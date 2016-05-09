@@ -1,9 +1,12 @@
 {
   "name": "javascript-obfuscator",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "JavaScript obfuscator",
   "main": "index.js",
   "dependencies": {
+    "esprima": "^2.7.2",
+    "escodegen": "^1.8.0",
+    "estraverse": "^4.2.0"
   },
   "devDependencies": {
     "lite-server": "^1.3.1",

@@ -1,17 +1,17 @@
 {
   "name": "javascript-obfuscator",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "JavaScript obfuscator",
   "main": "index.js",
   "dependencies": {
     "esprima": "^2.7.2",
     "escodegen": "^1.8.0",
-    "estraverse": "^4.2.0"
+    "estraverse": "^4.2.0",
+    "typescript": "^1.8.10"
   },
   "devDependencies": {
     "lite-server": "^1.3.1",
-    "tsd": "^0.6.5",
-    "typescript": "*"
+    "tsd": "^0.6.5"
   },
   "repository": {
     "type": "git",

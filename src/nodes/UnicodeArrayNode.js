@@ -67,4 +67,3 @@ class UnicodeArrayNode extends Node_1.Node {
 }
 UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH = 4;
 exports.UnicodeArrayNode = UnicodeArrayNode;
-//# sourceMappingURL=UnicodeArrayNode.js.map

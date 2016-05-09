@@ -2,10 +2,15 @@
   "compilerOptions": {
     "target": "ES6",
     "module": "commonjs",
-    "sourceMap": true,
+    "sourceMap": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "removeComments": true,
     "noImplicitAny": false
-  }
+  },
+  "files": [
+    "index.ts",
+    "typings/tsd.d.ts",
+    "tests/dev-test.ts"
+  ]
 }

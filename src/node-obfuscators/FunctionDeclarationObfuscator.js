@@ -34,4 +34,3 @@ class FunctionDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
     }
 }
 exports.FunctionDeclarationObfuscator = FunctionDeclarationObfuscator;
-//# sourceMappingURL=FunctionDeclarationObfuscator.js.map

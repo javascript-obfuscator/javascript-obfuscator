@@ -86,4 +86,3 @@ class Obfuscator {
     }
 }
 exports.Obfuscator = Obfuscator;
-//# sourceMappingURL=Obfuscator.js.map

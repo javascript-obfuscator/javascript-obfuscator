@@ -40,4 +40,3 @@ class VariableDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
     }
 }
 exports.VariableDeclarationObfuscator = VariableDeclarationObfuscator;
-//# sourceMappingURL=VariableDeclarationObfuscator.js.map

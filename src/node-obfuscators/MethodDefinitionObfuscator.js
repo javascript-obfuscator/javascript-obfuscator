@@ -25,4 +25,3 @@ class MethodDefinitionObfuscator extends NodeObfuscator_1.NodeObfuscator {
     }
 }
 exports.MethodDefinitionObfuscator = MethodDefinitionObfuscator;
-//# sourceMappingURL=MethodDefinitionObfuscator.js.map

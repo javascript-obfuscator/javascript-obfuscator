@@ -20,4 +20,3 @@ class LiteralObfuscator extends NodeObfuscator_1.NodeObfuscator {
     }
 }
 exports.LiteralObfuscator = LiteralObfuscator;
-//# sourceMappingURL=LiteralObfuscator.js.map

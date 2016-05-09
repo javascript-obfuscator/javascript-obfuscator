@@ -17,4 +17,3 @@ JavaScriptObfuscator.escodegenParams = {
 };
 exports.JavaScriptObfuscator = JavaScriptObfuscator;
 module.exports = JavaScriptObfuscator;
-//# sourceMappingURL=index.js.map

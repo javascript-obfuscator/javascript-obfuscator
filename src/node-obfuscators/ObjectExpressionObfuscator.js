@@ -45,4 +45,3 @@ class ObjectExpressionObfuscator extends NodeObfuscator_1.NodeObfuscator {
     }
 }
 exports.ObjectExpressionObfuscator = ObjectExpressionObfuscator;
-//# sourceMappingURL=ObjectExpressionObfuscator.js.map

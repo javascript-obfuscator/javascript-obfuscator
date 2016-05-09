@@ -26,4 +26,3 @@ class NodeObfuscator {
     }
 }
 exports.NodeObfuscator = NodeObfuscator;
-//# sourceMappingURL=NodeObfuscator.js.map

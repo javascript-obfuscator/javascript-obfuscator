@@ -5,4 +5,3 @@ class NodesGroup {
     }
 }
 exports.NodesGroup = NodesGroup;
-//# sourceMappingURL=NodesGroup.js.map

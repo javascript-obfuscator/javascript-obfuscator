@@ -46,4 +46,3 @@ class MemberExpressionObfuscator extends NodeObfuscator_1.NodeObfuscator {
     }
 }
 exports.MemberExpressionObfuscator = MemberExpressionObfuscator;
-//# sourceMappingURL=MemberExpressionObfuscator.js.map

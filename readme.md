@@ -60,7 +60,7 @@ Options for JavaScript obfuscator:
 
 ###Available options
 ####rotateUnicodeArray
-Default: `true`
+Type: `boolean` Default: `true`
 
 For more hard understanding of code, during each obfuscation all literal values are stored in array as Unicode codes sequence.
 This options will rotate all values inside array on a random value during obfuscation of code, and insert inside source code helper function

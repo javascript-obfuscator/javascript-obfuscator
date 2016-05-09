@@ -1,6 +1,6 @@
 "use strict";
 const Obfuscator_1 = require('./src/Obfuscator');
-let escodegen = require('escodegen'), esprima = require('esprima'), RawSource = require('webpack-core/lib/RawSource');
+let escodegen = require('escodegen'), esprima = require('esprima');
 class JavaScriptObfuscator {
     static obfuscate(sourceCode, options) {
         let astTree = esprima.parse(sourceCode), obfuscator = new Obfuscator_1.Obfuscator(options);
@@ -8,7 +8,7 @@ class JavaScriptObfuscator {
         return JavaScriptObfuscator.generateCode(astTree);
     }
     static generateCode(astTree) {
-        return new RawSource(escodegen.generate(astTree, JavaScriptObfuscator.escodegenParams));
+        return escodegen.generate(astTree, JavaScriptObfuscator.escodegenParams);
     }
 }
 JavaScriptObfuscator.escodegenParams = {

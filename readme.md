@@ -39,12 +39,14 @@ Options for JavaScript obfuscator:
 }
 ```
 
-####Available options
-#####rotateUnicodeArray
+###Available options
+####rotateUnicodeArray
 Default: `true`
 
 For more hard understanding of code, during each obfuscation all literal values are stored in array as Unicode codes sequence.
 This options will rotate all values inside array at random value during obfuscation of code, and insert inside source code helper function
 which will rotate array values back to their original indexes.
+
 This option affected only on visual code organisation, because we can easily get original array during debug process.
+
 Not recommended for small source code, because helper function will attract attention.

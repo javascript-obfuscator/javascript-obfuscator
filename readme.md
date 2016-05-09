@@ -1,6 +1,7 @@
 #JavaScript obfuscator for Node.js
 
 JavaScript obfuscator for Node.js and free alternative of [js-obfuscator](https://github.com/caiguanhao/js-obfuscator) without any limits.
+Compatible with ES6.
 
 ###Installation
 
@@ -19,6 +20,16 @@ var obfuscatedCode = JavaScriptObfuscator.obfuscate(
         rotateUnicodeArray: false
     }
 );
+
+console.log(obfuscatedCode);
+/*
+var _0x41c0 = [
+    '\u0061\u0062\u0063',
+    '\u006c\u006f\u0067'
+];
+var variable = _0x41c0[0];
+console[_0x41c0[1]](variable);
+*/
 ```
 
 ## obfuscate(sourceCode, options)

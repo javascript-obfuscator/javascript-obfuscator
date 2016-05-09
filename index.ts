@@ -7,8 +7,7 @@ import { UnicodeArrayNodesGroup } from './src/node-groups/UnicodeArrayNodesGroup
 import { Utils } from './src/Utils';
 
 let escodegen = require('escodegen'),
-    esprima = require('esprima'),
-    RawSource: any = require('webpack-core/lib/RawSource');
+    esprima = require('esprima');
 
 export class JavaScriptObfuscator {
     /**
@@ -38,7 +37,7 @@ export class JavaScriptObfuscator {
      * @param astTree
      */
     private static generateCode (astTree: any): string {
-        return new RawSource(escodegen.generate(astTree, JavaScriptObfuscator.escodegenParams));
+        return escodegen.generate(astTree, JavaScriptObfuscator.escodegenParams);
     }
 }
 

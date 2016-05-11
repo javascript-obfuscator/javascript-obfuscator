@@ -1,5 +1,6 @@
 import { NodeObfuscator } from './NodeObfuscator';
 import { Utils } from '../Utils';
+import {NodeUtils} from "../NodeUtils";
 
 let estraverse = require('estraverse');
 
@@ -29,7 +30,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
         }
 
         this.replaceVariableName(variableDeclarationNode);
-        this.replaceVariableCalls(parentNode);
+        this.replaceVariableCalls(variableDeclarationNode, parentNode);
     }
 
     /**
@@ -38,13 +39,13 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
     private replaceVariableName (variableDeclarationNode: any): void {
         variableDeclarationNode.declarations.forEach((declarationNode) => {
             estraverse.replace(declarationNode, {
-                leave: (node) => {
+                enter: (node) => {
                     if (node.type !== 'VariableDeclarator') {
                         return;
                     }
 
                     estraverse.replace(node.id, {
-                        leave: (node) => {
+                        enter: (node) => {
                             this.variableName.set(node.name, Utils.getRandomVariableName());
                             node.name = this.variableName.get(node.name);
                         }
@@ -55,11 +56,24 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
     }
 
     /**
+     * @param variableDeclarationNode
      * @param variableParentNode
      */
-    private replaceVariableCalls (variableParentNode: any): void {
-        estraverse.replace(variableParentNode, {
-            leave: (node, parentNode) => {
+    private replaceVariableCalls (variableDeclarationNode: any, variableParentNode: any): void {
+        let scopeNode: any,
+            statementNode: any;
+
+        if (variableDeclarationNode.kind === 'var') {
+            scopeNode = NodeUtils.getParentNodeWithType(
+                variableDeclarationNode,
+                ['FunctionDeclaration', 'FunctionExpression', 'ArrowFunctionExpression', 'MethodDefinition']
+            );
+        } else {
+            scopeNode = variableParentNode;
+        }
+
+        estraverse.replace(scopeNode, {
+            enter: (node, parentNode) => {
                 this.replaceNodeIdentifierByNewValue(node, parentNode, this.variableName);
             }
         });

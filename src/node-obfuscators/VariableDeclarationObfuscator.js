@@ -1,6 +1,7 @@
 "use strict";
 const NodeObfuscator_1 = require('./NodeObfuscator');
 const Utils_1 = require('../Utils');
+const NodeUtils_1 = require("../NodeUtils");
 let estraverse = require('estraverse');
 class VariableDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
     constructor(...args) {
@@ -12,17 +13,17 @@ class VariableDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
             return;
         }
         this.replaceVariableName(variableDeclarationNode);
-        this.replaceVariableCalls(parentNode);
+        this.replaceVariableCalls(variableDeclarationNode, parentNode);
     }
     replaceVariableName(variableDeclarationNode) {
         variableDeclarationNode.declarations.forEach((declarationNode) => {
             estraverse.replace(declarationNode, {
-                leave: (node) => {
+                enter: (node) => {
                     if (node.type !== 'VariableDeclarator') {
                         return;
                     }
                     estraverse.replace(node.id, {
-                        leave: (node) => {
+                        enter: (node) => {
                             this.variableName.set(node.name, Utils_1.Utils.getRandomVariableName());
                             node.name = this.variableName.get(node.name);
                         }
@@ -31,9 +32,16 @@ class VariableDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
             });
         });
     }
-    replaceVariableCalls(variableParentNode) {
-        estraverse.replace(variableParentNode, {
-            leave: (node, parentNode) => {
+    replaceVariableCalls(variableDeclarationNode, variableParentNode) {
+        let scopeNode, statementNode;
+        if (variableDeclarationNode.kind === 'var') {
+            scopeNode = NodeUtils_1.NodeUtils.getParentNodeWithType(variableDeclarationNode, ['FunctionDeclaration', 'FunctionExpression', 'ArrowFunctionExpression', 'MethodDefinition']);
+        }
+        else {
+            scopeNode = variableParentNode;
+        }
+        estraverse.replace(scopeNode, {
+            enter: (node, parentNode) => {
                 this.replaceNodeIdentifierByNewValue(node, parentNode, this.variableName);
             }
         });

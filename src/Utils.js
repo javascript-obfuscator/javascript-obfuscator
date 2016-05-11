@@ -25,7 +25,7 @@ class Utils {
     }
     static getRandomVariableName(length = 6) {
         const prefix = '_0x';
-        return `${prefix}${(Utils.decToHex(Utils.getRandomInteger(10000, 9999999))).substr(0, length)}`;
+        return `${prefix}${(Utils.decToHex(Utils.getRandomInteger(10000, 99999999))).substr(0, length)}`;
     }
     static stringToUnicode(string) {
         return `'${string.replace(/[\s\S]/g, (escape) => {

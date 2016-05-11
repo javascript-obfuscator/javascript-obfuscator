@@ -6,7 +6,7 @@ import { Utils } from '../Utils';
 
 export abstract class NodeObfuscator implements INodeObfuscator {
     /**
-     * @param Map <string, Node>
+     * @type Map <string, Node>
      */
     protected nodes: Map <string, INode>;
 

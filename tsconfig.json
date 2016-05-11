@@ -7,10 +7,5 @@
     "experimentalDecorators": true,
     "removeComments": true,
     "noImplicitAny": false
-  },
-  "files": [
-    "index.ts",
-    "typings/tsd.d.ts",
-    "tests/dev-test.ts"
-  ]
+  }
 }

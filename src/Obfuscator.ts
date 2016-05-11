@@ -4,6 +4,7 @@ import { INodesGroup } from './interfaces/INodesGroup';
 
 import { AppendState } from './enums/AppendState';
 
+import { CatchClauseObfuscator } from "./node-obfuscators/CatchClauseObfuscator";
 import { FunctionDeclarationObfuscator } from './node-obfuscators/FunctionDeclarationObfuscator';
 import { FunctionObfuscator } from './node-obfuscators/FunctionObfuscator';
 import { LiteralObfuscator } from './node-obfuscators/LiteralObfuscator';
@@ -30,6 +31,7 @@ export class Obfuscator {
      */
     private nodeObfuscators: Map <string, Function[]> = new Map <string, Function[]> ([
         ['ClassDeclaration', [FunctionDeclarationObfuscator]],
+        ['CatchClause', [CatchClauseObfuscator]],
         ['FunctionDeclaration', [
             FunctionDeclarationObfuscator,
             FunctionObfuscator
@@ -40,7 +42,7 @@ export class Obfuscator {
         ['VariableDeclaration', [VariableDeclarationObfuscator]],
         ['ObjectExpression', [ObjectExpressionObfuscator]],
         ['MemberExpression', [MemberExpressionObfuscator]],
-        ['Literal', [LiteralObfuscator]]
+        //['Literal', [LiteralObfuscator]]
     ]);
 
     /**
@@ -73,7 +75,8 @@ export class Obfuscator {
         this.beforeObfuscation(node);
 
         estraverse.replace(node, {
-            leave: (node, parent) => this.nodeController(node, parent)
+            enter: (node, parent) => this.nodeControllerEnter(node, parent),
+            leave: (node, parent) => this.nodeControllerLeave(node, parent)
         });
 
         this.afterObfuscation(node);
@@ -125,7 +128,18 @@ export class Obfuscator {
      * @param node
      * @param parent
      */
-    private nodeController (node, parent): void {
+    private nodeControllerEnter (node, parent): void {
+        switch (node.type) {
+            default:
+                node.parentNode = parent;
+        }
+    }
+
+    /**
+     * @param node
+     * @param parent
+     */
+    private nodeControllerLeave (node, parent): void {
         switch (node.type) {
             default:
                 this.initializeNodeObfuscators(node, parent);

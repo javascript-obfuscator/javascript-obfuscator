@@ -1,8 +1,8 @@
 "use strict";
 const AppendState_1 = require('./enums/AppendState');
+const CatchClauseObfuscator_1 = require("./node-obfuscators/CatchClauseObfuscator");
 const FunctionDeclarationObfuscator_1 = require('./node-obfuscators/FunctionDeclarationObfuscator');
 const FunctionObfuscator_1 = require('./node-obfuscators/FunctionObfuscator');
-const LiteralObfuscator_1 = require('./node-obfuscators/LiteralObfuscator');
 const MemberExpressionObfuscator_1 = require('./node-obfuscators/MemberExpressionObfuscator');
 const MethodDefinitionObfuscator_1 = require('./node-obfuscators/MethodDefinitionObfuscator');
 const ObjectExpressionObfuscator_1 = require('./node-obfuscators/ObjectExpressionObfuscator');
@@ -16,6 +16,7 @@ class Obfuscator {
         this.nodes = new Map();
         this.nodeObfuscators = new Map([
             ['ClassDeclaration', [FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator]],
+            ['CatchClause', [CatchClauseObfuscator_1.CatchClauseObfuscator]],
             ['FunctionDeclaration', [
                     FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator,
                     FunctionObfuscator_1.FunctionObfuscator
@@ -26,7 +27,6 @@ class Obfuscator {
             ['VariableDeclaration', [VariableDeclarationObfuscator_1.VariableDeclarationObfuscator]],
             ['ObjectExpression', [ObjectExpressionObfuscator_1.ObjectExpressionObfuscator]],
             ['MemberExpression', [MemberExpressionObfuscator_1.MemberExpressionObfuscator]],
-            ['Literal', [LiteralObfuscator_1.LiteralObfuscator]]
         ]);
         this.options = {
             rotateUnicodeArray: true
@@ -42,7 +42,8 @@ class Obfuscator {
         }
         this.beforeObfuscation(node);
         estraverse.replace(node, {
-            leave: (node, parent) => this.nodeController(node, parent)
+            enter: (node, parent) => this.nodeControllerEnter(node, parent),
+            leave: (node, parent) => this.nodeControllerLeave(node, parent)
         });
         this.afterObfuscation(node);
     }
@@ -70,7 +71,13 @@ class Obfuscator {
         });
     }
     ;
-    nodeController(node, parent) {
+    nodeControllerEnter(node, parent) {
+        switch (node.type) {
+            default:
+                node.parentNode = parent;
+        }
+    }
+    nodeControllerLeave(node, parent) {
         switch (node.type) {
             default:
                 this.initializeNodeObfuscators(node, parent);

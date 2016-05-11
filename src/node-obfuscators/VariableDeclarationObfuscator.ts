@@ -1,6 +1,6 @@
 import { NodeObfuscator } from './NodeObfuscator';
+import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
-import {NodeUtils} from "../NodeUtils";
 
 let estraverse = require('estraverse');
 

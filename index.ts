@@ -3,8 +3,6 @@
 declare let module: any;
 
 import { Obfuscator } from './src/Obfuscator';
-import { UnicodeArrayNodesGroup } from './src/node-groups/UnicodeArrayNodesGroup';
-import { Utils } from './src/Utils';
 
 let escodegen = require('escodegen'),
     esprima = require('esprima');

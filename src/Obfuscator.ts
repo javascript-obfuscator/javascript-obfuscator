@@ -8,7 +8,6 @@ import { CatchClauseObfuscator } from "./node-obfuscators/CatchClauseObfuscator"
 import { FunctionDeclarationObfuscator } from './node-obfuscators/FunctionDeclarationObfuscator';
 import { FunctionObfuscator } from './node-obfuscators/FunctionObfuscator';
 import { LiteralObfuscator } from './node-obfuscators/LiteralObfuscator';
-import { NodesGroup } from './node-groups/NodesGroup';
 import { MemberExpressionObfuscator } from './node-obfuscators/MemberExpressionObfuscator';
 import { MethodDefinitionObfuscator } from './node-obfuscators/MethodDefinitionObfuscator';
 import { ObjectExpressionObfuscator } from './node-obfuscators/ObjectExpressionObfuscator';
@@ -63,7 +62,7 @@ export class Obfuscator {
      */
     public obfuscateNode (node: any): void {
         if (this.options['rotateUnicodeArray']) {
-            this.setNodesGroup('unicodeArrayNodesGroup', new UnicodeArrayNodesGroup(node));
+            this.setNodesGroup(new UnicodeArrayNodesGroup(node));
         } else {
             this.setNode(
                 'unicodeArrayNode',
@@ -90,10 +89,9 @@ export class Obfuscator {
     }
 
     /**
-     * @param groupName
      * @param nodesGroup
      */
-    public setNodesGroup (groupName: string, nodesGroup: NodesGroup): void {
+    public setNodesGroup (nodesGroup: INodesGroup): void {
         let nodes: Map <string, INode> = nodesGroup.getNodes();
 
         nodes.forEach((node: INode, key: string) => {

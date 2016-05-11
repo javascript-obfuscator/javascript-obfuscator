@@ -13,7 +13,7 @@ export class JavaScriptObfuscator {
      */
     private static escodegenParams: any = {
         format: {
-            //compact: true
+            compact: true
         },
         verbatim: 'x-verbatim-property'
     };

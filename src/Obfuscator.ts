@@ -14,7 +14,6 @@ import { MethodDefinitionObfuscator } from './node-obfuscators/MethodDefinitionO
 import { ObjectExpressionObfuscator } from './node-obfuscators/ObjectExpressionObfuscator';
 import { UnicodeArrayNode } from './nodes/UnicodeArrayNode';
 import { UnicodeArrayNodesGroup } from './node-groups/UnicodeArrayNodesGroup';
-import { UnicodeArrayRotateFunctionNode } from './nodes/UnicodeArrayRotateFunctionNode';
 import { Utils } from './Utils';
 import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclarationObfuscator';
 
@@ -42,7 +41,7 @@ export class Obfuscator {
         ['VariableDeclaration', [VariableDeclarationObfuscator]],
         ['ObjectExpression', [ObjectExpressionObfuscator]],
         ['MemberExpression', [MemberExpressionObfuscator]],
-        //['Literal', [LiteralObfuscator]]
+        ['Literal', [LiteralObfuscator]]
     ]);
 
     /**

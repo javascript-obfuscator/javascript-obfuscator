@@ -1,5 +1,6 @@
 "use strict";
 const NodeObfuscator_1 = require('./NodeObfuscator');
+const NodeUtils_1 = require("../NodeUtils");
 const Utils_1 = require('../Utils');
 let estraverse = require('estraverse');
 class FunctionDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
@@ -12,7 +13,7 @@ class FunctionDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
             return;
         }
         this.replaceFunctionName(functionDeclarationNode);
-        this.replaceFunctionCalls(parentNode);
+        this.replaceFunctionCalls(functionDeclarationNode);
     }
     replaceFunctionName(functionDeclarationNode) {
         estraverse.replace(functionDeclarationNode.id, {
@@ -25,9 +26,10 @@ class FunctionDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
             }
         });
     }
-    replaceFunctionCalls(functionParentNode) {
-        estraverse.replace(functionParentNode, {
-            leave: (node, parentNode) => {
+    replaceFunctionCalls(functionDeclarationNode) {
+        let scopeNode = NodeUtils_1.NodeUtils.getNodeScope(functionDeclarationNode);
+        estraverse.replace(scopeNode, {
+            enter: (node, parentNode) => {
                 this.replaceNodeIdentifierByNewValue(node, parentNode, this.functionName);
             }
         });

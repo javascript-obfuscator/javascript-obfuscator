@@ -1,4 +1,5 @@
 import { NodeObfuscator } from './NodeObfuscator';
+import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
 
 let estraverse = require('estraverse');
@@ -28,7 +29,7 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
         }
 
         this.replaceFunctionName(functionDeclarationNode);
-        this.replaceFunctionCalls(parentNode);
+        this.replaceFunctionCalls(functionDeclarationNode);
     }
 
     /**
@@ -48,11 +49,15 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
     }
 
     /**
-     * @param functionParentNode
+     * @param functionDeclarationNode
      */
-    private replaceFunctionCalls (functionParentNode: any): void {
-        estraverse.replace(functionParentNode, {
-            leave: (node, parentNode) => {
+    private replaceFunctionCalls (functionDeclarationNode: any): void {
+        let scopeNode: any = NodeUtils.getNodeScope(
+            functionDeclarationNode
+        );
+
+        estraverse.replace(scopeNode, {
+            enter: (node, parentNode) => {
                 this.replaceNodeIdentifierByNewValue(node, parentNode, this.functionName);
             }
         });

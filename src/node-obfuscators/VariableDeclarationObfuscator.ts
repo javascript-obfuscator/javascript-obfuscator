@@ -64,9 +64,8 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
             statementNode: any;
 
         if (variableDeclarationNode.kind === 'var') {
-            scopeNode = NodeUtils.getParentNodeWithType(
-                variableDeclarationNode,
-                ['FunctionDeclaration', 'FunctionExpression', 'ArrowFunctionExpression', 'MethodDefinition']
+            scopeNode = NodeUtils.getNodeScope(
+                variableDeclarationNode
             );
         } else {
             scopeNode = variableParentNode;

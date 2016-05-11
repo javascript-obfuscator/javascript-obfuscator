@@ -3,6 +3,7 @@ const AppendState_1 = require('./enums/AppendState');
 const CatchClauseObfuscator_1 = require("./node-obfuscators/CatchClauseObfuscator");
 const FunctionDeclarationObfuscator_1 = require('./node-obfuscators/FunctionDeclarationObfuscator');
 const FunctionObfuscator_1 = require('./node-obfuscators/FunctionObfuscator');
+const LiteralObfuscator_1 = require('./node-obfuscators/LiteralObfuscator');
 const MemberExpressionObfuscator_1 = require('./node-obfuscators/MemberExpressionObfuscator');
 const MethodDefinitionObfuscator_1 = require('./node-obfuscators/MethodDefinitionObfuscator');
 const ObjectExpressionObfuscator_1 = require('./node-obfuscators/ObjectExpressionObfuscator');
@@ -27,6 +28,7 @@ class Obfuscator {
             ['VariableDeclaration', [VariableDeclarationObfuscator_1.VariableDeclarationObfuscator]],
             ['ObjectExpression', [ObjectExpressionObfuscator_1.ObjectExpressionObfuscator]],
             ['MemberExpression', [MemberExpressionObfuscator_1.MemberExpressionObfuscator]],
+            ['Literal', [LiteralObfuscator_1.LiteralObfuscator]]
         ]);
         this.options = {
             rotateUnicodeArray: true

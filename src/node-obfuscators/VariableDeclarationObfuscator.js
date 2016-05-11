@@ -35,7 +35,7 @@ class VariableDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
     replaceVariableCalls(variableDeclarationNode, variableParentNode) {
         let scopeNode, statementNode;
         if (variableDeclarationNode.kind === 'var') {
-            scopeNode = NodeUtils_1.NodeUtils.getParentNodeWithType(variableDeclarationNode, ['FunctionDeclaration', 'FunctionExpression', 'ArrowFunctionExpression', 'MethodDefinition']);
+            scopeNode = NodeUtils_1.NodeUtils.getNodeScope(variableDeclarationNode);
         }
         else {
             scopeNode = variableParentNode;

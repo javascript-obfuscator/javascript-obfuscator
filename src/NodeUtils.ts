@@ -1,6 +1,33 @@
 export class NodeUtils {
     /**
      * @param node
+     * @param deep
+     */
+    public static getNodeScope (node: any,  deep: number = 0): any {
+        let scopeNodes: string[] = [
+            'FunctionDeclaration',
+            'FunctionExpression',
+            'ArrowFunctionExpression',
+            'MethodDefinition'
+        ];
+
+        if (node.parentNode.type === 'Program') {
+            return node.parentNode;
+        }
+
+        if (scopeNodes.indexOf(node.parentNode.type) < 0) {
+            return NodeUtils.getNodeScope(node.parentNode, deep);
+        }
+
+        if (deep > 0) {
+            return NodeUtils.getNodeScope(node.parentNode, --deep);
+        }
+
+        return node; // BlockStatement of scopeNodes
+    }
+
+    /**
+     * @param node
      * @param types
      * @param limitNodeTypes
      * @param deep

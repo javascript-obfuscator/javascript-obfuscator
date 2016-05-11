@@ -31,7 +31,7 @@ export class FunctionObfuscator extends NodeObfuscator {
     private replaceFunctionParams (functionNode: any): void {
         functionNode.params.forEach((paramsNode) => {
             estraverse.replace(paramsNode, {
-                leave: (node, parentNode) => {
+                leave: (node) => {
                     if (node.type !== 'Identifier') {
                        return;
                     }

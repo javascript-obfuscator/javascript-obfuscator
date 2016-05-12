@@ -28,14 +28,21 @@ export class JavaScriptObfuscator {
 
         obfuscator.obfuscateNode(astTree);
 
-        return JavaScriptObfuscator.generateCode(astTree);
+        return JavaScriptObfuscator.generateCode(astTree, options);
     }
 
     /**
      * @param astTree
+     * @param options
      */
-    private static generateCode (astTree: any): string {
-        return escodegen.generate(astTree, JavaScriptObfuscator.escodegenParams);
+    private static generateCode (astTree: any, options: any): string {
+        let escodegenParams: any = Object.assign({}, JavaScriptObfuscator.escodegenParams);
+
+        if (options.compact !== undefined) {
+            escodegenParams.format.compact = options.compact;
+        }
+
+        return escodegen.generate(astTree, escodegenParams);
     }
 }
 

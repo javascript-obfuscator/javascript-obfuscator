@@ -16,7 +16,7 @@ class MethodDefinitionObfuscator extends NodeObfuscator_1.NodeObfuscator {
                 if (node.type !== 'Identifier' ||
                     this.ignoredNames.indexOf(node.name) >= 0 ||
                     methodDefinitionNode.computed === true) {
-                    return;
+                    return estraverse.VisitorOption.Skip;
                 }
                 methodDefinitionNode.computed = true;
                 node.name = this.replaceLiteralStringByArrayElement(node.name);

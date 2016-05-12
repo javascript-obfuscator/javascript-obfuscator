@@ -41,7 +41,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
             estraverse.replace(declarationNode, {
                 enter: (node) => {
                     if (node.type !== 'VariableDeclarator') {
-                        return;
+                        return estraverse.VisitorOption.Skip;
                     }
 
                     estraverse.replace(node.id, {
@@ -78,7 +78,11 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
 
         estraverse.replace(scopeNode, {
             enter: (node, parentNode) => {
-                if (node.parentNode && (node.type === 'FunctionDeclaration' || node.type === 'FunctionExpression')) {
+                if (
+                    node.type === 'FunctionDeclaration' ||
+                    node.type === 'FunctionExpression' ||
+                    node.type === 'ArrowFunctionExpression'
+                ) {
                     functionParentScope = NodeUtils.getNodeScope(
                         node
                     );

@@ -16,7 +16,7 @@ class FunctionObfuscator extends NodeObfuscator_1.NodeObfuscator {
             estraverse.replace(paramsNode, {
                 leave: (node) => {
                     if (node.type !== 'Identifier') {
-                        return;
+                        return estraverse.VisitorOption.Skip;
                     }
                     this.functionParams.set(node.name, Utils_1.Utils.getRandomVariableName());
                     node.name = this.functionParams.get(node.name);

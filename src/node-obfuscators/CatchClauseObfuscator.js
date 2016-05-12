@@ -15,7 +15,7 @@ class CatchClauseObfuscator extends NodeObfuscator_1.NodeObfuscator {
         estraverse.replace(catchClauseNode.param, {
             leave: (node, parentNode) => {
                 if (node.type !== 'Identifier') {
-                    return;
+                    return estraverse.VisitorOption.Skip;
                 }
                 this.catchClauseParam.set(node.name, Utils_1.Utils.getRandomVariableName());
                 node.name = this.catchClauseParam.get(node.name);

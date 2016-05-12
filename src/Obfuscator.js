@@ -44,8 +44,10 @@ class Obfuscator {
         }
         this.beforeObfuscation(node);
         estraverse.replace(node, {
-            enter: (node, parent) => this.nodeControllerEnter(node, parent),
-            leave: (node, parent) => this.nodeControllerLeave(node, parent)
+            enter: (node, parent) => this.nodeControllerFirstPass(node, parent)
+        });
+        estraverse.replace(node, {
+            leave: (node, parent) => this.nodeControllerSecondPass(node, parent)
         });
         this.afterObfuscation(node);
     }
@@ -73,13 +75,15 @@ class Obfuscator {
         });
     }
     ;
-    nodeControllerEnter(node, parent) {
-        switch (node.type) {
-            default:
-                node.parentNode = parent;
-        }
+    nodeControllerFirstPass(node, parent) {
+        Object.defineProperty(node, 'parentNode', {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: parent || node
+        });
     }
-    nodeControllerLeave(node, parent) {
+    nodeControllerSecondPass(node, parent) {
         switch (node.type) {
             default:
                 this.initializeNodeObfuscators(node, parent);

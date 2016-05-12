@@ -32,7 +32,7 @@ export class CatchClauseObfuscator extends NodeObfuscator {
         estraverse.replace(catchClauseNode.param, {
             leave: (node, parentNode) => {
                 if (node.type !== 'Identifier') {
-                    return;
+                    return estraverse.VisitorOption.Skip;
                 }
 
                 this.catchClauseParam.set(node.name, Utils.getRandomVariableName());

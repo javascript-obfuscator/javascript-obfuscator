@@ -33,7 +33,7 @@ export class FunctionObfuscator extends NodeObfuscator {
             estraverse.replace(paramsNode, {
                 leave: (node) => {
                     if (node.type !== 'Identifier') {
-                       return;
+                        return estraverse.VisitorOption.Skip;
                     }
 
                     this.functionParams.set(node.name, Utils.getRandomVariableName());

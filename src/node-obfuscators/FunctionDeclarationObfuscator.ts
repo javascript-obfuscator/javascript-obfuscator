@@ -39,7 +39,7 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
         estraverse.replace(functionDeclarationNode.id, {
             leave: (node) => {
                 if (node.type !== 'Identifier') {
-                    return;
+                    return estraverse.VisitorOption.Skip;
                 }
 
                 this.functionName.set(node.name, Utils.getRandomVariableName());

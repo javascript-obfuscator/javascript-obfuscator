@@ -18,17 +18,7 @@ class NodeUtils {
             return NodeUtils.getNodeScope(node.parentNode, --deep);
         }
         if (node.type !== 'BlockStatement') {
-            let blockStatementNode;
-            estraverse.traverse(node, {
-                enter: function (node, parent) {
-                    switch (node.type) {
-                        case 'BlockStatement':
-                            blockStatementNode = node;
-                            this['break']();
-                    }
-                }
-            });
-            return blockStatementNode;
+            return NodeUtils.getNodeScope(node.parentNode);
         }
         return node;
     }

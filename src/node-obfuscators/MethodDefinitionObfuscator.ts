@@ -42,7 +42,7 @@ export class MethodDefinitionObfuscator extends NodeObfuscator {
                     this.ignoredNames.indexOf(node.name) >= 0 ||
                     methodDefinitionNode.computed === true
                 ) {
-                    return;
+                    return estraverse.VisitorOption.Skip;
                 }
 
                 methodDefinitionNode.computed = true;

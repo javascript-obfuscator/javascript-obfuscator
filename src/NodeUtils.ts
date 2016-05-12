@@ -26,20 +26,7 @@ export class NodeUtils {
         }
 
         if (node.type !== 'BlockStatement') {
-            let blockStatementNode: any;
-
-            estraverse.traverse(node, {
-                enter: function (node, parent) {
-                    switch (node.type) {
-                        case 'BlockStatement':
-                            blockStatementNode = node;
-
-                            this['break']();
-                    }
-                }
-            });
-
-            return blockStatementNode;
+            return NodeUtils.getNodeScope(node.parentNode);
         }
 
         return node; // BlockStatement of scopeNodes

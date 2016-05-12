@@ -37,7 +37,7 @@ class Obfuscator {
     }
     obfuscateNode(node) {
         if (this.options['rotateUnicodeArray']) {
-            this.setNodesGroup('unicodeArrayNodesGroup', new UnicodeArrayNodesGroup_1.UnicodeArrayNodesGroup(node));
+            this.setNodesGroup(new UnicodeArrayNodesGroup_1.UnicodeArrayNodesGroup(node));
         }
         else {
             this.setNode('unicodeArrayNode', new UnicodeArrayNode_1.UnicodeArrayNode(node, Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH)));
@@ -52,7 +52,7 @@ class Obfuscator {
     setNode(nodeName, node) {
         this.nodes.set(nodeName, node);
     }
-    setNodesGroup(groupName, nodesGroup) {
+    setNodesGroup(nodesGroup) {
         let nodes = nodesGroup.getNodes();
         nodes.forEach((node, key) => {
             this.nodes.set(key, node);

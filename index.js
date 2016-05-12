@@ -5,14 +5,20 @@ class JavaScriptObfuscator {
     static obfuscate(sourceCode, options) {
         let astTree = esprima.parse(sourceCode), obfuscator = new Obfuscator_1.Obfuscator(options);
         obfuscator.obfuscateNode(astTree);
-        return JavaScriptObfuscator.generateCode(astTree);
+        return JavaScriptObfuscator.generateCode(astTree, options);
     }
-    static generateCode(astTree) {
-        return escodegen.generate(astTree, JavaScriptObfuscator.escodegenParams);
+    static generateCode(astTree, options) {
+        let escodegenParams = Object.assign({}, JavaScriptObfuscator.escodegenParams);
+        if (options.compact !== undefined) {
+            escodegenParams.format.compact = options.compact;
+        }
+        return escodegen.generate(astTree, escodegenParams);
     }
 }
 JavaScriptObfuscator.escodegenParams = {
-    format: {},
+    format: {
+        compact: true
+    },
     verbatim: 'x-verbatim-property'
 };
 exports.JavaScriptObfuscator = JavaScriptObfuscator;

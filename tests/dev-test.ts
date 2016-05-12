@@ -18,6 +18,32 @@ var obfuscatedCode = JavaScriptObfuscator.obfuscate(
         }
 
         console.log(test);
+        
+        var test = function (test) {
+            console.log(test);
+            
+            if (true) {
+                var test = 5
+            }
+            
+            return test;
+        }
+        
+        console.log(test(1));
+        
+        function test2 (abc) {
+            function test1 () {
+              console.log('inside', abc.item);
+            }
+            
+            console.log('between', abc);
+            
+            var abc = {};
+            
+            return abc.item = 15, test1();
+        };
+        
+        test2(22);
     })();
     `,
     {

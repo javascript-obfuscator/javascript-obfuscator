@@ -1,12 +1,12 @@
 "use strict";
 const NodeObfuscator_1 = require('./NodeObfuscator');
-const Utils_1 = require('../Utils');
 const NodeUtils_1 = require("../NodeUtils");
+const Utils_1 = require('../Utils');
 let estraverse = require('estraverse');
 class VariableDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
     constructor(...args) {
         super(...args);
-        this.variableName = new Map();
+        this.variableNames = new Map();
     }
     obfuscateNode(variableDeclarationNode, parentNode) {
         if (parentNode.type === 'Program') {
@@ -24,8 +24,8 @@ class VariableDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
                     }
                     estraverse.replace(node.id, {
                         enter: (node) => {
-                            this.variableName.set(node.name, Utils_1.Utils.getRandomVariableName());
-                            node.name = this.variableName.get(node.name);
+                            this.variableNames.set(node.name, Utils_1.Utils.getRandomVariableName());
+                            node.name = this.variableNames.get(node.name);
                         }
                     });
                 }
@@ -33,16 +33,36 @@ class VariableDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
         });
     }
     replaceVariableCalls(variableDeclarationNode, variableParentNode) {
-        let scopeNode, statementNode;
+        let scopeNode;
         if (variableDeclarationNode.kind === 'var') {
             scopeNode = NodeUtils_1.NodeUtils.getNodeScope(variableDeclarationNode);
         }
         else {
             scopeNode = variableParentNode;
         }
+        let isNodeAfterVariableDeclaratorFlag = false, isNodeBeforeVariableDeclaratorFlag = true, functionParentScope, functionNextNode, functionIndex = -1;
         estraverse.replace(scopeNode, {
             enter: (node, parentNode) => {
-                this.replaceNodeIdentifierByNewValue(node, parentNode, this.variableName);
+                if (node.parentNode && (node.type === 'FunctionDeclaration' || node.type === 'FunctionExpression')) {
+                    functionParentScope = NodeUtils_1.NodeUtils.getNodeScope(node);
+                    functionIndex = functionParentScope.body.indexOf(node);
+                    if (functionIndex >= 0) {
+                        functionNextNode = functionParentScope.body[functionIndex + 1];
+                    }
+                    isNodeAfterVariableDeclaratorFlag = true;
+                }
+                if (functionNextNode && isNodeBeforeVariableDeclaratorFlag && node === functionNextNode) {
+                    isNodeAfterVariableDeclaratorFlag = false;
+                    functionNextNode = undefined;
+                    functionIndex = -1;
+                }
+                if (node === variableDeclarationNode) {
+                    isNodeAfterVariableDeclaratorFlag = true;
+                    isNodeBeforeVariableDeclaratorFlag = false;
+                }
+                if (isNodeAfterVariableDeclaratorFlag) {
+                    this.replaceNodeIdentifierByNewValue(node, parentNode, this.variableNames);
+                }
             }
         });
     }

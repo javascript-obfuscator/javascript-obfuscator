@@ -1,4 +1,5 @@
 "use strict";
+let estraverse = require('estraverse');
 class NodeUtils {
     static getNodeScope(node, deep = 0) {
         let scopeNodes = [
@@ -15,6 +16,19 @@ class NodeUtils {
         }
         if (deep > 0) {
             return NodeUtils.getNodeScope(node.parentNode, --deep);
+        }
+        if (node.type !== 'BlockStatement') {
+            let blockStatementNode;
+            estraverse.traverse(node, {
+                enter: function (node, parent) {
+                    switch (node.type) {
+                        case 'BlockStatement':
+                            blockStatementNode = node;
+                            this['break']();
+                    }
+                }
+            });
+            return blockStatementNode;
         }
         return node;
     }

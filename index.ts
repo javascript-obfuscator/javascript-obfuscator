@@ -22,7 +22,7 @@ export class JavaScriptObfuscator {
      * @param sourceCode
      * @param options
      */
-    public static obfuscate (sourceCode: string, options: any): string {
+    public static obfuscate (sourceCode: string, options: any = {}): string {
         let astTree: any = esprima.parse(sourceCode),
             obfuscator: Obfuscator = new Obfuscator(options);
 
@@ -35,10 +35,10 @@ export class JavaScriptObfuscator {
      * @param astTree
      * @param options
      */
-    private static generateCode (astTree: any, options: any): string {
+    private static generateCode (astTree: any, options: any = {}): string {
         let escodegenParams: any = Object.assign({}, JavaScriptObfuscator.escodegenParams);
 
-        if (options.compact !== undefined) {
+        if (options.hasOwnProperty('compact')) {
             escodegenParams.format.compact = options.compact;
         }
 

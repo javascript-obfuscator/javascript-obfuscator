@@ -1,3 +1,5 @@
+let estraverse = require('estraverse');
+
 export class NodeUtils {
     /**
      * @param node
@@ -21,6 +23,23 @@ export class NodeUtils {
 
         if (deep > 0) {
             return NodeUtils.getNodeScope(node.parentNode, --deep);
+        }
+
+        if (node.type !== 'BlockStatement') {
+            let blockStatementNode: any;
+
+            estraverse.traverse(node, {
+                enter: function (node, parent) {
+                    switch (node.type) {
+                        case 'BlockStatement':
+                            blockStatementNode = node;
+
+                            this['break']();
+                    }
+                }
+            });
+
+            return blockStatementNode;
         }
 
         return node; // BlockStatement of scopeNodes

@@ -82,6 +82,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
             functionNextNode: ITreeNode,
             functionIndex: number = -1;
 
+        //TODO: REFACTOR THIS
         estraverse.replace(scopeNode, {
             enter: (node: ITreeNode, parentNode: ITreeNode) => {
                 if (

@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "JavaScript obfuscator",
   "main": "index.js",
   "dependencies": {
@@ -22,7 +22,6 @@
     "tsc:w": "tsc -w",
     "lite": "lite-server",
     "start": "concurrent \"npm run tsc:w\" \"npm run lite\" ",
-    "postinstall": "typings install",
     "test": "node tests/dev-test.js"
   },
   "author": {

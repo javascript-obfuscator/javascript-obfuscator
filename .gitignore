@@ -2,7 +2,3 @@
 node_modules
 npm-debug.log
 *.js.map
-typings/browser/
-typings/browser.d.ts
-typings/main/
-typings/main.d.ts

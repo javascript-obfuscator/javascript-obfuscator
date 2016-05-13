@@ -1,6 +1,7 @@
 "use strict";
 const estraverse = require('estraverse');
 const NodeObfuscator_1 = require('./NodeObfuscator');
+const NodeUtils_1 = require("../NodeUtils");
 const Utils_1 = require('../Utils');
 class FunctionObfuscator extends NodeObfuscator_1.NodeObfuscator {
     constructor(...args) {
@@ -15,11 +16,12 @@ class FunctionObfuscator extends NodeObfuscator_1.NodeObfuscator {
         functionNode.params.forEach((paramsNode) => {
             estraverse.replace(paramsNode, {
                 leave: (node) => {
-                    if (node.type !== 'Identifier') {
-                        return estraverse.VisitorOption.Skip;
+                    if (NodeUtils_1.NodeUtils.isIdentifierNode(node)) {
+                        this.functionParams.set(node.name, Utils_1.Utils.getRandomVariableName());
+                        node.name = this.functionParams.get(node.name);
+                        return;
                     }
-                    this.functionParams.set(node.name, Utils_1.Utils.getRandomVariableName());
-                    node.name = this.functionParams.get(node.name);
+                    return estraverse.VisitorOption.Skip;
                 }
             });
         });

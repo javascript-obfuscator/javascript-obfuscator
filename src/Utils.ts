@@ -3,9 +3,9 @@ export class Utils {
      * @param array
      * @param times
      * @param reverse
-     * @returns {any[]}
+     * @returns any[]
      */
-    public static arrayRotate (array: any[], times: number, reverse: boolean = false) {
+    public static arrayRotate (array: any[], times: number, reverse: boolean = false): any[] {
         if (times < 0) {
             return;
         }
@@ -45,7 +45,7 @@ export class Utils {
 
     /**
      * @param length
-     * @returns {any}
+     * @returns any
      */
     public static getRandomVariableName (length: number = 6): string {
         const prefix = '_0x';

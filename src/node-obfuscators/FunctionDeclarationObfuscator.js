@@ -18,11 +18,12 @@ class FunctionDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
     replaceFunctionName(functionDeclarationNode) {
         estraverse.replace(functionDeclarationNode.id, {
             leave: (node) => {
-                if (node.type !== 'Identifier') {
-                    return estraverse.VisitorOption.Skip;
+                if (NodeUtils_1.NodeUtils.isIdentifierNode(node)) {
+                    this.functionName.set(node.name, Utils_1.Utils.getRandomVariableName());
+                    node.name = this.functionName.get(node.name);
+                    return;
                 }
-                this.functionName.set(node.name, Utils_1.Utils.getRandomVariableName());
-                node.name = this.functionName.get(node.name);
+                return estraverse.VisitorOption.Skip;
             }
         });
     }

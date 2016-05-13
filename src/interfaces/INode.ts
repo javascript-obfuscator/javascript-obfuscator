@@ -1,3 +1,5 @@
+import { ITreeNode } from '../interfaces/nodes/ITreeNode';
+
 import { AppendState } from '../enums/AppendState';
 
 export interface INode {
@@ -9,9 +11,9 @@ export interface INode {
     getAppendState (): AppendState;
 
     /**
-     * @returns any
+     * @returns ITreeNode
      */
-    getNode (): any;
+    getNode (): ITreeNode;
 
     /**
      * @returns {string}
@@ -26,7 +28,7 @@ export interface INode {
     /**
      * @param node
      */
-    setNode (node: any): void;
+    setNode (node: ITreeNode): void;
 
     updateNode (): void;
 }

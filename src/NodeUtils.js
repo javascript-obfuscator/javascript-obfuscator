@@ -33,5 +33,8 @@ class NodeUtils {
         }
         return node.parentNode;
     }
+    static isIdentifierNode(node) {
+        return node.type === 'Identifier';
+    }
 }
 exports.NodeUtils = NodeUtils;

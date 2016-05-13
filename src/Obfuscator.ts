@@ -3,6 +3,7 @@ import * as estraverse from 'estraverse';
 import { INode } from './interfaces/INode';
 import { INodeObfuscator } from './interfaces/INodeObfuscator';
 import { INodesGroup } from './interfaces/INodesGroup';
+import { ITreeNode } from './interfaces/nodes/ITreeNode';
 
 import { AppendState } from './enums/AppendState';
 
@@ -60,7 +61,7 @@ export class Obfuscator {
     /**
      * @param node
      */
-    public obfuscateNode (node: any): void {
+    public obfuscateNode (node: ITreeNode): void {
         if (this.options['rotateUnicodeArray']) {
             this.setNodesGroup(new UnicodeArrayNodesGroup(node));
         } else {
@@ -73,11 +74,11 @@ export class Obfuscator {
         this.beforeObfuscation(node);
 
         estraverse.replace(node, {
-            enter: (node, parent) => this.nodeControllerFirstPass(node, parent)
+            enter: (node: ITreeNode, parent: ITreeNode) => this.nodeControllerFirstPass(node, parent)
         });
 
         estraverse.replace(node, {
-            leave: (node, parent) => this.nodeControllerSecondPass(node, parent)
+            leave: (node: ITreeNode, parent: ITreeNode) => this.nodeControllerSecondPass(node, parent)
         });
 
         this.afterObfuscation(node);
@@ -105,7 +106,7 @@ export class Obfuscator {
     /**
      * @param node
      */
-    private afterObfuscation (node: any): void {
+    private afterObfuscation (node: ITreeNode): void {
         this.nodes.forEach((node: INode) => {
             if (node.getAppendState() === AppendState.AfterObfuscation) {
                 node.appendNode();
@@ -116,7 +117,7 @@ export class Obfuscator {
     /**
      * @param node
      */
-    private beforeObfuscation (node: any): void {
+    private beforeObfuscation (node: ITreeNode): void {
         this.nodes.forEach((node: INode) => {
             if (node.getAppendState() === AppendState.BeforeObfuscation) {
                 node.appendNode();
@@ -128,7 +129,7 @@ export class Obfuscator {
      * @param node
      * @param parent
      */
-    private nodeControllerFirstPass (node, parent): void {
+    private nodeControllerFirstPass (node: ITreeNode, parent: ITreeNode): void {
         Object.defineProperty(node, 'parentNode', {
             enumerable: true,
             configurable: true,
@@ -141,7 +142,7 @@ export class Obfuscator {
      * @param node
      * @param parent
      */
-    private nodeControllerSecondPass (node, parent): void {
+    private nodeControllerSecondPass (node: ITreeNode, parent: ITreeNode): void {
         switch (node.type) {
             default:
                 this.initializeNodeObfuscators(node, parent);
@@ -152,7 +153,7 @@ export class Obfuscator {
      * @param node
      * @param parent
      */
-    private initializeNodeObfuscators (node: any, parent: any): void {
+    private initializeNodeObfuscators (node: ITreeNode, parent: ITreeNode): void {
         if (!this.nodeObfuscators.has(node.type)) {
             return;
         }

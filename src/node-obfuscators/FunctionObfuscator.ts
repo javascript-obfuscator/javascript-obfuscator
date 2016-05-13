@@ -1,6 +1,10 @@
 import * as estraverse from 'estraverse';
 
+import { IFunctionNode } from "../interfaces/nodes/IFunctionNode";
+import { ITreeNode } from "../interfaces/nodes/ITreeNode";
+
 import { NodeObfuscator } from './NodeObfuscator';
+import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
 
 /**
@@ -20,7 +24,7 @@ export class FunctionObfuscator extends NodeObfuscator {
     /**
      * @param functionNode
      */
-    public obfuscateNode (functionNode: any): void {
+    public obfuscateNode (functionNode: IFunctionNode): void {
         this.replaceFunctionParams(functionNode);
         this.replaceFunctionParamsInBody(functionNode);
     }
@@ -28,16 +32,18 @@ export class FunctionObfuscator extends NodeObfuscator {
     /**
      * @param functionNode
      */
-    private replaceFunctionParams (functionNode: any): void {
+    private replaceFunctionParams (functionNode: IFunctionNode): void {
         functionNode.params.forEach((paramsNode) => {
             estraverse.replace(paramsNode, {
-                leave: (node) => {
-                    if (node.type !== 'Identifier') {
-                        return estraverse.VisitorOption.Skip;
+                leave: (node: ITreeNode) => {
+                    if (NodeUtils.isIdentifierNode(node)) {
+                        this.functionParams.set(node.name, Utils.getRandomVariableName());
+                        node.name = this.functionParams.get(node.name);
+
+                        return;
                     }
 
-                    this.functionParams.set(node.name, Utils.getRandomVariableName());
-                    node.name = this.functionParams.get(node.name);
+                    return estraverse.VisitorOption.Skip;
                 }
             });
         });
@@ -46,9 +52,9 @@ export class FunctionObfuscator extends NodeObfuscator {
     /**
      * @param functionNode
      */
-    private replaceFunctionParamsInBody (functionNode: any): void {
+    private replaceFunctionParamsInBody (functionNode: IFunctionNode): void {
         estraverse.replace(functionNode.body, {
-            leave: (node, parentNode) => {
+            leave: (node: ITreeNode, parentNode: ITreeNode) => {
                 this.replaceNodeIdentifierByNewValue(node, parentNode, this.functionParams);
             }
         });

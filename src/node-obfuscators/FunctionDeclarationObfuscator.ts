@@ -1,5 +1,8 @@
 import * as estraverse from 'estraverse';
 
+import { IFunctionDeclarationNode } from "../interfaces/nodes/IFunctionDeclarationNode";
+import { ITreeNode } from "../interfaces/nodes/ITreeNode";
+
 import { NodeObfuscator } from './NodeObfuscator';
 import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
@@ -23,7 +26,7 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
      * @param functionDeclarationNode
      * @param parentNode
      */
-    public obfuscateNode (functionDeclarationNode: any, parentNode: any): void {
+    public obfuscateNode (functionDeclarationNode: IFunctionDeclarationNode, parentNode: ITreeNode): void {
         if (parentNode.type === 'Program') {
             return;
         }
@@ -35,15 +38,17 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
     /**
      * @param functionDeclarationNode
      */
-    private replaceFunctionName (functionDeclarationNode: any): void {
+    private replaceFunctionName (functionDeclarationNode: IFunctionDeclarationNode): void {
         estraverse.replace(functionDeclarationNode.id, {
-            leave: (node) => {
-                if (node.type !== 'Identifier') {
-                    return estraverse.VisitorOption.Skip;
+            leave: (node: ITreeNode) => {
+                if (NodeUtils.isIdentifierNode(node)) {
+                    this.functionName.set(node.name, Utils.getRandomVariableName());
+                    node.name = this.functionName.get(node.name);
+
+                    return;
                 }
 
-                this.functionName.set(node.name, Utils.getRandomVariableName());
-                node.name = this.functionName.get(node.name);
+                return estraverse.VisitorOption.Skip;
             }
         });
     }
@@ -51,13 +56,13 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
     /**
      * @param functionDeclarationNode
      */
-    private replaceFunctionCalls (functionDeclarationNode: any): void {
-        let scopeNode: any = NodeUtils.getNodeScope(
+    private replaceFunctionCalls (functionDeclarationNode: IFunctionDeclarationNode): void {
+        let scopeNode: ITreeNode = NodeUtils.getNodeScope(
             functionDeclarationNode
         );
 
         estraverse.replace(scopeNode, {
-            enter: (node, parentNode) => {
+            enter: (node: ITreeNode, parentNode: ITreeNode) => {
                 this.replaceNodeIdentifierByNewValue(node, parentNode, this.functionName);
             }
         });

@@ -1,6 +1,10 @@
 import * as estraverse from 'estraverse';
 
+import { ICatchClauseNode } from "../interfaces/nodes/ICatchClauseNode";
+import { ITreeNode } from '../interfaces/nodes/ITreeNode';
+
 import { NodeObfuscator } from './NodeObfuscator';
+import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
 
 /**
@@ -20,7 +24,7 @@ export class CatchClauseObfuscator extends NodeObfuscator {
     /**
      * @param catchClauseNode
      */
-    public obfuscateNode (catchClauseNode: any): void {
+    public obfuscateNode (catchClauseNode: ICatchClauseNode): void {
         this.replaceCatchClauseParam(catchClauseNode);
         this.replaceCatchClauseParamInBlock(catchClauseNode);
     }
@@ -28,15 +32,17 @@ export class CatchClauseObfuscator extends NodeObfuscator {
     /**
      * @param catchClauseNode
      */
-    private replaceCatchClauseParam (catchClauseNode: any): void {
+    private replaceCatchClauseParam (catchClauseNode: ICatchClauseNode): void {
         estraverse.replace(catchClauseNode.param, {
-            leave: (node, parentNode) => {
-                if (node.type !== 'Identifier') {
-                    return estraverse.VisitorOption.Skip;
+            leave: (node: ITreeNode, parentNode: ITreeNode) => {
+                if (NodeUtils.isIdentifierNode(node)) {
+                    this.catchClauseParam.set(node.name, Utils.getRandomVariableName());
+                    node.name = this.catchClauseParam.get(node.name);
+
+                    return;
                 }
 
-                this.catchClauseParam.set(node.name, Utils.getRandomVariableName());
-                node.name = this.catchClauseParam.get(node.name);
+                return estraverse.VisitorOption.Skip;
             }
         });
     }
@@ -44,9 +50,9 @@ export class CatchClauseObfuscator extends NodeObfuscator {
     /**
      * @param catchClauseNode
      */
-    private replaceCatchClauseParamInBlock (catchClauseNode: any): void {
+    private replaceCatchClauseParamInBlock (catchClauseNode: ICatchClauseNode): void {
         estraverse.replace(catchClauseNode.body, {
-            leave: (node, parentNode) => {
+            leave: (node: ITreeNode, parentNode: ITreeNode) => {
                 this.replaceNodeIdentifierByNewValue(node, parentNode, this.catchClauseParam);
             }
         });

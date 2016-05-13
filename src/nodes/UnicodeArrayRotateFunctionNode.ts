@@ -1,13 +1,16 @@
 import * as estraverse from 'estraverse';
 
+import { IProgramNode } from '../interfaces/nodes/IProgramNode';
+import { ITreeNode } from '../interfaces/nodes/ITreeNode';
+
 import { Node } from './Node';
 import { Utils } from '../Utils';
 
 export class UnicodeArrayRotateFunctionNode extends Node {
     /**
-     * @type any
+     * @type {ITreeNode}
      */
-    private astTree: any;
+    private astTree: ITreeNode;
     /**
      * @type {string}
      */
@@ -19,9 +22,9 @@ export class UnicodeArrayRotateFunctionNode extends Node {
     private unicodeArrayRotateFunctionName: string;
 
     /**
-     * @type any
+     * @type {ITreeNode}
      */
-    protected node: any;
+    protected node: ITreeNode;
 
     /**
      * @param astTree
@@ -29,7 +32,7 @@ export class UnicodeArrayRotateFunctionNode extends Node {
      * @param unicodeArrayName
      */
     constructor (
-        astTree: any,
+        astTree: ITreeNode,
         unicodeArrayRotateFunctionName: string,
         unicodeArrayName: string
     ) {
@@ -43,10 +46,10 @@ export class UnicodeArrayRotateFunctionNode extends Node {
 
     public appendNode (): void {
         estraverse.replace(this.astTree, {
-            leave: (node, parent) => {
+            leave: (node: ITreeNode, parent: ITreeNode) => {
                 switch (node.type) {
                     case 'Program':
-                        node.body.push(this.getNode());
+                        (<IProgramNode>node).body.push(this.getNode());
 
                         break;
                 }

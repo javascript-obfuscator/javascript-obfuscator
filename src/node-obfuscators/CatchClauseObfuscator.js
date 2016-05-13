@@ -1,6 +1,7 @@
 "use strict";
 const estraverse = require('estraverse');
 const NodeObfuscator_1 = require('./NodeObfuscator');
+const NodeUtils_1 = require("../NodeUtils");
 const Utils_1 = require('../Utils');
 class CatchClauseObfuscator extends NodeObfuscator_1.NodeObfuscator {
     constructor(...args) {
@@ -14,11 +15,12 @@ class CatchClauseObfuscator extends NodeObfuscator_1.NodeObfuscator {
     replaceCatchClauseParam(catchClauseNode) {
         estraverse.replace(catchClauseNode.param, {
             leave: (node, parentNode) => {
-                if (node.type !== 'Identifier') {
-                    return estraverse.VisitorOption.Skip;
+                if (NodeUtils_1.NodeUtils.isIdentifierNode(node)) {
+                    this.catchClauseParam.set(node.name, Utils_1.Utils.getRandomVariableName());
+                    node.name = this.catchClauseParam.get(node.name);
+                    return;
                 }
-                this.catchClauseParam.set(node.name, Utils_1.Utils.getRandomVariableName());
-                node.name = this.catchClauseParam.get(node.name);
+                return estraverse.VisitorOption.Skip;
             }
         });
     }

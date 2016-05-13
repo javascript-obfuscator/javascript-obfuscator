@@ -1,6 +1,9 @@
 import * as escodegen from 'escodegen';
 import * as estraverse from 'estraverse';
 
+import { IProgramNode } from '../interfaces/nodes/IProgramNode';
+import { ITreeNode } from '../interfaces/nodes/ITreeNode';
+
 import { Node } from './Node';
 import { Utils } from '../Utils';
 
@@ -18,9 +21,9 @@ export class UnicodeArrayNode extends Node {
     protected appendState: AppendState = AppendState.AfterObfuscation;
 
     /**
-     * @type any
+     * @type {ITreeNode}
      */
-    private astTree: any;
+    private astTree: ITreeNode;
 
     /**
      * @type {string[]}
@@ -38,16 +41,16 @@ export class UnicodeArrayNode extends Node {
     private unicodeArrayRotateValue: number;
 
     /**
-     * @type any
+     * @type {ITreeNode}
      */
-    protected node: any;
+    protected node: ITreeNode;
 
     /**
      * @param astTree
      * @param unicodeArrayName
      * @param unicodeArrayRotateValue
      */
-    constructor (astTree: any, unicodeArrayName: string, unicodeArrayRotateValue: number = 0) {
+    constructor (astTree: ITreeNode, unicodeArrayName: string, unicodeArrayRotateValue: number = 0) {
         super();
 
         this.astTree = astTree;
@@ -58,10 +61,10 @@ export class UnicodeArrayNode extends Node {
 
     public appendNode (): void {
         estraverse.replace(this.astTree, {
-            leave: (node, parent) => {
+            leave: (node: ITreeNode, parent: ITreeNode) => {
                 switch (node.type) {
                     case 'Program':
-                        node.body.unshift(this.getNode());
+                        (<IProgramNode>node).body.unshift(this.getNode());
 
                         break;
                 }
@@ -84,9 +87,9 @@ export class UnicodeArrayNode extends Node {
     }
 
     /**
-     * @returns any
+     * @returns {ITreeNode}
      */
-    public getNode (): any {
+    public getNode (): ITreeNode {
         Utils.arrayRotate(this.unicodeArray, this.unicodeArrayRotateValue);
 
         this.updateNode();

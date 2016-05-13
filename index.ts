@@ -3,6 +3,8 @@
 import * as esprima from 'esprima';
 import * as escodegen from 'escodegen';
 
+import { IProgramNode } from './src/interfaces/nodes/IProgramNode';
+
 import { Obfuscator } from './src/Obfuscator';
 
 export class JavaScriptObfuscator {
@@ -21,7 +23,7 @@ export class JavaScriptObfuscator {
      * @param options
      */
     public static obfuscate (sourceCode: string, options: any = {}): string {
-        let astTree: any = esprima.parse(sourceCode),
+        let astTree: IProgramNode = esprima.parse(sourceCode),
             obfuscator: Obfuscator = new Obfuscator(options);
 
         obfuscator.obfuscateNode(astTree);
@@ -33,7 +35,7 @@ export class JavaScriptObfuscator {
      * @param astTree
      * @param options
      */
-    private static generateCode (astTree: any, options: any = {}): string {
+    private static generateCode (astTree: IProgramNode, options: any = {}): string {
         let escodegenParams: any = Object.assign({}, JavaScriptObfuscator.escodegenParams);
 
         if (options.hasOwnProperty('compact')) {

@@ -1,3 +1,5 @@
+import { ITreeNode } from '../interfaces/nodes/ITreeNode';
+
 import { INode } from '../interfaces/INode';
 
 import { NodesGroup } from './NodesGroup';
@@ -15,7 +17,7 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
     /**
      * @param astTree
      */
-    constructor (astTree: any) {
+    constructor (astTree: ITreeNode) {
         super();
 
         let unicodeArrayName: string = Utils.getRandomVariableName(UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH),

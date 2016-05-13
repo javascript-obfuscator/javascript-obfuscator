@@ -1,9 +1,13 @@
+import { IIdentifierNode } from "./interfaces/nodes/IIdentifierNode";
+import { ITreeNode } from './interfaces/nodes/ITreeNode';
+
 export class NodeUtils {
     /**
      * @param node
      * @param deep
+     * @returns {ITreeNode}
      */
-    public static getNodeScope (node: any,  deep: number = 0): any {
+    public static getNodeScope (node: ITreeNode,  deep: number = 0): ITreeNode {
         let scopeNodes: string[] = [
             'FunctionDeclaration',
             'FunctionExpression',
@@ -35,8 +39,14 @@ export class NodeUtils {
      * @param types
      * @param limitNodeTypes
      * @param deep
+     * @returns {ITreeNode}
      */
-    public static getParentNodeWithType (node: any, types: string[], limitNodeTypes: string[] = [], deep: number = 0): any {
+    public static getParentNodeWithType (
+        node: ITreeNode,
+        types: string[],
+        limitNodeTypes: string[] = [],
+        deep: number = 0
+    ): ITreeNode {
         if (node.parentNode.type === 'Program' || limitNodeTypes.indexOf(node.parentNode.type) >= 0) {
             return node.parentNode;
         }
@@ -50,5 +60,13 @@ export class NodeUtils {
         }
 
         return node.parentNode;
+    }
+
+    /**
+     * @param node
+     * @returns {boolean}
+     */
+    public static isIdentifierNode (node: ITreeNode): node is IIdentifierNode {
+        return node.type === 'Identifier';
     }
 }

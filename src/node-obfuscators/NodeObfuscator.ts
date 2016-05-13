@@ -1,6 +1,8 @@
 import { INode } from '../interfaces/INode';
 import { INodeObfuscator } from '../interfaces/INodeObfuscator';
+import { ITreeNode } from "../interfaces/nodes/ITreeNode";
 
+import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
 
 export abstract class NodeObfuscator implements INodeObfuscator {
@@ -20,18 +22,18 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @param node
      * @param parentNode
      */
-    public abstract obfuscateNode (node: any, parentNode?: any): void;
+    public abstract obfuscateNode (node: ITreeNode, parentNode?: ITreeNode): void;
 
     /**
      * @param node
      * @param parentNode
      * @param namesMap
      */
-    protected replaceNodeIdentifierByNewValue (node: any, parentNode: any, namesMap: Map <string, string>) {
-        if (node.type === 'Identifier' && namesMap.has(node.name)) {
+    protected replaceNodeIdentifierByNewValue (node: ITreeNode, parentNode: ITreeNode, namesMap: Map <string, string>) {
+        if (NodeUtils.isIdentifierNode(node) && namesMap.has(node.name)) {
             if (
-                (parentNode.type === 'Property' && parentNode.key === node) ||
-                (parentNode.type === 'MemberExpression' && parentNode.computed === false && parentNode.property === node)
+                (NodeUtils.isPropertyNode(parentNode) && parentNode.key === node) ||
+                (NodeUtils.isMemberExpressionNode(parentNode) && parentNode.computed === false && parentNode.property === node )
             ) {
                 return;
             }

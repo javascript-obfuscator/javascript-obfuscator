@@ -19,15 +19,16 @@ class VariableDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
         variableDeclarationNode.declarations.forEach((declarationNode) => {
             estraverse.replace(declarationNode, {
                 enter: (node) => {
-                    if (node.type !== 'VariableDeclarator') {
-                        return estraverse.VisitorOption.Skip;
+                    if (NodeUtils_1.NodeUtils.isVariableDeclaratorNode(node)) {
+                        estraverse.replace(node.id, {
+                            enter: (node) => {
+                                this.variableNames.set(node.name, Utils_1.Utils.getRandomVariableName());
+                                node.name = this.variableNames.get(node.name);
+                            }
+                        });
+                        return;
                     }
-                    estraverse.replace(node.id, {
-                        enter: (node) => {
-                            this.variableNames.set(node.name, Utils_1.Utils.getRandomVariableName());
-                            node.name = this.variableNames.get(node.name);
-                        }
-                    });
+                    return estraverse.VisitorOption.Skip;
                 }
             });
         });
@@ -47,9 +48,11 @@ class VariableDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
                     node.type === 'FunctionExpression' ||
                     node.type === 'ArrowFunctionExpression') {
                     functionParentScope = NodeUtils_1.NodeUtils.getNodeScope(node);
-                    functionIndex = functionParentScope.body.indexOf(node);
-                    if (functionIndex >= 0) {
-                        functionNextNode = functionParentScope.body[functionIndex + 1];
+                    if (NodeUtils_1.NodeUtils.isBlockStatementNode(functionParentScope)) {
+                        functionIndex = functionParentScope.body.indexOf(node);
+                        if (functionIndex >= 0) {
+                            functionNextNode = functionParentScope.body[functionIndex + 1];
+                        }
                     }
                     isNodeAfterVariableDeclaratorFlag = true;
                 }

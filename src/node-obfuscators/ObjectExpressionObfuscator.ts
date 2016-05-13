@@ -1,7 +1,13 @@
 import * as escodegen from 'escodegen';
 import * as estraverse from 'estraverse';
 
+import { IIdentifierNode } from "../interfaces/nodes/IIdentifierNode";
+import { ILiteralNode } from "../interfaces/nodes/ILiteralNode";
+import { IObjectExpressionNode } from "../interfaces/nodes/IObjectExpressionNode";
+import { ITreeNode } from "../interfaces/nodes/ITreeNode";
+
 import { NodeObfuscator } from './NodeObfuscator'
+import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
 
 /**
@@ -18,20 +24,18 @@ export class ObjectExpressionObfuscator extends NodeObfuscator {
     /**
      * @param objectExpressionNode
      */
-    public obfuscateNode (objectExpressionNode: any): void {
+    public obfuscateNode (objectExpressionNode: IObjectExpressionNode): void {
         objectExpressionNode.properties.forEach((property) => {
             estraverse.replace(property.key, {
-                leave: (node, parentNode) => {
-                    switch (node.type) {
-                        case 'Literal':
-                            this.literalNodeController(node);
+                leave: (node: ITreeNode, parentNode: ITreeNode) => {
+                    if (NodeUtils.isLiteralNode(node)) {
+                        this.literalNodeController(node);
 
-                            break;
+                        return;
+                    }
 
-                        case 'Identifier':
-                            this.identifierNodeController(node);
-
-                            break;
+                    if (NodeUtils.isIdentifierNode(node)) {
+                        this.identifierNodeController(node);
                     }
                 }
             });
@@ -41,7 +45,7 @@ export class ObjectExpressionObfuscator extends NodeObfuscator {
     /**
      * @param node
      */
-    private literalNodeController (node: any): void {
+    private literalNodeController (node: ILiteralNode): void {
         switch (typeof node.value) {
             case 'string':
                 if (node['x-verbatim-property']) {
@@ -49,7 +53,7 @@ export class ObjectExpressionObfuscator extends NodeObfuscator {
                 }
 
                 node['x-verbatim-property'] = {
-                    content : Utils.stringToUnicode(node.value),
+                    content : Utils.stringToUnicode(<string>node.value),
                     precedence: escodegen.Precedence.Primary
                 };
 
@@ -60,17 +64,20 @@ export class ObjectExpressionObfuscator extends NodeObfuscator {
     /**
      * @param node
      */
-    private identifierNodeController (node: any): void {
-        let nodeValue: string = node['name'];
+    private identifierNodeController (node: IIdentifierNode): void {
+        let nodeValue: string = node.name,
+            literalNode: ILiteralNode = {
+                type: 'Literal',
+                value: nodeValue,
+                raw: `'${nodeValue}'`,
+                'x-verbatim-property': {
+                    content : Utils.stringToUnicode(nodeValue),
+                    precedence: escodegen.Precedence.Primary
+                }
+            };
 
-        node['type'] = 'Literal';
-        node['value'] = nodeValue;
-        node['raw'] = `'${nodeValue}'`;
-        node['x-verbatim-property'] = {
-            content : Utils.stringToUnicode(nodeValue),
-            precedence: escodegen['Precedence']['Primary']
-        };
+        delete node.name;
 
-        delete node['name'];
+        Object.assign(node, literalNode);
     }
 }

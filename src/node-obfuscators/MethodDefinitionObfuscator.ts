@@ -1,6 +1,10 @@
 import * as estraverse from 'estraverse';
 
+import { IMethodDefinitionNode } from "../interfaces/nodes/IMethodDefinitionNode";
+import { ITreeNode } from "../interfaces/nodes/ITreeNode";
+
 import { NodeObfuscator } from './NodeObfuscator';
+import { NodeUtils } from "../NodeUtils";
 
 /**
  * replaces:
@@ -13,11 +17,6 @@ import { NodeObfuscator } from './NodeObfuscator';
  */
 export class MethodDefinitionObfuscator extends NodeObfuscator {
     /**
-     * @type {Map<string, string>}
-     */
-    private methodName: Map <string, string> = new Map <string, string> ();
-
-    /**
      * @type {string[]}
      */
     private ignoredNames: string[] = ['constructor'];
@@ -26,26 +25,26 @@ export class MethodDefinitionObfuscator extends NodeObfuscator {
      * @param methodDefinitionNode
      * @param parentNode
      */
-    public obfuscateNode (methodDefinitionNode: any, parentNode: any): void {
+    public obfuscateNode (methodDefinitionNode: IMethodDefinitionNode, parentNode: ITreeNode): void {
         this.replaceMethodName(methodDefinitionNode);
     }
 
     /**
      * @param methodDefinitionNode
      */
-    private replaceMethodName (methodDefinitionNode: any): void {
+    private replaceMethodName (methodDefinitionNode: IMethodDefinitionNode): void {
         estraverse.replace(methodDefinitionNode.key, {
-            leave: (node) => {
+            leave: (node: ITreeNode) => {
                 if (
-                    node.type !== 'Identifier' ||
-                    this.ignoredNames.indexOf(node.name) >= 0 ||
-                    methodDefinitionNode.computed === true
+                    NodeUtils.isIdentifierNode(node) &&
+                    this.ignoredNames.indexOf(node.name) < 0 &&
+                    methodDefinitionNode.computed === false
                 ) {
-                    return estraverse.VisitorOption.Skip;
+                    methodDefinitionNode.computed = true;
+                    node.name = this.replaceLiteralStringByArrayElement(node.name);
                 }
 
-                methodDefinitionNode.computed = true;
-                node.name = this.replaceLiteralStringByArrayElement(node.name);
+                return estraverse.VisitorOption.Skip;
             }
         });
     }

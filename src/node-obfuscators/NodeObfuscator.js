@@ -1,13 +1,14 @@
 "use strict";
+const NodeUtils_1 = require("../NodeUtils");
 const Utils_1 = require('../Utils');
 class NodeObfuscator {
     constructor(nodes) {
         this.nodes = nodes;
     }
     replaceNodeIdentifierByNewValue(node, parentNode, namesMap) {
-        if (node.type === 'Identifier' && namesMap.has(node.name)) {
-            if ((parentNode.type === 'Property' && parentNode.key === node) ||
-                (parentNode.type === 'MemberExpression' && parentNode.computed === false && parentNode.property === node)) {
+        if (NodeUtils_1.NodeUtils.isIdentifierNode(node) && namesMap.has(node.name)) {
+            if ((NodeUtils_1.NodeUtils.isPropertyNode(parentNode) && parentNode.key === node) ||
+                (NodeUtils_1.NodeUtils.isMemberExpressionNode(parentNode) && parentNode.computed === false && parentNode.property === node)) {
                 return;
             }
             node.name = namesMap.get(node.name);

@@ -1,5 +1,9 @@
 import * as estraverse from 'estraverse';
 
+import { IIdentifierNode } from "../interfaces/nodes/IIdentifierNode";
+import { ITreeNode } from "../interfaces/nodes/ITreeNode";
+import { IVariableDeclarationNode } from "../interfaces/nodes/IVariableDeclarationNode";
+
 import { NodeObfuscator } from './NodeObfuscator';
 import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
@@ -24,7 +28,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
      * @param variableDeclarationNode
      * @param parentNode
      */
-    public obfuscateNode (variableDeclarationNode: any, parentNode: any): void {
+    public obfuscateNode (variableDeclarationNode: IVariableDeclarationNode, parentNode: ITreeNode): void {
         if (parentNode.type === 'Program') {
             return;
         }
@@ -36,20 +40,22 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
     /**
      * @param variableDeclarationNode
      */
-    private replaceVariableName (variableDeclarationNode: any): void {
+    private replaceVariableName (variableDeclarationNode: IVariableDeclarationNode): void {
         variableDeclarationNode.declarations.forEach((declarationNode) => {
             estraverse.replace(declarationNode, {
-                enter: (node) => {
-                    if (node.type !== 'VariableDeclarator') {
-                        return estraverse.VisitorOption.Skip;
+                enter: (node: ITreeNode) => {
+                    if (NodeUtils.isVariableDeclaratorNode(node)) {
+                        estraverse.replace(node.id, {
+                            enter: (node: IIdentifierNode) => {
+                                this.variableNames.set(node.name, Utils.getRandomVariableName());
+                                node.name = this.variableNames.get(node.name);
+                            }
+                        });
+
+                        return;
                     }
 
-                    estraverse.replace(node.id, {
-                        enter: (node) => {
-                            this.variableNames.set(node.name, Utils.getRandomVariableName());
-                            node.name = this.variableNames.get(node.name);
-                        }
-                    });
+                    return estraverse.VisitorOption.Skip;
                 }
             });
         });
@@ -59,8 +65,8 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
      * @param variableDeclarationNode
      * @param variableParentNode
      */
-    private replaceVariableCalls (variableDeclarationNode: any, variableParentNode: any): void {
-        let scopeNode: any;
+    private replaceVariableCalls (variableDeclarationNode: IVariableDeclarationNode, variableParentNode: ITreeNode): void {
+        let scopeNode: ITreeNode;
 
         if (variableDeclarationNode.kind === 'var') {
             scopeNode = NodeUtils.getNodeScope(
@@ -72,12 +78,12 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
 
         let isNodeAfterVariableDeclaratorFlag: boolean = false,
             isNodeBeforeVariableDeclaratorFlag: boolean = true,
-            functionParentScope: any,
-            functionNextNode: any,
+            functionParentScope: ITreeNode,
+            functionNextNode: ITreeNode,
             functionIndex: number = -1;
 
         estraverse.replace(scopeNode, {
-            enter: (node, parentNode) => {
+            enter: (node: ITreeNode, parentNode: ITreeNode) => {
                 if (
                     node.type === 'FunctionDeclaration' ||
                     node.type === 'FunctionExpression' ||
@@ -87,10 +93,12 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
                         node
                     );
 
-                    functionIndex = functionParentScope.body.indexOf(node);
+                    if (NodeUtils.isBlockStatementNode(functionParentScope)) {
+                        functionIndex = functionParentScope.body.indexOf(node);
 
-                    if (functionIndex >= 0) {
-                        functionNextNode = functionParentScope.body[functionIndex + 1];
+                        if (functionIndex >= 0) {
+                            functionNextNode = functionParentScope.body[functionIndex + 1];
+                        }
                     }
 
                     isNodeAfterVariableDeclaratorFlag = true;

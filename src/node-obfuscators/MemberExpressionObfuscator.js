@@ -2,35 +2,37 @@
 const escodegen = require('escodegen');
 const estraverse = require('estraverse');
 const NodeObfuscator_1 = require('./NodeObfuscator');
+const NodeUtils_1 = require("../NodeUtils");
 class MemberExpressionObfuscator extends NodeObfuscator_1.NodeObfuscator {
     obfuscateNode(memberExpressionNode) {
         estraverse.replace(memberExpressionNode.property, {
             leave: (node, parentNode) => {
-                switch (node.type) {
-                    case 'Literal':
-                        this.literalNodeController(node);
-                        break;
-                    case 'Identifier':
-                        if (memberExpressionNode.computed) {
-                            break;
-                        }
-                        memberExpressionNode.computed = true;
-                        this.identifierNodeController(node);
-                        break;
+                if (NodeUtils_1.NodeUtils.isLiteralNode(node)) {
+                    this.literalNodeController(node);
+                    return;
+                }
+                if (NodeUtils_1.NodeUtils.isIdentifierNode(node)) {
+                    if (memberExpressionNode.computed) {
+                        return;
+                    }
+                    memberExpressionNode.computed = true;
+                    this.identifierNodeController(node);
                 }
             }
         });
     }
     identifierNodeController(node) {
-        let nodeValue = node['name'];
-        node['type'] = 'Literal';
-        node['value'] = nodeValue;
-        node['raw'] = `'${nodeValue}'`;
-        node['x-verbatim-property'] = {
-            content: this.replaceLiteralStringByArrayElement(nodeValue),
-            precedence: escodegen.Precedence.Primary
+        let nodeValue = node.name, literalNode = {
+            type: 'Literal',
+            value: nodeValue,
+            raw: `'${nodeValue}'`,
+            'x-verbatim-property': {
+                content: this.replaceLiteralStringByArrayElement(nodeValue),
+                precedence: escodegen.Precedence.Primary
+            }
         };
-        delete node['name'];
+        delete node.name;
+        Object.assign(node, literalNode);
     }
     literalNodeController(node) {
         switch (typeof node.value) {

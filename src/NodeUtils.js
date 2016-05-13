@@ -33,8 +33,23 @@ class NodeUtils {
         }
         return node.parentNode;
     }
+    static isBlockStatementNode(node) {
+        return node.type === 'BlockStatement';
+    }
     static isIdentifierNode(node) {
         return node.type === 'Identifier';
+    }
+    static isLiteralNode(node) {
+        return node.type === 'Literal';
+    }
+    static isMemberExpressionNode(node) {
+        return node.type === 'MemberExpression';
+    }
+    static isPropertyNode(node) {
+        return node.type === 'Property';
+    }
+    static isVariableDeclaratorNode(node) {
+        return node.type === 'VariableDeclarator';
     }
 }
 exports.NodeUtils = NodeUtils;

@@ -1,10 +1,10 @@
 "use strict";
 const estraverse = require('estraverse');
 const NodeObfuscator_1 = require('./NodeObfuscator');
+const NodeUtils_1 = require("../NodeUtils");
 class MethodDefinitionObfuscator extends NodeObfuscator_1.NodeObfuscator {
     constructor(...args) {
         super(...args);
-        this.methodName = new Map();
         this.ignoredNames = ['constructor'];
     }
     obfuscateNode(methodDefinitionNode, parentNode) {
@@ -13,13 +13,13 @@ class MethodDefinitionObfuscator extends NodeObfuscator_1.NodeObfuscator {
     replaceMethodName(methodDefinitionNode) {
         estraverse.replace(methodDefinitionNode.key, {
             leave: (node) => {
-                if (node.type !== 'Identifier' ||
-                    this.ignoredNames.indexOf(node.name) >= 0 ||
-                    methodDefinitionNode.computed === true) {
-                    return estraverse.VisitorOption.Skip;
+                if (NodeUtils_1.NodeUtils.isIdentifierNode(node) &&
+                    this.ignoredNames.indexOf(node.name) < 0 &&
+                    methodDefinitionNode.computed === false) {
+                    methodDefinitionNode.computed = true;
+                    node.name = this.replaceLiteralStringByArrayElement(node.name);
                 }
-                methodDefinitionNode.computed = true;
-                node.name = this.replaceLiteralStringByArrayElement(node.name);
+                return estraverse.VisitorOption.Skip;
             }
         });
     }

@@ -4,7 +4,7 @@ const NodeObfuscator_1 = require('./NodeObfuscator');
 const NodeUtils_1 = require("../NodeUtils");
 class LiteralObfuscator extends NodeObfuscator_1.NodeObfuscator {
     obfuscateNode(literalNode, parentNode) {
-        if (NodeUtils_1.NodeUtils.isPropertyNode(parentNode) && parentNode.key) {
+        if (NodeUtils_1.NodeUtils.isPropertyNode(parentNode) && parentNode.key === literalNode) {
             return;
         }
         switch (typeof literalNode.value) {

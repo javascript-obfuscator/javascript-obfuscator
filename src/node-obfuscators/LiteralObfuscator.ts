@@ -12,7 +12,7 @@ export class LiteralObfuscator extends NodeObfuscator {
      * @param parentNode
      */
     public obfuscateNode (literalNode: ILiteralNode, parentNode: ITreeNode): void {
-        if (NodeUtils.isPropertyNode(parentNode) && parentNode.key) {
+        if (NodeUtils.isPropertyNode(parentNode) && parentNode.key === literalNode) {
             return;
         }
 

@@ -5,6 +5,8 @@ Compatible with ES6.
 Tested on Angular2 bundle.
 https://gist.github.com/sanex3339/ffc2876123b52e6d11ce45369fd53acf
 
+##Important: right now obfuscated code may not work after minification with UglifyJS (tested on Angular 2 bundle). I will try to fix that soon or later.
+
 ###Installation
 
 Install the package with NPM and add it to your devDependencies:

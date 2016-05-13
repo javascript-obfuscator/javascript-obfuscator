@@ -1,6 +1,6 @@
 "use strict";
+const estraverse = require('estraverse');
 const Node_1 = require('./Node');
-let estraverse = require('estraverse');
 class UnicodeArrayRotateFunctionCallNode extends Node_1.Node {
     constructor(astTree, unicodeArrayRotateFunctionName, unicodeArrayName, unicodeArrayRotateValue) {
         super();

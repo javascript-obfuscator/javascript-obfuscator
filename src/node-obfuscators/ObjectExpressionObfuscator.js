@@ -1,7 +1,8 @@
 "use strict";
+const escodegen = require('escodegen');
+const estraverse = require('estraverse');
 const NodeObfuscator_1 = require('./NodeObfuscator');
 const Utils_1 = require('../Utils');
-let escodegen = require('escodegen'), estraverse = require('estraverse');
 class ObjectExpressionObfuscator extends NodeObfuscator_1.NodeObfuscator {
     obfuscateNode(objectExpressionNode) {
         objectExpressionNode.properties.forEach((property) => {
@@ -27,7 +28,7 @@ class ObjectExpressionObfuscator extends NodeObfuscator_1.NodeObfuscator {
                 }
                 node['x-verbatim-property'] = {
                     content: Utils_1.Utils.stringToUnicode(node.value),
-                    precedence: escodegen['Precedence']['Primary']
+                    precedence: escodegen.Precedence.Primary
                 };
                 break;
         }

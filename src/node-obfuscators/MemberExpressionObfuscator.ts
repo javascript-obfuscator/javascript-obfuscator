@@ -1,7 +1,7 @@
-import { NodeObfuscator } from './NodeObfuscator'
+import * as escodegen from 'escodegen';
+import * as estraverse from 'estraverse';
 
-let escodegen = require('escodegen'),
-    estraverse = require('estraverse');
+import { NodeObfuscator } from './NodeObfuscator'
 
 export class MemberExpressionObfuscator extends NodeObfuscator {
     /**
@@ -50,7 +50,7 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
         node['raw'] = `'${nodeValue}'`;
         node['x-verbatim-property'] = {
             content : this.replaceLiteralStringByArrayElement(nodeValue),
-            precedence: escodegen['Precedence']['Primary']
+            precedence: escodegen.Precedence.Primary
         };
 
         delete node['name'];
@@ -74,7 +74,7 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
 
                 node['x-verbatim-property'] = {
                     content : this.replaceLiteralStringByArrayElement(node.value),
-                    precedence: escodegen['Precedence']['Primary']
+                    precedence: escodegen.Precedence.Primary
                 };
 
                 break;

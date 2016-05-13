@@ -10,6 +10,10 @@ declare namespace escodegen {
         }
     }
 
+    enum Precedence {
+        Primary
+    }
+
     function generate(ast: any, opts?: GenerateOpts): string;
 }
 

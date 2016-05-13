@@ -1,7 +1,6 @@
 import { INode } from '../interfaces/INode';
 import { INodeObfuscator } from '../interfaces/INodeObfuscator';
 
-import { UnicodeArrayNode } from '../nodes/UnicodeArrayNode';
 import { Utils } from '../Utils';
 
 export abstract class NodeObfuscator implements INodeObfuscator {

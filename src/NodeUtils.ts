@@ -1,5 +1,3 @@
-let estraverse = require('estraverse');
-
 export class NodeUtils {
     /**
      * @param node

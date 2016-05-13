@@ -1,6 +1,6 @@
 "use strict";
+const escodegen = require('escodegen');
 const NodeObfuscator_1 = require('./NodeObfuscator');
-let escodegen = require('escodegen'), estraverse = require('estraverse');
 class LiteralObfuscator extends NodeObfuscator_1.NodeObfuscator {
     obfuscateNode(literalNode, parentNode) {
         if (parentNode.type === 'Property' && parentNode.key === literalNode) {

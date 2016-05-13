@@ -1,8 +1,8 @@
+import * as estraverse from 'estraverse';
+
 import { NodeObfuscator } from './NodeObfuscator';
 import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
-
-let estraverse = require('estraverse');
 
 /**
  * replaces:

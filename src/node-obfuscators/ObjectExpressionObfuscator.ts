@@ -1,8 +1,8 @@
+import * as escodegen from 'escodegen';
+import * as estraverse from 'estraverse';
+
 import { NodeObfuscator } from './NodeObfuscator'
 import { Utils } from '../Utils';
-
-let escodegen = require('escodegen'),
-    estraverse = require('estraverse');
 
 /**
  * replaces:
@@ -50,7 +50,7 @@ export class ObjectExpressionObfuscator extends NodeObfuscator {
 
                 node['x-verbatim-property'] = {
                     content : Utils.stringToUnicode(node.value),
-                    precedence: escodegen['Precedence']['Primary']
+                    precedence: escodegen.Precedence.Primary
                 };
 
                 break;

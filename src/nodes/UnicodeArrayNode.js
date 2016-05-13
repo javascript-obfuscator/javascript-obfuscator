@@ -1,8 +1,9 @@
 "use strict";
+const escodegen = require('escodegen');
+const estraverse = require('estraverse');
 const Node_1 = require('./Node');
 const Utils_1 = require('../Utils');
 const AppendState_1 = require('../enums/AppendState');
-let escodegen = require('escodegen'), estraverse = require('estraverse');
 class UnicodeArrayNode extends Node_1.Node {
     constructor(astTree, unicodeArrayName, unicodeArrayRotateValue = 0) {
         super();

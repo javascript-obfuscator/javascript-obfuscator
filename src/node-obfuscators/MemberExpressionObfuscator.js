@@ -1,6 +1,7 @@
 "use strict";
+const escodegen = require('escodegen');
+const estraverse = require('estraverse');
 const NodeObfuscator_1 = require('./NodeObfuscator');
-let escodegen = require('escodegen'), estraverse = require('estraverse');
 class MemberExpressionObfuscator extends NodeObfuscator_1.NodeObfuscator {
     obfuscateNode(memberExpressionNode) {
         estraverse.replace(memberExpressionNode.property, {
@@ -27,7 +28,7 @@ class MemberExpressionObfuscator extends NodeObfuscator_1.NodeObfuscator {
         node['raw'] = `'${nodeValue}'`;
         node['x-verbatim-property'] = {
             content: this.replaceLiteralStringByArrayElement(nodeValue),
-            precedence: escodegen['Precedence']['Primary']
+            precedence: escodegen.Precedence.Primary
         };
         delete node['name'];
     }
@@ -39,7 +40,7 @@ class MemberExpressionObfuscator extends NodeObfuscator_1.NodeObfuscator {
                 }
                 node['x-verbatim-property'] = {
                     content: this.replaceLiteralStringByArrayElement(node.value),
-                    precedence: escodegen['Precedence']['Primary']
+                    precedence: escodegen.Precedence.Primary
                 };
                 break;
         }

@@ -1,7 +1,7 @@
 "use strict";
+const estraverse = require('estraverse');
 const NodeObfuscator_1 = require('./NodeObfuscator');
 const Utils_1 = require('../Utils');
-let estraverse = require('estraverse');
 class FunctionObfuscator extends NodeObfuscator_1.NodeObfuscator {
     constructor(...args) {
         super(...args);

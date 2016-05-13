@@ -1,7 +1,7 @@
+import * as estraverse from 'estraverse';
+
 import { Node } from './Node';
 import { Utils } from '../Utils';
-
-let estraverse = require('estraverse');
 
 export class UnicodeArrayRotateFunctionNode extends Node {
     /**

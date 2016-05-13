@@ -1,7 +1,6 @@
-import { NodeObfuscator } from './NodeObfuscator'
+import * as escodegen from 'escodegen';
 
-let escodegen = require('escodegen'),
-    estraverse = require('estraverse');
+import { NodeObfuscator } from './NodeObfuscator';
 
 export class LiteralObfuscator extends NodeObfuscator {
     /**

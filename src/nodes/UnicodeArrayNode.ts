@@ -1,10 +1,10 @@
+import * as escodegen from 'escodegen';
+import * as estraverse from 'estraverse';
+
 import { Node } from './Node';
 import { Utils } from '../Utils';
 
 import { AppendState } from '../enums/AppendState';
-
-let escodegen = require('escodegen'),
-    estraverse = require('estraverse');
 
 export class UnicodeArrayNode extends Node {
     /**

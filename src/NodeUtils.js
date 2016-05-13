@@ -1,5 +1,4 @@
 "use strict";
-let estraverse = require('estraverse');
 class NodeUtils {
     static getNodeScope(node, deep = 0) {
         let scopeNodes = [

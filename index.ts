@@ -1,10 +1,9 @@
 "use strict";
 
 import * as esprima from 'esprima';
+import * as escodegen from 'escodegen';
 
 import { Obfuscator } from './src/Obfuscator';
-
-let escodegen = require('escodegen');
 
 export class JavaScriptObfuscator {
     /**

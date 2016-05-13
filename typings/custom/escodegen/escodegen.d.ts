@@ -1,4 +1,4 @@
-declare module 'escodegen' {
+declare namespace escodegen {
     interface GenerateOpts {
         comment?: boolean;
         format?: {
@@ -10,5 +10,9 @@ declare module 'escodegen' {
         }
     }
 
-    export function generate(ast: any, opts?: GenerateOpts): string;
+    function generate(ast: any, opts?: GenerateOpts): string;
+}
+
+declare module "escodegen" {
+    export = escodegen
 }

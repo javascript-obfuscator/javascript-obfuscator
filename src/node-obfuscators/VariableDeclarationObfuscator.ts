@@ -90,9 +90,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
                     node.type === 'FunctionExpression' ||
                     node.type === 'ArrowFunctionExpression'
                 ) {
-                    functionParentScope = NodeUtils.getNodeScope(
-                        node
-                    );
+                    functionParentScope = NodeUtils.getNodeScope(node);
 
                     if (NodeUtils.isBlockStatementNode(functionParentScope)) {
                         functionIndex = functionParentScope.body.indexOf(node);

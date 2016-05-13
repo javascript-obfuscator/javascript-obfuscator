@@ -1,3 +1,5 @@
+import * as estraverse from 'estraverse';
+
 import { INode } from './interfaces/INode';
 import { INodeObfuscator } from './interfaces/INodeObfuscator';
 import { INodesGroup } from './interfaces/INodesGroup';
@@ -15,8 +17,6 @@ import { UnicodeArrayNode } from './nodes/UnicodeArrayNode';
 import { UnicodeArrayNodesGroup } from './node-groups/UnicodeArrayNodesGroup';
 import { Utils } from './Utils';
 import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclarationObfuscator';
-
-let estraverse = require('estraverse');
 
 export class Obfuscator {
     /**

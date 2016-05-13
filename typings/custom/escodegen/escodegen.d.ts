@@ -14,5 +14,5 @@ declare namespace escodegen {
 }
 
 declare module "escodegen" {
-    export = escodegen
+    export = escodegen;
 }

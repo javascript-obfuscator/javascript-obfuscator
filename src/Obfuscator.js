@@ -1,4 +1,5 @@
 "use strict";
+const estraverse = require('estraverse');
 const AppendState_1 = require('./enums/AppendState');
 const CatchClauseObfuscator_1 = require("./node-obfuscators/CatchClauseObfuscator");
 const FunctionDeclarationObfuscator_1 = require('./node-obfuscators/FunctionDeclarationObfuscator');
@@ -11,7 +12,6 @@ const UnicodeArrayNode_1 = require('./nodes/UnicodeArrayNode');
 const UnicodeArrayNodesGroup_1 = require('./node-groups/UnicodeArrayNodesGroup');
 const Utils_1 = require('./Utils');
 const VariableDeclarationObfuscator_1 = require('./node-obfuscators/VariableDeclarationObfuscator');
-let estraverse = require('estraverse');
 class Obfuscator {
     constructor(options) {
         this.nodes = new Map();

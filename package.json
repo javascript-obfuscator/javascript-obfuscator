@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "lite-server": "^1.3.1",
-    "tsd": "^0.6.5"
+    "typings": "^0.8.1"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
     "tsc:w": "tsc -w",
     "lite": "lite-server",
     "start": "concurrent \"npm run tsc:w\" \"npm run lite\" ",
-    "postinstall": "tsc",
+    "postinstall": "typings install",
     "test": "node tests/dev-test.js"
   },
   "author": {

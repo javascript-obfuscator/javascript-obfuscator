@@ -1,11 +1,10 @@
 "use strict";
 
-declare let module: any;
+import * as esprima from 'esprima';
 
 import { Obfuscator } from './src/Obfuscator';
 
-let escodegen = require('escodegen'),
-    esprima = require('esprima');
+let escodegen = require('escodegen');
 
 export class JavaScriptObfuscator {
     /**

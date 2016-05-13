@@ -1,0 +1,9 @@
+{
+  "name": "javascript-obfuscator",
+  "version": false,
+  "ambientDependencies": {
+    "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#6834f97fb33561a3ad40695084da2b660efaee29",
+    "estree": "github:DefinitelyTyped/DefinitelyTyped/estree/estree.d.ts#7de6c3dd94feaeb21f20054b9f30d5dabc5efabd",
+    "esprima": "github:DefinitelyTyped/DefinitelyTyped/esprima/esprima.d.ts#7de6c3dd94feaeb21f20054b9f30d5dabc5efabd"
+  }
+}

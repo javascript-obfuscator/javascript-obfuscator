@@ -1,6 +1,6 @@
 var JavaScriptObfuscator = require('../index.js');
 var obfuscatedCode = JavaScriptObfuscator.obfuscate(`
-   (function(){
+    (function(){
         var result = 1,
             term1 = 0,
             term2 = 1,

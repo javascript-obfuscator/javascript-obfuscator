@@ -8,22 +8,25 @@ import { IProgramNode } from './src/interfaces/nodes/IProgramNode';
 import { Obfuscator } from './src/Obfuscator';
 
 export class JavaScriptObfuscator {
+    private static defaultOptions: any = {
+        compact: true,
+        rotateUnicodeArray: true
+    };
+
     /**
      * @type any
      */
     private static escodegenParams: any = {
-        format: {
-            compact: true
-        },
         verbatim: 'x-verbatim-property'
     };
 
     /**
      * @param sourceCode
-     * @param options
+     * @param customOptions
      */
-    public static obfuscate (sourceCode: string, options: any = {}): string {
+    public static obfuscate (sourceCode: string, customOptions: any): string {
         let astTree: IProgramNode = esprima.parse(sourceCode),
+            options: any = Object.assign(JavaScriptObfuscator.defaultOptions, customOptions),
             obfuscator: Obfuscator = new Obfuscator(options);
 
         obfuscator.obfuscateNode(astTree);
@@ -35,10 +38,11 @@ export class JavaScriptObfuscator {
      * @param astTree
      * @param options
      */
-    private static generateCode (astTree: IProgramNode, options: any = {}): string {
+    private static generateCode (astTree: IProgramNode, options: any): string {
         let escodegenParams: any = Object.assign({}, JavaScriptObfuscator.escodegenParams);
 
         if (options.hasOwnProperty('compact')) {
+            escodegenParams.format = {};
             escodegenParams.format.compact = options.compact;
         }
 

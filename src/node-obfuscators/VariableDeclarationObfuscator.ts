@@ -68,13 +68,9 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
     private replaceVariableCalls (variableDeclarationNode: IVariableDeclarationNode, variableParentNode: ITreeNode): void {
         let scopeNode: ITreeNode;
 
-        if (variableDeclarationNode.kind === 'var') {
-            scopeNode = NodeUtils.getNodeScope(
-                variableDeclarationNode
-            );
-        } else {
-            scopeNode = variableParentNode;
-        }
+        scopeNode = variableDeclarationNode.kind === 'var' ? NodeUtils.getNodeScope(
+            variableDeclarationNode
+        ) : variableParentNode;
 
         let isNodeAfterVariableDeclaratorFlag: boolean = false;
 

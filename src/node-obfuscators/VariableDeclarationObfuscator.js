@@ -35,12 +35,7 @@ class VariableDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
     }
     replaceVariableCalls(variableDeclarationNode, variableParentNode) {
         let scopeNode;
-        if (variableDeclarationNode.kind === 'var') {
-            scopeNode = NodeUtils_1.NodeUtils.getNodeScope(variableDeclarationNode);
-        }
-        else {
-            scopeNode = variableParentNode;
-        }
+        scopeNode = variableDeclarationNode.kind === 'var' ? NodeUtils_1.NodeUtils.getNodeScope(variableDeclarationNode) : variableParentNode;
         let isNodeAfterVariableDeclaratorFlag = false;
         estraverse.replace(scopeNode, {
             enter: (node, parentNode) => {

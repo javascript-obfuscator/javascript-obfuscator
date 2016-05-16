@@ -35,35 +35,21 @@ class VariableDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
     }
     replaceVariableCalls(variableDeclarationNode, variableParentNode) {
         let scopeNode;
-        if (variableDeclarationNode.kind === 'var') {
-            scopeNode = NodeUtils_1.NodeUtils.getNodeScope(variableDeclarationNode);
-        }
-        else {
-            scopeNode = variableParentNode;
-        }
-        let isNodeAfterVariableDeclaratorFlag = false, isNodeBeforeVariableDeclaratorFlag = true, functionParentScope, functionNextNode, functionIndex = -1;
+        scopeNode = variableDeclarationNode.kind === 'var' ? NodeUtils_1.NodeUtils.getNodeScope(variableDeclarationNode) : variableParentNode;
+        let isNodeAfterVariableDeclaratorFlag = false;
         estraverse.replace(scopeNode, {
             enter: (node, parentNode) => {
                 if (node.type === 'FunctionDeclaration' ||
                     node.type === 'FunctionExpression' ||
                     node.type === 'ArrowFunctionExpression') {
-                    functionParentScope = NodeUtils_1.NodeUtils.getNodeScope(node);
-                    if (NodeUtils_1.NodeUtils.isBlockStatementNode(functionParentScope)) {
-                        functionIndex = functionParentScope.body.indexOf(node);
-                        if (functionIndex >= 0) {
-                            functionNextNode = functionParentScope.body[functionIndex + 1];
+                    estraverse.replace(node, {
+                        enter: (node, parentNode) => {
+                            this.replaceNodeIdentifierByNewValue(node, parentNode, this.variableNames);
                         }
-                    }
-                    isNodeAfterVariableDeclaratorFlag = true;
-                }
-                if (functionNextNode && isNodeBeforeVariableDeclaratorFlag && node === functionNextNode) {
-                    isNodeAfterVariableDeclaratorFlag = false;
-                    functionNextNode = undefined;
-                    functionIndex = -1;
+                    });
                 }
                 if (node === variableDeclarationNode) {
                     isNodeAfterVariableDeclaratorFlag = true;
-                    isNodeBeforeVariableDeclaratorFlag = false;
                 }
                 if (isNodeAfterVariableDeclaratorFlag) {
                     this.replaceNodeIdentifierByNewValue(node, parentNode, this.variableNames);

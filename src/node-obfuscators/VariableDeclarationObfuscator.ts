@@ -68,21 +68,12 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
     private replaceVariableCalls (variableDeclarationNode: IVariableDeclarationNode, variableParentNode: ITreeNode): void {
         let scopeNode: ITreeNode;
 
-        if (variableDeclarationNode.kind === 'var') {
-            scopeNode = NodeUtils.getNodeScope(
-                variableDeclarationNode
-            );
-        } else {
-            scopeNode = variableParentNode;
-        }
+        scopeNode = variableDeclarationNode.kind === 'var' ? NodeUtils.getNodeScope(
+            variableDeclarationNode
+        ) : variableParentNode;
 
-        let isNodeAfterVariableDeclaratorFlag: boolean = false,
-            isNodeBeforeVariableDeclaratorFlag: boolean = true,
-            functionParentScope: ITreeNode,
-            functionNextNode: ITreeNode,
-            functionIndex: number = -1;
+        let isNodeAfterVariableDeclaratorFlag: boolean = false;
 
-        //TODO: REFACTOR THIS
         estraverse.replace(scopeNode, {
             enter: (node: ITreeNode, parentNode: ITreeNode) => {
                 if (
@@ -90,28 +81,15 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
                     node.type === 'FunctionExpression' ||
                     node.type === 'ArrowFunctionExpression'
                 ) {
-                    functionParentScope = NodeUtils.getNodeScope(node);
-
-                    if (NodeUtils.isBlockStatementNode(functionParentScope)) {
-                        functionIndex = functionParentScope.body.indexOf(node);
-
-                        if (functionIndex >= 0) {
-                            functionNextNode = functionParentScope.body[functionIndex + 1];
+                    estraverse.replace(node, {
+                        enter: (node: ITreeNode, parentNode: ITreeNode) => {
+                            this.replaceNodeIdentifierByNewValue(node, parentNode, this.variableNames);
                         }
-                    }
-
-                    isNodeAfterVariableDeclaratorFlag = true;
-                }
-
-                if (functionNextNode && isNodeBeforeVariableDeclaratorFlag && node === functionNextNode) {
-                    isNodeAfterVariableDeclaratorFlag = false;
-                    functionNextNode = undefined;
-                    functionIndex = -1;
+                    });
                 }
 
                 if (node === variableDeclarationNode) {
                     isNodeAfterVariableDeclaratorFlag = true;
-                    isNodeBeforeVariableDeclaratorFlag = false;
                 }
 
                 if (isNodeAfterVariableDeclaratorFlag) {

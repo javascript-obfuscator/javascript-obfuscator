@@ -47,15 +47,13 @@ export class Obfuscator {
     /**
      * @type any
      */
-    private options: any = {
-        rotateUnicodeArray: true
-    };
+    private options: any;
 
     /**
      * @param options
      */
-    constructor (options: any) {
-        Object.assign(this.options, options);
+    constructor (options: any = {}) {
+        this.options = options;
     }
 
     /**

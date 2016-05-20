@@ -4,7 +4,7 @@ export class Utils {
      * @param searchElement
      * @returns {boolean}
      */
-    public static arrayContains (array: any[], searchElement: any) {
+    public static arrayContains (array: any[], searchElement: any): boolean {
         return array.indexOf(searchElement) >= 0;
     }
 

@@ -52,5 +52,3 @@ export class JavaScriptObfuscator {
         return escodegen.generate(astTree, escodegenParams);
     }
 }
-
-module.exports = JavaScriptObfuscator;

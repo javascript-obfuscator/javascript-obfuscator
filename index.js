@@ -25,4 +25,3 @@ JavaScriptObfuscator.escodegenParams = {
     verbatim: 'x-verbatim-property'
 };
 exports.JavaScriptObfuscator = JavaScriptObfuscator;
-module.exports = JavaScriptObfuscator;

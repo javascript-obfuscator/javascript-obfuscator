@@ -64,7 +64,7 @@
     "no-duplicate-key": true,
     "no-duplicate-variable": true,
     "no-empty": false,
-    "no-eval": true,
+    "no-eval": false,
     "no-inferrable-types": false,
     "no-internal-module": true,
     "no-invalid-this": [
@@ -77,7 +77,7 @@
     "no-shadowed-variable": false,
     "no-string-literal": false,
     "no-switch-case-fall-through": true,
-    "no-trailing-whitespace": false,
+    "no-trailing-whitespace": true,
     "no-unreachable": true,
     "no-unused-expression": true,
     "no-unused-variable": true,

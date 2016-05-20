@@ -8,32 +8,35 @@ import { IVariableDeclaratorNode } from "./interfaces/nodes/IVariableDeclaratorN
 
 export class NodeUtils {
     /**
+     * @type {string[]}
+     */
+    private static scopeNodes: string[] = [
+        'ArrowFunctionExpression',
+        'FunctionDeclaration',
+        'FunctionExpression',
+        'MethodDefinition'
+    ];
+
+    /**
      * @param node
-     * @param deep
+     * @param depth
      * @returns {ITreeNode}
      */
-    public static getNodeScope (node: ITreeNode,  deep: number = 0): ITreeNode {
-        let scopeNodes: string[] = [
-            'FunctionDeclaration',
-            'FunctionExpression',
-            'ArrowFunctionExpression',
-            'MethodDefinition'
-        ];
-
+    public static getScopeOfNode (node: ITreeNode, depth: number = 0): ITreeNode {
         if (node.parentNode.type === 'Program') {
             return node.parentNode;
         }
 
-        if (scopeNodes.indexOf(node.parentNode.type) < 0) {
-            return NodeUtils.getNodeScope(node.parentNode, deep);
+        if (NodeUtils.scopeNodes.indexOf(node.parentNode.type) < 0) {
+            return NodeUtils.getScopeOfNode(node.parentNode, depth);
         }
 
-        if (deep > 0) {
-            return NodeUtils.getNodeScope(node.parentNode, --deep);
+        if (depth > 0) {
+            return NodeUtils.getScopeOfNode(node.parentNode, --depth);
         }
 
         if (node.type !== 'BlockStatement') {
-            return NodeUtils.getNodeScope(node.parentNode);
+            return NodeUtils.getScopeOfNode(node.parentNode);
         }
 
         return node; // BlockStatement of scopeNodes

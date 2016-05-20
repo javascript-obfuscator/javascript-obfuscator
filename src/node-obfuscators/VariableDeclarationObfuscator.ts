@@ -13,7 +13,7 @@ import { Utils } from '../Utils';
  *     var variable = 1;
  *     variable++;
  *
- * by:
+ * on:
  *     var _0x12d45f = 1;
  *     _0x12d45f++;
  *
@@ -68,7 +68,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
     private replaceVariableCalls (variableDeclarationNode: IVariableDeclarationNode, variableParentNode: ITreeNode): void {
         let scopeNode: ITreeNode;
 
-        scopeNode = variableDeclarationNode.kind === 'var' ? NodeUtils.getNodeScope(
+        scopeNode = variableDeclarationNode.kind === 'var' ? NodeUtils.getScopeOfNode(
             variableDeclarationNode
         ) : variableParentNode;
 

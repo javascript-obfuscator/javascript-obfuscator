@@ -48,9 +48,11 @@ export class Utils {
      * @returns any
      */
     public static getRandomVariableName (length: number = 6): string {
-        const prefix = '_0x';
+        const rangeMinInteger: number = 10000,
+            rangeMaxInteger: number = 99999999,
+            prefix: string = '_0x';
 
-        return `${prefix}${(Utils.decToHex(Utils.getRandomInteger(10000, 99999999))).substr(0, length)}`;
+        return `${prefix}${(Utils.decToHex(Utils.getRandomInteger(rangeMinInteger, rangeMaxInteger))).substr(0, length)}`;
     }
 
     /**

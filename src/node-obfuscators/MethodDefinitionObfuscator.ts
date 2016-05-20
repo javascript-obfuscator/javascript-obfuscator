@@ -11,7 +11,7 @@ import { NodeUtils } from "../NodeUtils";
  *     function foo () { //... };
  *     foo();
  *
- * by:
+ * on:
  *     function _0x12d45f () { //... };
  *     _0x12d45f();
  */

@@ -12,7 +12,7 @@ import { Utils } from '../Utils';
  *     function foo () { //... };
  *     foo();
  *
- * by:
+ * on:
  *     function _0x12d45f () { //... };
  *     _0x12d45f();
  */
@@ -57,7 +57,7 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
      * @param functionDeclarationNode
      */
     private replaceFunctionCalls (functionDeclarationNode: IFunctionDeclarationNode): void {
-        let scopeNode: ITreeNode = NodeUtils.getNodeScope(
+        let scopeNode: ITreeNode = NodeUtils.getScopeOfNode(
             functionDeclarationNode
         );
 

@@ -24,8 +24,8 @@ class Utils {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
     static getRandomVariableName(length = 6) {
-        const prefix = '_0x';
-        return `${prefix}${(Utils.decToHex(Utils.getRandomInteger(10000, 99999999))).substr(0, length)}`;
+        const rangeMinInteger = 10000, rangeMaxInteger = 99999999, prefix = '_0x';
+        return `${prefix}${(Utils.decToHex(Utils.getRandomInteger(rangeMinInteger, rangeMaxInteger))).substr(0, length)}`;
     }
     static stringToUnicode(string) {
         return `'${string.replace(/[\s\S]/g, (escape) => {

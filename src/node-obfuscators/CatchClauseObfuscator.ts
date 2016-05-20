@@ -11,7 +11,7 @@ import { Utils } from '../Utils';
  * replaces:
  *     try {} catch (e) { console.log(e); };
  *
- * by:
+ * on:
  *     try {} catch (_0x12d45f) { console.log(_0x12d45f); };
  *
  */

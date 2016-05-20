@@ -1,23 +1,17 @@
 "use strict";
 class NodeUtils {
-    static getNodeScope(node, deep = 0) {
-        let scopeNodes = [
-            'FunctionDeclaration',
-            'FunctionExpression',
-            'ArrowFunctionExpression',
-            'MethodDefinition'
-        ];
+    static getScopeOfNode(node, depth = 0) {
         if (node.parentNode.type === 'Program') {
             return node.parentNode;
         }
-        if (scopeNodes.indexOf(node.parentNode.type) < 0) {
-            return NodeUtils.getNodeScope(node.parentNode, deep);
+        if (NodeUtils.scopeNodes.indexOf(node.parentNode.type) < 0) {
+            return NodeUtils.getScopeOfNode(node.parentNode, depth);
         }
-        if (deep > 0) {
-            return NodeUtils.getNodeScope(node.parentNode, --deep);
+        if (depth > 0) {
+            return NodeUtils.getScopeOfNode(node.parentNode, --depth);
         }
         if (node.type !== 'BlockStatement') {
-            return NodeUtils.getNodeScope(node.parentNode);
+            return NodeUtils.getScopeOfNode(node.parentNode);
         }
         return node;
     }
@@ -52,4 +46,10 @@ class NodeUtils {
         return node.type === 'VariableDeclarator';
     }
 }
+NodeUtils.scopeNodes = [
+    'ArrowFunctionExpression',
+    'FunctionDeclaration',
+    'FunctionExpression',
+    'MethodDefinition'
+];
 exports.NodeUtils = NodeUtils;

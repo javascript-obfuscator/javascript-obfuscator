@@ -38,7 +38,7 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
      * replaces:
      *     object.identifier = 1;
      *
-     * by:
+     * on:
      *     object[_0x23d45[25]] = 1;
      *
      * and skip:
@@ -67,7 +67,7 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
      * replaces:
      *     object['literal'] = 1;
      *
-     * by:
+     * on:
      *     object[_0x23d45[25]] = 1;
      *
      * @param node

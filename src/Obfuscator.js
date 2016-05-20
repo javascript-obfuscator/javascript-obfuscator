@@ -13,7 +13,7 @@ const UnicodeArrayNodesGroup_1 = require('./node-groups/UnicodeArrayNodesGroup')
 const Utils_1 = require('./Utils');
 const VariableDeclarationObfuscator_1 = require('./node-obfuscators/VariableDeclarationObfuscator');
 class Obfuscator {
-    constructor(options) {
+    constructor(options = {}) {
         this.nodes = new Map();
         this.nodeObfuscators = new Map([
             ['ClassDeclaration', [FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator]],
@@ -30,10 +30,7 @@ class Obfuscator {
             ['MemberExpression', [MemberExpressionObfuscator_1.MemberExpressionObfuscator]],
             ['Literal', [LiteralObfuscator_1.LiteralObfuscator]]
         ]);
-        this.options = {
-            rotateUnicodeArray: true
-        };
-        Object.assign(this.options, options);
+        this.options = options;
     }
     obfuscateNode(node) {
         if (this.options['rotateUnicodeArray']) {

@@ -11,7 +11,7 @@ import { Utils } from '../Utils';
  * replaces:
  *     function foo (argument1) { return argument1; };
  *
- * by:
+ * on:
  *     function foo (_0x12d45f) { return _0x12d45f; };
  *
  */

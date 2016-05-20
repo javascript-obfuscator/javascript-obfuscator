@@ -28,7 +28,7 @@ class FunctionDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
         });
     }
     replaceFunctionCalls(functionDeclarationNode) {
-        let scopeNode = NodeUtils_1.NodeUtils.getNodeScope(functionDeclarationNode);
+        let scopeNode = NodeUtils_1.NodeUtils.getScopeOfNode(functionDeclarationNode);
         estraverse.replace(scopeNode, {
             enter: (node, parentNode) => {
                 this.replaceNodeIdentifierByNewValue(node, parentNode, this.functionName);

@@ -17,7 +17,7 @@ import { Utils } from '../Utils';
  * or:
  *     var object = { PSEUDO: 1 };
  *
- * by:
+ * on:
  *     var object = { '\u0050\u0053\u0045\u0055\u0044\u004f': 1 };
  */
 export class ObjectExpressionObfuscator extends NodeObfuscator {

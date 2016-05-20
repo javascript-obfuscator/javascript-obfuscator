@@ -7,6 +7,7 @@ import { IVariableDeclarationNode } from "../interfaces/nodes/IVariableDeclarati
 import { NodeObfuscator } from './NodeObfuscator';
 import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
+import {IVariableDeclaratorNode} from "../interfaces/nodes/IVariableDeclaratorNode";
 
 /**
  * replaces:
@@ -41,16 +42,12 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
      * @param variableDeclarationNode
      */
     private replaceVariableName (variableDeclarationNode: IVariableDeclarationNode): void {
-        variableDeclarationNode.declarations.forEach((declarationNode: ITreeNode) => {
-            estraverse.replace(declarationNode, {
+        variableDeclarationNode.declarations.forEach((declarationNode: IVariableDeclaratorNode) => {
+            estraverse.replace(declarationNode.id, {
                 enter: (node: ITreeNode): any => {
-                    if (NodeUtils.isVariableDeclaratorNode(node)) {
-                        estraverse.replace(node.id, {
-                            enter: (node: IIdentifierNode): any => {
-                                this.variableNames.set(node.name, Utils.getRandomVariableName());
-                                node.name = this.variableNames.get(node.name);
-                            }
-                        });
+                    if (NodeUtils.isIdentifierNode(node)) {
+                        this.variableNames.set(node.name, Utils.getRandomVariableName());
+                        node.name = this.variableNames.get(node.name);
 
                         return;
                     }

@@ -17,15 +17,11 @@ class VariableDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
     }
     replaceVariableName(variableDeclarationNode) {
         variableDeclarationNode.declarations.forEach((declarationNode) => {
-            estraverse.replace(declarationNode, {
+            estraverse.replace(declarationNode.id, {
                 enter: (node) => {
-                    if (NodeUtils_1.NodeUtils.isVariableDeclaratorNode(node)) {
-                        estraverse.replace(node.id, {
-                            enter: (node) => {
-                                this.variableNames.set(node.name, Utils_1.Utils.getRandomVariableName());
-                                node.name = this.variableNames.get(node.name);
-                            }
-                        });
+                    if (NodeUtils_1.NodeUtils.isIdentifierNode(node)) {
+                        this.variableNames.set(node.name, Utils_1.Utils.getRandomVariableName());
+                        node.name = this.variableNames.get(node.name);
                         return;
                     }
                     return estraverse.VisitorOption.Skip;

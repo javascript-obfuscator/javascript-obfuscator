@@ -1,6 +1,15 @@
 export class Utils {
     /**
      * @param array
+     * @param searchElement
+     * @returns {boolean}
+     */
+    public static arrayContains (array: any[], searchElement: any) {
+        return array.indexOf(searchElement) >= 0;
+    }
+
+    /**
+     * @param array
      * @param times
      * @param reverse
      * @returns any[]

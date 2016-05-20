@@ -1,5 +1,8 @@
 "use strict";
 class Utils {
+    static arrayContains(array, searchElement) {
+        return array.indexOf(searchElement) >= 0;
+    }
     static arrayRotate(array, times, reverse = false) {
         if (times < 0) {
             return;

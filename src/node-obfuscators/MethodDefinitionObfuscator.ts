@@ -5,6 +5,7 @@ import { ITreeNode } from "../interfaces/nodes/ITreeNode";
 
 import { NodeObfuscator } from './NodeObfuscator';
 import { NodeUtils } from "../NodeUtils";
+import { Utils } from "../Utils";
 
 /**
  * replaces:
@@ -37,7 +38,7 @@ export class MethodDefinitionObfuscator extends NodeObfuscator {
             leave: (node: ITreeNode): any => {
                 if (
                     NodeUtils.isIdentifierNode(node) &&
-                    this.ignoredNames.indexOf(node.name) < 0 &&
+                    !Utils.arrayContains(this.ignoredNames, node.name) &&
                     methodDefinitionNode.computed === false
                 ) {
                     methodDefinitionNode.computed = true;

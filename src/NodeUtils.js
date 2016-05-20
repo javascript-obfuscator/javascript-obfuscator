@@ -1,10 +1,11 @@
 "use strict";
+const Utils_1 = require("./Utils");
 class NodeUtils {
     static getScopeOfNode(node, depth = 0) {
         if (node.parentNode.type === 'Program') {
             return node.parentNode;
         }
-        if (NodeUtils.scopeNodes.indexOf(node.parentNode.type) < 0) {
+        if (!Utils_1.Utils.arrayContains(NodeUtils.scopeNodes, node.parentNode.type)) {
             return NodeUtils.getScopeOfNode(node.parentNode, depth);
         }
         if (depth > 0) {
@@ -15,15 +16,15 @@ class NodeUtils {
         }
         return node;
     }
-    static getParentNodeWithType(node, types, limitNodeTypes = [], deep = 0) {
-        if (node.parentNode.type === 'Program' || limitNodeTypes.indexOf(node.parentNode.type) >= 0) {
+    static getParentNodeWithType(node, types, limitNodeTypes = [], depth = 0) {
+        if (node.parentNode.type === 'Program' || Utils_1.Utils.arrayContains(limitNodeTypes, node.parentNode.type)) {
             return node.parentNode;
         }
-        if (types.indexOf(node.parentNode.type) < 0) {
-            return NodeUtils.getParentNodeWithType(node.parentNode, types, limitNodeTypes, deep);
+        if (!Utils_1.Utils.arrayContains(types, node.parentNode.type)) {
+            return NodeUtils.getParentNodeWithType(node.parentNode, types, limitNodeTypes, depth);
         }
-        if (deep > 0) {
-            return NodeUtils.getParentNodeWithType(node.parentNode, types, limitNodeTypes, --deep);
+        if (depth > 0) {
+            return NodeUtils.getParentNodeWithType(node.parentNode, types, limitNodeTypes, --depth);
         }
         return node.parentNode;
     }

@@ -6,6 +6,8 @@ import { IPropertyNode } from "./interfaces/nodes/IPropertyNode";
 import { ITreeNode } from './interfaces/nodes/ITreeNode';
 import { IVariableDeclaratorNode } from "./interfaces/nodes/IVariableDeclaratorNode";
 
+import { Utils } from "./Utils";
+
 export class NodeUtils {
     /**
      * @type {string[]}
@@ -27,7 +29,7 @@ export class NodeUtils {
             return node.parentNode;
         }
 
-        if (NodeUtils.scopeNodes.indexOf(node.parentNode.type) < 0) {
+        if (!Utils.arrayContains(NodeUtils.scopeNodes, node.parentNode.type)) {
             return NodeUtils.getScopeOfNode(node.parentNode, depth);
         }
 
@@ -46,25 +48,25 @@ export class NodeUtils {
      * @param node
      * @param types
      * @param limitNodeTypes
-     * @param deep
+     * @param depth
      * @returns {ITreeNode}
      */
     public static getParentNodeWithType (
         node: ITreeNode,
         types: string[],
         limitNodeTypes: string[] = [],
-        deep: number = 0
+        depth: number = 0
     ): ITreeNode {
-        if (node.parentNode.type === 'Program' || limitNodeTypes.indexOf(node.parentNode.type) >= 0) {
+        if (node.parentNode.type === 'Program' || Utils.arrayContains(limitNodeTypes, node.parentNode.type)) {
             return node.parentNode;
         }
 
-        if (types.indexOf(node.parentNode.type) < 0) {
-            return NodeUtils.getParentNodeWithType(node.parentNode, types, limitNodeTypes, deep);
+        if (!Utils.arrayContains(types, node.parentNode.type)) {
+            return NodeUtils.getParentNodeWithType(node.parentNode, types, limitNodeTypes, depth);
         }
 
-        if (deep > 0) {
-            return NodeUtils.getParentNodeWithType(node.parentNode, types, limitNodeTypes, --deep);
+        if (depth > 0) {
+            return NodeUtils.getParentNodeWithType(node.parentNode, types, limitNodeTypes, --depth);
         }
 
         return node.parentNode;

@@ -79,7 +79,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
                     'FunctionExpression'
                 ];
 
-                if (functionNodes.indexOf(node.type) >= 0) {
+                if (Utils.arrayContains(functionNodes, node.type)) {
                     estraverse.replace(node, {
                         enter: (node: ITreeNode, parentNode: ITreeNode): any => {
                             this.replaceNodeIdentifierByNewValue(node, parentNode, this.variableNames);

@@ -2,6 +2,7 @@
 const estraverse = require('estraverse');
 const NodeObfuscator_1 = require('./NodeObfuscator');
 const NodeUtils_1 = require("../NodeUtils");
+const Utils_1 = require("../Utils");
 class MethodDefinitionObfuscator extends NodeObfuscator_1.NodeObfuscator {
     constructor(...args) {
         super(...args);
@@ -14,7 +15,7 @@ class MethodDefinitionObfuscator extends NodeObfuscator_1.NodeObfuscator {
         estraverse.replace(methodDefinitionNode.key, {
             leave: (node) => {
                 if (NodeUtils_1.NodeUtils.isIdentifierNode(node) &&
-                    this.ignoredNames.indexOf(node.name) < 0 &&
+                    !Utils_1.Utils.arrayContains(this.ignoredNames, node.name) &&
                     methodDefinitionNode.computed === false) {
                     methodDefinitionNode.computed = true;
                     node.name = this.replaceLiteralStringByArrayElement(node.name);

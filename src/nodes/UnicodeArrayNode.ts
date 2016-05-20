@@ -23,6 +23,11 @@ export class UnicodeArrayNode extends Node {
     /**
      * @type {ITreeNode}
      */
+    protected node: ITreeNode;
+
+    /**
+     * @type {ITreeNode}
+     */
     private astTree: ITreeNode;
 
     /**
@@ -41,11 +46,6 @@ export class UnicodeArrayNode extends Node {
     private unicodeArrayRotateValue: number;
 
     /**
-     * @type {ITreeNode}
-     */
-    protected node: ITreeNode;
-
-    /**
      * @param astTree
      * @param unicodeArrayName
      * @param unicodeArrayRotateValue
@@ -61,11 +61,14 @@ export class UnicodeArrayNode extends Node {
 
     public appendNode (): void {
         estraverse.replace(this.astTree, {
-            leave: (node: ITreeNode, parent: ITreeNode) => {
+            leave: (node: ITreeNode, parent: ITreeNode): any => {
                 switch (node.type) {
                     case 'Program':
                         (<IProgramNode>node).body.unshift(this.getNode());
 
+                        break;
+
+                    default:
                         break;
                 }
             }
@@ -112,7 +115,7 @@ export class UnicodeArrayNode extends Node {
                     },
                     'init': {
                         'type': 'ArrayExpression',
-                        'elements': this.unicodeArray.map((value) => {
+                        'elements': this.unicodeArray.map((value: string) => {
                             return {
                                 'type': 'Literal',
                                 'value': value,

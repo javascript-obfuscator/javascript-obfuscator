@@ -1,0 +1,153 @@
+{
+  "rules": {
+    "align": [
+      true,
+      "parameters",
+      "arguments",
+      "statements"
+    ],
+    "ban": [
+      true,
+      [ "_", "forEach" ],
+      [ "_", "each" ],
+      [ "$", "each" ],
+      [ "angular", "forEach" ]
+    ],
+    "class-name": true,
+    "comment-format": [
+      true,
+      "check-space",
+      "check-lowercase"
+    ],
+    "curly": true,
+    "eofline": true,
+    "forin": true,
+    "indent": [
+      true,
+      "spaces"
+    ],
+    "interface-name": [
+      true,
+      "always-prefix"
+    ],
+    "jsdoc-format": true,
+    "label-position": true,
+    "label-undefined": true,
+    "max-line-length": [
+      true,
+      140
+    ],
+    "member-access": true,
+    "member-ordering": [
+      true,
+      { "order": "fields-first" }
+    ],
+    "new-parens": true,
+    "no-angle-bracket-type-assertion": false,
+    "no-any": false,
+    "no-arg": true,
+    "no-bitwise": true,
+    "no-conditional-assignment": true,
+    "no-consecutive-blank-lines": false,
+    "no-console": [
+      true,
+      "debug",
+      "info",
+      "time",
+      "timeEnd",
+      "trace"
+    ],
+    "no-construct": true,
+    "no-constructor-vars": true,
+    "no-debugger": true,
+    "no-default-export": true,
+    "no-duplicate-key": true,
+    "no-duplicate-variable": true,
+    "no-empty": false,
+    "no-eval": true,
+    "no-inferrable-types": false,
+    "no-internal-module": true,
+    "no-invalid-this": [
+      true,
+      "check-function-in-method"
+    ],
+    "no-null-keyword": false,
+    "no-reference": true,
+    "no-require-imports": true,
+    "no-shadowed-variable": false,
+    "no-string-literal": false,
+    "no-switch-case-fall-through": true,
+    "no-trailing-whitespace": false,
+    "no-unreachable": true,
+    "no-unused-expression": true,
+    "no-unused-variable": true,
+    "no-use-before-declare": true,
+    "no-var-keyword": true,
+    "no-var-requires": true,
+    "object-literal-sort-keys": true,
+    "one-line": [
+      true,
+      "check-open-brace",
+      "check-catch",
+      "check-else",
+      "check-finally",
+      "check-whitespace"
+    ],
+    "one-variable-per-declaration": false,
+    "quotemark": false,
+    "radix": true,
+    "semicolon": [true, "always"],
+    "switch-default": true,
+    "trailing-comma": false,
+    "triple-equals": [
+      true,
+      "allow-null-check",
+      "allow-undefined-check"
+    ],
+    "typedef": [
+      true,
+      "call-signature",
+      "parameter",
+      "arrow-parameter",
+      "property-declaration",
+      "variable-declaration",
+      "member-variable-declaration"
+    ],
+    "typedef-whitespace": [
+      true,
+      {
+        "call-signature": "nospace",
+        "index-signature": "nospace",
+        "parameter": "nospace",
+        "property-declaration": "nospace",
+        "variable-declaration": "nospace"
+      },
+      {
+        "call-signature": "space",
+        "index-signature": "space",
+        "parameter": "space",
+        "property-declaration": "space",
+        "variable-declaration": "space"
+      }
+    ],
+    "use-isnan": true,
+    "use-strict": [
+      true,
+      "check-module",
+      "check-function"
+    ],
+    "variable-name": [
+      true,
+      "check-format",
+      "allow-leading-underscore"
+    ],
+    "whitespace": [
+      true,
+      "check-branch",
+      "check-decl",
+      "check-operator",
+      "check-separator",
+      "check-type"
+    ]
+  }
+}

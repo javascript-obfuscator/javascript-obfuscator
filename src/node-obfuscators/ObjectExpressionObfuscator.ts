@@ -6,9 +6,10 @@ import { ILiteralNode } from "../interfaces/nodes/ILiteralNode";
 import { IObjectExpressionNode } from "../interfaces/nodes/IObjectExpressionNode";
 import { ITreeNode } from "../interfaces/nodes/ITreeNode";
 
-import { NodeObfuscator } from './NodeObfuscator'
+import { NodeObfuscator } from './NodeObfuscator';
 import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
+import {IPropertyNode} from "../interfaces/nodes/IPropertyNode";
 
 /**
  * replaces:
@@ -25,9 +26,9 @@ export class ObjectExpressionObfuscator extends NodeObfuscator {
      * @param objectExpressionNode
      */
     public obfuscateNode (objectExpressionNode: IObjectExpressionNode): void {
-        objectExpressionNode.properties.forEach((property) => {
+        objectExpressionNode.properties.forEach((property: IPropertyNode) => {
             estraverse.replace(property.key, {
-                leave: (node: ITreeNode, parentNode: ITreeNode) => {
+                leave: (node: ITreeNode, parentNode: ITreeNode): any => {
                     if (NodeUtils.isLiteralNode(node)) {
                         this.literalNodeController(node);
 
@@ -58,6 +59,9 @@ export class ObjectExpressionObfuscator extends NodeObfuscator {
                 };
 
                 break;
+
+            default:
+                break;
         }
     }
 
@@ -67,13 +71,13 @@ export class ObjectExpressionObfuscator extends NodeObfuscator {
     private identifierNodeController (node: IIdentifierNode): void {
         let nodeValue: string = node.name,
             literalNode: ILiteralNode = {
-                type: 'Literal',
-                value: nodeValue,
                 raw: `'${nodeValue}'`,
                 'x-verbatim-property': {
                     content : Utils.stringToUnicode(nodeValue),
                     precedence: escodegen.Precedence.Primary
-                }
+                },
+                type: 'Literal',
+                value: nodeValue
             };
 
         delete node.name;

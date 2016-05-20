@@ -18,6 +18,7 @@ class MethodDefinitionObfuscator extends NodeObfuscator_1.NodeObfuscator {
                     methodDefinitionNode.computed === false) {
                     methodDefinitionNode.computed = true;
                     node.name = this.replaceLiteralStringByArrayElement(node.name);
+                    return;
                 }
                 return estraverse.VisitorOption.Skip;
             }

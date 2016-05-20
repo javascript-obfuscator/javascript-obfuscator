@@ -6,7 +6,7 @@ import { ILiteralNode } from "../interfaces/nodes/ILiteralNode";
 import { IMemberExpressionNode } from "../interfaces/nodes/IMemberExpressionNode";
 import { ITreeNode } from "../interfaces/nodes/ITreeNode";
 
-import { NodeObfuscator } from './NodeObfuscator'
+import { NodeObfuscator } from './NodeObfuscator';
 import { NodeUtils } from "../NodeUtils";
 
 export class MemberExpressionObfuscator extends NodeObfuscator {
@@ -15,7 +15,7 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
      */
     public obfuscateNode (memberExpressionNode: IMemberExpressionNode): void {
         estraverse.replace(memberExpressionNode.property, {
-            leave: (node: ITreeNode, parentNode: ITreeNode) => {
+            leave: (node: ITreeNode, parentNode: ITreeNode): any => {
                 if (NodeUtils.isLiteralNode(node)) {
                     this.literalNodeController(node);
 
@@ -49,13 +49,13 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
     private identifierNodeController (node: IIdentifierNode): void {
         let nodeValue: string = node.name,
             literalNode: ILiteralNode = {
-                type: 'Literal',
-                value: nodeValue,
                 raw: `'${nodeValue}'`,
                 'x-verbatim-property': {
                     content : this.replaceLiteralStringByArrayElement(nodeValue),
                     precedence: escodegen.Precedence.Primary
-                }
+                },
+                type: 'Literal',
+                value: nodeValue
             };
 
         delete node.name;
@@ -84,6 +84,9 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
                     precedence: escodegen.Precedence.Primary
                 };
 
+                break;
+
+            default:
                 break;
         }
     }

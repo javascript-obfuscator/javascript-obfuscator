@@ -49,6 +49,6 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
                     unicodeArrayRotateValue
                 )
             ]
-        ])
+        ]);
     }
 }

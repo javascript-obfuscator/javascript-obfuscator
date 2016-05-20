@@ -17,6 +17,8 @@ class LiteralObfuscator extends NodeObfuscator_1.NodeObfuscator {
                     precedence: escodegen.Precedence.Primary
                 };
                 break;
+            default:
+                break;
         }
     }
 }

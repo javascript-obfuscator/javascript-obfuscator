@@ -17,6 +17,8 @@ class UnicodeArrayRotateFunctionNode extends Node_1.Node {
                     case 'Program':
                         node.body.push(this.getNode());
                         break;
+                    default:
+                        break;
                 }
             }
         });

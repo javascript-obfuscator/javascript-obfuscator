@@ -40,7 +40,7 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
      */
     private replaceFunctionName (functionDeclarationNode: IFunctionDeclarationNode): void {
         estraverse.replace(functionDeclarationNode.id, {
-            leave: (node: ITreeNode) => {
+            leave: (node: ITreeNode): any => {
                 if (NodeUtils.isIdentifierNode(node)) {
                     this.functionName.set(node.name, Utils.getRandomVariableName());
                     node.name = this.functionName.get(node.name);
@@ -62,7 +62,7 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
         );
 
         estraverse.replace(scopeNode, {
-            enter: (node: ITreeNode, parentNode: ITreeNode) => {
+            enter: (node: ITreeNode, parentNode: ITreeNode): any => {
                 this.replaceNodeIdentifierByNewValue(node, parentNode, this.functionName);
             }
         });

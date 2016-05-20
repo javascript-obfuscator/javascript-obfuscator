@@ -23,13 +23,13 @@ class MemberExpressionObfuscator extends NodeObfuscator_1.NodeObfuscator {
     }
     identifierNodeController(node) {
         let nodeValue = node.name, literalNode = {
-            type: 'Literal',
-            value: nodeValue,
             raw: `'${nodeValue}'`,
             'x-verbatim-property': {
                 content: this.replaceLiteralStringByArrayElement(nodeValue),
                 precedence: escodegen.Precedence.Primary
-            }
+            },
+            type: 'Literal',
+            value: nodeValue
         };
         delete node.name;
         Object.assign(node, literalNode);
@@ -44,6 +44,8 @@ class MemberExpressionObfuscator extends NodeObfuscator_1.NodeObfuscator {
                     content: this.replaceLiteralStringByArrayElement(node.value),
                     precedence: escodegen.Precedence.Primary
                 };
+                break;
+            default:
                 break;
         }
     }

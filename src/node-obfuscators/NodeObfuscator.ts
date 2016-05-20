@@ -29,7 +29,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @param parentNode
      * @param namesMap
      */
-    protected replaceNodeIdentifierByNewValue (node: ITreeNode, parentNode: ITreeNode, namesMap: Map <string, string>) {
+    protected replaceNodeIdentifierByNewValue (node: ITreeNode, parentNode: ITreeNode, namesMap: Map <string, string>): void {
         if (NodeUtils.isIdentifierNode(node) && namesMap.has(node.name)) {
             if (
                 (NodeUtils.isPropertyNode(parentNode) && parentNode.key === node) ||

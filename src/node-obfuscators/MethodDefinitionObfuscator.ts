@@ -34,7 +34,7 @@ export class MethodDefinitionObfuscator extends NodeObfuscator {
      */
     private replaceMethodName (methodDefinitionNode: IMethodDefinitionNode): void {
         estraverse.replace(methodDefinitionNode.key, {
-            leave: (node: ITreeNode) => {
+            leave: (node: ITreeNode): any => {
                 if (
                     NodeUtils.isIdentifierNode(node) &&
                     this.ignoredNames.indexOf(node.name) < 0 &&
@@ -42,6 +42,8 @@ export class MethodDefinitionObfuscator extends NodeObfuscator {
                 ) {
                     methodDefinitionNode.computed = true;
                     node.name = this.replaceLiteralStringByArrayElement(node.name);
+
+                    return;
                 }
 
                 return estraverse.VisitorOption.Skip;

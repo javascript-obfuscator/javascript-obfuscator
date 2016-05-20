@@ -39,7 +39,7 @@ export class NodeUtils {
             return NodeUtils.getScopeOfNode(node.parentNode);
         }
 
-        return node; // BlockStatement of scopeNodes
+        return node; // blocks statement of scopeNodes
     }
 
     /**

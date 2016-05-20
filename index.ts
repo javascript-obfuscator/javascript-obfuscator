@@ -8,6 +8,9 @@ import { IProgramNode } from './src/interfaces/nodes/IProgramNode';
 import { Obfuscator } from './src/Obfuscator';
 
 export class JavaScriptObfuscator {
+    /**
+     * @type any
+     */
     private static defaultOptions: any = {
         compact: true,
         rotateUnicodeArray: true

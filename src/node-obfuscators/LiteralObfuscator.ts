@@ -28,6 +28,9 @@ export class LiteralObfuscator extends NodeObfuscator {
                 };
 
                 break;
+
+            default:
+                break;
         }
     }
 }

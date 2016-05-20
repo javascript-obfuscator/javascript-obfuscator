@@ -21,6 +21,8 @@ class UnicodeArrayNode extends Node_1.Node {
                     case 'Program':
                         node.body.unshift(this.getNode());
                         break;
+                    default:
+                        break;
                 }
             }
         });

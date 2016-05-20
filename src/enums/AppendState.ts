@@ -1,1 +1,4 @@
-export enum AppendState {BeforeObfuscation, AfterObfuscation}
+export enum AppendState {
+    AfterObfuscation,
+    BeforeObfuscation
+}

@@ -74,10 +74,10 @@ class Obfuscator {
     ;
     nodeControllerFirstPass(node, parent) {
         Object.defineProperty(node, 'parentNode', {
-            enumerable: true,
             configurable: true,
-            writable: true,
-            value: parent || node
+            enumerable: true,
+            value: parent || node,
+            writable: true
         });
     }
     nodeControllerSecondPass(node, parent) {

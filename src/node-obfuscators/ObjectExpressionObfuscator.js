@@ -31,17 +31,19 @@ class ObjectExpressionObfuscator extends NodeObfuscator_1.NodeObfuscator {
                     precedence: escodegen.Precedence.Primary
                 };
                 break;
+            default:
+                break;
         }
     }
     identifierNodeController(node) {
         let nodeValue = node.name, literalNode = {
-            type: 'Literal',
-            value: nodeValue,
             raw: `'${nodeValue}'`,
             'x-verbatim-property': {
                 content: Utils_1.Utils.stringToUnicode(nodeValue),
                 precedence: escodegen.Precedence.Primary
-            }
+            },
+            type: 'Literal',
+            value: nodeValue
         };
         delete node.name;
         Object.assign(node, literalNode);

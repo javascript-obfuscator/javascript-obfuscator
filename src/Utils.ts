@@ -60,7 +60,7 @@ export class Utils {
      * @returns {string}
      */
     public static stringToUnicode (string: string): string {
-        return `'${string.replace(/[\s\S]/g, (escape) => {
+        return `'${string.replace(/[\s\S]/g, (escape: string): string => {
             return `\\u${('0000' + escape.charCodeAt(0).toString(16)).slice(-4)}`;
         })}'`;
     }

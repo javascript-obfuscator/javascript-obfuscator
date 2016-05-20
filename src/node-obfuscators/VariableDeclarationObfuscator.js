@@ -39,9 +39,12 @@ class VariableDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
         let isNodeAfterVariableDeclaratorFlag = false;
         estraverse.replace(scopeNode, {
             enter: (node, parentNode) => {
-                if (node.type === 'FunctionDeclaration' ||
-                    node.type === 'FunctionExpression' ||
-                    node.type === 'ArrowFunctionExpression') {
+                const functionNodes = [
+                    'ArrowFunctionExpression',
+                    'FunctionDeclaration',
+                    'FunctionExpression'
+                ];
+                if (functionNodes.indexOf(node.type) >= 0) {
                     estraverse.replace(node, {
                         enter: (node, parentNode) => {
                             this.replaceNodeIdentifierByNewValue(node, parentNode, this.variableNames);

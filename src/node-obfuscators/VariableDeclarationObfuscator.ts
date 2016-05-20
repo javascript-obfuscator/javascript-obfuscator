@@ -1,6 +1,5 @@
 import * as estraverse from 'estraverse';
 
-import { IIdentifierNode } from "../interfaces/nodes/IIdentifierNode";
 import { ITreeNode } from "../interfaces/nodes/ITreeNode";
 import { IVariableDeclarationNode } from "../interfaces/nodes/IVariableDeclarationNode";
 

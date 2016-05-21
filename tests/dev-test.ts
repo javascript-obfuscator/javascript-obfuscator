@@ -44,6 +44,7 @@ let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         };
         
         test2(22);
+        console.log(105.4);
     })();
     `,
     {

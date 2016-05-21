@@ -49,6 +49,10 @@ export abstract class NodeObfuscator implements INodeObfuscator {
     protected replaceLiteralNumberByHexadecimalValue (nodeValue: number): string {
         const prefix: string = '0x';
 
+        if (!Utils.isInteger(nodeValue)) {
+            return String(nodeValue);
+        }
+
         return `${prefix}${Utils.decToHex(nodeValue)}`;
     }
 

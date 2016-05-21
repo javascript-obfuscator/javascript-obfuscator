@@ -16,6 +16,9 @@ class NodeObfuscator {
     }
     replaceLiteralNumberByHexadecimalValue(nodeValue) {
         const prefix = '0x';
+        if (!Utils_1.Utils.isInteger(nodeValue)) {
+            return String(nodeValue);
+        }
         return `${prefix}${Utils_1.Utils.decToHex(nodeValue)}`;
     }
     replaceLiteralStringByArrayElement(nodeValue) {

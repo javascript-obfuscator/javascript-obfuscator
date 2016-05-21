@@ -69,6 +69,18 @@ export class Utils {
         return `${prefix}${(Utils.decToHex(Utils.getRandomInteger(rangeMinInteger, rangeMaxInteger))).substr(0, length)}`;
     }
 
+    /**
+     * @param number
+     * @returns {boolean}
+     */
+    public static isInteger (number: number): boolean {
+        return number % 1 === 0;
+    }
+
+    /**
+     * @param obj
+     * @returns {T}
+     */
     public static strEnumify <T extends { [prop: string]: '' | string }> (obj: T): T {
         return obj;
     }

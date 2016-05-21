@@ -30,6 +30,9 @@ class Utils {
         const rangeMinInteger = 10000, rangeMaxInteger = 99999999, prefix = '_0x';
         return `${prefix}${(Utils.decToHex(Utils.getRandomInteger(rangeMinInteger, rangeMaxInteger))).substr(0, length)}`;
     }
+    static isInteger(number) {
+        return number % 1 === 0;
+    }
     static strEnumify(obj) {
         return obj;
     }

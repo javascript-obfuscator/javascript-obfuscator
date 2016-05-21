@@ -119,15 +119,6 @@ export class Obfuscator {
     };
 
     private insertNewNodes (astTree: ITreeNode): void {
-        if (this.options['rotateUnicodeArray']) {
-            this.setNodesGroup(new UnicodeArrayNodesGroup(astTree));
-        } else {
-            this.setNode(
-                'unicodeArrayNode',
-                new UnicodeArrayNode(astTree, Utils.getRandomVariableName(UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH))
-            );
-        }
-
         if (this.options['disableConsoleOutput']) {
             this.setNode(
                 'consoleOutputDisableExpressionNode',
@@ -137,6 +128,18 @@ export class Obfuscator {
 
         if (this.options['debugProtection']) {
             this.setNodesGroup(new DebugProtectionNodesGroup(astTree, this.options));
+        }
+
+        /**
+         * Important to set this nodes latest to prevent runtime errors cause by `rotateUnicodeArray` option
+         */
+        if (this.options['rotateUnicodeArray']) {
+            this.setNodesGroup(new UnicodeArrayNodesGroup(astTree));
+        } else {
+            this.setNode(
+                'unicodeArrayNode',
+                new UnicodeArrayNode(astTree, Utils.getRandomVariableName(UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH))
+            );
         }
     }
 

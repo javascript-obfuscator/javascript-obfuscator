@@ -1,13 +1,13 @@
 import * as escodegen from 'escodegen';
 import * as estraverse from 'estraverse';
 
-import { IProgramNode } from '../interfaces/nodes/IProgramNode';
 import { ITreeNode } from '../interfaces/nodes/ITreeNode';
 
 import { AppendState } from '../enums/AppendState';
 import { NodeType } from "../enums/NodeType";
 
 import { Node } from './Node';
+import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
 
 export class UnicodeArrayNode extends Node {
@@ -63,15 +63,13 @@ export class UnicodeArrayNode extends Node {
     public appendNode (): void {
         estraverse.replace(this.astTree, {
             leave: (node: ITreeNode, parent: ITreeNode): any => {
-                switch (node.type) {
-                    case NodeType.Program:
-                        (<IProgramNode>node).body.unshift(this.getNode());
+                if (NodeUtils.isProgramNode(node)) {
+                    node.body.unshift(this.getNode());
 
-                        break;
-
-                    default:
-                        break;
+                    return estraverse.VisitorOption.Break;
                 }
+
+                return estraverse.VisitorOption.Skip;
             }
         });
     }

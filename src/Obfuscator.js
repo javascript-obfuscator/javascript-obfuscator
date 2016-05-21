@@ -71,17 +71,17 @@ class Obfuscator {
     }
     ;
     insertNewNodes(astTree) {
-        if (this.options['rotateUnicodeArray']) {
-            this.setNodesGroup(new UnicodeArrayNodesGroup_1.UnicodeArrayNodesGroup(astTree));
-        }
-        else {
-            this.setNode('unicodeArrayNode', new UnicodeArrayNode_1.UnicodeArrayNode(astTree, Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH)));
-        }
         if (this.options['disableConsoleOutput']) {
             this.setNode('consoleOutputDisableExpressionNode', new ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode(astTree));
         }
         if (this.options['debugProtection']) {
             this.setNodesGroup(new DebugProtectionNodesGroup_1.DebugProtectionNodesGroup(astTree, this.options));
+        }
+        if (this.options['rotateUnicodeArray']) {
+            this.setNodesGroup(new UnicodeArrayNodesGroup_1.UnicodeArrayNodesGroup(astTree));
+        }
+        else {
+            this.setNode('unicodeArrayNode', new UnicodeArrayNode_1.UnicodeArrayNode(astTree, Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH)));
         }
     }
     nodeControllerFirstPass(node, parent) {

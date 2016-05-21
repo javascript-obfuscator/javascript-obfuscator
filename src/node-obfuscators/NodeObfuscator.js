@@ -14,6 +14,12 @@ class NodeObfuscator {
             node.name = namesMap.get(node.name);
         }
     }
+    replaceLiteralBooleanByJSFuck(nodeValue) {
+        if (nodeValue) {
+            return '!![]';
+        }
+        return '![]';
+    }
     replaceLiteralNumberByHexadecimalValue(nodeValue) {
         const prefix = '0x';
         if (!Utils_1.Utils.isInteger(nodeValue)) {

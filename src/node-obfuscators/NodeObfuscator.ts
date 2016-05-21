@@ -46,6 +46,18 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @param nodeValue
      * @returns {string}
      */
+    protected replaceLiteralBooleanByJSFuck (nodeValue: boolean): string {
+        if (nodeValue) {
+            return '!![]';
+        }
+
+        return '![]';
+    }
+
+    /**
+     * @param nodeValue
+     * @returns {string}
+     */
     protected replaceLiteralNumberByHexadecimalValue (nodeValue: number): string {
         const prefix: string = '0x';
 

@@ -9,6 +9,7 @@ import { AppendState } from './enums/AppendState';
 import { NodeType } from "./enums/NodeType";
 
 import { CatchClauseObfuscator } from "./node-obfuscators/CatchClauseObfuscator";
+import { DebugProtectionNodesGroup } from "./node-groups/DebugProtectionNodesGroup";
 import { FunctionDeclarationObfuscator } from './node-obfuscators/FunctionDeclarationObfuscator';
 import { FunctionObfuscator } from './node-obfuscators/FunctionObfuscator';
 import { LiteralObfuscator } from './node-obfuscators/LiteralObfuscator';
@@ -61,15 +62,7 @@ export class Obfuscator {
      * @param node
      */
     public obfuscateNode (node: ITreeNode): void {
-        if (this.options['rotateUnicodeArray']) {
-            this.setNodesGroup(new UnicodeArrayNodesGroup(node));
-        } else {
-            this.setNode(
-                'unicodeArrayNode',
-                new UnicodeArrayNode(node, Utils.getRandomVariableName(UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH))
-            );
-        }
-
+        this.insertNewNodes(node);
         this.beforeObfuscation(node);
 
         estraverse.replace(node, {
@@ -123,6 +116,21 @@ export class Obfuscator {
             }
         });
     };
+
+    private insertNewNodes (astTree: ITreeNode): void {
+        if (this.options['rotateUnicodeArray']) {
+            this.setNodesGroup(new UnicodeArrayNodesGroup(astTree));
+        } else {
+            this.setNode(
+                'unicodeArrayNode',
+                new UnicodeArrayNode(astTree, Utils.getRandomVariableName(UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH))
+            );
+        }
+
+        if (this.options['debugProtection']) {
+            this.setNodesGroup(new DebugProtectionNodesGroup(astTree, this.options));
+        }
+    }
 
     /**
      * @param node

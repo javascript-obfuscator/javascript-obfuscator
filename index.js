@@ -19,6 +19,8 @@ class JavaScriptObfuscator {
 }
 JavaScriptObfuscator.defaultOptions = {
     compact: true,
+    debugProtection: true,
+    debugProtectionInterval: true,
     rotateUnicodeArray: true
 };
 JavaScriptObfuscator.escodegenParams = {

@@ -18,6 +18,7 @@ export class UnicodeArrayRotateFunctionNode extends Node {
      * @type {ITreeNode}
      */
     private astTree: ITreeNode;
+
     /**
      * @type {string}
      */

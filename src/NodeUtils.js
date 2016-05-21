@@ -41,6 +41,9 @@ class NodeUtils {
     static isMemberExpressionNode(node) {
         return node.type === NodeType_1.NodeType.MemberExpression;
     }
+    static isProgramNode(node) {
+        return node.type === NodeType_1.NodeType.Program;
+    }
     static isPropertyNode(node) {
         return node.type === NodeType_1.NodeType.Property;
     }

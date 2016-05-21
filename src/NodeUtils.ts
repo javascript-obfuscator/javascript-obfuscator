@@ -2,6 +2,7 @@ import { IBlockStatementNode } from "./interfaces/nodes/IBlockStatementNode";
 import { IIdentifierNode } from "./interfaces/nodes/IIdentifierNode";
 import { ILiteralNode } from "./interfaces/nodes/ILiteralNode";
 import { IMemberExpressionNode } from "./interfaces/nodes/IMemberExpressionNode";
+import { IProgramNode } from "./interfaces/nodes/IProgramNode";
 import { IPropertyNode } from "./interfaces/nodes/IPropertyNode";
 import { ITreeNode } from './interfaces/nodes/ITreeNode';
 import { IVariableDeclaratorNode } from "./interfaces/nodes/IVariableDeclaratorNode";
@@ -106,6 +107,14 @@ export class NodeUtils {
         return node.type === NodeType.MemberExpression;
     }
 
+    /**
+     *
+     * @param node
+     * @returns {boolean}
+     */
+    public static isProgramNode (node: ITreeNode): node is IProgramNode {
+        return node.type === NodeType.Program;
+    }
 
     /**
      *

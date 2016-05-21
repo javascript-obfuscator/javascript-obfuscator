@@ -3,6 +3,7 @@ const estraverse = require('estraverse');
 const AppendState_1 = require('./enums/AppendState');
 const NodeType_1 = require("./enums/NodeType");
 const CatchClauseObfuscator_1 = require("./node-obfuscators/CatchClauseObfuscator");
+const DebugProtectionNodesGroup_1 = require("./node-groups/DebugProtectionNodesGroup");
 const FunctionDeclarationObfuscator_1 = require('./node-obfuscators/FunctionDeclarationObfuscator');
 const FunctionObfuscator_1 = require('./node-obfuscators/FunctionObfuscator');
 const LiteralObfuscator_1 = require('./node-obfuscators/LiteralObfuscator');
@@ -34,12 +35,7 @@ class Obfuscator {
         this.options = options;
     }
     obfuscateNode(node) {
-        if (this.options['rotateUnicodeArray']) {
-            this.setNodesGroup(new UnicodeArrayNodesGroup_1.UnicodeArrayNodesGroup(node));
-        }
-        else {
-            this.setNode('unicodeArrayNode', new UnicodeArrayNode_1.UnicodeArrayNode(node, Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH)));
-        }
+        this.insertNewNodes(node);
         this.beforeObfuscation(node);
         estraverse.replace(node, {
             enter: (node, parent) => this.nodeControllerFirstPass(node, parent)
@@ -73,6 +69,17 @@ class Obfuscator {
         });
     }
     ;
+    insertNewNodes(astTree) {
+        if (this.options['rotateUnicodeArray']) {
+            this.setNodesGroup(new UnicodeArrayNodesGroup_1.UnicodeArrayNodesGroup(astTree));
+        }
+        else {
+            this.setNode('unicodeArrayNode', new UnicodeArrayNode_1.UnicodeArrayNode(astTree, Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH)));
+        }
+        if (this.options['debugProtection']) {
+            this.setNodesGroup(new DebugProtectionNodesGroup_1.DebugProtectionNodesGroup(astTree, this.options));
+        }
+    }
     nodeControllerFirstPass(node, parent) {
         Object.defineProperty(node, 'parentNode', {
             configurable: true,

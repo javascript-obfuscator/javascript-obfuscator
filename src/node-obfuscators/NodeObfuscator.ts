@@ -64,7 +64,8 @@ export abstract class NodeObfuscator implements INodeObfuscator {
         let value: string = Utils.stringToUnicode(nodeValue),
             unicodeArray: string[] = this.nodes.get('unicodeArrayNode').getNodeData(),
             sameIndex: number = unicodeArray.indexOf(value),
-            index: number;
+            index: number,
+            hexadecimalIndex: string;
 
         if (sameIndex < 0) {
             index = unicodeArray.length;
@@ -73,6 +74,8 @@ export abstract class NodeObfuscator implements INodeObfuscator {
             index = sameIndex;
         }
 
-        return `${this.nodes.get('unicodeArrayNode').getNodeIdentifier()}[${index}]`;
+        hexadecimalIndex = this.replaceLiteralNumberByHexadecimalValue(index);
+
+        return `${this.nodes.get('unicodeArrayNode').getNodeIdentifier()}[${hexadecimalIndex}]`;
     }
 }

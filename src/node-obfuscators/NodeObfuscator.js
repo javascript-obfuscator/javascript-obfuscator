@@ -22,7 +22,7 @@ class NodeObfuscator {
         return `${prefix}${Utils_1.Utils.decToHex(nodeValue)}`;
     }
     replaceLiteralStringByArrayElement(nodeValue) {
-        let value = Utils_1.Utils.stringToUnicode(nodeValue), unicodeArray = this.nodes.get('unicodeArrayNode').getNodeData(), sameIndex = unicodeArray.indexOf(value), index;
+        let value = Utils_1.Utils.stringToUnicode(nodeValue), unicodeArray = this.nodes.get('unicodeArrayNode').getNodeData(), sameIndex = unicodeArray.indexOf(value), index, hexadecimalIndex;
         if (sameIndex < 0) {
             index = unicodeArray.length;
             unicodeArray.push(Utils_1.Utils.stringToUnicode(nodeValue));
@@ -30,7 +30,8 @@ class NodeObfuscator {
         else {
             index = sameIndex;
         }
-        return `${this.nodes.get('unicodeArrayNode').getNodeIdentifier()}[${index}]`;
+        hexadecimalIndex = this.replaceLiteralNumberByHexadecimalValue(index);
+        return `${this.nodes.get('unicodeArrayNode').getNodeIdentifier()}[${hexadecimalIndex}]`;
     }
 }
 exports.NodeObfuscator = NodeObfuscator;

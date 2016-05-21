@@ -55,7 +55,8 @@ Options for JavaScript obfuscator:
 
 ```javascript
 {
-    rotateUnicodeArray: false
+    rotateUnicodeArray: true
+    // ...
 }
 ```
 
@@ -64,6 +65,26 @@ Options for JavaScript obfuscator:
 Type: `boolean` Default: `true`
 
 Compact code output in one line.
+
+####debugProtection
+Type: `boolean` Default: `false`
+
+#####This option can cause browser freeze while Developer Tools is enabled! Use at own risk.
+
+Force enable debug mode in some browsers (mainly based on WebKit) on page load, if Developers Tools panel is enbaled.
+With this options using of Debug panel is impossible.
+
+WebKit based browsers: blocking site window, but you still can navigate through Developers Tools panel.
+Firefox: *not* blocking site window, but you still can't use Debug panel.
+
+####debugProtectionInterval
+Type: `boolean` Default: `false`
+
+#####This option can cause browser freeze even while Developer Tools is disabled! Use at own risk.
+
+Works if `debugProtection` is enabled.
+
+Force enable debug mode in some browsers (mainly based on WebKit) when Developers Tools panel was enbaled, even after page was loaded.
 
 ####rotateUnicodeArray
 Type: `boolean` Default: `true`

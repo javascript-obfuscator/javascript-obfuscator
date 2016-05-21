@@ -1,5 +1,10 @@
 export class Utils {
     /**
+     * @type {RegExp}
+     */
+    private static hexRepetitiveZerosRegExp: RegExp = new RegExp('^(0{2,})+(?!$)', '');
+
+    /**
      * @param array
      * @param searchElement
      * @returns {boolean}
@@ -40,7 +45,7 @@ export class Utils {
      * @returns {string}
      */
     public static decToHex(dec: number): string {
-        return (dec + Math.pow(16, 6)).toString(16).substr(-6);
+        return (dec + Math.pow(16, 6)).toString(16).substr(-6).replace(Utils.hexRepetitiveZerosRegExp, '');
     }
 
     /**
@@ -64,10 +69,6 @@ export class Utils {
         return `${prefix}${(Utils.decToHex(Utils.getRandomInteger(rangeMinInteger, rangeMaxInteger))).substr(0, length)}`;
     }
 
-    /**
-     * @param obj
-     * @returns {T}
-     */
     public static strEnumify <T extends { [prop: string]: '' | string }> (obj: T): T {
         return obj;
     }

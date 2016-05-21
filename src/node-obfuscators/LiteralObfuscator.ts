@@ -16,14 +16,22 @@ export class LiteralObfuscator extends NodeObfuscator {
             return;
         }
 
+        if (literalNode['x-verbatim-property']) {
+            return;
+        }
+
         switch (typeof literalNode.value) {
             case 'string':
-                if (literalNode['x-verbatim-property']) {
-                    break;
-                }
-
                 literalNode['x-verbatim-property'] = {
                     content : this.replaceLiteralStringByArrayElement(<string>literalNode.value),
+                    precedence: escodegen.Precedence.Primary
+                };
+
+                break;
+
+            case 'number':
+                literalNode['x-verbatim-property'] = {
+                    content : this.replaceLiteralNumberByHexadecimalValue(<number>literalNode.value),
                     precedence: escodegen.Precedence.Primary
                 };
 

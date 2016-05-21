@@ -7,13 +7,19 @@ class LiteralObfuscator extends NodeObfuscator_1.NodeObfuscator {
         if (NodeUtils_1.NodeUtils.isPropertyNode(parentNode) && parentNode.key === literalNode) {
             return;
         }
+        if (literalNode['x-verbatim-property']) {
+            return;
+        }
         switch (typeof literalNode.value) {
             case 'string':
-                if (literalNode['x-verbatim-property']) {
-                    break;
-                }
                 literalNode['x-verbatim-property'] = {
                     content: this.replaceLiteralStringByArrayElement(literalNode.value),
+                    precedence: escodegen.Precedence.Primary
+                };
+                break;
+            case 'number':
+                literalNode['x-verbatim-property'] = {
+                    content: this.replaceLiteralNumberByHexadecimalValue(literalNode.value),
                     precedence: escodegen.Precedence.Primary
                 };
                 break;

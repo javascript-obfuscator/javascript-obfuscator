@@ -46,6 +46,16 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @param nodeValue
      * @returns {string}
      */
+    protected replaceLiteralNumberByHexadecimalValue (nodeValue: number): string {
+        const prefix: string = '0x';
+
+        return `${prefix}${Utils.decToHex(nodeValue)}`;
+    }
+
+    /**
+     * @param nodeValue
+     * @returns {string}
+     */
     protected replaceLiteralStringByArrayElement (nodeValue: string): string {
         let value: string = Utils.stringToUnicode(nodeValue),
             unicodeArray: string[] = this.nodes.get('unicodeArrayNode').getNodeData(),

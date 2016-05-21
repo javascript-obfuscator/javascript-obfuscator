@@ -21,7 +21,7 @@ class Utils {
         return newArray;
     }
     static decToHex(dec) {
-        return (dec + Math.pow(16, 6)).toString(16).substr(-6);
+        return (dec + Math.pow(16, 6)).toString(16).substr(-6).replace(Utils.hexRepetitiveZerosRegExp, '');
     }
     static getRandomInteger(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -39,4 +39,5 @@ class Utils {
         })}'`;
     }
 }
+Utils.hexRepetitiveZerosRegExp = new RegExp('^(0{2,})+(?!$)', '');
 exports.Utils = Utils;

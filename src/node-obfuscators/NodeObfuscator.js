@@ -14,6 +14,10 @@ class NodeObfuscator {
             node.name = namesMap.get(node.name);
         }
     }
+    replaceLiteralNumberByHexadecimalValue(nodeValue) {
+        const prefix = '0x';
+        return `${prefix}${Utils_1.Utils.decToHex(nodeValue)}`;
+    }
     replaceLiteralStringByArrayElement(nodeValue) {
         let value = Utils_1.Utils.stringToUnicode(nodeValue), unicodeArray = this.nodes.get('unicodeArrayNode').getNodeData(), sameIndex = unicodeArray.indexOf(value), index;
         if (sameIndex < 0) {

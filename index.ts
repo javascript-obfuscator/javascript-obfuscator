@@ -13,8 +13,8 @@ export class JavaScriptObfuscator {
      */
     private static defaultOptions: any = {
         compact: true,
-        debugProtection: true,
-        debugProtectionInterval: true,
+        debugProtection: false,
+        debugProtectionInterval: false,
         rotateUnicodeArray: true
     };
 

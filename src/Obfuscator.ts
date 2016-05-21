@@ -9,6 +9,7 @@ import { AppendState } from './enums/AppendState';
 import { NodeType } from "./enums/NodeType";
 
 import { CatchClauseObfuscator } from "./node-obfuscators/CatchClauseObfuscator";
+import { ConsoleOutputDisableExpressionNode } from "./nodes/ConsoleOutputDisableExpressionNode";
 import { DebugProtectionNodesGroup } from "./node-groups/DebugProtectionNodesGroup";
 import { FunctionDeclarationObfuscator } from './node-obfuscators/FunctionDeclarationObfuscator';
 import { FunctionObfuscator } from './node-obfuscators/FunctionObfuscator';
@@ -124,6 +125,13 @@ export class Obfuscator {
             this.setNode(
                 'unicodeArrayNode',
                 new UnicodeArrayNode(astTree, Utils.getRandomVariableName(UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH))
+            );
+        }
+
+        if (this.options['disableConsoleOutput']) {
+            this.setNode(
+                'consoleOutputDisableExpressionNode',
+                new ConsoleOutputDisableExpressionNode(astTree)
             );
         }
 

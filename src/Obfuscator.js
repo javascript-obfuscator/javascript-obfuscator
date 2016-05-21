@@ -3,6 +3,7 @@ const estraverse = require('estraverse');
 const AppendState_1 = require('./enums/AppendState');
 const NodeType_1 = require("./enums/NodeType");
 const CatchClauseObfuscator_1 = require("./node-obfuscators/CatchClauseObfuscator");
+const ConsoleOutputDisableExpressionNode_1 = require("./nodes/ConsoleOutputDisableExpressionNode");
 const DebugProtectionNodesGroup_1 = require("./node-groups/DebugProtectionNodesGroup");
 const FunctionDeclarationObfuscator_1 = require('./node-obfuscators/FunctionDeclarationObfuscator');
 const FunctionObfuscator_1 = require('./node-obfuscators/FunctionObfuscator');
@@ -75,6 +76,9 @@ class Obfuscator {
         }
         else {
             this.setNode('unicodeArrayNode', new UnicodeArrayNode_1.UnicodeArrayNode(astTree, Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH)));
+        }
+        if (this.options['disableConsoleOutput']) {
+            this.setNode('consoleOutputDisableExpressionNode', new ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode(astTree));
         }
         if (this.options['debugProtection']) {
             this.setNodesGroup(new DebugProtectionNodesGroup_1.DebugProtectionNodesGroup(astTree, this.options));

@@ -49,6 +49,7 @@ let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
     })();
     `,
     {
+        disableConsoleOutput: false,
         rotateUnicodeArray: false
     }
 );

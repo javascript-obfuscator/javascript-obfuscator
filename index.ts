@@ -15,6 +15,7 @@ export class JavaScriptObfuscator {
         compact: true,
         debugProtection: false,
         debugProtectionInterval: false,
+        disableConsoleOutput: true,
         rotateUnicodeArray: true
     };
 

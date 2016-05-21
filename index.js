@@ -21,6 +21,7 @@ JavaScriptObfuscator.defaultOptions = {
     compact: true,
     debugProtection: false,
     debugProtectionInterval: false,
+    disableConsoleOutput: true,
     rotateUnicodeArray: true
 };
 JavaScriptObfuscator.escodegenParams = {

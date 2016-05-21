@@ -86,6 +86,11 @@ Works if `debugProtection` is enabled.
 
 Force enable debug mode in some browsers (mainly based on WebKit) when Developers Tools panel was enbaled, even after page was loaded.
 
+####disableConsoleOutput
+Type: `boolean` Default: `true`
+
+Disable `console.log`, `console.info`, `console.error` and `console.warn` messages output into browser console.
+
 ####rotateUnicodeArray
 Type: `boolean` Default: `true`
 

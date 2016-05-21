@@ -2,6 +2,8 @@ import { INode } from '../interfaces/INode';
 import { INodeObfuscator } from '../interfaces/INodeObfuscator';
 import { ITreeNode } from "../interfaces/nodes/ITreeNode";
 
+import { JSFuck } from "../enums/JSFuck";
+
 import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
 
@@ -47,11 +49,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @returns {string}
      */
     protected replaceLiteralBooleanByJSFuck (nodeValue: boolean): string {
-        if (nodeValue) {
-            return '!![]';
-        }
-
-        return '![]';
+        return nodeValue ? JSFuck.True : JSFuck.False;
     }
 
     /**

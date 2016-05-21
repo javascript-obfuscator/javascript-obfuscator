@@ -1,4 +1,5 @@
 "use strict";
+const JSFuck_1 = require("../enums/JSFuck");
 const NodeUtils_1 = require("../NodeUtils");
 const Utils_1 = require('../Utils');
 class NodeObfuscator {
@@ -15,10 +16,7 @@ class NodeObfuscator {
         }
     }
     replaceLiteralBooleanByJSFuck(nodeValue) {
-        if (nodeValue) {
-            return '!![]';
-        }
-        return '![]';
+        return nodeValue ? JSFuck_1.JSFuck.True : JSFuck_1.JSFuck.False;
     }
     replaceLiteralNumberByHexadecimalValue(nodeValue) {
         const prefix = '0x';

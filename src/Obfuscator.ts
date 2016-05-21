@@ -63,7 +63,7 @@ export class Obfuscator {
      * @param node
      */
     public obfuscateNode (node: ITreeNode): void {
-        this.insertNewNodes(node);
+        this.setNewNodes(node);
         this.beforeObfuscation(node);
 
         estraverse.replace(node, {
@@ -118,7 +118,7 @@ export class Obfuscator {
         });
     };
 
-    private insertNewNodes (astTree: ITreeNode): void {
+    private setNewNodes (astTree: ITreeNode): void {
         if (this.options['disableConsoleOutput']) {
             this.setNode(
                 'consoleOutputDisableExpressionNode',

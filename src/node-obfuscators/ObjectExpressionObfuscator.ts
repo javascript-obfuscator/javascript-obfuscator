@@ -4,12 +4,14 @@ import * as estraverse from 'estraverse';
 import { IIdentifierNode } from "../interfaces/nodes/IIdentifierNode";
 import { ILiteralNode } from "../interfaces/nodes/ILiteralNode";
 import { IObjectExpressionNode } from "../interfaces/nodes/IObjectExpressionNode";
+import { IPropertyNode } from "../interfaces/nodes/IPropertyNode";
 import { ITreeNode } from "../interfaces/nodes/ITreeNode";
+
+import { NodeType } from "../enums/NodeType";
 
 import { NodeObfuscator } from './NodeObfuscator';
 import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
-import {IPropertyNode} from "../interfaces/nodes/IPropertyNode";
 
 /**
  * replaces:
@@ -76,7 +78,7 @@ export class ObjectExpressionObfuscator extends NodeObfuscator {
                     content : Utils.stringToUnicode(nodeValue),
                     precedence: escodegen.Precedence.Primary
                 },
-                type: 'Literal',
+                type: NodeType.Literal,
                 value: nodeValue
             };
 

@@ -3,6 +3,8 @@ import * as estraverse from 'estraverse';
 import { IFunctionDeclarationNode } from "../interfaces/nodes/IFunctionDeclarationNode";
 import { ITreeNode } from "../interfaces/nodes/ITreeNode";
 
+import { NodeType } from "../enums/NodeType";
+
 import { NodeObfuscator } from './NodeObfuscator';
 import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
@@ -27,7 +29,7 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
      * @param parentNode
      */
     public obfuscateNode (functionDeclarationNode: IFunctionDeclarationNode, parentNode: ITreeNode): void {
-        if (parentNode.type === 'Program') {
+        if (parentNode.type === NodeType.Program) {
             return;
         }
 

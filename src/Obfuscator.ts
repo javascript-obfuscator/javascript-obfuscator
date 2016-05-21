@@ -6,6 +6,7 @@ import { INodesGroup } from './interfaces/INodesGroup';
 import { ITreeNode } from './interfaces/nodes/ITreeNode';
 
 import { AppendState } from './enums/AppendState';
+import { NodeType } from "./enums/NodeType";
 
 import { CatchClauseObfuscator } from "./node-obfuscators/CatchClauseObfuscator";
 import { FunctionDeclarationObfuscator } from './node-obfuscators/FunctionDeclarationObfuscator';
@@ -29,19 +30,19 @@ export class Obfuscator {
      * @type {Map<string, Function[]>}
      */
     private nodeObfuscators: Map <string, Function[]> = new Map <string, Function[]> ([
-        ['ClassDeclaration', [FunctionDeclarationObfuscator]],
-        ['CatchClause', [CatchClauseObfuscator]],
-        ['FunctionDeclaration', [
+        [NodeType.ArrowFunctionExpression, [FunctionObfuscator]],
+        [NodeType.ClassDeclaration, [FunctionDeclarationObfuscator]],
+        [NodeType.CatchClause, [CatchClauseObfuscator]],
+        [NodeType.FunctionDeclaration, [
             FunctionDeclarationObfuscator,
             FunctionObfuscator
         ]],
-        ['ArrowFunctionExpression', [FunctionObfuscator]],
-        ['FunctionExpression', [FunctionObfuscator]],
-        ['MethodDefinition', [MethodDefinitionObfuscator]],
-        ['VariableDeclaration', [VariableDeclarationObfuscator]],
-        ['ObjectExpression', [ObjectExpressionObfuscator]],
-        ['MemberExpression', [MemberExpressionObfuscator]],
-        ['Literal', [LiteralObfuscator]]
+        [NodeType.FunctionExpression, [FunctionObfuscator]],
+        [NodeType.MemberExpression, [MemberExpressionObfuscator]],
+        [NodeType.MethodDefinition, [MethodDefinitionObfuscator]],
+        [NodeType.ObjectExpression, [ObjectExpressionObfuscator]],
+        [NodeType.VariableDeclaration, [VariableDeclarationObfuscator]],
+        [NodeType.Literal, [LiteralObfuscator]]
     ]);
 
     /**

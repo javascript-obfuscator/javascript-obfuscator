@@ -1,5 +1,6 @@
 "use strict";
 const estraverse = require('estraverse');
+const NodeType_1 = require("../enums/NodeType");
 const Node_1 = require('./Node');
 class UnicodeArrayRotateFunctionCallNode extends Node_1.Node {
     constructor(astTree, unicodeArrayRotateFunctionName, unicodeArrayName, unicodeArrayRotateValue) {
@@ -14,7 +15,7 @@ class UnicodeArrayRotateFunctionCallNode extends Node_1.Node {
         estraverse.replace(this.astTree, {
             leave: (node, parent) => {
                 switch (node.type) {
-                    case 'Program':
+                    case NodeType_1.NodeType.Program:
                         node.body.unshift(this.getNode());
                         break;
                     default:
@@ -25,25 +26,25 @@ class UnicodeArrayRotateFunctionCallNode extends Node_1.Node {
     }
     getNodeStructure() {
         return {
-            'type': 'ExpressionStatement',
+            'type': NodeType_1.NodeType.ExpressionStatement,
             'expression': {
-                'type': 'CallExpression',
+                'type': NodeType_1.NodeType.CallExpression,
                 'callee': {
-                    'type': 'Identifier',
+                    'type': NodeType_1.NodeType.Identifier,
                     'name': this.unicodeArrayRotateFunctionName
                 },
                 'arguments': [
                     {
-                        'type': 'Identifier',
+                        'type': NodeType_1.NodeType.Identifier,
                         'name': this.unicodeArrayName
                     },
                     {
-                        'type': 'Literal',
+                        'type': NodeType_1.NodeType.Literal,
                         'value': this.unicodeArrayRotateValue,
                         'raw': `'${this.unicodeArrayRotateValue}'`
                     },
                     {
-                        'type': 'Literal',
+                        'type': NodeType_1.NodeType.Literal,
                         'value': true,
                         'raw': 'true'
                     }

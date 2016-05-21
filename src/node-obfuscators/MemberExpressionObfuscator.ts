@@ -6,6 +6,8 @@ import { ILiteralNode } from "../interfaces/nodes/ILiteralNode";
 import { IMemberExpressionNode } from "../interfaces/nodes/IMemberExpressionNode";
 import { ITreeNode } from "../interfaces/nodes/ITreeNode";
 
+import { NodeType } from "../enums/NodeType";
+
 import { NodeObfuscator } from './NodeObfuscator';
 import { NodeUtils } from "../NodeUtils";
 
@@ -54,7 +56,7 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
                     content : this.replaceLiteralStringByArrayElement(nodeValue),
                     precedence: escodegen.Precedence.Primary
                 },
-                type: 'Literal',
+                type: NodeType.Literal,
                 value: nodeValue
             };
 

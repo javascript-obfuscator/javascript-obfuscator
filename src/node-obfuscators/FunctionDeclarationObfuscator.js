@@ -1,5 +1,6 @@
 "use strict";
 const estraverse = require('estraverse');
+const NodeType_1 = require("../enums/NodeType");
 const NodeObfuscator_1 = require('./NodeObfuscator');
 const NodeUtils_1 = require("../NodeUtils");
 const Utils_1 = require('../Utils');
@@ -9,7 +10,7 @@ class FunctionDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
         this.functionName = new Map();
     }
     obfuscateNode(functionDeclarationNode, parentNode) {
-        if (parentNode.type === 'Program') {
+        if (parentNode.type === NodeType_1.NodeType.Program) {
             return;
         }
         this.replaceFunctionName(functionDeclarationNode);

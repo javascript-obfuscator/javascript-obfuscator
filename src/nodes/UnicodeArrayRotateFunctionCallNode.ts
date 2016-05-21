@@ -3,6 +3,8 @@ import * as estraverse from 'estraverse';
 import { IProgramNode } from "../interfaces/nodes/IProgramNode";
 import { ITreeNode } from "../interfaces/nodes/ITreeNode";
 
+import { NodeType } from "../enums/NodeType";
+
 import { Node } from './Node';
 
 export class UnicodeArrayRotateFunctionCallNode extends Node {
@@ -56,7 +58,7 @@ export class UnicodeArrayRotateFunctionCallNode extends Node {
         estraverse.replace(this.astTree, {
             leave: (node: ITreeNode, parent: ITreeNode): any => {
                 switch (node.type) {
-                    case 'Program':
+                    case NodeType.Program:
                         (<IProgramNode>node).body.unshift(this.getNode());
 
                         break;
@@ -73,25 +75,25 @@ export class UnicodeArrayRotateFunctionCallNode extends Node {
      */
     protected getNodeStructure (): any {
         return {
-            'type': 'ExpressionStatement',
+            'type': NodeType.ExpressionStatement,
             'expression': {
-                'type': 'CallExpression',
+                'type': NodeType.CallExpression,
                 'callee': {
-                    'type': 'Identifier',
+                    'type': NodeType.Identifier,
                     'name': this.unicodeArrayRotateFunctionName
                 },
                 'arguments': [
                     {
-                        'type': 'Identifier',
+                        'type': NodeType.Identifier,
                         'name': this.unicodeArrayName
                     },
                     {
-                        'type': 'Literal',
+                        'type': NodeType.Literal,
                         'value': this.unicodeArrayRotateValue,
                         'raw': `'${this.unicodeArrayRotateValue}'`
                     },
                     {
-                        'type': 'Literal',
+                        'type': NodeType.Literal,
                         'value': true,
                         'raw': 'true'
                     }

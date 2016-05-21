@@ -1,9 +1,10 @@
 "use strict";
 const escodegen = require('escodegen');
 const estraverse = require('estraverse');
+const AppendState_1 = require('../enums/AppendState');
+const NodeType_1 = require("../enums/NodeType");
 const Node_1 = require('./Node');
 const Utils_1 = require('../Utils');
-const AppendState_1 = require('../enums/AppendState');
 class UnicodeArrayNode extends Node_1.Node {
     constructor(astTree, unicodeArrayName, unicodeArrayRotateValue = 0) {
         super();
@@ -18,7 +19,7 @@ class UnicodeArrayNode extends Node_1.Node {
         estraverse.replace(this.astTree, {
             leave: (node, parent) => {
                 switch (node.type) {
-                    case 'Program':
+                    case NodeType_1.NodeType.Program:
                         node.body.unshift(this.getNode());
                         break;
                     default:
@@ -40,19 +41,19 @@ class UnicodeArrayNode extends Node_1.Node {
     }
     getNodeStructure() {
         return {
-            'type': 'VariableDeclaration',
+            'type': NodeType_1.NodeType.VariableDeclaration,
             'declarations': [
                 {
-                    'type': 'VariableDeclarator',
+                    'type': NodeType_1.NodeType.VariableDeclarator,
                     'id': {
-                        'type': 'Identifier',
+                        'type': NodeType_1.NodeType.Identifier,
                         'name': this.unicodeArrayName
                     },
                     'init': {
-                        'type': 'ArrayExpression',
+                        'type': NodeType_1.NodeType.ArrayExpression,
                         'elements': this.unicodeArray.map((value) => {
                             return {
-                                'type': 'Literal',
+                                'type': NodeType_1.NodeType.Literal,
                                 'value': value,
                                 'raw': `'${value}'`,
                                 'x-verbatim-property': {

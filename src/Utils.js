@@ -30,6 +30,9 @@ class Utils {
         const rangeMinInteger = 10000, rangeMaxInteger = 99999999, prefix = '_0x';
         return `${prefix}${(Utils.decToHex(Utils.getRandomInteger(rangeMinInteger, rangeMaxInteger))).substr(0, length)}`;
     }
+    static strEnumify(obj) {
+        return obj;
+    }
     static stringToUnicode(string) {
         return `'${string.replace(/[\s\S]/g, (escape) => {
             return `\\u${('0000' + escape.charCodeAt(0).toString(16)).slice(-4)}`;

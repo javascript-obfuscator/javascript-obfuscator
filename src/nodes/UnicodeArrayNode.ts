@@ -4,10 +4,11 @@ import * as estraverse from 'estraverse';
 import { IProgramNode } from '../interfaces/nodes/IProgramNode';
 import { ITreeNode } from '../interfaces/nodes/ITreeNode';
 
+import { AppendState } from '../enums/AppendState';
+import { NodeType } from "../enums/NodeType";
+
 import { Node } from './Node';
 import { Utils } from '../Utils';
-
-import { AppendState } from '../enums/AppendState';
 
 export class UnicodeArrayNode extends Node {
     /**
@@ -63,7 +64,7 @@ export class UnicodeArrayNode extends Node {
         estraverse.replace(this.astTree, {
             leave: (node: ITreeNode, parent: ITreeNode): any => {
                 switch (node.type) {
-                    case 'Program':
+                    case NodeType.Program:
                         (<IProgramNode>node).body.unshift(this.getNode());
 
                         break;
@@ -105,19 +106,19 @@ export class UnicodeArrayNode extends Node {
      */
     protected getNodeStructure (): any {
         return {
-            'type': 'VariableDeclaration',
+            'type': NodeType.VariableDeclaration,
             'declarations': [
                 {
-                    'type': 'VariableDeclarator',
+                    'type': NodeType.VariableDeclarator,
                     'id': {
-                        'type': 'Identifier',
+                        'type': NodeType.Identifier,
                         'name': this.unicodeArrayName
                     },
                     'init': {
-                        'type': 'ArrayExpression',
+                        'type': NodeType.ArrayExpression,
                         'elements': this.unicodeArray.map((value: string) => {
                             return {
-                                'type': 'Literal',
+                                'type': NodeType.Literal,
                                 'value': value,
                                 'raw': `'${value}'`,
                                 'x-verbatim-property': {

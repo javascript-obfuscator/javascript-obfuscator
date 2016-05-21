@@ -65,6 +65,14 @@ export class Utils {
     }
 
     /**
+     * @param obj
+     * @returns {T}
+     */
+    public static strEnumify <T extends { [prop: string]: '' | string }> (obj: T): T {
+        return obj;
+    }
+
+    /**
      * @param string
      * @returns {string}
      */

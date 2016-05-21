@@ -6,6 +6,8 @@ import { IPropertyNode } from "./interfaces/nodes/IPropertyNode";
 import { ITreeNode } from './interfaces/nodes/ITreeNode';
 import { IVariableDeclaratorNode } from "./interfaces/nodes/IVariableDeclaratorNode";
 
+import { NodeType } from "./enums/NodeType";
+
 import { Utils } from "./Utils";
 
 export class NodeUtils {
@@ -13,10 +15,10 @@ export class NodeUtils {
      * @type {string[]}
      */
     private static scopeNodes: string[] = [
-        'ArrowFunctionExpression',
-        'FunctionDeclaration',
-        'FunctionExpression',
-        'MethodDefinition'
+        NodeType.ArrowFunctionExpression,
+        NodeType.FunctionDeclaration,
+        NodeType.FunctionExpression,
+        NodeType.MethodDefinition
     ];
 
     /**
@@ -25,7 +27,7 @@ export class NodeUtils {
      * @returns {ITreeNode}
      */
     public static getScopeOfNode (node: ITreeNode, depth: number = 0): ITreeNode {
-        if (node.parentNode.type === 'Program') {
+        if (node.parentNode.type === NodeType.Program) {
             return node.parentNode;
         }
 
@@ -37,7 +39,7 @@ export class NodeUtils {
             return NodeUtils.getScopeOfNode(node.parentNode, --depth);
         }
 
-        if (node.type !== 'BlockStatement') {
+        if (node.type !== NodeType.BlockStatement) {
             return NodeUtils.getScopeOfNode(node.parentNode);
         }
 
@@ -57,7 +59,7 @@ export class NodeUtils {
         limitNodeTypes: string[] = [],
         depth: number = 0
     ): ITreeNode {
-        if (node.parentNode.type === 'Program' || Utils.arrayContains(limitNodeTypes, node.parentNode.type)) {
+        if (node.parentNode.type === NodeType.Program || Utils.arrayContains(limitNodeTypes, node.parentNode.type)) {
             return node.parentNode;
         }
 
@@ -77,7 +79,7 @@ export class NodeUtils {
      * @returns {boolean}
      */
     public static isBlockStatementNode (node: ITreeNode): node is IBlockStatementNode {
-        return node.type === 'BlockStatement';
+        return node.type === NodeType.BlockStatement;
     }
 
     /**
@@ -85,7 +87,7 @@ export class NodeUtils {
      * @returns {boolean}
      */
     public static isIdentifierNode (node: ITreeNode): node is IIdentifierNode {
-        return node.type === 'Identifier';
+        return node.type === NodeType.Identifier;
     }
 
     /**
@@ -93,7 +95,7 @@ export class NodeUtils {
      * @returns {boolean}
      */
     public static isLiteralNode (node: ITreeNode): node is ILiteralNode {
-        return node.type === 'Literal';
+        return node.type === NodeType.Literal;
     }
 
     /**
@@ -101,7 +103,7 @@ export class NodeUtils {
      * @returns {boolean}
      */
     public static isMemberExpressionNode (node: ITreeNode): node is IMemberExpressionNode {
-        return node.type === 'MemberExpression';
+        return node.type === NodeType.MemberExpression;
     }
 
 
@@ -111,7 +113,7 @@ export class NodeUtils {
      * @returns {boolean}
      */
     public static isPropertyNode (node: ITreeNode): node is IPropertyNode {
-        return node.type === 'Property';
+        return node.type === NodeType.Property;
     }
 
     /**
@@ -120,6 +122,6 @@ export class NodeUtils {
      * @returns {boolean}
      */
     public static isVariableDeclaratorNode (node: ITreeNode): node is IVariableDeclaratorNode {
-        return node.type === 'VariableDeclarator';
+        return node.type === NodeType.VariableDeclarator;
     }
 }

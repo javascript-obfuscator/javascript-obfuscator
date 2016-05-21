@@ -1,6 +1,7 @@
 "use strict";
 const estraverse = require('estraverse');
 const AppendState_1 = require('./enums/AppendState');
+const NodeType_1 = require("./enums/NodeType");
 const CatchClauseObfuscator_1 = require("./node-obfuscators/CatchClauseObfuscator");
 const FunctionDeclarationObfuscator_1 = require('./node-obfuscators/FunctionDeclarationObfuscator');
 const FunctionObfuscator_1 = require('./node-obfuscators/FunctionObfuscator');
@@ -16,19 +17,19 @@ class Obfuscator {
     constructor(options = {}) {
         this.nodes = new Map();
         this.nodeObfuscators = new Map([
-            ['ClassDeclaration', [FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator]],
-            ['CatchClause', [CatchClauseObfuscator_1.CatchClauseObfuscator]],
-            ['FunctionDeclaration', [
+            [NodeType_1.NodeType.ArrowFunctionExpression, [FunctionObfuscator_1.FunctionObfuscator]],
+            [NodeType_1.NodeType.ClassDeclaration, [FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator]],
+            [NodeType_1.NodeType.CatchClause, [CatchClauseObfuscator_1.CatchClauseObfuscator]],
+            [NodeType_1.NodeType.FunctionDeclaration, [
                     FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator,
                     FunctionObfuscator_1.FunctionObfuscator
                 ]],
-            ['ArrowFunctionExpression', [FunctionObfuscator_1.FunctionObfuscator]],
-            ['FunctionExpression', [FunctionObfuscator_1.FunctionObfuscator]],
-            ['MethodDefinition', [MethodDefinitionObfuscator_1.MethodDefinitionObfuscator]],
-            ['VariableDeclaration', [VariableDeclarationObfuscator_1.VariableDeclarationObfuscator]],
-            ['ObjectExpression', [ObjectExpressionObfuscator_1.ObjectExpressionObfuscator]],
-            ['MemberExpression', [MemberExpressionObfuscator_1.MemberExpressionObfuscator]],
-            ['Literal', [LiteralObfuscator_1.LiteralObfuscator]]
+            [NodeType_1.NodeType.FunctionExpression, [FunctionObfuscator_1.FunctionObfuscator]],
+            [NodeType_1.NodeType.MemberExpression, [MemberExpressionObfuscator_1.MemberExpressionObfuscator]],
+            [NodeType_1.NodeType.MethodDefinition, [MethodDefinitionObfuscator_1.MethodDefinitionObfuscator]],
+            [NodeType_1.NodeType.ObjectExpression, [ObjectExpressionObfuscator_1.ObjectExpressionObfuscator]],
+            [NodeType_1.NodeType.VariableDeclaration, [VariableDeclarationObfuscator_1.VariableDeclarationObfuscator]],
+            [NodeType_1.NodeType.Literal, [LiteralObfuscator_1.LiteralObfuscator]]
         ]);
         this.options = options;
     }

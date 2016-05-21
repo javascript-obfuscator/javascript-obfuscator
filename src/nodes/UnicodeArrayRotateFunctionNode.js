@@ -1,5 +1,6 @@
 "use strict";
 const estraverse = require('estraverse');
+const NodeType_1 = require("../enums/NodeType");
 const Node_1 = require('./Node');
 const Utils_1 = require('../Utils');
 class UnicodeArrayRotateFunctionNode extends Node_1.Node {
@@ -14,7 +15,7 @@ class UnicodeArrayRotateFunctionNode extends Node_1.Node {
         estraverse.replace(this.astTree, {
             leave: (node, parent) => {
                 switch (node.type) {
-                    case 'Program':
+                    case NodeType_1.NodeType.Program:
                         node.body.push(this.getNode());
                         break;
                     default:
@@ -28,49 +29,49 @@ class UnicodeArrayRotateFunctionNode extends Node_1.Node {
     }
     getNodeStructure() {
         return {
-            'type': 'FunctionExpression',
+            'type': NodeType_1.NodeType.FunctionExpression,
             'id': {
-                'type': 'Identifier',
+                'type': NodeType_1.NodeType.Identifier,
                 'name': this.unicodeArrayRotateFunctionName
             },
             'params': [
                 {
-                    'type': 'Identifier',
+                    'type': NodeType_1.NodeType.Identifier,
                     'name': 'array'
                 },
                 {
-                    'type': 'Identifier',
+                    'type': NodeType_1.NodeType.Identifier,
                     'name': 'times'
                 },
                 {
-                    'type': 'Identifier',
+                    'type': NodeType_1.NodeType.Identifier,
                     'name': 'reverse'
                 }
             ],
             'defaults': [],
             'body': {
-                'type': 'BlockStatement',
+                'type': NodeType_1.NodeType.BlockStatement,
                 'body': [
                     {
-                        'type': 'IfStatement',
+                        'type': NodeType_1.NodeType.IfStatement,
                         'test': {
-                            'type': 'BinaryExpression',
+                            'type': NodeType_1.NodeType.BinaryExpression,
                             'operator': '<',
                             'left': {
-                                'type': 'Identifier',
+                                'type': NodeType_1.NodeType.Identifier,
                                 'name': 'times'
                             },
                             'right': {
-                                'type': 'Literal',
+                                'type': NodeType_1.NodeType.Literal,
                                 'value': 0,
                                 'raw': '0'
                             }
                         },
                         'consequent': {
-                            'type': 'BlockStatement',
+                            'type': NodeType_1.NodeType.BlockStatement,
                             'body': [
                                 {
-                                    'type': 'ReturnStatement',
+                                    'type': NodeType_1.NodeType.ReturnStatement,
                                     'argument': null
                                 }
                             ]
@@ -78,23 +79,23 @@ class UnicodeArrayRotateFunctionNode extends Node_1.Node {
                         'alternate': null
                     },
                     {
-                        'type': 'ExpressionStatement',
+                        'type': NodeType_1.NodeType.ExpressionStatement,
                         'expression': {
-                            'type': 'AssignmentExpression',
+                            'type': NodeType_1.NodeType.AssignmentExpression,
                             'operator': '=',
                             'left': {
-                                'type': 'Identifier',
+                                'type': NodeType_1.NodeType.Identifier,
                                 'name': 'reverse'
                             },
                             'right': {
-                                'type': 'LogicalExpression',
+                                'type': NodeType_1.NodeType.LogicalExpression,
                                 'operator': '||',
                                 'left': {
-                                    'type': 'Identifier',
+                                    'type': NodeType_1.NodeType.Identifier,
                                     'name': 'reverse'
                                 },
                                 'right': {
-                                    'type': 'Literal',
+                                    'type': NodeType_1.NodeType.Literal,
                                     'value': false,
                                     'raw': 'false'
                                 }
@@ -102,12 +103,12 @@ class UnicodeArrayRotateFunctionNode extends Node_1.Node {
                         }
                     },
                     {
-                        'type': 'VariableDeclaration',
+                        'type': NodeType_1.NodeType.VariableDeclaration,
                         'declarations': [
                             {
-                                'type': 'VariableDeclarator',
+                                'type': NodeType_1.NodeType.VariableDeclarator,
                                 'id': {
-                                    'type': 'Identifier',
+                                    'type': NodeType_1.NodeType.Identifier,
                                     'name': 'temp'
                                 },
                                 'init': null
@@ -116,53 +117,53 @@ class UnicodeArrayRotateFunctionNode extends Node_1.Node {
                         'kind': 'var'
                     },
                     {
-                        'type': 'WhileStatement',
+                        'type': NodeType_1.NodeType.WhileStatement,
                         'test': {
-                            'type': 'UpdateExpression',
+                            'type': NodeType_1.NodeType.UpdateExpression,
                             'operator': '--',
                             'argument': {
-                                'type': 'Identifier',
+                                'type': NodeType_1.NodeType.Identifier,
                                 'name': 'times'
                             },
                             'prefix': false
                         },
                         'body': {
-                            'type': 'BlockStatement',
+                            'type': NodeType_1.NodeType.BlockStatement,
                             'body': [
                                 {
-                                    'type': 'IfStatement',
+                                    'type': NodeType_1.NodeType.IfStatement,
                                     'test': {
-                                        'type': 'UnaryExpression',
+                                        'type': NodeType_1.NodeType.UnaryExpression,
                                         'operator': '!',
                                         'argument': {
-                                            'type': 'Identifier',
+                                            'type': NodeType_1.NodeType.Identifier,
                                             'name': 'reverse'
                                         },
                                         'prefix': true
                                     },
                                     'consequent': {
-                                        'type': 'BlockStatement',
+                                        'type': NodeType_1.NodeType.BlockStatement,
                                         'body': [
                                             {
-                                                'type': 'ExpressionStatement',
+                                                'type': NodeType_1.NodeType.ExpressionStatement,
                                                 'expression': {
-                                                    'type': 'AssignmentExpression',
+                                                    'type': NodeType_1.NodeType.AssignmentExpression,
                                                     'operator': '=',
                                                     'left': {
-                                                        'type': 'Identifier',
+                                                        'type': NodeType_1.NodeType.Identifier,
                                                         'name': 'temp'
                                                     },
                                                     'right': {
-                                                        'type': 'CallExpression',
+                                                        'type': NodeType_1.NodeType.CallExpression,
                                                         'callee': {
-                                                            'type': 'MemberExpression',
+                                                            'type': NodeType_1.NodeType.MemberExpression,
                                                             'computed': true,
                                                             'object': {
-                                                                'type': 'Identifier',
+                                                                'type': NodeType_1.NodeType.Identifier,
                                                                 'name': 'array'
                                                             },
                                                             'property': {
-                                                                'type': 'Literal',
+                                                                'type': NodeType_1.NodeType.Literal,
                                                                 'name': 'pop',
                                                                 'x-verbatim-property': Utils_1.Utils.stringToUnicode('pop')
                                                             }
@@ -172,25 +173,25 @@ class UnicodeArrayRotateFunctionNode extends Node_1.Node {
                                                 }
                                             },
                                             {
-                                                'type': 'ExpressionStatement',
+                                                'type': NodeType_1.NodeType.ExpressionStatement,
                                                 'expression': {
-                                                    'type': 'CallExpression',
+                                                    'type': NodeType_1.NodeType.CallExpression,
                                                     'callee': {
-                                                        'type': 'MemberExpression',
+                                                        'type': NodeType_1.NodeType.MemberExpression,
                                                         'computed': true,
                                                         'object': {
-                                                            'type': 'Identifier',
+                                                            'type': NodeType_1.NodeType.Identifier,
                                                             'name': 'array'
                                                         },
                                                         'property': {
-                                                            'type': 'Literal',
+                                                            'type': NodeType_1.NodeType.Literal,
                                                             'name': 'unshift',
                                                             'x-verbatim-property': Utils_1.Utils.stringToUnicode('unshift')
                                                         }
                                                     },
                                                     'arguments': [
                                                         {
-                                                            'type': 'Identifier',
+                                                            'type': NodeType_1.NodeType.Identifier,
                                                             'name': 'temp'
                                                         }
                                                     ]
@@ -199,28 +200,28 @@ class UnicodeArrayRotateFunctionNode extends Node_1.Node {
                                         ]
                                     },
                                     'alternate': {
-                                        'type': 'BlockStatement',
+                                        'type': NodeType_1.NodeType.BlockStatement,
                                         'body': [
                                             {
-                                                'type': 'ExpressionStatement',
+                                                'type': NodeType_1.NodeType.ExpressionStatement,
                                                 'expression': {
-                                                    'type': 'AssignmentExpression',
+                                                    'type': NodeType_1.NodeType.AssignmentExpression,
                                                     'operator': '=',
                                                     'left': {
-                                                        'type': 'Identifier',
+                                                        'type': NodeType_1.NodeType.Identifier,
                                                         'name': 'temp'
                                                     },
                                                     'right': {
-                                                        'type': 'CallExpression',
+                                                        'type': NodeType_1.NodeType.CallExpression,
                                                         'callee': {
-                                                            'type': 'MemberExpression',
+                                                            'type': NodeType_1.NodeType.MemberExpression,
                                                             'computed': true,
                                                             'object': {
-                                                                'type': 'Identifier',
+                                                                'type': NodeType_1.NodeType.Identifier,
                                                                 'name': 'array'
                                                             },
                                                             'property': {
-                                                                'type': 'Literal',
+                                                                'type': NodeType_1.NodeType.Literal,
                                                                 'name': 'shift',
                                                                 'x-verbatim-property': Utils_1.Utils.stringToUnicode('shift')
                                                             }
@@ -230,25 +231,25 @@ class UnicodeArrayRotateFunctionNode extends Node_1.Node {
                                                 }
                                             },
                                             {
-                                                'type': 'ExpressionStatement',
+                                                'type': NodeType_1.NodeType.ExpressionStatement,
                                                 'expression': {
-                                                    'type': 'CallExpression',
+                                                    'type': NodeType_1.NodeType.CallExpression,
                                                     'callee': {
-                                                        'type': 'MemberExpression',
+                                                        'type': NodeType_1.NodeType.MemberExpression,
                                                         'computed': true,
                                                         'object': {
-                                                            'type': 'Identifier',
+                                                            'type': NodeType_1.NodeType.Identifier,
                                                             'name': 'array'
                                                         },
                                                         'property': {
-                                                            'type': 'Literal',
+                                                            'type': NodeType_1.NodeType.Literal,
                                                             'name': 'push',
                                                             'x-verbatim-property': Utils_1.Utils.stringToUnicode('push')
                                                         }
                                                     },
                                                     'arguments': [
                                                         {
-                                                            'type': 'Identifier',
+                                                            'type': NodeType_1.NodeType.Identifier,
                                                             'name': 'temp'
                                                         }
                                                     ]

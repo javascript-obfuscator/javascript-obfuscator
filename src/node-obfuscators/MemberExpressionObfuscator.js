@@ -1,6 +1,7 @@
 "use strict";
 const escodegen = require('escodegen');
 const estraverse = require('estraverse');
+const NodeType_1 = require("../enums/NodeType");
 const NodeObfuscator_1 = require('./NodeObfuscator');
 const NodeUtils_1 = require("../NodeUtils");
 class MemberExpressionObfuscator extends NodeObfuscator_1.NodeObfuscator {
@@ -28,7 +29,7 @@ class MemberExpressionObfuscator extends NodeObfuscator_1.NodeObfuscator {
                 content: this.replaceLiteralStringByArrayElement(nodeValue),
                 precedence: escodegen.Precedence.Primary
             },
-            type: 'Literal',
+            type: NodeType_1.NodeType.Literal,
             value: nodeValue
         };
         delete node.name;

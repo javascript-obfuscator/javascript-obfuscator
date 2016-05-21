@@ -2,11 +2,13 @@ import * as estraverse from 'estraverse';
 
 import { ITreeNode } from "../interfaces/nodes/ITreeNode";
 import { IVariableDeclarationNode } from "../interfaces/nodes/IVariableDeclarationNode";
+import { IVariableDeclaratorNode } from "../interfaces/nodes/IVariableDeclaratorNode";
+
+import { NodeType } from "../enums/NodeType";
 
 import { NodeObfuscator } from './NodeObfuscator';
 import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
-import {IVariableDeclaratorNode} from "../interfaces/nodes/IVariableDeclaratorNode";
 
 /**
  * replaces:
@@ -29,7 +31,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
      * @param parentNode
      */
     public obfuscateNode (variableDeclarationNode: IVariableDeclarationNode, parentNode: ITreeNode): void {
-        if (parentNode.type === 'Program') {
+        if (parentNode.type === NodeType.Program) {
             return;
         }
 
@@ -73,9 +75,9 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
         estraverse.replace(scopeNode, {
             enter: (node: ITreeNode, parentNode: ITreeNode): any => {
                 const functionNodes: string[] = [
-                    'ArrowFunctionExpression',
-                    'FunctionDeclaration',
-                    'FunctionExpression'
+                    NodeType.ArrowFunctionExpression,
+                    NodeType.FunctionDeclaration,
+                    NodeType.FunctionExpression
                 ];
 
                 if (Utils.arrayContains(functionNodes, node.type)) {

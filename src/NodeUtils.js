@@ -2,6 +2,12 @@
 const NodeType_1 = require("./enums/NodeType");
 const Utils_1 = require("./Utils");
 class NodeUtils {
+    static getBlockScopeNodeByIndex(node, index = 0) {
+        if (NodeUtils.isNodeHasBlockScope(node) && node.body[index]) {
+            return node.body[index];
+        }
+        return node;
+    }
     static getScopeOfNode(node, depth = 0) {
         if (node.parentNode.type === NodeType_1.NodeType.Program) {
             return node.parentNode;
@@ -40,6 +46,12 @@ class NodeUtils {
     }
     static isMemberExpressionNode(node) {
         return node.type === NodeType_1.NodeType.MemberExpression;
+    }
+    static isNodeHasBlockScope(node) {
+        return (node.type === NodeType_1.NodeType.BlockStatement ||
+            node.type === NodeType_1.NodeType.CatchClause ||
+            node.type === NodeType_1.NodeType.FunctionExpression ||
+            node.type === NodeType_1.NodeType.Program) && node.hasOwnProperty('body');
     }
     static isProgramNode(node) {
         return node.type === NodeType_1.NodeType.Program;

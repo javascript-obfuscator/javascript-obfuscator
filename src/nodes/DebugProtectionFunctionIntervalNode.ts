@@ -1,5 +1,3 @@
-/* tslint:disable:max-line-length */
-
 import * as estraverse from 'estraverse';
 
 import { ITreeNode } from '../interfaces/nodes/ITreeNode';

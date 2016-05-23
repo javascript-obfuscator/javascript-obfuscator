@@ -10,6 +10,8 @@ import { IVariableDeclaratorNode } from "./interfaces/nodes/IVariableDeclaratorN
 import { NodeType } from "./enums/NodeType";
 
 import { Utils } from "./Utils";
+import {ICatchClauseNode} from "./interfaces/nodes/ICatchClauseNode";
+import {IFunctionNode} from "./interfaces/nodes/IFunctionNode";
 
 export class NodeUtils {
     /**
@@ -21,6 +23,19 @@ export class NodeUtils {
         NodeType.FunctionExpression,
         NodeType.MethodDefinition
     ];
+
+    /**
+     * @param node
+     * @param index
+     * @returns {ITreeNode}
+     */
+    public static getBlockScopeNodeByIndex (node: ITreeNode, index: number = 0): ITreeNode {
+        if (NodeUtils.isNodeHasBlockScope(node) && node.body[index]) {
+            return node.body[index];
+        }
+
+        return node;
+    }
 
     /**
      * @param node
@@ -105,6 +120,21 @@ export class NodeUtils {
      */
     public static isMemberExpressionNode (node: ITreeNode): node is IMemberExpressionNode {
         return node.type === NodeType.MemberExpression;
+    }
+
+    /**
+     * @param node
+     * @returns {boolean}
+     */
+    public static isNodeHasBlockScope (
+        node: ITreeNode
+    ): node is IBlockStatementNode|ICatchClauseNode|IFunctionNode|IProgramNode {
+        return (
+            node.type === NodeType.BlockStatement ||
+            node.type === NodeType.CatchClause ||
+            node.type === NodeType.FunctionExpression ||
+            node.type === NodeType.Program
+        ) && node.hasOwnProperty('body');
     }
 
     /**

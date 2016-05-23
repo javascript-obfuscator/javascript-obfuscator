@@ -6,6 +6,7 @@ import { ITreeNode } from "../interfaces/nodes/ITreeNode";
 import { NodeType } from "../enums/NodeType";
 
 import { Node } from './Node';
+import { NodeUtils } from "../NodeUtils";
 
 export class UnicodeArrayRotateFunctionCallNode extends Node {
     /**
@@ -57,15 +58,13 @@ export class UnicodeArrayRotateFunctionCallNode extends Node {
     public appendNode (): void {
         estraverse.replace(this.astTree, {
             leave: (node: ITreeNode, parent: ITreeNode): any => {
-                switch (node.type) {
-                    case NodeType.Program:
-                        (<IProgramNode>node).body.unshift(this.getNode());
+                if (NodeUtils.isProgramNode(node)) {
+                    node.body.unshift(this.getNode());
 
-                        break;
-
-                    default:
-                        break;
+                    return estraverse.VisitorOption.Break;
                 }
+
+                return estraverse.VisitorOption.Skip;
             }
         });
     }

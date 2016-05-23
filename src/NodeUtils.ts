@@ -1,4 +1,6 @@
 import { IBlockStatementNode } from "./interfaces/nodes/IBlockStatementNode";
+import { ICatchClauseNode } from "./interfaces/nodes/ICatchClauseNode";
+import { IFunctionNode } from "./interfaces/nodes/IFunctionNode";
 import { IIdentifierNode } from "./interfaces/nodes/IIdentifierNode";
 import { ILiteralNode } from "./interfaces/nodes/ILiteralNode";
 import { IMemberExpressionNode } from "./interfaces/nodes/IMemberExpressionNode";
@@ -10,8 +12,6 @@ import { IVariableDeclaratorNode } from "./interfaces/nodes/IVariableDeclaratorN
 import { NodeType } from "./enums/NodeType";
 
 import { Utils } from "./Utils";
-import {ICatchClauseNode} from "./interfaces/nodes/ICatchClauseNode";
-import {IFunctionNode} from "./interfaces/nodes/IFunctionNode";
 
 export class NodeUtils {
     /**
@@ -129,12 +129,7 @@ export class NodeUtils {
     public static isNodeHasBlockScope (
         node: ITreeNode
     ): node is IBlockStatementNode|ICatchClauseNode|IFunctionNode|IProgramNode {
-        return (
-            node.type === NodeType.BlockStatement ||
-            node.type === NodeType.CatchClause ||
-            node.type === NodeType.FunctionExpression ||
-            node.type === NodeType.Program
-        ) && node.hasOwnProperty('body');
+        return node.hasOwnProperty('body');
     }
 
     /**

@@ -48,10 +48,7 @@ class NodeUtils {
         return node.type === NodeType_1.NodeType.MemberExpression;
     }
     static isNodeHasBlockScope(node) {
-        return (node.type === NodeType_1.NodeType.BlockStatement ||
-            node.type === NodeType_1.NodeType.CatchClause ||
-            node.type === NodeType_1.NodeType.FunctionExpression ||
-            node.type === NodeType_1.NodeType.Program) && node.hasOwnProperty('body');
+        return node.hasOwnProperty('body');
     }
     static isProgramNode(node) {
         return node.type === NodeType_1.NodeType.Program;

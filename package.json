@@ -22,7 +22,7 @@
     "tsc:w": "tsc -w",
     "lite": "lite-server",
     "start": "concurrent \"npm run tsc:w\" \"npm run lite\" ",
-    "test": "node tests/dev-test.js"
+    "tests": "node tests/dev-test.js"
   },
   "author": {
     "name": "sanex3339"

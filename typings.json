@@ -6,6 +6,6 @@
     "estree": "github:DefinitelyTyped/DefinitelyTyped/estree/estree.d.ts",
     "esprima": "github:DefinitelyTyped/DefinitelyTyped/esprima/esprima.d.ts",
     "escodegen": "github:DefinitelyTyped/DefinitelyTyped/escodegen/escodegen.d.ts",
-    "estraverse": "github:DefinitelyTyped/DefinitelyTyped/escodegen/estraverse.d.ts"
+    "estraverse": "github:DefinitelyTyped/DefinitelyTyped/estraverse/estraverse.d.ts"
   }
 }

@@ -36,7 +36,7 @@ class Obfuscator {
         this.options = options;
     }
     obfuscateNode(node) {
-        this.insertNewNodes(node);
+        this.setNewNodes(node);
         this.beforeObfuscation(node);
         estraverse.replace(node, {
             enter: (node, parent) => this.nodeControllerFirstPass(node, parent)
@@ -70,7 +70,7 @@ class Obfuscator {
         });
     }
     ;
-    insertNewNodes(astTree) {
+    setNewNodes(astTree) {
         if (this.options['disableConsoleOutput']) {
             this.setNode('consoleOutputDisableExpressionNode', new ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode(astTree));
         }

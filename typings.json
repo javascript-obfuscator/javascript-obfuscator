@@ -5,6 +5,7 @@
     "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#6834f97fb33561a3ad40695084da2b660efaee29",
     "estree": "github:DefinitelyTyped/DefinitelyTyped/estree/estree.d.ts",
     "esprima": "github:DefinitelyTyped/DefinitelyTyped/esprima/esprima.d.ts",
-    "escodegen": "github:DefinitelyTyped/DefinitelyTyped/escodegen/escodegen.d.ts"
+    "escodegen": "github:DefinitelyTyped/DefinitelyTyped/escodegen/escodegen.d.ts",
+    "estraverse": "github:DefinitelyTyped/DefinitelyTyped/escodegen/estraverse.d.ts"
   }
 }

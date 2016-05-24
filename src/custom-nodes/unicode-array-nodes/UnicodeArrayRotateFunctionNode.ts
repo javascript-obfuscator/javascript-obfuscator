@@ -54,7 +54,7 @@ export class UnicodeArrayRotateFunctionNode extends Node {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: BlockScopeNode): void {
-        NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), 0);
+        NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), 1);
     }
 
     /**

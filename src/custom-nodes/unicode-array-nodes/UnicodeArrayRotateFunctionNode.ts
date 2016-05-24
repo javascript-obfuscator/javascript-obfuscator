@@ -13,22 +13,22 @@ export class UnicodeArrayRotateFunctionNode extends Node {
     private unicodeArrayName: string;
 
     /**
-     * @param {string}
+     * @param {number}
      */
-    private unicodeArrayRotateFunctionName: string;
+    private unicodeArrayRotateValue: number;
 
     /**
-     * @param unicodeArrayRotateFunctionName
      * @param unicodeArrayName
+     * @param unicodeArrayRotateValue
      */
     constructor (
-        unicodeArrayRotateFunctionName: string,
-        unicodeArrayName: string
+        unicodeArrayName: string,
+        unicodeArrayRotateValue
     ) {
         super();
 
-        this.unicodeArrayRotateFunctionName = unicodeArrayRotateFunctionName;
         this.unicodeArrayName = unicodeArrayName;
+        this.unicodeArrayRotateValue = unicodeArrayRotateValue;
 
         this.node = this.getNodeStructure();
     }
@@ -37,14 +37,7 @@ export class UnicodeArrayRotateFunctionNode extends Node {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: BlockScopeNode): void {
-        NodeUtils.appendNode(blockScopeNode.body, this.getNode());
-    }
-
-    /**
-     * @returns {string}
-     */
-    public getNodeIdentifier (): string {
-        return this.unicodeArrayRotateFunctionName;
+        NodeUtils.prependNode(blockScopeNode.body, this.getNode());
     }
 
     /**
@@ -52,242 +45,261 @@ export class UnicodeArrayRotateFunctionNode extends Node {
      */
     protected getNodeStructure (): any {
         return {
-            'type': NodeType.FunctionExpression,
-            'id': {
-                'type': NodeType.Identifier,
-                'name': this.unicodeArrayRotateFunctionName
-            },
-            'params': [
-                {
-                    'type': NodeType.Identifier,
-                    'name': 'array'
-                },
-                {
-                    'type': NodeType.Identifier,
-                    'name': 'times'
-                },
-                {
-                    'type': NodeType.Identifier,
-                    'name': 'reverse'
-                }
-            ],
-            'defaults': [],
-            'body': {
-                'type': NodeType.BlockStatement,
-                'body': [
-                    {
-                        'type': NodeType.IfStatement,
-                        'test': {
-                            'type': NodeType.BinaryExpression,
-                            'operator': '<',
-                            'left': {
-                                'type': NodeType.Identifier,
-                                'name': 'times'
-                            },
-                            'right': {
-                                'type': NodeType.Literal,
-                                'value': 0,
-                                'raw': '0'
-                            }
+            "type": "ExpressionStatement",
+            "expression": {
+                "type": "CallExpression",
+                "callee": {
+                    'type': NodeType.FunctionExpression,
+                    'id': null,
+                    'params': [
+                        {
+                            'type': NodeType.Identifier,
+                            'name': 'array'
                         },
-                        'consequent': {
-                            'type': NodeType.BlockStatement,
-                            'body': [
-                                {
-                                    'type': NodeType.ReturnStatement,
-                                    'argument': null
-                                }
-                            ]
+                        {
+                            'type': NodeType.Identifier,
+                            'name': 'times'
                         },
-                        'alternate': null
-                    },
-                    {
-                        'type': NodeType.ExpressionStatement,
-                        'expression': {
-                            'type': NodeType.AssignmentExpression,
-                            'operator': '=',
-                            'left': {
-                                'type': NodeType.Identifier,
-                                'name': 'reverse'
-                            },
-                            'right': {
-                                'type': NodeType.LogicalExpression,
-                                'operator': '||',
-                                'left': {
-                                    'type': NodeType.Identifier,
-                                    'name': 'reverse'
-                                },
-                                'right': {
-                                    'type': NodeType.Literal,
-                                    'value': false,
-                                    'raw': 'false'
-                                }
-                            }
+                        {
+                            'type': NodeType.Identifier,
+                            'name': 'reverse'
                         }
-                    },
-                    {
-                        'type': NodeType.VariableDeclaration,
-                        'declarations': [
+                    ],
+                    'defaults': [],
+                    'body': {
+                        'type': NodeType.BlockStatement,
+                        'body': [
                             {
-                                'type': NodeType.VariableDeclarator,
-                                'id': {
-                                    'type': NodeType.Identifier,
-                                    'name': 'temp'
+                                'type': NodeType.IfStatement,
+                                'test': {
+                                    'type': NodeType.BinaryExpression,
+                                    'operator': '<',
+                                    'left': {
+                                        'type': NodeType.Identifier,
+                                        'name': 'times'
+                                    },
+                                    'right': {
+                                        'type': NodeType.Literal,
+                                        'value': 0,
+                                        'raw': '0'
+                                    }
                                 },
-                                'init': null
-                            }
-                        ],
-                        'kind': 'var'
-                    },
-                    {
-                        'type': NodeType.WhileStatement,
-                        'test': {
-                            'type': NodeType.UpdateExpression,
-                            'operator': '--',
-                            'argument': {
-                                'type': NodeType.Identifier,
-                                'name': 'times'
+                                'consequent': {
+                                    'type': NodeType.BlockStatement,
+                                    'body': [
+                                        {
+                                            'type': NodeType.ReturnStatement,
+                                            'argument': null
+                                        }
+                                    ]
+                                },
+                                'alternate': null
                             },
-                            'prefix': false
-                        },
-                        'body': {
-                            'type': NodeType.BlockStatement,
-                            'body': [
-                                {
-                                    'type': NodeType.IfStatement,
-                                    'test': {
-                                        'type': NodeType.UnaryExpression,
-                                        'operator': '!',
-                                        'argument': {
+                            {
+                                'type': NodeType.ExpressionStatement,
+                                'expression': {
+                                    'type': NodeType.AssignmentExpression,
+                                    'operator': '=',
+                                    'left': {
+                                        'type': NodeType.Identifier,
+                                        'name': 'reverse'
+                                    },
+                                    'right': {
+                                        'type': NodeType.LogicalExpression,
+                                        'operator': '||',
+                                        'left': {
                                             'type': NodeType.Identifier,
                                             'name': 'reverse'
                                         },
-                                        'prefix': true
-                                    },
-                                    'consequent': {
-                                        'type': NodeType.BlockStatement,
-                                        'body': [
-                                            {
-                                                'type': NodeType.ExpressionStatement,
-                                                'expression': {
-                                                    'type': NodeType.AssignmentExpression,
-                                                    'operator': '=',
-                                                    'left': {
-                                                        'type': NodeType.Identifier,
-                                                        'name': 'temp'
-                                                    },
-                                                    'right': {
-                                                        'type': NodeType.CallExpression,
-                                                        'callee': {
-                                                            'type': NodeType.MemberExpression,
-                                                            'computed': true,
-                                                            'object': {
-                                                                'type': NodeType.Identifier,
-                                                                'name': 'array'
-                                                            },
-                                                            'property': {
-                                                                'type': NodeType.Literal,
-                                                                'name': 'pop',
-                                                                'x-verbatim-property': Utils.stringToUnicode('pop')
-                                                            }
-                                                        },
-                                                        'arguments': []
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                'type': NodeType.ExpressionStatement,
-                                                'expression': {
-                                                    'type': NodeType.CallExpression,
-                                                    'callee': {
-                                                        'type': NodeType.MemberExpression,
-                                                        'computed': true,
-                                                        'object': {
-                                                            'type': NodeType.Identifier,
-                                                            'name': 'array'
-                                                        },
-                                                        'property': {
-                                                            'type': NodeType.Literal,
-                                                            'name': 'unshift',
-                                                            'x-verbatim-property': Utils.stringToUnicode('unshift')
-                                                        }
-                                                    },
-                                                    'arguments': [
-                                                        {
-                                                            'type': NodeType.Identifier,
-                                                            'name': 'temp'
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ]
-                                    },
-                                    'alternate': {
-                                        'type': NodeType.BlockStatement,
-                                        'body': [
-                                            {
-                                                'type': NodeType.ExpressionStatement,
-                                                'expression': {
-                                                    'type': NodeType.AssignmentExpression,
-                                                    'operator': '=',
-                                                    'left': {
-                                                        'type': NodeType.Identifier,
-                                                        'name': 'temp'
-                                                    },
-                                                    'right': {
-                                                        'type': NodeType.CallExpression,
-                                                        'callee': {
-                                                            'type': NodeType.MemberExpression,
-                                                            'computed': true,
-                                                            'object': {
-                                                                'type': NodeType.Identifier,
-                                                                'name': 'array'
-                                                            },
-                                                            'property': {
-                                                                'type': NodeType.Literal,
-                                                                'name': 'shift',
-                                                                'x-verbatim-property': Utils.stringToUnicode('shift')
-                                                            }
-                                                        },
-                                                        'arguments': []
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                'type': NodeType.ExpressionStatement,
-                                                'expression': {
-                                                    'type': NodeType.CallExpression,
-                                                    'callee': {
-                                                        'type': NodeType.MemberExpression,
-                                                        'computed': true,
-                                                        'object': {
-                                                            'type': NodeType.Identifier,
-                                                            'name': 'array'
-                                                        },
-                                                        'property': {
-                                                            'type': NodeType.Literal,
-                                                            'name': 'push',
-                                                            'x-verbatim-property': Utils.stringToUnicode('push')
-                                                        }
-                                                    },
-                                                    'arguments': [
-                                                        {
-                                                            'type': NodeType.Identifier,
-                                                            'name': 'temp'
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ]
+                                        'right': {
+                                            'type': NodeType.Literal,
+                                            'value': false,
+                                            'raw': 'false'
+                                        }
                                     }
                                 }
-                            ]
-                        }
+                            },
+                            {
+                                'type': NodeType.VariableDeclaration,
+                                'declarations': [
+                                    {
+                                        'type': NodeType.VariableDeclarator,
+                                        'id': {
+                                            'type': NodeType.Identifier,
+                                            'name': 'temp'
+                                        },
+                                        'init': null
+                                    }
+                                ],
+                                'kind': 'var'
+                            },
+                            {
+                                'type': NodeType.WhileStatement,
+                                'test': {
+                                    'type': NodeType.UpdateExpression,
+                                    'operator': '--',
+                                    'argument': {
+                                        'type': NodeType.Identifier,
+                                        'name': 'times'
+                                    },
+                                    'prefix': false
+                                },
+                                'body': {
+                                    'type': NodeType.BlockStatement,
+                                    'body': [
+                                        {
+                                            'type': NodeType.IfStatement,
+                                            'test': {
+                                                'type': NodeType.UnaryExpression,
+                                                'operator': '!',
+                                                'argument': {
+                                                    'type': NodeType.Identifier,
+                                                    'name': 'reverse'
+                                                },
+                                                'prefix': true
+                                            },
+                                            'consequent': {
+                                                'type': NodeType.BlockStatement,
+                                                'body': [
+                                                    {
+                                                        'type': NodeType.ExpressionStatement,
+                                                        'expression': {
+                                                            'type': NodeType.AssignmentExpression,
+                                                            'operator': '=',
+                                                            'left': {
+                                                                'type': NodeType.Identifier,
+                                                                'name': 'temp'
+                                                            },
+                                                            'right': {
+                                                                'type': NodeType.CallExpression,
+                                                                'callee': {
+                                                                    'type': NodeType.MemberExpression,
+                                                                    'computed': true,
+                                                                    'object': {
+                                                                        'type': NodeType.Identifier,
+                                                                        'name': 'array'
+                                                                    },
+                                                                    'property': {
+                                                                        'type': NodeType.Literal,
+                                                                        'name': 'pop',
+                                                                        'x-verbatim-property': Utils.stringToUnicode('pop')
+                                                                    }
+                                                                },
+                                                                'arguments': []
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        'type': NodeType.ExpressionStatement,
+                                                        'expression': {
+                                                            'type': NodeType.CallExpression,
+                                                            'callee': {
+                                                                'type': NodeType.MemberExpression,
+                                                                'computed': true,
+                                                                'object': {
+                                                                    'type': NodeType.Identifier,
+                                                                    'name': 'array'
+                                                                },
+                                                                'property': {
+                                                                    'type': NodeType.Literal,
+                                                                    'name': 'unshift',
+                                                                    'x-verbatim-property': Utils.stringToUnicode('unshift')
+                                                                }
+                                                            },
+                                                            'arguments': [
+                                                                {
+                                                                    'type': NodeType.Identifier,
+                                                                    'name': 'temp'
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            'alternate': {
+                                                'type': NodeType.BlockStatement,
+                                                'body': [
+                                                    {
+                                                        'type': NodeType.ExpressionStatement,
+                                                        'expression': {
+                                                            'type': NodeType.AssignmentExpression,
+                                                            'operator': '=',
+                                                            'left': {
+                                                                'type': NodeType.Identifier,
+                                                                'name': 'temp'
+                                                            },
+                                                            'right': {
+                                                                'type': NodeType.CallExpression,
+                                                                'callee': {
+                                                                    'type': NodeType.MemberExpression,
+                                                                    'computed': true,
+                                                                    'object': {
+                                                                        'type': NodeType.Identifier,
+                                                                        'name': 'array'
+                                                                    },
+                                                                    'property': {
+                                                                        'type': NodeType.Literal,
+                                                                        'name': 'shift',
+                                                                        'x-verbatim-property': Utils.stringToUnicode('shift')
+                                                                    }
+                                                                },
+                                                                'arguments': []
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        'type': NodeType.ExpressionStatement,
+                                                        'expression': {
+                                                            'type': NodeType.CallExpression,
+                                                            'callee': {
+                                                                'type': NodeType.MemberExpression,
+                                                                'computed': true,
+                                                                'object': {
+                                                                    'type': NodeType.Identifier,
+                                                                    'name': 'array'
+                                                                },
+                                                                'property': {
+                                                                    'type': NodeType.Literal,
+                                                                    'name': 'push',
+                                                                    'x-verbatim-property': Utils.stringToUnicode('push')
+                                                                }
+                                                            },
+                                                            'arguments': [
+                                                                {
+                                                                    'type': NodeType.Identifier,
+                                                                    'name': 'temp'
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    'generator': false,
+                    'expression': false
+                },
+                "arguments": [
+                    {
+                        'type': 'Identifier',
+                        'name': this.unicodeArrayName
+                    },
+                    {
+                        'type': 'Literal',
+                        'value': this.unicodeArrayRotateValue,
+                        'raw': `'${this.unicodeArrayRotateValue}'`
+                    },
+                    {
+                        'type': 'Literal',
+                        'value': true,
+                        'raw': 'true'
                     }
                 ]
-            },
-            'generator': false,
-            'expression': false
+            }
         };
     }
 }

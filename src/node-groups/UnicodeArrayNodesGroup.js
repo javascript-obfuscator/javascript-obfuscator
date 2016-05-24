@@ -1,26 +1,21 @@
 "use strict";
 const NodesGroup_1 = require('./NodesGroup');
 const UnicodeArrayNode_1 = require('../custom-nodes/unicode-array-nodes/UnicodeArrayNode');
-const UnicodeArrayRotateFunctionCallNode_1 = require('../custom-nodes/unicode-array-nodes/UnicodeArrayRotateFunctionCallNode');
 const UnicodeArrayRotateFunctionNode_1 = require('../custom-nodes/unicode-array-nodes/UnicodeArrayRotateFunctionNode');
 const Utils_1 = require('../Utils');
 class UnicodeArrayNodesGroup extends NodesGroup_1.NodesGroup {
     constructor() {
         super();
-        this.unicodeArrayRotateFunctionName = Utils_1.Utils.getRandomVariableName();
-        let unicodeArrayName = Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH), unicodeArrayRotateValue = Utils_1.Utils.getRandomInteger(100, 500);
+        this.unicodeArrayName = Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
+        this.unicodeArrayRotateValue = Utils_1.Utils.getRandomInteger(100, 500);
         this.nodes = new Map([
             [
                 'unicodeArrayNode',
-                new UnicodeArrayNode_1.UnicodeArrayNode(unicodeArrayName, unicodeArrayRotateValue)
+                new UnicodeArrayNode_1.UnicodeArrayNode(this.unicodeArrayName, this.unicodeArrayRotateValue)
             ],
             [
                 'unicodeArrayRotateFunctionNode',
-                new UnicodeArrayRotateFunctionNode_1.UnicodeArrayRotateFunctionNode(this.unicodeArrayRotateFunctionName, unicodeArrayName)
-            ],
-            [
-                'unicodeArrayRotateFunctionCallNode',
-                new UnicodeArrayRotateFunctionCallNode_1.UnicodeArrayRotateFunctionCallNode(this.unicodeArrayRotateFunctionName, unicodeArrayName, unicodeArrayRotateValue)
+                new UnicodeArrayRotateFunctionNode_1.UnicodeArrayRotateFunctionNode(this.unicodeArrayName, this.unicodeArrayRotateValue)
             ]
         ]);
     }

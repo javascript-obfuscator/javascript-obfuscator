@@ -19,11 +19,6 @@ export class DebugProtectionNodesGroup extends NodesGroup {
     private astTree: INode;
 
     /**
-     * @type {number}
-     */
-    private debugProtectionFunctionIndex: number;
-
-    /**
      * @type {string}
      */
     private debugProtectionFunctionIdentifier: string = Utils.getRandomVariableName();
@@ -40,8 +35,6 @@ export class DebugProtectionNodesGroup extends NodesGroup {
         super();
 
         this.options = options;
-
-        this.debugProtectionFunctionIndex = this.getDebugProtectionFunctionIndex();
 
         this.nodes = new Map <string, ICustomNode> ([
             [
@@ -60,28 +53,5 @@ export class DebugProtectionNodesGroup extends NodesGroup {
                 new DebugProtectionFunctionIntervalNode(this.debugProtectionFunctionIdentifier)
             );
         }
-    }
-
-    /**
-     * @returns {number}
-     */
-    private getDebugProtectionFunctionIndex (): number {
-        let randomIndex: number;
-
-        estraverse.replace(this.astTree, {
-            leave: (node: INode, parent: INode): any => {
-                if (NodeUtils.isProgramNode(node)) {
-                    let programBodyLength: number = node.body.length;
-
-                    randomIndex = Utils.getRandomInteger(0, programBodyLength);
-
-                    return estraverse.VisitorOption.Break;
-                }
-
-                return estraverse.VisitorOption.Skip;
-            }
-        });
-
-        return randomIndex;
     }
 }

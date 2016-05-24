@@ -14,7 +14,8 @@ class UnicodeArrayRotateFunctionNode extends Node_1.Node {
         this.node = this.getNodeStructure();
     }
     appendNode(blockScopeNode) {
-        NodeUtils_1.NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), 1);
+        let programBodyLength = blockScopeNode.body.length, randomIndex = Utils_1.Utils.getRandomInteger(1, programBodyLength);
+        NodeUtils_1.NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), randomIndex);
     }
     getNode() {
         if (!this.unicodeArray.length) {

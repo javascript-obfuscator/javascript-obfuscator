@@ -9,7 +9,7 @@ import { AppendState } from './enums/AppendState';
 import { NodeType } from './enums/NodeType';
 
 import { CatchClauseObfuscator } from './node-obfuscators/CatchClauseObfuscator';
-import { ConsoleOutputDisableExpressionNode } from './nodes/consoleOutputNodes/ConsoleOutputDisableExpressionNode';
+import { ConsoleOutputDisableExpressionNode } from './custom-nodes/console-output-nodes/ConsoleOutputDisableExpressionNode';
 import { DebugProtectionNodesGroup } from './node-groups/DebugProtectionNodesGroup';
 import { FunctionDeclarationObfuscator } from './node-obfuscators/FunctionDeclarationObfuscator';
 import { FunctionObfuscator } from './node-obfuscators/FunctionObfuscator';
@@ -17,7 +17,7 @@ import { LiteralObfuscator } from './node-obfuscators/LiteralObfuscator';
 import { MemberExpressionObfuscator } from './node-obfuscators/MemberExpressionObfuscator';
 import { MethodDefinitionObfuscator } from './node-obfuscators/MethodDefinitionObfuscator';
 import { ObjectExpressionObfuscator } from './node-obfuscators/ObjectExpressionObfuscator';
-import { UnicodeArrayNode } from './nodes/unicodeArrayNodes/UnicodeArrayNode';
+import { UnicodeArrayNode } from './custom-nodes/unicode-array-nodes/UnicodeArrayNode';
 import { UnicodeArrayNodesGroup } from './node-groups/UnicodeArrayNodesGroup';
 import { Utils } from './Utils';
 import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclarationObfuscator';

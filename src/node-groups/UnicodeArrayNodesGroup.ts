@@ -3,9 +3,9 @@ import { ITreeNode } from '../interfaces/nodes/ITreeNode';
 import { INode } from '../interfaces/INode';
 
 import { NodesGroup } from './NodesGroup';
-import { UnicodeArrayNode } from '../nodes/unicodeArrayNodes/UnicodeArrayNode';
-import { UnicodeArrayRotateFunctionCallNode } from '../nodes/unicodeArrayNodes/UnicodeArrayRotateFunctionCallNode';
-import { UnicodeArrayRotateFunctionNode } from '../nodes/unicodeArrayNodes/UnicodeArrayRotateFunctionNode';
+import { UnicodeArrayNode } from '../custom-nodes/unicode-array-nodes/UnicodeArrayNode';
+import { UnicodeArrayRotateFunctionCallNode } from '../custom-nodes/unicode-array-nodes/UnicodeArrayRotateFunctionCallNode';
+import { UnicodeArrayRotateFunctionNode } from '../custom-nodes/unicode-array-nodes/UnicodeArrayRotateFunctionNode';
 import { Utils } from '../Utils';
 
 export class UnicodeArrayNodesGroup extends NodesGroup {

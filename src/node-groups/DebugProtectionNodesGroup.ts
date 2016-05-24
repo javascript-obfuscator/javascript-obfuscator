@@ -4,9 +4,9 @@ import { ITreeNode } from '../interfaces/nodes/ITreeNode';
 
 import { INode } from '../interfaces/INode';
 
-import { DebugProtectionFunctionCallNode } from "../nodes/debugProtectionNodes/DebugProtectionFunctionCallNode";
-import { DebugProtectionFunctionIntervalNode } from "../nodes/debugProtectionNodes/DebugProtectionFunctionIntervalNode";
-import { DebugProtectionFunctionNode } from "../nodes/debugProtectionNodes/DebugProtectionFunctionNode";
+import { DebugProtectionFunctionCallNode } from "../custom-nodes/debug-protection-nodes/DebugProtectionFunctionCallNode";
+import { DebugProtectionFunctionIntervalNode } from "../custom-nodes/debug-protection-nodes/DebugProtectionFunctionIntervalNode";
+import { DebugProtectionFunctionNode } from "../custom-nodes/debug-protection-nodes/DebugProtectionFunctionNode";
 
 import { NodesGroup } from './NodesGroup';
 import { NodeUtils } from "../NodeUtils";

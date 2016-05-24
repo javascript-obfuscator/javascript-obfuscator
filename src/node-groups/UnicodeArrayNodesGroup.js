@@ -1,8 +1,8 @@
 "use strict";
 const NodesGroup_1 = require('./NodesGroup');
-const UnicodeArrayNode_1 = require('../nodes/unicodeArrayNodes/UnicodeArrayNode');
-const UnicodeArrayRotateFunctionCallNode_1 = require('../nodes/unicodeArrayNodes/UnicodeArrayRotateFunctionCallNode');
-const UnicodeArrayRotateFunctionNode_1 = require('../nodes/unicodeArrayNodes/UnicodeArrayRotateFunctionNode');
+const UnicodeArrayNode_1 = require('../custom-nodes/unicode-array-nodes/UnicodeArrayNode');
+const UnicodeArrayRotateFunctionCallNode_1 = require('../custom-nodes/unicode-array-nodes/UnicodeArrayRotateFunctionCallNode');
+const UnicodeArrayRotateFunctionNode_1 = require('../custom-nodes/unicode-array-nodes/UnicodeArrayRotateFunctionNode');
 const Utils_1 = require('../Utils');
 class UnicodeArrayNodesGroup extends NodesGroup_1.NodesGroup {
     constructor(astTree) {

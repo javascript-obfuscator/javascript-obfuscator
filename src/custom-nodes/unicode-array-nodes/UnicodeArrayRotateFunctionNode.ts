@@ -8,8 +8,7 @@ import { AppendState } from "../../enums/AppendState";
 
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
-import {Utils} from "../../Utils";
-import {Obfuscator} from "../../Obfuscator";
+import { Utils } from "../../Utils";
 
 export class UnicodeArrayRotateFunctionNode extends Node {
     /**
@@ -55,10 +54,7 @@ export class UnicodeArrayRotateFunctionNode extends Node {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: BlockScopeNode): void {
-        let programBodyLength: number = blockScopeNode.body.length,
-            randomIndex: number = Utils.getRandomInteger(1, programBodyLength);
-
-        NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), randomIndex);
+        NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), 1);
     }
 
     /**

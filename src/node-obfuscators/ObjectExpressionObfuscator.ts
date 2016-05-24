@@ -5,7 +5,7 @@ import { IIdentifierNode } from "../interfaces/nodes/IIdentifierNode";
 import { ILiteralNode } from "../interfaces/nodes/ILiteralNode";
 import { IObjectExpressionNode } from "../interfaces/nodes/IObjectExpressionNode";
 import { IPropertyNode } from "../interfaces/nodes/IPropertyNode";
-import { ITreeNode } from "../interfaces/nodes/ITreeNode";
+import { INode } from "../interfaces/nodes/INode";
 
 import { NodeType } from "../enums/NodeType";
 
@@ -30,7 +30,7 @@ export class ObjectExpressionObfuscator extends NodeObfuscator {
     public obfuscateNode (objectExpressionNode: IObjectExpressionNode): void {
         objectExpressionNode.properties.forEach((property: IPropertyNode) => {
             estraverse.replace(property.key, {
-                leave: (node: ITreeNode, parentNode: ITreeNode): any => {
+                leave: (node: INode, parentNode: INode): any => {
                     if (NodeUtils.isLiteralNode(node)) {
                         this.literalNodeController(node);
 

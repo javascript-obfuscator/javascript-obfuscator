@@ -1,9 +1,9 @@
 import * as estraverse from 'estraverse';
 
-import { INode } from './interfaces/INode';
+import { ICustomNode } from './interfaces/ICustomNode';
 import { INodeObfuscator } from './interfaces/INodeObfuscator';
 import { INodesGroup } from './interfaces/INodesGroup';
-import { ITreeNode } from './interfaces/nodes/ITreeNode';
+import { INode } from './interfaces/nodes/INode';
 
 import { AppendState } from './enums/AppendState';
 import { NodeType } from './enums/NodeType';
@@ -26,7 +26,7 @@ export class Obfuscator {
     /**
      * @type {Map<string, Node>}
      */
-    private nodes: Map <string, INode> = new Map <string, INode> ();
+    private nodes: Map <string, ICustomNode> = new Map <string, ICustomNode> ();
 
     /**
      * @type {Map<string, Function[]>}
@@ -62,16 +62,16 @@ export class Obfuscator {
     /**
      * @param node
      */
-    public obfuscateNode (node: ITreeNode): void {
+    public obfuscateNode (node: INode): void {
         this.setNewNodes(node);
         this.beforeObfuscation(node);
 
         estraverse.replace(node, {
-            enter: (node: ITreeNode, parent: ITreeNode): any => this.nodeControllerFirstPass(node, parent)
+            enter: (node: INode, parent: INode): any => this.nodeControllerFirstPass(node, parent)
         });
 
         estraverse.replace(node, {
-            leave: (node: ITreeNode, parent: ITreeNode): any => this.nodeControllerSecondPass(node, parent)
+            leave: (node: INode, parent: INode): any => this.nodeControllerSecondPass(node, parent)
         });
 
         this.afterObfuscation(node);
@@ -81,7 +81,7 @@ export class Obfuscator {
      * @param nodeName
      * @param node
      */
-    public setNode (nodeName: string, node: INode): void {
+    public setNode (nodeName: string, node: ICustomNode): void {
         this.nodes.set(nodeName, node);
     }
 
@@ -89,9 +89,9 @@ export class Obfuscator {
      * @param nodesGroup
      */
     public setNodesGroup (nodesGroup: INodesGroup): void {
-        let nodes: Map <string, INode> = nodesGroup.getNodes();
+        let nodes: Map <string, ICustomNode> = nodesGroup.getNodes();
 
-        nodes.forEach((node: INode, key: string) => {
+        nodes.forEach((node: ICustomNode, key: string) => {
             this.nodes.set(key, node);
         });
     }
@@ -99,8 +99,8 @@ export class Obfuscator {
     /**
      * @param node
      */
-    private afterObfuscation (node: ITreeNode): void {
-        this.nodes.forEach((node: INode) => {
+    private afterObfuscation (node: INode): void {
+        this.nodes.forEach((node: ICustomNode) => {
             if (node.getAppendState() === AppendState.AfterObfuscation) {
                 node.appendNode();
             }
@@ -110,15 +110,15 @@ export class Obfuscator {
     /**
      * @param node
      */
-    private beforeObfuscation (node: ITreeNode): void {
-        this.nodes.forEach((node: INode) => {
+    private beforeObfuscation (node: INode): void {
+        this.nodes.forEach((node: ICustomNode) => {
             if (node.getAppendState() === AppendState.BeforeObfuscation) {
                 node.appendNode();
             }
         });
     };
 
-    private setNewNodes (astTree: ITreeNode): void {
+    private setNewNodes (astTree: INode): void {
         if (this.options['disableConsoleOutput']) {
             this.setNode(
                 'consoleOutputDisableExpressionNode',
@@ -147,7 +147,7 @@ export class Obfuscator {
      * @param node
      * @param parent
      */
-    private nodeControllerFirstPass (node: ITreeNode, parent: ITreeNode): void {
+    private nodeControllerFirstPass (node: INode, parent: INode): void {
         Object.defineProperty(node, 'parentNode', {
             configurable: true,
             enumerable: true,
@@ -160,7 +160,7 @@ export class Obfuscator {
      * @param node
      * @param parent
      */
-    private nodeControllerSecondPass (node: ITreeNode, parent: ITreeNode): void {
+    private nodeControllerSecondPass (node: INode, parent: INode): void {
         switch (node.type) {
             default:
                 this.initializeNodeObfuscators(node, parent);
@@ -171,7 +171,7 @@ export class Obfuscator {
      * @param node
      * @param parent
      */
-    private initializeNodeObfuscators (node: ITreeNode, parent: ITreeNode): void {
+    private initializeNodeObfuscators (node: INode, parent: INode): void {
         if (!this.nodeObfuscators.has(node.type)) {
             return;
         }

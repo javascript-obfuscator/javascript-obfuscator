@@ -1,7 +1,7 @@
 import * as escodegen from 'escodegen';
 import * as estraverse from 'estraverse';
 
-import { ITreeNode } from '../../interfaces/nodes/ITreeNode';
+import { INode } from '../../interfaces/nodes/INode';
 
 import { AppendState } from '../../enums/AppendState';
 import { NodeType } from "../../enums/NodeType";
@@ -41,7 +41,7 @@ export class UnicodeArrayNode extends Node {
      * @param unicodeArrayName
      * @param unicodeArrayRotateValue
      */
-    constructor (astTree: ITreeNode, unicodeArrayName: string, unicodeArrayRotateValue: number = 0) {
+    constructor (astTree: INode, unicodeArrayName: string, unicodeArrayRotateValue: number = 0) {
         super();
 
         this.astTree = astTree;
@@ -53,7 +53,7 @@ export class UnicodeArrayNode extends Node {
 
     public appendNode (): void {
         estraverse.replace(this.astTree, {
-            leave: (node: ITreeNode, parent: ITreeNode): any => {
+            leave: (node: INode, parent: INode): any => {
                 if (NodeUtils.isProgramNode(node)) {
                     NodeUtils.prependNode(node.body, this.getNode());
 
@@ -80,9 +80,9 @@ export class UnicodeArrayNode extends Node {
     }
 
     /**
-     * @returns {ITreeNode}
+     * @returns {INode}
      */
-    public getNode (): ITreeNode {
+    public getNode (): INode {
         Utils.arrayRotate(this.unicodeArray, this.unicodeArrayRotateValue);
 
         this.updateNode();

@@ -1,7 +1,7 @@
 import * as estraverse from 'estraverse';
 
 import { IFunctionNode } from "../interfaces/nodes/IFunctionNode";
-import { ITreeNode } from "../interfaces/nodes/ITreeNode";
+import { INode } from "../interfaces/nodes/INode";
 
 import { NodeObfuscator } from './NodeObfuscator';
 import { NodeUtils } from "../NodeUtils";
@@ -33,9 +33,9 @@ export class FunctionObfuscator extends NodeObfuscator {
      * @param functionNode
      */
     private replaceFunctionParams (functionNode: IFunctionNode): void {
-        functionNode.params.forEach((paramsNode: ITreeNode) => {
+        functionNode.params.forEach((paramsNode: INode) => {
             estraverse.replace(paramsNode, {
-                leave: (node: ITreeNode): any => {
+                leave: (node: INode): any => {
                     if (NodeUtils.isIdentifierNode(node)) {
                         this.functionParams.set(node.name, Utils.getRandomVariableName());
                         node.name = this.functionParams.get(node.name);
@@ -54,7 +54,7 @@ export class FunctionObfuscator extends NodeObfuscator {
      */
     private replaceFunctionParamsInBody (functionNode: IFunctionNode): void {
         estraverse.replace(functionNode.body, {
-            leave: (node: ITreeNode, parentNode: ITreeNode): any => {
+            leave: (node: INode, parentNode: INode): any => {
                 this.replaceNodeIdentifierByNewValue(node, parentNode, this.functionParams);
             }
         });

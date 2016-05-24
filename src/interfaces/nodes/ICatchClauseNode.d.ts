@@ -1,7 +1,7 @@
 import { IIdentifierNode } from "./IIdentifierNode";
-import { ITreeNode } from "./ITreeNode";
+import { INode } from "./INode";
 
-export interface ICatchClauseNode extends ITreeNode {
+export interface ICatchClauseNode extends INode {
     param: IIdentifierNode;
-    body: ITreeNode[];
+    body: INode[];
 }

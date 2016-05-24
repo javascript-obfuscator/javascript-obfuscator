@@ -1,5 +1,5 @@
-import { ITreeNode } from "./ITreeNode";
+import { INode } from "./INode";
 
-export interface IBlockStatementNode extends ITreeNode {
-    body: ITreeNode[];
+export interface IBlockStatementNode extends INode {
+    body: INode[];
 }

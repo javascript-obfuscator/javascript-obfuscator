@@ -1,7 +1,7 @@
 import * as estraverse from 'estraverse';
 
 import { IFunctionDeclarationNode } from "../interfaces/nodes/IFunctionDeclarationNode";
-import { ITreeNode } from "../interfaces/nodes/ITreeNode";
+import { INode } from "../interfaces/nodes/INode";
 
 import { NodeType } from "../enums/NodeType";
 
@@ -28,7 +28,7 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
      * @param functionDeclarationNode
      * @param parentNode
      */
-    public obfuscateNode (functionDeclarationNode: IFunctionDeclarationNode, parentNode: ITreeNode): void {
+    public obfuscateNode (functionDeclarationNode: IFunctionDeclarationNode, parentNode: INode): void {
         if (parentNode.type === NodeType.Program) {
             return;
         }
@@ -42,7 +42,7 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
      */
     private replaceFunctionName (functionDeclarationNode: IFunctionDeclarationNode): void {
         estraverse.replace(functionDeclarationNode.id, {
-            leave: (node: ITreeNode): any => {
+            leave: (node: INode): any => {
                 if (NodeUtils.isIdentifierNode(node)) {
                     this.functionName.set(node.name, Utils.getRandomVariableName());
                     node.name = this.functionName.get(node.name);
@@ -59,12 +59,12 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
      * @param functionDeclarationNode
      */
     private replaceFunctionCalls (functionDeclarationNode: IFunctionDeclarationNode): void {
-        let scopeNode: ITreeNode = NodeUtils.getScopeOfNode(
+        let scopeNode: INode = NodeUtils.getScopeOfNode(
             functionDeclarationNode
         );
 
         estraverse.replace(scopeNode, {
-            enter: (node: ITreeNode, parentNode: ITreeNode): any => {
+            enter: (node: INode, parentNode: INode): any => {
                 this.replaceNodeIdentifierByNewValue(node, parentNode, this.functionName);
             }
         });

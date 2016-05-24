@@ -1,6 +1,6 @@
 import * as estraverse from 'estraverse';
 
-import { ITreeNode } from '../../interfaces/nodes/ITreeNode';
+import { INode } from '../../interfaces/nodes/INode';
 
 import { NodeType } from '../../enums/NodeType';
 
@@ -18,7 +18,7 @@ export class DebugProtectionFunctionIntervalNode extends Node {
      * @param debugProtectionFunctionName
      */
     constructor (
-        astTree: ITreeNode,
+        astTree: INode,
         debugProtectionFunctionName: string
     ) {
         super();
@@ -31,7 +31,7 @@ export class DebugProtectionFunctionIntervalNode extends Node {
 
     public appendNode (): void {
         estraverse.replace(this.astTree, {
-            leave: (node: ITreeNode, parent: ITreeNode): any => {
+            leave: (node: INode, parent: INode): any => {
                 if (NodeUtils.isProgramNode(node)) {
                     NodeUtils.appendNode(node.body, this.getNode());
 

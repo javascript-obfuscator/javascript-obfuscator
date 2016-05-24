@@ -1,6 +1,6 @@
-import { ITreeNode } from '../interfaces/nodes/ITreeNode';
+import { INode } from '../interfaces/nodes/INode';
 
-import { INode } from '../interfaces/INode';
+import { ICustomNode } from '../interfaces/ICustomNode';
 
 import { NodesGroup } from './NodesGroup';
 import { UnicodeArrayNode } from '../custom-nodes/unicode-array-nodes/UnicodeArrayNode';
@@ -17,13 +17,13 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
     /**
      * @param astTree
      */
-    constructor (astTree: ITreeNode) {
+    constructor (astTree: INode) {
         super();
 
         let unicodeArrayName: string = Utils.getRandomVariableName(UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH),
             unicodeArrayRotateValue: number = Utils.getRandomInteger(100, 500);
 
-        this.nodes = new Map <string, INode> ([
+        this.nodes = new Map <string, ICustomNode> ([
             [
                 'unicodeArrayNode',
                 new UnicodeArrayNode(

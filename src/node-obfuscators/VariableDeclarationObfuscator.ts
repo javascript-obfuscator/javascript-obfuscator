@@ -1,6 +1,6 @@
 import * as estraverse from 'estraverse';
 
-import { ITreeNode } from "../interfaces/nodes/ITreeNode";
+import { INode } from "../interfaces/nodes/INode";
 import { IVariableDeclarationNode } from "../interfaces/nodes/IVariableDeclarationNode";
 import { IVariableDeclaratorNode } from "../interfaces/nodes/IVariableDeclaratorNode";
 
@@ -30,7 +30,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
      * @param variableDeclarationNode
      * @param parentNode
      */
-    public obfuscateNode (variableDeclarationNode: IVariableDeclarationNode, parentNode: ITreeNode): void {
+    public obfuscateNode (variableDeclarationNode: IVariableDeclarationNode, parentNode: INode): void {
         if (parentNode.type === NodeType.Program) {
             return;
         }
@@ -45,7 +45,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
     private replaceVariableName (variableDeclarationNode: IVariableDeclarationNode): void {
         variableDeclarationNode.declarations.forEach((declarationNode: IVariableDeclaratorNode) => {
             estraverse.replace(declarationNode.id, {
-                enter: (node: ITreeNode): any => {
+                enter: (node: INode): any => {
                     if (NodeUtils.isIdentifierNode(node)) {
                         this.variableNames.set(node.name, Utils.getRandomVariableName());
                         node.name = this.variableNames.get(node.name);
@@ -63,8 +63,8 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
      * @param variableDeclarationNode
      * @param variableParentNode
      */
-    private replaceVariableCalls (variableDeclarationNode: IVariableDeclarationNode, variableParentNode: ITreeNode): void {
-        let scopeNode: ITreeNode;
+    private replaceVariableCalls (variableDeclarationNode: IVariableDeclarationNode, variableParentNode: INode): void {
+        let scopeNode: INode;
 
         scopeNode = variableDeclarationNode.kind === 'var' ? NodeUtils.getScopeOfNode(
             variableDeclarationNode
@@ -73,7 +73,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
         let isNodeAfterVariableDeclaratorFlag: boolean = false;
 
         estraverse.replace(scopeNode, {
-            enter: (node: ITreeNode, parentNode: ITreeNode): any => {
+            enter: (node: INode, parentNode: INode): any => {
                 const functionNodes: string[] = [
                     NodeType.ArrowFunctionExpression,
                     NodeType.FunctionDeclaration,
@@ -82,7 +82,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
 
                 if (Utils.arrayContains(functionNodes, node.type)) {
                     estraverse.replace(node, {
-                        enter: (node: ITreeNode, parentNode: ITreeNode): any => {
+                        enter: (node: INode, parentNode: INode): any => {
                             this.replaceNodeIdentifierByNewValue(node, parentNode, this.variableNames);
                         }
                     });

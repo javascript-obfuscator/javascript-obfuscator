@@ -1,8 +1,8 @@
 import { IIdentifierNode } from "./IIdentifierNode";
 import { ILiteralNode } from "./ILiteralNode";
-import { ITreeNode } from "./ITreeNode";
+import { INode } from "./INode";
 
-export interface IPropertyNode extends ITreeNode {
+export interface IPropertyNode extends INode {
     key: IIdentifierNode|ILiteralNode;
     computed: boolean;
     value: IIdentifierNode|ILiteralNode;

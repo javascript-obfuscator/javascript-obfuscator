@@ -1,8 +1,8 @@
 import * as estraverse from 'estraverse';
 
-import { ITreeNode } from '../interfaces/nodes/ITreeNode';
+import { INode } from '../interfaces/nodes/INode';
 
-import { INode } from '../interfaces/INode';
+import { ICustomNode } from '../interfaces/ICustomNode';
 
 import { DebugProtectionFunctionCallNode } from "../custom-nodes/debug-protection-nodes/DebugProtectionFunctionCallNode";
 import { DebugProtectionFunctionIntervalNode } from "../custom-nodes/debug-protection-nodes/DebugProtectionFunctionIntervalNode";
@@ -14,9 +14,9 @@ import { Utils } from '../Utils';
 
 export class DebugProtectionNodesGroup extends NodesGroup {
     /**
-     * @type {ITreeNode}
+     * @type {INode}
      */
-    private astTree: ITreeNode;
+    private astTree: INode;
 
     /**
      * @type {number}
@@ -35,8 +35,9 @@ export class DebugProtectionNodesGroup extends NodesGroup {
 
     /**
      * @param astTree
+     * @param options
      */
-    constructor (astTree: ITreeNode, options: any) {
+    constructor (astTree: INode, options: any) {
         super();
 
         this.astTree = astTree;
@@ -44,7 +45,7 @@ export class DebugProtectionNodesGroup extends NodesGroup {
 
         this.debugProtectionFunctionIndex = this.getDebugProtectionFunctionIndex();
 
-        this.nodes = new Map <string, INode> ([
+        this.nodes = new Map <string, ICustomNode> ([
             [
                 'debugProtectionFunctionNode',
                 new DebugProtectionFunctionNode(
@@ -80,7 +81,7 @@ export class DebugProtectionNodesGroup extends NodesGroup {
         let randomIndex: number;
 
         estraverse.replace(this.astTree, {
-            leave: (node: ITreeNode, parent: ITreeNode): any => {
+            leave: (node: INode, parent: INode): any => {
                 if (NodeUtils.isProgramNode(node)) {
                     let programBodyLength: number = node.body.length;
 

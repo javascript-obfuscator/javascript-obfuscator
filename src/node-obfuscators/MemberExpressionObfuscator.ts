@@ -4,7 +4,7 @@ import * as estraverse from 'estraverse';
 import { IIdentifierNode } from "../interfaces/nodes/IIdentifierNode";
 import { ILiteralNode } from "../interfaces/nodes/ILiteralNode";
 import { IMemberExpressionNode } from "../interfaces/nodes/IMemberExpressionNode";
-import { ITreeNode } from "../interfaces/nodes/ITreeNode";
+import { INode } from "../interfaces/nodes/INode";
 
 import { NodeType } from "../enums/NodeType";
 
@@ -17,7 +17,7 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
      */
     public obfuscateNode (memberExpressionNode: IMemberExpressionNode): void {
         estraverse.replace(memberExpressionNode.property, {
-            leave: (node: ITreeNode, parentNode: ITreeNode): any => {
+            leave: (node: INode, parentNode: INode): any => {
                 if (NodeUtils.isLiteralNode(node)) {
                     this.literalNodeController(node);
 

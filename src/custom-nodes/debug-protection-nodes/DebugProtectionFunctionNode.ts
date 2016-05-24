@@ -1,7 +1,7 @@
 import * as esprima from 'esprima';
 import * as estraverse from 'estraverse';
 
-import { ITreeNode } from '../../interfaces/nodes/ITreeNode';
+import { INode } from '../../interfaces/nodes/INode';
 
 import { Node } from '../Node';
 import { NodeUtils } from '../../NodeUtils';
@@ -23,7 +23,7 @@ export class DebugProtectionFunctionNode extends Node {
      * @param debugProtectionFunctionIndex
      */
     constructor (
-        astTree: ITreeNode,
+        astTree: INode,
         debugProtectionFunctionName: string,
         debugProtectionFunctionIndex: number
     ) {
@@ -38,7 +38,7 @@ export class DebugProtectionFunctionNode extends Node {
 
     public appendNode (): void {
         estraverse.replace(this.astTree, {
-            leave: (node: ITreeNode, parent: ITreeNode): any => {
+            leave: (node: INode, parent: INode): any => {
                 if (NodeUtils.isProgramNode(node)) {
                     NodeUtils.insertNodeAtIndex(node.body, this.getNode(), this.debugProtectionFunctionIndex);
 

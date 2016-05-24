@@ -1,5 +1,5 @@
-import { ITreeNode } from "./ITreeNode";
+import { INode } from "./INode";
 
-export interface IIdentifierNode extends ITreeNode{
+export interface IIdentifierNode extends INode{
     name: string;
 }

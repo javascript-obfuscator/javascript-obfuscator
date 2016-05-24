@@ -1,9 +1,9 @@
-import { ITreeNode } from '../interfaces/nodes/ITreeNode';
+import { INode } from '../interfaces/nodes/INode';
 
 export interface INodeObfuscator {
     /**
      * @param node
      * @param parentNode
      */
-    obfuscateNode (node: ITreeNode, parentNode?: ITreeNode): void;
+    obfuscateNode (node: INode, parentNode?: INode): void;
 }

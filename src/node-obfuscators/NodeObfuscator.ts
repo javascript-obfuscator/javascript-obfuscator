@@ -1,6 +1,6 @@
-import { INode } from '../interfaces/INode';
+import { ICustomNode } from '../interfaces/ICustomNode';
 import { INodeObfuscator } from '../interfaces/INodeObfuscator';
-import { ITreeNode } from "../interfaces/nodes/ITreeNode";
+import { INode } from "../interfaces/nodes/INode";
 
 import { JSFuck } from "../enums/JSFuck";
 
@@ -11,12 +11,12 @@ export abstract class NodeObfuscator implements INodeObfuscator {
     /**
      * @type Map <string, Node>
      */
-    protected nodes: Map <string, INode>;
+    protected nodes: Map <string, ICustomNode>;
 
     /**
      * @param nodes
      */
-    constructor(nodes: Map <string, INode>) {
+    constructor(nodes: Map <string, ICustomNode>) {
         this.nodes = nodes;
     }
 
@@ -24,14 +24,14 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @param node
      * @param parentNode
      */
-    public abstract obfuscateNode (node: ITreeNode, parentNode?: ITreeNode): void;
+    public abstract obfuscateNode (node: INode, parentNode?: INode): void;
 
     /**
      * @param node
      * @param parentNode
      * @param namesMap
      */
-    protected replaceNodeIdentifierByNewValue (node: ITreeNode, parentNode: ITreeNode, namesMap: Map <string, string>): void {
+    protected replaceNodeIdentifierByNewValue (node: INode, parentNode: INode, namesMap: Map <string, string>): void {
         if (NodeUtils.isIdentifierNode(node) && namesMap.has(node.name)) {
             if (
                 (NodeUtils.isPropertyNode(parentNode) && parentNode.key === node) ||

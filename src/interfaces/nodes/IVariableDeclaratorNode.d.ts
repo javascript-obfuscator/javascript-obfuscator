@@ -1,7 +1,7 @@
 import { IIdentifierNode } from "./IIdentifierNode";
-import { ITreeNode } from "./ITreeNode";
+import { INode } from "./INode";
 
-export interface IVariableDeclaratorNode extends ITreeNode {
+export interface IVariableDeclaratorNode extends INode {
     id: IIdentifierNode;
     init: any;
 }

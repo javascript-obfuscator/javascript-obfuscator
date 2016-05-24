@@ -2,7 +2,7 @@ import * as escodegen from 'escodegen';
 
 import { ILiteralNode } from "../interfaces/nodes/ILiteralNode";
 
-import { ITreeNode } from "../interfaces/nodes/ITreeNode";
+import { INode } from "../interfaces/nodes/INode";
 import { NodeObfuscator } from './NodeObfuscator';
 import { NodeUtils } from "../NodeUtils";
 
@@ -11,7 +11,7 @@ export class LiteralObfuscator extends NodeObfuscator {
      * @param literalNode
      * @param parentNode
      */
-    public obfuscateNode (literalNode: ILiteralNode, parentNode: ITreeNode): void {
+    public obfuscateNode (literalNode: ILiteralNode, parentNode: INode): void {
         if (NodeUtils.isPropertyNode(parentNode) && parentNode.key === literalNode) {
             return;
         }

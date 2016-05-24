@@ -1,6 +1,6 @@
 import { IPropertyNode } from "./IPropertyNode";
-import { ITreeNode } from "./ITreeNode";
+import { INode } from "./INode";
 
-export interface IObjectExpressionNode extends ITreeNode {
+export interface IObjectExpressionNode extends INode {
     properties: IPropertyNode[];
 }

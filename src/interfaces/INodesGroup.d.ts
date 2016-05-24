@@ -1,8 +1,8 @@
-import { INode } from './INode';
+import { ICustomNode } from './ICustomNode';
 
 export interface INodesGroup {
     /**
-     * @returns {Map <string, INode>}
+     * @returns {Map <string, ICustomNode>}
      */
-    getNodes (): Map <string, INode>;
+    getNodes (): Map <string, ICustomNode>;
 }

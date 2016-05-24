@@ -6,7 +6,7 @@ import { ILiteralNode } from "./interfaces/nodes/ILiteralNode";
 import { IMemberExpressionNode } from "./interfaces/nodes/IMemberExpressionNode";
 import { IProgramNode } from "./interfaces/nodes/IProgramNode";
 import { IPropertyNode } from "./interfaces/nodes/IPropertyNode";
-import { ITreeNode } from './interfaces/nodes/ITreeNode';
+import { INode } from './interfaces/nodes/INode';
 import { IVariableDeclaratorNode } from "./interfaces/nodes/IVariableDeclaratorNode";
 
 import { NodeType } from "./enums/NodeType";
@@ -28,7 +28,7 @@ export class NodeUtils {
      * @param blockScopeBody
      * @param node
      */
-    public static appendNode (blockScopeBody: ITreeNode[], node: ITreeNode): void {
+    public static appendNode (blockScopeBody: INode[], node: INode): void {
         if (!NodeUtils.validateNode(node)) {
             return;
         }
@@ -39,9 +39,9 @@ export class NodeUtils {
     /**
      * @param node
      * @param index
-     * @returns {ITreeNode}
+     * @returns {INode}
      */
-    public static getBlockScopeNodeByIndex (node: ITreeNode, index: number = 0): ITreeNode {
+    public static getBlockScopeNodeByIndex (node: INode, index: number = 0): INode {
         if (NodeUtils.isNodeHasBlockScope(node) && node.body[index]) {
             return node.body[index];
         }
@@ -52,9 +52,9 @@ export class NodeUtils {
     /**
      * @param node
      * @param depth
-     * @returns {ITreeNode}
+     * @returns {INode}
      */
-    public static getScopeOfNode (node: ITreeNode, depth: number = 0): ITreeNode {
+    public static getScopeOfNode (node: INode, depth: number = 0): INode {
         if (node.parentNode.type === NodeType.Program) {
             return node.parentNode;
         }
@@ -79,14 +79,14 @@ export class NodeUtils {
      * @param types
      * @param limitNodeTypes
      * @param depth
-     * @returns {ITreeNode}
+     * @returns {INode}
      */
     public static getParentNodeWithType (
-        node: ITreeNode,
+        node: INode,
         types: string[],
         limitNodeTypes: string[] = [],
         depth: number = 0
-    ): ITreeNode {
+    ): INode {
         if (node.parentNode.type === NodeType.Program || Utils.arrayContains(limitNodeTypes, node.parentNode.type)) {
             return node.parentNode;
         }
@@ -107,7 +107,7 @@ export class NodeUtils {
      * @param node
      * @param index
      */
-    public static insertNodeAtIndex (blockScopeBody: ITreeNode[], node: ITreeNode, index: number): void {
+    public static insertNodeAtIndex (blockScopeBody: INode[], node: INode, index: number): void {
         if (!NodeUtils.validateNode(node)) {
             return;
         }
@@ -119,7 +119,7 @@ export class NodeUtils {
      * @param node
      * @returns {boolean}
      */
-    public static isBlockStatementNode (node: ITreeNode): node is IBlockStatementNode {
+    public static isBlockStatementNode (node: INode): node is IBlockStatementNode {
         return node.type === NodeType.BlockStatement;
     }
 
@@ -127,7 +127,7 @@ export class NodeUtils {
      * @param node
      * @returns {boolean}
      */
-    public static isIdentifierNode (node: ITreeNode): node is IIdentifierNode {
+    public static isIdentifierNode (node: INode): node is IIdentifierNode {
         return node.type === NodeType.Identifier;
     }
 
@@ -135,7 +135,7 @@ export class NodeUtils {
      * @param node
      * @returns {boolean}
      */
-    public static isLiteralNode (node: ITreeNode): node is ILiteralNode {
+    public static isLiteralNode (node: INode): node is ILiteralNode {
         return node.type === NodeType.Literal;
     }
 
@@ -143,7 +143,7 @@ export class NodeUtils {
      * @param node
      * @returns {boolean}
      */
-    public static isMemberExpressionNode (node: ITreeNode): node is IMemberExpressionNode {
+    public static isMemberExpressionNode (node: INode): node is IMemberExpressionNode {
         return node.type === NodeType.MemberExpression;
     }
 
@@ -152,7 +152,7 @@ export class NodeUtils {
      * @returns {boolean}
      */
     public static isNodeHasBlockScope (
-        node: ITreeNode
+        node: INode
     ): node is IBlockStatementNode|ICatchClauseNode|IFunctionNode|IProgramNode {
         return node.hasOwnProperty('body');
     }
@@ -162,7 +162,7 @@ export class NodeUtils {
      * @param node
      * @returns {boolean}
      */
-    public static isProgramNode (node: ITreeNode): node is IProgramNode {
+    public static isProgramNode (node: INode): node is IProgramNode {
         return node.type === NodeType.Program;
     }
 
@@ -171,7 +171,7 @@ export class NodeUtils {
      * @param node
      * @returns {boolean}
      */
-    public static isPropertyNode (node: ITreeNode): node is IPropertyNode {
+    public static isPropertyNode (node: INode): node is IPropertyNode {
         return node.type === NodeType.Property;
     }
 
@@ -180,7 +180,7 @@ export class NodeUtils {
      * @param node
      * @returns {boolean}
      */
-    public static isVariableDeclaratorNode (node: ITreeNode): node is IVariableDeclaratorNode {
+    public static isVariableDeclaratorNode (node: INode): node is IVariableDeclaratorNode {
         return node.type === NodeType.VariableDeclarator;
     }
 
@@ -188,7 +188,7 @@ export class NodeUtils {
      * @param blockScopeBody
      * @param node
      */
-    public static prependNode (blockScopeBody: ITreeNode[], node: ITreeNode): void {
+    public static prependNode (blockScopeBody: INode[], node: INode): void {
         if (!NodeUtils.validateNode(node)) {
             return;
         }
@@ -200,7 +200,7 @@ export class NodeUtils {
      * @param node
      * @returns {boolean}
      */
-    private static validateNode (node: ITreeNode): boolean {
+    private static validateNode (node: INode): boolean {
         return !!node;
     }
 }

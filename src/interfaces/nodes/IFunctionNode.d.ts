@@ -1,10 +1,10 @@
 import { IIdentifierNode } from "./IIdentifierNode";
-import { ITreeNode } from "./ITreeNode";
+import { INode } from "./INode";
 
-export interface IFunctionNode extends ITreeNode {
+export interface IFunctionNode extends INode {
     id: IIdentifierNode;
     params: IIdentifierNode[];
-    body: ITreeNode[];
+    body: INode[];
     generator: boolean;
     expression: boolean;
 }

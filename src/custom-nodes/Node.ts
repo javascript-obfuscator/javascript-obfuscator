@@ -1,23 +1,23 @@
-import { INode } from '../interfaces/INode';
-import { ITreeNode } from '../interfaces/nodes/ITreeNode';
+import { ICustomNode } from '../interfaces/ICustomNode';
+import { INode } from '../interfaces/nodes/INode';
 
 import { AppendState } from '../enums/AppendState';
 
-export abstract class Node implements INode {
+export abstract class Node implements ICustomNode {
     /**
      * @type {AppendState}
      */
     protected appendState: AppendState = AppendState.BeforeObfuscation;
 
     /**
-     * @type {ITreeNode}
+     * @type {INode}
      */
-    protected astTree: ITreeNode;
+    protected astTree: INode;
 
     /**
-     * @type {ITreeNode}
+     * @type {INode}
      */
-    protected node: ITreeNode;
+    protected node: INode;
 
     constructor () {}
 
@@ -33,14 +33,14 @@ export abstract class Node implements INode {
     /**
      * @returns any
      */
-    public getNode (): ITreeNode {
+    public getNode (): INode {
         return this.node;
     }
 
     /**
      * @param node
      */
-    public setNode (node: ITreeNode): void {
+    public setNode (node: INode): void {
         this.node = node;
     }
 

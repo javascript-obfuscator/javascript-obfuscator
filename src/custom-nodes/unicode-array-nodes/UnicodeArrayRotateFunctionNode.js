@@ -1,5 +1,4 @@
 "use strict";
-const estraverse = require('estraverse');
 const NodeType_1 = require("../../enums/NodeType");
 const Node_1 = require('../Node');
 const NodeUtils_1 = require("../../NodeUtils");
@@ -11,16 +10,8 @@ class UnicodeArrayRotateFunctionNode extends Node_1.Node {
         this.unicodeArrayName = unicodeArrayName;
         this.node = this.getNodeStructure();
     }
-    appendNode(astTree) {
-        estraverse.replace(astTree, {
-            leave: (node, parent) => {
-                if (NodeUtils_1.NodeUtils.isProgramNode(node)) {
-                    NodeUtils_1.NodeUtils.appendNode(node.body, this.getNode());
-                    return estraverse.VisitorOption.Break;
-                }
-                return estraverse.VisitorOption.Skip;
-            }
-        });
+    appendNode(blockScopeNode) {
+        NodeUtils_1.NodeUtils.appendNode(blockScopeNode.body, this.getNode());
     }
     getNodeIdentifier() {
         return this.unicodeArrayRotateFunctionName;

@@ -1,7 +1,6 @@
 import * as esprima from 'esprima';
-import * as estraverse from 'estraverse';
 
-import { INode } from '../../interfaces/nodes/INode';
+import { BlockScopeNode } from "../../types/BlockScopeNode";
 
 import { Node } from '../Node';
 import { NodeUtils } from '../../NodeUtils';
@@ -27,23 +26,13 @@ export class DebugProtectionFunctionNode extends Node {
     }
 
     /**
-     * @param astTree
+     * @param blockScopeNode
      */
-    public appendNode (astTree: INode): void {
-        estraverse.replace(astTree, {
-            leave: (node: INode, parent: INode): any => {
-                if (NodeUtils.isProgramNode(node)) {
-                    let programBodyLength: number = node.body.length,
-                        randomIndex = Utils.getRandomInteger(0, programBodyLength);
+    public appendNode (blockScopeNode: BlockScopeNode): void {
+        let programBodyLength: number = blockScopeNode.body.length,
+            randomIndex = Utils.getRandomInteger(0, programBodyLength);
 
-                    NodeUtils.insertNodeAtIndex(node.body, this.getNode(), randomIndex);
-
-                    return estraverse.VisitorOption.Break;
-                }
-
-                return estraverse.VisitorOption.Skip;
-            }
-        });
+        NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), randomIndex);
     }
 
     /**

@@ -1,4 +1,5 @@
 "use strict";
+const estraverse = require('estraverse');
 const NodeType_1 = require("./enums/NodeType");
 const Utils_1 = require("./Utils");
 class NodeUtils {
@@ -14,18 +15,18 @@ class NodeUtils {
         }
         return node;
     }
-    static getScopeOfNode(node, depth = 0) {
+    static getBlockScopeOfNode(node, depth = 0) {
         if (node.parentNode.type === NodeType_1.NodeType.Program) {
             return node.parentNode;
         }
         if (!Utils_1.Utils.arrayContains(NodeUtils.scopeNodes, node.parentNode.type)) {
-            return NodeUtils.getScopeOfNode(node.parentNode, depth);
+            return NodeUtils.getBlockScopeOfNode(node.parentNode, depth);
         }
         if (depth > 0) {
-            return NodeUtils.getScopeOfNode(node.parentNode, --depth);
+            return NodeUtils.getBlockScopeOfNode(node.parentNode, --depth);
         }
         if (node.type !== NodeType_1.NodeType.BlockStatement) {
-            return NodeUtils.getScopeOfNode(node.parentNode);
+            return NodeUtils.getBlockScopeOfNode(node.parentNode);
         }
         return node;
     }
@@ -70,6 +71,18 @@ class NodeUtils {
     }
     static isVariableDeclaratorNode(node) {
         return node.type === NodeType_1.NodeType.VariableDeclarator;
+    }
+    static parentize(node) {
+        estraverse.replace(node, {
+            enter: (node, parentNode) => {
+                Object.defineProperty(node, 'parentNode', {
+                    configurable: true,
+                    enumerable: true,
+                    value: parentNode || node,
+                    writable: true
+                });
+            }
+        });
     }
     static prependNode(blockScopeBody, node) {
         if (!NodeUtils.validateNode(node)) {

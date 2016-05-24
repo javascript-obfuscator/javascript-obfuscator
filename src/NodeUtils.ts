@@ -1,6 +1,6 @@
+import * as estraverse from 'estraverse';
+
 import { IBlockStatementNode } from "./interfaces/nodes/IBlockStatementNode";
-import { ICatchClauseNode } from "./interfaces/nodes/ICatchClauseNode";
-import { IFunctionNode } from "./interfaces/nodes/IFunctionNode";
 import { IIdentifierNode } from "./interfaces/nodes/IIdentifierNode";
 import { ILiteralNode } from "./interfaces/nodes/ILiteralNode";
 import { IMemberExpressionNode } from "./interfaces/nodes/IMemberExpressionNode";
@@ -8,6 +8,8 @@ import { IProgramNode } from "./interfaces/nodes/IProgramNode";
 import { IPropertyNode } from "./interfaces/nodes/IPropertyNode";
 import { INode } from './interfaces/nodes/INode';
 import { IVariableDeclaratorNode } from "./interfaces/nodes/IVariableDeclaratorNode";
+
+import { BlockScopeNode } from "./types/BlockScopeNode";
 
 import { NodeType } from "./enums/NodeType";
 
@@ -54,24 +56,24 @@ export class NodeUtils {
      * @param depth
      * @returns {INode}
      */
-    public static getScopeOfNode (node: INode, depth: number = 0): INode {
+    public static getBlockScopeOfNode (node: INode, depth: number = 0): BlockScopeNode {
         if (node.parentNode.type === NodeType.Program) {
-            return node.parentNode;
+            return <BlockScopeNode> node.parentNode;
         }
 
         if (!Utils.arrayContains(NodeUtils.scopeNodes, node.parentNode.type)) {
-            return NodeUtils.getScopeOfNode(node.parentNode, depth);
+            return NodeUtils.getBlockScopeOfNode(node.parentNode, depth);
         }
 
         if (depth > 0) {
-            return NodeUtils.getScopeOfNode(node.parentNode, --depth);
+            return NodeUtils.getBlockScopeOfNode(node.parentNode, --depth);
         }
 
         if (node.type !== NodeType.BlockStatement) {
-            return NodeUtils.getScopeOfNode(node.parentNode);
+            return NodeUtils.getBlockScopeOfNode(node.parentNode);
         }
 
-        return node; // blocks statement of scopeNodes
+        return <BlockScopeNode> node; // blocks statement of scopeNodes
     }
 
     /**
@@ -151,9 +153,7 @@ export class NodeUtils {
      * @param node
      * @returns {boolean}
      */
-    public static isNodeHasBlockScope (
-        node: INode
-    ): node is IBlockStatementNode|ICatchClauseNode|IFunctionNode|IProgramNode {
+    public static isNodeHasBlockScope (node: INode): node is BlockScopeNode {
         return node.hasOwnProperty('body');
     }
 
@@ -182,6 +182,22 @@ export class NodeUtils {
      */
     public static isVariableDeclaratorNode (node: INode): node is IVariableDeclaratorNode {
         return node.type === NodeType.VariableDeclarator;
+    }
+
+    /**
+     * @param node
+     */
+    public static parentize (node: INode): void {
+        estraverse.replace(node, {
+            enter: (node: INode, parentNode: INode): any => {
+                Object.defineProperty(node, 'parentNode', {
+                    configurable: true,
+                    enumerable: true,
+                    value: parentNode || node,
+                    writable: true
+                });
+            }
+        });
     }
 
     /**

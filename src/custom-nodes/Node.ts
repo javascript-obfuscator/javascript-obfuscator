@@ -3,6 +3,8 @@ import { INode } from '../interfaces/nodes/INode';
 
 import { AppendState } from '../enums/AppendState';
 
+import { NodeUtils } from "../NodeUtils";
+
 export abstract class Node implements ICustomNode {
     /**
      * @type {AppendState}
@@ -29,6 +31,8 @@ export abstract class Node implements ICustomNode {
      * @returns any
      */
     public getNode (): INode {
+        NodeUtils.parentize(this.node);
+
         return this.node;
     }
 

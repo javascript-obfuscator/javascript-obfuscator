@@ -1,6 +1,4 @@
-import * as estraverse from 'estraverse';
-
-import { INode } from '../../interfaces/nodes/INode';
+import { BlockScopeNode } from "../../types/BlockScopeNode";
 
 import { NodeType } from '../../enums/NodeType';
 
@@ -25,20 +23,10 @@ export class DebugProtectionFunctionIntervalNode extends Node {
     }
 
     /**
-     * @param astTree
+     * @param blockScopeNode
      */
-    public appendNode (astTree: INode): void {
-        estraverse.replace(astTree, {
-            leave: (node: INode, parent: INode): any => {
-                if (NodeUtils.isProgramNode(node)) {
-                    NodeUtils.appendNode(node.body, this.getNode());
-
-                    return estraverse.VisitorOption.Break;
-                }
-
-                return estraverse.VisitorOption.Skip;
-            }
-        });
+    public appendNode (blockScopeNode: BlockScopeNode): void {
+        NodeUtils.appendNode(blockScopeNode.body, this.getNode());
     }
 
     /**

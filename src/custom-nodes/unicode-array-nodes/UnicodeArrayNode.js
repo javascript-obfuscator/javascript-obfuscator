@@ -1,6 +1,5 @@
 "use strict";
 const escodegen = require('escodegen');
-const estraverse = require('estraverse');
 const AppendState_1 = require('../../enums/AppendState');
 const NodeType_1 = require("../../enums/NodeType");
 const Node_1 = require('../Node');
@@ -15,16 +14,8 @@ class UnicodeArrayNode extends Node_1.Node {
         this.unicodeArrayRotateValue = unicodeArrayRotateValue;
         this.node = this.getNodeStructure();
     }
-    appendNode(astTree) {
-        estraverse.replace(astTree, {
-            leave: (node, parent) => {
-                if (NodeUtils_1.NodeUtils.isProgramNode(node)) {
-                    NodeUtils_1.NodeUtils.prependNode(node.body, this.getNode());
-                    return estraverse.VisitorOption.Break;
-                }
-                return estraverse.VisitorOption.Skip;
-            }
-        });
+    appendNode(blockScopeNode) {
+        NodeUtils_1.NodeUtils.prependNode(blockScopeNode.body, this.getNode());
     }
     getNodeIdentifier() {
         return this.unicodeArrayName;

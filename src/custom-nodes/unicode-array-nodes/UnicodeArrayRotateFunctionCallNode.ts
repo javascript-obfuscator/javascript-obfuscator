@@ -1,6 +1,4 @@
-import * as estraverse from 'estraverse';
-
-import { INode } from "../../interfaces/nodes/INode";
+import { BlockScopeNode } from "../../types/BlockScopeNode";
 
 import { NodeType } from "../../enums/NodeType";
 
@@ -42,18 +40,11 @@ export class UnicodeArrayRotateFunctionCallNode extends Node {
         this.node = this.getNodeStructure();
     }
 
-    public appendNode (astTree: INode): void {
-        estraverse.replace(astTree, {
-            leave: (node: INode, parent: INode): any => {
-                if (NodeUtils.isProgramNode(node)) {
-                    NodeUtils.prependNode(node.body, this.getNode());
-
-                    return estraverse.VisitorOption.Break;
-                }
-
-                return estraverse.VisitorOption.Skip;
-            }
-        });
+    /**
+     * @param blockScopeNode
+     */
+    public appendNode (blockScopeNode: BlockScopeNode): void {
+        NodeUtils.prependNode(blockScopeNode.body, this.getNode());
     }
 
     /**

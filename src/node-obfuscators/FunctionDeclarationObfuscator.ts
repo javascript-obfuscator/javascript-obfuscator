@@ -59,7 +59,7 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
      * @param functionDeclarationNode
      */
     private replaceFunctionCalls (functionDeclarationNode: IFunctionDeclarationNode): void {
-        let scopeNode: INode = NodeUtils.getScopeOfNode(
+        let scopeNode: INode = NodeUtils.getBlockScopeOfNode(
             functionDeclarationNode
         );
 

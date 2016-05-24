@@ -1,6 +1,5 @@
 "use strict";
 const esprima = require('esprima');
-const estraverse = require('estraverse');
 const Node_1 = require('../Node');
 const NodeUtils_1 = require("../../NodeUtils");
 class ConsoleOutputDisableExpressionNode extends Node_1.Node {
@@ -8,16 +7,8 @@ class ConsoleOutputDisableExpressionNode extends Node_1.Node {
         super();
         this.node = this.getNodeStructure();
     }
-    appendNode(astTree) {
-        estraverse.replace(astTree, {
-            leave: (node, parent) => {
-                if (NodeUtils_1.NodeUtils.isProgramNode(node)) {
-                    NodeUtils_1.NodeUtils.prependNode(node.body, this.getNode());
-                    return estraverse.VisitorOption.Break;
-                }
-                return estraverse.VisitorOption.Skip;
-            }
-        });
+    appendNode(blockScopeNode) {
+        NodeUtils_1.NodeUtils.prependNode(blockScopeNode.body, this.getNode());
     }
     getNodeStructure() {
         return NodeUtils_1.NodeUtils.getBlockScopeNodeByIndex(esprima.parse(`

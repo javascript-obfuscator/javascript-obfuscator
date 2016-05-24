@@ -10,6 +10,7 @@ const FunctionObfuscator_1 = require('./node-obfuscators/FunctionObfuscator');
 const LiteralObfuscator_1 = require('./node-obfuscators/LiteralObfuscator');
 const MemberExpressionObfuscator_1 = require('./node-obfuscators/MemberExpressionObfuscator');
 const MethodDefinitionObfuscator_1 = require('./node-obfuscators/MethodDefinitionObfuscator');
+const NodeUtils_1 = require("./NodeUtils");
 const ObjectExpressionObfuscator_1 = require('./node-obfuscators/ObjectExpressionObfuscator');
 const UnicodeArrayNode_1 = require('./custom-nodes/unicode-array-nodes/UnicodeArrayNode');
 const UnicodeArrayNodesGroup_1 = require('./node-groups/UnicodeArrayNodesGroup');
@@ -37,13 +38,9 @@ class Obfuscator {
     }
     obfuscateNode(node) {
         this.setNewNodes();
+        NodeUtils_1.NodeUtils.parentize(node);
         this.beforeObfuscation(node);
-        estraverse.replace(node, {
-            enter: (node, parent) => this.nodeControllerFirstPass(node, parent)
-        });
-        estraverse.replace(node, {
-            leave: (node, parent) => this.nodeControllerSecondPass(node, parent)
-        });
+        this.obfuscate(node);
         this.afterObfuscation(node);
     }
     setNode(nodeName, node) {
@@ -58,18 +55,33 @@ class Obfuscator {
     afterObfuscation(astTree) {
         this.nodes.forEach((node) => {
             if (node.getAppendState() === AppendState_1.AppendState.AfterObfuscation) {
-                node.appendNode(astTree);
+                node.appendNode(NodeUtils_1.NodeUtils.getBlockScopeOfNode(astTree));
             }
         });
     }
     beforeObfuscation(astTree) {
         this.nodes.forEach((node) => {
             if (node.getAppendState() === AppendState_1.AppendState.BeforeObfuscation) {
-                node.appendNode(astTree);
+                node.appendNode(NodeUtils_1.NodeUtils.getBlockScopeOfNode(astTree));
             }
         });
     }
     ;
+    initializeNodeObfuscators(node, parentNode) {
+        if (!this.nodeObfuscators.has(node.type)) {
+            return;
+        }
+        this.nodeObfuscators.get(node.type).forEach((obfuscator) => {
+            new obfuscator(this.nodes).obfuscateNode(node, parentNode);
+        });
+    }
+    obfuscate(node) {
+        estraverse.replace(node, {
+            leave: (node, parentNode) => {
+                this.initializeNodeObfuscators(node, parentNode);
+            }
+        });
+    }
     setNewNodes() {
         if (this.options['disableConsoleOutput']) {
             this.setNode('consoleOutputDisableExpressionNode', new ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode());
@@ -83,28 +95,6 @@ class Obfuscator {
         else {
             this.setNode('unicodeArrayNode', new UnicodeArrayNode_1.UnicodeArrayNode(Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH)));
         }
-    }
-    nodeControllerFirstPass(node, parent) {
-        Object.defineProperty(node, 'parentNode', {
-            configurable: true,
-            enumerable: true,
-            value: parent || node,
-            writable: true
-        });
-    }
-    nodeControllerSecondPass(node, parent) {
-        switch (node.type) {
-            default:
-                this.initializeNodeObfuscators(node, parent);
-        }
-    }
-    initializeNodeObfuscators(node, parent) {
-        if (!this.nodeObfuscators.has(node.type)) {
-            return;
-        }
-        this.nodeObfuscators.get(node.type).forEach((obfuscator) => {
-            new obfuscator(this.nodes).obfuscateNode(node, parent);
-        });
     }
 }
 exports.Obfuscator = Obfuscator;

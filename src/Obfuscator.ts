@@ -16,6 +16,7 @@ import { FunctionObfuscator } from './node-obfuscators/FunctionObfuscator';
 import { LiteralObfuscator } from './node-obfuscators/LiteralObfuscator';
 import { MemberExpressionObfuscator } from './node-obfuscators/MemberExpressionObfuscator';
 import { MethodDefinitionObfuscator } from './node-obfuscators/MethodDefinitionObfuscator';
+import { NodeUtils } from "./NodeUtils";
 import { ObjectExpressionObfuscator } from './node-obfuscators/ObjectExpressionObfuscator';
 import { UnicodeArrayNode } from './custom-nodes/unicode-array-nodes/UnicodeArrayNode';
 import { UnicodeArrayNodesGroup } from './node-groups/UnicodeArrayNodesGroup';
@@ -64,16 +65,11 @@ export class Obfuscator {
      */
     public obfuscateNode (node: INode): void {
         this.setNewNodes();
+
+        NodeUtils.parentize(node);
+
         this.beforeObfuscation(node);
-
-        estraverse.replace(node, {
-            enter: (node: INode, parent: INode): any => this.nodeControllerFirstPass(node, parent)
-        });
-
-        estraverse.replace(node, {
-            leave: (node: INode, parent: INode): any => this.nodeControllerSecondPass(node, parent)
-        });
-
+        this.obfuscate(node);
         this.afterObfuscation(node);
     }
 
@@ -102,7 +98,7 @@ export class Obfuscator {
     private afterObfuscation (astTree: INode): void {
         this.nodes.forEach((node: ICustomNode) => {
             if (node.getAppendState() === AppendState.AfterObfuscation) {
-                node.appendNode(astTree);
+                node.appendNode(NodeUtils.getBlockScopeOfNode(astTree));
             }
         });
     }
@@ -113,10 +109,36 @@ export class Obfuscator {
     private beforeObfuscation (astTree: INode): void {
         this.nodes.forEach((node: ICustomNode) => {
             if (node.getAppendState() === AppendState.BeforeObfuscation) {
-                node.appendNode(astTree);
+                node.appendNode(NodeUtils.getBlockScopeOfNode(astTree));
             }
         });
     };
+
+
+    /**
+     * @param node
+     * @param parentNode
+     */
+    private initializeNodeObfuscators (node: INode, parentNode: INode): void {
+        if (!this.nodeObfuscators.has(node.type)) {
+            return;
+        }
+
+        this.nodeObfuscators.get(node.type).forEach((obfuscator: Function) => {
+            new (<INodeObfuscator> obfuscator(this.nodes)).obfuscateNode(node, parentNode);
+        });
+    }
+
+    /**
+     * @param node
+     */
+    private obfuscate (node: INode): void {
+        estraverse.replace(node, {
+            leave: (node: INode, parentNode: INode): any => {
+                this.initializeNodeObfuscators(node, parentNode);
+            }
+        });
+    }
 
     private setNewNodes (): void {
         if (this.options['disableConsoleOutput']) {
@@ -141,43 +163,5 @@ export class Obfuscator {
                 new UnicodeArrayNode(Utils.getRandomVariableName(UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH))
             );
         }
-    }
-
-    /**
-     * @param node
-     * @param parent
-     */
-    private nodeControllerFirstPass (node: INode, parent: INode): void {
-        Object.defineProperty(node, 'parentNode', {
-            configurable: true,
-            enumerable: true,
-            value: parent || node,
-            writable: true
-        });
-    }
-
-    /**
-     * @param node
-     * @param parent
-     */
-    private nodeControllerSecondPass (node: INode, parent: INode): void {
-        switch (node.type) {
-            default:
-                this.initializeNodeObfuscators(node, parent);
-        }
-    }
-
-    /**
-     * @param node
-     * @param parent
-     */
-    private initializeNodeObfuscators (node: INode, parent: INode): void {
-        if (!this.nodeObfuscators.has(node.type)) {
-            return;
-        }
-
-        this.nodeObfuscators.get(node.type).forEach((obfuscator: Function) => {
-            new (<INodeObfuscator> obfuscator(this.nodes)).obfuscateNode(node, parent);
-        });
     }
 }

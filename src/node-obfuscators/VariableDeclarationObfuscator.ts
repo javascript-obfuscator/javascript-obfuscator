@@ -66,7 +66,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
     private replaceVariableCalls (variableDeclarationNode: IVariableDeclarationNode, variableParentNode: INode): void {
         let scopeNode: INode;
 
-        scopeNode = variableDeclarationNode.kind === 'var' ? NodeUtils.getScopeOfNode(
+        scopeNode = variableDeclarationNode.kind === 'var' ? NodeUtils.getBlockScopeOfNode(
             variableDeclarationNode
         ) : variableParentNode;
 

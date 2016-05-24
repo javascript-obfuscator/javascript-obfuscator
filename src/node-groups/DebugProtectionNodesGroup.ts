@@ -1,7 +1,3 @@
-import * as estraverse from 'estraverse';
-
-import { INode } from '../interfaces/nodes/INode';
-
 import { ICustomNode } from '../interfaces/ICustomNode';
 
 import { DebugProtectionFunctionCallNode } from "../custom-nodes/debug-protection-nodes/DebugProtectionFunctionCallNode";
@@ -9,15 +5,9 @@ import { DebugProtectionFunctionIntervalNode } from "../custom-nodes/debug-prote
 import { DebugProtectionFunctionNode } from "../custom-nodes/debug-protection-nodes/DebugProtectionFunctionNode";
 
 import { NodesGroup } from './NodesGroup';
-import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
 
 export class DebugProtectionNodesGroup extends NodesGroup {
-    /**
-     * @type {INode}
-     */
-    private astTree: INode;
-
     /**
      * @type {string}
      */

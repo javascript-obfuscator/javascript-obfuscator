@@ -22,6 +22,7 @@ class NodeUtils {
         if (node.parentNode.type === NodeType_1.NodeType.Program) {
             return node.parentNode;
         }
+        console.log(node.type, node.parentNode.type);
         if (!Utils_1.Utils.arrayContains(NodeUtils.scopeNodes, node.parentNode.type)) {
             return NodeUtils.getBlockScopeOfNode(node.parentNode, depth);
         }

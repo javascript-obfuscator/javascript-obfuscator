@@ -65,6 +65,8 @@ export class NodeUtils {
             return <BlockScopeNode> node.parentNode;
         }
 
+        console.log(node.type, node.parentNode.type);
+
         if (!Utils.arrayContains(NodeUtils.scopeNodes, node.parentNode.type)) {
             return NodeUtils.getBlockScopeOfNode(node.parentNode, depth);
         }

@@ -3,6 +3,15 @@ const estraverse = require('estraverse');
 const NodeType_1 = require("./enums/NodeType");
 const Utils_1 = require("./Utils");
 class NodeUtils {
+    static addXVerbatimPropertyToLiterals(node) {
+        estraverse.replace(node, {
+            enter: (node, parentNode) => {
+                if (NodeUtils.isLiteralNode(node)) {
+                    node['x-verbatim-property'] = node.raw;
+                }
+            }
+        });
+    }
     static appendNode(blockScopeBody, node) {
         if (!NodeUtils.validateNode(node)) {
             return;
@@ -22,7 +31,6 @@ class NodeUtils {
         if (node.parentNode.type === NodeType_1.NodeType.Program) {
             return node.parentNode;
         }
-        console.log(node.type, node.parentNode.type);
         if (!Utils_1.Utils.arrayContains(NodeUtils.scopeNodes, node.parentNode.type)) {
             return NodeUtils.getBlockScopeOfNode(node.parentNode, depth);
         }

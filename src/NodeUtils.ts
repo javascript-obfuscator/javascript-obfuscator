@@ -27,6 +27,19 @@ export class NodeUtils {
     ];
 
     /**
+     * @param node
+     */
+    public static addXVerbatimPropertyToLiterals (node: INode): void {
+        estraverse.replace(node, {
+            enter: (node: INode, parentNode: INode): any => {
+                if (NodeUtils.isLiteralNode(node)) {
+                   node['x-verbatim-property'] = node.raw;
+                }
+            }
+        });
+    }
+
+    /**
      * @param blockScopeBody
      * @param node
      */
@@ -64,8 +77,6 @@ export class NodeUtils {
         if (node.parentNode.type === NodeType.Program) {
             return <BlockScopeNode> node.parentNode;
         }
-
-        console.log(node.type, node.parentNode.type);
 
         if (!Utils.arrayContains(NodeUtils.scopeNodes, node.parentNode.type)) {
             return NodeUtils.getBlockScopeOfNode(node.parentNode, depth);

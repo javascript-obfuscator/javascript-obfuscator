@@ -40,7 +40,7 @@ export class UnicodeArrayRotateFunctionNode extends Node {
     constructor (
         unicodeArrayName: string,
         unicodeArray: string[],
-        unicodeArrayRotateValue
+        unicodeArrayRotateValue: number
     ) {
         super();
 
@@ -73,52 +73,26 @@ export class UnicodeArrayRotateFunctionNode extends Node {
      * @returns any
      */
     protected getNodeStructure (): any {
-        return NodeUtils.getBlockScopeNodeByIndex(
-            esprima.parse(`
-                    (function (array, times, reverse) {
-                        if (times < 0) {
-                            return;
-                        }
-                    
-                        var temp;
-                    
-                        while (times--) {
-                            if (!reverse) {
-                                temp = array.pop();
-                                array.unshift(temp);
-                            } else {
-                                temp = array.shift();
-                                array.push(temp);
-                            }
-                        }
-                    })(${this.unicodeArrayName}, ${this.unicodeArrayRotateValue}, true);
-                `)
-        );
+        let arrayName: string = Utils.getRandomVariableName(),
+            timesName: string = Utils.getRandomVariableName(),
+            tempArrayName: string = Utils.getRandomVariableName(),
+            node: INode = esprima.parse(`
+                (function (${arrayName}, ${timesName}) {
+                    if (${timesName} < 0x${Utils.decToHex(0)}) {
+                        return;
+                    }
 
-        /*return new Obfuscator({
-            rotateUnicodeArray: false
-        }).obfuscateNode(
-            NodeUtils.getBlockScopeNodeByIndex(
-                esprima.parse(`
-                    (function (array, times, reverse) {
-                        if (times < 0) {
-                            return;
-                        }
-                    
-                        var temp;
-                    
-                        while (times--) {
-                            if (!reverse) {
-                                temp = array.pop();
-                                array.unshift(temp);
-                            } else {
-                                temp = array.shift();
-                                array.push(temp);
-                            }
-                        }
-                    })(${this.unicodeArrayName}, ${this.unicodeArrayRotateValue}, true);
-                `)
-            )
-        );*/
+                    var ${tempArrayName};
+
+                    while (${timesName}--) {
+                        ${tempArrayName} = ${arrayName}[${Utils.stringToUnicode('shift')}]();
+                        ${arrayName}[${Utils.stringToUnicode('push')}](${tempArrayName});
+                    }
+                })(${this.unicodeArrayName}, 0x${Utils.decToHex(this.unicodeArrayRotateValue)});
+            `);
+
+        NodeUtils.addXVerbatimPropertyToLiterals(node);
+
+        return NodeUtils.getBlockScopeNodeByIndex(node);
     }
 }

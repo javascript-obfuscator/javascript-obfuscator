@@ -1,8 +1,8 @@
 "use strict";
 const estraverse = require('estraverse');
-const DebugProtectionFunctionCallNode_1 = require("../nodes/DebugProtectionFunctionCallNode");
-const DebugProtectionFunctionIntervalNode_1 = require("../nodes/DebugProtectionFunctionIntervalNode");
-const DebugProtectionFunctionNode_1 = require("../nodes/DebugProtectionFunctionNode");
+const DebugProtectionFunctionCallNode_1 = require("../nodes/debugProtectionNodes/DebugProtectionFunctionCallNode");
+const DebugProtectionFunctionIntervalNode_1 = require("../nodes/debugProtectionNodes/DebugProtectionFunctionIntervalNode");
+const DebugProtectionFunctionNode_1 = require("../nodes/debugProtectionNodes/DebugProtectionFunctionNode");
 const NodesGroup_1 = require('./NodesGroup');
 const NodeUtils_1 = require("../NodeUtils");
 const Utils_1 = require('../Utils');

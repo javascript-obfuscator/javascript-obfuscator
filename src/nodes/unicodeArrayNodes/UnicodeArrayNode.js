@@ -1,11 +1,11 @@
 "use strict";
 const escodegen = require('escodegen');
 const estraverse = require('estraverse');
-const AppendState_1 = require('../enums/AppendState');
-const NodeType_1 = require("../enums/NodeType");
-const Node_1 = require('./Node');
-const NodeUtils_1 = require("../NodeUtils");
-const Utils_1 = require('../Utils');
+const AppendState_1 = require('../../enums/AppendState');
+const NodeType_1 = require("../../enums/NodeType");
+const Node_1 = require('../Node');
+const NodeUtils_1 = require("../../NodeUtils");
+const Utils_1 = require('../../Utils');
 class UnicodeArrayNode extends Node_1.Node {
     constructor(astTree, unicodeArrayName, unicodeArrayRotateValue = 0) {
         super();

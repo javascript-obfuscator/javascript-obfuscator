@@ -1,12 +1,12 @@
 import * as estraverse from 'estraverse';
 
-import { IProgramNode } from "../interfaces/nodes/IProgramNode";
-import { ITreeNode } from "../interfaces/nodes/ITreeNode";
+import { IProgramNode } from "../../interfaces/nodes/IProgramNode";
+import { ITreeNode } from "../../interfaces/nodes/ITreeNode";
 
-import { NodeType } from "../enums/NodeType";
+import { NodeType } from "../../enums/NodeType";
 
-import { Node } from './Node';
-import { NodeUtils } from "../NodeUtils";
+import { Node } from '../Node';
+import { NodeUtils } from "../../NodeUtils";
 
 export class UnicodeArrayRotateFunctionCallNode extends Node {
     /**

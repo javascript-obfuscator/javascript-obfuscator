@@ -1,10 +1,10 @@
 import * as esprima from 'esprima';
 import * as estraverse from 'estraverse';
 
-import { ITreeNode } from '../interfaces/nodes/ITreeNode';
+import { ITreeNode } from '../../interfaces/nodes/ITreeNode';
 
-import { Node } from './Node';
-import { NodeUtils } from '../NodeUtils';
+import { Node } from '../Node';
+import { NodeUtils } from '../../NodeUtils';
 
 export class DebugProtectionFunctionNode extends Node {
     /**

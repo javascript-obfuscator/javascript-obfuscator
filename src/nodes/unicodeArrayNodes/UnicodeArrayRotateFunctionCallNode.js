@@ -1,8 +1,8 @@
 "use strict";
 const estraverse = require('estraverse');
-const NodeType_1 = require("../enums/NodeType");
-const Node_1 = require('./Node');
-const NodeUtils_1 = require("../NodeUtils");
+const NodeType_1 = require("../../enums/NodeType");
+const Node_1 = require('../Node');
+const NodeUtils_1 = require("../../NodeUtils");
 class UnicodeArrayRotateFunctionCallNode extends Node_1.Node {
     constructor(astTree, unicodeArrayRotateFunctionName, unicodeArrayName, unicodeArrayRotateValue) {
         super();

@@ -1,8 +1,8 @@
 "use strict";
 const esprima = require('esprima');
 const estraverse = require('estraverse');
-const Node_1 = require('./Node');
-const NodeUtils_1 = require("../NodeUtils");
+const Node_1 = require('../Node');
+const NodeUtils_1 = require("../../NodeUtils");
 class ConsoleOutputDisableExpressionNode extends Node_1.Node {
     constructor(astTree) {
         super();

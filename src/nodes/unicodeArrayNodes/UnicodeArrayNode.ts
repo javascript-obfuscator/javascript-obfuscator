@@ -1,14 +1,14 @@
 import * as escodegen from 'escodegen';
 import * as estraverse from 'estraverse';
 
-import { ITreeNode } from '../interfaces/nodes/ITreeNode';
+import { ITreeNode } from '../../interfaces/nodes/ITreeNode';
 
-import { AppendState } from '../enums/AppendState';
-import { NodeType } from "../enums/NodeType";
+import { AppendState } from '../../enums/AppendState';
+import { NodeType } from "../../enums/NodeType";
 
-import { Node } from './Node';
-import { NodeUtils } from "../NodeUtils";
-import { Utils } from '../Utils';
+import { Node } from '../Node';
+import { NodeUtils } from "../../NodeUtils";
+import { Utils } from '../../Utils';
 
 export class UnicodeArrayNode extends Node {
     /**

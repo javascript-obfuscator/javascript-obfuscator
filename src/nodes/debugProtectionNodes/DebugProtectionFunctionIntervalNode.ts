@@ -1,11 +1,11 @@
 import * as estraverse from 'estraverse';
 
-import { ITreeNode } from '../interfaces/nodes/ITreeNode';
+import { ITreeNode } from '../../interfaces/nodes/ITreeNode';
 
-import { NodeType } from '../enums/NodeType';
+import { NodeType } from '../../enums/NodeType';
 
-import { Node } from './Node';
-import { NodeUtils } from '../NodeUtils';
+import { Node } from '../Node';
+import { NodeUtils } from '../../NodeUtils';
 
 export class DebugProtectionFunctionIntervalNode extends Node {
     /**

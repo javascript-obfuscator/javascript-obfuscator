@@ -6,18 +6,18 @@ import { INodesGroup } from './interfaces/INodesGroup';
 import { ITreeNode } from './interfaces/nodes/ITreeNode';
 
 import { AppendState } from './enums/AppendState';
-import { NodeType } from "./enums/NodeType";
+import { NodeType } from './enums/NodeType';
 
-import { CatchClauseObfuscator } from "./node-obfuscators/CatchClauseObfuscator";
-import { ConsoleOutputDisableExpressionNode } from "./nodes/ConsoleOutputDisableExpressionNode";
-import { DebugProtectionNodesGroup } from "./node-groups/DebugProtectionNodesGroup";
+import { CatchClauseObfuscator } from './node-obfuscators/CatchClauseObfuscator';
+import { ConsoleOutputDisableExpressionNode } from './nodes/consoleOutputNodes/ConsoleOutputDisableExpressionNode';
+import { DebugProtectionNodesGroup } from './node-groups/DebugProtectionNodesGroup';
 import { FunctionDeclarationObfuscator } from './node-obfuscators/FunctionDeclarationObfuscator';
 import { FunctionObfuscator } from './node-obfuscators/FunctionObfuscator';
 import { LiteralObfuscator } from './node-obfuscators/LiteralObfuscator';
 import { MemberExpressionObfuscator } from './node-obfuscators/MemberExpressionObfuscator';
 import { MethodDefinitionObfuscator } from './node-obfuscators/MethodDefinitionObfuscator';
 import { ObjectExpressionObfuscator } from './node-obfuscators/ObjectExpressionObfuscator';
-import { UnicodeArrayNode } from './nodes/UnicodeArrayNode';
+import { UnicodeArrayNode } from './nodes/unicodeArrayNodes/UnicodeArrayNode';
 import { UnicodeArrayNodesGroup } from './node-groups/UnicodeArrayNodesGroup';
 import { Utils } from './Utils';
 import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclarationObfuscator';

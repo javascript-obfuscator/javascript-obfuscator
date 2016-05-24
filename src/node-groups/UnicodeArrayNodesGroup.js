@@ -8,14 +8,15 @@ class UnicodeArrayNodesGroup extends NodesGroup_1.NodesGroup {
         super();
         this.unicodeArrayName = Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
         this.unicodeArrayRotateValue = Utils_1.Utils.getRandomInteger(100, 500);
+        let unicodeArrayNode = new UnicodeArrayNode_1.UnicodeArrayNode(this.unicodeArrayName, this.unicodeArrayRotateValue), unicodeArray = unicodeArrayNode.getNodeData();
         this.nodes = new Map([
             [
                 'unicodeArrayNode',
-                new UnicodeArrayNode_1.UnicodeArrayNode(this.unicodeArrayName, this.unicodeArrayRotateValue)
+                unicodeArrayNode
             ],
             [
                 'unicodeArrayRotateFunctionNode',
-                new UnicodeArrayRotateFunctionNode_1.UnicodeArrayRotateFunctionNode(this.unicodeArrayName, this.unicodeArrayRotateValue)
+                new UnicodeArrayRotateFunctionNode_1.UnicodeArrayRotateFunctionNode(this.unicodeArrayName, unicodeArray, this.unicodeArrayRotateValue)
             ]
         ]);
     }

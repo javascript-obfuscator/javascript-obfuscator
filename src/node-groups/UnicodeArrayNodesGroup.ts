@@ -19,18 +19,22 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
     constructor () {
         super();
 
+        let unicodeArrayNode: UnicodeArrayNode = new UnicodeArrayNode(
+                this.unicodeArrayName,
+                this.unicodeArrayRotateValue
+            ),
+            unicodeArray: string [] = unicodeArrayNode.getNodeData();
+
         this.nodes = new Map <string, ICustomNode> ([
             [
                 'unicodeArrayNode',
-                new UnicodeArrayNode(
-                    this.unicodeArrayName,
-                    this.unicodeArrayRotateValue
-                )
+                unicodeArrayNode
             ],
             [
                 'unicodeArrayRotateFunctionNode',
                 new UnicodeArrayRotateFunctionNode(
                     this.unicodeArrayName,
+                    unicodeArray,
                     this.unicodeArrayRotateValue
                 )
             ]

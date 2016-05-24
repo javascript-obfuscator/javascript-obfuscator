@@ -24,6 +24,9 @@ class UnicodeArrayNode extends Node_1.Node {
         return this.unicodeArray;
     }
     getNode() {
+        if (!this.unicodeArray.length) {
+            return;
+        }
         Utils_1.Utils.arrayRotate(this.unicodeArray, this.unicodeArrayRotateValue);
         this.updateNode();
         return super.getNode();

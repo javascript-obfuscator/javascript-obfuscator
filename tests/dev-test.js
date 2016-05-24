@@ -48,6 +48,7 @@ let obfuscatedCode = index_1.JavaScriptObfuscator.obfuscate(`
     })();
     `, {
     disableConsoleOutput: false,
+    rotateUnicodeArray: false
 });
 console.log(obfuscatedCode);
 console.log(eval(obfuscatedCode));

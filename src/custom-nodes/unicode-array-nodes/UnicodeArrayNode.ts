@@ -75,6 +75,10 @@ export class UnicodeArrayNode extends Node {
      * @returns {INode}
      */
     public getNode (): INode {
+        if (!this.unicodeArray.length) {
+            return;
+        }
+
         Utils.arrayRotate(this.unicodeArray, this.unicodeArrayRotateValue);
 
         this.updateNode();

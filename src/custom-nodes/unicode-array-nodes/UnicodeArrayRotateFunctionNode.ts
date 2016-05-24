@@ -1,5 +1,8 @@
+import { INode } from "../../interfaces/nodes/INode";
+
 import { BlockScopeNode } from "../../types/BlockScopeNode";
 
+import { AppendState } from "../../enums/AppendState";
 import { NodeType } from "../../enums/NodeType";
 
 import { Node } from '../Node';
@@ -7,6 +10,16 @@ import { NodeUtils } from "../../NodeUtils";
 import { Utils } from '../../Utils';
 
 export class UnicodeArrayRotateFunctionNode extends Node {
+    /**
+     * @type {AppendState}
+     */
+    protected appendState: AppendState = AppendState.AfterObfuscation;
+
+    /**
+     * @type {string[]}
+     */
+    private unicodeArray: string[];
+
     /**
      * @type {string}
      */
@@ -19,15 +32,18 @@ export class UnicodeArrayRotateFunctionNode extends Node {
 
     /**
      * @param unicodeArrayName
+     * @param unicodeArray
      * @param unicodeArrayRotateValue
      */
     constructor (
         unicodeArrayName: string,
+        unicodeArray: string[],
         unicodeArrayRotateValue
     ) {
         super();
 
         this.unicodeArrayName = unicodeArrayName;
+        this.unicodeArray = unicodeArray;
         this.unicodeArrayRotateValue = unicodeArrayRotateValue;
 
         this.node = this.getNodeStructure();
@@ -37,7 +53,18 @@ export class UnicodeArrayRotateFunctionNode extends Node {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: BlockScopeNode): void {
-        NodeUtils.prependNode(blockScopeNode.body, this.getNode());
+        NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), 1);
+    }
+
+    /**
+     * @returns {INode}
+     */
+    public getNode (): INode {
+        if (!this.unicodeArray.length) {
+            return;
+        }
+
+        return super.getNode();
     }
 
     /**
@@ -45,9 +72,9 @@ export class UnicodeArrayRotateFunctionNode extends Node {
      */
     protected getNodeStructure (): any {
         return {
-            "type": "ExpressionStatement",
+            "type": NodeType.ExpressionStatement,
             "expression": {
-                "type": "CallExpression",
+                "type": NodeType.CallExpression,
                 "callee": {
                     'type': NodeType.FunctionExpression,
                     'id': null,
@@ -285,16 +312,16 @@ export class UnicodeArrayRotateFunctionNode extends Node {
                 },
                 "arguments": [
                     {
-                        'type': 'Identifier',
+                        'type': NodeType.Identifier,
                         'name': this.unicodeArrayName
                     },
                     {
-                        'type': 'Literal',
+                        'type': NodeType.Literal,
                         'value': this.unicodeArrayRotateValue,
                         'raw': `'${this.unicodeArrayRotateValue}'`
                     },
                     {
-                        'type': 'Literal',
+                        'type': NodeType.Literal,
                         'value': true,
                         'raw': 'true'
                     }

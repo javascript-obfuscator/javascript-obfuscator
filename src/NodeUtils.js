@@ -16,6 +16,9 @@ class NodeUtils {
         return node;
     }
     static getBlockScopeOfNode(node, depth = 0) {
+        if (!node.parentNode) {
+            throw new ReferenceError('`parentNode` property of given node is `undefined`');
+        }
         if (node.parentNode.type === NodeType_1.NodeType.Program) {
             return node.parentNode;
         }
@@ -29,18 +32,6 @@ class NodeUtils {
             return NodeUtils.getBlockScopeOfNode(node.parentNode);
         }
         return node;
-    }
-    static getParentNodeWithType(node, types, limitNodeTypes = [], depth = 0) {
-        if (node.parentNode.type === NodeType_1.NodeType.Program || Utils_1.Utils.arrayContains(limitNodeTypes, node.parentNode.type)) {
-            return node.parentNode;
-        }
-        if (!Utils_1.Utils.arrayContains(types, node.parentNode.type)) {
-            return NodeUtils.getParentNodeWithType(node.parentNode, types, limitNodeTypes, depth);
-        }
-        if (depth > 0) {
-            return NodeUtils.getParentNodeWithType(node.parentNode, types, limitNodeTypes, --depth);
-        }
-        return node.parentNode;
     }
     static insertNodeAtIndex(blockScopeBody, node, index) {
         if (!NodeUtils.validateNode(node)) {

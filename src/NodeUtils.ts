@@ -57,6 +57,10 @@ export class NodeUtils {
      * @returns {INode}
      */
     public static getBlockScopeOfNode (node: INode, depth: number = 0): BlockScopeNode {
+        if (!node.parentNode) {
+            throw new ReferenceError('`parentNode` property of given node is `undefined`');
+        }
+
         if (node.parentNode.type === NodeType.Program) {
             return <BlockScopeNode> node.parentNode;
         }
@@ -74,34 +78,6 @@ export class NodeUtils {
         }
 
         return <BlockScopeNode> node; // blocks statement of scopeNodes
-    }
-
-    /**
-     * @param node
-     * @param types
-     * @param limitNodeTypes
-     * @param depth
-     * @returns {INode}
-     */
-    public static getParentNodeWithType (
-        node: INode,
-        types: string[],
-        limitNodeTypes: string[] = [],
-        depth: number = 0
-    ): INode {
-        if (node.parentNode.type === NodeType.Program || Utils.arrayContains(limitNodeTypes, node.parentNode.type)) {
-            return node.parentNode;
-        }
-
-        if (!Utils.arrayContains(types, node.parentNode.type)) {
-            return NodeUtils.getParentNodeWithType(node.parentNode, types, limitNodeTypes, depth);
-        }
-
-        if (depth > 0) {
-            return NodeUtils.getParentNodeWithType(node.parentNode, types, limitNodeTypes, --depth);
-        }
-
-        return node.parentNode;
     }
 
     /**

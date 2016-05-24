@@ -1,6 +1,5 @@
 import * as estraverse from 'estraverse';
 
-import { IProgramNode } from "../../interfaces/nodes/IProgramNode";
 import { INode } from "../../interfaces/nodes/INode";
 
 import { NodeType } from "../../enums/NodeType";

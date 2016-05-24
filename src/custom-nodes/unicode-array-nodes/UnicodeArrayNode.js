@@ -7,17 +7,16 @@ const Node_1 = require('../Node');
 const NodeUtils_1 = require("../../NodeUtils");
 const Utils_1 = require('../../Utils');
 class UnicodeArrayNode extends Node_1.Node {
-    constructor(astTree, unicodeArrayName, unicodeArrayRotateValue = 0) {
+    constructor(unicodeArrayName, unicodeArrayRotateValue = 0) {
         super();
         this.appendState = AppendState_1.AppendState.AfterObfuscation;
         this.unicodeArray = [];
-        this.astTree = astTree;
         this.unicodeArrayName = unicodeArrayName;
         this.unicodeArrayRotateValue = unicodeArrayRotateValue;
         this.node = this.getNodeStructure();
     }
-    appendNode() {
-        estraverse.replace(this.astTree, {
+    appendNode(astTree) {
+        estraverse.replace(astTree, {
             leave: (node, parent) => {
                 if (NodeUtils_1.NodeUtils.isProgramNode(node)) {
                     NodeUtils_1.NodeUtils.prependNode(node.body, this.getNode());

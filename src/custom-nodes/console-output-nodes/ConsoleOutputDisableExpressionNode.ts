@@ -7,19 +7,17 @@ import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
 
 export class ConsoleOutputDisableExpressionNode extends Node {
-    /**
-     * @param astTree
-     */
-    constructor (astTree: INode) {
+    constructor () {
         super();
 
-        this.astTree = astTree;
-        
         this.node = this.getNodeStructure();
     }
 
-    public appendNode (): void {
-        estraverse.replace(this.astTree, {
+    /**
+     * @param astTree
+     */
+    public appendNode (astTree: INode): void {
+        estraverse.replace(astTree, {
             leave: (node: INode, parent: INode): any => {
                 if (NodeUtils.isProgramNode(node)) {
                     NodeUtils.prependNode(node.body, this.getNode());

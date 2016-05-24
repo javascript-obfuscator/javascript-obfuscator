@@ -34,13 +34,11 @@ export class DebugProtectionNodesGroup extends NodesGroup {
     private options: any;
 
     /**
-     * @param astTree
      * @param options
      */
-    constructor (astTree: INode, options: any) {
+    constructor (options: any) {
         super();
 
-        this.astTree = astTree;
         this.options = options;
 
         this.debugProtectionFunctionIndex = this.getDebugProtectionFunctionIndex();
@@ -48,28 +46,18 @@ export class DebugProtectionNodesGroup extends NodesGroup {
         this.nodes = new Map <string, ICustomNode> ([
             [
                 'debugProtectionFunctionNode',
-                new DebugProtectionFunctionNode(
-                    this.astTree,
-                    this.debugProtectionFunctionIdentifier,
-                    this.debugProtectionFunctionIndex
-                )
+                new DebugProtectionFunctionNode(this.debugProtectionFunctionIdentifier)
             ],
             [
                 'debugProtectionFunctionCallNode',
-                new DebugProtectionFunctionCallNode(
-                    this.astTree,
-                    this.debugProtectionFunctionIdentifier
-                )
+                new DebugProtectionFunctionCallNode(this.debugProtectionFunctionIdentifier)
             ]
         ]);
 
         if (this.options['debugProtectionInterval']) {
             this.nodes.set(
                 'debugProtectionFunctionIntervalNode',
-                new DebugProtectionFunctionIntervalNode(
-                    this.astTree,
-                    this.debugProtectionFunctionIdentifier
-                )
+                new DebugProtectionFunctionIntervalNode(this.debugProtectionFunctionIdentifier)
             );
         }
     }

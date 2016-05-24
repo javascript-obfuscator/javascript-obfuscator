@@ -4,14 +4,13 @@ const NodeType_1 = require('../../enums/NodeType');
 const Node_1 = require('../Node');
 const NodeUtils_1 = require('../../NodeUtils');
 class DebugProtectionFunctionIntervalNode extends Node_1.Node {
-    constructor(astTree, debugProtectionFunctionName) {
+    constructor(debugProtectionFunctionName) {
         super();
-        this.astTree = astTree;
         this.debugProtectionFunctionName = debugProtectionFunctionName;
         this.node = this.getNodeStructure();
     }
-    appendNode() {
-        estraverse.replace(this.astTree, {
+    appendNode(astTree) {
+        estraverse.replace(astTree, {
             leave: (node, parent) => {
                 if (NodeUtils_1.NodeUtils.isProgramNode(node)) {
                     NodeUtils_1.NodeUtils.appendNode(node.body, this.getNode());

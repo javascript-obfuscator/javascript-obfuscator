@@ -5,6 +5,7 @@ import { INode } from '../../interfaces/nodes/INode';
 
 import { Node } from '../Node';
 import { NodeUtils } from '../../NodeUtils';
+import { Utils } from "../../Utils";
 
 export class DebugProtectionFunctionNode extends Node {
     /**
@@ -13,34 +14,29 @@ export class DebugProtectionFunctionNode extends Node {
     private debugProtectionFunctionName: string;
 
     /**
-     * @type {number}
-     */
-    private debugProtectionFunctionIndex: number;
-
-    /**
-     * @param astTree
      * @param debugProtectionFunctionName
-     * @param debugProtectionFunctionIndex
      */
     constructor (
-        astTree: INode,
-        debugProtectionFunctionName: string,
-        debugProtectionFunctionIndex: number
+        debugProtectionFunctionName: string
     ) {
         super();
 
-        this.astTree = astTree;
         this.debugProtectionFunctionName = debugProtectionFunctionName;
-        this.debugProtectionFunctionIndex = debugProtectionFunctionIndex;
 
         this.node = this.getNodeStructure();
     }
 
-    public appendNode (): void {
-        estraverse.replace(this.astTree, {
+    /**
+     * @param astTree
+     */
+    public appendNode (astTree: INode): void {
+        estraverse.replace(astTree, {
             leave: (node: INode, parent: INode): any => {
                 if (NodeUtils.isProgramNode(node)) {
-                    NodeUtils.insertNodeAtIndex(node.body, this.getNode(), this.debugProtectionFunctionIndex);
+                    let programBodyLength: number = node.body.length,
+                        randomIndex = Utils.getRandomInteger(0, programBodyLength);
+
+                    NodeUtils.insertNodeAtIndex(node.body, this.getNode(), randomIndex);
 
                     return estraverse.VisitorOption.Break;
                 }

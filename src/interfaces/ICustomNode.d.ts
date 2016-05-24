@@ -3,7 +3,10 @@ import { INode } from '../interfaces/nodes/INode';
 import { AppendState } from '../enums/AppendState';
 
 export interface ICustomNode {
-    appendNode (): void;
+    /**
+     * @param astTree
+     */
+    appendNode (astTree: INode): void;
 
     /**
      * @returns {AppendState}

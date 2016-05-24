@@ -5,15 +5,14 @@ const Node_1 = require('../Node');
 const NodeUtils_1 = require("../../NodeUtils");
 const Utils_1 = require('../../Utils');
 class UnicodeArrayRotateFunctionNode extends Node_1.Node {
-    constructor(astTree, unicodeArrayRotateFunctionName, unicodeArrayName) {
+    constructor(unicodeArrayRotateFunctionName, unicodeArrayName) {
         super();
-        this.astTree = astTree;
         this.unicodeArrayRotateFunctionName = unicodeArrayRotateFunctionName;
         this.unicodeArrayName = unicodeArrayName;
         this.node = this.getNodeStructure();
     }
-    appendNode() {
-        estraverse.replace(this.astTree, {
+    appendNode(astTree) {
+        estraverse.replace(astTree, {
             leave: (node, parent) => {
                 if (NodeUtils_1.NodeUtils.isProgramNode(node)) {
                     NodeUtils_1.NodeUtils.appendNode(node.body, this.getNode());

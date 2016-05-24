@@ -36,7 +36,7 @@ class Obfuscator {
         this.options = options;
     }
     obfuscateNode(node) {
-        this.setNewNodes(node);
+        this.setNewNodes();
         this.beforeObfuscation(node);
         estraverse.replace(node, {
             enter: (node, parent) => this.nodeControllerFirstPass(node, parent)
@@ -55,33 +55,33 @@ class Obfuscator {
             this.nodes.set(key, node);
         });
     }
-    afterObfuscation(node) {
+    afterObfuscation(astTree) {
         this.nodes.forEach((node) => {
             if (node.getAppendState() === AppendState_1.AppendState.AfterObfuscation) {
-                node.appendNode();
+                node.appendNode(astTree);
             }
         });
     }
-    beforeObfuscation(node) {
+    beforeObfuscation(astTree) {
         this.nodes.forEach((node) => {
             if (node.getAppendState() === AppendState_1.AppendState.BeforeObfuscation) {
-                node.appendNode();
+                node.appendNode(astTree);
             }
         });
     }
     ;
-    setNewNodes(astTree) {
+    setNewNodes() {
         if (this.options['disableConsoleOutput']) {
-            this.setNode('consoleOutputDisableExpressionNode', new ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode(astTree));
+            this.setNode('consoleOutputDisableExpressionNode', new ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode());
         }
         if (this.options['debugProtection']) {
-            this.setNodesGroup(new DebugProtectionNodesGroup_1.DebugProtectionNodesGroup(astTree, this.options));
+            this.setNodesGroup(new DebugProtectionNodesGroup_1.DebugProtectionNodesGroup(this.options));
         }
         if (this.options['rotateUnicodeArray']) {
-            this.setNodesGroup(new UnicodeArrayNodesGroup_1.UnicodeArrayNodesGroup(astTree));
+            this.setNodesGroup(new UnicodeArrayNodesGroup_1.UnicodeArrayNodesGroup());
         }
         else {
-            this.setNode('unicodeArrayNode', new UnicodeArrayNode_1.UnicodeArrayNode(astTree, Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH)));
+            this.setNode('unicodeArrayNode', new UnicodeArrayNode_1.UnicodeArrayNode(Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH)));
         }
     }
     nodeControllerFirstPass(node, parent) {

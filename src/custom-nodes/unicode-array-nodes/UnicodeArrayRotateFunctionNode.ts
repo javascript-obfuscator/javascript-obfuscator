@@ -20,26 +20,26 @@ export class UnicodeArrayRotateFunctionNode extends Node {
     private unicodeArrayRotateFunctionName: string;
 
     /**
-     * @param astTree
      * @param unicodeArrayRotateFunctionName
      * @param unicodeArrayName
      */
     constructor (
-        astTree: INode,
         unicodeArrayRotateFunctionName: string,
         unicodeArrayName: string
     ) {
         super();
 
-        this.astTree = astTree;
         this.unicodeArrayRotateFunctionName = unicodeArrayRotateFunctionName;
         this.unicodeArrayName = unicodeArrayName;
 
         this.node = this.getNodeStructure();
     }
 
-    public appendNode (): void {
-        estraverse.replace(this.astTree, {
+    /**
+     * @param astTree
+     */
+    public appendNode (astTree: INode): void {
+        estraverse.replace(astTree, {
             leave: (node: INode, parent: INode): any => {
                 if (NodeUtils.isProgramNode(node)) {
                     NodeUtils.appendNode(node.body, this.getNode());

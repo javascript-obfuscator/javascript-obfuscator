@@ -14,23 +14,21 @@ export class DebugProtectionFunctionIntervalNode extends Node {
     private debugProtectionFunctionName: string;
 
     /**
-     * @param astTree
      * @param debugProtectionFunctionName
      */
-    constructor (
-        astTree: INode,
-        debugProtectionFunctionName: string
-    ) {
+    constructor (debugProtectionFunctionName: string) {
         super();
 
-        this.astTree = astTree;
         this.debugProtectionFunctionName = debugProtectionFunctionName;
 
         this.node = this.getNodeStructure();
     }
 
-    public appendNode (): void {
-        estraverse.replace(this.astTree, {
+    /**
+     * @param astTree
+     */
+    public appendNode (astTree: INode): void {
+        estraverse.replace(astTree, {
             leave: (node: INode, parent: INode): any => {
                 if (NodeUtils.isProgramNode(node)) {
                     NodeUtils.appendNode(node.body, this.getNode());

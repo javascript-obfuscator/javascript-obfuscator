@@ -63,7 +63,7 @@ export class Obfuscator {
      * @param node
      */
     public obfuscateNode (node: INode): void {
-        this.setNewNodes(node);
+        this.setNewNodes();
         this.beforeObfuscation(node);
 
         estraverse.replace(node, {
@@ -97,48 +97,48 @@ export class Obfuscator {
     }
 
     /**
-     * @param node
+     * @param astTree
      */
-    private afterObfuscation (node: INode): void {
+    private afterObfuscation (astTree: INode): void {
         this.nodes.forEach((node: ICustomNode) => {
             if (node.getAppendState() === AppendState.AfterObfuscation) {
-                node.appendNode();
+                node.appendNode(astTree);
             }
         });
     }
 
     /**
-     * @param node
+     * @param astTree
      */
-    private beforeObfuscation (node: INode): void {
+    private beforeObfuscation (astTree: INode): void {
         this.nodes.forEach((node: ICustomNode) => {
             if (node.getAppendState() === AppendState.BeforeObfuscation) {
-                node.appendNode();
+                node.appendNode(astTree);
             }
         });
     };
 
-    private setNewNodes (astTree: INode): void {
+    private setNewNodes (): void {
         if (this.options['disableConsoleOutput']) {
             this.setNode(
                 'consoleOutputDisableExpressionNode',
-                new ConsoleOutputDisableExpressionNode(astTree)
+                new ConsoleOutputDisableExpressionNode()
             );
         }
 
         if (this.options['debugProtection']) {
-            this.setNodesGroup(new DebugProtectionNodesGroup(astTree, this.options));
+            this.setNodesGroup(new DebugProtectionNodesGroup(this.options));
         }
 
         /**
          * Important to set this nodes latest to prevent runtime errors cause by `rotateUnicodeArray` option
          */
         if (this.options['rotateUnicodeArray']) {
-            this.setNodesGroup(new UnicodeArrayNodesGroup(astTree));
+            this.setNodesGroup(new UnicodeArrayNodesGroup());
         } else {
             this.setNode(
                 'unicodeArrayNode',
-                new UnicodeArrayNode(astTree, Utils.getRandomVariableName(UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH))
+                new UnicodeArrayNode(Utils.getRandomVariableName(UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH))
             );
         }
     }

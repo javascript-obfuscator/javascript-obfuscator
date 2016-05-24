@@ -3,19 +3,19 @@ const esprima = require('esprima');
 const estraverse = require('estraverse');
 const Node_1 = require('../Node');
 const NodeUtils_1 = require('../../NodeUtils');
+const Utils_1 = require("../../Utils");
 class DebugProtectionFunctionNode extends Node_1.Node {
-    constructor(astTree, debugProtectionFunctionName, debugProtectionFunctionIndex) {
+    constructor(debugProtectionFunctionName) {
         super();
-        this.astTree = astTree;
         this.debugProtectionFunctionName = debugProtectionFunctionName;
-        this.debugProtectionFunctionIndex = debugProtectionFunctionIndex;
         this.node = this.getNodeStructure();
     }
-    appendNode() {
-        estraverse.replace(this.astTree, {
+    appendNode(astTree) {
+        estraverse.replace(astTree, {
             leave: (node, parent) => {
                 if (NodeUtils_1.NodeUtils.isProgramNode(node)) {
-                    NodeUtils_1.NodeUtils.insertNodeAtIndex(node.body, this.getNode(), this.debugProtectionFunctionIndex);
+                    let programBodyLength = node.body.length, randomIndex = Utils_1.Utils.getRandomInteger(0, programBodyLength);
+                    NodeUtils_1.NodeUtils.insertNodeAtIndex(node.body, this.getNode(), randomIndex);
                     return estraverse.VisitorOption.Break;
                 }
                 return estraverse.VisitorOption.Skip;

@@ -14,10 +14,7 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
      */
     private unicodeArrayRotateFunctionIdentifier: string = Utils.getRandomVariableName();
 
-    /**
-     * @param astTree
-     */
-    constructor (astTree: INode) {
+    constructor () {
         super();
 
         let unicodeArrayName: string = Utils.getRandomVariableName(UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH),
@@ -27,7 +24,6 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
             [
                 'unicodeArrayNode',
                 new UnicodeArrayNode(
-                    astTree,
                     unicodeArrayName,
                     unicodeArrayRotateValue
                 )
@@ -35,7 +31,6 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
             [
                 'unicodeArrayRotateFunctionNode',
                 new UnicodeArrayRotateFunctionNode(
-                    astTree,
                     this.unicodeArrayRotateFunctionIdentifier,
                     unicodeArrayName
                 )
@@ -43,7 +38,6 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
             [
                 'unicodeArrayRotateFunctionCallNode',
                 new UnicodeArrayRotateFunctionCallNode(
-                    astTree,
                     this.unicodeArrayRotateFunctionIdentifier,
                     unicodeArrayName,
                     unicodeArrayRotateValue

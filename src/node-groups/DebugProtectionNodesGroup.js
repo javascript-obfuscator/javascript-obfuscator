@@ -7,24 +7,23 @@ const NodesGroup_1 = require('./NodesGroup');
 const NodeUtils_1 = require("../NodeUtils");
 const Utils_1 = require('../Utils');
 class DebugProtectionNodesGroup extends NodesGroup_1.NodesGroup {
-    constructor(astTree, options) {
+    constructor(options) {
         super();
         this.debugProtectionFunctionIdentifier = Utils_1.Utils.getRandomVariableName();
-        this.astTree = astTree;
         this.options = options;
         this.debugProtectionFunctionIndex = this.getDebugProtectionFunctionIndex();
         this.nodes = new Map([
             [
                 'debugProtectionFunctionNode',
-                new DebugProtectionFunctionNode_1.DebugProtectionFunctionNode(this.astTree, this.debugProtectionFunctionIdentifier, this.debugProtectionFunctionIndex)
+                new DebugProtectionFunctionNode_1.DebugProtectionFunctionNode(this.debugProtectionFunctionIdentifier)
             ],
             [
                 'debugProtectionFunctionCallNode',
-                new DebugProtectionFunctionCallNode_1.DebugProtectionFunctionCallNode(this.astTree, this.debugProtectionFunctionIdentifier)
+                new DebugProtectionFunctionCallNode_1.DebugProtectionFunctionCallNode(this.debugProtectionFunctionIdentifier)
             ]
         ]);
         if (this.options['debugProtectionInterval']) {
-            this.nodes.set('debugProtectionFunctionIntervalNode', new DebugProtectionFunctionIntervalNode_1.DebugProtectionFunctionIntervalNode(this.astTree, this.debugProtectionFunctionIdentifier));
+            this.nodes.set('debugProtectionFunctionIntervalNode', new DebugProtectionFunctionIntervalNode_1.DebugProtectionFunctionIntervalNode(this.debugProtectionFunctionIdentifier));
         }
     }
     getDebugProtectionFunctionIndex() {

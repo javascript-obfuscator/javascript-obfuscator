@@ -4,13 +4,12 @@ const estraverse = require('estraverse');
 const Node_1 = require('../Node');
 const NodeUtils_1 = require("../../NodeUtils");
 class ConsoleOutputDisableExpressionNode extends Node_1.Node {
-    constructor(astTree) {
+    constructor() {
         super();
-        this.astTree = astTree;
         this.node = this.getNodeStructure();
     }
-    appendNode() {
-        estraverse.replace(this.astTree, {
+    appendNode(astTree) {
+        estraverse.replace(astTree, {
             leave: (node, parent) => {
                 if (NodeUtils_1.NodeUtils.isProgramNode(node)) {
                     NodeUtils_1.NodeUtils.prependNode(node.body, this.getNode());

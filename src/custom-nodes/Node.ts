@@ -12,16 +12,11 @@ export abstract class Node implements ICustomNode {
     /**
      * @type {INode}
      */
-    protected astTree: INode;
-
-    /**
-     * @type {INode}
-     */
     protected node: INode;
 
     constructor () {}
 
-    public abstract appendNode (): void;
+    public abstract appendNode (astTree: INode): void;
 
     /**
      * @returns {AppendState}

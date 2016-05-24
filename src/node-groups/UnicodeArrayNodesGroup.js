@@ -7,7 +7,7 @@ const Utils_1 = require('../Utils');
 class UnicodeArrayNodesGroup extends NodesGroup_1.NodesGroup {
     constructor() {
         super();
-        this.unicodeArrayRotateFunctionIdentifier = Utils_1.Utils.getRandomVariableName();
+        this.unicodeArrayRotateFunctionName = Utils_1.Utils.getRandomVariableName();
         let unicodeArrayName = Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH), unicodeArrayRotateValue = Utils_1.Utils.getRandomInteger(100, 500);
         this.nodes = new Map([
             [
@@ -16,11 +16,11 @@ class UnicodeArrayNodesGroup extends NodesGroup_1.NodesGroup {
             ],
             [
                 'unicodeArrayRotateFunctionNode',
-                new UnicodeArrayRotateFunctionNode_1.UnicodeArrayRotateFunctionNode(this.unicodeArrayRotateFunctionIdentifier, unicodeArrayName)
+                new UnicodeArrayRotateFunctionNode_1.UnicodeArrayRotateFunctionNode(this.unicodeArrayRotateFunctionName, unicodeArrayName)
             ],
             [
                 'unicodeArrayRotateFunctionCallNode',
-                new UnicodeArrayRotateFunctionCallNode_1.UnicodeArrayRotateFunctionCallNode(this.unicodeArrayRotateFunctionIdentifier, unicodeArrayName, unicodeArrayRotateValue)
+                new UnicodeArrayRotateFunctionCallNode_1.UnicodeArrayRotateFunctionCallNode(this.unicodeArrayRotateFunctionName, unicodeArrayName, unicodeArrayRotateValue)
             ]
         ]);
     }

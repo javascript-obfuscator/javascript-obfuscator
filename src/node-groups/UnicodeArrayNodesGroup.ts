@@ -1,5 +1,3 @@
-import { INode } from '../interfaces/nodes/INode';
-
 import { ICustomNode } from '../interfaces/ICustomNode';
 
 import { NodesGroup } from './NodesGroup';
@@ -12,7 +10,7 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
     /**
      * @type {string}
      */
-    private unicodeArrayRotateFunctionIdentifier: string = Utils.getRandomVariableName();
+    private unicodeArrayRotateFunctionName: string = Utils.getRandomVariableName();
 
     constructor () {
         super();
@@ -31,14 +29,14 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
             [
                 'unicodeArrayRotateFunctionNode',
                 new UnicodeArrayRotateFunctionNode(
-                    this.unicodeArrayRotateFunctionIdentifier,
+                    this.unicodeArrayRotateFunctionName,
                     unicodeArrayName
                 )
             ],
             [
                 'unicodeArrayRotateFunctionCallNode',
                 new UnicodeArrayRotateFunctionCallNode(
-                    this.unicodeArrayRotateFunctionIdentifier,
+                    this.unicodeArrayRotateFunctionName,
                     unicodeArrayName,
                     unicodeArrayRotateValue
                 )

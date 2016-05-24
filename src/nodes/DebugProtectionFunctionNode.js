@@ -15,7 +15,7 @@ class DebugProtectionFunctionNode extends Node_1.Node {
         estraverse.replace(this.astTree, {
             leave: (node, parent) => {
                 if (NodeUtils_1.NodeUtils.isProgramNode(node)) {
-                    node.body.splice(this.debugProtectionFunctionIndex, 0, this.getNode());
+                    NodeUtils_1.NodeUtils.insertNodeAtIndex(node.body, this.getNode(), this.debugProtectionFunctionIndex);
                     return estraverse.VisitorOption.Break;
                 }
                 return estraverse.VisitorOption.Skip;

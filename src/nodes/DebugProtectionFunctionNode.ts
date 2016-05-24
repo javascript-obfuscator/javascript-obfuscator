@@ -8,16 +8,6 @@ import { NodeUtils } from '../NodeUtils';
 
 export class DebugProtectionFunctionNode extends Node {
     /**
-     * @type {ITreeNode}
-     */
-    protected node: ITreeNode;
-
-    /**
-     * @type {ITreeNode}
-     */
-    private astTree: ITreeNode;
-
-    /**
      * @type {string}
      */
     private debugProtectionFunctionName: string;
@@ -42,6 +32,7 @@ export class DebugProtectionFunctionNode extends Node {
         this.astTree = astTree;
         this.debugProtectionFunctionName = debugProtectionFunctionName;
         this.debugProtectionFunctionIndex = debugProtectionFunctionIndex;
+
         this.node = this.getNodeStructure();
     }
 
@@ -49,7 +40,7 @@ export class DebugProtectionFunctionNode extends Node {
         estraverse.replace(this.astTree, {
             leave: (node: ITreeNode, parent: ITreeNode): any => {
                 if (NodeUtils.isProgramNode(node)) {
-                    node.body.splice(this.debugProtectionFunctionIndex, 0, this.getNode());
+                    NodeUtils.insertNodeAtIndex(node.body, this.getNode(), this.debugProtectionFunctionIndex);
 
                     return estraverse.VisitorOption.Break;
                 }

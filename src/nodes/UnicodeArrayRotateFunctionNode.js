@@ -16,7 +16,7 @@ class UnicodeArrayRotateFunctionNode extends Node_1.Node {
         estraverse.replace(this.astTree, {
             leave: (node, parent) => {
                 if (NodeUtils_1.NodeUtils.isProgramNode(node)) {
-                    node.body.push(this.getNode());
+                    NodeUtils_1.NodeUtils.appendNode(node.body, this.getNode());
                     return estraverse.VisitorOption.Break;
                 }
                 return estraverse.VisitorOption.Skip;

@@ -2,6 +2,12 @@
 const NodeType_1 = require("./enums/NodeType");
 const Utils_1 = require("./Utils");
 class NodeUtils {
+    static appendNode(blockScopeBody, node) {
+        if (!NodeUtils.validateNode(node)) {
+            return;
+        }
+        blockScopeBody.push(node);
+    }
     static getBlockScopeNodeByIndex(node, index = 0) {
         if (NodeUtils.isNodeHasBlockScope(node) && node.body[index]) {
             return node.body[index];
@@ -35,6 +41,12 @@ class NodeUtils {
         }
         return node.parentNode;
     }
+    static insertNodeAtIndex(blockScopeBody, node, index) {
+        if (!NodeUtils.validateNode(node)) {
+            return;
+        }
+        blockScopeBody.splice(index, 0, node);
+    }
     static isBlockStatementNode(node) {
         return node.type === NodeType_1.NodeType.BlockStatement;
     }
@@ -58,6 +70,15 @@ class NodeUtils {
     }
     static isVariableDeclaratorNode(node) {
         return node.type === NodeType_1.NodeType.VariableDeclarator;
+    }
+    static prependNode(blockScopeBody, node) {
+        if (!NodeUtils.validateNode(node)) {
+            return;
+        }
+        blockScopeBody.unshift(node);
+    }
+    static validateNode(node) {
+        return !!node;
     }
 }
 NodeUtils.scopeNodes = [

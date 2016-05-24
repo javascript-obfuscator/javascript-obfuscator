@@ -12,6 +12,11 @@ export abstract class Node implements INode {
     /**
      * @type {ITreeNode}
      */
+    protected astTree: ITreeNode;
+
+    /**
+     * @type {ITreeNode}
+     */
     protected node: ITreeNode;
 
     constructor () {}

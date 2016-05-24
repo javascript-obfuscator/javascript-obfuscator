@@ -22,16 +22,6 @@ export class UnicodeArrayNode extends Node {
     protected appendState: AppendState = AppendState.AfterObfuscation;
 
     /**
-     * @type {ITreeNode}
-     */
-    protected node: ITreeNode;
-
-    /**
-     * @type {ITreeNode}
-     */
-    private astTree: ITreeNode;
-
-    /**
      * @type {string[]}
      */
     private unicodeArray: string[] = [];
@@ -57,6 +47,7 @@ export class UnicodeArrayNode extends Node {
         this.astTree = astTree;
         this.unicodeArrayName = unicodeArrayName;
         this.unicodeArrayRotateValue = unicodeArrayRotateValue;
+
         this.node = this.getNodeStructure();
     }
 
@@ -64,7 +55,7 @@ export class UnicodeArrayNode extends Node {
         estraverse.replace(this.astTree, {
             leave: (node: ITreeNode, parent: ITreeNode): any => {
                 if (NodeUtils.isProgramNode(node)) {
-                    node.body.unshift(this.getNode());
+                    NodeUtils.prependNode(node.body, this.getNode());
 
                     return estraverse.VisitorOption.Break;
                 }
@@ -96,7 +87,7 @@ export class UnicodeArrayNode extends Node {
 
         this.updateNode();
 
-        return this.node;
+        return super.getNode();
     }
 
     /**

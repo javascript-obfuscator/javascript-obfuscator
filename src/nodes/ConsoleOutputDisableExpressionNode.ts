@@ -8,22 +8,13 @@ import { NodeUtils } from "../NodeUtils";
 
 export class ConsoleOutputDisableExpressionNode extends Node {
     /**
-     * @type {ITreeNode}
-     */
-    protected node: ITreeNode;
-
-    /**
-     * @type {ITreeNode}
-     */
-    private astTree: ITreeNode;
-
-    /**
      * @param astTree
      */
     constructor (astTree: ITreeNode) {
         super();
 
         this.astTree = astTree;
+        
         this.node = this.getNodeStructure();
     }
 
@@ -31,7 +22,7 @@ export class ConsoleOutputDisableExpressionNode extends Node {
         estraverse.replace(this.astTree, {
             leave: (node: ITreeNode, parent: ITreeNode): any => {
                 if (NodeUtils.isProgramNode(node)) {
-                    node.body.unshift(this.getNode());
+                    NodeUtils.prependNode(node.body, this.getNode());
 
                     return estraverse.VisitorOption.Break;
                 }

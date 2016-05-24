@@ -25,6 +25,18 @@ export class NodeUtils {
     ];
 
     /**
+     * @param blockScopeBody
+     * @param node
+     */
+    public static appendNode (blockScopeBody: ITreeNode[], node: ITreeNode): void {
+        if (!NodeUtils.validateNode(node)) {
+            return;
+        }
+
+        blockScopeBody.push(node);
+    }
+
+    /**
      * @param node
      * @param index
      * @returns {ITreeNode}
@@ -88,6 +100,19 @@ export class NodeUtils {
         }
 
         return node.parentNode;
+    }
+
+    /**
+     * @param blockScopeBody
+     * @param node
+     * @param index
+     */
+    public static insertNodeAtIndex (blockScopeBody: ITreeNode[], node: ITreeNode, index: number): void {
+        if (!NodeUtils.validateNode(node)) {
+            return;
+        }
+
+        blockScopeBody.splice(index, 0, node);
     }
 
     /**
@@ -157,5 +182,25 @@ export class NodeUtils {
      */
     public static isVariableDeclaratorNode (node: ITreeNode): node is IVariableDeclaratorNode {
         return node.type === NodeType.VariableDeclarator;
+    }
+
+    /**
+     * @param blockScopeBody
+     * @param node
+     */
+    public static prependNode (blockScopeBody: ITreeNode[], node: ITreeNode): void {
+        if (!NodeUtils.validateNode(node)) {
+            return;
+        }
+
+        blockScopeBody.unshift(node);
+    }
+
+    /**
+     * @param node
+     * @returns {boolean}
+     */
+    private static validateNode (node: ITreeNode): boolean {
+        return !!node;
     }
 }

@@ -10,16 +10,6 @@ import { NodeUtils } from "../NodeUtils";
 
 export class UnicodeArrayRotateFunctionCallNode extends Node {
     /**
-     * @type {ITreeNode}
-     */
-    protected node: ITreeNode;
-
-    /**
-     * @type {ITreeNode}
-     */
-    private astTree: ITreeNode;
-
-    /**
      * @type {string}
      */
     private unicodeArrayName: string;
@@ -49,9 +39,11 @@ export class UnicodeArrayRotateFunctionCallNode extends Node {
         super();
 
         this.astTree = astTree;
+
         this.unicodeArrayRotateFunctionName = unicodeArrayRotateFunctionName;
         this.unicodeArrayName = unicodeArrayName;
         this.unicodeArrayRotateValue = unicodeArrayRotateValue;
+
         this.node = this.getNodeStructure();
     }
 
@@ -59,7 +51,7 @@ export class UnicodeArrayRotateFunctionCallNode extends Node {
         estraverse.replace(this.astTree, {
             leave: (node: ITreeNode, parent: ITreeNode): any => {
                 if (NodeUtils.isProgramNode(node)) {
-                    node.body.unshift(this.getNode());
+                    NodeUtils.prependNode(node.body, this.getNode());
 
                     return estraverse.VisitorOption.Break;
                 }

@@ -1,6 +1,7 @@
+import * as escodegen from 'escodegen';
+import * as esprima from 'esprima';
 import * as estraverse from 'estraverse';
 
-import { IProgramNode } from '../interfaces/nodes/IProgramNode';
 import { ITreeNode } from '../interfaces/nodes/ITreeNode';
 
 import { NodeType } from "../enums/NodeType";
@@ -10,16 +11,6 @@ import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
 
 export class UnicodeArrayRotateFunctionNode extends Node {
-    /**
-     * @type {ITreeNode}
-     */
-    protected node: ITreeNode;
-
-    /**
-     * @type {ITreeNode}
-     */
-    private astTree: ITreeNode;
-
     /**
      * @type {string}
      */
@@ -45,6 +36,7 @@ export class UnicodeArrayRotateFunctionNode extends Node {
         this.astTree = astTree;
         this.unicodeArrayRotateFunctionName = unicodeArrayRotateFunctionName;
         this.unicodeArrayName = unicodeArrayName;
+
         this.node = this.getNodeStructure();
     }
 
@@ -52,7 +44,7 @@ export class UnicodeArrayRotateFunctionNode extends Node {
         estraverse.replace(this.astTree, {
             leave: (node: ITreeNode, parent: ITreeNode): any => {
                 if (NodeUtils.isProgramNode(node)) {
-                    node.body.push(this.getNode());
+                    NodeUtils.appendNode(node.body, this.getNode());
 
                     return estraverse.VisitorOption.Break;
                 }

@@ -12,9 +12,7 @@ const MemberExpressionObfuscator_1 = require('./node-obfuscators/MemberExpressio
 const MethodDefinitionObfuscator_1 = require('./node-obfuscators/MethodDefinitionObfuscator');
 const NodeUtils_1 = require("./NodeUtils");
 const ObjectExpressionObfuscator_1 = require('./node-obfuscators/ObjectExpressionObfuscator');
-const UnicodeArrayNode_1 = require('./custom-nodes/unicode-array-nodes/UnicodeArrayNode');
 const UnicodeArrayNodesGroup_1 = require('./node-groups/UnicodeArrayNodesGroup');
-const Utils_1 = require('./Utils');
 const VariableDeclarationObfuscator_1 = require('./node-obfuscators/VariableDeclarationObfuscator');
 class Obfuscator {
     constructor(options = {}) {
@@ -89,12 +87,7 @@ class Obfuscator {
         if (this.options['debugProtection']) {
             this.setNodesGroup(new DebugProtectionNodesGroup_1.DebugProtectionNodesGroup(this.options));
         }
-        if (this.options['rotateUnicodeArray']) {
-            this.setNodesGroup(new UnicodeArrayNodesGroup_1.UnicodeArrayNodesGroup());
-        }
-        else {
-            this.setNode('unicodeArrayNode', new UnicodeArrayNode_1.UnicodeArrayNode(Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH)));
-        }
+        this.setNodesGroup(new UnicodeArrayNodesGroup_1.UnicodeArrayNodesGroup(this.options));
     }
 }
 exports.Obfuscator = Obfuscator;

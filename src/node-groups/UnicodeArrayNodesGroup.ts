@@ -4,8 +4,14 @@ import { NodesGroup } from './NodesGroup';
 import { UnicodeArrayNode } from '../custom-nodes/unicode-array-nodes/UnicodeArrayNode';
 import { UnicodeArrayRotateFunctionNode } from '../custom-nodes/unicode-array-nodes/UnicodeArrayRotateFunctionNode';
 import { Utils } from '../Utils';
+import {UnicodeArrayTranslator} from "../custom-nodes/unicode-array-nodes/UnicodeArrayTranslator";
 
 export class UnicodeArrayNodesGroup extends NodesGroup {
+    /**
+     * @type {any}
+     */
+    private options: any;
+
     /**
      * @type {string}
      */
@@ -16,8 +22,18 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
      */
     private unicodeArrayRotateValue: number = Utils.getRandomInteger(100, 500);
 
-    constructor () {
+    /**
+     * @type {string}
+     */
+    private unicodeArrayTranslatorName: string = Utils.getRandomVariableName(UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
+
+    /**
+     * @param options
+     */
+    constructor (options: any) {
         super();
+
+        this.options = options;
 
         let unicodeArrayNode: UnicodeArrayNode = new UnicodeArrayNode(
                 this.unicodeArrayName,
@@ -31,13 +47,24 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
                 unicodeArrayNode
             ],
             [
+                'unicodeArrayTranslator',
+                new UnicodeArrayTranslator(
+                    this.unicodeArrayTranslatorName,
+                    this.unicodeArrayName,
+                    unicodeArray
+                )
+            ]
+        ]);
+
+        if (this.options['rotateUnicodeArray']) {
+            this.nodes.set(
                 'unicodeArrayRotateFunctionNode',
                 new UnicodeArrayRotateFunctionNode(
                     this.unicodeArrayName,
                     unicodeArray,
                     this.unicodeArrayRotateValue
                 )
-            ]
-        ]);
+            );
+        }
     }
 }

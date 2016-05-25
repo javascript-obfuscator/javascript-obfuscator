@@ -155,13 +155,6 @@ export class Obfuscator {
         /**
          * Important to set this nodes latest to prevent runtime errors cause by `rotateUnicodeArray` option
          */
-        if (this.options['rotateUnicodeArray']) {
-            this.setNodesGroup(new UnicodeArrayNodesGroup());
-        } else {
-            this.setNode(
-                'unicodeArrayNode',
-                new UnicodeArrayNode(Utils.getRandomVariableName(UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH))
-            );
-        }
+        this.setNodesGroup(new UnicodeArrayNodesGroup(this.options));
     }
 }

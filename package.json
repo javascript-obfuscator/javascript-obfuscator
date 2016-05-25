@@ -1,7 +1,16 @@
 {
   "name": "javascript-obfuscator",
-  "version": "0.4.0",
+  "version": "0.4.2",
   "description": "JavaScript obfuscator",
+  "keywords": [
+    "obfuscator",
+    "obfuscation",
+    "uglify",
+    "crush",
+    "code protection",
+    "javascript obfuscator",
+    "js obfuscator"
+  ],
   "main": "index.js",
   "dependencies": {
     "esprima": "^2.7.2",

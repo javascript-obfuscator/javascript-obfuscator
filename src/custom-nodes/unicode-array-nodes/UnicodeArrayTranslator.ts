@@ -82,7 +82,7 @@ export class UnicodeArrayTranslator extends Node {
         let keyName: string = Utils.getRandomVariableName(),
             node: INode = esprima.parse(`
                 var ${this.unicodeArrayTranslatorName} = function (${keyName}) {
-                    return ${this.unicodeArrayName}[parseInt(${keyName})]
+                    return ${this.unicodeArrayName}[[][${Utils.stringToUnicode('filter')}][${Utils.stringToUnicode('constructor')}](${Utils.stringToUnicode('return this')})()[${Utils.stringToUnicode('parseInt')}](${keyName})]
                 };
             `);
 

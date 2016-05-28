@@ -7,7 +7,7 @@ import { IProgramNode } from './src/interfaces/nodes/IProgramNode';
 
 import { Obfuscator } from './src/Obfuscator';
 
-export class JavaScriptObfuscator {
+class JavaScriptObfuscator {
     /**
      * @type any
      */
@@ -55,3 +55,5 @@ export class JavaScriptObfuscator {
         return escodegen.generate(astTree, escodegenParams);
     }
 }
+
+module.exports = JavaScriptObfuscator;

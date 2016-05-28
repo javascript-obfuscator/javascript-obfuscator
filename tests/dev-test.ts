@@ -1,4 +1,4 @@
-import { JavaScriptObfuscator } from "../index";
+import * as JavaScriptObfuscator from "../index";
 
 let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
     `

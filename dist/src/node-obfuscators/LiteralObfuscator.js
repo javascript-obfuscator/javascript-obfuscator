@@ -19,7 +19,7 @@ class LiteralObfuscator extends NodeObfuscator_1.NodeObfuscator {
                 content = this.replaceLiteralNumberByHexadecimalValue(literalNode.value);
                 break;
             case 'string':
-                content = this.replaceLiteralStringByUnicodeArrayTranslatorCall(literalNode.value);
+                content = this.replaceLiteralStringByUnicodeArrayCall(literalNode.value);
                 break;
             default:
                 return;

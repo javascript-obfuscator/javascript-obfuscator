@@ -26,7 +26,7 @@ class MemberExpressionObfuscator extends NodeObfuscator_1.NodeObfuscator {
         let nodeValue = node.name, literalNode = {
             raw: `'${nodeValue}'`,
             'x-verbatim-property': {
-                content: this.replaceLiteralStringByUnicodeArrayTranslatorCall(nodeValue),
+                content: this.replaceLiteralStringByUnicodeArrayCall(nodeValue),
                 precedence: escodegen.Precedence.Primary
             },
             type: NodeType_1.NodeType.Literal,
@@ -42,7 +42,7 @@ class MemberExpressionObfuscator extends NodeObfuscator_1.NodeObfuscator {
                     break;
                 }
                 node['x-verbatim-property'] = {
-                    content: this.replaceLiteralStringByUnicodeArrayTranslatorCall(node.value),
+                    content: this.replaceLiteralStringByUnicodeArrayCall(node.value),
                     precedence: escodegen.Precedence.Primary
                 };
                 break;

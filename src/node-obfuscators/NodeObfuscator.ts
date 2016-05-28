@@ -14,10 +14,17 @@ export abstract class NodeObfuscator implements INodeObfuscator {
     protected nodes: Map <string, ICustomNode>;
 
     /**
-     * @param nodes
+     * @type any
      */
-    constructor(nodes: Map <string, ICustomNode>) {
+    protected options: any;
+
+    /**
+     * @param nodes
+     * @param options
+     */
+    constructor(nodes: Map <string, ICustomNode>, options: any = {}) {
         this.nodes = nodes;
+        this.options = options;
     }
 
     /**
@@ -70,7 +77,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @param nodeValue
      * @returns {string}
      */
-    protected replaceLiteralStringByUnicodeArrayTranslatorCall (nodeValue: string): string {
+    protected replaceLiteralStringByUnicodeArrayCall (nodeValue: string): string {
         let value: string = Utils.stringToUnicode(nodeValue),
             unicodeArray: string[] = this.nodes.get('unicodeArrayNode').getNodeData(),
             sameIndex: number = unicodeArray.indexOf(value),
@@ -86,6 +93,10 @@ export abstract class NodeObfuscator implements INodeObfuscator {
 
         hexadecimalIndex = this.replaceLiteralNumberByHexadecimalValue(index);
 
-        return `${this.nodes.get('unicodeArrayTranslator').getNodeIdentifier()}('${hexadecimalIndex}')`;
+        if (this.options['wrapUnicodeArrayCalls']) {
+            return `${this.nodes.get('unicodeArrayCallsWrapper').getNodeIdentifier()}('${hexadecimalIndex}')`;
+        }
+
+        return `${this.nodes.get('unicodeArrayNode').getNodeIdentifier()}[${hexadecimalIndex}]`;
     }
 }

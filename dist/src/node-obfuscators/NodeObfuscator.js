@@ -3,8 +3,9 @@ const JSFuck_1 = require("../enums/JSFuck");
 const NodeUtils_1 = require("../NodeUtils");
 const Utils_1 = require('../Utils');
 class NodeObfuscator {
-    constructor(nodes) {
+    constructor(nodes, options = {}) {
         this.nodes = nodes;
+        this.options = options;
     }
     replaceNodeIdentifierByNewValue(node, parentNode, namesMap) {
         if (NodeUtils_1.NodeUtils.isIdentifierNode(node) && namesMap.has(node.name)) {
@@ -25,7 +26,7 @@ class NodeObfuscator {
         }
         return `${prefix}${Utils_1.Utils.decToHex(nodeValue)}`;
     }
-    replaceLiteralStringByUnicodeArrayTranslatorCall(nodeValue) {
+    replaceLiteralStringByUnicodeArrayCall(nodeValue) {
         let value = Utils_1.Utils.stringToUnicode(nodeValue), unicodeArray = this.nodes.get('unicodeArrayNode').getNodeData(), sameIndex = unicodeArray.indexOf(value), index, hexadecimalIndex;
         if (sameIndex < 0) {
             index = unicodeArray.length;
@@ -35,7 +36,10 @@ class NodeObfuscator {
             index = sameIndex;
         }
         hexadecimalIndex = this.replaceLiteralNumberByHexadecimalValue(index);
-        return `${this.nodes.get('unicodeArrayTranslator').getNodeIdentifier()}('${hexadecimalIndex}')`;
+        if (this.options['wrapUnicodeArrayCalls']) {
+            return `${this.nodes.get('unicodeArrayCallsWrapper').getNodeIdentifier()}('${hexadecimalIndex}')`;
+        }
+        return `${this.nodes.get('unicodeArrayNode').getNodeIdentifier()}[${hexadecimalIndex}]`;
     }
 }
 exports.NodeObfuscator = NodeObfuscator;

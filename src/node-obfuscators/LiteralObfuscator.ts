@@ -35,7 +35,7 @@ export class LiteralObfuscator extends NodeObfuscator {
 
 
             case 'string':
-                content = this.replaceLiteralStringByUnicodeArrayTranslatorCall(<string>literalNode.value);
+                content = this.replaceLiteralStringByUnicodeArrayCall(<string>literalNode.value);
 
                 break;
 

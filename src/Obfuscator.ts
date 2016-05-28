@@ -125,7 +125,7 @@ export class Obfuscator {
         }
 
         this.nodeObfuscators.get(node.type).forEach((obfuscator: Function) => {
-            new (<INodeObfuscator> obfuscator(this.nodes)).obfuscateNode(node, parentNode);
+            new (<INodeObfuscator> obfuscator(this.nodes, this.options)).obfuscateNode(node, parentNode);
         });
     }
 

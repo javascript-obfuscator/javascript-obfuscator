@@ -10,7 +10,7 @@ import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
 import { Utils } from "../../Utils";
 
-export class UnicodeArrayTranslator extends Node {
+export class UnicodeArrayCallsWrapper extends Node {
     /**
      * @type {AppendState}
      */
@@ -29,21 +29,21 @@ export class UnicodeArrayTranslator extends Node {
     /**
      * @type {string}
      */
-    private unicodeArrayTranslatorName: string;
+    private unicodeArrayCallsWrapperName: string;
 
     /**
-     * @param unicodeArrayTranslatorName
+     * @param unicodeArrayCallsWrapperName
      * @param unicodeArrayName
      * @param unicodeArray
      */
     constructor (
-        unicodeArrayTranslatorName: string,
+        unicodeArrayCallsWrapperName: string,
         unicodeArrayName: string,
         unicodeArray: string[]
     ) {
         super();
 
-        this.unicodeArrayTranslatorName = unicodeArrayTranslatorName;
+        this.unicodeArrayCallsWrapperName = unicodeArrayCallsWrapperName;
         this.unicodeArrayName = unicodeArrayName;
         this.unicodeArray = unicodeArray;
 
@@ -61,7 +61,7 @@ export class UnicodeArrayTranslator extends Node {
      * @returns {string}
      */
     public getNodeIdentifier (): string {
-        return this.unicodeArrayTranslatorName;
+        return this.unicodeArrayCallsWrapperName;
     };
 
     /**
@@ -81,7 +81,7 @@ export class UnicodeArrayTranslator extends Node {
     protected getNodeStructure (): any {
         let keyName: string = Utils.getRandomVariableName(),
             node: INode = esprima.parse(`
-                var ${this.unicodeArrayTranslatorName} = function (${keyName}) {
+                var ${this.unicodeArrayCallsWrapperName} = function (${keyName}) {
                     return ${this.unicodeArrayName}[[][${Utils.stringToUnicode('filter')}][${Utils.stringToUnicode('constructor')}](${Utils.stringToUnicode('return this')})()[${Utils.stringToUnicode('parseInt')}](${keyName})]
                 };
             `);

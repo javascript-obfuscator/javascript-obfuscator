@@ -3,7 +3,7 @@ const esprima = require('esprima');
 const escodegen = require('escodegen');
 const Obfuscator_1 = require('./src/Obfuscator');
 class JavaScriptObfuscator {
-    static obfuscate(sourceCode, customOptions) {
+    static obfuscate(sourceCode, customOptions = {}) {
         let astTree = esprima.parse(sourceCode), options = Object.assign(JavaScriptObfuscator.defaultOptions, customOptions), obfuscator = new Obfuscator_1.Obfuscator(options);
         obfuscator.obfuscateNode(astTree);
         return JavaScriptObfuscator.generateCode(astTree, options);
@@ -23,7 +23,7 @@ JavaScriptObfuscator.defaultOptions = {
     debugProtectionInterval: false,
     disableConsoleOutput: true,
     rotateUnicodeArray: true,
-    wrapUnicodeArrayCalls: false
+    wrapUnicodeArrayCalls: true
 };
 JavaScriptObfuscator.escodegenParams = {
     verbatim: 'x-verbatim-property'

@@ -31,7 +31,7 @@ class JavaScriptObfuscator {
      * @param sourceCode
      * @param customOptions
      */
-    public static obfuscate (sourceCode: string, customOptions: any = {}): string {
+    public static obfuscate (sourceCode: string, customOptions?: any): string {
         let astTree: IProgramNode = esprima.parse(sourceCode),
             options: any = Object.assign(JavaScriptObfuscator.defaultOptions, customOptions),
             obfuscator: Obfuscator = new Obfuscator(options);

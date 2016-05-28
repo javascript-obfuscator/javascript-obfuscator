@@ -103,9 +103,7 @@ This option affected only on visual code organisation, because we can easily get
 Not recommended for small source code, because helper function will attract attention.
 
 ####wrapUnicodeArrayCalls
-Type: `boolean` Default: `false`
-
-#####This option have huge affect on performance! Use this option only on small pieces of code (< 5000 LOC)
+Type: `boolean` Default: `true`
 
 Instead using direct calls to `unicodeArray` items `var t = _0x43a123[0x0]`, 
 when index `0x0` can be easy reverted to `0` with few js beautifiers, this option wrap all calls to special function instead.

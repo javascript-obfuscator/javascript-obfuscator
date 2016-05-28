@@ -29,7 +29,7 @@ class UnicodeArrayCallsWrapper extends Node_1.Node {
     getNodeStructure() {
         let keyName = Utils_1.Utils.getRandomVariableName(), node = esprima.parse(`
                 var ${this.unicodeArrayCallsWrapperName} = function (${keyName}) {
-                    return ${this.unicodeArrayName}[[][${Utils_1.Utils.stringToUnicode('filter')}][${Utils_1.Utils.stringToUnicode('constructor')}](${Utils_1.Utils.stringToUnicode('return this')})()[${Utils_1.Utils.stringToUnicode('parseInt')}](${keyName})]
+                    return ${this.unicodeArrayName}[parseInt(${keyName}, 16)]
                 };
             `);
         NodeUtils_1.NodeUtils.addXVerbatimPropertyToLiterals(node);

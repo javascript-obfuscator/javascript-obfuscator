@@ -82,7 +82,7 @@ export class UnicodeArrayCallsWrapper extends Node {
         let keyName: string = Utils.getRandomVariableName(),
             node: INode = esprima.parse(`
                 var ${this.unicodeArrayCallsWrapperName} = function (${keyName}) {
-                    return ${this.unicodeArrayName}[[][${Utils.stringToUnicode('filter')}][${Utils.stringToUnicode('constructor')}](${Utils.stringToUnicode('return this')})()[${Utils.stringToUnicode('parseInt')}](${keyName})]
+                    return ${this.unicodeArrayName}[parseInt(${keyName}, 16)]
                 };
             `);
 

@@ -111,5 +111,5 @@ Instead using direct calls to `unicodeArray` items `var t = _0x43a123[0x0]`,
 when index `0x0` can be easy reverted to `0` with few js beautifiers, this option wrap all calls to special function instead.
 
 ```javascript
-`var t = _0x12a634('0x0')`
+var t = _0x12a634('0x0')
 ```

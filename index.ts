@@ -10,7 +10,7 @@ import { Obfuscator } from './src/Obfuscator';
 
 class JavaScriptObfuscator {
     /**
-     * @type any
+     * @type {IOptions}
      */
     private static defaultOptions: IOptions = {
         compact: true,

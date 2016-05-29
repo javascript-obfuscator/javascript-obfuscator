@@ -48,7 +48,7 @@ export class Obfuscator {
     ]);
 
     /**
-     * @type any
+     * @type {IOptions}
      */
     private options: IOptions;
 

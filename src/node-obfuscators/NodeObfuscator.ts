@@ -15,7 +15,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
     protected nodes: Map <string, ICustomNode>;
 
     /**
-     * @type any
+     * @type {IOptions}
      */
     protected options: IOptions;
 

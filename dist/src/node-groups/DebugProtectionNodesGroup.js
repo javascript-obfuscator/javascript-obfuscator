@@ -5,10 +5,9 @@ const DebugProtectionFunctionNode_1 = require("../custom-nodes/debug-protection-
 const NodesGroup_1 = require('./NodesGroup');
 const Utils_1 = require('../Utils');
 class DebugProtectionNodesGroup extends NodesGroup_1.NodesGroup {
-    constructor(options) {
-        super();
+    constructor(options = {}) {
+        super(options);
         this.debugProtectionFunctionIdentifier = Utils_1.Utils.getRandomVariableName();
-        this.options = options;
         this.nodes = new Map([
             [
                 'debugProtectionFunctionNode',

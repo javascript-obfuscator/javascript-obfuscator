@@ -5,12 +5,11 @@ const UnicodeArrayNode_1 = require('../custom-nodes/unicode-array-nodes/UnicodeA
 const UnicodeArrayRotateFunctionNode_1 = require('../custom-nodes/unicode-array-nodes/UnicodeArrayRotateFunctionNode');
 const Utils_1 = require('../Utils');
 class UnicodeArrayNodesGroup extends NodesGroup_1.NodesGroup {
-    constructor(options) {
-        super();
+    constructor(options = {}) {
+        super(options);
         this.unicodeArrayName = Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
         this.unicodeArrayRotateValue = Utils_1.Utils.getRandomInteger(100, 500);
         this.unicodeArrayTranslatorName = Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
-        this.options = options;
         let unicodeArrayNode = new UnicodeArrayNode_1.UnicodeArrayNode(this.unicodeArrayName, this.unicodeArrayRotateValue), unicodeArray = unicodeArrayNode.getNodeData();
         this.nodes = new Map([
             [

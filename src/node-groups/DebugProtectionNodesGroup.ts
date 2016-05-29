@@ -1,4 +1,5 @@
 import { ICustomNode } from '../interfaces/ICustomNode';
+import { IOptions } from "../interfaces/IOptions";
 
 import { DebugProtectionFunctionCallNode } from "../custom-nodes/debug-protection-nodes/DebugProtectionFunctionCallNode";
 import { DebugProtectionFunctionIntervalNode } from "../custom-nodes/debug-protection-nodes/DebugProtectionFunctionIntervalNode";
@@ -14,17 +15,10 @@ export class DebugProtectionNodesGroup extends NodesGroup {
     private debugProtectionFunctionIdentifier: string = Utils.getRandomVariableName();
 
     /**
-     * @type {any}
-     */
-    private options: any;
-
-    /**
      * @param options
      */
-    constructor (options: any) {
-        super();
-
-        this.options = options;
+    constructor (options: IOptions = {}) {
+        super(options);
 
         this.nodes = new Map <string, ICustomNode> ([
             [

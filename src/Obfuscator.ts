@@ -4,6 +4,7 @@ import { ICustomNode } from './interfaces/ICustomNode';
 import { INodeObfuscator } from './interfaces/INodeObfuscator';
 import { INodesGroup } from './interfaces/INodesGroup';
 import { INode } from './interfaces/nodes/INode';
+import { IOptions } from "./interfaces/IOptions";
 
 import { AppendState } from './enums/AppendState';
 import { NodeType } from './enums/NodeType';
@@ -18,9 +19,7 @@ import { MemberExpressionObfuscator } from './node-obfuscators/MemberExpressionO
 import { MethodDefinitionObfuscator } from './node-obfuscators/MethodDefinitionObfuscator';
 import { NodeUtils } from "./NodeUtils";
 import { ObjectExpressionObfuscator } from './node-obfuscators/ObjectExpressionObfuscator';
-import { UnicodeArrayNode } from './custom-nodes/unicode-array-nodes/UnicodeArrayNode';
 import { UnicodeArrayNodesGroup } from './node-groups/UnicodeArrayNodesGroup';
-import { Utils } from './Utils';
 import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclarationObfuscator';
 
 export class Obfuscator {
@@ -51,12 +50,12 @@ export class Obfuscator {
     /**
      * @type any
      */
-    private options: any;
+    private options: IOptions;
 
     /**
      * @param options
      */
-    constructor (options: any = {}) {
+    constructor (options: IOptions = {}) {
         this.options = options;
     }
 

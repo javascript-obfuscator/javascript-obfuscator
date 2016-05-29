@@ -1,4 +1,5 @@
 import { ICustomNode } from '../interfaces/ICustomNode';
+import { IOptions } from "../interfaces/IOptions";
 
 import { NodesGroup } from './NodesGroup';
 import { UnicodeArrayCallsWrapper } from "../custom-nodes/unicode-array-nodes/UnicodeArrayCallsWrapper";
@@ -7,11 +8,6 @@ import { UnicodeArrayRotateFunctionNode } from '../custom-nodes/unicode-array-no
 import { Utils } from '../Utils';
 
 export class UnicodeArrayNodesGroup extends NodesGroup {
-    /**
-     * @type {any}
-     */
-    private options: any;
-
     /**
      * @type {string}
      */
@@ -30,10 +26,8 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
     /**
      * @param options
      */
-    constructor (options: any) {
-        super();
-
-        this.options = options;
+    constructor (options: IOptions = {}) {
+        super(options);
 
         let unicodeArrayNode: UnicodeArrayNode = new UnicodeArrayNode(
                 this.unicodeArrayName,

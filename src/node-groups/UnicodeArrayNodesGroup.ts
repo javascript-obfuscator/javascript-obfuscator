@@ -1,4 +1,3 @@
-import { ICustomNode } from '../interfaces/ICustomNode';
 import { IOptions } from "../interfaces/IOptions";
 
 import { NodesGroup } from './NodesGroup';

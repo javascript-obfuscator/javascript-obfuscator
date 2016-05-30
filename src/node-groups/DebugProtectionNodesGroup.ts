@@ -1,4 +1,3 @@
-import { ICustomNode } from '../interfaces/ICustomNode';
 import { IOptions } from "../interfaces/IOptions";
 
 import { DebugProtectionFunctionCallNode } from "../custom-nodes/debug-protection-nodes/DebugProtectionFunctionCallNode";

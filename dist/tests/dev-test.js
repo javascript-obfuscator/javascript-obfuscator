@@ -1,6 +1,4 @@
-"use strict";
-const JavaScriptObfuscator = require("../index");
-let obfuscatedCode = JavaScriptObfuscator.obfuscate(`
+let JavaScriptObfuscator = require('../index'), obfuscatedCode = JavaScriptObfuscator.obfuscate(`
     (function(){
         var result = 1,
             term1 = 0,

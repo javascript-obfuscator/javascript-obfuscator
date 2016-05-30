@@ -5,5 +5,4 @@ export interface IOptions {
     disableConsoleOutput?: boolean;
     rotateUnicodeArray?: boolean;
     wrapUnicodeArrayCalls?: boolean;
-    [id: string]: any;
 }

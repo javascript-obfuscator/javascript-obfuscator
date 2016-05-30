@@ -2,7 +2,7 @@ import * as esprima from 'esprima';
 
 import { INode } from "../../interfaces/nodes/INode";
 
-import { BlockScopeNode } from "../../types/BlockScopeNode";
+import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
 import { AppendState } from "../../enums/AppendState";
 
@@ -53,7 +53,7 @@ export class UnicodeArrayCallsWrapper extends Node {
     /**
      * @param blockScopeNode
      */
-    public appendNode (blockScopeNode: BlockScopeNode): void {
+    public appendNode (blockScopeNode: TBlockScopeNode): void {
         NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), 1);
     }
 
@@ -76,9 +76,9 @@ export class UnicodeArrayCallsWrapper extends Node {
     }
 
     /**
-     * @returns any
+     * @returns {INode}
      */
-    protected getNodeStructure (): any {
+    protected getNodeStructure (): INode {
         let keyName: string = Utils.getRandomVariableName(),
             node: INode = esprima.parse(`
                 var ${this.unicodeArrayCallsWrapperName} = function (${keyName}) {

@@ -17,15 +17,15 @@ export class Utils {
      * @param array
      * @param times
      * @param reverse
-     * @returns any[]
+     * @returns {T[]}
      */
-    public static arrayRotate (array: any[], times: number, reverse: boolean = false): any[] {
+    public static arrayRotate <T> (array: T[], times: number, reverse: boolean = false): T[] {
         if (times < 0) {
             return;
         }
 
-        let newArray: any[] = array,
-            temp: any;
+        let newArray: T[] = array,
+            temp: T;
 
         while (times--) {
             if (!reverse) {
@@ -45,7 +45,14 @@ export class Utils {
      * @returns {string}
      */
     public static decToHex(dec: number): string {
-        return (dec + Math.pow(16, 6)).toString(16).substr(-6).replace(Utils.hexRepetitiveZerosRegExp, '');
+        const decToHexSliceValue: number = -6,
+            exponent: number = 6,
+            radix: number = 16;
+
+        return (dec + Math.pow(radix, exponent))
+            .toString(radix)
+            .substr(decToHexSliceValue)
+            .replace(Utils.hexRepetitiveZerosRegExp, '');
     }
 
     /**
@@ -90,8 +97,11 @@ export class Utils {
      * @returns {string}
      */
     public static stringToUnicode (string: string): string {
+        const radix: number = 16,
+            unicodeSliceValue: number = -4;
+
         return `'${string.replace(/[\s\S]/g, (escape: string): string => {
-            return `\\u${('0000' + escape.charCodeAt(0).toString(16)).slice(-4)}`;
+            return `\\u${('0000' + escape.charCodeAt(0).toString(radix)).slice(unicodeSliceValue)}`;
         })}'`;
     }
 }

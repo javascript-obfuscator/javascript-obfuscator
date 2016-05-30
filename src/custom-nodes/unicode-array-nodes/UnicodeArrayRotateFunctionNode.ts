@@ -2,7 +2,7 @@ import * as esprima from 'esprima';
 
 import { INode } from "../../interfaces/nodes/INode";
 
-import { BlockScopeNode } from "../../types/BlockScopeNode";
+import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
 import { AppendState } from "../../enums/AppendState";
 
@@ -53,7 +53,7 @@ export class UnicodeArrayRotateFunctionNode extends Node {
     /**
      * @param blockScopeNode
      */
-    public appendNode (blockScopeNode: BlockScopeNode): void {
+    public appendNode (blockScopeNode: TBlockScopeNode): void {
         NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), 1);
     }
 
@@ -69,9 +69,9 @@ export class UnicodeArrayRotateFunctionNode extends Node {
     }
 
     /**
-     * @returns any
+     * @returns {INode}
      */
-    protected getNodeStructure (): any {
+    protected getNodeStructure (): INode {
         let arrayName: string = Utils.getRandomVariableName(),
             timesName: string = Utils.getRandomVariableName(),
             tempArrayName: string = Utils.getRandomVariableName(),

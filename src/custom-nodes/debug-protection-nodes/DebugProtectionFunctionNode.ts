@@ -1,6 +1,8 @@
 import * as esprima from 'esprima';
 
-import { BlockScopeNode } from "../../types/BlockScopeNode";
+import { INode } from "../../interfaces/nodes/INode";
+
+import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
 import { Node } from '../Node';
 import { NodeUtils } from '../../NodeUtils';
@@ -28,7 +30,7 @@ export class DebugProtectionFunctionNode extends Node {
     /**
      * @param blockScopeNode
      */
-    public appendNode (blockScopeNode: BlockScopeNode): void {
+    public appendNode (blockScopeNode: TBlockScopeNode): void {
         let programBodyLength: number = blockScopeNode.body.length,
             randomIndex: number = Utils.getRandomInteger(0, programBodyLength);
 
@@ -45,9 +47,9 @@ export class DebugProtectionFunctionNode extends Node {
     /**
      * Found this trick in JScrambler
      *
-     * @returns any
+     * @returns {INode}
      */
-    protected getNodeStructure (): any {
+    protected getNodeStructure (): INode {
         return NodeUtils.getBlockScopeNodeByIndex(
             esprima.parse(`
                 var ${this.debugProtectionFunctionName} = function () {

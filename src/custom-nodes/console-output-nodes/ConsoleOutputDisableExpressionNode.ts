@@ -1,6 +1,8 @@
 import * as esprima from 'esprima';
 
-import { BlockScopeNode } from "../../types/BlockScopeNode";
+import { INode } from "../../interfaces/nodes/INode";
+
+import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
@@ -15,7 +17,7 @@ export class ConsoleOutputDisableExpressionNode extends Node {
     /**
      * @param blockScopeNode
      */
-    public appendNode (blockScopeNode: BlockScopeNode): void {
+    public appendNode (blockScopeNode: TBlockScopeNode): void {
         NodeUtils.prependNode(blockScopeNode.body, this.getNode());
     }
 
@@ -33,9 +35,9 @@ export class ConsoleOutputDisableExpressionNode extends Node {
      *  _console
      *  })();
      *
-     * @returns any
+     * @returns {INode}
      */
-    protected getNodeStructure (): any {
+    protected getNodeStructure (): INode {
         return NodeUtils.getBlockScopeNodeByIndex(
             esprima.parse(`
                 (function () {

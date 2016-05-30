@@ -2,7 +2,7 @@ import * as escodegen from 'escodegen';
 
 import { INode } from '../../interfaces/nodes/INode';
 
-import { BlockScopeNode } from "../../types/BlockScopeNode";
+import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
 import { AppendState } from '../../enums/AppendState';
 import { NodeType } from "../../enums/NodeType";
@@ -10,6 +10,7 @@ import { NodeType } from "../../enums/NodeType";
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
 import { Utils } from '../../Utils';
+import {IVariableDeclarationNode} from "../../interfaces/nodes/IVariableDeclarationNode";
 
 export class UnicodeArrayNode extends Node {
     /**
@@ -53,7 +54,7 @@ export class UnicodeArrayNode extends Node {
     /**
      * @param blockScopeNode
      */
-    public appendNode (blockScopeNode: BlockScopeNode): void {
+    public appendNode (blockScopeNode: TBlockScopeNode): void {
         NodeUtils.prependNode(blockScopeNode.body, this.getNode());
     }
 
@@ -79,7 +80,7 @@ export class UnicodeArrayNode extends Node {
             return;
         }
 
-        Utils.arrayRotate(this.unicodeArray, this.unicodeArrayRotateValue);
+        Utils.arrayRotate <string> (this.unicodeArray, this.unicodeArrayRotateValue);
 
         this.updateNode();
 
@@ -87,9 +88,9 @@ export class UnicodeArrayNode extends Node {
     }
 
     /**
-     * @returns any
+     * @returns {INode}
      */
-    protected getNodeStructure (): any {
+    protected getNodeStructure (): IVariableDeclarationNode {
         return {
             'type': NodeType.VariableDeclaration,
             'declarations': [

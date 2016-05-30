@@ -1,4 +1,6 @@
-import { BlockScopeNode } from "../../types/BlockScopeNode";
+import { IExpressionStatementNode } from "../../interfaces/nodes/IExpressionStatementNode";
+
+import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
 import { NodeType } from '../../enums/NodeType';
 
@@ -25,14 +27,14 @@ export class DebugProtectionFunctionIntervalNode extends Node {
     /**
      * @param blockScopeNode
      */
-    public appendNode (blockScopeNode: BlockScopeNode): void {
+    public appendNode (blockScopeNode: TBlockScopeNode): void {
         NodeUtils.appendNode(blockScopeNode.body, this.getNode());
     }
 
     /**
-     * @returns any
+     * @returns {IExpressionStatementNode}
      */
-    protected getNodeStructure (): any {
+    protected getNodeStructure (): IExpressionStatementNode {
         return {
             'type': NodeType.ExpressionStatement,
             'expression': {

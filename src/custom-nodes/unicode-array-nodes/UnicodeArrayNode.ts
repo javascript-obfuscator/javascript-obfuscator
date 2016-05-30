@@ -2,7 +2,7 @@ import * as escodegen from 'escodegen';
 
 import { INode } from '../../interfaces/nodes/INode';
 
-import { BlockScopeNode } from "../../types/BlockScopeNode";
+import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
 import { AppendState } from '../../enums/AppendState';
 import { NodeType } from "../../enums/NodeType";
@@ -53,7 +53,7 @@ export class UnicodeArrayNode extends Node {
     /**
      * @param blockScopeNode
      */
-    public appendNode (blockScopeNode: BlockScopeNode): void {
+    public appendNode (blockScopeNode: TBlockScopeNode): void {
         NodeUtils.prependNode(blockScopeNode.body, this.getNode());
     }
 

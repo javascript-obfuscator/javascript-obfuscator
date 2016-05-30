@@ -1,6 +1,6 @@
 import * as esprima from 'esprima';
 
-import { BlockScopeNode } from "../../types/BlockScopeNode";
+import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
@@ -15,7 +15,7 @@ export class ConsoleOutputDisableExpressionNode extends Node {
     /**
      * @param blockScopeNode
      */
-    public appendNode (blockScopeNode: BlockScopeNode): void {
+    public appendNode (blockScopeNode: TBlockScopeNode): void {
         NodeUtils.prependNode(blockScopeNode.body, this.getNode());
     }
 

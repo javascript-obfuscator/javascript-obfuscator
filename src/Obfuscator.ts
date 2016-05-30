@@ -1,10 +1,11 @@
 import * as estraverse from 'estraverse';
 
 import { ICustomNode } from './interfaces/ICustomNode';
-import { INodeObfuscator } from './interfaces/INodeObfuscator';
 import { INodesGroup } from './interfaces/INodesGroup';
 import { INode } from './interfaces/nodes/INode';
 import { IOptions } from "./interfaces/IOptions";
+
+import { TNodeObfuscator } from "./types/TNodeObfuscator";
 
 import { AppendState } from './enums/AppendState';
 import { NodeType } from './enums/NodeType';
@@ -29,9 +30,9 @@ export class Obfuscator {
     private nodes: Map <string, ICustomNode> = new Map <string, ICustomNode> ();
 
     /**
-     * @type {Map<string, Function[]>}
+     * @type {Map<string, TNodeObfuscator[]>}
      */
-    private nodeObfuscators: Map <string, Function[]> = new Map <string, Function[]> ([
+    private nodeObfuscators: Map <string, TNodeObfuscator[]> = new Map <string, TNodeObfuscator[]> ([
         [NodeType.ArrowFunctionExpression, [FunctionObfuscator]],
         [NodeType.ClassDeclaration, [FunctionDeclarationObfuscator]],
         [NodeType.CatchClause, [CatchClauseObfuscator]],
@@ -123,8 +124,8 @@ export class Obfuscator {
             return;
         }
 
-        this.nodeObfuscators.get(node.type).forEach((obfuscator: Function) => {
-            new (<INodeObfuscator> obfuscator(this.nodes, this.options)).obfuscateNode(node, parentNode);
+        this.nodeObfuscators.get(node.type).forEach((obfuscator: TNodeObfuscator) => {
+            new obfuscator(this.nodes, this.options).obfuscateNode(node, parentNode);
         });
     }
 

@@ -9,7 +9,7 @@ import { IPropertyNode } from "./interfaces/nodes/IPropertyNode";
 import { INode } from './interfaces/nodes/INode';
 import { IVariableDeclaratorNode } from "./interfaces/nodes/IVariableDeclaratorNode";
 
-import { BlockScopeNode } from "./types/BlockScopeNode";
+import { TBlockScopeNode } from "./types/TBlockScopeNode";
 
 import { NodeType } from "./enums/NodeType";
 
@@ -69,13 +69,13 @@ export class NodeUtils {
      * @param depth
      * @returns {INode}
      */
-    public static getBlockScopeOfNode (node: INode, depth: number = 0): BlockScopeNode {
+    public static getBlockScopeOfNode (node: INode, depth: number = 0): TBlockScopeNode {
         if (!node.parentNode) {
             throw new ReferenceError('`parentNode` property of given node is `undefined`');
         }
 
         if (node.parentNode.type === NodeType.Program) {
-            return <BlockScopeNode> node.parentNode;
+            return <TBlockScopeNode> node.parentNode;
         }
 
         if (!Utils.arrayContains(NodeUtils.scopeNodes, node.parentNode.type)) {
@@ -90,7 +90,7 @@ export class NodeUtils {
             return NodeUtils.getBlockScopeOfNode(node.parentNode);
         }
 
-        return <BlockScopeNode> node; // blocks statement of scopeNodes
+        return <TBlockScopeNode> node; // blocks statement of scopeNodes
     }
 
     /**
@@ -142,7 +142,7 @@ export class NodeUtils {
      * @param node
      * @returns {boolean}
      */
-    public static isNodeHasBlockScope (node: INode): node is BlockScopeNode {
+    public static isNodeHasBlockScope (node: INode): node is TBlockScopeNode {
         return node.hasOwnProperty('body');
     }
 

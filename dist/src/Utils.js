@@ -21,7 +21,11 @@ class Utils {
         return newArray;
     }
     static decToHex(dec) {
-        return (dec + Math.pow(16, 6)).toString(16).substr(-6).replace(Utils.hexRepetitiveZerosRegExp, '');
+        const decToHexSliceValue = -6, exponent = 6, radix = 16;
+        return (dec + Math.pow(radix, exponent))
+            .toString(radix)
+            .substr(decToHexSliceValue)
+            .replace(Utils.hexRepetitiveZerosRegExp, '');
     }
     static getRandomInteger(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -37,8 +41,9 @@ class Utils {
         return obj;
     }
     static stringToUnicode(string) {
+        const radix = 16, unicodeSliceValue = -4;
         return `'${string.replace(/[\s\S]/g, (escape) => {
-            return `\\u${('0000' + escape.charCodeAt(0).toString(16)).slice(-4)}`;
+            return `\\u${('0000' + escape.charCodeAt(0).toString(radix)).slice(unicodeSliceValue)}`;
         })}'`;
     }
 }

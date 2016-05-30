@@ -70,7 +70,7 @@
     ],
     "no-null-keyword": false,
     "no-reference": true,
-    "no-require-imports": true,
+    "no-require-imports": false,
     "no-shadowed-variable": false,
     "no-string-literal": false,
     "no-switch-case-fall-through": true,
@@ -80,7 +80,7 @@
     "no-unused-variable": true,
     "no-use-before-declare": true,
     "no-var-keyword": true,
-    "no-var-requires": true,
+    "no-var-requires": false,
     "object-literal-sort-keys": true,
     "one-line": [
       true,

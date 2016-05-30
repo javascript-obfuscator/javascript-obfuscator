@@ -1,4 +1,4 @@
-let JavaScriptObfuscator = require('../index'),
+let JavaScriptObfuscator: any = require('../index'),
     obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
     `
     (function(){

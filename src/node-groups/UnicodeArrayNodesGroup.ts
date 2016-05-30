@@ -35,12 +35,10 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
             ),
             unicodeArray: string [] = unicodeArrayNode.getNodeData();
 
-        this.nodes = new Map <string, ICustomNode> ([
-            [
-                'unicodeArrayNode',
-                unicodeArrayNode
-            ]
-        ]);
+        this.nodes.set(
+            'unicodeArrayNode',
+            unicodeArrayNode
+        );
 
         if (this.options['wrapUnicodeArrayCalls']) {
             this.nodes.set(

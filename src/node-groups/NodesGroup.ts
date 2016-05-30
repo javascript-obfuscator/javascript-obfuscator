@@ -7,7 +7,7 @@ export abstract class NodesGroup implements INodesGroup {
     /**
      * @type {Map<string, Node>}
      */
-    protected nodes: Map <string, ICustomNode>;
+    protected nodes: Map <string, ICustomNode> = new Map <string, ICustomNode> ();
 
     /**
      * @type {IOptions}

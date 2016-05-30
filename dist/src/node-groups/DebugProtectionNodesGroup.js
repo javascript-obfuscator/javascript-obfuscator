@@ -8,16 +8,8 @@ class DebugProtectionNodesGroup extends NodesGroup_1.NodesGroup {
     constructor(options = {}) {
         super(options);
         this.debugProtectionFunctionIdentifier = Utils_1.Utils.getRandomVariableName();
-        this.nodes = new Map([
-            [
-                'debugProtectionFunctionNode',
-                new DebugProtectionFunctionNode_1.DebugProtectionFunctionNode(this.debugProtectionFunctionIdentifier)
-            ],
-            [
-                'debugProtectionFunctionCallNode',
-                new DebugProtectionFunctionCallNode_1.DebugProtectionFunctionCallNode(this.debugProtectionFunctionIdentifier)
-            ]
-        ]);
+        this.nodes.set('debugProtectionFunctionNode', new DebugProtectionFunctionNode_1.DebugProtectionFunctionNode(this.debugProtectionFunctionIdentifier));
+        this.nodes.set('debugProtectionFunctionCallNode', new DebugProtectionFunctionCallNode_1.DebugProtectionFunctionCallNode(this.debugProtectionFunctionIdentifier));
         if (this.options['debugProtectionInterval']) {
             this.nodes.set('debugProtectionFunctionIntervalNode', new DebugProtectionFunctionIntervalNode_1.DebugProtectionFunctionIntervalNode(this.debugProtectionFunctionIdentifier));
         }

@@ -20,16 +20,14 @@ export class DebugProtectionNodesGroup extends NodesGroup {
     constructor (options: IOptions = {}) {
         super(options);
 
-        this.nodes = new Map <string, ICustomNode> ([
-            [
-                'debugProtectionFunctionNode',
-                new DebugProtectionFunctionNode(this.debugProtectionFunctionIdentifier)
-            ],
-            [
-                'debugProtectionFunctionCallNode',
-                new DebugProtectionFunctionCallNode(this.debugProtectionFunctionIdentifier)
-            ]
-        ]);
+        this.nodes.set(
+            'debugProtectionFunctionNode',
+            new DebugProtectionFunctionNode(this.debugProtectionFunctionIdentifier)
+        );
+        this.nodes.set(
+            'debugProtectionFunctionCallNode',
+            new DebugProtectionFunctionCallNode(this.debugProtectionFunctionIdentifier)
+        );
 
         if (this.options['debugProtectionInterval']) {
             this.nodes.set(

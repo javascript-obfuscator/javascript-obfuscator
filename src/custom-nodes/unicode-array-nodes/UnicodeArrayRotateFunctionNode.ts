@@ -69,9 +69,9 @@ export class UnicodeArrayRotateFunctionNode extends Node {
     }
 
     /**
-     * @returns any
+     * @returns {INode}
      */
-    protected getNodeStructure (): any {
+    protected getNodeStructure (): INode {
         let arrayName: string = Utils.getRandomVariableName(),
             timesName: string = Utils.getRandomVariableName(),
             tempArrayName: string = Utils.getRandomVariableName(),

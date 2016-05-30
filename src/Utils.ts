@@ -17,15 +17,15 @@ export class Utils {
      * @param array
      * @param times
      * @param reverse
-     * @returns any[]
+     * @returns {T[]}
      */
-    public static arrayRotate (array: any[], times: number, reverse: boolean = false): any[] {
+    public static arrayRotate <T> (array: T[], times: number, reverse: boolean = false): T[] {
         if (times < 0) {
             return;
         }
 
-        let newArray: any[] = array,
-            temp: any;
+        let newArray: T[] = array,
+            temp: T;
 
         while (times--) {
             if (!reverse) {

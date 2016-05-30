@@ -76,9 +76,9 @@ export class UnicodeArrayCallsWrapper extends Node {
     }
 
     /**
-     * @returns any
+     * @returns {INode}
      */
-    protected getNodeStructure (): any {
+    protected getNodeStructure (): INode {
         let keyName: string = Utils.getRandomVariableName(),
             node: INode = esprima.parse(`
                 var ${this.unicodeArrayCallsWrapperName} = function (${keyName}) {

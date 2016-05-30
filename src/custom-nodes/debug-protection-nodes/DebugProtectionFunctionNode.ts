@@ -1,5 +1,7 @@
 import * as esprima from 'esprima';
 
+import { INode } from "../../interfaces/nodes/INode";
+
 import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
 import { Node } from '../Node';
@@ -45,9 +47,9 @@ export class DebugProtectionFunctionNode extends Node {
     /**
      * Found this trick in JScrambler
      *
-     * @returns any
+     * @returns {INode}
      */
-    protected getNodeStructure (): any {
+    protected getNodeStructure (): INode {
         return NodeUtils.getBlockScopeNodeByIndex(
             esprima.parse(`
                 var ${this.debugProtectionFunctionName} = function () {

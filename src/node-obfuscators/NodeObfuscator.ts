@@ -45,13 +45,13 @@ export abstract class NodeObfuscator implements INodeObfuscator {
                     NodeUtils.isPropertyNode(parentNode) &&
                     parentNode.key === node
                 ),
-                parentNodeIsAMemberExpressionComputedNode: boolean = (
+                parentNodeIsAMemberExpressionNotComputedNode: boolean = (
                     NodeUtils.isMemberExpressionNode(parentNode) &&
                     parentNode.computed === false &&
                     parentNode.property === node
                 );
 
-            if (parentNodeIsAPropertyNode || parentNodeIsAMemberExpressionComputedNode) {
+            if (parentNodeIsAPropertyNode || parentNodeIsAMemberExpressionNotComputedNode) {
                 return;
             }
 

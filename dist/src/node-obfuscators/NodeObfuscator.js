@@ -10,10 +10,10 @@ class NodeObfuscator {
     replaceNodeIdentifierByNewValue(node, parentNode, namesMap) {
         if (NodeUtils_1.NodeUtils.isIdentifierNode(node) && namesMap.has(node.name)) {
             const parentNodeIsAPropertyNode = (NodeUtils_1.NodeUtils.isPropertyNode(parentNode) &&
-                parentNode.key === node), parentNodeIsAMemberExpressionComputedNode = (NodeUtils_1.NodeUtils.isMemberExpressionNode(parentNode) &&
+                parentNode.key === node), parentNodeIsAMemberExpressionNotComputedNode = (NodeUtils_1.NodeUtils.isMemberExpressionNode(parentNode) &&
                 parentNode.computed === false &&
                 parentNode.property === node);
-            if (parentNodeIsAPropertyNode || parentNodeIsAMemberExpressionComputedNode) {
+            if (parentNodeIsAPropertyNode || parentNodeIsAMemberExpressionNotComputedNode) {
                 return;
             }
             node.name = namesMap.get(node.name);

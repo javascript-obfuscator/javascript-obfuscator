@@ -62,8 +62,9 @@ export class Obfuscator {
 
     /**
      * @param node
+     * @returns {INode}
      */
-    public obfuscateNode (node: INode): void {
+    public obfuscateNode (node: INode): INode {
         this.setNewNodes();
 
         NodeUtils.parentize(node);
@@ -71,6 +72,8 @@ export class Obfuscator {
         this.beforeObfuscation(node);
         this.obfuscate(node);
         this.afterObfuscation(node);
+
+        return node;
     }
 
     /**

@@ -42,6 +42,12 @@ class NodeUtils {
         }
         return node;
     }
+    static getProgramNode(bodyNode) {
+        return {
+            'type': NodeType_1.NodeType.Program,
+            'body': bodyNode
+        };
+    }
     static insertNodeAtIndex(blockScopeBody, node, index) {
         if (!NodeUtils.validateNode(node)) {
             return;

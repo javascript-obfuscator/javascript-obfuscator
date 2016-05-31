@@ -40,6 +40,7 @@ class Obfuscator {
         this.beforeObfuscation(node);
         this.obfuscate(node);
         this.afterObfuscation(node);
+        return node;
     }
     setNode(nodeName, node) {
         this.nodes.set(nodeName, node);

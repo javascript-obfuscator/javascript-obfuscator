@@ -94,6 +94,17 @@ export class NodeUtils {
     }
 
     /**
+     * @param bodyNode
+     * @returns IProgramNode
+     */
+    public static getProgramNode (bodyNode: INode[]): IProgramNode {
+        return {
+            'type': NodeType.Program,
+            'body': bodyNode
+        };
+    }
+
+    /**
      * @param blockScopeBody
      * @param node
      * @param index

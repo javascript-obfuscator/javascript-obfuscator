@@ -3,7 +3,6 @@
     "align": [
       true,
       "parameters",
-      "arguments",
       "statements"
     ],
     "ban": [
@@ -128,11 +127,7 @@
       }
     ],
     "use-isnan": true,
-    "use-strict": [
-      true,
-      "check-module",
-      "check-function"
-    ],
+    "use-strict": false,
     "variable-name": false,
     "whitespace": [
       true,

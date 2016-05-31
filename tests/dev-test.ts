@@ -1,5 +1,6 @@
-let JavaScriptObfuscator: any = require('../index'),
-    obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+import { JavaScriptObfuscator } from '../src/JavaScriptObfuscator';
+
+let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
     `
     (function(){
         var result = 1,

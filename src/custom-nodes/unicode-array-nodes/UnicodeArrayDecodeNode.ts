@@ -1,10 +1,13 @@
 import * as esprima from 'esprima';
+import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 
 import { INode } from "../../interfaces/nodes/INode";
 
 import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
 import { AppendState } from "../../enums/AppendState";
+
+import { NO_CUSTOM_NODES_PRESET } from "../../preset-options/NoCustomNodesPreset";
 
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
@@ -64,22 +67,40 @@ export class UnicodeArrayDecodeNode extends Node {
      * @returns {INode}
      */
     protected getNodeStructure (): INode {
-        let decodedTempArrayName: string = Utils.getRandomVariableName(),
+        const atobPolyfill: string = JavaScriptObfuscator.obfuscate(`
+                var object = []['filter']['constructor']('return this')();
+                var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+    
+                object.atob || (
+                    object.atob = function(input) {
+                        var str = String(input).replace(/=+$/, '');
+                        for (
+                            var bc = 0, bs, buffer, idx = 0, output = '';
+                            buffer = str.charAt(idx++);
+                            ~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer,
+                                bc++ % 4) ? output += String.fromCharCode(255 & bs >> (-2 * bc & 6)) : 0
+                        ) {
+                            buffer = chars.indexOf(buffer);
+                        }
+                    return output;
+                });
+            `, NO_CUSTOM_NODES_PRESET),
             indexVariableName: string = Utils.getRandomVariableName(),
-            node: INode = esprima.parse(`
-                (function () {
-                    //atob polyfill
-                    !function(){var r=[]["filter"]["constructor"]("return this")(),e="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";r.atob||(r.atob=function(r){var o=String(r).replace(/=+$/,"");for(var n,a,i=0,c=0,d="";a=o.charAt(c++);~a&&(n=i%4?64*n+a:a,i++%4)?d+=String.fromCharCode(255&n>>(-2*i&6)):0)a=e.indexOf(a);return d})}(); 
-                    
-                    var ${decodedTempArrayName} = [];
-                    
-                    for (var ${indexVariableName} in ${this.unicodeArrayName}) {
-                        ${decodedTempArrayName}[${Utils.stringToUnicode('push')}](atob(${this.unicodeArrayName}[${indexVariableName}]));
-                    }
-                    
-                    ${this.unicodeArrayName} = ${decodedTempArrayName};
-                })();
-            `);
+            tempArrayName: string = Utils.getRandomVariableName();
+
+        let node: INode = esprima.parse(`
+            (function () {
+                ${atobPolyfill}
+              
+                var ${tempArrayName} = [];
+                
+                for (var ${indexVariableName} in ${this.unicodeArrayName}) {
+                    ${tempArrayName}[${Utils.stringToUnicode('push')}](atob(${this.unicodeArrayName}[${indexVariableName}]));
+                }
+                
+                ${this.unicodeArrayName} = ${tempArrayName};
+            })();
+        `);
 
         NodeUtils.addXVerbatimPropertyToLiterals(node);
 

@@ -95,7 +95,7 @@ export class UnicodeArrayDecodeNode extends Node {
                 var ${tempArrayName} = [];
                 
                 for (var ${indexVariableName} in ${this.unicodeArrayName}) {
-                    ${tempArrayName}[${Utils.stringToUnicode('push')}](atob(${this.unicodeArrayName}[${indexVariableName}]));
+                    ${tempArrayName}[${Utils.stringToUnicode('push')}](decodeURI(atob(${this.unicodeArrayName}[${indexVariableName}])));
                 }
                 
                 ${this.unicodeArrayName} = ${tempArrayName};

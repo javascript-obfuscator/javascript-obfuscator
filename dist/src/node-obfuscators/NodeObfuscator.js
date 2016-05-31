@@ -32,7 +32,7 @@ class NodeObfuscator {
     replaceLiteralStringByUnicodeArrayCall(nodeValue) {
         let value = nodeValue;
         if (this.options['encodeUnicodeArray']) {
-            value = new Buffer(value).toString('base64');
+            value = new Buffer(encodeURI(value)).toString('base64');
         }
         value = Utils_1.Utils.stringToUnicode(value);
         let unicodeArray = this.nodes.get('unicodeArrayNode').getNodeData(), sameIndex = unicodeArray.indexOf(value), index, hexadecimalIndex;

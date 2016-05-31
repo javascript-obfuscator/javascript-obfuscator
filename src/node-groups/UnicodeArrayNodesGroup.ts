@@ -16,7 +16,7 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
     /**
      * @type {number}
      */
-    private unicodeArrayRotateValue: number = Utils.getRandomInteger(100, 500);
+    private unicodeArrayRotateValue: number;
 
     /**
      * @type {string}
@@ -28,6 +28,8 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
      */
     constructor (options: IOptions = {}) {
         super(options);
+
+        this.unicodeArrayRotateValue = this.options['rotateUnicodeArray'] ? Utils.getRandomInteger(100, 500) : 0;
 
         let unicodeArrayNode: UnicodeArrayNode = new UnicodeArrayNode(
                 this.unicodeArrayName,
@@ -51,6 +53,16 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
             );
         }
 
+        if (this.options['encodeUnicodeArray']) {
+            this.nodes.set(
+                'unicodeArrayDecodeNode',
+                new UnicodeArrayDecodeNode (
+                    this.unicodeArrayName,
+                    unicodeArray
+                )
+            );
+        }
+
         if (this.options['rotateUnicodeArray']) {
             this.nodes.set(
                 'unicodeArrayRotateFunctionNode',
@@ -58,16 +70,6 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
                     this.unicodeArrayName,
                     unicodeArray,
                     this.unicodeArrayRotateValue
-                )
-            );
-        }
-
-        if (this.options['encodeUnicodeArray']) {
-            this.nodes.set(
-                'unicodeArrayDecodeNode',
-                new UnicodeArrayDecodeNode (
-                    this.unicodeArrayName,
-                    unicodeArray
                 )
             );
         }

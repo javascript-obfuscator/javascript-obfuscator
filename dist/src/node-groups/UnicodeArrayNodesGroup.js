@@ -9,18 +9,18 @@ class UnicodeArrayNodesGroup extends NodesGroup_1.NodesGroup {
     constructor(options = {}) {
         super(options);
         this.unicodeArrayName = Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
-        this.unicodeArrayRotateValue = Utils_1.Utils.getRandomInteger(100, 500);
         this.unicodeArrayTranslatorName = Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
+        this.unicodeArrayRotateValue = this.options['rotateUnicodeArray'] ? Utils_1.Utils.getRandomInteger(100, 500) : 0;
         let unicodeArrayNode = new UnicodeArrayNode_1.UnicodeArrayNode(this.unicodeArrayName, this.unicodeArrayRotateValue), unicodeArray = unicodeArrayNode.getNodeData();
         this.nodes.set('unicodeArrayNode', unicodeArrayNode);
         if (this.options['wrapUnicodeArrayCalls']) {
             this.nodes.set('unicodeArrayCallsWrapper', new UnicodeArrayCallsWrapper_1.UnicodeArrayCallsWrapper(this.unicodeArrayTranslatorName, this.unicodeArrayName, unicodeArray));
         }
-        if (this.options['rotateUnicodeArray']) {
-            this.nodes.set('unicodeArrayRotateFunctionNode', new UnicodeArrayRotateFunctionNode_1.UnicodeArrayRotateFunctionNode(this.unicodeArrayName, unicodeArray, this.unicodeArrayRotateValue));
-        }
         if (this.options['encodeUnicodeArray']) {
             this.nodes.set('unicodeArrayDecodeNode', new UnicodeArrayDecodeNode_1.UnicodeArrayDecodeNode(this.unicodeArrayName, unicodeArray));
+        }
+        if (this.options['rotateUnicodeArray']) {
+            this.nodes.set('unicodeArrayRotateFunctionNode', new UnicodeArrayRotateFunctionNode_1.UnicodeArrayRotateFunctionNode(this.unicodeArrayName, unicodeArray, this.unicodeArrayRotateValue));
         }
     }
 }

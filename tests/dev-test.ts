@@ -49,8 +49,7 @@ let JavaScriptObfuscator: any = require('../index'),
     `,
     {
         disableConsoleOutput: false,
-        encodeUnicodeArray: true,
-        rotateUnicodeArray: false
+        encodeUnicodeArray: true
     }
 );
 

@@ -35,7 +35,7 @@ let obfuscatedCode = JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(`
               console.log('inside', abc.item);
             }
             
-            console.log('between', abc);
+            console.log('тест', abc);
             
             var abc = {};
             

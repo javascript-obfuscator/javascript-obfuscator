@@ -42,7 +42,11 @@ class Utils {
     }
     static stringToUnicode(string) {
         const radix = 16, unicodeSliceValue = -4;
+        let regexp = new RegExp('[a-zA-Z]');
         return `'${string.replace(/[\s\S]/g, (escape) => {
+            if (regexp.test(escape)) {
+                return '\\x' + escape.charCodeAt(0).toString(radix);
+            }
             return `\\u${('0000' + escape.charCodeAt(0).toString(radix)).slice(unicodeSliceValue)}`;
         })}'`;
     }

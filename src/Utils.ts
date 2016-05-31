@@ -100,7 +100,13 @@ export class Utils {
         const radix: number = 16,
             unicodeSliceValue: number = -4;
 
+        let regexp: RegExp = new RegExp('[a-zA-Z]');
+
         return `'${string.replace(/[\s\S]/g, (escape: string): string => {
+            if (regexp.test(escape)) {
+                return '\\x' + escape.charCodeAt(0).toString(radix);
+            }
+
             return `\\u${('0000' + escape.charCodeAt(0).toString(radix)).slice(unicodeSliceValue)}`;
         })}'`;
     }

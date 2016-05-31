@@ -48,7 +48,9 @@ let JavaScriptObfuscator: any = require('../index'),
     })();
     `,
     {
-        disableConsoleOutput: false
+        disableConsoleOutput: false,
+        encodeUnicodeArray: true,
+        rotateUnicodeArray: false
     }
 );
 

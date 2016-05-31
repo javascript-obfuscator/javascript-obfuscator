@@ -1,6 +1,7 @@
 "use strict";
 const NodesGroup_1 = require('./NodesGroup');
 const UnicodeArrayCallsWrapper_1 = require("../custom-nodes/unicode-array-nodes/UnicodeArrayCallsWrapper");
+const UnicodeArrayDecodeNode_1 = require("../custom-nodes/unicode-array-nodes/UnicodeArrayDecodeNode");
 const UnicodeArrayNode_1 = require('../custom-nodes/unicode-array-nodes/UnicodeArrayNode');
 const UnicodeArrayRotateFunctionNode_1 = require('../custom-nodes/unicode-array-nodes/UnicodeArrayRotateFunctionNode');
 const Utils_1 = require('../Utils');
@@ -17,6 +18,9 @@ class UnicodeArrayNodesGroup extends NodesGroup_1.NodesGroup {
         }
         if (this.options['rotateUnicodeArray']) {
             this.nodes.set('unicodeArrayRotateFunctionNode', new UnicodeArrayRotateFunctionNode_1.UnicodeArrayRotateFunctionNode(this.unicodeArrayName, unicodeArray, this.unicodeArrayRotateValue));
+        }
+        if (this.options['encodeUnicodeArray']) {
+            this.nodes.set('unicodeArrayDecodeNode', new UnicodeArrayDecodeNode_1.UnicodeArrayDecodeNode(this.unicodeArrayName, unicodeArray));
         }
     }
 }

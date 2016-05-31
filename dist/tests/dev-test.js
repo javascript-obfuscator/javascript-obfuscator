@@ -45,7 +45,9 @@ let JavaScriptObfuscator = require('../index'), obfuscatedCode = JavaScriptObfus
         console.log(true, false);
     })();
     `, {
-    disableConsoleOutput: false
+    disableConsoleOutput: false,
+    encodeUnicodeArray: true,
+    rotateUnicodeArray: false
 });
 console.log(obfuscatedCode);
 console.log(eval(obfuscatedCode));

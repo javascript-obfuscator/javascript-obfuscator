@@ -3,6 +3,7 @@ export interface IOptions {
     debugProtection?: boolean;
     debugProtectionInterval?: boolean;
     disableConsoleOutput?: boolean;
+    encodeUnicodeArray?: boolean;
     rotateUnicodeArray?: boolean;
     wrapUnicodeArrayCalls?: boolean;
 }

@@ -17,6 +17,7 @@ class JavaScriptObfuscator {
         debugProtection: false,
         debugProtectionInterval: false,
         disableConsoleOutput: true,
+        encodeUnicodeArray: false,
         rotateUnicodeArray: true,
         wrapUnicodeArrayCalls: true
     };

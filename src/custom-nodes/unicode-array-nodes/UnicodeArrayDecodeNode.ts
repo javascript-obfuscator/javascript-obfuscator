@@ -69,7 +69,7 @@ export class UnicodeArrayDecodeNode extends Node {
             node: INode = esprima.parse(`
                 (function () {
                     //atob polyfill
-                    !function(){function t(t){this.message=t}var r=[]["filter"]["constructor"]("return this")(),e="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";r.atob||(r.atob=function(r){var o=String(r).replace(/=+$/,"");for(var n,a,i=0,c=0,d="";a=o.charAt(c++);~a&&(n=i%4?64*n+a:a,i++%4)?d+=String.fromCharCode(255&n>>(-2*i&6)):0)a=e.indexOf(a);return d})}(); 
+                    !function(){var r=[]["filter"]["constructor"]("return this")(),e="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";r.atob||(r.atob=function(r){var o=String(r).replace(/=+$/,"");for(var n,a,i=0,c=0,d="";a=o.charAt(c++);~a&&(n=i%4?64*n+a:a,i++%4)?d+=String.fromCharCode(255&n>>(-2*i&6)):0)a=e.indexOf(a);return d})}(); 
                     
                     var ${decodedTempArrayName} = [];
                     

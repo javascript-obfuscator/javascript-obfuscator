@@ -86,15 +86,16 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @returns {string}
      */
     protected replaceLiteralStringByUnicodeArrayCall (nodeValue: string): string {
-        let value: string = Utils.stringToUnicode(nodeValue),
-            unicodeArray: string[] = this.nodes.get('unicodeArrayNode').getNodeData(),
+        let value: string = Utils.stringToUnicode(nodeValue);
+
+        let unicodeArray: string[] = this.nodes.get('unicodeArrayNode').getNodeData(),
             sameIndex: number = unicodeArray.indexOf(value),
             index: number,
             hexadecimalIndex: string;
 
         if (sameIndex < 0) {
             index = unicodeArray.length;
-            unicodeArray.push(Utils.stringToUnicode(nodeValue));
+            unicodeArray.push(value);
         } else {
             index = sameIndex;
         }

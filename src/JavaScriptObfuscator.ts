@@ -12,9 +12,9 @@ import { Obfuscator } from './Obfuscator';
 
 export class JavaScriptObfuscator {
     /**
-     * @type any
+     * @type {GenerateOptions}
      */
-    private static escodegenParams: any = {
+    private static escodegenParams: escodegen.GenerateOptions = {
         verbatim: 'x-verbatim-property'
     };
 
@@ -37,7 +37,7 @@ export class JavaScriptObfuscator {
      * @param options
      */
     private static generateCode (astTree: INode, options: IOptions): string {
-        let escodegenParams: any = Object.assign({}, JavaScriptObfuscator.escodegenParams);
+        let escodegenParams: escodegen.GenerateOptions = Object.assign({}, JavaScriptObfuscator.escodegenParams);
 
         if (options.hasOwnProperty('compact')) {
             escodegenParams.format = {};

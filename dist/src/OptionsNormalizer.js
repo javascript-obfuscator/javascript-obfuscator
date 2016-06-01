@@ -6,16 +6,16 @@ class OptionsNormalizer {
         return normalizedOptions;
     }
     static unicodeArrayRule(options) {
-        const disabledUnicodeArrayOptions = {
-            encodeUnicodeLiterals: false,
-            rotateUnicodeArray: false,
-            unicodeArray: false,
-            wrapUnicodeArrayCalls: false
-        };
         if (!options['unicodeArray']) {
-            Object.assign(options, disabledUnicodeArrayOptions);
+            Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
         }
         return options;
     }
 }
+OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS = {
+    encodeUnicodeLiterals: false,
+    rotateUnicodeArray: false,
+    unicodeArray: false,
+    wrapUnicodeArrayCalls: false
+};
 exports.OptionsNormalizer = OptionsNormalizer;

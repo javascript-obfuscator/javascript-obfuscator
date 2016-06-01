@@ -91,6 +91,14 @@ Type: `boolean` Default: `true`
 
 Disable `console.log`, `console.info`, `console.error` and `console.warn` messages output into browser console.
 
+####encodeUnicodeArray
+Type: `boolean` Default: `false`
+
+This option can slightly slowdown your code speed.
+
+All strings in unicode array becomes encoded in Base64.
+To decode strings, special function will inserted on page under `unicodeArray` node.
+
 ####rotateUnicodeArray
 Type: `boolean` Default: `true`
 

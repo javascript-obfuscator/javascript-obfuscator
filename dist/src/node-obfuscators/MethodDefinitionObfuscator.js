@@ -18,7 +18,7 @@ class MethodDefinitionObfuscator extends NodeObfuscator_1.NodeObfuscator {
                     !Utils_1.Utils.arrayContains(this.ignoredNames, node.name) &&
                     methodDefinitionNode.computed === false) {
                     methodDefinitionNode.computed = true;
-                    node.name = this.replaceLiteralStringByUnicodeArrayCall(node.name);
+                    node.name = this.replaceLiteralValueByUnicodeValue(node.name);
                     return;
                 }
                 return estraverse.VisitorOption.Skip;

@@ -29,12 +29,18 @@ class NodeObfuscator {
         }
         return `${prefix}${Utils_1.Utils.decToHex(nodeValue)}`;
     }
-    replaceLiteralStringByUnicodeArrayCall(nodeValue) {
+    replaceLiteralValueByUnicodeValue(nodeValue) {
         let value = nodeValue;
-        if (this.options['encodeUnicodeArray']) {
+        if (this.options['unicodeArray'] && this.options['encodeUnicodeArray']) {
             value = new Buffer(encodeURI(value)).toString('base64');
         }
         value = Utils_1.Utils.stringToUnicode(value);
+        if (!this.options['unicodeArray']) {
+            return value;
+        }
+        return this.replaceLiteralValueByUnicodeArrayCall(value);
+    }
+    replaceLiteralValueByUnicodeArrayCall(value) {
         let unicodeArray = this.nodes.get('unicodeArrayNode').getNodeData(), sameIndex = unicodeArray.indexOf(value), index, hexadecimalIndex;
         if (sameIndex < 0) {
             index = unicodeArray.length;

@@ -6,5 +6,6 @@ exports.NO_CUSTOM_NODES_PRESET = Object.freeze({
     disableConsoleOutput: false,
     encodeUnicodeArray: false,
     rotateUnicodeArray: false,
+    unicodeArray: false,
     wrapUnicodeArrayCalls: false
 });

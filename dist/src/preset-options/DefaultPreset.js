@@ -6,5 +6,6 @@ exports.DEFAULT_PRESET = Object.freeze({
     disableConsoleOutput: true,
     encodeUnicodeArray: false,
     rotateUnicodeArray: true,
+    unicodeArray: true,
     wrapUnicodeArrayCalls: true
 });

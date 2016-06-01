@@ -42,7 +42,7 @@ export class MethodDefinitionObfuscator extends NodeObfuscator {
                     methodDefinitionNode.computed === false
                 ) {
                     methodDefinitionNode.computed = true;
-                    node.name = this.replaceLiteralStringByUnicodeArrayCall(node.name);
+                    node.name = this.replaceLiteralValueByUnicodeValue(node.name);
 
                     return;
                 }

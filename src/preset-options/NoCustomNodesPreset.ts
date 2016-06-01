@@ -7,5 +7,6 @@ export const NO_CUSTOM_NODES_PRESET: IOptions = Object.freeze({
     disableConsoleOutput: false,
     encodeUnicodeArray: false,
     rotateUnicodeArray: false,
+    unicodeArray: false,
     wrapUnicodeArrayCalls: false
 });

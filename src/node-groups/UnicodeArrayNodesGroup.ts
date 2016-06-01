@@ -37,6 +37,10 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
             ),
             unicodeArray: string [] = unicodeArrayNode.getNodeData();
 
+        if (!this.options['unicodeArray']) {
+            return;
+        }
+
         this.nodes.set(
             'unicodeArrayNode',
             unicodeArrayNode

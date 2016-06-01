@@ -7,5 +7,6 @@ export const DEFAULT_PRESET: IOptions = Object.freeze({
     disableConsoleOutput: true,
     encodeUnicodeArray: false,
     rotateUnicodeArray: true,
+    unicodeArray: true,
     wrapUnicodeArrayCalls: true
 });

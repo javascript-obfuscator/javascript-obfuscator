@@ -1,6 +1,7 @@
 import * as escodegen from 'escodegen';
 
 import { INode } from '../../interfaces/nodes/INode';
+import { IVariableDeclarationNode } from "../../interfaces/nodes/IVariableDeclarationNode";
 
 import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
@@ -10,7 +11,6 @@ import { NodeType } from "../../enums/NodeType";
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
 import { Utils } from '../../Utils';
-import {IVariableDeclarationNode} from "../../interfaces/nodes/IVariableDeclarationNode";
 
 export class UnicodeArrayNode extends Node {
     /**

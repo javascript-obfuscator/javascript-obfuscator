@@ -5,5 +5,6 @@ export interface IOptions {
     disableConsoleOutput?: boolean;
     encodeUnicodeArray?: boolean;
     rotateUnicodeArray?: boolean;
+    unicodeArray?: boolean;
     wrapUnicodeArrayCalls?: boolean;
 }

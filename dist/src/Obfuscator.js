@@ -54,14 +54,14 @@ class Obfuscator {
     afterObfuscation(astTree) {
         this.nodes.forEach((node) => {
             if (node.getAppendState() === AppendState_1.AppendState.AfterObfuscation) {
-                node.appendNode(NodeUtils_1.NodeUtils.getBlockScopeOfNode(astTree));
+                node.appendNode(astTree);
             }
         });
     }
     beforeObfuscation(astTree) {
         this.nodes.forEach((node) => {
             if (node.getAppendState() === AppendState_1.AppendState.BeforeObfuscation) {
-                node.appendNode(NodeUtils_1.NodeUtils.getBlockScopeOfNode(astTree));
+                node.appendNode(astTree);
             }
         });
     }

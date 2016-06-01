@@ -188,14 +188,18 @@ export class NodeUtils {
      * @param node
      */
     public static parentize (node: INode): void {
+        let isRootNode: boolean = true;
+
         estraverse.replace(node, {
             enter: (node: INode, parentNode: INode): any => {
                 Object.defineProperty(node, 'parentNode', {
                     configurable: true,
                     enumerable: true,
-                    value: parentNode || node,
+                    value: isRootNode ? NodeUtils.getProgramNode([node]) : parentNode || node,
                     writable: true
                 });
+
+                isRootNode = false;
             }
         });
     }

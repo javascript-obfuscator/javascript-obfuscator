@@ -79,14 +79,16 @@ class NodeUtils {
         return node.type === NodeType_1.NodeType.VariableDeclarator;
     }
     static parentize(node) {
+        let isRootNode = true;
         estraverse.replace(node, {
             enter: (node, parentNode) => {
                 Object.defineProperty(node, 'parentNode', {
                     configurable: true,
                     enumerable: true,
-                    value: parentNode || node,
+                    value: isRootNode ? NodeUtils.getProgramNode([node]) : parentNode || node,
                     writable: true
                 });
+                isRootNode = false;
             }
         });
     }

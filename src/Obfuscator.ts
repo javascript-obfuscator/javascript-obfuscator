@@ -101,7 +101,7 @@ export class Obfuscator {
     private afterObfuscation (astTree: INode): void {
         this.nodes.forEach((node: ICustomNode) => {
             if (node.getAppendState() === AppendState.AfterObfuscation) {
-                node.appendNode(NodeUtils.getBlockScopeOfNode(astTree));
+                node.appendNode(astTree);
             }
         });
     }
@@ -112,7 +112,7 @@ export class Obfuscator {
     private beforeObfuscation (astTree: INode): void {
         this.nodes.forEach((node: ICustomNode) => {
             if (node.getAppendState() === AppendState.BeforeObfuscation) {
-                node.appendNode(NodeUtils.getBlockScopeOfNode(astTree));
+                node.appendNode(astTree);
             }
         });
     };

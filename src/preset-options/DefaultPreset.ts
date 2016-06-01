@@ -1,6 +1,6 @@
 import { IOptions } from "../interfaces/IOptions";
 
-export const DEFAULT_PRESET: IOptions = {
+export const DEFAULT_PRESET: IOptions = Object.freeze({
     compact: true,
     debugProtection: false,
     debugProtectionInterval: false,
@@ -8,4 +8,4 @@ export const DEFAULT_PRESET: IOptions = {
     encodeUnicodeArray: false,
     rotateUnicodeArray: true,
     wrapUnicodeArrayCalls: true
-};
+});

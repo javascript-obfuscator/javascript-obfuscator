@@ -1,5 +1,5 @@
 "use strict";
-exports.NO_CUSTOM_NODES_PRESET = {
+exports.NO_CUSTOM_NODES_PRESET = Object.freeze({
     compact: true,
     debugProtection: false,
     debugProtectionInterval: false,
@@ -7,4 +7,4 @@ exports.NO_CUSTOM_NODES_PRESET = {
     encodeUnicodeArray: false,
     rotateUnicodeArray: false,
     wrapUnicodeArrayCalls: false
-};
+});

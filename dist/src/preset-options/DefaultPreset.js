@@ -1,5 +1,5 @@
 "use strict";
-exports.DEFAULT_PRESET = {
+exports.DEFAULT_PRESET = Object.freeze({
     compact: true,
     debugProtection: false,
     debugProtectionInterval: false,
@@ -7,4 +7,4 @@ exports.DEFAULT_PRESET = {
     encodeUnicodeArray: false,
     rotateUnicodeArray: true,
     wrapUnicodeArrayCalls: true
-};
+});

@@ -1,6 +1,9 @@
 import { IOptions } from "./interfaces/IOptions";
 
 export class OptionsNormalizer {
+    /**
+     * @type {IOptions}
+     */
     public static DISABLED_UNICODE_ARRAY_OPTIONS: IOptions = {
         encodeUnicodeLiterals: false,
         rotateUnicodeArray: false,
@@ -8,6 +11,10 @@ export class OptionsNormalizer {
         wrapUnicodeArrayCalls: false
     };
 
+    /**
+     * @param options
+     * @returns {IOptions}
+     */
     public static normalize (options: IOptions): IOptions {
         let normalizedOptions: IOptions = Object.assign({}, options);
         

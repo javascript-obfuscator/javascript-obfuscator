@@ -14,7 +14,7 @@ export class OptionsNormalizer {
      * @returns {IOptions}
      */
     private static unicodeArrayRule (options: IOptions): IOptions {
-        const disabledUnicodeArrayOptions: {[index: string]: boolean} = {
+        const disabledUnicodeArrayOptions: IOptions = {
             encodeUnicodeLiterals: false,
             rotateUnicodeArray: false,
             unicodeArray: false,

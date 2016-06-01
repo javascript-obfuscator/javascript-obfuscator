@@ -67,30 +67,29 @@ export class UnicodeArrayDecodeNode extends Node {
      * @returns {INode}
      */
     protected getNodeStructure (): INode {
-        const atobPolyfill: string = JavaScriptObfuscator.obfuscate(`
-                var object = []['filter']['constructor']('return this')();
-                var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-    
-                object.atob || (
-                    object.atob = function(input) {
-                        var str = String(input).replace(/=+$/, '');
-                        for (
-                            var bc = 0, bs, buffer, idx = 0, output = '';
-                            buffer = str.charAt(idx++);
-                            ~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer,
-                                bc++ % 4) ? output += String.fromCharCode(255 & bs >> (-2 * bc & 6)) : 0
-                        ) {
-                            buffer = chars.indexOf(buffer);
-                        }
-                    return output;
-                });
-            `, NO_CUSTOM_NODES_PRESET),
-            indexVariableName: string = Utils.getRandomVariableName(),
+        const indexVariableName: string = Utils.getRandomVariableName(),
             tempArrayName: string = Utils.getRandomVariableName();
 
         let node: INode = esprima.parse(`
             (function () {
-                ${atobPolyfill}
+                ${JavaScriptObfuscator.obfuscate(`
+                    var object = []['filter']['constructor']('return this')();
+                    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+        
+                    object.atob || (
+                        object.atob = function(input) {
+                            var str = String(input).replace(/=+$/, '');
+                            for (
+                                var bc = 0, bs, buffer, idx = 0, output = '';
+                                buffer = str.charAt(idx++);
+                                ~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer,
+                                    bc++ % 4) ? output += String.fromCharCode(255 & bs >> (-2 * bc & 6)) : 0
+                            ) {
+                                buffer = chars.indexOf(buffer);
+                            }
+                        return output;
+                    });
+                `, NO_CUSTOM_NODES_PRESET)}
               
                 var ${tempArrayName} = [];
                 

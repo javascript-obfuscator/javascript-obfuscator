@@ -88,7 +88,9 @@ class Obfuscator {
         if (this.options['debugProtection']) {
             this.setNodesGroup(new DebugProtectionNodesGroup_1.DebugProtectionNodesGroup(this.options));
         }
-        this.setNodesGroup(new UnicodeArrayNodesGroup_1.UnicodeArrayNodesGroup(this.options));
+        if (this.options['unicodeArray']) {
+            this.setNodesGroup(new UnicodeArrayNodesGroup_1.UnicodeArrayNodesGroup(this.options));
+        }
     }
 }
 exports.Obfuscator = Obfuscator;

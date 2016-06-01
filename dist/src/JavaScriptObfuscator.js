@@ -13,8 +13,9 @@ class JavaScriptObfuscator {
     static generateCode(astTree, options) {
         let escodegenParams = Object.assign({}, JavaScriptObfuscator.escodegenParams);
         if (options.hasOwnProperty('compact')) {
-            escodegenParams.format = {};
-            escodegenParams.format.compact = options.compact;
+            escodegenParams.format = {
+                compact: options.compact
+            };
         }
         return escodegen.generate(astTree, escodegenParams);
     }

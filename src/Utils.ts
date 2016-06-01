@@ -100,7 +100,7 @@ export class Utils {
         const radix: number = 16,
             unicodeSliceValue: number = -4;
 
-        let regexp: RegExp = new RegExp('[a-zA-Z]');
+        let regexp: RegExp = new RegExp('[\x00-\x7F]');
 
         return `'${string.replace(/[\s\S]/g, (escape: string): string => {
             if (regexp.test(escape)) {

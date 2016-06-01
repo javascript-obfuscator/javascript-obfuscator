@@ -31,6 +31,9 @@ class UnicodeArrayNode extends Node_1.Node {
         this.updateNode();
         return super.getNode();
     }
+    updateNodeData(data) {
+        this.unicodeArray.push(data);
+    }
     getNodeStructure() {
         return {
             'type': NodeType_1.NodeType.VariableDeclaration,

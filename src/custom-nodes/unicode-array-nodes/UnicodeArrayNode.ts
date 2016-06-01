@@ -88,6 +88,13 @@ export class UnicodeArrayNode extends Node {
     }
 
     /**
+     * @param data
+     */
+    public updateNodeData (data: string): void {
+        this.unicodeArray.push(data);
+    }
+
+    /**
      * @returns {INode}
      */
     protected getNodeStructure (): IVariableDeclarationNode {

@@ -7,6 +7,7 @@ import { JSFuck } from "../enums/JSFuck";
 
 import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
+import {UnicodeArrayNode} from "../custom-nodes/unicode-array-nodes/UnicodeArrayNode";
 
 export abstract class NodeObfuscator implements INodeObfuscator {
     /**
@@ -106,16 +107,17 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @returns {string}
      */
     protected replaceLiteralValueByUnicodeArrayCall (value: string): string {
-        let unicodeArray: string[] = this.nodes.get('unicodeArrayNode').getNodeData(),
+        let unicodeArrayNode: UnicodeArrayNode = <UnicodeArrayNode> this.nodes.get('unicodeArrayNode'),
+            unicodeArray: string[] = unicodeArrayNode.getNodeData(),
             sameIndex: number = unicodeArray.indexOf(value),
             index: number,
             hexadecimalIndex: string;
 
-        if (sameIndex < 0) {
-            index = unicodeArray.length;
-            unicodeArray.push(value);
-        } else {
+        if (sameIndex >= 0) {
             index = sameIndex;
+        } else {
+            index = unicodeArray.length;
+            unicodeArrayNode.updateNodeData(value);
         }
 
         hexadecimalIndex = this.replaceLiteralNumberByHexadecimalValue(index);
@@ -124,6 +126,6 @@ export abstract class NodeObfuscator implements INodeObfuscator {
             return `${this.nodes.get('unicodeArrayCallsWrapper').getNodeIdentifier()}('${hexadecimalIndex}')`;
         }
 
-        return `${this.nodes.get('unicodeArrayNode').getNodeIdentifier()}[${hexadecimalIndex}]`;
+        return `${unicodeArrayNode.getNodeIdentifier()}[${hexadecimalIndex}]`;
     }
 }

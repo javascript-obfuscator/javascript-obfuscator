@@ -41,19 +41,19 @@ class NodeObfuscator {
         return this.replaceLiteralValueByUnicodeArrayCall(value);
     }
     replaceLiteralValueByUnicodeArrayCall(value) {
-        let unicodeArray = this.nodes.get('unicodeArrayNode').getNodeData(), sameIndex = unicodeArray.indexOf(value), index, hexadecimalIndex;
-        if (sameIndex < 0) {
-            index = unicodeArray.length;
-            unicodeArray.push(value);
+        let unicodeArrayNode = this.nodes.get('unicodeArrayNode'), unicodeArray = unicodeArrayNode.getNodeData(), sameIndex = unicodeArray.indexOf(value), index, hexadecimalIndex;
+        if (sameIndex >= 0) {
+            index = sameIndex;
         }
         else {
-            index = sameIndex;
+            index = unicodeArray.length;
+            unicodeArrayNode.updateNodeData(value);
         }
         hexadecimalIndex = this.replaceLiteralNumberByHexadecimalValue(index);
         if (this.options['wrapUnicodeArrayCalls']) {
             return `${this.nodes.get('unicodeArrayCallsWrapper').getNodeIdentifier()}('${hexadecimalIndex}')`;
         }
-        return `${this.nodes.get('unicodeArrayNode').getNodeIdentifier()}[${hexadecimalIndex}]`;
+        return `${unicodeArrayNode.getNodeIdentifier()}[${hexadecimalIndex}]`;
     }
 }
 exports.NodeObfuscator = NodeObfuscator;

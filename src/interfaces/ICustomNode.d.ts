@@ -34,4 +34,9 @@ export interface ICustomNode {
     setNode (node: INode): void;
 
     updateNode (): void;
+
+    /**
+     * @param data
+     */
+    updateNodeData ? (data: any): void;
 }

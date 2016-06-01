@@ -9,6 +9,7 @@ import { IOptions } from './interfaces/IOptions';
 import { DEFAULT_PRESET } from './preset-options/DefaultPreset';
 
 import { Obfuscator } from './Obfuscator';
+import { OptionsNormalizer } from "./OptionsNormalizer";
 
 export class JavaScriptObfuscator {
     /**
@@ -24,7 +25,7 @@ export class JavaScriptObfuscator {
      */
     public static obfuscate (sourceCode: string, customOptions?: IOptions): string {
         let astTree: INode = esprima.parse(sourceCode),
-            options: any = Object.assign({}, DEFAULT_PRESET, customOptions),
+            options: IOptions = OptionsNormalizer.normalize(Object.assign({}, DEFAULT_PRESET, customOptions)),
             obfuscator: Obfuscator = new Obfuscator(options);
 
         astTree = obfuscator.obfuscateNode(astTree);

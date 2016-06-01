@@ -19,7 +19,7 @@ class UnicodeArrayNodesGroup extends NodesGroup_1.NodesGroup {
         if (this.options['wrapUnicodeArrayCalls']) {
             this.nodes.set('unicodeArrayCallsWrapper', new UnicodeArrayCallsWrapper_1.UnicodeArrayCallsWrapper(this.unicodeArrayTranslatorName, this.unicodeArrayName, unicodeArray));
         }
-        if (this.options['encodeUnicodeArray']) {
+        if (this.options['encodeUnicodeLiterals']) {
             this.nodes.set('unicodeArrayDecodeNode', new UnicodeArrayDecodeNode_1.UnicodeArrayDecodeNode(this.unicodeArrayName, unicodeArray));
         }
         if (this.options['rotateUnicodeArray']) {

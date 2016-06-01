@@ -88,7 +88,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
     protected replaceLiteralValueByUnicodeValue (nodeValue: string): string {
         let value: string = nodeValue;
 
-        if (this.options['unicodeArray'] && this.options['encodeUnicodeArray']) {
+        if (this.options['encodeUnicodeLiterals']) {
             value = new Buffer(encodeURI(value)).toString('base64');
         }
 

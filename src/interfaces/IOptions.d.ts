@@ -3,8 +3,8 @@ export interface IOptions {
     debugProtection?: boolean;
     debugProtectionInterval?: boolean;
     disableConsoleOutput?: boolean;
-    encodeUnicodeArray?: boolean;
     rotateUnicodeArray?: boolean;
+    encodeUnicodeLiterals?: boolean;
     unicodeArray?: boolean;
     wrapUnicodeArrayCalls?: boolean;
 }

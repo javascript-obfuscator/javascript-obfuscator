@@ -57,7 +57,7 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
             );
         }
 
-        if (this.options['encodeUnicodeArray']) {
+        if (this.options['encodeUnicodeLiterals']) {
             this.nodes.set(
                 'unicodeArrayDecodeNode',
                 new UnicodeArrayDecodeNode (

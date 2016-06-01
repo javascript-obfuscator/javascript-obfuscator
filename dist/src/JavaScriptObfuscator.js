@@ -3,9 +3,10 @@ const esprima = require('esprima');
 const escodegen = require('escodegen');
 const DefaultPreset_1 = require('./preset-options/DefaultPreset');
 const Obfuscator_1 = require('./Obfuscator');
+const OptionsNormalizer_1 = require("./OptionsNormalizer");
 class JavaScriptObfuscator {
     static obfuscate(sourceCode, customOptions) {
-        let astTree = esprima.parse(sourceCode), options = Object.assign({}, DefaultPreset_1.DEFAULT_PRESET, customOptions), obfuscator = new Obfuscator_1.Obfuscator(options);
+        let astTree = esprima.parse(sourceCode), options = OptionsNormalizer_1.OptionsNormalizer.normalize(Object.assign({}, DefaultPreset_1.DEFAULT_PRESET, customOptions)), obfuscator = new Obfuscator_1.Obfuscator(options);
         astTree = obfuscator.obfuscateNode(astTree);
         return JavaScriptObfuscator.generateCode(astTree, options);
     }

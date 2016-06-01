@@ -50,7 +50,7 @@ let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
     `,
     {
         disableConsoleOutput: false,
-        encodeUnicodeArray: true
+        encodeUnicodeLiterals: true
     }
 );
 

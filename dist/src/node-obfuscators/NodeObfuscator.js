@@ -31,7 +31,7 @@ class NodeObfuscator {
     }
     replaceLiteralValueByUnicodeValue(nodeValue) {
         let value = nodeValue;
-        if (this.options['unicodeArray'] && this.options['encodeUnicodeArray']) {
+        if (this.options['encodeUnicodeLiterals']) {
             value = new Buffer(encodeURI(value)).toString('base64');
         }
         value = Utils_1.Utils.stringToUnicode(value);

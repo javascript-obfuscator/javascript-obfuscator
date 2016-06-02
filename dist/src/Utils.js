@@ -41,13 +41,15 @@ class Utils {
         return obj;
     }
     static stringToUnicode(string) {
-        const radix = 16, unicodeSliceValue = -4;
-        let regexp = new RegExp('[\x00-\x7F]');
+        const radix = 16;
+        let regexp = new RegExp('[\x00-\x7F]'), template;
         return `'${string.replace(/[\s\S]/g, (escape) => {
             if (regexp.test(escape)) {
-                return '\\x' + escape.charCodeAt(0).toString(radix);
+                template = '0'.repeat(2);
+                return `\\x${(template + escape.charCodeAt(0).toString(radix)).slice(-template.length)}`;
             }
-            return `\\u${('0000' + escape.charCodeAt(0).toString(radix)).slice(unicodeSliceValue)}`;
+            template = '0'.repeat(4);
+            return `\\u${(template + escape.charCodeAt(0).toString(radix)).slice(-template.length)}`;
         })}'`;
     }
 }

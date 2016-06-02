@@ -97,17 +97,21 @@ export class Utils {
      * @returns {string}
      */
     public static stringToUnicode (string: string): string {
-        const radix: number = 16,
-            unicodeSliceValue: number = -4;
+        const radix: number = 16;
 
-        let regexp: RegExp = new RegExp('[\x00-\x7F]');
+        let regexp: RegExp = new RegExp('[\x00-\x7F]'),
+            template: string;
 
         return `'${string.replace(/[\s\S]/g, (escape: string): string => {
             if (regexp.test(escape)) {
-                return '\\x' + escape.charCodeAt(0).toString(radix);
+                template = '0'.repeat(2);
+                
+                return `\\x${(template + escape.charCodeAt(0).toString(radix)).slice(-template.length)}`;
             }
-
-            return `\\u${('0000' + escape.charCodeAt(0).toString(radix)).slice(unicodeSliceValue)}`;
+            
+            template = '0'.repeat(4);
+            
+            return `\\u${(template + escape.charCodeAt(0).toString(radix)).slice(-template.length)}`;
         })}'`;
     }
 }

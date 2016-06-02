@@ -101,6 +101,11 @@ This option can slightly slowdown your code speed.
 All strings in unicode array becomes encoded in Base64.
 To decode strings, special function will inserted on page under `unicodeArray` node.
 
+####reservedNames
+Type: `string[]` Default: `[]`
+
+Disable obfuscation of given variable names, function names and names of function parameters.
+
 ####rotateUnicodeArray
 Type: `boolean` Default: `true`
 

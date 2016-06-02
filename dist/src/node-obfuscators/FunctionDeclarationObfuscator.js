@@ -19,7 +19,7 @@ class FunctionDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
     replaceFunctionName(functionDeclarationNode) {
         estraverse.replace(functionDeclarationNode.id, {
             leave: (node) => {
-                if (NodeUtils_1.NodeUtils.isIdentifierNode(node)) {
+                if (NodeUtils_1.NodeUtils.isIdentifierNode(node) && !this.isReservedName(node.name)) {
                     this.functionName.set(node.name, Utils_1.Utils.getRandomVariableName());
                     node.name = this.functionName.get(node.name);
                     return;

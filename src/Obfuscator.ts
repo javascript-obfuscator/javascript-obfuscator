@@ -157,7 +157,7 @@ export class Obfuscator {
 
         if (this.options['unicodeArray']) {
             /**
-             * Important to set this nodes latest to prevent runtime errors cause by `rotateUnicodeArray` option
+             * Important to set this nodes latest to prevent runtime errors caused by `rotateUnicodeArray` option
              */
             this.setNodesGroup(new UnicodeArrayNodesGroup(this.options));
         }

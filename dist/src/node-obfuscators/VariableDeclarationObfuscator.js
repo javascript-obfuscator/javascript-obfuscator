@@ -20,7 +20,7 @@ class VariableDeclarationObfuscator extends NodeObfuscator_1.NodeObfuscator {
         variableDeclarationNode.declarations.forEach((declarationNode) => {
             estraverse.replace(declarationNode.id, {
                 enter: (node) => {
-                    if (NodeUtils_1.NodeUtils.isIdentifierNode(node)) {
+                    if (NodeUtils_1.NodeUtils.isIdentifierNode(node) && !this.isReservedName(node.name)) {
                         this.variableNames.set(node.name, Utils_1.Utils.getRandomVariableName());
                         node.name = this.variableNames.get(node.name);
                         return;

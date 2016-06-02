@@ -36,6 +36,16 @@ export abstract class NodeObfuscator implements INodeObfuscator {
     public abstract obfuscateNode (node: INode, parentNode?: INode): void;
 
     /**
+     * @param name
+     * @returns {boolean}
+     */
+    protected isReservedName (name: string): boolean {
+        return this.options['reservedNames'].some((reservedName: string) => {
+            return reservedName === name;
+        });
+    }
+
+    /**
      * @param node
      * @param parentNode
      * @param namesMap

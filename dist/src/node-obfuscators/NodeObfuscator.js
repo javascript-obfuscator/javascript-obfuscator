@@ -7,6 +7,11 @@ class NodeObfuscator {
         this.nodes = nodes;
         this.options = options;
     }
+    isReservedName(name) {
+        return this.options['reservedNames'].some((reservedName) => {
+            return reservedName === name;
+        });
+    }
     replaceNodeIdentifierByNewValue(node, parentNode, namesMap) {
         if (NodeUtils_1.NodeUtils.isIdentifierNode(node) && namesMap.has(node.name)) {
             const parentNodeIsAPropertyNode = (NodeUtils_1.NodeUtils.isPropertyNode(parentNode) &&

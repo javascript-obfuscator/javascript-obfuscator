@@ -4,6 +4,7 @@ exports.DEFAULT_PRESET = Object.freeze({
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: true,
+    reservedNames: [],
     rotateUnicodeArray: true,
     encodeUnicodeLiterals: false,
     unicodeArray: true,

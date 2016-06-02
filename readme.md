@@ -94,6 +94,8 @@ Disable `console.log`, `console.info`, `console.error` and `console.warn` messag
 ####encodeUnicodeArray
 Type: `boolean` Default: `false`
 
+#####`unicodeArray` option must be be enabled
+
 This option can slightly slowdown your code speed.
 
 All strings in unicode array becomes encoded in Base64.
@@ -101,6 +103,8 @@ To decode strings, special function will inserted on page under `unicodeArray` n
 
 ####rotateUnicodeArray
 Type: `boolean` Default: `true`
+
+#####`unicodeArray` option must be be enabled
 
 For more hard understanding of code, during each obfuscation all literal values are stored in array as Unicode codes sequence.
 This options will rotate all values inside array on a random value during obfuscation of code, and insert inside source code helper function
@@ -110,8 +114,15 @@ This option affected only on visual code organisation, because we can easily get
 
 Not recommended for small source code, because helper function will attract attention.
 
+####unicodeArray
+Type: `boolean` Default: `true`
+
+Put all literal strings into array and replace every literal string by array call.
+
 ####wrapUnicodeArrayCalls
 Type: `boolean` Default: `true`
+
+#####`unicodeArray` option must be be enabled
 
 Instead using direct calls to `unicodeArray` items `var t = _0x43a123[0x0]`, 
 when index `0x0` can be easy reverted to `0` with few js beautifiers, this option wrap all calls to special function instead.

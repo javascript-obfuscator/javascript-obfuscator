@@ -106,7 +106,7 @@ Type: `string[]` Default: `[]`
 
 Disable obfuscation of given variable names, function names and names of function parameters.
 
-####rotateUnicodeArray
+####rotateUnicodeLiterals
 Type: `boolean` Default: `true`
 
 #####`unicodeArray` option must be enabled

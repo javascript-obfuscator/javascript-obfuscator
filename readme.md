@@ -91,14 +91,14 @@ Type: `boolean` Default: `true`
 
 Disable `console.log`, `console.info`, `console.error` and `console.warn` messages output into browser console.
 
-####encodeUnicodeArray
+####encodeUnicodeLiterals
 Type: `boolean` Default: `false`
 
 #####`unicodeArray` option must be enabled
 
 This option can slightly slowdown your code speed.
 
-All strings in unicode array becomes encoded in Base64.
+All literals in unicode array becomes encoded in Base64.
 To decode strings, special function will be inserted on page under `unicodeArray` node.
 
 ####reservedNames
@@ -106,7 +106,7 @@ Type: `string[]` Default: `[]`
 
 Disable obfuscation of given variable names, function names and names of function parameters.
 
-####rotateUnicodeLiterals
+####rotateUnicodeArray
 Type: `boolean` Default: `true`
 
 #####`unicodeArray` option must be enabled

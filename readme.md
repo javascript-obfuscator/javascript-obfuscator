@@ -111,8 +111,7 @@ Type: `boolean` Default: `true`
 
 #####`unicodeArray` option must be enabled
 
-For the better understanding of a code, during each obfuscation all literal values are stored in array as Unicode code sequence.
-This option will rotate all values inside array on a random value during obfuscation of code, and insert inside source code helper function
+This option will rotate all values inside `unicodeArray` on a random value during obfuscation of code, and insert inside source code helper function
 which will rotate array values back to their original indexes.
 
 This option affects only a visual code organisation, because we can easily get original array during debug process.

@@ -5,9 +5,9 @@ export const DEFAULT_PRESET: IOptions = Object.freeze({
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: true,
+    encodeUnicodeLiterals: false,
     reservedNames: [],
     rotateUnicodeArray: true,
-    encodeUnicodeLiterals: false,
     unicodeArray: true,
     wrapUnicodeArrayCalls: true
 });

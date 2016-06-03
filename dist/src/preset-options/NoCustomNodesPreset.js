@@ -4,9 +4,9 @@ exports.NO_CUSTOM_NODES_PRESET = Object.freeze({
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: false,
+    encodeUnicodeLiterals: false,
     reservedNames: [],
     rotateUnicodeArray: false,
-    encodeUnicodeLiterals: false,
     unicodeArray: false,
     wrapUnicodeArrayCalls: false
 });

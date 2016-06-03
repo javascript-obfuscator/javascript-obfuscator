@@ -42,14 +42,17 @@ class Utils {
     }
     static stringToUnicode(string) {
         const radix = 16;
-        let regexp = new RegExp('[\x00-\x7F]'), template;
+        let prefix, regexp = new RegExp('[\x00-\x7F]'), template;
         return `'${string.replace(/[\s\S]/g, (escape) => {
             if (regexp.test(escape)) {
+                prefix = '\\x';
                 template = '0'.repeat(2);
-                return `\\x${(template + escape.charCodeAt(0).toString(radix)).slice(-template.length)}`;
             }
-            template = '0'.repeat(4);
-            return `\\u${(template + escape.charCodeAt(0).toString(radix)).slice(-template.length)}`;
+            else {
+                prefix = '\\u';
+                template = '0'.repeat(4);
+            }
+            return `${prefix}${(template + escape.charCodeAt(0).toString(radix)).slice(-template.length)}`;
         })}'`;
     }
 }

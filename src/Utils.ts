@@ -99,19 +99,20 @@ export class Utils {
     public static stringToUnicode (string: string): string {
         const radix: number = 16;
 
-        let regexp: RegExp = new RegExp('[\x00-\x7F]'),
+        let prefix: string,
+            regexp: RegExp = new RegExp('[\x00-\x7F]'),
             template: string;
 
         return `'${string.replace(/[\s\S]/g, (escape: string): string => {
             if (regexp.test(escape)) {
+                prefix = '\\x';
                 template = '0'.repeat(2);
-                
-                return `\\x${(template + escape.charCodeAt(0).toString(radix)).slice(-template.length)}`;
+            } else {
+                prefix = '\\u';
+                template = '0'.repeat(4);  
             }
             
-            template = '0'.repeat(4);
-            
-            return `\\u${(template + escape.charCodeAt(0).toString(radix)).slice(-template.length)}`;
+            return `${prefix}${(template + escape.charCodeAt(0).toString(radix)).slice(-template.length)}`;
         })}'`;
     }
 }

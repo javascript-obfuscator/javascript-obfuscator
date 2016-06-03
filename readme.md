@@ -30,13 +30,13 @@ var obfuscatedCode = JavaScriptObfuscator.obfuscate(
 
 console.log(obfuscatedCode);
 /*
-var _0x8741 = [
-    '\u0061\u0062\u0063',
-    '\u006c\u006f\u0067'
+var _0xabf1 = [
+    '\x61\x62\x63', 
+    '\x6c\x6f\x67'
 ];
-(function () {
-    var _0x45e59c = _0x8741[0];
-    console[_0x8741[1]](_0x45e59c);
+(function() {
+    var _0xe6fab6 = _0xabf1[0x0];
+    console[_0xabf1[0x1]](_0xe6fab6);
 }());
 */
 ```

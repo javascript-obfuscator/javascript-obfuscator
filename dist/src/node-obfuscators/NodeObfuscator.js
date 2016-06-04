@@ -35,7 +35,7 @@ class NodeObfuscator {
         return `${prefix}${Utils_1.Utils.decToHex(nodeValue)}`;
     }
     replaceLiteralValueByUnicodeValue(nodeValue) {
-        let value = nodeValue, replaceByUnicodeArrayFlag = Math.random() > this.options['unicodeArrayThreshold'];
+        let value = nodeValue, replaceByUnicodeArrayFlag = Math.random() <= this.options['unicodeArrayThreshold'];
         if (this.options['encodeUnicodeLiterals'] && replaceByUnicodeArrayFlag) {
             value = new Buffer(encodeURI(value)).toString('base64');
         }

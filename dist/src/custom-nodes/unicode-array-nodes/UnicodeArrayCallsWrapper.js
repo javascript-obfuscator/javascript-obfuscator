@@ -36,7 +36,7 @@ class UnicodeArrayCallsWrapper extends Node_1.Node {
                 if (
                     ${keyName} % ${Utils_1.Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0 &&
                     /\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/.test(
-                        ${environmentName}.toString()
+                        ${environmentName}[${Utils_1.Utils.stringToUnicode('toString')}]()
                     ) !== true && ${keyName}++
                 ) {
                     return ${this.unicodeArrayName}[parseInt(${keyName}, 16)]

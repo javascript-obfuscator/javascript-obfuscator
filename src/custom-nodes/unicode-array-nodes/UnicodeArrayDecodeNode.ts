@@ -78,7 +78,7 @@ export class UnicodeArrayDecodeNode extends Node {
 
         let node: INode,
             selfDefendingCode: string = '';
-        
+
         if (this.options['selfDefending']) {
             selfDefendingCode = `
                 var ${environmentName} = function(){return ${Utils.stringToUnicode('dev')};};
@@ -86,7 +86,7 @@ export class UnicodeArrayDecodeNode extends Node {
                 if (
                     ${indexVariableName} % ${Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0 &&
                     /\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/.test(
-                        ${environmentName}.toString()
+                        ${environmentName}[${Utils.stringToUnicode('toString')}]()
                     ) !== true && ${indexVariableName}++
                 ) {
                     continue;

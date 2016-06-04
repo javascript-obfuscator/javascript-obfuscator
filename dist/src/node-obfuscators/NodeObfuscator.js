@@ -35,12 +35,12 @@ class NodeObfuscator {
         return `${prefix}${Utils_1.Utils.decToHex(nodeValue)}`;
     }
     replaceLiteralValueByUnicodeValue(nodeValue) {
-        let value = nodeValue;
-        if (this.options['encodeUnicodeLiterals']) {
+        let value = nodeValue, replaceByUnicodeArrayFlag = Math.random() > this.options['unicodeArrayThreshold'];
+        if (this.options['encodeUnicodeLiterals'] && replaceByUnicodeArrayFlag) {
             value = new Buffer(encodeURI(value)).toString('base64');
         }
         value = Utils_1.Utils.stringToUnicode(value);
-        if (!this.options['unicodeArray']) {
+        if (!this.options['unicodeArray'] || !replaceByUnicodeArrayFlag) {
             return value;
         }
         return this.replaceLiteralValueByUnicodeArrayCall(value);

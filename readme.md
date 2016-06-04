@@ -123,6 +123,16 @@ Type: `boolean` Default: `true`
 
 Put all literal strings into array and replace every literal string by array call.
 
+####unicodeArrayThreshold
+Type: `number` Default: `0.8` Min: `0` Max: `1`
+
+#####`unicodeArray` option must be enabled
+
+Probability that the literal string will inserted into `unicodeArray`.
+Use this option for huge source code size, because many calls to `unicodeArray` will slowdown code performance.
+
+Value `0` is equals `unicodeArray: false`.
+
 ####wrapUnicodeArrayCalls
 Type: `boolean` Default: `true`
 

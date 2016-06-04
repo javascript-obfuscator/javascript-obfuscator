@@ -8,5 +8,6 @@ export interface IOptions {
     rotateUnicodeArray?: boolean;
     selfDefending?: boolean;
     unicodeArray?: boolean;
+    unicodeArrayThreshold?: number;
     wrapUnicodeArrayCalls?: boolean;
 }

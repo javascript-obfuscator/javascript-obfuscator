@@ -97,19 +97,20 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @returns {string}
      */
     protected replaceLiteralValueByUnicodeValue (nodeValue: string): string {
-        let value: string = nodeValue;
+        let value: string = nodeValue,
+            replaceByUnicodeArrayFlag: boolean = Math.random() > this.options['unicodeArrayThreshold'];
 
-        if (this.options['encodeUnicodeLiterals']) {
+        if (this.options['encodeUnicodeLiterals'] && replaceByUnicodeArrayFlag) {
             value = new Buffer(encodeURI(value)).toString('base64');
         }
 
         value = Utils.stringToUnicode(value);
 
-        if (!this.options['unicodeArray']) {
+        if (!this.options['unicodeArray'] || !replaceByUnicodeArrayFlag) {
             return value;
         }
 
-        return this.replaceLiteralValueByUnicodeArrayCall(value)
+        return this.replaceLiteralValueByUnicodeArrayCall(value);
     }
 
     /**

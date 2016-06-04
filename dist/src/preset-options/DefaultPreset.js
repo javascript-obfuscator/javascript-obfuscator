@@ -9,5 +9,6 @@ exports.DEFAULT_PRESET = Object.freeze({
     rotateUnicodeArray: true,
     selfDefending: true,
     unicodeArray: true,
+    unicodeArrayThreshold: 0.8,
     wrapUnicodeArrayCalls: true
 });

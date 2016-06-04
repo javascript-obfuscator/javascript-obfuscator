@@ -10,5 +10,6 @@ export const DEFAULT_PRESET: IOptions = Object.freeze({
     rotateUnicodeArray: true,
     selfDefending: true,
     unicodeArray: true,
+    unicodeArrayThreshold: 0.8,
     wrapUnicodeArrayCalls: true
 });

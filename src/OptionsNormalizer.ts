@@ -8,6 +8,7 @@ export class OptionsNormalizer {
         encodeUnicodeLiterals: false,
         rotateUnicodeArray: false,
         unicodeArray: false,
+        unicodeArrayThreshold: 0,
         wrapUnicodeArrayCalls: false
     };
 

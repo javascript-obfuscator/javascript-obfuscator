@@ -5,8 +5,8 @@ const Node_1 = require('../Node');
 const NodeUtils_1 = require("../../NodeUtils");
 const Utils_1 = require("../../Utils");
 class UnicodeArrayCallsWrapper extends Node_1.Node {
-    constructor(unicodeArrayCallsWrapperName, unicodeArrayName, unicodeArray) {
-        super();
+    constructor(unicodeArrayCallsWrapperName, unicodeArrayName, unicodeArray, options = {}) {
+        super(options);
         this.appendState = AppendState_1.AppendState.AfterObfuscation;
         this.unicodeArrayCallsWrapperName = unicodeArrayCallsWrapperName;
         this.unicodeArrayName = unicodeArrayName;
@@ -24,14 +24,32 @@ class UnicodeArrayCallsWrapper extends Node_1.Node {
         if (!this.unicodeArray.length) {
             return;
         }
+        this.updateNode();
         return super.getNode();
     }
     getNodeStructure() {
-        let keyName = Utils_1.Utils.getRandomVariableName(), node = esprima.parse(`
-                var ${this.unicodeArrayCallsWrapperName} = function (${keyName}) {
+        let environmentName = Utils_1.Utils.getRandomVariableName(), keyName = Utils_1.Utils.getRandomVariableName(), selfDefendingCode = '', node;
+        if (this.options['selfDefending']) {
+            selfDefendingCode = `
+                var ${environmentName} = function(){return ${Utils_1.Utils.stringToUnicode('production')};};
+                                                                      
+                if (
+                    ${keyName} % ${Utils_1.Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0 &&
+                    /\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/.test(
+                        ${environmentName}.toString()
+                    ) !== true && ${keyName}++
+                ) {
                     return ${this.unicodeArrayName}[parseInt(${keyName}, 16)]
-                };
-            `);
+                }
+            `;
+        }
+        node = esprima.parse(`
+            var ${this.unicodeArrayCallsWrapperName} = function (${keyName}) {
+                ${selfDefendingCode}
+                
+                return ${this.unicodeArrayName}[parseInt(${keyName}, 16)]
+            };
+        `);
         NodeUtils_1.NodeUtils.addXVerbatimPropertyToLiterals(node);
         return NodeUtils_1.NodeUtils.getBlockScopeNodeByIndex(node);
     }

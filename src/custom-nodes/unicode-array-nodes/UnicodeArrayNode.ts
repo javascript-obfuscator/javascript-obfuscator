@@ -1,6 +1,7 @@
 import * as escodegen from 'escodegen';
 
 import { INode } from '../../interfaces/nodes/INode';
+import { IOptions } from "../../interfaces/IOptions";
 import { IVariableDeclarationNode } from "../../interfaces/nodes/IVariableDeclarationNode";
 
 import { TBlockScopeNode } from "../../types/TBlockScopeNode";
@@ -41,9 +42,14 @@ export class UnicodeArrayNode extends Node {
     /**
      * @param unicodeArrayName
      * @param unicodeArrayRotateValue
+     * @param options
      */
-    constructor (unicodeArrayName: string, unicodeArrayRotateValue: number = 0) {
-        super();
+    constructor (
+        unicodeArrayName: string,
+        unicodeArrayRotateValue: number = 0,
+        options: IOptions = {}
+    ) {
+        super(options);
 
         this.unicodeArrayName = unicodeArrayName;
         this.unicodeArrayRotateValue = unicodeArrayRotateValue;

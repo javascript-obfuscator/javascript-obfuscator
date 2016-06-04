@@ -1,5 +1,6 @@
 import { ICustomNode } from '../interfaces/ICustomNode';
 import { INode } from '../interfaces/nodes/INode';
+import { IOptions } from "../interfaces/IOptions";
 
 import { AppendState } from '../enums/AppendState';
 
@@ -16,7 +17,17 @@ export abstract class Node implements ICustomNode {
      */
     protected node: INode;
 
-    constructor () {}
+    /**
+     * @type {IOptions}
+     */
+    protected options: IOptions;
+
+    /**
+     * @param options
+     */
+    constructor (options: IOptions = {}) {
+        this.options = options;
+    }
 
     public abstract appendNode (astTree: INode): void;
 

@@ -12,6 +12,7 @@ const MemberExpressionObfuscator_1 = require('./node-obfuscators/MemberExpressio
 const MethodDefinitionObfuscator_1 = require('./node-obfuscators/MethodDefinitionObfuscator');
 const NodeUtils_1 = require("./NodeUtils");
 const ObjectExpressionObfuscator_1 = require('./node-obfuscators/ObjectExpressionObfuscator');
+const SelfDefendingNodesGroup_1 = require("./node-groups/SelfDefendingNodesGroup");
 const UnicodeArrayNodesGroup_1 = require('./node-groups/UnicodeArrayNodesGroup');
 const VariableDeclarationObfuscator_1 = require('./node-obfuscators/VariableDeclarationObfuscator');
 class Obfuscator {
@@ -82,6 +83,9 @@ class Obfuscator {
         });
     }
     setNewNodes() {
+        if (this.options['selfDefending']) {
+            this.setNodesGroup(new SelfDefendingNodesGroup_1.SelfDefendingNodesGroup(this.options));
+        }
         if (this.options['disableConsoleOutput']) {
             this.setNode('consoleOutputDisableExpressionNode', new ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode());
         }

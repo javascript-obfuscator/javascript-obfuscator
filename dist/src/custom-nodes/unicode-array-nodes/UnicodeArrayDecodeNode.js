@@ -7,8 +7,8 @@ const Node_1 = require('../Node');
 const NodeUtils_1 = require("../../NodeUtils");
 const Utils_1 = require("../../Utils");
 class UnicodeArrayDecodeNode extends Node_1.Node {
-    constructor(unicodeArrayName, unicodeArray) {
-        super();
+    constructor(unicodeArrayName, unicodeArray, options = {}) {
+        super(options);
         this.appendState = AppendState_1.AppendState.AfterObfuscation;
         this.unicodeArrayName = unicodeArrayName;
         this.unicodeArray = unicodeArray;
@@ -21,11 +21,27 @@ class UnicodeArrayDecodeNode extends Node_1.Node {
         if (!this.unicodeArray.length) {
             return;
         }
+        this.updateNode();
         return super.getNode();
     }
     getNodeStructure() {
-        const indexVariableName = Utils_1.Utils.getRandomVariableName(), tempArrayName = Utils_1.Utils.getRandomVariableName();
-        let node = esprima.parse(`
+        const environmentName = Utils_1.Utils.getRandomVariableName(), indexVariableName = Utils_1.Utils.getRandomVariableName(), tempArrayName = Utils_1.Utils.getRandomVariableName();
+        let node, selfDefendingCode = '';
+        if (this.options['selfDefending']) {
+            selfDefendingCode = `
+                var ${environmentName} = function(){return ${Utils_1.Utils.stringToUnicode('dev')};};
+                                        
+                if (
+                    ${indexVariableName} % ${Utils_1.Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0 &&
+                    /\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/.test(
+                        ${environmentName}.toString()
+                    ) !== true && ${indexVariableName}++
+                ) {
+                    continue;
+                }
+            `;
+        }
+        node = esprima.parse(`
             (function () {
                 ${JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(`
                     (function () {
@@ -51,6 +67,8 @@ class UnicodeArrayDecodeNode extends Node_1.Node {
                 var ${tempArrayName} = [];
                 
                 for (var ${indexVariableName} in ${this.unicodeArrayName}) {
+                    ${selfDefendingCode}
+                
                     ${tempArrayName}[${Utils_1.Utils.stringToUnicode('push')}](decodeURI(atob(${this.unicodeArrayName}[${indexVariableName}])));
                 }
                 

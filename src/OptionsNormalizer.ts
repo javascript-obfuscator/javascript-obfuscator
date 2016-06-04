@@ -12,15 +12,36 @@ export class OptionsNormalizer {
     };
 
     /**
+     * @type {IOptions}
+     */
+    public static SELF_DEFENDING_OPTIONS: IOptions = {
+        compact: true,
+        selfDefending: true
+    };
+
+    /**
      * @param options
      * @returns {IOptions}
      */
     public static normalize (options: IOptions): IOptions {
         let normalizedOptions: IOptions = Object.assign({}, options);
-        
+
         normalizedOptions = OptionsNormalizer.unicodeArrayRule(normalizedOptions);
-        
+        normalizedOptions = OptionsNormalizer.selfDefendingRule(normalizedOptions);
+
         return normalizedOptions;
+    }
+
+    /**
+     * @param options
+     * @returns {IOptions}
+     */
+    private static selfDefendingRule (options: IOptions): IOptions {
+        if (options['selfDefending']) {
+            Object.assign(options, OptionsNormalizer.SELF_DEFENDING_OPTIONS);
+        }
+
+        return options;
     }
 
     /**
@@ -31,7 +52,7 @@ export class OptionsNormalizer {
         if (!options['unicodeArray']) {
             Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
         }
-        
+
         return options;
     }
 }

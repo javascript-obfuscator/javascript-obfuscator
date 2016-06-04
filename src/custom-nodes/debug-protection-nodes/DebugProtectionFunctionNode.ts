@@ -1,6 +1,7 @@
 import * as esprima from 'esprima';
 
 import { INode } from "../../interfaces/nodes/INode";
+import { IOptions } from "../../interfaces/IOptions";
 
 import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
@@ -16,11 +17,10 @@ export class DebugProtectionFunctionNode extends Node {
 
     /**
      * @param debugProtectionFunctionName
+     * @param options
      */
-    constructor (
-        debugProtectionFunctionName: string
-    ) {
-        super();
+    constructor (debugProtectionFunctionName: string, options: IOptions = {}) {
+        super(options);
 
         this.debugProtectionFunctionName = debugProtectionFunctionName;
 

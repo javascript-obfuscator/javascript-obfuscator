@@ -1,6 +1,7 @@
 import * as esprima from 'esprima';
 
 import { INode } from "../../interfaces/nodes/INode";
+import { IOptions } from "../../interfaces/IOptions";
 
 import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
@@ -8,8 +9,11 @@ import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
 
 export class ConsoleOutputDisableExpressionNode extends Node {
-    constructor () {
-        super();
+    /**
+     * @param options
+     */
+    constructor (options: IOptions = {}) {
+        super(options);
 
         this.node = this.getNodeStructure();
     }

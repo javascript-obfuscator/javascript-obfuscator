@@ -3,8 +3,8 @@ const esprima = require('esprima');
 const Node_1 = require('../Node');
 const NodeUtils_1 = require("../../NodeUtils");
 class ConsoleOutputDisableExpressionNode extends Node_1.Node {
-    constructor() {
-        super();
+    constructor(options = {}) {
+        super(options);
         this.node = this.getNodeStructure();
     }
     appendNode(blockScopeNode) {

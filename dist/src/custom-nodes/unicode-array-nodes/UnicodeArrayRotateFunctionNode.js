@@ -5,8 +5,8 @@ const Node_1 = require('../Node');
 const NodeUtils_1 = require("../../NodeUtils");
 const Utils_1 = require("../../Utils");
 class UnicodeArrayRotateFunctionNode extends Node_1.Node {
-    constructor(unicodeArrayName, unicodeArray, unicodeArrayRotateValue) {
-        super();
+    constructor(unicodeArrayName, unicodeArray, unicodeArrayRotateValue, options = {}) {
+        super(options);
         this.appendState = AppendState_1.AppendState.AfterObfuscation;
         this.unicodeArrayName = unicodeArrayName;
         this.unicodeArray = unicodeArray;

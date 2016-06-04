@@ -2,8 +2,9 @@
 const AppendState_1 = require('../enums/AppendState');
 const NodeUtils_1 = require("../NodeUtils");
 class Node {
-    constructor() {
+    constructor(options = {}) {
         this.appendState = AppendState_1.AppendState.BeforeObfuscation;
+        this.options = options;
     }
     getAppendState() {
         return this.appendState;

@@ -1,4 +1,5 @@
 import { IExpressionStatementNode } from "../../interfaces/nodes/IExpressionStatementNode";
+import { IOptions } from "../../interfaces/IOptions";
 
 import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
@@ -15,12 +16,13 @@ export class DebugProtectionFunctionCallNode extends Node {
 
     /**
      * @param debugProtectionFunctionName
+     * @param options
      */
-    constructor (debugProtectionFunctionName: string) {
-        super();
+    constructor (debugProtectionFunctionName: string, options: IOptions = {}) {
+        super(options);
 
         this.debugProtectionFunctionName = debugProtectionFunctionName;
-        
+
         this.node = this.getNodeStructure();
     }
 

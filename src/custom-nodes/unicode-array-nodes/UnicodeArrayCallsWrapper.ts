@@ -1,6 +1,7 @@
 import * as esprima from 'esprima';
 
 import { INode } from "../../interfaces/nodes/INode";
+import { IOptions } from "../../interfaces/IOptions";
 
 import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
@@ -35,13 +36,15 @@ export class UnicodeArrayCallsWrapper extends Node {
      * @param unicodeArrayCallsWrapperName
      * @param unicodeArrayName
      * @param unicodeArray
+     * @param options
      */
     constructor (
         unicodeArrayCallsWrapperName: string,
         unicodeArrayName: string,
-        unicodeArray: string[]
+        unicodeArray: string[],
+        options: IOptions = {}
     ) {
-        super();
+        super(options);
 
         this.unicodeArrayCallsWrapperName = unicodeArrayCallsWrapperName;
         this.unicodeArrayName = unicodeArrayName;
@@ -72,6 +75,8 @@ export class UnicodeArrayCallsWrapper extends Node {
             return;
         }
 
+        this.updateNode();
+
         return super.getNode();
     }
 
@@ -79,12 +84,33 @@ export class UnicodeArrayCallsWrapper extends Node {
      * @returns {INode}
      */
     protected getNodeStructure (): INode {
-        let keyName: string = Utils.getRandomVariableName(),
-            node: INode = esprima.parse(`
-                var ${this.unicodeArrayCallsWrapperName} = function (${keyName}) {
+        let environmentName: string = Utils.getRandomVariableName(),
+            keyName: string = Utils.getRandomVariableName(),
+            selfDefendingCode: string = '',
+            node: INode;
+
+        if (this.options['selfDefending']) {
+            selfDefendingCode = `
+                var ${environmentName} = function(){return ${Utils.stringToUnicode('production')};};
+                                                                      
+                if (
+                    ${keyName} % ${Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0 &&
+                    /\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/.test(
+                        ${environmentName}.toString()
+                    ) !== true && ${keyName}++
+                ) {
                     return ${this.unicodeArrayName}[parseInt(${keyName}, 16)]
-                };
-            `);
+                }
+            `;
+        }
+
+        node = esprima.parse(`
+            var ${this.unicodeArrayCallsWrapperName} = function (${keyName}) {
+                ${selfDefendingCode}
+                
+                return ${this.unicodeArrayName}[parseInt(${keyName}, 16)]
+            };
+        `);
 
         NodeUtils.addXVerbatimPropertyToLiterals(node);
 

@@ -28,7 +28,7 @@ class Utils {
             .replace(Utils.hexRepetitiveZerosRegExp, '');
     }
     static getRandomInteger(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        return Math.round(Math.floor(Math.random() * (max - min + 1)) + min);
     }
     static getRandomVariableName(length = 6) {
         const rangeMinInteger = 10000, rangeMaxInteger = 99999999, prefix = '_0x';

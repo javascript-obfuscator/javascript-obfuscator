@@ -3,8 +3,8 @@ const NodeType_1 = require('../../enums/NodeType');
 const Node_1 = require('../Node');
 const NodeUtils_1 = require('../../NodeUtils');
 class DebugProtectionFunctionIntervalNode extends Node_1.Node {
-    constructor(debugProtectionFunctionName) {
-        super();
+    constructor(debugProtectionFunctionName, options = {}) {
+        super(options);
         this.debugProtectionFunctionName = debugProtectionFunctionName;
         this.node = this.getNodeStructure();
     }

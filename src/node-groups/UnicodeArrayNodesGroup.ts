@@ -33,7 +33,8 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
 
         let unicodeArrayNode: UnicodeArrayNode = new UnicodeArrayNode(
                 this.unicodeArrayName,
-                this.unicodeArrayRotateValue
+                this.unicodeArrayRotateValue,
+                this.options
             ),
             unicodeArray: string [] = unicodeArrayNode.getNodeData();
 
@@ -48,7 +49,8 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
                 new UnicodeArrayCallsWrapper(
                     this.unicodeArrayTranslatorName,
                     this.unicodeArrayName,
-                    unicodeArray
+                    unicodeArray,
+                    this.options
                 )
             );
         }
@@ -58,7 +60,8 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
                 'unicodeArrayDecodeNode',
                 new UnicodeArrayDecodeNode (
                     this.unicodeArrayName,
-                    unicodeArray
+                    unicodeArray,
+                    this.options
                 )
             );
         }
@@ -69,7 +72,8 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
                 new UnicodeArrayRotateFunctionNode(
                     this.unicodeArrayName,
                     unicodeArray,
-                    this.unicodeArrayRotateValue
+                    this.unicodeArrayRotateValue,
+                    this.options
                 )
             );
         }

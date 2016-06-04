@@ -1,6 +1,7 @@
 import * as esprima from 'esprima';
 
 import { INode } from "../../interfaces/nodes/INode";
+import { IOptions } from "../../interfaces/IOptions";
 
 import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
@@ -35,13 +36,15 @@ export class UnicodeArrayRotateFunctionNode extends Node {
      * @param unicodeArrayName
      * @param unicodeArray
      * @param unicodeArrayRotateValue
+     * @param options
      */
     constructor (
         unicodeArrayName: string,
         unicodeArray: string[],
-        unicodeArrayRotateValue: number
+        unicodeArrayRotateValue: number,
+        options: IOptions = {}
     ) {
-        super();
+        super(options);
 
         this.unicodeArrayName = unicodeArrayName;
         this.unicodeArray = unicodeArray;

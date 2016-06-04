@@ -8,6 +8,7 @@ export const DEFAULT_PRESET: IOptions = Object.freeze({
     encodeUnicodeLiterals: false,
     reservedNames: [],
     rotateUnicodeArray: true,
+    selfDefending: true,
     unicodeArray: true,
     wrapUnicodeArrayCalls: true
 });

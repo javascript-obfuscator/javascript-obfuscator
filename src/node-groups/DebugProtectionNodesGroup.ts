@@ -21,17 +21,17 @@ export class DebugProtectionNodesGroup extends NodesGroup {
 
         this.nodes.set(
             'debugProtectionFunctionNode',
-            new DebugProtectionFunctionNode(this.debugProtectionFunctionIdentifier)
+            new DebugProtectionFunctionNode(this.debugProtectionFunctionIdentifier, this.options)
         );
         this.nodes.set(
             'debugProtectionFunctionCallNode',
-            new DebugProtectionFunctionCallNode(this.debugProtectionFunctionIdentifier)
+            new DebugProtectionFunctionCallNode(this.debugProtectionFunctionIdentifier, this.options)
         );
 
         if (this.options['debugProtectionInterval']) {
             this.nodes.set(
                 'debugProtectionFunctionIntervalNode',
-                new DebugProtectionFunctionIntervalNode(this.debugProtectionFunctionIdentifier)
+                new DebugProtectionFunctionIntervalNode(this.debugProtectionFunctionIdentifier, this.options)
             );
         }
     }

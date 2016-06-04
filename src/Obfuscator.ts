@@ -20,6 +20,7 @@ import { MemberExpressionObfuscator } from './node-obfuscators/MemberExpressionO
 import { MethodDefinitionObfuscator } from './node-obfuscators/MethodDefinitionObfuscator';
 import { NodeUtils } from "./NodeUtils";
 import { ObjectExpressionObfuscator } from './node-obfuscators/ObjectExpressionObfuscator';
+import { SelfDefendingNodesGroup } from "./node-groups/SelfDefendingNodesGroup";
 import { UnicodeArrayNodesGroup } from './node-groups/UnicodeArrayNodesGroup';
 import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclarationObfuscator';
 
@@ -144,6 +145,10 @@ export class Obfuscator {
     }
 
     private setNewNodes (): void {
+        if (this.options['selfDefending']) {
+            this.setNodesGroup(new SelfDefendingNodesGroup(this.options));
+        }
+
         if (this.options['disableConsoleOutput']) {
             this.setNode(
                 'consoleOutputDisableExpressionNode',

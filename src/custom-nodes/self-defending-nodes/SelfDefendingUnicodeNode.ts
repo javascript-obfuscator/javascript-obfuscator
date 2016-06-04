@@ -57,7 +57,7 @@ export class SelfDefendingUnicodeNode extends Node {
                     if (
                         !/(\\\\\[x|u](\\w){2,4})+/.test(func.toString())
                     ) {
-                        console.log('LOL');
+                        []["filter"]["constructor"]((+(32))["toString"](33) + (+(101))["toString"](21)[1] + ([false]+undefined)[10] + (false+"")[2] + (true+"")[3] + '(!![]){}')();
                     }
                 })();
             `, NO_CUSTOM_NODES_PRESET)

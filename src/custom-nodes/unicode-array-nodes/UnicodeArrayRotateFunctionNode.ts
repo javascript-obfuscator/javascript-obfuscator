@@ -7,6 +7,9 @@ import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
 import { AppendState } from "../../enums/AppendState";
 
+import { NO_CUSTOM_NODES_PRESET } from "../../preset-options/NoCustomNodesPreset";
+
+import { JavaScriptObfuscator } from "../../JavaScriptObfuscator";
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
 import { Utils } from "../../Utils";
@@ -76,22 +79,42 @@ export class UnicodeArrayRotateFunctionNode extends Node {
      */
     protected getNodeStructure (): INode {
         let arrayName: string = Utils.getRandomVariableName(),
+            code: string = '',
             timesName: string = Utils.getRandomVariableName(),
             tempArrayName: string = Utils.getRandomVariableName(),
-            node: INode = esprima.parse(`
-                (function (${arrayName}, ${timesName}) {
-                    if (${timesName} < 0x${Utils.decToHex(0)}) {
-                        return;
-                    }
+            node: INode;
 
-                    var ${tempArrayName};
-
-                    while (${timesName}--) {
-                        ${tempArrayName} = ${arrayName}[${Utils.stringToUnicode('shift')}]();
-                        ${arrayName}[${Utils.stringToUnicode('push')}](${tempArrayName});
+        if (this.options['selfDefending']) {
+            code = JavaScriptObfuscator.obfuscate(`
+                (function () {
+                    var func = function () {
+                        return '\x77\x69\x6e\x64\x6f\x77';
+                    };
+                                        
+                    if (
+                        !/(\\\\\[x|u](\\w){2,4})+/.test(func.toString())
+                    ) {
+                        []["filter"]["constructor"]((+(32))["toString"](33) + (+(101))["toString"](21)[1] + ([false]+undefined)[10] + (false+"")[2] + (true+"")[3] + '(!![]){}')();
                     }
-                })(${this.unicodeArrayName}, 0x${Utils.decToHex(this.unicodeArrayRotateValue)});
-            `);
+                })();
+            `, NO_CUSTOM_NODES_PRESET);
+        }
+
+        node = esprima.parse(`
+            (function (${arrayName}, ${timesName}) {
+                if (${timesName} < 0x${Utils.decToHex(0)}) {
+                    return;
+                }
+
+                var ${tempArrayName};
+
+                while (${timesName}--) {
+                    ${code}
+                    ${tempArrayName} = ${arrayName}[${Utils.stringToUnicode('shift')}]();
+                    ${arrayName}[${Utils.stringToUnicode('push')}](${tempArrayName});
+                }
+            })(${this.unicodeArrayName}, 0x${Utils.decToHex(this.unicodeArrayRotateValue)});
+        `);
 
         NodeUtils.addXVerbatimPropertyToLiterals(node);
 

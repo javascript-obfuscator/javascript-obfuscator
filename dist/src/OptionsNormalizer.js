@@ -27,6 +27,8 @@ OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS = {
 };
 OptionsNormalizer.SELF_DEFENDING_OPTIONS = {
     compact: true,
-    selfDefending: true
+    rotateUnicodeArray: true,
+    selfDefending: true,
+    wrapUnicodeArrayCalls: true
 };
 exports.OptionsNormalizer = OptionsNormalizer;

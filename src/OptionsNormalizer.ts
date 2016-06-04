@@ -16,7 +16,9 @@ export class OptionsNormalizer {
      */
     public static SELF_DEFENDING_OPTIONS: IOptions = {
         compact: true,
-        selfDefending: true
+        rotateUnicodeArray: true,
+        selfDefending: true,
+        wrapUnicodeArrayCalls: true
     };
 
     /**

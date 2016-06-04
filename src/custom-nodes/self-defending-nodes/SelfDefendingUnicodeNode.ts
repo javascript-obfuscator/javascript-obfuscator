@@ -12,6 +12,7 @@ import { NO_CUSTOM_NODES_PRESET } from "../../preset-options/NoCustomNodesPreset
 import { JavaScriptObfuscator } from "../../JavaScriptObfuscator";
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
+import { Utils } from "../../Utils";
 
 export class SelfDefendingUnicodeNode extends Node {
     /**
@@ -32,7 +33,14 @@ export class SelfDefendingUnicodeNode extends Node {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TBlockScopeNode): void {
-        NodeUtils.prependNode(blockScopeNode.body, this.getNode());
+        let programBodyLength: number = blockScopeNode.body.length,
+            randomIndex: number = 0;
+
+        if (programBodyLength > 2) {
+            randomIndex = Utils.getRandomInteger(programBodyLength, programBodyLength / 2);
+        }
+
+        NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), randomIndex);
     }
 
     /**
@@ -40,8 +48,18 @@ export class SelfDefendingUnicodeNode extends Node {
      */
     protected getNodeStructure (): INode {
         let node: INode = esprima.parse(
-             JavaScriptObfuscator.obfuscate(`
-               
+            JavaScriptObfuscator.obfuscate(`
+                (function () {                                
+                    var func = function () {
+                        return '\x77\x69\x6e\x64\x6f\x77';
+                    };
+                                        
+                    if (
+                        !/(\\\\\[x|u](\\w){2,4})+/.test(func.toString())
+                    ) {
+                        console.log('LOL');
+                    }
+                })();
             `, NO_CUSTOM_NODES_PRESET)
         );
 

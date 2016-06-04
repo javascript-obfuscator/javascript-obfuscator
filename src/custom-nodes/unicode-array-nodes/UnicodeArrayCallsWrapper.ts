@@ -84,31 +84,33 @@ export class UnicodeArrayCallsWrapper extends Node {
      * @returns {INode}
      */
     protected getNodeStructure (): INode {
-        let environmentName: string = Utils.getRandomVariableName(),
+        let code: string = '',
+            environmentName: string = Utils.getRandomVariableName(),
             keyName: string = Utils.getRandomVariableName(),
-            selfDefendingCode: string = '',
             node: INode;
 
         if (this.options['selfDefending']) {
-            selfDefendingCode = `
+            code = `
                 var ${environmentName} = function(){return ${Utils.stringToUnicode('production')};};
                                                                       
                 if (
                     ${keyName} % ${Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0 &&
                     /\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/.test(
                         ${environmentName}[${Utils.stringToUnicode('toString')}]()
-                    ) !== true && ${keyName}++
+                    ) === true || ${keyName}++
                 ) {
-                    return ${this.unicodeArrayName}[parseInt(${keyName}, 16)]
+                    return ${this.unicodeArrayName}[parseInt(${keyName}, 16)];
                 }
+                
+                return ${this.unicodeArrayName}[parseInt(${keyName}, 16)];
             `;
+        } else {
+            code = `return ${this.unicodeArrayName}[parseInt(${keyName}, 16)]`;
         }
 
         node = esprima.parse(`
             var ${this.unicodeArrayCallsWrapperName} = function (${keyName}) {
-                ${selfDefendingCode}
-                
-                return ${this.unicodeArrayName}[parseInt(${keyName}, 16)]
+                ${code}
             };
         `);
 

@@ -26,9 +26,9 @@ class UnicodeArrayDecodeNode extends Node_1.Node {
     }
     getNodeStructure() {
         const environmentName = Utils_1.Utils.getRandomVariableName(), indexVariableName = Utils_1.Utils.getRandomVariableName(), tempArrayName = Utils_1.Utils.getRandomVariableName();
-        let node, selfDefendingCode = '';
+        let code = '', node;
         if (this.options['selfDefending']) {
-            selfDefendingCode = `
+            code = `
                 var ${environmentName} = function(){return ${Utils_1.Utils.stringToUnicode('dev')};};
                                         
                 if (
@@ -67,7 +67,7 @@ class UnicodeArrayDecodeNode extends Node_1.Node {
                 var ${tempArrayName} = [];
                 
                 for (var ${indexVariableName} in ${this.unicodeArrayName}) {
-                    ${selfDefendingCode}
+                    ${code}
                 
                     ${tempArrayName}[${Utils_1.Utils.stringToUnicode('push')}](decodeURI(atob(${this.unicodeArrayName}[${indexVariableName}])));
                 }

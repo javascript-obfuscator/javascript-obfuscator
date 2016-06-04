@@ -76,11 +76,11 @@ export class UnicodeArrayDecodeNode extends Node {
             indexVariableName: string = Utils.getRandomVariableName(),
             tempArrayName: string = Utils.getRandomVariableName();
 
-        let node: INode,
-            selfDefendingCode: string = '';
+        let code: string = '',
+            node: INode;
 
         if (this.options['selfDefending']) {
-            selfDefendingCode = `
+            code = `
                 var ${environmentName} = function(){return ${Utils.stringToUnicode('dev')};};
                                         
                 if (
@@ -120,7 +120,7 @@ export class UnicodeArrayDecodeNode extends Node {
                 var ${tempArrayName} = [];
                 
                 for (var ${indexVariableName} in ${this.unicodeArrayName}) {
-                    ${selfDefendingCode}
+                    ${code}
                 
                     ${tempArrayName}[${Utils.stringToUnicode('push')}](decodeURI(atob(${this.unicodeArrayName}[${indexVariableName}])));
                 }

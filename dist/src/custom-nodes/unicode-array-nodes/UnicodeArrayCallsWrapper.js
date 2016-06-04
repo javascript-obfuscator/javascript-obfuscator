@@ -28,26 +28,29 @@ class UnicodeArrayCallsWrapper extends Node_1.Node {
         return super.getNode();
     }
     getNodeStructure() {
-        let environmentName = Utils_1.Utils.getRandomVariableName(), keyName = Utils_1.Utils.getRandomVariableName(), selfDefendingCode = '', node;
+        let code = '', environmentName = Utils_1.Utils.getRandomVariableName(), keyName = Utils_1.Utils.getRandomVariableName(), node;
         if (this.options['selfDefending']) {
-            selfDefendingCode = `
+            code = `
                 var ${environmentName} = function(){return ${Utils_1.Utils.stringToUnicode('production')};};
                                                                       
                 if (
                     ${keyName} % ${Utils_1.Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0 &&
                     /\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/.test(
                         ${environmentName}[${Utils_1.Utils.stringToUnicode('toString')}]()
-                    ) !== true && ${keyName}++
+                    ) === true || ${keyName}++
                 ) {
-                    return ${this.unicodeArrayName}[parseInt(${keyName}, 16)]
+                    return ${this.unicodeArrayName}[parseInt(${keyName}, 16)];
                 }
+                
+                return ${this.unicodeArrayName}[parseInt(${keyName}, 16)];
             `;
+        }
+        else {
+            code = `return ${this.unicodeArrayName}[parseInt(${keyName}, 16)]`;
         }
         node = esprima.parse(`
             var ${this.unicodeArrayCallsWrapperName} = function (${keyName}) {
-                ${selfDefendingCode}
-                
-                return ${this.unicodeArrayName}[parseInt(${keyName}, 16)]
+                ${code}
             };
         `);
         NodeUtils_1.NodeUtils.addXVerbatimPropertyToLiterals(node);

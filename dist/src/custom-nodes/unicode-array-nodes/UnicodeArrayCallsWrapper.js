@@ -1,7 +1,6 @@
 "use strict";
 const esprima = require('esprima');
 const AppendState_1 = require("../../enums/AppendState");
-const JSFuck_1 = require("../../enums/JSFuck");
 const Node_1 = require('../Node');
 const NodeUtils_1 = require("../../NodeUtils");
 const Utils_1 = require("../../Utils");
@@ -29,29 +28,10 @@ class UnicodeArrayCallsWrapper extends Node_1.Node {
         return super.getNode();
     }
     getNodeStructure() {
-        let code = '', environmentName = Utils_1.Utils.getRandomVariableName(), keyName = Utils_1.Utils.getRandomVariableName(), node;
-        if (this.options['selfDefending']) {
-            code = `
-                var ${environmentName} = function(){return ${Utils_1.Utils.stringToUnicode('production')};};
-                                                                          
-                if (
-                    ${keyName} % ${Utils_1.Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0x0 &&
-                    (
-                        Function(${Utils_1.Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})()[${Utils_1.Utils.stringToUnicode('test')}](
-                            ${environmentName}[${Utils_1.Utils.stringToUnicode('toString')}]()
-                        ) === ${JSFuck_1.JSFuck.True} || ${keyName}++
-                    )
-                );
-                
-                return ${this.unicodeArrayName}[parseInt(${keyName}, 0x010)];
-            `;
-        }
-        else {
-            code = `return ${this.unicodeArrayName}[parseInt(${keyName}, 0x010)]`;
-        }
+        let keyName = Utils_1.Utils.getRandomVariableName(), node;
         node = esprima.parse(`
             var ${this.unicodeArrayCallsWrapperName} = function (${keyName}) {
-                ${code}
+                return ${this.unicodeArrayName}[parseInt(${keyName}, 0x010)];
             };
         `);
         NodeUtils_1.NodeUtils.addXVerbatimPropertyToLiterals(node);

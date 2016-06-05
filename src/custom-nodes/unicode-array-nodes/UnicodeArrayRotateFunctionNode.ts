@@ -82,7 +82,9 @@ export class UnicodeArrayRotateFunctionNode extends Node {
         let arrayName: string = Utils.getRandomVariableName(),
             code: string = '',
             timesName: string = Utils.getRandomVariableName(),
+            timesArgumentName: string = Utils.getRandomVariableName(),
             tempArrayName: string = Utils.getRandomVariableName(),
+            whileFunctionName: string = Utils.getRandomVariableName(),
             node: INode;
 
         if (this.options['selfDefending']) {
@@ -92,13 +94,11 @@ export class UnicodeArrayRotateFunctionNode extends Node {
                         return 'window';
                     };
                                         
-                    if (
-                        !Function(${Utils.stringToUnicode(`return/(\\\\[x|u](\\w){2,4})+/`)})().test(func.toString())
-                    ) {
-                        []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.True}){}')();
-                    }
+                    !Function(${Utils.stringToUnicode(`return/(\\\\[x|u](\\w){2,4})+/`)})().test(func.toString()) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.True}){}')() : ${JSFuck.Window}.eval(${whileFunctionName}(${timesName})) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')() : []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')();
                 })();
             `, NO_CUSTOM_NODES_PRESET);
+        } else {
+            code = `${whileFunctionName}(${timesName})`;
         }
 
         node = esprima.parse(`
@@ -109,11 +109,14 @@ export class UnicodeArrayRotateFunctionNode extends Node {
 
                 var ${tempArrayName};
 
-                while (${timesName}--) {
-                    ${code}
-                    ${tempArrayName} = ${arrayName}[${Utils.stringToUnicode('shift')}]();
-                    ${arrayName}[${Utils.stringToUnicode('push')}](${tempArrayName});
-                }
+                var ${whileFunctionName} = function (${timesArgumentName}) {
+                    while (${timesArgumentName}--) {
+                        ${tempArrayName} = ${arrayName}[${Utils.stringToUnicode('shift')}]();
+                        ${arrayName}[${Utils.stringToUnicode('push')}](${tempArrayName});
+                    }
+                };
+                
+                ${code}
             })(${this.unicodeArrayName}, 0x${Utils.decToHex(this.unicodeArrayRotateValue)});
         `);
 

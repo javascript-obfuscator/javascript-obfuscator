@@ -1,4 +1,6 @@
 export const JSFuck: any = {
+    Window: '[]["filter"]["constructor"]("return this")()',
+
     False: '![]',
     True: '!![]',
 

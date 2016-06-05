@@ -26,7 +26,7 @@ class UnicodeArrayRotateFunctionNode extends Node_1.Node {
         return super.getNode();
     }
     getNodeStructure() {
-        let arrayName = Utils_1.Utils.getRandomVariableName(), code = '', timesName = Utils_1.Utils.getRandomVariableName(), tempArrayName = Utils_1.Utils.getRandomVariableName(), node;
+        let arrayName = Utils_1.Utils.getRandomVariableName(), code = '', timesName = Utils_1.Utils.getRandomVariableName(), timesArgumentName = Utils_1.Utils.getRandomVariableName(), tempArrayName = Utils_1.Utils.getRandomVariableName(), whileFunctionName = Utils_1.Utils.getRandomVariableName(), node;
         if (this.options['selfDefending']) {
             code = JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(`
                 (function () {
@@ -34,13 +34,12 @@ class UnicodeArrayRotateFunctionNode extends Node_1.Node {
                         return 'window';
                     };
                                         
-                    if (
-                        !Function(${Utils_1.Utils.stringToUnicode(`return/(\\\\[x|u](\\w){2,4})+/`)})().test(func.toString())
-                    ) {
-                        []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.True}){}')();
-                    }
+                    !Function(${Utils_1.Utils.stringToUnicode(`return/(\\\\[x|u](\\w){2,4})+/`)})().test(func.toString()) ? []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.True}){}')() : ${JSFuck_1.JSFuck.Window}.eval(${whileFunctionName}(${timesName})) ? []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.False}){}')() : []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.False}){}')();
                 })();
             `, NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET);
+        }
+        else {
+            code = `${whileFunctionName}(${timesName})`;
         }
         node = esprima.parse(`
             (function (${arrayName}, ${timesName}) {
@@ -50,11 +49,14 @@ class UnicodeArrayRotateFunctionNode extends Node_1.Node {
 
                 var ${tempArrayName};
 
-                while (${timesName}--) {
-                    ${code}
-                    ${tempArrayName} = ${arrayName}[${Utils_1.Utils.stringToUnicode('shift')}]();
-                    ${arrayName}[${Utils_1.Utils.stringToUnicode('push')}](${tempArrayName});
-                }
+                var ${whileFunctionName} = function (${timesArgumentName}) {
+                    while (${timesArgumentName}--) {
+                        ${tempArrayName} = ${arrayName}[${Utils_1.Utils.stringToUnicode('shift')}]();
+                        ${arrayName}[${Utils_1.Utils.stringToUnicode('push')}](${tempArrayName});
+                    }
+                };
+                
+                ${code}
             })(${this.unicodeArrayName}, 0x${Utils_1.Utils.decToHex(this.unicodeArrayRotateValue)});
         `);
         NodeUtils_1.NodeUtils.addXVerbatimPropertyToLiterals(node);

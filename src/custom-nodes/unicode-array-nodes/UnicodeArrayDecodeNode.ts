@@ -74,6 +74,7 @@ export class UnicodeArrayDecodeNode extends Node {
      */
     protected getNodeStructure (): INode {
         const environmentName: string = Utils.getRandomVariableName(),
+            forLoopFunctionName: string = Utils.getRandomVariableName(),
             indexVariableName: string = Utils.getRandomVariableName(),
             tempArrayName: string = Utils.getRandomVariableName();
 
@@ -83,15 +84,8 @@ export class UnicodeArrayDecodeNode extends Node {
         if (this.options['selfDefending']) {
             code = `
                 var ${environmentName} = function(){return ${Utils.stringToUnicode('dev')};};
-                                        
-                if (
-                    ${indexVariableName} % ${Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0 &&
-                    Function(${Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})()[${Utils.stringToUnicode('test')}](
-                        ${environmentName}[${Utils.stringToUnicode('toString')}]()
-                    ) !== ${JSFuck.True} && ${indexVariableName}++
-                ) {
-                    continue;
-                }
+                   
+                Function(${Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})()[${Utils.stringToUnicode('test')}](${environmentName}[${Utils.stringToUnicode('toString')}]()) !== ${JSFuck.True} && !${this.unicodeArrayName}++ ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.True}){}')() : ${JSFuck.Window}.eval(${forLoopFunctionName}()) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')() : []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')();
             `;
         }
 
@@ -118,15 +112,17 @@ export class UnicodeArrayDecodeNode extends Node {
                     })();
                 `, NO_CUSTOM_NODES_PRESET)}
               
-                var ${tempArrayName} = [];
+                var ${forLoopFunctionName} = function () {
+                    var ${tempArrayName} = [];
+                    
+                    for (var ${indexVariableName} in ${this.unicodeArrayName}) {
+                        ${tempArrayName}[${Utils.stringToUnicode('push')}](decodeURI(atob(${this.unicodeArrayName}[${indexVariableName}])));
+                    }
+                    
+                    ${this.unicodeArrayName} = ${tempArrayName};
+                };
                 
-                for (var ${indexVariableName} in ${this.unicodeArrayName}) {
-                    ${code}
-                
-                    ${tempArrayName}[${Utils.stringToUnicode('push')}](decodeURI(atob(${this.unicodeArrayName}[${indexVariableName}])));
-                }
-                
-                ${this.unicodeArrayName} = ${tempArrayName};
+                ${code}
             })();
         `);
 

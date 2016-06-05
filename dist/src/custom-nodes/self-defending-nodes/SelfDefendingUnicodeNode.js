@@ -1,6 +1,7 @@
 "use strict";
 const esprima = require('esprima');
 const AppendState_1 = require("../../enums/AppendState");
+const JSFuck_1 = require("../../enums/JSFuck");
 const NoCustomNodesPreset_1 = require("../../preset-options/NoCustomNodesPreset");
 const JavaScriptObfuscator_1 = require("../../JavaScriptObfuscator");
 const Node_1 = require('../Node');
@@ -26,11 +27,7 @@ class SelfDefendingUnicodeNode extends Node_1.Node {
                         return 'window';
                     };
                                                             
-                    if (
-                        !Function(${Utils_1.Utils.stringToUnicode(`return/(\\\\[x|u](\\w){2,4})+/`)})().test(func.toString())
-                    ) {
-                        []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(true){}')();
-                    }
+                    !Function(${Utils_1.Utils.stringToUnicode(`return/(\\\\[x|u](\\w){2,4})+/`)})().test(func.toString()) ? []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.True}){}')() : !!!!!![] ? []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.False}){}')() : []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.False}){}')();
                 })();
             `, NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET));
         NodeUtils_1.NodeUtils.addXVerbatimPropertyToLiterals(node);

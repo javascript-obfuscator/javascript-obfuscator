@@ -26,20 +26,13 @@ class UnicodeArrayDecodeNode extends Node_1.Node {
         return super.getNode();
     }
     getNodeStructure() {
-        const environmentName = Utils_1.Utils.getRandomVariableName(), indexVariableName = Utils_1.Utils.getRandomVariableName(), tempArrayName = Utils_1.Utils.getRandomVariableName();
+        const environmentName = Utils_1.Utils.getRandomVariableName(), forLoopFunctionName = Utils_1.Utils.getRandomVariableName(), indexVariableName = Utils_1.Utils.getRandomVariableName(), tempArrayName = Utils_1.Utils.getRandomVariableName();
         let code = '', node;
         if (this.options['selfDefending']) {
             code = `
                 var ${environmentName} = function(){return ${Utils_1.Utils.stringToUnicode('dev')};};
-                                        
-                if (
-                    ${indexVariableName} % ${Utils_1.Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0 &&
-                    Function(${Utils_1.Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})()[${Utils_1.Utils.stringToUnicode('test')}](
-                        ${environmentName}[${Utils_1.Utils.stringToUnicode('toString')}]()
-                    ) !== ${JSFuck_1.JSFuck.True} && ${indexVariableName}++
-                ) {
-                    continue;
-                }
+                   
+                Function(${Utils_1.Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})()[${Utils_1.Utils.stringToUnicode('test')}](${environmentName}[${Utils_1.Utils.stringToUnicode('toString')}]()) !== ${JSFuck_1.JSFuck.True} && !${this.unicodeArrayName}++ ? []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.True}){}')() : ${JSFuck_1.JSFuck.Window}.eval(${forLoopFunctionName}()) ? []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.False}){}')() : []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.False}){}')();
             `;
         }
         node = esprima.parse(`
@@ -65,15 +58,17 @@ class UnicodeArrayDecodeNode extends Node_1.Node {
                     })();
                 `, NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET)}
               
-                var ${tempArrayName} = [];
+                var ${forLoopFunctionName} = function () {
+                    var ${tempArrayName} = [];
+                    
+                    for (var ${indexVariableName} in ${this.unicodeArrayName}) {
+                        ${tempArrayName}[${Utils_1.Utils.stringToUnicode('push')}](decodeURI(atob(${this.unicodeArrayName}[${indexVariableName}])));
+                    }
+                    
+                    ${this.unicodeArrayName} = ${tempArrayName};
+                };
                 
-                for (var ${indexVariableName} in ${this.unicodeArrayName}) {
-                    ${code}
-                
-                    ${tempArrayName}[${Utils_1.Utils.stringToUnicode('push')}](decodeURI(atob(${this.unicodeArrayName}[${indexVariableName}])));
-                }
-                
-                ${this.unicodeArrayName} = ${tempArrayName};
+                ${code}
             })();
         `);
         NodeUtils_1.NodeUtils.addXVerbatimPropertyToLiterals(node);

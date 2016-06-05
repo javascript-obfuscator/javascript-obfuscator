@@ -6,6 +6,7 @@ import { IOptions } from "../../interfaces/IOptions";
 import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
 import { AppendState } from "../../enums/AppendState";
+import { JSFuck } from "../../enums/JSFuck";
 
 import { NO_CUSTOM_NODES_PRESET } from "../../preset-options/NoCustomNodesPreset";
 
@@ -54,11 +55,7 @@ export class SelfDefendingUnicodeNode extends Node {
                         return 'window';
                     };
                                                             
-                    if (
-                        !Function(${Utils.stringToUnicode(`return/(\\\\[x|u](\\w){2,4})+/`)})().test(func.toString())
-                    ) {
-                        []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(true){}')();
-                    }
+                    !Function(${Utils.stringToUnicode(`return/(\\\\[x|u](\\w){2,4})+/`)})().test(func.toString()) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.True}){}')() : !!!!!![] ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')() : []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')();
                 })();
             `, NO_CUSTOM_NODES_PRESET)
         );

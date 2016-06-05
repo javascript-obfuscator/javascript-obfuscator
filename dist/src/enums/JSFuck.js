@@ -1,5 +1,6 @@
 "use strict";
 exports.JSFuck = {
+    Window: '[]["filter"]["constructor"]("return this")()',
     False: '![]',
     True: '!![]',
     a: '(false+"")[1]',

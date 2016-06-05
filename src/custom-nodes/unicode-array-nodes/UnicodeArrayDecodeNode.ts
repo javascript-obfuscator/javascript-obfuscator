@@ -87,6 +87,8 @@ export class UnicodeArrayDecodeNode extends Node {
                    
                 Function(${Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})()[${Utils.stringToUnicode('test')}](${environmentName}[${Utils.stringToUnicode('toString')}]()) !== ${JSFuck.True} && !${this.unicodeArrayName}++ ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.True}){}')() : ${JSFuck.Window}.eval(${forLoopFunctionName}()) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')() : []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')();
             `;
+        } else {
+            code = `${forLoopFunctionName}();`;
         }
 
         node = esprima.parse(`

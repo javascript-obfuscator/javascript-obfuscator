@@ -35,6 +35,9 @@ class UnicodeArrayDecodeNode extends Node_1.Node {
                 Function(${Utils_1.Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})()[${Utils_1.Utils.stringToUnicode('test')}](${environmentName}[${Utils_1.Utils.stringToUnicode('toString')}]()) !== ${JSFuck_1.JSFuck.True} && !${this.unicodeArrayName}++ ? []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.True}){}')() : ${JSFuck_1.JSFuck.Window}.eval(${forLoopFunctionName}()) ? []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.False}){}')() : []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.False}){}')();
             `;
         }
+        else {
+            code = `${forLoopFunctionName}();`;
+        }
         node = esprima.parse(`
             (function () {
                 ${JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(`

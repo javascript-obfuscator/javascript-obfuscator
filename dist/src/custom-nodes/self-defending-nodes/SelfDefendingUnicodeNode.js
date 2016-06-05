@@ -23,7 +23,7 @@ class SelfDefendingUnicodeNode extends Node_1.Node {
     getNodeStructure() {
         let node = esprima.parse(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(`
                 (function () {                                
-                     var func = function(){return ${Utils_1.Utils.stringToUnicode('dev')};},
+                    var func = function(){return ${Utils_1.Utils.stringToUnicode('dev')};},
                         func2 = function () {
                             return 'window';
                         };

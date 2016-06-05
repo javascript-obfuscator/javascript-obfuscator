@@ -15,7 +15,7 @@ class SelfDefendingUnicodeNode extends Node_1.Node {
     appendNode(blockScopeNode) {
         let programBodyLength = blockScopeNode.body.length, randomIndex = 0;
         if (programBodyLength > 2) {
-            randomIndex = Utils_1.Utils.getRandomInteger(programBodyLength / 2, programBodyLength);
+            randomIndex = Utils_1.Utils.getRandomInteger(programBodyLength / 2, programBodyLength - 1);
         }
         NodeUtils_1.NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), randomIndex);
     }

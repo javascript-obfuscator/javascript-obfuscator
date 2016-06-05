@@ -37,7 +37,7 @@ export class SelfDefendingUnicodeNode extends Node {
             randomIndex: number = 0;
 
         if (programBodyLength > 2) {
-            randomIndex = Utils.getRandomInteger(programBodyLength / 2, programBodyLength);
+            randomIndex = Utils.getRandomInteger(programBodyLength / 2, programBodyLength - 1);
         }
 
         NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), randomIndex);

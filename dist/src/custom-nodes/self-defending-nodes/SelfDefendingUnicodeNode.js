@@ -23,11 +23,9 @@ class SelfDefendingUnicodeNode extends Node_1.Node {
     getNodeStructure() {
         let node = esprima.parse(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(`
                 (function () {                                
-                    var func = function () {
-                        return 'window';
-                    };
-                                                            
-                    !Function(${Utils_1.Utils.stringToUnicode(`return/(\\\\[x|u](\\w){2,4})+/`)})().test(func.toString()) ? []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.True}){}')() : !!!!!![] ? []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.False}){}')() : []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.False}){}')();
+                    var func = function(){return ${Utils_1.Utils.stringToUnicode('dev')};};
+                                        
+                    !Function(${Utils_1.Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})().test(func.toString()) ? []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.True}){}')() : !!!!!![] ? []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.False}){}')() : []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.False}){}')();
                 })();
             `, NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET));
         NodeUtils_1.NodeUtils.addXVerbatimPropertyToLiterals(node);

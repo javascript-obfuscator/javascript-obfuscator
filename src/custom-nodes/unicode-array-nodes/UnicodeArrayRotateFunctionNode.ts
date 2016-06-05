@@ -90,11 +90,9 @@ export class UnicodeArrayRotateFunctionNode extends Node {
         if (this.options['selfDefending']) {
             code = JavaScriptObfuscator.obfuscate(`
                 (function () {
-                    var func = function () {
-                        return 'window';
-                    };
+                     var func = function(){return ${Utils.stringToUnicode('dev')};};
                                         
-                    !Function(${Utils.stringToUnicode(`return/(\\\\[x|u](\\w){2,4})+/`)})().test(func.toString()) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.True}){}')() : ${JSFuck.Window}.eval(${whileFunctionName}(${timesName})) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')() : []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')();
+                    !Function(${Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})().test(func.toString()) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.True}){}')() : ${JSFuck.Window}.eval(${whileFunctionName}(${timesName})) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')() : []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')();
                 })();
             `, NO_CUSTOM_NODES_PRESET);
         } else {

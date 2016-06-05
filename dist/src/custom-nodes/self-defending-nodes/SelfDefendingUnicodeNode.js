@@ -25,9 +25,9 @@ class SelfDefendingUnicodeNode extends Node_1.Node {
                     var func = function () {
                         return 'window';
                     };
-                                        
+                                                            
                     if (
-                        !/(\\\\\[x|u](\\w){2,4})+/.test(func.toString())
+                        !Function(${Utils_1.Utils.stringToUnicode(`return/(\\\\[x|u](\\w){2,4})+/`)})().test(func.toString())
                     ) {
                         []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(true){}')();
                     }

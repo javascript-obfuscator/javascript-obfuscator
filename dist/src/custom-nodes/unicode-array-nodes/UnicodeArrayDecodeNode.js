@@ -34,7 +34,7 @@ class UnicodeArrayDecodeNode extends Node_1.Node {
                                         
                 if (
                     ${indexVariableName} % ${Utils_1.Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0 &&
-                    /\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/[${Utils_1.Utils.stringToUnicode('test')}](
+                    Function(${Utils_1.Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})()[${Utils_1.Utils.stringToUnicode('test')}](
                         ${environmentName}[${Utils_1.Utils.stringToUnicode('toString')}]()
                     ) !== ${JSFuck_1.JSFuck.True} && ${indexVariableName}++
                 ) {

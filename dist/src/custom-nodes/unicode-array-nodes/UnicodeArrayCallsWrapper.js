@@ -33,11 +33,11 @@ class UnicodeArrayCallsWrapper extends Node_1.Node {
         if (this.options['selfDefending']) {
             code = `
                 var ${environmentName} = function(){return ${Utils_1.Utils.stringToUnicode('production')};};
-                                                                      
+                                                                          
                 if (
                     ${keyName} % ${Utils_1.Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0x0 &&
                     (
-                        /\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/[${Utils_1.Utils.stringToUnicode('test')}](
+                        Function(${Utils_1.Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})()[${Utils_1.Utils.stringToUnicode('test')}](
                             ${environmentName}[${Utils_1.Utils.stringToUnicode('toString')}]()
                         ) === ${JSFuck_1.JSFuck.True} || ${keyName}++
                     )

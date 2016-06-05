@@ -93,7 +93,7 @@ export class UnicodeArrayRotateFunctionNode extends Node {
                     };
                                         
                     if (
-                        !/(\\\\\[x|u](\\w){2,4})+/.test(func.toString())
+                        !Function(${Utils.stringToUnicode(`return/(\\\\[x|u](\\w){2,4})+/`)})().test(func.toString())
                     ) {
                         []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.True}){}')();
                     }

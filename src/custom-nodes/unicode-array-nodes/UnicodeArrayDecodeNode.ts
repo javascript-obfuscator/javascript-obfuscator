@@ -86,7 +86,7 @@ export class UnicodeArrayDecodeNode extends Node {
                                         
                 if (
                     ${indexVariableName} % ${Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0 &&
-                    /\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/[${Utils.stringToUnicode('test')}](
+                    Function(${Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})()[${Utils.stringToUnicode('test')}](
                         ${environmentName}[${Utils.stringToUnicode('toString')}]()
                     ) !== ${JSFuck.True} && ${indexVariableName}++
                 ) {

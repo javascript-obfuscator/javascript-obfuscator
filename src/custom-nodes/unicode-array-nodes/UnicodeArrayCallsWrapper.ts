@@ -93,11 +93,11 @@ export class UnicodeArrayCallsWrapper extends Node {
         if (this.options['selfDefending']) {
             code = `
                 var ${environmentName} = function(){return ${Utils.stringToUnicode('production')};};
-                                                                      
+                                                                          
                 if (
                     ${keyName} % ${Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0x0 &&
                     (
-                        /\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/[${Utils.stringToUnicode('test')}](
+                        Function(${Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})()[${Utils.stringToUnicode('test')}](
                             ${environmentName}[${Utils.stringToUnicode('toString')}]()
                         ) === ${JSFuck.True} || ${keyName}++
                     )

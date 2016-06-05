@@ -6,7 +6,6 @@ import { IOptions } from "../../interfaces/IOptions";
 import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
 import { AppendState } from "../../enums/AppendState";
-import { JSFuck } from "../../enums/JSFuck";
 
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";

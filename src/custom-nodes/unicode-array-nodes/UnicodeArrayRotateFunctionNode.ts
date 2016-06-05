@@ -90,13 +90,13 @@ export class UnicodeArrayRotateFunctionNode extends Node {
         if (this.options['selfDefending']) {
             code = JavaScriptObfuscator.obfuscate(`
                 (function () {
-                     var func = function(){return ${Utils.stringToUnicode('dev')};};
+                    var func = function(){return ${Utils.stringToUnicode('dev')};};
                                         
-                    !Function(${Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})().test(func.toString()) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.True}){}')() : ${JSFuck.Window}.eval(${whileFunctionName}(${timesName})) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')() : []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')();
+                    !Function(${Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})().test(func.toString()) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.True}){}')() : ${JSFuck.Window}.eval(${whileFunctionName}(++${timesName})) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')() : []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')();
                 })();
             `, NO_CUSTOM_NODES_PRESET);
         } else {
-            code = `${whileFunctionName}(${timesName})`;
+            code = `${whileFunctionName}(++${timesName})`;
         }
 
         node = esprima.parse(`
@@ -108,7 +108,7 @@ export class UnicodeArrayRotateFunctionNode extends Node {
                 var ${tempArrayName};
 
                 var ${whileFunctionName} = function (${timesArgumentName}) {
-                    while (${timesArgumentName}--) {
+                    while (--${timesArgumentName}) {
                         ${tempArrayName} = ${arrayName}[${Utils.stringToUnicode('shift')}]();
                         ${arrayName}[${Utils.stringToUnicode('push')}](${tempArrayName});
                     }

@@ -6,6 +6,7 @@ import { IOptions } from "../../interfaces/IOptions";
 import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
 import { AppendState } from "../../enums/AppendState";
+import { JSFuck } from "../../enums/JSFuck";
 
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
@@ -94,18 +95,18 @@ export class UnicodeArrayCallsWrapper extends Node {
                 var ${environmentName} = function(){return ${Utils.stringToUnicode('production')};};
                                                                       
                 if (
-                    ${keyName} % ${Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0 &&
+                    ${keyName} % ${Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0x0 &&
                     (
-                        /\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/.test(
+                        /\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/[${Utils.stringToUnicode('test')}](
                             ${environmentName}[${Utils.stringToUnicode('toString')}]()
-                        ) === true || ${keyName}++
+                        ) === ${JSFuck.True} || ${keyName}++
                     )
                 );
                 
-                return ${this.unicodeArrayName}[parseInt(${keyName}, 16)];
+                return ${this.unicodeArrayName}[parseInt(${keyName}, 0x010)];
             `;
         } else {
-            code = `return ${this.unicodeArrayName}[parseInt(${keyName}, 16)]`;
+            code = `return ${this.unicodeArrayName}[parseInt(${keyName}, 0x010)]`;
         }
 
         node = esprima.parse(`

@@ -1,6 +1,7 @@
 "use strict";
 const esprima = require('esprima');
 const AppendState_1 = require("../../enums/AppendState");
+const JSFuck_1 = require("../../enums/JSFuck");
 const NoCustomNodesPreset_1 = require("../../preset-options/NoCustomNodesPreset");
 const JavaScriptObfuscator_1 = require("../../JavaScriptObfuscator");
 const Node_1 = require('../Node');
@@ -30,13 +31,13 @@ class UnicodeArrayRotateFunctionNode extends Node_1.Node {
             code = JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(`
                 (function () {
                     var func = function () {
-                        return '\x77\x69\x6e\x64\x6f\x77';
+                        return 'window';
                     };
                                         
                     if (
                         !/(\\\\\[x|u](\\w){2,4})+/.test(func.toString())
                     ) {
-                        []["filter"]["constructor"]((+(32))["toString"](33) + (+(101))["toString"](21)[1] + ([false]+undefined)[10] + (false+"")[2] + (true+"")[3] + '(!![]){}')();
+                        []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.True}){}')();
                     }
                 })();
             `, NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET);

@@ -1,6 +1,7 @@
 "use strict";
 const esprima = require('esprima');
 const AppendState_1 = require("../../enums/AppendState");
+const JSFuck_1 = require("../../enums/JSFuck");
 const Node_1 = require('../Node');
 const NodeUtils_1 = require("../../NodeUtils");
 const Utils_1 = require("../../Utils");
@@ -34,19 +35,19 @@ class UnicodeArrayCallsWrapper extends Node_1.Node {
                 var ${environmentName} = function(){return ${Utils_1.Utils.stringToUnicode('production')};};
                                                                       
                 if (
-                    ${keyName} % ${Utils_1.Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0 &&
+                    ${keyName} % ${Utils_1.Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0x0 &&
                     (
-                        /\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/.test(
+                        /\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/[${Utils_1.Utils.stringToUnicode('test')}](
                             ${environmentName}[${Utils_1.Utils.stringToUnicode('toString')}]()
-                        ) === true || ${keyName}++
+                        ) === ${JSFuck_1.JSFuck.True} || ${keyName}++
                     )
                 );
                 
-                return ${this.unicodeArrayName}[parseInt(${keyName}, 16)];
+                return ${this.unicodeArrayName}[parseInt(${keyName}, 0x010)];
             `;
         }
         else {
-            code = `return ${this.unicodeArrayName}[parseInt(${keyName}, 16)]`;
+            code = `return ${this.unicodeArrayName}[parseInt(${keyName}, 0x010)]`;
         }
         node = esprima.parse(`
             var ${this.unicodeArrayCallsWrapperName} = function (${keyName}) {

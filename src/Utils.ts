@@ -1,3 +1,5 @@
+import { JSFuck } from './enums/JSFuck';
+
 export class Utils {
     /**
      * @type {RegExp}
@@ -90,6 +92,19 @@ export class Utils {
      */
     public static strEnumify <T extends {[prop: string]: ''|string}> (obj: T): T {
         return obj;
+    }
+
+    /**
+     * @param string
+     * @returns {string}
+     */
+    public static stringToJSFuck (string: string): string {
+        return Array
+            .from(string)
+            .map((character: string): string => {
+                return JSFuck[character] || character;
+            })
+            .join(' + ');
     }
 
     /**

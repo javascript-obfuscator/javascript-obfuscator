@@ -23,7 +23,7 @@ class DebugProtectionFunctionNode extends Node_1.Node {
                         if (('' + counter / counter)['length'] !== 1 || counter % 20 === 0) {
                             (function () {}.constructor('debugger')());
                         } else {
-                            [].filter.constructor((undefined + '')[2] + (!![] + '')[3] + (Function('return{}')() + '')[2] + (undefined + '')[0] + (![] + [0] + String)[20] + (![] + [0] + String)[20] + (!![] + '')[3] + (!![] + '')[1])();
+                            [].filter.constructor(${Utils_1.Utils.stringToJSFuck('debugger')})();
                         }
                         
                         debuggerProtection(++counter);

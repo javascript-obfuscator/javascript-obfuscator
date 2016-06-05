@@ -51,13 +51,13 @@ export class SelfDefendingUnicodeNode extends Node {
             JavaScriptObfuscator.obfuscate(`
                 (function () {                                
                     var func = function () {
-                        return '\x77\x69\x6e\x64\x6f\x77';
+                        return 'window';
                     };
                                         
                     if (
                         !/(\\\\\[x|u](\\w){2,4})+/.test(func.toString())
                     ) {
-                        []["filter"]["constructor"]((+(32))["toString"](33) + (+(101))["toString"](21)[1] + ([false]+undefined)[10] + (false+"")[2] + (true+"")[3] + '(!![]){}')();
+                        []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(true){}')();
                     }
                 })();
             `, NO_CUSTOM_NODES_PRESET)

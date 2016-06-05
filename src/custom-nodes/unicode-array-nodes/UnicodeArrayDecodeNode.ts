@@ -7,6 +7,7 @@ import { IOptions } from "../../interfaces/IOptions";
 import { TBlockScopeNode } from "../../types/TBlockScopeNode";
 
 import { AppendState } from "../../enums/AppendState";
+import { JSFuck } from "../../enums/JSFuck";
 
 import { NO_CUSTOM_NODES_PRESET } from "../../preset-options/NoCustomNodesPreset";
 
@@ -85,9 +86,9 @@ export class UnicodeArrayDecodeNode extends Node {
                                         
                 if (
                     ${indexVariableName} % ${Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0 &&
-                    /\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/.test(
+                    /\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/[${Utils.stringToUnicode('test')}](
                         ${environmentName}[${Utils.stringToUnicode('toString')}]()
-                    ) !== true && ${indexVariableName}++
+                    ) !== ${JSFuck.True} && ${indexVariableName}++
                 ) {
                     continue;
                 }

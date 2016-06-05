@@ -2,6 +2,7 @@
 const esprima = require('esprima');
 const JavaScriptObfuscator_1 = require('../../JavaScriptObfuscator');
 const AppendState_1 = require("../../enums/AppendState");
+const JSFuck_1 = require("../../enums/JSFuck");
 const NoCustomNodesPreset_1 = require("../../preset-options/NoCustomNodesPreset");
 const Node_1 = require('../Node');
 const NodeUtils_1 = require("../../NodeUtils");
@@ -33,9 +34,9 @@ class UnicodeArrayDecodeNode extends Node_1.Node {
                                         
                 if (
                     ${indexVariableName} % ${Utils_1.Utils.getRandomInteger(this.unicodeArray.length / 8, this.unicodeArray.length / 2)} === 0 &&
-                    /\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/.test(
+                    /\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/[${Utils_1.Utils.stringToUnicode('test')}](
                         ${environmentName}[${Utils_1.Utils.stringToUnicode('toString')}]()
-                    ) !== true && ${indexVariableName}++
+                    ) !== ${JSFuck_1.JSFuck.True} && ${indexVariableName}++
                 ) {
                     continue;
                 }

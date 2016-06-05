@@ -29,6 +29,7 @@ OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS = {
     encodeUnicodeLiterals: false,
     rotateUnicodeArray: false,
     unicodeArray: false,
+    unicodeArrayThreshold: 0,
     wrapUnicodeArrayCalls: false
 };
 OptionsNormalizer.SELF_DEFENDING_OPTIONS = {

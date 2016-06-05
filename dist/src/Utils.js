@@ -1,4 +1,5 @@
 "use strict";
+const JSFuck_1 = require('./enums/JSFuck');
 class Utils {
     static arrayContains(array, searchElement) {
         return array.indexOf(searchElement) >= 0;
@@ -39,6 +40,14 @@ class Utils {
     }
     static strEnumify(obj) {
         return obj;
+    }
+    static stringToJSFuck(string) {
+        return Array
+            .from(string)
+            .map((character) => {
+            return JSFuck_1.JSFuck[character] || character;
+        })
+            .join(' + ');
     }
     static stringToUnicode(string) {
         const radix = 16;

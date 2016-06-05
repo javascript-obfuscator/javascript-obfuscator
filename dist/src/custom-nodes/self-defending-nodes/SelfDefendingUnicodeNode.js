@@ -15,7 +15,7 @@ class SelfDefendingUnicodeNode extends Node_1.Node {
     appendNode(blockScopeNode) {
         let programBodyLength = blockScopeNode.body.length, randomIndex = 0;
         if (programBodyLength > 2) {
-            randomIndex = Utils_1.Utils.getRandomInteger(programBodyLength, programBodyLength / 2);
+            randomIndex = Utils_1.Utils.getRandomInteger(programBodyLength / 2, programBodyLength);
         }
         NodeUtils_1.NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), randomIndex);
     }
@@ -23,13 +23,13 @@ class SelfDefendingUnicodeNode extends Node_1.Node {
         let node = esprima.parse(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(`
                 (function () {                                
                     var func = function () {
-                        return '\x77\x69\x6e\x64\x6f\x77';
+                        return 'window';
                     };
                                         
                     if (
                         !/(\\\\\[x|u](\\w){2,4})+/.test(func.toString())
                     ) {
-                        []["filter"]["constructor"]((+(32))["toString"](33) + (+(101))["toString"](21)[1] + ([false]+undefined)[10] + (false+"")[2] + (true+"")[3] + '(!![]){}')();
+                        []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(true){}')();
                     }
                 })();
             `, NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET));

@@ -91,11 +91,7 @@ Type: `boolean` Default: `true`
 
 Disable `console.log`, `console.info`, `console.error` and `console.warn` messages output into browser console.
 
-<<<<<<< 41c75087f34cab1a2645295c9eef76444d463315
-####encodeUnicodeLiterals
-=======
 #### `encodeUnicodeLiterals`
->>>>>>> readme improvements
 Type: `boolean` Default: `false`
 
 ##### :warning: `unicodeArray` option must be enabled

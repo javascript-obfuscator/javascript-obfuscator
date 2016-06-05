@@ -51,7 +51,7 @@ export class SelfDefendingUnicodeNode extends Node {
         let node: INode = esprima.parse(
             JavaScriptObfuscator.obfuscate(`
                 (function () {                                
-                     var func = function(){return ${Utils.stringToUnicode('dev')};},
+                    var func = function(){return ${Utils.stringToUnicode('dev')};},
                         func2 = function () {
                             return 'window';
                         };

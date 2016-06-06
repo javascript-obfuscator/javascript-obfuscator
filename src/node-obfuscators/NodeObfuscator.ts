@@ -101,7 +101,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
             replaceByUnicodeArrayFlag: boolean = Math.random() <= this.options['unicodeArrayThreshold'];
 
         if (this.options['encodeUnicodeLiterals'] && replaceByUnicodeArrayFlag) {
-            value = new Buffer(encodeURI(value)).toString('base64');
+            value = Utils.btoa(value);
         }
 
         value = Utils.stringToUnicode(value);

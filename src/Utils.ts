@@ -43,6 +43,13 @@ export class Utils {
     }
 
     /**
+     * @param string
+     */
+    public static btoa (string: string): string {
+        return new Buffer(encodeURI(string)).toString('base64');
+    }
+
+    /**
      * @param dec
      * @returns {string}
      */

@@ -21,6 +21,9 @@ class Utils {
         }
         return newArray;
     }
+    static btoa(string) {
+        return new Buffer(encodeURI(string)).toString('base64');
+    }
     static decToHex(dec) {
         const decToHexSliceValue = -6, exponent = 6, radix = 16;
         return (dec + Math.pow(radix, exponent))

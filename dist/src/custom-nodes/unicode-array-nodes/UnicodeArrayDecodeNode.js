@@ -32,7 +32,7 @@ class UnicodeArrayDecodeNode extends Node_1.Node {
             code = `
                 var ${environmentName} = function(){return ${Utils_1.Utils.stringToUnicode('dev')};};
                    
-                Function(${Utils_1.Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})()[${Utils_1.Utils.stringToUnicode('test')}](${environmentName}[${Utils_1.Utils.stringToUnicode('toString')}]()) !== ${JSFuck_1.JSFuck.True} && !${this.unicodeArrayName}++ ? []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.True}){}')() : ${JSFuck_1.JSFuck.Window}.eval(${forLoopFunctionName}()) ? []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.False}){}')() : []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.False}){}')();
+                Function(${Utils_1.Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})()[${Utils_1.Utils.stringToUnicode('test')}](${environmentName}[${Utils_1.Utils.stringToUnicode('toString')}]()) !== ${JSFuck_1.JSFuck.True} && !${this.unicodeArrayName}++ ? []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.True}){}')() : []["filter"]["constructor"](${forLoopFunctionName}())() ? []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.False}){}')() : []['filter']['constructor'](${Utils_1.Utils.stringToJSFuck('while')} + '(${JSFuck_1.JSFuck.False}){}')();
             `;
         }
         else {

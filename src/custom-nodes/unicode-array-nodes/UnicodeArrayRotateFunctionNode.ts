@@ -83,7 +83,6 @@ export class UnicodeArrayRotateFunctionNode extends Node {
             code: string = '',
             timesName: string = Utils.getRandomVariableName(),
             timesArgumentName: string = Utils.getRandomVariableName(),
-            tempArrayName: string = Utils.getRandomVariableName(),
             whileFunctionName: string = Utils.getRandomVariableName(),
             node: INode;
 
@@ -101,16 +100,9 @@ export class UnicodeArrayRotateFunctionNode extends Node {
 
         node = esprima.parse(`
             (function (${arrayName}, ${timesName}) {
-                if (${timesName} < 0x${Utils.decToHex(0)}) {
-                    return;
-                }
-
-                var ${tempArrayName};
-
                 var ${whileFunctionName} = function (${timesArgumentName}) {
                     while (--${timesArgumentName}) {
-                        ${tempArrayName} = ${arrayName}[${Utils.stringToUnicode('shift')}]();
-                        ${arrayName}[${Utils.stringToUnicode('push')}](${tempArrayName});
+                        ${arrayName}[${Utils.stringToUnicode('push')}](${arrayName}[${Utils.stringToUnicode('shift')}]());
                     }
                 };
                 

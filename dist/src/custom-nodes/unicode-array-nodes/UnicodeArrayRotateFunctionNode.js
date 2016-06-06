@@ -26,7 +26,7 @@ class UnicodeArrayRotateFunctionNode extends Node_1.Node {
         return super.getNode();
     }
     getNodeStructure() {
-        let arrayName = Utils_1.Utils.getRandomVariableName(), code = '', timesName = Utils_1.Utils.getRandomVariableName(), timesArgumentName = Utils_1.Utils.getRandomVariableName(), tempArrayName = Utils_1.Utils.getRandomVariableName(), whileFunctionName = Utils_1.Utils.getRandomVariableName(), node;
+        let arrayName = Utils_1.Utils.getRandomVariableName(), code = '', timesName = Utils_1.Utils.getRandomVariableName(), timesArgumentName = Utils_1.Utils.getRandomVariableName(), whileFunctionName = Utils_1.Utils.getRandomVariableName(), node;
         if (this.options['selfDefending']) {
             code = JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(`
                 (function () {
@@ -41,16 +41,9 @@ class UnicodeArrayRotateFunctionNode extends Node_1.Node {
         }
         node = esprima.parse(`
             (function (${arrayName}, ${timesName}) {
-                if (${timesName} < 0x${Utils_1.Utils.decToHex(0)}) {
-                    return;
-                }
-
-                var ${tempArrayName};
-
                 var ${whileFunctionName} = function (${timesArgumentName}) {
                     while (--${timesArgumentName}) {
-                        ${tempArrayName} = ${arrayName}[${Utils_1.Utils.stringToUnicode('shift')}]();
-                        ${arrayName}[${Utils_1.Utils.stringToUnicode('push')}](${tempArrayName});
+                        ${arrayName}[${Utils_1.Utils.stringToUnicode('push')}](${arrayName}[${Utils_1.Utils.stringToUnicode('shift')}]());
                     }
                 };
                 

@@ -20,10 +20,14 @@
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",
+    "babel-loader": "^6.2.4",
     "babel-polyfill": "^6.9.1",
     "babel-preset-es2015": "^6.9.0",
     "lite-server": "^1.3.1",
-    "typings": "^0.8.1"
+    "ts-loader": "^0.8.2",
+    "typings": "^0.8.1",
+    "webpack": "^1.13.1",
+    "webpack-node-externals": "^1.2.0"
   },
   "repository": {
     "type": "git",
@@ -32,9 +36,10 @@
   "scripts": {
     "tsc": "tsc",
     "tsc:w": "tsc -w",
+    "webpack": "node_modules/.bin/webpack",
     "lite": "lite-server",
     "start": "concurrent \"npm run tsc:w\" \"npm run lite\" ",
-    "tests": "node dist/tests/dev-test.js"
+    "tests": "node dist/tests/test-bundle.js"
   },
   "author": {
     "name": "sanex3339"

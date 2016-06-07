@@ -1,5 +1,6 @@
 "use strict";
-const Utils_1 = require("../Utils");
+
+var Utils_1 = require("../Utils");
 exports.NodeType = Utils_1.Utils.strEnumify({
     ArrayExpression: 'ArrayExpression',
     ArrowFunctionExpression: 'ArrowFunctionExpression',

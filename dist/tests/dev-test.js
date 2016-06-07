@@ -1,52 +1,7 @@
 "use strict";
-const JavaScriptObfuscator_1 = require('../src/JavaScriptObfuscator');
-let obfuscatedCode = JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(`
-    (function(){
-        var result = 1,
-            term1 = 0,
-            term2 = 1,
-            i = 1;
-        while(i < 10)
-        {
-            var test = 10;
-            result = term1 + term2;
-            console.log(result);
-            term1 = term2;
-            term2 = result;
-            i++;
-        }
 
-        console.log(test);
-        
-        var test = function (test) {
-            console.log(test);
-            
-            if (true) {
-                var test = 5
-            }
-            
-            return test;
-        }
-        
-        console.log(test(1));
-        
-        function test2 (abc) {
-            function test1 () {
-              console.log('inside', abc.item);
-            }
-            
-            console.log('тест', abc);
-            
-            var abc = {};
-            
-            return abc.item = 15, test1();
-        };
-        
-        test2(22);
-        console.log(105.4);
-        console.log(true, false);
-    })();
-    `, {
+var JavaScriptObfuscator_1 = require('../src/JavaScriptObfuscator');
+var obfuscatedCode = JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate("\n    (function(){\n        var result = 1,\n            term1 = 0,\n            term2 = 1,\n            i = 1;\n        while(i < 10)\n        {\n            var test = 10;\n            result = term1 + term2;\n            console.log(result);\n            term1 = term2;\n            term2 = result;\n            i++;\n        }\n\n        console.log(test);\n        \n        var test = function (test) {\n            console.log(test);\n            \n            if (true) {\n                var test = 5\n            }\n            \n            return test;\n        }\n        \n        console.log(test(1));\n        \n        function test2 (abc) {\n            function test1 () {\n              console.log('inside', abc.item);\n            }\n            \n            console.log('тест', abc);\n            \n            var abc = {};\n            \n            return abc.item = 15, test1();\n        };\n        \n        test2(22);\n        console.log(105.4);\n        console.log(true, false);\n    })();\n    ", {
     disableConsoleOutput: false,
     encodeUnicodeLiterals: true
 });

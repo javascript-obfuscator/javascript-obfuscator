@@ -1,4 +1,5 @@
 "use strict";
+
 exports.JSFuck = {
     Window: '[]["filter"]["constructor"]("return this")()',
     False: '![]',
@@ -36,23 +37,23 @@ exports.JSFuck = {
     E: '(RegExp+"")[12]',
     F: '(+[]+Function)[10]',
     G: '(false+Function("return Date")()())[30]',
-    H: `'H'`,
+    H: '\'H\'',
     I: '(Infinity+"")[0]',
-    J: `'J'`,
-    K: `'K'`,
-    L: `'L'`,
+    J: '\'J\'',
+    K: '\'K\'',
+    L: '\'L\'',
     M: '(true+Function("return Date")()())[30]',
     N: '(NaN+"")[0]',
     O: '(NaN+Function("return{}")())[11]',
-    P: `'P'`,
-    Q: `'Q'`,
+    P: '\'P\'',
+    Q: '\'Q\'',
     R: '(+[]+RegExp)[10]',
     S: '(+[]+String)[10]',
     T: '(NaN+Function("return Date")()())[30]',
     U: '(NaN+Function("return{}")()["to"+String["name"]]["call"]())[11]',
-    V: `'V'`,
-    W: `'W'`,
-    X: `'X'`,
-    Y: `'Y'`,
-    Z: `'Z'`
+    V: '\'V\'',
+    W: '\'W\'',
+    X: '\'X\'',
+    Y: '\'Y\'',
+    Z: '\'Z\''
 };

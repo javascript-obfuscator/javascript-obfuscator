@@ -1,4 +1,5 @@
 "use strict";
+
 exports.DEFAULT_PRESET = Object.freeze({
     compact: true,
     debugProtection: false,

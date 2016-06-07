@@ -1,17 +1,17 @@
-#JavaScript obfuscator for Node.js
+# JavaScript obfuscator for Node.js
 
-JavaScript obfuscator for Node.js and free alternative to [js-obfuscator](https://github.com/caiguanhao/js-obfuscator) (which uses [javascriptobfuscator.com](https://javascriptobfuscator.com/Javascript-Obfuscator.aspx)) without any limits and sending data on server.
+JavaScript obfuscator for Node.js is a free alternative of [js-obfuscator](https://github.com/caiguanhao/js-obfuscator) (which uses [javascriptobfuscator.com](https://javascriptobfuscator.com/Javascript-Obfuscator.aspx)) without any limits and sending data to a server.
 Compatible with ES6.
 Tested on Angular2 bundle.
 https://gist.github.com/sanex3339/ffc2876123b52e6d11ce45369fd53acf
 
-###Installation
+## Installation
 
-Install the package with NPM and add it to your devDependencies:
+Install the package with NPM and add it to your `devDependencies`:
 
 `npm install --save-dev javascript-obfuscator`
 
-###Usage:
+## Usage
 
 ```javascript
 var JavaScriptObfuscator = require('javascript-obfuscator');
@@ -41,14 +41,14 @@ var _0xabf1 = [
 */
 ```
 
-## obfuscate(sourceCode, options)
+## `obfuscate(sourceCode, options)`
 
-###sourceCode
+#### `sourceCode`
 Type: `string` Default: `null`
 
-Any valid SourceCode
+Any valid SourceCode.
 
-###options
+#### `options`
 Type: `Object` Default: `null`
 
 Options for JavaScript obfuscator:
@@ -60,48 +60,48 @@ Options for JavaScript obfuscator:
 }
 ```
 
-###Available options
-####compact
+### Available options
+#### `compact`
 Type: `boolean` Default: `true`
 
 Compact code output into one line.
 
-####debugProtection
+#### `debugProtection`
 Type: `boolean` Default: `false`
 
-#####This option can cause browser freeze if Developer Tools are enabled! Use it at your own risk.
+##### :warning: This option can cause browser freeze while Developer Tools is enabled! Use at own risk.
 
-Force enable debug mode in some browsers (mainly based on WebKit) on page load, if Developer Tools panel is enabled.
-With this option enabled, using of Debug panel is impossible.
+Force enable debug mode in some browsers (mainly based on WebKit) on page load if Developer Tools panel is enabled.
+With this options using of Debug panel is impossible.
 
-WebKit based browsers: blocking site window, but you still can navigate through Developers Tools panel.
-Firefox: *not* blocking site window, but you still can't use Debug panel.
+WebKit-based browsers: blocks the site window, but you still can navigate through Developer Tools panel.
+Firefox: does *not* block the site window, but you still can't use Debug panel.
 
-####debugProtectionInterval
+#### `debugProtectionInterval`
 Type: `boolean` Default: `false`
 
-#####This option can cause browser freeze even if Developer Tools are disabled! Use it at your own risk.
+##### :warning: This option can cause browser freeze even while Developer Tools is disabled! Use at own risk.
 
 Works if `debugProtection` is enabled.
 
-Force enable debug mode in some browsers (mainly based on WebKit) when Developers Tools panel was enabled, even after page was loaded.
+Force enable debug mode in some browsers (mainly based on WebKit) when Developer Tools panel was enabled, even after page was loaded.
 
-####disableConsoleOutput
+#### `disableConsoleOutput`
 Type: `boolean` Default: `true`
 
 Disable `console.log`, `console.info`, `console.error` and `console.warn` messages output into browser console.
 
-####encodeUnicodeLiterals
+#### `encodeUnicodeLiterals`
 Type: `boolean` Default: `false`
 
-#####`unicodeArray` option must be enabled
+##### :warning: `unicodeArray` option must be enabled
 
 This option can slightly slowdown your code speed.
 
 All literals in unicode array becomes encoded in Base64.
 To decode strings, special function will be inserted on page under `unicodeArray` node.
 
-####reservedNames
+#### `reservedNames`
 Type: `string[]` Default: `[]`
 
 Disable obfuscation of variable names, function names and names of function parameters that match with given RegExp pattern.
@@ -116,37 +116,37 @@ Example:
 	}
 ```
 
-####rotateUnicodeArray
+#### `rotateUnicodeArray`
 Type: `boolean` Default: `true`
 
-#####`unicodeArray` option must be enabled
+##### :warning: `unicodeArray` option must be enabled
 
 This option will rotate all values inside `unicodeArray` on a random value during obfuscation of code, and insert inside source code helper function
 which will rotate array values back to their original indexes.
 
-This option affects only a visual code organisation, because we can easily get original array during debug process.
+Keep in mind that this option affects only how the code is visually organised, since the original arrays can be easily accessed during the debug process.
 
-Usage is not recommended for a small source code, because helper function will attract attention.
+It is also not recommended to enable `rotateUnicodeArray` for small source code, because a helper function might attract attention.
 
-####unicodeArray
+#### `unicodeArray`
 Type: `boolean` Default: `true`
 
 Put all literal strings into array and replace every literal string by array call.
 
-####unicodeArrayThreshold
+#### unicodeArrayThreshold
 Type: `number` Default: `0.8` Min: `0` Max: `1`
 
-#####`unicodeArray` option must be enabled
+##### :warning: `unicodeArray` option must be enabled
 
 Probability that the literal string will inserted into `unicodeArray`.
 Use this option for huge source code size, because many calls to `unicodeArray` will slowdown code performance.
 
 Value `0` is equals `unicodeArray: false`.
 
-####wrapUnicodeArrayCalls
+#### `wrapUnicodeArrayCalls`
 Type: `boolean` Default: `true`
 
-#####`unicodeArray` option must be enabled
+##### :warning: `unicodeArray` option must be enabled
 
 Instead using direct calls to `unicodeArray` items `var t = _0x43a123[0x0]`, 
 when index `0x0` can be easily reverted to `0` with few js beautifiers, this option will wrap all calls to special function instead.

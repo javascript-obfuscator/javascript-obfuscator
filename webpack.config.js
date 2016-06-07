@@ -1,10 +1,8 @@
-var nodeExternals = require('webpack-node-externals'),
-    webpack = require("webpack");
+var nodeExternals = require('webpack-node-externals');
 
 module.exports = {
     entry: {
-        'index': './index.ts',
-        'tests/test-bundle': './tests/dev-test.ts'
+        'index': './index.ts'
     },
     target: 'node',
     externals: [nodeExternals()],

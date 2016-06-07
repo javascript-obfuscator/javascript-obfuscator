@@ -26,7 +26,7 @@
     "lite-server": "^1.3.1",
     "ts-loader": "^0.8.2",
     "typings": "^0.8.1",
-    "webpack": "^1.13.1",
+    "webpack": "^2.1.0-beta.12",
     "webpack-node-externals": "^1.2.0"
   },
   "repository": {
@@ -40,7 +40,7 @@
     "watch": "node_modules/.bin/webpack --watch",
     "lite": "lite-server",
     "start": "concurrent \"npm run tsc:w\" \"npm run lite\" ",
-    "tests": "node dist/tests/test-bundle.js"
+    "tests": "node tests/dev-test.js"
   },
   "author": {
     "name": "sanex3339"

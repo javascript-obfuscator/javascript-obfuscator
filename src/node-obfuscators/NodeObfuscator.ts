@@ -41,7 +41,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      */
     protected isReservedName (name: string): boolean {
         return this.options['reservedNames'].some((reservedName: string) => {
-            return reservedName === name;
+            return new RegExp(reservedName, 'g').test(name);
         });
     }
 

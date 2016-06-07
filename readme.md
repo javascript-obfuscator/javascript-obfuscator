@@ -104,7 +104,17 @@ To decode strings, special function will be inserted on page under `unicodeArray
 ####reservedNames
 Type: `string[]` Default: `[]`
 
-Disable obfuscation of given variable names, function names and names of function parameters.
+Disable obfuscation of variable names, function names and names of function parameters that match with given RegExp pattern.
+
+Example:
+```javascript
+	{
+		reservedNames: [
+			'^someVariable',
+			'functionParameter_\d'
+		]
+	}
+```
 
 ####rotateUnicodeArray
 Type: `boolean` Default: `true`

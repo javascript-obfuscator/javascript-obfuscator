@@ -9,7 +9,7 @@ class NodeObfuscator {
     }
     isReservedName(name) {
         return this.options['reservedNames'].some((reservedName) => {
-            return reservedName === name;
+            return new RegExp(reservedName, 'g').test(name);
         });
     }
     replaceNodeIdentifierByNewValue(node, parentNode, namesMap) {

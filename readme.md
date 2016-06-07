@@ -1,5 +1,7 @@
 #JavaScript obfuscator for Node.js
 
+##Required Node.js v6.0.0+
+
 JavaScript obfuscator for Node.js and free alternative to [js-obfuscator](https://github.com/caiguanhao/js-obfuscator) (which uses [javascriptobfuscator.com](https://javascriptobfuscator.com/Javascript-Obfuscator.aspx)) without any limits and sending data on server.
 Compatible with ES6.
 Tested on Angular2 bundle.

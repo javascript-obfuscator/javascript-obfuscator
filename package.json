@@ -37,6 +37,7 @@
     "tsc": "tsc",
     "tsc:w": "tsc -w",
     "webpack": "node_modules/.bin/webpack",
+    "watch": "node_modules/.bin/webpack --watch",
     "lite": "lite-server",
     "start": "concurrent \"npm run tsc:w\" \"npm run lite\" ",
     "tests": "node dist/tests/test-bundle.js"

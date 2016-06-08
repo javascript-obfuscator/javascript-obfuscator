@@ -50,26 +50,44 @@ var _0xabf1 = [
 
 ## `obfuscate(sourceCode, options)`
 
-This is the main function that runs the Obfuscator. 
+This is the main function that runs the Obfuscator. It takes two parameters, `sourceCode` and `options` – the source code and the opitons respectively:
 
-#### `sourceCode`
-Type: `string` Default: `null`
+* `sourceCode` (`string`, default: `null`) – any valid source code, passed as a string variable. JS Obfuscator will parse this string and apply a set of modificating functions to it, generating a string with the new (obfuscated) code and printing it to the console;
+* `options` (`Object`, default: `null`) – an object literal.
 
-Any valid source code.
+## JavaScript Obfuscator Options
 
-#### `options`
-Type: `Object` Default: `null`
-
-Options for the JavaScript obfuscator:
+At this moment of time, there are following options (`name: default`) available for the JS Obfuscator:
 
 ```javascript
 {
-    rotateUnicodeArray: true
-    // ...
+    compact: true,
+    debugProtection: false,
+    debugProtectionInterval: false,
+    disableConsoleOutput: true,
+    encodeUnicodeLiterals: false,
+    reservedNames: [],
+    rotateUnicodeArray: true,
+    selfDefending: true,
+    unicodeArray: true,
+    unicodeArrayThreshold: 0.8,
+    wrapUnicodeArrayCalls: true
 }
 ```
 
-### Available options
+* `compact` (default `true`): output code on one line,
+* `debugProtection` (default `false`): force load debug mode 
+* `debugProtectionInterval` (default `false`):
+* `disableConsoleOutput` (default `true`):
+* `encodeUnicodeLiterals` (default `false`):
+* `reservedNames` (default `[]`):
+* `rotateUnicodeArray` (default `true`):
+* `selfDefending` (default `true`):
+* `unicodeArray` (default `true`):
+* `unicodeArrayThreshold` (default `0.8`):
+* `wrapUnicodeArrayCalls` (default `true`):
+
+
 #### `compact`
 Type: `boolean` Default: `true`
 

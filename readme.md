@@ -18,6 +18,8 @@ $ npm install --save-dev javascript-obfuscator
 
 ## Usage
 
+Here's an example of how to use it:
+
 ```javascript
 var JavaScriptObfuscator = require('javascript-obfuscator');
 
@@ -48,6 +50,8 @@ var _0xabf1 = [
 
 ## `obfuscate(sourceCode, options)`
 
+This is the main function that runs the Obfuscator. 
+
 #### `sourceCode`
 Type: `string` Default: `null`
 
@@ -69,7 +73,7 @@ Options for the JavaScript obfuscator:
 #### `compact`
 Type: `boolean` Default: `true`
 
-Compact code output one one line.
+Compact code output on one line.
 
 #### `debugProtection`
 Type: `boolean` Default: `false`

@@ -64,13 +64,10 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
      * @param variableParentNode
      */
     private replaceVariableCalls (variableDeclarationNode: IVariableDeclarationNode, variableParentNode: INode): void {
-        let scopeNode: INode;
-
-        scopeNode = variableDeclarationNode.kind === 'var' ? NodeUtils.getBlockScopeOfNode(
-            variableDeclarationNode
-        ) : variableParentNode;
-
-        let isNodeAfterVariableDeclaratorFlag: boolean = false;
+        let scopeNode: INode = variableDeclarationNode.kind === 'var' ? NodeUtils.getBlockScopeOfNode(
+                variableDeclarationNode
+            ) : variableParentNode,
+            isNodeAfterVariableDeclaratorFlag: boolean = false;
 
         estraverse.replace(scopeNode, {
             enter: (node: INode, parentNode: INode): any => {

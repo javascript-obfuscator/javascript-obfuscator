@@ -37,18 +37,6 @@ module.exports =
 /******/ 	// identity function for calling harmory imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 
-/******/ 	// define getter function for harmory exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
-/******/ 	};
-
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
 
@@ -2366,9 +2354,8 @@ module.exports =
 	        value: function replaceVariableCalls(variableDeclarationNode, variableParentNode) {
 	            var _this3 = this;
 
-	            var scopeNode = void 0;
-	            scopeNode = variableDeclarationNode.kind === 'var' ? NodeUtils_1.NodeUtils.getBlockScopeOfNode(variableDeclarationNode) : variableParentNode;
-	            var isNodeAfterVariableDeclaratorFlag = false;
+	            var scopeNode = variableDeclarationNode.kind === 'var' ? NodeUtils_1.NodeUtils.getBlockScopeOfNode(variableDeclarationNode) : variableParentNode,
+	                isNodeAfterVariableDeclaratorFlag = false;
 	            estraverse.replace(scopeNode, {
 	                enter: function enter(node, parentNode) {
 	                    var functionNodes = [NodeType_1.NodeType.ArrowFunctionExpression, NodeType_1.NodeType.FunctionDeclaration, NodeType_1.NodeType.FunctionExpression];

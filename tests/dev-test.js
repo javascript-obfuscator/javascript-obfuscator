@@ -43,8 +43,8 @@ let obfuscatedCode = JavaScriptObfuscator.obfuscate(
             return abc.item = 15, test1();
         };
         
-        /*var regexptest = /version\/(\d+)/i;
-        console.log(regexptest);*/
+        var regexptest = /version\\/(\\d+)/i;
+        console.log(regexptest);
         
         test2(22);
         console.log(105.4);

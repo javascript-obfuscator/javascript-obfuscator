@@ -52,17 +52,17 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      */
     protected replaceNodeIdentifierByNewValue (node: INode, parentNode: INode, namesMap: Map <string, string>): void {
         if (NodeUtils.isIdentifierNode(node) && namesMap.has(node.name)) {
-            const parentNodeIsAPropertyNode: boolean = (
+            const parentNodeIsPropertyNode: boolean = (
                     NodeUtils.isPropertyNode(parentNode) &&
                     parentNode.key === node
                 ),
-                parentNodeIsAMemberExpressionNode: boolean = (
+                parentNodeIsMemberExpressionNode: boolean = (
                     NodeUtils.isMemberExpressionNode(parentNode) &&
                     parentNode.computed === false &&
                     parentNode.property === node
                 );
 
-            if (parentNodeIsAPropertyNode || parentNodeIsAMemberExpressionNode) {
+            if (parentNodeIsPropertyNode || parentNodeIsMemberExpressionNode) {
                 return;
             }
 

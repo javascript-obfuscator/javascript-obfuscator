@@ -455,9 +455,9 @@ module.exports =
 	        key: "replaceNodeIdentifierByNewValue",
 	        value: function replaceNodeIdentifierByNewValue(node, parentNode, namesMap) {
 	            if (NodeUtils_1.NodeUtils.isIdentifierNode(node) && namesMap.has(node.name)) {
-	                var parentNodeIsAPropertyNode = NodeUtils_1.NodeUtils.isPropertyNode(parentNode) && parentNode.key === node,
-	                    parentNodeIsAMemberExpressionNode = NodeUtils_1.NodeUtils.isMemberExpressionNode(parentNode) && parentNode.computed === false && parentNode.property === node;
-	                if (parentNodeIsAPropertyNode || parentNodeIsAMemberExpressionNode) {
+	                var parentNodeIsPropertyNode = NodeUtils_1.NodeUtils.isPropertyNode(parentNode) && parentNode.key === node,
+	                    parentNodeIsMemberExpressionNode = NodeUtils_1.NodeUtils.isMemberExpressionNode(parentNode) && parentNode.computed === false && parentNode.property === node;
+	                if (parentNodeIsPropertyNode || parentNodeIsMemberExpressionNode) {
 	                    return;
 	                }
 	                node.name = namesMap.get(node.name);

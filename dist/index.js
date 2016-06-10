@@ -631,10 +631,10 @@ module.exports =
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+	var Kernel_1 = __webpack_require__(39);
 	var esprima = __webpack_require__(7);
 	var escodegen = __webpack_require__(9);
 	var DefaultPreset_1 = __webpack_require__(37);
-	var Obfuscator_1 = __webpack_require__(15);
 	var OptionsNormalizer_1 = __webpack_require__(16);
 
 	var JavaScriptObfuscator = function () {
@@ -643,16 +643,16 @@ module.exports =
 	    }
 
 	    _createClass(JavaScriptObfuscator, null, [{
-	        key: 'obfuscate',
+	        key: "obfuscate",
 	        value: function obfuscate(sourceCode, customOptions) {
 	            var astTree = esprima.parse(sourceCode),
 	                options = OptionsNormalizer_1.OptionsNormalizer.normalize(Object.assign({}, DefaultPreset_1.DEFAULT_PRESET, customOptions)),
-	                obfuscator = new Obfuscator_1.Obfuscator(options);
+	                obfuscator = Kernel_1.default.get('IObfuscator');
 	            astTree = obfuscator.obfuscateNode(astTree);
 	            return JavaScriptObfuscator.generateCode(astTree, options);
 	        }
 	    }, {
-	        key: 'generateCode',
+	        key: "generateCode",
 	        value: function generateCode(astTree, options) {
 	            var escodegenParams = Object.assign({}, JavaScriptObfuscator.escodegenParams);
 	            if (options.hasOwnProperty('compact')) {
@@ -752,8 +752,22 @@ module.exports =
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+	var __decorate = undefined && undefined.__decorate || function (decorators, target, key, desc) {
+	    var c = arguments.length,
+	        r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
+	        d;
+	    if ((typeof Reflect === "undefined" ? "undefined" : _typeof(Reflect)) === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);else for (var i = decorators.length - 1; i >= 0; i--) {
+	        if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    }return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	var __metadata = undefined && undefined.__metadata || function (k, v) {
+	    if ((typeof Reflect === "undefined" ? "undefined" : _typeof(Reflect)) === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+	};
+	var inversify_1 = __webpack_require__(38);
 	var estraverse = __webpack_require__(4);
 	var AppendState_1 = __webpack_require__(6);
 	var NodeType_1 = __webpack_require__(3);
@@ -770,7 +784,6 @@ module.exports =
 	var SelfDefendingNodesGroup_1 = __webpack_require__(27);
 	var UnicodeArrayNodesGroup_1 = __webpack_require__(28);
 	var VariableDeclarationObfuscator_1 = __webpack_require__(36);
-
 	var Obfuscator = function () {
 	    function Obfuscator() {
 	        var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
@@ -783,7 +796,7 @@ module.exports =
 	    }
 
 	    _createClass(Obfuscator, [{
-	        key: 'obfuscateNode',
+	        key: "obfuscateNode",
 	        value: function obfuscateNode(node) {
 	            this.setNewNodes();
 	            NodeUtils_1.NodeUtils.parentize(node);
@@ -793,12 +806,12 @@ module.exports =
 	            return node;
 	        }
 	    }, {
-	        key: 'setNode',
+	        key: "setNode",
 	        value: function setNode(nodeName, node) {
 	            this.nodes.set(nodeName, node);
 	        }
 	    }, {
-	        key: 'setNodesGroup',
+	        key: "setNodesGroup",
 	        value: function setNodesGroup(nodesGroup) {
 	            var _this = this;
 
@@ -808,7 +821,7 @@ module.exports =
 	            });
 	        }
 	    }, {
-	        key: 'afterObfuscation',
+	        key: "afterObfuscation",
 	        value: function afterObfuscation(astTree) {
 	            this.nodes.forEach(function (node) {
 	                if (node.getAppendState() === AppendState_1.AppendState.AfterObfuscation) {
@@ -817,7 +830,7 @@ module.exports =
 	            });
 	        }
 	    }, {
-	        key: 'beforeObfuscation',
+	        key: "beforeObfuscation",
 	        value: function beforeObfuscation(astTree) {
 	            this.nodes.forEach(function (node) {
 	                if (node.getAppendState() === AppendState_1.AppendState.BeforeObfuscation) {
@@ -826,7 +839,7 @@ module.exports =
 	            });
 	        }
 	    }, {
-	        key: 'initializeNodeObfuscators',
+	        key: "initializeNodeObfuscators",
 	        value: function initializeNodeObfuscators(node, parentNode) {
 	            var _this2 = this;
 
@@ -838,7 +851,7 @@ module.exports =
 	            });
 	        }
 	    }, {
-	        key: 'obfuscate',
+	        key: "obfuscate",
 	        value: function obfuscate(node) {
 	            var _this3 = this;
 
@@ -849,7 +862,7 @@ module.exports =
 	            });
 	        }
 	    }, {
-	        key: 'setNewNodes',
+	        key: "setNewNodes",
 	        value: function setNewNodes() {
 	            if (this.options['selfDefending']) {
 	                this.setNodesGroup(new SelfDefendingNodesGroup_1.SelfDefendingNodesGroup(this.options));
@@ -868,7 +881,7 @@ module.exports =
 
 	    return Obfuscator;
 	}();
-
+	Obfuscator = __decorate([inversify_1.injectable(), __metadata('design:paramtypes', [Object])], Obfuscator);
 	exports.Obfuscator = Obfuscator;
 
 /***/ },
@@ -2414,6 +2427,26 @@ module.exports =
 	    unicodeArrayThreshold: 0.8,
 	    wrapUnicodeArrayCalls: true
 	});
+
+/***/ },
+/* 38 */
+/***/ function(module, exports) {
+
+	module.exports = require("inversify");
+
+/***/ },
+/* 39 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	"use strict";
+
+	var inversify_1 = __webpack_require__(38);
+	var Obfuscator_1 = __webpack_require__(15);
+	var kernel = new inversify_1.Kernel();
+	kernel.bind('IObfuscator').to(Obfuscator_1.Obfuscator);
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.default = kernel;
 
 /***/ }
 /******/ ]);

@@ -1,9 +1,12 @@
 "use strict";
 
+import kernel from "./Kernel";
+
 import * as esprima from 'esprima';
 import * as escodegen from 'escodegen';
 
 import { INode } from './interfaces/nodes/INode';
+import { IObfuscator } from "./interfaces/IObfuscator";
 import { IOptions } from './interfaces/IOptions';
 
 import { DEFAULT_PRESET } from './preset-options/DefaultPreset';
@@ -26,7 +29,7 @@ export class JavaScriptObfuscator {
     public static obfuscate (sourceCode: string, customOptions?: IOptions): string {
         let astTree: INode = esprima.parse(sourceCode),
             options: IOptions = OptionsNormalizer.normalize(Object.assign({}, DEFAULT_PRESET, customOptions)),
-            obfuscator: Obfuscator = new Obfuscator(options);
+            obfuscator: Obfuscator = kernel.get<IObfuscator>('IObfuscator');
 
         astTree = obfuscator.obfuscateNode(astTree);
 

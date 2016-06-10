@@ -1,8 +1,11 @@
+import { injectable } from "inversify";
+
 import * as estraverse from 'estraverse';
 
 import { ICustomNode } from './interfaces/ICustomNode';
 import { INodesGroup } from './interfaces/INodesGroup';
 import { INode } from './interfaces/nodes/INode';
+import { IObfuscator } from "./interfaces/IObfuscator";
 import { IOptions } from "./interfaces/IOptions";
 
 import { TNodeObfuscator } from "./types/TNodeObfuscator";
@@ -24,7 +27,8 @@ import { SelfDefendingNodesGroup } from "./node-groups/SelfDefendingNodesGroup";
 import { UnicodeArrayNodesGroup } from './node-groups/UnicodeArrayNodesGroup';
 import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclarationObfuscator';
 
-export class Obfuscator {
+@injectable()
+export class Obfuscator implements IObfuscator {
     /**
      * @type {Map<string, Node>}
      */
@@ -81,14 +85,14 @@ export class Obfuscator {
      * @param nodeName
      * @param node
      */
-    public setNode (nodeName: string, node: ICustomNode): void {
+    private setNode (nodeName: string, node: ICustomNode): void {
         this.nodes.set(nodeName, node);
     }
 
     /**
      * @param nodesGroup
      */
-    public setNodesGroup (nodesGroup: INodesGroup): void {
+    private setNodesGroup (nodesGroup: INodesGroup): void {
         let nodes: Map <string, ICustomNode> = nodesGroup.getNodes();
 
         nodes.forEach((node: ICustomNode, key: string) => {

@@ -4,6 +4,7 @@ module.exports = {
     entry: {
         'index': './index.ts'
     },
+    devtool: 'source-map',
     target: 'node',
     externals: [nodeExternals()],
     module: {

@@ -1,4 +1,5 @@
-var nodeExternals = require('webpack-node-externals');
+var nodeExternals = require('webpack-node-externals'),
+    webpack = require('webpack');
 
 module.exports = {
     entry: {
@@ -16,6 +17,15 @@ module.exports = {
         extensions: ['', '.ts'],
         modulesDirectories: ['./src', './node_modules']
     },
+    plugins: [
+        new webpack.BannerPlugin(
+            {
+                banner: 'require("source-map-support").install();',
+                raw: true,
+                entryOnly: false
+            }
+        )
+    ],
     output: {
         path: './dist',
         filename: '[name].js',

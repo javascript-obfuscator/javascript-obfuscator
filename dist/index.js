@@ -1,3 +1,4 @@
+require("source-map-support").install();
 module.exports =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache

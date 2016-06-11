@@ -27,6 +27,6 @@ export class Options implements IOptions {
      * @returns {T}
      */
     public get <T> (optionName: string): T {
-        return <T> this.options[optionName];
+        return this.options[optionName];
     }
 }

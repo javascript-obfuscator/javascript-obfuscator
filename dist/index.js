@@ -751,7 +751,7 @@ module.exports =
 	var Obfuscator_1 = __webpack_require__(17);
 	var Options_1 = __webpack_require__(18);
 	var kernel = new inversify_1.Kernel();
-	kernel.bind('IOptions').to(Options_1.Options);
+	kernel.bind('IOptions').to(Options_1.Options).inSingletonScope();
 	kernel.bind('IObfuscator').to(Obfuscator_1.Obfuscator);
 	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = kernel;
@@ -936,7 +936,7 @@ module.exports =
 	        key: "assign",
 	        value: function assign(options) {
 	            if (this.options) {
-	                throw new Error('Options can\'t be reassigned!');
+	                throw new Error('Options object can\'t be reassigned!');
 	            }
 	            this.options = Object.assign({}, DefaultPreset_1.DEFAULT_PRESET, options);
 	            this.normalizeOptions();

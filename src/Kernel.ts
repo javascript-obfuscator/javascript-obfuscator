@@ -8,7 +8,7 @@ import { Options } from "./Options";
 
 let kernel: IKernel = new Kernel();
 
-kernel.bind<IOptions>('IOptions').to(Options);
+kernel.bind<IOptions>('IOptions').to(Options).inSingletonScope();
 kernel.bind<IObfuscator>('IObfuscator').to(Obfuscator);
 
 export default kernel;

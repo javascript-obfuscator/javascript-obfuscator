@@ -36,7 +36,7 @@ export class Options implements IOptions {
      */
     public assign (options: IOptionsPreset): void {
         if (this.options) {
-            throw new Error('Options can\'t be reassigned!');
+            throw new Error('Options object can\'t be reassigned!');
         }
 
         this.options = Object.assign({}, DEFAULT_PRESET, options);

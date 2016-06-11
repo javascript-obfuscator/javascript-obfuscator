@@ -15,7 +15,7 @@ export class OptionsNormalizer {
     /**
      * @type {IOptionsPreset}
      */
-    public static SELF_DEFENDING_OPTIONS: IOptionsPreset = {
+    private static SELF_DEFENDING_OPTIONS: IOptionsPreset = {
         compact: true,
         selfDefending: true
     };

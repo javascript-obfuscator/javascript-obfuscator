@@ -877,7 +877,7 @@ module.exports =
 	    function Options(options) {
 	        _classCallCheck(this, Options);
 
-	        this.options = Object.freeze(Options.normalizeOptions(Object.assign({}, DefaultPreset_1.DEFAULT_PRESET, options)));
+	        this.options = Object.freeze(Options.normalizeOptionsPreset(Object.assign({}, DefaultPreset_1.DEFAULT_PRESET, options)));
 	    }
 
 	    _createClass(Options, [{
@@ -886,8 +886,8 @@ module.exports =
 	            return this.options[optionName];
 	        }
 	    }], [{
-	        key: "normalizeOptions",
-	        value: function normalizeOptions(options) {
+	        key: "normalizeOptionsPreset",
+	        value: function normalizeOptionsPreset(options) {
 	            var normalizedOptions = Object.assign({}, options);
 	            normalizedOptions = Options.unicodeArrayRule(normalizedOptions);
 	            normalizedOptions = Options.unicodeArrayThresholdRule(normalizedOptions);

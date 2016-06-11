@@ -33,7 +33,7 @@ export class Options implements IOptions {
      */
     constructor (options: IOptionsPreset) {
         this.options = Object.freeze(
-            Options.normalizeOptions(
+            Options.normalizeOptionsPreset(
                 Object.assign({}, DEFAULT_PRESET, options)
             )
         );
@@ -51,7 +51,7 @@ export class Options implements IOptions {
      * @param options
      * @returns {IOptionsPreset}
      */
-    public static normalizeOptions (options: IOptionsPreset): IOptionsPreset {
+    public static normalizeOptionsPreset (options: IOptionsPreset): IOptionsPreset {
         let normalizedOptions: IOptionsPreset = Object.assign({}, options);
 
         normalizedOptions = Options.unicodeArrayRule(normalizedOptions);

@@ -1,11 +1,8 @@
-import { injectable } from "inversify";
-
 import { IOptions } from "./interfaces/IOptions";
 import { IOptionsPreset } from "./interfaces/IOptionsPreset";
 
 import { DEFAULT_PRESET } from "./preset-options/DefaultPreset";
 
-@injectable()
 export class Options implements IOptions {
     /**
      * @type {IOptionsPreset}
@@ -34,39 +31,34 @@ export class Options implements IOptions {
     /**
      * @param options
      */
-    public assign (options: IOptionsPreset): void {
-        if (this.options) {
-            throw new Error('Options object can\'t be reassigned!');
-        }
-
-        this.options = Object.assign({}, DEFAULT_PRESET, options);
-
-        this.normalizeOptions();
+    constructor (options: IOptionsPreset) {
+        this.options = Object.freeze(
+            Options.normalizeOptions(
+                Object.assign({}, DEFAULT_PRESET, options)
+            )
+        );
     }
 
     /**
      * @param optionName
-     * @returns {any}
+     * @returns {T}
      */
-    public getOption (optionName: string): any {
-        return this.options[optionName];
+    public get <T> (optionName: string): T {
+        return <T> this.options[optionName];
     }
 
     /**
+     * @param options
      * @returns {IOptionsPreset}
      */
-    public getOptions (): IOptionsPreset {
-        return this.options;
-    }
-
-    private normalizeOptions (): void {
-        let normalizedOptions: IOptionsPreset = Object.assign({}, this.options);
+    public static normalizeOptions (options: IOptionsPreset): IOptionsPreset {
+        let normalizedOptions: IOptionsPreset = Object.assign({}, options);
 
         normalizedOptions = Options.unicodeArrayRule(normalizedOptions);
         normalizedOptions = Options.unicodeArrayThresholdRule(normalizedOptions);
         normalizedOptions = Options.selfDefendingRule(normalizedOptions);
 
-        this.options = Object.freeze(normalizedOptions);
+        return normalizedOptions;
     }
 
     /**

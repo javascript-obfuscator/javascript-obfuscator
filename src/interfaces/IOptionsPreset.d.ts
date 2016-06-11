@@ -10,4 +10,5 @@ export interface IOptionsPreset {
     unicodeArray?: boolean;
     unicodeArrayThreshold?: number;
     wrapUnicodeArrayCalls?: boolean;
+    [key: string]: any;
 }

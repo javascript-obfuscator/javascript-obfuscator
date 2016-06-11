@@ -28,7 +28,7 @@ export class DebugProtectionNodesGroup extends NodesGroup {
             new DebugProtectionFunctionCallNode(this.debugProtectionFunctionIdentifier, this.options)
         );
 
-        if (this.options.getOption('debugProtectionInterval')) {
+        if (this.options.get('debugProtectionInterval')) {
             this.nodes.set(
                 'debugProtectionFunctionIntervalNode',
                 new DebugProtectionFunctionIntervalNode(this.debugProtectionFunctionIdentifier, this.options)

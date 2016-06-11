@@ -1,6 +1,6 @@
-import { IOptions } from "../interfaces/IOptions";
+import { IOptionsPreset } from "../interfaces/IOptionsPreset";
 
-export const DEFAULT_PRESET: IOptions = Object.freeze({
+export const DEFAULT_PRESET: IOptionsPreset = Object.freeze({
     compact: true,
     debugProtection: false,
     debugProtectionInterval: false,

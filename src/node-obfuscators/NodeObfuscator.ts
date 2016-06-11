@@ -24,7 +24,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @param nodes
      * @param options
      */
-    constructor(nodes: Map <string, ICustomNode>, options: IOptions = {}) {
+    constructor(nodes: Map <string, ICustomNode>, options: IOptions) {
         this.nodes = nodes;
         this.options = options;
     }
@@ -40,9 +40,10 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @returns {boolean}
      */
     protected isReservedName (name: string): boolean {
-        return this.options['reservedNames'].some((reservedName: string) => {
-            return new RegExp(reservedName, 'g').test(name);
-        });
+        return this.options.getOption('reservedNames')
+            .some((reservedName: string) => {
+                return new RegExp(reservedName, 'g').test(name);
+            });
     }
 
     /**
@@ -98,15 +99,15 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      */
     protected replaceLiteralValueByUnicodeValue (nodeValue: string): string {
         let value: string = nodeValue,
-            replaceByUnicodeArrayFlag: boolean = Math.random() <= this.options['unicodeArrayThreshold'];
+            replaceByUnicodeArrayFlag: boolean = Math.random() <= this.options.getOption('unicodeArrayThreshold');
 
-        if (this.options['encodeUnicodeLiterals'] && replaceByUnicodeArrayFlag) {
+        if (this.options.getOption('encodeUnicodeLiterals') && replaceByUnicodeArrayFlag) {
             value = Utils.btoa(value);
         }
 
         value = Utils.stringToUnicode(value);
 
-        if (!this.options['unicodeArray'] || !replaceByUnicodeArrayFlag) {
+        if (!this.options.getOption('unicodeArray') || !replaceByUnicodeArrayFlag) {
             return value;
         }
 
@@ -133,7 +134,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
 
         hexadecimalIndex = this.replaceLiteralNumberByHexadecimalValue(index);
 
-        if (this.options['wrapUnicodeArrayCalls']) {
+        if (this.options.getOption('wrapUnicodeArrayCalls')) {
             return `${this.nodes.get('unicodeArrayCallsWrapper').getNodeIdentifier()}('${hexadecimalIndex}')`;
         }
 

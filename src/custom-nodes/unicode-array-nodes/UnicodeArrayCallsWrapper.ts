@@ -42,7 +42,7 @@ export class UnicodeArrayCallsWrapper extends Node {
         unicodeArrayCallsWrapperName: string,
         unicodeArrayName: string,
         unicodeArray: string[],
-        options: IOptions = {}
+        options: IOptions
     ) {
         super(options);
 

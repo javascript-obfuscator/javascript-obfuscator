@@ -8,11 +8,7 @@ import * as escodegen from 'escodegen';
 import { INode } from './interfaces/nodes/INode';
 import { IObfuscator } from "./interfaces/IObfuscator";
 import { IOptions } from './interfaces/IOptions';
-
-import { DEFAULT_PRESET } from './preset-options/DefaultPreset';
-
-import { Obfuscator } from './Obfuscator';
-import { OptionsNormalizer } from "./OptionsNormalizer";
+import { IOptionsPreset } from "./interfaces/IOptionsPreset";
 
 export class JavaScriptObfuscator {
     /**
@@ -26,10 +22,12 @@ export class JavaScriptObfuscator {
      * @param sourceCode
      * @param customOptions
      */
-    public static obfuscate (sourceCode: string, customOptions?: IOptions): string {
+    public static obfuscate (sourceCode: string, customOptions?: IOptionsPreset): string {
         let astTree: INode = esprima.parse(sourceCode),
-            options: IOptions = OptionsNormalizer.normalize(Object.assign({}, DEFAULT_PRESET, customOptions)),
-            obfuscator: Obfuscator = kernel.get<IObfuscator>('IObfuscator');
+            options: IOptions = kernel.get<IOptions>('IOptions'),
+            obfuscator: IObfuscator = kernel.get<IObfuscator>('IObfuscator');
+
+        options.assign(customOptions);
 
         astTree = obfuscator.obfuscateNode(astTree);
 
@@ -43,11 +41,9 @@ export class JavaScriptObfuscator {
     private static generateCode (astTree: INode, options: IOptions): string {
         let escodegenParams: escodegen.GenerateOptions = Object.assign({}, JavaScriptObfuscator.escodegenParams);
 
-        if (options.hasOwnProperty('compact')) {
-            escodegenParams.format = {
-                compact: options.compact
-            };
-        }
+        escodegenParams.format = {
+            compact: options.getOption('compact')
+        };
 
         return escodegen.generate(astTree, escodegenParams);
     }

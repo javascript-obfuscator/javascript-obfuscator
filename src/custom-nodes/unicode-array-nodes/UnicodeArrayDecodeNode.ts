@@ -39,7 +39,7 @@ export class UnicodeArrayDecodeNode extends Node {
     constructor (
         unicodeArrayName: string,
         unicodeArray: string[],
-        options: IOptions = {}
+        options: IOptions
     ) {
         super(options);
 
@@ -81,7 +81,7 @@ export class UnicodeArrayDecodeNode extends Node {
         let code: string = '',
             node: INode;
 
-        if (this.options['selfDefending']) {
+        if (this.options.getOption('selfDefending')) {
             code = `
                 var ${environmentName} = function(){return ${Utils.stringToUnicode('dev')};};
                    

@@ -47,7 +47,7 @@ export class UnicodeArrayNode extends Node {
     constructor (
         unicodeArrayName: string,
         unicodeArrayRotateValue: number = 0,
-        options: IOptions = {}
+        options: IOptions
     ) {
         super(options);
 

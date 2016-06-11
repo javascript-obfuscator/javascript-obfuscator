@@ -14,7 +14,7 @@ export abstract class NodesGroup implements INodesGroup {
      */
     protected options: IOptions;
 
-    constructor (options: IOptions = {}) {
+    constructor (options: IOptions) {
         this.options = options;
     }
 

@@ -19,7 +19,7 @@ export class DebugProtectionFunctionNode extends Node {
      * @param debugProtectionFunctionName
      * @param options
      */
-    constructor (debugProtectionFunctionName: string, options: IOptions = {}) {
+    constructor (debugProtectionFunctionName: string, options: IOptions) {
         super(options);
 
         this.debugProtectionFunctionName = debugProtectionFunctionName;

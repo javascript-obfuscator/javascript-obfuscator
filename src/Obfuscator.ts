@@ -1,4 +1,4 @@
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 
 import * as estraverse from 'estraverse';
 
@@ -61,7 +61,9 @@ export class Obfuscator implements IObfuscator {
     /**
      * @param options
      */
-    constructor (options: IOptions = {}) {
+    constructor (
+        @inject('IOptions') options: IOptions
+    ) {
         this.options = options;
     }
 
@@ -149,22 +151,22 @@ export class Obfuscator implements IObfuscator {
     }
 
     private setNewNodes (): void {
-        if (this.options['selfDefending']) {
+        if (this.options.getOption('selfDefending')) {
             this.setNodesGroup(new SelfDefendingNodesGroup(this.options));
         }
 
-        if (this.options['disableConsoleOutput']) {
+        if (this.options.getOption('disableConsoleOutput')) {
             this.setNode(
                 'consoleOutputDisableExpressionNode',
-                new ConsoleOutputDisableExpressionNode()
+                new ConsoleOutputDisableExpressionNode(this.options)
             );
         }
 
-        if (this.options['debugProtection']) {
+        if (this.options.getOption('debugProtection')) {
             this.setNodesGroup(new DebugProtectionNodesGroup(this.options));
         }
 
-        if (this.options['unicodeArray']) {
+        if (this.options.getOption('unicodeArray')) {
             /**
              * Important to set this nodes latest to prevent runtime errors caused by `rotateUnicodeArray` option
              */

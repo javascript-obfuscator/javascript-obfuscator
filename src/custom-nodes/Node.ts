@@ -25,7 +25,7 @@ export abstract class Node implements ICustomNode {
     /**
      * @param options
      */
-    constructor (options: IOptions = {}) {
+    constructor (options: IOptions) {
         this.options = options;
     }
 

@@ -6,7 +6,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "removeComments": true,
-    "noImplicitAny": true
+    "noImplicitAny": false
   },
   "exclude": [
     "node_modules",

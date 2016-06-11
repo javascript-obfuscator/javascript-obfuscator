@@ -7,7 +7,7 @@ export class SelfDefendingNodesGroup extends NodesGroup {
     /**
      * @param options
      */
-    constructor (options: IOptions = {}) {
+    constructor (options: IOptions) {
         super(options);
 
         this.nodes.set(

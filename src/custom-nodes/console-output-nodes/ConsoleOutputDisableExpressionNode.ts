@@ -12,7 +12,7 @@ export class ConsoleOutputDisableExpressionNode extends Node {
     /**
      * @param options
      */
-    constructor (options: IOptions = {}) {
+    constructor (options: IOptions) {
         super(options);
 
         this.node = this.getNodeStructure();

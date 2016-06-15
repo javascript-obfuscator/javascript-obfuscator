@@ -1,5 +1,14 @@
-var nodeExternals = require('webpack-node-externals'),
+var fs = require("fs"),
+    nodeExternals = require('webpack-node-externals'),
     webpack = require('webpack');
+
+function getLicenseText () {
+    return `/*
+Copyright (C) 2016 Timofey Kachalov <sanex3339@yandex.ru>
+
+${fs.readFileSync('./LICENSE.BSD', 'utf8')}
+*/`;
+}
 
 module.exports = {
     entry: {
@@ -20,7 +29,7 @@ module.exports = {
     plugins: [
         new webpack.BannerPlugin(
             {
-                banner: 'require("source-map-support").install();',
+                banner: `${getLicenseText()}\n\nrequire("source-map-support").install();\n`,
                 raw: true,
                 entryOnly: false
             }

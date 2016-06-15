@@ -44,7 +44,7 @@
     "tests": "node tests/dev-test.js"
   },
   "author": {
-    "name": "sanex3339"
+    "name": "Timofey Kachalov"
   },
-  "license": "ISC"
+  "license": "BSD-2-Clause"
 }

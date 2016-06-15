@@ -133,9 +133,9 @@ It is also not recommended to enable `rotateUnicodeArray` for small source code,
 #### `selfDefending`
 Type: `boolean` Default: `true`
 
-##### :warning: this option forces set the `compact` value to `true`
+##### :warning: this option forcibly set `compact` value to `true`
 
-Enables self-defending for obfuscated code. If obfuscated compact code will be formatted, this code will not work.
+Enables self-defending for obfuscated code. If obfuscated compact code is formatted, it will not work any more.
 
 #### `unicodeArray`
 Type: `boolean` Default: `true`

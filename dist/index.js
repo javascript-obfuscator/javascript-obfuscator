@@ -756,8 +756,10 @@ module.exports =
 	"use strict";
 	"use strict";
 	
-	__webpack_require__(13);
 	var JavaScriptObfuscator_1 = __webpack_require__(10);
+	if (!global._babelPolyfill) {
+	    __webpack_require__(13);
+	}
 	module.exports = JavaScriptObfuscator_1.JavaScriptObfuscator;
 
 /***/ },

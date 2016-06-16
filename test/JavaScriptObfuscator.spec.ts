@@ -26,5 +26,31 @@ describe('JavaScriptObfuscator', () => {
                 /^\(function *\(\) *\{ *var *_0x[\w]+ *= *0x\d+; *\}(\(\)\)|\)\(\));?$/
             );
         });
+
+        it('should obfuscate simple code with literal variable value', () => {
+            let pattern = /^var _0x(\w){4} *= *\['(\\[x|u]\d+)+'\]; *var *test *= *_0x(\w){4}\[0x0\];$/;
+
+            assert.match(
+                JavaScriptObfuscator.obfuscate(
+                    `var test = 'abc';`,
+                    Object.assign({}, DEFAULT_PRESET, NO_CUSTOM_NODES_PRESET, {
+                        unicodeArray: true,
+                        unicodeArrayThreshold: 1
+                    })
+                ),
+                pattern
+            );
+
+            assert.match(
+                JavaScriptObfuscator.obfuscate(
+                    `var test = 'абц';`,
+                    Object.assign({}, DEFAULT_PRESET, NO_CUSTOM_NODES_PRESET, {
+                        unicodeArray: true,
+                        unicodeArrayThreshold: 1
+                    })
+                ),
+                pattern
+            );
+        });
     });
 });

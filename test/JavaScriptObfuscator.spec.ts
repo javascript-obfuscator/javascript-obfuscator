@@ -1,6 +1,5 @@
 import { JavaScriptObfuscator } from "../src/JavaScriptObfuscator";
 
-import { DEFAULT_PRESET } from "../src/preset-options/DefaultPreset";
 import { NO_CUSTOM_NODES_PRESET } from "../src/preset-options/NoCustomNodesPreset";
 
 let assert: any = require('chai').assert;

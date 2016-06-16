@@ -29,7 +29,14 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
     constructor (options: IOptions) {
         super(options);
 
-        this.unicodeArrayRotateValue = this.options.get('rotateUnicodeArray') ? Utils.getRandomInteger(100, 500) : 0;
+        if (this.options.get('rotateUnicodeArray')) {
+            this.unicodeArrayRotateValue = Utils.getRandomGenerator().integer({
+                min: 100,
+                max: 500
+            });
+        } else {
+            this.unicodeArrayRotateValue = 0;
+        }
 
         let unicodeArrayNode: UnicodeArrayNode = new UnicodeArrayNode(
                 this.unicodeArrayName,

@@ -257,6 +257,7 @@ module.exports =
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
+	var chance_1 = __webpack_require__(39);
 	var JSFuck_1 = __webpack_require__(8);
 	
 	var Utils = function () {
@@ -304,9 +305,9 @@ module.exports =
 	            return (dec + Math.pow(radix, exponent)).toString(radix).substr(decToHexSliceValue).replace(Utils.hexRepetitiveZerosRegExp, '');
 	        }
 	    }, {
-	        key: 'getRandomInteger',
-	        value: function getRandomInteger(min, max) {
-	            return Math.round(Math.floor(Math.random() * (max - min + 1)) + min);
+	        key: 'getRandomGenerator',
+	        value: function getRandomGenerator() {
+	            return Utils.randomGenerator;
 	        }
 	    }, {
 	        key: 'getRandomVariableName',
@@ -316,7 +317,10 @@ module.exports =
 	            var rangeMinInteger = 10000,
 	                rangeMaxInteger = 99999999,
 	                prefix = '_0x';
-	            return '' + prefix + Utils.decToHex(Utils.getRandomInteger(rangeMinInteger, rangeMaxInteger)).substr(0, length);
+	            return '' + prefix + Utils.decToHex(Utils.getRandomGenerator().integer({
+	                min: rangeMinInteger,
+	                max: rangeMaxInteger
+	            })).substr(0, length);
 	        }
 	    }, {
 	        key: 'isInteger',
@@ -359,6 +363,7 @@ module.exports =
 	}();
 	
 	Utils.hexRepetitiveZerosRegExp = new RegExp('^(0{2,})+(?!$)', '');
+	Utils.randomGenerator = new chance_1.Chance();
 	exports.Utils = Utils;
 
 /***/ },
@@ -1216,7 +1221,10 @@ module.exports =
 	        key: 'appendNode',
 	        value: function appendNode(blockScopeNode) {
 	            var programBodyLength = blockScopeNode.body.length,
-	                randomIndex = Utils_1.Utils.getRandomInteger(0, programBodyLength);
+	                randomIndex = Utils_1.Utils.getRandomGenerator().integer({
+	                min: 0,
+	                max: programBodyLength
+	            });
 	            NodeUtils_1.NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), randomIndex);
 	        }
 	    }, {
@@ -1279,7 +1287,10 @@ module.exports =
 	            var programBodyLength = blockScopeNode.body.length,
 	                randomIndex = 0;
 	            if (programBodyLength > 2) {
-	                randomIndex = Utils_1.Utils.getRandomInteger(programBodyLength / 2, programBodyLength - 1);
+	                randomIndex = Utils_1.Utils.getRandomGenerator().integer({
+	                    min: programBodyLength / 2,
+	                    max: programBodyLength - 1
+	                });
 	            }
 	            NodeUtils_1.NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), randomIndex);
 	        }
@@ -1745,7 +1756,14 @@ module.exports =
 	
 	        _this.unicodeArrayName = Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
 	        _this.unicodeArrayTranslatorName = Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
-	        _this.unicodeArrayRotateValue = _this.options.get('rotateUnicodeArray') ? Utils_1.Utils.getRandomInteger(100, 500) : 0;
+	        if (_this.options.get('rotateUnicodeArray')) {
+	            _this.unicodeArrayRotateValue = Utils_1.Utils.getRandomGenerator().integer({
+	                min: 100,
+	                max: 500
+	            });
+	        } else {
+	            _this.unicodeArrayRotateValue = 0;
+	        }
 	        var unicodeArrayNode = new UnicodeArrayNode_1.UnicodeArrayNode(_this.unicodeArrayName, _this.unicodeArrayRotateValue, _this.options),
 	            unicodeArray = unicodeArrayNode.getNodeData();
 	        _this.nodes.set('unicodeArrayNode', unicodeArrayNode);
@@ -2442,6 +2460,12 @@ module.exports =
 	    unicodeArrayThreshold: 0.8,
 	    wrapUnicodeArrayCalls: true
 	});
+
+/***/ },
+/* 39 */
+/***/ function(module, exports) {
+
+	module.exports = require("chance");
 
 /***/ }
 /******/ ]);

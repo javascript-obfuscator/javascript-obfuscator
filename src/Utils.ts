@@ -1,3 +1,5 @@
+import { Chance } from 'chance';
+
 import { JSFuck } from './enums/JSFuck';
 
 export class Utils {
@@ -5,6 +7,11 @@ export class Utils {
      * @type {RegExp}
      */
     private static hexRepetitiveZerosRegExp: RegExp = new RegExp('^(0{2,})+(?!$)', '');
+
+    /**
+     * @type {Chance.Chance}
+     */
+    private static randomGenerator: Chance.Chance = new Chance();
 
     /**
      * @param array
@@ -65,12 +72,10 @@ export class Utils {
     }
 
     /**
-     * @param min
-     * @param max
-     * @returns {number}
+     * @returns {Chance.Chance}
      */
-    public static getRandomInteger (min: number, max: number): number {
-        return Math.round(Math.floor(Math.random() * (max - min + 1)) + min);
+    public static getRandomGenerator (): Chance.Chance {
+        return Utils.randomGenerator;
     }
 
     /**
@@ -82,7 +87,14 @@ export class Utils {
             rangeMaxInteger: number = 99999999,
             prefix: string = '_0x';
 
-        return `${prefix}${(Utils.decToHex(Utils.getRandomInteger(rangeMinInteger, rangeMaxInteger))).substr(0, length)}`;
+        return `${prefix}${(
+            Utils.decToHex(
+                Utils.getRandomGenerator().integer({
+                    min: rangeMinInteger,
+                    max: rangeMaxInteger
+                })
+            )
+        ).substr(0, length)}`;
     }
 
     /**

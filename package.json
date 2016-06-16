@@ -13,8 +13,9 @@
   ],
   "main": "dist/index.js",
   "dependencies": {
-    "esprima": "^2.7.2",
+    "chance": "^1.0.3",
     "escodegen": "^1.8.0",
+    "esprima": "^2.7.2",
     "estraverse": "^4.2.0"
   },
   "devDependencies": {

@@ -32,7 +32,10 @@ export class DebugProtectionFunctionNode extends Node {
      */
     public appendNode (blockScopeNode: TBlockScopeNode): void {
         let programBodyLength: number = blockScopeNode.body.length,
-            randomIndex: number = Utils.getRandomInteger(0, programBodyLength);
+            randomIndex: number = Utils.getRandomGenerator().integer({
+                min: 0,
+                max: programBodyLength
+            });
 
         NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), randomIndex);
     }

@@ -13,7 +13,7 @@ describe('JavaScriptObfuscator', () => {
                     `var test = 1;`,
                     Object.assign({}, DEFAULT_PRESET, NO_CUSTOM_NODES_PRESET)
                 ),
-                /^var *[A-Za-z]+ *= *0x\d+;$/
+                /^var *test *= *0x\d+;$/
             );
         });
 

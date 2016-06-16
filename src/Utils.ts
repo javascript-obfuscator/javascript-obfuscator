@@ -53,7 +53,7 @@ export class Utils {
      * @param dec
      * @returns {string}
      */
-    public static decToHex(dec: number): string {
+    public static decToHex (dec: number): string {
         const decToHexSliceValue: number = -6,
             exponent: number = 6,
             radix: number = 16;
@@ -69,7 +69,7 @@ export class Utils {
      * @param max
      * @returns {number}
      */
-    public static getRandomInteger(min: number, max: number): number {
+    public static getRandomInteger (min: number, max: number): number {
         return Math.round(Math.floor(Math.random() * (max - min + 1)) + min);
     }
 

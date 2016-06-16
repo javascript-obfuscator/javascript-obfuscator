@@ -44,7 +44,7 @@
     "watch": "node_modules/.bin/webpack --watch",
     "lite": "lite-server",
     "start": "concurrent \"npm run tsc:w\" \"npm run lite\" ",
-    "test:dev": "node test/dev-test.js",
+    "test:dev": "node test/dev/test.js",
     "test:mocha": "mocha --require ts-node/register test/**/*.ts",
     "test": "npm run test:dev && npm run test:mocha",
     "typings": "node_modules/.bin/typings install"

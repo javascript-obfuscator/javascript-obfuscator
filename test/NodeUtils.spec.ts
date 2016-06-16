@@ -86,7 +86,7 @@ describe('NodeUtils', () => {
         });
 
         it('should return block-scope node of given node by given index if node has block-scope', () => {
-            assert.deepEqual(NodeUtils.getBlockScopeNodeByIndex(blockStatementNode, 0), identifierNode);
+            assert.deepEqual(NodeUtils.getBlockScopeNodeByIndex(blockStatementNode), identifierNode);
             assert.deepEqual(NodeUtils.getBlockScopeNodeByIndex(blockStatementNode, 1), literalNode);
         });
 

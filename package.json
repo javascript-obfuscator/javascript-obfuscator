@@ -22,7 +22,9 @@
     "babel-loader": "^6.2.4",
     "babel-polyfill": "^6.9.1",
     "babel-preset-es2015": "^6.9.0",
+    "chai": "^3.5.0",
     "lite-server": "^1.3.1",
+    "mocha": "^2.5.3",
     "source-map-support": "^0.4.0",
     "ts-loader": "^0.8.2",
     "typescript": "^1.8.10",
@@ -41,7 +43,8 @@
     "watch": "node_modules/.bin/webpack --watch",
     "lite": "lite-server",
     "start": "concurrent \"npm run tsc:w\" \"npm run lite\" ",
-    "tests": "node tests/dev-test.js"
+    "test": "node_modules/.bin/mocha --compilers ts:typescript",
+    "typings": "node_modules/.bin/typings install"
   },
   "author": {
     "name": "Timofey Kachalov"

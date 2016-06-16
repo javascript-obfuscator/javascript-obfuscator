@@ -1,10 +1,10 @@
 import { IBlockStatementNode } from "../src/interfaces/nodes/IBlockStatementNode";
 import { IIdentifierNode } from "../src/interfaces/nodes/IIdentifierNode";
+import { ILiteralNode } from "../src/interfaces/nodes/ILiteralNode";
 
 import { NodeType } from "../src/enums/NodeType";
 
 import { NodeUtils } from '../src/NodeUtils';
-import {ILiteralNode} from "../src/interfaces/nodes/ILiteralNode";
 
 let assert: any = require('chai').assert;
 

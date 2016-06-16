@@ -7,22 +7,22 @@ let assert: any = require('chai').assert;
 
 describe('JavaScriptObfuscator', () => {
     describe('obfuscate (sourceCode: string, customOptions?: IOptionsPreset): string', () => {
-        let code: string;
-
         it('should obfuscate simple code with variable inside global scope', () => {
-            code = `var test = 1;`;
-
             assert.match(
-                JavaScriptObfuscator.obfuscate(code, Object.assign({}, DEFAULT_PRESET, NO_CUSTOM_NODES_PRESET)),
+                JavaScriptObfuscator.obfuscate(
+                    `var test = 1;`,
+                    Object.assign({}, DEFAULT_PRESET, NO_CUSTOM_NODES_PRESET)
+                ),
                 /^var *[A-Za-z]+ *= *0x\d+;$/
             );
         });
 
         it('should obfuscate simple code with variable inside block-scope', () => {
-            code = `(function () {var test = 1;})()`;
-
             assert.match(
-                JavaScriptObfuscator.obfuscate(code, Object.assign({}, DEFAULT_PRESET, NO_CUSTOM_NODES_PRESET)),
+                JavaScriptObfuscator.obfuscate(
+                    `(function () {var test = 1;})()`,
+                    Object.assign({}, DEFAULT_PRESET, NO_CUSTOM_NODES_PRESET)
+                ),
                 /^\(function *\( *\) *\{ *var *_0x[\w]+ *= *0x\d+; *\} *(\( *\) *\)|\) *\( *\));?$/
             );
         });

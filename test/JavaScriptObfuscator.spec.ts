@@ -23,7 +23,7 @@ describe('JavaScriptObfuscator', () => {
                     `(function () {var test = 1;})()`,
                     Object.assign({}, DEFAULT_PRESET, NO_CUSTOM_NODES_PRESET)
                 ),
-                /^\(function *\( *\) *\{ *var *_0x[\w]+ *= *0x\d+; *\} *(\( *\) *\)|\) *\( *\));?$/
+                /^\(function *\(\) *\{ *var *_0x[\w]+ *= *0x\d+; *\}(\(\)\)|\)\(\));?$/
             );
         });
     });

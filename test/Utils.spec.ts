@@ -43,30 +43,6 @@ describe('Utils', () => {
         });
     });
 
-    describe('getRandomInteger (min: number, max: number): number', () => {
-        let values: number[] = [],
-            randomValue: number;
-
-        beforeEach(() => {
-            for (let i = 0; i < 200; i++) {
-                randomValue = Utils.getRandomInteger(0, 100);
-
-                if (values.indexOf(randomValue) === -1) {
-                    values.push(randomValue);
-                }
-            }
-
-            values.sort((a, b) => {
-                return a - b;
-            });
-        });
-
-        it('should return a random integer between two ranges', () => {
-            assert.isAtLeast(values[0], 0);
-            assert.isAtMost(values[values.length - 1], 100);
-        });
-    });
-
     describe('getRandomVariableName (length: number = 6): string', () => {
         it('should return a string of given length with random variable name', () => {
             assert.match(Utils.getRandomVariableName(4), /^_0x(\w){4}$/);

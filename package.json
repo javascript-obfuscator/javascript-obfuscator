@@ -27,6 +27,7 @@
     "mocha": "^2.5.3",
     "source-map-support": "^0.4.0",
     "ts-loader": "^0.8.2",
+    "ts-node": "^0.9.1",
     "typescript": "^1.8.10",
     "typings": "^0.8.1",
     "webpack": "^2.1.0-beta.12",
@@ -43,7 +44,9 @@
     "watch": "node_modules/.bin/webpack --watch",
     "lite": "lite-server",
     "start": "concurrent \"npm run tsc:w\" \"npm run lite\" ",
-    "test": "node_modules/.bin/mocha --compilers ts:typescript",
+    "test:dev": "node test/dev-test.js",
+    "test:mocha": "mocha --require ts-node/register test/**/*.ts",
+    "test": "npm run test:dev && npm run test:mocha",
     "typings": "node_modules/.bin/typings install"
   },
   "author": {

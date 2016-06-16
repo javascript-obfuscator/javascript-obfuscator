@@ -10,6 +10,7 @@
   },
   "exclude": [
     "node_modules",
+    "test",
     "typings/browser",
     "typings/browser.d.ts"
   ]

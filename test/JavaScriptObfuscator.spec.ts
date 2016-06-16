@@ -11,7 +11,7 @@ describe('JavaScriptObfuscator', () => {
             assert.match(
                 JavaScriptObfuscator.obfuscate(
                     `var test = 1;`,
-                    Object.assign({}, DEFAULT_PRESET, NO_CUSTOM_NODES_PRESET)
+                    Object.assign({}, NO_CUSTOM_NODES_PRESET)
                 ),
                 /^var *test *= *0x\d+;$/
             );
@@ -21,7 +21,7 @@ describe('JavaScriptObfuscator', () => {
             assert.match(
                 JavaScriptObfuscator.obfuscate(
                     `(function () {var test = 1;})()`,
-                    Object.assign({}, DEFAULT_PRESET, NO_CUSTOM_NODES_PRESET)
+                    Object.assign({}, NO_CUSTOM_NODES_PRESET)
                 ),
                 /^\(function *\(\) *\{ *var *_0x[\w]+ *= *0x\d+; *\}(\(\)\)|\)\(\));?$/
             );
@@ -33,7 +33,7 @@ describe('JavaScriptObfuscator', () => {
             assert.match(
                 JavaScriptObfuscator.obfuscate(
                     `var test = 'abc';`,
-                    Object.assign({}, DEFAULT_PRESET, NO_CUSTOM_NODES_PRESET, {
+                    Object.assign({}, NO_CUSTOM_NODES_PRESET, {
                         unicodeArray: true,
                         unicodeArrayThreshold: 1
                     })
@@ -44,7 +44,7 @@ describe('JavaScriptObfuscator', () => {
             assert.match(
                 JavaScriptObfuscator.obfuscate(
                     `var test = 'абц';`,
-                    Object.assign({}, DEFAULT_PRESET, NO_CUSTOM_NODES_PRESET, {
+                    Object.assign({}, NO_CUSTOM_NODES_PRESET, {
                         unicodeArray: true,
                         unicodeArrayThreshold: 1
                     })

@@ -156,14 +156,20 @@ describe('NodeUtils', () => {
             functionDeclarationNode['parentNode'] = programNode;
             blockStatementNode['parentNode'] = functionDeclarationNode;
             identifierNode['parentNode'] = blockStatementNode;
-            literalNode['parentNode'] = blockStatementNode;
         });
 
         it('should return block-scope node for given node', () => {
             assert.deepEqual(NodeUtils.getBlockScopeOfNode(identifierNode), blockStatementNode);
             assert.deepEqual(NodeUtils.getBlockScopeOfNode(identifierNode, 1), programNode);
             assert.deepEqual(NodeUtils.getBlockScopeOfNode(functionDeclarationNode), programNode);
+            assert.deepEqual(NodeUtils.getBlockScopeOfNode(blockStatementNode), programNode);
             assert.deepEqual(NodeUtils.getBlockScopeOfNode(programNode), programNode);
+        });
+
+        it('should throw a `ReferenceError` if node has no `parentNode` property', () => {
+            assert.throws(function () {
+                return NodeUtils.getBlockScopeOfNode(literalNode);
+            }, ReferenceError);
         });
     });
 
@@ -214,8 +220,6 @@ describe('NodeUtils', () => {
             ]);
 
             NodeUtils.parentize(blockStatementNode);
-
-            console.log(blockStatementNode);
         });
 
         it('should parentize given AST-tree', () => {

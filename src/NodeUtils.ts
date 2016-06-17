@@ -69,21 +69,27 @@ export class NodeUtils {
      * @returns {INode}
      */
     public static getBlockScopeOfNode (node: INode, depth: number = 0): TNodeWithBlockStatement {
-        if (!node.parentNode) {
+        let parentNode: INode = node.parentNode;
+
+        if (!parentNode) {
             throw new ReferenceError('`parentNode` property of given node is `undefined`');
         }
 
-        if (!Utils.arrayContains(NodeUtils.nodesWithBlockScope, node.parentNode.type)) {
-            return NodeUtils.getBlockScopeOfNode(node.parentNode, depth);
-        } else if (depth > 0) {
-            return NodeUtils.getBlockScopeOfNode(node.parentNode, --depth);
+        if (Nodes.isBlockStatementNode(parentNode)) {
+            if (!Utils.arrayContains(NodeUtils.nodesWithBlockScope, parentNode['parentNode'].type)) {
+                return NodeUtils.getBlockScopeOfNode(parentNode, depth);
+            } else if (depth > 0) {
+                return NodeUtils.getBlockScopeOfNode(parentNode, --depth);
+            }
+
+            return parentNode;
         }
 
-        if (Nodes.isProgramNode(node) || Nodes.isBlockStatementNode(node)) {
-            return node;
+        if (Nodes.isProgramNode(parentNode)) {
+            return parentNode;
         }
 
-        return NodeUtils.getBlockScopeOfNode(node.parentNode);
+        return NodeUtils.getBlockScopeOfNode(parentNode);
     }
 
     /**

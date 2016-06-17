@@ -260,18 +260,22 @@ module.exports =
 	        value: function getBlockScopeOfNode(node) {
 	            var depth = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 	
-	            if (!node.parentNode) {
+	            var parentNode = node.parentNode;
+	            if (!parentNode) {
 	                throw new ReferenceError('`parentNode` property of given node is `undefined`');
 	            }
-	            if (!Utils_1.Utils.arrayContains(NodeUtils.nodesWithBlockScope, node.parentNode.type)) {
-	                return NodeUtils.getBlockScopeOfNode(node.parentNode, depth);
-	            } else if (depth > 0) {
-	                return NodeUtils.getBlockScopeOfNode(node.parentNode, --depth);
+	            if (Nodes_1.Nodes.isBlockStatementNode(parentNode)) {
+	                if (!Utils_1.Utils.arrayContains(NodeUtils.nodesWithBlockScope, parentNode['parentNode'].type)) {
+	                    return NodeUtils.getBlockScopeOfNode(parentNode, depth);
+	                } else if (depth > 0) {
+	                    return NodeUtils.getBlockScopeOfNode(parentNode, --depth);
+	                }
+	                return parentNode;
 	            }
-	            if (Nodes_1.Nodes.isProgramNode(node) || Nodes_1.Nodes.isBlockStatementNode(node)) {
-	                return node;
+	            if (Nodes_1.Nodes.isProgramNode(parentNode)) {
+	                return parentNode;
 	            }
-	            return NodeUtils.getBlockScopeOfNode(node.parentNode);
+	            return NodeUtils.getBlockScopeOfNode(parentNode);
 	        }
 	    }, {
 	        key: "insertNodeAtIndex",

@@ -45,7 +45,7 @@ export class CatchClauseObfuscator extends NodeObfuscator {
     private replaceCatchClauseParamInBlockStatement (catchClauseNode: ICatchClauseNode): void {
         estraverse.replace(catchClauseNode.body, {
             leave: (node: INode, parentNode: INode): any => {
-                this.replaceNodeIdentifierByNewValue(node, parentNode, this.catchClauseParam);
+                this.replaceNodeIdentifierWithNewValue(node, parentNode, this.catchClauseParam);
             }
         });
     }

@@ -24,18 +24,18 @@ export class LiteralObfuscator extends NodeObfuscator {
 
         switch (typeof literalNode.value) {
             case 'boolean':
-                content = this.replaceLiteralBooleanByJSFuck(<boolean>literalNode.value);
+                content = this.replaceLiteralBooleanWithJSFuck(<boolean>literalNode.value);
 
                 break;
 
             case 'number':
-                content = this.replaceLiteralNumberByHexadecimalValue(<number>literalNode.value);
+                content = this.replaceLiteralNumberWithHexadecimalValue(<number>literalNode.value);
 
                 break;
 
 
             case 'string':
-                content = this.replaceLiteralValueByUnicodeValue(<string>literalNode.value);
+                content = this.replaceLiteralValueWithUnicodeValue(<string>literalNode.value);
 
                 break;
 

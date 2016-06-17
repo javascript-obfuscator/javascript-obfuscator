@@ -72,7 +72,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @param parentNode
      * @param namesMap
      */
-    protected replaceNodeIdentifierByNewValue (node: INode, parentNode: INode, namesMap: Map <string, string>): void {
+    protected replaceNodeIdentifierWithNewValue (node: INode, parentNode: INode, namesMap: Map <string, string>): void {
         if (Nodes.isIdentifierNode(node) && namesMap.has(node.name)) {
             const parentNodeIsPropertyNode: boolean = (
                     Nodes.isPropertyNode(parentNode) &&
@@ -96,7 +96,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @param nodeValue
      * @returns {string}
      */
-    protected replaceLiteralBooleanByJSFuck (nodeValue: boolean): string {
+    protected replaceLiteralBooleanWithJSFuck (nodeValue: boolean): string {
         return nodeValue ? JSFuck.True : JSFuck.False;
     }
 
@@ -104,7 +104,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @param nodeValue
      * @returns {string}
      */
-    protected replaceLiteralNumberByHexadecimalValue (nodeValue: number): string {
+    protected replaceLiteralNumberWithHexadecimalValue (nodeValue: number): string {
         const prefix: string = '0x';
 
         if (!Utils.isInteger(nodeValue)) {
@@ -118,28 +118,28 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @param nodeValue
      * @returns {string}
      */
-    protected replaceLiteralValueByUnicodeValue (nodeValue: string): string {
+    protected replaceLiteralValueWithUnicodeValue (nodeValue: string): string {
         let value: string = nodeValue,
-            replaceByUnicodeArrayFlag: boolean = Math.random() <= this.options.get('unicodeArrayThreshold');
+            replaceWithUnicodeArrayFlag: boolean = Math.random() <= this.options.get('unicodeArrayThreshold');
 
-        if (this.options.get('encodeUnicodeLiterals') && replaceByUnicodeArrayFlag) {
+        if (this.options.get('encodeUnicodeLiterals') && replaceWithUnicodeArrayFlag) {
             value = Utils.btoa(value);
         }
 
         value = Utils.stringToUnicode(value);
 
-        if (!this.options.get('unicodeArray') || !replaceByUnicodeArrayFlag) {
+        if (!this.options.get('unicodeArray') || !replaceWithUnicodeArrayFlag) {
             return value;
         }
 
-        return this.replaceLiteralValueByUnicodeArrayCall(value);
+        return this.replaceLiteralValueWithUnicodeArrayCall(value);
     }
 
     /**
      * @param value
      * @returns {string}
      */
-    protected replaceLiteralValueByUnicodeArrayCall (value: string): string {
+    protected replaceLiteralValueWithUnicodeArrayCall (value: string): string {
         let unicodeArrayNode: UnicodeArrayNode = <UnicodeArrayNode> this.nodes.get('unicodeArrayNode'),
             unicodeArray: string[] = unicodeArrayNode.getNodeData(),
             sameIndex: number = unicodeArray.indexOf(value),
@@ -153,7 +153,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
             unicodeArrayNode.updateNodeData(value);
         }
 
-        hexadecimalIndex = this.replaceLiteralNumberByHexadecimalValue(index);
+        hexadecimalIndex = this.replaceLiteralNumberWithHexadecimalValue(index);
 
         if (this.options.get('wrapUnicodeArrayCalls')) {
             return `${this.nodes.get('unicodeArrayCallsWrapper').getNodeIdentifier()}('${hexadecimalIndex}')`;

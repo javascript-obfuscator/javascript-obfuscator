@@ -40,7 +40,7 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
      * @param functionDeclarationNode
      */
     private replaceFunctionName (functionDeclarationNode: IFunctionDeclarationNode): void {
-        estraverse.replace(functionDeclarationNode.id, {
+        estraverse.traverse(functionDeclarationNode.id, {
             leave: (node: INode): any => this.storeIdentifiersNames(node, this.functionName)
         });
     }

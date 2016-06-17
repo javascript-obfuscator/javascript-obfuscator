@@ -44,11 +44,12 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
      * @param variableDeclarationNode
      */
     private replaceVariableName (variableDeclarationNode: IVariableDeclarationNode): void {
-        variableDeclarationNode.declarations.forEach((declarationNode: IVariableDeclaratorNode) => {
-            estraverse.replace(declarationNode.id, {
-                enter: (node: INode): any => this.storeIdentifiersNames(node, this.variableNames)
+        variableDeclarationNode.declarations
+            .forEach((declarationNode: IVariableDeclaratorNode) => {
+                estraverse.traverse(declarationNode.id, {
+                    enter: (node: INode): any => this.storeIdentifiersNames(node, this.variableNames)
+                });
             });
-        });
     }
 
     /**

@@ -1870,7 +1870,7 @@ module.exports =
 	        value: function replaceCatchClauseParam(catchClauseNode) {
 	            var _this2 = this;
 	
-	            estraverse.replace(catchClauseNode.param, {
+	            estraverse.traverse(catchClauseNode.param, {
 	                leave: function leave(node) {
 	                    return _this2.storeIdentifiersNames(node, _this2.catchClauseParam);
 	                }
@@ -1946,7 +1946,7 @@ module.exports =
 	        value: function replaceFunctionName(functionDeclarationNode) {
 	            var _this2 = this;
 	
-	            estraverse.replace(functionDeclarationNode.id, {
+	            estraverse.traverse(functionDeclarationNode.id, {
 	                leave: function leave(node) {
 	                    return _this2.storeIdentifiersNames(node, _this2.functionName);
 	                }
@@ -2019,7 +2019,7 @@ module.exports =
 	            var _this2 = this;
 	
 	            functionNode.params.forEach(function (paramsNode) {
-	                estraverse.replace(paramsNode, {
+	                estraverse.traverse(paramsNode, {
 	                    leave: function leave(node) {
 	                        return _this2.storeIdentifiersNames(node, _this2.functionParams);
 	                    }
@@ -2414,7 +2414,7 @@ module.exports =
 	            var _this2 = this;
 	
 	            variableDeclarationNode.declarations.forEach(function (declarationNode) {
-	                estraverse.replace(declarationNode.id, {
+	                estraverse.traverse(declarationNode.id, {
 	                    enter: function enter(node) {
 	                        return _this2.storeIdentifiersNames(node, _this2.variableNames);
 	                    }

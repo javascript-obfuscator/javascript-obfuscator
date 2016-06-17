@@ -36,16 +36,7 @@ export class FunctionObfuscator extends NodeObfuscator {
     private replaceFunctionParams (functionNode: IFunctionNode): void {
         functionNode.params.forEach((paramsNode: INode) => {
             estraverse.replace(paramsNode, {
-                leave: (node: INode): any => {
-                    if (Nodes.isIdentifierNode(node) && !this.isReservedName(node.name)) {
-                        this.functionParams.set(node.name, Utils.getRandomVariableName());
-                        node.name = this.functionParams.get(node.name);
-
-                        return;
-                    }
-
-                    return estraverse.VisitorOption.Skip;
-                }
+                leave: (node: INode): any => this.replaceAndStoreIdentifiersNames(node, this.functionParams)
             });
         });
     }

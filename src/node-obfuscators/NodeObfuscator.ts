@@ -1,3 +1,5 @@
+import * as estraverse from 'estraverse';
+
 import { ICustomNode } from '../interfaces/ICustomNode';
 import { INodeObfuscator } from '../interfaces/INodeObfuscator';
 import { INode } from "../interfaces/nodes/INode";
@@ -44,6 +46,25 @@ export abstract class NodeObfuscator implements INodeObfuscator {
             .some((reservedName: string) => {
                 return new RegExp(reservedName, 'g').test(name);
             });
+    }
+
+    /**
+     * Replaces all identifiers names in specified node with new random names and stores that names in given `namesMap`.
+     * Reserved names will be ignored.
+     *
+     * @param node
+     * @param namesMap
+     * @returns {estraverse.VisitorOption}
+     */
+    protected replaceAndStoreIdentifiersNames (node: INode, namesMap: Map <string, string>): estraverse.VisitorOption {
+        if (Nodes.isIdentifierNode(node) && !this.isReservedName(node.name)) {
+            namesMap.set(node.name, Utils.getRandomVariableName());
+            node.name = namesMap.get(node.name);
+
+            return;
+        }
+
+        return estraverse.VisitorOption.Skip;
     }
 
     /**

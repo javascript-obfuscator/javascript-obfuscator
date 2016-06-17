@@ -46,16 +46,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
     private replaceVariableName (variableDeclarationNode: IVariableDeclarationNode): void {
         variableDeclarationNode.declarations.forEach((declarationNode: IVariableDeclaratorNode) => {
             estraverse.replace(declarationNode.id, {
-                enter: (node: INode): any => {
-                    if (Nodes.isIdentifierNode(node) && !this.isReservedName(node.name)) {
-                        this.variableNames.set(node.name, Utils.getRandomVariableName());
-                        node.name = this.variableNames.get(node.name);
-
-                        return;
-                    }
-
-                    return estraverse.VisitorOption.Skip;
-                }
+                enter: (node: INode): any => this.replaceAndStoreIdentifiersNames(node, this.variableNames)
             });
         });
     }

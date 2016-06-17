@@ -213,9 +213,9 @@ module.exports =
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var estraverse = __webpack_require__(5);
-	var NodeType_1 = __webpack_require__(3);
-	var Nodes_1 = __webpack_require__(2);
+	var estraverse = __webpack_require__(3);
+	var NodeType_1 = __webpack_require__(2);
+	var Nodes_1 = __webpack_require__(4);
 	var Utils_1 = __webpack_require__(0);
 	
 	var NodeUtils = function () {
@@ -329,11 +329,55 @@ module.exports =
 	"use strict";
 	"use strict";
 	
+	var Utils_1 = __webpack_require__(0);
+	exports.NodeType = Utils_1.Utils.strEnumify({
+	    ArrayExpression: 'ArrayExpression',
+	    ArrowFunctionExpression: 'ArrowFunctionExpression',
+	    AssignmentExpression: 'AssignmentExpression',
+	    BinaryExpression: 'BinaryExpression',
+	    BlockStatement: 'BlockStatement',
+	    CallExpression: 'CallExpression',
+	    CatchClause: 'CatchClause',
+	    ClassDeclaration: 'ClassDeclaration',
+	    ExpressionStatement: 'ExpressionStatement',
+	    FunctionDeclaration: 'FunctionDeclaration',
+	    FunctionExpression: 'FunctionExpression',
+	    Identifier: 'Identifier',
+	    IfStatement: 'IfStatement',
+	    Literal: 'Literal',
+	    LogicalExpression: 'LogicalExpression',
+	    MemberExpression: 'MemberExpression',
+	    MethodDefinition: 'MethodDefinition',
+	    ObjectExpression: 'ObjectExpression',
+	    Program: 'Program',
+	    Property: 'Property',
+	    ReturnStatement: 'ReturnStatement',
+	    TryStatement: 'TryStatement',
+	    UnaryExpression: 'UnaryExpression',
+	    UpdateExpression: 'UpdateExpression',
+	    VariableDeclaration: 'VariableDeclaration',
+	    VariableDeclarator: 'VariableDeclarator',
+	    WhileStatement: 'WhileStatement'
+	});
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	module.exports = require("estraverse");
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	"use strict";
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var NodeType_1 = __webpack_require__(3);
+	var NodeType_1 = __webpack_require__(2);
 	
 	var Nodes = function () {
 	    function Nodes() {
@@ -396,45 +440,7 @@ module.exports =
 	exports.Nodes = Nodes;
 
 /***/ },
-/* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	"use strict";
-	
-	var Utils_1 = __webpack_require__(0);
-	exports.NodeType = Utils_1.Utils.strEnumify({
-	    ArrayExpression: 'ArrayExpression',
-	    ArrowFunctionExpression: 'ArrowFunctionExpression',
-	    AssignmentExpression: 'AssignmentExpression',
-	    BinaryExpression: 'BinaryExpression',
-	    BlockStatement: 'BlockStatement',
-	    CallExpression: 'CallExpression',
-	    CatchClause: 'CatchClause',
-	    ClassDeclaration: 'ClassDeclaration',
-	    ExpressionStatement: 'ExpressionStatement',
-	    FunctionDeclaration: 'FunctionDeclaration',
-	    FunctionExpression: 'FunctionExpression',
-	    Identifier: 'Identifier',
-	    IfStatement: 'IfStatement',
-	    Literal: 'Literal',
-	    LogicalExpression: 'LogicalExpression',
-	    MemberExpression: 'MemberExpression',
-	    MethodDefinition: 'MethodDefinition',
-	    ObjectExpression: 'ObjectExpression',
-	    Program: 'Program',
-	    Property: 'Property',
-	    ReturnStatement: 'ReturnStatement',
-	    TryStatement: 'TryStatement',
-	    UnaryExpression: 'UnaryExpression',
-	    UpdateExpression: 'UpdateExpression',
-	    VariableDeclaration: 'VariableDeclaration',
-	    VariableDeclarator: 'VariableDeclarator',
-	    WhileStatement: 'WhileStatement'
-	});
-
-/***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -484,12 +490,6 @@ module.exports =
 	exports.Node = Node;
 
 /***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	module.exports = require("estraverse");
-
-/***/ },
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -500,8 +500,9 @@ module.exports =
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
+	var estraverse = __webpack_require__(3);
 	var JSFuck_1 = __webpack_require__(9);
-	var Nodes_1 = __webpack_require__(2);
+	var Nodes_1 = __webpack_require__(4);
 	var Utils_1 = __webpack_require__(0);
 	
 	var NodeObfuscator = function () {
@@ -518,6 +519,16 @@ module.exports =
 	            return this.options.get('reservedNames').some(function (reservedName) {
 	                return new RegExp(reservedName, 'g').test(name);
 	            });
+	        }
+	    }, {
+	        key: "replaceAndStoreIdentifiersNames",
+	        value: function replaceAndStoreIdentifiersNames(node, namesMap) {
+	            if (Nodes_1.Nodes.isIdentifierNode(node) && !this.isReservedName(node.name)) {
+	                namesMap.set(node.name, Utils_1.Utils.getRandomVariableName());
+	                node.name = namesMap.get(node.name);
+	                return;
+	            }
+	            return estraverse.VisitorOption.Skip;
 	        }
 	    }, {
 	        key: "replaceNodeIdentifierByNewValue",
@@ -807,9 +818,9 @@ module.exports =
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var estraverse = __webpack_require__(5);
+	var estraverse = __webpack_require__(3);
 	var AppendState_1 = __webpack_require__(7);
-	var NodeType_1 = __webpack_require__(3);
+	var NodeType_1 = __webpack_require__(2);
 	var CatchClauseObfuscator_1 = __webpack_require__(31);
 	var ConsoleOutputDisableExpressionNode_1 = __webpack_require__(19);
 	var DebugProtectionNodesGroup_1 = __webpack_require__(28);
@@ -1038,7 +1049,7 @@ module.exports =
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var esprima = __webpack_require__(8);
-	var Node_1 = __webpack_require__(4);
+	var Node_1 = __webpack_require__(5);
 	var NodeUtils_1 = __webpack_require__(1);
 	
 	var ConsoleOutputDisableExpressionNode = function (_Node_1$Node) {
@@ -1085,8 +1096,8 @@ module.exports =
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var NodeType_1 = __webpack_require__(3);
-	var Node_1 = __webpack_require__(4);
+	var NodeType_1 = __webpack_require__(2);
+	var Node_1 = __webpack_require__(5);
 	var NodeUtils_1 = __webpack_require__(1);
 	
 	var DebugProtectionFunctionCallNode = function (_Node_1$Node) {
@@ -1144,8 +1155,8 @@ module.exports =
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var NodeType_1 = __webpack_require__(3);
-	var Node_1 = __webpack_require__(4);
+	var NodeType_1 = __webpack_require__(2);
+	var Node_1 = __webpack_require__(5);
 	var NodeUtils_1 = __webpack_require__(1);
 	
 	var DebugProtectionFunctionIntervalNode = function (_Node_1$Node) {
@@ -1229,7 +1240,7 @@ module.exports =
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var esprima = __webpack_require__(8);
-	var Node_1 = __webpack_require__(4);
+	var Node_1 = __webpack_require__(5);
 	var NodeUtils_1 = __webpack_require__(1);
 	var Utils_1 = __webpack_require__(0);
 	
@@ -1293,7 +1304,7 @@ module.exports =
 	var JSFuck_1 = __webpack_require__(9);
 	var NoCustomNodesPreset_1 = __webpack_require__(13);
 	var JavaScriptObfuscator_1 = __webpack_require__(11);
-	var Node_1 = __webpack_require__(4);
+	var Node_1 = __webpack_require__(5);
 	var NodeUtils_1 = __webpack_require__(1);
 	var Utils_1 = __webpack_require__(0);
 	
@@ -1356,7 +1367,7 @@ module.exports =
 	
 	var esprima = __webpack_require__(8);
 	var AppendState_1 = __webpack_require__(7);
-	var Node_1 = __webpack_require__(4);
+	var Node_1 = __webpack_require__(5);
 	var NodeUtils_1 = __webpack_require__(1);
 	var Utils_1 = __webpack_require__(0);
 	
@@ -1433,7 +1444,7 @@ module.exports =
 	var AppendState_1 = __webpack_require__(7);
 	var JSFuck_1 = __webpack_require__(9);
 	var NoCustomNodesPreset_1 = __webpack_require__(13);
-	var Node_1 = __webpack_require__(4);
+	var Node_1 = __webpack_require__(5);
 	var NodeUtils_1 = __webpack_require__(1);
 	var Utils_1 = __webpack_require__(0);
 	
@@ -1510,8 +1521,8 @@ module.exports =
 	
 	var escodegen = __webpack_require__(10);
 	var AppendState_1 = __webpack_require__(7);
-	var NodeType_1 = __webpack_require__(3);
-	var Node_1 = __webpack_require__(4);
+	var NodeType_1 = __webpack_require__(2);
+	var Node_1 = __webpack_require__(5);
 	var NodeUtils_1 = __webpack_require__(1);
 	var Utils_1 = __webpack_require__(0);
 	
@@ -1623,7 +1634,7 @@ module.exports =
 	var JSFuck_1 = __webpack_require__(9);
 	var NoCustomNodesPreset_1 = __webpack_require__(13);
 	var JavaScriptObfuscator_1 = __webpack_require__(11);
-	var Node_1 = __webpack_require__(4);
+	var Node_1 = __webpack_require__(5);
 	var NodeUtils_1 = __webpack_require__(1);
 	var Utils_1 = __webpack_require__(0);
 	
@@ -1828,10 +1839,8 @@ module.exports =
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var estraverse = __webpack_require__(5);
+	var estraverse = __webpack_require__(3);
 	var NodeObfuscator_1 = __webpack_require__(6);
-	var Nodes_1 = __webpack_require__(2);
-	var Utils_1 = __webpack_require__(0);
 	
 	var CatchClauseObfuscator = function (_NodeObfuscator_1$Nod) {
 	    _inherits(CatchClauseObfuscator, _NodeObfuscator_1$Nod);
@@ -1863,13 +1872,8 @@ module.exports =
 	            var _this2 = this;
 	
 	            estraverse.replace(catchClauseNode.param, {
-	                leave: function leave(node, parentNode) {
-	                    if (Nodes_1.Nodes.isIdentifierNode(node) && !_this2.isReservedName(node.name)) {
-	                        _this2.catchClauseParam.set(node.name, Utils_1.Utils.getRandomVariableName());
-	                        node.name = _this2.catchClauseParam.get(node.name);
-	                        return;
-	                    }
-	                    return estraverse.VisitorOption.Skip;
+	                leave: function leave(node) {
+	                    return _this2.replaceAndStoreIdentifiersNames(node, _this2.catchClauseParam);
 	                }
 	            });
 	        }
@@ -1906,12 +1910,10 @@ module.exports =
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var estraverse = __webpack_require__(5);
-	var NodeType_1 = __webpack_require__(3);
+	var estraverse = __webpack_require__(3);
+	var NodeType_1 = __webpack_require__(2);
 	var NodeObfuscator_1 = __webpack_require__(6);
-	var Nodes_1 = __webpack_require__(2);
 	var NodeUtils_1 = __webpack_require__(1);
-	var Utils_1 = __webpack_require__(0);
 	
 	var FunctionDeclarationObfuscator = function (_NodeObfuscator_1$Nod) {
 	    _inherits(FunctionDeclarationObfuscator, _NodeObfuscator_1$Nod);
@@ -1947,12 +1949,7 @@ module.exports =
 	
 	            estraverse.replace(functionDeclarationNode.id, {
 	                leave: function leave(node) {
-	                    if (Nodes_1.Nodes.isIdentifierNode(node) && !_this2.isReservedName(node.name)) {
-	                        _this2.functionName.set(node.name, Utils_1.Utils.getRandomVariableName());
-	                        node.name = _this2.functionName.get(node.name);
-	                        return;
-	                    }
-	                    return estraverse.VisitorOption.Skip;
+	                    return _this2.replaceAndStoreIdentifiersNames(node, _this2.functionName);
 	                }
 	            });
 	        }
@@ -1990,10 +1987,8 @@ module.exports =
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var estraverse = __webpack_require__(5);
+	var estraverse = __webpack_require__(3);
 	var NodeObfuscator_1 = __webpack_require__(6);
-	var Nodes_1 = __webpack_require__(2);
-	var Utils_1 = __webpack_require__(0);
 	
 	var FunctionObfuscator = function (_NodeObfuscator_1$Nod) {
 	    _inherits(FunctionObfuscator, _NodeObfuscator_1$Nod);
@@ -2027,12 +2022,7 @@ module.exports =
 	            functionNode.params.forEach(function (paramsNode) {
 	                estraverse.replace(paramsNode, {
 	                    leave: function leave(node) {
-	                        if (Nodes_1.Nodes.isIdentifierNode(node) && !_this2.isReservedName(node.name)) {
-	                            _this2.functionParams.set(node.name, Utils_1.Utils.getRandomVariableName());
-	                            node.name = _this2.functionParams.get(node.name);
-	                            return;
-	                        }
-	                        return estraverse.VisitorOption.Skip;
+	                        return _this2.replaceAndStoreIdentifiersNames(node, _this2.functionParams);
 	                    }
 	                });
 	            });
@@ -2074,7 +2064,7 @@ module.exports =
 	
 	var escodegen = __webpack_require__(10);
 	var NodeObfuscator_1 = __webpack_require__(6);
-	var Nodes_1 = __webpack_require__(2);
+	var Nodes_1 = __webpack_require__(4);
 	
 	var LiteralObfuscator = function (_NodeObfuscator_1$Nod) {
 	    _inherits(LiteralObfuscator, _NodeObfuscator_1$Nod);
@@ -2138,10 +2128,10 @@ module.exports =
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var escodegen = __webpack_require__(10);
-	var estraverse = __webpack_require__(5);
-	var NodeType_1 = __webpack_require__(3);
+	var estraverse = __webpack_require__(3);
+	var NodeType_1 = __webpack_require__(2);
 	var NodeObfuscator_1 = __webpack_require__(6);
-	var Nodes_1 = __webpack_require__(2);
+	var Nodes_1 = __webpack_require__(4);
 	
 	var MemberExpressionObfuscator = function (_NodeObfuscator_1$Nod) {
 	    _inherits(MemberExpressionObfuscator, _NodeObfuscator_1$Nod);
@@ -2228,9 +2218,9 @@ module.exports =
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var estraverse = __webpack_require__(5);
+	var estraverse = __webpack_require__(3);
 	var NodeObfuscator_1 = __webpack_require__(6);
-	var Nodes_1 = __webpack_require__(2);
+	var Nodes_1 = __webpack_require__(4);
 	var Utils_1 = __webpack_require__(0);
 	
 	var MethodDefinitionObfuscator = function (_NodeObfuscator_1$Nod) {
@@ -2297,10 +2287,10 @@ module.exports =
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var escodegen = __webpack_require__(10);
-	var estraverse = __webpack_require__(5);
-	var NodeType_1 = __webpack_require__(3);
+	var estraverse = __webpack_require__(3);
+	var NodeType_1 = __webpack_require__(2);
 	var NodeObfuscator_1 = __webpack_require__(6);
-	var Nodes_1 = __webpack_require__(2);
+	var Nodes_1 = __webpack_require__(4);
 	var Utils_1 = __webpack_require__(0);
 	
 	var ObjectExpressionObfuscator = function (_NodeObfuscator_1$Nod) {
@@ -2386,10 +2376,9 @@ module.exports =
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var estraverse = __webpack_require__(5);
-	var NodeType_1 = __webpack_require__(3);
+	var estraverse = __webpack_require__(3);
+	var NodeType_1 = __webpack_require__(2);
 	var NodeObfuscator_1 = __webpack_require__(6);
-	var Nodes_1 = __webpack_require__(2);
 	var NodeUtils_1 = __webpack_require__(1);
 	var Utils_1 = __webpack_require__(0);
 	
@@ -2428,12 +2417,7 @@ module.exports =
 	            variableDeclarationNode.declarations.forEach(function (declarationNode) {
 	                estraverse.replace(declarationNode.id, {
 	                    enter: function enter(node) {
-	                        if (Nodes_1.Nodes.isIdentifierNode(node) && !_this2.isReservedName(node.name)) {
-	                            _this2.variableNames.set(node.name, Utils_1.Utils.getRandomVariableName());
-	                            node.name = _this2.variableNames.get(node.name);
-	                            return;
-	                        }
-	                        return estraverse.VisitorOption.Skip;
+	                        return _this2.replaceAndStoreIdentifiersNames(node, _this2.variableNames);
 	                    }
 	                });
 	            });

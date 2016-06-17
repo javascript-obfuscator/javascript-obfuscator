@@ -47,7 +47,7 @@ export class FunctionObfuscator extends NodeObfuscator {
     private replaceFunctionParamsInBlockStatement (functionNode: IFunctionNode): void {
         estraverse.replace(functionNode.body, {
             leave: (node: INode, parentNode: INode): any => {
-                this.replaceNodeIdentifierWithNewValue(node, parentNode, this.functionParams);
+                this.replaceIdentifiersWithValuesFromNamesMap(node, parentNode, this.functionParams);
             }
         });
     }

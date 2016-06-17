@@ -458,8 +458,8 @@ module.exports =
 	            return estraverse.VisitorOption.Skip;
 	        }
 	    }, {
-	        key: "replaceNodeIdentifierWithNewValue",
-	        value: function replaceNodeIdentifierWithNewValue(node, parentNode, namesMap) {
+	        key: "replaceIdentifiersWithValuesFromNamesMap",
+	        value: function replaceIdentifiersWithValuesFromNamesMap(node, parentNode, namesMap) {
 	            if (Nodes_1.Nodes.isIdentifierNode(node) && namesMap.has(node.name)) {
 	                var parentNodeIsPropertyNode = Nodes_1.Nodes.isPropertyNode(parentNode) && parentNode.key === node,
 	                    parentNodeIsMemberExpressionNode = Nodes_1.Nodes.isMemberExpressionNode(parentNode) && parentNode.computed === false && parentNode.property === node;
@@ -1884,7 +1884,7 @@ module.exports =
 	
 	            estraverse.replace(catchClauseNode.body, {
 	                leave: function leave(node, parentNode) {
-	                    _this3.replaceNodeIdentifierWithNewValue(node, parentNode, _this3.catchClauseParam);
+	                    _this3.replaceIdentifiersWithValuesFromNamesMap(node, parentNode, _this3.catchClauseParam);
 	                }
 	            });
 	        }
@@ -1961,7 +1961,7 @@ module.exports =
 	            var scopeNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(functionDeclarationNode);
 	            estraverse.replace(scopeNode, {
 	                enter: function enter(node, parentNode) {
-	                    _this3.replaceNodeIdentifierWithNewValue(node, parentNode, _this3.functionName);
+	                    _this3.replaceIdentifiersWithValuesFromNamesMap(node, parentNode, _this3.functionName);
 	                }
 	            });
 	        }
@@ -2034,7 +2034,7 @@ module.exports =
 	
 	            estraverse.replace(functionNode.body, {
 	                leave: function leave(node, parentNode) {
-	                    _this3.replaceNodeIdentifierWithNewValue(node, parentNode, _this3.functionParams);
+	                    _this3.replaceIdentifiersWithValuesFromNamesMap(node, parentNode, _this3.functionParams);
 	                }
 	            });
 	        }
@@ -2435,7 +2435,7 @@ module.exports =
 	                    if (Utils_1.Utils.arrayContains(functionNodes, node.type)) {
 	                        estraverse.replace(node, {
 	                            enter: function enter(node, parentNode) {
-	                                _this3.replaceNodeIdentifierWithNewValue(node, parentNode, _this3.variableNames);
+	                                _this3.replaceIdentifiersWithValuesFromNamesMap(node, parentNode, _this3.variableNames);
 	                            }
 	                        });
 	                    }
@@ -2443,7 +2443,7 @@ module.exports =
 	                        isNodeAfterVariableDeclaratorFlag = true;
 	                    }
 	                    if (isNodeAfterVariableDeclaratorFlag) {
-	                        _this3.replaceNodeIdentifierWithNewValue(node, parentNode, _this3.variableNames);
+	                        _this3.replaceIdentifiersWithValuesFromNamesMap(node, parentNode, _this3.variableNames);
 	                    }
 	                }
 	            });

@@ -55,7 +55,7 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
 
         estraverse.replace(scopeNode, {
             enter: (node: INode, parentNode: INode): any => {
-                this.replaceNodeIdentifierWithNewValue(node, parentNode, this.functionName);
+                this.replaceIdentifiersWithValuesFromNamesMap(node, parentNode, this.functionName);
             }
         });
     }

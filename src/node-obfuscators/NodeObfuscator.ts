@@ -56,7 +56,10 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @param namesMap
      * @returns {estraverse.VisitorOption}
      */
-    protected replaceAndStoreIdentifiersNames (node: INode, namesMap: Map <string, string>): estraverse.VisitorOption {
+    protected replaceAndStoreIdentifiersNames (
+        node: INode,
+        namesMap: Map <string, string>
+    ): estraverse.VisitorOption {
         if (Nodes.isIdentifierNode(node) && !this.isReservedName(node.name)) {
             namesMap.set(node.name, Utils.getRandomVariableName());
             node.name = namesMap.get(node.name);
@@ -72,7 +75,11 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @param parentNode
      * @param namesMap
      */
-    protected replaceNodeIdentifierWithNewValue (node: INode, parentNode: INode, namesMap: Map <string, string>): void {
+    protected replaceIdentifiersWithValuesFromNamesMap (
+        node: INode,
+        parentNode: INode,
+        namesMap: Map <string, string>
+    ): void {
         if (Nodes.isIdentifierNode(node) && namesMap.has(node.name)) {
             const parentNodeIsPropertyNode: boolean = (
                     Nodes.isPropertyNode(parentNode) &&

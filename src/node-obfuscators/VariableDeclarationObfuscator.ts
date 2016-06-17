@@ -72,7 +72,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
                 if (Utils.arrayContains(functionNodes, node.type)) {
                     estraverse.replace(node, {
                         enter: (node: INode, parentNode: INode): any => {
-                            this.replaceNodeIdentifierWithNewValue(node, parentNode, this.variableNames);
+                            this.replaceIdentifiersWithValuesFromNamesMap(node, parentNode, this.variableNames);
                         }
                     });
                 }
@@ -82,7 +82,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
                 }
 
                 if (isNodeAfterVariableDeclaratorFlag) {
-                    this.replaceNodeIdentifierWithNewValue(node, parentNode, this.variableNames);
+                    this.replaceIdentifiersWithValuesFromNamesMap(node, parentNode, this.variableNames);
                 }
             }
         });

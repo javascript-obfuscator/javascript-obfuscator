@@ -87,17 +87,21 @@ describe('NodeUtils', () => {
             };
         });
 
-        it('should return block-scope node of given node by given index if node has block-scope', () => {
+        it('should return block-statement child node of given node if that node has block-statement', () => {
             assert.deepEqual(NodeUtils.getBlockStatementNodeByIndex(blockStatementNode), identifierNode);
             assert.deepEqual(NodeUtils.getBlockStatementNodeByIndex(blockStatementNode, 1), literalNode);
         });
 
-        it('should return root node if index is out of boundaries', () => {
-            assert.deepEqual(NodeUtils.getBlockStatementNodeByIndex(blockStatementNode, 2), blockStatementNode);
+        it('should throw a `ReferenceError` if index is out of boundaries', () => {
+            assert.throws(function () {
+                return NodeUtils.getBlockStatementNodeByIndex(blockStatementNode, 2);
+            }, ReferenceError);
         });
 
-        it('should return root node if node has not block-scope', () => {
-            assert.deepEqual(NodeUtils.getBlockStatementNodeByIndex(identifierNode, 1), identifierNode);
+        it('should throw a `TypeError` if node has not block-statement', () => {
+            assert.throws(function () {
+                NodeUtils.getBlockStatementNodeByIndex(identifierNode, 1)
+            }, TypeError);
         });
     });
 

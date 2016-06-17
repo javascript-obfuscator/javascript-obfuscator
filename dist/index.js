@@ -247,10 +247,13 @@ module.exports =
 	        value: function getBlockStatementNodeByIndex(node) {
 	            var index = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 	
-	            if (Nodes_1.Nodes.isNodeHasBlockStatement(node) && node.body[index]) {
+	            if (Nodes_1.Nodes.isNodeHasBlockStatement(node)) {
+	                if (node.body[index] === undefined) {
+	                    throw new ReferenceError("Wrong index `" + index + "`. BlockStatement body length is `" + node.body.length + "`.");
+	                }
 	                return node.body[index];
 	            }
-	            return node;
+	            throw new TypeError('The specified node has not block statement');
 	        }
 	    }, {
 	        key: "getBlockScopeOfNode",

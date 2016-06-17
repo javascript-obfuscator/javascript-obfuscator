@@ -53,13 +53,13 @@ export class NodeUtils {
     public static getBlockStatementNodeByIndex (node: INode, index: number = 0): INode {
         if (Nodes.isNodeHasBlockStatement(node)) {
             if (node.body[index] === undefined) {
-                throw new ReferenceError(`Wrong index \`${index}\`. BlockStatement body length is \`${node.body.length}\`.`);
+                throw new ReferenceError(`Wrong index \`${index}\`. Block-statement body length is \`${node.body.length}\``);
             }
 
             return node.body[index];
         }
 
-        throw new TypeError('The specified node has not block statement');
+        throw new TypeError('The specified node have no a block-statement');
     }
 
     /**

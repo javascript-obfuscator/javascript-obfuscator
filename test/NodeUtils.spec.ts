@@ -122,7 +122,7 @@ describe('NodeUtils', () => {
             }, ReferenceError);
         });
 
-        it('should throw a `TypeError` if node has not block-statement', () => {
+        it('should throw a `TypeError` if node have no a block-statement', () => {
             assert.throws(function () {
                 NodeUtils.getBlockStatementNodeByIndex(identifierNode, 1)
             }, TypeError);

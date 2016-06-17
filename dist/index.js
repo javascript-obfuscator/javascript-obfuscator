@@ -249,11 +249,11 @@ module.exports =
 	
 	            if (Nodes_1.Nodes.isNodeHasBlockStatement(node)) {
 	                if (node.body[index] === undefined) {
-	                    throw new ReferenceError("Wrong index `" + index + "`. BlockStatement body length is `" + node.body.length + "`.");
+	                    throw new ReferenceError("Wrong index `" + index + "`. Block-statement body length is `" + node.body.length + "`");
 	                }
 	                return node.body[index];
 	            }
-	            throw new TypeError('The specified node has not block statement');
+	            throw new TypeError('The specified node have no a block-statement');
 	        }
 	    }, {
 	        key: "getBlockScopeOfNode",

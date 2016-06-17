@@ -5,7 +5,7 @@ import { IOptions } from "../interfaces/IOptions";
 
 import { JSFuck } from "../enums/JSFuck";
 
-import { NodeUtils } from "../NodeUtils";
+import { Nodes } from "../Nodes";
 import { UnicodeArrayNode } from "../custom-nodes/unicode-array-nodes/UnicodeArrayNode";
 import { Utils } from '../Utils';
 
@@ -52,13 +52,13 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @param namesMap
      */
     protected replaceNodeIdentifierByNewValue (node: INode, parentNode: INode, namesMap: Map <string, string>): void {
-        if (NodeUtils.isIdentifierNode(node) && namesMap.has(node.name)) {
+        if (Nodes.isIdentifierNode(node) && namesMap.has(node.name)) {
             const parentNodeIsPropertyNode: boolean = (
-                    NodeUtils.isPropertyNode(parentNode) &&
+                    Nodes.isPropertyNode(parentNode) &&
                     parentNode.key === node
                 ),
                 parentNodeIsMemberExpressionNode: boolean = (
-                    NodeUtils.isMemberExpressionNode(parentNode) &&
+                    Nodes.isMemberExpressionNode(parentNode) &&
                     parentNode.computed === false &&
                     parentNode.property === node
                 );

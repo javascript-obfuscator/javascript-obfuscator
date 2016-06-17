@@ -4,7 +4,7 @@ import { ILiteralNode } from "../interfaces/nodes/ILiteralNode";
 
 import { INode } from "../interfaces/nodes/INode";
 import { NodeObfuscator } from './NodeObfuscator';
-import { NodeUtils } from "../NodeUtils";
+import { Nodes } from "../Nodes";
 
 export class LiteralObfuscator extends NodeObfuscator {
     /**
@@ -12,7 +12,7 @@ export class LiteralObfuscator extends NodeObfuscator {
      * @param parentNode
      */
     public obfuscateNode (literalNode: ILiteralNode, parentNode: INode): void {
-        if (NodeUtils.isPropertyNode(parentNode) && parentNode.key === literalNode) {
+        if (Nodes.isPropertyNode(parentNode) && parentNode.key === literalNode) {
             return;
         }
 

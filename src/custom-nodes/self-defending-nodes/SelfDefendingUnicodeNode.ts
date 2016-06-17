@@ -3,7 +3,7 @@ import * as esprima from 'esprima';
 import { INode } from "../../interfaces/nodes/INode";
 import { IOptions } from "../../interfaces/IOptions";
 
-import { TBlockScopeNode } from "../../types/TBlockScopeNode";
+import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
 
 import { AppendState } from "../../enums/AppendState";
 import { JSFuck } from "../../enums/JSFuck";
@@ -33,7 +33,7 @@ export class SelfDefendingUnicodeNode extends Node {
     /**
      * @param blockScopeNode
      */
-    public appendNode (blockScopeNode: TBlockScopeNode): void {
+    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
         let programBodyLength: number = blockScopeNode.body.length,
             randomIndex: number = 0;
 
@@ -66,6 +66,6 @@ export class SelfDefendingUnicodeNode extends Node {
 
         NodeUtils.addXVerbatimPropertyToLiterals(node);
 
-        return NodeUtils.getBlockScopeNodeByIndex(node);
+        return NodeUtils.getBlockStatementNodeByIndex(node);
     }
 }

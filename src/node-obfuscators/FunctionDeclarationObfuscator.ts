@@ -6,6 +6,7 @@ import { INode } from "../interfaces/nodes/INode";
 import { NodeType } from "../enums/NodeType";
 
 import { NodeObfuscator } from './NodeObfuscator';
+import { Nodes } from "../Nodes";
 import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
 
@@ -43,7 +44,7 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
     private replaceFunctionName (functionDeclarationNode: IFunctionDeclarationNode): void {
         estraverse.replace(functionDeclarationNode.id, {
             leave: (node: INode): any => {
-                if (NodeUtils.isIdentifierNode(node) && !this.isReservedName(node.name)) {
+                if (Nodes.isIdentifierNode(node) && !this.isReservedName(node.name)) {
                     this.functionName.set(node.name, Utils.getRandomVariableName());
                     node.name = this.functionName.get(node.name);
 

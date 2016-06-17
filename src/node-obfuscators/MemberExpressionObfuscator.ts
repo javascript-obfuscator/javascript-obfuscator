@@ -9,7 +9,7 @@ import { INode } from "../interfaces/nodes/INode";
 import { NodeType } from "../enums/NodeType";
 
 import { NodeObfuscator } from './NodeObfuscator';
-import { NodeUtils } from "../NodeUtils";
+import { Nodes } from "../Nodes";
 
 export class MemberExpressionObfuscator extends NodeObfuscator {
     /**
@@ -18,13 +18,13 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
     public obfuscateNode (memberExpressionNode: IMemberExpressionNode): void {
         estraverse.replace(memberExpressionNode.property, {
             leave: (node: INode, parentNode: INode): any => {
-                if (NodeUtils.isLiteralNode(node)) {
+                if (Nodes.isLiteralNode(node)) {
                     this.literalNodeController(node);
 
                     return;
                 }
 
-                if (NodeUtils.isIdentifierNode(node)) {
+                if (Nodes.isIdentifierNode(node)) {
                     if (memberExpressionNode.computed) {
                         return;
                     }

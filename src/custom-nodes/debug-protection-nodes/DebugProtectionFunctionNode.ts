@@ -3,7 +3,7 @@ import * as esprima from 'esprima';
 import { INode } from "../../interfaces/nodes/INode";
 import { IOptions } from "../../interfaces/IOptions";
 
-import { TBlockScopeNode } from "../../types/TBlockScopeNode";
+import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
 
 import { Node } from '../Node';
 import { NodeUtils } from '../../NodeUtils';
@@ -30,7 +30,7 @@ export class DebugProtectionFunctionNode extends Node {
     /**
      * @param blockScopeNode
      */
-    public appendNode (blockScopeNode: TBlockScopeNode): void {
+    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
         let programBodyLength: number = blockScopeNode.body.length,
             randomIndex: number = Utils.getRandomGenerator().integer({
                 min: 0,
@@ -53,7 +53,7 @@ export class DebugProtectionFunctionNode extends Node {
      * @returns {INode}
      */
     protected getNodeStructure (): INode {
-        return NodeUtils.getBlockScopeNodeByIndex(
+        return NodeUtils.getBlockStatementNodeByIndex(
             esprima.parse(`
                 var ${this.debugProtectionFunctionName} = function () {
                     function debuggerProtection (counter) {

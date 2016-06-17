@@ -4,7 +4,7 @@ import { IMethodDefinitionNode } from "../interfaces/nodes/IMethodDefinitionNode
 import { INode } from "../interfaces/nodes/INode";
 
 import { NodeObfuscator } from './NodeObfuscator';
-import { NodeUtils } from "../NodeUtils";
+import { Nodes } from "../Nodes";
 import { Utils } from "../Utils";
 
 /**
@@ -37,7 +37,7 @@ export class MethodDefinitionObfuscator extends NodeObfuscator {
         estraverse.replace(methodDefinitionNode.key, {
             leave: (node: INode): any => {
                 if (
-                    NodeUtils.isIdentifierNode(node) &&
+                    Nodes.isIdentifierNode(node) &&
                     !Utils.arrayContains(this.ignoredNames, node.name) &&
                     methodDefinitionNode.computed === false
                 ) {

@@ -4,7 +4,7 @@ import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { INode } from "../../interfaces/nodes/INode";
 import { IOptions } from "../../interfaces/IOptions";
 
-import { TBlockScopeNode } from "../../types/TBlockScopeNode";
+import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
 
 import { AppendState } from "../../enums/AppendState";
 import { JSFuck } from "../../enums/JSFuck";
@@ -52,7 +52,7 @@ export class UnicodeArrayDecodeNode extends Node {
     /**
      * @param blockScopeNode
      */
-    public appendNode (blockScopeNode: TBlockScopeNode): void {
+    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
         NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), 1);
     }
 
@@ -130,6 +130,6 @@ export class UnicodeArrayDecodeNode extends Node {
 
         NodeUtils.addXVerbatimPropertyToLiterals(node);
 
-        return NodeUtils.getBlockScopeNodeByIndex(node);
+        return NodeUtils.getBlockStatementNodeByIndex(node);
     }
 }

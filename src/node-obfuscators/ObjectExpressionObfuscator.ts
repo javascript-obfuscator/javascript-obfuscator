@@ -10,7 +10,7 @@ import { INode } from "../interfaces/nodes/INode";
 import { NodeType } from "../enums/NodeType";
 
 import { NodeObfuscator } from './NodeObfuscator';
-import { NodeUtils } from "../NodeUtils";
+import { Nodes } from "../Nodes";
 import { Utils } from '../Utils';
 
 /**
@@ -31,13 +31,13 @@ export class ObjectExpressionObfuscator extends NodeObfuscator {
         objectExpressionNode.properties.forEach((property: IPropertyNode) => {
             estraverse.replace(property.key, {
                 leave: (node: INode, parentNode: INode): any => {
-                    if (NodeUtils.isLiteralNode(node)) {
+                    if (Nodes.isLiteralNode(node)) {
                         this.literalNodeController(node);
 
                         return;
                     }
 
-                    if (NodeUtils.isIdentifierNode(node)) {
+                    if (Nodes.isIdentifierNode(node)) {
                         this.identifierNodeController(node);
                     }
                 }

@@ -7,6 +7,7 @@ import { IVariableDeclaratorNode } from "../interfaces/nodes/IVariableDeclarator
 import { NodeType } from "../enums/NodeType";
 
 import { NodeObfuscator } from './NodeObfuscator';
+import { Nodes } from "../Nodes";
 import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
 
@@ -46,7 +47,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
         variableDeclarationNode.declarations.forEach((declarationNode: IVariableDeclaratorNode) => {
             estraverse.replace(declarationNode.id, {
                 enter: (node: INode): any => {
-                    if (NodeUtils.isIdentifierNode(node) && !this.isReservedName(node.name)) {
+                    if (Nodes.isIdentifierNode(node) && !this.isReservedName(node.name)) {
                         this.variableNames.set(node.name, Utils.getRandomVariableName());
                         node.name = this.variableNames.get(node.name);
 

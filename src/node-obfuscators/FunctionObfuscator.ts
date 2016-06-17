@@ -4,7 +4,7 @@ import { IFunctionNode } from "../interfaces/nodes/IFunctionNode";
 import { INode } from "../interfaces/nodes/INode";
 
 import { NodeObfuscator } from './NodeObfuscator';
-import { NodeUtils } from "../NodeUtils";
+import { Nodes } from "../Nodes";
 import { Utils } from '../Utils';
 
 /**
@@ -36,7 +36,7 @@ export class FunctionObfuscator extends NodeObfuscator {
         functionNode.params.forEach((paramsNode: INode) => {
             estraverse.replace(paramsNode, {
                 leave: (node: INode): any => {
-                    if (NodeUtils.isIdentifierNode(node) && !this.isReservedName(node.name)) {
+                    if (Nodes.isIdentifierNode(node) && !this.isReservedName(node.name)) {
                         this.functionParams.set(node.name, Utils.getRandomVariableName());
                         node.name = this.functionParams.get(node.name);
 

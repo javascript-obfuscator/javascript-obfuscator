@@ -4,7 +4,7 @@ import { INode } from '../../interfaces/nodes/INode';
 import { IOptions } from "../../interfaces/IOptions";
 import { IVariableDeclarationNode } from "../../interfaces/nodes/IVariableDeclarationNode";
 
-import { TBlockScopeNode } from "../../types/TBlockScopeNode";
+import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
 
 import { AppendState } from '../../enums/AppendState';
 import { NodeType } from "../../enums/NodeType";
@@ -60,7 +60,7 @@ export class UnicodeArrayNode extends Node {
     /**
      * @param blockScopeNode
      */
-    public appendNode (blockScopeNode: TBlockScopeNode): void {
+    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
         NodeUtils.prependNode(blockScopeNode.body, this.getNode());
     }
 

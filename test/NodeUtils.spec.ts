@@ -60,7 +60,7 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('getBlockScopeNodeByIndex (node: INode, index: number = 0): INode', () => {
+    describe('getBlockStatementNodeByIndex (node: INode, index: number = 0): INode', () => {
         let blockStatementNode: IBlockStatementNode,
             identifierNode: IIdentifierNode,
             literalNode: ILiteralNode;
@@ -88,20 +88,20 @@ describe('NodeUtils', () => {
         });
 
         it('should return block-scope node of given node by given index if node has block-scope', () => {
-            assert.deepEqual(NodeUtils.getBlockScopeNodeByIndex(blockStatementNode), identifierNode);
-            assert.deepEqual(NodeUtils.getBlockScopeNodeByIndex(blockStatementNode, 1), literalNode);
+            assert.deepEqual(NodeUtils.getBlockStatementNodeByIndex(blockStatementNode), identifierNode);
+            assert.deepEqual(NodeUtils.getBlockStatementNodeByIndex(blockStatementNode, 1), literalNode);
         });
 
         it('should return root node if index is out of boundaries', () => {
-            assert.deepEqual(NodeUtils.getBlockScopeNodeByIndex(blockStatementNode, 2), blockStatementNode);
+            assert.deepEqual(NodeUtils.getBlockStatementNodeByIndex(blockStatementNode, 2), blockStatementNode);
         });
 
         it('should return root node if node has not block-scope', () => {
-            assert.deepEqual(NodeUtils.getBlockScopeNodeByIndex(identifierNode, 1), identifierNode);
+            assert.deepEqual(NodeUtils.getBlockStatementNodeByIndex(identifierNode, 1), identifierNode);
         });
     });
 
-    describe('getBlockScopeOfNode (node: INode, depth: number = 0): TBlockScopeNode', () => {
+    describe('getBlockScopeOfNode (node: INode, depth: number = 0): TNodeWithBlockStatement', () => {
         let blockStatementNode: IBlockStatementNode,
             identifierNode: IIdentifierNode,
             functionDeclarationNode: IFunctionDeclarationNode,

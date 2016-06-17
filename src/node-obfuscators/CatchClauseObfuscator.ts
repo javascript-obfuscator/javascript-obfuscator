@@ -4,7 +4,7 @@ import { ICatchClauseNode } from "../interfaces/nodes/ICatchClauseNode";
 import { INode } from '../interfaces/nodes/INode';
 
 import { NodeObfuscator } from './NodeObfuscator';
-import { NodeUtils } from "../NodeUtils";
+import { Nodes } from "../Nodes";
 import { Utils } from '../Utils';
 
 /**
@@ -35,7 +35,7 @@ export class CatchClauseObfuscator extends NodeObfuscator {
     private replaceCatchClauseParam (catchClauseNode: ICatchClauseNode): void {
         estraverse.replace(catchClauseNode.param, {
             leave: (node: INode, parentNode: INode): any => {
-                if (NodeUtils.isIdentifierNode(node) && !this.isReservedName(node.name)) {
+                if (Nodes.isIdentifierNode(node) && !this.isReservedName(node.name)) {
                     this.catchClauseParam.set(node.name, Utils.getRandomVariableName());
                     node.name = this.catchClauseParam.get(node.name);
 

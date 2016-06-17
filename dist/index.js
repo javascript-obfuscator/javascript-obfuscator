@@ -263,19 +263,15 @@ module.exports =
 	            if (!node.parentNode) {
 	                throw new ReferenceError('`parentNode` property of given node is `undefined`');
 	            }
-	            if (node.parentNode.type === NodeType_1.NodeType.Program) {
-	                return node.parentNode;
-	            }
 	            if (!Utils_1.Utils.arrayContains(NodeUtils.nodesWithBlockScope, node.parentNode.type)) {
 	                return NodeUtils.getBlockScopeOfNode(node.parentNode, depth);
-	            }
-	            if (depth > 0) {
+	            } else if (depth > 0) {
 	                return NodeUtils.getBlockScopeOfNode(node.parentNode, --depth);
 	            }
-	            if (node.type !== NodeType_1.NodeType.BlockStatement) {
-	                return NodeUtils.getBlockScopeOfNode(node.parentNode);
+	            if (Nodes_1.Nodes.isProgramNode(node) || Nodes_1.Nodes.isBlockStatementNode(node)) {
+	                return node;
 	            }
-	            return node;
+	            return NodeUtils.getBlockScopeOfNode(node.parentNode);
 	        }
 	    }, {
 	        key: "insertNodeAtIndex",
@@ -319,7 +315,7 @@ module.exports =
 	    return NodeUtils;
 	}();
 	
-	NodeUtils.nodesWithBlockScope = [NodeType_1.NodeType.ArrowFunctionExpression, NodeType_1.NodeType.FunctionDeclaration, NodeType_1.NodeType.FunctionExpression, NodeType_1.NodeType.MethodDefinition];
+	NodeUtils.nodesWithBlockScope = [NodeType_1.NodeType.ArrowFunctionExpression, NodeType_1.NodeType.FunctionDeclaration, NodeType_1.NodeType.FunctionExpression, NodeType_1.NodeType.MethodDefinition, NodeType_1.NodeType.Program];
 	exports.NodeUtils = NodeUtils;
 
 /***/ },

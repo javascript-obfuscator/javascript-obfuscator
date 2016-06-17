@@ -17,7 +17,8 @@ export class NodeUtils {
         NodeType.ArrowFunctionExpression,
         NodeType.FunctionDeclaration,
         NodeType.FunctionExpression,
-        NodeType.MethodDefinition
+        NodeType.MethodDefinition,
+        NodeType.Program
     ];
 
     /**
@@ -72,23 +73,17 @@ export class NodeUtils {
             throw new ReferenceError('`parentNode` property of given node is `undefined`');
         }
 
-        if (node.parentNode.type === NodeType.Program) {
-            return <TNodeWithBlockStatement> node.parentNode;
-        }
-
         if (!Utils.arrayContains(NodeUtils.nodesWithBlockScope, node.parentNode.type)) {
             return NodeUtils.getBlockScopeOfNode(node.parentNode, depth);
-        }
-
-        if (depth > 0) {
+        } else if (depth > 0) {
             return NodeUtils.getBlockScopeOfNode(node.parentNode, --depth);
         }
 
-        if (node.type !== NodeType.BlockStatement) {
-            return NodeUtils.getBlockScopeOfNode(node.parentNode);
+        if (Nodes.isProgramNode(node) || Nodes.isBlockStatementNode(node)) {
+            return node;
         }
 
-        return <TNodeWithBlockStatement> node; // blocks statement of scopeNodes
+        return NodeUtils.getBlockScopeOfNode(node.parentNode);
     }
 
     /**

@@ -32,14 +32,14 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
             return;
         }
 
+        this.storeFunctionName(functionDeclarationNode);
         this.replaceFunctionName(functionDeclarationNode);
-        this.replaceFunctionCalls(functionDeclarationNode);
     }
 
     /**
      * @param functionDeclarationNode
      */
-    private replaceFunctionName (functionDeclarationNode: IFunctionDeclarationNode): void {
+    private storeFunctionName (functionDeclarationNode: IFunctionDeclarationNode): void {
         estraverse.traverse(functionDeclarationNode.id, {
             leave: (node: INode): any => this.storeIdentifiersNames(node, this.functionName)
         });
@@ -48,7 +48,7 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
     /**
      * @param functionDeclarationNode
      */
-    private replaceFunctionCalls (functionDeclarationNode: IFunctionDeclarationNode): void {
+    private replaceFunctionName (functionDeclarationNode: IFunctionDeclarationNode): void {
         let scopeNode: INode = NodeUtils.getBlockScopeOfNode(
             functionDeclarationNode
         );

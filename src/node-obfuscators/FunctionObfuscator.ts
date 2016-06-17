@@ -26,29 +26,37 @@ export class FunctionObfuscator extends NodeObfuscator {
      * @param functionNode
      */
     public obfuscateNode (functionNode: IFunctionNode): void {
+        this.storeFunctionParams(functionNode);
         this.replaceFunctionParams(functionNode);
-        this.replaceFunctionParamsInBlockStatement(functionNode);
+    }
+
+    /**
+     * @param functionNode
+     */
+    private storeFunctionParams (functionNode: IFunctionNode): void {
+        functionNode.params
+            .forEach((paramsNode: INode) => {
+                estraverse.traverse(paramsNode, {
+                    leave: (node: INode): any => this.storeIdentifiersNames(node, this.functionParams)
+                });
+            });
     }
 
     /**
      * @param functionNode
      */
     private replaceFunctionParams (functionNode: IFunctionNode): void {
-        functionNode.params.forEach((paramsNode: INode) => {
-            estraverse.traverse(paramsNode, {
-                leave: (node: INode): any => this.storeIdentifiersNames(node, this.functionParams)
-            });
-        });
-    }
-
-    /**
-     * @param functionNode
-     */
-    private replaceFunctionParamsInBlockStatement (functionNode: IFunctionNode): void {
-        estraverse.replace(functionNode, {
+        let replaceVisitor: estraverse.Visitor = {
             leave: (node: INode, parentNode: INode): any => {
                 this.replaceIdentifiersWithRandomNames(node, parentNode, this.functionParams);
             }
-        });
+        };
+
+        functionNode.params
+            .forEach((paramsNode: INode) => {
+                estraverse.replace(paramsNode, replaceVisitor);
+            });
+
+        estraverse.replace(functionNode.body, replaceVisitor);
     }
 }

@@ -36,14 +36,14 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
             return;
         }
 
-        this.replaceVariableName(variableDeclarationNode);
-        this.replaceVariableCalls(variableDeclarationNode, parentNode);
+        this.storeVariableNames(variableDeclarationNode);
+        this.replaceVariableNames(variableDeclarationNode, parentNode);
     }
 
     /**
      * @param variableDeclarationNode
      */
-    private replaceVariableName (variableDeclarationNode: IVariableDeclarationNode): void {
+    private storeVariableNames (variableDeclarationNode: IVariableDeclarationNode): void {
         variableDeclarationNode.declarations
             .forEach((declarationNode: IVariableDeclaratorNode) => {
                 estraverse.traverse(declarationNode.id, {
@@ -56,7 +56,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
      * @param variableDeclarationNode
      * @param variableParentNode
      */
-    private replaceVariableCalls (variableDeclarationNode: IVariableDeclarationNode, variableParentNode: INode): void {
+    private replaceVariableNames (variableDeclarationNode: IVariableDeclarationNode, variableParentNode: INode): void {
         let scopeNode: INode = variableDeclarationNode.kind === 'var' ? NodeUtils.getBlockScopeOfNode(
                 variableDeclarationNode
             ) : variableParentNode,

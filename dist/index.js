@@ -1862,12 +1862,12 @@ module.exports =
 	    _createClass(CatchClauseObfuscator, [{
 	        key: 'obfuscateNode',
 	        value: function obfuscateNode(catchClauseNode) {
+	            this.storeCatchClauseParam(catchClauseNode);
 	            this.replaceCatchClauseParam(catchClauseNode);
-	            this.replaceCatchClauseParamInBlockStatement(catchClauseNode);
 	        }
 	    }, {
-	        key: 'replaceCatchClauseParam',
-	        value: function replaceCatchClauseParam(catchClauseNode) {
+	        key: 'storeCatchClauseParam',
+	        value: function storeCatchClauseParam(catchClauseNode) {
 	            var _this2 = this;
 	
 	            estraverse.traverse(catchClauseNode.param, {
@@ -1877,8 +1877,8 @@ module.exports =
 	            });
 	        }
 	    }, {
-	        key: 'replaceCatchClauseParamInBlockStatement',
-	        value: function replaceCatchClauseParamInBlockStatement(catchClauseNode) {
+	        key: 'replaceCatchClauseParam',
+	        value: function replaceCatchClauseParam(catchClauseNode) {
 	            var _this3 = this;
 	
 	            estraverse.replace(catchClauseNode, {
@@ -1938,12 +1938,12 @@ module.exports =
 	            if (parentNode.type === NodeType_1.NodeType.Program) {
 	                return;
 	            }
+	            this.storeFunctionName(functionDeclarationNode);
 	            this.replaceFunctionName(functionDeclarationNode);
-	            this.replaceFunctionCalls(functionDeclarationNode);
 	        }
 	    }, {
-	        key: "replaceFunctionName",
-	        value: function replaceFunctionName(functionDeclarationNode) {
+	        key: "storeFunctionName",
+	        value: function storeFunctionName(functionDeclarationNode) {
 	            var _this2 = this;
 	
 	            estraverse.traverse(functionDeclarationNode.id, {
@@ -1953,8 +1953,8 @@ module.exports =
 	            });
 	        }
 	    }, {
-	        key: "replaceFunctionCalls",
-	        value: function replaceFunctionCalls(functionDeclarationNode) {
+	        key: "replaceFunctionName",
+	        value: function replaceFunctionName(functionDeclarationNode) {
 	            var _this3 = this;
 	
 	            var scopeNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(functionDeclarationNode);
@@ -2010,12 +2010,12 @@ module.exports =
 	    _createClass(FunctionObfuscator, [{
 	        key: 'obfuscateNode',
 	        value: function obfuscateNode(functionNode) {
+	            this.storeFunctionParams(functionNode);
 	            this.replaceFunctionParams(functionNode);
-	            this.replaceFunctionParamsInBlockStatement(functionNode);
 	        }
 	    }, {
-	        key: 'replaceFunctionParams',
-	        value: function replaceFunctionParams(functionNode) {
+	        key: 'storeFunctionParams',
+	        value: function storeFunctionParams(functionNode) {
 	            var _this2 = this;
 	
 	            functionNode.params.forEach(function (paramsNode) {
@@ -2027,15 +2027,19 @@ module.exports =
 	            });
 	        }
 	    }, {
-	        key: 'replaceFunctionParamsInBlockStatement',
-	        value: function replaceFunctionParamsInBlockStatement(functionNode) {
+	        key: 'replaceFunctionParams',
+	        value: function replaceFunctionParams(functionNode) {
 	            var _this3 = this;
 	
-	            estraverse.replace(functionNode, {
+	            var replaceVisitor = {
 	                leave: function leave(node, parentNode) {
 	                    _this3.replaceIdentifiersWithRandomNames(node, parentNode, _this3.functionParams);
 	                }
+	            };
+	            functionNode.params.forEach(function (paramsNode) {
+	                estraverse.replace(paramsNode, replaceVisitor);
 	            });
+	            estraverse.replace(functionNode.body, replaceVisitor);
 	        }
 	    }]);
 	
@@ -2405,12 +2409,12 @@ module.exports =
 	            if (parentNode.type === NodeType_1.NodeType.Program) {
 	                return;
 	            }
-	            this.replaceVariableName(variableDeclarationNode);
-	            this.replaceVariableCalls(variableDeclarationNode, parentNode);
+	            this.storeVariableNames(variableDeclarationNode);
+	            this.replaceVariableNames(variableDeclarationNode, parentNode);
 	        }
 	    }, {
-	        key: "replaceVariableName",
-	        value: function replaceVariableName(variableDeclarationNode) {
+	        key: "storeVariableNames",
+	        value: function storeVariableNames(variableDeclarationNode) {
 	            var _this2 = this;
 	
 	            variableDeclarationNode.declarations.forEach(function (declarationNode) {
@@ -2422,8 +2426,8 @@ module.exports =
 	            });
 	        }
 	    }, {
-	        key: "replaceVariableCalls",
-	        value: function replaceVariableCalls(variableDeclarationNode, variableParentNode) {
+	        key: "replaceVariableNames",
+	        value: function replaceVariableNames(variableDeclarationNode, variableParentNode) {
 	            var _this3 = this;
 	
 	            var scopeNode = variableDeclarationNode.kind === 'var' ? NodeUtils_1.NodeUtils.getBlockScopeOfNode(variableDeclarationNode) : variableParentNode,

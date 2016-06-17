@@ -46,7 +46,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
     private replaceVariableName (variableDeclarationNode: IVariableDeclarationNode): void {
         variableDeclarationNode.declarations.forEach((declarationNode: IVariableDeclaratorNode) => {
             estraverse.replace(declarationNode.id, {
-                enter: (node: INode): any => this.replaceAndStoreIdentifiersNames(node, this.variableNames)
+                enter: (node: INode): any => this.storeIdentifiersNames(node, this.variableNames)
             });
         });
     }
@@ -72,7 +72,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
                 if (Utils.arrayContains(functionNodes, node.type)) {
                     estraverse.replace(node, {
                         enter: (node: INode, parentNode: INode): any => {
-                            this.replaceIdentifiersWithValuesFromNamesMap(node, parentNode, this.variableNames);
+                            this.replaceIdentifiersWithRandomNames(node, parentNode, this.variableNames);
                         }
                     });
                 }
@@ -82,7 +82,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
                 }
 
                 if (isNodeAfterVariableDeclaratorFlag) {
-                    this.replaceIdentifiersWithValuesFromNamesMap(node, parentNode, this.variableNames);
+                    this.replaceIdentifiersWithRandomNames(node, parentNode, this.variableNames);
                 }
             }
         });

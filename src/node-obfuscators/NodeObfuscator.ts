@@ -49,20 +49,19 @@ export abstract class NodeObfuscator implements INodeObfuscator {
     }
 
     /**
-     * Replaces all identifiers names in specified node with new random names and stores that names in given `namesMap`.
+     * Store all identifiers names as keys in given `namesMap` with random names as value.
      * Reserved names will be ignored.
      *
      * @param node
      * @param namesMap
      * @returns {estraverse.VisitorOption}
      */
-    protected replaceAndStoreIdentifiersNames (
+    protected storeIdentifiersNames (
         node: INode,
         namesMap: Map <string, string>
     ): estraverse.VisitorOption {
         if (Nodes.isIdentifierNode(node) && !this.isReservedName(node.name)) {
             namesMap.set(node.name, Utils.getRandomVariableName());
-            node.name = namesMap.get(node.name);
 
             return;
         }
@@ -75,7 +74,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @param parentNode
      * @param namesMap
      */
-    protected replaceIdentifiersWithValuesFromNamesMap (
+    protected replaceIdentifiersWithRandomNames (
         node: INode,
         parentNode: INode,
         namesMap: Map <string, string>

@@ -448,18 +448,17 @@ module.exports =
 	            });
 	        }
 	    }, {
-	        key: "replaceAndStoreIdentifiersNames",
-	        value: function replaceAndStoreIdentifiersNames(node, namesMap) {
+	        key: "storeIdentifiersNames",
+	        value: function storeIdentifiersNames(node, namesMap) {
 	            if (Nodes_1.Nodes.isIdentifierNode(node) && !this.isReservedName(node.name)) {
 	                namesMap.set(node.name, Utils_1.Utils.getRandomVariableName());
-	                node.name = namesMap.get(node.name);
 	                return;
 	            }
 	            return estraverse.VisitorOption.Skip;
 	        }
 	    }, {
-	        key: "replaceIdentifiersWithValuesFromNamesMap",
-	        value: function replaceIdentifiersWithValuesFromNamesMap(node, parentNode, namesMap) {
+	        key: "replaceIdentifiersWithRandomNames",
+	        value: function replaceIdentifiersWithRandomNames(node, parentNode, namesMap) {
 	            if (Nodes_1.Nodes.isIdentifierNode(node) && namesMap.has(node.name)) {
 	                var parentNodeIsPropertyNode = Nodes_1.Nodes.isPropertyNode(parentNode) && parentNode.key === node,
 	                    parentNodeIsMemberExpressionNode = Nodes_1.Nodes.isMemberExpressionNode(parentNode) && parentNode.computed === false && parentNode.property === node;
@@ -1873,7 +1872,7 @@ module.exports =
 	
 	            estraverse.replace(catchClauseNode.param, {
 	                leave: function leave(node) {
-	                    return _this2.replaceAndStoreIdentifiersNames(node, _this2.catchClauseParam);
+	                    return _this2.storeIdentifiersNames(node, _this2.catchClauseParam);
 	                }
 	            });
 	        }
@@ -1882,9 +1881,9 @@ module.exports =
 	        value: function replaceCatchClauseParamInBlockStatement(catchClauseNode) {
 	            var _this3 = this;
 	
-	            estraverse.replace(catchClauseNode.body, {
+	            estraverse.replace(catchClauseNode, {
 	                leave: function leave(node, parentNode) {
-	                    _this3.replaceIdentifiersWithValuesFromNamesMap(node, parentNode, _this3.catchClauseParam);
+	                    _this3.replaceIdentifiersWithRandomNames(node, parentNode, _this3.catchClauseParam);
 	                }
 	            });
 	        }
@@ -1949,7 +1948,7 @@ module.exports =
 	
 	            estraverse.replace(functionDeclarationNode.id, {
 	                leave: function leave(node) {
-	                    return _this2.replaceAndStoreIdentifiersNames(node, _this2.functionName);
+	                    return _this2.storeIdentifiersNames(node, _this2.functionName);
 	                }
 	            });
 	        }
@@ -1961,7 +1960,7 @@ module.exports =
 	            var scopeNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(functionDeclarationNode);
 	            estraverse.replace(scopeNode, {
 	                enter: function enter(node, parentNode) {
-	                    _this3.replaceIdentifiersWithValuesFromNamesMap(node, parentNode, _this3.functionName);
+	                    _this3.replaceIdentifiersWithRandomNames(node, parentNode, _this3.functionName);
 	                }
 	            });
 	        }
@@ -2022,7 +2021,7 @@ module.exports =
 	            functionNode.params.forEach(function (paramsNode) {
 	                estraverse.replace(paramsNode, {
 	                    leave: function leave(node) {
-	                        return _this2.replaceAndStoreIdentifiersNames(node, _this2.functionParams);
+	                        return _this2.storeIdentifiersNames(node, _this2.functionParams);
 	                    }
 	                });
 	            });
@@ -2032,9 +2031,9 @@ module.exports =
 	        value: function replaceFunctionParamsInBlockStatement(functionNode) {
 	            var _this3 = this;
 	
-	            estraverse.replace(functionNode.body, {
+	            estraverse.replace(functionNode, {
 	                leave: function leave(node, parentNode) {
-	                    _this3.replaceIdentifiersWithValuesFromNamesMap(node, parentNode, _this3.functionParams);
+	                    _this3.replaceIdentifiersWithRandomNames(node, parentNode, _this3.functionParams);
 	                }
 	            });
 	        }
@@ -2417,7 +2416,7 @@ module.exports =
 	            variableDeclarationNode.declarations.forEach(function (declarationNode) {
 	                estraverse.replace(declarationNode.id, {
 	                    enter: function enter(node) {
-	                        return _this2.replaceAndStoreIdentifiersNames(node, _this2.variableNames);
+	                        return _this2.storeIdentifiersNames(node, _this2.variableNames);
 	                    }
 	                });
 	            });
@@ -2435,7 +2434,7 @@ module.exports =
 	                    if (Utils_1.Utils.arrayContains(functionNodes, node.type)) {
 	                        estraverse.replace(node, {
 	                            enter: function enter(node, parentNode) {
-	                                _this3.replaceIdentifiersWithValuesFromNamesMap(node, parentNode, _this3.variableNames);
+	                                _this3.replaceIdentifiersWithRandomNames(node, parentNode, _this3.variableNames);
 	                            }
 	                        });
 	                    }
@@ -2443,7 +2442,7 @@ module.exports =
 	                        isNodeAfterVariableDeclaratorFlag = true;
 	                    }
 	                    if (isNodeAfterVariableDeclaratorFlag) {
-	                        _this3.replaceIdentifiersWithValuesFromNamesMap(node, parentNode, _this3.variableNames);
+	                        _this3.replaceIdentifiersWithRandomNames(node, parentNode, _this3.variableNames);
 	                    }
 	                }
 	            });

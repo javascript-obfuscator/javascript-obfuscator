@@ -41,7 +41,7 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
      */
     private replaceFunctionName (functionDeclarationNode: IFunctionDeclarationNode): void {
         estraverse.replace(functionDeclarationNode.id, {
-            leave: (node: INode): any => this.replaceAndStoreIdentifiersNames(node, this.functionName)
+            leave: (node: INode): any => this.storeIdentifiersNames(node, this.functionName)
         });
     }
 
@@ -55,7 +55,7 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
 
         estraverse.replace(scopeNode, {
             enter: (node: INode, parentNode: INode): any => {
-                this.replaceIdentifiersWithValuesFromNamesMap(node, parentNode, this.functionName);
+                this.replaceIdentifiersWithRandomNames(node, parentNode, this.functionName);
             }
         });
     }

@@ -1,62 +1,97 @@
 import { IBlockStatementNode } from "../src/interfaces/nodes/IBlockStatementNode";
+import { IFunctionDeclarationNode } from "../src/interfaces/nodes/IFunctionDeclarationNode";
 import { IIdentifierNode } from "../src/interfaces/nodes/IIdentifierNode";
 import { ILiteralNode } from "../src/interfaces/nodes/ILiteralNode";
+import { INode } from "../src/interfaces/nodes/INode";
 import { IProgramNode } from "../src/interfaces/nodes/IProgramNode";
 
 import { NodeType } from "../src/enums/NodeType";
 
 import { NodeUtils } from '../src/NodeUtils';
-import {IFunctionDeclarationNode} from "../src/interfaces/nodes/IFunctionDeclarationNode";
 
 let assert: any = require('chai').assert;
 
+function getProgramNode (bodyNodes: INode[] = []): IProgramNode {
+    return {
+        type: NodeType.Program,
+        body: bodyNodes
+    };
+}
+
+function getBlockStatementNode (bodyNodes: INode[] = []): IBlockStatementNode {
+    return {
+        type: NodeType.BlockStatement,
+        body: bodyNodes
+    };
+}
+
+function getFunctionDeclarationNode (blockStatementNode: IBlockStatementNode): IFunctionDeclarationNode {
+    return {
+        type: NodeType.FunctionDeclaration,
+        id: {
+            type: NodeType.Identifier,
+            name: 'test'
+        },
+        params: [],
+        body: blockStatementNode,
+        generator: false,
+        expression: false
+    };
+}
+
+function getIdentifierNode (): IIdentifierNode {
+    return {
+        type: NodeType.Identifier,
+        name: 'identifier',
+    };
+}
+
+function getLiteralNode (): ILiteralNode {
+    return {
+        type: NodeType.Literal,
+        value: 'string',
+        raw: `'string'`,
+        'x-verbatim-property': `'string'`
+    };
+}
+
 describe('NodeUtils', () => {
     describe('addXVerbatimPropertyToLiterals (node: INode): void', () => {
-        let node: any;
+        let literalNode: any,
+            expectedLiteralNode: any;
 
         beforeEach(() => {
-            node = {
-                type: NodeType.Literal,
-                value: 'string',
-                raw: `'string'`
-            };
+            literalNode = getLiteralNode();
 
-            NodeUtils.addXVerbatimPropertyToLiterals(node)
+            expectedLiteralNode = Object.assign({}, literalNode);
+            expectedLiteralNode['x-verbatim-property'] = `'string'`;
+
+            NodeUtils.addXVerbatimPropertyToLiterals(literalNode)
         });
 
         it('should add `x-verbatim-property` to `Literal` node', () => {
-            assert.deepEqual(node, {
-                type: NodeType.Literal,
-                value: 'string',
-                raw: `'string'`,
-                'x-verbatim-property': `'string'`
-            });
+            assert.deepEqual(literalNode, expectedLiteralNode);
         });
     });
 
     describe('appendNode (blockScopeBody: INode[], node: INode): void', () => {
         let blockStatementNode: IBlockStatementNode,
+            expectedBlockStatementNode: IBlockStatementNode,
             identifierNode: IIdentifierNode;
 
         beforeEach(() => {
-            blockStatementNode = {
-                type: NodeType.Literal,
-                body: []
-            };
+            identifierNode = getIdentifierNode();
 
-            identifierNode = {
-                type: NodeType.Identifier,
-                name: 'identifier'
-            };
+            blockStatementNode = getBlockStatementNode();
+
+            expectedBlockStatementNode = Object.assign({}, blockStatementNode);
+            expectedBlockStatementNode.body.push(identifierNode);
 
             NodeUtils.appendNode(blockStatementNode.body, identifierNode)
         });
 
         it('should append given node to a `BlockStatement` node body', () => {
-            assert.deepEqual(blockStatementNode, {
-                type: NodeType.Literal,
-                body: [identifierNode]
-            });
+            assert.deepEqual(blockStatementNode, expectedBlockStatementNode);
         });
     });
 
@@ -66,25 +101,14 @@ describe('NodeUtils', () => {
             literalNode: ILiteralNode;
 
         beforeEach(() => {
-            identifierNode = {
-                type: NodeType.Identifier,
-                name: 'identifier'
-            };
+            identifierNode = getIdentifierNode();
 
-            literalNode = {
-                type: NodeType.Literal,
-                value: 'string',
-                raw: `'string'`,
-                'x-verbatim-property': `'string'`
-            };
+            literalNode = getLiteralNode();
 
-            blockStatementNode = {
-                type: NodeType.BlockStatement,
-                body: [
-                    identifierNode,
-                    literalNode
-                ]
-            };
+            blockStatementNode = getBlockStatementNode([
+                identifierNode,
+                literalNode
+            ]);
         });
 
         it('should return block-statement child node of given node if that node has block-statement', () => {
@@ -113,42 +137,20 @@ describe('NodeUtils', () => {
             programNode: IProgramNode;
 
         beforeEach(() => {
-            identifierNode = {
-                type: NodeType.Identifier,
-                name: 'identifier',
-            };
+            identifierNode = getIdentifierNode();
 
-            literalNode = {
-                type: NodeType.Literal,
-                value: 'string',
-                raw: `'string'`,
-                'x-verbatim-property': `'string'`
-            };
+            literalNode = getLiteralNode();
 
-            blockStatementNode = {
-                type: NodeType.BlockStatement,
-                body: [
-                    identifierNode,
-                    literalNode
-                ]
-            };
+            blockStatementNode = getBlockStatementNode([
+                identifierNode,
+                literalNode
+            ]);
 
-            functionDeclarationNode = {
-                type: NodeType.FunctionDeclaration,
-                id: {
-                    type: NodeType.Identifier,
-                    name: 'test'
-                },
-                params: [],
-                body: blockStatementNode,
-                generator: false,
-                expression: false
-            };
+            functionDeclarationNode = getFunctionDeclarationNode(blockStatementNode);
 
-            programNode = {
-                type: NodeType.Program,
-                body: [functionDeclarationNode]
-            };
+            programNode = getProgramNode([
+                functionDeclarationNode
+            ]);
 
             programNode['parentNode'] = programNode;
             functionDeclarationNode['parentNode'] = programNode;
@@ -172,24 +174,13 @@ describe('NodeUtils', () => {
             literalNode: ILiteralNode;
 
         beforeEach(() => {
-            identifierNode = {
-                type: NodeType.Identifier,
-                name: 'identifier'
-            };
+            identifierNode = getIdentifierNode();
 
-            literalNode = {
-                type: NodeType.Literal,
-                value: 'string',
-                raw: `'string'`,
-                'x-verbatim-property': `'string'`
-            };
+            literalNode = getLiteralNode();
 
-            blockStatementNode = {
-                type: NodeType.BlockStatement,
-                body: [
-                    identifierNode
-                ]
-            };
+            blockStatementNode = getBlockStatementNode([
+                identifierNode
+            ]);
 
             expectedBlockStatementNode = Object.assign({}, blockStatementNode);
             expectedBlockStatementNode['body'].push(literalNode);
@@ -209,32 +200,22 @@ describe('NodeUtils', () => {
             programNode: IProgramNode;
 
         beforeEach(() => {
-            identifierNode = {
-                type: NodeType.Identifier,
-                name: 'identifier'
-            };
+            identifierNode = getIdentifierNode();
 
-            literalNode = {
-                type: NodeType.Literal,
-                value: 'string',
-                raw: `'string'`,
-                'x-verbatim-property': `'string'`
-            };
+            literalNode = getLiteralNode();
 
-            blockStatementNode = {
-                type: NodeType.BlockStatement,
-                body: [
-                    identifierNode,
-                    literalNode
-                ]
-            };
+            blockStatementNode = getBlockStatementNode([
+                identifierNode,
+                literalNode
+            ]);
 
-            programNode = {
-                type: NodeType.Program,
-                body: [blockStatementNode]
-            };
+            programNode = getProgramNode([
+                blockStatementNode
+            ]);
 
             NodeUtils.parentize(blockStatementNode);
+
+            console.log(blockStatementNode);
         });
 
         it('should parentize given AST-tree', () => {
@@ -251,22 +232,13 @@ describe('NodeUtils', () => {
             literalNode: ILiteralNode;
 
         beforeEach(() => {
-            identifierNode = {
-                type: NodeType.Identifier,
-                name: 'identifier'
-            };
+            identifierNode = getIdentifierNode();
 
-            literalNode = {
-                type: NodeType.Literal,
-                value: 'string',
-                raw: `'string'`,
-                'x-verbatim-property': `'string'`
-            };
+            literalNode = getLiteralNode();
 
-            blockStatementNode = {
-                type: NodeType.Literal,
-                body: [identifierNode]
-            };
+            blockStatementNode = getBlockStatementNode([
+                identifierNode
+            ]);
 
             expectedBlockStatementNode = Object.assign({}, blockStatementNode);
             expectedBlockStatementNode['body'].unshift(literalNode);

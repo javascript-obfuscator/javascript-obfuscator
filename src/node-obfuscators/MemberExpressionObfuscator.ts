@@ -19,7 +19,7 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
         estraverse.replace(memberExpressionNode.property, {
             leave: (node: INode, parentNode: INode): any => {
                 if (Nodes.isLiteralNode(node)) {
-                    this.literalNodeController(node);
+                    this.obfuscateLiteralProperty(node);
 
                     return;
                 }
@@ -30,7 +30,7 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
                     }
 
                     memberExpressionNode.computed = true;
-                    this.identifierNodeController(node);
+                    this.obfuscateIdentifierProperty(node);
                 }
             }
         });
@@ -48,7 +48,7 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
      *
      * @param node
      */
-    private identifierNodeController (node: IIdentifierNode): void {
+    private obfuscateIdentifierProperty (node: IIdentifierNode): void {
         let nodeValue: string = node.name,
             literalNode: ILiteralNode = {
                 raw: `'${nodeValue}'`,
@@ -74,7 +74,7 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
      *
      * @param node
      */
-    private literalNodeController (node: ILiteralNode): void {
+    private obfuscateLiteralProperty (node: ILiteralNode): void {
         switch (typeof node.value) {
             case 'string':
                 if (node['x-verbatim-property']) {

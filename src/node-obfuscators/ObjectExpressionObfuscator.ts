@@ -28,27 +28,28 @@ export class ObjectExpressionObfuscator extends NodeObfuscator {
      * @param objectExpressionNode
      */
     public obfuscateNode (objectExpressionNode: IObjectExpressionNode): void {
-        objectExpressionNode.properties.forEach((property: IPropertyNode) => {
-            estraverse.replace(property.key, {
-                leave: (node: INode, parentNode: INode): any => {
-                    if (Nodes.isLiteralNode(node)) {
-                        this.literalNodeController(node);
+        objectExpressionNode.properties
+            .forEach((property: IPropertyNode) => {
+                estraverse.replace(property.key, {
+                    leave: (node: INode, parentNode: INode): any => {
+                        if (Nodes.isLiteralNode(node)) {
+                            this.obfuscateLiteralPropertyKey(node);
 
-                        return;
-                    }
+                            return;
+                        }
 
-                    if (Nodes.isIdentifierNode(node)) {
-                        this.identifierNodeController(node);
+                        if (Nodes.isIdentifierNode(node)) {
+                            this.obfuscateIdentifierPropertyKey(node);
+                        }
                     }
-                }
+                });
             });
-        });
     }
 
     /**
      * @param node
      */
-    private literalNodeController (node: ILiteralNode): void {
+    private obfuscateLiteralPropertyKey (node: ILiteralNode): void {
         switch (typeof node.value) {
             case 'string':
                 if (node['x-verbatim-property']) {
@@ -70,7 +71,7 @@ export class ObjectExpressionObfuscator extends NodeObfuscator {
     /**
      * @param node
      */
-    private identifierNodeController (node: IIdentifierNode): void {
+    private obfuscateIdentifierPropertyKey (node: IIdentifierNode): void {
         let nodeValue: string = node.name,
             literalNode: ILiteralNode = {
                 raw: `'${nodeValue}'`,

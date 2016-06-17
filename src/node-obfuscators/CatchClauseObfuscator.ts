@@ -6,6 +6,7 @@ import { INode } from '../interfaces/nodes/INode';
 import { NodeObfuscator } from './NodeObfuscator';
 import { Nodes } from "../Nodes";
 import { Utils } from '../Utils';
+import {IBlockStatementNode} from "../interfaces/nodes/IBlockStatementNode";
 
 /**
  * replaces:
@@ -26,7 +27,7 @@ export class CatchClauseObfuscator extends NodeObfuscator {
      */
     public obfuscateNode (catchClauseNode: ICatchClauseNode): void {
         this.replaceCatchClauseParam(catchClauseNode);
-        this.replaceCatchClauseParamInBlock(catchClauseNode);
+        this.replaceCatchClauseParamInBlockStatement(catchClauseNode);
     }
 
     /**
@@ -50,7 +51,7 @@ export class CatchClauseObfuscator extends NodeObfuscator {
     /**
      * @param catchClauseNode
      */
-    private replaceCatchClauseParamInBlock (catchClauseNode: ICatchClauseNode): void {
+    private replaceCatchClauseParamInBlockStatement (catchClauseNode: ICatchClauseNode): void {
         estraverse.replace(catchClauseNode.body, {
             leave: (node: INode, parentNode: INode): any => {
                 this.replaceNodeIdentifierByNewValue(node, parentNode, this.catchClauseParam);

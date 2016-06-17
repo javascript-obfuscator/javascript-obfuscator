@@ -51,6 +51,11 @@ let obfuscatedCode = JavaScriptObfuscator.obfuscate(
         test2(22);
         console.log(105.4);
         console.log(true, false);
+        
+        try {
+        } catch (error) {
+            console.log(error);
+        }
     })();
     `,
     {

@@ -1855,7 +1855,7 @@ module.exports =
 	        key: 'obfuscateNode',
 	        value: function obfuscateNode(catchClauseNode) {
 	            this.replaceCatchClauseParam(catchClauseNode);
-	            this.replaceCatchClauseParamInBlock(catchClauseNode);
+	            this.replaceCatchClauseParamInBlockStatement(catchClauseNode);
 	        }
 	    }, {
 	        key: 'replaceCatchClauseParam',
@@ -1874,8 +1874,8 @@ module.exports =
 	            });
 	        }
 	    }, {
-	        key: 'replaceCatchClauseParamInBlock',
-	        value: function replaceCatchClauseParamInBlock(catchClauseNode) {
+	        key: 'replaceCatchClauseParamInBlockStatement',
+	        value: function replaceCatchClauseParamInBlockStatement(catchClauseNode) {
 	            var _this3 = this;
 	
 	            estraverse.replace(catchClauseNode.body, {
@@ -2017,7 +2017,7 @@ module.exports =
 	        key: 'obfuscateNode',
 	        value: function obfuscateNode(functionNode) {
 	            this.replaceFunctionParams(functionNode);
-	            this.replaceFunctionParamsInBody(functionNode);
+	            this.replaceFunctionParamsInBlockStatement(functionNode);
 	        }
 	    }, {
 	        key: 'replaceFunctionParams',
@@ -2038,8 +2038,8 @@ module.exports =
 	            });
 	        }
 	    }, {
-	        key: 'replaceFunctionParamsInBody',
-	        value: function replaceFunctionParamsInBody(functionNode) {
+	        key: 'replaceFunctionParamsInBlockStatement',
+	        value: function replaceFunctionParamsInBlockStatement(functionNode) {
 	            var _this3 = this;
 	
 	            estraverse.replace(functionNode.body, {
@@ -2160,7 +2160,7 @@ module.exports =
 	            estraverse.replace(memberExpressionNode.property, {
 	                leave: function leave(node, parentNode) {
 	                    if (Nodes_1.Nodes.isLiteralNode(node)) {
-	                        _this2.literalNodeController(node);
+	                        _this2.obfuscateLiteralProperty(node);
 	                        return;
 	                    }
 	                    if (Nodes_1.Nodes.isIdentifierNode(node)) {
@@ -2168,14 +2168,14 @@ module.exports =
 	                            return;
 	                        }
 	                        memberExpressionNode.computed = true;
-	                        _this2.identifierNodeController(node);
+	                        _this2.obfuscateIdentifierProperty(node);
 	                    }
 	                }
 	            });
 	        }
 	    }, {
-	        key: 'identifierNodeController',
-	        value: function identifierNodeController(node) {
+	        key: 'obfuscateIdentifierProperty',
+	        value: function obfuscateIdentifierProperty(node) {
 	            var nodeValue = node.name,
 	                literalNode = {
 	                raw: '\'' + nodeValue + '\'',
@@ -2190,8 +2190,8 @@ module.exports =
 	            Object.assign(node, literalNode);
 	        }
 	    }, {
-	        key: 'literalNodeController',
-	        value: function literalNodeController(node) {
+	        key: 'obfuscateLiteralProperty',
+	        value: function obfuscateLiteralProperty(node) {
 	            switch (_typeof(node.value)) {
 	                case 'string':
 	                    if (node['x-verbatim-property']) {
@@ -2321,19 +2321,19 @@ module.exports =
 	                estraverse.replace(property.key, {
 	                    leave: function leave(node, parentNode) {
 	                        if (Nodes_1.Nodes.isLiteralNode(node)) {
-	                            _this2.literalNodeController(node);
+	                            _this2.obfuscateLiteralPropertyKey(node);
 	                            return;
 	                        }
 	                        if (Nodes_1.Nodes.isIdentifierNode(node)) {
-	                            _this2.identifierNodeController(node);
+	                            _this2.obfuscateIdentifierPropertyKey(node);
 	                        }
 	                    }
 	                });
 	            });
 	        }
 	    }, {
-	        key: 'literalNodeController',
-	        value: function literalNodeController(node) {
+	        key: 'obfuscateLiteralPropertyKey',
+	        value: function obfuscateLiteralPropertyKey(node) {
 	            switch (_typeof(node.value)) {
 	                case 'string':
 	                    if (node['x-verbatim-property']) {
@@ -2349,8 +2349,8 @@ module.exports =
 	            }
 	        }
 	    }, {
-	        key: 'identifierNodeController',
-	        value: function identifierNodeController(node) {
+	        key: 'obfuscateIdentifierPropertyKey',
+	        value: function obfuscateIdentifierPropertyKey(node) {
 	            var nodeValue = node.name,
 	                literalNode = {
 	                raw: '\'' + nodeValue + '\'',

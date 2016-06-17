@@ -1,5 +1,6 @@
 import * as estraverse from 'estraverse';
 
+import { IBlockStatementNode } from "../interfaces/nodes/IBlockStatementNode";
 import { IFunctionNode } from "../interfaces/nodes/IFunctionNode";
 import { INode } from "../interfaces/nodes/INode";
 
@@ -26,7 +27,7 @@ export class FunctionObfuscator extends NodeObfuscator {
      */
     public obfuscateNode (functionNode: IFunctionNode): void {
         this.replaceFunctionParams(functionNode);
-        this.replaceFunctionParamsInBody(functionNode);
+        this.replaceFunctionParamsInBlockStatement(functionNode);
     }
 
     /**
@@ -52,7 +53,7 @@ export class FunctionObfuscator extends NodeObfuscator {
     /**
      * @param functionNode
      */
-    private replaceFunctionParamsInBody (functionNode: IFunctionNode): void {
+    private replaceFunctionParamsInBlockStatement (functionNode: IFunctionNode): void {
         estraverse.replace(functionNode.body, {
             leave: (node: INode, parentNode: INode): any => {
                 this.replaceNodeIdentifierByNewValue(node, parentNode, this.functionParams);

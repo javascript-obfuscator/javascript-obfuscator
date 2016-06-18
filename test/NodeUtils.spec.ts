@@ -1,6 +1,7 @@
 import { IBlockStatementNode } from "../src/interfaces/nodes/IBlockStatementNode";
 import { IFunctionDeclarationNode } from "../src/interfaces/nodes/IFunctionDeclarationNode";
 import { IIdentifierNode } from "../src/interfaces/nodes/IIdentifierNode";
+import { IIfStatementNode } from "../src/interfaces/nodes/IIfStatementNode";
 import { ILiteralNode } from "../src/interfaces/nodes/ILiteralNode";
 import { INode } from "../src/interfaces/nodes/INode";
 import { IProgramNode } from "../src/interfaces/nodes/IProgramNode";
@@ -36,6 +37,19 @@ function getFunctionDeclarationNode (blockStatementNode: IBlockStatementNode): I
         body: blockStatementNode,
         generator: false,
         expression: false
+    };
+}
+
+function getIfStatementNode (blockStatementNode: IBlockStatementNode): IIfStatementNode {
+    return {
+        type: 'IfStatement',
+        test: {
+            type: 'Literal',
+            value: true,
+            raw: 'true'
+        },
+        consequent: blockStatementNode,
+        alternate: null
     };
 }
 
@@ -87,11 +101,25 @@ describe('NodeUtils', () => {
             expectedBlockStatementNode = Object.assign({}, blockStatementNode);
             expectedBlockStatementNode.body.push(identifierNode);
 
-            NodeUtils.appendNode(blockStatementNode.body, identifierNode)
+            NodeUtils.appendNode(blockStatementNode.body, identifierNode);
         });
 
         it('should append given node to a `BlockStatement` node body', () => {
             assert.deepEqual(blockStatementNode, expectedBlockStatementNode);
+        });
+
+        it('should does not change `BlockStatement` node body if given node is not a valid Node', () => {
+            assert.doesNotChange(
+                () => NodeUtils.appendNode(blockStatementNode.body, <INode>null),
+                blockStatementNode,
+                'body'
+            );
+
+            assert.doesNotChange(
+                () => NodeUtils.appendNode(blockStatementNode.body, <INode>{}),
+                blockStatementNode,
+                'body'
+            );
         });
     });
 
@@ -117,36 +145,51 @@ describe('NodeUtils', () => {
         });
 
         it('should throw a `ReferenceError` if index is out of boundaries', () => {
-            assert.throws(function () {
-                return NodeUtils.getBlockStatementNodeByIndex(blockStatementNode, 2);
-            }, ReferenceError);
+            assert.throws(() => NodeUtils.getBlockStatementNodeByIndex(blockStatementNode, 2), ReferenceError);
         });
 
         it('should throw a `TypeError` if node have no a block-statement', () => {
-            assert.throws(function () {
-                NodeUtils.getBlockStatementNodeByIndex(identifierNode, 1)
-            }, TypeError);
+            assert.throws(() => NodeUtils.getBlockStatementNodeByIndex(identifierNode, 1), TypeError);
         });
     });
 
     describe('getBlockScopeOfNode (node: INode, depth: number = 0): TNodeWithBlockStatement', () => {
-        let blockStatementNode: IBlockStatementNode,
+        let functionDeclarationBlockStatementNode: IBlockStatementNode,
+            ifStatementBlockStatementNode1: IBlockStatementNode,
+            ifStatementBlockStatementNode2: IBlockStatementNode,
+            ifStatementNode1: IIfStatementNode,
+            ifStatementNode2: IIfStatementNode,
             identifierNode: IIdentifierNode,
             functionDeclarationNode: IFunctionDeclarationNode,
-            literalNode: ILiteralNode,
+            literalNode1: ILiteralNode,
+            literalNode2: ILiteralNode,
             programNode: IProgramNode;
 
         beforeEach(() => {
             identifierNode = getIdentifierNode();
 
-            literalNode = getLiteralNode();
+            literalNode1 = getLiteralNode();
+            literalNode2 = getLiteralNode();
 
-            blockStatementNode = getBlockStatementNode([
-                identifierNode,
-                literalNode
+            ifStatementBlockStatementNode2 = getBlockStatementNode([
+                literalNode1,
+                literalNode2
             ]);
 
-            functionDeclarationNode = getFunctionDeclarationNode(blockStatementNode);
+            ifStatementNode2 = getIfStatementNode(ifStatementBlockStatementNode2)
+
+            ifStatementBlockStatementNode1 = getBlockStatementNode([
+                ifStatementNode2
+            ]);
+
+            ifStatementNode1 = getIfStatementNode(ifStatementBlockStatementNode1);
+
+            functionDeclarationBlockStatementNode = getBlockStatementNode([
+                identifierNode,
+                ifStatementNode1
+            ]);
+
+            functionDeclarationNode = getFunctionDeclarationNode(functionDeclarationBlockStatementNode);
 
             programNode = getProgramNode([
                 functionDeclarationNode
@@ -154,22 +197,26 @@ describe('NodeUtils', () => {
 
             programNode['parentNode'] = programNode;
             functionDeclarationNode['parentNode'] = programNode;
-            blockStatementNode['parentNode'] = functionDeclarationNode;
-            identifierNode['parentNode'] = blockStatementNode;
+            functionDeclarationBlockStatementNode['parentNode'] = functionDeclarationNode;
+            identifierNode['parentNode'] = functionDeclarationBlockStatementNode;
+            ifStatementNode1['parentNode'] = functionDeclarationBlockStatementNode;
+            ifStatementBlockStatementNode1['parentNode'] = ifStatementNode1;
+            ifStatementNode2['parentNode'] = ifStatementBlockStatementNode1;
+            ifStatementBlockStatementNode2['parentNode'] = ifStatementNode2;
+            literalNode1['parentNode'] = ifStatementBlockStatementNode2;
         });
 
         it('should return block-scope node for given node', () => {
-            assert.deepEqual(NodeUtils.getBlockScopeOfNode(identifierNode), blockStatementNode);
+            assert.deepEqual(NodeUtils.getBlockScopeOfNode(identifierNode), functionDeclarationBlockStatementNode);
             assert.deepEqual(NodeUtils.getBlockScopeOfNode(identifierNode, 1), programNode);
             assert.deepEqual(NodeUtils.getBlockScopeOfNode(functionDeclarationNode), programNode);
-            assert.deepEqual(NodeUtils.getBlockScopeOfNode(blockStatementNode), programNode);
+            assert.deepEqual(NodeUtils.getBlockScopeOfNode(functionDeclarationBlockStatementNode), programNode);
             assert.deepEqual(NodeUtils.getBlockScopeOfNode(programNode), programNode);
+            assert.deepEqual(NodeUtils.getBlockScopeOfNode(literalNode1), functionDeclarationBlockStatementNode);
         });
 
         it('should throw a `ReferenceError` if node has no `parentNode` property', () => {
-            assert.throws(function () {
-                return NodeUtils.getBlockScopeOfNode(literalNode);
-            }, ReferenceError);
+            assert.throws(() => NodeUtils.getBlockScopeOfNode(literalNode2), ReferenceError);
         });
     });
 
@@ -194,8 +241,22 @@ describe('NodeUtils', () => {
             NodeUtils.insertNodeAtIndex(blockStatementNode.body, literalNode, 1);
         });
 
-        it('should insert given node in block-scope body at index', () => {
+        it('should insert given node in `BlockStatement` node body at index', () => {
             assert.deepEqual(blockStatementNode, expectedBlockStatementNode);
+        });
+
+        it('should does not change `BlockStatement` node body if given node is not a valid Node', () => {
+            assert.doesNotChange(
+                () => NodeUtils.insertNodeAtIndex(blockStatementNode.body, <INode>null, 1),
+                blockStatementNode,
+                'body'
+            );
+
+            assert.doesNotChange(
+                () => NodeUtils.insertNodeAtIndex(blockStatementNode.body, <INode>{}, 1),
+                blockStatementNode,
+                'body'
+            );
         });
     });
 
@@ -252,6 +313,20 @@ describe('NodeUtils', () => {
 
         it('should prepend given node to a `BlockStatement` node body', () => {
             assert.deepEqual(blockStatementNode, expectedBlockStatementNode);
+        });
+
+        it('should does not change `BlockStatement` node body if given node is not a valid Node', () => {
+            assert.doesNotChange(
+                () => NodeUtils.prependNode(blockStatementNode.body, <INode>null),
+                blockStatementNode,
+                'body'
+            );
+
+            assert.doesNotChange(
+                () => NodeUtils.prependNode(blockStatementNode.body, <INode>{}),
+                blockStatementNode,
+                'body'
+            );
         });
     });
 });

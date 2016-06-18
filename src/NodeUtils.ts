@@ -142,6 +142,6 @@ export class NodeUtils {
      * @returns {boolean}
      */
     private static validateNode (node: INode): boolean {
-        return !!node;
+        return !!node && node.hasOwnProperty('type');
     }
 }

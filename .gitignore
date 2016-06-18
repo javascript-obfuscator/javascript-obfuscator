@@ -1,5 +1,7 @@
 .idea
-node_modules
 npm-debug.log
 *.js.map
-tmp
+/coverage
+/node_modules
+/test-tmp
+/tmp

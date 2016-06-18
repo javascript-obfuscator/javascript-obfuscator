@@ -24,6 +24,7 @@
     "babel-polyfill": "^6.9.1",
     "babel-preset-es2015": "^6.9.0",
     "chai": "^3.5.0",
+    "istanbul": "^1.0.0-alpha.2",
     "lite-server": "^1.3.1",
     "mocha": "^2.5.3",
     "source-map-support": "^0.4.0",
@@ -39,15 +40,17 @@
     "url": "git+https://github.com/sanex3339/javascript-obfuscator.git"
   },
   "scripts": {
-    "tsc": "tsc",
-    "tsc:w": "tsc -w",
-    "webpack": "node_modules/.bin/webpack",
-    "watch": "node_modules/.bin/webpack --watch",
     "lite": "lite-server",
+    "webpack": "node_modules/.bin/webpack",
+    "build": "npm run webpack && npm test",
+    "watch": "node_modules/.bin/webpack --watch",
     "start": "concurrent \"npm run tsc:w\" \"npm run lite\" ",
+    "test:compile": "tsc -p tsconfig-test.json",
     "test:dev": "node test/dev/test.js",
-    "test:mocha": "mocha --require ts-node/register test/**/*.spec.ts",
-    "test": "npm run test:dev && npm run test:mocha",
+    "test:full": "npm run test:compile && istanbul cover _mocha -- test-tmp/test/**/**.spec.js && npm run test:removeTestTmpDir",
+    "test:mocha": "npm run test:compile && mocha -- test-tmp/test/**/**.spec.js && npm run test:removeTestTmpDir",
+    "test:removeTestTmpDir": "rm -rf test-tmp",
+    "test": "npm run test:dev && npm run test:full",
     "typings": "node_modules/.bin/typings install"
   },
   "author": {

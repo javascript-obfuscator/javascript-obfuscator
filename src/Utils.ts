@@ -29,8 +29,8 @@ export class Utils {
      * @returns {T[]}
      */
     public static arrayRotate <T> (array: T[], times: number, reverse: boolean = false): T[] {
-        if (times < 0) {
-            return;
+        if (times <= 0) {
+            return array;
         }
 
         let newArray: T[] = array,

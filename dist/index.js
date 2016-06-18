@@ -111,8 +111,8 @@ module.exports =
 	        value: function arrayRotate(array, times) {
 	            var reverse = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
 	
-	            if (times < 0) {
-	                return;
+	            if (times <= 0) {
+	                return array;
 	            }
 	            var newArray = array,
 	                temp = void 0;

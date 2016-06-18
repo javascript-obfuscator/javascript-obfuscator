@@ -27,6 +27,11 @@ describe('Utils', () => {
         it('should rotate (shift) array by a given value in reverse directions', () => {
             assert.deepEqual(Utils.arrayRotate(array, 2, true), [3, 4, 5, 6, 1, 2]);
         });
+
+        it('should do nothing if value <= 0', () => {
+            assert.deepEqual(Utils.arrayRotate(array, 0, true), [1, 2, 3, 4, 5, 6]);
+            assert.deepEqual(Utils.arrayRotate(array, -1, true), [1, 2, 3, 4, 5, 6]);
+        });
     });
 
     describe('btoa (string: string): string', () => {

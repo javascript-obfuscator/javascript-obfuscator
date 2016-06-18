@@ -176,7 +176,7 @@ describe('NodeUtils', () => {
                 literalNode2
             ]);
 
-            ifStatementNode2 = getIfStatementNode(ifStatementBlockStatementNode2)
+            ifStatementNode2 = getIfStatementNode(ifStatementBlockStatementNode2);
 
             ifStatementBlockStatementNode1 = getBlockStatementNode([
                 ifStatementNode2

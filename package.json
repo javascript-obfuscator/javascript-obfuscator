@@ -47,7 +47,7 @@
     "test:compile": "node_modules/.bin/tsc -p tsconfig-test.json",
     "test:dev": "node test/dev/test.js",
     "test:full": "npm run test:compile && node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- test-tmp/test/**/**.spec.js && npm run test:removeTestTmpDir",
-    "test:mocha": "npm run test:compile && node_modules/.bin/mocha -- test-tmp/test/**/**.spec.js && npm run test:removeTestTmpDir",
+    "test:mocha": "npm run test:compile && node_modules/.bin/mocha test-tmp/test/**/**.spec.js && npm run test:removeTestTmpDir",
     "test:removeTestTmpDir": "rm -rf test-tmp",
     "test": "npm run test:dev && npm run test:full",
     "typings": "node_modules/.bin/typings install"

@@ -53,7 +53,7 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
             literalNode: ILiteralNode = {
                 raw: `'${nodeValue}'`,
                 'x-verbatim-property': {
-                    content : this.replaceLiteralValueByUnicodeValue(nodeValue),
+                    content : this.replaceLiteralValueWithUnicodeValue(nodeValue),
                     precedence: escodegen.Precedence.Primary
                 },
                 type: NodeType.Literal,
@@ -82,7 +82,7 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
                 }
 
                 node['x-verbatim-property'] = {
-                    content : this.replaceLiteralValueByUnicodeValue(<string>node.value),
+                    content : this.replaceLiteralValueWithUnicodeValue(<string>node.value),
                     precedence: escodegen.Precedence.Primary
                 };
 

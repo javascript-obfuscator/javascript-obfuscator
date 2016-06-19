@@ -26,38 +26,37 @@ export class FunctionObfuscator extends NodeObfuscator {
      * @param functionNode
      */
     public obfuscateNode (functionNode: IFunctionNode): void {
+        this.storeFunctionParams(functionNode);
         this.replaceFunctionParams(functionNode);
-        this.replaceFunctionParamsInBlockStatement(functionNode);
+    }
+
+    /**
+     * @param functionNode
+     */
+    private storeFunctionParams (functionNode: IFunctionNode): void {
+        functionNode.params
+            .forEach((paramsNode: INode) => {
+                estraverse.traverse(paramsNode, {
+                    leave: (node: INode): any => this.storeIdentifiersNames(node, this.functionParams)
+                });
+            });
     }
 
     /**
      * @param functionNode
      */
     private replaceFunctionParams (functionNode: IFunctionNode): void {
-        functionNode.params.forEach((paramsNode: INode) => {
-            estraverse.replace(paramsNode, {
-                leave: (node: INode): any => {
-                    if (Nodes.isIdentifierNode(node) && !this.isReservedName(node.name)) {
-                        this.functionParams.set(node.name, Utils.getRandomVariableName());
-                        node.name = this.functionParams.get(node.name);
-
-                        return;
-                    }
-
-                    return estraverse.VisitorOption.Skip;
-                }
-            });
-        });
-    }
-
-    /**
-     * @param functionNode
-     */
-    private replaceFunctionParamsInBlockStatement (functionNode: IFunctionNode): void {
-        estraverse.replace(functionNode.body, {
+        let replaceVisitor: estraverse.Visitor = {
             leave: (node: INode, parentNode: INode): any => {
-                this.replaceNodeIdentifierByNewValue(node, parentNode, this.functionParams);
+                this.replaceIdentifiersWithRandomNames(node, parentNode, this.functionParams);
             }
-        });
+        };
+
+        functionNode.params
+            .forEach((paramsNode: INode) => {
+                estraverse.replace(paramsNode, replaceVisitor);
+            });
+
+        estraverse.replace(functionNode.body, replaceVisitor);
     }
 }

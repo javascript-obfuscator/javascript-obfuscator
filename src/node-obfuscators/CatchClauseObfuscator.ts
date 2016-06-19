@@ -26,35 +26,26 @@ export class CatchClauseObfuscator extends NodeObfuscator {
      * @param catchClauseNode
      */
     public obfuscateNode (catchClauseNode: ICatchClauseNode): void {
+        this.storeCatchClauseParam(catchClauseNode);
         this.replaceCatchClauseParam(catchClauseNode);
-        this.replaceCatchClauseParamInBlockStatement(catchClauseNode);
     }
 
     /**
      * @param catchClauseNode
      */
-    private replaceCatchClauseParam (catchClauseNode: ICatchClauseNode): void {
-        estraverse.replace(catchClauseNode.param, {
-            leave: (node: INode, parentNode: INode): any => {
-                if (Nodes.isIdentifierNode(node) && !this.isReservedName(node.name)) {
-                    this.catchClauseParam.set(node.name, Utils.getRandomVariableName());
-                    node.name = this.catchClauseParam.get(node.name);
-
-                    return;
-                }
-
-                return estraverse.VisitorOption.Skip;
-            }
+    private storeCatchClauseParam (catchClauseNode: ICatchClauseNode): void {
+        estraverse.traverse(catchClauseNode.param, {
+            leave: (node: INode): any => this.storeIdentifiersNames(node, this.catchClauseParam)
         });
     }
 
     /**
      * @param catchClauseNode
      */
-    private replaceCatchClauseParamInBlockStatement (catchClauseNode: ICatchClauseNode): void {
-        estraverse.replace(catchClauseNode.body, {
+    private replaceCatchClauseParam (catchClauseNode: ICatchClauseNode): void {
+        estraverse.replace(catchClauseNode, {
             leave: (node: INode, parentNode: INode): any => {
-                this.replaceNodeIdentifierByNewValue(node, parentNode, this.catchClauseParam);
+                this.replaceIdentifiersWithRandomNames(node, parentNode, this.catchClauseParam);
             }
         });
     }

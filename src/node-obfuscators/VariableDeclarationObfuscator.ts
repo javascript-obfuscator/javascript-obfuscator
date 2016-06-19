@@ -36,35 +36,27 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
             return;
         }
 
-        this.replaceVariableName(variableDeclarationNode);
-        this.replaceVariableCalls(variableDeclarationNode, parentNode);
+        this.storeVariableNames(variableDeclarationNode);
+        this.replaceVariableNames(variableDeclarationNode, parentNode);
     }
 
     /**
      * @param variableDeclarationNode
      */
-    private replaceVariableName (variableDeclarationNode: IVariableDeclarationNode): void {
-        variableDeclarationNode.declarations.forEach((declarationNode: IVariableDeclaratorNode) => {
-            estraverse.replace(declarationNode.id, {
-                enter: (node: INode): any => {
-                    if (Nodes.isIdentifierNode(node) && !this.isReservedName(node.name)) {
-                        this.variableNames.set(node.name, Utils.getRandomVariableName());
-                        node.name = this.variableNames.get(node.name);
-
-                        return;
-                    }
-
-                    return estraverse.VisitorOption.Skip;
-                }
+    private storeVariableNames (variableDeclarationNode: IVariableDeclarationNode): void {
+        variableDeclarationNode.declarations
+            .forEach((declarationNode: IVariableDeclaratorNode) => {
+                estraverse.traverse(declarationNode.id, {
+                    enter: (node: INode): any => this.storeIdentifiersNames(node, this.variableNames)
+                });
             });
-        });
     }
 
     /**
      * @param variableDeclarationNode
      * @param variableParentNode
      */
-    private replaceVariableCalls (variableDeclarationNode: IVariableDeclarationNode, variableParentNode: INode): void {
+    private replaceVariableNames (variableDeclarationNode: IVariableDeclarationNode, variableParentNode: INode): void {
         let scopeNode: INode = variableDeclarationNode.kind === 'var' ? NodeUtils.getBlockScopeOfNode(
                 variableDeclarationNode
             ) : variableParentNode,
@@ -81,7 +73,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
                 if (Utils.arrayContains(functionNodes, node.type)) {
                     estraverse.replace(node, {
                         enter: (node: INode, parentNode: INode): any => {
-                            this.replaceNodeIdentifierByNewValue(node, parentNode, this.variableNames);
+                            this.replaceIdentifiersWithRandomNames(node, parentNode, this.variableNames);
                         }
                     });
                 }
@@ -91,7 +83,7 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
                 }
 
                 if (isNodeAfterVariableDeclaratorFlag) {
-                    this.replaceNodeIdentifierByNewValue(node, parentNode, this.variableNames);
+                    this.replaceIdentifiersWithRandomNames(node, parentNode, this.variableNames);
                 }
             }
         });

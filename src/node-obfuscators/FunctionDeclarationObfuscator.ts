@@ -6,9 +6,7 @@ import { INode } from "../interfaces/nodes/INode";
 import { NodeType } from "../enums/NodeType";
 
 import { NodeObfuscator } from './NodeObfuscator';
-import { Nodes } from "../Nodes";
 import { NodeUtils } from "../NodeUtils";
-import { Utils } from '../Utils';
 
 /**
  * replaces:
@@ -34,39 +32,30 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
             return;
         }
 
+        this.storeFunctionName(functionDeclarationNode);
         this.replaceFunctionName(functionDeclarationNode);
-        this.replaceFunctionCalls(functionDeclarationNode);
     }
 
     /**
      * @param functionDeclarationNode
      */
-    private replaceFunctionName (functionDeclarationNode: IFunctionDeclarationNode): void {
-        estraverse.replace(functionDeclarationNode.id, {
-            leave: (node: INode): any => {
-                if (Nodes.isIdentifierNode(node) && !this.isReservedName(node.name)) {
-                    this.functionName.set(node.name, Utils.getRandomVariableName());
-                    node.name = this.functionName.get(node.name);
-
-                    return;
-                }
-
-                return estraverse.VisitorOption.Skip;
-            }
+    private storeFunctionName (functionDeclarationNode: IFunctionDeclarationNode): void {
+        estraverse.traverse(functionDeclarationNode.id, {
+            leave: (node: INode): any => this.storeIdentifiersNames(node, this.functionName)
         });
     }
 
     /**
      * @param functionDeclarationNode
      */
-    private replaceFunctionCalls (functionDeclarationNode: IFunctionDeclarationNode): void {
+    private replaceFunctionName (functionDeclarationNode: IFunctionDeclarationNode): void {
         let scopeNode: INode = NodeUtils.getBlockScopeOfNode(
             functionDeclarationNode
         );
 
         estraverse.replace(scopeNode, {
             enter: (node: INode, parentNode: INode): any => {
-                this.replaceNodeIdentifierByNewValue(node, parentNode, this.functionName);
+                this.replaceIdentifiersWithRandomNames(node, parentNode, this.functionName);
             }
         });
     }

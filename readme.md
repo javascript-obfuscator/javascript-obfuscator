@@ -25,9 +25,9 @@ $ npm install --save-dev javascript-obfuscator
 Here's an example of how to use it:
 
 ```javascript
-var JavaScriptObfuscator = require('javascript-obfuscator');
+var jsObfs = require('javascript-obfuscator');
 
-var obfuscatedCode = JavaScriptObfuscator.obfuscate(
+var obfuscatedCode = jsObfs.JavaScriptObfuscator.obfuscate(
     `
     (function(){
         var variable = 'abc';

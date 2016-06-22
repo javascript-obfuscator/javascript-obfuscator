@@ -4,4 +4,5 @@ node_js:
   - "stable"
 
 after_success:
+  - npm run test:coveralls
   - rm -rf ./coverage

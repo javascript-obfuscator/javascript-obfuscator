@@ -93,7 +93,7 @@ At this moment of time, there are following options (`name: default`) available 
     --debugProtectionInterval <boolean>
     --disableConsoleOutput <boolean>
     --encodeUnicodeLiterals <boolean>
-    --reservedNames <list> (comma separated).
+    --reservedNames <list> (comma separated)
     --rotateUnicodeArray <boolean>
     --selfDefending <boolean>
     --unicodeArray <boolean>

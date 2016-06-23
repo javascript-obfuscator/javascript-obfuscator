@@ -20,7 +20,7 @@ Install the package from NPM and add it to your `devDependencies`:
 $ npm install --save-dev javascript-obfuscator
 ```
 
-## Usage
+## Node Usage
 
 Here's an example of how to use it:
 
@@ -59,7 +59,7 @@ This is the main function that runs the Obfuscator. It takes two parameters, `so
 * `sourceCode` (`string`, default: `null`) – any valid source code, passed as a string variable. JS Obfuscator will parse this string and apply a set of modificating functions to it, generating a string with the new (obfuscated) code and printing it to the console;
 * `options` (`Object`, default: `null`) – an object literal.
 
-## CLI
+## CLI Usage
 Usage: `javascript-obfuscator [options] < in.js > out.js`
 
 See CLI options below.
@@ -88,6 +88,9 @@ At this moment of time, there are following options (`name: default`) available 
 
 #### CLI options:
 ```
+    -v, --version
+    -h, --help
+
     --compact <boolean>
     --debugProtection <boolean>
     --debugProtectionInterval <boolean>

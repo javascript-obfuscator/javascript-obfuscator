@@ -52,7 +52,7 @@ var _0xabf1 = [
 */
 ```
 
-## `obfuscate(sourceCode, options)`
+### `obfuscate(sourceCode, options)`
 
 This is the main function that runs the Obfuscator. It takes two parameters, `sourceCode` and `options` – the source code and the opitons respectively:
 
@@ -206,7 +206,7 @@ Instead of using direct calls to `unicodeArray` items `var t = _0x43a123[0x0]`, 
 var t = _0x12a634('0x0')
 ```
 
-### License
+## License
 Copyright (C) 2016 [Timofey Kachalov](http://github.com/sanex3339).
 
 Redistribution and use in source and binary forms, with or without

@@ -59,7 +59,7 @@ This is the main function that runs the Obfuscator. It takes two parameters, `so
 * `sourceCode` (`string`, default: `null`) – any valid source code, passed as a string variable. JS Obfuscator will parse this string and apply a set of modificating functions to it, generating a string with the new (obfuscated) code and printing it to the console;
 * `options` (`Object`, default: `null`) – an object literal.
 
-### CLI
+## CLI
 Usage: `javascript-obfuscator [options] < in.js > out.js`
 
 See CLI options below.
@@ -67,6 +67,8 @@ See CLI options below.
 ## JavaScript Obfuscator Options
 
 At this moment of time, there are following options (`name: default`) available for the JS Obfuscator:
+
+#### options:
 
 ```javascript
 {
@@ -84,7 +86,7 @@ At this moment of time, there are following options (`name: default`) available 
 }
 ```
 
-CLI options
+#### CLI options:
 ```
     --compact <boolean>
     --debugProtection <boolean>

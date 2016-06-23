@@ -116,7 +116,7 @@ Compact code output on one line.
 ### `debugProtection`
 Type: `boolean` Default: `false`
 
-#### :warning: Can freeze browser while Developer Tools are enabled! Use at own risk.
+##### :warning: Can freeze browser while Developer Tools are enabled! Use at own risk.
 
 Force enable debug mode on page load if Developer Tools panel is enabled (in some, mainly WebKit-based, browsers). This makes it almost impossible to use the Console (the debug panel).
 
@@ -126,7 +126,7 @@ Force enable debug mode on page load if Developer Tools panel is enabled (in som
 ### `debugProtectionInterval`
 Type: `boolean` Default: `false`
 
-#### :warning: Can freeze browser even while Developer Tools are disabled! Use at own risk.
+##### :warning: Can freeze browser even while Developer Tools are disabled! Use at own risk.
 
 Works if `debugProtection` is enabled.
 
@@ -140,7 +140,7 @@ Disable `console.log`, `console.info`, `console.error` and `console.warn` messag
 ### `encodeUnicodeLiterals`
 Type: `boolean` Default: `false`
 
-#### :warning: `unicodeArray` option must be enabled
+##### :warning: `unicodeArray` option must be enabled
 
 This option can slightly slow down your code speed.
 
@@ -165,7 +165,7 @@ Example:
 ### `rotateUnicodeArray`
 Type: `boolean` Default: `true`
 
-#### :warning: `unicodeArray` must be enabled
+##### :warning: `unicodeArray` must be enabled
 
 Shift the `unicodeArray` values by a random number of places during the code obfuscation and insert a helper function for shifting the array back into the source code. (It works just like the Caesar cypher.)
 
@@ -176,7 +176,7 @@ It is also not recommended to enable `rotateUnicodeArray` for small source code 
 ### `selfDefending`
 Type: `boolean` Default: `true`
 
-#### :warning: this option forcibly set `compact` value to `true`
+##### :warning: this option forcibly set `compact` value to `true`
 
 Enables self-defending for obfuscated code. If obfuscated compact code is formatted, it will not work any more.
 
@@ -188,7 +188,7 @@ Put all literal strings into an array and replace every literal string by an arr
 ### `unicodeArrayThreshold`
 Type: `number` Default: `0.8` Min: `0` Max: `1`
 
-#### :warning: `unicodeArray` option must be enabled
+##### :warning: `unicodeArray` option must be enabled
 
 The probability that the literal string will be inserted into `unicodeArray`.
 Use this option for huge source code size, because many calls to `unicodeArray` will slow down code performance.
@@ -198,7 +198,7 @@ Use this option for huge source code size, because many calls to `unicodeArray` 
 ### `wrapUnicodeArrayCalls`
 Type: `boolean` Default: `true`
 
-#### :warning: `unicodeArray` option must be enabled
+##### :warning: `unicodeArray` option must be enabled
 
 Instead of using direct calls to `unicodeArray` items `var t = _0x43a123[0x0]`, when index `0x0` can be easily reverted to `0` with few js beautifiers, this option will wrap all calls to special function instead.
 

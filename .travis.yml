@@ -3,6 +3,8 @@ language: node_js
 node_js:
   - "stable"
 
+script: "npm run travis"
+
 after_success:
   - npm run test:coveralls
   - rm -rf ./coverage

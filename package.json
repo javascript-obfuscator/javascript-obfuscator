@@ -35,6 +35,7 @@
     "mocha": "^2.5.3",
     "ts-loader": "^0.8.2",
     "ts-node": "^0.9.1",
+    "tslint": "^3.11.0",
     "typescript": "^1.8.10",
     "typings": "^0.8.1",
     "webpack": "^2.1.0-beta.12",
@@ -47,7 +48,7 @@
   "scripts": {
     "start": "npm run watch",
     "webpack": "node_modules/.bin/webpack",
-    "build": "npm run webpack && npm test",
+    "build": "npm run webpack && npm run tslint && npm test",
     "watch": "node_modules/.bin/webpack --watch",
     "test:compile": "node_modules/.bin/tsc -p tsconfig-test.json",
     "test:dev": "node test/dev/test.js",
@@ -56,6 +57,8 @@
     "test:mocha": "npm run test:compile && node_modules/.bin/mocha test-tmp/test/**/**.spec.js  && npm run test:removeTestTmpDir",
     "test:removeTestTmpDir": "rm -rf test-tmp",
     "test": "npm run test:dev && npm run test:full",
+    "tslint": "tslint src/*.ts",
+    "travis": "npm run tslint && npm test",
     "typings": "node_modules/.bin/typings install"
   },
   "author": {

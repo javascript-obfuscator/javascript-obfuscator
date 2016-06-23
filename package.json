@@ -13,16 +13,16 @@
   ],
   "main": "dist/index.js",
   "bin": {
-    "javascript-obfuscator": "./bin/javascript-obfuscator"
+    "javascript-obfuscator": "./bin/javascript-obfuscator.js"
   },
   "dependencies": {
+    "babel-polyfill": "^6.9.1",
     "chance": "^1.0.3",
+    "commander": "^2.9.0",
     "escodegen": "^1.8.0",
     "esprima": "^2.7.2",
     "estraverse": "^4.2.0",
-    "commander": "^2.9.0",
-    "source-map-support": "^0.4.0",
-    "babel-polyfill": "^6.9.1"
+    "source-map-support": "^0.4.0"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",

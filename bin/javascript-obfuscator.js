@@ -1,16 +1,13 @@
 #!/usr/bin/env node
 
-var fs = require('fs');
-var path = require('path');
-var JavaScriptObfuscator = require('../dist/index');
+var commands = require('commander'),
+    fs = require('fs'),
+    path = require('path'),
+    JavaScriptObfuscator = require('../dist/index'),
+    packageConfig = fs.readFileSync(path.join(path.dirname(fs.realpathSync(process.argv[1])), '../package.json')),
+    buildVersion = JSON.parse(packageConfig).version,
+    isWindows = process.platform == 'win32';
 
-var commands = require('commander');
-
-var packageConfig = fs.readFileSync(path.join(path.dirname(fs.realpathSync(process.argv[1])), '../package.json'));
-var buildVersion = JSON.parse(packageConfig).version;
-
-var isWindows = process.platform == 'win32';
-    
 // Specify commander options to parse command line params correctly
 commands
   .version(buildVersion, '-v, --version')
@@ -20,23 +17,26 @@ commands
   .option('--debugProtectionInterval', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze).')
   .option('--skip-disableConsoleOutput', 'Allow console.log, console.info, console.error and console.warn messages output into browser console.')
   .option('--encodeUnicodeLiterals', 'All literals in Unicode array become encoded in Base64 (this option can slightly slow down your code speed).')
-  .option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated).', (val)=>val.split(','))
+  .option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated).', (val) => val.split(','))
   .option('--skip-rotateUnicodeArray', 'Disable rotation of unicode array values during obfuscation.')
   .option('--skip-selfDefending', 'Disables self-defending for obfuscated code.')
   .option('--skip-unicodeArray', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call.')	
   .option('--unicodeArrayThreshold <threshold>', 'The probability that the literal string will be inserted into unicodeArray (Default: 0.8, Min: 0, Max: 1).', parseFloat)	
-  .option('--skip-wrapUnicodeArrayCalls', 'Disables usage of special access function instead of direct array call.')	
+  .option('--skip-wrapUnicodeArrayCalls', 'Disables usage of special access function instead of direct array call.')
 ;
 
 commands.on('--help', function () {
   console.log('  Examples:\n');
   console.log('    %> javascript-obfuscator < in.js > out.js');
+
   if (isWindows) {
     console.log('    %> type in1.js in2.js | javascript-obfuscator > out.js');
   } else {
     console.log('    %> cat in1.js in2.js | javascript-obfuscator > out.js');
   }
+
   console.log('');
+
   process.exit();
 });
 
@@ -44,18 +44,21 @@ commands.parse(process.argv);
 
 // If no sensible data passed in just print help and exit
 var fromStdin = !process.env.__DIRECT__ && !process.stdin.isTTY;
+
 if (!fromStdin) {
   commands.outputHelp();
+
   return 0;
 }
 
-var encoding = 'utf-8';
-var data = '';
+var encoding = 'utf-8',
+    data = '';
 
 process.stdin.setEncoding(encoding);
  
 process.stdin.on('readable', function() {
     var chunk;
+
     while (chunk = process.stdin.read()) {
       data += chunk;
     }
@@ -81,5 +84,6 @@ function processData () {
   };
 
   var obfuscatedCode = JavaScriptObfuscator.obfuscate(data, options);
+
   process.stdout.write(obfuscatedCode);
-};
+}

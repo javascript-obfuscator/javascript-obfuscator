@@ -22,8 +22,6 @@ var commands = require('commander'),
 configureProcess();
 configureCommands();
 
-commands.parse(process.argv);
-
 if (!isDataExist()) {
     commands.outputHelp();
 
@@ -60,7 +58,7 @@ function configureCommands () {
         .option('--unicodeArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', parseBoolean)
         .option('--unicodeArrayThreshold <number>', 'The probability that the literal string will be inserted into unicodeArray (Default: 0.8, Min: 0, Max: 1)', parseFloat)
         .option('--wrapUnicodeArrayCalls <boolean>', 'Disables usage of special access function instead of direct array call', parseBoolean)
-    ;
+        .parse(process.argv);
 
     commands.on('--help', function () {
         var isWindows = process.platform == 'win32';

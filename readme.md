@@ -42,7 +42,7 @@ var obfuscatedCode = JavaScriptObfuscator.obfuscate(
 console.log(obfuscatedCode);
 /*
 var _0xabf1 = [
-    '\x61\x62\x63', 
+    '\x61\x62\x63',
     '\x6c\x6f\x67'
 ];
 (function() {
@@ -58,6 +58,11 @@ This is the main function that runs the Obfuscator. It takes two parameters, `so
 
 * `sourceCode` (`string`, default: `null`) – any valid source code, passed as a string variable. JS Obfuscator will parse this string and apply a set of modificating functions to it, generating a string with the new (obfuscated) code and printing it to the console;
 * `options` (`Object`, default: `null`) – an object literal.
+
+### CLI
+Usage: `javascript-obfuscator [options] < in.js > out.js`
+
+See CLI options below.
 
 ## JavaScript Obfuscator Options
 

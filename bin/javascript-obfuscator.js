@@ -89,9 +89,7 @@ function configureProcess () {
         }
     });
 
-    process.stdin.on('end', function () {
-        processData();
-    });
+    process.stdin.on('end', processData);
 }
 
 function getBuildVersion () {

@@ -59,12 +59,14 @@ This is the main function that runs the Obfuscator. It takes two parameters, `so
 * `sourceCode` (`string`, default: `null`) – any valid source code, passed as a string variable. JS Obfuscator will parse this string and apply a set of modificating functions to it, generating a string with the new (obfuscated) code and printing it to the console;
 * `options` (`Object`, default: `null`) – an object literal.
 
+See options in [options section](#javascript-obfuscator-options).
+
 ## CLI usage
 Usage: `javascript-obfuscator [options] < in.js > out.js`
 
 Example: `javascript-obfuscator --compact true --selfDefending false < in.js > out.js`
 
-See CLI options below.
+See CLI options in [options section](#javascript-obfuscator-options).
 
 ## JavaScript Obfuscator Options
 

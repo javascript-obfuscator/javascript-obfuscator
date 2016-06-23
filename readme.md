@@ -84,6 +84,21 @@ At this moment of time, there are following options (`name: default`) available 
 }
 ```
 
+CLI options
+```
+    --compact <boolean>
+    --debugProtection <boolean>
+    --debugProtectionInterval <boolean>
+    --disableConsoleOutput <boolean>
+    --encodeUnicodeLiterals <boolean>
+    --reservedNames <list> (comma separated).
+    --rotateUnicodeArray <boolean>
+    --selfDefending <boolean>
+    --unicodeArray <boolean>
+    --unicodeArrayThreshold <number>
+    --wrapUnicodeArrayCalls <boolean>
+```
+
 ### `compact`
 Type: `boolean` Default: `true`
 

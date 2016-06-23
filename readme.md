@@ -62,7 +62,7 @@ This is the main function that runs the Obfuscator. It takes two parameters, `so
 ## CLI usage
 Usage: `javascript-obfuscator [options] < in.js > out.js`
 
-Example: `javascript-obfuscator --compact false --selfDefending false < in.js > out.js`
+Example: `javascript-obfuscator --compact true --selfDefending false < in.js > out.js`
 
 See CLI options below.
 

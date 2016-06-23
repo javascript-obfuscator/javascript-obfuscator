@@ -312,7 +312,7 @@ module.exports =
 	    }, {
 	        key: "validateNode",
 	        value: function validateNode(node) {
-	            return !!node;
+	            return !!node && node.hasOwnProperty('type');
 	        }
 	    }]);
 	

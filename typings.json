@@ -2,8 +2,9 @@
   "name": "javascript-obfuscator",
   "version": false,
   "ambientDependencies": {
-    "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#6834f97fb33561a3ad40695084da2b660efaee29",
+    "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts",
     "chance": "github:DefinitelyTyped/DefinitelyTyped/chance/chance.d.ts",
+    "commander": "github:DefinitelyTyped/DefinitelyTyped/commander/commander.d.ts",
     "estree": "github:DefinitelyTyped/DefinitelyTyped/estree/estree.d.ts",
     "esprima": "github:DefinitelyTyped/DefinitelyTyped/esprima/esprima.d.ts",
     "escodegen": "github:DefinitelyTyped/DefinitelyTyped/escodegen/escodegen.d.ts",

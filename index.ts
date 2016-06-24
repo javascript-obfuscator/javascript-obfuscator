@@ -2,7 +2,7 @@
 
 import { JavaScriptObfuscator } from './src/JavaScriptObfuscator';
 
-if (!global._babelPolyfill) {
+if (!(<any>global)._babelPolyfill) {
     require('babel-polyfill');
 }
 

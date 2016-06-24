@@ -7,7 +7,6 @@ import { IVariableDeclaratorNode } from "../interfaces/nodes/IVariableDeclarator
 import { NodeType } from "../enums/NodeType";
 
 import { NodeObfuscator } from './NodeObfuscator';
-import { Nodes } from "../Nodes";
 import { NodeUtils } from "../NodeUtils";
 import { Utils } from '../Utils';
 

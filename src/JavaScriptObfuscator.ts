@@ -8,6 +8,7 @@ import { IObfuscator } from "./interfaces/IObfuscator";
 import { IOptions } from './interfaces/IOptions';
 import { IOptionsPreset } from "./interfaces/IOptionsPreset";
 
+import { JavaScriptObfuscatorCLI } from "./cli/JavaScriptObfuscatorCLI";
 import { Obfuscator } from "./Obfuscator";
 import { Options } from "./Options";
 
@@ -31,6 +32,10 @@ export class JavaScriptObfuscator {
         astTree = obfuscator.obfuscateNode(astTree);
 
         return JavaScriptObfuscator.generateCode(astTree, options);
+    }
+
+    public static runCLI (): void {
+        new JavaScriptObfuscatorCLI().run();
     }
 
     /**

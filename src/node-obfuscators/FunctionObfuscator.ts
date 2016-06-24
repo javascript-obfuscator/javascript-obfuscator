@@ -1,12 +1,9 @@
 import * as estraverse from 'estraverse';
 
-import { IBlockStatementNode } from "../interfaces/nodes/IBlockStatementNode";
 import { IFunctionNode } from "../interfaces/nodes/IFunctionNode";
 import { INode } from "../interfaces/nodes/INode";
 
 import { NodeObfuscator } from './NodeObfuscator';
-import { Nodes } from "../Nodes";
-import { Utils } from '../Utils';
 
 /**
  * replaces:

@@ -43,7 +43,7 @@
     "no-any": false,
     "no-arg": true,
     "no-bitwise": true,
-    "no-conditional-assignment": true,
+    "no-conditional-assignment": false,
     "no-consecutive-blank-lines": false,
     "no-console": [
       true,
@@ -68,7 +68,7 @@
       "check-function-in-method"
     ],
     "no-null-keyword": false,
-    "no-reference": true,
+    "no-reference": false,
     "no-require-imports": false,
     "no-shadowed-variable": false,
     "no-string-literal": false,

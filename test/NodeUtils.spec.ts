@@ -80,7 +80,7 @@ describe('NodeUtils', () => {
             expectedLiteralNode = Object.assign({}, literalNode);
             expectedLiteralNode['x-verbatim-property'] = `'string'`;
 
-            NodeUtils.addXVerbatimPropertyToLiterals(literalNode)
+            NodeUtils.addXVerbatimPropertyToLiterals(literalNode);
         });
 
         it('should add `x-verbatim-property` to `Literal` node', () => {
@@ -308,7 +308,7 @@ describe('NodeUtils', () => {
             expectedBlockStatementNode = Object.assign({}, blockStatementNode);
             expectedBlockStatementNode['body'].unshift(literalNode);
 
-            NodeUtils.prependNode(blockStatementNode.body, literalNode)
+            NodeUtils.prependNode(blockStatementNode.body, literalNode);
         });
 
         it('should prepend given node to a `BlockStatement` node body', () => {

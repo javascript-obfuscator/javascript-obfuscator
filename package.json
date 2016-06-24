@@ -57,7 +57,7 @@
     "test:mocha": "npm run test:compile && node_modules/.bin/mocha test-tmp/test/**/**.spec.js  && npm run test:removeTestTmpDir",
     "test:removeTestTmpDir": "rm -rf test-tmp",
     "test": "npm run test:dev && npm run test:full",
-    "tslint": "tslint src/*.ts",
+    "tslint": "tslint src/**/*.ts",
     "travis": "npm run tslint && npm test",
     "typings": "node_modules/.bin/typings install"
   },

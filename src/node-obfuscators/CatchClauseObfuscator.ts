@@ -4,9 +4,6 @@ import { ICatchClauseNode } from "../interfaces/nodes/ICatchClauseNode";
 import { INode } from '../interfaces/nodes/INode';
 
 import { NodeObfuscator } from './NodeObfuscator';
-import { Nodes } from "../Nodes";
-import { Utils } from '../Utils';
-import {IBlockStatementNode} from "../interfaces/nodes/IBlockStatementNode";
 
 /**
  * replaces:

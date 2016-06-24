@@ -1,3 +1,7 @@
 #!/usr/bin/env node
 
-require('../dist/index').runCLI();
+require('../dist/index').runCLI(
+    process.argv,
+    process.stdin,
+    process.stdout
+);

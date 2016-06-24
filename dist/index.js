@@ -648,8 +648,8 @@ module.exports =
 	        }
 	    }, {
 	        key: 'runCLI',
-	        value: function runCLI() {
-	            new JavaScriptObfuscatorCLI_1.JavaScriptObfuscatorCLI().run();
+	        value: function runCLI(argv, stdin, stdout) {
+	            new JavaScriptObfuscatorCLI_1.JavaScriptObfuscatorCLI(argv, stdin, stdout).run();
 	        }
 	    }, {
 	        key: 'generateCode',
@@ -1071,33 +1071,35 @@ module.exports =
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var commands = __webpack_require__(42);
-	var fs = __webpack_require__(43);
-	var path = __webpack_require__(44);
 	var DefaultPreset_1 = __webpack_require__(14);
 	var JavaScriptObfuscator_1 = __webpack_require__(9);
+	var child_process_1 = __webpack_require__(45);
 	
 	var JavaScriptObfuscatorCLI = function () {
-	    function JavaScriptObfuscatorCLI() {
+	    function JavaScriptObfuscatorCLI(argv, stdin, stdout) {
 	        _classCallCheck(this, JavaScriptObfuscatorCLI);
 	
 	        this.data = '';
+	        this.argv = argv;
+	        this.stdin = stdin;
+	        this.stdout = stdout;
 	    }
 	
 	    _createClass(JavaScriptObfuscatorCLI, [{
-	        key: 'run',
+	        key: "run",
 	        value: function run() {
 	            this.configureProcess();
 	            this.configureCommands();
-	            if (!JavaScriptObfuscatorCLI.isDataExist()) {
+	            if (!this.isDataExist()) {
 	                commands.outputHelp();
 	            }
 	        }
 	    }, {
-	        key: 'configureCommands',
+	        key: "configureCommands",
 	        value: function configureCommands() {
 	            commands.version(JavaScriptObfuscatorCLI.getBuildVersion(), '-v, --version').usage('[options] STDIN STDOUT').option('--compact <boolean>', 'Disable one line output code compacting', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtection <boolean>', 'Disable browser Debug panel (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtectionInterval <boolean>', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--disableConsoleOutput <boolean>', 'Allow console.log, console.info, console.error and console.warn messages output into browser console', JavaScriptObfuscatorCLI.parseBoolean).option('--encodeUnicodeLiterals <boolean>', 'All literals in Unicode array become encoded in Base64 (this option can slightly slow down your code speed)', JavaScriptObfuscatorCLI.parseBoolean).option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', function (val) {
 	                return val.split(',');
-	            }).option('--rotateUnicodeArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean).option('--unicodeArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean).option('--unicodeArrayThreshold <number>', 'The probability that the literal string will be inserted into unicodeArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).option('--wrapUnicodeArrayCalls <boolean>', 'Disables usage of special access function instead of direct array call', JavaScriptObfuscatorCLI.parseBoolean).parse(process.argv);
+	            }).option('--rotateUnicodeArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean).option('--unicodeArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean).option('--unicodeArrayThreshold <number>', 'The probability that the literal string will be inserted into unicodeArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).option('--wrapUnicodeArrayCalls <boolean>', 'Disables usage of special access function instead of direct array call', JavaScriptObfuscatorCLI.parseBoolean).parse(this.argv);
 	            commands.on('--help', function () {
 	                var isWindows = process.platform === 'win32';
 	                console.log('  Examples:\n');
@@ -1112,26 +1114,33 @@ module.exports =
 	            });
 	        }
 	    }, {
-	        key: 'configureProcess',
+	        key: "configureProcess",
 	        value: function configureProcess() {
 	            var _this = this;
 	
-	            process.stdin.setEncoding('utf-8');
-	            process.stdin.on('readable', function () {
+	            this.stdin.setEncoding('utf-8');
+	            this.stdin.on('readable', function () {
 	                var chunk = void 0;
-	                while (chunk = process.stdin.read()) {
+	                while (chunk = _this.stdin.read()) {
 	                    _this.data += chunk;
 	                }
 	            });
-	            process.stdin.on('end', this.processData);
+	            this.stdin.on('end', function () {
+	                return _this.processData();
+	            });
 	        }
 	    }, {
-	        key: 'processData',
+	        key: "isDataExist",
+	        value: function isDataExist() {
+	            return !process.env.__DIRECT__ && !this.stdin.isTTY;
+	        }
+	    }, {
+	        key: "processData",
 	        value: function processData() {
-	            process.stdout.write(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(this.data, JavaScriptObfuscatorCLI.buildOptions()));
+	            this.stdout.write(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(this.data, JavaScriptObfuscatorCLI.buildOptions()));
 	        }
 	    }], [{
-	        key: 'buildOptions',
+	        key: "buildOptions",
 	        value: function buildOptions() {
 	            var options = {},
 	                availableOptions = Object.keys(DefaultPreset_1.DEFAULT_PRESET);
@@ -1147,18 +1156,12 @@ module.exports =
 	            return Object.assign({}, DefaultPreset_1.DEFAULT_PRESET, options);
 	        }
 	    }, {
-	        key: 'getBuildVersion',
+	        key: "getBuildVersion",
 	        value: function getBuildVersion() {
-	            var packageConfig = fs.readFileSync(path.join(path.dirname(fs.realpathSync(process.argv[1])), '../package.json'));
-	            return JSON.parse(packageConfig).version;
+	            return String(child_process_1.execSync("npm info " + JavaScriptObfuscatorCLI.packageName + " version"));
 	        }
 	    }, {
-	        key: 'isDataExist',
-	        value: function isDataExist() {
-	            return !process.env.__DIRECT__ && !process.stdin.isTTY;
-	        }
-	    }, {
-	        key: 'parseBoolean',
+	        key: "parseBoolean",
 	        value: function parseBoolean(value) {
 	            return value === 'true' || value === '1';
 	        }
@@ -1167,6 +1170,7 @@ module.exports =
 	    return JavaScriptObfuscatorCLI;
 	}();
 	
+	JavaScriptObfuscatorCLI.packageName = 'javascript-obfuscator';
 	exports.JavaScriptObfuscatorCLI = JavaScriptObfuscatorCLI;
 
 /***/ },
@@ -2608,16 +2612,12 @@ module.exports =
 	module.exports = require("commander");
 
 /***/ },
-/* 43 */
+/* 43 */,
+/* 44 */,
+/* 45 */
 /***/ function(module, exports) {
 
-	module.exports = require("fs");
-
-/***/ },
-/* 44 */
-/***/ function(module, exports) {
-
-	module.exports = require("path");
+	module.exports = require("child_process");
 
 /***/ }
 /******/ ]);

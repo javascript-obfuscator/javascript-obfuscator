@@ -34,8 +34,17 @@ export class JavaScriptObfuscator {
         return JavaScriptObfuscator.generateCode(astTree, options);
     }
 
-    public static runCLI (): void {
-        new JavaScriptObfuscatorCLI().run();
+    /**
+     * @param argv
+     * @param stdin
+     * @param stdout
+     */
+    public static runCLI (
+        argv: string[],
+        stdin: NodeJS.ReadableStream,
+        stdout: NodeJS.WritableStream
+    ): void {
+        new JavaScriptObfuscatorCLI(argv, stdin, stdout).run();
     }
 
     /**

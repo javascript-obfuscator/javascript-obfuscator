@@ -1,6 +1,4 @@
 import * as commands from 'commander';
-import * as fs from 'fs';
-import * as path from 'path';
 import * as tty from 'tty';
 
 import { IOptionsPreset } from "../interfaces/IOptionsPreset";
@@ -8,14 +6,43 @@ import { IOptionsPreset } from "../interfaces/IOptionsPreset";
 import { DEFAULT_PRESET } from "../preset-options/DefaultPreset";
 
 import { JavaScriptObfuscator } from "../JavaScriptObfuscator";
+import {execSync} from "child_process";
 
 export class JavaScriptObfuscatorCLI {
     /**
      * @type {string}
      */
+    private static packageName: string = 'javascript-obfuscator';
+
+    /**
+     * @type {string[]}
+     */
+    private argv: string[];
+
+    /**
+     * @type {string}
+     */
     private data: string = '';
 
-    constructor () {}
+    /**
+     * @type {NodeJS.ReadableStream}
+     */
+    private stdin: NodeJS.ReadableStream;
+
+    /**
+     * @type {NodeJS.WritableStream}
+     */
+    private stdout: NodeJS.WritableStream;
+
+    constructor (
+        argv: string[],
+        stdin: NodeJS.ReadableStream,
+        stdout: NodeJS.WritableStream
+    ) {
+        this.argv = argv;
+        this.stdin = stdin;
+        this.stdout = stdout;
+    }
 
     /**
      * @returns {IOptionsPreset}
@@ -43,23 +70,7 @@ export class JavaScriptObfuscatorCLI {
      * @returns {string}
      */
     private static getBuildVersion (): string {
-        let packageConfig: any = fs.readFileSync(
-            path.join(
-                path.dirname(
-                    fs.realpathSync(process.argv[1])
-                ),
-                '../package.json'
-            )
-        );
-
-        return JSON.parse(packageConfig).version;
-    }
-
-    /**
-     * @returns {boolean}
-     */
-    private static isDataExist (): boolean {
-        return !process.env.__DIRECT__ && !(<tty.ReadStream>process.stdin).isTTY;
+        return String(execSync(`npm info ${JavaScriptObfuscatorCLI.packageName} version`));
     }
 
     /**
@@ -74,7 +85,7 @@ export class JavaScriptObfuscatorCLI {
         this.configureProcess();
         this.configureCommands();
 
-        if (!JavaScriptObfuscatorCLI.isDataExist()) {
+        if (!this.isDataExist()) {
             commands.outputHelp();
         }
     }
@@ -94,7 +105,7 @@ export class JavaScriptObfuscatorCLI {
             .option('--unicodeArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--unicodeArrayThreshold <number>', 'The probability that the literal string will be inserted into unicodeArray (Default: 0.8, Min: 0, Max: 1)', parseFloat)
             .option('--wrapUnicodeArrayCalls <boolean>', 'Disables usage of special access function instead of direct array call', JavaScriptObfuscatorCLI.parseBoolean)
-            .parse(process.argv);
+            .parse(this.argv);
 
         commands.on('--help', () => {
             let isWindows: boolean = process.platform === 'win32';
@@ -115,21 +126,28 @@ export class JavaScriptObfuscatorCLI {
     }
 
     private configureProcess (): void {
-        process.stdin.setEncoding('utf-8');
+        this.stdin.setEncoding('utf-8');
 
-        process.stdin.on('readable', () => {
+        this.stdin.on('readable', () => {
             let chunk: string;
 
-            while (chunk = <string>process.stdin.read()) {
+            while (chunk = <string>this.stdin.read()) {
                 this.data += chunk;
             }
         });
 
-        process.stdin.on('end', this.processData);
+        this.stdin.on('end', () => this.processData());
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    private isDataExist (): boolean {
+        return !process.env.__DIRECT__ && !(<tty.ReadStream>this.stdin).isTTY;
     }
 
     private processData (): void {
-        process.stdout.write(
+        this.stdout.write(
             JavaScriptObfuscator.obfuscate(this.data, JavaScriptObfuscatorCLI.buildOptions())
         );
     }

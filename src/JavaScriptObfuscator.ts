@@ -36,15 +36,9 @@ export class JavaScriptObfuscator {
 
     /**
      * @param argv
-     * @param stdin
-     * @param stdout
      */
-    public static runCLI (
-        argv: string[],
-        stdin: NodeJS.ReadableStream,
-        stdout: NodeJS.WritableStream
-    ): void {
-        new JavaScriptObfuscatorCLI(argv, stdin, stdout).run();
+    public static runCLI (argv: string[]): void {
+        new JavaScriptObfuscatorCLI(argv).run();
     }
 
     /**

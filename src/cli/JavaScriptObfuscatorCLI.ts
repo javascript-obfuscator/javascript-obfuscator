@@ -1,5 +1,5 @@
 import * as commands from 'commander';
-import * as tty from 'tty';
+import * as fs from 'fs';
 import { execSync } from "child_process";
 
 import { IOptionsPreset } from "../interfaces/IOptionsPreset";
@@ -22,7 +22,12 @@ export class JavaScriptObfuscatorCLI {
     /**
      * @type {string[]}
      */
-    private argv: string[];
+    private arguments: string[];
+
+    /**
+     * @type {string[]}
+     */
+    private rawArguments: string[];
 
     /**
      * @type {string}
@@ -30,23 +35,14 @@ export class JavaScriptObfuscatorCLI {
     private data: string = '';
 
     /**
-     * @type {NodeJS.ReadableStream}
+     * @type {string}
      */
-    private stdin: NodeJS.ReadableStream;
+    private inputFilePath: string;
 
-    /**
-     * @type {NodeJS.WritableStream}
-     */
-    private stdout: NodeJS.WritableStream;
-
-    constructor (
-        argv: string[],
-        stdin: NodeJS.ReadableStream,
-        stdout: NodeJS.WritableStream
-    ) {
-        this.argv = argv;
-        this.stdin = stdin;
-        this.stdout = stdout;
+    constructor (argv: string[]) {
+        this.rawArguments = argv;
+        this.arguments = this.rawArguments.slice(2);
+        this.inputFilePath = this.arguments[0];
     }
 
     /**
@@ -72,6 +68,15 @@ export class JavaScriptObfuscatorCLI {
     }
 
     /**
+     * @param filePath
+     */
+    private static checkFilePath (filePath: string): void {
+        if (!fs.existsSync(filePath)) {
+            throw new Error(`Wrong input file \`${filePath}\``);
+        }
+    }
+
+    /**
      * @returns {string}
      */
     private static getBuildVersion (): string {
@@ -89,18 +94,25 @@ export class JavaScriptObfuscatorCLI {
     }
 
     public run (): void {
-        this.configureProcess();
         this.configureCommands();
 
-        if (!this.isDataExist()) {
+        if (!this.arguments.length || this.arguments.indexOf('--help') >= 0) {
             commands.outputHelp();
+
+            return;
         }
+
+        JavaScriptObfuscatorCLI.checkFilePath(this.inputFilePath);
+
+        this.getData();
+        this.processData();
     }
 
     private configureCommands (): void {
         commands
             .version(JavaScriptObfuscatorCLI.getBuildVersion(), '-v, --version')
-            .usage('[options] STDIN STDOUT')
+            .usage('<inputPath> [options]')
+            .option('-o, --output <path>', 'Output path for obfuscated code')
             .option('--compact <boolean>', 'Disable one line output code compacting', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--debugProtection <boolean>', 'Disable browser Debug panel (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--debugProtectionInterval <boolean>', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean)
@@ -112,7 +124,7 @@ export class JavaScriptObfuscatorCLI {
             .option('--unicodeArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--unicodeArrayThreshold <number>', 'The probability that the literal string will be inserted into unicodeArray (Default: 0.8, Min: 0, Max: 1)', parseFloat)
             .option('--wrapUnicodeArrayCalls <boolean>', 'Disables usage of special access function instead of direct array call', JavaScriptObfuscatorCLI.parseBoolean)
-            .parse(this.argv);
+            .parse(this.rawArguments);
 
         commands.on('--help', () => {
             let isWindows: boolean = process.platform === 'win32',
@@ -127,30 +139,35 @@ export class JavaScriptObfuscatorCLI {
         });
     }
 
-    private configureProcess (): void {
-        this.stdin.setEncoding(JavaScriptObfuscatorCLI.encoding);
-
-        this.stdin.on('readable', () => {
-            let chunk: string;
-
-            while (chunk = <string>this.stdin.read()) {
-                this.data += chunk;
-            }
-        });
-
-        this.stdin.on('end', () => this.processData());
+    private getData (): void {
+        this.data = fs.readFileSync(this.inputFilePath, JavaScriptObfuscatorCLI.encoding);
     }
 
     /**
-     * @returns {boolean}
+     * @returns {string}
      */
-    private isDataExist (): boolean {
-        return !process.env.__DIRECT__ && !(<tty.ReadStream>this.stdin).isTTY;
+    private getOutputPath (): string {
+        let outputPath: string = (<any>commands).output;
+
+        if (outputPath) {
+            return outputPath;
+        }
+
+        return this.inputFilePath
+            .split('.')
+            .map<string>((value: string, index: number) => {
+                return index === 0 ? `${value}-obfuscated` : value;
+            })
+            .join('.');
     }
 
     private processData (): void {
-        this.stdout.write(
-            JavaScriptObfuscator.obfuscate(this.data, JavaScriptObfuscatorCLI.buildOptions())
+        fs.writeFileSync(
+            this.getOutputPath(),
+            JavaScriptObfuscator.obfuscate(this.data, JavaScriptObfuscatorCLI.buildOptions()),
+            {
+                encoding: JavaScriptObfuscatorCLI.encoding
+            }
         );
     }
 }

@@ -1083,7 +1083,6 @@ module.exports =
 	        this.data = '';
 	        this.rawArguments = argv;
 	        this.arguments = this.rawArguments.slice(2);
-	        this.inputFilePath = this.arguments[0];
 	    }
 	
 	    _createClass(JavaScriptObfuscatorCLI, [{
@@ -1094,7 +1093,7 @@ module.exports =
 	                commands.outputHelp();
 	                return;
 	            }
-	            JavaScriptObfuscatorCLI.checkFilePath(this.inputFilePath);
+	            this.inputPath = this.getInputPath();
 	            this.getData();
 	            this.processData();
 	        }
@@ -1117,7 +1116,16 @@ module.exports =
 	    }, {
 	        key: 'getData',
 	        value: function getData() {
-	            this.data = fs.readFileSync(this.inputFilePath, JavaScriptObfuscatorCLI.encoding);
+	            this.data = fs.readFileSync(this.inputPath, JavaScriptObfuscatorCLI.encoding);
+	        }
+	    }, {
+	        key: 'getInputPath',
+	        value: function getInputPath() {
+	            var inputPath = this.arguments[0];
+	            if (!JavaScriptObfuscatorCLI.isFilePath(inputPath)) {
+	                throw new ReferenceError('First argument must be a valid file path');
+	            }
+	            return inputPath;
 	        }
 	    }, {
 	        key: 'getOutputPath',
@@ -1126,7 +1134,7 @@ module.exports =
 	            if (outputPath) {
 	                return outputPath;
 	            }
-	            return this.inputFilePath.split('.').map(function (value, index) {
+	            return this.inputPath.split('.').map(function (value, index) {
 	                return index === 0 ? value + '-obfuscated' : value;
 	            }).join('.');
 	        }
@@ -1154,18 +1162,20 @@ module.exports =
 	            return Object.assign({}, DefaultPreset_1.DEFAULT_PRESET, options);
 	        }
 	    }, {
-	        key: 'checkFilePath',
-	        value: function checkFilePath(filePath) {
-	            if (!fs.existsSync(filePath)) {
-	                throw new Error('Wrong input file `' + filePath + '`');
-	            }
-	        }
-	    }, {
 	        key: 'getBuildVersion',
 	        value: function getBuildVersion() {
 	            return child_process_1.execSync('npm info ' + JavaScriptObfuscatorCLI.packageName + ' version', {
 	                encoding: JavaScriptObfuscatorCLI.encoding
 	            });
+	        }
+	    }, {
+	        key: 'isFilePath',
+	        value: function isFilePath(filePath) {
+	            try {
+	                return fs.statSync(filePath).isFile();
+	            } catch (e) {
+	                return false;
+	            }
 	        }
 	    }, {
 	        key: 'parseBoolean',

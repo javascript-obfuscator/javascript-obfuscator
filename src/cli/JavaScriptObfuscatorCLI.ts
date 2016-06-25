@@ -37,12 +37,11 @@ export class JavaScriptObfuscatorCLI {
     /**
      * @type {string}
      */
-    private inputFilePath: string;
+    private inputPath: string;
 
     constructor (argv: string[]) {
         this.rawArguments = argv;
         this.arguments = this.rawArguments.slice(2);
-        this.inputFilePath = this.arguments[0];
     }
 
     /**
@@ -68,21 +67,23 @@ export class JavaScriptObfuscatorCLI {
     }
 
     /**
-     * @param filePath
-     */
-    private static checkFilePath (filePath: string): void {
-        if (!fs.existsSync(filePath)) {
-            throw new Error(`Wrong input file \`${filePath}\``);
-        }
-    }
-
-    /**
      * @returns {string}
      */
     private static getBuildVersion (): string {
         return execSync(`npm info ${JavaScriptObfuscatorCLI.packageName} version`, {
             encoding: JavaScriptObfuscatorCLI.encoding
         });
+    }
+
+    /**
+     * @param filePath
+     */
+    private static isFilePath (filePath: string): boolean {
+        try {
+            return fs.statSync(filePath).isFile();
+        } catch (e) {
+            return false;
+        }
     }
 
     /**
@@ -102,7 +103,7 @@ export class JavaScriptObfuscatorCLI {
             return;
         }
 
-        JavaScriptObfuscatorCLI.checkFilePath(this.inputFilePath);
+        this.inputPath = this.getInputPath();
 
         this.getData();
         this.processData();
@@ -140,7 +141,17 @@ export class JavaScriptObfuscatorCLI {
     }
 
     private getData (): void {
-        this.data = fs.readFileSync(this.inputFilePath, JavaScriptObfuscatorCLI.encoding);
+        this.data = fs.readFileSync(this.inputPath, JavaScriptObfuscatorCLI.encoding);
+    }
+
+    private getInputPath (): string {
+        let inputPath: string = this.arguments[0];
+
+        if (!JavaScriptObfuscatorCLI.isFilePath(inputPath)) {
+            throw new ReferenceError(`First argument must be a valid file path`);
+        }
+
+        return inputPath;
     }
 
     /**
@@ -153,7 +164,7 @@ export class JavaScriptObfuscatorCLI {
             return outputPath;
         }
 
-        return this.inputFilePath
+        return this.inputPath
             .split('.')
             .map<string>((value: string, index: number) => {
                 return index === 0 ? `${value}-obfuscated` : value;

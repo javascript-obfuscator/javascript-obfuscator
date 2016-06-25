@@ -48,6 +48,9 @@ export class JavaScriptObfuscatorCLI {
      */
     private inputPath: string;
 
+    /**
+     * @param argv
+     */
     constructor (argv: string[]) {
         this.rawArguments = argv;
         this.arguments = this.rawArguments.slice(2);
@@ -153,6 +156,9 @@ export class JavaScriptObfuscatorCLI {
         this.data = fs.readFileSync(this.inputPath, JavaScriptObfuscatorCLI.encoding);
     }
 
+    /**
+     * @returns {string}
+     */
     private getInputPath (): string {
         let inputPath: string = this.arguments[0];
 

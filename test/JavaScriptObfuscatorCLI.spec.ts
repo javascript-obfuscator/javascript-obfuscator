@@ -1,12 +1,11 @@
 import * as fs from 'fs';
 
-import { JavaScriptObfuscatorCLI } from "../src/cli/JavaScriptObfuscatorCLI";
+import { JavaScriptObfuscator } from "../src/JavaScriptObfuscator";
 
 let assert: any = require('chai').assert;
 
 describe('JavaScriptObfuscatorCLI', () => {
-    let CLI: JavaScriptObfuscatorCLI,
-        fixturesDirName: string = 'test/fixtures',
+    let fixturesDirName: string = 'test/fixtures',
         tmpDirName: string = 'test/tmp',
         fixtureFileName: string = 'sample.js',
         fixtureFilePath: string = `${fixturesDirName}/${fixtureFileName}`,
@@ -15,7 +14,7 @@ describe('JavaScriptObfuscatorCLI', () => {
 
     describe('run (): void', () => {
         beforeEach(() => {
-            CLI = new JavaScriptObfuscatorCLI([
+            JavaScriptObfuscator.runCLI([
                 'node',
                 'javascript-obfuscator',
                 fixtureFilePath,
@@ -26,8 +25,6 @@ describe('JavaScriptObfuscatorCLI', () => {
                 '--selfDefending',
                 'false'
             ]);
-
-            CLI.run();
         });
 
         it('should obfuscate file with JS code', () => {

@@ -62,9 +62,22 @@ This is the main function that runs the Obfuscator. It takes two parameters, `so
 See [options](#options).
 
 ## CLI usage
-Usage: `javascript-obfuscator [options] < in.js > out.js`
+Usage:
+```sh
+javascript-obfuscator in.js [options]
+javascript-obfuscator in.js -output out.js [options]
+```
 
-Example: `javascript-obfuscator --compact true --selfDefending false < in.js > out.js`
+If the destination path is not specified through `--output` option, obfuscated code will saved in input file directory with name `INPUT_FILE_NAME-obfuscated.js`
+
+Examples:
+```sh
+javascript-obfuscator samples/sample.js --compact true --selfDefending false
+// creates a new file samples/sample-obfuscated.js
+
+javascript-obfuscator samples/sample.js --output output/output.js --compact true --selfDefending false
+// creates a new file output/output.js
+```
 
 See [CLI options](#cli-options).
 
@@ -91,9 +104,11 @@ At this moment of time, there are following options (`name: default`) available 
 ```
 
 #### CLI options:
-```
+```sh
     -v, --version
     -h, --help
+
+    -o, --output
 
     --compact <boolean>
     --debugProtection <boolean>

@@ -1,5 +1,7 @@
 import * as commands from 'commander';
 import * as fs from 'fs';
+import * as mkdirp from 'mkdirp';
+import * as path from 'path';
 import { execSync } from "child_process";
 
 import { IOptionsPreset } from "../interfaces/IOptionsPreset";
@@ -173,6 +175,11 @@ export class JavaScriptObfuscatorCLI {
     }
 
     private processData (): void {
+        let outputPath: string = this.getOutputPath(),
+            dirName: string = path.dirname(outputPath);
+
+        mkdirp.sync(dirName);
+
         fs.writeFileSync(
             this.getOutputPath(),
             JavaScriptObfuscator.obfuscate(this.data, JavaScriptObfuscatorCLI.buildOptions()),

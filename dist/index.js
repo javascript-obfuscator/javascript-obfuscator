@@ -1072,6 +1072,8 @@ module.exports =
 	
 	var commands = __webpack_require__(43);
 	var fs = __webpack_require__(44);
+	var mkdirp = __webpack_require__(46);
+	var path = __webpack_require__(45);
 	var child_process_1 = __webpack_require__(42);
 	var DefaultPreset_1 = __webpack_require__(14);
 	var JavaScriptObfuscator_1 = __webpack_require__(9);
@@ -1141,6 +1143,9 @@ module.exports =
 	    }, {
 	        key: 'processData',
 	        value: function processData() {
+	            var outputPath = this.getOutputPath(),
+	                dirName = path.dirname(outputPath);
+	            mkdirp.sync(dirName);
 	            fs.writeFileSync(this.getOutputPath(), JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(this.data, JavaScriptObfuscatorCLI.buildOptions()), {
 	                encoding: JavaScriptObfuscatorCLI.encoding
 	            });
@@ -2640,6 +2645,18 @@ module.exports =
 /***/ function(module, exports) {
 
 	module.exports = require("fs");
+
+/***/ },
+/* 45 */
+/***/ function(module, exports) {
+
+	module.exports = require("path");
+
+/***/ },
+/* 46 */
+/***/ function(module, exports) {
+
+	module.exports = require("mkdirp");
 
 /***/ }
 /******/ ]);

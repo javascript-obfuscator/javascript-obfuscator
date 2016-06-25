@@ -9,6 +9,7 @@
     "esprima": "github:DefinitelyTyped/DefinitelyTyped/esprima/esprima.d.ts",
     "escodegen": "github:DefinitelyTyped/DefinitelyTyped/escodegen/escodegen.d.ts",
     "estraverse": "github:DefinitelyTyped/DefinitelyTyped/estraverse/estraverse.d.ts",
+    "mkdirp": "github:DefinitelyTyped/DefinitelyTyped/mkdirp/mkdirp.d.ts",
     "mocha": "github:DefinitelyTyped/DefinitelyTyped/mocha/mocha.d.ts",
     "chai": "github:DefinitelyTyped/DefinitelyTyped/chai/chai.d.ts"
   }

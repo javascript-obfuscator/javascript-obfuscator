@@ -1070,10 +1070,10 @@ module.exports =
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var commands = __webpack_require__(42);
+	var commands = __webpack_require__(43);
+	var child_process_1 = __webpack_require__(42);
 	var DefaultPreset_1 = __webpack_require__(14);
 	var JavaScriptObfuscator_1 = __webpack_require__(9);
-	var child_process_1 = __webpack_require__(45);
 	
 	var JavaScriptObfuscatorCLI = function () {
 	    function JavaScriptObfuscatorCLI(argv, stdin, stdout) {
@@ -1101,14 +1101,11 @@ module.exports =
 	                return val.split(',');
 	            }).option('--rotateUnicodeArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean).option('--unicodeArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean).option('--unicodeArrayThreshold <number>', 'The probability that the literal string will be inserted into unicodeArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).option('--wrapUnicodeArrayCalls <boolean>', 'Disables usage of special access function instead of direct array call', JavaScriptObfuscatorCLI.parseBoolean).parse(this.argv);
 	            commands.on('--help', function () {
-	                var isWindows = process.platform === 'win32';
+	                var isWindows = process.platform === 'win32',
+	                    commandName = isWindows ? 'type' : 'cat';
 	                console.log('  Examples:\n');
 	                console.log('    %> javascript-obfuscator < in.js > out.js');
-	                if (isWindows) {
-	                    console.log('    %> type in1.js in2.js | javascript-obfuscator > out.js');
-	                } else {
-	                    console.log('    %> cat in1.js in2.js | javascript-obfuscator > out.js');
-	                }
+	                console.log("    %> " + commandName + " in1.js in2.js | javascript-obfuscator > out.js");
 	                console.log('');
 	                process.exit();
 	            });
@@ -1118,7 +1115,7 @@ module.exports =
 	        value: function configureProcess() {
 	            var _this = this;
 	
-	            this.stdin.setEncoding('utf-8');
+	            this.stdin.setEncoding(JavaScriptObfuscatorCLI.encoding);
 	            this.stdin.on('readable', function () {
 	                var chunk = void 0;
 	                while (chunk = _this.stdin.read()) {
@@ -1158,7 +1155,9 @@ module.exports =
 	    }, {
 	        key: "getBuildVersion",
 	        value: function getBuildVersion() {
-	            return String(child_process_1.execSync("npm info " + JavaScriptObfuscatorCLI.packageName + " version"));
+	            return child_process_1.execSync("npm info " + JavaScriptObfuscatorCLI.packageName + " version", {
+	                encoding: JavaScriptObfuscatorCLI.encoding
+	            });
 	        }
 	    }, {
 	        key: "parseBoolean",
@@ -1170,6 +1169,7 @@ module.exports =
 	    return JavaScriptObfuscatorCLI;
 	}();
 	
+	JavaScriptObfuscatorCLI.encoding = 'utf8';
 	JavaScriptObfuscatorCLI.packageName = 'javascript-obfuscator';
 	exports.JavaScriptObfuscatorCLI = JavaScriptObfuscatorCLI;
 
@@ -2609,15 +2609,13 @@ module.exports =
 /* 42 */
 /***/ function(module, exports) {
 
-	module.exports = require("commander");
+	module.exports = require("child_process");
 
 /***/ },
-/* 43 */,
-/* 44 */,
-/* 45 */
+/* 43 */
 /***/ function(module, exports) {
 
-	module.exports = require("child_process");
+	module.exports = require("commander");
 
 /***/ }
 /******/ ]);

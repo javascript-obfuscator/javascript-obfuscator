@@ -1,3 +1,5 @@
+import * as child_process from 'child_process';
+
 import { JavaScriptObfuscatorCLI } from "../src/cli/JavaScriptObfuscatorCLI";
 
 let assert: any = require('chai').assert,
@@ -12,7 +14,9 @@ describe('JavaScriptObfuscatorCLI', () => {
 
             this.timeout(7000);
 
-            stdout.captureData();
+            stdin.send('test/dev/test.js');
+
+            stdout.startCapture();
 
             let CLI: JavaScriptObfuscatorCLI = new JavaScriptObfuscatorCLI(
                 [
@@ -23,7 +27,7 @@ describe('JavaScriptObfuscatorCLI', () => {
                     '--selfDefending',
                     'false'
                 ],
-                stdin.send(new Buffer('var test = \'abc\';')),
+                stdin,
                 stdout
             );
 

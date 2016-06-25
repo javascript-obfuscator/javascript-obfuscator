@@ -1,14 +1,19 @@
 import * as commands from 'commander';
 import * as tty from 'tty';
+import { execSync } from "child_process";
 
 import { IOptionsPreset } from "../interfaces/IOptionsPreset";
 
 import { DEFAULT_PRESET } from "../preset-options/DefaultPreset";
 
 import { JavaScriptObfuscator } from "../JavaScriptObfuscator";
-import {execSync} from "child_process";
 
 export class JavaScriptObfuscatorCLI {
+    /**
+     * @type {BufferEncoding}
+     */
+    private static encoding: BufferEncoding = 'utf8';
+
     /**
      * @type {string}
      */
@@ -70,7 +75,9 @@ export class JavaScriptObfuscatorCLI {
      * @returns {string}
      */
     private static getBuildVersion (): string {
-        return String(execSync(`npm info ${JavaScriptObfuscatorCLI.packageName} version`));
+        return execSync(`npm info ${JavaScriptObfuscatorCLI.packageName} version`, {
+            encoding: JavaScriptObfuscatorCLI.encoding
+        });
     }
 
     /**
@@ -108,17 +115,12 @@ export class JavaScriptObfuscatorCLI {
             .parse(this.argv);
 
         commands.on('--help', () => {
-            let isWindows: boolean = process.platform === 'win32';
+            let isWindows: boolean = process.platform === 'win32',
+                commandName: string = isWindows ? 'type' : 'cat';
 
             console.log('  Examples:\n');
             console.log('    %> javascript-obfuscator < in.js > out.js');
-
-            if (isWindows) {
-                console.log('    %> type in1.js in2.js | javascript-obfuscator > out.js');
-            } else {
-                console.log('    %> cat in1.js in2.js | javascript-obfuscator > out.js');
-            }
-
+            console.log(`    %> ${commandName} in1.js in2.js | javascript-obfuscator > out.js`);
             console.log('');
 
             process.exit();
@@ -126,7 +128,7 @@ export class JavaScriptObfuscatorCLI {
     }
 
     private configureProcess (): void {
-        this.stdin.setEncoding('utf-8');
+        this.stdin.setEncoding(JavaScriptObfuscatorCLI.encoding);
 
         this.stdin.on('readable', () => {
             let chunk: string;

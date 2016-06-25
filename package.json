@@ -31,7 +31,7 @@
     "babel-preset-es2015": "^6.9.0",
     "chai": "^3.5.0",
     "coveralls": "^2.11.9",
-    "istanbul": "^1.0.0-alpha.2",
+    "istanbul": "1.1.0-alpha.1",
     "lite-server": "^1.3.1",
     "mocha": "^2.5.3",
     "ts-loader": "^0.8.2",

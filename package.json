@@ -36,7 +36,7 @@
     "mocha": "^2.5.3",
     "ts-loader": "^0.8.2",
     "ts-node": "^0.9.1",
-    "tslint": "^3.11.0",
+    "tslint": "3.11.0",
     "typescript": "^1.8.10",
     "typings": "^0.8.1",
     "webpack": "^2.1.0-beta.12",

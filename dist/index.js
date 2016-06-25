@@ -1127,6 +1127,9 @@ var JavaScriptObfuscatorCLI = function () {
             if (!JavaScriptObfuscatorCLI.isFilePath(inputPath)) {
                 throw new ReferenceError('First argument must be a valid file path');
             }
+            if (JavaScriptObfuscatorCLI.availableInputExtensions.indexOf(path.extname(inputPath)) === -1) {
+                throw new ReferenceError('Input file must have .js extension');
+            }
             return inputPath;
         }
     }, {
@@ -1192,6 +1195,7 @@ var JavaScriptObfuscatorCLI = function () {
     return JavaScriptObfuscatorCLI;
 }();
 
+JavaScriptObfuscatorCLI.availableInputExtensions = ['.js'];
 JavaScriptObfuscatorCLI.encoding = 'utf8';
 JavaScriptObfuscatorCLI.packageName = 'javascript-obfuscator';
 exports.JavaScriptObfuscatorCLI = JavaScriptObfuscatorCLI;

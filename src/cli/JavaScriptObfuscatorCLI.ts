@@ -12,6 +12,13 @@ import { JavaScriptObfuscator } from "../JavaScriptObfuscator";
 
 export class JavaScriptObfuscatorCLI {
     /**
+     * @type {string[]}
+     */
+    private static availableInputExtensions: string[] = [
+        '.js'
+    ];
+
+    /**
      * @type {BufferEncoding}
      */
     private static encoding: BufferEncoding = 'utf8';
@@ -151,6 +158,10 @@ export class JavaScriptObfuscatorCLI {
 
         if (!JavaScriptObfuscatorCLI.isFilePath(inputPath)) {
             throw new ReferenceError(`First argument must be a valid file path`);
+        }
+
+        if (JavaScriptObfuscatorCLI.availableInputExtensions.indexOf(path.extname(inputPath)) === -1) {
+            throw new ReferenceError(`Input file must have .js extension`);
         }
 
         return inputPath;

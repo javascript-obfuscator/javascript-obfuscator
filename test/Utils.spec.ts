@@ -51,7 +51,7 @@ describe('Utils', () => {
     describe('getRandomVariableName (length: number = 6): string', () => {
         it('should return a string of given length with random variable name', () => {
             assert.match(Utils.getRandomVariableName(4), /^_0x(\w){4}$/);
-            assert.match(Utils.getRandomVariableName(6), /^_0x(\w){6}$/);
+            assert.match(Utils.getRandomVariableName(6), /^_0x(\w){4,6}$/);
         });
     });
 

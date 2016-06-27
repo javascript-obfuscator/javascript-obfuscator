@@ -1,0 +1,4 @@
+#!/bin/bash
+
+npm run tslint
+npm test

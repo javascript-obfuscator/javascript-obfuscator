@@ -47,20 +47,20 @@
     "url": "git+https://github.com/sanex3339/javascript-obfuscator.git"
   },
   "scripts": {
-    "start": "npm run watch",
-    "webpack": "node_modules/.bin/webpack",
-    "build": "npm run webpack && npm run tslint && npm test",
-    "watch": "node_modules/.bin/webpack --watch",
-    "test:compile": "node_modules/.bin/tsc -p tsconfig-test.json",
-    "test:dev": "node test/dev/test.js",
-    "test:full": "npm run test:compile && node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- test-tmp/test/**/**.spec.js && npm run test:removeTestTmpDir",
-    "test:coveralls": "npm run test:compile && node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- test-tmp/test/**/**.spec.js --report lcovonly && cat ./coverage/lcov.info | coveralls && npm run test:removeTestTmpDir",
-    "test:mocha": "npm run test:compile && node_modules/.bin/mocha test-tmp/test/**/**.spec.js && npm run test:removeTestTmpDir",
-    "test:removeTestTmpDir": "rm -rf test-tmp",
-    "test": "npm run test:dev && npm run test:full",
-    "tslint": "tslint src/**/*.ts",
-    "travis": "npm run tslint && npm test",
-    "typings": "node_modules/.bin/typings install"
+    "start": "scripts/start",
+    "webpack": "scripts/webpack",
+    "build": "scripts/build",
+    "watch": "scripts/watch",
+    "test:compile": "scripts/test-compile",
+    "test:dev": "scripts/test-dev",
+    "test:full": "scripts/test-full",
+    "test:coveralls": "scripts/test-coveralls",
+    "test:mocha": "scripts/test-mocha",
+    "test:removeTmpDir": "scripts/test-remove-tmp-dir",
+    "test": "scripts/test",
+    "tslint": "scripts/tslint",
+    "travis": "scripts/travis",
+    "typings": "srcipts/typings"
   },
   "author": {
     "name": "Timofey Kachalov"

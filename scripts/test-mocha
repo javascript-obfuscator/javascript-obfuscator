@@ -1,0 +1,5 @@
+#!/bin/bash
+
+npm run test:compile
+$(npm bin)/mocha test-tmp/test/**/**.spec.js
+npm run test:removeTmpDir

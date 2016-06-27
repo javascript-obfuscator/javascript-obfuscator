@@ -94,8 +94,6 @@ export class JavaScriptObfuscatorCLI {
 
         if (!this.arguments.length || this.arguments.indexOf('--help') >= 0) {
             this.commands.outputHelp();
-
-            return;
         }
 
         this.inputPath = this.getInputPath();

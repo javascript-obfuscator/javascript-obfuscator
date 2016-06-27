@@ -12,6 +12,9 @@ https://gist.github.com/sanex3339/ffc2876123b52e6d11ce45369fd53acf
 [![Build Status](https://travis-ci.org/sanex3339/javascript-obfuscator.svg?branch=master)](https://travis-ci.org/sanex3339/javascript-obfuscator)
 [![Coverage Status](https://coveralls.io/repos/github/sanex3339/javascript-obfuscator/badge.svg?branch=master)](https://coveralls.io/github/sanex3339/javascript-obfuscator?branch=master)
 
+[![Dependency Status](https://david-dm.org/sanex3339/javascript-obfuscator.svg)](https://david-dm.org/sanex3339/javascript-obfuscator)
+[![devDependency Status](https://david-dm.org/sanex3339/javascript-obfuscator/dev-status.svg)](https://david-dm.org/sanex3339/javascript-obfuscator#info=devDependencies)
+
 ## Installation
 
 Install the package from NPM and add it to your `devDependencies`:

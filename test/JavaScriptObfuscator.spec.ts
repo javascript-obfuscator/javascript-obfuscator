@@ -2,7 +2,7 @@ import { JavaScriptObfuscator } from "../src/JavaScriptObfuscator";
 
 import { NO_CUSTOM_NODES_PRESET } from "../src/preset-options/NoCustomNodesPreset";
 
-let assert: any = require('chai').assert;
+const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('JavaScriptObfuscator', () => {
     describe('obfuscate (sourceCode: string, customOptions?: IOptionsPreset): string', () => {

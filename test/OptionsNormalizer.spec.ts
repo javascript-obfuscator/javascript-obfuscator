@@ -4,7 +4,7 @@ import { OptionsNormalizer } from '../src/OptionsNormalizer';
 
 import { DEFAULT_PRESET } from '../src/preset-options/DefaultPreset';
 
-let assert: any = require('chai').assert;
+const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('OptionsNormalizer', () => {
     describe('normalizeOptionsPreset (options: IOptionsPreset): IOptionsPreset', () => {

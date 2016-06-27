@@ -2,7 +2,7 @@ import * as fs from 'fs';
 
 import { JavaScriptObfuscator } from "../src/JavaScriptObfuscator";
 
-let assert: any = require('chai').assert;
+const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('JavaScriptObfuscatorCLI', () => {
     let fixturesDirName: string = 'test/fixtures',

@@ -10,7 +10,7 @@ import { NodeType } from "../src/enums/NodeType";
 
 import { NodeUtils } from '../src/NodeUtils';
 
-let assert: any = require('chai').assert;
+const assert: any = require('chai').assert;
 
 function getProgramNode (bodyNodes: INode[] = []): IProgramNode {
     return {

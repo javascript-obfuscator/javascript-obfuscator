@@ -2,7 +2,7 @@ import { Utils } from '../src/Utils';
 
 import { JSFuck } from '../src/enums/JSFuck';
 
-let assert: any = require('chai').assert;
+const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('Utils', () => {
     describe('arrayContains (array: any[], searchElement: any): boolean', () => {

@@ -1,3 +1,5 @@
+'use strict';
+
 let fs = require("fs"),
     nodeExternals = require('webpack-node-externals'),
     webpack = require('webpack');

@@ -16,7 +16,6 @@
     "javascript-obfuscator": "./bin/javascript-obfuscator.js"
   },
   "dependencies": {
-    "babel-polyfill": "^6.9.1",
     "chance": "^1.0.3",
     "commander": "^2.9.0",
     "escodegen": "^1.8.0",

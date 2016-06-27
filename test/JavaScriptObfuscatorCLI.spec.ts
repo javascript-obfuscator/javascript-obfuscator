@@ -10,30 +10,43 @@ describe('JavaScriptObfuscatorCLI', () => {
         fixtureFileName: string = 'sample.js',
         fixtureFilePath: string = `${fixturesDirName}/${fixtureFileName}`,
         outputFileName: string = 'sample-obfuscated.js',
+        outputFixturesFilePath: string = `${fixturesDirName}/${outputFileName}`,
         outputFilePath: string = `${tmpDirName}/${outputFileName}`;
 
     describe('run (): void', () => {
-        beforeEach(() => {
-            JavaScriptObfuscator.runCLI([
-                'node',
-                'javascript-obfuscator',
-                fixtureFilePath,
-                '--output',
-                outputFilePath,
-                '--compact',
-                'false',
-                '--selfDefending',
-                'false'
-            ]);
+        describe('--output option is set', () => {
+            it('should creates file with obfuscated JS code in --output directory', () => {
+                JavaScriptObfuscator.runCLI([
+                    'node',
+                    'javascript-obfuscator',
+                    fixtureFilePath,
+                    '--output',
+                    outputFilePath
+                ]);
+
+                assert.equal(fs.existsSync(outputFilePath), true);
+            });
+
+            afterEach(() => {
+                fs.unlinkSync(outputFilePath);
+                fs.rmdirSync(tmpDirName);
+            });
         });
 
-        it('should obfuscate file with JS code', () => {
-            assert.equal(1, 1);
-        });
+        describe('—output option is not set', () => {
+            it(`should creates file called \`${outputFileName}\` with obfuscated JS code in \`${fixturesDirName}\` directory`, () => {
+                JavaScriptObfuscator.runCLI([
+                    'node',
+                    'javascript-obfuscator',
+                    fixtureFilePath
+                ]);
 
-        afterEach(() => {
-            fs.unlinkSync(outputFilePath);
-            fs.rmdirSync(tmpDirName);
+                assert.equal(fs.existsSync(outputFixturesFilePath), true);
+            });
+
+            afterEach(() => {
+                fs.unlinkSync(outputFixturesFilePath);
+            });
         });
     });
 });

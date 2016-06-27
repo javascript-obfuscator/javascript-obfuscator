@@ -1,4 +1,4 @@
-import * as commands from 'commander';
+import { Command } from 'commander';
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as path from 'path';
@@ -34,6 +34,11 @@ export class JavaScriptObfuscatorCLI {
     private arguments: string[];
 
     /**
+     * @type {commander.ICommand}
+     */
+    private commands: commander.ICommand;
+
+    /**
      * @type {string[]}
      */
     private rawArguments: string[];
@@ -54,28 +59,6 @@ export class JavaScriptObfuscatorCLI {
     constructor (argv: string[]) {
         this.rawArguments = argv;
         this.arguments = this.rawArguments.slice(2);
-    }
-
-    /**
-     * @returns {IOptionsPreset}
-     */
-    private static buildOptions (): IOptionsPreset {
-        let options: IOptionsPreset = {},
-            availableOptions: string[] = Object.keys(DEFAULT_PRESET);
-
-        for (let option in commands) {
-            if (!commands.hasOwnProperty(option)) {
-                continue;
-            }
-
-            if (availableOptions.indexOf(option) === -1) {
-                continue;
-            }
-
-            options[option] = (<any>commands)[option];
-        }
-
-        return Object.assign({}, DEFAULT_PRESET, options);
     }
 
     /**
@@ -110,7 +93,7 @@ export class JavaScriptObfuscatorCLI {
         this.configureCommands();
 
         if (!this.arguments.length || this.arguments.indexOf('--help') >= 0) {
-            commands.outputHelp();
+            this.commands.outputHelp();
 
             return;
         }
@@ -121,8 +104,30 @@ export class JavaScriptObfuscatorCLI {
         this.processData();
     }
 
+    /**
+     * @returns {IOptionsPreset}
+     */
+    private buildOptions (): IOptionsPreset {
+        let options: IOptionsPreset = {},
+            availableOptions: string[] = Object.keys(DEFAULT_PRESET);
+
+        for (let option in this.commands) {
+            if (!this.commands.hasOwnProperty(option)) {
+                continue;
+            }
+
+            if (availableOptions.indexOf(option) === -1) {
+                continue;
+            }
+
+            options[option] = (<any>this.commands)[option];
+        }
+
+        return Object.assign({}, DEFAULT_PRESET, options);
+    }
+
     private configureCommands (): void {
-        commands
+        this.commands = new Command()
             .version(JavaScriptObfuscatorCLI.getBuildVersion(), '-v, --version')
             .usage('<inputPath> [options]')
             .option('-o, --output <path>', 'Output path for obfuscated code')
@@ -139,7 +144,7 @@ export class JavaScriptObfuscatorCLI {
             .option('--wrapUnicodeArrayCalls <boolean>', 'Disables usage of special access function instead of direct array call', JavaScriptObfuscatorCLI.parseBoolean)
             .parse(this.rawArguments);
 
-        commands.on('--help', () => {
+        this.commands.on('--help', () => {
             let isWindows: boolean = process.platform === 'win32',
                 commandName: string = isWindows ? 'type' : 'cat';
 
@@ -177,7 +182,7 @@ export class JavaScriptObfuscatorCLI {
      * @returns {string}
      */
     private getOutputPath (): string {
-        let outputPath: string = (<any>commands).output;
+        let outputPath: string = (<any>this.commands).output;
 
         if (outputPath) {
             return outputPath;
@@ -199,7 +204,7 @@ export class JavaScriptObfuscatorCLI {
 
         fs.writeFileSync(
             this.getOutputPath(),
-            JavaScriptObfuscator.obfuscate(this.data, JavaScriptObfuscatorCLI.buildOptions()),
+            JavaScriptObfuscator.obfuscate(this.data, this.buildOptions()),
             {
                 encoding: JavaScriptObfuscatorCLI.encoding
             }

@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as sinon from 'sinon';
 
-import { BabelPolyfill } from 'polyfills/BabelPolyfill';
+import { BabelPolyfill } from './polyfills/BabelPolyfill';
 
 import { StdoutWriteMock } from "../test/mocks/StdoutWriteMock";
 

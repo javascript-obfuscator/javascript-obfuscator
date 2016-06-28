@@ -1,4 +1,4 @@
-import { BabelPolyfill } from 'polyfills/BabelPolyfill';
+import { BabelPolyfill } from './polyfills/BabelPolyfill';
 
 import { Utils } from '../src/Utils';
 

@@ -1,4 +1,4 @@
-import { BabelPolyfill } from 'polyfills/BabelPolyfill';
+import { BabelPolyfill } from './polyfills/BabelPolyfill';
 
 import { IBlockStatementNode } from "../src/interfaces/nodes/IBlockStatementNode";
 import { IFunctionDeclarationNode } from "../src/interfaces/nodes/IFunctionDeclarationNode";

@@ -1,6 +1,6 @@
 'use strict';
 
-let JavaScriptObfuscator: any = require('../../dist/index');
+let JavaScriptObfuscator: any = require('../../index');
 
 let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
     `

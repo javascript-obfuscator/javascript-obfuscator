@@ -1,3 +1,5 @@
 #!/bin/bash
 
-$(npm bin)/ts-node --compilerOptions '{"target": "es3"}' test/dev/test.ts
+npm run test:compile
+node test-tmp/test/dev/test.js
+npm run test:removeTmpDir

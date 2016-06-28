@@ -1,5 +1,3 @@
 #!/bin/bash
 
-npm run test:compile
-node test-tmp/test/dev/test.js
-npm run test:removeTmpDir
+$(npm bin)/ts-node test/dev/test.ts

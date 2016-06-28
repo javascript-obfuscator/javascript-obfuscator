@@ -1,4 +1,3 @@
 #!/bin/bash
 
-npm run test:dev
 npm run test:full

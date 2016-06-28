@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "0.6.0",
+  "version": "0.7.0-dev",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -28,7 +28,6 @@
   "devDependencies": {
     "babel-cli": "^6.9.0",
     "babel-loader": "^6.2.4",
-    "babel-plugin-transform-object-assign": "^6.8.0",
     "babel-preset-es2015": "^6.9.0",
     "chai": "^3.5.0",
     "coveralls": "^2.11.9",

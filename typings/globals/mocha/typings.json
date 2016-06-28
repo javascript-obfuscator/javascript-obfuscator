@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/master/mocha/mocha.d.ts",
+    "raw": "github:DefinitelyTyped/DefinitelyTyped/mocha/mocha.d.ts",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/master/mocha/mocha.d.ts"
+  }
+}

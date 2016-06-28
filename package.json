@@ -32,6 +32,7 @@
     "coveralls": "^2.11.9",
     "istanbul": "1.1.0-alpha.1",
     "mocha": "^2.5.3",
+    "sinon": "^1.17.4",
     "ts-loader": "^0.8.2",
     "ts-node": "^0.9.1",
     "tslint": "^3.12.1",
@@ -58,7 +59,7 @@
     "test": "scripts/test",
     "tslint": "scripts/tslint",
     "travis": "scripts/travis",
-    "typings": "srcipts/typings"
+    "typings": "scripts/typings"
   },
   "author": {
     "name": "Timofey Kachalov"

@@ -94,6 +94,8 @@ export class JavaScriptObfuscatorCLI {
 
         if (!this.arguments.length || this.arguments.indexOf('--help') >= 0) {
             this.commands.outputHelp();
+
+            return;
         }
 
         this.inputPath = this.getInputPath();
@@ -143,15 +145,10 @@ export class JavaScriptObfuscatorCLI {
             .parse(this.rawArguments);
 
         this.commands.on('--help', () => {
-            let isWindows: boolean = process.platform === 'win32',
-                commandName: string = isWindows ? 'type' : 'cat';
-
             console.log('  Examples:\n');
-            console.log('    %> javascript-obfuscator < in.js > out.js');
-            console.log(`    %> ${commandName} in1.js in2.js | javascript-obfuscator > out.js`);
+            console.log('    %> javascript-obfuscator in.js --compact true --selfDefending false');
+            console.log('    %> javascript-obfuscator in.js --output out.js --compact true --selfDefending false');
             console.log('');
-
-            process.exit();
         });
     }
 

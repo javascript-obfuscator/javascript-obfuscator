@@ -1,17 +1,22 @@
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
+import * as sinon from 'sinon';
+
+import { StdoutWriteMock } from "../test/mocks/StdoutWriteMock";
 
 import { JavaScriptObfuscator } from "../src/JavaScriptObfuscator";
 
 const assert: Chai.AssertStatic = require('chai').assert;
 
-describe('JavaScriptObfuscatorCLI', () => {
+describe('JavaScriptObfuscatorCLI', function (): void {
     let fixturesDirName: string = 'test/fixtures',
         fixtureFileName: string = 'sample.js',
         fixtureFilePath: string = `${fixturesDirName}/${fixtureFileName}`,
         outputDirName: string = 'test/tmp',
         outputFileName: string = 'sample-obfuscated.js',
         outputFilePath: string = `${outputDirName}/${outputFileName}`;
+
+    this.timeout(5000);
 
     describe('run (): void', () => {
         before(() => {
@@ -40,7 +45,7 @@ describe('JavaScriptObfuscatorCLI', () => {
             });
         });
 
-        describe('—output option is not set', () => {
+        describe('--output option is not set', () => {
             it(`should creates file called \`${outputFileName}\` with obfuscated JS code in \`${fixturesDirName}\` directory`, () => {
                 let outputFixturesFilePath: string = `${fixturesDirName}/${outputFileName}`;
 
@@ -76,6 +81,48 @@ describe('JavaScriptObfuscatorCLI', () => {
                 ]), ReferenceError);
 
                 fs.unlinkSync(outputWrongExtensionFilePath);
+            });
+        });
+
+        describe('help output', () => {
+            let callback: Sinon.SinonSpy,
+                stdoutWriteMock: StdoutWriteMock;
+
+            beforeEach(() => {
+                callback = sinon.spy(console, 'log');
+                stdoutWriteMock = new StdoutWriteMock(process.stdout.write);
+            });
+
+            it('should print `console.log` help if `--help` option is set', () => {
+                stdoutWriteMock.mute();
+
+                JavaScriptObfuscator.runCLI([
+                    'node',
+                    'javascript-obfuscator',
+                    fixtureFilePath,
+                    '--help'
+                ]);
+
+                stdoutWriteMock.restore();
+
+                assert.equal(callback.called, true);
+            });
+
+            it('should print `console.log` help if no options is passed', () => {
+                stdoutWriteMock.mute();
+
+                JavaScriptObfuscator.runCLI([
+                    'node',
+                    'javascript-obfuscator'
+                ]);
+
+                stdoutWriteMock.restore();
+
+                assert.equal(callback.called, true);
+            });
+
+            afterEach(() => {
+                callback.restore();
             });
         });
 

@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/master/mkdirp/mkdirp.d.ts",
+    "raw": "github:DefinitelyTyped/DefinitelyTyped/mkdirp/mkdirp.d.ts",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/master/mkdirp/mkdirp.d.ts"
+  }
+}

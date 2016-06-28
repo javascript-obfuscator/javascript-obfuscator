@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/master/escodegen/escodegen.d.ts",
+    "raw": "github:DefinitelyTyped/DefinitelyTyped/escodegen/escodegen.d.ts",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/master/escodegen/escodegen.d.ts"
+  }
+}

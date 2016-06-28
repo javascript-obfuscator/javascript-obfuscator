@@ -1084,6 +1084,7 @@ var JavaScriptObfuscatorCLI = function () {
             this.configureCommands();
             if (!this.arguments.length || this.arguments.indexOf('--help') >= 0) {
                 this.commands.outputHelp();
+                return;
             }
             this.inputPath = this.getInputPath();
             this.getData();
@@ -1112,13 +1113,10 @@ var JavaScriptObfuscatorCLI = function () {
                 return val.split(',');
             }).option('--rotateUnicodeArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean).option('--unicodeArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean).option('--unicodeArrayThreshold <number>', 'The probability that the literal string will be inserted into unicodeArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).option('--wrapUnicodeArrayCalls <boolean>', 'Disables usage of special access function instead of direct array call', JavaScriptObfuscatorCLI.parseBoolean).parse(this.rawArguments);
             this.commands.on('--help', function () {
-                var isWindows = process.platform === 'win32',
-                    commandName = isWindows ? 'type' : 'cat';
                 console.log('  Examples:\n');
-                console.log('    %> javascript-obfuscator < in.js > out.js');
-                console.log('    %> ' + commandName + ' in1.js in2.js | javascript-obfuscator > out.js');
+                console.log('    %> javascript-obfuscator in.js --compact true --selfDefending false');
+                console.log('    %> javascript-obfuscator in.js --output out.js --compact true --selfDefending false');
                 console.log('');
-                process.exit();
             });
         }
     }, {

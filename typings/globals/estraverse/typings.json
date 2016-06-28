@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/master/estraverse/estraverse.d.ts",
+    "raw": "github:DefinitelyTyped/DefinitelyTyped/estraverse/estraverse.d.ts",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/master/estraverse/estraverse.d.ts"
+  }
+}

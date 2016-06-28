@@ -11,6 +11,10 @@
     "javascript obfuscator",
     "js obfuscator"
   ],
+  "engines": {
+    "node": ">=0.12.0",
+    "iojs": ">=1.0.0"
+  },
   "main": "dist/index.js",
   "bin": {
     "javascript-obfuscator": "./bin/javascript-obfuscator.js"

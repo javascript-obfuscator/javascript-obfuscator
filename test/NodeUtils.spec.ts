@@ -1,3 +1,5 @@
+import { BabelPolyfill } from 'polyfills/BabelPolyfill';
+
 import { IBlockStatementNode } from "../src/interfaces/nodes/IBlockStatementNode";
 import { IFunctionDeclarationNode } from "../src/interfaces/nodes/IFunctionDeclarationNode";
 import { IIdentifierNode } from "../src/interfaces/nodes/IIdentifierNode";
@@ -11,6 +13,8 @@ import { NodeType } from "../src/enums/NodeType";
 import { NodeUtils } from '../src/NodeUtils';
 
 const assert: any = require('chai').assert;
+
+BabelPolyfill.append();
 
 function getProgramNode (bodyNodes: INode[] = []): IProgramNode {
     return {

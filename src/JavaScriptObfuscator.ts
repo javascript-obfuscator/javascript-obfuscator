@@ -12,10 +12,6 @@ import { JavaScriptObfuscatorCLI } from "./cli/JavaScriptObfuscatorCLI";
 import { Obfuscator } from "./Obfuscator";
 import { Options } from "./Options";
 
-if (!(<any>global)._babelPolyfill) {
-    require('babel-polyfill');
-}
-
 export class JavaScriptObfuscator {
     /**
      * @type {GenerateOptions}

@@ -1,7 +1,6 @@
 {
   "presets": ["es2015"],
   "plugins": [
-    "transform-array-from",
     "transform-object-assign"
   ]
 }

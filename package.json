@@ -28,7 +28,6 @@
   "devDependencies": {
     "babel-cli": "^6.9.0",
     "babel-loader": "^6.2.4",
-    "babel-plugin-transform-array-from": "^1.0.0",
     "babel-plugin-transform-object-assign": "^6.8.0",
     "babel-preset-es2015": "^6.9.0",
     "chai": "^3.5.0",

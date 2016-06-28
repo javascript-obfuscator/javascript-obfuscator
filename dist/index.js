@@ -622,6 +622,8 @@ exports.Nodes = Nodes;
 "use strict";
 "use strict";
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -654,7 +656,7 @@ var JavaScriptObfuscator = function () {
     }, {
         key: 'generateCode',
         value: function generateCode(astTree, options) {
-            var escodegenParams = Object.assign({}, JavaScriptObfuscator.escodegenParams);
+            var escodegenParams = _extends({}, JavaScriptObfuscator.escodegenParams);
             escodegenParams.format = {
                 compact: options.get('compact')
             };
@@ -957,6 +959,8 @@ exports.Obfuscator = Obfuscator;
 "use strict";
 "use strict";
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -968,7 +972,7 @@ var Options = function () {
     function Options(options) {
         _classCallCheck(this, Options);
 
-        this.options = Object.freeze(OptionsNormalizer_1.OptionsNormalizer.normalizeOptionsPreset(Object.assign({}, DefaultPreset_1.DEFAULT_PRESET, options)));
+        this.options = Object.freeze(OptionsNormalizer_1.OptionsNormalizer.normalizeOptionsPreset(_extends({}, DefaultPreset_1.DEFAULT_PRESET, options)));
     }
 
     _createClass(Options, [{
@@ -990,6 +994,8 @@ exports.Options = Options;
 "use strict";
 "use strict";
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1002,7 +1008,7 @@ var OptionsNormalizer = function () {
     _createClass(OptionsNormalizer, null, [{
         key: 'normalizeOptionsPreset',
         value: function normalizeOptionsPreset(options) {
-            var normalizedOptions = Object.assign({}, options);
+            var normalizedOptions = _extends({}, options);
             normalizedOptions = OptionsNormalizer.unicodeArrayRule(normalizedOptions);
             normalizedOptions = OptionsNormalizer.unicodeArrayThresholdRule(normalizedOptions);
             normalizedOptions = OptionsNormalizer.selfDefendingRule(normalizedOptions);
@@ -1012,7 +1018,7 @@ var OptionsNormalizer = function () {
         key: 'selfDefendingRule',
         value: function selfDefendingRule(options) {
             if (options['selfDefending']) {
-                Object.assign(options, OptionsNormalizer.SELF_DEFENDING_OPTIONS);
+                _extends(options, OptionsNormalizer.SELF_DEFENDING_OPTIONS);
             }
             return options;
         }
@@ -1020,7 +1026,7 @@ var OptionsNormalizer = function () {
         key: 'unicodeArrayRule',
         value: function unicodeArrayRule(options) {
             if (!options['unicodeArray']) {
-                Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
+                _extends(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
             }
             return options;
         }
@@ -1056,6 +1062,8 @@ exports.OptionsNormalizer = OptionsNormalizer;
 
 "use strict";
 "use strict";
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -1104,7 +1112,7 @@ var JavaScriptObfuscatorCLI = function () {
                 }
                 options[option] = this.commands[option];
             }
-            return Object.assign({}, DefaultPreset_1.DEFAULT_PRESET, options);
+            return _extends({}, DefaultPreset_1.DEFAULT_PRESET, options);
         }
     }, {
         key: 'configureCommands',
@@ -2278,6 +2286,8 @@ exports.LiteralObfuscator = LiteralObfuscator;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2336,7 +2346,7 @@ var MemberExpressionObfuscator = function (_NodeObfuscator_1$Nod) {
                 value: nodeValue
             };
             delete node.name;
-            Object.assign(node, literalNode);
+            _extends(node, literalNode);
         }
     }, {
         key: 'obfuscateLiteralProperty',
@@ -2435,6 +2445,8 @@ exports.MethodDefinitionObfuscator = MethodDefinitionObfuscator;
 "use strict";
 "use strict";
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -2511,7 +2523,7 @@ var ObjectExpressionObfuscator = function (_NodeObfuscator_1$Nod) {
                 value: nodeValue
             };
             delete node.name;
-            Object.assign(node, literalNode);
+            _extends(node, literalNode);
         }
     }]);
 

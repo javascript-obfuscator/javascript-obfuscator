@@ -1,4 +1,4 @@
 #!/bin/bash
 
 $(npm bin)/tsc -p tsconfig-test.json
-$(npm bin)/babel test-tmp --out-dir test-tmp --source-maps
+$(npm bin)/babel test-tmp --out-dir test-tmp --source-maps --presets es2015 --plugins transform-object-assign

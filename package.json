@@ -27,6 +27,7 @@
   "devDependencies": {
     "babel-cli": "^6.9.0",
     "babel-loader": "^6.2.4",
+    "babel-plugin-transform-object-assign": "^6.8.0",
     "babel-preset-es2015": "^6.9.0",
     "chai": "^3.5.0",
     "coveralls": "^2.11.9",
@@ -34,7 +35,7 @@
     "mocha": "^2.5.3",
     "sinon": "^1.17.4",
     "ts-loader": "^0.8.2",
-    "ts-node": "^0.9.1",
+    "ts-node": "^0.9.3",
     "tslint": "^3.12.1",
     "typescript": "^1.8.10",
     "typings": "^1.3.0",

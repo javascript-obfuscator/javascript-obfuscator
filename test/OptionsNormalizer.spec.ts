@@ -8,18 +8,21 @@ const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('OptionsNormalizer', () => {
     describe('normalizeOptionsPreset (options: IOptionsPreset): IOptionsPreset', () => {
-        let optionsPreset1: IOptionsPreset = Object.assign({}, DEFAULT_PRESET, {
+        let optionsPreset1: IOptionsPreset,
+            optionsPreset2: IOptionsPreset;
+
+        beforeEach(() => {
+            optionsPreset1 = Object.assign({}, DEFAULT_PRESET, {
                 compact: false,
                 rotateUnicodeArray: true,
                 unicodeArray: false,
                 unicodeArrayThreshold: 0.5,
                 wrapUnicodeArrayCalls: true
-
-            }),
-            optionsPreset2: IOptionsPreset = Object.assign({}, DEFAULT_PRESET, {
-                unicodeArrayThreshold: 2
-
             });
+            optionsPreset2 = Object.assign({}, DEFAULT_PRESET, {
+                unicodeArrayThreshold: 2
+            });
+        });
 
         it('should normalize options preset', () => {
             assert.deepEqual(

@@ -4,6 +4,10 @@ import { NO_CUSTOM_NODES_PRESET } from "../src/preset-options/NoCustomNodesPrese
 
 const assert: Chai.AssertStatic = require('chai').assert;
 
+beforeEach(() => {
+    console.log(Object.assign);
+});
+
 describe('JavaScriptObfuscator', () => {
     describe('obfuscate (sourceCode: string, customOptions?: IOptionsPreset): string', () => {
         it('should obfuscate simple code with variable inside global scope', () => {

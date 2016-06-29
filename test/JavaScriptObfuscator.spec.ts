@@ -1,12 +1,8 @@
-import { BabelPolyfill } from './polyfills/BabelPolyfill';
-
 import { JavaScriptObfuscator } from "../src/JavaScriptObfuscator";
 
 import { NO_CUSTOM_NODES_PRESET } from "../src/preset-options/NoCustomNodesPreset";
 
 const assert: Chai.AssertStatic = require('chai').assert;
-
-BabelPolyfill.append();
 
 describe('JavaScriptObfuscator', () => {
     describe('obfuscate (sourceCode: string, customOptions?: IOptionsPreset): string', () => {

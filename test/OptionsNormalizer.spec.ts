@@ -1,5 +1,3 @@
-import { BabelPolyfill } from './polyfills/BabelPolyfill';
-
 import { IOptionsPreset } from "../src/interfaces/IOptionsPreset";
 
 import { OptionsNormalizer } from '../src/OptionsNormalizer';
@@ -7,8 +5,6 @@ import { OptionsNormalizer } from '../src/OptionsNormalizer';
 import { DEFAULT_PRESET } from '../src/preset-options/DefaultPreset';
 
 const assert: Chai.AssertStatic = require('chai').assert;
-
-BabelPolyfill.append();
 
 describe('OptionsNormalizer', () => {
     describe('normalizeOptionsPreset (options: IOptionsPreset): IOptionsPreset', () => {

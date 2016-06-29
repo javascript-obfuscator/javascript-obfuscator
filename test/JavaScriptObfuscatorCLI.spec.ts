@@ -2,15 +2,11 @@ import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as sinon from 'sinon';
 
-import { BabelPolyfill } from './polyfills/BabelPolyfill';
-
 import { StdoutWriteMock } from "../test/mocks/StdoutWriteMock";
 
 import { JavaScriptObfuscator } from "../src/JavaScriptObfuscator";
 
 const assert: Chai.AssertStatic = require('chai').assert;
-
-BabelPolyfill.append();
 
 describe('JavaScriptObfuscatorCLI', function (): void {
     let fixturesDirName: string = 'test/fixtures',

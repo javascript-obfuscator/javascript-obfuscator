@@ -77,7 +77,7 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
     private obfuscateLiteralProperty (node: ILiteralNode): void {
         if (typeof node.value === 'string' && !node['x-verbatim-property']) {
             node['x-verbatim-property'] = {
-                content : this.replaceLiteralValueWithUnicodeValue(node.value),
+                content : this.replaceLiteralValueWithUnicodeValue(<string>node.value),
                 precedence: escodegen.Precedence.Primary
             };
         }

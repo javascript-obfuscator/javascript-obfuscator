@@ -7,9 +7,5 @@
     "experimentalDecorators": true,
     "removeComments": true,
     "noImplicitAny": true
-  },
-  "exclude": [
-    "node_modules",
-    "test"
-  ]
+  }
 }

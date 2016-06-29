@@ -2,5 +2,5 @@
 
 npm run test:compile
 node test-tmp/test/dev/test.js
-$(npm bin)/istanbul cover $(npm bin)/_mocha -- test-tmp/test/**/**.spec.js
+$(npm bin)/istanbul cover $(npm bin)/_mocha -- $(find test-tmp/test -name '*.spec.js')
 npm run test:removeTmpDir

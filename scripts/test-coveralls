@@ -1,6 +1,6 @@
 #!/bin/bash
 
 npm run test:compile
-$(npm bin)/istanbul cover $(npm bin)/_mocha -- test-tmp/test/**/**.spec.js --report lcovonly
+$(npm bin)/istanbul cover $(npm bin)/_mocha -- $(find test-tmp/test -name '*.spec.js') --report lcovonly
 cat ./coverage/lcov.info | $(npm bin)/coveralls
 npm run test:removeTmpDir

@@ -50,21 +50,11 @@ export class ObjectExpressionObfuscator extends NodeObfuscator {
      * @param node
      */
     private obfuscateLiteralPropertyKey (node: ILiteralNode): void {
-        switch (typeof node.value) {
-            case 'string':
-                if (node['x-verbatim-property']) {
-                    break;
-                }
-
-                node['x-verbatim-property'] = {
-                    content : Utils.stringToUnicode(<string>node.value),
-                    precedence: escodegen.Precedence.Primary
-                };
-
-                break;
-
-            default:
-                break;
+        if (typeof node.value === 'string' && !node['x-verbatim-property']) {
+            node['x-verbatim-property'] = {
+                content : Utils.stringToUnicode(node.value),
+                precedence: escodegen.Precedence.Primary
+            };
         }
     }
 

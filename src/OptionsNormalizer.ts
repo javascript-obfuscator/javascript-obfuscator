@@ -39,7 +39,7 @@ export class OptionsNormalizer {
      * @returns {IOptionsPreset}
      */
     private static selfDefendingRule (options: IOptionsPreset): IOptionsPreset {
-        if (options['selfDefending']) {
+        if (options.selfDefending) {
             Object.assign(options, OptionsNormalizer.SELF_DEFENDING_OPTIONS);
         }
 
@@ -51,7 +51,7 @@ export class OptionsNormalizer {
      * @returns {IOptionsPreset}
      */
     private static unicodeArrayRule (options: IOptionsPreset): IOptionsPreset {
-        if (!options['unicodeArray']) {
+        if (!options.unicodeArray) {
             Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
         }
 
@@ -66,9 +66,9 @@ export class OptionsNormalizer {
         const minValue: number = 0,
             maxValue: number = 1;
 
-        options['unicodeArrayThreshold'] = Math.min(
+        options.unicodeArrayThreshold = Math.min(
             Math.max(
-                options['unicodeArrayThreshold'],
+                options.unicodeArrayThreshold,
                 minValue
             ),
             maxValue

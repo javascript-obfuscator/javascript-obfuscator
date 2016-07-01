@@ -982,9 +982,31 @@ var OptionsNormalizer = function () {
         key: "normalizeOptionsPreset",
         value: function normalizeOptionsPreset(options) {
             var normalizedOptions = Object.assign({}, options);
-            normalizedOptions = OptionsNormalizer.unicodeArrayRule(normalizedOptions);
-            normalizedOptions = OptionsNormalizer.unicodeArrayThresholdRule(normalizedOptions);
-            normalizedOptions = OptionsNormalizer.selfDefendingRule(normalizedOptions);
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = OptionsNormalizer.normalizerRules[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var normalizerRule = _step.value;
+
+                    normalizedOptions = normalizerRule(normalizedOptions);
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
             return normalizedOptions;
         }
     }, {
@@ -1027,6 +1049,7 @@ OptionsNormalizer.SELF_DEFENDING_OPTIONS = {
     compact: true,
     selfDefending: true
 };
+OptionsNormalizer.normalizerRules = [OptionsNormalizer.unicodeArrayRule, OptionsNormalizer.unicodeArrayThresholdRule, OptionsNormalizer.selfDefendingRule];
 exports.OptionsNormalizer = OptionsNormalizer;
 
 /***/ },

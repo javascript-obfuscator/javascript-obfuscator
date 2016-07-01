@@ -1,5 +1,7 @@
 import { IOptionsPreset } from "./interfaces/IOptionsPreset";
 
+import { TOptionsNormalizerRule } from "./types/TOptionsNormalizerRule";
+
 export class OptionsNormalizer {
     /**
      * @type {IOptionsPreset}
@@ -21,15 +23,24 @@ export class OptionsNormalizer {
     };
 
     /**
+     * @type {TOptionsNormalizerRule[]}
+     */
+    private static normalizerRules: TOptionsNormalizerRule[] = [
+        OptionsNormalizer.unicodeArrayRule,
+        OptionsNormalizer.unicodeArrayThresholdRule,
+        OptionsNormalizer.selfDefendingRule
+    ];
+
+    /**
      * @param options
      * @returns {IOptionsPreset}
      */
     public static normalizeOptionsPreset (options: IOptionsPreset): IOptionsPreset {
         let normalizedOptions: IOptionsPreset = Object.assign({}, options);
 
-        normalizedOptions = OptionsNormalizer.unicodeArrayRule(normalizedOptions);
-        normalizedOptions = OptionsNormalizer.unicodeArrayThresholdRule(normalizedOptions);
-        normalizedOptions = OptionsNormalizer.selfDefendingRule(normalizedOptions);
+        for (let normalizerRule of OptionsNormalizer.normalizerRules) {
+            normalizedOptions = normalizerRule(normalizedOptions);
+        }
 
         return normalizedOptions;
     }

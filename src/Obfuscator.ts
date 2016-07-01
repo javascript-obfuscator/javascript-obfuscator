@@ -1,7 +1,6 @@
 import * as estraverse from 'estraverse';
 
 import { ICustomNode } from './interfaces/ICustomNode';
-import { INodesGroup } from './interfaces/INodesGroup';
 import { INode } from './interfaces/nodes/INode';
 import { IObfuscator } from "./interfaces/IObfuscator";
 import { IOptions } from "./interfaces/IOptions";
@@ -12,7 +11,7 @@ import { AppendState } from './enums/AppendState';
 import { NodeType } from './enums/NodeType';
 
 import { CatchClauseObfuscator } from './node-obfuscators/CatchClauseObfuscator';
-import { ConsoleOutputDisableExpressionNode } from './custom-nodes/console-output-nodes/ConsoleOutputDisableExpressionNode';
+import { ConsoleOutputNodesGroup } from "./node-groups/ConsoleOutputNodesGroup";
 import { DebugProtectionNodesGroup } from './node-groups/DebugProtectionNodesGroup';
 import { FunctionDeclarationObfuscator } from './node-obfuscators/FunctionDeclarationObfuscator';
 import { FunctionObfuscator } from './node-obfuscators/FunctionObfuscator';
@@ -29,7 +28,7 @@ export class Obfuscator implements IObfuscator {
     /**
      * @type {Map<string, Node>}
      */
-    private nodes: Map <string, ICustomNode> = new Map <string, ICustomNode> ();
+    private nodes: Map <string, ICustomNode>;
 
     /**
      * @type {Map<string, TNodeObfuscator[]>}
@@ -60,6 +59,13 @@ export class Obfuscator implements IObfuscator {
      */
     constructor (options: IOptions) {
         this.options = options;
+
+        this.nodes = new Map <string, ICustomNode> ([
+            ...new SelfDefendingNodesGroup(this.options).getNodes(),
+            ...new ConsoleOutputNodesGroup(this.options).getNodes(),
+            ...new DebugProtectionNodesGroup(this.options).getNodes(),
+            ...new UnicodeArrayNodesGroup(this.options).getNodes()
+        ]);
     }
 
     /**
@@ -67,8 +73,6 @@ export class Obfuscator implements IObfuscator {
      * @returns {INode}
      */
     public obfuscateNode (node: INode): INode {
-        this.setNewNodes();
-
         NodeUtils.parentize(node);
 
         this.beforeObfuscation(node);
@@ -76,25 +80,6 @@ export class Obfuscator implements IObfuscator {
         this.afterObfuscation(node);
 
         return node;
-    }
-
-    /**
-     * @param nodeName
-     * @param node
-     */
-    private setNode (nodeName: string, node: ICustomNode): void {
-        this.nodes.set(nodeName, node);
-    }
-
-    /**
-     * @param nodesGroup
-     */
-    private setNodesGroup (nodesGroup: INodesGroup): void {
-        let nodes: Map <string, ICustomNode> = nodesGroup.getNodes();
-
-        nodes.forEach((node: ICustomNode, key: string) => {
-            this.nodes.set(key, node);
-        });
     }
 
     /**
@@ -143,29 +128,5 @@ export class Obfuscator implements IObfuscator {
                 this.initializeNodeObfuscators(node, parentNode);
             }
         });
-    }
-
-    private setNewNodes (): void {
-        if (this.options.get('selfDefending')) {
-            this.setNodesGroup(new SelfDefendingNodesGroup(this.options));
-        }
-
-        if (this.options.get('disableConsoleOutput')) {
-            this.setNode(
-                'consoleOutputDisableExpressionNode',
-                new ConsoleOutputDisableExpressionNode(this.options)
-            );
-        }
-
-        if (this.options.get('debugProtection')) {
-            this.setNodesGroup(new DebugProtectionNodesGroup(this.options));
-        }
-
-        if (this.options.get('unicodeArray')) {
-            /**
-             * Important to set this nodes latest to prevent runtime errors caused by `rotateUnicodeArray` option
-             */
-            this.setNodesGroup(new UnicodeArrayNodesGroup(this.options));
-        }
     }
 }

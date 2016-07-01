@@ -19,6 +19,10 @@ export class DebugProtectionNodesGroup extends NodesGroup {
     constructor (options: IOptions) {
         super(options);
 
+        if (!this.options.get('debugProtection')) {
+            return;
+        }
+
         this.nodes.set(
             'debugProtectionFunctionNode',
             new DebugProtectionFunctionNode(this.debugProtectionFunctionIdentifier, this.options)

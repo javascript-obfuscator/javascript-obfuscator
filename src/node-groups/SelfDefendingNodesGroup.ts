@@ -10,6 +10,10 @@ export class SelfDefendingNodesGroup extends NodesGroup {
     constructor (options: IOptions) {
         super(options);
 
+        if (!this.options.get('selfDefending')) {
+            return;
+        }
+
         this.nodes.set(
             'selfDefendingUnicodeNode',
             new SelfDefendingUnicodeNode(this.options)

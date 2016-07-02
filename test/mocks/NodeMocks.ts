@@ -45,13 +45,14 @@ export class NodeMocks {
     }
 
     /**
+     * @param functionName
      * @param blockStatementNode
      * @returns {IFunctionDeclarationNode}
      */
-    public static getFunctionDeclarationNode (blockStatementNode: IBlockStatementNode): IFunctionDeclarationNode {
+    public static getFunctionDeclarationNode (functionName: string, blockStatementNode: IBlockStatementNode): IFunctionDeclarationNode {
         return {
             type: NodeType.FunctionDeclaration,
-            id: NodeMocks.getIdentifierNode('test'),
+            id: NodeMocks.getIdentifierNode(functionName),
             params: [],
             body: blockStatementNode,
             generator: false,

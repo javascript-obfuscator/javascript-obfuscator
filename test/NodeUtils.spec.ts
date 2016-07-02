@@ -131,7 +131,7 @@ describe('NodeUtils', () => {
                 ifStatementNode1
             ]);
 
-            functionDeclarationNode = NodeMocks.getFunctionDeclarationNode(functionDeclarationBlockStatementNode);
+            functionDeclarationNode = NodeMocks.getFunctionDeclarationNode('test', functionDeclarationBlockStatementNode);
 
             programNode = NodeMocks.getProgramNode([
                 functionDeclarationNode

@@ -1,0 +1,70 @@
+import { ICatchClauseNode } from "../../src/interfaces/nodes/ICatchClauseNode";
+import { ICustomNode } from "../../src/interfaces/ICustomNode";
+import { INode } from "../../src/interfaces/nodes/INode";
+
+import { DEFAULT_PRESET } from "../../src/preset-options/DefaultPreset";
+
+import { NodeType } from "../../src/enums/NodeType";
+
+import { CatchClauseObfuscator } from '../../src/node-obfuscators/CatchClauseObfuscator';
+import { NodeMocks } from "../mocks/NodeMocks";
+import { Options } from "../../src/Options";
+
+const assert: Chai.AssertStatic = require('chai').assert;
+
+describe('CatchClauseObfuscator', () => {
+    describe('obfuscateNode (catchClauseNode: ICatchClauseNode): void', () => {
+        let catchClauseObfuscator: CatchClauseObfuscator,
+            catchClauseNode: ICatchClauseNode;
+
+        beforeEach(() => {
+            catchClauseObfuscator = new CatchClauseObfuscator(
+                new Map<string, ICustomNode>(),
+                new Options(DEFAULT_PRESET)
+            );
+
+            catchClauseNode = NodeMocks.getCatchClauseNode([
+                <INode>{
+                    type: NodeType.ExpressionStatement,
+                    expression: {
+                        type: NodeType.CallExpression,
+                        callee: {
+                            type: NodeType.MemberExpression,
+                            computed: false,
+                            object: {
+                                type: NodeType.Identifier,
+                                name: 'console'
+                            },
+                            property: {
+                                type: NodeType.Identifier,
+                                name: 'log'
+                            }
+                        },
+                        arguments: [
+                            {
+                                type: NodeType.Identifier,
+                                'name': 'err'
+                            }
+                        ]
+                    }
+                }
+            ]);
+
+            catchClauseObfuscator.obfuscateNode(catchClauseNode);
+        });
+
+        it('should obfuscate catch clause param name', () => {
+            assert.match(
+                (<any>catchClauseNode.body.body[0]).expression.arguments[0].name,
+                /^_0x\w+$/
+            );
+        });
+
+        it('should obfuscate catch clause param calls in catch clause node body', () => {
+            assert.match(
+                catchClauseNode.param.name,
+                /^_0x\w+$/
+            );
+        });
+    });
+});

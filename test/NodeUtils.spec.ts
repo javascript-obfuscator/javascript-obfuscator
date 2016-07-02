@@ -6,68 +6,10 @@ import { ILiteralNode } from "../src/interfaces/nodes/ILiteralNode";
 import { INode } from "../src/interfaces/nodes/INode";
 import { IProgramNode } from "../src/interfaces/nodes/IProgramNode";
 
-import { NodeType } from "../src/enums/NodeType";
-
+import { NodeMocks } from './mocks/NodeMocks';
 import { NodeUtils } from '../src/NodeUtils';
 
 const assert: any = require('chai').assert;
-
-function getProgramNode (bodyNodes: INode[] = []): IProgramNode {
-    return {
-        type: NodeType.Program,
-        body: bodyNodes
-    };
-}
-
-function getBlockStatementNode (bodyNodes: INode[] = []): IBlockStatementNode {
-    return {
-        type: NodeType.BlockStatement,
-        body: bodyNodes
-    };
-}
-
-function getFunctionDeclarationNode (blockStatementNode: IBlockStatementNode): IFunctionDeclarationNode {
-    return {
-        type: NodeType.FunctionDeclaration,
-        id: {
-            type: NodeType.Identifier,
-            name: 'test'
-        },
-        params: [],
-        body: blockStatementNode,
-        generator: false,
-        expression: false
-    };
-}
-
-function getIfStatementNode (blockStatementNode: IBlockStatementNode): IIfStatementNode {
-    return {
-        type: 'IfStatement',
-        test: {
-            type: 'Literal',
-            value: true,
-            raw: 'true'
-        },
-        consequent: blockStatementNode,
-        alternate: null
-    };
-}
-
-function getIdentifierNode (): IIdentifierNode {
-    return {
-        type: NodeType.Identifier,
-        name: 'identifier',
-    };
-}
-
-function getLiteralNode (): ILiteralNode {
-    return {
-        type: NodeType.Literal,
-        value: 'string',
-        raw: `'string'`,
-        'x-verbatim-property': `'string'`
-    };
-}
 
 describe('NodeUtils', () => {
     describe('addXVerbatimPropertyToLiterals (node: INode): void', () => {
@@ -75,7 +17,7 @@ describe('NodeUtils', () => {
             expectedLiteralNode: any;
 
         beforeEach(() => {
-            literalNode = getLiteralNode();
+            literalNode = NodeMocks.getLiteralNode();
 
             expectedLiteralNode = Object.assign({}, literalNode);
             expectedLiteralNode['x-verbatim-property'] = `'string'`;
@@ -94,9 +36,9 @@ describe('NodeUtils', () => {
             identifierNode: IIdentifierNode;
 
         beforeEach(() => {
-            identifierNode = getIdentifierNode();
+            identifierNode = NodeMocks.getIdentifierNode();
 
-            blockStatementNode = getBlockStatementNode();
+            blockStatementNode = NodeMocks.getBlockStatementNode();
 
             expectedBlockStatementNode = Object.assign({}, blockStatementNode);
             expectedBlockStatementNode.body.push(identifierNode);
@@ -129,11 +71,11 @@ describe('NodeUtils', () => {
             literalNode: ILiteralNode;
 
         beforeEach(() => {
-            identifierNode = getIdentifierNode();
+            identifierNode = NodeMocks.getIdentifierNode();
 
-            literalNode = getLiteralNode();
+            literalNode = NodeMocks.getLiteralNode();
 
-            blockStatementNode = getBlockStatementNode([
+            blockStatementNode = NodeMocks.getBlockStatementNode([
                 identifierNode,
                 literalNode
             ]);
@@ -166,32 +108,32 @@ describe('NodeUtils', () => {
             programNode: IProgramNode;
 
         beforeEach(() => {
-            identifierNode = getIdentifierNode();
+            identifierNode = NodeMocks.getIdentifierNode();
 
-            literalNode1 = getLiteralNode();
-            literalNode2 = getLiteralNode();
+            literalNode1 = NodeMocks.getLiteralNode();
+            literalNode2 = NodeMocks.getLiteralNode();
 
-            ifStatementBlockStatementNode2 = getBlockStatementNode([
+            ifStatementBlockStatementNode2 = NodeMocks.getBlockStatementNode([
                 literalNode1,
                 literalNode2
             ]);
 
-            ifStatementNode2 = getIfStatementNode(ifStatementBlockStatementNode2);
+            ifStatementNode2 = NodeMocks.getIfStatementNode(ifStatementBlockStatementNode2);
 
-            ifStatementBlockStatementNode1 = getBlockStatementNode([
+            ifStatementBlockStatementNode1 = NodeMocks.getBlockStatementNode([
                 ifStatementNode2
             ]);
 
-            ifStatementNode1 = getIfStatementNode(ifStatementBlockStatementNode1);
+            ifStatementNode1 = NodeMocks.getIfStatementNode(ifStatementBlockStatementNode1);
 
-            functionDeclarationBlockStatementNode = getBlockStatementNode([
+            functionDeclarationBlockStatementNode = NodeMocks.getBlockStatementNode([
                 identifierNode,
                 ifStatementNode1
             ]);
 
-            functionDeclarationNode = getFunctionDeclarationNode(functionDeclarationBlockStatementNode);
+            functionDeclarationNode = NodeMocks.getFunctionDeclarationNode(functionDeclarationBlockStatementNode);
 
-            programNode = getProgramNode([
+            programNode = NodeMocks.getProgramNode([
                 functionDeclarationNode
             ]);
 
@@ -227,11 +169,11 @@ describe('NodeUtils', () => {
             literalNode: ILiteralNode;
 
         beforeEach(() => {
-            identifierNode = getIdentifierNode();
+            identifierNode = NodeMocks.getIdentifierNode();
 
-            literalNode = getLiteralNode();
+            literalNode = NodeMocks.getLiteralNode();
 
-            blockStatementNode = getBlockStatementNode([
+            blockStatementNode = NodeMocks.getBlockStatementNode([
                 identifierNode
             ]);
 
@@ -267,16 +209,16 @@ describe('NodeUtils', () => {
             programNode: IProgramNode;
 
         beforeEach(() => {
-            identifierNode = getIdentifierNode();
+            identifierNode = NodeMocks.getIdentifierNode();
 
-            literalNode = getLiteralNode();
+            literalNode = NodeMocks.getLiteralNode();
 
-            blockStatementNode = getBlockStatementNode([
+            blockStatementNode = NodeMocks.getBlockStatementNode([
                 identifierNode,
                 literalNode
             ]);
 
-            programNode = getProgramNode([
+            programNode = NodeMocks.getProgramNode([
                 blockStatementNode
             ]);
 
@@ -297,11 +239,11 @@ describe('NodeUtils', () => {
             literalNode: ILiteralNode;
 
         beforeEach(() => {
-            identifierNode = getIdentifierNode();
+            identifierNode = NodeMocks.getIdentifierNode();
 
-            literalNode = getLiteralNode();
+            literalNode = NodeMocks.getLiteralNode();
 
-            blockStatementNode = getBlockStatementNode([
+            blockStatementNode = NodeMocks.getBlockStatementNode([
                 identifierNode
             ]);
 

@@ -1,6 +1,6 @@
 import { ICatchClauseNode } from "../../src/interfaces/nodes/ICatchClauseNode";
 import { ICustomNode } from "../../src/interfaces/ICustomNode";
-import { INode } from "../../src/interfaces/nodes/INode";
+import { IExpressionStatementNode } from "../../src/interfaces/nodes/IExpressionStatementNode";
 
 import { DEFAULT_PRESET } from "../../src/preset-options/DefaultPreset";
 
@@ -18,36 +18,38 @@ describe('CatchClauseObfuscator', () => {
             catchClauseNode: ICatchClauseNode;
 
         beforeEach(() => {
+            let expressionStatementNode: IExpressionStatementNode = {
+                type: NodeType.ExpressionStatement,
+                expression: {
+                    type: NodeType.CallExpression,
+                    callee: {
+                        type: NodeType.MemberExpression,
+                        computed: false,
+                        object: {
+                            type: NodeType.Identifier,
+                            name: 'console'
+                        },
+                        property: {
+                            type: NodeType.Identifier,
+                            name: 'log'
+                        }
+                    },
+                    arguments: [
+                        {
+                            type: NodeType.Identifier,
+                            'name': 'err'
+                        }
+                    ]
+                }
+            };
+
             catchClauseObfuscator = new CatchClauseObfuscator(
                 new Map<string, ICustomNode>(),
                 new Options(DEFAULT_PRESET)
             );
 
             catchClauseNode = NodeMocks.getCatchClauseNode([
-                <INode>{
-                    type: NodeType.ExpressionStatement,
-                    expression: {
-                        type: NodeType.CallExpression,
-                        callee: {
-                            type: NodeType.MemberExpression,
-                            computed: false,
-                            object: {
-                                type: NodeType.Identifier,
-                                name: 'console'
-                            },
-                            property: {
-                                type: NodeType.Identifier,
-                                name: 'log'
-                            }
-                        },
-                        arguments: [
-                            {
-                                type: NodeType.Identifier,
-                                'name': 'err'
-                            }
-                        ]
-                    }
-                }
+                expressionStatementNode
             ]);
 
             catchClauseObfuscator.obfuscateNode(catchClauseNode);

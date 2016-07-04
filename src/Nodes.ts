@@ -7,6 +7,8 @@ import { IProgramNode } from "./interfaces/nodes/IProgramNode";
 import { IPropertyNode } from "./interfaces/nodes/IPropertyNode";
 import { IVariableDeclaratorNode } from "./interfaces/nodes/IVariableDeclaratorNode";
 
+import { TStatement } from "./types/TStatement";
+
 import { TNodeWithBlockStatement } from "./types/TNodeWithBlockStatement";
 
 import { NodeType } from "./enums/NodeType";
@@ -16,7 +18,7 @@ export class Nodes {
      * @param bodyNode
      * @returns IProgramNode
      */
-    public static getProgramNode (bodyNode: INode[]): IProgramNode {
+    public static getProgramNode (bodyNode: TStatement[]): IProgramNode {
         return {
             'type': NodeType.Program,
             'body': bodyNode

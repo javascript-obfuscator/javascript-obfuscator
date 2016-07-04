@@ -3,6 +3,7 @@ import * as estraverse from 'estraverse';
 import { INode } from './interfaces/nodes/INode';
 
 import { TNodeWithBlockStatement } from "./types/TNodeWithBlockStatement";
+import { TStatement } from "./types/TStatement";
 
 import { NodeType } from "./enums/NodeType";
 
@@ -116,7 +117,7 @@ export class NodeUtils {
                 Object.defineProperty(node, 'parentNode', {
                     configurable: true,
                     enumerable: true,
-                    value: isRootNode ? Nodes.getProgramNode([node]) : parentNode || node,
+                    value: isRootNode ? Nodes.getProgramNode(<TStatement[]>[node]) : parentNode || node,
                     writable: true
                 });
 

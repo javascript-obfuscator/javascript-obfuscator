@@ -1,10 +1,12 @@
+import { TStatement } from "../../src/types/TStatement";
+
 import { IBlockStatementNode } from "../../src/interfaces/nodes/IBlockStatementNode";
 import { ICatchClauseNode } from "../../src/interfaces/nodes/ICatchClauseNode";
+import { IExpressionStatementNode } from "../../src/interfaces/nodes/IExpressionStatementNode";
 import { IFunctionDeclarationNode } from "../../src/interfaces/nodes/IFunctionDeclarationNode";
 import { IIdentifierNode } from "../../src/interfaces/nodes/IIdentifierNode";
 import { IIfStatementNode } from "../../src/interfaces/nodes/IIfStatementNode";
 import { ILiteralNode } from "../../src/interfaces/nodes/ILiteralNode";
-import { INode } from "../../src/interfaces/nodes/INode";
 import { IProgramNode } from "../../src/interfaces/nodes/IProgramNode";
 
 import { NodeType } from "../../src/enums/NodeType";
@@ -14,7 +16,7 @@ export class NodeMocks {
      * @param bodyNodes
      * @returns {IProgramNode}
      */
-    public static getProgramNode (bodyNodes: INode[] = []): IProgramNode {
+    public static getProgramNode (bodyNodes: TStatement[] = []): IProgramNode {
         return {
             type: NodeType.Program,
             body: bodyNodes
@@ -25,7 +27,7 @@ export class NodeMocks {
      * @param bodyNodes
      * @returns {IBlockStatementNode}
      */
-    public static getBlockStatementNode (bodyNodes: INode[] = []): IBlockStatementNode {
+    public static getBlockStatementNode (bodyNodes: TStatement[] = []): IBlockStatementNode {
         return {
             type: NodeType.BlockStatement,
             body: bodyNodes
@@ -36,11 +38,21 @@ export class NodeMocks {
      * @param bodyNodes
      * @returns {ICatchClauseNode}
      */
-    public static getCatchClauseNode (bodyNodes: INode[] = []): ICatchClauseNode {
+    public static getCatchClauseNode (bodyNodes: TStatement[] = []): ICatchClauseNode {
         return {
             type: NodeType.CatchClause,
             param: NodeMocks.getIdentifierNode('err'),
             body: NodeMocks.getBlockStatementNode(bodyNodes)
+        };
+    }
+
+    /**
+     * @returns {IExpressionStatementNode}
+     */
+    public static getExpressionStatementNode (): IExpressionStatementNode {
+        return {
+            type: NodeType.ExpressionStatement,
+            expression: NodeMocks.getIdentifierNode()
         };
     }
 

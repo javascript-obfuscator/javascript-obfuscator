@@ -1,7 +1,7 @@
 import { IBlockStatementNode } from "../../src/interfaces/nodes/IBlockStatementNode";
 import { ICustomNode } from "../../src/interfaces/ICustomNode";
+import { IExpressionStatementNode } from "../../src/interfaces/nodes/IExpressionStatementNode";
 import { IFunctionDeclarationNode } from "../../src/interfaces/nodes/IFunctionDeclarationNode";
-import { INode } from "../../src/interfaces/nodes/INode";
 import { IProgramNode } from "../../src/interfaces/nodes/IProgramNode";
 
 import { NodeType } from "../../src/enums/NodeType";
@@ -16,14 +16,14 @@ const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('FunctionDeclarationObfuscator', () => {
     describe('obfuscateNode (functionDeclarationNode: IFunctionDeclarationNode, parentNode: INode): void', () => {
-        let expressionStatementNode: INode,
+        let expressionStatementNode: IExpressionStatementNode,
             functionDeclarationObfuscator: FunctionDeclarationObfuscator,
             functionDeclarationNode: IFunctionDeclarationNode,
             functionName: string = 'functionDeclaration',
             programNode: IProgramNode;
 
         beforeEach(() => {
-            expressionStatementNode = <INode>{
+            expressionStatementNode = {
                 type: NodeType.ExpressionStatement,
                 expression: {
                     type: NodeType.CallExpression,

@@ -74,11 +74,11 @@ describe('FunctionDeclarationObfuscator', () => {
                 );
             });
 
-            it('should obfuscate function name inside `functionDeclaration` parent scope', () => {
+            it('should obfuscate function name', () => {
                 assert.match(functionDeclarationNode.id.name, /^_0x\w+$/);
             });
 
-            it('should obfuscate function name in `functionDeclaration` calls inside `functionDeclaration` parent scope', () => {
+            it('should obfuscate function name inside `functionDeclaration` parent scope', () => {
                 assert.match((<any>expressionStatementNode).expression.callee.name, /^_0x\w+$/);
             });
         });

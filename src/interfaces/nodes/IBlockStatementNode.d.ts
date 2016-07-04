@@ -1,4 +1,4 @@
-import { TStatement } from "../../types/TStatement";
+import { TStatement } from "../../types/nodes/TStatement";
 
 import { INode } from "./INode";
 

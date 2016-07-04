@@ -1,4 +1,4 @@
-import { TExpression } from "../../types/TExpression";
+import { TExpression } from "../../types/nodes/TExpression";
 
 import { INode } from "./INode";
 

@@ -3,7 +3,7 @@ import * as estraverse from 'estraverse';
 import { INode } from './interfaces/nodes/INode';
 
 import { TNodeWithBlockStatement } from "./types/TNodeWithBlockStatement";
-import { TStatement } from "./types/TStatement";
+import { TStatement } from "./types/nodes/TStatement";
 
 import { NodeType } from "./enums/NodeType";
 

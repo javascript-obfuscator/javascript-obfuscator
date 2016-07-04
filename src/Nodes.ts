@@ -7,7 +7,7 @@ import { IProgramNode } from "./interfaces/nodes/IProgramNode";
 import { IPropertyNode } from "./interfaces/nodes/IPropertyNode";
 import { IVariableDeclaratorNode } from "./interfaces/nodes/IVariableDeclaratorNode";
 
-import { TStatement } from "./types/TStatement";
+import { TStatement } from "./types/nodes/TStatement";
 
 import { TNodeWithBlockStatement } from "./types/TNodeWithBlockStatement";
 

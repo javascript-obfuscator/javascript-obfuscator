@@ -1,4 +1,4 @@
-import { TStatement } from "../../src/types/TStatement";
+import { TStatement } from "../../src/types/nodes/TStatement";
 
 import { IBlockStatementNode } from "../../src/interfaces/nodes/IBlockStatementNode";
 import { ICatchClauseNode } from "../../src/interfaces/nodes/ICatchClauseNode";

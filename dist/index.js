@@ -1070,6 +1070,7 @@ var path = __webpack_require__(47);
 var child_process_1 = __webpack_require__(43);
 var DefaultPreset_1 = __webpack_require__(14);
 var JavaScriptObfuscator_1 = __webpack_require__(9);
+var Utils_1 = __webpack_require__(0);
 
 var JavaScriptObfuscatorCLI = function () {
     function JavaScriptObfuscatorCLI(argv) {
@@ -1084,7 +1085,7 @@ var JavaScriptObfuscatorCLI = function () {
         key: 'run',
         value: function run() {
             this.configureCommands();
-            if (!this.arguments.length || this.arguments.indexOf('--help') >= 0) {
+            if (!this.arguments.length || Utils_1.Utils.arrayContains(this.arguments, '--help')) {
                 this.commands.outputHelp();
                 return;
             }
@@ -1101,7 +1102,7 @@ var JavaScriptObfuscatorCLI = function () {
                 if (!this.commands.hasOwnProperty(option)) {
                     continue;
                 }
-                if (availableOptions.indexOf(option) === -1) {
+                if (!Utils_1.Utils.arrayContains(availableOptions, option)) {
                     continue;
                 }
                 options[option] = this.commands[option];
@@ -1133,7 +1134,7 @@ var JavaScriptObfuscatorCLI = function () {
             if (!JavaScriptObfuscatorCLI.isFilePath(inputPath)) {
                 throw new ReferenceError('First argument must be a valid file path');
             }
-            if (JavaScriptObfuscatorCLI.availableInputExtensions.indexOf(path.extname(inputPath)) === -1) {
+            if (!Utils_1.Utils.arrayContains(JavaScriptObfuscatorCLI.availableInputExtensions, path.extname(inputPath))) {
                 throw new ReferenceError('Input file must have .js extension');
             }
             return inputPath;

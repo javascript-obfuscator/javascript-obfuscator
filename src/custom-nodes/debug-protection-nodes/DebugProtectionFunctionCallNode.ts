@@ -1,14 +1,19 @@
-import { IExpressionStatementNode } from "../../interfaces/nodes/IExpressionStatementNode";
+import { INode } from "../../interfaces/nodes/INode";
 import { IOptions } from "../../interfaces/IOptions";
 
 import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
 
-import { NodeType } from "../../enums/NodeType";
+import { AppendState } from "../../enums/AppendState";
 
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
 
 export class DebugProtectionFunctionCallNode extends Node {
+    /**
+     * @type {AppendState}
+     */
+    protected appendState: AppendState = AppendState.BeforeObfuscation;
+
     /**
      * @type {string}
      */
@@ -22,8 +27,6 @@ export class DebugProtectionFunctionCallNode extends Node {
         super(options);
 
         this.debugProtectionFunctionName = debugProtectionFunctionName;
-
-        this.node = this.getNodeStructure();
     }
 
     /**
@@ -34,19 +37,11 @@ export class DebugProtectionFunctionCallNode extends Node {
     }
 
     /**
-     * @returns {IExpressionStatementNode}
+     * @returns {INode}
      */
-    protected getNodeStructure (): IExpressionStatementNode {
-        return {
-            'type': NodeType.ExpressionStatement,
-            'expression': {
-                'type': NodeType.CallExpression,
-                'callee': {
-                    'type': NodeType.Identifier,
-                    'name': this.debugProtectionFunctionName
-                },
-                'arguments': []
-            }
-        };
+    protected getNodeStructure (): INode {
+        return NodeUtils.convertCodeToStructure(`
+            ${this.debugProtectionFunctionName}();
+        `);
     }
 }

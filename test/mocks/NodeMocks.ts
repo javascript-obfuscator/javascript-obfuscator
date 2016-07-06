@@ -1,3 +1,5 @@
+import * as escodegen from 'escodegen';
+
 import { TStatement } from "../../src/types/nodes/TStatement";
 
 import { IBlockStatementNode } from "../../src/interfaces/nodes/IBlockStatementNode";
@@ -108,7 +110,10 @@ export class NodeMocks {
             type: NodeType.Literal,
             value: 'string',
             raw: `'string'`,
-            'x-verbatim-property': `'string'`
+            'x-verbatim-property': {
+                content: `'string'`,
+                precedence: escodegen.Precedence.Primary
+            }
         };
     }
 }

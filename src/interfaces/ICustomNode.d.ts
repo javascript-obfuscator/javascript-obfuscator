@@ -29,13 +29,6 @@ export interface ICustomNode {
     getNodeData ? (): any;
 
     /**
-     * @param node
-     */
-    setNode (node: INode): void;
-
-    updateNode (): void;
-
-    /**
      * @param data
      */
     updateNodeData ? (data: any): void;

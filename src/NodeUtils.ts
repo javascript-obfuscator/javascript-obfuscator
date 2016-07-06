@@ -1,3 +1,5 @@
+import * as escodegen from 'escodegen';
+import * as esprima from 'esprima';
 import * as estraverse from 'estraverse';
 
 import { INode } from './interfaces/nodes/INode';
@@ -29,7 +31,10 @@ export class NodeUtils {
         estraverse.replace(node, {
             enter: (node: INode, parentNode: INode): any => {
                 if (Nodes.isLiteralNode(node)) {
-                   node['x-verbatim-property'] = node.raw;
+                   node['x-verbatim-property'] = {
+                        content : node.raw,
+                        precedence: escodegen.Precedence.Primary
+                    };
                 }
             }
         });
@@ -45,6 +50,18 @@ export class NodeUtils {
         }
 
         blockScopeBody.push(node);
+    }
+
+    /**
+     * @param code
+     * @returns {INode}
+     */
+    public static convertCodeToStructure (code: string): INode {
+        let structure: INode = esprima.parse(code);
+
+        NodeUtils.addXVerbatimPropertyToLiterals(structure);
+
+        return NodeUtils.getBlockStatementNodeByIndex(structure);
     }
 
     /**

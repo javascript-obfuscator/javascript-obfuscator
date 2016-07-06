@@ -1,5 +1,3 @@
-import * as esprima from 'esprima';
-
 import { INode } from "../../interfaces/nodes/INode";
 import { IOptions } from "../../interfaces/IOptions";
 
@@ -53,8 +51,6 @@ export class UnicodeArrayRotateFunctionNode extends Node {
         this.unicodeArrayName = unicodeArrayName;
         this.unicodeArray = unicodeArray;
         this.unicodeArrayRotateValue = unicodeArrayRotateValue;
-
-        this.node = this.getNodeStructure();
     }
 
     /**
@@ -83,8 +79,7 @@ export class UnicodeArrayRotateFunctionNode extends Node {
             code: string = '',
             timesName: string = Utils.getRandomVariableName(),
             timesArgumentName: string = Utils.getRandomVariableName(),
-            whileFunctionName: string = Utils.getRandomVariableName(),
-            node: INode;
+            whileFunctionName: string = Utils.getRandomVariableName();
 
         if (this.options.get('selfDefending')) {
             code = JavaScriptObfuscator.obfuscate(`
@@ -98,7 +93,7 @@ export class UnicodeArrayRotateFunctionNode extends Node {
             code = `${whileFunctionName}(++${timesName})`;
         }
 
-        node = esprima.parse(`
+        return NodeUtils.convertCodeToStructure(`
             (function (${arrayName}, ${timesName}) {
                 var ${whileFunctionName} = function (${timesArgumentName}) {
                     while (--${timesArgumentName}) {
@@ -109,9 +104,5 @@ export class UnicodeArrayRotateFunctionNode extends Node {
                 ${code}
             })(${this.unicodeArrayName}, 0x${Utils.decToHex(this.unicodeArrayRotateValue)});
         `);
-
-        NodeUtils.addXVerbatimPropertyToLiterals(node);
-
-        return NodeUtils.getBlockStatementNodeByIndex(node);
     }
 }

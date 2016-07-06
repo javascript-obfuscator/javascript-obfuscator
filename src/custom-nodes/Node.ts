@@ -8,14 +8,11 @@ import { NodeUtils } from "../NodeUtils";
 
 export abstract class Node implements ICustomNode {
     /**
+     * TODO: add `abstract` modifier
+     *
      * @type {AppendState}
      */
-    protected appendState: AppendState = AppendState.BeforeObfuscation;
-
-    /**
-     * @type {INode}
-     */
-    protected node: INode;
+    protected appendState: AppendState;
 
     /**
      * @type {IOptions}
@@ -39,23 +36,14 @@ export abstract class Node implements ICustomNode {
     }
 
     /**
-     * @returns any
+     * @returns {INode}
      */
     public getNode (): INode {
-        NodeUtils.parentize(this.node);
+        let node: INode = this.getNodeStructure();
 
-        return this.node;
-    }
+        NodeUtils.parentize(node);
 
-    /**
-     * @param node
-     */
-    public setNode (node: INode): void {
-        this.node = node;
-    }
-
-    public updateNode (): void {
-        this.node = this.getNodeStructure();
+        return node;
     }
 
     /**

@@ -1,7 +1,4 @@
-import * as esprima from 'esprima';
-
 import { INode } from "../../interfaces/nodes/INode";
-import { IOptions } from "../../interfaces/IOptions";
 
 import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
 
@@ -20,15 +17,6 @@ export class SelfDefendingUnicodeNode extends Node {
      * @type {AppendState}
      */
     protected appendState: AppendState = AppendState.AfterObfuscation;
-
-    /**
-     * @param options
-     */
-    constructor (options: IOptions) {
-        super(options);
-
-        this.node = this.getNodeStructure();
-    }
 
     /**
      * @param blockScopeNode
@@ -51,7 +39,7 @@ export class SelfDefendingUnicodeNode extends Node {
      * @returns {INode}
      */
     protected getNodeStructure (): INode {
-        let node: INode = esprima.parse(
+        return NodeUtils.convertCodeToStructure(
             JavaScriptObfuscator.obfuscate(`
                 (function () {                                
                     var func = function(){return ${Utils.stringToUnicode('dev')};},
@@ -63,9 +51,5 @@ export class SelfDefendingUnicodeNode extends Node {
                 })();
             `, NO_CUSTOM_NODES_PRESET)
         );
-
-        NodeUtils.addXVerbatimPropertyToLiterals(node);
-
-        return NodeUtils.getBlockStatementNodeByIndex(node);
     }
 }

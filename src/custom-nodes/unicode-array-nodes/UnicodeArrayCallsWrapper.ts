@@ -1,5 +1,3 @@
-import * as esprima from 'esprima';
-
 import { INode } from "../../interfaces/nodes/INode";
 import { IOptions } from "../../interfaces/IOptions";
 
@@ -49,8 +47,6 @@ export class UnicodeArrayCallsWrapper extends Node {
         this.unicodeArrayCallsWrapperName = unicodeArrayCallsWrapperName;
         this.unicodeArrayName = unicodeArrayName;
         this.unicodeArray = unicodeArray;
-
-        this.node = this.getNodeStructure();
     }
 
     /**
@@ -75,8 +71,6 @@ export class UnicodeArrayCallsWrapper extends Node {
             return;
         }
 
-        this.updateNode();
-
         return super.getNode();
     }
 
@@ -84,17 +78,12 @@ export class UnicodeArrayCallsWrapper extends Node {
      * @returns {INode}
      */
     protected getNodeStructure (): INode {
-        let keyName: string = Utils.getRandomVariableName(),
-            node: INode;
+        let keyName: string = Utils.getRandomVariableName();
 
-        node = esprima.parse(`
+        return NodeUtils.convertCodeToStructure(`
             var ${this.unicodeArrayCallsWrapperName} = function (${keyName}) {
                 return ${this.unicodeArrayName}[parseInt(${keyName}, 0x010)];
             };
         `);
-
-        NodeUtils.addXVerbatimPropertyToLiterals(node);
-
-        return NodeUtils.getBlockStatementNodeByIndex(node);
     }
 }

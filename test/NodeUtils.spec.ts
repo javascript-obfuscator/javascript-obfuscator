@@ -17,9 +17,9 @@ describe('NodeUtils', () => {
 
         beforeEach(() => {
             literalNode = NodeMocks.getLiteralNode();
+            delete literalNode['x-verbatim-property'];
 
-            expectedLiteralNode = Object.assign({}, literalNode);
-            expectedLiteralNode['x-verbatim-property'] = `'string'`;
+            expectedLiteralNode = NodeMocks.getLiteralNode();
 
             NodeUtils.addXVerbatimPropertyToLiterals(literalNode);
         });
@@ -39,8 +39,9 @@ describe('NodeUtils', () => {
 
             blockStatementNode = NodeMocks.getBlockStatementNode();
 
-            expectedBlockStatementNode = Object.assign({}, blockStatementNode);
-            expectedBlockStatementNode.body.push(expressionStatementNode);
+            expectedBlockStatementNode = NodeMocks.getBlockStatementNode([
+                expressionStatementNode
+            ]);
 
             NodeUtils.appendNode(blockStatementNode.body, expressionStatementNode);
         });
@@ -173,8 +174,10 @@ describe('NodeUtils', () => {
                 expressionStatementNode1
             ]);
 
-            expectedBlockStatementNode = Object.assign({}, blockStatementNode);
-            expectedBlockStatementNode['body'].push(expressionStatementNode2);
+            expectedBlockStatementNode = NodeMocks.getBlockStatementNode([
+                expressionStatementNode1,
+                expressionStatementNode1
+            ]);
 
             NodeUtils.insertNodeAtIndex(blockStatementNode.body, expressionStatementNode2, 1);
         });
@@ -245,8 +248,10 @@ describe('NodeUtils', () => {
                 expressionStatementNode1
             ]);
 
-            expectedBlockStatementNode = Object.assign({}, blockStatementNode);
-            expectedBlockStatementNode['body'].unshift(expressionStatementNode2);
+            expectedBlockStatementNode = NodeMocks.getBlockStatementNode([
+                expressionStatementNode2,
+                expressionStatementNode1
+            ]);
 
             NodeUtils.prependNode(blockStatementNode.body, expressionStatementNode2);
         });

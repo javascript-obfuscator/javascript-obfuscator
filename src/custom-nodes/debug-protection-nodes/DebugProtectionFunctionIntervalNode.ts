@@ -1,14 +1,19 @@
-import { IExpressionStatementNode } from "../../interfaces/nodes/IExpressionStatementNode";
+import { INode } from "../../interfaces/nodes/INode";
 import { IOptions } from "../../interfaces/IOptions";
 
 import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
 
-import { NodeType } from '../../enums/NodeType';
+import { AppendState } from "../../enums/AppendState";
 
 import { Node } from '../Node';
 import { NodeUtils } from '../../NodeUtils';
 
 export class DebugProtectionFunctionIntervalNode extends Node {
+    /**
+     * @type {AppendState}
+     */
+    protected appendState: AppendState = AppendState.BeforeObfuscation;
+
     /**
      * @type {string}
      */
@@ -22,8 +27,6 @@ export class DebugProtectionFunctionIntervalNode extends Node {
         super(options);
 
         this.debugProtectionFunctionName = debugProtectionFunctionName;
-
-        this.node = this.getNodeStructure();
     }
 
     /**
@@ -34,49 +37,13 @@ export class DebugProtectionFunctionIntervalNode extends Node {
     }
 
     /**
-     * @returns {IExpressionStatementNode}
+     * @returns {INode}
      */
-    protected getNodeStructure (): IExpressionStatementNode {
-        return {
-            'type': NodeType.ExpressionStatement,
-            'expression': {
-                'type': NodeType.CallExpression,
-                'callee': {
-                    'type': NodeType.Identifier,
-                    'name': 'setInterval'
-                },
-                'arguments': [
-                    {
-                        'type': NodeType.FunctionExpression,
-                        'id': null,
-                        'params': [],
-                        'defaults': [],
-                        'body': {
-                            'type': NodeType.BlockStatement,
-                            'body': [
-                                {
-                                    'type': NodeType.ExpressionStatement,
-                                    'expression': {
-                                        'type': NodeType.CallExpression,
-                                        'callee': {
-                                            'type': NodeType.Identifier,
-                                            'name': this.debugProtectionFunctionName
-                                        },
-                                        'arguments': []
-                                    }
-                                }
-                            ]
-                        },
-                        'generator': false,
-                        'expression': false
-                    },
-                    {
-                        'type': NodeType.Literal,
-                        'value': 4000,
-                        'raw': '4000'
-                    }
-                ]
-            }
-        };
+    protected getNodeStructure (): INode {
+        return NodeUtils.convertCodeToStructure(`
+            setInterval(function () {
+                ${this.debugProtectionFunctionName}();
+            }, 4000);
+        `);
     }
 }

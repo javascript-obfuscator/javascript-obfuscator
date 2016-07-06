@@ -1,4 +1,3 @@
-import * as esprima from 'esprima';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 
 import { INode } from "../../interfaces/nodes/INode";
@@ -45,8 +44,6 @@ export class UnicodeArrayDecodeNode extends Node {
 
         this.unicodeArrayName = unicodeArrayName;
         this.unicodeArray = unicodeArray;
-
-        this.node = this.getNodeStructure();
     }
 
     /**
@@ -64,8 +61,6 @@ export class UnicodeArrayDecodeNode extends Node {
             return;
         }
 
-        this.updateNode();
-
         return super.getNode();
     }
 
@@ -78,8 +73,7 @@ export class UnicodeArrayDecodeNode extends Node {
             indexVariableName: string = Utils.getRandomVariableName(),
             tempArrayName: string = Utils.getRandomVariableName();
 
-        let code: string = '',
-            node: INode;
+        let code: string = '';
 
         if (this.options.get('selfDefending')) {
             code = `
@@ -91,7 +85,7 @@ export class UnicodeArrayDecodeNode extends Node {
             code = `${forLoopFunctionName}();`;
         }
 
-        node = esprima.parse(`
+        return NodeUtils.convertCodeToStructure(`
             (function () {
                 ${JavaScriptObfuscator.obfuscate(`
                     (function () {
@@ -127,9 +121,5 @@ export class UnicodeArrayDecodeNode extends Node {
                 ${code}
             })();
         `);
-
-        NodeUtils.addXVerbatimPropertyToLiterals(node);
-
-        return NodeUtils.getBlockStatementNodeByIndex(node);
     }
 }

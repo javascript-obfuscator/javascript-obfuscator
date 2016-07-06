@@ -1,15 +1,20 @@
-import * as esprima from 'esprima';
-
 import { INode } from "../../interfaces/nodes/INode";
 import { IOptions } from "../../interfaces/IOptions";
 
 import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
+
+import { AppendState } from "../../enums/AppendState";
 
 import { Node } from '../Node';
 import { NodeUtils } from '../../NodeUtils';
 import { Utils } from "../../Utils";
 
 export class DebugProtectionFunctionNode extends Node {
+    /**
+     * @type {AppendState}
+     */
+    protected appendState: AppendState = AppendState.BeforeObfuscation;
+
     /**
      * @type {string}
      */
@@ -23,8 +28,6 @@ export class DebugProtectionFunctionNode extends Node {
         super(options);
 
         this.debugProtectionFunctionName = debugProtectionFunctionName;
-
-        this.node = this.getNodeStructure();
     }
 
     /**
@@ -53,24 +56,22 @@ export class DebugProtectionFunctionNode extends Node {
      * @returns {INode}
      */
     protected getNodeStructure (): INode {
-        return NodeUtils.getBlockStatementNodeByIndex(
-            esprima.parse(`
-                var ${this.debugProtectionFunctionName} = function () {
-                    function debuggerProtection (counter) {
-                        if (('' + counter / counter)['length'] !== 1 || counter % 20 === 0) {
-                            (function () {}.constructor('debugger')());
-                        } else {
-                            [].filter.constructor(${Utils.stringToJSFuck('debugger')})();
-                        }
-                        
-                        debuggerProtection(++counter);
+        return NodeUtils.convertCodeToStructure(`
+            var ${this.debugProtectionFunctionName} = function () {
+                function debuggerProtection (counter) {
+                    if (('' + counter / counter)['length'] !== 1 || counter % 20 === 0) {
+                        (function () {}.constructor('debugger')());
+                    } else {
+                        [].filter.constructor(${Utils.stringToJSFuck('debugger')})();
                     }
                     
-                    try {
-                        debuggerProtection(0);
-                    } catch (y) {}
-                };
-            `)
-        );
+                    debuggerProtection(++counter);
+                }
+                
+                try {
+                    debuggerProtection(0);
+                } catch (y) {}
+            };
+        `);
     }
 }

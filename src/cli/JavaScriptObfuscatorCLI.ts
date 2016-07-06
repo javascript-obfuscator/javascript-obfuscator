@@ -9,6 +9,7 @@ import { IOptionsPreset } from "../interfaces/IOptionsPreset";
 import { DEFAULT_PRESET } from "../preset-options/DefaultPreset";
 
 import { JavaScriptObfuscator } from "../JavaScriptObfuscator";
+import { Utils } from "../Utils";
 
 export class JavaScriptObfuscatorCLI {
     /**
@@ -92,7 +93,7 @@ export class JavaScriptObfuscatorCLI {
     public run (): void {
         this.configureCommands();
 
-        if (!this.arguments.length || this.arguments.indexOf('--help') >= 0) {
+        if (!this.arguments.length || Utils.arrayContains(this.arguments, '--help')) {
             this.commands.outputHelp();
 
             return;
@@ -116,7 +117,7 @@ export class JavaScriptObfuscatorCLI {
                 continue;
             }
 
-            if (availableOptions.indexOf(option) === -1) {
+            if (!Utils.arrayContains(availableOptions, option)) {
                 continue;
             }
 
@@ -166,7 +167,7 @@ export class JavaScriptObfuscatorCLI {
             throw new ReferenceError(`First argument must be a valid file path`);
         }
 
-        if (JavaScriptObfuscatorCLI.availableInputExtensions.indexOf(path.extname(inputPath)) === -1) {
+        if (!Utils.arrayContains(JavaScriptObfuscatorCLI.availableInputExtensions, path.extname(inputPath))) {
             throw new ReferenceError(`Input file must have .js extension`);
         }
 

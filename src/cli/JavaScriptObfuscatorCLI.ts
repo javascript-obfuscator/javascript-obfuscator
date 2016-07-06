@@ -2,9 +2,9 @@ import { Command } from 'commander';
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as path from 'path';
-import { execSync } from "child_process";
 
 import { IOptionsPreset } from "../interfaces/IOptionsPreset";
+import { IPackageConfig } from "../interfaces/IPackageConfig";
 
 import { DEFAULT_PRESET } from "../preset-options/DefaultPreset";
 
@@ -23,11 +23,6 @@ export class JavaScriptObfuscatorCLI {
      * @type {BufferEncoding}
      */
     private static encoding: BufferEncoding = 'utf8';
-
-    /**
-     * @type {string}
-     */
-    private static packageName: string = 'javascript-obfuscator';
 
     /**
      * @type {string[]}
@@ -66,9 +61,21 @@ export class JavaScriptObfuscatorCLI {
      * @returns {string}
      */
     private static getBuildVersion (): string {
-        return execSync(`npm info ${JavaScriptObfuscatorCLI.packageName} version`, {
-            encoding: JavaScriptObfuscatorCLI.encoding
-        });
+        return JavaScriptObfuscatorCLI.getPackageConfig().version;
+    }
+
+    private static getPackageConfig (): IPackageConfig {
+        return JSON.parse(
+            fs.readFileSync(
+                path.join(
+                    path.dirname(
+                        fs.realpathSync(process.argv[1])
+                    ),
+                    '../package.json'
+                ),
+                JavaScriptObfuscatorCLI.encoding
+            )
+        );
     }
 
     /**

@@ -1,3 +1,5 @@
+import { TSourceMapModes } from "../types/TSourceMapModes";
+
 export interface IOptionsPreset {
     compact?: boolean;
     debugProtection?: boolean;
@@ -7,6 +9,8 @@ export interface IOptionsPreset {
     reservedNames?: string[];
     rotateUnicodeArray?: boolean;
     selfDefending?: boolean;
+    sourceMap?: boolean;
+    sourceMapMode?: TSourceMapModes;
     unicodeArray?: boolean;
     unicodeArrayThreshold?: number;
     wrapUnicodeArrayCalls?: boolean;

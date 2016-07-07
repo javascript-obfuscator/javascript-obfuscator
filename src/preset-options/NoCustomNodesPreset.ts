@@ -1,5 +1,7 @@
 import { IOptionsPreset } from "../interfaces/IOptionsPreset";
 
+import { SourceMapMode } from "../enums/SourceMapMode";
+
 export const NO_CUSTOM_NODES_PRESET: IOptionsPreset = Object.freeze({
     compact: true,
     debugProtection: false,
@@ -9,6 +11,8 @@ export const NO_CUSTOM_NODES_PRESET: IOptionsPreset = Object.freeze({
     reservedNames: [],
     rotateUnicodeArray: false,
     selfDefending: false,
+    sourceMap: false,
+    sourceMapMode: SourceMapMode.Separate,
     unicodeArray: false,
     unicodeArrayThreshold: 0,
     wrapUnicodeArrayCalls: false

@@ -6,9 +6,12 @@ import * as path from 'path';
 import { IOptionsPreset } from "../interfaces/IOptionsPreset";
 import { IPackageConfig } from "../interfaces/IPackageConfig";
 
+import { SourceMapMode } from "../enums/SourceMapMode";
+
 import { DEFAULT_PRESET } from "../preset-options/DefaultPreset";
 
 import { JavaScriptObfuscator } from "../JavaScriptObfuscator";
+import { SourceMapInjector } from "../SourceMapInjector";
 import { Utils } from "../Utils";
 
 export class JavaScriptObfuscatorCLI {
@@ -35,11 +38,6 @@ export class JavaScriptObfuscatorCLI {
     private commands: commander.ICommand;
 
     /**
-     * @type {string[]}
-     */
-    private rawArguments: string[];
-
-    /**
      * @type {string}
      */
     private data: string = '';
@@ -48,6 +46,11 @@ export class JavaScriptObfuscatorCLI {
      * @type {string}
      */
     private inputPath: string;
+
+    /**
+     * @type {string[]}
+     */
+    private rawArguments: string[];
 
     /**
      * @param argv
@@ -147,6 +150,8 @@ export class JavaScriptObfuscatorCLI {
             .option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', (val: string) => val.split(','))
             .option('--rotateUnicodeArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean)
+            .option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean)
+            .option('--sourceMapMode [separate, inline]', 'Create a separate files with code and source map or combine them into a single file')
             .option('--unicodeArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--unicodeArrayThreshold <number>', 'The probability that the literal string will be inserted into unicodeArray (Default: 0.8, Min: 0, Max: 1)', parseFloat)
             .option('--wrapUnicodeArrayCalls <boolean>', 'Disables usage of special access function instead of direct array call', JavaScriptObfuscatorCLI.parseBoolean)
@@ -184,7 +189,7 @@ export class JavaScriptObfuscatorCLI {
     /**
      * @returns {string}
      */
-    private getOutputPath (): string {
+    private getOutputCodePath (): string {
         let outputPath: string = (<any>this.commands).output;
 
         if (outputPath) {
@@ -199,15 +204,46 @@ export class JavaScriptObfuscatorCLI {
             .join('.');
     }
 
+    /**
+     * @returns {string}
+     */
+    private getOutputSourceMapPath (outputCodePath: string): string {
+        return outputCodePath
+            .split('.')
+            .map<string>((value: string, index: number, array: string[]) => {
+                return index === array.length - 1 ? `${value}.map` : value;
+            })
+            .join('.');
+    }
+
     private processData (): void {
-        let outputPath: string = this.getOutputPath(),
-            dirName: string = path.dirname(outputPath);
+        let outputCodePath: string = this.getOutputCodePath(),
+            outputSourceMapPath: string = this.getOutputSourceMapPath(outputCodePath),
+            dirName: string = path.dirname(outputCodePath),
+            options: IOptionsPreset = this.buildOptions();
 
         mkdirp.sync(dirName);
 
+        JavaScriptObfuscator.obfuscate(this.data, options);
+
+        if (options.sourceMap && options.sourceMapMode === SourceMapMode.Separate) {
+            JavaScriptObfuscator.obfuscatedCode = SourceMapInjector.appendSourceMapUrlToSourceCode(
+                JavaScriptObfuscator.obfuscatedCode,
+                [...outputSourceMapPath.split('/')].pop()
+            );
+
+            fs.writeFileSync(
+                outputSourceMapPath,
+                JavaScriptObfuscator.sourceMap,
+                {
+                    encoding: JavaScriptObfuscatorCLI.encoding
+                }
+            );
+        }
+
         fs.writeFileSync(
-            this.getOutputPath(),
-            JavaScriptObfuscator.obfuscate(this.data, this.buildOptions()),
+            outputCodePath,
+            JavaScriptObfuscator.obfuscatedCode,
             {
                 encoding: JavaScriptObfuscatorCLI.encoding
             }

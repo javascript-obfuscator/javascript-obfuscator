@@ -13,6 +13,8 @@ import { IIfStatementNode } from "../../src/interfaces/nodes/IIfStatementNode";
 import { ILiteralNode } from "../../src/interfaces/nodes/ILiteralNode";
 import { IProgramNode } from "../../src/interfaces/nodes/IProgramNode";
 import { ISpreadElementNode } from "../../src/interfaces/nodes/ISpreadElementNode";
+import { IVariableDeclarationNode } from "../../src/interfaces/nodes/IVariableDeclarationNode";
+import { IVariableDeclaratorNode } from "../../src/interfaces/nodes/IVariableDeclaratorNode";
 
 import { NodeType } from "../../src/enums/NodeType";
 
@@ -24,7 +26,8 @@ export class NodeMocks {
     public static getProgramNode (bodyNodes: TStatement[] = []): IProgramNode {
         return {
             type: NodeType.Program,
-            body: bodyNodes
+            body: bodyNodes,
+            sourceType: 'script'
         };
     }
 
@@ -130,17 +133,47 @@ export class NodeMocks {
     }
 
     /**
+     * @param value
      * @returns {ILiteralNode}
      */
-    public static getLiteralNode (): ILiteralNode {
+    public static getLiteralNode (value: boolean|number|string = 'value'): ILiteralNode {
         return {
             type: NodeType.Literal,
-            value: 'string',
-            raw: `'string'`,
+            value: value,
+            raw: `'${value}'`,
             'x-verbatim-property': {
-                content: `'string'`,
+                content: `'${value}'`,
                 precedence: escodegen.Precedence.Primary
             }
+        };
+    }
+
+    /**
+     * @param declarations
+     * @param kind
+     * @returns {IVariableDeclarationNode}
+     */
+    public static getVariableDeclarationNode (
+        declarations: IVariableDeclaratorNode[] = [],
+        kind: string = 'var'
+    ): IVariableDeclarationNode {
+        return {
+            type: NodeType.VariableDeclaration,
+            declarations: declarations,
+            kind: kind
+        };
+    }
+
+    /**
+     * @param id
+     * @param init
+     * @returns {IVariableDeclaratorNode}
+     */
+    public static getVariableDeclaratorNode (id: IIdentifierNode, init: any): IVariableDeclaratorNode {
+        return {
+            type: NodeType.VariableDeclarator,
+            id: id,
+            init: init
         };
     }
 }

@@ -21,7 +21,8 @@ export class Nodes {
     public static getProgramNode (bodyNode: TStatement[]): IProgramNode {
         return {
             'type': NodeType.Program,
-            'body': bodyNode
+            'body': bodyNode,
+            'sourceType': 'script'
         };
     }
 

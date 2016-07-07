@@ -1,9 +1,15 @@
 import { IBlockStatementNode } from "../src/interfaces/nodes/IBlockStatementNode";
 import { IExpressionStatementNode } from "../src/interfaces/nodes/IExpressionStatementNode";
 import { IFunctionDeclarationNode } from "../src/interfaces/nodes/IFunctionDeclarationNode";
+import { IIdentifierNode } from "../src/interfaces/nodes/IIdentifierNode";
 import { IIfStatementNode } from "../src/interfaces/nodes/IIfStatementNode";
+import { ILiteralNode } from "../src/interfaces/nodes/ILiteralNode";
 import { INode } from "../src/interfaces/nodes/INode";
 import { IProgramNode } from "../src/interfaces/nodes/IProgramNode";
+import { IVariableDeclarationNode } from "../src/interfaces/nodes/IVariableDeclarationNode";
+import { IVariableDeclaratorNode } from "../src/interfaces/nodes/IVariableDeclaratorNode";
+
+import { NodeType } from "../src/enums/NodeType";
 
 import { NodeMocks } from './mocks/NodeMocks';
 import { NodeUtils } from '../src/NodeUtils';
@@ -62,6 +68,45 @@ describe('NodeUtils', () => {
                 blockStatementNode,
                 'body'
             );
+        });
+    });
+
+    describe('convertCodeToStructure (code: string): INode', () => {
+        let code: string,
+            identifierNode: IIdentifierNode,
+            literalNode: ILiteralNode,
+            programNode: IProgramNode,
+            variableDeclarationNode: IVariableDeclarationNode,
+            variableDeclaratorNode: IVariableDeclaratorNode;
+
+        beforeEach(() => {
+            code = `
+                var abc = 'cde';
+            `;
+
+            identifierNode = NodeMocks.getIdentifierNode('abc');
+
+            literalNode = NodeMocks.getLiteralNode('cde');
+
+            variableDeclaratorNode = NodeMocks.getVariableDeclaratorNode(identifierNode, literalNode);
+
+            variableDeclarationNode = NodeMocks.getVariableDeclarationNode([
+                variableDeclaratorNode
+            ]);
+
+            programNode = NodeMocks.getProgramNode([
+                variableDeclarationNode
+            ]);
+
+            programNode['parentNode'] = programNode;
+            variableDeclarationNode['parentNode'] = programNode;
+            variableDeclaratorNode['parentNode'] = variableDeclarationNode;
+            identifierNode['parentNode'] = variableDeclaratorNode;
+            literalNode['parentNode'] = variableDeclaratorNode;
+        });
+
+        xit('should convert code to `INode` structure', () => {
+            assert.deepEqual(NodeUtils.convertCodeToStructure(code), variableDeclarationNode);
         });
     });
 

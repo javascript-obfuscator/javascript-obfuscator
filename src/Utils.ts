@@ -1,8 +1,6 @@
 import { Chance } from 'chance';
 
 import { JSFuck } from './enums/JSFuck';
-import { SourceMapMode } from "./enums/SourceMapMode";
-import {TSourceMapModes} from "./types/TSourceMapModes";
 
 export class Utils {
     /**
@@ -14,28 +12,6 @@ export class Utils {
      * @type {Chance.Chance}
      */
     private static randomGenerator: Chance.Chance = new Chance();
-
-    /**
-     * @param sourceCode
-     * @param url
-     * @param mode
-     * @returns {string}
-     */
-    public static appendSourceMapUrlToSourceCode (
-        sourceCode: string,
-        url: string,
-        mode: TSourceMapModes = SourceMapMode.Separate
-    ): string {
-        let sourceMappingUrl: string = '//# sourceMappingURL=';
-
-        if (mode === SourceMapMode.Separate) {
-            sourceMappingUrl += url;
-        } else {
-            sourceMappingUrl += `data:application/json;base64,${Utils.btoa(url, false)}`;
-        }
-
-        return `${sourceCode}\n${sourceMappingUrl}`;
-    }
 
     /**
      * @param array

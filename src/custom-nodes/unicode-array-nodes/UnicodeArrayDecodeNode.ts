@@ -1,4 +1,3 @@
-import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 
 import { INode } from "../../interfaces/nodes/INode";
 import { IOptions } from "../../interfaces/IOptions";
@@ -10,6 +9,7 @@ import { JSFuck } from "../../enums/JSFuck";
 
 import { NO_CUSTOM_NODES_PRESET } from "../../preset-options/NoCustomNodesPreset";
 
+import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
 import { Utils } from "../../Utils";

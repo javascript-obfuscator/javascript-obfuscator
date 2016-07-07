@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as path from 'path';
 
+import { IObfuscationResult } from "../interfaces/IObfuscationResult";
 import { IOptionsPreset } from "../interfaces/IOptionsPreset";
 import { IPackageConfig } from "../interfaces/IPackageConfig";
 
@@ -11,7 +12,6 @@ import { SourceMapMode } from "../enums/SourceMapMode";
 import { DEFAULT_PRESET } from "../preset-options/DefaultPreset";
 
 import { JavaScriptObfuscator } from "../JavaScriptObfuscator";
-import { SourceMapInjector } from "../SourceMapInjector";
 import { Utils } from "../Utils";
 
 export class JavaScriptObfuscatorCLI {
@@ -217,36 +217,51 @@ export class JavaScriptObfuscatorCLI {
     }
 
     private processData (): void {
-        let outputCodePath: string = this.getOutputCodePath(),
-            outputSourceMapPath: string = this.getOutputSourceMapPath(outputCodePath),
-            dirName: string = path.dirname(outputCodePath),
+        let obfuscatedCode: string,
+            outputCodePath: string = this.getOutputCodePath(),
             options: IOptionsPreset = this.buildOptions();
 
-        mkdirp.sync(dirName);
+        mkdirp.sync(path.dirname(outputCodePath));
 
-        JavaScriptObfuscator.obfuscate(this.data, options);
+        if (options.sourceMap) {
+            switch (options.sourceMapMode) {
+                case SourceMapMode.Inline:
+                    obfuscatedCode = JavaScriptObfuscator.obfuscateWithSourceMap(this.data, options).toString();
 
-        if (options.sourceMap && options.sourceMapMode === SourceMapMode.Separate) {
-            JavaScriptObfuscator.obfuscatedCode = SourceMapInjector.appendSourceMapUrlToSourceCode(
-                JavaScriptObfuscator.obfuscatedCode,
-                [...outputSourceMapPath.split('/')].pop()
-            );
+                    break;
 
-            fs.writeFileSync(
-                outputSourceMapPath,
-                JavaScriptObfuscator.sourceMap,
-                {
-                    encoding: JavaScriptObfuscatorCLI.encoding
-                }
-            );
+                case SourceMapMode.Separate:
+                default:
+                    obfuscatedCode = this.sourceMapSeparateModeHandler(outputCodePath, options);
+            }
+        } else {
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(this.data, options);
         }
 
-        fs.writeFileSync(
-            outputCodePath,
-            JavaScriptObfuscator.obfuscatedCode,
-            {
-                encoding: JavaScriptObfuscatorCLI.encoding
-            }
-        );
+        fs.writeFileSync(outputCodePath, obfuscatedCode, {
+            encoding: JavaScriptObfuscatorCLI.encoding
+        });
+    }
+
+    /**
+     * @param outputCodePath
+     * @param options
+     */
+    private sourceMapSeparateModeHandler (outputCodePath: string, options: IOptionsPreset): string {
+        let outputSourceMapPath: string = this.getOutputSourceMapPath(outputCodePath),
+            sourceMapUrl: string;
+
+        sourceMapUrl = [...outputSourceMapPath.split('/')].pop();
+
+        let {
+            obfuscatedCode,
+            sourceMap
+        }: IObfuscationResult = JavaScriptObfuscator.obfuscateWithSourceMap(this.data, options, sourceMapUrl);
+
+        fs.writeFileSync(outputSourceMapPath, sourceMap, {
+            encoding: JavaScriptObfuscatorCLI.encoding
+        });
+
+        return obfuscatedCode;
     }
 }

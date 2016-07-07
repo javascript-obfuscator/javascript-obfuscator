@@ -1,65 +1,49 @@
 "use strict";
 
-import * as esprima from 'esprima';
-import * as escodegen from 'escodegen';
-
-import { IGeneratorOutput } from "./interfaces/IGeneratorOutput";
-import { INode } from './interfaces/nodes/INode';
-import { IObfuscator } from "./interfaces/IObfuscator";
-import { IOptions } from './interfaces/IOptions';
+import { IObfuscationResult } from "./interfaces/IObfuscationResult";
 import { IOptionsPreset } from "./interfaces/IOptionsPreset";
 
 import { JavaScriptObfuscatorCLI } from "./cli/JavaScriptObfuscatorCLI";
-import { Obfuscator } from "./Obfuscator";
-import { Options } from "./Options";
-import { SourceMapInjector } from "./SourceMapInjector";
+import { JavaScriptObfuscatorInstance } from "./JavaScriptObfuscatorInstance";
+import { ObfuscationResult } from "./ObfuscationResult";
 
 export class JavaScriptObfuscator {
     /**
-     * @type {string}
+     * @param sourceCode
+     * @param options
+     * @returns {string}
      */
-    public static obfuscatedCode: string;
+    public static obfuscate (sourceCode: string, options: IOptionsPreset = {}): string {
+        let javaScriptObfuscator: JavaScriptObfuscatorInstance = new JavaScriptObfuscatorInstance(sourceCode, options);
 
-    /**
-     * @type {string}
-     */
-    public static sourceMap: string;
+        javaScriptObfuscator.obfuscate();
 
-    /**
-     * @type {GenerateOptions}
-     */
-    private static escodegenParams: escodegen.GenerateOptions = {
-        verbatim: 'x-verbatim-property',
-        sourceMapWithCode: true
-    };
+        return javaScriptObfuscator.getObfuscatedCode();
+    }
 
     /**
      * @param sourceCode
-     * @param customOptions
+     * @param options
+     * @param sourceMapUrl
+     * @returns {string}
      */
-    public static obfuscate (sourceCode: string, customOptions?: IOptionsPreset): string {
-        let astTree: INode = esprima.parse(sourceCode, {
-                loc: true
-            }),
-            options: IOptions = new Options(customOptions),
-            obfuscator: IObfuscator = new Obfuscator(options);
+    public static obfuscateWithSourceMap (
+        sourceCode: string,
+        options: IOptionsPreset = {},
+        sourceMapUrl?: string
+    ): IObfuscationResult {
+        let javaScriptObfuscator: JavaScriptObfuscatorInstance = new JavaScriptObfuscatorInstance(sourceCode, options);
 
-        astTree = obfuscator.obfuscateNode(astTree);
+        javaScriptObfuscator.obfuscate();
 
-        let output: IGeneratorOutput = JavaScriptObfuscator.generateCode(astTree, sourceCode, options);
-
-        JavaScriptObfuscator.obfuscatedCode = output.code;
-
-        if (output.map) {
-            JavaScriptObfuscator.sourceMap = output.map.toString();
-            JavaScriptObfuscator.obfuscatedCode = new SourceMapInjector(
-                JavaScriptObfuscator.obfuscatedCode,
-                JavaScriptObfuscator.sourceMap,
-                options
-            ).inject();
+        if (sourceMapUrl) {
+            javaScriptObfuscator.setSourceMapUrl(sourceMapUrl);
         }
 
-        return JavaScriptObfuscator.obfuscatedCode;
+        return new ObfuscationResult(
+            javaScriptObfuscator.getObfuscatedCode(),
+            javaScriptObfuscator.getSourceMap()
+        );
     }
 
     /**
@@ -67,25 +51,5 @@ export class JavaScriptObfuscator {
      */
     public static runCLI (argv: string[]): void {
         new JavaScriptObfuscatorCLI(argv).run();
-    }
-
-    /**
-     * @param astTree
-     * @param sourceCode
-     * @param options
-     */
-    private static generateCode (astTree: INode, sourceCode: string, options: IOptions): IGeneratorOutput {
-        let escodegenParams: escodegen.GenerateOptions = Object.assign({}, JavaScriptObfuscator.escodegenParams);
-
-        if (options.get<boolean>('sourceMap')) {
-            escodegenParams.sourceMap = 'sourceMap';
-            escodegenParams.sourceContent = sourceCode;
-        }
-
-        escodegenParams.format = {
-            compact: options.get<boolean>('compact')
-        };
-
-        return escodegen.generate(astTree, escodegenParams);
     }
 }

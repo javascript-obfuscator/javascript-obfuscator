@@ -4,8 +4,6 @@ import { IExpressionStatementNode } from "../../src/interfaces/nodes/IExpression
 import { IFunctionDeclarationNode } from "../../src/interfaces/nodes/IFunctionDeclarationNode";
 import { IProgramNode } from "../../src/interfaces/nodes/IProgramNode";
 
-import { NodeType } from "../../src/enums/NodeType";
-
 import { DEFAULT_PRESET } from "../../src/preset-options/DefaultPreset";
 
 import { FunctionDeclarationObfuscator } from '../../src/node-obfuscators/FunctionDeclarationObfuscator';
@@ -23,14 +21,9 @@ describe('FunctionDeclarationObfuscator', () => {
             programNode: IProgramNode;
 
         beforeEach(() => {
-            expressionStatementNode = {
-                type: NodeType.ExpressionStatement,
-                expression: {
-                    type: NodeType.CallExpression,
-                    callee: NodeMocks.getIdentifierNode(functionName),
-                    arguments: []
-                }
-            };
+            expressionStatementNode = NodeMocks.getExpressionStatementNode(
+                NodeMocks.getCallExpressionNode(NodeMocks.getIdentifierNode(functionName))
+            );
 
             functionDeclarationObfuscator = new FunctionDeclarationObfuscator(
                 new Map<string, ICustomNode>(),

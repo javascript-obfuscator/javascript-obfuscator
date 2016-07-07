@@ -4,8 +4,6 @@ import { IOptions } from "../interfaces/IOptions";
 
 import { AppendState } from '../enums/AppendState';
 
-import { NodeUtils } from "../NodeUtils";
-
 export abstract class Node implements ICustomNode {
     /**
      * TODO: add `abstract` modifier
@@ -39,15 +37,11 @@ export abstract class Node implements ICustomNode {
      * @returns {INode}
      */
     public getNode (): INode {
-        let node: INode = this.getNodeStructure();
-
-        NodeUtils.parentize(node);
-
-        return node;
+        return this.getNodeStructure();
     }
 
     /**
-     * @returns any
+     * @returns {INode}
      */
-    protected abstract getNodeStructure (): any;
+    protected abstract getNodeStructure (): INode;
 }

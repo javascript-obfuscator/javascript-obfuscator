@@ -60,6 +60,7 @@ export class NodeUtils {
         let structure: INode = esprima.parse(code);
 
         NodeUtils.addXVerbatimPropertyToLiterals(structure);
+        NodeUtils.parentize(structure);
 
         return NodeUtils.getBlockStatementNodeByIndex(structure);
     }

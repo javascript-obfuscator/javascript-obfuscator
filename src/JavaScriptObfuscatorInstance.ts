@@ -1,5 +1,3 @@
-"use strict";
-
 import * as esprima from 'esprima';
 import * as escodegen from 'escodegen';
 
@@ -8,10 +6,11 @@ import { INode } from './interfaces/nodes/INode';
 import { IOptions } from './interfaces/IOptions';
 import { IOptionsPreset } from "./interfaces/IOptionsPreset";
 
+import { TSourceMapModes } from "./types/TSourceMapModes";
+
 import { Obfuscator } from "./Obfuscator";
 import { Options } from "./Options";
 import { SourceMapInjector } from "./SourceMapInjector";
-import {TSourceMapModes} from "./types/TSourceMapModes";
 
 export class JavaScriptObfuscatorInstance {
     /**

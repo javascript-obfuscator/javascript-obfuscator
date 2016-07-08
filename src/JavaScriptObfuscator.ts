@@ -1,5 +1,3 @@
-"use strict";
-
 import { IObfuscationResult } from "./interfaces/IObfuscationResult";
 import { IOptionsPreset } from "./interfaces/IOptionsPreset";
 
@@ -38,12 +36,11 @@ export class JavaScriptObfuscator {
 
         if (sourceMapUrl) {
             javaScriptObfuscator.setSourceMapUrl(sourceMapUrl);
+
+            return new ObfuscationResult(javaScriptObfuscator.getObfuscatedCode(), javaScriptObfuscator.getSourceMap());
         }
 
-        return new ObfuscationResult(
-            javaScriptObfuscator.getObfuscatedCode(),
-            javaScriptObfuscator.getSourceMap()
-        );
+        return new ObfuscationResult(javaScriptObfuscator.getObfuscatedCode(), null);
     }
 
     /**

@@ -132,14 +132,22 @@ export class NodeUtils {
 
         estraverse.replace(node, {
             enter: (node: INode, parentNode: INode): any => {
-                Object.defineProperty(node, 'parentNode', {
-                    configurable: true,
-                    enumerable: true,
-                    value: isRootNode ? Nodes.getProgramNode(<TStatement[]>[node]) : parentNode || node,
-                    writable: true
-                });
+                let value: INode;
 
-                isRootNode = false;
+                if (isRootNode) {
+                    if (node.type === NodeType.Program) {
+                        value = node;
+                    } else {
+                        value = Nodes.getProgramNode(<TStatement[]>[node]);
+                        value['parentNode'] = value;
+                    }
+
+                    isRootNode = false;
+                } else {
+                    value = parentNode || node;
+                }
+
+                node['parentNode'] = value;
             }
         });
     }

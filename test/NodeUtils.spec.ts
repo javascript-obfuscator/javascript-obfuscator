@@ -1,3 +1,5 @@
+import * as chai from 'chai';
+
 import { IBlockStatementNode } from "../src/interfaces/nodes/IBlockStatementNode";
 import { IExpressionStatementNode } from "../src/interfaces/nodes/IExpressionStatementNode";
 import { IFunctionDeclarationNode } from "../src/interfaces/nodes/IFunctionDeclarationNode";
@@ -9,12 +11,12 @@ import { IProgramNode } from "../src/interfaces/nodes/IProgramNode";
 import { IVariableDeclarationNode } from "../src/interfaces/nodes/IVariableDeclarationNode";
 import { IVariableDeclaratorNode } from "../src/interfaces/nodes/IVariableDeclaratorNode";
 
-import { NodeType } from "../src/enums/NodeType";
-
 import { NodeMocks } from './mocks/NodeMocks';
 import { NodeUtils } from '../src/NodeUtils';
 
-const assert: any = require('chai').assert;
+chai.use(require('chai-members-deep'));
+
+const assert: any = chai.assert;
 
 describe('NodeUtils', () => {
     describe('addXVerbatimPropertyToLiterals (node: INode): void', () => {
@@ -105,8 +107,8 @@ describe('NodeUtils', () => {
             literalNode['parentNode'] = variableDeclaratorNode;
         });
 
-        xit('should convert code to `INode` structure', () => {
-            assert.deepEqual(NodeUtils.convertCodeToStructure(code), variableDeclarationNode);
+        it('should convert code to `INode` structure', () => {
+            assert.deepEqualIdent(NodeUtils.convertCodeToStructure(code), variableDeclarationNode);
         });
     });
 
@@ -263,15 +265,30 @@ describe('NodeUtils', () => {
             ]);
 
             ifStatementNode = NodeMocks.getIfStatementNode(ifStatementBlockStatementNode);
+        });
 
+        it('should parentize given AST-tree with `ProgramNode` as root node', () => {
             programNode = NodeMocks.getProgramNode([
                 ifStatementNode
             ]);
 
-            NodeUtils.parentize(ifStatementNode);
+            NodeUtils.parentize(programNode);
+
+            assert.deepEqual(programNode['parentNode'], programNode);
+            assert.deepEqual(ifStatementNode['parentNode'], programNode);
+            assert.deepEqual(ifStatementBlockStatementNode['parentNode'], ifStatementNode);
+            assert.deepEqual(expressionStatementNode1['parentNode'], ifStatementBlockStatementNode);
+            assert.deepEqual(expressionStatementNode2['parentNode'], ifStatementBlockStatementNode);
         });
 
         it('should parentize given AST-tree', () => {
+            programNode = NodeMocks.getProgramNode([
+                ifStatementNode
+            ]);
+            programNode['parentNode'] = programNode;
+
+            NodeUtils.parentize(ifStatementNode);
+
             assert.deepEqual(ifStatementNode['parentNode'], programNode);
             assert.deepEqual(ifStatementBlockStatementNode['parentNode'], ifStatementNode);
             assert.deepEqual(expressionStatementNode1['parentNode'], ifStatementBlockStatementNode);

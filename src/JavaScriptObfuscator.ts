@@ -2,7 +2,7 @@ import { IObfuscationResult } from "./interfaces/IObfuscationResult";
 import { IOptionsPreset } from "./interfaces/IOptionsPreset";
 
 import { JavaScriptObfuscatorCLI } from "./cli/JavaScriptObfuscatorCLI";
-import { JavaScriptObfuscatorInstance } from "./JavaScriptObfuscatorInstance";
+import { JavaScriptObfuscatorInternal } from "./JavaScriptObfuscatorInternal";
 
 export class JavaScriptObfuscator {
     /**
@@ -11,7 +11,7 @@ export class JavaScriptObfuscator {
      * @returns {string}
      */
     public static obfuscate (sourceCode: string, options: IOptionsPreset = {}): string {
-        let javaScriptObfuscator: JavaScriptObfuscatorInstance = new JavaScriptObfuscatorInstance(sourceCode, options);
+        let javaScriptObfuscator: JavaScriptObfuscatorInternal = new JavaScriptObfuscatorInternal(sourceCode, options);
 
         javaScriptObfuscator.obfuscate();
 
@@ -27,7 +27,7 @@ export class JavaScriptObfuscator {
         sourceCode: string,
         options: IOptionsPreset = {}
     ): IObfuscationResult {
-        let javaScriptObfuscator: JavaScriptObfuscatorInstance = new JavaScriptObfuscatorInstance(sourceCode, options);
+        let javaScriptObfuscator: JavaScriptObfuscatorInternal = new JavaScriptObfuscatorInternal(sourceCode, options);
 
         javaScriptObfuscator.obfuscate();
 

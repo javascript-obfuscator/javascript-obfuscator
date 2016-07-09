@@ -9,7 +9,7 @@ import { DEFAULT_PRESET } from "../preset-options/DefaultPreset";
 
 import { CLIUtils } from "./CLIUtils";
 import { JavaScriptObfuscator } from "../JavaScriptObfuscator";
-import { JavaScriptObfuscatorInstance } from "../JavaScriptObfuscatorInstance";
+import { JavaScriptObfuscatorInternal } from "../JavaScriptObfuscatorInternal";
 import { Utils } from "../Utils";
 
 export class JavaScriptObfuscatorCLI {
@@ -178,7 +178,7 @@ export class JavaScriptObfuscatorCLI {
      * @param options
      */
     private processDataWithSourceMap (outputCodePath: string, options: IOptionsPreset): void {
-        let javaScriptObfuscator: JavaScriptObfuscatorInstance = new JavaScriptObfuscatorInstance(this.data, options),
+        let javaScriptObfuscator: JavaScriptObfuscatorInternal = new JavaScriptObfuscatorInternal(this.data, options),
             obfuscationResult: IObfuscationResult,
             outputSourceMapPath: string = CLIUtils.getOutputSourceMapPath(outputCodePath);
 

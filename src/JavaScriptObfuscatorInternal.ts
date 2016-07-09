@@ -14,7 +14,7 @@ import { Obfuscator } from "./Obfuscator";
 import { Options } from "./Options";
 import { SourceMapCorrector } from "./SourceMapCorrector";
 
-export class JavaScriptObfuscatorInstance {
+export class JavaScriptObfuscatorInternal {
     /**
      * @type {GenerateOptions}
      */
@@ -60,7 +60,7 @@ export class JavaScriptObfuscatorInstance {
     private static generateCode (sourceCode: string, astTree: INode, options: IOptions): IGeneratorOutput {
         let escodegenParams: escodegen.GenerateOptions = Object.assign(
                 {},
-                JavaScriptObfuscatorInstance.escodegenParams
+                JavaScriptObfuscatorInternal.escodegenParams
             ),
             generatorOutput: IGeneratorOutput;
 
@@ -102,7 +102,7 @@ export class JavaScriptObfuscatorInstance {
 
         astTree = new Obfuscator(this.options).obfuscateNode(astTree);
 
-        this.generatorOutput = JavaScriptObfuscatorInstance.generateCode(this.sourceCode, astTree, this.options);
+        this.generatorOutput = JavaScriptObfuscatorInternal.generateCode(this.sourceCode, astTree, this.options);
     }
 
     /**

@@ -85,26 +85,35 @@ describe('JavaScriptObfuscator', () => {
                 assert.isOk(JSON.parse(obfuscationResult.sourceMap).mappings);
             });
 
-            it('should returns object with obfuscated code and empty source map if `sourceMapMode` is `inline', () => {
+            it('should returns object with obfuscated code with inline source map and empty `sourceMap` if `sourceMapMode` is `inline', () => {
                 let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscateWithSourceMap(
                     `var test = 1;`,
                     Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                        sourceMap: true,
                         sourceMapMode: 'inline'
                     })
                 );
 
                 assert.isOk(obfuscationResult.obfuscatedCode);
+                assert.match(
+                    obfuscationResult.obfuscatedCode,
+                    /sourceMappingURL=data:application\/json;base64/
+                );
                 assert.isNotOk(obfuscationResult.sourceMap);
             });
 
-            it('should returns object with empty obfuscated code and empty source map if source code is empty', () => {
+            it('should returns object with empty obfuscated code and source map with empty data if source code is empty', () => {
                 let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscateWithSourceMap(
                     '',
-                    Object.assign({}, NO_CUSTOM_NODES_PRESET)
+                    Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                        sourceMap: true
+                    })
                 );
 
                 assert.isNotOk(obfuscationResult.obfuscatedCode);
-                assert.isNotOk(obfuscationResult.sourceMap);
+                assert.deepEqual(JSON.parse(obfuscationResult.sourceMap).names, []);
+                assert.deepEqual(JSON.parse(obfuscationResult.sourceMap).sources, []);
+                assert.isNotOk(JSON.parse(obfuscationResult.sourceMap).mappings);
             });
         });
 

@@ -1,18 +1,18 @@
 import * as chai from 'chai';
 
-import { IBlockStatementNode } from "../src/interfaces/nodes/IBlockStatementNode";
-import { IExpressionStatementNode } from "../src/interfaces/nodes/IExpressionStatementNode";
-import { IFunctionDeclarationNode } from "../src/interfaces/nodes/IFunctionDeclarationNode";
-import { IIdentifierNode } from "../src/interfaces/nodes/IIdentifierNode";
-import { IIfStatementNode } from "../src/interfaces/nodes/IIfStatementNode";
-import { ILiteralNode } from "../src/interfaces/nodes/ILiteralNode";
-import { INode } from "../src/interfaces/nodes/INode";
-import { IProgramNode } from "../src/interfaces/nodes/IProgramNode";
-import { IVariableDeclarationNode } from "../src/interfaces/nodes/IVariableDeclarationNode";
-import { IVariableDeclaratorNode } from "../src/interfaces/nodes/IVariableDeclaratorNode";
+import { IBlockStatementNode } from "../../src/interfaces/nodes/IBlockStatementNode";
+import { IExpressionStatementNode } from "../../src/interfaces/nodes/IExpressionStatementNode";
+import { IFunctionDeclarationNode } from "../../src/interfaces/nodes/IFunctionDeclarationNode";
+import { IIdentifierNode } from "../../src/interfaces/nodes/IIdentifierNode";
+import { IIfStatementNode } from "../../src/interfaces/nodes/IIfStatementNode";
+import { ILiteralNode } from "../../src/interfaces/nodes/ILiteralNode";
+import { INode } from "../../src/interfaces/nodes/INode";
+import { IProgramNode } from "../../src/interfaces/nodes/IProgramNode";
+import { IVariableDeclarationNode } from "../../src/interfaces/nodes/IVariableDeclarationNode";
+import { IVariableDeclaratorNode } from "../../src/interfaces/nodes/IVariableDeclaratorNode";
 
-import { NodeMocks } from './mocks/NodeMocks';
-import { NodeUtils } from '../src/NodeUtils';
+import { NodeMocks } from '../mocks/NodeMocks';
+import { NodeUtils } from '../../src/NodeUtils';
 
 chai.use(require('chai-members-deep'));
 

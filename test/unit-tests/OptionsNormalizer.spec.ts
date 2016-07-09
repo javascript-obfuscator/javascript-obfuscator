@@ -1,8 +1,8 @@
-import { IOptionsPreset } from "../src/interfaces/IOptionsPreset";
+import { IOptionsPreset } from "../../src/interfaces/IOptionsPreset";
 
-import { OptionsNormalizer } from '../src/OptionsNormalizer';
+import { OptionsNormalizer } from '../../src/OptionsNormalizer';
 
-import { DEFAULT_PRESET } from '../src/preset-options/DefaultPreset';
+import { DEFAULT_PRESET } from '../../src/preset-options/DefaultPreset';
 
 const assert: Chai.AssertStatic = require('chai').assert;
 

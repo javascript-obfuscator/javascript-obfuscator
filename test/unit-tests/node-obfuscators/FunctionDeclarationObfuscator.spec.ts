@@ -1,14 +1,14 @@
-import { IBlockStatementNode } from "../../src/interfaces/nodes/IBlockStatementNode";
-import { ICustomNode } from "../../src/interfaces/ICustomNode";
-import { IExpressionStatementNode } from "../../src/interfaces/nodes/IExpressionStatementNode";
-import { IFunctionDeclarationNode } from "../../src/interfaces/nodes/IFunctionDeclarationNode";
-import { IProgramNode } from "../../src/interfaces/nodes/IProgramNode";
+import { IBlockStatementNode } from "../../../src/interfaces/nodes/IBlockStatementNode";
+import { ICustomNode } from "../../../src/interfaces/ICustomNode";
+import { IExpressionStatementNode } from "../../../src/interfaces/nodes/IExpressionStatementNode";
+import { IFunctionDeclarationNode } from "../../../src/interfaces/nodes/IFunctionDeclarationNode";
+import { IProgramNode } from "../../../src/interfaces/nodes/IProgramNode";
 
-import { DEFAULT_PRESET } from "../../src/preset-options/DefaultPreset";
+import { DEFAULT_PRESET } from "../../../src/preset-options/DefaultPreset";
 
-import { FunctionDeclarationObfuscator } from '../../src/node-obfuscators/FunctionDeclarationObfuscator';
-import { NodeMocks } from "../mocks/NodeMocks";
-import { Options } from "../../src/Options";
+import { FunctionDeclarationObfuscator } from '../../../src/node-obfuscators/FunctionDeclarationObfuscator';
+import { NodeMocks } from "../../mocks/NodeMocks";
+import { Options } from "../../../src/Options";
 
 const assert: Chai.AssertStatic = require('chai').assert;
 

@@ -1,14 +1,14 @@
-import { ICatchClauseNode } from "../../src/interfaces/nodes/ICatchClauseNode";
-import { ICustomNode } from "../../src/interfaces/ICustomNode";
-import { IExpressionStatementNode } from "../../src/interfaces/nodes/IExpressionStatementNode";
+import { ICatchClauseNode } from "../../../src/interfaces/nodes/ICatchClauseNode";
+import { ICustomNode } from "../../../src/interfaces/ICustomNode";
+import { IExpressionStatementNode } from "../../../src/interfaces/nodes/IExpressionStatementNode";
 
-import { DEFAULT_PRESET } from "../../src/preset-options/DefaultPreset";
+import { DEFAULT_PRESET } from "../../../src/preset-options/DefaultPreset";
 
-import { NodeType } from "../../src/enums/NodeType";
+import { NodeType } from "../../../src/enums/NodeType";
 
-import { CatchClauseObfuscator } from '../../src/node-obfuscators/CatchClauseObfuscator';
-import { NodeMocks } from "../mocks/NodeMocks";
-import { Options } from "../../src/Options";
+import { CatchClauseObfuscator } from '../../../src/node-obfuscators/CatchClauseObfuscator';
+import { NodeMocks } from "../../mocks/NodeMocks";
+import { Options } from "../../../src/Options";
 
 const assert: Chai.AssertStatic = require('chai').assert;
 

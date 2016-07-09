@@ -1,6 +1,6 @@
-import { Utils } from '../src/Utils';
+import { Utils } from '../../src/Utils';
 
-import { JSFuck } from '../src/enums/JSFuck';
+import { JSFuck } from '../../src/enums/JSFuck';
 
 const assert: Chai.AssertStatic = require('chai').assert;
 

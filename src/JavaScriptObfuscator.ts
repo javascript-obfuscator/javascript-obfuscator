@@ -23,10 +23,7 @@ export class JavaScriptObfuscator {
      * @param options
      * @returns {string}
      */
-    public static obfuscateWithSourceMap (
-        sourceCode: string,
-        options: IOptionsPreset = {}
-    ): IObfuscationResult {
+    public static obfuscateWithSourceMap (sourceCode: string, options: IOptionsPreset = {}): IObfuscationResult {
         let javaScriptObfuscator: JavaScriptObfuscatorInternal = new JavaScriptObfuscatorInternal(sourceCode, options);
 
         javaScriptObfuscator.obfuscate();

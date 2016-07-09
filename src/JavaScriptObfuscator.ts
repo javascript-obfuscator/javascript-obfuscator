@@ -21,21 +21,15 @@ export class JavaScriptObfuscator {
     /**
      * @param sourceCode
      * @param options
-     * @param sourceMapUrl
      * @returns {string}
      */
     public static obfuscateWithSourceMap (
         sourceCode: string,
-        options: IOptionsPreset = {},
-        sourceMapUrl?: string
+        options: IOptionsPreset = {}
     ): IObfuscationResult {
         let javaScriptObfuscator: JavaScriptObfuscatorInstance = new JavaScriptObfuscatorInstance(sourceCode, options);
 
         javaScriptObfuscator.obfuscate();
-
-        if (sourceMapUrl) {
-            javaScriptObfuscator.setSourceMapUrl(sourceMapUrl);
-        }
 
         return javaScriptObfuscator.getObfuscationResult();
     }

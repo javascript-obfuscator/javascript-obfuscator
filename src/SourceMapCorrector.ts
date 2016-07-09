@@ -59,28 +59,33 @@ export class SourceMapCorrector {
             return this.obfuscatedCode;
         }
 
-        let sourceMappingUrl: string = '//# sourceMappingURL=',
-            sourceMappingUrlContent: string = this.sourceMapUrl || this.sourceMap;
+        let sourceMappingUrl: string = '//# sourceMappingURL=';
 
         switch (this.sourceMapMode) {
             case SourceMapMode.Inline:
-                sourceMappingUrl += `data:application/json;base64,${Utils.btoa(sourceMappingUrlContent, false)}`;
+                sourceMappingUrl += `data:application/json;base64,${Utils.btoa(this.sourceMapUrl || this.sourceMap, false)}`;
 
                 break;
 
             case SourceMapMode.Separate:
             default:
-                sourceMappingUrl += sourceMappingUrlContent;
+                if (this.sourceMapUrl) {
+                    sourceMappingUrl += this.sourceMapUrl;
+
+                    break;
+                }
+
+                return this.obfuscatedCode;
         }
 
         return `${this.obfuscatedCode}\n${sourceMappingUrl}`;
     };
 
     /**
-     * @returns {any}
+     * @returns {string}
      */
     private correctSourceMap (): string {
-        if (!this.sourceMapUrl) {
+        if (this.sourceMapMode === SourceMapMode.Inline) {
             return '';
         }
 

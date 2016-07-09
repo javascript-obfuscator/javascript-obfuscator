@@ -80,18 +80,13 @@ export class JavaScriptObfuscatorInstance {
     }
 
     /**
-     * @param raw
      * @returns {IObfuscationResult}
      */
-    public getObfuscationResult (raw: boolean = false): IObfuscationResult {
+    public getObfuscationResult (): IObfuscationResult {
         let obfuscationResult: IObfuscationResult = new ObfuscationResult(
             this.generatorOutput.code,
             this.generatorOutput.map
         );
-
-        if (raw) {
-            return obfuscationResult;
-        }
 
         return new SourceMapCorrector(
             obfuscationResult,

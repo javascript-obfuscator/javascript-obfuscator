@@ -4,7 +4,7 @@ JavaScript obfuscator for Node.js is a free alternative to [js-obfuscator](https
 
 * without any limits and sending data to a server;
 * compatible with ES6;
-* tested on Angular2 bundle;
+* tested on Angular2 bundle.
 
 https://gist.github.com/sanex3339/ffc2876123b52e6d11ce45369fd53acf
 
@@ -57,12 +57,26 @@ var _0xabf1 = [
 
 ### `obfuscate(sourceCode, options)`
 
+Returns `string` with obfuscated code.
+
 This is the main function that runs the Obfuscator. It takes two parameters, `sourceCode` and `options` – the source code and the opitons respectively:
 
 * `sourceCode` (`string`, default: `null`) – any valid source code, passed as a string variable. JS Obfuscator will parse this string and apply a set of modificating functions to it, generating a string with the new (obfuscated) code and printing it to the console;
 * `options` (`Object`, default: `null`) – an object literal.
 
-See [options](#options).
+### `obfuscateWithSourceMap(sourceCode, options)`
+
+Same as `obfuscate(sourceCode, options)` but instead `string` with obfuscated code returns `ObfuscationResult` object which contains two properties:
+* `obfuscatedCode` - `string` with obfuscated code;
+* `sourceMap` - `string` with source map or an empty string if `sourceMapMode` option is set as `inline`.
+
+Parameters:
+
+* `sourceCode` (`string`, default: `null`) – any valid source code;
+* `options` (`Object`, default: `null`) – an object literal.
+ See [options](#options).
+
+For available options see [options](#options).
 
 ## CLI usage
 Usage:
@@ -100,6 +114,8 @@ At this moment of time, there are following options (`name: default`) available 
     reservedNames: [],
     rotateUnicodeArray: true,
     selfDefending: true,
+    sourceMap: false,
+    sourceMapMode: 'separate',
     unicodeArray: true,
     unicodeArrayThreshold: 0.8,
     wrapUnicodeArrayCalls: true
@@ -121,6 +137,8 @@ At this moment of time, there are following options (`name: default`) available 
     --reservedNames <list> (comma separated)
     --rotateUnicodeArray <boolean>
     --selfDefending <boolean>
+    --sourceMap <boolean>
+    --sourceMapMode <string> [inline, separate]
     --unicodeArray <boolean>
     --unicodeArrayThreshold <number>
     --wrapUnicodeArrayCalls <boolean>
@@ -197,6 +215,18 @@ Type: `boolean` Default: `true`
 ##### :warning: this option forcibly set `compact` value to `true`
 
 Enables self-defending for obfuscated code. If obfuscated compact code is formatted, it will not work any more.
+
+### `sourceMap`
+Type: `boolean` Default: `false`
+
+Enables source map generation for obfuscated code.
+
+### `sourceMapMode`
+Type: `string` Default: `separate`
+
+Specify source map generation mode:
+* `inline` - emit a single file with source maps instead of having a separate file;
+* `separate` - generates corresponding '.map' file with source map. If obfuscator run through CLI - adds link to source map file to the end of file with obfuscated code `//# sourceMappingUrl=file.js.map`.
 
 ### `unicodeArray`
 Type: `boolean` Default: `true`

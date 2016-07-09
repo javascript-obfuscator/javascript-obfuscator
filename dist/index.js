@@ -1341,6 +1341,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var path = __webpack_require__(51);
 var commander_1 = __webpack_require__(48);
 var SourceMapMode_1 = __webpack_require__(11);
 var DefaultPreset_1 = __webpack_require__(16);
@@ -1359,7 +1360,7 @@ var JavaScriptObfuscatorCLI = function () {
     }
 
     _createClass(JavaScriptObfuscatorCLI, [{
-        key: "run",
+        key: 'run',
         value: function run() {
             this.configureCommands();
             if (!this.arguments.length || Utils_1.Utils.arrayContains(this.arguments, '--help')) {
@@ -1371,7 +1372,7 @@ var JavaScriptObfuscatorCLI = function () {
             this.processData();
         }
     }, {
-        key: "buildOptions",
+        key: 'buildOptions',
         value: function buildOptions() {
             var options = {},
                 availableOptions = Object.keys(DefaultPreset_1.DEFAULT_PRESET);
@@ -1387,7 +1388,7 @@ var JavaScriptObfuscatorCLI = function () {
             return Object.assign({}, DefaultPreset_1.DEFAULT_PRESET, options);
         }
     }, {
-        key: "configureCommands",
+        key: 'configureCommands',
         value: function configureCommands() {
             this.commands = new commander_1.Command().version(JavaScriptObfuscatorCLI.getBuildVersion(), '-v, --version').usage('<inputPath> [options]').option('-o, --output <path>', 'Output path for obfuscated code').option('--compact <boolean>', 'Disable one line output code compacting', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtection <boolean>', 'Disable browser Debug panel (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtectionInterval <boolean>', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--disableConsoleOutput <boolean>', 'Allow console.log, console.info, console.error and console.warn messages output into browser console', JavaScriptObfuscatorCLI.parseBoolean).option('--encodeUnicodeLiterals <boolean>', 'All literals in Unicode array become encoded in Base64 (this option can slightly slow down your code speed)', JavaScriptObfuscatorCLI.parseBoolean).option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', function (val) {
                 return val.split(',');
@@ -1400,12 +1401,12 @@ var JavaScriptObfuscatorCLI = function () {
             });
         }
     }, {
-        key: "getData",
+        key: 'getData',
         value: function getData() {
             this.data = CLIUtils_1.CLIUtils.readFile(this.inputPath);
         }
     }, {
-        key: "processData",
+        key: 'processData',
         value: function processData() {
             var options = this.buildOptions(),
                 outputCodePath = CLIUtils_1.CLIUtils.getOutputCodePath(this.commands, this.inputPath);
@@ -1416,20 +1417,20 @@ var JavaScriptObfuscatorCLI = function () {
             }
         }
     }, {
-        key: "processDataWithoutSourceMap",
+        key: 'processDataWithoutSourceMap',
         value: function processDataWithoutSourceMap(outputCodePath, options) {
             var obfuscatedCode = JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(this.data, options);
             CLIUtils_1.CLIUtils.writeFile(outputCodePath, obfuscatedCode);
         }
     }, {
-        key: "processDataWithSourceMap",
+        key: 'processDataWithSourceMap',
         value: function processDataWithSourceMap(outputCodePath, options) {
             var javaScriptObfuscator = new JavaScriptObfuscatorInternal_1.JavaScriptObfuscatorInternal(this.data, options),
                 obfuscationResult = void 0,
                 outputSourceMapPath = CLIUtils_1.CLIUtils.getOutputSourceMapPath(outputCodePath);
             javaScriptObfuscator.obfuscate();
             if (options.sourceMapMode === SourceMapMode_1.SourceMapMode.Separate) {
-                javaScriptObfuscator.setSourceMapUrl(outputSourceMapPath.split('/').pop());
+                javaScriptObfuscator.setSourceMapUrl(path.basename(outputSourceMapPath));
             }
             obfuscationResult = javaScriptObfuscator.getObfuscationResult();
             CLIUtils_1.CLIUtils.writeFile(outputCodePath, obfuscationResult.obfuscatedCode);
@@ -1438,17 +1439,17 @@ var JavaScriptObfuscatorCLI = function () {
             }
         }
     }], [{
-        key: "getBuildVersion",
+        key: 'getBuildVersion',
         value: function getBuildVersion() {
             return CLIUtils_1.CLIUtils.getPackageConfig().version;
         }
     }, {
-        key: "parseBoolean",
+        key: 'parseBoolean',
         value: function parseBoolean(value) {
             return value === 'true' || value === '1';
         }
     }, {
-        key: "parseSourceMapMode",
+        key: 'parseSourceMapMode',
         value: function parseSourceMapMode(value) {
             var availableMode = Object.keys(SourceMapMode_1.SourceMapMode).some(function (key) {
                 return SourceMapMode_1.SourceMapMode[key] === value;

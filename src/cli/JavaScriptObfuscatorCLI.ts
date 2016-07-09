@@ -1,3 +1,5 @@
+import * as path from 'path';
+
 import { Command } from 'commander';
 
 import { IObfuscationResult } from "../interfaces/IObfuscationResult";
@@ -186,7 +188,7 @@ export class JavaScriptObfuscatorCLI {
 
         if (options.sourceMapMode === SourceMapMode.Separate) {
             javaScriptObfuscator.setSourceMapUrl(
-                outputSourceMapPath.split('/').pop()
+                path.basename(outputSourceMapPath)
             );
         }
 

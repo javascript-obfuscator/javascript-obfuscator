@@ -186,7 +186,7 @@ export class JavaScriptObfuscatorCLI {
 
         if (options.sourceMapMode === SourceMapMode.Separate) {
             javaScriptObfuscator.setSourceMapUrl(
-                [...outputSourceMapPath.split('/')].pop()
+                outputSourceMapPath.split('/').pop()
             );
         }
 

@@ -15,13 +15,6 @@ export class JavaScriptObfuscatorCLI {
     /**
      * @type {string[]}
      */
-    private static availableInputExtensions: string[] = [
-        '.js'
-    ];
-
-    /**
-     * @type {string[]}
-     */
     private arguments: string[];
 
     /**
@@ -94,7 +87,7 @@ export class JavaScriptObfuscatorCLI {
             return;
         }
 
-        this.inputPath = CLIUtils.getInputPath(this.arguments, JavaScriptObfuscatorCLI.availableInputExtensions);
+        this.inputPath = CLIUtils.getInputPath(this.arguments);
 
         this.getData();
         this.processData();
@@ -195,6 +188,9 @@ export class JavaScriptObfuscatorCLI {
         obfuscationResult = JavaScriptObfuscator.obfuscateWithSourceMap(this.data, options, sourceMapUrl);
 
         CLIUtils.writeFile(outputCodePath, obfuscationResult.obfuscatedCode);
-        CLIUtils.writeFile(outputSourceMapPath, obfuscationResult.sourceMap);
+
+        if (obfuscationResult.sourceMap) {
+            CLIUtils.writeFile(outputSourceMapPath, obfuscationResult.sourceMap);
+        }
     }
 }

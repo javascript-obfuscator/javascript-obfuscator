@@ -8,23 +8,29 @@ import { Utils } from "../Utils";
 
 export class CLIUtils {
     /**
+     * @type {string[]}
+     */
+    private static availableInputExtensions: string[] = [
+        '.js'
+    ];
+
+    /**
      * @type {BufferEncoding}
      */
     private static encoding: BufferEncoding = 'utf8';
 
     /**
      * @param argv
-     * @param availableInputExtensions
      * @returns {string}
      */
-    public static getInputPath (argv: string[], availableInputExtensions: string[] = ['.js']): string {
+    public static getInputPath (argv: string[]): string {
         let inputPath: string = argv[0];
 
         if (!CLIUtils.isFilePath(inputPath)) {
             throw new ReferenceError(`First argument must be a valid file path`);
         }
 
-        if (!Utils.arrayContains(availableInputExtensions, path.extname(inputPath))) {
+        if (!Utils.arrayContains(CLIUtils.availableInputExtensions, path.extname(inputPath))) {
             throw new ReferenceError(`Input file must have .js extension`);
         }
 
@@ -104,10 +110,6 @@ export class CLIUtils {
      * @param data
      */
     public static writeFile (outputPath: string, data: any): void {
-        if (!data) {
-            return;
-        }
-
         mkdirp.sync(path.dirname(outputPath));
 
         fs.writeFileSync(outputPath, data, {

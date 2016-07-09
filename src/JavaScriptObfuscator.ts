@@ -3,7 +3,6 @@ import { IOptionsPreset } from "./interfaces/IOptionsPreset";
 
 import { JavaScriptObfuscatorCLI } from "./cli/JavaScriptObfuscatorCLI";
 import { JavaScriptObfuscatorInstance } from "./JavaScriptObfuscatorInstance";
-import { ObfuscationResult } from "./ObfuscationResult";
 
 export class JavaScriptObfuscator {
     /**
@@ -16,7 +15,7 @@ export class JavaScriptObfuscator {
 
         javaScriptObfuscator.obfuscate();
 
-        return javaScriptObfuscator.getObfuscatedCode();
+        return javaScriptObfuscator.getObfuscationResult().obfuscatedCode;
     }
 
     /**
@@ -36,11 +35,9 @@ export class JavaScriptObfuscator {
 
         if (sourceMapUrl) {
             javaScriptObfuscator.setSourceMapUrl(sourceMapUrl);
-
-            return new ObfuscationResult(javaScriptObfuscator.getObfuscatedCode(), javaScriptObfuscator.getSourceMap());
         }
 
-        return new ObfuscationResult(javaScriptObfuscator.getObfuscatedCode(), null);
+        return javaScriptObfuscator.getObfuscationResult();
     }
 
     /**

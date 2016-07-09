@@ -3,14 +3,16 @@ import * as escodegen from 'escodegen';
 
 import { IGeneratorOutput } from "./interfaces/IGeneratorOutput";
 import { INode } from './interfaces/nodes/INode';
+import { IObfuscationResult } from "./interfaces/IObfuscationResult";
 import { IOptions } from './interfaces/IOptions';
 import { IOptionsPreset } from "./interfaces/IOptionsPreset";
 
-import { TSourceMapModes } from "./types/TSourceMapModes";
+import { TSourceMapMode } from "./types/TSourceMapMode";
 
+import { ObfuscationResult } from "./ObfuscationResult";
 import { Obfuscator } from "./Obfuscator";
 import { Options } from "./Options";
-import { SourceMapInjector } from "./SourceMapInjector";
+import { SourceMapCorrector } from "./SourceMapCorrector";
 
 export class JavaScriptObfuscatorInstance {
     /**
@@ -39,7 +41,7 @@ export class JavaScriptObfuscatorInstance {
     /**
      * @type {string}
      */
-    private sourceMapUrl: string;
+    private sourceMapUrl: string = '';
 
     /**
      * @param sourceCode
@@ -56,7 +58,11 @@ export class JavaScriptObfuscatorInstance {
      * @param options
      */
     private static generateCode (sourceCode: string, astTree: INode, options: IOptions): IGeneratorOutput {
-        let escodegenParams: escodegen.GenerateOptions = Object.assign({}, JavaScriptObfuscatorInstance.escodegenParams);
+        let escodegenParams: escodegen.GenerateOptions = Object.assign(
+                {},
+                JavaScriptObfuscatorInstance.escodegenParams
+            ),
+            generatorOutput: IGeneratorOutput;
 
         if (options.get<boolean>('sourceMap')) {
             escodegenParams.sourceMap = 'sourceMap';
@@ -67,29 +73,31 @@ export class JavaScriptObfuscatorInstance {
             compact: options.get<boolean>('compact')
         };
 
-        return escodegen.generate(astTree, escodegenParams);
+        generatorOutput = escodegen.generate(astTree, escodegenParams);
+        generatorOutput.map = generatorOutput.map ? generatorOutput.map.toString() : '';
+
+        return generatorOutput;
     }
 
     /**
-     * @returns {string}
+     * @param raw
+     * @returns {IObfuscationResult}
      */
-    public getObfuscatedCode (): string {
-        if (this.generatorOutput.map) {
-            return SourceMapInjector.inject(
-                this.generatorOutput.code,
-                this.sourceMapUrl || this.generatorOutput.map.toString(),
-                this.options.get<TSourceMapModes>('sourceMapMode')
-            );
+    public getObfuscationResult (raw: boolean = false): IObfuscationResult {
+        let obfuscationResult: IObfuscationResult = new ObfuscationResult(
+            this.generatorOutput.code,
+            this.generatorOutput.map
+        );
+
+        if (raw) {
+            return obfuscationResult;
         }
 
-        return this.generatorOutput.code;
-    }
-
-    /**
-     * @returns {string}
-     */
-    public getSourceMap (): string {
-        return this.generatorOutput.map;
+        return new SourceMapCorrector(
+            obfuscationResult,
+            this.sourceMapUrl,
+            this.options.get<TSourceMapMode>('sourceMapMode')
+        ).correct();
     }
 
     public obfuscate (): void {

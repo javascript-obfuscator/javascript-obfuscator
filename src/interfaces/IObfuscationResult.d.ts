@@ -1,4 +1,13 @@
+import { IObfuscationResult } from "./IObfuscationResult";
+
 export interface IObfuscationResult {
-    obfuscatedCode: string;
-    sourceMap: string;
+    /**
+     * @return {string}
+     */
+    getObfuscatedCode (): string;
+
+    /**
+     * @return {string}
+     */
+    getSourceMap (): string;
 }

@@ -88,7 +88,7 @@ export class UnicodeArrayRotateFunctionNode extends Node {
                                         
                     !Function(${Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})().test(func.toString()) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.True}){}')() : Function(${Utils.stringToUnicode('a')}, ${Utils.stringToUnicode('b')}, ${Utils.stringToUnicode('a(++b)')})(${whileFunctionName}, ${timesName}) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')() : []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')();
                 })();
-            `, NO_CUSTOM_NODES_PRESET);
+            `, NO_CUSTOM_NODES_PRESET).getObfuscatedCode();
         } else {
             code = `${whileFunctionName}(++${timesName})`;
         }

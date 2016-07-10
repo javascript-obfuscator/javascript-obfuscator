@@ -106,7 +106,7 @@ export class UnicodeArrayDecodeNode extends Node {
                             return output;
                         });
                     })();
-                `, NO_CUSTOM_NODES_PRESET)}
+                `, NO_CUSTOM_NODES_PRESET).getObfuscatedCode()}
               
                 var ${forLoopFunctionName} = function () {
                     var ${tempArrayName} = [];

@@ -27,8 +27,11 @@ describe('JavaScriptObfuscatorInternal', () => {
         });
 
         it('should link obfuscated code with source map', () => {
-            assert.match(obfuscationResult.obfuscatedCode, new RegExp(`sourceMappingURL=${sourceMapUrl}`));
-            assert.isOk(JSON.parse(obfuscationResult.sourceMap).mappings);
+            assert.match(
+                obfuscationResult.getObfuscatedCode(),
+                new RegExp(`sourceMappingURL=${sourceMapUrl}`))
+            ;
+            assert.isOk(JSON.parse(obfuscationResult.getSourceMap()).mappings);
         });
     });
 });

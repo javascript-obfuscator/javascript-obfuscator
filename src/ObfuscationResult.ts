@@ -4,12 +4,12 @@ export class ObfuscationResult implements IObfuscationResult {
     /**
      * @type {string}
      */
-    public obfuscatedCode: string;
+    private obfuscatedCode: string;
 
     /**
      * @type {string}
      */
-    public sourceMap: string;
+    private sourceMap: string;
 
     /**
      * @param obfuscatedCode
@@ -18,6 +18,20 @@ export class ObfuscationResult implements IObfuscationResult {
     constructor (obfuscatedCode: string, sourceMap: string) {
         this.obfuscatedCode = obfuscatedCode;
         this.sourceMap = sourceMap;
+    }
+
+    /**
+     * @returns {string}
+     */
+    public getObfuscatedCode (): string {
+        return this.obfuscatedCode;
+    }
+
+    /**
+     * @returns {string}
+     */
+    public getSourceMap (): string {
+        return this.sourceMap;
     }
 
     /**

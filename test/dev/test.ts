@@ -62,7 +62,7 @@ let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         disableConsoleOutput: false,
         encodeUnicodeLiterals: true
     }
-);
+).getObfuscatedCode();
 
 console.log(obfuscatedCode);
 console.log(eval(obfuscatedCode));

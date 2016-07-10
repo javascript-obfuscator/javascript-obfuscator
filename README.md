@@ -30,7 +30,7 @@ Here's an example of how to use it:
 ```javascript
 var JavaScriptObfuscator = require('javascript-obfuscator');
 
-var obfuscatedCode = JavaScriptObfuscator.obfuscate(
+var obfuscationResult = JavaScriptObfuscator.obfuscate(
     `
     (function(){
         var variable = 'abc';
@@ -42,7 +42,7 @@ var obfuscatedCode = JavaScriptObfuscator.obfuscate(
     }
 );
 
-console.log(obfuscatedCode);
+console.log(obfuscationResult.getObfuscatedCode());
 /*
 var _0xabf1 = [
     '\x61\x62\x63',
@@ -57,24 +57,15 @@ var _0xabf1 = [
 
 ### `obfuscate(sourceCode, options)`
 
-Returns `string` with obfuscated code.
+Returns `ObfuscationResult` object which contains two public methods:
 
-This is the main function that runs the Obfuscator. It takes two parameters, `sourceCode` and `options` – the source code and the opitons respectively:
+* `getObfuscatedCode()` - returns `string` with obfuscated code;
+* `getSourceMap()` - if `sourceMap` options is enable - returns `string` with source map or an empty string if `sourceMapMode` option is set as `inline`.
 
-* `sourceCode` (`string`, default: `null`) – any valid source code, passed as a string variable. JS Obfuscator will parse this string and apply a set of modificating functions to it, generating a string with the new (obfuscated) code and printing it to the console;
-* `options` (`Object`, default: `null`) – an object literal.
+Method takes two parameters, `sourceCode` and `options` – the source code and the opitons respectively:
 
-### `obfuscateWithSourceMap(sourceCode, options)`
-
-Same as `obfuscate(sourceCode, options)` but instead `string` with obfuscated code returns `ObfuscationResult` object which contains two properties:
-* `obfuscatedCode` - `string` with obfuscated code;
-* `sourceMap` - `string` with source map or an empty string if `sourceMapMode` option is set as `inline`.
-
-Parameters:
-
-* `sourceCode` (`string`, default: `null`) – any valid source code;
-* `options` (`Object`, default: `null`) – an object literal.
- See [options](#options).
+* `sourceCode` (`string`, default: `null`) – any valid source code, passed as a string;
+* `options` (`Object`, default: `null`) – an object with options.
 
 For available options see [options](#options).
 

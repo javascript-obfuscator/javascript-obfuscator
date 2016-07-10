@@ -33,9 +33,13 @@ export class SourceMapCorrector {
      * @param sourceMapUrl
      * @param sourceMapMode
      */
-    constructor (obfuscationResult: IObfuscationResult, sourceMapUrl: string, sourceMapMode: TSourceMapMode) {
-        this.obfuscatedCode = obfuscationResult.obfuscatedCode;
-        this.sourceMap = obfuscationResult.sourceMap;
+    constructor (
+        obfuscationResult: IObfuscationResult,
+        sourceMapUrl: string,
+        sourceMapMode: TSourceMapMode
+    ) {
+        this.obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        this.sourceMap = obfuscationResult.getSourceMap();
 
         this.sourceMapUrl = sourceMapUrl;
         this.sourceMapMode = sourceMapMode;

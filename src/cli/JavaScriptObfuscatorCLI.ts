@@ -170,7 +170,7 @@ export class JavaScriptObfuscatorCLI {
      * @param options
      */
     private processDataWithoutSourceMap (outputCodePath: string, options: IOptionsPreset): void {
-        let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(this.data, options);
+        let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(this.data, options).getObfuscatedCode();
 
         CLIUtils.writeFile(outputCodePath, obfuscatedCode);
     }
@@ -194,10 +194,10 @@ export class JavaScriptObfuscatorCLI {
 
         obfuscationResult = javaScriptObfuscator.getObfuscationResult();
 
-        CLIUtils.writeFile(outputCodePath, obfuscationResult.obfuscatedCode);
+        CLIUtils.writeFile(outputCodePath, obfuscationResult.getObfuscatedCode());
 
-        if (obfuscationResult.sourceMap) {
-            CLIUtils.writeFile(outputSourceMapPath, obfuscationResult.sourceMap);
+        if (obfuscationResult.getSourceMap()) {
+            CLIUtils.writeFile(outputSourceMapPath, obfuscationResult.getSourceMap());
         }
     }
 }

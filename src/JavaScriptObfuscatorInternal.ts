@@ -83,13 +83,11 @@ export class JavaScriptObfuscatorInternal {
      * @returns {IObfuscationResult}
      */
     public getObfuscationResult (): IObfuscationResult {
-        let obfuscationResult: IObfuscationResult = new ObfuscationResult(
-            this.generatorOutput.code,
-            this.generatorOutput.map
-        );
-
         return new SourceMapCorrector(
-            obfuscationResult,
+            new ObfuscationResult(
+                this.generatorOutput.code,
+                this.generatorOutput.map
+            ),
             this.sourceMapUrl,
             this.options.get<TSourceMapMode>('sourceMapMode')
         ).correct();

@@ -1,5 +1,5 @@
 import { ICatchClauseNode } from "../../../src/interfaces/nodes/ICatchClauseNode";
-import { ICustomNode } from "../../../src/interfaces/ICustomNode";
+import { ICustomNode } from "../../../src/interfaces/custom-nodes/ICustomNode";
 import { IExpressionStatementNode } from "../../../src/interfaces/nodes/IExpressionStatementNode";
 
 import { DEFAULT_PRESET } from "../../../src/preset-options/DefaultPreset";

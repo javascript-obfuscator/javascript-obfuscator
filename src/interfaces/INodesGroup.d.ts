@@ -1,4 +1,4 @@
-import { ICustomNode } from './ICustomNode';
+import { ICustomNode } from './custom-nodes/ICustomNode';
 
 export interface INodesGroup {
     /**

@@ -1,5 +1,5 @@
+import { IObfuscatorOptions } from "./interfaces/IObfuscatorOptions";
 import { IOptions } from "./interfaces/IOptions";
-import { IOptionsPreset } from "./interfaces/IOptionsPreset";
 
 import { OptionsNormalizer } from "./OptionsNormalizer";
 
@@ -7,17 +7,17 @@ import { DEFAULT_PRESET } from "./preset-options/DefaultPreset";
 
 export class Options implements IOptions {
     /**
-     * @type {IOptionsPreset}
+     * @type {IObfuscatorOptions}
      */
-    private options: IOptionsPreset;
+    private options: IObfuscatorOptions;
 
     /**
-     * @param options
+     * @param obfuscatorOptions
      */
-    constructor (options: IOptionsPreset) {
+    constructor (obfuscatorOptions: IObfuscatorOptions) {
         this.options = Object.freeze(
             OptionsNormalizer.normalizeOptionsPreset(
-                Object.assign({}, DEFAULT_PRESET, options)
+                Object.assign({}, DEFAULT_PRESET, obfuscatorOptions)
             )
         );
     }

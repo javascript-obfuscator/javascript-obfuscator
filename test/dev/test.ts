@@ -60,7 +60,8 @@ let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
     `,
     {
         disableConsoleOutput: false,
-        encodeUnicodeLiterals: true
+        encodeUnicodeLiterals: true,
+        unicodeArrayThreshold: 0
     }
 ).getObfuscatedCode();
 

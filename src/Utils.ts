@@ -25,25 +25,23 @@ export class Utils {
     /**
      * @param array
      * @param times
-     * @param reverse
      * @returns {T[]}
      */
-    public static arrayRotate <T> (array: T[], times: number, reverse: boolean = false): T[] {
+    public static arrayRotate <T> (array: T[], times: number): T[] {
+        if (!array.length) {
+            throw new ReferenceError(`Cannot rotate empty array.`);
+        }
+
         if (times <= 0) {
             return array;
         }
 
         let newArray: T[] = array,
-            temp: T;
+            temp: T | undefined;
 
         while (times--) {
-            if (!reverse) {
-                temp = newArray.pop();
-                newArray.unshift(temp);
-            } else {
-                temp = newArray.shift();
-                newArray.push(temp);
-            }
+            temp = newArray.pop()!;
+            newArray.unshift(temp);
         }
 
         return newArray;

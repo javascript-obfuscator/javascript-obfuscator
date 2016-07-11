@@ -1,14 +1,14 @@
-import * as estraverse from 'estraverse';
-
-import { ICustomNode } from '../interfaces/ICustomNode';
+import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { INodeObfuscator } from '../interfaces/INodeObfuscator';
 import { INode } from "../interfaces/nodes/INode";
 import { IOptions } from "../interfaces/IOptions";
 
+import { TUnicodeArrayCallsWrapper } from "../types/custom-nodes/TUnicodeArrayCallsWrapper";
+import { TUnicodeArrayNode } from "../types/custom-nodes/TUnicodeArrayNode";
+
 import { JSFuck } from "../enums/JSFuck";
 
 import { Nodes } from "../Nodes";
-import { UnicodeArrayNode } from "../custom-nodes/unicode-array-nodes/UnicodeArrayNode";
 import { Utils } from '../Utils';
 
 export abstract class NodeObfuscator implements INodeObfuscator {
@@ -54,19 +54,14 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      *
      * @param node
      * @param namesMap
-     * @returns {estraverse.VisitorOption}
      */
     protected storeIdentifiersNames (
         node: INode,
         namesMap: Map <string, string>
-    ): estraverse.VisitorOption {
+    ): void {
         if (Nodes.isIdentifierNode(node) && !this.isReservedName(node.name)) {
             namesMap.set(node.name, Utils.getRandomVariableName());
-
-            return;
         }
-
-        return estraverse.VisitorOption.Skip;
     }
 
     /**
@@ -94,7 +89,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
                 return;
             }
 
-            node.name = namesMap.get(node.name);
+            node.name = <string>namesMap.get(node.name);
         }
     }
 
@@ -125,20 +120,19 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @returns {string}
      */
     protected replaceLiteralValueWithUnicodeValue (nodeValue: string): string {
-        let value: string = nodeValue,
-            replaceWithUnicodeArrayFlag: boolean = Math.random() <= this.options.get('unicodeArrayThreshold');
+        let replaceWithUnicodeArrayFlag: boolean = Math.random() <= this.options.get('unicodeArrayThreshold');
 
         if (this.options.get('encodeUnicodeLiterals') && replaceWithUnicodeArrayFlag) {
-            value = Utils.btoa(value);
+            nodeValue = Utils.btoa(nodeValue);
         }
 
-        value = Utils.stringToUnicode(value);
+        nodeValue = Utils.stringToUnicode(nodeValue);
 
-        if (!this.options.get('unicodeArray') || !replaceWithUnicodeArrayFlag) {
-            return value;
+        if (this.options.get('unicodeArray') && replaceWithUnicodeArrayFlag) {
+            return this.replaceLiteralValueWithUnicodeArrayCall(nodeValue);
         }
 
-        return this.replaceLiteralValueWithUnicodeArrayCall(value);
+        return nodeValue;
     }
 
     /**
@@ -146,23 +140,34 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @returns {string}
      */
     protected replaceLiteralValueWithUnicodeArrayCall (value: string): string {
-        let unicodeArrayNode: UnicodeArrayNode = <UnicodeArrayNode> this.nodes.get('unicodeArrayNode'),
-            unicodeArray: string[] = unicodeArrayNode.getNodeData(),
-            sameIndex: number = unicodeArray.indexOf(value),
-            index: number,
+        let unicodeArrayNode: TUnicodeArrayNode = <TUnicodeArrayNode>this.nodes.get('unicodeArrayNode');
+
+        if (!unicodeArrayNode) {
+            throw new ReferenceError('`unicodeArrayNode` node is not found in Map with custom nodes.');
+        }
+
+        let unicodeArray: string[] = unicodeArrayNode.getNodeData(),
+            valueIndex: number = unicodeArray.indexOf(value),
+            literalValueCallIndex: number,
             hexadecimalIndex: string;
 
-        if (sameIndex >= 0) {
-            index = sameIndex;
+        if (valueIndex >= 0) {
+            literalValueCallIndex = valueIndex;
         } else {
-            index = unicodeArray.length;
+            literalValueCallIndex = unicodeArray.length;
             unicodeArrayNode.updateNodeData(value);
         }
 
-        hexadecimalIndex = this.replaceLiteralNumberWithHexadecimalValue(index);
+        hexadecimalIndex = this.replaceLiteralNumberWithHexadecimalValue(literalValueCallIndex);
 
         if (this.options.get('wrapUnicodeArrayCalls')) {
-            return `${this.nodes.get('unicodeArrayCallsWrapper').getNodeIdentifier()}('${hexadecimalIndex}')`;
+            let unicodeArrayCallsWrapper: TUnicodeArrayCallsWrapper = <TUnicodeArrayCallsWrapper>this.nodes.get('unicodeArrayCallsWrapper');
+
+            if (!unicodeArrayCallsWrapper) {
+                throw new ReferenceError('`unicodeArrayCallsWrapper` node is not found in Map with custom nodes.');
+            }
+
+            return `${unicodeArrayCallsWrapper.getNodeIdentifier()}('${hexadecimalIndex}')`;
         }
 
         return `${unicodeArrayNode.getNodeIdentifier()}[${hexadecimalIndex}]`;

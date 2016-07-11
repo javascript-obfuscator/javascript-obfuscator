@@ -1,6 +1,6 @@
 import { TSourceMapMode } from "../types/TSourceMapMode";
 
-export interface IOptionsPreset {
+export interface IObfuscatorOptions {
     compact?: boolean;
     debugProtection?: boolean;
     debugProtectionInterval?: boolean;

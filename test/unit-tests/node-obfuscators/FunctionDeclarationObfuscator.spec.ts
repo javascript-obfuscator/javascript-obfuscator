@@ -1,5 +1,5 @@
 import { IBlockStatementNode } from "../../../src/interfaces/nodes/IBlockStatementNode";
-import { ICustomNode } from "../../../src/interfaces/ICustomNode";
+import { ICustomNode } from "../../../src/interfaces/custom-nodes/ICustomNode";
 import { IExpressionStatementNode } from "../../../src/interfaces/nodes/IExpressionStatementNode";
 import { IFunctionDeclarationNode } from "../../../src/interfaces/nodes/IFunctionDeclarationNode";
 import { IProgramNode } from "../../../src/interfaces/nodes/IProgramNode";
@@ -63,7 +63,7 @@ describe('FunctionDeclarationObfuscator', () => {
 
                 functionDeclarationObfuscator.obfuscateNode(
                     functionDeclarationNode,
-                    functionDeclarationNode['parentNode']
+                    blockStatementNode
                 );
             });
 
@@ -87,7 +87,7 @@ describe('FunctionDeclarationObfuscator', () => {
 
                 functionDeclarationObfuscator.obfuscateNode(
                     functionDeclarationNode,
-                    functionDeclarationNode['parentNode']
+                    programNode
                 );
             });
 

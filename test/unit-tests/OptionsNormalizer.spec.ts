@@ -1,4 +1,4 @@
-import { IOptionsPreset } from "../../src/interfaces/IOptionsPreset";
+import { IObfuscatorOptions } from "../../src/interfaces/IObfuscatorOptions";
 
 import { OptionsNormalizer } from '../../src/OptionsNormalizer';
 
@@ -7,9 +7,9 @@ import { DEFAULT_PRESET } from '../../src/preset-options/DefaultPreset';
 const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('OptionsNormalizer', () => {
-    describe('normalizeOptionsPreset (options: IOptionsPreset): IOptionsPreset', () => {
-        let optionsPreset1: IOptionsPreset,
-            optionsPreset2: IOptionsPreset;
+    describe('normalizeOptionsPreset (options: IObfuscatorOptions): IObfuscatorOptions', () => {
+        let optionsPreset1: IObfuscatorOptions,
+            optionsPreset2: IObfuscatorOptions;
 
         beforeEach(() => {
             optionsPreset1 = Object.assign({}, DEFAULT_PRESET, {

@@ -1,11 +1,11 @@
 import * as esprima from 'esprima';
 import * as escodegen from 'escodegen';
 
+import { IObfuscatorOptions } from "./interfaces/IObfuscatorOptions";
 import { IGeneratorOutput } from "./interfaces/IGeneratorOutput";
 import { INode } from './interfaces/nodes/INode';
 import { IObfuscationResult } from "./interfaces/IObfuscationResult";
 import { IOptions } from './interfaces/IOptions';
-import { IOptionsPreset } from "./interfaces/IOptionsPreset";
 
 import { TSourceMapMode } from "./types/TSourceMapMode";
 
@@ -45,11 +45,14 @@ export class JavaScriptObfuscatorInternal {
 
     /**
      * @param sourceCode
-     * @param customOptions
+     * @param obfuscatorOptions
      */
-    constructor (sourceCode: string, customOptions?: IOptionsPreset) {
+    constructor (sourceCode: string, obfuscatorOptions?: IObfuscatorOptions) {
         this.sourceCode = sourceCode;
-        this.options = new Options(customOptions);
+
+        if (obfuscatorOptions) {
+            this.options = new Options(obfuscatorOptions);
+        }
     }
 
     /**

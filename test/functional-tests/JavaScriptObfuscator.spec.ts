@@ -7,7 +7,7 @@ import { NO_CUSTOM_NODES_PRESET } from "../../src/preset-options/NoCustomNodesPr
 const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('JavaScriptObfuscator', () => {
-    describe('obfuscate (sourceCode: string, customOptions?: IOptionsPreset): IObfuscationResult', () => {
+    describe('obfuscate (sourceCode: string, customOptions?: IObfuscatorOptions): IObfuscationResult', () => {
         describe('if `sourceMap` option is `false`', () => {
             it('should returns object with obfuscated code and empty source map', () => {
                 let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(

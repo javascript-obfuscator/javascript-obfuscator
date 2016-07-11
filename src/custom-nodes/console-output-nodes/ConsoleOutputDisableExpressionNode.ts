@@ -1,5 +1,3 @@
-import * as esprima from 'esprima';
-
 import { INode } from "../../interfaces/nodes/INode";
 
 import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";

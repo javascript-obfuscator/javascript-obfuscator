@@ -1,8 +1,8 @@
-import { IOptionsPreset } from "../interfaces/IOptionsPreset";
+import { IObfuscatorOptions } from "../interfaces/IObfuscatorOptions";
 
 import { SourceMapMode } from "../enums/SourceMapMode";
 
-export const NO_CUSTOM_NODES_PRESET: IOptionsPreset = Object.freeze({
+export const NO_CUSTOM_NODES_PRESET: IObfuscatorOptions = Object.freeze({
     compact: true,
     debugProtection: false,
     debugProtectionInterval: false,

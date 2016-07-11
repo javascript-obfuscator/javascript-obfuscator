@@ -60,12 +60,6 @@ describe('NodeUtils', () => {
 
         it('should does not change `BlockStatement` node body if given node is not a valid Node', () => {
             assert.doesNotChange(
-                () => NodeUtils.appendNode(blockStatementNode.body, <INode>null),
-                blockStatementNode,
-                'body'
-            );
-
-            assert.doesNotChange(
                 () => NodeUtils.appendNode(blockStatementNode.body, <INode>{}),
                 blockStatementNode,
                 'body'
@@ -235,12 +229,6 @@ describe('NodeUtils', () => {
 
         it('should does not change `BlockStatement` node body if given node is not a valid Node', () => {
             assert.doesNotChange(
-                () => NodeUtils.insertNodeAtIndex(blockStatementNode.body, <INode>null, 1),
-                blockStatementNode,
-                'body'
-            );
-
-            assert.doesNotChange(
                 () => NodeUtils.insertNodeAtIndex(blockStatementNode.body, <INode>{}, 1),
                 blockStatementNode,
                 'body'
@@ -323,12 +311,6 @@ describe('NodeUtils', () => {
         });
 
         it('should does not change `BlockStatement` node body if given node is not a valid Node', () => {
-            assert.doesNotChange(
-                () => NodeUtils.prependNode(blockStatementNode.body, <INode>null),
-                blockStatementNode,
-                'body'
-            );
-
             assert.doesNotChange(
                 () => NodeUtils.prependNode(blockStatementNode.body, <INode>{}),
                 blockStatementNode,

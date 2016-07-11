@@ -55,6 +55,10 @@ export class UnicodeArrayNode extends Node {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
+        if (!this.unicodeArray.length) {
+            return;
+        }
+
         NodeUtils.prependNode(blockScopeNode.body, this.getNode());
     }
 
@@ -76,10 +80,6 @@ export class UnicodeArrayNode extends Node {
      * @returns {INode}
      */
     public getNode (): INode {
-        if (!this.unicodeArray.length) {
-            return;
-        }
-
         Utils.arrayRotate <string> (this.unicodeArray, this.unicodeArrayRotateValue);
 
         return super.getNode();

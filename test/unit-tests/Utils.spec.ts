@@ -13,7 +13,7 @@ describe('Utils', () => {
         });
     });
 
-    describe('arrayRotate <T> (array: T[], times: number, reverse: boolean = false): T[]', () => {
+    describe('arrayRotate <T> (array: T[], times: number): T[]', () => {
         let array: number[];
 
         beforeEach(() => {
@@ -24,13 +24,14 @@ describe('Utils', () => {
             assert.deepEqual(Utils.arrayRotate(array, 2), [5, 6, 1, 2, 3, 4]);
         });
 
-        it('should rotate (shift) array by a given value in reverse directions', () => {
-            assert.deepEqual(Utils.arrayRotate(array, 2, true), [3, 4, 5, 6, 1, 2]);
-        });
 
         it('should do nothing if value <= 0', () => {
-            assert.deepEqual(Utils.arrayRotate(array, 0, true), [1, 2, 3, 4, 5, 6]);
-            assert.deepEqual(Utils.arrayRotate(array, -1, true), [1, 2, 3, 4, 5, 6]);
+            assert.deepEqual(Utils.arrayRotate(array, 0), [1, 2, 3, 4, 5, 6]);
+            assert.deepEqual(Utils.arrayRotate(array, -1), [1, 2, 3, 4, 5, 6]);
+        });
+
+        it('should throw exception if array is empty', () => {
+            assert.throws(() => Utils.arrayRotate([], 5), ReferenceError);
         });
     });
 

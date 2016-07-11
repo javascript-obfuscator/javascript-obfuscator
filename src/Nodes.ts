@@ -19,13 +19,11 @@ export class Nodes {
      * @returns IProgramNode
      */
     public static getProgramNode (bodyNode: TStatement[]): IProgramNode {
-        let programNode: IProgramNode = {
+        return {
             'type': NodeType.Program,
             'body': bodyNode,
             'sourceType': 'script'
         };
-
-        return programNode;
     }
 
     /**

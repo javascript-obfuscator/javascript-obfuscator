@@ -1,5 +1,5 @@
 import { IBlockStatementNode } from "../../../src/interfaces/nodes/IBlockStatementNode";
-import { ICustomNode } from "../../../src/interfaces/ICustomNode";
+import { ICustomNode } from "../../../src/interfaces/custom-nodes/ICustomNode";
 import { IExpressionStatementNode } from "../../../src/interfaces/nodes/IExpressionStatementNode";
 import { IFunctionDeclarationNode } from "../../../src/interfaces/nodes/IFunctionDeclarationNode";
 import { IIdentifierNode } from "../../../src/interfaces/nodes/IIdentifierNode";

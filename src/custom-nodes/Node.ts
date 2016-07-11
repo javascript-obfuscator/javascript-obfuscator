@@ -1,4 +1,4 @@
-import { ICustomNode } from '../interfaces/ICustomNode';
+import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { INode } from '../interfaces/nodes/INode';
 import { IOptions } from "../interfaces/IOptions";
 
@@ -6,11 +6,9 @@ import { AppendState } from '../enums/AppendState';
 
 export abstract class Node implements ICustomNode {
     /**
-     * TODO: add `abstract` modifier
-     *
      * @type {AppendState}
      */
-    protected appendState: AppendState;
+    protected abstract appendState: AppendState;
 
     /**
      * @type {IOptions}
@@ -24,6 +22,9 @@ export abstract class Node implements ICustomNode {
         this.options = options;
     }
 
+    /**
+     * @param astTree
+     */
     public abstract appendNode (astTree: INode): void;
 
     /**

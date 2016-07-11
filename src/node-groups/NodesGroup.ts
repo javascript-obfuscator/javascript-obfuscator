@@ -1,4 +1,4 @@
-import { ICustomNode } from '../interfaces/ICustomNode';
+import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 
 import { INodesGroup } from '../interfaces/INodesGroup';
 import { IOptions } from "../interfaces/IOptions";

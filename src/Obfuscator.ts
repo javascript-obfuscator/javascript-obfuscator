@@ -1,6 +1,6 @@
 import * as estraverse from 'estraverse';
 
-import { ICustomNode } from './interfaces/ICustomNode';
+import { ICustomNode } from './interfaces/custom-nodes/ICustomNode';
 import { INode } from './interfaces/nodes/INode';
 import { IObfuscator } from "./interfaces/IObfuscator";
 import { IOptions } from "./interfaces/IOptions";
@@ -110,11 +110,13 @@ export class Obfuscator implements IObfuscator {
      * @param parentNode
      */
     private initializeNodeObfuscators (node: INode, parentNode: INode): void {
-        if (!this.nodeObfuscators.has(node.type)) {
+        let nodeObfuscators: TNodeObfuscator[] | undefined = this.nodeObfuscators.get(node.type);
+
+        if (!nodeObfuscators) {
             return;
         }
 
-        this.nodeObfuscators.get(node.type).forEach((obfuscator: TNodeObfuscator) => {
+        nodeObfuscators.forEach((obfuscator: TNodeObfuscator) => {
             new obfuscator(this.nodes, this.options).obfuscateNode(node, parentNode);
         });
     }

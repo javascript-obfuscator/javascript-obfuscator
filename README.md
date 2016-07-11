@@ -62,6 +62,8 @@ Returns `ObfuscationResult` object which contains two public methods:
 * `getObfuscatedCode()` - returns `string` with obfuscated code;
 * `getSourceMap()` - if `sourceMap` options is enable - returns `string` with source map or an empty string if `sourceMapMode` option is set as `inline`.
 
+Calling `toString()` for `ObfuscationResult` object will return `string` with obfuscated code.
+
 Method takes two parameters, `sourceCode` and `options` – the source code and the opitons respectively:
 
 * `sourceCode` (`string`, default: `null`) – any valid source code, passed as a string;

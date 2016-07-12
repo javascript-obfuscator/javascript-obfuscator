@@ -76,7 +76,7 @@ export class Options implements IOptions {
     /**
      * @type {ObjectSchema}
      */
-    private schema: Joi.ObjectSchema = Joi.object().keys({
+    private schema: Joi.ObjectSchema = Joi.object({
         compact: Joi.boolean(),
         debugProtection: Joi.boolean(),
         debugProtectionInterval: Joi.boolean(),

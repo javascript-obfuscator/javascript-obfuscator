@@ -1079,7 +1079,7 @@ var DefaultPreset_1 = __webpack_require__(16);
 var Options = function Options(obfuscatorOptions) {
     _classCallCheck(this, Options);
 
-    this.schema = Joi.object().keys({
+    this.schema = Joi.object({
         compact: Joi.boolean(),
         debugProtection: Joi.boolean(),
         debugProtectionInterval: Joi.boolean(),

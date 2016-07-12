@@ -10,7 +10,7 @@ export class ConsoleOutputNodesGroup extends NodesGroup {
     constructor (options: IOptions) {
         super(options);
 
-        if (!this.options.get('disableConsoleOutput')) {
+        if (!this.options.disableConsoleOutput) {
             return;
         }
 

@@ -81,7 +81,7 @@ export class UnicodeArrayRotateFunctionNode extends Node {
             timesArgumentName: string = Utils.getRandomVariableName(),
             whileFunctionName: string = Utils.getRandomVariableName();
 
-        if (this.options.get('selfDefending')) {
+        if (this.options.selfDefending) {
             code = JavaScriptObfuscator.obfuscate(`
                 (function () {
                     var func = function(){return ${Utils.stringToUnicode('dev')};};

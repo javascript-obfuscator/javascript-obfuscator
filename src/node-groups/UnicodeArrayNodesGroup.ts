@@ -29,11 +29,11 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
     constructor (options: IOptions) {
         super(options);
 
-        if (!this.options.get('unicodeArray')) {
+        if (!this.options.unicodeArray) {
             return;
         }
 
-        if (this.options.get('rotateUnicodeArray')) {
+        if (this.options.rotateUnicodeArray) {
             this.unicodeArrayRotateValue = Utils.getRandomGenerator().integer({
                 min: 100,
                 max: 500
@@ -54,7 +54,7 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
             unicodeArrayNode
         );
 
-        if (this.options.get('wrapUnicodeArrayCalls')) {
+        if (this.options.wrapUnicodeArrayCalls) {
             this.nodes.set(
                 'unicodeArrayCallsWrapper',
                 new UnicodeArrayCallsWrapper(
@@ -66,7 +66,7 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
             );
         }
 
-        if (this.options.get('encodeUnicodeLiterals')) {
+        if (this.options.encodeUnicodeLiterals) {
             this.nodes.set(
                 'unicodeArrayDecodeNode',
                 new UnicodeArrayDecodeNode (
@@ -77,7 +77,7 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
             );
         }
 
-        if (this.options.get('rotateUnicodeArray')) {
+        if (this.options.rotateUnicodeArray) {
             this.nodes.set(
                 'unicodeArrayRotateFunctionNode',
                 new UnicodeArrayRotateFunctionNode(

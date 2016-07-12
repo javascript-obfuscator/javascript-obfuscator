@@ -10,7 +10,7 @@ export class SelfDefendingNodesGroup extends NodesGroup {
     constructor (options: IOptions) {
         super(options);
 
-        if (!this.options.get('selfDefending')) {
+        if (!this.options.selfDefending) {
             return;
         }
 

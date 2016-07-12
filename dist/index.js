@@ -422,7 +422,7 @@ var NodeObfuscator = function () {
     _createClass(NodeObfuscator, [{
         key: "isReservedName",
         value: function isReservedName(name) {
-            return this.options.get('reservedNames').some(function (reservedName) {
+            return this.options.reservedNames.some(function (reservedName) {
                 return new RegExp(reservedName, 'g').test(name);
             });
         }
@@ -462,12 +462,12 @@ var NodeObfuscator = function () {
     }, {
         key: "replaceLiteralValueWithUnicodeValue",
         value: function replaceLiteralValueWithUnicodeValue(nodeValue) {
-            var replaceWithUnicodeArrayFlag = Math.random() <= this.options.get('unicodeArrayThreshold');
-            if (this.options.get('encodeUnicodeLiterals') && replaceWithUnicodeArrayFlag) {
+            var replaceWithUnicodeArrayFlag = Math.random() <= this.options.unicodeArrayThreshold;
+            if (this.options.encodeUnicodeLiterals && replaceWithUnicodeArrayFlag) {
                 nodeValue = Utils_1.Utils.btoa(nodeValue);
             }
             nodeValue = Utils_1.Utils.stringToUnicode(nodeValue);
-            if (this.options.get('unicodeArray') && replaceWithUnicodeArrayFlag) {
+            if (this.options.unicodeArray && replaceWithUnicodeArrayFlag) {
                 return this.replaceLiteralValueWithUnicodeArrayCall(nodeValue);
             }
             return nodeValue;
@@ -490,7 +490,7 @@ var NodeObfuscator = function () {
                 unicodeArrayNode.updateNodeData(value);
             }
             hexadecimalIndex = this.replaceLiteralNumberWithHexadecimalValue(literalValueCallIndex);
-            if (this.options.get('wrapUnicodeArrayCalls')) {
+            if (this.options.wrapUnicodeArrayCalls) {
                 var unicodeArrayCallsWrapper = this.nodes.get('unicodeArrayCallsWrapper');
                 if (!unicodeArrayCallsWrapper) {
                     throw new ReferenceError('`unicodeArrayCallsWrapper` node is not found in Map with custom nodes.');
@@ -828,7 +828,7 @@ var JavaScriptObfuscatorInternal = function () {
     _createClass(JavaScriptObfuscatorInternal, [{
         key: 'getObfuscationResult',
         value: function getObfuscationResult() {
-            return new SourceMapCorrector_1.SourceMapCorrector(new ObfuscationResult_1.ObfuscationResult(this.generatorOutput.code, this.generatorOutput.map), this.sourceMapUrl, this.options.get('sourceMapMode')).correct();
+            return new SourceMapCorrector_1.SourceMapCorrector(new ObfuscationResult_1.ObfuscationResult(this.generatorOutput.code, this.generatorOutput.map), this.sourceMapUrl, this.options.sourceMapMode).correct();
         }
     }, {
         key: 'obfuscate',
@@ -849,12 +849,12 @@ var JavaScriptObfuscatorInternal = function () {
         value: function generateCode(sourceCode, astTree, options) {
             var escodegenParams = Object.assign({}, JavaScriptObfuscatorInternal.escodegenParams),
                 generatorOutput = void 0;
-            if (options.get('sourceMap')) {
+            if (options.sourceMap) {
                 escodegenParams.sourceMap = 'sourceMap';
                 escodegenParams.sourceContent = sourceCode;
             }
             escodegenParams.format = {
-                compact: options.get('compact')
+                compact: options.compact
             };
             generatorOutput = escodegen.generate(astTree, escodegenParams);
             generatorOutput.map = generatorOutput.map ? generatorOutput.map.toString() : '';
@@ -1073,18 +1073,34 @@ exports.Obfuscator = Obfuscator;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var Joi = __webpack_require__(50);
 var DefaultPreset_1 = __webpack_require__(16);
 
 var Options = function Options(obfuscatorOptions) {
     _classCallCheck(this, Options);
 
+    this.schema = Joi.object().keys({
+        compact: Joi.boolean(),
+        debugProtection: Joi.boolean(),
+        debugProtectionInterval: Joi.boolean(),
+        disableConsoleOutput: Joi.boolean(),
+        encodeUnicodeLiterals: Joi.boolean(),
+        reservedNames: Joi.array().items(Joi.string()),
+        rotateUnicodeArray: Joi.boolean(),
+        selfDefending: Joi.boolean(),
+        sourceMap: Joi.boolean(),
+        sourceMapMode: Joi.string().allow(['inline', 'separate']),
+        unicodeArray: Joi.boolean(),
+        unicodeArrayThreshold: Joi.number().min(0).max(1),
+        wrapUnicodeArrayCalls: Joi.boolean()
+    });
     var options = Object.assign({}, DefaultPreset_1.DEFAULT_PRESET, obfuscatorOptions);
-    for (var option in options) {
-        if (!options.hasOwnProperty(option) || !this.hasOwnProperty(option)) {
-            continue;
+    Joi.validate(options, this.schema, function (error) {
+        if (error) {
+            throw new ReferenceError("Validation error. Errors: " + error);
         }
-        this[option] = options[option];
-    }
+    });
+    Object.assign(this, options);
 };
 
 exports.Options = Options;
@@ -1167,7 +1183,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var fs = __webpack_require__(49);
-var mkdirp = __webpack_require__(50);
+var mkdirp = __webpack_require__(51);
 var path = __webpack_require__(18);
 var Utils_1 = __webpack_require__(0);
 
@@ -1784,7 +1800,7 @@ var UnicodeArrayDecodeNode = function (_Node_1$Node) {
                 indexVariableName = Utils_1.Utils.getRandomVariableName(),
                 tempArrayName = Utils_1.Utils.getRandomVariableName();
             var code = '';
-            if (this.options.get('selfDefending')) {
+            if (this.options.selfDefending) {
                 code = "\n                var " + environmentName + " = function(){return " + Utils_1.Utils.stringToUnicode('dev') + ";};\n                   \n                Function(" + Utils_1.Utils.stringToUnicode("return/\\w+ *\\(\\) *{\\w+ *['|\"].+['|\"];? *}/") + ")()[" + Utils_1.Utils.stringToUnicode('test') + "](" + environmentName + "[" + Utils_1.Utils.stringToUnicode('toString') + "]()) !== " + JSFuck_1.JSFuck.True + " && !" + this.unicodeArrayName + "++ ? []['filter']['constructor'](" + Utils_1.Utils.stringToJSFuck('while') + " + '(" + JSFuck_1.JSFuck.True + "){}')() : Function(" + Utils_1.Utils.stringToUnicode('a') + ", atob(" + Utils_1.Utils.stringToUnicode(Utils_1.Utils.btoa('a.call()')) + "))(" + forLoopFunctionName + ") ? []['filter']['constructor'](" + Utils_1.Utils.stringToJSFuck('while') + " + '(" + JSFuck_1.JSFuck.False + "){}')() : []['filter']['constructor'](" + Utils_1.Utils.stringToJSFuck('while') + " + '(" + JSFuck_1.JSFuck.False + "){}')();\n            ";
             } else {
                 code = forLoopFunctionName + "();";
@@ -1941,7 +1957,7 @@ var UnicodeArrayRotateFunctionNode = function (_Node_1$Node) {
                 timesName = Utils_1.Utils.getRandomVariableName(),
                 timesArgumentName = Utils_1.Utils.getRandomVariableName(),
                 whileFunctionName = Utils_1.Utils.getRandomVariableName();
-            if (this.options.get('selfDefending')) {
+            if (this.options.selfDefending) {
                 code = JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate("\n                (function () {\n                    var func = function(){return " + Utils_1.Utils.stringToUnicode('dev') + ";};\n                                        \n                    !Function(" + Utils_1.Utils.stringToUnicode("return/\\w+ *\\(\\) *{\\w+ *['|\"].+['|\"];? *}/") + ")().test(func.toString()) ? []['filter']['constructor'](" + Utils_1.Utils.stringToJSFuck('while') + " + '(" + JSFuck_1.JSFuck.True + "){}')() : Function(" + Utils_1.Utils.stringToUnicode('a') + ", " + Utils_1.Utils.stringToUnicode('b') + ", " + Utils_1.Utils.stringToUnicode('a(++b)') + ")(" + whileFunctionName + ", " + timesName + ") ? []['filter']['constructor'](" + Utils_1.Utils.stringToJSFuck('while') + " + '(" + JSFuck_1.JSFuck.False + "){}')() : []['filter']['constructor'](" + Utils_1.Utils.stringToJSFuck('while') + " + '(" + JSFuck_1.JSFuck.False + "){}')();\n                })();\n            ", NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET).getObfuscatedCode();
             } else {
                 code = whileFunctionName + "(++" + timesName + ")";
@@ -1979,7 +1995,7 @@ var ConsoleOutputNodesGroup = function (_NodesGroup_1$NodesGr) {
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ConsoleOutputNodesGroup).call(this, options));
 
-        if (!_this.options.get('disableConsoleOutput')) {
+        if (!_this.options.disableConsoleOutput) {
             return _possibleConstructorReturn(_this);
         }
         _this.nodes.set('consoleOutputDisableExpressionNode', new ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode(_this.options));
@@ -2019,12 +2035,12 @@ var DebugProtectionNodesGroup = function (_NodesGroup_1$NodesGr) {
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DebugProtectionNodesGroup).call(this, options));
 
         _this.debugProtectionFunctionIdentifier = Utils_1.Utils.getRandomVariableName();
-        if (!_this.options.get('debugProtection')) {
+        if (!_this.options.debugProtection) {
             return _possibleConstructorReturn(_this);
         }
         _this.nodes.set('debugProtectionFunctionNode', new DebugProtectionFunctionNode_1.DebugProtectionFunctionNode(_this.debugProtectionFunctionIdentifier, _this.options));
         _this.nodes.set('debugProtectionFunctionCallNode', new DebugProtectionFunctionCallNode_1.DebugProtectionFunctionCallNode(_this.debugProtectionFunctionIdentifier, _this.options));
-        if (_this.options.get('debugProtectionInterval')) {
+        if (_this.options.debugProtectionInterval) {
             _this.nodes.set('debugProtectionFunctionIntervalNode', new DebugProtectionFunctionIntervalNode_1.DebugProtectionFunctionIntervalNode(_this.debugProtectionFunctionIdentifier, _this.options));
         }
         return _this;
@@ -2059,7 +2075,7 @@ var SelfDefendingNodesGroup = function (_NodesGroup_1$NodesGr) {
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SelfDefendingNodesGroup).call(this, options));
 
-        if (!_this.options.get('selfDefending')) {
+        if (!_this.options.selfDefending) {
             return _possibleConstructorReturn(_this);
         }
         _this.nodes.set('selfDefendingUnicodeNode', new SelfDefendingUnicodeNode_1.SelfDefendingUnicodeNode(_this.options));
@@ -2101,10 +2117,10 @@ var UnicodeArrayNodesGroup = function (_NodesGroup_1$NodesGr) {
 
         _this.unicodeArrayName = Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
         _this.unicodeArrayTranslatorName = Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
-        if (!_this.options.get('unicodeArray')) {
+        if (!_this.options.unicodeArray) {
             return _possibleConstructorReturn(_this);
         }
-        if (_this.options.get('rotateUnicodeArray')) {
+        if (_this.options.rotateUnicodeArray) {
             _this.unicodeArrayRotateValue = Utils_1.Utils.getRandomGenerator().integer({
                 min: 100,
                 max: 500
@@ -2115,13 +2131,13 @@ var UnicodeArrayNodesGroup = function (_NodesGroup_1$NodesGr) {
         var unicodeArrayNode = new UnicodeArrayNode_1.UnicodeArrayNode(_this.unicodeArrayName, _this.unicodeArrayRotateValue, _this.options),
             unicodeArray = unicodeArrayNode.getNodeData();
         _this.nodes.set('unicodeArrayNode', unicodeArrayNode);
-        if (_this.options.get('wrapUnicodeArrayCalls')) {
+        if (_this.options.wrapUnicodeArrayCalls) {
             _this.nodes.set('unicodeArrayCallsWrapper', new UnicodeArrayCallsWrapper_1.UnicodeArrayCallsWrapper(_this.unicodeArrayTranslatorName, _this.unicodeArrayName, unicodeArray, _this.options));
         }
-        if (_this.options.get('encodeUnicodeLiterals')) {
+        if (_this.options.encodeUnicodeLiterals) {
             _this.nodes.set('unicodeArrayDecodeNode', new UnicodeArrayDecodeNode_1.UnicodeArrayDecodeNode(_this.unicodeArrayName, unicodeArray, _this.options));
         }
-        if (_this.options.get('rotateUnicodeArray')) {
+        if (_this.options.rotateUnicodeArray) {
             _this.nodes.set('unicodeArrayRotateFunctionNode', new UnicodeArrayRotateFunctionNode_1.UnicodeArrayRotateFunctionNode(_this.unicodeArrayName, unicodeArray, _this.unicodeArrayRotateValue, _this.options));
         }
         return _this;
@@ -2769,6 +2785,12 @@ module.exports = require("fs");
 
 /***/ },
 /* 50 */
+/***/ function(module, exports) {
+
+module.exports = require("joi");
+
+/***/ },
+/* 51 */
 /***/ function(module, exports) {
 
 module.exports = require("mkdirp");

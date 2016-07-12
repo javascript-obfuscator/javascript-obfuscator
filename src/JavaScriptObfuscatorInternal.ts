@@ -7,8 +7,6 @@ import { INode } from './interfaces/nodes/INode';
 import { IObfuscationResult } from "./interfaces/IObfuscationResult";
 import { IOptions } from './interfaces/IOptions';
 
-import { TSourceMapMode } from "./types/TSourceMapMode";
-
 import { ObfuscationResult } from "./ObfuscationResult";
 import { Obfuscator } from "./Obfuscator";
 import { Options } from "./Options";
@@ -67,13 +65,13 @@ export class JavaScriptObfuscatorInternal {
             ),
             generatorOutput: IGeneratorOutput;
 
-        if (options.get<boolean>('sourceMap')) {
+        if (options.sourceMap) {
             escodegenParams.sourceMap = 'sourceMap';
             escodegenParams.sourceContent = sourceCode;
         }
 
         escodegenParams.format = {
-            compact: options.get<boolean>('compact')
+            compact: options.compact
         };
 
         generatorOutput = escodegen.generate(astTree, escodegenParams);
@@ -92,7 +90,7 @@ export class JavaScriptObfuscatorInternal {
                 this.generatorOutput.map
             ),
             this.sourceMapUrl,
-            this.options.get<TSourceMapMode>('sourceMapMode')
+            this.options.sourceMapMode
         ).correct();
     }
 

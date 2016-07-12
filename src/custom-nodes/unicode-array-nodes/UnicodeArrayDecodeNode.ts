@@ -75,7 +75,7 @@ export class UnicodeArrayDecodeNode extends Node {
 
         let code: string = '';
 
-        if (this.options.get('selfDefending')) {
+        if (this.options.selfDefending) {
             code = `
                 var ${environmentName} = function(){return ${Utils.stringToUnicode('dev')};};
                    

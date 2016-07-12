@@ -19,7 +19,7 @@ export class DebugProtectionNodesGroup extends NodesGroup {
     constructor (options: IOptions) {
         super(options);
 
-        if (!this.options.get('debugProtection')) {
+        if (!this.options.debugProtection) {
             return;
         }
 
@@ -32,7 +32,7 @@ export class DebugProtectionNodesGroup extends NodesGroup {
             new DebugProtectionFunctionCallNode(this.debugProtectionFunctionIdentifier, this.options)
         );
 
-        if (this.options.get('debugProtectionInterval')) {
+        if (this.options.debugProtectionInterval) {
             this.nodes.set(
                 'debugProtectionFunctionIntervalNode',
                 new DebugProtectionFunctionIntervalNode(this.debugProtectionFunctionIdentifier, this.options)

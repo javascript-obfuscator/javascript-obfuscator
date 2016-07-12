@@ -42,7 +42,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @returns {boolean}
      */
     protected isReservedName (name: string): boolean {
-        return this.options.get<string[]>('reservedNames')
+        return this.options.reservedNames
             .some((reservedName: string) => {
                 return new RegExp(reservedName, 'g').test(name);
             });
@@ -120,15 +120,15 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @returns {string}
      */
     protected replaceLiteralValueWithUnicodeValue (nodeValue: string): string {
-        let replaceWithUnicodeArrayFlag: boolean = Math.random() <= this.options.get('unicodeArrayThreshold');
+        let replaceWithUnicodeArrayFlag: boolean = Math.random() <= this.options.unicodeArrayThreshold;
 
-        if (this.options.get('encodeUnicodeLiterals') && replaceWithUnicodeArrayFlag) {
+        if (this.options.encodeUnicodeLiterals && replaceWithUnicodeArrayFlag) {
             nodeValue = Utils.btoa(nodeValue);
         }
 
         nodeValue = Utils.stringToUnicode(nodeValue);
 
-        if (this.options.get('unicodeArray') && replaceWithUnicodeArrayFlag) {
+        if (this.options.unicodeArray && replaceWithUnicodeArrayFlag) {
             return this.replaceLiteralValueWithUnicodeArrayCall(nodeValue);
         }
 
@@ -160,7 +160,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
 
         hexadecimalIndex = this.replaceLiteralNumberWithHexadecimalValue(literalValueCallIndex);
 
-        if (this.options.get('wrapUnicodeArrayCalls')) {
+        if (this.options.wrapUnicodeArrayCalls) {
             let unicodeArrayCallsWrapper: TUnicodeArrayCallsWrapper = <TUnicodeArrayCallsWrapper>this.nodes.get('unicodeArrayCallsWrapper');
 
             if (!unicodeArrayCallsWrapper) {

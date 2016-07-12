@@ -1,9 +1,9 @@
+import * as Joi from 'joi';
+
 import { IObfuscatorOptions } from "./interfaces/IObfuscatorOptions";
 import { IOptions } from "./interfaces/IOptions";
 
 import { TSourceMapMode } from "./types/TSourceMapMode";
-
-import { OptionsNormalizer } from "./OptionsNormalizer";
 
 import { DEFAULT_PRESET } from "./preset-options/DefaultPreset";
 
@@ -51,7 +51,7 @@ export class Options implements IOptions {
     /**
      * @type {boolean}
      */
-    public readonly sourceMap?: boolean;
+    public readonly sourceMap: boolean;
 
     /**
      * @type {TSourceMapMode}
@@ -74,17 +74,36 @@ export class Options implements IOptions {
     public readonly wrapUnicodeArrayCalls: boolean;
 
     /**
+     * @type {ObjectSchema}
+     */
+    private schema: Joi.ObjectSchema = Joi.object().keys({
+        compact: Joi.boolean(),
+        debugProtection: Joi.boolean(),
+        debugProtectionInterval: Joi.boolean(),
+        disableConsoleOutput: Joi.boolean(),
+        encodeUnicodeLiterals: Joi.boolean(),
+        reservedNames: Joi.array().items(Joi.string()),
+        rotateUnicodeArray: Joi.boolean(),
+        selfDefending: Joi.boolean(),
+        sourceMap: Joi.boolean(),
+        sourceMapMode: Joi.string().allow(['inline', 'separate']),
+        unicodeArray: Joi.boolean(),
+        unicodeArrayThreshold: Joi.number().min(0).max(1),
+        wrapUnicodeArrayCalls: Joi.boolean()
+    });
+
+    /**
      * @param obfuscatorOptions
      */
     constructor (obfuscatorOptions: IObfuscatorOptions) {
         let options: IObfuscatorOptions = Object.assign({}, DEFAULT_PRESET, obfuscatorOptions);
 
-        for (let option in options) {
-            if (!options.hasOwnProperty(option) || !this.hasOwnProperty(option)) {
-                continue;
+        Joi.validate(options, this.schema, (error: Joi.ValidationError) => {
+            if (error) {
+                throw new ReferenceError(`Validation error. Errors: ${error}`);
             }
+        });
 
-            this[option] = options[option];
-        }
+        Object.assign(this, options);
     }
 }

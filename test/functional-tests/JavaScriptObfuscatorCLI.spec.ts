@@ -85,7 +85,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
         });
 
         describe('help output', () => {
-            let callback: Sinon.SinonSpy,
+            let callback: sinon.SinonSpy,
                 stdoutWriteMock: StdoutWriteMock;
 
             beforeEach(() => {

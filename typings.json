@@ -2,16 +2,8 @@
   "name": "javascript-obfuscator",
   "version": false,
   "globalDependencies": {
-    "chai": "github:DefinitelyTyped/DefinitelyTyped/chai/chai.d.ts",
-    "chance": "github:DefinitelyTyped/DefinitelyTyped/chance/chance.d.ts",
     "commander": "github:DefinitelyTyped/DefinitelyTyped/commander/commander.d.ts",
-    "estree": "github:DefinitelyTyped/DefinitelyTyped/estree/estree.d.ts",
-    "esprima": "github:DefinitelyTyped/DefinitelyTyped/esprima/esprima.d.ts",
     "escodegen": "github:DefinitelyTyped/DefinitelyTyped/escodegen/escodegen.d.ts",
-    "estraverse": "github:DefinitelyTyped/DefinitelyTyped/estraverse/estraverse.d.ts",
-    "mkdirp": "github:DefinitelyTyped/DefinitelyTyped/mkdirp/mkdirp.d.ts",
-    "mocha": "github:DefinitelyTyped/DefinitelyTyped/mocha/mocha.d.ts",
-    "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts",
-    "sinon": "github:DefinitelyTyped/DefinitelyTyped/sinon/sinon.d.ts"
+    "estraverse": "github:DefinitelyTyped/DefinitelyTyped/estraverse/estraverse.d.ts"
   }
 }

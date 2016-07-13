@@ -31,7 +31,14 @@
     "source-map-support": "^0.4.1"
   },
   "devDependencies": {
+    "@types/chai": "^3.4.27-alpha",
+    "@types/chance": "^0.7.27-alpha",
+    "@types/esprima": "^2.1.27-alpha",
     "@types/joi": "^6.5.27-alpha",
+    "@types/mkdirp": "^0.3.27-alpha",
+    "@types/mocha": "^2.2.26-alpha",
+    "@types/node": "^4.0.28-alpha",
+    "@types/sinon": "^1.16.25-alpha",
     "babel-cli": "^6.10.1",
     "babel-loader": "^6.2.4",
     "babel-preset-es2015": "^6.9.0",

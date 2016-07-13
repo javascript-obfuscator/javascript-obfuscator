@@ -1,6 +1,6 @@
 'use strict';
 
-let JavaScriptObfuscator: any = require('../../index');
+import { JavaScriptObfuscator } from "../../src/JavaScriptObfuscator";
 
 let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
     `
@@ -61,7 +61,7 @@ let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
     {
         disableConsoleOutput: false,
         encodeUnicodeLiterals: true,
-        unicodeArrayThreshold: 0
+        unicodeArrayThreshold: 2
     }
 ).getObfuscatedCode();
 

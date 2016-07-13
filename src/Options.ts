@@ -6,6 +6,7 @@ import { IOptions } from "./interfaces/IOptions";
 import { TSourceMapMode } from "./types/TSourceMapMode";
 
 import { DEFAULT_PRESET } from "./preset-options/DefaultPreset";
+import {OptionsNormalizer} from "./OptionsNormalizer";
 
 export class Options implements IOptions {
     /**
@@ -74,7 +75,7 @@ export class Options implements IOptions {
     public readonly wrapUnicodeArrayCalls: boolean;
 
     /**
-     * @type {ObjectSchema}
+     * @type {Joi.ObjectSchema}
      */
     private schema: Joi.ObjectSchema = Joi.object({
         compact: Joi.boolean(),
@@ -96,14 +97,19 @@ export class Options implements IOptions {
      * @param obfuscatorOptions
      */
     constructor (obfuscatorOptions: IObfuscatorOptions) {
-        let options: IObfuscatorOptions = Object.assign({}, DEFAULT_PRESET, obfuscatorOptions);
-
-        Joi.validate(options, this.schema, (error: Joi.ValidationError) => {
-            if (error) {
-                throw new ReferenceError(`Validation error. Errors: ${error}`);
+        Joi.validate(
+            obfuscatorOptions,
+            this.schema,
+            (error: Joi.ValidationError) => {
+                if (error) {
+                    throw error;
+                }
             }
-        });
+        );
 
-        Object.assign(this, options);
+        Object.assign(
+            this,
+            OptionsNormalizer.normalizeOptions(Object.assign({}, DEFAULT_PRESET, obfuscatorOptions))
+        );
     }
 }

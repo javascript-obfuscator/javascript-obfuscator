@@ -1097,7 +1097,7 @@ var Options = function Options(obfuscatorOptions) {
         rotateUnicodeArray: Joi.boolean(),
         selfDefending: Joi.boolean(),
         sourceMap: Joi.boolean(),
-        sourceMapMode: Joi.string().allow(['inline', 'separate']),
+        sourceMapMode: Joi.string().valid(['inline', 'separate']),
         unicodeArray: Joi.boolean(),
         unicodeArrayThreshold: Joi.number().min(0).max(1),
         wrapUnicodeArrayCalls: Joi.boolean()

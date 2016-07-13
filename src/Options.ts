@@ -6,7 +6,8 @@ import { IOptions } from "./interfaces/IOptions";
 import { TSourceMapMode } from "./types/TSourceMapMode";
 
 import { DEFAULT_PRESET } from "./preset-options/DefaultPreset";
-import {OptionsNormalizer} from "./OptionsNormalizer";
+
+import { OptionsNormalizer } from "./OptionsNormalizer";
 
 export class Options implements IOptions {
     /**
@@ -97,15 +98,11 @@ export class Options implements IOptions {
      * @param obfuscatorOptions
      */
     constructor (obfuscatorOptions: IObfuscatorOptions) {
-        Joi.validate(
-            obfuscatorOptions,
-            this.schema,
-            (error: Joi.ValidationError) => {
-                if (error) {
-                    throw error;
-                }
+        Joi.validate(obfuscatorOptions, this.schema, (error: Joi.ValidationError) => {
+            if (error) {
+                throw error;
             }
-        );
+        });
 
         Object.assign(
             this,

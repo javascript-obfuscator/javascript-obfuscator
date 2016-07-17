@@ -8,6 +8,16 @@
     "removeComments": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "types": [
+      "chai",
+      "chance",
+      "esprima",
+      "joi",
+      "mkdirp",
+      "mocha",
+      "node",
+      "sinon"
+    ]
   }
 }

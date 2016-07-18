@@ -1,4 +1,4 @@
-import { IsBoolean, IsIn, IsInt, IsString, Min, Max, validateSync, ValidationError, ValidatorOptions } from 'class-validator';
+import { IsBoolean, IsIn, IsNumber, IsString, Min, Max, validateSync, ValidationError, ValidatorOptions } from 'class-validator';
 
 import { IObfuscatorOptions } from "./interfaces/IObfuscatorOptions";
 import { IOptions } from "./interfaces/IOptions";
@@ -90,7 +90,7 @@ export class Options implements IOptions {
     /**
      * @type {number}
      */
-    @IsInt()
+    @IsNumber()
     @Min(0)
     @Max(1)
     public readonly unicodeArrayThreshold: number;
@@ -107,9 +107,12 @@ export class Options implements IOptions {
     constructor (obfuscatorOptions: IObfuscatorOptions) {
         Object.assign(this, Object.assign({}, DEFAULT_PRESET, obfuscatorOptions));
 
-        let errors: ValidationError[] = validateSync(this, Options.validatorOptions);
+        let errors: ValidationError[] = validateSync(this, Options.validatorOptions),
+            validationHasErrors: boolean = errors.some((error: ValidationError): boolean => {
+                return Object.keys(error.constraints).length > 0;
+            });
 
-        if (errors.length) {
+        if (validationHasErrors) {
             throw new ReferenceError(`Validation failed. errors:\n${Options.formatErrors(errors)}`);
         }
 

@@ -1060,8 +1060,11 @@ var Options = function () {
         _classCallCheck(this, Options);
 
         Object.assign(this, Object.assign({}, DefaultPreset_1.DEFAULT_PRESET, obfuscatorOptions));
-        var errors = class_validator_1.validateSync(this, Options.validatorOptions);
-        if (errors.length) {
+        var errors = class_validator_1.validateSync(this, Options.validatorOptions),
+            validationHasErrors = errors.some(function (error) {
+            return Object.keys(error.constraints).length > 0;
+        });
+        if (validationHasErrors) {
             throw new ReferenceError("Validation failed. errors:\n" + Options.formatErrors(errors));
         }
         Object.assign(this, OptionsNormalizer_1.OptionsNormalizer.normalizeOptions(this));
@@ -1128,7 +1131,7 @@ __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], 
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "sourceMap", void 0);
 __decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata('design:type', String)], Options.prototype, "sourceMapMode", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "unicodeArray", void 0);
-__decorate([class_validator_1.IsInt(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata('design:type', Number)], Options.prototype, "unicodeArrayThreshold", void 0);
+__decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata('design:type', Number)], Options.prototype, "unicodeArrayThreshold", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "wrapUnicodeArrayCalls", void 0);
 exports.Options = Options;
 

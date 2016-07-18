@@ -5,11 +5,10 @@ import { IOptions } from "../../interfaces/IOptions";
 import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
 
 import { AppendState } from "../../enums/AppendState";
-import { JSFuck } from "../../enums/JSFuck";
 
-import { NO_CUSTOM_NODES_PRESET } from "../../preset-options/NoCustomNodesPreset";
+import { SelfDefendingTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-decode-node/SelfDefendingTemplate";
+import { UnicodeArrayDecodeTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-decode-node/UnicodeArrayDecodeTemplate";
 
-import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
 import { Utils } from "../../Utils";
@@ -68,58 +67,18 @@ export class UnicodeArrayDecodeNode extends Node {
      * @returns {INode}
      */
     protected getNodeStructure (): INode {
-        const environmentName: string = Utils.getRandomVariableName(),
-            forLoopFunctionName: string = Utils.getRandomVariableName(),
-            indexVariableName: string = Utils.getRandomVariableName(),
-            tempArrayName: string = Utils.getRandomVariableName();
+        const forLoopFunctionName: string = Utils.getRandomVariableName();
 
         let code: string = '';
 
         if (this.options.selfDefending) {
-            code = `
-                var ${environmentName} = function(){return ${Utils.stringToUnicode('dev')};};
-                   
-                Function(${Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})()[${Utils.stringToUnicode('test')}](${environmentName}[${Utils.stringToUnicode('toString')}]()) !== ${JSFuck.True} && !${this.unicodeArrayName}++ ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.True}){}')() : Function(${Utils.stringToUnicode('a')}, atob(${Utils.stringToUnicode(Utils.btoa('a.call()'))}))(${forLoopFunctionName}) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')() : []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')();
-            `;
+            code = SelfDefendingTemplate(this.unicodeArrayName, forLoopFunctionName);
         } else {
             code = `${forLoopFunctionName}();`;
         }
 
-        return NodeUtils.convertCodeToStructure(`
-            (function () {
-                ${JavaScriptObfuscator.obfuscate(`
-                    (function () {
-                        var object = []['filter']['constructor']('return this')();
-                        var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-            
-                        object.atob || (
-                            object.atob = function(input) {
-                                var str = String(input).replace(/=+$/, '');
-                                for (
-                                    var bc = 0, bs, buffer, idx = 0, output = '';
-                                    buffer = str.charAt(idx++);
-                                    ~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer,
-                                        bc++ % 4) ? output += String.fromCharCode(255 & bs >> (-2 * bc & 6)) : 0
-                                ) {
-                                    buffer = chars.indexOf(buffer);
-                                }
-                            return output;
-                        });
-                    })();
-                `, NO_CUSTOM_NODES_PRESET).getObfuscatedCode()}
-              
-                var ${forLoopFunctionName} = function () {
-                    var ${tempArrayName} = [];
-                    
-                    for (var ${indexVariableName} in ${this.unicodeArrayName}) {
-                        ${tempArrayName}[${Utils.stringToUnicode('push')}](decodeURI(atob(${this.unicodeArrayName}[${indexVariableName}])));
-                    }
-                    
-                    ${this.unicodeArrayName} = ${tempArrayName};
-                };
-                
-                ${code}
-            })();
-        `);
+        return NodeUtils.convertCodeToStructure(
+            UnicodeArrayDecodeTemplate(code, this.unicodeArrayName, forLoopFunctionName)
+        );
     }
 }

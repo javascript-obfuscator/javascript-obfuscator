@@ -3,9 +3,10 @@ import { INode } from "../../interfaces/nodes/INode";
 import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
 
 import { AppendState } from "../../enums/AppendState";
-import { JSFuck } from "../../enums/JSFuck";
 
 import { NO_CUSTOM_NODES_PRESET } from "../../preset-options/NoCustomNodesPreset";
+
+import { SelfDefendingTemplate } from "../../templates/custom-nodes/self-defending-nodes/self-defending-unicode-node/SelfDefendingTemplate";
 
 import { JavaScriptObfuscator } from "../../JavaScriptObfuscator";
 import { Node } from '../Node';
@@ -40,16 +41,7 @@ export class SelfDefendingUnicodeNode extends Node {
      */
     protected getNodeStructure (): INode {
         return NodeUtils.convertCodeToStructure(
-            JavaScriptObfuscator.obfuscate(`
-                (function () {                                
-                    var func = function(){return ${Utils.stringToUnicode('dev')};},
-                        func2 = function () {
-                            return 'window';
-                        };
-                
-                    !Function(${Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})().test(func.toString()) ? Function(${Utils.stringToUnicode(`return/(\\\\[x|u](\\w){2,4})+/`)})().test(func2.toString()) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')() : []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.True}){}')() : []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')();
-                })();
-            `, NO_CUSTOM_NODES_PRESET).getObfuscatedCode()
+            JavaScriptObfuscator.obfuscate(SelfDefendingTemplate(), NO_CUSTOM_NODES_PRESET).getObfuscatedCode()
         );
     }
 }

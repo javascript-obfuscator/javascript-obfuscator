@@ -4,9 +4,11 @@ import { IOptions } from "../../interfaces/IOptions";
 import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
 
 import { AppendState } from "../../enums/AppendState";
-import { JSFuck } from "../../enums/JSFuck";
 
 import { NO_CUSTOM_NODES_PRESET } from "../../preset-options/NoCustomNodesPreset";
+
+import { SelfDefendingTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-rotate-function-node/SelfDefendingTemplate";
+import { UnicodeArrayRotateFunctionTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-rotate-function-node/UnicodeArrayRotateFunctionTemplate";
 
 import { JavaScriptObfuscator } from "../../JavaScriptObfuscator";
 import { Node } from '../Node';
@@ -75,34 +77,27 @@ export class UnicodeArrayRotateFunctionNode extends Node {
      * @returns {INode}
      */
     protected getNodeStructure (): INode {
-        let arrayName: string = Utils.getRandomVariableName(),
-            code: string = '',
+        let code: string = '',
             timesName: string = Utils.getRandomVariableName(),
-            timesArgumentName: string = Utils.getRandomVariableName(),
             whileFunctionName: string = Utils.getRandomVariableName();
 
         if (this.options.selfDefending) {
-            code = JavaScriptObfuscator.obfuscate(`
-                (function () {
-                    var func = function(){return ${Utils.stringToUnicode('dev')};};
-                                        
-                    !Function(${Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})().test(func.toString()) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.True}){}')() : Function(${Utils.stringToUnicode('a')}, ${Utils.stringToUnicode('b')}, ${Utils.stringToUnicode('a(++b)')})(${whileFunctionName}, ${timesName}) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')() : []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(${JSFuck.False}){}')();
-                })();
-            `, NO_CUSTOM_NODES_PRESET).getObfuscatedCode();
+            code = JavaScriptObfuscator.obfuscate(
+                SelfDefendingTemplate(whileFunctionName, timesName),
+                NO_CUSTOM_NODES_PRESET
+            ).getObfuscatedCode();
         } else {
             code = `${whileFunctionName}(++${timesName})`;
         }
 
-        return NodeUtils.convertCodeToStructure(`
-            (function (${arrayName}, ${timesName}) {
-                var ${whileFunctionName} = function (${timesArgumentName}) {
-                    while (--${timesArgumentName}) {
-                        ${arrayName}[${Utils.stringToUnicode('push')}](${arrayName}[${Utils.stringToUnicode('shift')}]());
-                    }
-                };
-                
-                ${code}
-            })(${this.unicodeArrayName}, 0x${Utils.decToHex(this.unicodeArrayRotateValue)});
-        `);
+        return NodeUtils.convertCodeToStructure(
+            UnicodeArrayRotateFunctionTemplate(
+                code,
+                this.unicodeArrayName,
+                this.unicodeArrayRotateValue,
+                whileFunctionName,
+                timesName
+            )
+        );
     }
 }

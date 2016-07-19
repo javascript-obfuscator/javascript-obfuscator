@@ -1,6 +1,6 @@
 import { ValidationError } from 'class-validator';
 
-export class ValidationErrorFormatter {
+export class ValidationErrorsFormatter {
     /**
      * @param validationErrors
      * @returns {string}
@@ -9,7 +9,7 @@ export class ValidationErrorFormatter {
         let errorsArray: string[] = [];
 
         for (let error of validationErrors) {
-            errorsArray.push(ValidationErrorFormatter.formatError(error));
+            errorsArray.push(ValidationErrorsFormatter.formatError(error));
         }
 
         return errorsArray.join('\n');

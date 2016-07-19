@@ -2733,7 +2733,7 @@ var __metadata = undefined && undefined.__metadata || function (k, v) {
 var class_validator_1 = __webpack_require__(57);
 var DefaultPreset_1 = __webpack_require__(16);
 var OptionsNormalizer_1 = __webpack_require__(46);
-var ValidationErrorFormatter_1 = __webpack_require__(47);
+var ValidationErrorsFormatter_1 = __webpack_require__(47);
 
 var Options = function Options(obfuscatorOptions) {
     _classCallCheck(this, Options);
@@ -2741,7 +2741,7 @@ var Options = function Options(obfuscatorOptions) {
     Object.assign(this, DefaultPreset_1.DEFAULT_PRESET, obfuscatorOptions);
     var errors = class_validator_1.validateSync(this, Options.validatorOptions);
     if (errors.length) {
-        throw new ReferenceError("Validation failed. errors:\n" + ValidationErrorFormatter_1.ValidationErrorFormatter.format(errors));
+        throw new ReferenceError("Validation failed. errors:\n" + ValidationErrorsFormatter_1.ValidationErrorsFormatter.format(errors));
     }
     Object.assign(this, OptionsNormalizer_1.OptionsNormalizer.normalizeOptions(this));
 };
@@ -2869,12 +2869,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ValidationErrorFormatter = function () {
-    function ValidationErrorFormatter() {
-        _classCallCheck(this, ValidationErrorFormatter);
+var ValidationErrorsFormatter = function () {
+    function ValidationErrorsFormatter() {
+        _classCallCheck(this, ValidationErrorsFormatter);
     }
 
-    _createClass(ValidationErrorFormatter, null, [{
+    _createClass(ValidationErrorsFormatter, null, [{
         key: "format",
         value: function format(validationErrors) {
             var errorsArray = [];
@@ -2886,7 +2886,7 @@ var ValidationErrorFormatter = function () {
                 for (var _iterator = validationErrors[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                     var error = _step.value;
 
-                    errorsArray.push(ValidationErrorFormatter.formatError(error));
+                    errorsArray.push(ValidationErrorsFormatter.formatError(error));
                 }
             } catch (err) {
                 _didIteratorError = true;
@@ -2920,10 +2920,10 @@ var ValidationErrorFormatter = function () {
         }
     }]);
 
-    return ValidationErrorFormatter;
+    return ValidationErrorsFormatter;
 }();
 
-exports.ValidationErrorFormatter = ValidationErrorFormatter;
+exports.ValidationErrorsFormatter = ValidationErrorsFormatter;
 
 /***/ },
 /* 48 */

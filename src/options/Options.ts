@@ -8,7 +8,7 @@ import { TSourceMapMode } from "../types/TSourceMapMode";
 import { DEFAULT_PRESET } from "../preset-options/DefaultPreset";
 
 import { OptionsNormalizer } from "./OptionsNormalizer";
-import { ValidationErrorFormatter } from "./ValidationErrorFormatter";
+import { ValidationErrorsFormatter } from "./ValidationErrorsFormatter";
 
 export class Options implements IOptions {
     /**
@@ -111,7 +111,7 @@ export class Options implements IOptions {
         let errors: ValidationError[] = validateSync(this, Options.validatorOptions);
 
         if (errors.length) {
-            throw new ReferenceError(`Validation failed. errors:\n${ValidationErrorFormatter.format(errors)}`);
+            throw new ReferenceError(`Validation failed. errors:\n${ValidationErrorsFormatter.format(errors)}`);
         }
 
         Object.assign(this, OptionsNormalizer.normalizeOptions(this));

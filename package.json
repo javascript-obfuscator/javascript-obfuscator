@@ -22,11 +22,11 @@
   "dependencies": {
     "babel-polyfill": "^6.9.1",
     "chance": "^1.0.3",
+    "class-validator": "^0.5.0-alpha.3",
     "commander": "^2.9.0",
     "escodegen": "^1.8.0",
     "esprima": "^2.7.2",
     "estraverse": "^4.2.0",
-    "joi": "^6.10.0",
     "mkdirp": "^0.5.1",
     "source-map-support": "^0.4.1"
   },

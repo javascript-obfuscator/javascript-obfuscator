@@ -1,6 +1,6 @@
 import { IObfuscatorOptions } from "../../src/interfaces/IObfuscatorOptions";
 
-import { OptionsNormalizer } from '../../src/OptionsNormalizer';
+import { OptionsNormalizer } from '../../src/options/OptionsNormalizer';
 
 import { DEFAULT_PRESET } from '../../src/preset-options/DefaultPreset';
 

@@ -8,7 +8,7 @@ import { NodeType } from "../../../src/enums/NodeType";
 
 import { CatchClauseObfuscator } from '../../../src/node-obfuscators/CatchClauseObfuscator';
 import { NodeMocks } from "../../mocks/NodeMocks";
-import { Options } from "../../../src/Options";
+import { Options } from "../../../src/options/Options";
 
 const assert: Chai.AssertStatic = require('chai').assert;
 

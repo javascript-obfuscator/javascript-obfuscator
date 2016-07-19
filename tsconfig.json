@@ -12,6 +12,7 @@
     "types": [
       "chai",
       "chance",
+      "commander",
       "esprima",
       "joi",
       "mkdirp",

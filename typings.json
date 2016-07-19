@@ -2,7 +2,6 @@
   "name": "javascript-obfuscator",
   "version": false,
   "globalDependencies": {
-    "commander": "github:DefinitelyTyped/DefinitelyTyped/commander/commander.d.ts",
     "escodegen": "github:DefinitelyTyped/DefinitelyTyped/escodegen/escodegen.d.ts",
     "estraverse": "github:DefinitelyTyped/DefinitelyTyped/estraverse/estraverse.d.ts"
   }

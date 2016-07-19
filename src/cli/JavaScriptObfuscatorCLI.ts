@@ -1,6 +1,6 @@
+import * as commander from 'commander';
 import * as path from 'path';
 
-import { Command } from 'commander';
 
 import { IObfuscationResult } from "../interfaces/IObfuscationResult";
 import { IObfuscatorOptions } from "../interfaces/IObfuscatorOptions";
@@ -119,7 +119,7 @@ export class JavaScriptObfuscatorCLI {
     }
 
     private configureCommands (): void {
-        this.commands = new Command()
+        this.commands = new commander.Command()
             .version(JavaScriptObfuscatorCLI.getBuildVersion(), '-v, --version')
             .usage('<inputPath> [options]')
             .option('-o, --output <path>', 'Output path for obfuscated code')

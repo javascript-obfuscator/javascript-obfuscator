@@ -33,6 +33,7 @@
   "devDependencies": {
     "@types/chai": "^3.4.27-alpha",
     "@types/chance": "^0.7.27-alpha",
+    "@types/commander": "^2.3.28",
     "@types/esprima": "^2.1.27-alpha",
     "@types/joi": "^6.5.27-alpha",
     "@types/mkdirp": "^0.3.27-alpha",

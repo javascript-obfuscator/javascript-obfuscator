@@ -9,7 +9,7 @@ import { DEFAULT_PRESET } from "../../../src/preset-options/DefaultPreset";
 
 import { FunctionObfuscator } from "../../../src/node-obfuscators/FunctionObfuscator";
 import { NodeMocks } from "../../mocks/NodeMocks";
-import { Options } from "../../../src/Options";
+import { Options } from "../../../src/options/Options";
 
 
 const assert: Chai.AssertStatic = require('chai').assert;

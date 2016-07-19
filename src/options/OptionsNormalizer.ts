@@ -1,6 +1,6 @@
-import { IObfuscatorOptions } from "./interfaces/IObfuscatorOptions";
+import { IObfuscatorOptions } from "../interfaces/IObfuscatorOptions";
 
-import { TOptionsNormalizerRule } from "./types/TOptionsNormalizerRule";
+import { TOptionsNormalizerRule } from "../types/TOptionsNormalizerRule";
 
 export class OptionsNormalizer {
     /**

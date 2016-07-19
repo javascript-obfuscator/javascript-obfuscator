@@ -9,7 +9,7 @@ import { IOptions } from './interfaces/IOptions';
 
 import { ObfuscationResult } from "./ObfuscationResult";
 import { Obfuscator } from "./Obfuscator";
-import { Options } from "./Options";
+import { Options } from "./options/Options";
 import { SourceMapCorrector } from "./SourceMapCorrector";
 
 export class JavaScriptObfuscatorInternal {

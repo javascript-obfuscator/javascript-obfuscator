@@ -22,7 +22,7 @@
   "dependencies": {
     "babel-polyfill": "^6.9.1",
     "chance": "^1.0.3",
-    "class-validator": "^0.5.0-alpha.1",
+    "class-validator": "^0.5.0-alpha.2",
     "commander": "^2.9.0",
     "escodegen": "^1.8.0",
     "esprima": "^2.7.2",

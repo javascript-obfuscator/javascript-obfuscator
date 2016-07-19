@@ -107,12 +107,9 @@ export class Options implements IOptions {
     constructor (obfuscatorOptions: IObfuscatorOptions) {
         Object.assign(this, Object.assign({}, DEFAULT_PRESET, obfuscatorOptions));
 
-        let errors: ValidationError[] = validateSync(this, Options.validatorOptions),
-            validationHasErrors: boolean = errors.some((error: ValidationError): boolean => {
-                return Object.keys(error.constraints).length > 0;
-            });
+        let errors: ValidationError[] = validateSync(this, Options.validatorOptions);
 
-        if (validationHasErrors) {
+        if (errors.length) {
             throw new ReferenceError(`Validation failed. errors:\n${Options.formatErrors(errors)}`);
         }
 

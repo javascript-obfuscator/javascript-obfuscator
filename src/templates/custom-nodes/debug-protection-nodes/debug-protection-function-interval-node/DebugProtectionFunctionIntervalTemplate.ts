@@ -1,11 +1,10 @@
 /**
- * @param debugProtectionFunctionName
  * @returns {string}
  */
-export function DebugProtectionFunctionIntervalTemplate (debugProtectionFunctionName: string): string {
+export function DebugProtectionFunctionIntervalTemplate (): string {
     return `
         setInterval(function () {
-            ${debugProtectionFunctionName}();
+            {debugProtectionFunctionName}();
         }, 4000);
     `;
 }

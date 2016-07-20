@@ -1,35 +1,22 @@
-import { NO_CUSTOM_NODES_PRESET } from "../../../../preset-options/NoCustomNodesPreset";
-
-import { AtobTemplate } from "../../AtobTemplate";
-
-import { JavaScriptObfuscator } from '../../../../JavaScriptObfuscator';
-import { Utils } from "../../../../Utils";
-
 /**
- * @param code
- * @param unicodeArrayName
- * @param forLoopFunctionName
  * @returns {string}
  */
-export function UnicodeArrayDecodeTemplate (code: string, unicodeArrayName: string, forLoopFunctionName: string): string {
-    let indexVariableName: string = Utils.getRandomVariableName(),
-        tempArrayName: string = Utils.getRandomVariableName();
-
+export function UnicodeArrayDecodeTemplate (): string {
     return `
         (function () {
-            ${JavaScriptObfuscator.obfuscate(AtobTemplate(), NO_CUSTOM_NODES_PRESET).getObfuscatedCode()}
+           {atobPolyfill}
           
-            var ${forLoopFunctionName} = function () {
-                var ${tempArrayName} = [];
+            var {forLoopFunctionName} = function () {
+                var array = [];
                 
-                for (var ${indexVariableName} in ${unicodeArrayName}) {
-                    ${tempArrayName}[${Utils.stringToUnicode('push')}](decodeURI(atob(${unicodeArrayName}[${indexVariableName}])));
+                for (var i in {unicodeArrayName}) {
+                    array['push'](decodeURI(atob({unicodeArrayName}[i])));
                 }
                 
-                ${unicodeArrayName} = ${tempArrayName};
+                {unicodeArrayName} = array;
             };
             
-            ${code}
+            {code}
         })();
     `;
 }

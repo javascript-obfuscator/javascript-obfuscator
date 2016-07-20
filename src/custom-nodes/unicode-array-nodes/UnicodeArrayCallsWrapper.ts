@@ -1,3 +1,5 @@
+import 'format-unicorn';
+
 import { INode } from "../../interfaces/nodes/INode";
 import { IOptions } from "../../interfaces/IOptions";
 
@@ -9,6 +11,7 @@ import { UnicodeArrayCallsWrapperTemplate } from "../../templates/custom-nodes/u
 
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
+import { Utils } from "../../Utils";
 
 export class UnicodeArrayCallsWrapper extends Node {
     /**
@@ -79,8 +82,14 @@ export class UnicodeArrayCallsWrapper extends Node {
      * @returns {INode}
      */
     protected getNodeStructure (): INode {
+        let keyName: string = Utils.getRandomVariableName();
+
         return NodeUtils.convertCodeToStructure(
-            UnicodeArrayCallsWrapperTemplate(this.unicodeArrayCallsWrapperName, this.unicodeArrayName)
+            UnicodeArrayCallsWrapperTemplate().formatUnicorn({
+                keyName: keyName,
+                unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName,
+                unicodeArrayName: this.unicodeArrayName
+            })
         );
     }
 }

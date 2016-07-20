@@ -41,7 +41,10 @@ export class SelfDefendingUnicodeNode extends Node {
      */
     protected getNodeStructure (): INode {
         return NodeUtils.convertCodeToStructure(
-            JavaScriptObfuscator.obfuscate(SelfDefendingTemplate(), NO_CUSTOM_NODES_PRESET).getObfuscatedCode()
+            JavaScriptObfuscator.obfuscate(
+                SelfDefendingTemplate(),
+                NO_CUSTOM_NODES_PRESET
+            ).getObfuscatedCode()
         );
     }
 }

@@ -1,3 +1,5 @@
+import 'format-unicorn';
+
 import { INode } from "../../interfaces/nodes/INode";
 import { IOptions } from "../../interfaces/IOptions";
 
@@ -43,7 +45,9 @@ export class DebugProtectionFunctionCallNode extends Node {
      */
     protected getNodeStructure (): INode {
         return NodeUtils.convertCodeToStructure(
-            DebugProtectionFunctionCallTemplate(this.debugProtectionFunctionName)
+            DebugProtectionFunctionCallTemplate().formatUnicorn({
+                debugProtectionFunctionName: this.debugProtectionFunctionName
+            })
         );
     }
 }

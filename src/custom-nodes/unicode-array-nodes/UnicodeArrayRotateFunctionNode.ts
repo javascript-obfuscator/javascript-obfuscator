@@ -1,3 +1,5 @@
+import 'format-unicorn';
+
 import { INode } from "../../interfaces/nodes/INode";
 import { IOptions } from "../../interfaces/IOptions";
 
@@ -82,22 +84,25 @@ export class UnicodeArrayRotateFunctionNode extends Node {
             whileFunctionName: string = Utils.getRandomVariableName();
 
         if (this.options.selfDefending) {
-            code = JavaScriptObfuscator.obfuscate(
-                SelfDefendingTemplate(whileFunctionName, timesName),
-                NO_CUSTOM_NODES_PRESET
-            ).getObfuscatedCode();
+            code = SelfDefendingTemplate().formatUnicorn({
+                timesName,
+                whileFunctionName
+            });
         } else {
             code = `${whileFunctionName}(++${timesName})`;
         }
 
         return NodeUtils.convertCodeToStructure(
-            UnicodeArrayRotateFunctionTemplate(
-                code,
-                this.unicodeArrayName,
-                this.unicodeArrayRotateValue,
-                whileFunctionName,
-                timesName
-            )
+            JavaScriptObfuscator.obfuscate(
+                UnicodeArrayRotateFunctionTemplate().formatUnicorn({
+                    code,
+                    timesName,
+                    unicodeArrayName: this.unicodeArrayName,
+                    unicodeArrayRotateValue: Utils.decToHex(this.unicodeArrayRotateValue),
+                    whileFunctionName
+                }),
+                NO_CUSTOM_NODES_PRESET
+            ).getObfuscatedCode()
         );
     }
 }

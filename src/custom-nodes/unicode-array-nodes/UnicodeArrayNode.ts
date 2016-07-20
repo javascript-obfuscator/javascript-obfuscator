@@ -1,3 +1,5 @@
+import 'format-unicorn';
+
 import { INode } from '../../interfaces/nodes/INode';
 import { IOptions } from "../../interfaces/IOptions";
 
@@ -5,10 +7,11 @@ import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
 
 import { AppendState } from '../../enums/AppendState';
 
+import { UnicodeArrayTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-node/UnicodeArrayTemplate";
+
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
 import { Utils } from '../../Utils';
-import {UnicodeArrayTemplate} from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-node/UnicodeArrayTemplate";
 
 export class UnicodeArrayNode extends Node {
     /**
@@ -98,7 +101,10 @@ export class UnicodeArrayNode extends Node {
      */
     protected getNodeStructure (): INode {
         return NodeUtils.convertCodeToStructure(
-            UnicodeArrayTemplate(this.unicodeArrayName, this.unicodeArray.join(','))
+            UnicodeArrayTemplate().formatUnicorn({
+                unicodeArrayName: this.unicodeArrayName,
+                unicodeArray: this.unicodeArray.join(',')
+            })
         );
     }
 }

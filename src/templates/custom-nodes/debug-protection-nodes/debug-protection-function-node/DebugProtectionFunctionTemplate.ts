@@ -1,12 +1,11 @@
 import { Utils } from "../../../../Utils";
 
 /**
- * @param debugProtectionFunctionName
  * @returns {string}
  */
-export function DebugProtectionFunctionTemplate (debugProtectionFunctionName: string): string {
+export function DebugProtectionFunctionTemplate (): string {
     return `
-        var ${debugProtectionFunctionName} = function () {
+        var {debugProtectionFunctionName} = function () {
             function debuggerProtection (counter) {
                 if (('' + counter / counter)['length'] !== 1 || counter % 20 === 0) {
                     (function () {}.constructor('debugger')());

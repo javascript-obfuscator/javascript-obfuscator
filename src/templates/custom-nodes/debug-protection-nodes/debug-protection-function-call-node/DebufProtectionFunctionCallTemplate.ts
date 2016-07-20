@@ -1,9 +1,6 @@
 /**
- * @param debugProtectionFunctionName
  * @returns {string}
  */
-export function DebugProtectionFunctionCallTemplate (debugProtectionFunctionName: string): string {
-    return `
-        ${debugProtectionFunctionName}();
-    `;
+export function DebugProtectionFunctionCallTemplate (): string {
+    return `{debugProtectionFunctionName}();`;
 }

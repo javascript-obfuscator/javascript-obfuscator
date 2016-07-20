@@ -5,6 +5,8 @@ import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
 
 import { AppendState } from "../../enums/AppendState";
 
+import { DebugProtectionFunctionCallTemplate } from "../../templates/custom-nodes/debug-protection-nodes/debug-protection-function-call-node/DebufProtectionFunctionCallTemplate";
+
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
 
@@ -40,8 +42,8 @@ export class DebugProtectionFunctionCallNode extends Node {
      * @returns {INode}
      */
     protected getNodeStructure (): INode {
-        return NodeUtils.convertCodeToStructure(`
-            ${this.debugProtectionFunctionName}();
-        `);
+        return NodeUtils.convertCodeToStructure(
+            DebugProtectionFunctionCallTemplate(this.debugProtectionFunctionName)
+        );
     }
 }

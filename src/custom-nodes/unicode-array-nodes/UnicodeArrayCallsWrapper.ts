@@ -5,9 +5,10 @@ import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
 
 import { AppendState } from "../../enums/AppendState";
 
+import { UnicodeArrayCallsWrapperTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayCallsWrapperTemplate";
+
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
-import { Utils } from "../../Utils";
 
 export class UnicodeArrayCallsWrapper extends Node {
     /**
@@ -78,12 +79,8 @@ export class UnicodeArrayCallsWrapper extends Node {
      * @returns {INode}
      */
     protected getNodeStructure (): INode {
-        let keyName: string = Utils.getRandomVariableName();
-
-        return NodeUtils.convertCodeToStructure(`
-            var ${this.unicodeArrayCallsWrapperName} = function (${keyName}) {
-                return ${this.unicodeArrayName}[parseInt(${keyName}, 0x010)];
-            };
-        `);
+        return NodeUtils.convertCodeToStructure(
+            UnicodeArrayCallsWrapperTemplate(this.unicodeArrayCallsWrapperName, this.unicodeArrayName)
+        );
     }
 }

@@ -8,6 +8,7 @@ import { AppendState } from '../../enums/AppendState';
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
 import { Utils } from '../../Utils';
+import {UnicodeArrayTemplate} from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-node/UnicodeArrayTemplate";
 
 export class UnicodeArrayNode extends Node {
     /**
@@ -96,8 +97,8 @@ export class UnicodeArrayNode extends Node {
      * @returns {INode}
      */
     protected getNodeStructure (): INode {
-        return NodeUtils.convertCodeToStructure(`
-            var ${this.unicodeArrayName} = [${this.unicodeArray.join(',')}];
-        `);
+        return NodeUtils.convertCodeToStructure(
+            UnicodeArrayTemplate(this.unicodeArrayName, this.unicodeArray.join(','))
+        );
     }
 }

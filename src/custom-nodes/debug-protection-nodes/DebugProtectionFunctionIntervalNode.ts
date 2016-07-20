@@ -5,6 +5,8 @@ import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
 
 import { AppendState } from "../../enums/AppendState";
 
+import { DebugProtectionFunctionIntervalTemplate } from "../../templates/custom-nodes/debug-protection-nodes/debug-protection-function-interval-node/DebugProtectionFunctionIntervalTemplate";
+
 import { Node } from '../Node';
 import { NodeUtils } from '../../NodeUtils';
 
@@ -40,10 +42,8 @@ export class DebugProtectionFunctionIntervalNode extends Node {
      * @returns {INode}
      */
     protected getNodeStructure (): INode {
-        return NodeUtils.convertCodeToStructure(`
-            setInterval(function () {
-                ${this.debugProtectionFunctionName}();
-            }, 4000);
-        `);
+        return NodeUtils.convertCodeToStructure(
+            DebugProtectionFunctionIntervalTemplate(this.debugProtectionFunctionName)
+        );
     }
 }

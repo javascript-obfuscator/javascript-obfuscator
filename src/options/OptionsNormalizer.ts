@@ -1,4 +1,5 @@
 import { IObfuscatorOptions } from "../interfaces/IObfuscatorOptions";
+import { IOptions } from "../interfaces/IOptions";
 
 import { TOptionsNormalizerRule } from "../types/TOptionsNormalizerRule";
 
@@ -33,10 +34,10 @@ export class OptionsNormalizer {
 
     /**
      * @param options
-     * @returns {IObfuscatorOptions}
+     * @returns {IOptions}
      */
-    public static normalizeOptions (options: IObfuscatorOptions): IObfuscatorOptions {
-        let normalizedOptions: IObfuscatorOptions = Object.assign({}, options);
+    public static normalizeOptions (options: IOptions): IOptions {
+        let normalizedOptions: IOptions = Object.assign({}, options);
 
         for (let normalizerRule of OptionsNormalizer.normalizerRules) {
             normalizedOptions = normalizerRule(normalizedOptions);
@@ -47,9 +48,9 @@ export class OptionsNormalizer {
 
     /**
      * @param options
-     * @returns {IObfuscatorOptions}
+     * @returns {IOptions}
      */
-    private static selfDefendingRule (options: IObfuscatorOptions): IObfuscatorOptions {
+    private static selfDefendingRule (options: IOptions): IOptions {
         if (options.selfDefending) {
             Object.assign(options, OptionsNormalizer.SELF_DEFENDING_OPTIONS);
         }
@@ -59,9 +60,9 @@ export class OptionsNormalizer {
 
     /**
      * @param options
-     * @returns {IObfuscatorOptions}
+     * @returns {IOptions}
      */
-    private static unicodeArrayRule (options: IObfuscatorOptions): IObfuscatorOptions {
+    private static unicodeArrayRule (options: IOptions): IOptions {
         if (!options.unicodeArray) {
             Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
         }
@@ -71,9 +72,9 @@ export class OptionsNormalizer {
 
     /**
      * @param options
-     * @returns {IObfuscatorOptions}
+     * @returns {IOptions}
      */
-    private static unicodeArrayThresholdRule (options: IObfuscatorOptions): IObfuscatorOptions {
+    private static unicodeArrayThresholdRule (options: IOptions): IOptions {
         if (options.unicodeArrayThreshold === 0) {
             Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
         }

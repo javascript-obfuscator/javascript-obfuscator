@@ -1,3 +1,3 @@
-import { IObfuscatorOptions } from "../interfaces/IObfuscatorOptions";
+import {IOptions} from "../interfaces/IOptions";
 
-export type TOptionsNormalizerRule = (options: IObfuscatorOptions) => IObfuscatorOptions;
+export type TOptionsNormalizerRule = (options: IOptions) => IOptions;

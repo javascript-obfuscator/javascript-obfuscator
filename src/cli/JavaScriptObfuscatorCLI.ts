@@ -90,7 +90,8 @@ export class JavaScriptObfuscatorCLI {
             return;
         }
 
-        this.inputPath = CLIUtils.getInputPath(this.arguments);
+        this.inputPath = this.arguments[0];
+        CLIUtils.validateInputPath(this.inputPath);
 
         this.getData();
         this.processData();
@@ -156,7 +157,7 @@ export class JavaScriptObfuscatorCLI {
 
     private processData (): void {
         let options: IObfuscatorOptions = this.buildOptions(),
-            outputCodePath: string = CLIUtils.getOutputCodePath(this.commands, this.inputPath);
+            outputCodePath: string = CLIUtils.getOutputCodePath((<any>this.commands).output, this.inputPath);
 
         if (options.sourceMap) {
             this.processDataWithSourceMap(outputCodePath, options);

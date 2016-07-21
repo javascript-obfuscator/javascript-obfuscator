@@ -1145,21 +1145,8 @@ var CLIUtils = function () {
     }
 
     _createClass(CLIUtils, null, [{
-        key: 'getInputPath',
-        value: function getInputPath(argv) {
-            var inputPath = argv[0];
-            if (!CLIUtils.isFilePath(inputPath)) {
-                throw new ReferenceError('First argument must be a valid file path');
-            }
-            if (!Utils_1.Utils.arrayContains(CLIUtils.availableInputExtensions, path.extname(inputPath))) {
-                throw new ReferenceError('Input file must have .js extension');
-            }
-            return inputPath;
-        }
-    }, {
         key: 'getOutputCodePath',
-        value: function getOutputCodePath(commands, inputPath) {
-            var outputPath = commands.output;
+        value: function getOutputCodePath(outputPath, inputPath) {
             if (outputPath) {
                 return outputPath;
             }
@@ -1192,6 +1179,16 @@ var CLIUtils = function () {
         key: 'readFile',
         value: function readFile(inputPath) {
             return fs.readFileSync(inputPath, CLIUtils.encoding);
+        }
+    }, {
+        key: 'validateInputPath',
+        value: function validateInputPath(inputPath) {
+            if (!CLIUtils.isFilePath(inputPath)) {
+                throw new ReferenceError('Given input path must be a valid file path');
+            }
+            if (!Utils_1.Utils.arrayContains(CLIUtils.availableInputExtensions, path.extname(inputPath))) {
+                throw new ReferenceError('Input file must have .js extension');
+            }
         }
     }, {
         key: 'writeFile',
@@ -1247,7 +1244,8 @@ var JavaScriptObfuscatorCLI = function () {
                 this.commands.outputHelp();
                 return;
             }
-            this.inputPath = CLIUtils_1.CLIUtils.getInputPath(this.arguments);
+            this.inputPath = this.arguments[0];
+            CLIUtils_1.CLIUtils.validateInputPath(this.inputPath);
             this.getData();
             this.processData();
         }
@@ -1289,7 +1287,7 @@ var JavaScriptObfuscatorCLI = function () {
         key: 'processData',
         value: function processData() {
             var options = this.buildOptions(),
-                outputCodePath = CLIUtils_1.CLIUtils.getOutputCodePath(this.commands, this.inputPath);
+                outputCodePath = CLIUtils_1.CLIUtils.getOutputCodePath(this.commands.output, this.inputPath);
             if (options.sourceMap) {
                 this.processDataWithSourceMap(outputCodePath, options);
             } else {

@@ -1,4 +1,3 @@
-import * as commander from 'commander';
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as path from 'path';
@@ -21,31 +20,11 @@ export class CLIUtils {
     private static encoding: BufferEncoding = 'utf8';
 
     /**
-     * @param argv
-     * @returns {string}
-     */
-    public static getInputPath (argv: string[]): string {
-        let inputPath: string = argv[0];
-
-        if (!CLIUtils.isFilePath(inputPath)) {
-            throw new ReferenceError(`First argument must be a valid file path`);
-        }
-
-        if (!Utils.arrayContains(CLIUtils.availableInputExtensions, path.extname(inputPath))) {
-            throw new ReferenceError(`Input file must have .js extension`);
-        }
-
-        return inputPath;
-    }
-
-    /**
-     * @param commands
+     * @param outputPath
      * @param inputPath
      * @returns {string}
      */
-    public static getOutputCodePath (commands: commander.ICommand, inputPath: string): string {
-        let outputPath: string = (<any>commands).output;
-
+    public static getOutputCodePath (outputPath: string, inputPath: string): string {
         if (outputPath) {
             return outputPath;
         }
@@ -104,6 +83,19 @@ export class CLIUtils {
      */
     public static readFile (inputPath: string): string {
         return fs.readFileSync(inputPath, CLIUtils.encoding);
+    }
+
+    /**
+     * @param inputPath
+     */
+    public static validateInputPath (inputPath: string): void {
+        if (!CLIUtils.isFilePath(inputPath)) {
+            throw new ReferenceError(`Given input path must be a valid file path`);
+        }
+
+        if (!Utils.arrayContains(CLIUtils.availableInputExtensions, path.extname(inputPath))) {
+            throw new ReferenceError(`Input file must have .js extension`);
+        }
     }
 
     /**

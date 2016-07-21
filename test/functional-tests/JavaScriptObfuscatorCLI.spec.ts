@@ -103,6 +103,13 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 ]);
 
                 assert.equal(fs.existsSync(outputSourceMapPath), true);
+
+                const content: string = fs.readFileSync(outputSourceMapPath, { encoding: 'utf8' }),
+                    sourceMap: any = JSON.parse(content);
+
+                assert.property(sourceMap, 'version');
+                assert.property(sourceMap, 'sources');
+                assert.property(sourceMap, 'names');
             });
 
             afterEach(() => {

@@ -5,6 +5,7 @@ node_js:
   - "0.12"
   - iojs
   - "4"
+  - "6"
   - "stable"
 
 script: "npm run travis"

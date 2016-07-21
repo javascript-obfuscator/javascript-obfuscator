@@ -1,5 +1,9 @@
 'use strict';
 
+if (!(<any>global)._babelPolyfill) {
+    require('babel-polyfill');
+}
+
 const JavaScriptObfuscator: any = require("../../index");
 
 let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(

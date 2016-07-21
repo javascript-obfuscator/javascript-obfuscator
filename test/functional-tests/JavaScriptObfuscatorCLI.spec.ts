@@ -84,6 +84,33 @@ describe('JavaScriptObfuscatorCLI', function (): void {
             });
         });
 
+        describe('--sourceMap option is set', () => {
+            let outputSourceMapPath: string = `${outputFilePath}.map`;
+
+            it('should creates file with source map in the same directory as output file', () => {
+                JavaScriptObfuscator.runCLI([
+                    'node',
+                    'javascript-obfuscator',
+                    fixtureFilePath,
+                    '--output',
+                    outputFilePath,
+                    '--compact',
+                    'true',
+                    '--selfDefending',
+                    '0',
+                    '--sourceMap',
+                    'true'
+                ]);
+
+                assert.equal(fs.existsSync(outputSourceMapPath), true);
+            });
+
+            afterEach(() => {
+                fs.unlinkSync(outputFilePath);
+                fs.unlinkSync(outputSourceMapPath);
+            });
+        });
+
         describe('help output', () => {
             let callback: sinon.SinonSpy,
                 stdoutWriteMock: StdoutWriteMock;

@@ -10,6 +10,7 @@ BabelPolyfill.append();
 import './unit-tests/NodeUtils.spec';
 import './unit-tests/ObfuscationResult.spec';
 import './unit-tests/OptionsNormalizer.spec';
+import './unit-tests/SourceMapCorrector.spec';
 import './unit-tests/Utils.spec';
 import './unit-tests/cli/CLIUtils.spec';
 import './unit-tests/node-obfuscators/CatchClauseObfuscator.spec';

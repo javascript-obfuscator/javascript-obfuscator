@@ -1,4 +1,5 @@
 import { IObfuscationResult } from "./interfaces/IObfuscationResult";
+import { ISourceMapCorrector } from "./interfaces/ISourceMapCorrector";
 
 import { TSourceMapMode } from "./types/TSourceMapMode";
 
@@ -7,7 +8,7 @@ import { SourceMapMode } from "./enums/SourceMapMode";
 import { ObfuscationResult } from "./ObfuscationResult";
 import { Utils } from "./Utils";
 
-export class SourceMapCorrector {
+export class SourceMapCorrector implements ISourceMapCorrector {
     /**
      * @type {string}
      */

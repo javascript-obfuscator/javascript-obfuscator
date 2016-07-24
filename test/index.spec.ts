@@ -25,3 +25,4 @@ import './functional-tests/JavaScriptObfuscatorCLI.spec';
 import './functional-tests/JavaScriptObfuscatorInternal.spec';
 import './functional-tests/node-obfuscators/LiteralObfuscator.spec';
 import './functional-tests/node-obfuscators/MemberExpressionObfuscator.spec';
+import './functional-tests/node-obfuscators/MethodDefinitionObfuscator.spec';

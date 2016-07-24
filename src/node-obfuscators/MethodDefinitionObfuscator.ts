@@ -9,12 +9,10 @@ import { Utils } from "../Utils";
 
 /**
  * replaces:
- *     function foo () { //... };
- *     foo();
+ *     foo () { //... };
  *
  * on:
- *     function _0x12d45f () { //... };
- *     _0x12d45f();
+ *     [_0x9a4e('0x0')] { //... };
  */
 export class MethodDefinitionObfuscator extends NodeObfuscator {
     /**

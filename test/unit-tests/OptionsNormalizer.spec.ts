@@ -12,12 +12,13 @@ describe('OptionsNormalizer', () => {
     describe('normalizeOptions (options: IObfuscatorOptions): IObfuscatorOptions', () => {
         let options1: IOptions,
             options2: IOptions,
-            expectedOptions1: IOptions,
-            expectedOptions2: IOptions,
+            options3: IOptions,
             optionsPreset1: IObfuscatorOptions,
             optionsPreset2: IObfuscatorOptions,
+            optionsPreset3: IObfuscatorOptions,
             expectedOptionsPreset1: IObfuscatorOptions,
-            expectedOptionsPreset2: IObfuscatorOptions;
+            expectedOptionsPreset2: IObfuscatorOptions,
+            expectedOptionsPreset3: IObfuscatorOptions;
 
         beforeEach(() => {
             optionsPreset1 = Object.assign({}, DEFAULT_PRESET, {
@@ -33,6 +34,11 @@ describe('OptionsNormalizer', () => {
                 unicodeArrayThreshold: 0,
                 wrapUnicodeArrayCalls: true
             });
+            optionsPreset3 = Object.assign({}, DEFAULT_PRESET, {
+                unicodeArray: true,
+                encodeUnicodeLiterals: true,
+                wrapUnicodeArrayCalls: false
+            });
 
             expectedOptionsPreset1 = Object.assign({}, DEFAULT_PRESET, {
                 compact: true,
@@ -47,17 +53,21 @@ describe('OptionsNormalizer', () => {
                 unicodeArrayThreshold: 0,
                 wrapUnicodeArrayCalls: false
             });
+            expectedOptionsPreset3 = Object.assign({}, DEFAULT_PRESET, {
+                unicodeArray: true,
+                encodeUnicodeLiterals: true,
+                wrapUnicodeArrayCalls: true
+            });
 
             options1 = new Options(optionsPreset1);
             options2 = new Options(optionsPreset2);
-
-            expectedOptions1 = new Options(expectedOptionsPreset1);
-            expectedOptions2 = new Options(expectedOptionsPreset2);
+            options3 = new Options(optionsPreset3);
         });
 
         it('should normalize options preset', () => {
-            assert.deepEqual(OptionsNormalizer.normalizeOptions(options1), expectedOptions1);
-            assert.deepEqual(OptionsNormalizer.normalizeOptions(options2), expectedOptions2);
+            assert.deepEqual(OptionsNormalizer.normalizeOptions(options1), expectedOptionsPreset1);
+            assert.deepEqual(OptionsNormalizer.normalizeOptions(options2), expectedOptionsPreset2);
+            assert.deepEqual(OptionsNormalizer.normalizeOptions(options3), expectedOptionsPreset3);
         });
     });
 });

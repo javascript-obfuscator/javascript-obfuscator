@@ -18,6 +18,14 @@ export class OptionsNormalizer {
     /**
      * @type {IObfuscatorOptions}
      */
+    private static ENCODE_UNICODE_LITERALS_OPTIONS: IObfuscatorOptions = {
+        encodeUnicodeLiterals: true,
+        wrapUnicodeArrayCalls: true
+    };
+
+    /**
+     * @type {IObfuscatorOptions}
+     */
     private static SELF_DEFENDING_OPTIONS: IObfuscatorOptions = {
         compact: true,
         selfDefending: true
@@ -29,6 +37,7 @@ export class OptionsNormalizer {
     private static normalizerRules: TOptionsNormalizerRule[] = [
         OptionsNormalizer.unicodeArrayRule,
         OptionsNormalizer.unicodeArrayThresholdRule,
+        OptionsNormalizer.encodeUnicodeLiteralsRule,
         OptionsNormalizer.selfDefendingRule
     ];
 
@@ -44,6 +53,18 @@ export class OptionsNormalizer {
         }
 
         return normalizedOptions;
+    }
+
+    /**
+     * @param options
+     * @returns {IOptions}
+     */
+    private static encodeUnicodeLiteralsRule (options: IOptions): IOptions {
+        if (options.unicodeArray && options.encodeUnicodeLiterals) {
+            Object.assign(options, OptionsNormalizer.ENCODE_UNICODE_LITERALS_OPTIONS);
+        }
+
+        return options;
     }
 
     /**

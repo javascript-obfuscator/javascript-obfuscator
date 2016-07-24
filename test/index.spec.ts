@@ -16,6 +16,7 @@ import './unit-tests/cli/CLIUtils.spec';
 import './unit-tests/node-obfuscators/CatchClauseObfuscator.spec';
 import './unit-tests/node-obfuscators/FunctionDeclarationObfuscator.spec';
 import './unit-tests/node-obfuscators/FunctionObfuscator.spec';
+import './unit-tests/node-obfuscators/LiteralObfuscator.spec';
 
 /**
  * Functional tests

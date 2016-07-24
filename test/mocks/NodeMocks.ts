@@ -11,6 +11,7 @@ import { IFunctionDeclarationNode } from "../../src/interfaces/nodes/IFunctionDe
 import { IIdentifierNode } from "../../src/interfaces/nodes/IIdentifierNode";
 import { IIfStatementNode } from "../../src/interfaces/nodes/IIfStatementNode";
 import { ILiteralNode } from "../../src/interfaces/nodes/ILiteralNode";
+import { IMemberExpressionNode } from "../../src/interfaces/nodes/IMemberExpressionNode";
 import { IProgramNode } from "../../src/interfaces/nodes/IProgramNode";
 import { ISpreadElementNode } from "../../src/interfaces/nodes/ISpreadElementNode";
 import { IVariableDeclarationNode } from "../../src/interfaces/nodes/IVariableDeclarationNode";
@@ -145,6 +146,23 @@ export class NodeMocks {
                 content: `'${value}'`,
                 precedence: escodegen.Precedence.Primary
             }
+        };
+    }
+
+    /**
+     * @param object
+     * @param property
+     * @return {IMemberExpressionNode}
+     */
+    public static getMemberExpressionNode (
+        object: IIdentifierNode,
+        property: IIdentifierNode|ILiteralNode
+    ): IMemberExpressionNode {
+        return {
+            type: NodeType.MemberExpression,
+            computed: false,
+            object: object,
+            property: property
         };
     }
 

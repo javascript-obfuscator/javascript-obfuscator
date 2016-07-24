@@ -2872,6 +2872,14 @@ var OptionsNormalizer = function () {
             return normalizedOptions;
         }
     }, {
+        key: "encodeUnicodeLiteralsRule",
+        value: function encodeUnicodeLiteralsRule(options) {
+            if (options.unicodeArray && options.encodeUnicodeLiterals) {
+                Object.assign(options, OptionsNormalizer.ENCODE_UNICODE_LITERALS_OPTIONS);
+            }
+            return options;
+        }
+    }, {
         key: "selfDefendingRule",
         value: function selfDefendingRule(options) {
             if (options.selfDefending) {
@@ -2907,11 +2915,15 @@ OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS = {
     unicodeArrayThreshold: 0,
     wrapUnicodeArrayCalls: false
 };
+OptionsNormalizer.ENCODE_UNICODE_LITERALS_OPTIONS = {
+    encodeUnicodeLiterals: true,
+    wrapUnicodeArrayCalls: true
+};
 OptionsNormalizer.SELF_DEFENDING_OPTIONS = {
     compact: true,
     selfDefending: true
 };
-OptionsNormalizer.normalizerRules = [OptionsNormalizer.unicodeArrayRule, OptionsNormalizer.unicodeArrayThresholdRule, OptionsNormalizer.selfDefendingRule];
+OptionsNormalizer.normalizerRules = [OptionsNormalizer.unicodeArrayRule, OptionsNormalizer.unicodeArrayThresholdRule, OptionsNormalizer.encodeUnicodeLiteralsRule, OptionsNormalizer.selfDefendingRule];
 exports.OptionsNormalizer = OptionsNormalizer;
 
 /***/ },

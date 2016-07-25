@@ -2,8 +2,6 @@ import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as sinon from 'sinon';
 
-import { StdoutWriteMock } from "../mocks/StdoutWriteMock";
-
 import { JavaScriptObfuscator } from "../../src/JavaScriptObfuscator";
 
 const assert: Chai.AssertStatic = require('chai').assert;
@@ -119,17 +117,13 @@ describe('JavaScriptObfuscatorCLI', function (): void {
         });
 
         describe('help output', () => {
-            let callback: sinon.SinonSpy,
-                stdoutWriteMock: StdoutWriteMock;
+            let callback: sinon.SinonSpy;
 
             beforeEach(() => {
                 callback = sinon.spy(console, 'log');
-                stdoutWriteMock = new StdoutWriteMock(process.stdout.write);
             });
 
             it('should print `console.log` help if `--help` option is set', () => {
-                stdoutWriteMock.mute();
-
                 JavaScriptObfuscator.runCLI([
                     'node',
                     'javascript-obfuscator',
@@ -137,20 +131,14 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     '--help'
                 ]);
 
-                stdoutWriteMock.restore();
-
                 assert.equal(callback.called, true);
             });
 
             it('should print `console.log` help if no options is passed', () => {
-                stdoutWriteMock.mute();
-
                 JavaScriptObfuscator.runCLI([
                     'node',
                     'javascript-obfuscator'
                 ]);
-
-                stdoutWriteMock.restore();
 
                 assert.equal(callback.called, true);
             });

@@ -1,8 +1,0 @@
-{
-  "name": "javascript-obfuscator",
-  "version": false,
-  "globalDependencies": {
-    "escodegen": "github:DefinitelyTyped/DefinitelyTyped/escodegen/escodegen.d.ts",
-    "estraverse": "github:DefinitelyTyped/DefinitelyTyped/estraverse/estraverse.d.ts"
-  }
-}

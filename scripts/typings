@@ -1,3 +1,0 @@
-#!/bin/bash
-
-$(npm bin)/typings install

@@ -58,7 +58,7 @@
     "tslint": "^3.13.0",
     "typescript": "^2.0.0",
     "webpack": "^2.1.0-beta.20",
-    "webpack-node-externals": "^1.3.0"
+    "webpack-node-externals": "^1.3.2"
   },
   "repository": {
     "type": "git",

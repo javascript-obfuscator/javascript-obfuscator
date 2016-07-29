@@ -78,7 +78,7 @@ javascript-obfuscator in.js [options]
 javascript-obfuscator in.js -output out.js [options]
 ```
 
-If the destination path is not specified through `--output` option, obfuscated code will saved in input file directory with name `INPUT_FILE_NAME-obfuscated.js`
+If the destination path is not specified through `--output` option, obfuscated code will saved into input file directory with name like `INPUT_FILE_NAME-obfuscated.js`
 
 Examples:
 ```sh
@@ -93,7 +93,7 @@ See [CLI options](#cli-options).
 
 ## JavaScript Obfuscator Options
 
-At this moment of time, there are following options (`name: default`) available for the JS Obfuscator:
+Following options available for the JS Obfuscator:
 
 #### options:
 
@@ -217,7 +217,7 @@ Enables source map generation for obfuscated code.
 ### `sourceMapMode`
 Type: `string` Default: `separate`
 
-Specify source map generation mode:
+Specifies source map generation mode:
 * `inline` - emit a single file with source maps instead of having a separate file;
 * `separate` - generates corresponding '.map' file with source map. If obfuscator run through CLI - adds link to source map file to the end of file with obfuscated code `//# sourceMappingUrl=file.js.map`.
 

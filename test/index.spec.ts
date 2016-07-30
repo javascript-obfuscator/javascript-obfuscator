@@ -27,3 +27,4 @@ import './functional-tests/node-obfuscators/LiteralObfuscator.spec';
 import './functional-tests/node-obfuscators/MemberExpressionObfuscator.spec';
 import './functional-tests/node-obfuscators/MethodDefinitionObfuscator.spec';
 import './functional-tests/node-obfuscators/ObjectExpressionObfuscator.spec';
+import './functional-tests/node-obfuscators/VariableDeclarationObfuscator.spec';

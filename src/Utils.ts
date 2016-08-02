@@ -4,11 +4,6 @@ import { JSFuck } from './enums/JSFuck';
 
 export class Utils {
     /**
-     * @type {RegExp}
-     */
-    private static hexRepetitiveZerosRegExp: RegExp = new RegExp('^(0{2,})+(?!$)', '');
-
-    /**
      * @type {Chance.Chance}
      */
     private static randomGenerator: Chance.Chance = new Chance();
@@ -62,14 +57,9 @@ export class Utils {
      * @returns {string}
      */
     public static decToHex (dec: number): string {
-        const decToHexSliceValue: number = -6,
-            exponent: number = 6,
-            radix: number = 16;
+        const radix: number = 16;
 
-        return (dec + Math.pow(radix, exponent))
-            .toString(radix)
-            .substr(decToHexSliceValue)
-            .replace(Utils.hexRepetitiveZerosRegExp, '');
+        return Number(dec).toString(radix);
     }
 
     /**

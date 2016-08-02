@@ -142,10 +142,8 @@ var Utils = function () {
     }, {
         key: 'decToHex',
         value: function decToHex(dec) {
-            var decToHexSliceValue = -6,
-                exponent = 6,
-                radix = 16;
-            return (dec + Math.pow(radix, exponent)).toString(radix).substr(decToHexSliceValue).replace(Utils.hexRepetitiveZerosRegExp, '');
+            var radix = 16;
+            return Number(dec).toString(radix);
         }
     }, {
         key: 'getRandomGenerator',
@@ -205,7 +203,6 @@ var Utils = function () {
     return Utils;
 }();
 
-Utils.hexRepetitiveZerosRegExp = new RegExp('^(0{2,})+(?!$)', '');
 Utils.randomGenerator = new chance_1.Chance();
 exports.Utils = Utils;
 

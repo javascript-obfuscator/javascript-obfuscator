@@ -46,6 +46,7 @@ describe('Utils', () => {
             assert.equal(Utils.decToHex(0), '0');
             assert.equal(Utils.decToHex(10), 'a');
             assert.equal(Utils.decToHex(17), '11');
+            assert.equal(Utils.decToHex(536870912), '20000000');
         });
     });
 

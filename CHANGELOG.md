@@ -1,7 +1,11 @@
 Change Log
 ===
 
-v0.7.0-dev.0
+v0.7.0-dev.2
+---
+* Fix of incorrect `Utils.decToHex` method
+
+v0.7.0-dev.1
 ---
 * **Breaking API change:** now `obfuscate(sourceCode, options)` returns `ObfuscationResult` object instead `string`. `ObfuscationResult` object contains two public methods: `getObfuscatedCode()` and `getSourceMap()`.
 * CLI. Now any code can be obfuscated through CLI `javascript-obfuscator` command. See `README.md` for available options. 

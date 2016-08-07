@@ -1,6 +1,10 @@
 Change Log
 ===
 
+v0.7.0-dev.3
+---
+* Obfuscator now returns an empty string instead of obfuscated code if source code is empty
+
 v0.7.0-dev.2
 ---
 * Fix of incorrect `Utils.decToHex` method

@@ -53,9 +53,9 @@ describe('JavaScriptObfuscator', () => {
             it('should returns object with empty obfuscated code and source map with empty data if source code is empty', () => {
                 let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     '',
-                    Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                    {
                         sourceMap: true
-                    })
+                    }
                 );
 
                 assert.isNotOk(obfuscationResult.getObfuscatedCode());
@@ -65,11 +65,18 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
-        it('should returns empty string if source code is empty', () => {
+        it('should returns an empty string if source code is empty', () => {
             assert.isNotOk(
                 JavaScriptObfuscator.obfuscate(
-                    '',
-                    Object.assign({}, NO_CUSTOM_NODES_PRESET)
+                    ''
+                ).getObfuscatedCode()
+            );
+        });
+
+        it('should returns an empty string if source code contains only comments', () => {
+            assert.isNotOk(
+                JavaScriptObfuscator.obfuscate(
+                    '// comment'
                 ).getObfuscatedCode()
             );
         });

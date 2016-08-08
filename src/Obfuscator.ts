@@ -18,6 +18,7 @@ import { FunctionObfuscator } from './node-obfuscators/FunctionObfuscator';
 import { LiteralObfuscator } from './node-obfuscators/LiteralObfuscator';
 import { MemberExpressionObfuscator } from './node-obfuscators/MemberExpressionObfuscator';
 import { MethodDefinitionObfuscator } from './node-obfuscators/MethodDefinitionObfuscator';
+import { Nodes } from "./Nodes";
 import { NodeUtils } from "./NodeUtils";
 import { ObjectExpressionObfuscator } from './node-obfuscators/ObjectExpressionObfuscator';
 import { SelfDefendingNodesGroup } from "./node-groups/SelfDefendingNodesGroup";
@@ -73,6 +74,10 @@ export class Obfuscator implements IObfuscator {
      * @returns {INode}
      */
     public obfuscateNode (node: INode): INode {
+        if (Nodes.isProgramNode(node) && !node.body.length) {
+            return node;
+        }
+
         NodeUtils.parentize(node);
 
         this.beforeObfuscation(node);

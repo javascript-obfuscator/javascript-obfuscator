@@ -1,7 +1,6 @@
 import * as commander from 'commander';
 import * as path from 'path';
 
-
 import { IObfuscationResult } from "../interfaces/IObfuscationResult";
 import { IObfuscatorOptions } from "../interfaces/IObfuscatorOptions";
 

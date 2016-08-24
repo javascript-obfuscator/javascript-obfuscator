@@ -1,3 +1,9 @@
+<!--
+  Title: JavaScript Obfuscator
+  Description: JavaScript obfuscator for Node.js.
+  Author: sanex3339
+  -->
+
 # JavaScript obfuscator for Node.js
 
 JavaScript obfuscator for Node.js is a free alternative to [js-obfuscator](https://github.com/caiguanhao/js-obfuscator) (which uses [javascriptobfuscator.com](https://javascriptobfuscator.com/Javascript-Obfuscator.aspx))

@@ -486,16 +486,16 @@ var NodeObfuscator = function () {
                 throw new ReferenceError('`unicodeArrayNode` node is not found in Map with custom nodes.');
             }
             var unicodeArray = unicodeArrayNode.getNodeData(),
-                valueIndex = unicodeArray.indexOf(value),
-                literalValueCallIndex = void 0,
+                indexOfExistingValue = unicodeArray.getIndexOf(value),
+                indexOfValue = void 0,
                 hexadecimalIndex = void 0;
-            if (valueIndex >= 0) {
-                literalValueCallIndex = valueIndex;
+            if (indexOfExistingValue >= 0) {
+                indexOfValue = indexOfExistingValue;
             } else {
-                literalValueCallIndex = unicodeArray.length;
+                indexOfValue = unicodeArray.getLength();
                 unicodeArrayNode.updateNodeData(value);
             }
-            hexadecimalIndex = this.replaceLiteralNumberWithHexadecimalValue(literalValueCallIndex);
+            hexadecimalIndex = this.replaceLiteralNumberWithHexadecimalValue(indexOfValue);
             if (this.options.wrapUnicodeArrayCalls) {
                 var unicodeArrayCallsWrapper = this.nodes.get('unicodeArrayCallsWrapper');
                 if (!unicodeArrayCallsWrapper) {
@@ -1687,7 +1687,7 @@ var UnicodeArrayCallsWrapper = function (_Node_1$Node) {
     _createClass(UnicodeArrayCallsWrapper, [{
         key: "appendNode",
         value: function appendNode(blockScopeNode) {
-            if (!this.unicodeArray.length) {
+            if (!this.unicodeArray.getLength()) {
                 return;
             }
             NodeUtils_1.NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), 1);
@@ -1763,7 +1763,7 @@ var UnicodeArrayDecodeNode = function (_Node_1$Node) {
     _createClass(UnicodeArrayDecodeNode, [{
         key: "appendNode",
         value: function appendNode(blockScopeNode) {
-            if (!this.unicodeArray.length) {
+            if (!this.unicodeArray.getLength()) {
                 return;
             }
             NodeUtils_1.NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), 1);
@@ -1822,21 +1822,20 @@ var AppendState_1 = __webpack_require__(2);
 var UnicodeArrayTemplate_1 = __webpack_require__(58);
 var Node_1 = __webpack_require__(3);
 var NodeUtils_1 = __webpack_require__(1);
-var Utils_1 = __webpack_require__(0);
 
 var UnicodeArrayNode = function (_Node_1$Node) {
     _inherits(UnicodeArrayNode, _Node_1$Node);
 
-    function UnicodeArrayNode(unicodeArrayName) {
-        var unicodeArrayRotateValue = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
-        var options = arguments[2];
+    function UnicodeArrayNode(unicodeArray, unicodeArrayName) {
+        var unicodeArrayRotateValue = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
+        var options = arguments[3];
 
         _classCallCheck(this, UnicodeArrayNode);
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(UnicodeArrayNode).call(this, options));
 
         _this.appendState = AppendState_1.AppendState.AfterObfuscation;
-        _this.unicodeArray = [];
+        _this.unicodeArray = unicodeArray;
         _this.unicodeArrayName = unicodeArrayName;
         _this.unicodeArrayRotateValue = unicodeArrayRotateValue;
         return _this;
@@ -1845,7 +1844,7 @@ var UnicodeArrayNode = function (_Node_1$Node) {
     _createClass(UnicodeArrayNode, [{
         key: 'appendNode',
         value: function appendNode(blockScopeNode) {
-            if (!this.unicodeArray.length) {
+            if (!this.unicodeArray.getLength()) {
                 return;
             }
             NodeUtils_1.NodeUtils.prependNode(blockScopeNode.body, this.getNode());
@@ -1863,20 +1862,20 @@ var UnicodeArrayNode = function (_Node_1$Node) {
     }, {
         key: 'getNode',
         value: function getNode() {
-            Utils_1.Utils.arrayRotate(this.unicodeArray, this.unicodeArrayRotateValue);
+            this.unicodeArray.rotateArray(this.unicodeArrayRotateValue);
             return _get(Object.getPrototypeOf(UnicodeArrayNode.prototype), 'getNode', this).call(this);
         }
     }, {
         key: 'updateNodeData',
         value: function updateNodeData(data) {
-            this.unicodeArray.push(data);
+            this.unicodeArray.addToArray(data);
         }
     }, {
         key: 'getNodeStructure',
         value: function getNodeStructure() {
             return NodeUtils_1.NodeUtils.convertCodeToStructure(UnicodeArrayTemplate_1.UnicodeArrayTemplate().formatUnicorn({
                 unicodeArrayName: this.unicodeArrayName,
-                unicodeArray: this.unicodeArray.join(',')
+                unicodeArray: this.unicodeArray.toString()
             }));
         }
     }]);
@@ -1932,7 +1931,7 @@ var UnicodeArrayRotateFunctionNode = function (_Node_1$Node) {
     _createClass(UnicodeArrayRotateFunctionNode, [{
         key: "appendNode",
         value: function appendNode(blockScopeNode) {
-            if (!this.unicodeArray.length) {
+            if (!this.unicodeArray.getLength()) {
                 return;
             }
             NodeUtils_1.NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), 1);
@@ -2101,6 +2100,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var NodesGroup_1 = __webpack_require__(12);
+var UnicodeArray_1 = __webpack_require__(67);
 var UnicodeArrayCallsWrapper_1 = __webpack_require__(30);
 var UnicodeArrayDecodeNode_1 = __webpack_require__(31);
 var UnicodeArrayNode_1 = __webpack_require__(32);
@@ -2128,8 +2128,8 @@ var UnicodeArrayNodesGroup = function (_NodesGroup_1$NodesGr) {
         } else {
             _this.unicodeArrayRotateValue = 0;
         }
-        var unicodeArrayNode = new UnicodeArrayNode_1.UnicodeArrayNode(_this.unicodeArrayName, _this.unicodeArrayRotateValue, _this.options),
-            unicodeArray = unicodeArrayNode.getNodeData();
+        var unicodeArray = new UnicodeArray_1.UnicodeArray(),
+            unicodeArrayNode = new UnicodeArrayNode_1.UnicodeArrayNode(unicodeArray, _this.unicodeArrayName, _this.unicodeArrayRotateValue, _this.options);
         _this.nodes.set('unicodeArrayNode', unicodeArrayNode);
         if (_this.options.wrapUnicodeArrayCalls) {
             _this.nodes.set('unicodeArrayCallsWrapper', new UnicodeArrayCallsWrapper_1.UnicodeArrayCallsWrapper(_this.unicodeArrayTranslatorName, _this.unicodeArrayName, unicodeArray, _this.options));
@@ -3184,6 +3184,63 @@ if (!global._babelPolyfill) {
     __webpack_require__(20);
 }
 module.exports = JavaScriptObfuscator_1.JavaScriptObfuscator;
+
+/***/ },
+/* 67 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Utils_1 = __webpack_require__(0);
+
+var UnicodeArray = function () {
+    function UnicodeArray() {
+        _classCallCheck(this, UnicodeArray);
+
+        this.array = [];
+    }
+
+    _createClass(UnicodeArray, [{
+        key: "addToArray",
+        value: function addToArray(value) {
+            this.array.push(value);
+        }
+    }, {
+        key: "getArray",
+        value: function getArray() {
+            return this.array;
+        }
+    }, {
+        key: "getIndexOf",
+        value: function getIndexOf(value) {
+            return this.array.indexOf(value);
+        }
+    }, {
+        key: "getLength",
+        value: function getLength() {
+            return this.array.length;
+        }
+    }, {
+        key: "rotateArray",
+        value: function rotateArray(rotationValue) {
+            this.array = Utils_1.Utils.arrayRotate(this.array, rotationValue);
+        }
+    }, {
+        key: "toString",
+        value: function toString() {
+            return this.array.toString();
+        }
+    }]);
+
+    return UnicodeArray;
+}();
+
+exports.UnicodeArray = UnicodeArray;
 
 /***/ }
 /******/ ]);

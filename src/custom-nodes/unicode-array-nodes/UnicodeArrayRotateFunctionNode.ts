@@ -15,6 +15,7 @@ import { UnicodeArrayRotateFunctionTemplate } from "../../templates/custom-nodes
 import { JavaScriptObfuscator } from "../../JavaScriptObfuscator";
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
+import { UnicodeArray } from "../../UnicodeArray";
 import { Utils } from "../../Utils";
 
 export class UnicodeArrayRotateFunctionNode extends Node {
@@ -24,9 +25,9 @@ export class UnicodeArrayRotateFunctionNode extends Node {
     protected appendState: AppendState = AppendState.AfterObfuscation;
 
     /**
-     * @type {string[]}
+     * @type {UnicodeArray}
      */
-    private unicodeArray: string[];
+    private unicodeArray: UnicodeArray;
 
     /**
      * @type {string}
@@ -46,7 +47,7 @@ export class UnicodeArrayRotateFunctionNode extends Node {
      */
     constructor (
         unicodeArrayName: string,
-        unicodeArray: string[],
+        unicodeArray: UnicodeArray,
         unicodeArrayRotateValue: number,
         options: IOptions
     ) {
@@ -61,7 +62,7 @@ export class UnicodeArrayRotateFunctionNode extends Node {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        if (!this.unicodeArray.length) {
+        if (!this.unicodeArray.getLength()) {
             return;
         }
 

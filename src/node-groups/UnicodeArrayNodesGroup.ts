@@ -1,6 +1,7 @@
 import { IOptions } from "../interfaces/IOptions";
 
 import { NodesGroup } from './NodesGroup';
+import { UnicodeArray } from "../UnicodeArray";
 import { UnicodeArrayCallsWrapper } from "../custom-nodes/unicode-array-nodes/UnicodeArrayCallsWrapper";
 import { UnicodeArrayDecodeNode } from "../custom-nodes/unicode-array-nodes/UnicodeArrayDecodeNode";
 import { UnicodeArrayNode } from '../custom-nodes/unicode-array-nodes/UnicodeArrayNode';
@@ -42,12 +43,13 @@ export class UnicodeArrayNodesGroup extends NodesGroup {
             this.unicodeArrayRotateValue = 0;
         }
 
-        let unicodeArrayNode: UnicodeArrayNode = new UnicodeArrayNode(
+        let unicodeArray: UnicodeArray = new UnicodeArray(),
+            unicodeArrayNode: UnicodeArrayNode = new UnicodeArrayNode(
+                unicodeArray,
                 this.unicodeArrayName,
                 this.unicodeArrayRotateValue,
                 this.options
-            ),
-            unicodeArray: string [] = unicodeArrayNode.getNodeData();
+            );
 
         this.nodes.set(
             'unicodeArrayNode',

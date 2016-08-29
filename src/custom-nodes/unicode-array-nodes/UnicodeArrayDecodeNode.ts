@@ -16,6 +16,7 @@ import { UnicodeArrayDecodeTemplate } from "../../templates/custom-nodes/unicode
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
+import { UnicodeArray } from "../../UnicodeArray";
 
 export class UnicodeArrayDecodeNode extends Node {
     /**
@@ -24,9 +25,9 @@ export class UnicodeArrayDecodeNode extends Node {
     protected appendState: AppendState = AppendState.AfterObfuscation;
 
     /**
-     * @type {string[]}
+     * @type {UnicodeArray}
      */
-    private unicodeArray: string[];
+    private unicodeArray: UnicodeArray;
 
     /**
      * @type {string}
@@ -40,7 +41,7 @@ export class UnicodeArrayDecodeNode extends Node {
      */
     constructor (
         unicodeArrayName: string,
-        unicodeArray: string[],
+        unicodeArray: UnicodeArray,
         options: IOptions
     ) {
         super(options);
@@ -53,7 +54,7 @@ export class UnicodeArrayDecodeNode extends Node {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        if (!this.unicodeArray.length) {
+        if (!this.unicodeArray.getLength()) {
             return;
         }
 

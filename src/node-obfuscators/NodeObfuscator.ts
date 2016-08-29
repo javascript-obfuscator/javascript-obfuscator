@@ -9,6 +9,7 @@ import { TUnicodeArrayNode } from "../types/custom-nodes/TUnicodeArrayNode";
 import { JSFuck } from "../enums/JSFuck";
 
 import { Nodes } from "../Nodes";
+import { UnicodeArray } from "../UnicodeArray";
 import { Utils } from '../Utils';
 
 export abstract class NodeObfuscator implements INodeObfuscator {
@@ -146,19 +147,19 @@ export abstract class NodeObfuscator implements INodeObfuscator {
             throw new ReferenceError('`unicodeArrayNode` node is not found in Map with custom nodes.');
         }
 
-        let unicodeArray: string[] = unicodeArrayNode.getNodeData(),
-            valueIndex: number = unicodeArray.indexOf(value),
-            literalValueCallIndex: number,
+        let unicodeArray: UnicodeArray = unicodeArrayNode.getNodeData(),
+            indexOfExistingValue: number = unicodeArray.getIndexOf(value),
+            indexOfValue: number,
             hexadecimalIndex: string;
 
-        if (valueIndex >= 0) {
-            literalValueCallIndex = valueIndex;
+        if (indexOfExistingValue >= 0) {
+            indexOfValue = indexOfExistingValue;
         } else {
-            literalValueCallIndex = unicodeArray.length;
+            indexOfValue = unicodeArray.getLength();
             unicodeArrayNode.updateNodeData(value);
         }
 
-        hexadecimalIndex = this.replaceLiteralNumberWithHexadecimalValue(literalValueCallIndex);
+        hexadecimalIndex = this.replaceLiteralNumberWithHexadecimalValue(indexOfValue);
 
         if (this.options.wrapUnicodeArrayCalls) {
             let unicodeArrayCallsWrapper: TUnicodeArrayCallsWrapper = <TUnicodeArrayCallsWrapper>this.nodes.get('unicodeArrayCallsWrapper');

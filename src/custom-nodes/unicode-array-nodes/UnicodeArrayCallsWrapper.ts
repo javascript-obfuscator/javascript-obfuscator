@@ -11,6 +11,7 @@ import { UnicodeArrayCallsWrapperTemplate } from "../../templates/custom-nodes/u
 
 import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
+import { UnicodeArray } from "../../UnicodeArray";
 import { Utils } from "../../Utils";
 
 export class UnicodeArrayCallsWrapper extends Node {
@@ -20,9 +21,9 @@ export class UnicodeArrayCallsWrapper extends Node {
     protected appendState: AppendState = AppendState.AfterObfuscation;
 
     /**
-     * @type {string[]}
+     * @type {UnicodeArray}
      */
-    private unicodeArray: string[];
+    private unicodeArray: UnicodeArray;
 
     /**
      * @type {string}
@@ -43,7 +44,7 @@ export class UnicodeArrayCallsWrapper extends Node {
     constructor (
         unicodeArrayCallsWrapperName: string,
         unicodeArrayName: string,
-        unicodeArray: string[],
+        unicodeArray: UnicodeArray,
         options: IOptions
     ) {
         super(options);
@@ -57,7 +58,7 @@ export class UnicodeArrayCallsWrapper extends Node {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        if (!this.unicodeArray.length) {
+        if (!this.unicodeArray.getLength()) {
             return;
         }
 

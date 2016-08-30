@@ -536,12 +536,13 @@ var NodeObfuscator = function () {
     }, {
         key: "replaceIdentifiersWithRandomNames",
         value: function replaceIdentifiersWithRandomNames(node, parentNode, namesMap) {
+            var obfuscatedIdentifierName = namesMap.get(node.name);
             var parentNodeIsPropertyNode = Nodes_1.Nodes.isPropertyNode(parentNode) && parentNode.key === node;
             var parentNodeIsMemberExpressionNode = Nodes_1.Nodes.isMemberExpressionNode(parentNode) && parentNode.computed === false && parentNode.property === node;
-            if (parentNodeIsPropertyNode || parentNodeIsMemberExpressionNode || !namesMap.has(node.name)) {
+            if (parentNodeIsPropertyNode || parentNodeIsMemberExpressionNode || !obfuscatedIdentifierName) {
                 return node.name;
             }
-            return namesMap.get(node.name);
+            return obfuscatedIdentifierName;
         }
     }, {
         key: "replaceLiteralBooleanWithJSFuck",

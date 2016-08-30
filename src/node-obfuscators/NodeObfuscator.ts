@@ -72,26 +72,24 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @param namesMap
      * @returns {string}
      */
-    protected replaceIdentifiersWithRandomNames (node: IIdentifierNode, parentNode: INode, namesMap: Map <string, string>): string {
-        const parentNodeIsPropertyNode: boolean = (
-            Nodes.isPropertyNode(parentNode) &&
-            parentNode.key === node
-        );
+    protected replaceIdentifiersWithRandomNames (
+        node: IIdentifierNode,
+        parentNode: INode,
+        namesMap: Map <string, string>
+    ): string {
+        const obfuscatedIdentifierName: string|undefined = namesMap.get(node.name);
+        const parentNodeIsPropertyNode: boolean = Nodes.isPropertyNode(parentNode) && parentNode.key === node;
         const parentNodeIsMemberExpressionNode: boolean = (
             Nodes.isMemberExpressionNode(parentNode) &&
             parentNode.computed === false &&
             parentNode.property === node
         );
 
-        if (
-            parentNodeIsPropertyNode ||
-            parentNodeIsMemberExpressionNode ||
-            !namesMap.has(node.name)
-        ) {
+        if (parentNodeIsPropertyNode || parentNodeIsMemberExpressionNode || !obfuscatedIdentifierName) {
             return node.name;
         }
 
-        return <string>namesMap.get(node.name);
+        return obfuscatedIdentifierName;
     }
 
     /**
@@ -121,7 +119,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @returns {string}
      */
     protected replaceLiteralValueWithUnicodeValue (nodeValue: string): string {
-        let replaceWithUnicodeArrayFlag: boolean = Math.random() <= this.options.unicodeArrayThreshold;
+        const replaceWithUnicodeArrayFlag: boolean = Math.random() <= this.options.unicodeArrayThreshold;
 
         if (this.options.encodeUnicodeLiterals && replaceWithUnicodeArrayFlag) {
             nodeValue = Utils.btoa(nodeValue);
@@ -141,7 +139,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
      * @returns {string}
      */
     protected replaceLiteralValueWithUnicodeArrayCall (value: string): string {
-        let unicodeArrayNode: TUnicodeArrayNode = <TUnicodeArrayNode>this.nodes.get('unicodeArrayNode');
+        const unicodeArrayNode: TUnicodeArrayNode = <TUnicodeArrayNode>this.nodes.get('unicodeArrayNode');
 
         if (!unicodeArrayNode) {
             throw new ReferenceError('`unicodeArrayNode` node is not found in Map with custom nodes.');
@@ -162,7 +160,7 @@ export abstract class NodeObfuscator implements INodeObfuscator {
         hexadecimalIndex = this.replaceLiteralNumberWithHexadecimalValue(indexOfValue);
 
         if (this.options.wrapUnicodeArrayCalls) {
-            let unicodeArrayCallsWrapper: TUnicodeArrayCallsWrapper = <TUnicodeArrayCallsWrapper>this.nodes.get('unicodeArrayCallsWrapper');
+            const unicodeArrayCallsWrapper: TUnicodeArrayCallsWrapper = <TUnicodeArrayCallsWrapper>this.nodes.get('unicodeArrayCallsWrapper');
 
             if (!unicodeArrayCallsWrapper) {
                 throw new ReferenceError('`unicodeArrayCallsWrapper` node is not found in Map with custom nodes.');

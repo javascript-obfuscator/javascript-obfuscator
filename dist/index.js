@@ -232,14 +232,12 @@ var NodeUtils = function () {
     _createClass(NodeUtils, null, [{
         key: 'addXVerbatimPropertyToLiterals',
         value: function addXVerbatimPropertyToLiterals(node) {
-            estraverse.replace(node, {
-                enter: function enter(node, parentNode) {
-                    if (Nodes_1.Nodes.isLiteralNode(node)) {
-                        node['x-verbatim-property'] = {
-                            content: node.raw,
-                            precedence: escodegen.Precedence.Primary
-                        };
-                    }
+            NodeUtils.typedReplace(node, NodeType_1.NodeType.Literal, {
+                leave: function leave(node) {
+                    node['x-verbatim-property'] = {
+                        content: node.raw,
+                        precedence: escodegen.Precedence.Primary
+                    };
                 }
             });
         }
@@ -334,6 +332,29 @@ var NodeUtils = function () {
                 return;
             }
             blockScopeBody.unshift(node);
+        }
+    }, {
+        key: 'typedReplace',
+        value: function typedReplace(node, nodeType, visitor) {
+            NodeUtils.typedTraverse(node, nodeType, visitor, 'replace');
+        }
+    }, {
+        key: 'typedTraverse',
+        value: function typedTraverse(node, nodeType, visitor) {
+            var traverseType = arguments.length <= 3 || arguments[3] === undefined ? 'traverse' : arguments[3];
+
+            estraverse[traverseType](node, {
+                enter: function enter(node) {
+                    if (node.type === nodeType && visitor.enter) {
+                        visitor.enter(node);
+                    }
+                },
+                leave: function leave(node) {
+                    if (node.type === nodeType && visitor.leave) {
+                        visitor.leave(node);
+                    }
+                }
+            });
         }
     }, {
         key: 'validateNode',
@@ -508,44 +529,19 @@ module.exports = require("estraverse");
 
 /***/ },
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 "use strict";
 "use strict";
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Nodes_1 = __webpack_require__(2);
-var Utils_1 = __webpack_require__(0);
+var AbstractNodeObfuscator = function AbstractNodeObfuscator(nodes, options) {
+    _classCallCheck(this, AbstractNodeObfuscator);
 
-var AbstractNodeObfuscator = function () {
-    function AbstractNodeObfuscator(nodes, options) {
-        _classCallCheck(this, AbstractNodeObfuscator);
-
-        this.nodes = nodes;
-        this.options = options;
-    }
-
-    _createClass(AbstractNodeObfuscator, [{
-        key: "isReservedName",
-        value: function isReservedName(name) {
-            return this.options.reservedNames.some(function (reservedName) {
-                return new RegExp(reservedName, 'g').test(name);
-            });
-        }
-    }, {
-        key: "storeIdentifiersNames",
-        value: function storeIdentifiersNames(node, namesMap) {
-            if (Nodes_1.Nodes.isIdentifierNode(node) && !this.isReservedName(node.name)) {
-                namesMap.set(node.name, Utils_1.Utils.getRandomVariableName());
-            }
-        }
-    }]);
-
-    return AbstractNodeObfuscator;
-}();
+    this.nodes = nodes;
+    this.options = options;
+};
 
 exports.AbstractNodeObfuscator = AbstractNodeObfuscator;
 
@@ -716,6 +712,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var AbstractReplacer_1 = __webpack_require__(13);
+var Utils_1 = __webpack_require__(0);
 
 var IdentifierReplacer = function (_AbstractReplacer_1$A) {
     _inherits(IdentifierReplacer, _AbstractReplacer_1$A);
@@ -734,6 +731,20 @@ var IdentifierReplacer = function (_AbstractReplacer_1$A) {
                 return nodeValue;
             }
             return obfuscatedIdentifierName;
+        }
+    }, {
+        key: "storeNames",
+        value: function storeNames(nodeName, namesMap) {
+            if (!this.isReservedName(nodeName)) {
+                namesMap.set(nodeName, Utils_1.Utils.getRandomVariableName());
+            }
+        }
+    }, {
+        key: "isReservedName",
+        value: function isReservedName(name) {
+            return this.options.reservedNames.some(function (reservedName) {
+                return new RegExp(reservedName, 'g').test(name);
+            });
         }
     }]);
 
@@ -2362,54 +2373,51 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var estraverse = __webpack_require__(5);
+var NodeType_1 = __webpack_require__(7);
 var AbstractNodeObfuscator_1 = __webpack_require__(6);
 var IdentifierReplacer_1 = __webpack_require__(14);
 var Nodes_1 = __webpack_require__(2);
+var NodeUtils_1 = __webpack_require__(1);
 
 var CatchClauseObfuscator = function (_AbstractNodeObfuscat) {
     _inherits(CatchClauseObfuscator, _AbstractNodeObfuscat);
 
-    function CatchClauseObfuscator() {
-        var _Object$getPrototypeO;
-
+    function CatchClauseObfuscator(nodes, options) {
         _classCallCheck(this, CatchClauseObfuscator);
 
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        var _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(CatchClauseObfuscator)).call.apply(_Object$getPrototypeO, [this].concat(args)));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CatchClauseObfuscator).call(this, nodes, options));
 
         _this.catchClauseParam = new Map();
+        _this.identifierReplacer = new IdentifierReplacer_1.IdentifierReplacer(_this.nodes, _this.options);
         return _this;
     }
 
     _createClass(CatchClauseObfuscator, [{
-        key: 'obfuscateNode',
+        key: "obfuscateNode",
         value: function obfuscateNode(catchClauseNode) {
             this.storeCatchClauseParam(catchClauseNode);
             this.replaceCatchClauseParam(catchClauseNode);
         }
     }, {
-        key: 'storeCatchClauseParam',
+        key: "storeCatchClauseParam",
         value: function storeCatchClauseParam(catchClauseNode) {
             var _this2 = this;
 
-            estraverse.traverse(catchClauseNode.param, {
+            NodeUtils_1.NodeUtils.typedReplace(catchClauseNode.param, NodeType_1.NodeType.Identifier, {
                 leave: function leave(node) {
-                    return _this2.storeIdentifiersNames(node, _this2.catchClauseParam);
+                    _this2.identifierReplacer.storeNames(node.name, _this2.catchClauseParam);
                 }
             });
         }
     }, {
-        key: 'replaceCatchClauseParam',
+        key: "replaceCatchClauseParam",
         value: function replaceCatchClauseParam(catchClauseNode) {
             var _this3 = this;
 
             estraverse.replace(catchClauseNode, {
                 leave: function leave(node, parentNode) {
                     if (Nodes_1.Nodes.isReplaceableIdentifierNode(node, parentNode)) {
-                        node.name = new IdentifierReplacer_1.IdentifierReplacer(_this3.nodes, _this3.options).replace(node.name, _this3.catchClauseParam);
+                        node.name = _this3.identifierReplacer.replace(node.name, _this3.catchClauseParam);
                     }
                 }
             });
@@ -2446,18 +2454,13 @@ var NodeUtils_1 = __webpack_require__(1);
 var FunctionDeclarationObfuscator = function (_AbstractNodeObfuscat) {
     _inherits(FunctionDeclarationObfuscator, _AbstractNodeObfuscat);
 
-    function FunctionDeclarationObfuscator() {
-        var _Object$getPrototypeO;
-
+    function FunctionDeclarationObfuscator(nodes, options) {
         _classCallCheck(this, FunctionDeclarationObfuscator);
 
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        var _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(FunctionDeclarationObfuscator)).call.apply(_Object$getPrototypeO, [this].concat(args)));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FunctionDeclarationObfuscator).call(this, nodes, options));
 
         _this.functionName = new Map();
+        _this.identifierReplacer = new IdentifierReplacer_1.IdentifierReplacer(_this.nodes, _this.options);
         return _this;
     }
 
@@ -2475,9 +2478,9 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeObfuscat) {
         value: function storeFunctionName(functionDeclarationNode) {
             var _this2 = this;
 
-            estraverse.traverse(functionDeclarationNode.id, {
+            NodeUtils_1.NodeUtils.typedReplace(functionDeclarationNode.id, NodeType_1.NodeType.Identifier, {
                 leave: function leave(node) {
-                    return _this2.storeIdentifiersNames(node, _this2.functionName);
+                    _this2.identifierReplacer.storeNames(node.name, _this2.functionName);
                 }
             });
         }
@@ -2490,7 +2493,7 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeObfuscat) {
             estraverse.replace(scopeNode, {
                 enter: function enter(node, parentNode) {
                     if (Nodes_1.Nodes.isReplaceableIdentifierNode(node, parentNode)) {
-                        node.name = new IdentifierReplacer_1.IdentifierReplacer(_this3.nodes, _this3.options).replace(node.name, _this3.functionName);
+                        node.name = _this3.identifierReplacer.replace(node.name, _this3.functionName);
                     }
                 }
             });
@@ -2518,56 +2521,53 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var estraverse = __webpack_require__(5);
+var NodeType_1 = __webpack_require__(7);
 var AbstractNodeObfuscator_1 = __webpack_require__(6);
 var IdentifierReplacer_1 = __webpack_require__(14);
 var Nodes_1 = __webpack_require__(2);
+var NodeUtils_1 = __webpack_require__(1);
 
 var FunctionObfuscator = function (_AbstractNodeObfuscat) {
     _inherits(FunctionObfuscator, _AbstractNodeObfuscat);
 
-    function FunctionObfuscator() {
-        var _Object$getPrototypeO;
-
+    function FunctionObfuscator(nodes, options) {
         _classCallCheck(this, FunctionObfuscator);
 
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        var _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(FunctionObfuscator)).call.apply(_Object$getPrototypeO, [this].concat(args)));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FunctionObfuscator).call(this, nodes, options));
 
         _this.functionParams = new Map();
+        _this.identifierReplacer = new IdentifierReplacer_1.IdentifierReplacer(_this.nodes, _this.options);
         return _this;
     }
 
     _createClass(FunctionObfuscator, [{
-        key: 'obfuscateNode',
+        key: "obfuscateNode",
         value: function obfuscateNode(functionNode) {
             this.storeFunctionParams(functionNode);
             this.replaceFunctionParams(functionNode);
         }
     }, {
-        key: 'storeFunctionParams',
+        key: "storeFunctionParams",
         value: function storeFunctionParams(functionNode) {
             var _this2 = this;
 
             functionNode.params.forEach(function (paramsNode) {
-                estraverse.traverse(paramsNode, {
+                NodeUtils_1.NodeUtils.typedReplace(paramsNode, NodeType_1.NodeType.Identifier, {
                     leave: function leave(node) {
-                        return _this2.storeIdentifiersNames(node, _this2.functionParams);
+                        _this2.identifierReplacer.storeNames(node.name, _this2.functionParams);
                     }
                 });
             });
         }
     }, {
-        key: 'replaceFunctionParams',
+        key: "replaceFunctionParams",
         value: function replaceFunctionParams(functionNode) {
             var _this3 = this;
 
             var replaceVisitor = {
                 leave: function leave(node, parentNode) {
                     if (Nodes_1.Nodes.isReplaceableIdentifierNode(node, parentNode)) {
-                        node.name = new IdentifierReplacer_1.IdentifierReplacer(_this3.nodes, _this3.options).replace(node.name, _this3.functionParams);
+                        node.name = _this3.identifierReplacer.replace(node.name, _this3.functionParams);
                     }
                 }
             };
@@ -2911,18 +2911,13 @@ var NodeUtils_1 = __webpack_require__(1);
 var VariableDeclarationObfuscator = function (_AbstractNodeObfuscat) {
     _inherits(VariableDeclarationObfuscator, _AbstractNodeObfuscat);
 
-    function VariableDeclarationObfuscator() {
-        var _Object$getPrototypeO;
-
+    function VariableDeclarationObfuscator(nodes, options) {
         _classCallCheck(this, VariableDeclarationObfuscator);
 
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        var _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(VariableDeclarationObfuscator)).call.apply(_Object$getPrototypeO, [this].concat(args)));
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(VariableDeclarationObfuscator).call(this, nodes, options));
 
         _this.variableNames = new Map();
+        _this.identifierReplacer = new IdentifierReplacer_1.IdentifierReplacer(_this.nodes, _this.options);
         return _this;
     }
 
@@ -2941,9 +2936,9 @@ var VariableDeclarationObfuscator = function (_AbstractNodeObfuscat) {
             var _this2 = this;
 
             variableDeclarationNode.declarations.forEach(function (declarationNode) {
-                estraverse.traverse(declarationNode.id, {
-                    enter: function enter(node) {
-                        return _this2.storeIdentifiersNames(node, _this2.variableNames);
+                NodeUtils_1.NodeUtils.typedReplace(declarationNode.id, NodeType_1.NodeType.Identifier, {
+                    leave: function leave(node) {
+                        _this2.identifierReplacer.storeNames(node.name, _this2.variableNames);
                     }
                 });
             });
@@ -2961,7 +2956,7 @@ var VariableDeclarationObfuscator = function (_AbstractNodeObfuscat) {
                         estraverse.replace(node, {
                             enter: function enter(node, parentNode) {
                                 if (Nodes_1.Nodes.isReplaceableIdentifierNode(node, parentNode)) {
-                                    node.name = new IdentifierReplacer_1.IdentifierReplacer(_this3.nodes, _this3.options).replace(node.name, _this3.variableNames);
+                                    node.name = _this3.identifierReplacer.replace(node.name, _this3.variableNames);
                                 }
                             }
                         });
@@ -2970,7 +2965,7 @@ var VariableDeclarationObfuscator = function (_AbstractNodeObfuscat) {
                         isNodeAfterVariableDeclaratorFlag = true;
                     }
                     if (Nodes_1.Nodes.isReplaceableIdentifierNode(node, parentNode) && isNodeAfterVariableDeclaratorFlag) {
-                        node.name = new IdentifierReplacer_1.IdentifierReplacer(_this3.nodes, _this3.options).replace(node.name, _this3.variableNames);
+                        node.name = _this3.identifierReplacer.replace(node.name, _this3.variableNames);
                     }
                 }
             });

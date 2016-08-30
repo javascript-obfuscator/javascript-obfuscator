@@ -1,11 +1,18 @@
 import * as estraverse from 'estraverse';
 
+import { ICustomNode } from "../interfaces/custom-nodes/ICustomNode";
 import { IFunctionNode } from "../interfaces/nodes/IFunctionNode";
+import { IIdentifierNode } from "../interfaces/nodes/IIdentifierNode";
 import { INode } from "../interfaces/nodes/INode";
+import { IOptions } from "../interfaces/IOptions";
+import { IReplacer } from "../interfaces/IReplacer";
+
+import { NodeType } from "../enums/NodeType";
 
 import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
 import { IdentifierReplacer } from "./replacers/IdentifierReplacer";
 import { Nodes } from "../Nodes";
+import { NodeUtils } from "../NodeUtils";
 
 /**
  * replaces:
@@ -22,6 +29,21 @@ export class FunctionObfuscator extends AbstractNodeObfuscator {
     private functionParams: Map <string, string> = new Map <string, string> ();
 
     /**
+     * @type {IReplacer&IdentifierReplacer}
+     */
+    private identifierReplacer: IReplacer&IdentifierReplacer;
+
+    /**
+     * @param nodes
+     * @param options
+     */
+    constructor(nodes: Map <string, ICustomNode>, options: IOptions) {
+        super(nodes, options);
+
+        this.identifierReplacer = new IdentifierReplacer(this.nodes, this.options);
+    }
+
+    /**
      * @param functionNode
      */
     public obfuscateNode (functionNode: IFunctionNode): void {
@@ -35,8 +57,10 @@ export class FunctionObfuscator extends AbstractNodeObfuscator {
     private storeFunctionParams (functionNode: IFunctionNode): void {
         functionNode.params
             .forEach((paramsNode: INode) => {
-                estraverse.traverse(paramsNode, {
-                    leave: (node: INode): any => this.storeIdentifiersNames(node, this.functionParams)
+                NodeUtils.typedReplace(paramsNode, NodeType.Identifier, {
+                    leave: (node: IIdentifierNode) => {
+                        this.identifierReplacer.storeNames(node.name, this.functionParams)
+                    }
                 });
             });
     }
@@ -48,8 +72,7 @@ export class FunctionObfuscator extends AbstractNodeObfuscator {
         let replaceVisitor: estraverse.Visitor = {
             leave: (node: INode, parentNode: INode): any => {
                 if (Nodes.isReplaceableIdentifierNode(node, parentNode)) {
-                    node.name = new IdentifierReplacer(this.nodes, this.options)
-                        .replace(node.name, this.functionParams);
+                    node.name = this.identifierReplacer.replace(node.name, this.functionParams);
                 }
             }
         };

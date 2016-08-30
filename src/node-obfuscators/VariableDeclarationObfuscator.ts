@@ -1,6 +1,10 @@
 import * as estraverse from 'estraverse';
 
+import { ICustomNode } from "../interfaces/custom-nodes/ICustomNode";
+import { IIdentifierNode } from "../interfaces/nodes/IIdentifierNode";
 import { INode } from "../interfaces/nodes/INode";
+import { IOptions } from "../interfaces/IOptions";
+import { IReplacer } from "../interfaces/IReplacer";
 import { IVariableDeclarationNode } from "../interfaces/nodes/IVariableDeclarationNode";
 import { IVariableDeclaratorNode } from "../interfaces/nodes/IVariableDeclaratorNode";
 
@@ -23,9 +27,24 @@ import { NodeUtils } from "../NodeUtils";
  */
 export class VariableDeclarationObfuscator extends AbstractNodeObfuscator {
     /**
+     * @type {IReplacer&IdentifierReplacer}
+     */
+    private identifierReplacer: IReplacer&IdentifierReplacer;
+
+    /**
      * @type {Map<string, string>}
      */
     private variableNames: Map <string, string> = new Map <string, string> ();
+
+    /**
+     * @param nodes
+     * @param options
+     */
+    constructor(nodes: Map <string, ICustomNode>, options: IOptions) {
+        super(nodes, options);
+
+        this.identifierReplacer = new IdentifierReplacer(this.nodes, this.options);
+    }
 
     /**
      * @param variableDeclarationNode
@@ -46,8 +65,10 @@ export class VariableDeclarationObfuscator extends AbstractNodeObfuscator {
     private storeVariableNames (variableDeclarationNode: IVariableDeclarationNode): void {
         variableDeclarationNode.declarations
             .forEach((declarationNode: IVariableDeclaratorNode) => {
-                estraverse.traverse(declarationNode.id, {
-                    enter: (node: INode): any => this.storeIdentifiersNames(node, this.variableNames)
+                NodeUtils.typedReplace(declarationNode.id, NodeType.Identifier, {
+                    leave: (node: IIdentifierNode) => {
+                        this.identifierReplacer.storeNames(node.name, this.variableNames)
+                    }
                 });
             });
     }
@@ -72,8 +93,7 @@ export class VariableDeclarationObfuscator extends AbstractNodeObfuscator {
                     estraverse.replace(node, {
                         enter: (node: INode, parentNode: INode): any => {
                             if (Nodes.isReplaceableIdentifierNode(node, parentNode)) {
-                                node.name = new IdentifierReplacer(this.nodes, this.options)
-                                    .replace(node.name, this.variableNames);
+                                node.name = this.identifierReplacer.replace(node.name, this.variableNames);
                             }
                         }
                     });
@@ -84,8 +104,7 @@ export class VariableDeclarationObfuscator extends AbstractNodeObfuscator {
                 }
 
                 if (Nodes.isReplaceableIdentifierNode(node, parentNode) && isNodeAfterVariableDeclaratorFlag) {
-                    node.name = new IdentifierReplacer(this.nodes, this.options)
-                        .replace(node.name, this.variableNames);
+                    node.name = this.identifierReplacer.replace(node.name, this.variableNames);
                 }
             }
         });

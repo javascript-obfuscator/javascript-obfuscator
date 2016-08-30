@@ -1,7 +1,11 @@
 import * as estraverse from 'estraverse';
 
+import { ICustomNode } from "../interfaces/custom-nodes/ICustomNode";
 import { IFunctionDeclarationNode } from "../interfaces/nodes/IFunctionDeclarationNode";
+import { IIdentifierNode } from "../interfaces/nodes/IIdentifierNode";
 import { INode } from "../interfaces/nodes/INode";
+import { IOptions } from "../interfaces/IOptions";
+import { IReplacer } from "../interfaces/IReplacer";
 
 import { NodeType } from "../enums/NodeType";
 
@@ -26,6 +30,21 @@ export class FunctionDeclarationObfuscator extends AbstractNodeObfuscator {
     private functionName: Map <string, string> = new Map <string, string> ();
 
     /**
+     * @type {IReplacer&IdentifierReplacer}
+     */
+    private identifierReplacer: IReplacer&IdentifierReplacer;
+
+    /**
+     * @param nodes
+     * @param options
+     */
+    constructor(nodes: Map <string, ICustomNode>, options: IOptions) {
+        super(nodes, options);
+
+        this.identifierReplacer = new IdentifierReplacer(this.nodes, this.options);
+    }
+
+    /**
      * @param functionDeclarationNode
      * @param parentNode
      */
@@ -42,8 +61,10 @@ export class FunctionDeclarationObfuscator extends AbstractNodeObfuscator {
      * @param functionDeclarationNode
      */
     private storeFunctionName (functionDeclarationNode: IFunctionDeclarationNode): void {
-        estraverse.traverse(functionDeclarationNode.id, {
-            leave: (node: INode): any => this.storeIdentifiersNames(node, this.functionName)
+        NodeUtils.typedReplace(functionDeclarationNode.id, NodeType.Identifier, {
+            leave: (node: IIdentifierNode) => {
+                this.identifierReplacer.storeNames(node.name, this.functionName)
+            }
         });
     }
 
@@ -58,8 +79,7 @@ export class FunctionDeclarationObfuscator extends AbstractNodeObfuscator {
         estraverse.replace(scopeNode, {
             enter: (node: INode, parentNode: INode): any => {
                 if (Nodes.isReplaceableIdentifierNode(node, parentNode)) {
-                    node.name = new IdentifierReplacer(this.nodes, this.options)
-                        .replace(node.name, this.functionName);
+                    node.name = this.identifierReplacer.replace(node.name, this.functionName);
                 }
             }
         });

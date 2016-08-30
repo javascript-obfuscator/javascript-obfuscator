@@ -2,6 +2,7 @@ import * as escodegen from 'escodegen';
 import * as esprima from 'esprima';
 import * as estraverse from 'estraverse';
 
+import { ILiteralNode } from "./interfaces/nodes/ILiteralNode";
 import { INode } from './interfaces/nodes/INode';
 
 import { TNodeWithBlockStatement } from "./types/TNodeWithBlockStatement";
@@ -28,14 +29,12 @@ export class NodeUtils {
      * @param node
      */
     public static addXVerbatimPropertyToLiterals (node: INode): void {
-        estraverse.replace(node, {
-            enter: (node: INode, parentNode: INode): any => {
-                if (Nodes.isLiteralNode(node)) {
-                   node['x-verbatim-property'] = {
-                        content : node.raw,
-                        precedence: escodegen.Precedence.Primary
-                    };
-                }
+        NodeUtils.typedReplace(node, NodeType.Literal, {
+            leave: (node: ILiteralNode) => {
+                node['x-verbatim-property'] = {
+                    content : node.raw,
+                    precedence: escodegen.Precedence.Primary
+                };
             }
         });
     }
@@ -166,6 +165,45 @@ export class NodeUtils {
         }
 
         blockScopeBody.unshift(node);
+    }
+
+    /**
+     * @param node
+     * @param nodeType
+     * @param visitor
+     */
+    public static typedReplace (
+        node: INode,
+        nodeType: string,
+        visitor: {enter?: (node: INode) => void, leave?: (node: INode) => void},
+    ): void {
+        NodeUtils.typedTraverse(node, nodeType, visitor, 'replace');
+    }
+
+    /**
+     * @param node
+     * @param nodeType
+     * @param visitor
+     * @param traverseType
+     */
+    public static typedTraverse (
+        node: INode,
+        nodeType: string,
+        visitor: {enter?: (node: INode) => void, leave?: (node: INode) => void},
+        traverseType: string = 'traverse'
+    ): void {
+        (<any>estraverse)[traverseType](node, {
+            enter: (node: INode): any => {
+                if (node.type === nodeType && visitor.enter) {
+                    visitor.enter(node)
+                }
+            },
+            leave: (node: INode): any => {
+                if (node.type === nodeType && visitor.leave) {
+                    visitor.leave(node)
+                }
+            }
+        });
     }
 
     /**

@@ -55,9 +55,9 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
         );
 
         estraverse.replace(scopeNode, {
-            enter: (node: INode): any => {
+            enter: (node: INode, parentNode: INode): any => {
                 if (Nodes.isIdentifierNode(node)) {
-                    node.name = this.replaceIdentifiersWithRandomNames(node, this.functionName);
+                    node.name = this.replaceIdentifiersWithRandomNames(node, parentNode, this.functionName);
                 }
             }
         });

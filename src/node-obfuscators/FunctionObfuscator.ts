@@ -45,9 +45,9 @@ export class FunctionObfuscator extends NodeObfuscator {
      */
     private replaceFunctionParams (functionNode: IFunctionNode): void {
         let replaceVisitor: estraverse.Visitor = {
-            leave: (node: INode): any => {
+            leave: (node: INode, parentNode: INode): any => {
                 if (Nodes.isIdentifierNode(node)) {
-                    node.name = this.replaceIdentifiersWithRandomNames(node, this.functionParams);
+                    node.name = this.replaceIdentifiersWithRandomNames(node, parentNode, this.functionParams);
                 }
             }
         };

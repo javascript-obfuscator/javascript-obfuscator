@@ -535,11 +535,13 @@ var NodeObfuscator = function () {
         }
     }, {
         key: "replaceIdentifiersWithRandomNames",
-        value: function replaceIdentifiersWithRandomNames(node, namesMap) {
-            if (namesMap.has(node.name)) {
-                return namesMap.get(node.name);
+        value: function replaceIdentifiersWithRandomNames(node, parentNode, namesMap) {
+            var parentNodeIsPropertyNode = Nodes_1.Nodes.isPropertyNode(parentNode) && parentNode.key === node;
+            var parentNodeIsMemberExpressionNode = Nodes_1.Nodes.isMemberExpressionNode(parentNode) && parentNode.computed === false && parentNode.property === node;
+            if (parentNodeIsPropertyNode || parentNodeIsMemberExpressionNode || !namesMap.has(node.name)) {
+                return node.name;
             }
-            return node.name;
+            return namesMap.get(node.name);
         }
     }, {
         key: "replaceLiteralBooleanWithJSFuck",
@@ -2281,9 +2283,9 @@ var CatchClauseObfuscator = function (_NodeObfuscator_1$Nod) {
             var _this3 = this;
 
             estraverse.replace(catchClauseNode, {
-                leave: function leave(node) {
+                leave: function leave(node, parentNode) {
                     if (Nodes_1.Nodes.isIdentifierNode(node)) {
-                        node.name = _this3.replaceIdentifiersWithRandomNames(node, _this3.catchClauseParam);
+                        node.name = _this3.replaceIdentifiersWithRandomNames(node, parentNode, _this3.catchClauseParam);
                     }
                 }
             });
@@ -2361,9 +2363,9 @@ var FunctionDeclarationObfuscator = function (_NodeObfuscator_1$Nod) {
 
             var scopeNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(functionDeclarationNode);
             estraverse.replace(scopeNode, {
-                enter: function enter(node) {
+                enter: function enter(node, parentNode) {
                     if (Nodes_1.Nodes.isIdentifierNode(node)) {
-                        node.name = _this3.replaceIdentifiersWithRandomNames(node, _this3.functionName);
+                        node.name = _this3.replaceIdentifiersWithRandomNames(node, parentNode, _this3.functionName);
                     }
                 }
             });
@@ -2437,9 +2439,9 @@ var FunctionObfuscator = function (_NodeObfuscator_1$Nod) {
             var _this3 = this;
 
             var replaceVisitor = {
-                leave: function leave(node) {
+                leave: function leave(node, parentNode) {
                     if (Nodes_1.Nodes.isIdentifierNode(node)) {
-                        node.name = _this3.replaceIdentifiersWithRandomNames(node, _this3.functionParams);
+                        node.name = _this3.replaceIdentifiersWithRandomNames(node, parentNode, _this3.functionParams);
                     }
                 }
             };
@@ -2822,12 +2824,12 @@ var VariableDeclarationObfuscator = function (_NodeObfuscator_1$Nod) {
             var scopeNode = variableDeclarationNode.kind === 'var' ? NodeUtils_1.NodeUtils.getBlockScopeOfNode(variableDeclarationNode) : variableParentNode,
                 isNodeAfterVariableDeclaratorFlag = false;
             estraverse.replace(scopeNode, {
-                enter: function enter(node) {
+                enter: function enter(node, parentNode) {
                     if (Nodes_1.Nodes.isArrowFunctionExpressionNode(node) || Nodes_1.Nodes.isFunctionDeclarationNode(node) || Nodes_1.Nodes.isFunctionExpressionNode(node)) {
                         estraverse.replace(node, {
-                            enter: function enter(node) {
+                            enter: function enter(node, parentNode) {
                                 if (Nodes_1.Nodes.isIdentifierNode(node)) {
-                                    node.name = _this3.replaceIdentifiersWithRandomNames(node, _this3.variableNames);
+                                    node.name = _this3.replaceIdentifiersWithRandomNames(node, parentNode, _this3.variableNames);
                                 }
                             }
                         });
@@ -2836,7 +2838,7 @@ var VariableDeclarationObfuscator = function (_NodeObfuscator_1$Nod) {
                         isNodeAfterVariableDeclaratorFlag = true;
                     }
                     if (Nodes_1.Nodes.isIdentifierNode(node) && isNodeAfterVariableDeclaratorFlag) {
-                        node.name = _this3.replaceIdentifiersWithRandomNames(node, _this3.variableNames);
+                        node.name = _this3.replaceIdentifiersWithRandomNames(node, parentNode, _this3.variableNames);
                     }
                 }
             });

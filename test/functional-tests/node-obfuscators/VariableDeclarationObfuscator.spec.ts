@@ -85,4 +85,45 @@ describe('VariableDeclarationObfuscator', () => {
             assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(abc\);/);
         });
     });
+
+    describe('wrong replacement', () => {
+        it('shouldn\'t replace property node identifier', () => {
+            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                `
+                function foo () {
+                    var test = 'abc';
+                    
+                    var object = {
+                        test: 'cde'
+                    };
+                    
+                    console.log(test);
+                }
+            `,
+                Object.assign({}, NO_CUSTOM_NODES_PRESET)
+            );
+
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var _0x([a-z0-9]){6} *= *\{'\\x74\\x65\\x73\\x74/);
+        });
+
+        it('shouldn\'t replace computed member expression identifier', () => {
+            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                `
+                function foo () {
+                    var test = 'abc';
+                    
+                    var object = {
+                        'test': 'cde'
+                    };
+                    
+                    console.log(test);
+                    console.log(object.test);
+                }
+            `,
+                Object.assign({}, NO_CUSTOM_NODES_PRESET)
+            );
+
+            assert.match(obfuscationResult.getObfuscatedCode(),  /_0x([a-z0-9]){6}\['\\x74\\x65\\x73\\x74'\]/);
+        });
+    });
 });

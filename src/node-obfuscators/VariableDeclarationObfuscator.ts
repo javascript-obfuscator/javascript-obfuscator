@@ -7,8 +7,8 @@ import { IVariableDeclaratorNode } from "../interfaces/nodes/IVariableDeclarator
 import { NodeType } from "../enums/NodeType";
 
 import { NodeObfuscator } from './NodeObfuscator';
+import { Nodes } from "../Nodes";
 import { NodeUtils } from "../NodeUtils";
-import { Utils } from '../Utils';
 
 /**
  * replaces:
@@ -62,27 +62,27 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
             isNodeAfterVariableDeclaratorFlag: boolean = false;
 
         estraverse.replace(scopeNode, {
-            enter: (node: INode, parentNode: INode): any => {
-                const functionNodes: string[] = [
-                    NodeType.ArrowFunctionExpression,
-                    NodeType.FunctionDeclaration,
-                    NodeType.FunctionExpression
-                ];
-
-                if (Utils.arrayContains(functionNodes, node.type)) {
+            enter: (node: INode): any => {
+                if (
+                    Nodes.isArrowFunctionExpressionNode(node) ||
+                    Nodes.isFunctionDeclarationNode(node) ||
+                    Nodes.isFunctionExpressionNode(node)
+                ) {
                     estraverse.replace(node, {
-                        enter: (node: INode, parentNode: INode): any => {
-                            this.replaceIdentifiersWithRandomNames(node, parentNode, this.variableNames);
+                        enter: (node: INode): any => {
+                            if (Nodes.isIdentifierNode(node)) {
+                                node.name = this.replaceIdentifiersWithRandomNames(node, this.variableNames);
+                            }
                         }
                     });
                 }
 
-                if (node === variableDeclarationNode) {
+                if (Nodes.isVariableDeclarationNode(node) && node === variableDeclarationNode) {
                     isNodeAfterVariableDeclaratorFlag = true;
                 }
 
-                if (isNodeAfterVariableDeclaratorFlag) {
-                    this.replaceIdentifiersWithRandomNames(node, parentNode, this.variableNames);
+                if (Nodes.isIdentifierNode(node) && isNodeAfterVariableDeclaratorFlag) {
+                    node.name = this.replaceIdentifiersWithRandomNames(node, this.variableNames);
                 }
             }
         });

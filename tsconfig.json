@@ -22,9 +22,5 @@
       "node",
       "sinon"
     ]
-  },
-  "exclude": [
-    "node_modules",
-    "test"
-  ]
+  }
 }

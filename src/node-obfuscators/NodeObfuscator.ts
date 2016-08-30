@@ -1,4 +1,5 @@
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
+import { IIdentifierNode } from "../interfaces/nodes/IIdentifierNode";
 import { INodeObfuscator } from '../interfaces/INodeObfuscator';
 import { INode } from "../interfaces/nodes/INode";
 import { IOptions } from "../interfaces/IOptions";
@@ -67,31 +68,15 @@ export abstract class NodeObfuscator implements INodeObfuscator {
 
     /**
      * @param node
-     * @param parentNode
      * @param namesMap
+     * @returns {string}
      */
-    protected replaceIdentifiersWithRandomNames (
-        node: INode,
-        parentNode: INode,
-        namesMap: Map <string, string>
-    ): void {
-        if (Nodes.isIdentifierNode(node) && namesMap.has(node.name)) {
-            const parentNodeIsPropertyNode: boolean = (
-                    Nodes.isPropertyNode(parentNode) &&
-                    parentNode.key === node
-                ),
-                parentNodeIsMemberExpressionNode: boolean = (
-                    Nodes.isMemberExpressionNode(parentNode) &&
-                    parentNode.computed === false &&
-                    parentNode.property === node
-                );
-
-            if (parentNodeIsPropertyNode || parentNodeIsMemberExpressionNode) {
-                return;
-            }
-
-            node.name = <string>namesMap.get(node.name);
+    protected replaceIdentifiersWithRandomNames (node: IIdentifierNode, namesMap: Map <string, string>): string {
+        if (namesMap.has(node.name)) {
+            return <string>namesMap.get(node.name);
         }
+
+        return node.name;
     }
 
     /**

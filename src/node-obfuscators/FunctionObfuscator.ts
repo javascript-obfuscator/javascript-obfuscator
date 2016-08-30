@@ -4,6 +4,7 @@ import { IFunctionNode } from "../interfaces/nodes/IFunctionNode";
 import { INode } from "../interfaces/nodes/INode";
 
 import { NodeObfuscator } from './NodeObfuscator';
+import { Nodes } from "../Nodes";
 
 /**
  * replaces:
@@ -44,8 +45,10 @@ export class FunctionObfuscator extends NodeObfuscator {
      */
     private replaceFunctionParams (functionNode: IFunctionNode): void {
         let replaceVisitor: estraverse.Visitor = {
-            leave: (node: INode, parentNode: INode): any => {
-                this.replaceIdentifiersWithRandomNames(node, parentNode, this.functionParams);
+            leave: (node: INode): any => {
+                if (Nodes.isIdentifierNode(node)) {
+                    node.name = this.replaceIdentifiersWithRandomNames(node, this.functionParams);
+                }
             }
         };
 

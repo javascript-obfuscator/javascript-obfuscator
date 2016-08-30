@@ -6,7 +6,8 @@ import { IVariableDeclaratorNode } from "../interfaces/nodes/IVariableDeclarator
 
 import { NodeType } from "../enums/NodeType";
 
-import { NodeObfuscator } from './NodeObfuscator';
+import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
+import { IdentifierReplacer } from "./replacers/IdentifierReplacer";
 import { Nodes } from "../Nodes";
 import { NodeUtils } from "../NodeUtils";
 
@@ -20,7 +21,7 @@ import { NodeUtils } from "../NodeUtils";
  *     _0x12d45f++;
  *
  */
-export class VariableDeclarationObfuscator extends NodeObfuscator {
+export class VariableDeclarationObfuscator extends AbstractNodeObfuscator {
     /**
      * @type {Map<string, string>}
      */
@@ -70,8 +71,9 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
                 ) {
                     estraverse.replace(node, {
                         enter: (node: INode, parentNode: INode): any => {
-                            if (Nodes.isIdentifierNode(node)) {
-                                node.name = this.replaceIdentifiersWithRandomNames(node, parentNode, this.variableNames);
+                            if (Nodes.isReplaceableIdentifierNode(node, parentNode)) {
+                                node.name = new IdentifierReplacer(this.nodes, this.options)
+                                    .replace(node.name, this.variableNames);
                             }
                         }
                     });
@@ -81,8 +83,9 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
                     isNodeAfterVariableDeclaratorFlag = true;
                 }
 
-                if (Nodes.isIdentifierNode(node) && isNodeAfterVariableDeclaratorFlag) {
-                    node.name = this.replaceIdentifiersWithRandomNames(node, parentNode, this.variableNames);
+                if (Nodes.isReplaceableIdentifierNode(node, parentNode) && isNodeAfterVariableDeclaratorFlag) {
+                    node.name = new IdentifierReplacer(this.nodes, this.options)
+                        .replace(node.name, this.variableNames);
                 }
             }
         });

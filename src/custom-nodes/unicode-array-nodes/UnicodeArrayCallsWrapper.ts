@@ -9,12 +9,12 @@ import { AppendState } from "../../enums/AppendState";
 
 import { UnicodeArrayCallsWrapperTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayCallsWrapperTemplate";
 
-import { Node } from '../Node';
+import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeUtils } from "../../NodeUtils";
 import { UnicodeArray } from "../../UnicodeArray";
 import { Utils } from "../../Utils";
 
-export class UnicodeArrayCallsWrapper extends Node {
+export class UnicodeArrayCallsWrapper extends AbstractCustomNode {
     /**
      * @type {AppendState}
      */

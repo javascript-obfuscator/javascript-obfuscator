@@ -3,7 +3,8 @@ import * as estraverse from 'estraverse';
 import { ICatchClauseNode } from "../interfaces/nodes/ICatchClauseNode";
 import { INode } from '../interfaces/nodes/INode';
 
-import { NodeObfuscator } from './NodeObfuscator';
+import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
+import { IdentifierReplacer } from "./replacers/IdentifierReplacer";
 import { Nodes } from "../Nodes";
 
 /**
@@ -14,7 +15,7 @@ import { Nodes } from "../Nodes";
  *     try {} catch (_0x12d45f) { console.log(_0x12d45f); };
  *
  */
-export class CatchClauseObfuscator extends NodeObfuscator {
+export class CatchClauseObfuscator extends AbstractNodeObfuscator {
     /**
      * @type {Map<string, string>}
      */
@@ -43,8 +44,9 @@ export class CatchClauseObfuscator extends NodeObfuscator {
     private replaceCatchClauseParam (catchClauseNode: ICatchClauseNode): void {
         estraverse.replace(catchClauseNode, {
             leave: (node: INode, parentNode: INode): any => {
-                if (Nodes.isIdentifierNode(node)) {
-                    node.name = this.replaceIdentifiersWithRandomNames(node, parentNode, this.catchClauseParam);
+                if (Nodes.isReplaceableIdentifierNode(node, parentNode)) {
+                    node.name = new IdentifierReplacer(this.nodes, this.options)
+                        .replace(node.name, this.catchClauseParam);
                 }
             }
         });

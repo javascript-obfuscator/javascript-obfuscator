@@ -9,7 +9,7 @@ import { INode } from "../interfaces/nodes/INode";
 
 import { NodeType } from "../enums/NodeType";
 
-import { NodeObfuscator } from './NodeObfuscator';
+import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
 import { Nodes } from "../Nodes";
 import { Utils } from '../Utils';
 
@@ -23,7 +23,7 @@ import { Utils } from '../Utils';
  * on:
  *     var object = { '\u0050\u0053\u0045\u0055\u0044\u004f': 1 };
  */
-export class ObjectExpressionObfuscator extends NodeObfuscator {
+export class ObjectExpressionObfuscator extends AbstractNodeObfuscator {
     /**
      * @param objectExpressionNode
      */

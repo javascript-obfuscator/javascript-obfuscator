@@ -1,9 +1,9 @@
 import { IOptions } from "../interfaces/IOptions";
 
+import { AbstractNodesGroup } from './AbstractNodesGroup';
 import { ConsoleOutputDisableExpressionNode } from "../custom-nodes/console-output-nodes/ConsoleOutputDisableExpressionNode";
-import { NodesGroup } from './NodesGroup';
 
-export class ConsoleOutputNodesGroup extends NodesGroup {
+export class ConsoleOutputNodesGroup extends AbstractNodesGroup {
     /**
      * @param options
      */

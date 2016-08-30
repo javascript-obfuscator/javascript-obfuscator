@@ -27,7 +27,7 @@ import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclar
 
 export class Obfuscator implements IObfuscator {
     /**
-     * @type {Map<string, Node>}
+     * @type {Map<string, AbstractCustomNode>}
      */
     private nodes: Map <string, ICustomNode>;
 

@@ -13,12 +13,12 @@ import { AtobTemplate } from "../../templates/custom-nodes/AtobTemplate";
 import { SelfDefendingTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-decode-node/SelfDefendingTemplate";
 import { UnicodeArrayDecodeTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-decode-node/UnicodeArrayDecodeTemplate";
 
+import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
-import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
 import { UnicodeArray } from "../../UnicodeArray";
 
-export class UnicodeArrayDecodeNode extends Node {
+export class UnicodeArrayDecodeNode extends AbstractCustomNode {
     /**
      * @type {AppendState}
      */

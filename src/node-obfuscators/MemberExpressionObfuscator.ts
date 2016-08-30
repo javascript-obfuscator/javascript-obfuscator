@@ -8,10 +8,11 @@ import { INode } from "../interfaces/nodes/INode";
 
 import { NodeType } from "../enums/NodeType";
 
-import { NodeObfuscator } from './NodeObfuscator';
+import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
 import { Nodes } from "../Nodes";
+import { StringLiteralReplacer } from "./replacers/StringLiteralReplacer";
 
-export class MemberExpressionObfuscator extends NodeObfuscator {
+export class MemberExpressionObfuscator extends AbstractNodeObfuscator {
     /**
      * @param memberExpressionNode
      */
@@ -53,7 +54,7 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
             literalNode: ILiteralNode = {
                 raw: `'${nodeValue}'`,
                 'x-verbatim-property': {
-                    content : this.replaceLiteralValueWithUnicodeValue(nodeValue),
+                    content : new StringLiteralReplacer(this.nodes, this.options).replace(nodeValue),
                     precedence: escodegen.Precedence.Primary
                 },
                 type: NodeType.Literal,
@@ -77,7 +78,7 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
     private obfuscateLiteralProperty (node: ILiteralNode): void {
         if (typeof node.value === 'string' && !node['x-verbatim-property']) {
             node['x-verbatim-property'] = {
-                content : this.replaceLiteralValueWithUnicodeValue(node.value),
+                content : new StringLiteralReplacer(this.nodes, this.options).replace(node.value),
                 precedence: escodegen.Precedence.Primary
             };
         }

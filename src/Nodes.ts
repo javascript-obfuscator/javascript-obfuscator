@@ -105,6 +105,26 @@ export class Nodes {
     }
 
     /**
+     * @param node
+     * @param parentNode
+     * @returns {boolean}
+     */
+    public static isReplaceableIdentifierNode (node: INode, parentNode: INode): node is IIdentifierNode {
+        if (!Nodes.isIdentifierNode(node)) {
+            return false;
+        }
+
+        const parentNodeIsPropertyNode: boolean = Nodes.isPropertyNode(parentNode) && parentNode.key === node;
+        const parentNodeIsMemberExpressionNode: boolean = (
+            Nodes.isMemberExpressionNode(parentNode) &&
+            parentNode.computed === false &&
+            parentNode.property === node
+        );
+
+        return !parentNodeIsPropertyNode && !parentNodeIsMemberExpressionNode;
+    }
+
+    /**
      *
      * @param node
      * @returns {boolean}

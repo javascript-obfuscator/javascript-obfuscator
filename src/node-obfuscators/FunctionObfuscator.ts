@@ -3,7 +3,8 @@ import * as estraverse from 'estraverse';
 import { IFunctionNode } from "../interfaces/nodes/IFunctionNode";
 import { INode } from "../interfaces/nodes/INode";
 
-import { NodeObfuscator } from './NodeObfuscator';
+import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
+import { IdentifierReplacer } from "./replacers/IdentifierReplacer";
 import { Nodes } from "../Nodes";
 
 /**
@@ -14,7 +15,7 @@ import { Nodes } from "../Nodes";
  *     function foo (_0x12d45f) { return _0x12d45f; };
  *
  */
-export class FunctionObfuscator extends NodeObfuscator {
+export class FunctionObfuscator extends AbstractNodeObfuscator {
     /**
      * @type {Map<string, string>}
      */
@@ -46,8 +47,9 @@ export class FunctionObfuscator extends NodeObfuscator {
     private replaceFunctionParams (functionNode: IFunctionNode): void {
         let replaceVisitor: estraverse.Visitor = {
             leave: (node: INode, parentNode: INode): any => {
-                if (Nodes.isIdentifierNode(node)) {
-                    node.name = this.replaceIdentifiersWithRandomNames(node, parentNode, this.functionParams);
+                if (Nodes.isReplaceableIdentifierNode(node, parentNode)) {
+                    node.name = new IdentifierReplacer(this.nodes, this.options)
+                        .replace(node.name, this.functionParams);
                 }
             }
         };

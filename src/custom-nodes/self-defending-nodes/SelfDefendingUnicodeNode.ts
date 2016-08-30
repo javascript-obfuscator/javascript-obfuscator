@@ -8,12 +8,12 @@ import { NO_CUSTOM_NODES_PRESET } from "../../preset-options/NoCustomNodesPreset
 
 import { SelfDefendingTemplate } from "../../templates/custom-nodes/self-defending-nodes/self-defending-unicode-node/SelfDefendingTemplate";
 
+import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from "../../JavaScriptObfuscator";
-import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
 import { Utils } from "../../Utils";
 
-export class SelfDefendingUnicodeNode extends Node {
+export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     /**
      * @type {AppendState}
      */

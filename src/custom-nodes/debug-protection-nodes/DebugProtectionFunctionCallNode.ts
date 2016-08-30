@@ -9,10 +9,10 @@ import { AppendState } from "../../enums/AppendState";
 
 import { DebugProtectionFunctionCallTemplate } from "../../templates/custom-nodes/debug-protection-nodes/debug-protection-function-call-node/DebufProtectionFunctionCallTemplate";
 
-import { Node } from '../Node';
+import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeUtils } from "../../NodeUtils";
 
-export class DebugProtectionFunctionCallNode extends Node {
+export class DebugProtectionFunctionCallNode extends AbstractCustomNode {
     /**
      * @type {AppendState}
      */

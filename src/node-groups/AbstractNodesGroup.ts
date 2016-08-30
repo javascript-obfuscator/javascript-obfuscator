@@ -3,9 +3,9 @@ import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { INodesGroup } from '../interfaces/INodesGroup';
 import { IOptions } from "../interfaces/IOptions";
 
-export abstract class NodesGroup implements INodesGroup {
+export abstract class AbstractNodesGroup implements INodesGroup {
     /**
-     * @type {Map<string, Node>}
+     * @type {Map<string, AbstractCustomNode>}
      */
     protected nodes: Map <string, ICustomNode> = new Map <string, ICustomNode> ();
 

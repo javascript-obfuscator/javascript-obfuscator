@@ -1,6 +1,6 @@
 import { IOptions } from "../interfaces/IOptions";
 
-import { NodesGroup } from './NodesGroup';
+import { AbstractNodesGroup } from './AbstractNodesGroup';
 import { UnicodeArray } from "../UnicodeArray";
 import { UnicodeArrayCallsWrapper } from "../custom-nodes/unicode-array-nodes/UnicodeArrayCallsWrapper";
 import { UnicodeArrayDecodeNode } from "../custom-nodes/unicode-array-nodes/UnicodeArrayDecodeNode";
@@ -8,7 +8,7 @@ import { UnicodeArrayNode } from '../custom-nodes/unicode-array-nodes/UnicodeArr
 import { UnicodeArrayRotateFunctionNode } from '../custom-nodes/unicode-array-nodes/UnicodeArrayRotateFunctionNode';
 import { Utils } from '../Utils';
 
-export class UnicodeArrayNodesGroup extends NodesGroup {
+export class UnicodeArrayNodesGroup extends AbstractNodesGroup {
     /**
      * @type {string}
      */

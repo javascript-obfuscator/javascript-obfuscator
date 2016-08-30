@@ -3,9 +3,10 @@ import * as estraverse from 'estraverse';
 import { IMethodDefinitionNode } from "../interfaces/nodes/IMethodDefinitionNode";
 import { INode } from "../interfaces/nodes/INode";
 
-import { NodeObfuscator } from './NodeObfuscator';
+import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
 import { Nodes } from "../Nodes";
 import { Utils } from "../Utils";
+import { StringLiteralReplacer } from "./replacers/StringLiteralReplacer";
 
 /**
  * replaces:
@@ -14,7 +15,7 @@ import { Utils } from "../Utils";
  * on:
  *     [_0x9a4e('0x0')] { //... };
  */
-export class MethodDefinitionObfuscator extends NodeObfuscator {
+export class MethodDefinitionObfuscator extends AbstractNodeObfuscator {
     /**
      * @type {string[]}
      */
@@ -40,7 +41,8 @@ export class MethodDefinitionObfuscator extends NodeObfuscator {
                     methodDefinitionNode.computed === false
                 ) {
                     methodDefinitionNode.computed = true;
-                    node.name = this.replaceLiteralValueWithUnicodeValue(node.name);
+                    node.name = new StringLiteralReplacer(this.nodes, this.options)
+                        .replace(node.name);
 
                     return;
                 }

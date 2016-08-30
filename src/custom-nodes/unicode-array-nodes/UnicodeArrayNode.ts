@@ -11,10 +11,10 @@ import { UnicodeArray } from '../../UnicodeArray';
 
 import { UnicodeArrayTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-node/UnicodeArrayTemplate";
 
-import { Node } from '../Node';
+import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeUtils } from "../../NodeUtils";
 
-export class UnicodeArrayNode extends Node {
+export class UnicodeArrayNode extends AbstractCustomNode {
     /**
      * @type {number}
      */

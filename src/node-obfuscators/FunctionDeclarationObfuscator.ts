@@ -5,7 +5,8 @@ import { INode } from "../interfaces/nodes/INode";
 
 import { NodeType } from "../enums/NodeType";
 
-import { NodeObfuscator } from './NodeObfuscator';
+import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
+import { IdentifierReplacer } from "./replacers/IdentifierReplacer";
 import { Nodes } from "../Nodes";
 import { NodeUtils } from "../NodeUtils";
 
@@ -18,7 +19,7 @@ import { NodeUtils } from "../NodeUtils";
  *     function _0x12d45f () { //... };
  *     _0x12d45f();
  */
-export class FunctionDeclarationObfuscator extends NodeObfuscator {
+export class FunctionDeclarationObfuscator extends AbstractNodeObfuscator {
     /**
      * @type {Map<string, string>}
      */
@@ -56,8 +57,9 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
 
         estraverse.replace(scopeNode, {
             enter: (node: INode, parentNode: INode): any => {
-                if (Nodes.isIdentifierNode(node)) {
-                    node.name = this.replaceIdentifiersWithRandomNames(node, parentNode, this.functionName);
+                if (Nodes.isReplaceableIdentifierNode(node, parentNode)) {
+                    node.name = new IdentifierReplacer(this.nodes, this.options)
+                        .replace(node.name, this.functionName);
                 }
             }
         });

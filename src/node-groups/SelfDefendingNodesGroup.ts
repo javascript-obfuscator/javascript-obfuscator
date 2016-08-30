@@ -1,9 +1,9 @@
 import { IOptions } from "../interfaces/IOptions";
 
-import { NodesGroup } from './NodesGroup';
+import { AbstractNodesGroup } from './AbstractNodesGroup';
 import { SelfDefendingUnicodeNode } from "../custom-nodes/self-defending-nodes/SelfDefendingUnicodeNode";
 
-export class SelfDefendingNodesGroup extends NodesGroup {
+export class SelfDefendingNodesGroup extends AbstractNodesGroup {
     /**
      * @param options
      */

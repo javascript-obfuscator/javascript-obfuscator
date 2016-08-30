@@ -12,13 +12,13 @@ import { NO_CUSTOM_NODES_PRESET } from "../../preset-options/NoCustomNodesPreset
 import { SelfDefendingTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-rotate-function-node/SelfDefendingTemplate";
 import { UnicodeArrayRotateFunctionTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-rotate-function-node/UnicodeArrayRotateFunctionTemplate";
 
+import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from "../../JavaScriptObfuscator";
-import { Node } from '../Node';
 import { NodeUtils } from "../../NodeUtils";
 import { UnicodeArray } from "../../UnicodeArray";
 import { Utils } from "../../Utils";
 
-export class UnicodeArrayRotateFunctionNode extends Node {
+export class UnicodeArrayRotateFunctionNode extends AbstractCustomNode {
     /**
      * @type {AppendState}
      */

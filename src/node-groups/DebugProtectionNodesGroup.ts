@@ -4,10 +4,10 @@ import { DebugProtectionFunctionCallNode } from "../custom-nodes/debug-protectio
 import { DebugProtectionFunctionIntervalNode } from "../custom-nodes/debug-protection-nodes/DebugProtectionFunctionIntervalNode";
 import { DebugProtectionFunctionNode } from "../custom-nodes/debug-protection-nodes/DebugProtectionFunctionNode";
 
-import { NodesGroup } from './NodesGroup';
+import { AbstractNodesGroup } from './AbstractNodesGroup';
 import { Utils } from '../Utils';
 
-export class DebugProtectionNodesGroup extends NodesGroup {
+export class DebugProtectionNodesGroup extends AbstractNodesGroup {
     /**
      * @type {string}
      */

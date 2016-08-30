@@ -6,10 +6,10 @@ import { AppendState } from "../../enums/AppendState";
 
 import { ConsoleOutputDisableExpressionTemplate } from "../../templates/custom-nodes/console-output-nodes/console-output-disable-expression-node/ConsoleOutputDisableExpressionTemplate";
 
-import { Node } from '../Node';
+import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeUtils } from "../../NodeUtils";
 
-export class ConsoleOutputDisableExpressionNode extends Node {
+export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
     /**
      * @type {AppendState}
      */

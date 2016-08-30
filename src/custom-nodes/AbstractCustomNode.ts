@@ -4,7 +4,7 @@ import { IOptions } from "../interfaces/IOptions";
 
 import { AppendState } from '../enums/AppendState';
 
-export abstract class Node implements ICustomNode {
+export abstract class AbstractCustomNode implements ICustomNode {
     /**
      * @type {AppendState}
      */

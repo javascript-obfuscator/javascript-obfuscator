@@ -1,12 +1,15 @@
 import * as escodegen from 'escodegen';
 
 import { ILiteralNode } from "../interfaces/nodes/ILiteralNode";
-
 import { INode } from "../interfaces/nodes/INode";
-import { NodeObfuscator } from './NodeObfuscator';
-import { Nodes } from "../Nodes";
 
-export class LiteralObfuscator extends NodeObfuscator {
+import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
+import { BooleanLiteralReplacer } from "./replacers/BooleanLiteralReplacer";
+import { Nodes } from "../Nodes";
+import { NumberLiteralReplacer } from "./replacers/NumberLiteralReplacer";
+import { StringLiteralReplacer } from "./replacers/StringLiteralReplacer";
+
+export class LiteralObfuscator extends AbstractNodeObfuscator {
     /**
      * @param literalNode
      * @param parentNode
@@ -24,18 +27,21 @@ export class LiteralObfuscator extends NodeObfuscator {
 
         switch (typeof literalNode.value) {
             case 'boolean':
-                content = this.replaceLiteralBooleanWithJSFuck(<boolean>literalNode.value);
+                content = new BooleanLiteralReplacer(this.nodes, this.options)
+                    .replace(<boolean>literalNode.value);
 
                 break;
 
             case 'number':
-                content = this.replaceLiteralNumberWithHexadecimalValue(<number>literalNode.value);
+                content = new NumberLiteralReplacer(this.nodes, this.options)
+                    .replace(<number>literalNode.value);
 
                 break;
 
 
             case 'string':
-                content = this.replaceLiteralValueWithUnicodeValue(<string>literalNode.value);
+                content = new StringLiteralReplacer(this.nodes, this.options)
+                        .replace(<string>literalNode.value);
 
                 break;
 

@@ -5,7 +5,6 @@ import { IFunctionDeclarationNode } from "../interfaces/nodes/IFunctionDeclarati
 import { IIdentifierNode } from "../interfaces/nodes/IIdentifierNode";
 import { INode } from "../interfaces/nodes/INode";
 import { IOptions } from "../interfaces/IOptions";
-import { IReplacer } from "../interfaces/IReplacer";
 
 import { NodeType } from "../enums/NodeType";
 
@@ -25,14 +24,9 @@ import { NodeUtils } from "../NodeUtils";
  */
 export class FunctionDeclarationObfuscator extends AbstractNodeObfuscator {
     /**
-     * @type {Map<string, string>}
+     * @type {IdentifierReplacer}
      */
-    private functionName: Map <string, string> = new Map <string, string> ();
-
-    /**
-     * @type {IReplacer&IdentifierReplacer}
-     */
-    private identifierReplacer: IReplacer&IdentifierReplacer;
+    private identifierReplacer: IdentifierReplacer;
 
     /**
      * @param nodes
@@ -63,7 +57,7 @@ export class FunctionDeclarationObfuscator extends AbstractNodeObfuscator {
     private storeFunctionName (functionDeclarationNode: IFunctionDeclarationNode): void {
         NodeUtils.typedReplace(functionDeclarationNode.id, NodeType.Identifier, {
             leave: (node: IIdentifierNode) => {
-                this.identifierReplacer.storeNames(node.name, this.functionName)
+                this.identifierReplacer.storeNames(node.name)
             }
         });
     }
@@ -79,7 +73,7 @@ export class FunctionDeclarationObfuscator extends AbstractNodeObfuscator {
         estraverse.replace(scopeNode, {
             enter: (node: INode, parentNode: INode): any => {
                 if (Nodes.isReplaceableIdentifierNode(node, parentNode)) {
-                    node.name = this.identifierReplacer.replace(node.name, this.functionName);
+                    node.name = this.identifierReplacer.replace(node.name);
                 }
             }
         });

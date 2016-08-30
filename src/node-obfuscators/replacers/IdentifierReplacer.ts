@@ -3,12 +3,16 @@ import { Utils } from "../../Utils";
 
 export class IdentifierReplacer extends AbstractReplacer {
     /**
+     * @type {Map<string, string>}
+     */
+    private namesMap: Map<string, string> = new Map<string, string>();
+
+    /**
      * @param nodeValue
-     * @param namesMap
      * @returns {string}
      */
-    public replace (nodeValue: string, namesMap: Map <string, string>): string {
-        const obfuscatedIdentifierName: string|undefined = namesMap.get(nodeValue);
+    public replace (nodeValue: string): string {
+        const obfuscatedIdentifierName: string|undefined = this.namesMap.get(nodeValue);
 
         if (!obfuscatedIdentifierName) {
             return nodeValue;
@@ -22,11 +26,10 @@ export class IdentifierReplacer extends AbstractReplacer {
      * Reserved names will be ignored.
      *
      * @param nodeName
-     * @param namesMap
      */
-    public storeNames (nodeName: string, namesMap: Map <string, string>): void {
+    public storeNames (nodeName: string): void {
         if (!this.isReservedName(nodeName)) {
-            namesMap.set(nodeName, Utils.getRandomVariableName());
+            this.namesMap.set(nodeName, Utils.getRandomVariableName());
         }
     }
 

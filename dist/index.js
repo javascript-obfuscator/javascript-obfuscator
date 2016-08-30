@@ -718,15 +718,24 @@ var IdentifierReplacer = function (_AbstractReplacer_1$A) {
     _inherits(IdentifierReplacer, _AbstractReplacer_1$A);
 
     function IdentifierReplacer() {
+        var _Object$getPrototypeO;
+
         _classCallCheck(this, IdentifierReplacer);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(IdentifierReplacer).apply(this, arguments));
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        var _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(IdentifierReplacer)).call.apply(_Object$getPrototypeO, [this].concat(args)));
+
+        _this.namesMap = new Map();
+        return _this;
     }
 
     _createClass(IdentifierReplacer, [{
         key: "replace",
-        value: function replace(nodeValue, namesMap) {
-            var obfuscatedIdentifierName = namesMap.get(nodeValue);
+        value: function replace(nodeValue) {
+            var obfuscatedIdentifierName = this.namesMap.get(nodeValue);
             if (!obfuscatedIdentifierName) {
                 return nodeValue;
             }
@@ -734,9 +743,9 @@ var IdentifierReplacer = function (_AbstractReplacer_1$A) {
         }
     }, {
         key: "storeNames",
-        value: function storeNames(nodeName, namesMap) {
+        value: function storeNames(nodeName) {
             if (!this.isReservedName(nodeName)) {
-                namesMap.set(nodeName, Utils_1.Utils.getRandomVariableName());
+                this.namesMap.set(nodeName, Utils_1.Utils.getRandomVariableName());
             }
         }
     }, {
@@ -2387,7 +2396,6 @@ var CatchClauseObfuscator = function (_AbstractNodeObfuscat) {
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CatchClauseObfuscator).call(this, nodes, options));
 
-        _this.catchClauseParam = new Map();
         _this.identifierReplacer = new IdentifierReplacer_1.IdentifierReplacer(_this.nodes, _this.options);
         return _this;
     }
@@ -2405,7 +2413,7 @@ var CatchClauseObfuscator = function (_AbstractNodeObfuscat) {
 
             NodeUtils_1.NodeUtils.typedReplace(catchClauseNode.param, NodeType_1.NodeType.Identifier, {
                 leave: function leave(node) {
-                    _this2.identifierReplacer.storeNames(node.name, _this2.catchClauseParam);
+                    _this2.identifierReplacer.storeNames(node.name);
                 }
             });
         }
@@ -2417,7 +2425,7 @@ var CatchClauseObfuscator = function (_AbstractNodeObfuscat) {
             estraverse.replace(catchClauseNode, {
                 leave: function leave(node, parentNode) {
                     if (Nodes_1.Nodes.isReplaceableIdentifierNode(node, parentNode)) {
-                        node.name = _this3.identifierReplacer.replace(node.name, _this3.catchClauseParam);
+                        node.name = _this3.identifierReplacer.replace(node.name);
                     }
                 }
             });
@@ -2459,7 +2467,6 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeObfuscat) {
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FunctionDeclarationObfuscator).call(this, nodes, options));
 
-        _this.functionName = new Map();
         _this.identifierReplacer = new IdentifierReplacer_1.IdentifierReplacer(_this.nodes, _this.options);
         return _this;
     }
@@ -2480,7 +2487,7 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeObfuscat) {
 
             NodeUtils_1.NodeUtils.typedReplace(functionDeclarationNode.id, NodeType_1.NodeType.Identifier, {
                 leave: function leave(node) {
-                    _this2.identifierReplacer.storeNames(node.name, _this2.functionName);
+                    _this2.identifierReplacer.storeNames(node.name);
                 }
             });
         }
@@ -2493,7 +2500,7 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeObfuscat) {
             estraverse.replace(scopeNode, {
                 enter: function enter(node, parentNode) {
                     if (Nodes_1.Nodes.isReplaceableIdentifierNode(node, parentNode)) {
-                        node.name = _this3.identifierReplacer.replace(node.name, _this3.functionName);
+                        node.name = _this3.identifierReplacer.replace(node.name);
                     }
                 }
             });
@@ -2535,7 +2542,6 @@ var FunctionObfuscator = function (_AbstractNodeObfuscat) {
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FunctionObfuscator).call(this, nodes, options));
 
-        _this.functionParams = new Map();
         _this.identifierReplacer = new IdentifierReplacer_1.IdentifierReplacer(_this.nodes, _this.options);
         return _this;
     }
@@ -2554,7 +2560,7 @@ var FunctionObfuscator = function (_AbstractNodeObfuscat) {
             functionNode.params.forEach(function (paramsNode) {
                 NodeUtils_1.NodeUtils.typedReplace(paramsNode, NodeType_1.NodeType.Identifier, {
                     leave: function leave(node) {
-                        _this2.identifierReplacer.storeNames(node.name, _this2.functionParams);
+                        _this2.identifierReplacer.storeNames(node.name);
                     }
                 });
             });
@@ -2567,7 +2573,7 @@ var FunctionObfuscator = function (_AbstractNodeObfuscat) {
             var replaceVisitor = {
                 leave: function leave(node, parentNode) {
                     if (Nodes_1.Nodes.isReplaceableIdentifierNode(node, parentNode)) {
-                        node.name = _this3.identifierReplacer.replace(node.name, _this3.functionParams);
+                        node.name = _this3.identifierReplacer.replace(node.name);
                     }
                 }
             };
@@ -2916,7 +2922,6 @@ var VariableDeclarationObfuscator = function (_AbstractNodeObfuscat) {
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(VariableDeclarationObfuscator).call(this, nodes, options));
 
-        _this.variableNames = new Map();
         _this.identifierReplacer = new IdentifierReplacer_1.IdentifierReplacer(_this.nodes, _this.options);
         return _this;
     }
@@ -2938,7 +2943,7 @@ var VariableDeclarationObfuscator = function (_AbstractNodeObfuscat) {
             variableDeclarationNode.declarations.forEach(function (declarationNode) {
                 NodeUtils_1.NodeUtils.typedReplace(declarationNode.id, NodeType_1.NodeType.Identifier, {
                     leave: function leave(node) {
-                        _this2.identifierReplacer.storeNames(node.name, _this2.variableNames);
+                        _this2.identifierReplacer.storeNames(node.name);
                     }
                 });
             });
@@ -2956,7 +2961,7 @@ var VariableDeclarationObfuscator = function (_AbstractNodeObfuscat) {
                         estraverse.replace(node, {
                             enter: function enter(node, parentNode) {
                                 if (Nodes_1.Nodes.isReplaceableIdentifierNode(node, parentNode)) {
-                                    node.name = _this3.identifierReplacer.replace(node.name, _this3.variableNames);
+                                    node.name = _this3.identifierReplacer.replace(node.name);
                                 }
                             }
                         });
@@ -2965,7 +2970,7 @@ var VariableDeclarationObfuscator = function (_AbstractNodeObfuscat) {
                         isNodeAfterVariableDeclaratorFlag = true;
                     }
                     if (Nodes_1.Nodes.isReplaceableIdentifierNode(node, parentNode) && isNodeAfterVariableDeclaratorFlag) {
-                        node.name = _this3.identifierReplacer.replace(node.name, _this3.variableNames);
+                        node.name = _this3.identifierReplacer.replace(node.name);
                     }
                 }
             });

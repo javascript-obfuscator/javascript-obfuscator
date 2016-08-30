@@ -5,7 +5,6 @@ import { ICustomNode } from "../interfaces/custom-nodes/ICustomNode";
 import { IIdentifierNode } from "../interfaces/nodes/IIdentifierNode";
 import { INode } from '../interfaces/nodes/INode';
 import { IOptions } from "../interfaces/IOptions";
-import { IReplacer } from "../interfaces/IReplacer";
 
 import { NodeType } from "../enums/NodeType";
 
@@ -24,14 +23,9 @@ import { NodeUtils } from "../NodeUtils";
  */
 export class CatchClauseObfuscator extends AbstractNodeObfuscator {
     /**
-     * @type {Map<string, string>}
+     * @type {IdentifierReplacer}
      */
-    private catchClauseParam: Map <string, string> = new Map <string, string> ();
-
-    /**
-     * @type {IReplacer&IdentifierReplacer}
-     */
-    private identifierReplacer: IReplacer&IdentifierReplacer;
+    private identifierReplacer: IdentifierReplacer;
 
     /**
      * @param nodes
@@ -57,7 +51,7 @@ export class CatchClauseObfuscator extends AbstractNodeObfuscator {
     private storeCatchClauseParam (catchClauseNode: ICatchClauseNode): void {
         NodeUtils.typedReplace(catchClauseNode.param, NodeType.Identifier, {
             leave: (node: IIdentifierNode) => {
-                this.identifierReplacer.storeNames(node.name, this.catchClauseParam)
+                this.identifierReplacer.storeNames(node.name)
             }
         });
     }
@@ -69,7 +63,7 @@ export class CatchClauseObfuscator extends AbstractNodeObfuscator {
         estraverse.replace(catchClauseNode, {
             leave: (node: INode, parentNode: INode): any => {
                 if (Nodes.isReplaceableIdentifierNode(node, parentNode)) {
-                    node.name = this.identifierReplacer.replace(node.name, this.catchClauseParam);
+                    node.name = this.identifierReplacer.replace(node.name);
                 }
             }
         });

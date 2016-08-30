@@ -27,6 +27,10 @@ export class StringLiteralReplacer extends AbstractReplacer {
         return nodeValue;
     }
 
+    /**
+     * @param value
+     * @returns {string}
+     */
     private replaceStringLiteralWithUnicodeArrayCall (value: string): string {
         const unicodeArrayNode: TUnicodeArrayNode = <TUnicodeArrayNode>this.nodes.get('unicodeArrayNode');
 

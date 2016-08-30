@@ -58,7 +58,7 @@ describe('NodeUtils', () => {
             assert.deepEqual(blockStatementNode, expectedBlockStatementNode);
         });
 
-        it('should does not change `BlockStatement` node body if given node is not a valid AbstractCustomNode', () => {
+        it('should does not change `BlockStatement` node body if given node is not a valid Node', () => {
             assert.doesNotChange(
                 () => NodeUtils.appendNode(blockStatementNode.body, <INode>{}),
                 blockStatementNode,
@@ -227,7 +227,7 @@ describe('NodeUtils', () => {
             assert.deepEqual(blockStatementNode, expectedBlockStatementNode);
         });
 
-        it('should does not change `BlockStatement` node body if given node is not a valid AbstractCustomNode', () => {
+        it('should does not change `BlockStatement` node body if given node is not a valid Node', () => {
             assert.doesNotChange(
                 () => NodeUtils.insertNodeAtIndex(blockStatementNode.body, <INode>{}, 1),
                 blockStatementNode,
@@ -310,7 +310,7 @@ describe('NodeUtils', () => {
             assert.deepEqual(blockStatementNode, expectedBlockStatementNode);
         });
 
-        it('should does not change `BlockStatement` node body if given node is not a valid AbstractCustomNode', () => {
+        it('should does not change `BlockStatement` node body if given node is not a valid Node', () => {
             assert.doesNotChange(
                 () => NodeUtils.prependNode(blockStatementNode.body, <INode>{}),
                 blockStatementNode,

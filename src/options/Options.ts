@@ -103,6 +103,14 @@ export class Options implements IOptions {
     public readonly wrapUnicodeArrayCalls: boolean;
 
     /**
+     * @type {string[]}
+     */
+    @IsString({
+        each: true
+    })
+    public readonly domainLock: string[];
+
+    /**
      * @param obfuscatorOptions
      */
     constructor (obfuscatorOptions: IObfuscatorOptions) {

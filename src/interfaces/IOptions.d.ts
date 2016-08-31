@@ -14,4 +14,5 @@ export interface IOptions {
     readonly unicodeArray: boolean;
     readonly unicodeArrayThreshold: number;
     readonly wrapUnicodeArrayCalls: boolean;
+    readonly domainLock: string[];
 }

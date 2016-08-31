@@ -80,4 +80,32 @@ describe('Utils', () => {
             assert.equal(Utils.stringToUnicode('string'), expected);
         });
     });
+
+    describe('getRandomString (length: number, charSet?: string): string', () => {
+
+        let str1 = Utils.getRandomString(42),
+            otherCharSet = '0123456789abcdef',
+            str2 = Utils.getRandomString(10, otherCharSet)
+
+        it('should return a random string matching the default charSet', () => {
+            assert.match(str1, /^[a-zA-Z0-9]{42}$/);
+        });
+
+        it('should return a random string matching a custom charSet', () => {
+            assert.match(str2, /^[a-f0-9]{10}$/);
+        });
+
+    });
+
+    describe('hideString (str: string, length: number): [string, string]', () => {
+
+        let original1 = 'example.com',
+            [str1, diff] = Utils.hideString(original1, 30);
+
+        it('should return a string with the original string within', () => {
+            assert.isTrue(str1.length > original1.length);
+            assert.equal(str1.replace(new RegExp('[' + diff + ']', 'g'), ''), original1);
+        });
+
+    });
 });

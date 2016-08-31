@@ -22,5 +22,8 @@
       "node",
       "sinon"
     ]
-  }
+  },
+  "compileOnSave": false,
+  "buildOnSave": false,
+  "exclude": ["node_modules"]
 }

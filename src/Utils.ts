@@ -89,6 +89,61 @@ export class Utils {
     }
 
     /**
+     * snippet from http://stackoverflow.com/a/1349462
+     * @param length
+     * @param charSet
+     * @returns string
+     */
+    public static getRandomString (length: number, charSet?: string): string {
+      if (charSet == null)
+        charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+
+      let randomString = ''
+      for (let i = 0; i < length; i++) {
+        const randomPos = Math.floor(Math.random() * charSet.length);
+        randomString += charSet.charAt(randomPos);
+      }
+      return randomString;
+    }
+
+    /**
+     * @param length
+     * @param charSet
+     * @returns string
+     */
+    public static hideString(str: string, length: number): [string, string] {
+
+      // from http://stackoverflow.com/a/3561711
+      const escapeRegExp = (s: string) =>
+        s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+
+      const randomMerge = function (s1: string, s2: string): string {
+        let i1 = -1, i2 = -1, result = '';
+        while (i1 < s1.length || i2 < s2.length) {
+          if (Math.random() < 0.5 && i2 < s2.length) {
+            result += s2.charAt(++i2);
+          } else {
+            result += s1.charAt(++i1);
+          }
+        }
+        return result;
+      }
+
+      let randomString = Utils.getRandomString(length);
+
+      let randomStringDiff = randomString.replace(
+                              new RegExp('[' + escapeRegExp(str) + ']', 'g'),
+                              '');
+
+      // quick and dirty shuffle
+      // from http://stackoverflow.com/a/13365977
+      randomStringDiff = randomStringDiff.split('').sort(()=> 0.5-Math.random()).join('')
+
+      return [randomMerge(str, randomStringDiff), randomStringDiff];
+
+    }
+
+    /**
      * @param number
      * @returns {boolean}
      */
@@ -134,9 +189,9 @@ export class Utils {
                 template = '0'.repeat(2);
             } else {
                 prefix = '\\u';
-                template = '0'.repeat(4);  
+                template = '0'.repeat(4);
             }
-            
+
             return `${prefix}${(template + escape.charCodeAt(0).toString(radix)).slice(-template.length)}`;
         })}'`;
     }

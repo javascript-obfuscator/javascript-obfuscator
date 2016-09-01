@@ -111,7 +111,10 @@ export class Utils {
         return result;
       }
 
-      let randomString = Utils.randomGenerator.string({length: length});
+      // here we need a custom pool parameter because the default on from Change.string
+      // can return chars that break the RegExp
+      const customPool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let randomString = Utils.randomGenerator.string({length: length, pool: customPool});
 
       let randomStringDiff = randomString.replace(
                               new RegExp('[' + escapeRegExp(str) + ']', 'g'),

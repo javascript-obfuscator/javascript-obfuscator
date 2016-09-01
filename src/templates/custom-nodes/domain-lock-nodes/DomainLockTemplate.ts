@@ -1,3 +1,5 @@
+import { Utils } from "../../../Utils";
+
 /**
  * @returns {string}
  */
@@ -9,7 +11,7 @@ export function DomainLockTemplate (): string {
           var evil = []["forEach"]["constructor"];
           var window = evil("return this")();
           for (var d in window)
-            if (d.length = 101 && d.charCodeAt(7) == 116 && d.charCodeAt(5) == 101 && d.charCodeAt(3) == 117 && d.charCodeAt(0) == 100) break;
+            if (d.length == 8 && d.charCodeAt(7) == 116 && d.charCodeAt(5) == 101 && d.charCodeAt(3) == 117 && d.charCodeAt(0) == 100) break;
           for (var d1 in window[d])
             if (d1.length == 6 && d1.charCodeAt(5) == 110 && d1.charCodeAt(0) == 100) break;
 
@@ -24,7 +26,9 @@ export function DomainLockTemplate (): string {
                 break;
             }
           }
-          alert("can run on this domain: " + ok);
+          if (!ok) {
+            evil(${Utils.stringToUnicode(`throw new Error()`)})();
+          }
         })();
     `;
 }

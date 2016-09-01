@@ -1,6 +1,10 @@
 Change Log
 ===
 
+v0.7.1
+---
+* IE error fix [#14](https://github.com/sanex3339/javascript-obfuscator/issues/14)
+
 v0.7.0-dev.3
 ---
 * Obfuscator now returns an empty string instead of obfuscated code if source code is empty

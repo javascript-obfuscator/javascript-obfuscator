@@ -15,5 +15,6 @@ export const DEFAULT_PRESET: IObfuscatorOptions = Object.freeze({
     sourceMapMode: SourceMapMode.Separate,
     unicodeArray: true,
     unicodeArrayThreshold: 0.8,
-    wrapUnicodeArrayCalls: true
+    wrapUnicodeArrayCalls: true,
+    domainLock: []
 });

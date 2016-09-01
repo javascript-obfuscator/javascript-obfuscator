@@ -15,5 +15,6 @@ export const NO_CUSTOM_NODES_PRESET: IObfuscatorOptions = Object.freeze({
     sourceMapMode: SourceMapMode.Separate,
     unicodeArray: false,
     unicodeArrayThreshold: 0,
-    wrapUnicodeArrayCalls: false
+    wrapUnicodeArrayCalls: false,
+    domainLock: []
 });

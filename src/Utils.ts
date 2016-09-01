@@ -89,24 +89,6 @@ export class Utils {
     }
 
     /**
-     * snippet from http://stackoverflow.com/a/1349462
-     * @param length
-     * @param charSet
-     * @returns string
-     */
-    public static getRandomString (length: number, charSet?: string): string {
-      if (charSet == null)
-        charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-
-      let randomString = ''
-      for (let i = 0; i < length; i++) {
-        const randomPos = Math.floor(Math.random() * charSet.length);
-        randomString += charSet.charAt(randomPos);
-      }
-      return randomString;
-    }
-
-    /**
      * @param length
      * @param charSet
      * @returns string
@@ -129,15 +111,15 @@ export class Utils {
         return result;
       }
 
-      let randomString = Utils.getRandomString(length);
+      let randomString = Utils.randomGenerator.string({length: length});
 
       let randomStringDiff = randomString.replace(
                               new RegExp('[' + escapeRegExp(str) + ']', 'g'),
                               '');
 
-      // quick and dirty shuffle
-      // from http://stackoverflow.com/a/13365977
-      randomStringDiff = randomStringDiff.split('').sort(()=> 0.5-Math.random()).join('')
+      let randomStringDiffArray = randomStringDiff.split('');
+      Utils.randomGenerator.shuffle(randomStringDiffArray);
+      randomStringDiff = randomStringDiffArray.join('');
 
       return [randomMerge(str, randomStringDiff), randomStringDiff];
 

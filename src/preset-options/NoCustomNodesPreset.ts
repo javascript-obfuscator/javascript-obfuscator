@@ -7,6 +7,7 @@ export const NO_CUSTOM_NODES_PRESET: IObfuscatorOptions = Object.freeze({
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: false,
+    domainLock: [],
     encodeUnicodeLiterals: false,
     reservedNames: [],
     rotateUnicodeArray: false,

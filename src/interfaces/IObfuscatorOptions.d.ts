@@ -14,5 +14,6 @@ export interface IObfuscatorOptions {
     unicodeArray?: boolean;
     unicodeArrayThreshold?: number;
     wrapUnicodeArrayCalls?: boolean;
+    domainLock?: string[];
     [key: string]: any;
 }

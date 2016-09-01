@@ -64,6 +64,7 @@ let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
     `,
     {
         disableConsoleOutput: false,
+        domainLock: ['.google.ru'],
         encodeUnicodeLiterals: true
     }
 ).getObfuscatedCode();

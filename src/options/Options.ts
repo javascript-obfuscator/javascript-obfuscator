@@ -45,6 +45,14 @@ export class Options implements IOptions {
     public readonly disableConsoleOutput: boolean;
 
     /**
+     * @type {string[]}
+     */
+    @IsString({
+        each: true
+    })
+    public readonly domainLock: string[];
+
+    /**
      * @type {boolean}
      */
     @IsBoolean()

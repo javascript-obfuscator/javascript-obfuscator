@@ -89,6 +89,46 @@ export class Utils {
     }
 
     /**
+     * @param length
+     * @param charSet
+     * @returns string
+     */
+    public static hideString(str: string, length: number): [string, string] {
+
+      // from http://stackoverflow.com/a/3561711
+      const escapeRegExp = (s: string) =>
+        s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+
+      const randomMerge = function (s1: string, s2: string): string {
+        let i1 = -1, i2 = -1, result = '';
+        while (i1 < s1.length || i2 < s2.length) {
+          if (Math.random() < 0.5 && i2 < s2.length) {
+            result += s2.charAt(++i2);
+          } else {
+            result += s1.charAt(++i1);
+          }
+        }
+        return result;
+      }
+
+      // here we need a custom pool parameter because the default on from Change.string
+      // can return chars that break the RegExp
+      const customPool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let randomString = Utils.randomGenerator.string({length: length, pool: customPool});
+
+      let randomStringDiff = randomString.replace(
+                              new RegExp('[' + escapeRegExp(str) + ']', 'g'),
+                              '');
+
+      let randomStringDiffArray = randomStringDiff.split('');
+      Utils.randomGenerator.shuffle(randomStringDiffArray);
+      randomStringDiff = randomStringDiffArray.join('');
+
+      return [randomMerge(str, randomStringDiff), randomStringDiff];
+
+    }
+
+    /**
      * @param number
      * @returns {boolean}
      */
@@ -134,9 +174,9 @@ export class Utils {
                 template = '0'.repeat(2);
             } else {
                 prefix = '\\u';
-                template = '0'.repeat(4);  
+                template = '0'.repeat(4);
             }
-            
+
             return `${prefix}${(template + escape.charCodeAt(0).toString(radix)).slice(-template.length)}`;
         })}'`;
     }

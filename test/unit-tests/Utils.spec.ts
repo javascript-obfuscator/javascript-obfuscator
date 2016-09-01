@@ -80,4 +80,15 @@ describe('Utils', () => {
             assert.equal(Utils.stringToUnicode('string'), expected);
         });
     });
+
+    describe('hideString (str: string, length: number): [string, string]', () => {
+        let original1: string = 'example.com',
+            [str1, diff] = Utils.hideString(original1, 30);
+
+        it('should return a string with the original string within', () => {
+            assert.isTrue(str1.length > original1.length);
+            assert.equal(str1.replace(new RegExp('[' + diff + ']', 'g'), ''), original1);
+        });
+
+    });
 });

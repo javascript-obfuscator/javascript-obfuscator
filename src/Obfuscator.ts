@@ -13,6 +13,7 @@ import { NodeType } from './enums/NodeType';
 import { CatchClauseObfuscator } from './node-obfuscators/CatchClauseObfuscator';
 import { ConsoleOutputNodesGroup } from "./node-groups/ConsoleOutputNodesGroup";
 import { DebugProtectionNodesGroup } from './node-groups/DebugProtectionNodesGroup';
+import { DomainLockNodesGroup } from './node-groups/DomainLockNodesGroup';
 import { FunctionDeclarationObfuscator } from './node-obfuscators/FunctionDeclarationObfuscator';
 import { FunctionObfuscator } from './node-obfuscators/FunctionObfuscator';
 import { LiteralObfuscator } from './node-obfuscators/LiteralObfuscator';
@@ -65,7 +66,8 @@ export class Obfuscator implements IObfuscator {
             ...new SelfDefendingNodesGroup(this.options).getNodes(),
             ...new ConsoleOutputNodesGroup(this.options).getNodes(),
             ...new DebugProtectionNodesGroup(this.options).getNodes(),
-            ...new UnicodeArrayNodesGroup(this.options).getNodes()
+            ...new UnicodeArrayNodesGroup(this.options).getNodes(),
+            ...new DomainLockNodesGroup(this.options).getNodes()
         ]);
     }
 

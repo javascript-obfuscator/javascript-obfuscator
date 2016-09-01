@@ -1,6 +1,6 @@
 #!/bin/bash
 
-npm run test:compile
-node test-tmp/test/dev/test.js
-$(npm bin)/istanbul cover $(npm bin)/_mocha -- test-tmp/test/index.spec.js
+npm run test:compile &&
+node test-tmp/test/dev/test.js &&
+$(npm bin)/istanbul cover $(npm bin)/_mocha -- test-tmp/test/index.spec.js &&
 npm run test:removeTmpDir

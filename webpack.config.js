@@ -12,7 +12,23 @@ ${fs.readFileSync('./LICENSE.BSD', 'utf8')}
 */`;
 }
 
+const isTravisEnv = process.env.TRAVIS ? JSON.parse(process.env.TRAVIS) : false;
+const plugins = [
+    new webpack.BannerPlugin(
+        {
+            banner: `${getLicenseText()}\n\nrequire("source-map-support").install();\n`,
+            raw: true,
+            entryOnly: false
+        }
+    )
+];
+
+if (isTravisEnv) {
+    plugins.push(new webpack.NoErrorsPlugin());
+}
+
 module.exports = {
+    bail: isTravisEnv,
     entry: {
         'index': './index.ts'
     },
@@ -28,15 +44,7 @@ module.exports = {
         extensions: ['', '.ts'],
         modulesDirectories: ['./src', './node_modules']
     },
-    plugins: [
-        new webpack.BannerPlugin(
-            {
-                banner: `${getLicenseText()}\n\nrequire("source-map-support").install();\n`,
-                raw: true,
-                entryOnly: false
-            }
-        )
-    ],
+    plugins: plugins,
     output: {
         path: './dist',
         filename: '[name].js',

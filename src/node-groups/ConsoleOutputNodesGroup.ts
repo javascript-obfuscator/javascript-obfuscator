@@ -18,5 +18,7 @@ export class ConsoleOutputNodesGroup extends AbstractNodesGroup {
             'consoleOutputDisableExpressionNode',
             new ConsoleOutputDisableExpressionNode(this.options)
         );
+
+        var t = {};
     }
 }

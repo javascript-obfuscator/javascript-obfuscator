@@ -2216,6 +2216,7 @@ var ConsoleOutputNodesGroup = function (_AbstractNodesGroup_) {
             return _possibleConstructorReturn(_this);
         }
         _this.nodes.set('consoleOutputDisableExpressionNode', new ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode(_this.options));
+        var t = {};
         return _this;
     }
 

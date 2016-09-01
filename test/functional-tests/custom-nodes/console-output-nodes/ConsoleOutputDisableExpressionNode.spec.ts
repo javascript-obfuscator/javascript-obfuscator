@@ -13,7 +13,7 @@ describe('ConsoleOutputDisableExpressionNode', () => {
             }
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(), /_\u0003\.log\u0001\.in/);
+        assert.match(obfuscationResult.getObfuscatedCode(), /for *\(_0x([a-z0-9]){5,6} in _0x([a-z0-9]){5,6} *= *_0x([a-z0-9]){4}\('0xc'\)\)/);
     });
 
     it('should\'t append `ConsoleOutputDisableExpressionNode` custom node into the obfuscated code if `disableConsoleOutput` option is not set', () => {
@@ -24,6 +24,6 @@ describe('ConsoleOutputDisableExpressionNode', () => {
             }
         );
 
-        assert.notMatch(obfuscationResult.getObfuscatedCode(), /_\u0003\.log\u0001\.in/);
+        assert.notMatch(obfuscationResult.getObfuscatedCode(), /for *\(_0x([a-z0-9]){5,6} in _0x([a-z0-9]){5,6} *= *_0x([a-z0-9]){4}\('0xc'\)\)/);
     });
 });

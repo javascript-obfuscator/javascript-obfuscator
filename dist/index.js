@@ -1194,7 +1194,7 @@ var Obfuscator = function () {
 
         this.nodeObfuscators = new Map([[NodeType_1.NodeType.ArrowFunctionExpression, [FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.ClassDeclaration, [FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator]], [NodeType_1.NodeType.CatchClause, [CatchClauseObfuscator_1.CatchClauseObfuscator]], [NodeType_1.NodeType.FunctionDeclaration, [FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator, FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.FunctionExpression, [FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.MemberExpression, [MemberExpressionObfuscator_1.MemberExpressionObfuscator]], [NodeType_1.NodeType.MethodDefinition, [MethodDefinitionObfuscator_1.MethodDefinitionObfuscator]], [NodeType_1.NodeType.ObjectExpression, [ObjectExpressionObfuscator_1.ObjectExpressionObfuscator]], [NodeType_1.NodeType.VariableDeclaration, [VariableDeclarationObfuscator_1.VariableDeclarationObfuscator]], [NodeType_1.NodeType.Literal, [LiteralObfuscator_1.LiteralObfuscator]]]);
         this.options = options;
-        this.nodes = new Map([].concat(_toConsumableArray(new SelfDefendingNodesGroup_1.SelfDefendingNodesGroup(this.options).getNodes()), _toConsumableArray(new ConsoleOutputNodesGroup_1.ConsoleOutputNodesGroup(this.options).getNodes()), _toConsumableArray(new DebugProtectionNodesGroup_1.DebugProtectionNodesGroup(this.options).getNodes()), _toConsumableArray(new UnicodeArrayNodesGroup_1.UnicodeArrayNodesGroup(this.options).getNodes()), _toConsumableArray(new DomainLockNodesGroup_1.DomainLockNodesGroup(this.options).getNodes())));
+        this.nodes = new Map([].concat(_toConsumableArray(new DomainLockNodesGroup_1.DomainLockNodesGroup(this.options).getNodes()), _toConsumableArray(new SelfDefendingNodesGroup_1.SelfDefendingNodesGroup(this.options).getNodes()), _toConsumableArray(new ConsoleOutputNodesGroup_1.ConsoleOutputNodesGroup(this.options).getNodes()), _toConsumableArray(new DebugProtectionNodesGroup_1.DebugProtectionNodesGroup(this.options).getNodes()), _toConsumableArray(new UnicodeArrayNodesGroup_1.UnicodeArrayNodesGroup(this.options).getNodes())));
     }
 
     _createClass(Obfuscator, [{
@@ -1846,6 +1846,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+__webpack_require__(8);
 var AppendState_1 = __webpack_require__(2);
 var DomainLockNodeTemplate_1 = __webpack_require__(62);
 var AbstractCustomNode_1 = __webpack_require__(4);
@@ -1887,8 +1888,8 @@ var DomainLockNode = function (_AbstractCustomNode_) {
             var diff = _Utils_1$Utils$hideSt2[1];
 
             return NodeUtils_1.NodeUtils.convertCodeToStructure(DomainLockNodeTemplate_1.DomainLockNodeTemplate().formatUnicorn({
-                domains: Utils_1.Utils.stringToUnicode(hiddenDomainsString),
-                diff: diff
+                diff: diff,
+                domains: hiddenDomainsString
             }));
         }
     }]);
@@ -2765,9 +2766,6 @@ var LiteralObfuscator = function (_AbstractNodeObfuscat) {
             if (Nodes_1.Nodes.isPropertyNode(parentNode) && parentNode.key === literalNode) {
                 return;
             }
-            if (literalNode['x-verbatim-property']) {
-                return;
-            }
             var content = void 0;
             switch (_typeof(literalNode.value)) {
                 case 'boolean':
@@ -3459,7 +3457,7 @@ exports.DebugProtectionFunctionTemplate = DebugProtectionFunctionTemplate;
 "use strict";
 
 function DomainLockNodeTemplate() {
-    return "\n        (function () {\n            var domains = {domains}.replace(/[{diff}]/g, \"\").split(\";\");\n            var eval = [][\"forEach\"][\"constructor\"];\n            var window = eval(\"return this\")();\n            \n            for (var d in window) {\n                if (d.length == 8 && d.charCodeAt(7) == 116 && d.charCodeAt(5) == 101 && d.charCodeAt(3) == 117 && d.charCodeAt(0) == 100) {\n                    break;\n                }\n            }\n                \n            for (var d1 in window[d]) {\n                if (d1.length == 6 && d1.charCodeAt(5) == 110 && d1.charCodeAt(0) == 100) {\n                    break;\n                }\n            }\n        \n            var currentDomain = window[d][d1];\n            \n            if (!currentDomain) {\n                return;\n            }\n            \n            var ok = false;\n                        \n            for (var i = 0; i < domains.length; i++) {\n                var domain = domains[i];\n                var position = currentDomain.length - domain.length;\n                var lastIndex = currentDomain.indexOf(domain, position);\n                var endsWith = lastIndex !== -1 && lastIndex === position;\n                \n                if (endsWith) {\n                    if (currentDomain.length == domain.length || domain.indexOf(\".\") === 0) {\n                        ok = true;\n                    }\n                    \n                    break;\n                }\n            }\n                \n            if (!ok) {\n                eval('throw new Error()')();\n            }\n        })();\n    ";
+    return "\n        (function () {\n            var regExp = new RegExp(\"[{diff}]\", \"g\");\n            var domains = \"{domains}\".replace(regExp, \"\").split(\";\");\n            var eval = [][\"forEach\"][\"constructor\"];\n            var window = eval(\"return this\")();\n            \n            for (var d in window) {\n                if (d.length == 8 && d.charCodeAt(7) == 116 && d.charCodeAt(5) == 101 && d.charCodeAt(3) == 117 && d.charCodeAt(0) == 100) {\n                    break;\n                }\n            }\n                \n            for (var d1 in window[d]) {\n                if (d1.length == 6 && d1.charCodeAt(5) == 110 && d1.charCodeAt(0) == 100) {\n                    break;\n                }\n            }\n        \n            var currentDomain = window[d][d1];\n            \n            if (!currentDomain) {\n                return;\n            }\n            \n            var ok = false;\n                        \n            for (var i = 0; i < domains.length; i++) {\n                var domain = domains[i];\n                var position = currentDomain.length - domain.length;\n                var lastIndex = currentDomain.indexOf(domain, position);\n                var endsWith = lastIndex !== -1 && lastIndex === position;\n                \n                if (endsWith) {\n                    if (currentDomain.length == domain.length || domain.indexOf(\".\") === 0) {\n                        ok = true;\n                    }\n                    \n                    break;\n                }\n            }\n                \n            if (!ok) {\n                eval('throw new Error()')();\n            }\n        })();\n    ";
 }
 exports.DomainLockNodeTemplate = DomainLockNodeTemplate;
 

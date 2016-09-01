@@ -1,4 +1,4 @@
-// import { Utils } from "../../Utils";
+import 'format-unicorn';
 
 import { INode } from "../../interfaces/nodes/INode";
 
@@ -30,12 +30,12 @@ export class DomainLockNode extends AbstractCustomNode {
      */
     protected getNodeStructure (): INode {
         let domainsString = this.options.domainLock.join(';'),
-        [hiddenDomainsString, diff] = Utils.hideString(domainsString, domainsString.length * 3);
+            [hiddenDomainsString, diff] = Utils.hideString(domainsString, domainsString.length * 3);
 
         return NodeUtils.convertCodeToStructure(
             DomainLockNodeTemplate().formatUnicorn({
-              domains: Utils.stringToUnicode(hiddenDomainsString),
-              diff: diff
+                diff: diff,
+                domains: hiddenDomainsString
             })
         );
     }

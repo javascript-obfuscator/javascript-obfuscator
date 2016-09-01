@@ -4,7 +4,8 @@
 export function DomainLockNodeTemplate (): string {
     return `
         (function () {
-            var domains = {domains}.replace(/[{diff}]/g, "").split(";");
+            var regExp = new RegExp("[{diff}]", "g");
+            var domains = "{domains}".replace(regExp, "").split(";");
             var eval = []["forEach"]["constructor"];
             var window = eval("return this")();
             

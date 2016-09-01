@@ -63,11 +63,11 @@ export class Obfuscator implements IObfuscator {
         this.options = options;
 
         this.nodes = new Map <string, ICustomNode> ([
+            ...new DomainLockNodesGroup(this.options).getNodes(),
             ...new SelfDefendingNodesGroup(this.options).getNodes(),
             ...new ConsoleOutputNodesGroup(this.options).getNodes(),
             ...new DebugProtectionNodesGroup(this.options).getNodes(),
-            ...new UnicodeArrayNodesGroup(this.options).getNodes(),
-            ...new DomainLockNodesGroup(this.options).getNodes()
+            ...new UnicodeArrayNodesGroup(this.options).getNodes()
         ]);
     }
 

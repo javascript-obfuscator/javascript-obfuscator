@@ -19,10 +19,6 @@ export class LiteralObfuscator extends AbstractNodeObfuscator {
             return;
         }
 
-        if (literalNode['x-verbatim-property']) {
-            return;
-        }
-
         let content: string;
 
         switch (typeof literalNode.value) {

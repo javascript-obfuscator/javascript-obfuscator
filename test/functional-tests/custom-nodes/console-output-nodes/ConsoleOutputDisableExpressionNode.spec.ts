@@ -9,21 +9,23 @@ describe('ConsoleOutputDisableExpressionNode', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `var test = 'test';`,
             {
-                disableConsoleOutput: true
+                disableConsoleOutput: true,
+                unicodeArrayThreshold: 1
             }
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(), /for *\(_0x([a-z0-9]){5,6} in _0x([a-z0-9]){5,6} *= *_0x([a-z0-9]){4}\('0xc'\)\)/);
+        assert.match(obfuscationResult.getObfuscatedCode(), /for *\(_0x([a-z0-9]){5,6} in _0x([a-z0-9]){5,6} *= *_0x([a-z0-9]){4}\('0x.*'\)\)/);
     });
 
     it('should\'t append `ConsoleOutputDisableExpressionNode` custom node into the obfuscated code if `disableConsoleOutput` option is not set', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `var test = 'test';`,
             {
-                disableConsoleOutput: false
+                disableConsoleOutput: false,
+                unicodeArrayThreshold: 1
             }
         );
 
-        assert.notMatch(obfuscationResult.getObfuscatedCode(), /for *\(_0x([a-z0-9]){5,6} in _0x([a-z0-9]){5,6} *= *_0x([a-z0-9]){4}\('0xc'\)\)/);
+        assert.notMatch(obfuscationResult.getObfuscatedCode(), /for *\(_0x([a-z0-9]){5,6} in _0x([a-z0-9]){5,6} *= *_0x([a-z0-9]){4}\('0x.*'\)\)/);
     });
 });

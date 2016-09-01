@@ -18,8 +18,8 @@ describe('VariableDeclarationObfuscator', () => {
             Object.assign({}, NO_CUSTOM_NODES_PRESET)
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-z0-9]){6} *= *'\\x61\\x62\\x63';/);
-        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-z0-9]){6}\);/);
+        assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-z0-9]){5,6} *= *'\\x61\\x62\\x63';/);
+        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-z0-9]){5,6}\);/);
     });
 
     it('should obfuscate variable call (`identifier` node) outside of block scope of node in which this variable was declared with `var` kind', () => {
@@ -35,7 +35,7 @@ describe('VariableDeclarationObfuscator', () => {
             Object.assign({}, NO_CUSTOM_NODES_PRESET)
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-z0-9]){6}\);/);
+        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-z0-9]){5,6}\);/);
     });
 
     it('should not obfuscate variable call (`identifier` node) outside of block scope of node in which this variable was declared with `let` kind', () => {
@@ -78,7 +78,7 @@ describe('VariableDeclarationObfuscator', () => {
         });
 
         it('should obfuscate variable call (`identifier` node) before variable declaration if this call is inside function body', () => {
-            assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-z0-9]){6}\['\\x69\\x74\\x65\\x6d'\]\);/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-z0-9]){5,6}\['\\x69\\x74\\x65\\x6d'\]\);/);
         });
 
         it('should not obfuscate variable call (`identifier` node) before variable declaration', () => {
@@ -103,7 +103,7 @@ describe('VariableDeclarationObfuscator', () => {
                 Object.assign({}, NO_CUSTOM_NODES_PRESET)
             );
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var _0x([a-z0-9]){6} *= *\{'\\x74\\x65\\x73\\x74/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var _0x([a-z0-9]){5,6} *= *\{'\\x74\\x65\\x73\\x74/);
         });
 
         it('shouldn\'t replace computed member expression identifier', () => {
@@ -123,7 +123,7 @@ describe('VariableDeclarationObfuscator', () => {
                 Object.assign({}, NO_CUSTOM_NODES_PRESET)
             );
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /_0x([a-z0-9]){6}\['\\x74\\x65\\x73\\x74'\]/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /_0x([a-z0-9]){5,6}\['\\x74\\x65\\x73\\x74'\]/);
         });
     });
 });

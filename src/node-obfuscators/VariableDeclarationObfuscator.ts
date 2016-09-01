@@ -60,9 +60,7 @@ export class VariableDeclarationObfuscator extends AbstractNodeObfuscator {
         variableDeclarationNode.declarations
             .forEach((declarationNode: IVariableDeclaratorNode) => {
                 NodeUtils.typedReplace(declarationNode.id, NodeType.Identifier, {
-                    leave: (node: IIdentifierNode) => {
-                        this.identifierReplacer.storeNames(node.name)
-                    }
+                    leave: (node: IIdentifierNode) => this.identifierReplacer.storeNames(node.name)
                 });
             });
     }

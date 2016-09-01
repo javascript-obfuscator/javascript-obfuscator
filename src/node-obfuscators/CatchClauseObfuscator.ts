@@ -50,9 +50,7 @@ export class CatchClauseObfuscator extends AbstractNodeObfuscator {
      */
     private storeCatchClauseParam (catchClauseNode: ICatchClauseNode): void {
         NodeUtils.typedReplace(catchClauseNode.param, NodeType.Identifier, {
-            leave: (node: IIdentifierNode) => {
-                this.identifierReplacer.storeNames(node.name)
-            }
+            leave: (node: IIdentifierNode) => this.identifierReplacer.storeNames(node.name)
         });
     }
 

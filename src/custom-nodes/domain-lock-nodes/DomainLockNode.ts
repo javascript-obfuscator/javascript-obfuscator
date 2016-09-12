@@ -1,6 +1,6 @@
-import 'format-unicorn';
+import * as ESTree from 'estree';
 
-import { INode } from "../../interfaces/nodes/INode";
+import 'format-unicorn';
 
 import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
 
@@ -26,9 +26,9 @@ export class DomainLockNode extends AbstractCustomNode {
     }
 
     /**
-     * @returns {INode}
+     * @returns {ESTree.Node}
      */
-    protected getNodeStructure (): INode {
+    protected getNodeStructure (): ESTree.Node {
         let domainsString = this.options.domainLock.join(';'),
             [hiddenDomainsString, diff] = Utils.hideString(domainsString, domainsString.length * 3);
 

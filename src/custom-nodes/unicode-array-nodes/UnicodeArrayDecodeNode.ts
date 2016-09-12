@@ -1,6 +1,7 @@
+import * as ESTree from 'estree';
+
 import 'format-unicorn';
 
-import { INode } from "../../interfaces/nodes/INode";
 import { IOptions } from "../../interfaces/IOptions";
 
 import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
@@ -62,16 +63,16 @@ export class UnicodeArrayDecodeNode extends AbstractCustomNode {
     }
 
     /**
-     * @returns {INode}
+     * @returns {ESTree.Node}
      */
-    public getNode (): INode {
+    public getNode (): ESTree.Node {
         return super.getNode();
     }
 
     /**
-     * @returns {INode}
+     * @returns {ESTree.Node}
      */
-    protected getNodeStructure (): INode {
+    protected getNodeStructure (): ESTree.Node {
         const forLoopFunctionName: string = 'forLoopFunc';
 
         let code: string;

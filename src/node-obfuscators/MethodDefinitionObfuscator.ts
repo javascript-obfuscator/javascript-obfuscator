@@ -1,7 +1,5 @@
 import * as estraverse from 'estraverse';
-
-import { IMethodDefinitionNode } from "../interfaces/nodes/IMethodDefinitionNode";
-import { INode } from "../interfaces/nodes/INode";
+import * as ESTree from 'estree';
 
 import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
 import { Nodes } from "../Nodes";
@@ -25,16 +23,16 @@ export class MethodDefinitionObfuscator extends AbstractNodeObfuscator {
      * @param methodDefinitionNode
      * @param parentNode
      */
-    public obfuscateNode (methodDefinitionNode: IMethodDefinitionNode, parentNode: INode): void {
+    public obfuscateNode (methodDefinitionNode: ESTree.MethodDefinition, parentNode: ESTree.Node): void {
         this.replaceMethodName(methodDefinitionNode);
     }
 
     /**
      * @param methodDefinitionNode
      */
-    private replaceMethodName (methodDefinitionNode: IMethodDefinitionNode): void {
+    private replaceMethodName (methodDefinitionNode: ESTree.MethodDefinition): void {
         estraverse.replace(methodDefinitionNode.key, {
-            leave: (node: INode): any => {
+            leave: (node: ESTree.Node): any => {
                 if (
                     Nodes.isIdentifierNode(node) &&
                     !Utils.arrayContains(this.ignoredNames, node.name) &&

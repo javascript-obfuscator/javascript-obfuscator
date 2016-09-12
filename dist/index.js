@@ -745,7 +745,7 @@ var IdentifierReplacer = function (_AbstractReplacer_1$A) {
     _inherits(IdentifierReplacer, _AbstractReplacer_1$A);
 
     function IdentifierReplacer() {
-        var _Object$getPrototypeO;
+        var _ref;
 
         _classCallCheck(this, IdentifierReplacer);
 
@@ -753,7 +753,7 @@ var IdentifierReplacer = function (_AbstractReplacer_1$A) {
             args[_key] = arguments[_key];
         }
 
-        var _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(IdentifierReplacer)).call.apply(_Object$getPrototypeO, [this].concat(args)));
+        var _this = _possibleConstructorReturn(this, (_ref = IdentifierReplacer.__proto__ || Object.getPrototypeOf(IdentifierReplacer)).call.apply(_ref, [this].concat(args)));
 
         _this.namesMap = new Map();
         return _this;
@@ -814,7 +814,7 @@ var StringLiteralReplacer = function (_AbstractReplacer_1$A) {
     function StringLiteralReplacer() {
         _classCallCheck(this, StringLiteralReplacer);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(StringLiteralReplacer).apply(this, arguments));
+        return _possibleConstructorReturn(this, (StringLiteralReplacer.__proto__ || Object.getPrototypeOf(StringLiteralReplacer)).apply(this, arguments));
     }
 
     _createClass(StringLiteralReplacer, [{
@@ -1023,25 +1023,25 @@ exports.JSFuck = {
     e: '(true+"")[3]',
     f: '(false+"")[0]',
     g: '(false+[0]+String)[20]',
-    h: '(+(101))["to"+String["name"]](21)[1]',
+    h: '(+(101))["toString"](21)[1]',
     i: '([false]+undefined)[10]',
     j: '([]["entries"]()+"")[3]',
-    k: '(+(20))["to"+String["name"]](21)',
+    k: '(+(20))["toString"](21)',
     l: '(false+"")[2]',
     m: '(Number+"")[11]',
     n: '(undefined+"")[1]',
     o: '(true+[]["fill"])[10]',
-    p: '(+(211))["to"+String["name"]](31)[1]',
-    q: '(+(212))["to"+String["name"]](31)[1]',
+    p: '(+(211))["toString"](31)[1]',
+    q: '(+(212))["toString"](31)[1]',
     r: '(true+"")[1]',
     s: '(false+"")[3]',
     t: '(true+"")[0]',
     u: '(undefined+"")[0]',
-    v: '(+(31))["to"+String["name"]](32)',
-    w: '(+(32))["to"+String["name"]](33)',
-    x: '(+(101))["to"+String["name"]](34)[1]',
+    v: '(+(31))["toString"](32)',
+    w: '(+(32))["toString"](33)',
+    x: '(+(101))["toString"](34)[1]',
     y: '(NaN+[Infinity])[10]',
-    z: '(+(35))["to"+String["name"]](36)',
+    z: '(+(35))["toString"](36)',
     A: '(+[]+Array)[10]',
     B: '(+[]+Boolean)[10]',
     C: 'Function("return escape")()(("")["italics"]())[2]',
@@ -1062,7 +1062,7 @@ exports.JSFuck = {
     R: '(+[]+RegExp)[10]',
     S: '(+[]+String)[10]',
     T: '(NaN+Function("return Date")()())[30]',
-    U: '(NaN+Function("return{}")()["to"+String["name"]]["call"]())[11]',
+    U: '(NaN+Function("return{}")()["toString"]["call"]())[11]',
     V: '\'V\'',
     W: '\'W\'',
     X: '\'X\'',
@@ -1094,7 +1094,7 @@ var NumberLiteralReplacer = function (_AbstractReplacer_1$A) {
     function NumberLiteralReplacer() {
         _classCallCheck(this, NumberLiteralReplacer);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(NumberLiteralReplacer).apply(this, arguments));
+        return _possibleConstructorReturn(this, (NumberLiteralReplacer.__proto__ || Object.getPrototypeOf(NumberLiteralReplacer)).apply(this, arguments));
     }
 
     _createClass(NumberLiteralReplacer, [{
@@ -1628,7 +1628,7 @@ var ConsoleOutputDisableExpressionNode = function (_AbstractCustomNode_) {
     _inherits(ConsoleOutputDisableExpressionNode, _AbstractCustomNode_);
 
     function ConsoleOutputDisableExpressionNode() {
-        var _Object$getPrototypeO;
+        var _ref;
 
         _classCallCheck(this, ConsoleOutputDisableExpressionNode);
 
@@ -1636,7 +1636,7 @@ var ConsoleOutputDisableExpressionNode = function (_AbstractCustomNode_) {
             args[_key] = arguments[_key];
         }
 
-        var _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(ConsoleOutputDisableExpressionNode)).call.apply(_Object$getPrototypeO, [this].concat(args)));
+        var _this = _possibleConstructorReturn(this, (_ref = ConsoleOutputDisableExpressionNode.__proto__ || Object.getPrototypeOf(ConsoleOutputDisableExpressionNode)).call.apply(_ref, [this].concat(args)));
 
         _this.appendState = AppendState_1.AppendState.BeforeObfuscation;
         return _this;
@@ -1686,7 +1686,7 @@ var DebugProtectionFunctionCallNode = function (_AbstractCustomNode_) {
     function DebugProtectionFunctionCallNode(debugProtectionFunctionName, options) {
         _classCallCheck(this, DebugProtectionFunctionCallNode);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DebugProtectionFunctionCallNode).call(this, options));
+        var _this = _possibleConstructorReturn(this, (DebugProtectionFunctionCallNode.__proto__ || Object.getPrototypeOf(DebugProtectionFunctionCallNode)).call(this, options));
 
         _this.appendState = AppendState_1.AppendState.BeforeObfuscation;
         _this.debugProtectionFunctionName = debugProtectionFunctionName;
@@ -1739,7 +1739,7 @@ var DebugProtectionFunctionIntervalNode = function (_AbstractCustomNode_) {
     function DebugProtectionFunctionIntervalNode(debugProtectionFunctionName, options) {
         _classCallCheck(this, DebugProtectionFunctionIntervalNode);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DebugProtectionFunctionIntervalNode).call(this, options));
+        var _this = _possibleConstructorReturn(this, (DebugProtectionFunctionIntervalNode.__proto__ || Object.getPrototypeOf(DebugProtectionFunctionIntervalNode)).call(this, options));
 
         _this.appendState = AppendState_1.AppendState.BeforeObfuscation;
         _this.debugProtectionFunctionName = debugProtectionFunctionName;
@@ -1793,7 +1793,7 @@ var DebugProtectionFunctionNode = function (_AbstractCustomNode_) {
     function DebugProtectionFunctionNode(debugProtectionFunctionName, options) {
         _classCallCheck(this, DebugProtectionFunctionNode);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DebugProtectionFunctionNode).call(this, options));
+        var _this = _possibleConstructorReturn(this, (DebugProtectionFunctionNode.__proto__ || Object.getPrototypeOf(DebugProtectionFunctionNode)).call(this, options));
 
         _this.appendState = AppendState_1.AppendState.BeforeObfuscation;
         _this.debugProtectionFunctionName = debugProtectionFunctionName;
@@ -1857,7 +1857,7 @@ var DomainLockNode = function (_AbstractCustomNode_) {
     _inherits(DomainLockNode, _AbstractCustomNode_);
 
     function DomainLockNode() {
-        var _Object$getPrototypeO;
+        var _ref;
 
         _classCallCheck(this, DomainLockNode);
 
@@ -1865,7 +1865,7 @@ var DomainLockNode = function (_AbstractCustomNode_) {
             args[_key] = arguments[_key];
         }
 
-        var _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(DomainLockNode)).call.apply(_Object$getPrototypeO, [this].concat(args)));
+        var _this = _possibleConstructorReturn(this, (_ref = DomainLockNode.__proto__ || Object.getPrototypeOf(DomainLockNode)).call.apply(_ref, [this].concat(args)));
 
         _this.appendState = AppendState_1.AppendState.BeforeObfuscation;
         return _this;
@@ -1926,7 +1926,7 @@ var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
     _inherits(SelfDefendingUnicodeNode, _AbstractCustomNode_);
 
     function SelfDefendingUnicodeNode() {
-        var _Object$getPrototypeO;
+        var _ref;
 
         _classCallCheck(this, SelfDefendingUnicodeNode);
 
@@ -1934,7 +1934,7 @@ var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
             args[_key] = arguments[_key];
         }
 
-        var _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(SelfDefendingUnicodeNode)).call.apply(_Object$getPrototypeO, [this].concat(args)));
+        var _this = _possibleConstructorReturn(this, (_ref = SelfDefendingUnicodeNode.__proto__ || Object.getPrototypeOf(SelfDefendingUnicodeNode)).call.apply(_ref, [this].concat(args)));
 
         _this.appendState = AppendState_1.AppendState.AfterObfuscation;
         return _this;
@@ -1995,7 +1995,7 @@ var UnicodeArrayCallsWrapper = function (_AbstractCustomNode_) {
     function UnicodeArrayCallsWrapper(unicodeArrayCallsWrapperName, unicodeArrayName, unicodeArray, options) {
         _classCallCheck(this, UnicodeArrayCallsWrapper);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(UnicodeArrayCallsWrapper).call(this, options));
+        var _this = _possibleConstructorReturn(this, (UnicodeArrayCallsWrapper.__proto__ || Object.getPrototypeOf(UnicodeArrayCallsWrapper)).call(this, options));
 
         _this.appendState = AppendState_1.AppendState.AfterObfuscation;
         _this.unicodeArrayCallsWrapperName = unicodeArrayCallsWrapperName;
@@ -2020,7 +2020,7 @@ var UnicodeArrayCallsWrapper = function (_AbstractCustomNode_) {
     }, {
         key: "getNode",
         value: function getNode() {
-            return _get(Object.getPrototypeOf(UnicodeArrayCallsWrapper.prototype), "getNode", this).call(this);
+            return _get(UnicodeArrayCallsWrapper.prototype.__proto__ || Object.getPrototypeOf(UnicodeArrayCallsWrapper.prototype), "getNode", this).call(this);
         }
     }, {
         key: "getNodeStructure",
@@ -2072,7 +2072,7 @@ var UnicodeArrayDecodeNode = function (_AbstractCustomNode_) {
     function UnicodeArrayDecodeNode(unicodeArrayName, unicodeArray, options) {
         _classCallCheck(this, UnicodeArrayDecodeNode);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(UnicodeArrayDecodeNode).call(this, options));
+        var _this = _possibleConstructorReturn(this, (UnicodeArrayDecodeNode.__proto__ || Object.getPrototypeOf(UnicodeArrayDecodeNode)).call(this, options));
 
         _this.appendState = AppendState_1.AppendState.AfterObfuscation;
         _this.unicodeArrayName = unicodeArrayName;
@@ -2091,7 +2091,7 @@ var UnicodeArrayDecodeNode = function (_AbstractCustomNode_) {
     }, {
         key: "getNode",
         value: function getNode() {
-            return _get(Object.getPrototypeOf(UnicodeArrayDecodeNode.prototype), "getNode", this).call(this);
+            return _get(UnicodeArrayDecodeNode.prototype.__proto__ || Object.getPrototypeOf(UnicodeArrayDecodeNode.prototype), "getNode", this).call(this);
         }
     }, {
         key: "getNodeStructure",
@@ -2152,7 +2152,7 @@ var UnicodeArrayNode = function (_AbstractCustomNode_) {
 
         _classCallCheck(this, UnicodeArrayNode);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(UnicodeArrayNode).call(this, options));
+        var _this = _possibleConstructorReturn(this, (UnicodeArrayNode.__proto__ || Object.getPrototypeOf(UnicodeArrayNode)).call(this, options));
 
         _this.appendState = AppendState_1.AppendState.AfterObfuscation;
         _this.unicodeArray = unicodeArray;
@@ -2183,7 +2183,7 @@ var UnicodeArrayNode = function (_AbstractCustomNode_) {
         key: 'getNode',
         value: function getNode() {
             this.unicodeArray.rotateArray(this.unicodeArrayRotateValue);
-            return _get(Object.getPrototypeOf(UnicodeArrayNode.prototype), 'getNode', this).call(this);
+            return _get(UnicodeArrayNode.prototype.__proto__ || Object.getPrototypeOf(UnicodeArrayNode.prototype), 'getNode', this).call(this);
         }
     }, {
         key: 'updateNodeData',
@@ -2239,7 +2239,7 @@ var UnicodeArrayRotateFunctionNode = function (_AbstractCustomNode_) {
     function UnicodeArrayRotateFunctionNode(unicodeArrayName, unicodeArray, unicodeArrayRotateValue, options) {
         _classCallCheck(this, UnicodeArrayRotateFunctionNode);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(UnicodeArrayRotateFunctionNode).call(this, options));
+        var _this = _possibleConstructorReturn(this, (UnicodeArrayRotateFunctionNode.__proto__ || Object.getPrototypeOf(UnicodeArrayRotateFunctionNode)).call(this, options));
 
         _this.appendState = AppendState_1.AppendState.AfterObfuscation;
         _this.unicodeArrayName = unicodeArrayName;
@@ -2259,7 +2259,7 @@ var UnicodeArrayRotateFunctionNode = function (_AbstractCustomNode_) {
     }, {
         key: "getNode",
         value: function getNode() {
-            return _get(Object.getPrototypeOf(UnicodeArrayRotateFunctionNode.prototype), "getNode", this).call(this);
+            return _get(UnicodeArrayRotateFunctionNode.prototype.__proto__ || Object.getPrototypeOf(UnicodeArrayRotateFunctionNode.prototype), "getNode", this).call(this);
         }
     }, {
         key: "getNodeStructure",
@@ -2312,7 +2312,7 @@ var ConsoleOutputNodesGroup = function (_AbstractNodesGroup_) {
     function ConsoleOutputNodesGroup(options) {
         _classCallCheck(this, ConsoleOutputNodesGroup);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ConsoleOutputNodesGroup).call(this, options));
+        var _this = _possibleConstructorReturn(this, (ConsoleOutputNodesGroup.__proto__ || Object.getPrototypeOf(ConsoleOutputNodesGroup)).call(this, options));
 
         if (!_this.options.disableConsoleOutput) {
             return _possibleConstructorReturn(_this);
@@ -2351,7 +2351,7 @@ var DebugProtectionNodesGroup = function (_AbstractNodesGroup_) {
     function DebugProtectionNodesGroup(options) {
         _classCallCheck(this, DebugProtectionNodesGroup);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DebugProtectionNodesGroup).call(this, options));
+        var _this = _possibleConstructorReturn(this, (DebugProtectionNodesGroup.__proto__ || Object.getPrototypeOf(DebugProtectionNodesGroup)).call(this, options));
 
         _this.debugProtectionFunctionIdentifier = Utils_1.Utils.getRandomVariableName();
         if (!_this.options.debugProtection) {
@@ -2392,7 +2392,7 @@ var DomainLockNodesGroup = function (_AbstractNodesGroup_) {
     function DomainLockNodesGroup(options) {
         _classCallCheck(this, DomainLockNodesGroup);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DomainLockNodesGroup).call(this, options));
+        var _this = _possibleConstructorReturn(this, (DomainLockNodesGroup.__proto__ || Object.getPrototypeOf(DomainLockNodesGroup)).call(this, options));
 
         if (!_this.options.domainLock.length) {
             return _possibleConstructorReturn(_this);
@@ -2428,7 +2428,7 @@ var SelfDefendingNodesGroup = function (_AbstractNodesGroup_) {
     function SelfDefendingNodesGroup(options) {
         _classCallCheck(this, SelfDefendingNodesGroup);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SelfDefendingNodesGroup).call(this, options));
+        var _this = _possibleConstructorReturn(this, (SelfDefendingNodesGroup.__proto__ || Object.getPrototypeOf(SelfDefendingNodesGroup)).call(this, options));
 
         if (!_this.options.selfDefending) {
             return _possibleConstructorReturn(_this);
@@ -2469,7 +2469,7 @@ var UnicodeArrayNodesGroup = function (_AbstractNodesGroup_) {
     function UnicodeArrayNodesGroup(options) {
         _classCallCheck(this, UnicodeArrayNodesGroup);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(UnicodeArrayNodesGroup).call(this, options));
+        var _this = _possibleConstructorReturn(this, (UnicodeArrayNodesGroup.__proto__ || Object.getPrototypeOf(UnicodeArrayNodesGroup)).call(this, options));
 
         _this.unicodeArrayName = Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
         _this.unicodeArrayTranslatorName = Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
@@ -2532,7 +2532,7 @@ var CatchClauseObfuscator = function (_AbstractNodeObfuscat) {
     function CatchClauseObfuscator(nodes, options) {
         _classCallCheck(this, CatchClauseObfuscator);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CatchClauseObfuscator).call(this, nodes, options));
+        var _this = _possibleConstructorReturn(this, (CatchClauseObfuscator.__proto__ || Object.getPrototypeOf(CatchClauseObfuscator)).call(this, nodes, options));
 
         _this.identifierReplacer = new IdentifierReplacer_1.IdentifierReplacer(_this.nodes, _this.options);
         return _this;
@@ -2603,7 +2603,7 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeObfuscat) {
     function FunctionDeclarationObfuscator(nodes, options) {
         _classCallCheck(this, FunctionDeclarationObfuscator);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FunctionDeclarationObfuscator).call(this, nodes, options));
+        var _this = _possibleConstructorReturn(this, (FunctionDeclarationObfuscator.__proto__ || Object.getPrototypeOf(FunctionDeclarationObfuscator)).call(this, nodes, options));
 
         _this.identifierReplacer = new IdentifierReplacer_1.IdentifierReplacer(_this.nodes, _this.options);
         return _this;
@@ -2678,7 +2678,7 @@ var FunctionObfuscator = function (_AbstractNodeObfuscat) {
     function FunctionObfuscator(nodes, options) {
         _classCallCheck(this, FunctionObfuscator);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FunctionObfuscator).call(this, nodes, options));
+        var _this = _possibleConstructorReturn(this, (FunctionObfuscator.__proto__ || Object.getPrototypeOf(FunctionObfuscator)).call(this, nodes, options));
 
         _this.identifierReplacer = new IdentifierReplacer_1.IdentifierReplacer(_this.nodes, _this.options);
         return _this;
@@ -2757,7 +2757,7 @@ var LiteralObfuscator = function (_AbstractNodeObfuscat) {
     function LiteralObfuscator() {
         _classCallCheck(this, LiteralObfuscator);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(LiteralObfuscator).apply(this, arguments));
+        return _possibleConstructorReturn(this, (LiteralObfuscator.__proto__ || Object.getPrototypeOf(LiteralObfuscator)).apply(this, arguments));
     }
 
     _createClass(LiteralObfuscator, [{
@@ -2820,7 +2820,7 @@ var MemberExpressionObfuscator = function (_AbstractNodeObfuscat) {
     function MemberExpressionObfuscator() {
         _classCallCheck(this, MemberExpressionObfuscator);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(MemberExpressionObfuscator).apply(this, arguments));
+        return _possibleConstructorReturn(this, (MemberExpressionObfuscator.__proto__ || Object.getPrototypeOf(MemberExpressionObfuscator)).apply(this, arguments));
     }
 
     _createClass(MemberExpressionObfuscator, [{
@@ -2902,7 +2902,7 @@ var MethodDefinitionObfuscator = function (_AbstractNodeObfuscat) {
     _inherits(MethodDefinitionObfuscator, _AbstractNodeObfuscat);
 
     function MethodDefinitionObfuscator() {
-        var _Object$getPrototypeO;
+        var _ref;
 
         _classCallCheck(this, MethodDefinitionObfuscator);
 
@@ -2910,7 +2910,7 @@ var MethodDefinitionObfuscator = function (_AbstractNodeObfuscat) {
             args[_key] = arguments[_key];
         }
 
-        var _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(MethodDefinitionObfuscator)).call.apply(_Object$getPrototypeO, [this].concat(args)));
+        var _this = _possibleConstructorReturn(this, (_ref = MethodDefinitionObfuscator.__proto__ || Object.getPrototypeOf(MethodDefinitionObfuscator)).call.apply(_ref, [this].concat(args)));
 
         _this.ignoredNames = ['constructor'];
         return _this;
@@ -2972,7 +2972,7 @@ var ObjectExpressionObfuscator = function (_AbstractNodeObfuscat) {
     function ObjectExpressionObfuscator() {
         _classCallCheck(this, ObjectExpressionObfuscator);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(ObjectExpressionObfuscator).apply(this, arguments));
+        return _possibleConstructorReturn(this, (ObjectExpressionObfuscator.__proto__ || Object.getPrototypeOf(ObjectExpressionObfuscator)).apply(this, arguments));
     }
 
     _createClass(ObjectExpressionObfuscator, [{
@@ -3055,7 +3055,7 @@ var VariableDeclarationObfuscator = function (_AbstractNodeObfuscat) {
     function VariableDeclarationObfuscator(nodes, options) {
         _classCallCheck(this, VariableDeclarationObfuscator);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(VariableDeclarationObfuscator).call(this, nodes, options));
+        var _this = _possibleConstructorReturn(this, (VariableDeclarationObfuscator.__proto__ || Object.getPrototypeOf(VariableDeclarationObfuscator)).call(this, nodes, options));
 
         _this.identifierReplacer = new IdentifierReplacer_1.IdentifierReplacer(_this.nodes, _this.options);
         return _this;
@@ -3141,7 +3141,7 @@ var BooleanLiteralReplacer = function (_AbstractReplacer_1$A) {
     function BooleanLiteralReplacer() {
         _classCallCheck(this, BooleanLiteralReplacer);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(BooleanLiteralReplacer).apply(this, arguments));
+        return _possibleConstructorReturn(this, (BooleanLiteralReplacer.__proto__ || Object.getPrototypeOf(BooleanLiteralReplacer)).apply(this, arguments));
     }
 
     _createClass(BooleanLiteralReplacer, [{

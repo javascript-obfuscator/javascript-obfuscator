@@ -1,7 +1,5 @@
 import * as escodegen from 'escodegen';
-
-import { ILiteralNode } from "../interfaces/nodes/ILiteralNode";
-import { INode } from "../interfaces/nodes/INode";
+import * as ESTree from 'estree';
 
 import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
 import { BooleanLiteralReplacer } from "./replacers/BooleanLiteralReplacer";
@@ -14,7 +12,7 @@ export class LiteralObfuscator extends AbstractNodeObfuscator {
      * @param literalNode
      * @param parentNode
      */
-    public obfuscateNode (literalNode: ILiteralNode, parentNode: INode): void {
+    public obfuscateNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): void {
         if (Nodes.isPropertyNode(parentNode) && parentNode.key === literalNode) {
             return;
         }

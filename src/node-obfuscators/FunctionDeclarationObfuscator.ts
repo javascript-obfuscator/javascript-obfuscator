@@ -1,9 +1,7 @@
 import * as estraverse from 'estraverse';
+import * as ESTree from 'estree';
 
 import { ICustomNode } from "../interfaces/custom-nodes/ICustomNode";
-import { IFunctionDeclarationNode } from "../interfaces/nodes/IFunctionDeclarationNode";
-import { IIdentifierNode } from "../interfaces/nodes/IIdentifierNode";
-import { INode } from "../interfaces/nodes/INode";
 import { IOptions } from "../interfaces/IOptions";
 
 import { NodeType } from "../enums/NodeType";
@@ -42,7 +40,7 @@ export class FunctionDeclarationObfuscator extends AbstractNodeObfuscator {
      * @param functionDeclarationNode
      * @param parentNode
      */
-    public obfuscateNode (functionDeclarationNode: IFunctionDeclarationNode, parentNode: INode): void {
+    public obfuscateNode (functionDeclarationNode: ESTree.FunctionDeclaration, parentNode: ESTree.Node): void {
         if (parentNode.type === NodeType.Program) {
             return;
         }
@@ -54,22 +52,22 @@ export class FunctionDeclarationObfuscator extends AbstractNodeObfuscator {
     /**
      * @param functionDeclarationNode
      */
-    private storeFunctionName (functionDeclarationNode: IFunctionDeclarationNode): void {
+    private storeFunctionName (functionDeclarationNode: ESTree.FunctionDeclaration): void {
         NodeUtils.typedReplace(functionDeclarationNode.id, NodeType.Identifier, {
-            leave: (node: IIdentifierNode) => this.identifierReplacer.storeNames(node.name)
+            leave: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
         });
     }
 
     /**
      * @param functionDeclarationNode
      */
-    private replaceFunctionName (functionDeclarationNode: IFunctionDeclarationNode): void {
-        let scopeNode: INode = NodeUtils.getBlockScopeOfNode(
+    private replaceFunctionName (functionDeclarationNode: ESTree.FunctionDeclaration): void {
+        let scopeNode: ESTree.Node = NodeUtils.getBlockScopeOfNode(
             functionDeclarationNode
         );
 
         estraverse.replace(scopeNode, {
-            enter: (node: INode, parentNode: INode): any => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Nodes.isReplaceableIdentifierNode(node, parentNode)) {
                     node.name = this.identifierReplacer.replace(node.name);
                 }

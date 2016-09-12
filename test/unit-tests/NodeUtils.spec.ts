@@ -1,15 +1,5 @@
 import * as chai from 'chai';
-
-import { IBlockStatementNode } from "../../src/interfaces/nodes/IBlockStatementNode";
-import { IExpressionStatementNode } from "../../src/interfaces/nodes/IExpressionStatementNode";
-import { IFunctionDeclarationNode } from "../../src/interfaces/nodes/IFunctionDeclarationNode";
-import { IIdentifierNode } from "../../src/interfaces/nodes/IIdentifierNode";
-import { IIfStatementNode } from "../../src/interfaces/nodes/IIfStatementNode";
-import { ILiteralNode } from "../../src/interfaces/nodes/ILiteralNode";
-import { INode } from "../../src/interfaces/nodes/INode";
-import { IProgramNode } from "../../src/interfaces/nodes/IProgramNode";
-import { IVariableDeclarationNode } from "../../src/interfaces/nodes/IVariableDeclarationNode";
-import { IVariableDeclaratorNode } from "../../src/interfaces/nodes/IVariableDeclaratorNode";
+import * as ESTree from 'estree';
 
 import { NodeMocks } from '../mocks/NodeMocks';
 import { NodeUtils } from '../../src/NodeUtils';
@@ -19,7 +9,7 @@ chai.use(require('chai-members-deep'));
 const assert: any = chai.assert;
 
 describe('NodeUtils', () => {
-    describe('addXVerbatimPropertyToLiterals (node: INode): void', () => {
+    describe('addXVerbatimPropertyToLiterals (node: ESTree.Node): void', () => {
         let literalNode: any,
             expectedLiteralNode: any;
 
@@ -37,10 +27,10 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('appendNode (blockScopeBody: INode[], node: INode): void', () => {
-        let blockStatementNode: IBlockStatementNode,
-            expectedBlockStatementNode: IBlockStatementNode,
-            expressionStatementNode: IExpressionStatementNode;
+    describe('appendNode (blockScopeBody: ESTree.Node[], node: ESTree.Node): void', () => {
+        let blockStatementNode: ESTree.BlockStatement,
+            expectedBlockStatementNode: ESTree.BlockStatement,
+            expressionStatementNode: ESTree.ExpressionStatement;
 
         beforeEach(() => {
             expressionStatementNode = NodeMocks.getExpressionStatementNode();
@@ -60,20 +50,20 @@ describe('NodeUtils', () => {
 
         it('should does not change `BlockStatement` node body if given node is not a valid Node', () => {
             assert.doesNotChange(
-                () => NodeUtils.appendNode(blockStatementNode.body, <INode>{}),
+                () => NodeUtils.appendNode(blockStatementNode.body, <ESTree.Node>{}),
                 blockStatementNode,
                 'body'
             );
         });
     });
 
-    describe('convertCodeToStructure (code: string): INode', () => {
+    describe('convertCodeToStructure (code: string): ESTree.Node', () => {
         let code: string,
-            identifierNode: IIdentifierNode,
-            literalNode: ILiteralNode,
-            programNode: IProgramNode,
-            variableDeclarationNode: IVariableDeclarationNode,
-            variableDeclaratorNode: IVariableDeclaratorNode;
+            identifierNode: ESTree.Identifier,
+            literalNode: ESTree.Literal,
+            programNode: ESTree.Program,
+            variableDeclarationNode: ESTree.VariableDeclaration,
+            variableDeclaratorNode: ESTree.VariableDeclarator;
 
         beforeEach(() => {
             code = `
@@ -101,15 +91,15 @@ describe('NodeUtils', () => {
             literalNode['parentNode'] = variableDeclaratorNode;
         });
 
-        it('should convert code to `INode` structure', () => {
+        it('should convert code to `ESTree.Node` structure', () => {
             assert.deepEqualIdent(NodeUtils.convertCodeToStructure(code), variableDeclarationNode);
         });
     });
 
-    describe('getBlockStatementNodeByIndex (node: INode, index: number = 0): INode', () => {
-        let blockStatementNode: IBlockStatementNode,
-            expressionStatementNode1: IExpressionStatementNode,
-            expressionStatementNode2: IExpressionStatementNode;
+    describe('getBlockStatementNodeByIndex (node: ESTree.Node, index: number = 0): ESTree.Node', () => {
+        let blockStatementNode: ESTree.BlockStatemen,
+            expressionStatementNode1: ESTree.ExpressionStatement,
+            expressionStatementNode2: ESTree.ExpressionStatement;
 
         beforeEach(() => {
             expressionStatementNode1 = NodeMocks.getExpressionStatementNode();
@@ -135,17 +125,17 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('getBlockScopeOfNode (node: INode, depth: number = 0): TNodeWithBlockStatement', () => {
-        let functionDeclarationBlockStatementNode: IBlockStatementNode,
-            ifStatementBlockStatementNode1: IBlockStatementNode,
-            ifStatementBlockStatementNode2: IBlockStatementNode,
-            ifStatementNode1: IIfStatementNode,
-            ifStatementNode2: IIfStatementNode,
-            expressionStatementNode1: IExpressionStatementNode,
-            expressionStatementNode2: IExpressionStatementNode,
-            expressionStatementNode3: IExpressionStatementNode,
-            functionDeclarationNode: IFunctionDeclarationNode,
-            programNode: IProgramNode;
+    describe('getBlockScopeOfNode (node: ESTree.Node, depth: number = 0): TNodeWithBlockStatement', () => {
+        let functionDeclarationBlockStatementNode: ESTree.BlockStatement,
+            ifStatementBlockStatementNode1: ESTree.BlockStatement,
+            ifStatementBlockStatementNode2: ESTree.BlockStatement,
+            ifStatementNode1: ESTree.IfStatement,
+            ifStatementNode2: ESTree.IfStatement,
+            expressionStatementNode1: ESTree.ExpressionStatement,
+            expressionStatementNode2: ESTree.ExpressionStatement,
+            expressionStatementNode3: ESTree.ExpressionStatement,
+            functionDeclarationNode: ESTree.FunctionDeclaration,
+            programNode: ESTree.Program;
 
         beforeEach(() => {
             expressionStatementNode1 = NodeMocks.getExpressionStatementNode();
@@ -201,11 +191,11 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('insertNodeAtIndex (blockScopeBody: INode[], node: INode, index: number): void', () => {
-        let blockStatementNode: IBlockStatementNode,
-            expectedBlockStatementNode: IBlockStatementNode,
-            expressionStatementNode1: IExpressionStatementNode,
-            expressionStatementNode2: IExpressionStatementNode;
+    describe('insertNodeAtIndex (blockScopeBody: ESTree.Node[], node: ESTree.Node, index: number): void', () => {
+        let blockStatementNode: ESTree.BlockStatement,
+            expectedBlockStatementNode: ESTree.BlockStatement,
+            expressionStatementNode1: ESTree.ExpressionStatement,
+            expressionStatementNode2: ESTree.ExpressionStatement;
 
         beforeEach(() => {
             expressionStatementNode1 = NodeMocks.getExpressionStatementNode();
@@ -229,19 +219,19 @@ describe('NodeUtils', () => {
 
         it('should does not change `BlockStatement` node body if given node is not a valid Node', () => {
             assert.doesNotChange(
-                () => NodeUtils.insertNodeAtIndex(blockStatementNode.body, <INode>{}, 1),
+                () => NodeUtils.insertNodeAtIndex(blockStatementNode.body, <ESTree.Node>{}, 1),
                 blockStatementNode,
                 'body'
             );
         });
     });
 
-    describe('parentize (node: INode): void', () => {
-        let ifStatementNode: IIfStatementNode,
-            ifStatementBlockStatementNode: IBlockStatementNode,
-            expressionStatementNode1: IExpressionStatementNode,
-            expressionStatementNode2: IExpressionStatementNode,
-            programNode: IProgramNode;
+    describe('parentize (node: ESTree.Node): void', () => {
+        let ifStatementNode: ESTree.IfStatement,
+            ifStatementBlockStatementNode: ESTree.BlockStatement,
+            expressionStatementNode1: ESTree.ExpressionStatement,
+            expressionStatementNode2: ESTree.ExpressionStatement,
+            programNode: ESTree.Program;
 
         beforeEach(() => {
             expressionStatementNode1 = NodeMocks.getExpressionStatementNode();
@@ -284,11 +274,11 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('prependNode (blockScopeBody: INode[], node: INode): void', () => {
-        let blockStatementNode: IBlockStatementNode,
-            expectedBlockStatementNode: IBlockStatementNode,
-            expressionStatementNode1: IExpressionStatementNode,
-            expressionStatementNode2: IExpressionStatementNode;
+    describe('prependNode (blockScopeBody: ESTree.Node[], node: ESTree.Node): void', () => {
+        let blockStatementNode: ESTree.BlockStatement,
+            expectedBlockStatementNode: ESTree.BlockStatement,
+            expressionStatementNode1: ESTree.ExpressionStatement,
+            expressionStatementNode2: ESTree.ExpressionStatement;
 
         beforeEach(() => {
             expressionStatementNode1 = NodeMocks.getExpressionStatementNode();
@@ -312,7 +302,7 @@ describe('NodeUtils', () => {
 
         it('should does not change `BlockStatement` node body if given node is not a valid Node', () => {
             assert.doesNotChange(
-                () => NodeUtils.prependNode(blockStatementNode.body, <INode>{}),
+                () => NodeUtils.prependNode(blockStatementNode.body, <ESTree.Node>{}),
                 blockStatementNode,
                 'body'
             );

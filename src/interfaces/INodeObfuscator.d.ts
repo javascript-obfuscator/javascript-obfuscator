@@ -1,9 +1,9 @@
-import { INode } from '../interfaces/nodes/INode';
+import * as ESTree from 'estree';
 
 export interface INodeObfuscator {
     /**
      * @param node
      * @param parentNode
      */
-    obfuscateNode (node: INode, parentNode?: INode): void;
+    obfuscateNode (node: ESTree.Node, parentNode?: ESTree.Node): void;
 }

@@ -1,6 +1,7 @@
+import * as ESTree from 'estree';
+
 import 'format-unicorn';
 
-import { INode } from "../../interfaces/nodes/INode";
 import { IOptions } from "../../interfaces/IOptions";
 
 import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
@@ -57,9 +58,9 @@ export class DebugProtectionFunctionNode extends AbstractCustomNode {
     /**
      * Found this trick in JScrambler
      *
-     * @returns {INode}
+     * @returns {ESTree.Node}
      */
-    protected getNodeStructure (): INode {
+    protected getNodeStructure (): ESTree.Node {
         return NodeUtils.convertCodeToStructure(
             DebugProtectionFunctionTemplate().formatUnicorn({
                 debugProtectionFunctionName: this.debugProtectionFunctionName

@@ -1,17 +1,4 @@
-import { IArrowFunctionExpressionNode } from "./interfaces/nodes/IArrowFunctionExpressionNode";
-import { IBlockStatementNode } from "./interfaces/nodes/IBlockStatementNode";
-import { IIdentifierNode } from "./interfaces/nodes/IIdentifierNode";
-import { IFunctionDeclarationNode } from "./interfaces/nodes/IFunctionDeclarationNode";
-import { IFunctionExpressionNode } from "./interfaces/nodes/IFunctionExpressionNode";
-import { ILiteralNode } from "./interfaces/nodes/ILiteralNode";
-import { IMemberExpressionNode } from "./interfaces/nodes/IMemberExpressionNode";
-import { INode } from "./interfaces/nodes/INode";
-import { IProgramNode } from "./interfaces/nodes/IProgramNode";
-import { IPropertyNode } from "./interfaces/nodes/IPropertyNode";
-import { IVariableDeclarationNode } from "./interfaces/nodes/IVariableDeclarationNode";
-import { IVariableDeclaratorNode } from "./interfaces/nodes/IVariableDeclaratorNode";
-
-import { TStatement } from "./types/nodes/TStatement";
+import * as ESTree from 'estree';
 
 import { TNodeWithBlockStatement } from "./types/TNodeWithBlockStatement";
 
@@ -20,9 +7,9 @@ import { NodeType } from "./enums/NodeType";
 export class Nodes {
     /**
      * @param bodyNode
-     * @returns IProgramNode
+     * @returns ESTree.Program
      */
-    public static getProgramNode (bodyNode: TStatement[]): IProgramNode {
+    public static getProgramNode (bodyNode: ESTree.Statement[]): ESTree.Program {
         return {
             'type': NodeType.Program,
             'body': bodyNode,
@@ -34,7 +21,7 @@ export class Nodes {
      * @param node
      * @returns {boolean}
      */
-    public static isArrowFunctionExpressionNode (node: INode): node is IArrowFunctionExpressionNode {
+    public static isArrowFunctionExpressionNode (node: ESTree.Node): node is ESTree.ArrowFunctionExpression {
         return node.type === NodeType.ArrowFunctionExpression;
     }
 
@@ -42,7 +29,7 @@ export class Nodes {
      * @param node
      * @returns {boolean}
      */
-    public static isBlockStatementNode (node: INode): node is IBlockStatementNode {
+    public static isBlockStatementNode (node: ESTree.Node): node is ESTree.BlockStatement {
         return node.type === NodeType.BlockStatement;
     }
 
@@ -50,7 +37,7 @@ export class Nodes {
      * @param node
      * @returns {boolean}
      */
-    public static isFunctionDeclarationNode (node: INode): node is IFunctionDeclarationNode {
+    public static isFunctionDeclarationNode (node: ESTree.Node): node is ESTree.FunctionDeclaration {
         return node.type === NodeType.FunctionDeclaration;
     }
 
@@ -58,7 +45,7 @@ export class Nodes {
      * @param node
      * @returns {boolean}
      */
-    public static isFunctionExpressionNode (node: INode): node is IFunctionExpressionNode {
+    public static isFunctionExpressionNode (node: ESTree.Node): node is ESTree.FunctionExpression {
         return node.type === NodeType.FunctionExpression;
     }
 
@@ -66,7 +53,7 @@ export class Nodes {
      * @param node
      * @returns {boolean}
      */
-    public static isIdentifierNode (node: INode): node is IIdentifierNode {
+    public static isIdentifierNode (node: ESTree.Node): node is ESTree.Identifier {
         return node.type === NodeType.Identifier;
     }
 
@@ -74,7 +61,7 @@ export class Nodes {
      * @param node
      * @returns {boolean}
      */
-    public static isLiteralNode (node: INode): node is ILiteralNode {
+    public static isLiteralNode (node: ESTree.Node): node is ESTree.Literal {
         return node.type === NodeType.Literal;
     }
 
@@ -82,7 +69,7 @@ export class Nodes {
      * @param node
      * @returns {boolean}
      */
-    public static isMemberExpressionNode (node: INode): node is IMemberExpressionNode {
+    public static isMemberExpressionNode (node: ESTree.Node): node is ESTree.MemberExpression {
         return node.type === NodeType.MemberExpression;
     }
 
@@ -91,7 +78,7 @@ export class Nodes {
      * @param node
      * @returns {boolean}
      */
-    public static isProgramNode (node: INode): node is IProgramNode {
+    public static isProgramNode (node: ESTree.Node): node is ESTree.Program {
         return node.type === NodeType.Program;
     }
 
@@ -100,7 +87,7 @@ export class Nodes {
      * @param node
      * @returns {boolean}
      */
-    public static isPropertyNode (node: INode): node is IPropertyNode {
+    public static isPropertyNode (node: ESTree.Node): node is ESTree.Property {
         return node.type === NodeType.Property;
     }
 
@@ -109,7 +96,7 @@ export class Nodes {
      * @param parentNode
      * @returns {boolean}
      */
-    public static isReplaceableIdentifierNode (node: INode, parentNode: INode): node is IIdentifierNode {
+    public static isReplaceableIdentifierNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
         if (!Nodes.isIdentifierNode(node)) {
             return false;
         }
@@ -129,7 +116,7 @@ export class Nodes {
      * @param node
      * @returns {boolean}
      */
-    public static isVariableDeclarationNode (node: INode): node is IVariableDeclarationNode {
+    public static isVariableDeclarationNode (node: ESTree.Node): node is ESTree.VariableDeclaration {
         return node.type === NodeType.VariableDeclaration;
     }
 
@@ -138,7 +125,7 @@ export class Nodes {
      * @param node
      * @returns {boolean}
      */
-    public static isVariableDeclaratorNode (node: INode): node is IVariableDeclaratorNode {
+    public static isVariableDeclaratorNode (node: ESTree.Node): node is ESTree.VariableDeclarator {
         return node.type === NodeType.VariableDeclarator;
     }
 
@@ -146,7 +133,7 @@ export class Nodes {
      * @param node
      * @returns {boolean}
      */
-    public static isNodeHasBlockStatement (node: INode): node is TNodeWithBlockStatement {
+    public static isNodeHasBlockStatement (node: ESTree.Node): node is TNodeWithBlockStatement {
         return node.hasOwnProperty('body') && Array.isArray((<TNodeWithBlockStatement>node).body);
     }
 }

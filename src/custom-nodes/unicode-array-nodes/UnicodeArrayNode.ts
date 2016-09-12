@@ -1,6 +1,7 @@
+import * as ESTree from 'estree';
+
 import 'format-unicorn';
 
-import { INode } from '../../interfaces/nodes/INode';
 import { IOptions } from "../../interfaces/IOptions";
 
 import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
@@ -85,9 +86,9 @@ export class UnicodeArrayNode extends AbstractCustomNode {
     }
 
     /**
-     * @returns {INode}
+     * @returns {ESTree.Node}
      */
-    public getNode (): INode {
+    public getNode (): ESTree.Node {
         this.unicodeArray.rotateArray(this.unicodeArrayRotateValue);
 
         return super.getNode();
@@ -101,9 +102,9 @@ export class UnicodeArrayNode extends AbstractCustomNode {
     }
 
     /**
-     * @returns {INode}
+     * @returns {ESTree.Node}
      */
-    protected getNodeStructure (): INode {
+    protected getNodeStructure (): ESTree.Node {
         return NodeUtils.convertCodeToStructure(
             UnicodeArrayTemplate().formatUnicorn({
                 unicodeArrayName: this.unicodeArrayName,

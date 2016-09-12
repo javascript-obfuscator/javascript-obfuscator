@@ -1,12 +1,9 @@
 import * as escodegen from 'escodegen';
 import * as esprima from 'esprima';
 import * as estraverse from 'estraverse';
-
-import { ILiteralNode } from "./interfaces/nodes/ILiteralNode";
-import { INode } from './interfaces/nodes/INode';
+import * as ESTree from 'estree';
 
 import { TNodeWithBlockStatement } from "./types/TNodeWithBlockStatement";
-import { TStatement } from "./types/nodes/TStatement";
 
 import { NodeType } from "./enums/NodeType";
 
@@ -28,9 +25,9 @@ export class NodeUtils {
     /**
      * @param node
      */
-    public static addXVerbatimPropertyToLiterals (node: INode): void {
+    public static addXVerbatimPropertyToLiterals (node: ESTree.Node): void {
         NodeUtils.typedReplace(node, NodeType.Literal, {
-            leave: (node: ILiteralNode) => {
+            leave: (node: ESTree.Literal) => {
                 node['x-verbatim-property'] = {
                     content : node.raw,
                     precedence: escodegen.Precedence.Primary
@@ -43,7 +40,7 @@ export class NodeUtils {
      * @param blockScopeBody
      * @param node
      */
-    public static appendNode (blockScopeBody: INode[], node: INode): void {
+    public static appendNode (blockScopeBody: ESTree.Node[], node: ESTree.Node): void {
         if (!NodeUtils.validateNode(node)) {
             return;
         }
@@ -53,10 +50,10 @@ export class NodeUtils {
 
     /**
      * @param code
-     * @returns {INode}
+     * @returns {ESTree.Node}
      */
-    public static convertCodeToStructure (code: string): INode {
-        let structure: INode = esprima.parse(code);
+    public static convertCodeToStructure (code: string): ESTree.Node {
+        let structure: ESTree.Node = esprima.parse(code);
 
         NodeUtils.addXVerbatimPropertyToLiterals(structure);
         NodeUtils.parentize(structure);
@@ -67,9 +64,9 @@ export class NodeUtils {
     /**
      * @param node
      * @param index
-     * @returns {INode}
+     * @returns {ESTree.Node}
      */
-    public static getBlockStatementNodeByIndex (node: INode, index: number = 0): INode {
+    public static getBlockStatementNodeByIndex (node: ESTree.Node, index: number = 0): ESTree.Node {
         if (Nodes.isNodeHasBlockStatement(node)) {
             if (node.body[index] === undefined) {
                 throw new ReferenceError(`Wrong index \`${index}\`. Block-statement body length is \`${node.body.length}\``);
@@ -84,21 +81,21 @@ export class NodeUtils {
     /**
      * @param node
      * @param depth
-     * @returns {INode}
+     * @returns {ESTree.Node}
      */
-    public static getBlockScopeOfNode (node: INode, depth: number = 0): TNodeWithBlockStatement {
-        let parentNode: INode | undefined = node.parentNode;
+    public static getBlockScopeOfNode (node: ESTree.Node, depth: number = 0): TNodeWithBlockStatement {
+        let parentNode: ESTree.Node | undefined = node['parentNode'];
 
         if (!parentNode) {
             throw new ReferenceError('`parentNode` property of given node is `undefined`');
         }
 
         if (Nodes.isBlockStatementNode(parentNode)) {
-            if (!parentNode.parentNode) {
+            if (!parentNode['parentNode']) {
                 throw new ReferenceError('`parentNode` property of `parentNode` of given node is `undefined`');
             }
 
-            if (!Utils.arrayContains(NodeUtils.nodesWithBlockScope, parentNode.parentNode.type)) {
+            if (!Utils.arrayContains(NodeUtils.nodesWithBlockScope, parentNode['parentNode'].type)) {
                 return NodeUtils.getBlockScopeOfNode(parentNode, depth);
             } else if (depth > 0) {
                 return NodeUtils.getBlockScopeOfNode(parentNode, --depth);
@@ -119,7 +116,7 @@ export class NodeUtils {
      * @param node
      * @param index
      */
-    public static insertNodeAtIndex (blockScopeBody: INode[], node: INode, index: number): void {
+    public static insertNodeAtIndex (blockScopeBody: ESTree.Node[], node: ESTree.Node, index: number): void {
         if (!NodeUtils.validateNode(node)) {
             return;
         }
@@ -130,18 +127,18 @@ export class NodeUtils {
     /**
      * @param node
      */
-    public static parentize (node: INode): void {
+    public static parentize (node: ESTree.Node): void {
         let isRootNode: boolean = true;
 
         estraverse.replace(node, {
-            enter: (node: INode, parentNode: INode): any => {
-                let value: INode;
+            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+                let value: ESTree.Node;
 
                 if (isRootNode) {
                     if (node.type === NodeType.Program) {
                         value = node;
                     } else {
-                        value = Nodes.getProgramNode(<TStatement[]>[node]);
+                        value = Nodes.getProgramNode(<ESTree.Statement[]>[node]);
                         value['parentNode'] = value;
                     }
 
@@ -159,7 +156,7 @@ export class NodeUtils {
      * @param blockScopeBody
      * @param node
      */
-    public static prependNode (blockScopeBody: INode[], node: INode): void {
+    public static prependNode (blockScopeBody: ESTree.Node[], node: ESTree.Node): void {
         if (!NodeUtils.validateNode(node)) {
             return;
         }
@@ -173,9 +170,9 @@ export class NodeUtils {
      * @param visitor
      */
     public static typedReplace (
-        node: INode,
+        node: ESTree.Node,
         nodeType: string,
-        visitor: {enter?: (node: INode) => void, leave?: (node: INode) => void},
+        visitor: {enter?: (node: ESTree.Node) => void, leave?: (node: ESTree.Node) => void},
     ): void {
         NodeUtils.typedTraverse(node, nodeType, visitor, 'replace');
     }
@@ -187,20 +184,20 @@ export class NodeUtils {
      * @param traverseType
      */
     public static typedTraverse (
-        node: INode,
+        node: ESTree.Node,
         nodeType: string,
-        visitor: {enter?: (node: INode) => void, leave?: (node: INode) => void},
+        visitor: {enter?: (node: ESTree.Node) => void, leave?: (node: ESTree.Node) => void},
         traverseType: string = 'traverse'
     ): void {
         (<any>estraverse)[traverseType](node, {
-            enter: (node: INode): any => {
+            enter: (node: ESTree.Node): any => {
                 if (node.type === nodeType && visitor.enter) {
-                    visitor.enter(node)
+                    visitor.enter(node);
                 }
             },
-            leave: (node: INode): any => {
+            leave: (node: ESTree.Node): any => {
                 if (node.type === nodeType && visitor.leave) {
-                    visitor.leave(node)
+                    visitor.leave(node);
                 }
             }
         });
@@ -210,7 +207,7 @@ export class NodeUtils {
      * @param node
      * @returns {boolean}
      */
-    private static validateNode (node: INode): boolean {
+    private static validateNode (node: ESTree.Node): boolean {
         return !!node && node.hasOwnProperty('type');
     }
 }

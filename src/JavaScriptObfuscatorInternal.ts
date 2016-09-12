@@ -1,9 +1,9 @@
 import * as esprima from 'esprima';
 import * as escodegen from 'escodegen';
+import * as ESTree from 'estree';
 
 import { IObfuscatorOptions } from "./interfaces/IObfuscatorOptions";
 import { IGeneratorOutput } from "./interfaces/IGeneratorOutput";
-import { INode } from './interfaces/nodes/INode';
 import { IObfuscationResult } from "./interfaces/IObfuscationResult";
 import { IOptions } from './interfaces/IOptions';
 
@@ -58,7 +58,7 @@ export class JavaScriptObfuscatorInternal {
      * @param astTree
      * @param options
      */
-    private static generateCode (sourceCode: string, astTree: INode, options: IOptions): IGeneratorOutput {
+    private static generateCode (sourceCode: string, astTree: ESTree.Node, options: IOptions): IGeneratorOutput {
         let escodegenParams: escodegen.GenerateOptions = Object.assign(
                 {},
                 JavaScriptObfuscatorInternal.escodegenParams
@@ -95,7 +95,7 @@ export class JavaScriptObfuscatorInternal {
     }
 
     public obfuscate (): void {
-        let astTree: INode = esprima.parse(this.sourceCode, {
+        let astTree: ESTree.Node = esprima.parse(this.sourceCode, {
             loc: true
         });
 

@@ -1,11 +1,8 @@
 import * as estraverse from 'estraverse';
+import * as ESTree from 'estree';
 
 import { ICustomNode } from "../interfaces/custom-nodes/ICustomNode";
-import { IIdentifierNode } from "../interfaces/nodes/IIdentifierNode";
-import { INode } from "../interfaces/nodes/INode";
 import { IOptions } from "../interfaces/IOptions";
-import { IVariableDeclarationNode } from "../interfaces/nodes/IVariableDeclarationNode";
-import { IVariableDeclaratorNode } from "../interfaces/nodes/IVariableDeclaratorNode";
 
 import { NodeType } from "../enums/NodeType";
 
@@ -44,7 +41,7 @@ export class VariableDeclarationObfuscator extends AbstractNodeObfuscator {
      * @param variableDeclarationNode
      * @param parentNode
      */
-    public obfuscateNode (variableDeclarationNode: IVariableDeclarationNode, parentNode: INode): void {
+    public obfuscateNode (variableDeclarationNode: ESTree.VariableDeclaration, parentNode: ESTree.Node): void {
         if (parentNode.type === NodeType.Program) {
             return;
         }
@@ -56,11 +53,11 @@ export class VariableDeclarationObfuscator extends AbstractNodeObfuscator {
     /**
      * @param variableDeclarationNode
      */
-    private storeVariableNames (variableDeclarationNode: IVariableDeclarationNode): void {
+    private storeVariableNames (variableDeclarationNode: ESTree.VariableDeclaration): void {
         variableDeclarationNode.declarations
-            .forEach((declarationNode: IVariableDeclaratorNode) => {
+            .forEach((declarationNode: ESTree.VariableDeclarator) => {
                 NodeUtils.typedReplace(declarationNode.id, NodeType.Identifier, {
-                    leave: (node: IIdentifierNode) => this.identifierReplacer.storeNames(node.name)
+                    leave: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
                 });
             });
     }
@@ -69,21 +66,21 @@ export class VariableDeclarationObfuscator extends AbstractNodeObfuscator {
      * @param variableDeclarationNode
      * @param variableParentNode
      */
-    private replaceVariableNames (variableDeclarationNode: IVariableDeclarationNode, variableParentNode: INode): void {
-        let scopeNode: INode = variableDeclarationNode.kind === 'var' ? NodeUtils.getBlockScopeOfNode(
+    private replaceVariableNames (variableDeclarationNode: ESTree.VariableDeclaration, variableParentNode: ESTree.Node): void {
+        let scopeNode: ESTree.Node = variableDeclarationNode.kind === 'var' ? NodeUtils.getBlockScopeOfNode(
                 variableDeclarationNode
             ) : variableParentNode,
             isNodeAfterVariableDeclaratorFlag: boolean = false;
 
         estraverse.replace(scopeNode, {
-            enter: (node: INode, parentNode: INode): any => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (
                     Nodes.isArrowFunctionExpressionNode(node) ||
                     Nodes.isFunctionDeclarationNode(node) ||
                     Nodes.isFunctionExpressionNode(node)
                 ) {
                     estraverse.replace(node, {
-                        enter: (node: INode, parentNode: INode): any => {
+                        enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                             if (Nodes.isReplaceableIdentifierNode(node, parentNode)) {
                                 node.name = this.identifierReplacer.replace(node.name);
                             }

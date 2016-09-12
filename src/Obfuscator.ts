@@ -1,7 +1,7 @@
 import * as estraverse from 'estraverse';
+import * as ESTree from 'estree';
 
 import { ICustomNode } from './interfaces/custom-nodes/ICustomNode';
-import { INode } from './interfaces/nodes/INode';
 import { IObfuscator } from "./interfaces/IObfuscator";
 import { IOptions } from "./interfaces/IOptions";
 
@@ -73,9 +73,9 @@ export class Obfuscator implements IObfuscator {
 
     /**
      * @param node
-     * @returns {INode}
+     * @returns {ESTree.Node}
      */
-    public obfuscateNode (node: INode): INode {
+    public obfuscateNode (node: ESTree.Node): ESTree.Node {
         if (Nodes.isProgramNode(node) && !node.body.length) {
             return node;
         }
@@ -92,7 +92,7 @@ export class Obfuscator implements IObfuscator {
     /**
      * @param astTree
      */
-    private afterObfuscation (astTree: INode): void {
+    private afterObfuscation (astTree: ESTree.Node): void {
         this.nodes.forEach((node: ICustomNode) => {
             if (node.getAppendState() === AppendState.AfterObfuscation) {
                 node.appendNode(astTree);
@@ -103,7 +103,7 @@ export class Obfuscator implements IObfuscator {
     /**
      * @param astTree
      */
-    private beforeObfuscation (astTree: INode): void {
+    private beforeObfuscation (astTree: ESTree.Node): void {
         this.nodes.forEach((node: ICustomNode) => {
             if (node.getAppendState() === AppendState.BeforeObfuscation) {
                 node.appendNode(astTree);
@@ -116,7 +116,7 @@ export class Obfuscator implements IObfuscator {
      * @param node
      * @param parentNode
      */
-    private initializeNodeObfuscators (node: INode, parentNode: INode): void {
+    private initializeNodeObfuscators (node: ESTree.Node, parentNode: ESTree.Node): void {
         let nodeObfuscators: TNodeObfuscator[] | undefined = this.nodeObfuscators.get(node.type);
 
         if (!nodeObfuscators) {
@@ -131,9 +131,9 @@ export class Obfuscator implements IObfuscator {
     /**
      * @param node
      */
-    private obfuscate (node: INode): void {
+    private obfuscate (node: ESTree.Node): void {
         estraverse.replace(node, {
-            leave: (node: INode, parentNode: INode): any => {
+            leave: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 this.initializeNodeObfuscators(node, parentNode);
             }
         });

@@ -1,5 +1,6 @@
+import * as ESTree from 'estree';
+
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
-import { INode } from '../interfaces/nodes/INode';
 import { IOptions } from "../interfaces/IOptions";
 
 import { AppendState } from '../enums/AppendState';
@@ -25,7 +26,7 @@ export abstract class AbstractCustomNode implements ICustomNode {
     /**
      * @param astTree
      */
-    public abstract appendNode (astTree: INode): void;
+    public abstract appendNode (astTree: ESTree.Node): void;
 
     /**
      * @returns {AppendState}
@@ -35,14 +36,14 @@ export abstract class AbstractCustomNode implements ICustomNode {
     }
 
     /**
-     * @returns {INode}
+     * @returns {ESTree.Node}
      */
-    public getNode (): INode {
+    public getNode (): ESTree.Node {
         return this.getNodeStructure();
     }
 
     /**
-     * @returns {INode}
+     * @returns {ESTree.Node}
      */
-    protected abstract getNodeStructure (): INode;
+    protected abstract getNodeStructure (): ESTree.Node;
 }

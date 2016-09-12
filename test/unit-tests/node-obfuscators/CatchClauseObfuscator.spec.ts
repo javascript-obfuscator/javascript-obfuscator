@@ -1,6 +1,6 @@
-import { ICatchClauseNode } from "../../../src/interfaces/nodes/ICatchClauseNode";
+import * as ESTree from 'estree';
+
 import { ICustomNode } from "../../../src/interfaces/custom-nodes/ICustomNode";
-import { IExpressionStatementNode } from "../../../src/interfaces/nodes/IExpressionStatementNode";
 
 import { DEFAULT_PRESET } from "../../../src/preset-options/DefaultPreset";
 
@@ -15,10 +15,10 @@ const assert: Chai.AssertStatic = require('chai').assert;
 describe('CatchClauseObfuscator', () => {
     describe('obfuscateNode (catchClauseNode: ICatchClauseNode): void', () => {
         let catchClauseObfuscator: CatchClauseObfuscator,
-            catchClauseNode: ICatchClauseNode;
+            catchClauseNode: ESTree.CatchClause;
 
         beforeEach(() => {
-            let expressionStatementNode: IExpressionStatementNode = {
+            let expressionStatementNode: ESTree.ExpressionStatement = {
                 type: NodeType.ExpressionStatement,
                 expression: {
                     type: NodeType.CallExpression,

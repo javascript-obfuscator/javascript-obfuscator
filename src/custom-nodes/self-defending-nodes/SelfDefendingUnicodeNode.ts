@@ -1,4 +1,4 @@
-import { INode } from "../../interfaces/nodes/INode";
+import * as ESTree from 'estree';
 
 import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
 
@@ -37,9 +37,9 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     }
 
     /**
-     * @returns {INode}
+     * @returns {ESTree.Node}
      */
-    protected getNodeStructure (): INode {
+    protected getNodeStructure (): ESTree.Node {
         return NodeUtils.convertCodeToStructure(
             JavaScriptObfuscator.obfuscate(
                 SelfDefendingTemplate(),

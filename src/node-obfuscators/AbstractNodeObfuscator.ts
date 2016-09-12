@@ -1,6 +1,7 @@
+import * as ESTree from 'estree';
+
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { INodeObfuscator } from '../interfaces/INodeObfuscator';
-import { INode } from "../interfaces/nodes/INode";
 import { IOptions } from "../interfaces/IOptions";
 
 export abstract class AbstractNodeObfuscator implements INodeObfuscator {
@@ -27,5 +28,5 @@ export abstract class AbstractNodeObfuscator implements INodeObfuscator {
      * @param node
      * @param parentNode
      */
-    public abstract obfuscateNode (node: INode, parentNode?: INode): void;
+    public abstract obfuscateNode (node: ESTree.Node, parentNode?: ESTree.Node): void;
 }

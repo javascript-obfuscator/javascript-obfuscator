@@ -1,11 +1,6 @@
 import * as escodegen from 'escodegen';
 import * as estraverse from 'estraverse';
-
-import { IIdentifierNode } from "../interfaces/nodes/IIdentifierNode";
-import { ILiteralNode } from "../interfaces/nodes/ILiteralNode";
-import { IObjectExpressionNode } from "../interfaces/nodes/IObjectExpressionNode";
-import { IPropertyNode } from "../interfaces/nodes/IPropertyNode";
-import { INode } from "../interfaces/nodes/INode";
+import * as ESTree from 'estree';
 
 import { NodeType } from "../enums/NodeType";
 
@@ -27,11 +22,11 @@ export class ObjectExpressionObfuscator extends AbstractNodeObfuscator {
     /**
      * @param objectExpressionNode
      */
-    public obfuscateNode (objectExpressionNode: IObjectExpressionNode): void {
+    public obfuscateNode (objectExpressionNode: ESTree.ObjectExpression): void {
         objectExpressionNode.properties
-            .forEach((property: IPropertyNode) => {
+            .forEach((property: ESTree.Property) => {
                 estraverse.replace(property.key, {
-                    leave: (node: INode, parentNode: INode): any => {
+                    leave: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                         if (Nodes.isLiteralNode(node)) {
                             this.obfuscateLiteralPropertyKey(node);
 
@@ -49,7 +44,7 @@ export class ObjectExpressionObfuscator extends AbstractNodeObfuscator {
     /**
      * @param node
      */
-    private obfuscateLiteralPropertyKey (node: ILiteralNode): void {
+    private obfuscateLiteralPropertyKey (node: ESTree.Literal): void {
         if (typeof node.value === 'string' && !node['x-verbatim-property']) {
             node['x-verbatim-property'] = {
                 content : Utils.stringToUnicode(node.value),
@@ -61,9 +56,9 @@ export class ObjectExpressionObfuscator extends AbstractNodeObfuscator {
     /**
      * @param node
      */
-    private obfuscateIdentifierPropertyKey (node: IIdentifierNode): void {
+    private obfuscateIdentifierPropertyKey (node: ESTree.Identifier): void {
         let nodeValue: string = node.name,
-            literalNode: ILiteralNode = {
+            literalNode: ESTree.Literal = {
                 raw: `'${nodeValue}'`,
                 'x-verbatim-property': {
                     content : Utils.stringToUnicode(nodeValue),

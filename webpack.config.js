@@ -1,15 +1,11 @@
 'use strict';
 
-let fs = require("fs"),
+var fs = require("fs"),
     nodeExternals = require('webpack-node-externals'),
     webpack = require('webpack');
 
 function getLicenseText () {
-    return `/*
-Copyright (C) 2016 Timofey Kachalov <sanex3339@yandex.ru>
-
-${fs.readFileSync('./LICENSE.BSD', 'utf8')}
-*/`;
+    return "/*\nCopyright (C) 2016 Timofey Kachalov <sanex3339@yandex.ru>\n\n" + fs.readFileSync('./LICENSE.BSD', 'utf8') + "\n*/";
 }
 
 module.exports = {
@@ -31,7 +27,7 @@ module.exports = {
     plugins: [
         new webpack.BannerPlugin(
             {
-                banner: `${getLicenseText()}\n\nrequire("source-map-support").install();\n`,
+                banner: getLicenseText() + '\n\nrequire("source-map-support").install();\n',
                 raw: true,
                 entryOnly: false
             }

@@ -4,8 +4,6 @@ import * as ESTree from 'estree';
 import { NodeMocks } from '../mocks/NodeMocks';
 import { NodeUtils } from '../../src/NodeUtils';
 
-chai.use(require('chai-members-deep'));
-
 const assert: any = chai.assert;
 
 describe('NodeUtils', () => {
@@ -92,12 +90,12 @@ describe('NodeUtils', () => {
         });
 
         it('should convert code to `ESTree.Node` structure', () => {
-            assert.deepEqualIdent(NodeUtils.convertCodeToStructure(code), variableDeclarationNode);
+            assert.deepEqual(NodeUtils.convertCodeToStructure(code), variableDeclarationNode);
         });
     });
 
     describe('getBlockStatementNodeByIndex (node: ESTree.Node, index: number = 0): ESTree.Node', () => {
-        let blockStatementNode: ESTree.BlockStatemen,
+        let blockStatementNode: ESTree.BlockStatement,
             expressionStatementNode1: ESTree.ExpressionStatement,
             expressionStatementNode2: ESTree.ExpressionStatement;
 

@@ -64,7 +64,7 @@ describe('CatchClauseObfuscator', () => {
 
         it('should obfuscate catch clause param calls in catch clause node body', () => {
             assert.match(
-                catchClauseNode.param.name,
+                (<ESTree.Identifier>catchClauseNode.param).name,
                 /^_0x\w+$/
             );
         });

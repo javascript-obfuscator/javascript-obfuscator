@@ -1,4 +1,4 @@
-import { INode } from '../nodes/INode';
+import * as ESTree from 'estree';
 
 import { AppendState } from '../../enums/AppendState';
 
@@ -6,7 +6,7 @@ export interface ICustomNode {
     /**
      * @param astTree
      */
-    appendNode (astTree: INode): void;
+    appendNode (astTree: ESTree.Node): void;
 
     /**
      * @returns {AppendState}
@@ -16,5 +16,5 @@ export interface ICustomNode {
     /**
      * @returns INode
      */
-    getNode (): INode;
+    getNode (): ESTree.Node;
 }

@@ -84,8 +84,7 @@ export class NodeMocks {
             id: NodeMocks.getIdentifierNode(functionName),
             params: params,
             body: blockStatementNode,
-            generator: false,
-            expression: false
+            generator: false
         };
     }
 
@@ -101,8 +100,7 @@ export class NodeMocks {
                 value: true,
                 raw: 'true'
             },
-            consequent: blockStatementNode,
-            alternate: null
+            consequent: blockStatementNode
         };
     }
 
@@ -157,7 +155,7 @@ export class NodeMocks {
      */
     public static getVariableDeclarationNode (
         declarations: ESTree.VariableDeclarator[] = [],
-        kind: string = 'var'
+        kind: 'var' | 'let' | 'const' = 'var'
     ): ESTree.VariableDeclaration {
         return {
             type: NodeType.VariableDeclaration,

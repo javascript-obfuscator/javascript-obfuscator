@@ -84,18 +84,18 @@ export class NodeUtils {
      * @returns {ESTree.Node}
      */
     public static getBlockScopeOfNode (node: ESTree.Node, depth: number = 0): TNodeWithBlockStatement {
-        let parentNode: ESTree.Node | undefined = node['parentNode'];
+        let parentNode: ESTree.Node | undefined = node.parentNode;
 
         if (!parentNode) {
             throw new ReferenceError('`parentNode` property of given node is `undefined`');
         }
 
         if (Nodes.isBlockStatementNode(parentNode)) {
-            if (!parentNode['parentNode']) {
+            if (!parentNode.parentNode) {
                 throw new ReferenceError('`parentNode` property of `parentNode` of given node is `undefined`');
             }
 
-            if (!Utils.arrayContains(NodeUtils.nodesWithBlockScope, parentNode['parentNode'].type)) {
+            if (!Utils.arrayContains(NodeUtils.nodesWithBlockScope, parentNode.parentNode.type)) {
                 return NodeUtils.getBlockScopeOfNode(parentNode, depth);
             } else if (depth > 0) {
                 return NodeUtils.getBlockScopeOfNode(parentNode, --depth);

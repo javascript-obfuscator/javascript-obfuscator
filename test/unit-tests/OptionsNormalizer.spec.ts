@@ -31,7 +31,6 @@ describe('OptionsNormalizer', () => {
             optionsPreset2 = Object.assign({}, DEFAULT_PRESET, {
                 rotateUnicodeArray: true,
                 sourceMapBaseUrl: 'http://localhost:9000',
-                sourceMapMode: 'inline',
                 unicodeArray: true,
                 unicodeArrayThreshold: 0,
                 wrapUnicodeArrayCalls: true
@@ -52,8 +51,7 @@ describe('OptionsNormalizer', () => {
             });
             expectedOptionsPreset2 = Object.assign({}, DEFAULT_PRESET, {
                 rotateUnicodeArray: false,
-                sourceMapBaseUrl: 'http://localhost:9000',
-                sourceMapMode: 'separate',
+                sourceMapBaseUrl: 'http://localhost:9000/',
                 unicodeArray: false,
                 unicodeArrayThreshold: 0,
                 wrapUnicodeArrayCalls: false

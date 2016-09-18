@@ -132,7 +132,7 @@ export class JavaScriptObfuscatorCLI {
             .option('--rotateUnicodeArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean)
-            .option('--sourceMapBaseUrl <boolean>', 'Inserts custom Url for source map')
+            .option('--sourceMapBaseUrl <boolean>', 'Adds base url to the source map import url when `--sourceMapMode=separate`')
             .option(
                 '--sourceMapMode <string> [inline, separate]',
                 'Specify source map output mode',

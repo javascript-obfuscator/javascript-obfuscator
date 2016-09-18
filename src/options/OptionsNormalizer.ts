@@ -34,13 +34,6 @@ export class OptionsNormalizer {
     };
 
     /**
-     * @type {IObfuscatorOptions}
-     */
-    private static SOURCE_MAP_BASE_URL_OPTIONS: IObfuscatorOptions = {
-        sourceMapMode: 'separate'
-    };
-
-    /**
      * @type {TOptionsNormalizerRule[]}
      */
     private static normalizerRules: TOptionsNormalizerRule[] = [
@@ -116,7 +109,9 @@ export class OptionsNormalizer {
      */
     private static sourceMapBaseUrl (options: IOptions): IOptions {
         if (options.sourceMapBaseUrl) {
-            Object.assign(options, OptionsNormalizer.SOURCE_MAP_BASE_URL_OPTIONS);
+            Object.assign(options, {
+                sourceMapBaseUrl: Utils.normalizeUrl(options.sourceMapBaseUrl)
+            });
         }
 
         return options;

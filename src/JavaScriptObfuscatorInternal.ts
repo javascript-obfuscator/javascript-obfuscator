@@ -84,8 +84,8 @@ export class JavaScriptObfuscatorInternal {
      * @returns {IObfuscationResult}
      */
     public getObfuscationResult (): IObfuscationResult {
-        if (this.options.sourceMapBaseUrl) {
-            this.setSourceMapUrl(this.options.sourceMapBaseUrl);
+        if (this.sourceMapUrl) {
+            this.sourceMapUrl = this.options.sourceMapBaseUrl + this.sourceMapUrl;
         }
 
         return new SourceMapCorrector(

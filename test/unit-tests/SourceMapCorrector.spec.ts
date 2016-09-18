@@ -57,10 +57,6 @@ describe('SourceMapCorrector', () => {
             it('should add source map to obfuscated code as base64 encoded string', () => {
                 assert.match(expectedObfuscationResult.getObfuscatedCode(), /data:application\/json;base64/);
             });
-
-            it('should clear original source map', () => {
-                assert.equal(expectedObfuscationResult.getSourceMap(), '');
-            });
         });
 
         it('should add source map import to obfuscated code if source map mode is `separate`', () => {

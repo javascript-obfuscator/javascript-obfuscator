@@ -14,6 +14,7 @@ export const DEFAULT_PRESET: IObfuscatorOptions = Object.freeze({
     selfDefending: true,
     sourceMap: false,
     sourceMapBaseUrl: '',
+    sourceMapFileName: '',
     sourceMapMode: SourceMapMode.Separate,
     unicodeArray: true,
     unicodeArrayThreshold: 0.8,

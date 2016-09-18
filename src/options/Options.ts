@@ -97,7 +97,7 @@ export class Options implements IOptions {
     public readonly sourceMap: boolean;
 
     /**
-     * @type {boolean}
+     * @type {string}
      */
     @IsString()
     @ValidateIf((options: IOptions) => Boolean(options.sourceMapBaseUrl))
@@ -106,6 +106,12 @@ export class Options implements IOptions {
         require_valid_protocol: true
     })
     public readonly sourceMapBaseUrl: string;
+
+    /**
+     * @type {string}
+     */
+    @IsString()
+    public readonly sourceMapFileName: string;
 
     /**
      * @type {TSourceMapMode}

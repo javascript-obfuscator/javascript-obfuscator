@@ -75,12 +75,6 @@ describe('Utils', () => {
         });
     });
 
-    describe('normalizeUrl (url: string): string', () => {
-        it('should normalize given url', () => {
-            assert.equal(Utils.normalizeUrl('http://localhost:9000'), 'http://localhost:9000/');
-        });
-    });
-
     describe('stringToJSFuck (string: string): string', () => {
         let expected: string = `${JSFuck.s} + ${JSFuck.t} + ${JSFuck.r} + ${JSFuck.i} + ${JSFuck.n} + ${JSFuck.g}`;
 

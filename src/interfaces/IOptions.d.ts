@@ -11,6 +11,7 @@ export interface IOptions {
     readonly selfDefending: boolean;
     readonly sourceMap: boolean;
     readonly sourceMapBaseUrl: string;
+    readonly sourceMapFileName: string;
     readonly sourceMapMode: TSourceMapMode;
     readonly unicodeArray: boolean;
     readonly unicodeArrayThreshold: number;

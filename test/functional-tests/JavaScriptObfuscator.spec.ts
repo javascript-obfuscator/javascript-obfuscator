@@ -33,7 +33,7 @@ describe('JavaScriptObfuscator', () => {
                 assert.isOk(JSON.parse(obfuscationResult.getSourceMap()).mappings);
             });
 
-            it('should returns object with obfuscated code with inline source map and empty `sourceMap` if `sourceMapMode` is `inline', () => {
+            it('should returns object with obfuscated code with inline source map as Base64 string', () => {
                 let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     `var test = 1;`,
                     Object.assign({}, NO_CUSTOM_NODES_PRESET, {
@@ -47,7 +47,7 @@ describe('JavaScriptObfuscator', () => {
                     obfuscationResult.getObfuscatedCode(),
                     /sourceMappingURL=data:application\/json;base64/
                 );
-                assert.isNotOk(obfuscationResult.getSourceMap());
+                assert.isOk(obfuscationResult.getSourceMap());
             });
 
             it('should returns object with empty obfuscated code and source map with empty data if source code is empty', () => {

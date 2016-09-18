@@ -52,7 +52,7 @@ export class SourceMapCorrector implements ISourceMapCorrector {
     public correct (): IObfuscationResult {
         return new ObfuscationResult(
             this.correctObfuscatedCode(),
-            this.correctSourceMap()
+            this.sourceMap
         );
     }
 
@@ -68,32 +68,21 @@ export class SourceMapCorrector implements ISourceMapCorrector {
 
         switch (this.sourceMapMode) {
             case SourceMapMode.Inline:
-                sourceMappingUrl += `data:application/json;base64,${Utils.btoa(this.sourceMapUrl || this.sourceMap, false)}`;
+                sourceMappingUrl += `data:application/json;base64,${Utils.btoa(this.sourceMap, false)}`;
 
                 break;
 
             case SourceMapMode.Separate:
             default:
-                if (this.sourceMapUrl) {
-                    sourceMappingUrl += this.sourceMapUrl;
-
-                    break;
+                if (!this.sourceMapUrl) {
+                    return this.obfuscatedCode;
                 }
 
-                return this.obfuscatedCode;
+                sourceMappingUrl += this.sourceMapUrl;
+
+                break;
         }
 
         return `${this.obfuscatedCode}\n${sourceMappingUrl}`;
     };
-
-    /**
-     * @returns {string}
-     */
-    private correctSourceMap (): string {
-        if (this.sourceMapMode === SourceMapMode.Inline) {
-            return '';
-        }
-
-        return this.sourceMap;
-    }
 }

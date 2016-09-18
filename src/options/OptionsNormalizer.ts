@@ -42,6 +42,7 @@ export class OptionsNormalizer {
         OptionsNormalizer.unicodeArrayThresholdRule,
         OptionsNormalizer.encodeUnicodeLiteralsRule,
         OptionsNormalizer.sourceMapBaseUrl,
+        OptionsNormalizer.sourceMapFileName,
         OptionsNormalizer.selfDefendingRule
     ];
 
@@ -108,9 +109,29 @@ export class OptionsNormalizer {
      * @returns {IOptions}
      */
     private static sourceMapBaseUrl (options: IOptions): IOptions {
-        if (options.sourceMapBaseUrl) {
+        let sourceMapBaseUrl: string = options.sourceMapBaseUrl;
+
+        if (sourceMapBaseUrl && !sourceMapBaseUrl.endsWith('/')) {
             Object.assign(options, {
-                sourceMapBaseUrl: Utils.normalizeUrl(options.sourceMapBaseUrl)
+                sourceMapBaseUrl: `${sourceMapBaseUrl}/`
+            });
+        }
+
+        return options;
+    }
+
+    /**
+     * @param options
+     * @returns {IOptions}
+     */
+    private static sourceMapFileName (options: IOptions): IOptions {
+        let sourceMapFileName: string = options.sourceMapFileName;
+
+        if (sourceMapFileName) {
+            sourceMapFileName = sourceMapFileName.split('.')[0];
+
+            Object.assign(options, {
+                sourceMapFileName: `${sourceMapFileName}.js.map`
             });
         }
 

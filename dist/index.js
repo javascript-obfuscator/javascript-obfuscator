@@ -208,14 +208,6 @@ var Utils = function () {
             return number % 1 === 0;
         }
     }, {
-        key: 'normalizeUrl',
-        value: function normalizeUrl(url) {
-            if (!url.endsWith('/')) {
-                url += '/';
-            }
-            return url;
-        }
-    }, {
         key: 'strEnumify',
         value: function strEnumify(obj) {
             return obj;
@@ -904,6 +896,7 @@ exports.NO_CUSTOM_NODES_PRESET = Object.freeze({
     selfDefending: false,
     sourceMap: false,
     sourceMapBaseUrl: '',
+    sourceMapFileName: '',
     sourceMapMode: SourceMapMode_1.SourceMapMode.Separate,
     unicodeArray: false,
     unicodeArrayThreshold: 0,
@@ -932,7 +925,6 @@ var JavaScriptObfuscatorInternal = function () {
     function JavaScriptObfuscatorInternal(sourceCode, obfuscatorOptions) {
         _classCallCheck(this, JavaScriptObfuscatorInternal);
 
-        this.sourceMapUrl = '';
         this.sourceCode = sourceCode;
         if (obfuscatorOptions) {
             this.options = new Options_1.Options(obfuscatorOptions);
@@ -942,10 +934,7 @@ var JavaScriptObfuscatorInternal = function () {
     _createClass(JavaScriptObfuscatorInternal, [{
         key: 'getObfuscationResult',
         value: function getObfuscationResult() {
-            if (this.sourceMapUrl) {
-                this.sourceMapUrl = this.options.sourceMapBaseUrl + this.sourceMapUrl;
-            }
-            return new SourceMapCorrector_1.SourceMapCorrector(new ObfuscationResult_1.ObfuscationResult(this.generatorOutput.code, this.generatorOutput.map), this.sourceMapUrl, this.options.sourceMapMode).correct();
+            return new SourceMapCorrector_1.SourceMapCorrector(new ObfuscationResult_1.ObfuscationResult(this.generatorOutput.code, this.generatorOutput.map), this.options.sourceMapBaseUrl + this.options.sourceMapFileName, this.options.sourceMapMode).correct();
         }
     }, {
         key: 'obfuscate',
@@ -955,11 +944,6 @@ var JavaScriptObfuscatorInternal = function () {
             });
             astTree = new Obfuscator_1.Obfuscator(this.options).obfuscateNode(astTree);
             this.generatorOutput = JavaScriptObfuscatorInternal.generateCode(this.sourceCode, astTree, this.options);
-        }
-    }, {
-        key: 'setSourceMapUrl',
-        value: function setSourceMapUrl(url) {
-            this.sourceMapUrl = url;
         }
     }], [{
         key: 'generateCode',
@@ -1157,6 +1141,7 @@ exports.DEFAULT_PRESET = Object.freeze({
     selfDefending: true,
     sourceMap: false,
     sourceMapBaseUrl: '',
+    sourceMapFileName: '',
     sourceMapMode: SourceMapMode_1.SourceMapMode.Separate,
     unicodeArray: true,
     unicodeArrayThreshold: 0.8,
@@ -1311,7 +1296,7 @@ var SourceMapCorrector = function () {
     _createClass(SourceMapCorrector, [{
         key: "correct",
         value: function correct() {
-            return new ObfuscationResult_1.ObfuscationResult(this.correctObfuscatedCode(), this.correctSourceMap());
+            return new ObfuscationResult_1.ObfuscationResult(this.correctObfuscatedCode(), this.sourceMap);
         }
     }, {
         key: "correctObfuscatedCode",
@@ -1322,25 +1307,17 @@ var SourceMapCorrector = function () {
             var sourceMappingUrl = '//# sourceMappingURL=';
             switch (this.sourceMapMode) {
                 case SourceMapMode_1.SourceMapMode.Inline:
-                    sourceMappingUrl += "data:application/json;base64," + Utils_1.Utils.btoa(this.sourceMapUrl || this.sourceMap, false);
+                    sourceMappingUrl += "data:application/json;base64," + Utils_1.Utils.btoa(this.sourceMap, false);
                     break;
                 case SourceMapMode_1.SourceMapMode.Separate:
                 default:
-                    if (this.sourceMapUrl) {
-                        sourceMappingUrl += this.sourceMapUrl;
-                        break;
+                    if (!this.sourceMapUrl) {
+                        return this.obfuscatedCode;
                     }
-                    return this.obfuscatedCode;
+                    sourceMappingUrl += this.sourceMapUrl;
+                    break;
             }
             return this.obfuscatedCode + "\n" + sourceMappingUrl;
-        }
-    }, {
-        key: "correctSourceMap",
-        value: function correctSourceMap() {
-            if (this.sourceMapMode === SourceMapMode_1.SourceMapMode.Inline) {
-                return '';
-            }
-            return this.sourceMap;
         }
     }]);
 
@@ -1440,9 +1417,17 @@ var CLIUtils = function () {
     }, {
         key: 'getOutputSourceMapPath',
         value: function getOutputSourceMapPath(outputCodePath) {
-            return outputCodePath.split('.').map(function (value, index, array) {
-                return index === array.length - 1 ? value + '.map' : value;
-            }).join('.');
+            var sourceMapFileName = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
+
+            if (sourceMapFileName) {
+                outputCodePath = outputCodePath.substr(0, outputCodePath.lastIndexOf('/')) + '/' + sourceMapFileName;
+            }
+            if (!/\.js\.map$/.test(outputCodePath)) {
+                outputCodePath = outputCodePath.split('.')[0] + '.js.map';
+            } else if (/\.js$/.test(outputCodePath)) {
+                outputCodePath += '.map';
+            }
+            return outputCodePath;
         }
     }, {
         key: 'getPackageConfig',
@@ -1553,7 +1538,7 @@ var JavaScriptObfuscatorCLI = function () {
         value: function configureCommands() {
             this.commands = new commander.Command().version(JavaScriptObfuscatorCLI.getBuildVersion(), '-v, --version').usage('<inputPath> [options]').option('-o, --output <path>', 'Output path for obfuscated code').option('--compact <boolean>', 'Disable one line output code compacting', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtection <boolean>', 'Disable browser Debug panel (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtectionInterval <boolean>', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--disableConsoleOutput <boolean>', 'Allow console.log, console.info, console.error and console.warn messages output into browser console', JavaScriptObfuscatorCLI.parseBoolean).option('--encodeUnicodeLiterals <boolean>', 'All literals in Unicode array become encoded in Base64 (this option can slightly slow down your code speed)', JavaScriptObfuscatorCLI.parseBoolean).option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', function (val) {
                 return val.split(',');
-            }).option('--rotateUnicodeArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMapBaseUrl <boolean>', 'Adds base url to the source map import url when `--sourceMapMode=separate`').option('--sourceMapMode <string> [inline, separate]', 'Specify source map output mode', JavaScriptObfuscatorCLI.parseSourceMapMode).option('--unicodeArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean).option('--unicodeArrayThreshold <number>', 'The probability that the literal string will be inserted into unicodeArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).option('--wrapUnicodeArrayCalls <boolean>', 'Disables usage of special access function instead of direct array call', JavaScriptObfuscatorCLI.parseBoolean).option('--domainLock <list>', 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)', function (val) {
+            }).option('--rotateUnicodeArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMapBaseUrl <string>', 'Sets base url to the source map import url when `--sourceMapMode=separate`').option('--sourceMapFileName <string>', 'Sets file name for output source map when `--sourceMapMode=separate`').option('--sourceMapMode <string> [inline, separate]', 'Specify source map output mode', JavaScriptObfuscatorCLI.parseSourceMapMode).option('--unicodeArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean).option('--unicodeArrayThreshold <number>', 'The probability that the literal string will be inserted into unicodeArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).option('--wrapUnicodeArrayCalls <boolean>', 'Disables usage of special access function instead of direct array call', JavaScriptObfuscatorCLI.parseBoolean).option('--domainLock <list>', 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)', function (val) {
                 return val.split(',');
             }).parse(this.rawArguments);
             this.commands.on('--help', function () {
@@ -1588,16 +1573,13 @@ var JavaScriptObfuscatorCLI = function () {
     }, {
         key: 'processDataWithSourceMap',
         value: function processDataWithSourceMap(outputCodePath, options) {
-            var javaScriptObfuscator = new JavaScriptObfuscatorInternal_1.JavaScriptObfuscatorInternal(this.data, options),
-                obfuscationResult = void 0,
-                outputSourceMapPath = CLIUtils_1.CLIUtils.getOutputSourceMapPath(outputCodePath);
+            var outputSourceMapPath = CLIUtils_1.CLIUtils.getOutputSourceMapPath(outputCodePath, options.sourceMapFileName ? options.sourceMapFileName : '');
+            options.sourceMapFileName = path.basename(outputSourceMapPath);
+            var javaScriptObfuscator = new JavaScriptObfuscatorInternal_1.JavaScriptObfuscatorInternal(this.data, options);
             javaScriptObfuscator.obfuscate();
-            if (options.sourceMapMode === SourceMapMode_1.SourceMapMode.Separate) {
-                javaScriptObfuscator.setSourceMapUrl(path.basename(outputSourceMapPath));
-            }
-            obfuscationResult = javaScriptObfuscator.getObfuscationResult();
+            var obfuscationResult = javaScriptObfuscator.getObfuscationResult();
             CLIUtils_1.CLIUtils.writeFile(outputCodePath, obfuscationResult.getObfuscatedCode());
-            if (obfuscationResult.getSourceMap()) {
+            if (options.sourceMapMode === 'separate' && obfuscationResult.getSourceMap()) {
                 CLIUtils_1.CLIUtils.writeFile(outputSourceMapPath, obfuscationResult.getSourceMap());
             }
         }
@@ -3244,6 +3226,7 @@ __decorate([class_validator_1.IsString(), class_validator_1.ValidateIf(function 
     require_protocol: false,
     require_valid_protocol: true
 }), __metadata('design:type', String)], Options.prototype, "sourceMapBaseUrl", void 0);
+__decorate([class_validator_1.IsString(), __metadata('design:type', String)], Options.prototype, "sourceMapFileName", void 0);
 __decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata('design:type', String)], Options.prototype, "sourceMapMode", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "unicodeArray", void 0);
 __decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata('design:type', Number)], Options.prototype, "unicodeArrayThreshold", void 0);
@@ -3354,9 +3337,22 @@ var OptionsNormalizer = function () {
     }, {
         key: "sourceMapBaseUrl",
         value: function sourceMapBaseUrl(options) {
-            if (options.sourceMapBaseUrl) {
+            var sourceMapBaseUrl = options.sourceMapBaseUrl;
+            if (sourceMapBaseUrl && !sourceMapBaseUrl.endsWith('/')) {
                 Object.assign(options, {
-                    sourceMapBaseUrl: Utils_1.Utils.normalizeUrl(options.sourceMapBaseUrl)
+                    sourceMapBaseUrl: sourceMapBaseUrl + "/"
+                });
+            }
+            return options;
+        }
+    }, {
+        key: "sourceMapFileName",
+        value: function sourceMapFileName(options) {
+            var sourceMapFileName = options.sourceMapFileName;
+            if (sourceMapFileName) {
+                sourceMapFileName = sourceMapFileName.split('.')[0];
+                Object.assign(options, {
+                    sourceMapFileName: sourceMapFileName + ".js.map"
                 });
             }
             return options;
@@ -3397,7 +3393,7 @@ OptionsNormalizer.SELF_DEFENDING_OPTIONS = {
     compact: true,
     selfDefending: true
 };
-OptionsNormalizer.normalizerRules = [OptionsNormalizer.domainLockRule, OptionsNormalizer.unicodeArrayRule, OptionsNormalizer.unicodeArrayThresholdRule, OptionsNormalizer.encodeUnicodeLiteralsRule, OptionsNormalizer.sourceMapBaseUrl, OptionsNormalizer.selfDefendingRule];
+OptionsNormalizer.normalizerRules = [OptionsNormalizer.domainLockRule, OptionsNormalizer.unicodeArrayRule, OptionsNormalizer.unicodeArrayThresholdRule, OptionsNormalizer.encodeUnicodeLiteralsRule, OptionsNormalizer.sourceMapBaseUrl, OptionsNormalizer.sourceMapFileName, OptionsNormalizer.selfDefendingRule];
 exports.OptionsNormalizer = OptionsNormalizer;
 
 /***/ },

@@ -10,18 +10,18 @@ describe('JavaScriptObfuscatorInternal', () => {
     describe(`setSourceMapUrl (url: string)`, () => {
         let javaScriptObfuscator: JavaScriptObfuscatorInternal,
             obfuscationResult: IObfuscationResult,
-            sourceMapUrl: string = 'test.map.js';
+            sourceMapUrl: string = 'test.js.map';
 
         it('should link obfuscated code with source map', () => {
             javaScriptObfuscator = new JavaScriptObfuscatorInternal(
                 `var test = 1;`,
                 Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                    sourceMap: true
+                    sourceMap: true,
+                    sourceMapFileName: sourceMapUrl
                 })
             );
 
             javaScriptObfuscator.obfuscate();
-            javaScriptObfuscator.setSourceMapUrl(sourceMapUrl);
 
             obfuscationResult = javaScriptObfuscator.getObfuscationResult();
 
@@ -39,12 +39,12 @@ describe('JavaScriptObfuscatorInternal', () => {
                 `var test = 1;`,
                 Object.assign({}, NO_CUSTOM_NODES_PRESET, {
                     sourceMap: true,
-                    sourceMapBaseUrl: sourceMapBaseUrl
+                    sourceMapBaseUrl: sourceMapBaseUrl,
+                    sourceMapFileName: sourceMapUrl
                 })
             );
 
             javaScriptObfuscator.obfuscate();
-            javaScriptObfuscator.setSourceMapUrl(sourceMapUrl);
 
             obfuscationResult = javaScriptObfuscator.getObfuscationResult();
 

@@ -31,12 +31,14 @@ describe('OptionsNormalizer', () => {
             optionsPreset2 = Object.assign({}, DEFAULT_PRESET, {
                 rotateUnicodeArray: true,
                 sourceMapBaseUrl: 'http://localhost:9000',
+                sourceMapFileName: 'outputSourceMapName',
                 unicodeArray: true,
                 unicodeArrayThreshold: 0,
                 wrapUnicodeArrayCalls: true
             });
             optionsPreset3 = Object.assign({}, DEFAULT_PRESET, {
                 domainLock: ['//localhost:9000', 'https://google.ru/abc?cde=fgh'],
+                sourceMapFileName: 'outputSourceMapName.map',
                 unicodeArray: true,
                 encodeUnicodeLiterals: true,
                 wrapUnicodeArrayCalls: false
@@ -52,12 +54,14 @@ describe('OptionsNormalizer', () => {
             expectedOptionsPreset2 = Object.assign({}, DEFAULT_PRESET, {
                 rotateUnicodeArray: false,
                 sourceMapBaseUrl: 'http://localhost:9000/',
+                sourceMapFileName: 'outputSourceMapName.js.map',
                 unicodeArray: false,
                 unicodeArrayThreshold: 0,
                 wrapUnicodeArrayCalls: false
             });
             expectedOptionsPreset3 = Object.assign({}, DEFAULT_PRESET, {
                 domainLock: ['localhost', 'google.ru'],
+                sourceMapFileName: 'outputSourceMapName.js.map',
                 unicodeArray: true,
                 encodeUnicodeLiterals: true,
                 wrapUnicodeArrayCalls: true

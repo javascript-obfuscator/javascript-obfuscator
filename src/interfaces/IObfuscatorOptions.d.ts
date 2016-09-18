@@ -11,6 +11,7 @@ export interface IObfuscatorOptions {
     selfDefending?: boolean;
     sourceMap?: boolean;
     sourceMapBaseUrl?: string;
+    sourceMapFileName?: string;
     sourceMapMode?: TSourceMapMode;
     unicodeArray?: boolean;
     unicodeArrayThreshold?: number;

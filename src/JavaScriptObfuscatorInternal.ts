@@ -37,11 +37,6 @@ export class JavaScriptObfuscatorInternal {
     private sourceCode: string;
 
     /**
-     * @type {string}
-     */
-    private sourceMapUrl: string = '';
-
-    /**
      * @param sourceCode
      * @param obfuscatorOptions
      */
@@ -84,16 +79,12 @@ export class JavaScriptObfuscatorInternal {
      * @returns {IObfuscationResult}
      */
     public getObfuscationResult (): IObfuscationResult {
-        if (this.sourceMapUrl) {
-            this.sourceMapUrl = this.options.sourceMapBaseUrl + this.sourceMapUrl;
-        }
-
         return new SourceMapCorrector(
             new ObfuscationResult(
                 this.generatorOutput.code,
                 this.generatorOutput.map
             ),
-            this.sourceMapUrl,
+            this.options.sourceMapBaseUrl + this.options.sourceMapFileName,
             this.options.sourceMapMode
         ).correct();
     }
@@ -106,12 +97,5 @@ export class JavaScriptObfuscatorInternal {
         astTree = new Obfuscator(this.options).obfuscateNode(astTree);
 
         this.generatorOutput = JavaScriptObfuscatorInternal.generateCode(this.sourceCode, astTree, this.options);
-    }
-
-    /**
-     * @param url
-     */
-    public setSourceMapUrl (url: string): void {
-        this.sourceMapUrl = url;
     }
 }

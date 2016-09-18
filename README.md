@@ -225,18 +225,31 @@ Enables source map generation for obfuscated code.
 ### `sourceMapBaseUrl`
 Type: `string` Default: ``
 
-Adds base url to the source map import url when `sourceMapMode: 'separate'`.
+Sets base url to the source map import url when `sourceMapMode: 'separate'`.
  
-##### :warning: this option designed for CLI usage
-
 CLI example:
 ```
 javascript-obfuscator input.js --output out.js --sourceMap true --sourceMapBaseUrl 'http://localhost:9000'
 ```
 
-Result import: 
+Result: 
 ```
 //# sourceMappingURL=http://localhost:9000/out.js.map
+```
+
+### `sourceMapFileName`
+Type: `string` Default: ``
+
+Sets file name for output source map when `sourceMapMode: 'separate'`.
+
+CLI example:
+```
+javascript-obfuscator input.js --output out.js --sourceMap true --sourceMapBaseUrl 'http://localhost:9000' --sourceMapFileName example
+```
+
+Result: 
+```
+//# sourceMappingURL=http://localhost:9000/example.js.map
 ```
 
 ### `sourceMapMode`

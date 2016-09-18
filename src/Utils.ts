@@ -153,18 +153,6 @@ export class Utils {
     }
 
     /**
-     * @param url
-     * @returns {string}
-     */
-    public static normalizeUrl (url: string): string {
-        if (!url.endsWith('/')) {
-            url += '/';
-        }
-
-        return url;
-    }
-
-    /**
      * @param obj
      * @returns {T}
      */

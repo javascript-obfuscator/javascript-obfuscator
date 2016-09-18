@@ -132,7 +132,8 @@ export class JavaScriptObfuscatorCLI {
             .option('--rotateUnicodeArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean)
-            .option('--sourceMapBaseUrl <boolean>', 'Adds base url to the source map import url when `--sourceMapMode=separate`')
+            .option('--sourceMapBaseUrl <string>', 'Sets base url to the source map import url when `--sourceMapMode=separate`')
+            .option('--sourceMapFileName <string>', 'Sets file name for output source map when `--sourceMapMode=separate`')
             .option(
                 '--sourceMapMode <string> [inline, separate]',
                 'Specify source map output mode',
@@ -182,23 +183,25 @@ export class JavaScriptObfuscatorCLI {
      * @param options
      */
     private processDataWithSourceMap (outputCodePath: string, options: IObfuscatorOptions): void {
-        let javaScriptObfuscator: JavaScriptObfuscatorInternal = new JavaScriptObfuscatorInternal(this.data, options),
-            obfuscationResult: IObfuscationResult,
-            outputSourceMapPath: string = CLIUtils.getOutputSourceMapPath(outputCodePath);
+        let outputSourceMapPath: string = CLIUtils.getOutputSourceMapPath(
+            outputCodePath,
+            options.sourceMapFileName ? options.sourceMapFileName : ''
+        );
+
+        options.sourceMapFileName = path.basename(outputSourceMapPath);
+
+        const javaScriptObfuscator: JavaScriptObfuscatorInternal = new JavaScriptObfuscatorInternal(
+            this.data,
+            options
+        );
 
         javaScriptObfuscator.obfuscate();
 
-        if (options.sourceMapMode === SourceMapMode.Separate) {
-            javaScriptObfuscator.setSourceMapUrl(
-                path.basename(outputSourceMapPath)
-            );
-        }
-
-        obfuscationResult = javaScriptObfuscator.getObfuscationResult();
+        const obfuscationResult: IObfuscationResult = javaScriptObfuscator.getObfuscationResult();
 
         CLIUtils.writeFile(outputCodePath, obfuscationResult.getObfuscatedCode());
 
-        if (obfuscationResult.getSourceMap()) {
+        if (options.sourceMapMode === 'separate' && obfuscationResult.getSourceMap()) {
             CLIUtils.writeFile(outputSourceMapPath, obfuscationResult.getSourceMap());
         }
     }

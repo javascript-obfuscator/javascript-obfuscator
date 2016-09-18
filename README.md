@@ -114,7 +114,6 @@ Following options available for the JS Obfuscator:
     rotateUnicodeArray: true,
     selfDefending: true,
     sourceMap: false,
-    sourceMapBaseUrl: '',
     sourceMapMode: 'separate',
     unicodeArray: true,
     unicodeArrayThreshold: 0.8,
@@ -127,7 +126,9 @@ Following options available for the JS Obfuscator:
     -v, --version
     -h, --help
 
+    // CLI specific
     -o, --output
+    --sourceMapBaseUrl <string>
 
     --compact <boolean>
     --debugProtection <boolean>
@@ -138,7 +139,6 @@ Following options available for the JS Obfuscator:
     --rotateUnicodeArray <boolean>
     --selfDefending <boolean>
     --sourceMap <boolean>
-    --sourceMapBaseUrl <string>
     --sourceMapMode <string> [inline, separate]
     --unicodeArray <boolean>
     --unicodeArrayThreshold <number>

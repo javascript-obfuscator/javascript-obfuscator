@@ -13,6 +13,7 @@ export const DEFAULT_PRESET: IObfuscatorOptions = Object.freeze({
     rotateUnicodeArray: true,
     selfDefending: true,
     sourceMap: false,
+    sourceMapBaseUrl: '',
     sourceMapMode: SourceMapMode.Separate,
     unicodeArray: true,
     unicodeArrayThreshold: 0.8,

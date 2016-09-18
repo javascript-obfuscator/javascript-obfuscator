@@ -63,6 +63,24 @@ export class Utils {
     }
 
     /**
+     * @param url
+     * @returns {string}
+     */
+    public static extractDomainFromUrl (url: string): string {
+        let domain: string;
+
+        if (url.indexOf('://') > -1 || url.indexOf('//') === 0) {
+            domain = url.split('/')[2];
+        } else {
+            domain = url.split('/')[0];
+        }
+
+        domain = domain.split(':')[0];
+
+        return domain;
+    }
+
+    /**
      * @returns {Chance.Chance}
      */
     public static getRandomGenerator (): Chance.Chance {
@@ -71,7 +89,7 @@ export class Utils {
 
     /**
      * @param length
-     * @returns any
+     * @returns {string}
      */
     public static getRandomVariableName (length: number = 6): string {
         const rangeMinInteger: number = 10000,
@@ -89,42 +107,40 @@ export class Utils {
     }
 
     /**
+     * @param str
      * @param length
-     * @param charSet
-     * @returns string
+     * @returns {string[]}
      */
     public static hideString(str: string, length: number): [string, string] {
+        const escapeRegExp = (s: string) =>
+            s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 
-      // from http://stackoverflow.com/a/3561711
-      const escapeRegExp = (s: string) =>
-        s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        const randomMerge = function (s1: string, s2: string): string {
+            let i1 = -1, i2 = -1, result = '';
 
-      const randomMerge = function (s1: string, s2: string): string {
-        let i1 = -1, i2 = -1, result = '';
-        while (i1 < s1.length || i2 < s2.length) {
-          if (Math.random() < 0.5 && i2 < s2.length) {
-            result += s2.charAt(++i2);
-          } else {
-            result += s1.charAt(++i1);
-          }
-        }
-        return result;
-      }
+            while (i1 < s1.length || i2 < s2.length) {
+                if (Math.random() < 0.5 && i2 < s2.length) {
+                    result += s2.charAt(++i2);
+                } else {
+                    result += s1.charAt(++i1);
+                }
+            }
 
-      // here we need a custom pool parameter because the default on from Change.string
-      // can return chars that break the RegExp
-      const customPool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-      let randomString = Utils.randomGenerator.string({length: length, pool: customPool});
+            return result;
+        };
 
-      let randomStringDiff = randomString.replace(
-                              new RegExp('[' + escapeRegExp(str) + ']', 'g'),
-                              '');
+        const customPool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
-      let randomStringDiffArray = randomStringDiff.split('');
-      Utils.randomGenerator.shuffle(randomStringDiffArray);
-      randomStringDiff = randomStringDiffArray.join('');
+        let randomString = Utils.randomGenerator.string({length: length, pool: customPool}),
+            randomStringDiff = randomString.replace(
+                new RegExp('[' + escapeRegExp(str) + ']', 'g'),
+            ''),
+            randomStringDiffArray = randomStringDiff.split('');
 
-      return [randomMerge(str, randomStringDiff), randomStringDiff];
+        Utils.randomGenerator.shuffle(randomStringDiffArray);
+        randomStringDiff = randomStringDiffArray.join('');
+
+        return [randomMerge(str, randomStringDiff), randomStringDiff];
 
     }
 

@@ -1,4 +1,16 @@
-import { IsBoolean, IsIn, IsNumber, IsString, Min, Max, validateSync, ValidationError, ValidatorOptions } from 'class-validator';
+import {
+    IsBoolean,
+    IsIn,
+    IsNumber,
+    IsString,
+    IsUrl,
+    Min,
+    Max,
+    ValidateIf,
+    validateSync,
+    ValidationError,
+    ValidatorOptions
+} from 'class-validator';
 
 import { IObfuscatorOptions } from "../interfaces/IObfuscatorOptions";
 import { IOptions } from "../interfaces/IOptions";
@@ -83,6 +95,17 @@ export class Options implements IOptions {
      */
     @IsBoolean()
     public readonly sourceMap: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    @IsString()
+    @ValidateIf((options: IOptions) => Boolean(options.sourceMapBaseUrl))
+    @IsUrl({
+        require_protocol: false,
+        require_valid_protocol: true
+    })
+    public readonly sourceMapBaseUrl: string;
 
     /**
      * @type {TSourceMapMode}

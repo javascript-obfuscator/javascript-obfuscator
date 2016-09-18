@@ -10,6 +10,7 @@ export interface IOptions {
     readonly rotateUnicodeArray: boolean;
     readonly selfDefending: boolean;
     readonly sourceMap: boolean;
+    readonly sourceMapBaseUrl: string;
     readonly sourceMapMode: TSourceMapMode;
     readonly unicodeArray: boolean;
     readonly unicodeArrayThreshold: number;

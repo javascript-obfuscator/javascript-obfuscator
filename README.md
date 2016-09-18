@@ -114,6 +114,7 @@ Following options available for the JS Obfuscator:
     rotateUnicodeArray: true,
     selfDefending: true,
     sourceMap: false,
+    sourceMapBaseUrl: '',
     sourceMapMode: 'separate',
     unicodeArray: true,
     unicodeArrayThreshold: 0.8,
@@ -137,6 +138,7 @@ Following options available for the JS Obfuscator:
     --rotateUnicodeArray <boolean>
     --selfDefending <boolean>
     --sourceMap <boolean>
+    --sourceMapBaseUrl <string>
     --sourceMapMode <string> [inline, separate]
     --unicodeArray <boolean>
     --unicodeArrayThreshold <number>
@@ -219,6 +221,11 @@ Enables self-defending for obfuscated code. If obfuscated compact code is format
 Type: `boolean` Default: `false`
 
 Enables source map generation for obfuscated code.
+
+### `sourceMapBaseUrl`
+Type: `string` Default: ``
+
+Inserts custom Url for source map
 
 ### `sourceMapMode`
 Type: `string` Default: `separate`

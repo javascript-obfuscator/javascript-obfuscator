@@ -50,6 +50,16 @@ describe('Utils', () => {
         });
     });
 
+    describe('extractDomainFromUrl (url: string): string', () => {
+        it('should extract domain from the given URL', () => {
+            assert.equal(Utils.extractDomainFromUrl('http://google.ru'), 'google.ru');
+            assert.equal(Utils.extractDomainFromUrl('http://www.google.ru'), 'www.google.ru');
+            assert.equal(Utils.extractDomainFromUrl('https://www.google.ru:9000'), 'www.google.ru');
+            assert.equal(Utils.extractDomainFromUrl('//google.ru/abc'), 'google.ru');
+            assert.equal(Utils.extractDomainFromUrl('//localhost:9000'), 'localhost');
+        });
+    });
+
     describe('getRandomVariableName (length: number = 6): string', () => {
         it('should return a string of given length with random variable name', () => {
             assert.match(Utils.getRandomVariableName(4), /^_0x(\w){4}$/);

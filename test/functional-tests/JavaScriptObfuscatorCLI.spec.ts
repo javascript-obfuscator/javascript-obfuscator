@@ -112,6 +112,33 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 assert.property(sourceMap, 'names');
             });
 
+            it('should creates file with source map in the same directory as output file if `sourceMapBaseUrl` is set', () => {
+                JavaScriptObfuscator.runCLI([
+                    'node',
+                    'javascript-obfuscator',
+                    fixtureFilePath,
+                    '--output',
+                    outputFilePath,
+                    '--compact',
+                    'true',
+                    '--selfDefending',
+                    '0',
+                    '--sourceMap',
+                    'true',
+                    '--sourceMapBaseUrl',
+                    'http://localhost:9000/'
+                ]);
+
+                assert.equal(fs.existsSync(outputSourceMapPath), true);
+
+                const content: string = fs.readFileSync(outputSourceMapPath, { encoding: 'utf8' }),
+                    sourceMap: any = JSON.parse(content);
+
+                assert.property(sourceMap, 'version');
+                assert.property(sourceMap, 'sources');
+                assert.property(sourceMap, 'names');
+            });
+
             afterEach(() => {
                 fs.unlinkSync(outputFilePath);
                 fs.unlinkSync(outputSourceMapPath);

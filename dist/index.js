@@ -146,6 +146,18 @@ var Utils = function () {
             return Number(dec).toString(radix);
         }
     }, {
+        key: 'extractDomainFromUrl',
+        value: function extractDomainFromUrl(url) {
+            var domain = void 0;
+            if (url.indexOf('://') > -1 || url.indexOf('//') === 0) {
+                domain = url.split('/')[2];
+            } else {
+                domain = url.split('/')[0];
+            }
+            domain = domain.split(':')[0];
+            return domain;
+        }
+    }, {
         key: 'getRandomGenerator',
         value: function getRandomGenerator() {
             return Utils.randomGenerator;
@@ -183,9 +195,9 @@ var Utils = function () {
                 return result;
             };
             var customPool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            var randomString = Utils.randomGenerator.string({ length: length, pool: customPool });
-            var randomStringDiff = randomString.replace(new RegExp('[' + escapeRegExp(str) + ']', 'g'), '');
-            var randomStringDiffArray = randomStringDiff.split('');
+            var randomString = Utils.randomGenerator.string({ length: length, pool: customPool }),
+                randomStringDiff = randomString.replace(new RegExp('[' + escapeRegExp(str) + ']', 'g'), ''),
+                randomStringDiffArray = randomStringDiff.split('');
             Utils.randomGenerator.shuffle(randomStringDiffArray);
             randomStringDiff = randomStringDiffArray.join('');
             return [randomMerge(str, randomStringDiff), randomStringDiff];
@@ -883,6 +895,7 @@ exports.NO_CUSTOM_NODES_PRESET = Object.freeze({
     rotateUnicodeArray: false,
     selfDefending: false,
     sourceMap: false,
+    sourceMapBaseUrl: '',
     sourceMapMode: SourceMapMode_1.SourceMapMode.Separate,
     unicodeArray: false,
     unicodeArrayThreshold: 0,
@@ -921,6 +934,9 @@ var JavaScriptObfuscatorInternal = function () {
     _createClass(JavaScriptObfuscatorInternal, [{
         key: 'getObfuscationResult',
         value: function getObfuscationResult() {
+            if (this.options.sourceMapBaseUrl) {
+                this.setSourceMapUrl(this.options.sourceMapBaseUrl);
+            }
             return new SourceMapCorrector_1.SourceMapCorrector(new ObfuscationResult_1.ObfuscationResult(this.generatorOutput.code, this.generatorOutput.map), this.sourceMapUrl, this.options.sourceMapMode).correct();
         }
     }, {
@@ -1132,6 +1148,7 @@ exports.DEFAULT_PRESET = Object.freeze({
     rotateUnicodeArray: true,
     selfDefending: true,
     sourceMap: false,
+    sourceMapBaseUrl: '',
     sourceMapMode: SourceMapMode_1.SourceMapMode.Separate,
     unicodeArray: true,
     unicodeArrayThreshold: 0.8,
@@ -1528,7 +1545,7 @@ var JavaScriptObfuscatorCLI = function () {
         value: function configureCommands() {
             this.commands = new commander.Command().version(JavaScriptObfuscatorCLI.getBuildVersion(), '-v, --version').usage('<inputPath> [options]').option('-o, --output <path>', 'Output path for obfuscated code').option('--compact <boolean>', 'Disable one line output code compacting', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtection <boolean>', 'Disable browser Debug panel (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtectionInterval <boolean>', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--disableConsoleOutput <boolean>', 'Allow console.log, console.info, console.error and console.warn messages output into browser console', JavaScriptObfuscatorCLI.parseBoolean).option('--encodeUnicodeLiterals <boolean>', 'All literals in Unicode array become encoded in Base64 (this option can slightly slow down your code speed)', JavaScriptObfuscatorCLI.parseBoolean).option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', function (val) {
                 return val.split(',');
-            }).option('--rotateUnicodeArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMapMode <string> [inline, separate]', 'Specify source map output mode', JavaScriptObfuscatorCLI.parseSourceMapMode).option('--unicodeArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean).option('--unicodeArrayThreshold <number>', 'The probability that the literal string will be inserted into unicodeArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).option('--wrapUnicodeArrayCalls <boolean>', 'Disables usage of special access function instead of direct array call', JavaScriptObfuscatorCLI.parseBoolean).option('--domainLock <list>', 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)', function (val) {
+            }).option('--rotateUnicodeArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMapBaseUrl <boolean>', 'Inserts custom Url for source map').option('--sourceMapMode <string> [inline, separate]', 'Specify source map output mode', JavaScriptObfuscatorCLI.parseSourceMapMode).option('--unicodeArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean).option('--unicodeArrayThreshold <number>', 'The probability that the literal string will be inserted into unicodeArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).option('--wrapUnicodeArrayCalls <boolean>', 'Disables usage of special access function instead of direct array call', JavaScriptObfuscatorCLI.parseBoolean).option('--domainLock <list>', 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)', function (val) {
                 return val.split(',');
             }).parse(this.rawArguments);
             this.commands.on('--help', function () {
@@ -3213,6 +3230,12 @@ __decorate([class_validator_1.IsString({
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "rotateUnicodeArray", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "selfDefending", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "sourceMap", void 0);
+__decorate([class_validator_1.IsString(), class_validator_1.ValidateIf(function (options) {
+    return Boolean(options.sourceMapBaseUrl);
+}), class_validator_1.IsUrl({
+    require_protocol: false,
+    require_valid_protocol: true
+}), __metadata('design:type', String)], Options.prototype, "sourceMapBaseUrl", void 0);
 __decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata('design:type', String)], Options.prototype, "sourceMapMode", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "unicodeArray", void 0);
 __decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata('design:type', Number)], Options.prototype, "unicodeArrayThreshold", void 0);
@@ -3221,7 +3244,7 @@ exports.Options = Options;
 
 /***/ },
 /* 55 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 "use strict";
@@ -3229,6 +3252,8 @@ exports.Options = Options;
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Utils_1 = __webpack_require__(0);
 
 var OptionsNormalizer = function () {
     function OptionsNormalizer() {
@@ -3267,6 +3292,42 @@ var OptionsNormalizer = function () {
             return normalizedOptions;
         }
     }, {
+        key: "domainLockRule",
+        value: function domainLockRule(options) {
+            if (options.domainLock.length) {
+                var normalizedDomains = [];
+                var _iteratorNormalCompletion2 = true;
+                var _didIteratorError2 = false;
+                var _iteratorError2 = undefined;
+
+                try {
+                    for (var _iterator2 = options.domainLock[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                        var domain = _step2.value;
+
+                        normalizedDomains.push(Utils_1.Utils.extractDomainFromUrl(domain));
+                    }
+                } catch (err) {
+                    _didIteratorError2 = true;
+                    _iteratorError2 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                            _iterator2.return();
+                        }
+                    } finally {
+                        if (_didIteratorError2) {
+                            throw _iteratorError2;
+                        }
+                    }
+                }
+
+                Object.assign(options, {
+                    domainLock: normalizedDomains
+                });
+            }
+            return options;
+        }
+    }, {
         key: "encodeUnicodeLiteralsRule",
         value: function encodeUnicodeLiteralsRule(options) {
             if (options.unicodeArray && options.encodeUnicodeLiterals) {
@@ -3279,6 +3340,14 @@ var OptionsNormalizer = function () {
         value: function selfDefendingRule(options) {
             if (options.selfDefending) {
                 Object.assign(options, OptionsNormalizer.SELF_DEFENDING_OPTIONS);
+            }
+            return options;
+        }
+    }, {
+        key: "sourceMapBaseUrl",
+        value: function sourceMapBaseUrl(options) {
+            if (options.sourceMapBaseUrl) {
+                Object.assign(options, OptionsNormalizer.SOURCE_MAP_BASE_URL_OPTIONS);
             }
             return options;
         }
@@ -3318,7 +3387,10 @@ OptionsNormalizer.SELF_DEFENDING_OPTIONS = {
     compact: true,
     selfDefending: true
 };
-OptionsNormalizer.normalizerRules = [OptionsNormalizer.unicodeArrayRule, OptionsNormalizer.unicodeArrayThresholdRule, OptionsNormalizer.encodeUnicodeLiteralsRule, OptionsNormalizer.selfDefendingRule];
+OptionsNormalizer.SOURCE_MAP_BASE_URL_OPTIONS = {
+    sourceMapMode: 'separate'
+};
+OptionsNormalizer.normalizerRules = [OptionsNormalizer.domainLockRule, OptionsNormalizer.unicodeArrayRule, OptionsNormalizer.unicodeArrayThresholdRule, OptionsNormalizer.encodeUnicodeLiteralsRule, OptionsNormalizer.sourceMapBaseUrl, OptionsNormalizer.selfDefendingRule];
 exports.OptionsNormalizer = OptionsNormalizer;
 
 /***/ },

@@ -10,6 +10,7 @@ export interface IObfuscatorOptions {
     rotateUnicodeArray?: boolean;
     selfDefending?: boolean;
     sourceMap?: boolean;
+    sourceMapBaseUrl?: string;
     sourceMapMode?: TSourceMapMode;
     unicodeArray?: boolean;
     unicodeArrayThreshold?: number;

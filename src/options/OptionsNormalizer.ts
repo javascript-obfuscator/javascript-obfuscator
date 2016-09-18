@@ -3,6 +3,8 @@ import { IOptions } from "../interfaces/IOptions";
 
 import { TOptionsNormalizerRule } from "../types/TOptionsNormalizerRule";
 
+import { Utils } from "../Utils";
+
 export class OptionsNormalizer {
     /**
      * @type {IObfuscatorOptions}
@@ -32,12 +34,21 @@ export class OptionsNormalizer {
     };
 
     /**
+     * @type {IObfuscatorOptions}
+     */
+    private static SOURCE_MAP_BASE_URL_OPTIONS: IObfuscatorOptions = {
+        sourceMapMode: 'separate'
+    };
+
+    /**
      * @type {TOptionsNormalizerRule[]}
      */
     private static normalizerRules: TOptionsNormalizerRule[] = [
+        OptionsNormalizer.domainLockRule,
         OptionsNormalizer.unicodeArrayRule,
         OptionsNormalizer.unicodeArrayThresholdRule,
         OptionsNormalizer.encodeUnicodeLiteralsRule,
+        OptionsNormalizer.sourceMapBaseUrl,
         OptionsNormalizer.selfDefendingRule
     ];
 
@@ -59,6 +70,26 @@ export class OptionsNormalizer {
      * @param options
      * @returns {IOptions}
      */
+    private static domainLockRule (options: IOptions): IOptions {
+        if (options.domainLock.length) {
+            let normalizedDomains: string[] = [];
+
+            for (let domain of options.domainLock) {
+                normalizedDomains.push(Utils.extractDomainFromUrl(domain));
+            }
+
+            Object.assign(options, {
+                domainLock: normalizedDomains
+            });
+        }
+
+        return options;
+    }
+
+    /**
+     * @param options
+     * @returns {IOptions}
+     */
     private static encodeUnicodeLiteralsRule (options: IOptions): IOptions {
         if (options.unicodeArray && options.encodeUnicodeLiterals) {
             Object.assign(options, OptionsNormalizer.ENCODE_UNICODE_LITERALS_OPTIONS);
@@ -74,6 +105,18 @@ export class OptionsNormalizer {
     private static selfDefendingRule (options: IOptions): IOptions {
         if (options.selfDefending) {
             Object.assign(options, OptionsNormalizer.SELF_DEFENDING_OPTIONS);
+        }
+
+        return options;
+    }
+
+    /**
+     * @param options
+     * @returns {IOptions}
+     */
+    private static sourceMapBaseUrl (options: IOptions): IOptions {
+        if (options.sourceMapBaseUrl) {
+            Object.assign(options, OptionsNormalizer.SOURCE_MAP_BASE_URL_OPTIONS);
         }
 
         return options;

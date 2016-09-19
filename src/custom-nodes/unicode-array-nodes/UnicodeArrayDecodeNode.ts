@@ -12,7 +12,7 @@ import { NO_CUSTOM_NODES_PRESET } from "../../preset-options/NoCustomNodesPreset
 
 import { AtobTemplate } from "../../templates/custom-nodes/AtobTemplate";
 import { SelfDefendingTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-decode-node/SelfDefendingTemplate";
-import { UnicodeArrayDecodeTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-decode-node/UnicodeArrayDecodeTemplate";
+import { UnicodeArrayDecodeNodeTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-decode-node/UnicodeArrayDecodeNodeTemplate";
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
@@ -88,7 +88,7 @@ export class UnicodeArrayDecodeNode extends AbstractCustomNode {
 
         return NodeUtils.convertCodeToStructure(
             JavaScriptObfuscator.obfuscate(
-                UnicodeArrayDecodeTemplate().formatUnicorn({
+                UnicodeArrayDecodeNodeTemplate().formatUnicorn({
                     atobPolyfill: AtobTemplate(),
                     code,
                     forLoopFunctionName,

@@ -1,7 +1,7 @@
 /**
  * @returns {string}
  */
-export function UnicodeArrayDecodeTemplate (): string {
+export function UnicodeArrayDecodeNodeTemplate (): string {
     return `
         (function () {
            {atobPolyfill}

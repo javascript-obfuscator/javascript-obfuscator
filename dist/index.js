@@ -2068,7 +2068,7 @@ var AppendState_1 = __webpack_require__(2);
 var NoCustomNodesPreset_1 = __webpack_require__(16);
 var AtobTemplate_1 = __webpack_require__(57);
 var SelfDefendingTemplate_1 = __webpack_require__(65);
-var UnicodeArrayDecodeTemplate_1 = __webpack_require__(66);
+var UnicodeArrayDecodeNodeTemplate_1 = __webpack_require__(66);
 var AbstractCustomNode_1 = __webpack_require__(4);
 var JavaScriptObfuscator_1 = __webpack_require__(9);
 var NodeUtils_1 = __webpack_require__(1);
@@ -2113,7 +2113,7 @@ var UnicodeArrayDecodeNode = function (_AbstractCustomNode_) {
             } else {
                 code = forLoopFunctionName + "();";
             }
-            return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(UnicodeArrayDecodeTemplate_1.UnicodeArrayDecodeTemplate().formatUnicorn({
+            return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(UnicodeArrayDecodeNodeTemplate_1.UnicodeArrayDecodeNodeTemplate().formatUnicorn({
                 atobPolyfill: AtobTemplate_1.AtobTemplate(),
                 code: code,
                 forLoopFunctionName: forLoopFunctionName,
@@ -3587,10 +3587,10 @@ exports.SelfDefendingTemplate = SelfDefendingTemplate;
 "use strict";
 "use strict";
 
-function UnicodeArrayDecodeTemplate() {
+function UnicodeArrayDecodeNodeTemplate() {
     return "\n        (function () {\n           {atobPolyfill}\n          \n            var {forLoopFunctionName} = function () {\n                var array = [];\n                \n                for (var i in {unicodeArrayName}) {\n                    array['push'](decodeURI(atob({unicodeArrayName}[i])));\n                }\n                \n                {unicodeArrayName} = array;\n            };\n            \n            {code}\n        })();\n    ";
 }
-exports.UnicodeArrayDecodeTemplate = UnicodeArrayDecodeTemplate;
+exports.UnicodeArrayDecodeNodeTemplate = UnicodeArrayDecodeNodeTemplate;
 
 /***/ },
 /* 67 */

@@ -111,6 +111,14 @@ export class OptionsNormalizer {
     private static sourceMapBaseUrl (options: IOptions): IOptions {
         let sourceMapBaseUrl: string = options.sourceMapBaseUrl;
 
+        if (!options.sourceMapFileName) {
+            Object.assign(options, {
+                sourceMapBaseUrl: ''
+            });
+
+            return options;
+        }
+
         if (sourceMapBaseUrl && !sourceMapBaseUrl.endsWith('/')) {
             Object.assign(options, {
                 sourceMapBaseUrl: `${sourceMapBaseUrl}/`
@@ -128,7 +136,9 @@ export class OptionsNormalizer {
         let sourceMapFileName: string = options.sourceMapFileName;
 
         if (sourceMapFileName) {
-            sourceMapFileName = sourceMapFileName.split('.')[0];
+            sourceMapFileName = sourceMapFileName
+                .replace(/^\/+/, '')
+                .split('.')[0];
 
             Object.assign(options, {
                 sourceMapFileName: `${sourceMapFileName}.js.map`

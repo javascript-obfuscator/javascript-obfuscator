@@ -3338,6 +3338,12 @@ var OptionsNormalizer = function () {
         key: "sourceMapBaseUrl",
         value: function sourceMapBaseUrl(options) {
             var sourceMapBaseUrl = options.sourceMapBaseUrl;
+            if (!options.sourceMapFileName) {
+                Object.assign(options, {
+                    sourceMapBaseUrl: ''
+                });
+                return options;
+            }
             if (sourceMapBaseUrl && !sourceMapBaseUrl.endsWith('/')) {
                 Object.assign(options, {
                     sourceMapBaseUrl: sourceMapBaseUrl + "/"
@@ -3350,7 +3356,7 @@ var OptionsNormalizer = function () {
         value: function sourceMapFileName(options) {
             var sourceMapFileName = options.sourceMapFileName;
             if (sourceMapFileName) {
-                sourceMapFileName = sourceMapFileName.split('.')[0];
+                sourceMapFileName = sourceMapFileName.replace(/^\/+/, '').split('.')[0];
                 Object.assign(options, {
                     sourceMapFileName: sourceMapFileName + ".js.map"
                 });

@@ -29,8 +29,8 @@ export class DomainLockNode extends AbstractCustomNode {
      * @returns {ESTree.Node}
      */
     protected getNodeStructure (): ESTree.Node {
-        let domainsString = this.options.domainLock.join(';'),
-            [hiddenDomainsString, diff] = Utils.hideString(domainsString, domainsString.length * 3);
+        let domainsString: string = this.options.domainLock.join(';'),
+            [hiddenDomainsString, diff]: string[] = Utils.hideString(domainsString, domainsString.length * 3);
 
         return NodeUtils.convertCodeToStructure(
             DomainLockNodeTemplate().formatUnicorn({

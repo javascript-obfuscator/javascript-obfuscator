@@ -14,13 +14,13 @@ export function DomainLockNodeTemplate (): string {
                     break;
                 }
             }
-                
+
             for (var d1 in window[d]) {
                 if (d1.length == 6 && d1.charCodeAt(5) == 110 && d1.charCodeAt(0) == 100) {
                     break;
                 }
             }
-        
+
             var currentDomain = window[d][d1];
             
             if (!currentDomain) {

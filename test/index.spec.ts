@@ -34,3 +34,4 @@ import './functional-tests/node-obfuscators/MemberExpressionObfuscator.spec';
 import './functional-tests/node-obfuscators/MethodDefinitionObfuscator.spec';
 import './functional-tests/node-obfuscators/ObjectExpressionObfuscator.spec';
 import './functional-tests/node-obfuscators/VariableDeclarationObfuscator.spec';
+import './functional-tests/templates/custom-nodes/domain-lock-nodes/DomainLockNode.spec';

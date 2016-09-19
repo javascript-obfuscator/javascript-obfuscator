@@ -1492,7 +1492,6 @@ var SourceMapMode_1 = __webpack_require__(12);
 var DefaultPreset_1 = __webpack_require__(21);
 var CLIUtils_1 = __webpack_require__(28);
 var JavaScriptObfuscator_1 = __webpack_require__(9);
-var JavaScriptObfuscatorInternal_1 = __webpack_require__(17);
 var Utils_1 = __webpack_require__(0);
 
 var JavaScriptObfuscatorCLI = function () {
@@ -1573,11 +1572,9 @@ var JavaScriptObfuscatorCLI = function () {
     }, {
         key: 'processDataWithSourceMap',
         value: function processDataWithSourceMap(outputCodePath, options) {
-            var outputSourceMapPath = CLIUtils_1.CLIUtils.getOutputSourceMapPath(outputCodePath, options.sourceMapFileName ? options.sourceMapFileName : '');
+            var outputSourceMapPath = CLIUtils_1.CLIUtils.getOutputSourceMapPath(outputCodePath, options.sourceMapFileName || '');
             options.sourceMapFileName = path.basename(outputSourceMapPath);
-            var javaScriptObfuscator = new JavaScriptObfuscatorInternal_1.JavaScriptObfuscatorInternal(this.data, options);
-            javaScriptObfuscator.obfuscate();
-            var obfuscationResult = javaScriptObfuscator.getObfuscationResult();
+            var obfuscationResult = JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(this.data, options);
             CLIUtils_1.CLIUtils.writeFile(outputCodePath, obfuscationResult.getObfuscatedCode());
             if (options.sourceMapMode === 'separate' && obfuscationResult.getSourceMap()) {
                 CLIUtils_1.CLIUtils.writeFile(outputSourceMapPath, obfuscationResult.getSourceMap());

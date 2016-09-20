@@ -40,12 +40,9 @@ export class JavaScriptObfuscatorInternal {
      * @param sourceCode
      * @param obfuscatorOptions
      */
-    constructor (sourceCode: string, obfuscatorOptions?: IObfuscatorOptions) {
+    constructor (sourceCode: string, obfuscatorOptions: IObfuscatorOptions = {}) {
         this.sourceCode = sourceCode;
-
-        if (obfuscatorOptions) {
-            this.options = new Options(obfuscatorOptions);
-        }
+        this.options = new Options(obfuscatorOptions);
     }
 
     /**
@@ -54,11 +51,10 @@ export class JavaScriptObfuscatorInternal {
      * @param options
      */
     private static generateCode (sourceCode: string, astTree: ESTree.Node, options: IOptions): IGeneratorOutput {
-        let escodegenParams: escodegen.GenerateOptions = Object.assign(
-                {},
-                JavaScriptObfuscatorInternal.escodegenParams
-            ),
-            generatorOutput: IGeneratorOutput;
+        const escodegenParams: escodegen.GenerateOptions = Object.assign(
+            {},
+            JavaScriptObfuscatorInternal.escodegenParams
+        );
 
         if (options.sourceMap) {
             escodegenParams.sourceMap = 'sourceMap';
@@ -69,7 +65,8 @@ export class JavaScriptObfuscatorInternal {
             compact: options.compact
         };
 
-        generatorOutput = escodegen.generate(astTree, escodegenParams);
+        const generatorOutput: IGeneratorOutput = escodegen.generate(astTree, escodegenParams);
+
         generatorOutput.map = generatorOutput.map ? generatorOutput.map.toString() : '';
 
         return generatorOutput;

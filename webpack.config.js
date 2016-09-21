@@ -21,8 +21,7 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['', '.ts'],
-        modulesDirectories: ['./src', './node_modules']
+        extensions: ['.ts']
     },
     plugins: [
         new webpack.BannerPlugin(

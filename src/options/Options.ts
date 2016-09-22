@@ -1,4 +1,5 @@
 import {
+    ArrayUnique,
     IsBoolean,
     IsIn,
     IsNumber,
@@ -73,6 +74,7 @@ export class Options implements IOptions {
     /**
      * @type {string[]}
      */
+    @ArrayUnique()
     @IsString({
         each: true
     })

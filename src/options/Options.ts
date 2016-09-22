@@ -60,6 +60,7 @@ export class Options implements IOptions {
     /**
      * @type {string[]}
      */
+    @ArrayUnique()
     @IsString({
         each: true
     })

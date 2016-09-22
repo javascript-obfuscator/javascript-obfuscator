@@ -3206,11 +3206,11 @@ __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], 
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "debugProtection", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "debugProtectionInterval", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "disableConsoleOutput", void 0);
-__decorate([class_validator_1.IsString({
+__decorate([class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
 }), __metadata('design:type', Array)], Options.prototype, "domainLock", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "encodeUnicodeLiterals", void 0);
-__decorate([class_validator_1.IsString({
+__decorate([class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
 }), __metadata('design:type', Array)], Options.prototype, "reservedNames", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "rotateUnicodeArray", void 0);

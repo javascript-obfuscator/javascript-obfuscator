@@ -13,7 +13,7 @@ describe('UnicodeArrayDecodeNode', () => {
             }
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(), /decodeURI\(atob\(_0x([a-z0-9]){4}\[_0x([a-z0-9]){5,6}\]\)\)/);
+        assert.match(obfuscationResult.getObfuscatedCode(), /decodeURI\(atob\(_0x([a-z0-9]){4}\[_0x([a-z0-9]){4,6}\]\)\)/);
     });
 
     it('should\'t append `UnicodeArrayDecodeNode` custom node into the obfuscated code if `encodeUnicodeLiterals` option is not set', () => {
@@ -24,6 +24,6 @@ describe('UnicodeArrayDecodeNode', () => {
             }
         );
 
-        assert.notMatch(obfuscationResult.getObfuscatedCode(), /decodeURI\(atob\(_0x([a-z0-9]){4}\[_0x([a-z0-9]){5,6}\]\)\)/);
+        assert.notMatch(obfuscationResult.getObfuscatedCode(), /decodeURI\(atob\(_0x([a-z0-9]){4}\[_0x([a-z0-9]){4,6}\]\)\)/);
     });
 });

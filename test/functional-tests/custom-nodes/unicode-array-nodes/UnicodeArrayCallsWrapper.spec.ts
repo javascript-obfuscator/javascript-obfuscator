@@ -13,7 +13,7 @@ describe('UnicodeArrayCallsWrapper', () => {
             }
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(), /return _0x([a-z0-9]){4}\[parseInt\(_0x([a-z0-9]){5,6}, *0x010\)\];/);
+        assert.match(obfuscationResult.getObfuscatedCode(), /return _0x([a-z0-9]){4}\[parseInt\(_0x([a-z0-9]){4,6}, *0x010\)\];/);
     });
 
     it('should\'t append `UnicodeArrayDecodeNode` custom node into the obfuscated code if `wrapUnicodeArrayCalls` option is not set', () => {
@@ -24,6 +24,6 @@ describe('UnicodeArrayCallsWrapper', () => {
             }
         );
 
-        assert.notMatch(obfuscationResult.getObfuscatedCode(), /return _0x([a-z0-9]){4}\[parseInt\(_0x([a-z0-9]){5,6}, *0x010\)\];/);
+        assert.notMatch(obfuscationResult.getObfuscatedCode(), /return _0x([a-z0-9]){4}\[parseInt\(_0x([a-z0-9]){4,6}, *0x010\)\];/);
     });
 });

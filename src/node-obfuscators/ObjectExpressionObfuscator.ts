@@ -25,8 +25,12 @@ export class ObjectExpressionObfuscator extends AbstractNodeObfuscator {
     public obfuscateNode (objectExpressionNode: ESTree.ObjectExpression): void {
         objectExpressionNode.properties
             .forEach((property: ESTree.Property) => {
+                if (property.shorthand) {
+                    property.shorthand = false;
+                }
+
                 estraverse.replace(property.key, {
-                    leave: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                         if (Nodes.isLiteralNode(node)) {
                             this.obfuscateLiteralPropertyKey(node);
 

@@ -892,7 +892,6 @@ exports.NO_CUSTOM_NODES_PRESET = Object.freeze({
     disableConsoleOutput: false,
     domainLock: [],
     encodeUnicodeLiterals: false,
-    optimize: false,
     reservedNames: [],
     rotateUnicodeArray: false,
     selfDefending: false,
@@ -1069,7 +1068,6 @@ exports.DEFAULT_PRESET = Object.freeze({
     disableConsoleOutput: true,
     domainLock: [],
     encodeUnicodeLiterals: false,
-    optimize: false,
     reservedNames: [],
     rotateUnicodeArray: true,
     selfDefending: true,
@@ -1113,12 +1111,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var esprima = __webpack_require__(21);
 var escodegen = __webpack_require__(11);
-var SourceMapMode_1 = __webpack_require__(12);
 var ObfuscationResult_1 = __webpack_require__(17);
 var Obfuscator_1 = __webpack_require__(25);
 var Options_1 = __webpack_require__(54);
 var SourceMapCorrector_1 = __webpack_require__(26);
-var optimizeJs = __webpack_require__(75);
 
 var JavaScriptObfuscatorInternal = function () {
     function JavaScriptObfuscatorInternal(sourceCode) {
@@ -1156,11 +1152,6 @@ var JavaScriptObfuscatorInternal = function () {
                 compact: options.compact
             };
             var generatorOutput = escodegen.generate(astTree, escodegenParams);
-            if (options.optimize) {
-                generatorOutput.code = optimizeJs(generatorOutput.code, {
-                    sourceMap: options.sourceMap && options.sourceMapMode === SourceMapMode_1.SourceMapMode.Inline
-                });
-            }
             generatorOutput.map = generatorOutput.map ? generatorOutput.map.toString() : '';
             return generatorOutput;
         }
@@ -1544,7 +1535,7 @@ var JavaScriptObfuscatorCLI = function () {
     }, {
         key: 'configureCommands',
         value: function configureCommands() {
-            this.commands = new commander.Command().version(JavaScriptObfuscatorCLI.getBuildVersion(), '-v, --version').usage('<inputPath> [options]').option('-o, --output <path>', 'Output path for obfuscated code').option('--compact <boolean>', 'Disable one line output code compacting', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtection <boolean>', 'Disable browser Debug panel (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtectionInterval <boolean>', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--disableConsoleOutput <boolean>', 'Allow console.log, console.info, console.error and console.warn messages output into browser console', JavaScriptObfuscatorCLI.parseBoolean).option('--encodeUnicodeLiterals <boolean>', 'All literals in Unicode array become encoded in Base64 (this option can slightly slow down your code speed)', JavaScriptObfuscatorCLI.parseBoolean).option('--optimize <boolean>', 'Enables optimizations for obfuscated code with help of `optimize-js`', JavaScriptObfuscatorCLI.parseBoolean).option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', function (val) {
+            this.commands = new commander.Command().version(JavaScriptObfuscatorCLI.getBuildVersion(), '-v, --version').usage('<inputPath> [options]').option('-o, --output <path>', 'Output path for obfuscated code').option('--compact <boolean>', 'Disable one line output code compacting', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtection <boolean>', 'Disable browser Debug panel (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtectionInterval <boolean>', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--disableConsoleOutput <boolean>', 'Allow console.log, console.info, console.error and console.warn messages output into browser console', JavaScriptObfuscatorCLI.parseBoolean).option('--encodeUnicodeLiterals <boolean>', 'All literals in Unicode array become encoded in Base64 (this option can slightly slow down your code speed)', JavaScriptObfuscatorCLI.parseBoolean).option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', function (val) {
                 return val.split(',');
             }).option('--rotateUnicodeArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMapBaseUrl <string>', 'Sets base url to the source map import url when `--sourceMapMode=separate`').option('--sourceMapFileName <string>', 'Sets file name for output source map when `--sourceMapMode=separate`').option('--sourceMapMode <string> [inline, separate]', 'Specify source map output mode', JavaScriptObfuscatorCLI.parseSourceMapMode).option('--unicodeArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean).option('--unicodeArrayThreshold <number>', 'The probability that the literal string will be inserted into unicodeArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).option('--wrapUnicodeArrayCalls <boolean>', 'Disables usage of special access function instead of direct array call', JavaScriptObfuscatorCLI.parseBoolean).option('--domainLock <list>', 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)', function (val) {
                 return val.split(',');
@@ -2974,8 +2965,11 @@ var ObjectExpressionObfuscator = function (_AbstractNodeObfuscat) {
             var _this2 = this;
 
             objectExpressionNode.properties.forEach(function (property) {
+                if (property.shorthand) {
+                    property.shorthand = false;
+                }
                 estraverse.replace(property.key, {
-                    leave: function leave(node, parentNode) {
+                    enter: function enter(node, parentNode) {
                         if (Nodes_1.Nodes.isLiteralNode(node)) {
                             _this2.obfuscateLiteralPropertyKey(node);
                             return;
@@ -3187,7 +3181,6 @@ __decorate([class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
 }), __metadata('design:type', Array)], Options.prototype, "domainLock", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "encodeUnicodeLiterals", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "optimize", void 0);
 __decorate([class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
 }), __metadata('design:type', Array)], Options.prototype, "reservedNames", void 0);
@@ -3634,12 +3627,7 @@ module.exports = require("fs");
 module.exports = require("mkdirp");
 
 /***/ },
-/* 75 */
-/***/ function(module, exports) {
-
-module.exports = require("optimize-js");
-
-/***/ },
+/* 75 */,
 /* 76 */
 /***/ function(module, exports, __webpack_require__) {
 

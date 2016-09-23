@@ -13,7 +13,7 @@ describe('UnicodeArrayRotateFunctionNode', () => {
             }
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(), /while *\(-- *_0x([a-z0-9]){5,6}\) *\{/);
+        assert.match(obfuscationResult.getObfuscatedCode(), /while *\(-- *_0x([a-z0-9]){4,6}\) *\{/);
     });
 
     it('should\'t append `UnicodeArrayRotateFunctionNode` custom node into the obfuscated code if `rotateUnicodeArray` option is not set', () => {
@@ -24,6 +24,6 @@ describe('UnicodeArrayRotateFunctionNode', () => {
             }
         );
 
-        assert.notMatch(obfuscationResult.getObfuscatedCode(), /while *\(-- *_0x([a-z0-9]){5,6}\) *\{/);
+        assert.notMatch(obfuscationResult.getObfuscatedCode(), /while *\(-- *_0x([a-z0-9]){4,6}\) *\{/);
     });
 });

@@ -12,6 +12,8 @@ import { Obfuscator } from "./Obfuscator";
 import { Options } from "./options/Options";
 import { SourceMapCorrector } from "./SourceMapCorrector";
 
+const optimizeJs = require('optimize-js');
+
 export class JavaScriptObfuscatorInternal {
     /**
      * @type {GenerateOptions}
@@ -66,6 +68,10 @@ export class JavaScriptObfuscatorInternal {
         };
 
         const generatorOutput: IGeneratorOutput = escodegen.generate(astTree, escodegenParams);
+
+        if (options.optimize) {
+            generatorOutput.code = optimizeJs(generatorOutput.code);
+        }
 
         generatorOutput.map = generatorOutput.map ? generatorOutput.map.toString() : '';
 

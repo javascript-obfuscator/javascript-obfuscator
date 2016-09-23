@@ -6,6 +6,7 @@ export interface IOptions {
     readonly debugProtectionInterval: boolean;
     readonly disableConsoleOutput: boolean;
     readonly encodeUnicodeLiterals: boolean;
+    readonly optimize: boolean;
     readonly reservedNames: string[];
     readonly rotateUnicodeArray: boolean;
     readonly selfDefending: boolean;

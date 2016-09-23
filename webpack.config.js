@@ -2,7 +2,8 @@
 
 var fs = require("fs"),
     nodeExternals = require('webpack-node-externals'),
-    webpack = require('webpack');
+    webpack = require('webpack'),
+    OptimizeJSPlugin = require('optimize-js-plugin');
 
 function getLicenseText () {
     return "/*\nCopyright (C) 2016 Timofey Kachalov <sanex3339@yandex.ru>\n\n" +
@@ -31,7 +32,10 @@ module.exports = {
                 raw: true,
                 entryOnly: false
             }
-        )
+        ),
+        /*new OptimizeJSPlugin({
+            sourceMap: true
+        })*/
     ],
     output: {
         path: './dist',

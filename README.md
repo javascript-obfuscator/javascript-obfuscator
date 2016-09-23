@@ -110,6 +110,7 @@ Following options available for the JS Obfuscator:
     debugProtectionInterval: false,
     disableConsoleOutput: true,
     encodeUnicodeLiterals: false,
+    optimize: false,
     reservedNames: [],
     rotateUnicodeArray: true,
     selfDefending: true,
@@ -135,6 +136,7 @@ Following options available for the JS Obfuscator:
     --debugProtectionInterval <boolean>
     --disableConsoleOutput <boolean>
     --encodeUnicodeLiterals <boolean>
+    --optimize <boolean>
     --reservedNames <list> (comma separated)
     --rotateUnicodeArray <boolean>
     --selfDefending <boolean>
@@ -185,6 +187,11 @@ This option can slightly slow down your code speed.
 
 All literals in Unicode array become encoded in Base64.
 To decode strings, a special function will be inserted on the page under `unicodeArray` node.
+
+### `optimize`
+Type: `boolean` Default: `false`
+
+Enables optimizations for obfuscated code with help of [optimize-js](https://github.com/nolanlawson/optimize-js)
 
 ### `reservedNames`
 Type: `string[]` Default: `[]`

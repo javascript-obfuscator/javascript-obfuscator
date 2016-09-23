@@ -1113,6 +1113,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var esprima = __webpack_require__(21);
 var escodegen = __webpack_require__(11);
+var SourceMapMode_1 = __webpack_require__(12);
 var ObfuscationResult_1 = __webpack_require__(17);
 var Obfuscator_1 = __webpack_require__(25);
 var Options_1 = __webpack_require__(54);
@@ -1156,7 +1157,9 @@ var JavaScriptObfuscatorInternal = function () {
             };
             var generatorOutput = escodegen.generate(astTree, escodegenParams);
             if (options.optimize) {
-                generatorOutput.code = optimizeJs(generatorOutput.code);
+                generatorOutput.code = optimizeJs(generatorOutput.code, {
+                    sourceMap: options.sourceMap && options.sourceMapMode === SourceMapMode_1.SourceMapMode.Inline
+                });
             }
             generatorOutput.map = generatorOutput.map ? generatorOutput.map.toString() : '';
             return generatorOutput;

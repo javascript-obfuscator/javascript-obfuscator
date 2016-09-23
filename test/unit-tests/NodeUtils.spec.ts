@@ -102,7 +102,7 @@ describe('NodeUtils', () => {
         });
 
         it('should convert code to `INode` structure', () => {
-            assert.deepEqualIdent(NodeUtils.convertCodeToStructure(code), variableDeclarationNode);
+            assert.deepEqual(NodeUtils.convertCodeToStructure(code), variableDeclarationNode);
         });
     });
 

@@ -32,7 +32,7 @@ export class CatchClauseObfuscator extends NodeObfuscator {
      */
     private storeCatchClauseParam (catchClauseNode: ICatchClauseNode): void {
         estraverse.traverse(catchClauseNode.param, {
-            leave: (node: INode): any => this.storeIdentifiersNames(node, this.catchClauseParam)
+            enter: (node: INode): any => this.storeIdentifiersNames(node, this.catchClauseParam)
         });
     }
 
@@ -41,7 +41,7 @@ export class CatchClauseObfuscator extends NodeObfuscator {
      */
     private replaceCatchClauseParam (catchClauseNode: ICatchClauseNode): void {
         estraverse.replace(catchClauseNode, {
-            leave: (node: INode, parentNode: INode): any => {
+            enter: (node: INode, parentNode: INode): any => {
                 this.replaceIdentifiersWithRandomNames(node, parentNode, this.catchClauseParam);
             }
         });

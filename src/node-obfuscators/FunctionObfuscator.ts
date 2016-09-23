@@ -4,6 +4,7 @@ import { IFunctionNode } from "../interfaces/nodes/IFunctionNode";
 import { INode } from "../interfaces/nodes/INode";
 
 import { NodeObfuscator } from './NodeObfuscator';
+import { Nodes } from "../Nodes";
 
 /**
  * replaces:
@@ -34,7 +35,7 @@ export class FunctionObfuscator extends NodeObfuscator {
         functionNode.params
             .forEach((paramsNode: INode) => {
                 estraverse.traverse(paramsNode, {
-                    leave: (node: INode): any => this.storeIdentifiersNames(node, this.functionParams)
+                    enter: (node: INode): any => this.storeIdentifiersNames(node, this.functionParams)
                 });
             });
     }
@@ -44,8 +45,20 @@ export class FunctionObfuscator extends NodeObfuscator {
      */
     private replaceFunctionParams (functionNode: IFunctionNode): void {
         let replaceVisitor: estraverse.Visitor = {
-            leave: (node: INode, parentNode: INode): any => {
+            enter: (node: INode, parentNode: INode): any => {
+                let newNodeName: string = '';
+
+                if (Nodes.isIdentifierNode(node)) {
+                    newNodeName = node.name;
+                }
+
                 this.replaceIdentifiersWithRandomNames(node, parentNode, this.functionParams);
+
+                if (Nodes.isIdentifierNode(node)) {
+                    if (node.name !== newNodeName) {
+                        node.obfuscated = true;
+                    }
+                }
             }
         };
 

@@ -12,6 +12,7 @@ import { TStatement } from "./types/nodes/TStatement";
 import { TNodeWithBlockStatement } from "./types/TNodeWithBlockStatement";
 
 import { NodeType } from "./enums/NodeType";
+import { ICallExpressionNode } from "./interfaces/nodes/ICallExpressionNode";
 
 export class Nodes {
     /**
@@ -22,7 +23,8 @@ export class Nodes {
         return {
             'type': NodeType.Program,
             'body': bodyNode,
-            'sourceType': 'script'
+            'sourceType': 'script',
+            'obfuscated': false
         };
     }
 
@@ -32,6 +34,14 @@ export class Nodes {
      */
     public static isBlockStatementNode (node: INode): node is IBlockStatementNode {
         return node.type === NodeType.BlockStatement;
+    }
+
+    /**
+     * @param node
+     * @returns {boolean}
+     */
+    public static isCallExpressionNode (node: INode): node is ICallExpressionNode {
+        return node.type === NodeType.CallExpression;
     }
 
     /**

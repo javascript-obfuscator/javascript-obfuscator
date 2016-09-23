@@ -28,7 +28,8 @@ export class NodeMocks {
         return {
             type: NodeType.Program,
             body: bodyNodes,
-            sourceType: 'script'
+            sourceType: 'script',
+            obfuscated: false
         };
     }
 
@@ -39,7 +40,8 @@ export class NodeMocks {
     public static getBlockStatementNode (bodyNodes: TStatement[] = []): IBlockStatementNode {
         return {
             type: NodeType.BlockStatement,
-            body: bodyNodes
+            body: bodyNodes,
+            obfuscated: false
         };
     }
 
@@ -51,7 +53,8 @@ export class NodeMocks {
         return {
             type: NodeType.CatchClause,
             param: NodeMocks.getIdentifierNode('err'),
-            body: NodeMocks.getBlockStatementNode(bodyNodes)
+            body: NodeMocks.getBlockStatementNode(bodyNodes),
+            obfuscated: false
         };
     }
 
@@ -67,7 +70,8 @@ export class NodeMocks {
         return {
             type: NodeType.CallExpression,
             callee: callee,
-            arguments: args
+            arguments: args,
+            obfuscated: false
         };
     }
 
@@ -80,7 +84,8 @@ export class NodeMocks {
     ): IExpressionStatementNode {
         return {
             type: NodeType.ExpressionStatement,
-            expression: expression
+            expression: expression,
+            obfuscated: false
         };
     }
 
@@ -101,7 +106,8 @@ export class NodeMocks {
             params: params,
             body: blockStatementNode,
             generator: false,
-            expression: false
+            expression: false,
+            obfuscated: false
         };
     }
 
@@ -115,10 +121,12 @@ export class NodeMocks {
             test: {
                 type: 'Literal',
                 value: true,
-                raw: 'true'
+                raw: 'true',
+                obfuscated: false
             },
             consequent: blockStatementNode,
-            alternate: null
+            alternate: null,
+            obfuscated: false
         };
     }
 
@@ -130,6 +138,7 @@ export class NodeMocks {
         return {
             type: NodeType.Identifier,
             name: identifierName,
+            obfuscated: false
         };
     }
 
@@ -145,7 +154,8 @@ export class NodeMocks {
             'x-verbatim-property': {
                 content: `'${value}'`,
                 precedence: escodegen.Precedence.Primary
-            }
+            },
+            obfuscated: false
         };
     }
 
@@ -162,7 +172,8 @@ export class NodeMocks {
             type: NodeType.MemberExpression,
             computed: false,
             object: object,
-            property: property
+            property: property,
+            obfuscated: false
         };
     }
 
@@ -178,7 +189,8 @@ export class NodeMocks {
         return {
             type: NodeType.VariableDeclaration,
             declarations: declarations,
-            kind: kind
+            kind: kind,
+            obfuscated: false
         };
     }
 
@@ -191,7 +203,8 @@ export class NodeMocks {
         return {
             type: NodeType.VariableDeclarator,
             id: id,
-            init: init
+            init: init,
+            obfuscated: false
         };
     }
 }

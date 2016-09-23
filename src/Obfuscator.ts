@@ -131,7 +131,7 @@ export class Obfuscator implements IObfuscator {
      */
     private obfuscate (node: INode): void {
         estraverse.replace(node, {
-            leave: (node: INode, parentNode: INode): any => {
+            enter: (node: INode, parentNode: INode): any => {
                 this.initializeNodeObfuscators(node, parentNode);
             }
         });

@@ -1,6 +1,12 @@
 Change Log
 ===
 
+v0.7.2
+---
+* runtime error fix [#7](https://github.com/sanex3339/webpack-obfuscator/issues/7)
+
+* shorthand object expression fix [#16](https://github.com/sanex3339/javascript-obfuscator/issues/16)
+
 v0.7.1
 ---
 * IE error fix [#14](https://github.com/sanex3339/javascript-obfuscator/issues/14)

@@ -18,8 +18,8 @@ describe('VariableDeclarationObfuscator', () => {
             Object.assign({}, NO_CUSTOM_NODES_PRESET)
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-z0-9]){6} *= *'\\x61\\x62\\x63';/);
-        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-z0-9]){6}\);/);
+        assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-z0-9]){4,6} *= *'\\x61\\x62\\x63';/);
+        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-z0-9]){4,6}\);/);
     });
 
     it('should obfuscate variable call (`identifier` node) outside of block scope of node in which this variable was declared with `var` kind', () => {
@@ -35,7 +35,65 @@ describe('VariableDeclarationObfuscator', () => {
             Object.assign({}, NO_CUSTOM_NODES_PRESET)
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-z0-9]){6}\);/);
+        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-z0-9]){4,6}\);/);
+    });
+
+    describe(`variable calls before variable declaration when function param has the same name as variables name`, () => {
+        let obfuscationResult: IObfuscationResult,
+            functionParamIdentifierName: string|null,
+            innerFunctionParamIdentifierName: string|null,
+            constructorIdentifierName: string|null,
+            objectIdentifierName: string|null,
+            variableDeclarationIdentifierName: string|null;
+
+        beforeEach(() => {
+            obfuscationResult = JavaScriptObfuscator.obfuscate(
+                `
+                    (function () {
+                        function foo (t, e) {
+                            return function () {
+                                function baz (t) {
+                                    console.log(t);
+                                }
+                        
+                                return {t: t};
+                                var t;
+                            }();
+                        }
+                    })();
+                `,
+                Object.assign({}, NO_CUSTOM_NODES_PRESET)
+            );
+        });
+
+        it('should correct obfuscate variables inside function body', () => {
+            const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+            const functionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(/function *_0x[a-z0-9]{5,6} *\((_0x[a-z0-9]{5,6})\,(_0x[a-z0-9]{5,6})\) *\{/);
+            const innerFunctionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(/function _0x[a-z0-9]{5,6} *\((_0x[a-z0-9]{5,6})\) *\{/);
+            const constructorIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(/console\['\\x6c\\x6f\\x67'\]\((_0x[a-z0-9]{5,6})\)/);
+            const objectIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(/return\{'\\x74':(_0x[a-z0-9]{5,6})\}/);
+            const variableDeclarationIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(/var *(_0x[a-z0-9]{5,6});/);
+
+            functionParamIdentifierName = (<RegExpMatchArray>functionParamIdentifierMatch)[1];
+            innerFunctionParamIdentifierName = (<RegExpMatchArray>innerFunctionParamIdentifierMatch)[1];
+            constructorIdentifierName = (<RegExpMatchArray>constructorIdentifierMatch)[1];
+            objectIdentifierName = (<RegExpMatchArray>objectIdentifierMatch)[1];
+            variableDeclarationIdentifierName = (<RegExpMatchArray>variableDeclarationIdentifierMatch)[1];
+
+            assert.notEqual(functionParamIdentifierName, constructorIdentifierName);
+            assert.notEqual(functionParamIdentifierName, innerFunctionParamIdentifierName);
+
+            assert.equal(functionParamIdentifierName, objectIdentifierName);
+            assert.equal(functionParamIdentifierName, variableDeclarationIdentifierName);
+
+            assert.equal(innerFunctionParamIdentifierName, constructorIdentifierName);
+            assert.equal(variableDeclarationIdentifierName, objectIdentifierName);
+        });
     });
 
     it('should not obfuscate variable call (`identifier` node) outside of block scope of node in which this variable was declared with `let` kind', () => {
@@ -78,11 +136,11 @@ describe('VariableDeclarationObfuscator', () => {
         });
 
         it('should obfuscate variable call (`identifier` node) before variable declaration if this call is inside function body', () => {
-            assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-z0-9]){6}\['\\x69\\x74\\x65\\x6d'\]\);/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-z0-9]){4,6}\['\\x69\\x74\\x65\\x6d'\]\);/);
         });
 
         it('should not obfuscate variable call (`identifier` node) before variable declaration', () => {
-            assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(abc\);/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-z0-9]){5,6}\);/);
         });
     });
 });

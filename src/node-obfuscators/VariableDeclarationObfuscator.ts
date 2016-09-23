@@ -8,7 +8,6 @@ import { NodeType } from "../enums/NodeType";
 
 import { NodeObfuscator } from './NodeObfuscator';
 import { NodeUtils } from "../NodeUtils";
-import { Utils } from '../Utils';
 
 /**
  * replaces:
@@ -58,30 +57,11 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
     private replaceVariableNames (variableDeclarationNode: IVariableDeclarationNode, variableParentNode: INode): void {
         let scopeNode: INode = variableDeclarationNode.kind === 'var' ? NodeUtils.getBlockScopeOfNode(
                 variableDeclarationNode
-            ) : variableParentNode,
-            isNodeAfterVariableDeclaratorFlag: boolean = false;
+            ) : variableParentNode;
 
         estraverse.replace(scopeNode, {
             enter: (node: INode, parentNode: INode): any => {
-                const functionNodes: string[] = [
-                    NodeType.ArrowFunctionExpression,
-                    NodeType.FunctionDeclaration,
-                    NodeType.FunctionExpression
-                ];
-
-                if (Utils.arrayContains(functionNodes, node.type)) {
-                    estraverse.replace(node, {
-                        enter: (node: INode, parentNode: INode): any => {
-                            this.replaceIdentifiersWithRandomNames(node, parentNode, this.variableNames);
-                        }
-                    });
-                }
-
-                if (node === variableDeclarationNode) {
-                    isNodeAfterVariableDeclaratorFlag = true;
-                }
-
-                if (isNodeAfterVariableDeclaratorFlag) {
+                if (!node.obfuscated) {
                     this.replaceIdentifiersWithRandomNames(node, parentNode, this.variableNames);
                 }
             }

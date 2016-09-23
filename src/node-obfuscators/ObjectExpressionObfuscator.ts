@@ -30,6 +30,10 @@ export class ObjectExpressionObfuscator extends NodeObfuscator {
     public obfuscateNode (objectExpressionNode: IObjectExpressionNode): void {
         objectExpressionNode.properties
             .forEach((property: IPropertyNode) => {
+                if (property.shorthand) {
+                    property.shorthand = false;
+                }
+
                 estraverse.replace(property.key, {
                     leave: (node: INode, parentNode: INode): any => {
                         if (Nodes.isLiteralNode(node)) {

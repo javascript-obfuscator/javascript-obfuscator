@@ -361,6 +361,7 @@ var NodeUtils = function () {
                         value = parentNode || node;
                     }
                     node['parentNode'] = value;
+                    node['obfuscated'] = false;
                 }
             });
         }
@@ -383,14 +384,14 @@ var NodeUtils = function () {
             var traverseType = arguments.length <= 3 || arguments[3] === undefined ? 'traverse' : arguments[3];
 
             estraverse[traverseType](node, {
-                enter: function enter(node) {
+                enter: function enter(node, parentNode) {
                     if (node.type === nodeType && visitor.enter) {
-                        visitor.enter(node);
+                        visitor.enter(node, parentNode);
                     }
                 },
-                leave: function leave(node) {
+                leave: function leave(node, parentNode) {
                     if (node.type === nodeType && visitor.leave) {
-                        visitor.leave(node);
+                        visitor.leave(node, parentNode);
                     }
                 }
             });
@@ -445,7 +446,8 @@ var Nodes = function () {
             return {
                 'type': NodeType_1.NodeType.Program,
                 'body': bodyNode,
-                'sourceType': 'script'
+                'sourceType': 'script',
+                'obfuscated': false
             };
         }
     }, {
@@ -457,6 +459,11 @@ var Nodes = function () {
         key: "isBlockStatementNode",
         value: function isBlockStatementNode(node) {
             return node.type === NodeType_1.NodeType.BlockStatement;
+        }
+    }, {
+        key: "isCallExpressionNode",
+        value: function isCallExpressionNode(node) {
+            return node.type === NodeType_1.NodeType.CallExpression;
         }
     }, {
         key: "isFunctionDeclarationNode",
@@ -757,15 +764,9 @@ var IdentifierReplacer = function (_AbstractReplacer_1$A) {
     _inherits(IdentifierReplacer, _AbstractReplacer_1$A);
 
     function IdentifierReplacer() {
-        var _ref;
-
         _classCallCheck(this, IdentifierReplacer);
 
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        var _this = _possibleConstructorReturn(this, (_ref = IdentifierReplacer.__proto__ || Object.getPrototypeOf(IdentifierReplacer)).call.apply(_ref, [this].concat(args)));
+        var _this = _possibleConstructorReturn(this, (IdentifierReplacer.__proto__ || Object.getPrototypeOf(IdentifierReplacer)).apply(this, arguments));
 
         _this.namesMap = new Map();
         return _this;
@@ -1631,15 +1632,9 @@ var ConsoleOutputDisableExpressionNode = function (_AbstractCustomNode_) {
     _inherits(ConsoleOutputDisableExpressionNode, _AbstractCustomNode_);
 
     function ConsoleOutputDisableExpressionNode() {
-        var _ref;
-
         _classCallCheck(this, ConsoleOutputDisableExpressionNode);
 
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        var _this = _possibleConstructorReturn(this, (_ref = ConsoleOutputDisableExpressionNode.__proto__ || Object.getPrototypeOf(ConsoleOutputDisableExpressionNode)).call.apply(_ref, [this].concat(args)));
+        var _this = _possibleConstructorReturn(this, (ConsoleOutputDisableExpressionNode.__proto__ || Object.getPrototypeOf(ConsoleOutputDisableExpressionNode)).apply(this, arguments));
 
         _this.appendState = AppendState_1.AppendState.BeforeObfuscation;
         return _this;
@@ -1860,15 +1855,9 @@ var DomainLockNode = function (_AbstractCustomNode_) {
     _inherits(DomainLockNode, _AbstractCustomNode_);
 
     function DomainLockNode() {
-        var _ref;
-
         _classCallCheck(this, DomainLockNode);
 
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        var _this = _possibleConstructorReturn(this, (_ref = DomainLockNode.__proto__ || Object.getPrototypeOf(DomainLockNode)).call.apply(_ref, [this].concat(args)));
+        var _this = _possibleConstructorReturn(this, (DomainLockNode.__proto__ || Object.getPrototypeOf(DomainLockNode)).apply(this, arguments));
 
         _this.appendState = AppendState_1.AppendState.BeforeObfuscation;
         return _this;
@@ -1929,15 +1918,9 @@ var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
     _inherits(SelfDefendingUnicodeNode, _AbstractCustomNode_);
 
     function SelfDefendingUnicodeNode() {
-        var _ref;
-
         _classCallCheck(this, SelfDefendingUnicodeNode);
 
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        var _this = _possibleConstructorReturn(this, (_ref = SelfDefendingUnicodeNode.__proto__ || Object.getPrototypeOf(SelfDefendingUnicodeNode)).call.apply(_ref, [this].concat(args)));
+        var _this = _possibleConstructorReturn(this, (SelfDefendingUnicodeNode.__proto__ || Object.getPrototypeOf(SelfDefendingUnicodeNode)).apply(this, arguments));
 
         _this.appendState = AppendState_1.AppendState.AfterObfuscation;
         return _this;
@@ -2712,9 +2695,13 @@ var FunctionObfuscator = function (_AbstractNodeObfuscat) {
             var _this3 = this;
 
             var replaceVisitor = {
-                leave: function leave(node, parentNode) {
+                enter: function enter(node, parentNode) {
                     if (Nodes_1.Nodes.isReplaceableIdentifierNode(node, parentNode)) {
-                        node.name = _this3.identifierReplacer.replace(node.name);
+                        var newNodeName = _this3.identifierReplacer.replace(node.name);
+                        if (node.name !== newNodeName) {
+                            node.name = newNodeName;
+                            node.obfuscated = true;
+                        }
                     }
                 }
             };
@@ -2905,15 +2892,9 @@ var MethodDefinitionObfuscator = function (_AbstractNodeObfuscat) {
     _inherits(MethodDefinitionObfuscator, _AbstractNodeObfuscat);
 
     function MethodDefinitionObfuscator() {
-        var _ref;
-
         _classCallCheck(this, MethodDefinitionObfuscator);
 
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-        }
-
-        var _this = _possibleConstructorReturn(this, (_ref = MethodDefinitionObfuscator.__proto__ || Object.getPrototypeOf(MethodDefinitionObfuscator)).call.apply(_ref, [this].concat(args)));
+        var _this = _possibleConstructorReturn(this, (MethodDefinitionObfuscator.__proto__ || Object.getPrototypeOf(MethodDefinitionObfuscator)).apply(this, arguments));
 
         _this.ignoredNames = ['constructor'];
         return _this;
@@ -3091,23 +3072,10 @@ var VariableDeclarationObfuscator = function (_AbstractNodeObfuscat) {
         value: function replaceVariableNames(variableDeclarationNode, variableParentNode) {
             var _this3 = this;
 
-            var scopeNode = variableDeclarationNode.kind === 'var' ? NodeUtils_1.NodeUtils.getBlockScopeOfNode(variableDeclarationNode) : variableParentNode,
-                isNodeAfterVariableDeclaratorFlag = false;
+            var scopeNode = variableDeclarationNode.kind === 'var' ? NodeUtils_1.NodeUtils.getBlockScopeOfNode(variableDeclarationNode) : variableParentNode;
             estraverse.replace(scopeNode, {
                 enter: function enter(node, parentNode) {
-                    if (Nodes_1.Nodes.isArrowFunctionExpressionNode(node) || Nodes_1.Nodes.isFunctionDeclarationNode(node) || Nodes_1.Nodes.isFunctionExpressionNode(node)) {
-                        estraverse.replace(node, {
-                            enter: function enter(node, parentNode) {
-                                if (Nodes_1.Nodes.isReplaceableIdentifierNode(node, parentNode)) {
-                                    node.name = _this3.identifierReplacer.replace(node.name);
-                                }
-                            }
-                        });
-                    }
-                    if (Nodes_1.Nodes.isVariableDeclarationNode(node) && node === variableDeclarationNode) {
-                        isNodeAfterVariableDeclaratorFlag = true;
-                    }
-                    if (Nodes_1.Nodes.isReplaceableIdentifierNode(node, parentNode) && isNodeAfterVariableDeclaratorFlag) {
+                    if (!node.obfuscated && Nodes_1.Nodes.isReplaceableIdentifierNode(node, parentNode)) {
                         node.name = _this3.identifierReplacer.replace(node.name);
                     }
                 }

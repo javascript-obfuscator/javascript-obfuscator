@@ -5,7 +5,8 @@ var fs = require("fs"),
     webpack = require('webpack');
 
 function getLicenseText () {
-    return "/*\nCopyright (C) 2016 Timofey Kachalov <sanex3339@yandex.ru>\n\n" + fs.readFileSync('./LICENSE.BSD', 'utf8') + "\n*/";
+    return "/*\nCopyright (C) 2016 Timofey Kachalov <sanex3339@yandex.ru>\n\n" +
+        fs.readFileSync('./LICENSE.BSD', 'utf8') + "\n*/";
 }
 
 module.exports = {

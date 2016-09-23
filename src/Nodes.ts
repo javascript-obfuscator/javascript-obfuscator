@@ -13,7 +13,8 @@ export class Nodes {
         return {
             'type': NodeType.Program,
             'body': bodyNode,
-            'sourceType': 'script'
+            'sourceType': 'script',
+            'obfuscated': false
         };
     }
 
@@ -31,6 +32,14 @@ export class Nodes {
      */
     public static isBlockStatementNode (node: ESTree.Node): node is ESTree.BlockStatement {
         return node.type === NodeType.BlockStatement;
+    }
+
+    /**
+     * @param node
+     * @returns {boolean}
+     */
+    public static isCallExpressionNode (node: ESTree.Node): node is ESTree.CallExpression {
+        return node.type === NodeType.CallExpression;
     }
 
     /**

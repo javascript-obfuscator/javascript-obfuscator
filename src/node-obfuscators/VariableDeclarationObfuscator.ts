@@ -69,30 +69,11 @@ export class VariableDeclarationObfuscator extends AbstractNodeObfuscator {
     private replaceVariableNames (variableDeclarationNode: ESTree.VariableDeclaration, variableParentNode: ESTree.Node): void {
         let scopeNode: ESTree.Node = variableDeclarationNode.kind === 'var' ? NodeUtils.getBlockScopeOfNode(
                 variableDeclarationNode
-            ) : variableParentNode,
-            isNodeAfterVariableDeclaratorFlag: boolean = false;
+            ) : variableParentNode;
 
         estraverse.replace(scopeNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (
-                    Nodes.isArrowFunctionExpressionNode(node) ||
-                    Nodes.isFunctionDeclarationNode(node) ||
-                    Nodes.isFunctionExpressionNode(node)
-                ) {
-                    estraverse.replace(node, {
-                        enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                            if (Nodes.isReplaceableIdentifierNode(node, parentNode)) {
-                                node.name = this.identifierReplacer.replace(node.name);
-                            }
-                        }
-                    });
-                }
-
-                if (Nodes.isVariableDeclarationNode(node) && node === variableDeclarationNode) {
-                    isNodeAfterVariableDeclaratorFlag = true;
-                }
-
-                if (Nodes.isReplaceableIdentifierNode(node, parentNode) && isNodeAfterVariableDeclaratorFlag) {
+                if (!node.obfuscated && Nodes.isReplaceableIdentifierNode(node, parentNode)) {
                     node.name = this.identifierReplacer.replace(node.name);
                 }
             }

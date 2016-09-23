@@ -82,7 +82,65 @@ describe('VariableDeclarationObfuscator', () => {
         });
 
         it('should not obfuscate variable call (`identifier` node) before variable declaration', () => {
-            assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(abc\);/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-z0-9]){5,6}\);/);
+        });
+    });
+
+    describe(`variable calls before variable declaration when function param has the same name as variables name`, () => {
+        let obfuscationResult: IObfuscationResult,
+            functionParamIdentifierName: string|null,
+            innerFunctionParamIdentifierName: string|null,
+            constructorIdentifierName: string|null,
+            objectIdentifierName: string|null,
+            variableDeclarationIdentifierName: string|null;
+
+        beforeEach(() => {
+            obfuscationResult = JavaScriptObfuscator.obfuscate(
+                `
+                    (function () {
+                        function foo (t, e) {
+                            return function () {
+                                function baz (t) {
+                                    console.log(t);
+                                }
+                        
+                                return {t: t};
+                                var t;
+                            }();
+                        }
+                    })();
+                `,
+                Object.assign({}, NO_CUSTOM_NODES_PRESET)
+            );
+        });
+
+        it('blablabla', () => {
+            const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+            const functionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(/function *_0x[a-z0-9]{5,6} *\((_0x[a-z0-9]{5,6})\,(_0x[a-z0-9]{5,6})\) *\{/);
+            const innerFunctionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(/function _0x[a-z0-9]{5,6} *\((_0x[a-z0-9]{5,6})\) *\{/);
+            const constructorIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(/console\['\\x6c\\x6f\\x67'\]\((_0x[a-z0-9]{5,6})\)/);
+            const objectIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(/return\{'\\x74':(_0x[a-z0-9]{5,6})\}/);
+            const variableDeclarationIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(/var *(_0x[a-z0-9]{5,6});/);
+
+            functionParamIdentifierName = (<RegExpMatchArray>functionParamIdentifierMatch)[1];
+            innerFunctionParamIdentifierName = (<RegExpMatchArray>innerFunctionParamIdentifierMatch)[1];
+            constructorIdentifierName = (<RegExpMatchArray>constructorIdentifierMatch)[1];
+            objectIdentifierName = (<RegExpMatchArray>objectIdentifierMatch)[1];
+            variableDeclarationIdentifierName = (<RegExpMatchArray>variableDeclarationIdentifierMatch)[1];
+
+            assert.notEqual(functionParamIdentifierName, constructorIdentifierName);
+            assert.notEqual(functionParamIdentifierName, innerFunctionParamIdentifierName);
+
+            assert.notEqual(functionParamIdentifierName, objectIdentifierName);
+            assert.notEqual(functionParamIdentifierName, variableDeclarationIdentifierName);
+
+            assert.equal(innerFunctionParamIdentifierName, constructorIdentifierName);
+            assert.equal(variableDeclarationIdentifierName, objectIdentifierName);
         });
     });
 

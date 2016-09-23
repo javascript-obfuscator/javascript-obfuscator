@@ -148,6 +148,7 @@ export class NodeUtils {
                 }
 
                 node['parentNode'] = value;
+                node['obfuscated'] = false;
             }
         });
     }
@@ -186,18 +187,18 @@ export class NodeUtils {
     public static typedTraverse (
         node: ESTree.Node,
         nodeType: string,
-        visitor: {enter?: (node: ESTree.Node) => void, leave?: (node: ESTree.Node) => void},
+        visitor: estraverse.Visitor,
         traverseType: string = 'traverse'
     ): void {
         (<any>estraverse)[traverseType](node, {
-            enter: (node: ESTree.Node): any => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (node.type === nodeType && visitor.enter) {
-                    visitor.enter(node);
+                    visitor.enter(node, parentNode);
                 }
             },
-            leave: (node: ESTree.Node): any => {
+            leave: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (node.type === nodeType && visitor.leave) {
-                    visitor.leave(node);
+                    visitor.leave(node, parentNode);
                 }
             }
         });

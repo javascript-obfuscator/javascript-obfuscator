@@ -60,9 +60,14 @@ export class FunctionObfuscator extends AbstractNodeObfuscator {
      */
     private replaceFunctionParams (functionNode: ESTree.Function): void {
         let replaceVisitor: estraverse.Visitor = {
-            leave: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Nodes.isReplaceableIdentifierNode(node, parentNode)) {
-                    node.name = this.identifierReplacer.replace(node.name);
+                    const newNodeName: string = this.identifierReplacer.replace(node.name);
+
+                    if (node.name !== newNodeName) {
+                        node.name = newNodeName;
+                        node.obfuscated = true;
+                    }
                 }
             }
         };

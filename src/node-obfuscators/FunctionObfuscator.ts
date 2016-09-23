@@ -50,7 +50,7 @@ export class FunctionObfuscator extends AbstractNodeObfuscator {
         functionNode.params
             .forEach((paramsNode: ESTree.Node) => {
                 NodeUtils.typedReplace(paramsNode, NodeType.Identifier, {
-                    leave: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
+                    enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
                 });
             });
     }

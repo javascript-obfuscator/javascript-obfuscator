@@ -1256,7 +1256,7 @@ var Obfuscator = function () {
             var _this2 = this;
 
             estraverse.replace(node, {
-                leave: function leave(node, parentNode) {
+                enter: function enter(node, parentNode) {
                     _this2.initializeNodeObfuscators(node, parentNode);
                 }
             });
@@ -2536,7 +2536,7 @@ var CatchClauseObfuscator = function (_AbstractNodeObfuscat) {
             var _this2 = this;
 
             NodeUtils_1.NodeUtils.typedReplace(catchClauseNode.param, NodeType_1.NodeType.Identifier, {
-                leave: function leave(node) {
+                enter: function enter(node) {
                     return _this2.identifierReplacer.storeNames(node.name);
                 }
             });
@@ -2547,7 +2547,7 @@ var CatchClauseObfuscator = function (_AbstractNodeObfuscat) {
             var _this3 = this;
 
             estraverse.replace(catchClauseNode, {
-                leave: function leave(node, parentNode) {
+                enter: function enter(node, parentNode) {
                     if (Nodes_1.Nodes.isReplaceableIdentifierNode(node, parentNode)) {
                         node.name = _this3.identifierReplacer.replace(node.name);
                     }
@@ -2610,7 +2610,7 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeObfuscat) {
             var _this2 = this;
 
             NodeUtils_1.NodeUtils.typedReplace(functionDeclarationNode.id, NodeType_1.NodeType.Identifier, {
-                leave: function leave(node) {
+                enter: function enter(node) {
                     return _this2.identifierReplacer.storeNames(node.name);
                 }
             });
@@ -2683,7 +2683,7 @@ var FunctionObfuscator = function (_AbstractNodeObfuscat) {
 
             functionNode.params.forEach(function (paramsNode) {
                 NodeUtils_1.NodeUtils.typedReplace(paramsNode, NodeType_1.NodeType.Identifier, {
-                    leave: function leave(node) {
+                    enter: function enter(node) {
                         return _this2.identifierReplacer.storeNames(node.name);
                     }
                 });
@@ -2819,7 +2819,7 @@ var MemberExpressionObfuscator = function (_AbstractNodeObfuscat) {
             var _this2 = this;
 
             estraverse.replace(memberExpressionNode.property, {
-                leave: function leave(node, parentNode) {
+                enter: function enter(node, parentNode) {
                     if (Nodes_1.Nodes.isLiteralNode(node)) {
                         _this2.obfuscateLiteralProperty(node);
                         return;
@@ -2911,7 +2911,7 @@ var MethodDefinitionObfuscator = function (_AbstractNodeObfuscat) {
             var _this2 = this;
 
             estraverse.replace(methodDefinitionNode.key, {
-                leave: function leave(node) {
+                enter: function enter(node) {
                     if (Nodes_1.Nodes.isIdentifierNode(node) && !Utils_1.Utils.arrayContains(_this2.ignoredNames, node.name) && methodDefinitionNode.computed === false) {
                         methodDefinitionNode.computed = true;
                         node.name = new StringLiteralReplacer_1.StringLiteralReplacer(_this2.nodes, _this2.options).replace(node.name);
@@ -3061,7 +3061,7 @@ var VariableDeclarationObfuscator = function (_AbstractNodeObfuscat) {
 
             variableDeclarationNode.declarations.forEach(function (declarationNode) {
                 NodeUtils_1.NodeUtils.typedReplace(declarationNode.id, NodeType_1.NodeType.Identifier, {
-                    leave: function leave(node) {
+                    enter: function enter(node) {
                         return _this2.identifierReplacer.storeNames(node.name);
                     }
                 });

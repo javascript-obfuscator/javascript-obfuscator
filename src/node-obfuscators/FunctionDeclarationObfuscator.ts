@@ -54,7 +54,7 @@ export class FunctionDeclarationObfuscator extends AbstractNodeObfuscator {
      */
     private storeFunctionName (functionDeclarationNode: ESTree.FunctionDeclaration): void {
         NodeUtils.typedReplace(functionDeclarationNode.id, NodeType.Identifier, {
-            leave: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
+            enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
         });
     }
 

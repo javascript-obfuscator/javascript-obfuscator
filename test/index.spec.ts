@@ -29,6 +29,7 @@ import './functional-tests/custom-nodes/unicode-array-nodes/UnicodeArrayCallsWra
 import './functional-tests/custom-nodes/unicode-array-nodes/UnicodeArrayDecodeNode.spec';
 import './functional-tests/custom-nodes/unicode-array-nodes/UnicodeArrayRotateFunctionNode.spec';
 import './functional-tests/custom-nodes/unicode-array-nodes/UnicodeArrayNode.spec';
+import './functional-tests/node-obfuscators/FunctionObfuscator.spec';
 import './functional-tests/node-obfuscators/LiteralObfuscator.spec';
 import './functional-tests/node-obfuscators/MemberExpressionObfuscator.spec';
 import './functional-tests/node-obfuscators/MethodDefinitionObfuscator.spec';

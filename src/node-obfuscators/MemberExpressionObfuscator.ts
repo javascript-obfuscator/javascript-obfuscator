@@ -14,7 +14,7 @@ export class MemberExpressionObfuscator extends AbstractNodeObfuscator {
      */
     public obfuscateNode (memberExpressionNode: ESTree.MemberExpression): void {
         estraverse.replace(memberExpressionNode.property, {
-            leave: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Nodes.isLiteralNode(node)) {
                     this.obfuscateLiteralProperty(node);
 

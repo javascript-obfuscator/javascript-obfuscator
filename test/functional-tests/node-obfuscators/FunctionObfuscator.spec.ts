@@ -7,14 +7,36 @@ import { JavaScriptObfuscator } from "../../../src/JavaScriptObfuscator";
 const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('FunctionObfuscator', () => {
-    describe('obfuscation of identifiers of FunctionDeclaration and FunctionExpression node body', () => {
-        it('should replace identifier name with obfuscated one', () => {
-            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                `var test = 'test';`,
+    describe('identifiers obfuscation inside `FunctionDeclaration` and `FunctionExpression` node body', () => {
+        it('should correct obfuscate both function parameter identifier and function body identifier with same name', () => {
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                `
+                    (function () {
+                        var test = function (test) {
+                            console.log(test);
+                            
+                            if (true) {
+                                var test = 5
+                            }
+                            
+                            return test;
+                        }
+                    })();
+                `,
                 Object.assign({}, NO_CUSTOM_NODES_PRESET)
             );
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /^var *test *= *'\\x74\\x65\\x73\\x74';$/);
+            const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+
+            const functionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(/var _0x[a-z0-9]{5,6} *= *function *\((_0x[a-z0-9]{5,6})\) *\{/);
+            const functionBodyIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(/console\['\\x6c\\x6f\\x67'\]\((_0x[a-z0-9]{5,6})\)/);
+
+            const functionParamIdentifierName: string = (<RegExpMatchArray>functionParamIdentifierMatch)[1];
+            const functionBodyIdentifierName: string = (<RegExpMatchArray>functionBodyIdentifierMatch)[1];
+
+            assert.equal(functionParamIdentifierName, functionBodyIdentifierName);
         });
     });
 });

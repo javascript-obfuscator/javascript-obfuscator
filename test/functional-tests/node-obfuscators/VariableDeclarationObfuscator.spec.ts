@@ -114,7 +114,7 @@ describe('VariableDeclarationObfuscator', () => {
             );
         });
 
-        it('blablabla', () => {
+        it('should correct obfuscate variables inside function body', () => {
             const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
             const functionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
                 .match(/function *_0x[a-z0-9]{5,6} *\((_0x[a-z0-9]{5,6})\,(_0x[a-z0-9]{5,6})\) *\{/);
@@ -136,8 +136,8 @@ describe('VariableDeclarationObfuscator', () => {
             assert.notEqual(functionParamIdentifierName, constructorIdentifierName);
             assert.notEqual(functionParamIdentifierName, innerFunctionParamIdentifierName);
 
-            assert.notEqual(functionParamIdentifierName, objectIdentifierName);
-            assert.notEqual(functionParamIdentifierName, variableDeclarationIdentifierName);
+            assert.equal(functionParamIdentifierName, objectIdentifierName);
+            assert.equal(functionParamIdentifierName, variableDeclarationIdentifierName);
 
             assert.equal(innerFunctionParamIdentifierName, constructorIdentifierName);
             assert.equal(variableDeclarationIdentifierName, objectIdentifierName);

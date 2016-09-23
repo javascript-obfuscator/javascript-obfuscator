@@ -48,7 +48,7 @@ export class CatchClauseObfuscator extends AbstractNodeObfuscator {
      */
     private storeCatchClauseParam (catchClauseNode: ESTree.CatchClause): void {
         NodeUtils.typedReplace(catchClauseNode.param, NodeType.Identifier, {
-            leave: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
+            enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
         });
     }
 
@@ -57,7 +57,7 @@ export class CatchClauseObfuscator extends AbstractNodeObfuscator {
      */
     private replaceCatchClauseParam (catchClauseNode: ESTree.CatchClause): void {
         estraverse.replace(catchClauseNode, {
-            leave: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Nodes.isReplaceableIdentifierNode(node, parentNode)) {
                     node.name = this.identifierReplacer.replace(node.name);
                 }

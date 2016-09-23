@@ -32,7 +32,7 @@ export class MethodDefinitionObfuscator extends AbstractNodeObfuscator {
      */
     private replaceMethodName (methodDefinitionNode: ESTree.MethodDefinition): void {
         estraverse.replace(methodDefinitionNode.key, {
-            leave: (node: ESTree.Node): any => {
+            enter: (node: ESTree.Node): any => {
                 if (
                     Nodes.isIdentifierNode(node) &&
                     !Utils.arrayContains(this.ignoredNames, node.name) &&

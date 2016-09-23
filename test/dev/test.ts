@@ -56,6 +56,11 @@ let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         console.log(105.4);
         console.log(true, false);
         
+        var sA = 'shorthand1';
+        var sB = 'shorthand2';
+        
+        console.log({sA, sB});
+        
         try {
         } catch (error) {
             console.log(error);

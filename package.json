@@ -29,7 +29,6 @@
     "estraverse": "^4.2.0",
     "format-unicorn": "^1.1.0",
     "mkdirp": "^0.5.1",
-    "optimize-js": "^1.0.1",
     "source-map-support": "^0.4.2"
   },
   "devDependencies": {

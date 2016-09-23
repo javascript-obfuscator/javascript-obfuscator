@@ -7,14 +7,10 @@ import { IGeneratorOutput } from "./interfaces/IGeneratorOutput";
 import { IObfuscationResult } from "./interfaces/IObfuscationResult";
 import { IOptions } from './interfaces/IOptions';
 
-import { SourceMapMode } from "./enums/SourceMapMode";
-
 import { ObfuscationResult } from "./ObfuscationResult";
 import { Obfuscator } from "./Obfuscator";
 import { Options } from "./options/Options";
 import { SourceMapCorrector } from "./SourceMapCorrector";
-
-const optimizeJs = require('optimize-js');
 
 export class JavaScriptObfuscatorInternal {
     /**
@@ -70,12 +66,6 @@ export class JavaScriptObfuscatorInternal {
         };
 
         const generatorOutput: IGeneratorOutput = escodegen.generate(astTree, escodegenParams);
-
-        if (options.optimize) {
-            generatorOutput.code = optimizeJs(generatorOutput.code, {
-                sourceMap: options.sourceMap && options.sourceMapMode === SourceMapMode.Inline
-            });
-        }
 
         generatorOutput.map = generatorOutput.map ? generatorOutput.map.toString() : '';
 

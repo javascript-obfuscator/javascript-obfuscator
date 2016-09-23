@@ -73,12 +73,6 @@ export class Options implements IOptions {
     public readonly encodeUnicodeLiterals: boolean;
 
     /**
-     * @type {boolean}
-     */
-    @IsBoolean()
-    public readonly optimize: boolean;
-
-    /**
      * @type {string[]}
      */
     @ArrayUnique()

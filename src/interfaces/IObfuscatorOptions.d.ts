@@ -6,7 +6,6 @@ export interface IObfuscatorOptions {
     debugProtectionInterval?: boolean;
     disableConsoleOutput?: boolean;
     encodeUnicodeLiterals?: boolean;
-    optimize?: boolean;
     reservedNames?: string[];
     rotateUnicodeArray?: boolean;
     selfDefending?: boolean;

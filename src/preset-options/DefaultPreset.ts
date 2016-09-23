@@ -9,7 +9,6 @@ export const DEFAULT_PRESET: IObfuscatorOptions = Object.freeze({
     disableConsoleOutput: true,
     domainLock: [],
     encodeUnicodeLiterals: false,
-    optimize: false,
     reservedNames: [],
     rotateUnicodeArray: true,
     selfDefending: true,

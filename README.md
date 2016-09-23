@@ -188,11 +188,6 @@ This option can slightly slow down your code speed.
 All literals in Unicode array become encoded in Base64.
 To decode strings, a special function will be inserted on the page under `unicodeArray` node.
 
-### `optimize`
-Type: `boolean` Default: `false`
-
-Enables optimizations for obfuscated code with help of [optimize-js](https://github.com/nolanlawson/optimize-js)
-
 ### `reservedNames`
 Type: `string[]` Default: `[]`
 

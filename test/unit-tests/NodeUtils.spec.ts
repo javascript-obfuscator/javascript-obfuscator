@@ -14,8 +14,6 @@ import { IVariableDeclaratorNode } from "../../src/interfaces/nodes/IVariableDec
 import { NodeMocks } from '../mocks/NodeMocks';
 import { NodeUtils } from '../../src/NodeUtils';
 
-chai.use(require('chai-members-deep'));
-
 const assert: any = chai.assert;
 
 describe('NodeUtils', () => {

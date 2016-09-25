@@ -1,6 +1,7 @@
 import {
     ArrayUnique,
     IsBoolean,
+    IsArray,
     IsIn,
     IsNumber,
     IsString,
@@ -60,6 +61,7 @@ export class Options implements IOptions {
     /**
      * @type {string[]}
      */
+    @IsArray()
     @ArrayUnique()
     @IsString({
         each: true
@@ -75,6 +77,7 @@ export class Options implements IOptions {
     /**
      * @type {string[]}
      */
+    @IsArray()
     @ArrayUnique()
     @IsString({
         each: true

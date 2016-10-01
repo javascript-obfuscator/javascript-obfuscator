@@ -135,7 +135,7 @@ var Utils = function () {
     }, {
         key: 'btoa',
         value: function btoa(string) {
-            var encode = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+            var encode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
             return new Buffer(encode ? encodeURI(string) : string).toString('base64');
         }
@@ -165,7 +165,7 @@ var Utils = function () {
     }, {
         key: 'getRandomVariableName',
         value: function getRandomVariableName() {
-            var length = arguments.length <= 0 || arguments[0] === undefined ? 6 : arguments[0];
+            var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 6;
 
             var rangeMinInteger = 10000,
                 rangeMaxInteger = 99999999,
@@ -299,7 +299,7 @@ var NodeUtils = function () {
     }, {
         key: 'getBlockStatementNodeByIndex',
         value: function getBlockStatementNodeByIndex(node) {
-            var index = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+            var index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
             if (Nodes_1.Nodes.isNodeHasBlockStatement(node)) {
                 if (node.body[index] === undefined) {
@@ -312,7 +312,7 @@ var NodeUtils = function () {
     }, {
         key: 'getBlockScopeOfNode',
         value: function getBlockScopeOfNode(node) {
-            var depth = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+            var depth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
             var parentNode = node.parentNode;
             if (!parentNode) {
@@ -381,7 +381,7 @@ var NodeUtils = function () {
     }, {
         key: 'typedTraverse',
         value: function typedTraverse(node, nodeType, visitor) {
-            var traverseType = arguments.length <= 3 || arguments[3] === undefined ? 'traverse' : arguments[3];
+            var traverseType = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'traverse';
 
             estraverse[traverseType](node, {
                 enter: function enter(node, parentNode) {
@@ -657,7 +657,7 @@ var JavaScriptObfuscator = function () {
     _createClass(JavaScriptObfuscator, null, [{
         key: "obfuscate",
         value: function obfuscate(sourceCode) {
-            var obfuscatorOptions = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+            var obfuscatorOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
             var javaScriptObfuscator = new JavaScriptObfuscatorInternal_1.JavaScriptObfuscatorInternal(sourceCode, obfuscatorOptions);
             javaScriptObfuscator.obfuscate();
@@ -1118,7 +1118,7 @@ var SourceMapCorrector_1 = __webpack_require__(26);
 
 var JavaScriptObfuscatorInternal = function () {
     function JavaScriptObfuscatorInternal(sourceCode) {
-        var obfuscatorOptions = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+        var obfuscatorOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
         _classCallCheck(this, JavaScriptObfuscatorInternal);
 
@@ -1417,7 +1417,7 @@ var CLIUtils = function () {
     }, {
         key: 'getOutputSourceMapPath',
         value: function getOutputSourceMapPath(outputCodePath) {
-            var sourceMapFileName = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
+            var sourceMapFileName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
 
             if (sourceMapFileName) {
                 outputCodePath = outputCodePath.substr(0, outputCodePath.lastIndexOf('/')) + '/' + sourceMapFileName;
@@ -2133,7 +2133,7 @@ var UnicodeArrayNode = function (_AbstractCustomNode_) {
     _inherits(UnicodeArrayNode, _AbstractCustomNode_);
 
     function UnicodeArrayNode(unicodeArray, unicodeArrayName) {
-        var unicodeArrayRotateValue = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
+        var unicodeArrayRotateValue = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
         var options = arguments[3];
 
         _classCallCheck(this, UnicodeArrayNode);
@@ -3177,11 +3177,11 @@ __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], 
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "debugProtection", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "debugProtectionInterval", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "disableConsoleOutput", void 0);
-__decorate([class_validator_1.ArrayUnique(), class_validator_1.IsString({
+__decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
 }), __metadata('design:type', Array)], Options.prototype, "domainLock", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "encodeUnicodeLiterals", void 0);
-__decorate([class_validator_1.ArrayUnique(), class_validator_1.IsString({
+__decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
 }), __metadata('design:type', Array)], Options.prototype, "reservedNames", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "rotateUnicodeArray", void 0);

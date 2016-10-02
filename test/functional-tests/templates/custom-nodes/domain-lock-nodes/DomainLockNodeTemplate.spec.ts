@@ -1,8 +1,8 @@
 import 'format-unicorn';
 
-import { DomainLockNodeTemplate } from "../../../../../src/templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate";
+import { DomainLockNodeTemplate } from '../../../../../src/templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
 
-import { Utils } from "../../../../../src/Utils";
+import { Utils } from '../../../../../src/Utils';
 
 
 const assert: Chai.AssertStatic = require('chai').assert;

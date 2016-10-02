@@ -1,12 +1,12 @@
-import { IOptions } from 'app/interfaces/IOptions';
+import { IOptions } from '../interfaces/IOptions';
 
 import { AbstractNodesGroup } from './AbstractNodesGroup';
-import { UnicodeArray } from 'app/UnicodeArray';
-import { UnicodeArrayCallsWrapper } from 'app/custom-nodes/unicode-array-nodes/UnicodeArrayCallsWrapper';
-import { UnicodeArrayDecodeNode } from 'app/custom-nodes/unicode-array-nodes/UnicodeArrayDecodeNode';
-import { UnicodeArrayNode } from 'app/custom-nodes/unicode-array-nodes/UnicodeArrayNode';
-import { UnicodeArrayRotateFunctionNode } from 'app/custom-nodes/unicode-array-nodes/UnicodeArrayRotateFunctionNode';
-import { Utils } from 'app/Utils';
+import { UnicodeArray } from '../UnicodeArray';
+import { UnicodeArrayCallsWrapper } from '../custom-nodes/unicode-array-nodes/UnicodeArrayCallsWrapper';
+import { UnicodeArrayDecodeNode } from '../custom-nodes/unicode-array-nodes/UnicodeArrayDecodeNode';
+import { UnicodeArrayNode } from '../custom-nodes/unicode-array-nodes/UnicodeArrayNode';
+import { UnicodeArrayRotateFunctionNode } from '../custom-nodes/unicode-array-nodes/UnicodeArrayRotateFunctionNode';
+import { Utils } from '../Utils';
 
 export class UnicodeArrayNodesGroup extends AbstractNodesGroup {
     /**

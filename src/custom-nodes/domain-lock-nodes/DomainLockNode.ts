@@ -2,15 +2,15 @@ import * as ESTree from 'estree';
 
 import 'format-unicorn';
 
-import { TNodeWithBlockStatement } from 'app/types/TNodeWithBlockStatement';
+import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 
-import { AppendState } from 'app/enums/AppendState';
+import { AppendState } from '../../enums/AppendState';
 
-import { DomainLockNodeTemplate } from 'app/templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
+import { DomainLockNodeTemplate } from '../../templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
 
-import { AbstractCustomNode } from 'app/custom-nodes/AbstractCustomNode';
-import { NodeUtils } from 'app/NodeUtils';
-import { Utils } from 'app/Utils';
+import { AbstractCustomNode } from '../AbstractCustomNode';
+import { NodeUtils } from '../../NodeUtils';
+import { Utils } from '../../Utils';
 
 export class DomainLockNode extends AbstractCustomNode {
     /**

@@ -1,5 +1,5 @@
 import { AbstractReplacer } from './AbstractReplacer';
-import { Utils } from 'app/Utils';
+import { Utils } from '../../Utils';
 
 export class NumberLiteralReplacer extends AbstractReplacer {
     /**

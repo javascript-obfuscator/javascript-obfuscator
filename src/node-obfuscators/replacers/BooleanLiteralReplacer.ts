@@ -1,4 +1,4 @@
-import { JSFuck } from 'app/enums/JSFuck';
+import { JSFuck } from '../../enums/JSFuck';
 
 import { AbstractReplacer } from './AbstractReplacer';
 

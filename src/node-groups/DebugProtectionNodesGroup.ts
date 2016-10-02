@@ -1,11 +1,11 @@
-import { IOptions } from 'app/interfaces/IOptions';
+import { IOptions } from '../interfaces/IOptions';
 
-import { DebugProtectionFunctionCallNode } from 'app/custom-nodes/debug-protection-nodes/DebugProtectionFunctionCallNode';
-import { DebugProtectionFunctionIntervalNode } from 'app/custom-nodes/debug-protection-nodes/DebugProtectionFunctionIntervalNode';
-import { DebugProtectionFunctionNode } from 'app/custom-nodes/debug-protection-nodes/DebugProtectionFunctionNode';
+import { DebugProtectionFunctionCallNode } from '../custom-nodes/debug-protection-nodes/DebugProtectionFunctionCallNode';
+import { DebugProtectionFunctionIntervalNode } from '../custom-nodes/debug-protection-nodes/DebugProtectionFunctionIntervalNode';
+import { DebugProtectionFunctionNode } from '../custom-nodes/debug-protection-nodes/DebugProtectionFunctionNode';
 
 import { AbstractNodesGroup } from './AbstractNodesGroup';
-import { Utils } from 'app/Utils';
+import { Utils } from '../Utils';
 
 export class DebugProtectionNodesGroup extends AbstractNodesGroup {
     /**

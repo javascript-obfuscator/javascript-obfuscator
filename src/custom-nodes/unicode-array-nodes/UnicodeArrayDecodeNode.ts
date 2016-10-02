@@ -2,22 +2,22 @@ import * as ESTree from 'estree';
 
 import 'format-unicorn';
 
-import { IOptions } from 'app/interfaces/IOptions';
+import { IOptions } from '../../interfaces/IOptions';
 
-import { TNodeWithBlockStatement } from 'app/types/TNodeWithBlockStatement';
+import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 
-import { AppendState } from 'app/enums/AppendState';
+import { AppendState } from '../../enums/AppendState';
 
-import { NO_CUSTOM_NODES_PRESET } from 'app/preset-options/NoCustomNodesPreset';
+import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
 
-import { AtobTemplate } from 'app/templates/custom-nodes/AtobTemplate';
-import { SelfDefendingTemplate } from 'app/templates/custom-nodes/unicode-array-nodes/unicode-array-decode-node/SelfDefendingTemplate';
-import { UnicodeArrayDecodeNodeTemplate } from 'app/templates/custom-nodes/unicode-array-nodes/unicode-array-decode-node/UnicodeArrayDecodeNodeTemplate';
+import { AtobTemplate } from '../../templates/custom-nodes/AtobTemplate';
+import { SelfDefendingTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-decode-node/SelfDefendingTemplate';
+import { UnicodeArrayDecodeNodeTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-decode-node/UnicodeArrayDecodeNodeTemplate';
 
-import { AbstractCustomNode } from 'app/custom-nodes/AbstractCustomNode';
-import { JavaScriptObfuscator } from 'app/JavaScriptObfuscator';
-import { NodeUtils } from 'app/NodeUtils';
-import { UnicodeArray } from 'app/UnicodeArray';
+import { AbstractCustomNode } from '../AbstractCustomNode';
+import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
+import { NodeUtils } from '../../NodeUtils';
+import { UnicodeArray } from '../../UnicodeArray';
 
 export class UnicodeArrayDecodeNode extends AbstractCustomNode {
     /**

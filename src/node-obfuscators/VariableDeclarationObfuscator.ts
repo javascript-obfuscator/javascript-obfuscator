@@ -1,15 +1,15 @@
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { ICustomNode } from 'app/interfaces/custom-nodes/ICustomNode';
-import { IOptions } from 'app/interfaces/IOptions';
+import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../interfaces/IOptions';
 
-import { NodeType } from 'app/enums/NodeType';
+import { NodeType } from '../enums/NodeType';
 
 import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
 import { IdentifierReplacer } from './replacers/IdentifierReplacer';
-import { Nodes } from 'app/Nodes';
-import { NodeUtils } from 'app/NodeUtils';
+import { Nodes } from '../Nodes';
+import { NodeUtils } from '../NodeUtils';
 
 /**
  * replaces:

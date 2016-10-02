@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
     "target": "ES6",
     "module": "commonjs",
     "sourceMap": true,
@@ -9,11 +8,6 @@
     "removeComments": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "noUnusedLocals": true,
-    "paths": {
-      "app/*": [
-        "src/*"
-      ]
-    }
+    "noUnusedLocals": true
   }
 }

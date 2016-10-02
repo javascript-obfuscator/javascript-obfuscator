@@ -1,9 +1,9 @@
-import { IObfuscatorOptions } from "../../src/interfaces/IObfuscatorOptions";
-import { IOptions } from "../../src/interfaces/IOptions";
+import { IObfuscatorOptions } from '../../src/interfaces/IObfuscatorOptions';
+import { IOptions } from '../../src/interfaces/IOptions';
 
 import { DEFAULT_PRESET } from '../../src/preset-options/DefaultPreset';
 
-import { Options } from "../../src/options/Options";
+import { Options } from '../../src/options/Options';
 import { OptionsNormalizer } from '../../src/options/OptionsNormalizer';
 
 const assert: Chai.AssertStatic = require('chai').assert;

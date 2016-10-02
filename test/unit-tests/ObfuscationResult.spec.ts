@@ -1,6 +1,6 @@
-import { IObfuscationResult } from "../../src/interfaces/IObfuscationResult";
+import { IObfuscationResult } from '../../src/interfaces/IObfuscationResult';
 
-import { ObfuscationResult } from "../../src/ObfuscationResult";
+import { ObfuscationResult } from '../../src/ObfuscationResult';
 
 const assert: Chai.AssertStatic = require('chai').assert;
 

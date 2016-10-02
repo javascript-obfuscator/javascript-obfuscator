@@ -1,14 +1,14 @@
 import * as ESTree from 'estree';
 
-import { ICustomNode } from "../../../src/interfaces/custom-nodes/ICustomNode";
+import { ICustomNode } from '../../../src/interfaces/custom-nodes/ICustomNode';
 
-import { DEFAULT_PRESET } from "../../../src/preset-options/DefaultPreset";
+import { DEFAULT_PRESET } from '../../../src/preset-options/DefaultPreset';
 
-import { NodeType } from "../../../src/enums/NodeType";
+import { NodeType } from '../../../src/enums/NodeType';
 
 import { CatchClauseObfuscator } from '../../../src/node-obfuscators/CatchClauseObfuscator';
-import { NodeMocks } from "../../mocks/NodeMocks";
-import { Options } from "../../../src/options/Options";
+import { NodeMocks } from '../../mocks/NodeMocks';
+import { Options } from '../../../src/options/Options';
 
 const assert: Chai.AssertStatic = require('chai').assert;
 

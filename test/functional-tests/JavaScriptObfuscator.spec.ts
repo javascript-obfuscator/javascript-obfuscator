@@ -1,8 +1,8 @@
-import { IObfuscationResult } from "../../src/interfaces/IObfuscationResult";
+import { IObfuscationResult } from '../../src/interfaces/IObfuscationResult';
 
-import { JavaScriptObfuscator } from "../../src/JavaScriptObfuscator";
+import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscator';
 
-import { NO_CUSTOM_NODES_PRESET } from "../../src/preset-options/NoCustomNodesPreset";
+import { NO_CUSTOM_NODES_PRESET } from '../../src/preset-options/NoCustomNodesPreset';
 
 const assert: Chai.AssertStatic = require('chai').assert;
 

@@ -1,4 +1,4 @@
-import { TSourceMapMode } from 'app/types/TSourceMapMode';
+import { TSourceMapMode } from '../types/TSourceMapMode';
 
 export interface IObfuscatorOptions {
     compact?: boolean;

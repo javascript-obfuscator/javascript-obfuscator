@@ -1,6 +1,6 @@
-import { ICustomNode } from 'app/interfaces/custom-nodes/ICustomNode';
-import { IOptions } from 'app/interfaces/IOptions';
-import { IReplacer } from 'app/interfaces/IReplacer';
+import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../../interfaces/IOptions';
+import { IReplacer } from '../../interfaces/IReplacer';
 
 export abstract class AbstractReplacer implements IReplacer {
     /**

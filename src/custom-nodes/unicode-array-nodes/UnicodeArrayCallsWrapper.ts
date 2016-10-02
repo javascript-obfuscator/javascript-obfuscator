@@ -2,18 +2,18 @@ import * as ESTree from 'estree';
 
 import 'format-unicorn';
 
-import { IOptions } from 'app/interfaces/IOptions';
+import { IOptions } from '../../interfaces/IOptions';
 
-import { TNodeWithBlockStatement } from 'app/types/TNodeWithBlockStatement';
+import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 
-import { AppendState } from 'app/enums/AppendState';
+import { AppendState } from '../../enums/AppendState';
 
-import { UnicodeArrayCallsWrapperTemplate } from 'app/templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayCallsWrapperTemplate';
+import { UnicodeArrayCallsWrapperTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayCallsWrapperTemplate';
 
-import { AbstractCustomNode } from 'app/custom-nodes/AbstractCustomNode';
-import { NodeUtils } from 'app/NodeUtils';
-import { UnicodeArray } from 'app/UnicodeArray';
-import { Utils } from 'app/Utils';
+import { AbstractCustomNode } from '../AbstractCustomNode';
+import { NodeUtils } from '../../NodeUtils';
+import { UnicodeArray } from '../../UnicodeArray';
+import { Utils } from '../../Utils';
 
 export class UnicodeArrayCallsWrapper extends AbstractCustomNode {
     /**

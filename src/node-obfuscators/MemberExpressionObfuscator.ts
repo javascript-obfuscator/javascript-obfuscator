@@ -2,10 +2,10 @@ import * as escodegen from 'escodegen';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { NodeType } from 'app/enums/NodeType';
+import { NodeType } from '../enums/NodeType';
 
 import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
-import { Nodes } from 'app/Nodes';
+import { Nodes } from '../Nodes';
 import { StringLiteralReplacer } from './replacers/StringLiteralReplacer';
 
 export class MemberExpressionObfuscator extends AbstractNodeObfuscator {

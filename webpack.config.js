@@ -1,10 +1,8 @@
 'use strict';
 
-var fs = require('fs'),
-    path = require('path'),
+var fs = require("fs"),
     nodeExternals = require('webpack-node-externals'),
-    webpack = require('webpack'),
-    TsConfigPathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin;
+    webpack = require('webpack');
 
 function getLicenseText () {
     return "/*\nCopyright (C) 2016 Timofey Kachalov <sanex3339@yandex.ru>\n\n" +
@@ -30,11 +28,7 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['.ts'],
-        modules: ['node_modules', 'src'],
-        plugins: [
-            new TsConfigPathsPlugin()
-        ]
+        extensions: ['.ts']
     },
     plugins: [
         new webpack.BannerPlugin(

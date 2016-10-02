@@ -1,12 +1,12 @@
 import * as ESTree from 'estree';
 
-import { ICustomNode } from "../../../src/interfaces/custom-nodes/ICustomNode";
+import { ICustomNode } from '../../../src/interfaces/custom-nodes/ICustomNode';
 
-import { DEFAULT_PRESET } from "../../../src/preset-options/DefaultPreset";
+import { DEFAULT_PRESET } from '../../../src/preset-options/DefaultPreset';
 
-import { FunctionObfuscator } from "../../../src/node-obfuscators/FunctionObfuscator";
-import { NodeMocks } from "../../mocks/NodeMocks";
-import { Options } from "../../../src/options/Options";
+import { FunctionObfuscator } from '../../../src/node-obfuscators/FunctionObfuscator';
+import { NodeMocks } from '../../mocks/NodeMocks';
+import { Options } from '../../../src/options/Options';
 
 
 const assert: Chai.AssertStatic = require('chai').assert;

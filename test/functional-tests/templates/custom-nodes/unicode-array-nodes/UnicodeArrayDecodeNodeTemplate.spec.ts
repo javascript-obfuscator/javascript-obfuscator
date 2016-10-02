@@ -1,9 +1,9 @@
 import 'format-unicorn';
 
-import { AtobTemplate } from "../../../../../src/templates/custom-nodes/AtobTemplate";
-import { UnicodeArrayDecodeNodeTemplate } from "../../../../../src/templates/custom-nodes/unicode-array-nodes/unicode-array-decode-node/UnicodeArrayDecodeNodeTemplate";
+import { AtobTemplate } from '../../../../../src/templates/custom-nodes/AtobTemplate';
+import { UnicodeArrayDecodeNodeTemplate } from '../../../../../src/templates/custom-nodes/unicode-array-nodes/unicode-array-decode-node/UnicodeArrayDecodeNodeTemplate';
 
-import { Utils } from "../../../../../src/Utils";
+import { Utils } from '../../../../../src/Utils';
 
 const assert: Chai.AssertStatic = require('chai').assert;
 

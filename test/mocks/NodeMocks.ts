@@ -1,7 +1,7 @@
 import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
-import { NodeType } from "../../src/enums/NodeType";
+import { NodeType } from '../../src/enums/NodeType';
 
 export class NodeMocks {
     /**

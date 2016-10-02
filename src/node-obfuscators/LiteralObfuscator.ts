@@ -3,7 +3,7 @@ import * as ESTree from 'estree';
 
 import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
 import { BooleanLiteralReplacer } from './replacers/BooleanLiteralReplacer';
-import { Nodes } from 'app/Nodes';
+import { Nodes } from '../Nodes';
 import { NumberLiteralReplacer } from './replacers/NumberLiteralReplacer';
 import { StringLiteralReplacer } from './replacers/StringLiteralReplacer';
 

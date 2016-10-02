@@ -3153,7 +3153,7 @@ var __metadata = undefined && undefined.__metadata || function (k, v) {
     if ((typeof Reflect === "undefined" ? "undefined" : _typeof(Reflect)) === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var class_validator_1 = __webpack_require__(71);
-var TSourceMapMode_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"app/types/TSourceMapMode\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+var TSourceMapMode_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../types/TSourceMapMode\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 var DefaultPreset_1 = __webpack_require__(20);
 var OptionsNormalizer_1 = __webpack_require__(55);
 var ValidationErrorsFormatter_1 = __webpack_require__(56);

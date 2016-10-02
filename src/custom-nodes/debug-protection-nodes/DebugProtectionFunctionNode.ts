@@ -2,17 +2,17 @@ import * as ESTree from 'estree';
 
 import 'format-unicorn';
 
-import { IOptions } from 'app/interfaces/IOptions';
+import { IOptions } from '../../interfaces/IOptions';
 
-import { TNodeWithBlockStatement } from 'app/types/TNodeWithBlockStatement';
+import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 
-import { AppendState } from 'app/enums/AppendState';
+import { AppendState } from '../../enums/AppendState';
 
-import { DebugProtectionFunctionTemplate } from 'app/templates/custom-nodes/debug-protection-nodes/debug-protection-function-node/DebugProtectionFunctionTemplate';
+import { DebugProtectionFunctionTemplate } from '../../templates/custom-nodes/debug-protection-nodes/debug-protection-function-node/DebugProtectionFunctionTemplate';
 
-import { AbstractCustomNode } from 'app/custom-nodes/AbstractCustomNode';
-import { NodeUtils } from 'app/NodeUtils';
-import { Utils } from 'app/Utils';
+import { AbstractCustomNode } from '../AbstractCustomNode';
+import { NodeUtils } from '../../NodeUtils';
+import { Utils } from '../../Utils';
 
 export class DebugProtectionFunctionNode extends AbstractCustomNode {
     /**

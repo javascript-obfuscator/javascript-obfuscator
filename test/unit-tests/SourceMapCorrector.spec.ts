@@ -1,12 +1,12 @@
-import { IObfuscationResult } from "../../src/interfaces/IObfuscationResult";
-import { ISourceMapCorrector } from "../../src/interfaces/ISourceMapCorrector";
+import { IObfuscationResult } from '../../src/interfaces/IObfuscationResult';
+import { ISourceMapCorrector } from '../../src/interfaces/ISourceMapCorrector';
 
-import { TSourceMapMode } from "../../src/types/TSourceMapMode";
+import { TSourceMapMode } from '../../src/types/TSourceMapMode';
 
-import { SourceMapMode } from "../../src/enums/SourceMapMode";
+import { SourceMapMode } from '../../src/enums/SourceMapMode';
 
-import { ObfuscationResult } from "../../src/ObfuscationResult";
-import { SourceMapCorrector } from "../../src/SourceMapCorrector";
+import { ObfuscationResult } from '../../src/ObfuscationResult';
+import { SourceMapCorrector } from '../../src/SourceMapCorrector';
 
 const assert: Chai.AssertStatic = require('chai').assert;
 

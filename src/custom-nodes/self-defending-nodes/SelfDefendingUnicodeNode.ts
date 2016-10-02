@@ -11,7 +11,7 @@ import { SelfDefendingTemplate } from '../../templates/custom-nodes/self-defendi
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeUtils } from '../../NodeUtils';
-import { Utils } from '../../Utils';
+import { HiddenNodeAppender } from '../../hidden-node-appender/HiddenNodeAppender';
 
 export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     /**
@@ -23,17 +23,11 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        let programBodyLength: number = blockScopeNode.body.length,
-            randomIndex: number = 0;
-
-        if (programBodyLength > 2) {
-            randomIndex = Utils.getRandomGenerator().integer({
-                min: programBodyLength / 2,
-                max: programBodyLength - 1
-            });
-        }
-
-        NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), randomIndex);
+        HiddenNodeAppender.appendNode(
+            blockScopeNode.body,
+            this.getNode(),
+            HiddenNodeAppender.getIndexByThreshold(blockScopeNode.body.length)
+        );
     }
 
     /**

@@ -5,7 +5,7 @@ import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
 const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('UnicodeArrayCallsWrapper', () => {
-    it('should correctly append `UnicodeArrayCallsWrapper` custom node into the obfuscated code if `wrapUnicodeArrayCalls` option is set', () => {
+    it('should correctly appendNode `UnicodeArrayCallsWrapper` custom node into the obfuscated code if `wrapUnicodeArrayCalls` option is set', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `var test = 'test';`,
             {
@@ -16,7 +16,7 @@ describe('UnicodeArrayCallsWrapper', () => {
         assert.match(obfuscationResult.getObfuscatedCode(), /return _0x([a-z0-9]){4}\[parseInt\(_0x([a-z0-9]){4,6}, *0x010\)\];/);
     });
 
-    it('should\'t append `UnicodeArrayDecodeNode` custom node into the obfuscated code if `wrapUnicodeArrayCalls` option is not set', () => {
+    it('should\'t appendNode `UnicodeArrayDecodeNode` custom node into the obfuscated code if `wrapUnicodeArrayCalls` option is not set', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `var test = 'test';`,
             {

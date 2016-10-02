@@ -42,7 +42,7 @@ describe('NodeUtils', () => {
             NodeUtils.appendNode(blockStatementNode.body, expressionStatementNode);
         });
 
-        it('should append given node to a `BlockStatement` node body', () => {
+        it('should appendNode given node to a `BlockStatement` node body', () => {
             assert.deepEqual(blockStatementNode, expectedBlockStatementNode);
         });
 

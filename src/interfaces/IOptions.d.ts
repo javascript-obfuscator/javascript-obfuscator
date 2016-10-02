@@ -5,6 +5,7 @@ export interface IOptions {
     readonly debugProtection: boolean;
     readonly debugProtectionInterval: boolean;
     readonly disableConsoleOutput: boolean;
+    readonly domainLock: string[];
     readonly encodeUnicodeLiterals: boolean;
     readonly reservedNames: string[];
     readonly rotateUnicodeArray: boolean;
@@ -16,5 +17,4 @@ export interface IOptions {
     readonly unicodeArray: boolean;
     readonly unicodeArrayThreshold: number;
     readonly wrapUnicodeArrayCalls: boolean;
-    readonly domainLock: string[];
 }

@@ -5,7 +5,7 @@ import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
 const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('DomainLockNode', () => {
-    it('should correctly append `DomainLockNode` custom node into the obfuscated code if `domainLock` option is set', () => {
+    it('should correctly appendNode `DomainLockNode` custom node into the obfuscated code if `domainLock` option is set', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `var test = 'test';`,
             {
@@ -16,7 +16,7 @@ describe('DomainLockNode', () => {
         assert.match(obfuscationResult.getObfuscatedCode(), /var _0x([a-z0-9]){4,6} *= *new RegExp/);
     });
 
-    it('should\'t append `DomainLockNode` custom node into the obfuscated code if `domainLock` option is not set', () => {
+    it('should\'t appendNode `DomainLockNode` custom node into the obfuscated code if `domainLock` option is not set', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `var test = 'test';`,
             {

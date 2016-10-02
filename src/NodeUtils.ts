@@ -50,13 +50,18 @@ export class NodeUtils {
 
     /**
      * @param code
+     * @param getFirstBlockStatementNodeByIndex
      * @returns {ESTree.Node}
      */
-    public static convertCodeToStructure (code: string): ESTree.Node {
+    public static convertCodeToStructure (code: string, getFirstBlockStatementNodeByIndex: boolean = true): ESTree.Node {
         let structure: ESTree.Node = esprima.parse(code);
 
         NodeUtils.addXVerbatimPropertyToLiterals(structure);
         NodeUtils.parentize(structure);
+
+        if (!getFirstBlockStatementNodeByIndex) {
+            return structure;
+        }
 
         return NodeUtils.getBlockStatementNodeByIndex(structure);
     }

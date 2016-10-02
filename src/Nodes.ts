@@ -46,6 +46,14 @@ export class Nodes {
      * @param node
      * @returns {boolean}
      */
+    public static isExpressionStatementNode (node: ESTree.Node): node is ESTree.ExpressionStatement {
+        return node.type === NodeType.ExpressionStatement;
+    }
+
+    /**
+     * @param node
+     * @returns {boolean}
+     */
     public static isFunctionDeclarationNode (node: ESTree.Node): node is ESTree.FunctionDeclaration {
         return node.type === NodeType.FunctionDeclaration;
     }

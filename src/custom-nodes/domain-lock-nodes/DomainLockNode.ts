@@ -9,7 +9,7 @@ import { AppendState } from '../../enums/AppendState';
 import { DomainLockNodeTemplate } from '../../templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { HiddenNodeAppender } from '../../hidden-node-appender/HiddenNodeAppender';
+import { CustomNodeAppender } from '../CustomNodeAppender';
 import { NodeUtils } from '../../NodeUtils';
 import { Utils } from '../../Utils';
 
@@ -23,10 +23,10 @@ export class DomainLockNode extends AbstractCustomNode {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        HiddenNodeAppender.appendNode(
+        CustomNodeAppender.appendNode(
             blockScopeNode.body,
             this.getNode(),
-            HiddenNodeAppender.getIndexByThreshold(blockScopeNode.body.length)
+            CustomNodeAppender.getIndexByThreshold(blockScopeNode.body.length)
         );
     }
 

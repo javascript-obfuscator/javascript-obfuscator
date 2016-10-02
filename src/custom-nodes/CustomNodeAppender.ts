@@ -2,10 +2,10 @@ import * as ESTree from 'estree';
 
 import { TNodeWithBlockStatement } from '../types/TNodeWithBlockStatement';
 
-import { IBlockScopeTraceData } from '../interfaces/IBlockScopeTraceData';
+import { IStackTraceData } from '../interfaces/IStackTraceData';
 
-import { ASTTreeBlockScopeAnalyzer } from './ASTTreeBlockScopeAnalyzer';
 import { NodeUtils } from '../NodeUtils';
+import { StackTraceAnalyzer } from '../StackTraceAnalyzer';
 import { Utils } from '../Utils';
 
 /**
@@ -25,14 +25,14 @@ import { Utils } from '../Utils';
  *
  * Appends node into block statement of `baz` function expression.
  */
-export class HiddenNodeAppender {
+export class CustomNodeAppender {
     /**
      * @param blockScopeBody
      * @param node
      * @param index
      */
     public static appendNode (blockScopeBody: ESTree.Node[], node: ESTree.Node, index: number = 0): void {
-        const blockScopeTraceData: IBlockScopeTraceData[] = new ASTTreeBlockScopeAnalyzer<IBlockScopeTraceData>(blockScopeBody).analyze();
+        const blockScopeTraceData: IStackTraceData[] = new StackTraceAnalyzer(blockScopeBody).analyze();
 
         if (!blockScopeTraceData.length) {
             NodeUtils.prependNode(blockScopeBody, node);
@@ -41,7 +41,7 @@ export class HiddenNodeAppender {
         }
 
         NodeUtils.prependNode(
-            HiddenNodeAppender.getOptimalBlockScope(blockScopeTraceData, index).body,
+            CustomNodeAppender.getOptimalBlockScope(blockScopeTraceData, index).body,
             node
         );
     }
@@ -66,11 +66,11 @@ export class HiddenNodeAppender {
      * @param index
      * @returns {TNodeWithBlockStatement}
      */
-    private static getOptimalBlockScope (blockScopeTraceData: IBlockScopeTraceData[], index: number): TNodeWithBlockStatement {
-        const firstCall: IBlockScopeTraceData = blockScopeTraceData[index];
+    private static getOptimalBlockScope (blockScopeTraceData: IStackTraceData[], index: number): TNodeWithBlockStatement {
+        const firstCall: IStackTraceData = blockScopeTraceData[index];
 
-        if (firstCall.trace.length) {
-            return HiddenNodeAppender.getOptimalBlockScope(firstCall.trace, 0);
+        if (firstCall.stackTrace.length) {
+            return CustomNodeAppender.getOptimalBlockScope(firstCall.stackTrace, 0);
         } else {
             return firstCall.callee;
         }

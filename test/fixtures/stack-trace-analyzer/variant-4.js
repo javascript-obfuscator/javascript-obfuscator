@@ -1,0 +1,7 @@
+function bar () {
+
+}
+
+function baz () {
+
+}

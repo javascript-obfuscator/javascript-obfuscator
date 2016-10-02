@@ -11,7 +11,7 @@ import { SelfDefendingTemplate } from '../../templates/custom-nodes/self-defendi
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeUtils } from '../../NodeUtils';
-import { HiddenNodeAppender } from '../../hidden-node-appender/HiddenNodeAppender';
+import { CustomNodeAppender } from '../CustomNodeAppender';
 
 export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     /**
@@ -23,10 +23,10 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        HiddenNodeAppender.appendNode(
+        CustomNodeAppender.appendNode(
             blockScopeNode.body,
             this.getNode(),
-            HiddenNodeAppender.getIndexByThreshold(blockScopeNode.body.length)
+            CustomNodeAppender.getIndexByThreshold(blockScopeNode.body.length)
         );
     }
 

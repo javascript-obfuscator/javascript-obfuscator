@@ -1,3 +1,5 @@
-export interface IAnalyzer <T> {
-    analyze (): T[];
+import { IStackTraceData } from './IStackTraceData';
+
+export interface IStackTraceAnalyzer {
+    analyze (): IStackTraceData[];
 }

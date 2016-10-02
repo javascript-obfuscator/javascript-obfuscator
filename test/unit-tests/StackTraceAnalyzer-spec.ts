@@ -2,13 +2,15 @@ import * as chai from 'chai';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockStatement } from '../../../src/types/TNodeWithBlockStatement';
+import { TNodeWithBlockStatement } from '../../src/types/TNodeWithBlockStatement';
 
-import { IBlockScopeTraceData } from '../../../src/interfaces/IBlockScopeTraceData';
+import { IStackTraceData } from '../../src/interfaces/IStackTraceData';
 
-import { ASTTreeBlockScopeAnalyzer } from '../../../src/hidden-node-appender/ASTTreeBlockScopeAnalyzer';
-import { Nodes } from '../../../src/Nodes';
-import { NodeUtils } from '../../../src/NodeUtils';
+import { readFileAsString } from '../helpers/readFileAsString';
+
+import { Nodes } from '../../src/Nodes';
+import { NodeUtils } from '../../src/NodeUtils';
+import { StackTraceAnalyzer } from '../../src/StackTraceAnalyzer';
 
 const assert: any = chai.assert;
 
@@ -64,181 +66,144 @@ function getFunctionExpressionByName (astTree: ESTree.Node, name: string): ESTre
     return functionExpressionNode;
 }
 
-describe('ASTTreeBlockScopeAnalyzer', () => {
-    describe('analyze (): IBlockScopeTraceData[]', () => {
+describe('StackTraceAnalyzer', () => {
+    describe('analyze (): IStackTraceData[]', () => {
         let ASTTree: TNodeWithBlockStatement,
-            blockScopeTraceData: IBlockScopeTraceData[],
-            expectedBlockScopeTraceData: IBlockScopeTraceData[];
+            blockScopeTraceData: IStackTraceData[],
+            expectedBlockScopeTraceData: IStackTraceData[];
 
         it('should returns correct BlockScopeTraceData - variant #1', () => {
-            ASTTree = <ESTree.Program>NodeUtils.convertCodeToStructure(`
-                function foo () {
-                
-                }
-                
-                function bar () {
-                    function inner1 () {
-                    
-                    }
-                
-                    function inner2 () {
-                        var inner3 = function () {
-                            
-                        }
-                        
-                        inner3();
-                    }
-                    
-                    inner2();
-                    inner1();
-                }
-                
-                function baz () {
-                
-                }
-                
-                baz();
-                foo();
-                bar();
-            `, false);
+            ASTTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
+                readFileAsString(
+                    require.resolve('../fixtures/stack-trace-analyzer/variant-1.js')
+                ),
+                false
+            );
 
             expectedBlockScopeTraceData = [
                 {
                     name: 'baz',
                     callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(ASTTree, 'baz')).body,
-                    trace: []
+                    stackTrace: []
                 },
                 {
                     name: 'foo',
                     callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(ASTTree, 'foo')).body,
-                    trace: []
+                    stackTrace: []
                 },
                 {
                     name: 'bar',
                     callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(ASTTree, 'bar')).body,
-                    trace: [
+                    stackTrace: [
                         {
                             name: 'inner2',
                             callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(ASTTree, 'inner2')).body,
-                            trace: [
+                            stackTrace: [
                                 {
                                     name: 'inner3',
                                     callee: (<ESTree.FunctionExpression>getFunctionExpressionByName(ASTTree, 'inner3')).body,
-                                    trace: []
+                                    stackTrace: []
                                 },
                             ]
                         },
                         {
                             name: 'inner1',
                             callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(ASTTree, 'inner1')).body,
-                            trace: []
+                            stackTrace: []
                         },
                     ]
                 }
             ];
 
-            blockScopeTraceData = new ASTTreeBlockScopeAnalyzer<IBlockScopeTraceData>(ASTTree.body).analyze();
+            blockScopeTraceData = new StackTraceAnalyzer(ASTTree.body).analyze();
 
             assert.deepEqual(blockScopeTraceData, expectedBlockScopeTraceData);
         });
 
         it('should returns correct BlockScopeTraceData - variant #2', () => {
-            ASTTree = <ESTree.Program>NodeUtils.convertCodeToStructure(`
-                bar();
-            
-                function foo () {
-                
-                }
-                
-                function bar () {
-                    
-                }
-                
-                function baz () {
-                    function inner1 () {
-                    
-                    }
-                    
-                    inner1();
-                }
-                
-                baz();
-                foo();
-            `, false);
+            ASTTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
+                readFileAsString(
+                    require.resolve('../fixtures/stack-trace-analyzer/variant-2.js')
+                ),
+                false
+            );
 
             expectedBlockScopeTraceData = [
                 {
                     name: 'bar',
                     callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(ASTTree, 'bar')).body,
-                    trace: []
+                    stackTrace: []
                 },
                 {
                     name: 'baz',
                     callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(ASTTree, 'baz')).body,
-                    trace: [
+                    stackTrace: [
                         {
                             name: 'inner1',
                             callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(ASTTree, 'inner1')).body,
-                            trace: []
+                            stackTrace: []
                         },
                     ]
                 },
                 {
                     name: 'foo',
                     callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(ASTTree, 'foo')).body,
-                    trace: []
+                    stackTrace: []
                 }
             ];
 
-            blockScopeTraceData = new ASTTreeBlockScopeAnalyzer<IBlockScopeTraceData>(ASTTree.body).analyze();
+            blockScopeTraceData = new StackTraceAnalyzer(ASTTree.body).analyze();
 
             assert.deepEqual(blockScopeTraceData, expectedBlockScopeTraceData);
         });
 
         it('should returns correct BlockScopeTraceData - variant #3', () => {
-            ASTTree = <ESTree.Program>NodeUtils.convertCodeToStructure(`
-                bar();
-            
-                function bar () {
-                
-                }
-            `, false);
+            ASTTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
+                readFileAsString(
+                    require.resolve('../fixtures/stack-trace-analyzer/variant-3.js')
+                ),
+                false
+            );
 
             expectedBlockScopeTraceData = [
                 {
                     name: 'bar',
                     callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(ASTTree, 'bar')).body,
-                    trace: []
+                    stackTrace: []
                 }
             ];
 
-            blockScopeTraceData = new ASTTreeBlockScopeAnalyzer<IBlockScopeTraceData>(ASTTree.body).analyze();
+            blockScopeTraceData = new StackTraceAnalyzer(ASTTree.body).analyze();
 
             assert.deepEqual(blockScopeTraceData, expectedBlockScopeTraceData);
         });
 
         it('should returns correct BlockScopeTraceData - variant #4', () => {
-            ASTTree = <ESTree.Program>NodeUtils.convertCodeToStructure(`
-                function bar () {
-                
-                }
-            `, false);
+            ASTTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
+                readFileAsString(
+                    require.resolve('../fixtures/stack-trace-analyzer/variant-4.js')
+                ),
+                false
+            );
 
             expectedBlockScopeTraceData = [];
 
-            blockScopeTraceData = new ASTTreeBlockScopeAnalyzer<IBlockScopeTraceData>(ASTTree.body).analyze();
+            blockScopeTraceData = new StackTraceAnalyzer(ASTTree.body).analyze();
 
             assert.deepEqual(blockScopeTraceData, expectedBlockScopeTraceData);
         });
 
         it('should returns correct BlockScopeTraceData - variant #5', () => {
-            ASTTree = <ESTree.Program>NodeUtils.convertCodeToStructure(`
-                bar();
-            `, false);
+            ASTTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
+                readFileAsString(
+                    require.resolve('../fixtures/stack-trace-analyzer/variant-5.js')
+                ),
+                false
+            );
 
             expectedBlockScopeTraceData = [];
 
-            blockScopeTraceData = new ASTTreeBlockScopeAnalyzer<IBlockScopeTraceData>(ASTTree.body).analyze();
+            blockScopeTraceData = new StackTraceAnalyzer(ASTTree.body).analyze();
 
             assert.deepEqual(blockScopeTraceData, expectedBlockScopeTraceData);
         });

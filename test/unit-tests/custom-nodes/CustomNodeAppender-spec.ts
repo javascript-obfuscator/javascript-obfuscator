@@ -1,12 +1,12 @@
 import * as chai from 'chai';
 import * as ESTree from 'estree';
 
-import { HiddenNodeAppender } from '../../../src/hidden-node-appender/HiddenNodeAppender';
+import { CustomNodeAppender } from '../../../src/custom-nodes/CustomNodeAppender';
 import { NodeUtils } from '../../../src/NodeUtils';
 
 const assert: any = chai.assert;
 
-describe('ASTTreeBlockScopeAnalyzer', () => {
+describe('CustomNodeAppender', () => {
     describe('appendNode (blockScopeNode: TNodeWithBlockStatement, node: ESTree.Node): void', () => {
         let astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
@@ -80,7 +80,7 @@ describe('ASTTreeBlockScopeAnalyzer', () => {
                 bar();
             `, false);
 
-            HiddenNodeAppender.appendNode(astTree.body, node);
+            CustomNodeAppender.appendNode(astTree.body, node);
 
             NodeUtils.parentize(astTree);
 
@@ -150,7 +150,7 @@ describe('ASTTreeBlockScopeAnalyzer', () => {
                 foo();
             `, false);
 
-            HiddenNodeAppender.appendNode(astTree.body, node);
+            CustomNodeAppender.appendNode(astTree.body, node);
 
             NodeUtils.parentize(astTree);
 
@@ -225,7 +225,7 @@ describe('ASTTreeBlockScopeAnalyzer', () => {
                     foo();
                 `, false);
 
-                HiddenNodeAppender.appendNode(astTree.body, node, 2);
+                CustomNodeAppender.appendNode(astTree.body, node, 2);
 
                 NodeUtils.parentize(astTree);
 
@@ -264,7 +264,7 @@ describe('ASTTreeBlockScopeAnalyzer', () => {
                     foo();
                 `, false);
 
-                HiddenNodeAppender.appendNode(astTree.body, node, 1);
+                CustomNodeAppender.appendNode(astTree.body, node, 1);
 
                 NodeUtils.parentize(astTree);
 
@@ -278,21 +278,21 @@ describe('ASTTreeBlockScopeAnalyzer', () => {
             let index: number;
 
             for (let i = 0; i < 10; i++) {
-                index = HiddenNodeAppender.getIndexByThreshold(100, 0.1);
+                index = CustomNodeAppender.getIndexByThreshold(100, 0.1);
 
                 assert.isAtLeast(index, 0);
                 assert.isAtMost(index, 10);
             }
 
             for (let i = 0; i < 10; i++) {
-                index = HiddenNodeAppender.getIndexByThreshold(10, 0.5);
+                index = CustomNodeAppender.getIndexByThreshold(10, 0.5);
 
                 assert.isAtLeast(index, 0);
                 assert.isAtMost(index, 5);
             }
 
             for (let i = 0; i < 10; i++) {
-                index = HiddenNodeAppender.getIndexByThreshold(1, 1);
+                index = CustomNodeAppender.getIndexByThreshold(1, 1);
 
                 assert.isAtLeast(index, 0);
                 assert.isAtMost(index, 1);

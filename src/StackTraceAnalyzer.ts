@@ -1,16 +1,16 @@
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockStatement } from '../types/TNodeWithBlockStatement';
+import { TNodeWithBlockStatement } from './types/TNodeWithBlockStatement';
 
-import { IBlockScopeTraceData } from '../interfaces/IBlockScopeTraceData';
+import { IStackTraceData } from './interfaces/IStackTraceData';
+import { IStackTraceAnalyzer } from './interfaces/IAnalyzer';
 
-import { Nodes } from '../Nodes';
-import { NodeUtils } from '../NodeUtils';
-import { IAnalyzer } from '../interfaces/IAnalyzer';
+import { Nodes } from './Nodes';
+import { NodeUtils } from './NodeUtils';
 
 /**
- * This class generates a structure with order of function trace calls
+ * This class generates a data with code stack trace functions calls
  *
  * For example:
  *
@@ -40,16 +40,16 @@ import { IAnalyzer } from '../interfaces/IAnalyzer';
  *      }
  * ]
  */
-export class ASTTreeBlockScopeAnalyzer <T> implements IAnalyzer<T> {
+export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     /**
      * @type {ESTree.Node[]}
      */
     private blockScopeBody: ESTree.Node[];
 
     /**
-     * @type {T[]}
+     * @type {IStackTraceData[]}
      */
-    private blockScopeTraceData: T[] = [];
+    private stackTraceData: IStackTraceData[] = [];
 
     /**
      * @param blockScopeBody
@@ -61,29 +61,29 @@ export class ASTTreeBlockScopeAnalyzer <T> implements IAnalyzer<T> {
     /**
      * @returns {T}
      */
-    public analyze (): T[] {
+    public analyze (): IStackTraceData[] {
         if (this.blockScopeBody.length === 1) {
             estraverse.traverse(this.blockScopeBody[0], {
                 enter: (node: ESTree.Node): any => {
                     if (Nodes.isBlockStatementNode(node)) {
-                        this.analyzeRecursive(node.body, this.blockScopeTraceData);
+                        this.analyzeRecursive(node.body, this.stackTraceData);
 
                         return estraverse.VisitorOption.Skip;
                     }
                 }
             });
         } else {
-            this.analyzeRecursive(this.blockScopeBody, this.blockScopeTraceData);
+            this.analyzeRecursive(this.blockScopeBody, this.stackTraceData);
         }
 
-        return this.blockScopeTraceData;
+        return this.stackTraceData;
     }
 
     /**
      * @param blockScopeBody
-     * @param dataTree
+     * @param stackTraceData
      */
-    private analyzeRecursive (blockScopeBody: ESTree.Node[], dataTree: any): void {
+    private analyzeRecursive (blockScopeBody: ESTree.Node[], stackTraceData: IStackTraceData[]): void {
         for (let rootNode of blockScopeBody) {
             estraverse.traverse(rootNode, {
                 enter: (node: ESTree.Node): any => {
@@ -101,15 +101,15 @@ export class ASTTreeBlockScopeAnalyzer <T> implements IAnalyzer<T> {
                             return estraverse.VisitorOption.Break;
                         }
 
-                        const data: IBlockScopeTraceData = {
+                        const data: IStackTraceData = {
                             callee: calleeNode,
                             name: node.callee.name,
-                            trace: []
+                            stackTrace: []
                         };
 
-                        dataTree.push(data);
+                        stackTraceData.push(data);
 
-                        this.analyzeRecursive(calleeNode.body, data.trace);
+                        this.analyzeRecursive(calleeNode.body, data.stackTrace);
                     }
                 }
             });

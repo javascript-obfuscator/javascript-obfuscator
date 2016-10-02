@@ -7,7 +7,7 @@ import { AppendState } from '../../enums/AppendState';
 import { ConsoleOutputDisableExpressionTemplate } from '../../templates/custom-nodes/console-output-nodes/console-output-disable-expression-node/ConsoleOutputDisableExpressionTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { HiddenNodeAppender } from '../../hidden-node-appender/HiddenNodeAppender';
+import { CustomNodeAppender } from '../CustomNodeAppender';
 import { NodeUtils } from '../../NodeUtils';
 
 export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
@@ -20,10 +20,10 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        HiddenNodeAppender.appendNode(
+        CustomNodeAppender.appendNode(
             blockScopeNode.body,
             this.getNode(),
-            HiddenNodeAppender.getIndexByThreshold(blockScopeNode.body.length)
+            CustomNodeAppender.getIndexByThreshold(blockScopeNode.body.length)
         );
     }
 

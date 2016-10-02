@@ -1,7 +1,12 @@
-function bar () {
+var object = {
+    foo: function () {
 
-}
+    },
 
-function baz () {
+    bar: function () {
 
-}
+    }
+};
+
+object.bar();
+object.foo();

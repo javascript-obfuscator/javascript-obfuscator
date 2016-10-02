@@ -87,30 +87,33 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
         for (let rootNode of blockScopeBody) {
             estraverse.traverse(rootNode, {
                 enter: (node: ESTree.Node): any => {
-                    if (
-                        Nodes.isCallExpressionNode(node) &&
-                        Nodes.isIdentifierNode(node.callee) &&
-                        rootNode.parentNode === NodeUtils.getBlockScopeOfNode(node)
-                    ) {
-                        const calleeNode: TNodeWithBlockStatement|null = this.getCalleeBlockStatement(
-                            NodeUtils.getBlockScopeOfNode(blockScopeBody[0]),
-                            node.callee.name
-                        );
+                    let calleeNode: TNodeWithBlockStatement|null = null,
+                        name: string = '';
 
-                        if (!calleeNode) {
-                            return estraverse.VisitorOption.Break;
+                    if (Nodes.isCallExpressionNode(node) && rootNode.parentNode === NodeUtils.getBlockScopeOfNode(node)) {
+                        if (Nodes.isIdentifierNode(node.callee)) {
+                            calleeNode = this.getCalleeBlockStatement(
+                                NodeUtils.getBlockScopeOfNode(blockScopeBody[0]),
+                                node.callee.name
+                            );
+
+                            name = node.callee.name;
                         }
-
-                        const data: IStackTraceData = {
-                            callee: calleeNode,
-                            name: node.callee.name,
-                            stackTrace: []
-                        };
-
-                        stackTraceData.push(data);
-
-                        this.analyzeRecursive(calleeNode.body, data.stackTrace);
                     }
+
+                    if (!calleeNode) {
+                        return;
+                    }
+
+                    const data: IStackTraceData = {
+                        callee: calleeNode,
+                        name: name,
+                        stackTrace: []
+                    };
+
+                    stackTraceData.push(data);
+
+                    this.analyzeRecursive(calleeNode.body, data.stackTrace);
                 }
             });
         }

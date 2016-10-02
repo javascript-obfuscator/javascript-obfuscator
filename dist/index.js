@@ -656,7 +656,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var JavaScriptObfuscatorCLI_1 = __webpack_require__(30);
+var JavaScriptObfuscatorCLI_1 = __webpack_require__(31);
 var JavaScriptObfuscatorInternal_1 = __webpack_require__(25);
 
 var JavaScriptObfuscator = function () {
@@ -813,7 +813,68 @@ var IdentifierReplacer = function (_AbstractReplacer_1$A) {
 exports.IdentifierReplacer = IdentifierReplacer;
 
 /***/ },
-/* 15 */,
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var NodeUtils_1 = __webpack_require__(1);
+var StackTraceAnalyzer_1 = __webpack_require__(28);
+var Utils_1 = __webpack_require__(0);
+
+var CustomNodeAppender = function () {
+    function CustomNodeAppender() {
+        _classCallCheck(this, CustomNodeAppender);
+    }
+
+    _createClass(CustomNodeAppender, null, [{
+        key: 'appendNode',
+        value: function appendNode(blockScopeBody, node) {
+            var index = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
+            var blockScopeTraceData = new StackTraceAnalyzer_1.StackTraceAnalyzer(blockScopeBody).analyze();
+            if (!blockScopeTraceData.length) {
+                NodeUtils_1.NodeUtils.prependNode(blockScopeBody, node);
+                return;
+            }
+            NodeUtils_1.NodeUtils.prependNode(CustomNodeAppender.getOptimalBlockScope(blockScopeTraceData, index).body, node);
+        }
+    }, {
+        key: 'getIndexByThreshold',
+        value: function getIndexByThreshold(blockStatementBodyLength) {
+            var threshold = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.1;
+
+            if (threshold < 0 || threshold > 1) {
+                throw new RangeError('`threshold` parameter should has value between 0 and 1');
+            }
+            return Utils_1.Utils.getRandomGenerator().integer({
+                min: 0,
+                max: Math.round(blockStatementBodyLength * threshold)
+            });
+        }
+    }, {
+        key: 'getOptimalBlockScope',
+        value: function getOptimalBlockScope(blockScopeTraceData, index) {
+            var firstCall = blockScopeTraceData[index];
+            if (firstCall.stackTrace.length) {
+                return CustomNodeAppender.getOptimalBlockScope(firstCall.stackTrace, 0);
+            } else {
+                return firstCall.callee;
+            }
+        }
+    }]);
+
+    return CustomNodeAppender;
+}();
+
+exports.CustomNodeAppender = CustomNodeAppender;
+
+/***/ },
 /* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -1348,6 +1409,128 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var estraverse = __webpack_require__(5);
+var Nodes_1 = __webpack_require__(2);
+var NodeUtils_1 = __webpack_require__(1);
+
+var StackTraceAnalyzer = function () {
+    function StackTraceAnalyzer(blockScopeBody) {
+        _classCallCheck(this, StackTraceAnalyzer);
+
+        this.stackTraceData = [];
+        this.blockScopeBody = blockScopeBody;
+    }
+
+    _createClass(StackTraceAnalyzer, [{
+        key: 'analyze',
+        value: function analyze() {
+            var _this = this;
+
+            if (this.blockScopeBody.length === 1) {
+                estraverse.traverse(this.blockScopeBody[0], {
+                    enter: function enter(node) {
+                        if (Nodes_1.Nodes.isBlockStatementNode(node)) {
+                            _this.analyzeRecursive(node.body, _this.stackTraceData);
+                            return estraverse.VisitorOption.Skip;
+                        }
+                    }
+                });
+            } else {
+                this.analyzeRecursive(this.blockScopeBody, this.stackTraceData);
+            }
+            return this.stackTraceData;
+        }
+    }, {
+        key: 'analyzeRecursive',
+        value: function analyzeRecursive(blockScopeBody, stackTraceData) {
+            var _this2 = this;
+
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                var _loop = function _loop() {
+                    var rootNode = _step.value;
+
+                    estraverse.traverse(rootNode, {
+                        enter: function enter(node) {
+                            var calleeNode = null,
+                                name = '';
+                            if (Nodes_1.Nodes.isCallExpressionNode(node) && rootNode.parentNode === NodeUtils_1.NodeUtils.getBlockScopeOfNode(node)) {
+                                if (Nodes_1.Nodes.isIdentifierNode(node.callee)) {
+                                    calleeNode = _this2.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopeOfNode(blockScopeBody[0]), node.callee.name);
+                                    name = node.callee.name;
+                                }
+                            }
+                            if (!calleeNode) {
+                                return;
+                            }
+                            var data = {
+                                callee: calleeNode,
+                                name: name,
+                                stackTrace: []
+                            };
+                            stackTraceData.push(data);
+                            _this2.analyzeRecursive(calleeNode.body, data.stackTrace);
+                        }
+                    });
+                };
+
+                for (var _iterator = blockScopeBody[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    _loop();
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'getCalleeBlockStatement',
+        value: function getCalleeBlockStatement(node, name) {
+            var calleeBlockStatement = null;
+            estraverse.traverse(node, {
+                enter: function enter(node, parentNode) {
+                    if (Nodes_1.Nodes.isFunctionDeclarationNode(node) && node.id.name === name) {
+                        calleeBlockStatement = node.body;
+                        return estraverse.VisitorOption.Break;
+                    }
+                    if (Nodes_1.Nodes.isFunctionExpressionNode(node) && Nodes_1.Nodes.isVariableDeclaratorNode(parentNode) && Nodes_1.Nodes.isIdentifierNode(parentNode.id) && parentNode.id.name === name) {
+                        calleeBlockStatement = node.body;
+                        return estraverse.VisitorOption.Break;
+                    }
+                }
+            });
+            return calleeBlockStatement;
+        }
+    }]);
+
+    return StackTraceAnalyzer;
+}();
+
+exports.StackTraceAnalyzer = StackTraceAnalyzer;
+
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 var Utils_1 = __webpack_require__(0);
 
 var UnicodeArray = function () {
@@ -1395,7 +1578,7 @@ var UnicodeArray = function () {
 exports.UnicodeArray = UnicodeArray;
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1487,7 +1670,7 @@ CLIUtils.encoding = 'utf8';
 exports.CLIUtils = CLIUtils;
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1501,7 +1684,7 @@ var commander = __webpack_require__(75);
 var path = __webpack_require__(23);
 var SourceMapMode_1 = __webpack_require__(12);
 var DefaultPreset_1 = __webpack_require__(21);
-var CLIUtils_1 = __webpack_require__(29);
+var CLIUtils_1 = __webpack_require__(30);
 var JavaScriptObfuscator_1 = __webpack_require__(9);
 var Utils_1 = __webpack_require__(0);
 
@@ -1620,7 +1803,7 @@ var JavaScriptObfuscatorCLI = function () {
 exports.JavaScriptObfuscatorCLI = JavaScriptObfuscatorCLI;
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1637,7 +1820,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var AppendState_1 = __webpack_require__(3);
 var ConsoleOutputDisableExpressionTemplate_1 = __webpack_require__(60);
 var AbstractCustomNode_1 = __webpack_require__(4);
-var CustomNodeAppender_1 = __webpack_require__(80);
+var CustomNodeAppender_1 = __webpack_require__(15);
 var NodeUtils_1 = __webpack_require__(1);
 
 var ConsoleOutputDisableExpressionNode = function (_AbstractCustomNode_) {
@@ -1670,7 +1853,7 @@ var ConsoleOutputDisableExpressionNode = function (_AbstractCustomNode_) {
 exports.ConsoleOutputDisableExpressionNode = ConsoleOutputDisableExpressionNode;
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1723,7 +1906,7 @@ var DebugProtectionFunctionCallNode = function (_AbstractCustomNode_) {
 exports.DebugProtectionFunctionCallNode = DebugProtectionFunctionCallNode;
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1776,7 +1959,7 @@ var DebugProtectionFunctionIntervalNode = function (_AbstractCustomNode_) {
 exports.DebugProtectionFunctionIntervalNode = DebugProtectionFunctionIntervalNode;
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1840,7 +2023,7 @@ var DebugProtectionFunctionNode = function (_AbstractCustomNode_) {
 exports.DebugProtectionFunctionNode = DebugProtectionFunctionNode;
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1860,7 +2043,7 @@ __webpack_require__(8);
 var AppendState_1 = __webpack_require__(3);
 var DomainLockNodeTemplate_1 = __webpack_require__(64);
 var AbstractCustomNode_1 = __webpack_require__(4);
-var CustomNodeAppender_1 = __webpack_require__(80);
+var CustomNodeAppender_1 = __webpack_require__(15);
 var NodeUtils_1 = __webpack_require__(1);
 var Utils_1 = __webpack_require__(0);
 
@@ -1905,7 +2088,7 @@ var DomainLockNode = function (_AbstractCustomNode_) {
 exports.DomainLockNode = DomainLockNode;
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1925,7 +2108,7 @@ var SelfDefendingTemplate_1 = __webpack_require__(65);
 var AbstractCustomNode_1 = __webpack_require__(4);
 var JavaScriptObfuscator_1 = __webpack_require__(9);
 var NodeUtils_1 = __webpack_require__(1);
-var CustomNodeAppender_1 = __webpack_require__(80);
+var CustomNodeAppender_1 = __webpack_require__(15);
 
 var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
     _inherits(SelfDefendingUnicodeNode, _AbstractCustomNode_);
@@ -1957,7 +2140,7 @@ var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
 exports.SelfDefendingUnicodeNode = SelfDefendingUnicodeNode;
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2031,7 +2214,7 @@ var UnicodeArrayCallsWrapper = function (_AbstractCustomNode_) {
 exports.UnicodeArrayCallsWrapper = UnicodeArrayCallsWrapper;
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2112,7 +2295,7 @@ var UnicodeArrayDecodeNode = function (_AbstractCustomNode_) {
 exports.UnicodeArrayDecodeNode = UnicodeArrayDecodeNode;
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2198,7 +2381,7 @@ UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH = 4;
 exports.UnicodeArrayNode = UnicodeArrayNode;
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2282,7 +2465,6 @@ var UnicodeArrayRotateFunctionNode = function (_AbstractCustomNode_) {
 exports.UnicodeArrayRotateFunctionNode = UnicodeArrayRotateFunctionNode;
 
 /***/ },
-/* 41 */,
 /* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -2296,7 +2478,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var AbstractNodesGroup_1 = __webpack_require__(10);
-var ConsoleOutputDisableExpressionNode_1 = __webpack_require__(31);
+var ConsoleOutputDisableExpressionNode_1 = __webpack_require__(32);
 
 var ConsoleOutputNodesGroup = function (_AbstractNodesGroup_) {
     _inherits(ConsoleOutputNodesGroup, _AbstractNodesGroup_);
@@ -2331,9 +2513,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var DebugProtectionFunctionCallNode_1 = __webpack_require__(32);
-var DebugProtectionFunctionIntervalNode_1 = __webpack_require__(33);
-var DebugProtectionFunctionNode_1 = __webpack_require__(34);
+var DebugProtectionFunctionCallNode_1 = __webpack_require__(33);
+var DebugProtectionFunctionIntervalNode_1 = __webpack_require__(34);
+var DebugProtectionFunctionNode_1 = __webpack_require__(35);
 var AbstractNodesGroup_1 = __webpack_require__(10);
 var Utils_1 = __webpack_require__(0);
 
@@ -2376,7 +2558,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var AbstractNodesGroup_1 = __webpack_require__(10);
-var DomainLockNode_1 = __webpack_require__(35);
+var DomainLockNode_1 = __webpack_require__(36);
 
 var DomainLockNodesGroup = function (_AbstractNodesGroup_) {
     _inherits(DomainLockNodesGroup, _AbstractNodesGroup_);
@@ -2412,7 +2594,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var AbstractNodesGroup_1 = __webpack_require__(10);
-var SelfDefendingUnicodeNode_1 = __webpack_require__(36);
+var SelfDefendingUnicodeNode_1 = __webpack_require__(37);
 
 var SelfDefendingNodesGroup = function (_AbstractNodesGroup_) {
     _inherits(SelfDefendingNodesGroup, _AbstractNodesGroup_);
@@ -2448,11 +2630,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var AbstractNodesGroup_1 = __webpack_require__(10);
-var UnicodeArray_1 = __webpack_require__(28);
-var UnicodeArrayCallsWrapper_1 = __webpack_require__(37);
-var UnicodeArrayDecodeNode_1 = __webpack_require__(38);
-var UnicodeArrayNode_1 = __webpack_require__(39);
-var UnicodeArrayRotateFunctionNode_1 = __webpack_require__(40);
+var UnicodeArray_1 = __webpack_require__(29);
+var UnicodeArrayCallsWrapper_1 = __webpack_require__(38);
+var UnicodeArrayDecodeNode_1 = __webpack_require__(39);
+var UnicodeArrayNode_1 = __webpack_require__(40);
+var UnicodeArrayRotateFunctionNode_1 = __webpack_require__(41);
 var Utils_1 = __webpack_require__(0);
 
 var UnicodeArrayNodesGroup = function (_AbstractNodesGroup_) {
@@ -3654,185 +3836,6 @@ if (!global._babelPolyfill) {
     __webpack_require__(24);
 }
 module.exports = JavaScriptObfuscator_1.JavaScriptObfuscator;
-
-/***/ },
-/* 80 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-"use strict";
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var NodeUtils_1 = __webpack_require__(1);
-var StackTraceAnalyzer_1 = __webpack_require__(81);
-var Utils_1 = __webpack_require__(0);
-
-var CustomNodeAppender = function () {
-    function CustomNodeAppender() {
-        _classCallCheck(this, CustomNodeAppender);
-    }
-
-    _createClass(CustomNodeAppender, null, [{
-        key: 'appendNode',
-        value: function appendNode(blockScopeBody, node) {
-            var index = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-
-            var blockScopeTraceData = new StackTraceAnalyzer_1.StackTraceAnalyzer(blockScopeBody).analyze();
-            if (!blockScopeTraceData.length) {
-                NodeUtils_1.NodeUtils.prependNode(blockScopeBody, node);
-                return;
-            }
-            NodeUtils_1.NodeUtils.prependNode(CustomNodeAppender.getOptimalBlockScope(blockScopeTraceData, index).body, node);
-        }
-    }, {
-        key: 'getIndexByThreshold',
-        value: function getIndexByThreshold(blockStatementBodyLength) {
-            var threshold = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.1;
-
-            if (threshold < 0 || threshold > 1) {
-                throw new RangeError('`threshold` parameter should has value between 0 and 1');
-            }
-            return Utils_1.Utils.getRandomGenerator().integer({
-                min: 0,
-                max: Math.round(blockStatementBodyLength * threshold)
-            });
-        }
-    }, {
-        key: 'getOptimalBlockScope',
-        value: function getOptimalBlockScope(blockScopeTraceData, index) {
-            var firstCall = blockScopeTraceData[index];
-            if (firstCall.stackTrace.length) {
-                return CustomNodeAppender.getOptimalBlockScope(firstCall.stackTrace, 0);
-            } else {
-                return firstCall.callee;
-            }
-        }
-    }]);
-
-    return CustomNodeAppender;
-}();
-
-exports.CustomNodeAppender = CustomNodeAppender;
-
-/***/ },
-/* 81 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-"use strict";
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var estraverse = __webpack_require__(5);
-var Nodes_1 = __webpack_require__(2);
-var NodeUtils_1 = __webpack_require__(1);
-
-var StackTraceAnalyzer = function () {
-    function StackTraceAnalyzer(blockScopeBody) {
-        _classCallCheck(this, StackTraceAnalyzer);
-
-        this.stackTraceData = [];
-        this.blockScopeBody = blockScopeBody;
-    }
-
-    _createClass(StackTraceAnalyzer, [{
-        key: 'analyze',
-        value: function analyze() {
-            var _this = this;
-
-            if (this.blockScopeBody.length === 1) {
-                estraverse.traverse(this.blockScopeBody[0], {
-                    enter: function enter(node) {
-                        if (Nodes_1.Nodes.isBlockStatementNode(node)) {
-                            _this.analyzeRecursive(node.body, _this.stackTraceData);
-                            return estraverse.VisitorOption.Skip;
-                        }
-                    }
-                });
-            } else {
-                this.analyzeRecursive(this.blockScopeBody, this.stackTraceData);
-            }
-            return this.stackTraceData;
-        }
-    }, {
-        key: 'analyzeRecursive',
-        value: function analyzeRecursive(blockScopeBody, stackTraceData) {
-            var _this2 = this;
-
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
-
-            try {
-                var _loop = function _loop() {
-                    var rootNode = _step.value;
-
-                    estraverse.traverse(rootNode, {
-                        enter: function enter(node) {
-                            if (Nodes_1.Nodes.isCallExpressionNode(node) && Nodes_1.Nodes.isIdentifierNode(node.callee) && rootNode.parentNode === NodeUtils_1.NodeUtils.getBlockScopeOfNode(node)) {
-                                var calleeNode = _this2.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopeOfNode(blockScopeBody[0]), node.callee.name);
-                                if (!calleeNode) {
-                                    return estraverse.VisitorOption.Break;
-                                }
-                                var data = {
-                                    callee: calleeNode,
-                                    name: node.callee.name,
-                                    stackTrace: []
-                                };
-                                stackTraceData.push(data);
-                                _this2.analyzeRecursive(calleeNode.body, data.stackTrace);
-                            }
-                        }
-                    });
-                };
-
-                for (var _iterator = blockScopeBody[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    _loop();
-                }
-            } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
-                    }
-                } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
-                    }
-                }
-            }
-        }
-    }, {
-        key: 'getCalleeBlockStatement',
-        value: function getCalleeBlockStatement(node, name) {
-            var calleeBlockStatement = null;
-            estraverse.traverse(node, {
-                enter: function enter(node, parentNode) {
-                    if (Nodes_1.Nodes.isFunctionDeclarationNode(node) && node.id.name === name) {
-                        calleeBlockStatement = node.body;
-                        return estraverse.VisitorOption.Break;
-                    }
-                    if (Nodes_1.Nodes.isFunctionExpressionNode(node) && Nodes_1.Nodes.isVariableDeclaratorNode(parentNode) && Nodes_1.Nodes.isIdentifierNode(parentNode.id) && parentNode.id.name === name) {
-                        calleeBlockStatement = node.body;
-                        return estraverse.VisitorOption.Break;
-                    }
-                }
-            });
-            return calleeBlockStatement;
-        }
-    }]);
-
-    return StackTraceAnalyzer;
-}();
-
-exports.StackTraceAnalyzer = StackTraceAnalyzer;
 
 /***/ }
 /******/ ]);

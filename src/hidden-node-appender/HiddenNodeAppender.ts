@@ -58,7 +58,7 @@ export class HiddenNodeAppender {
         return Utils.getRandomGenerator().integer({
             min: 0,
             max: Math.round(blockStatementBodyLength * threshold)
-        })
+        });
     }
 
     /**

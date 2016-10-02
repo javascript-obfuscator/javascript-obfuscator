@@ -109,7 +109,7 @@ export class ASTTreeBlockScopeAnalyzer <T> implements IAnalyzer<T> {
 
                         dataTree.push(data);
 
-                        this.analyzeRecursive(calleeNode.body, data.trace)
+                        this.analyzeRecursive(calleeNode.body, data.trace);
                     }
                 }
             });

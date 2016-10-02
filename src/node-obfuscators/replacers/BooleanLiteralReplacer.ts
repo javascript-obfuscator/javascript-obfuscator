@@ -1,6 +1,6 @@
-import { JSFuck } from "../../enums/JSFuck";
+import { JSFuck } from 'app/enums/JSFuck';
 
-import { AbstractReplacer } from "./AbstractReplacer";
+import { AbstractReplacer } from './AbstractReplacer';
 
 export class BooleanLiteralReplacer extends AbstractReplacer {
     /**

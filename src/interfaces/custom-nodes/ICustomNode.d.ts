@@ -1,6 +1,6 @@
 import * as ESTree from 'estree';
 
-import { AppendState } from '../../enums/AppendState';
+import { AppendState } from 'app/enums/AppendState';
 
 export interface ICustomNode {
     /**

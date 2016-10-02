@@ -1,8 +1,8 @@
 import * as ESTree from 'estree';
 
-import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
-import { INodeObfuscator } from '../interfaces/INodeObfuscator';
-import { IOptions } from "../interfaces/IOptions";
+import { ICustomNode } from 'app/interfaces/custom-nodes/ICustomNode';
+import { INodeObfuscator } from 'app/interfaces/INodeObfuscator';
+import { IOptions } from 'app/interfaces/IOptions';
 
 export abstract class AbstractNodeObfuscator implements INodeObfuscator {
     /**

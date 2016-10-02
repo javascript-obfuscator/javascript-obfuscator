@@ -10,20 +10,7 @@
     "removeComments": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "noUnusedLocals": true,
-    "types": [
-      "chai",
-      "chance",
-      "commander",
-      "escodegen",
-      "esprima",
-      "estraverse",
-      "joi",
-      "mkdirp",
-      "mocha",
-      "node",
-      "sinon"
-    ]
+    "noUnusedLocals": true
   },
   "exclude": [
     "node_modules"

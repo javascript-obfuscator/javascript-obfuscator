@@ -1,10 +1,10 @@
-import { TUnicodeArrayCallsWrapper } from "../../types/custom-nodes/TUnicodeArrayCallsWrapper";
-import { TUnicodeArrayNode } from "../../types/custom-nodes/TUnicodeArrayNode";
+import { TUnicodeArrayCallsWrapper } from 'app/types/custom-nodes/TUnicodeArrayCallsWrapper';
+import { TUnicodeArrayNode } from 'app/types/custom-nodes/TUnicodeArrayNode';
 
-import { AbstractReplacer } from "./AbstractReplacer";
-import { NumberLiteralReplacer } from "./NumberLiteralReplacer";
-import { UnicodeArray } from "../../UnicodeArray";
-import { Utils } from "../../Utils";
+import { AbstractReplacer } from './AbstractReplacer';
+import { NumberLiteralReplacer } from './NumberLiteralReplacer';
+import { UnicodeArray } from 'app/UnicodeArray';
+import { Utils } from 'app/Utils';
 
 export class StringLiteralReplacer extends AbstractReplacer {
     /**

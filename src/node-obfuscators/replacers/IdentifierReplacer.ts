@@ -1,5 +1,5 @@
-import { AbstractReplacer } from "./AbstractReplacer";
-import { Utils } from "../../Utils";
+import { AbstractReplacer } from './AbstractReplacer';
+import { Utils } from 'app/Utils';
 
 export class IdentifierReplacer extends AbstractReplacer {
     /**

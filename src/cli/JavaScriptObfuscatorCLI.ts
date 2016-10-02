@@ -1,16 +1,16 @@
 import * as commander from 'commander';
 import * as path from 'path';
 
-import { IObfuscationResult } from "../interfaces/IObfuscationResult";
-import { IObfuscatorOptions } from "../interfaces/IObfuscatorOptions";
+import { IObfuscationResult } from '../interfaces/IObfuscationResult';
+import { IObfuscatorOptions } from '../interfaces/IObfuscatorOptions';
 
-import { SourceMapMode } from "../enums/SourceMapMode";
+import { SourceMapMode } from '../enums/SourceMapMode';
 
-import { DEFAULT_PRESET } from "../preset-options/DefaultPreset";
+import { DEFAULT_PRESET } from '../preset-options/DefaultPreset';
 
-import { CLIUtils } from "./CLIUtils";
-import { JavaScriptObfuscator } from "../JavaScriptObfuscator";
-import { Utils } from "../Utils";
+import { CLIUtils } from './CLIUtils';
+import { JavaScriptObfuscator } from '../JavaScriptObfuscator';
+import { Utils } from '../Utils';
 
 export class JavaScriptObfuscatorCLI {
     /**

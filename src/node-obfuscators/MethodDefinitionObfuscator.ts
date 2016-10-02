@@ -2,9 +2,9 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
-import { Nodes } from "../Nodes";
-import { Utils } from "../Utils";
-import { StringLiteralReplacer } from "./replacers/StringLiteralReplacer";
+import { Nodes } from 'app/Nodes';
+import { Utils } from 'app/Utils';
+import { StringLiteralReplacer } from './replacers/StringLiteralReplacer';
 
 /**
  * replaces:

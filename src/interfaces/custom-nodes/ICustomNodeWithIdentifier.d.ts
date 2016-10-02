@@ -1,4 +1,4 @@
-import { ICustomNode } from "./ICustomNode";
+import { ICustomNode } from './ICustomNode';
 
 export interface ICustomNodeWithIdentifier extends ICustomNode {
     /**

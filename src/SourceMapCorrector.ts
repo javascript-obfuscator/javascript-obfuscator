@@ -1,12 +1,12 @@
-import { IObfuscationResult } from "./interfaces/IObfuscationResult";
-import { ISourceMapCorrector } from "./interfaces/ISourceMapCorrector";
+import { IObfuscationResult } from './interfaces/IObfuscationResult';
+import { ISourceMapCorrector } from './interfaces/ISourceMapCorrector';
 
-import { TSourceMapMode } from "./types/TSourceMapMode";
+import { TSourceMapMode } from './types/TSourceMapMode';
 
-import { SourceMapMode } from "./enums/SourceMapMode";
+import { SourceMapMode } from './enums/SourceMapMode';
 
-import { ObfuscationResult } from "./ObfuscationResult";
-import { Utils } from "./Utils";
+import { ObfuscationResult } from './ObfuscationResult';
+import { Utils } from './Utils';
 
 export class SourceMapCorrector implements ISourceMapCorrector {
     /**

@@ -1,9 +1,10 @@
 'use strict';
 
-var fs = require("fs"),
+var fs = require('fs'),
+    path = require('path'),
     nodeExternals = require('webpack-node-externals'),
     webpack = require('webpack'),
-    OptimizeJSPlugin = require('optimize-js-plugin');
+    TsConfigPathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin;
 
 function getLicenseText () {
     return "/*\nCopyright (C) 2016 Timofey Kachalov <sanex3339@yandex.ru>\n\n" +
@@ -19,11 +20,21 @@ module.exports = {
     externals: [nodeExternals()],
     module: {
         loaders: [
-            { test: /\.ts(x?)$/, loader: 'babel-loader!ts-loader' }
+            {
+                test: /\.ts(x?)$/,
+                loader: 'awesome-typescript-loader',
+                query: {
+                    useBabel: true
+                }
+            }
         ]
     },
     resolve: {
-        extensions: ['.ts']
+        extensions: ['.ts'],
+        modules: ['node_modules', 'src'],
+        plugins: [
+            new TsConfigPathsPlugin()
+        ]
     },
     plugins: [
         new webpack.BannerPlugin(
@@ -32,10 +43,7 @@ module.exports = {
                 raw: true,
                 entryOnly: false
             }
-        ),
-        /*new OptimizeJSPlugin({
-            sourceMap: true
-        })*/
+        )
     ],
     output: {
         path: './dist',

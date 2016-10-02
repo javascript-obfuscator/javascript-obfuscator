@@ -2,18 +2,18 @@ import * as ESTree from 'estree';
 
 import 'format-unicorn';
 
-import { IOptions } from "../../interfaces/IOptions";
+import { IOptions } from 'app/interfaces/IOptions';
 
-import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
+import { TNodeWithBlockStatement } from 'app/types/TNodeWithBlockStatement';
 
-import { AppendState } from '../../enums/AppendState';
+import { AppendState } from 'app/enums/AppendState';
 
-import { UnicodeArray } from '../../UnicodeArray';
+import { UnicodeArray } from 'app/UnicodeArray';
 
-import { UnicodeArrayTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-node/UnicodeArrayTemplate";
+import { UnicodeArrayTemplate } from 'app/templates/custom-nodes/unicode-array-nodes/unicode-array-node/UnicodeArrayTemplate';
 
-import { AbstractCustomNode } from '../AbstractCustomNode';
-import { NodeUtils } from "../../NodeUtils";
+import { AbstractCustomNode } from 'app/custom-nodes/AbstractCustomNode';
+import { NodeUtils } from 'app/NodeUtils';
 
 export class UnicodeArrayNode extends AbstractCustomNode {
     /**

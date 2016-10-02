@@ -1,4 +1,4 @@
-import { Utils } from "../../../../Utils";
+import { Utils } from 'app/Utils';
 
 export function SelfDefendingTemplate (): string {
     return `

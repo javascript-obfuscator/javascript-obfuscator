@@ -1,7 +1,7 @@
-import { IOptions } from "../interfaces/IOptions";
+import { IOptions } from 'app/interfaces/IOptions';
 
 import { AbstractNodesGroup } from './AbstractNodesGroup';
-import { SelfDefendingUnicodeNode } from "../custom-nodes/self-defending-nodes/SelfDefendingUnicodeNode";
+import { SelfDefendingUnicodeNode } from 'app/custom-nodes/self-defending-nodes/SelfDefendingUnicodeNode';
 
 export class SelfDefendingNodesGroup extends AbstractNodesGroup {
     /**

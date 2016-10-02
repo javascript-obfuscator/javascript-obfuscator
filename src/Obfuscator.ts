@@ -2,16 +2,16 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { ICustomNode } from './interfaces/custom-nodes/ICustomNode';
-import { IObfuscator } from "./interfaces/IObfuscator";
-import { IOptions } from "./interfaces/IOptions";
+import { IObfuscator } from './interfaces/IObfuscator';
+import { IOptions } from './interfaces/IOptions';
 
-import { TNodeObfuscator } from "./types/TNodeObfuscator";
+import { TNodeObfuscator } from './types/TNodeObfuscator';
 
 import { AppendState } from './enums/AppendState';
 import { NodeType } from './enums/NodeType';
 
 import { CatchClauseObfuscator } from './node-obfuscators/CatchClauseObfuscator';
-import { ConsoleOutputNodesGroup } from "./node-groups/ConsoleOutputNodesGroup";
+import { ConsoleOutputNodesGroup } from './node-groups/ConsoleOutputNodesGroup';
 import { DebugProtectionNodesGroup } from './node-groups/DebugProtectionNodesGroup';
 import { DomainLockNodesGroup } from './node-groups/DomainLockNodesGroup';
 import { FunctionDeclarationObfuscator } from './node-obfuscators/FunctionDeclarationObfuscator';
@@ -19,10 +19,10 @@ import { FunctionObfuscator } from './node-obfuscators/FunctionObfuscator';
 import { LiteralObfuscator } from './node-obfuscators/LiteralObfuscator';
 import { MemberExpressionObfuscator } from './node-obfuscators/MemberExpressionObfuscator';
 import { MethodDefinitionObfuscator } from './node-obfuscators/MethodDefinitionObfuscator';
-import { Nodes } from "./Nodes";
-import { NodeUtils } from "./NodeUtils";
+import { Nodes } from './Nodes';
+import { NodeUtils } from './NodeUtils';
 import { ObjectExpressionObfuscator } from './node-obfuscators/ObjectExpressionObfuscator';
-import { SelfDefendingNodesGroup } from "./node-groups/SelfDefendingNodesGroup";
+import { SelfDefendingNodesGroup } from './node-groups/SelfDefendingNodesGroup';
 import { UnicodeArrayNodesGroup } from './node-groups/UnicodeArrayNodesGroup';
 import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclarationObfuscator';
 

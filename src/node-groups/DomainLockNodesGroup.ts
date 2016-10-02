@@ -1,7 +1,7 @@
-import { IOptions } from "../interfaces/IOptions";
+import { IOptions } from 'app/interfaces/IOptions';
 
-import { AbstractNodesGroup } from "./AbstractNodesGroup";
-import { DomainLockNode } from "../custom-nodes/domain-lock-nodes/DomainLockNode";
+import { AbstractNodesGroup } from './AbstractNodesGroup';
+import { DomainLockNode } from 'app/custom-nodes/domain-lock-nodes/DomainLockNode';
 
 export class DomainLockNodesGroup extends AbstractNodesGroup {
     /**

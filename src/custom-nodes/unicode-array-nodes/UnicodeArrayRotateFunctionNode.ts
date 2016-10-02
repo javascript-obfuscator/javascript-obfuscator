@@ -2,22 +2,22 @@ import * as ESTree from 'estree';
 
 import 'format-unicorn';
 
-import { IOptions } from "../../interfaces/IOptions";
+import { IOptions } from 'app/interfaces/IOptions';
 
-import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
+import { TNodeWithBlockStatement } from 'app/types/TNodeWithBlockStatement';
 
-import { AppendState } from "../../enums/AppendState";
+import { AppendState } from 'app/enums/AppendState';
 
-import { NO_CUSTOM_NODES_PRESET } from "../../preset-options/NoCustomNodesPreset";
+import { NO_CUSTOM_NODES_PRESET } from 'app/preset-options/NoCustomNodesPreset';
 
-import { SelfDefendingTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-rotate-function-node/SelfDefendingTemplate";
-import { UnicodeArrayRotateFunctionTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-rotate-function-node/UnicodeArrayRotateFunctionTemplate";
+import { SelfDefendingTemplate } from 'app/templates/custom-nodes/unicode-array-nodes/unicode-array-rotate-function-node/SelfDefendingTemplate';
+import { UnicodeArrayRotateFunctionTemplate } from 'app/templates/custom-nodes/unicode-array-nodes/unicode-array-rotate-function-node/UnicodeArrayRotateFunctionTemplate';
 
-import { AbstractCustomNode } from '../AbstractCustomNode';
-import { JavaScriptObfuscator } from "../../JavaScriptObfuscator";
-import { NodeUtils } from "../../NodeUtils";
-import { UnicodeArray } from "../../UnicodeArray";
-import { Utils } from "../../Utils";
+import { AbstractCustomNode } from 'app/custom-nodes/AbstractCustomNode';
+import { JavaScriptObfuscator } from 'app/JavaScriptObfuscator';
+import { NodeUtils } from 'app/NodeUtils';
+import { UnicodeArray } from 'app/UnicodeArray';
+import { Utils } from 'app/Utils';
 
 export class UnicodeArrayRotateFunctionNode extends AbstractCustomNode {
     /**

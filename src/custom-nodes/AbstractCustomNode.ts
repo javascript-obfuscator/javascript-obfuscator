@@ -1,9 +1,9 @@
 import * as ESTree from 'estree';
 
-import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
-import { IOptions } from "../interfaces/IOptions";
+import { ICustomNode } from 'app/interfaces/custom-nodes/ICustomNode';
+import { IOptions } from 'app/interfaces/IOptions';
 
-import { AppendState } from '../enums/AppendState';
+import { AppendState } from 'app/enums/AppendState';
 
 export abstract class AbstractCustomNode implements ICustomNode {
     /**

@@ -3,12 +3,12 @@ import * as esprima from 'esprima';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockStatement } from "./types/TNodeWithBlockStatement";
+import { TNodeWithBlockStatement } from './types/TNodeWithBlockStatement';
 
-import { NodeType } from "./enums/NodeType";
+import { NodeType } from './enums/NodeType';
 
-import { Nodes } from "./Nodes";
-import { Utils } from "./Utils";
+import { Nodes } from './Nodes';
+import { Utils } from './Utils';
 
 export class NodeUtils {
     /**

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
     "target": "ES6",
     "module": "commonjs",
     "sourceMap": true,
@@ -9,18 +10,10 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "noUnusedLocals": true,
-    "types": [
-      "chai",
-      "chance",
-      "commander",
-      "escodegen",
-      "esprima",
-      "estraverse",
-      "joi",
-      "mkdirp",
-      "mocha",
-      "node",
-      "sinon"
-    ]
+    "paths": {
+      "app/*": [
+        "src/*"
+      ]
+    }
   }
 }

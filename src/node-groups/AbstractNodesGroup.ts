@@ -1,7 +1,7 @@
-import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
+import { ICustomNode } from 'app/interfaces/custom-nodes/ICustomNode';
 
-import { INodesGroup } from '../interfaces/INodesGroup';
-import { IOptions } from "../interfaces/IOptions";
+import { INodesGroup } from 'app/interfaces/INodesGroup';
+import { IOptions } from 'app/interfaces/IOptions';
 
 export abstract class AbstractNodesGroup implements INodesGroup {
     /**

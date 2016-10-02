@@ -14,15 +14,15 @@ import {
     ValidatorOptions
 } from 'class-validator';
 
-import { IObfuscatorOptions } from "../interfaces/IObfuscatorOptions";
-import { IOptions } from "../interfaces/IOptions";
+import { IObfuscatorOptions } from 'app/interfaces/IObfuscatorOptions';
+import { IOptions } from 'app/interfaces/IOptions';
 
-import { TSourceMapMode } from "../types/TSourceMapMode";
+import { TSourceMapMode } from 'app/types/TSourceMapMode';
 
-import { DEFAULT_PRESET } from "../preset-options/DefaultPreset";
+import { DEFAULT_PRESET } from 'app/preset-options/DefaultPreset';
 
-import { OptionsNormalizer } from "./OptionsNormalizer";
-import { ValidationErrorsFormatter } from "./ValidationErrorsFormatter";
+import { OptionsNormalizer } from './OptionsNormalizer';
+import { ValidationErrorsFormatter } from './ValidationErrorsFormatter';
 
 export class Options implements IOptions {
     /**

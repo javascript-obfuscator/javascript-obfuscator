@@ -2,10 +2,10 @@ import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
 import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
-import { BooleanLiteralReplacer } from "./replacers/BooleanLiteralReplacer";
-import { Nodes } from "../Nodes";
-import { NumberLiteralReplacer } from "./replacers/NumberLiteralReplacer";
-import { StringLiteralReplacer } from "./replacers/StringLiteralReplacer";
+import { BooleanLiteralReplacer } from './replacers/BooleanLiteralReplacer';
+import { Nodes } from 'app/Nodes';
+import { NumberLiteralReplacer } from './replacers/NumberLiteralReplacer';
+import { StringLiteralReplacer } from './replacers/StringLiteralReplacer';
 
 export class LiteralObfuscator extends AbstractNodeObfuscator {
     /**

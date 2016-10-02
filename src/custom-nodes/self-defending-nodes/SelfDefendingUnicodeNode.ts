@@ -1,17 +1,17 @@
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
+import { TNodeWithBlockStatement } from 'app/types/TNodeWithBlockStatement';
 
-import { AppendState } from "../../enums/AppendState";
+import { AppendState } from 'app/enums/AppendState';
 
-import { NO_CUSTOM_NODES_PRESET } from "../../preset-options/NoCustomNodesPreset";
+import { NO_CUSTOM_NODES_PRESET } from 'app/preset-options/NoCustomNodesPreset';
 
-import { SelfDefendingTemplate } from "../../templates/custom-nodes/self-defending-nodes/self-defending-unicode-node/SelfDefendingTemplate";
+import { SelfDefendingTemplate } from 'app/templates/custom-nodes/self-defending-nodes/self-defending-unicode-node/SelfDefendingTemplate';
 
-import { AbstractCustomNode } from '../AbstractCustomNode';
-import { JavaScriptObfuscator } from "../../JavaScriptObfuscator";
-import { NodeUtils } from "../../NodeUtils";
-import { Utils } from "../../Utils";
+import { AbstractCustomNode } from 'app/custom-nodes/AbstractCustomNode';
+import { JavaScriptObfuscator } from 'app/JavaScriptObfuscator';
+import { NodeUtils } from 'app/NodeUtils';
+import { Utils } from 'app/Utils';
 
 export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     /**

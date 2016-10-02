@@ -2,15 +2,15 @@ import * as esprima from 'esprima';
 import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
-import { IObfuscatorOptions } from "./interfaces/IObfuscatorOptions";
-import { IGeneratorOutput } from "./interfaces/IGeneratorOutput";
-import { IObfuscationResult } from "./interfaces/IObfuscationResult";
+import { IObfuscatorOptions } from './interfaces/IObfuscatorOptions';
+import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
+import { IObfuscationResult } from './interfaces/IObfuscationResult';
 import { IOptions } from './interfaces/IOptions';
 
-import { ObfuscationResult } from "./ObfuscationResult";
-import { Obfuscator } from "./Obfuscator";
-import { Options } from "./options/Options";
-import { SourceMapCorrector } from "./SourceMapCorrector";
+import { ObfuscationResult } from './ObfuscationResult';
+import { Obfuscator } from './Obfuscator';
+import { Options } from './options/Options';
+import { SourceMapCorrector } from './SourceMapCorrector';
 
 export class JavaScriptObfuscatorInternal {
     /**

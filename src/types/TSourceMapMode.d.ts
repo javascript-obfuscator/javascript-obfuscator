@@ -1,1 +1,1 @@
-export type TSourceMapMode = 'inline' | 'separate';
+export type TSourceMapMode = 'inline'|'separate';

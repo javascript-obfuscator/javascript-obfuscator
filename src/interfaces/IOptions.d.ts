@@ -1,4 +1,4 @@
-import { TSourceMapMode } from "../types/TSourceMapMode";
+import { TSourceMapMode } from '../types/TSourceMapMode';
 
 export interface IOptions {
     readonly compact: boolean;

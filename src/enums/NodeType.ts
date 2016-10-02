@@ -1,4 +1,4 @@
-import { Utils } from "../Utils";
+import { Utils } from 'app/Utils';
 
 export const NodeType: any = Utils.strEnumify({
     ArrayExpression: 'ArrayExpression',

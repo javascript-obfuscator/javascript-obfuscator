@@ -1,6 +1,6 @@
-import { IObfuscatorOptions } from "../interfaces/IObfuscatorOptions";
+import { IObfuscatorOptions } from 'app/interfaces/IObfuscatorOptions';
 
-import { SourceMapMode } from "../enums/SourceMapMode";
+import { SourceMapMode } from 'app/enums/SourceMapMode';
 
 export const DEFAULT_PRESET: IObfuscatorOptions = Object.freeze({
     compact: true,

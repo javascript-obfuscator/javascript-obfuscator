@@ -1,13 +1,13 @@
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
+import { TNodeWithBlockStatement } from 'app/types/TNodeWithBlockStatement';
 
-import { AppendState } from "../../enums/AppendState";
+import { AppendState } from 'app/enums/AppendState';
 
-import { ConsoleOutputDisableExpressionTemplate } from "../../templates/custom-nodes/console-output-nodes/console-output-disable-expression-node/ConsoleOutputDisableExpressionTemplate";
+import { ConsoleOutputDisableExpressionTemplate } from 'app/templates/custom-nodes/console-output-nodes/console-output-disable-expression-node/ConsoleOutputDisableExpressionTemplate';
 
-import { AbstractCustomNode } from '../AbstractCustomNode';
-import { NodeUtils } from "../../NodeUtils";
+import { AbstractCustomNode } from 'app/custom-nodes/AbstractCustomNode';
+import { NodeUtils } from 'app/NodeUtils';
 
 export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
     /**

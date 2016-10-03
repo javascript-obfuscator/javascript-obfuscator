@@ -2,15 +2,15 @@ import * as chai from 'chai';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockStatement } from '../../src/types/TNodeWithBlockStatement';
+import { TNodeWithBlockStatement } from '../../../src/types/TNodeWithBlockStatement';
 
-import { IStackTraceData } from '../../src/interfaces/IStackTraceData';
+import { IStackTraceData } from '../../../src/interfaces/stack-trace-analyzer/IStackTraceData';
 
-import { readFileAsString } from '../helpers/readFileAsString';
+import { readFileAsString } from '../../helpers/readFileAsString';
 
-import { Nodes } from '../../src/Nodes';
-import { NodeUtils } from '../../src/NodeUtils';
-import { StackTraceAnalyzer } from '../../src/StackTraceAnalyzer';
+import { Nodes } from '../../../src/Nodes';
+import { NodeUtils } from '../../../src/NodeUtils';
+import { StackTraceAnalyzer } from '../../../src/stack-trace-analyzer/StackTraceAnalyzer';
 
 const assert: any = chai.assert;
 
@@ -67,7 +67,7 @@ function getFunctionExpressionByName (astTree: ESTree.Node, name: string): ESTre
 }
 
 describe('StackTraceAnalyzer', () => {
-    describe('analyze (): IStackTraceData[]', () => {
+    describe('extract (): IStackTraceData[]', () => {
         let astTree: TNodeWithBlockStatement,
             stackTraceData: IStackTraceData[],
             expectedStackTraceData: IStackTraceData[];

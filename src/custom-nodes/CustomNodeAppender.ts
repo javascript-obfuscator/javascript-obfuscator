@@ -1,11 +1,9 @@
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockStatement } from '../types/TNodeWithBlockStatement';
-
-import { IStackTraceData } from '../interfaces/IStackTraceData';
+import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { NodeUtils } from '../NodeUtils';
-import { StackTraceAnalyzer } from '../StackTraceAnalyzer';
+import { StackTraceAnalyzer } from '../stack-trace-analyzer/StackTraceAnalyzer';
 import { Utils } from '../Utils';
 
 /**
@@ -34,16 +32,15 @@ export class CustomNodeAppender {
     public static appendNode (blockScopeBody: ESTree.Node[], node: ESTree.Node, index: number = 0): void {
         const blockScopeTraceData: IStackTraceData[] = new StackTraceAnalyzer(blockScopeBody).analyze();
 
-        if (!blockScopeTraceData.length) {
-            NodeUtils.prependNode(blockScopeBody, node);
+        let targetBlockScopeBody: ESTree.Node[];
 
-            return;
+        if (!blockScopeTraceData.length) {
+            targetBlockScopeBody = blockScopeBody;
+        } else {
+            targetBlockScopeBody = CustomNodeAppender.getOptimalBlockScopeBody(blockScopeTraceData, index);
         }
 
-        NodeUtils.prependNode(
-            CustomNodeAppender.getOptimalBlockScope(blockScopeTraceData, index).body,
-            node
-        );
+        NodeUtils.prependNode(targetBlockScopeBody, node);
     }
 
     /**
@@ -64,15 +61,15 @@ export class CustomNodeAppender {
     /**
      * @param blockScopeTraceData
      * @param index
-     * @returns {TNodeWithBlockStatement}
+     * @returns {ESTree.Node[]}
      */
-    private static getOptimalBlockScope (blockScopeTraceData: IStackTraceData[], index: number): TNodeWithBlockStatement {
+    private static getOptimalBlockScopeBody (blockScopeTraceData: IStackTraceData[], index: number): ESTree.Node[] {
         const firstCall: IStackTraceData = blockScopeTraceData[index];
 
         if (firstCall.stackTrace.length) {
-            return CustomNodeAppender.getOptimalBlockScope(firstCall.stackTrace, 0);
+            return CustomNodeAppender.getOptimalBlockScopeBody(firstCall.stackTrace, 0);
         } else {
-            return firstCall.callee;
+            return firstCall.callee.body;
         }
     }
 }

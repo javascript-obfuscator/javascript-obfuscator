@@ -72,9 +72,9 @@ describe('StackTraceAnalyzer', () => {
             stackTraceData: IStackTraceData[],
             expectedStackTraceData: IStackTraceData[];
 
-        it('should returns correct IStackTraceData - variant #1', () => {
+        it('should returns correct IStackTraceData - variant #1: basic-1', () => {
             astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
-                readFileAsString('./test/fixtures/stack-trace-analyzer/variant-1.js'),
+                readFileAsString('./test/fixtures/stack-trace-analyzer/basic-1.js'),
                 false
             );
 
@@ -118,9 +118,9 @@ describe('StackTraceAnalyzer', () => {
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
 
-        it('should returns correct BlockScopeTraceData - variant #2', () => {
+        it('should returns correct BlockScopeTraceData - variant #2: basic-2', () => {
             astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
-                readFileAsString('./test/fixtures/stack-trace-analyzer/variant-2.js'),
+                readFileAsString('./test/fixtures/stack-trace-analyzer/basic-2.js'),
                 false
             );
 
@@ -153,9 +153,44 @@ describe('StackTraceAnalyzer', () => {
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
 
-        it('should returns correct BlockScopeTraceData - variant #3', () => {
+        it('should returns correct BlockScopeTraceData - variant #3: deep conditions nesting', () => {
             astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
-                readFileAsString('./test/fixtures/stack-trace-analyzer/variant-3.js'),
+                readFileAsString('./test/fixtures/stack-trace-analyzer/deep-conditions-nesting.js'),
+                false
+            );
+
+            expectedStackTraceData = [
+                {
+                    name: 'bar',
+                    callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'bar')).body,
+                    stackTrace: []
+                },
+                {
+                    name: 'baz',
+                    callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'baz')).body,
+                    stackTrace: [
+                        {
+                            name: 'inner1',
+                            callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1')).body,
+                            stackTrace: []
+                        },
+                    ]
+                },
+                {
+                    name: 'foo',
+                    callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'foo')).body,
+                    stackTrace: []
+                }
+            ];
+
+            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+
+            assert.deepEqual(stackTraceData, expectedStackTraceData);
+        });
+
+        it('should returns correct BlockScopeTraceData - variant #4: call before declaration', () => {
+            astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
+                readFileAsString('./test/fixtures/stack-trace-analyzer/call-before-declaration.js'),
                 false
             );
 
@@ -172,9 +207,9 @@ describe('StackTraceAnalyzer', () => {
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
 
-        it('should returns correct BlockScopeTraceData - variant #4', () => {
+        it('should returns correct BlockScopeTraceData - variant #5: call expression of object member', () => {
             astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
-                readFileAsString('./test/fixtures/stack-trace-analyzer/variant-4.js'),
+                readFileAsString('./test/fixtures/stack-trace-analyzer/call-expression-of-object-member.js'),
                 false
             );
 
@@ -185,9 +220,9 @@ describe('StackTraceAnalyzer', () => {
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
 
-        it('should returns correct BlockScopeTraceData - variant #5', () => {
+        it('should returns correct BlockScopeTraceData - variant #6: no call expressions', () => {
             astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
-                readFileAsString('./test/fixtures/stack-trace-analyzer/variant-5.js'),
+                readFileAsString('./test/fixtures/stack-trace-analyzer/no-call-expressions.js'),
                 false
             );
 
@@ -198,9 +233,9 @@ describe('StackTraceAnalyzer', () => {
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
 
-        it('should returns correct BlockScopeTraceData - variant #6', () => {
+        it('should returns correct BlockScopeTraceData - variant #7: only call expression', () => {
             astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
-                readFileAsString('./test/fixtures/stack-trace-analyzer/variant-6.js'),
+                readFileAsString('./test/fixtures/stack-trace-analyzer/only-call-expression.js'),
                 false
             );
 

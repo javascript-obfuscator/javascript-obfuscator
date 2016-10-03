@@ -10,7 +10,7 @@ function bar () {
     function inner2 () {
         var inner3 = function () {
 
-        }
+        };
 
         inner3();
     }

@@ -13,7 +13,7 @@ import './unit-tests/OptionsNormalizer.spec';
 import './unit-tests/SourceMapCorrector.spec';
 import './unit-tests/Utils.spec';
 import './unit-tests/cli/CLIUtils.spec';
-import './unit-tests/custom-nodes/CustomNodeAppender-spec';
+import './unit-tests/custom-nodes/CustomNodeAppender.spec';
 import './unit-tests/node-obfuscators/CatchClauseObfuscator.spec';
 import './unit-tests/node-obfuscators/FunctionDeclarationObfuscator.spec';
 import './unit-tests/node-obfuscators/FunctionObfuscator.spec';
@@ -36,6 +36,11 @@ import './functional-tests/node-obfuscators/MemberExpressionObfuscator.spec';
 import './functional-tests/node-obfuscators/MethodDefinitionObfuscator.spec';
 import './functional-tests/node-obfuscators/ObjectExpressionObfuscator.spec';
 import './functional-tests/node-obfuscators/VariableDeclarationObfuscator.spec';
-import './functional-tests/stack-trace-analyzer/StackTraceAnalyzer-spec';
+import './functional-tests/stack-trace-analyzer/StackTraceAnalyzer.spec';
 import './functional-tests/templates/custom-nodes/domain-lock-nodes/DomainLockNodeTemplate.spec';
 import './functional-tests/templates/custom-nodes/unicode-array-nodes/UnicodeArrayDecodeNodeTemplate.spec';
+
+/**
+ * Performance tests
+ */
+import './performance-tests/JavaScriptObfuscatorPerformance.spec';

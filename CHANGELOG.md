@@ -1,6 +1,10 @@
 Change Log
 ===
 
+v0.7.3
+---
+* CLI missing polyfill fix [#17](https://github.com/sanex3339/javascript-obfuscator/issues/17)
+
 v0.7.2
 ---
 * runtime error fix [#7](https://github.com/sanex3339/webpack-obfuscator/issues/7)

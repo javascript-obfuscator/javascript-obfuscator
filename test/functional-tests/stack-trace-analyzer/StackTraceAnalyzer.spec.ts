@@ -286,9 +286,13 @@ describe('StackTraceAnalyzer', () => {
                         name: null,
                         callee: (<ESTree.FunctionExpression>getFunctionExpressionById(astTree, 'bar')).body,
                         stackTrace: [{
-                            name: 'baz',
-                            callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'baz')).body,
-                            stackTrace: []
+                            name: null,
+                            callee: (<ESTree.FunctionExpression>getFunctionExpressionById(astTree, 'baz')).body,
+                            stackTrace: [{
+                                name: 'inner',
+                                callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner')).body,
+                                stackTrace: []
+                            }]
                         }]
                     }]
                 }

@@ -1,9 +1,11 @@
 (function foo (){
     (function bar (){
-        baz();
+        !function baz (){
+            inner();
 
-        function baz () {
+            function inner () {
 
-        }
+            }
+        }();
     }());
 })();

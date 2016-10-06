@@ -66,6 +66,32 @@ function getFunctionExpressionByName (astTree: ESTree.Node, name: string): ESTre
     return functionExpressionNode;
 }
 
+/**
+ * @param astTree
+ * @param id
+ * @returns {ESTree.FunctionExpression|null}
+ */
+function getFunctionExpressionById (astTree: ESTree.Node, id: string): ESTree.FunctionExpression|null {
+    let functionExpressionNode: ESTree.FunctionExpression|null = null;
+
+    estraverse.traverse(astTree, {
+        enter: (node: ESTree.Node): any => {
+            if (
+                Nodes.isFunctionExpressionNode(node) &&
+                node.id &&
+                Nodes.isIdentifierNode(node.id) &&
+                node.id.name === id
+            ) {
+                functionExpressionNode = node;
+
+                return estraverse.VisitorOption.Break;
+            }
+        }
+    });
+
+    return functionExpressionNode;
+}
+
 describe('StackTraceAnalyzer', () => {
     describe('extract (): IStackTraceData[]', () => {
         let astTree: TNodeWithBlockStatement,
@@ -240,6 +266,33 @@ describe('StackTraceAnalyzer', () => {
             );
 
             expectedStackTraceData = [];
+
+            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+
+            assert.deepEqual(stackTraceData, expectedStackTraceData);
+        });
+
+        it('should returns correct BlockScopeTraceData - variant #8: self-invoking functions', () => {
+            astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
+                readFileAsString('./test/fixtures/stack-trace-analyzer/self-invoking-functions.js'),
+                false
+            );
+
+            expectedStackTraceData = [
+                {
+                    name: null,
+                    callee: (<ESTree.FunctionExpression>getFunctionExpressionById(astTree, 'foo')).body,
+                    stackTrace: [{
+                        name: null,
+                        callee: (<ESTree.FunctionExpression>getFunctionExpressionById(astTree, 'bar')).body,
+                        stackTrace: [{
+                            name: 'baz',
+                            callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'baz')).body,
+                            stackTrace: []
+                        }]
+                    }]
+                }
+            ];
 
             stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
 

@@ -42,13 +42,17 @@ export class FunctionExpressionCalleeDataExtractor implements ICalleeDataExtract
             );
         }
 
+        if (Nodes.isFunctionExpressionNode(this.callee)) {
+            calleeBlockStatement = this.callee.body;
+        }
+
         if (!calleeBlockStatement) {
             return null;
         }
 
         return {
             callee: calleeBlockStatement,
-            name: this.callee.name
+            name: this.callee.name || null
         };
     }
 

@@ -88,7 +88,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 81);
+/******/ 	return __webpack_require__(__webpack_require__.s = 80);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -3685,12 +3685,15 @@ var FunctionExpressionCalleeDataExtractor = function () {
             if (Nodes_1.Nodes.isIdentifierNode(this.callee)) {
                 calleeBlockStatement = this.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopeOfNode(this.blockScopeBody[0]), this.callee.name);
             }
+            if (Nodes_1.Nodes.isFunctionExpressionNode(this.callee)) {
+                calleeBlockStatement = this.callee.body;
+            }
             if (!calleeBlockStatement) {
                 return null;
             }
             return {
                 callee: calleeBlockStatement,
-                name: this.callee.name
+                name: this.callee.name || null
             };
         }
     }, {
@@ -3912,8 +3915,7 @@ module.exports = require("fs");
 module.exports = require("mkdirp");
 
 /***/ },
-/* 80 */,
-/* 81 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

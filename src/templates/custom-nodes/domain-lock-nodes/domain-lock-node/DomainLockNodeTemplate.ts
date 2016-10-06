@@ -45,7 +45,7 @@ export function DomainLockNodeTemplate (): string {
             }
                 
             if (!ok) {
-                eval('throw new Error()')();
+                eval('throw new Error("Unexpected identifier")')();
             }
         })();
     `;

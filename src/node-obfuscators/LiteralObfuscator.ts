@@ -32,7 +32,6 @@ export class LiteralObfuscator extends AbstractNodeObfuscator {
 
                 break;
 
-
             case 'string':
                 content = new StringLiteralReplacer(this.nodes, this.options)
                         .replace(<string>literalNode.value);

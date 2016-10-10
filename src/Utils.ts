@@ -112,11 +112,13 @@ export class Utils {
      * @returns {string[]}
      */
     public static hideString(str: string, length: number): [string, string] {
-        const escapeRegExp = (s: string) =>
+        const escapeRegExp: (s: string) => string = (s: string) =>
             s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 
-        const randomMerge = function (s1: string, s2: string): string {
-            let i1 = -1, i2 = -1, result = '';
+        const randomMerge: (s1: string, s2: string) => string = function (s1: string, s2: string): string {
+            let i1: number = -1,
+                i2: number = -1,
+                result: string = '';
 
             while (i1 < s1.length || i2 < s2.length) {
                 if (Math.random() < 0.5 && i2 < s2.length) {
@@ -129,13 +131,13 @@ export class Utils {
             return result;
         };
 
-        const customPool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        const customPool: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
-        let randomString = Utils.randomGenerator.string({length: length, pool: customPool}),
-            randomStringDiff = randomString.replace(
+        let randomString: string = Utils.randomGenerator.string({length: length, pool: customPool}),
+            randomStringDiff: string = randomString.replace(
                 new RegExp('[' + escapeRegExp(str) + ']', 'g'),
             ''),
-            randomStringDiffArray = randomStringDiff.split('');
+            randomStringDiffArray: string[] = randomStringDiff.split('');
 
         Utils.randomGenerator.shuffle(randomStringDiffArray);
         randomStringDiff = randomStringDiffArray.join('');

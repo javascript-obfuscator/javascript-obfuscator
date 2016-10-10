@@ -67,7 +67,7 @@
     "no-null-keyword": false,
     "no-reference": true,
     "no-require-imports": false,
-    "no-shadowed-variable": true,
+    "no-shadowed-variable": false,
     "no-string-literal": true,
     "no-switch-case-fall-through": false,
     "no-trailing-whitespace": true,

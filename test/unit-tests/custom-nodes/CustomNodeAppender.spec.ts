@@ -277,25 +277,24 @@ describe('CustomNodeAppender', () => {
         it('should returns random index between 0 and index based on threshold value', () => {
             let index: number;
 
-            for (let i = 0; i < 10; i++) {
+            for (let i: number = 0; i < 10; i++) {
                 index = CustomNodeAppender.getIndexByThreshold(100, 0.1);
 
                 assert.isAtLeast(index, 0);
                 assert.isAtMost(index, 10);
             }
 
-            for (let i = 0; i < 10; i++) {
+            for (let i: number = 0; i < 10; i++) {
                 index = CustomNodeAppender.getIndexByThreshold(10, 0.5);
 
                 assert.isAtLeast(index, 0);
                 assert.isAtMost(index, 5);
             }
 
-            for (let i = 0; i < 10; i++) {
+            for (let i: number = 0; i < 10; i++) {
                 index = CustomNodeAppender.getIndexByThreshold(1, 1);
 
-                assert.isAtLeast(index, 0);
-                assert.isAtMost(index, 1);
+                assert.equal(index, 0);
             }
         });
     });

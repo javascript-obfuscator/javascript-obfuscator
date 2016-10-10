@@ -856,7 +856,7 @@ var CustomNodeAppender = function () {
             }
             return Utils_1.Utils.getRandomGenerator().integer({
                 min: 0,
-                max: Math.round(blockStatementBodyLength * threshold)
+                max: Math.round((blockStatementBodyLength - 1) * threshold)
             });
         }
     }, {

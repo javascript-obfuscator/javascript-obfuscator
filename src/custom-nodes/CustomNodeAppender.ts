@@ -54,7 +54,7 @@ export class CustomNodeAppender {
 
         return Utils.getRandomGenerator().integer({
             min: 0,
-            max: Math.round(blockStatementBodyLength * threshold)
+            max: Math.round((blockStatementBodyLength - 1) * threshold)
         });
     }
 

@@ -8,8 +8,6 @@ node_js:
   - "6"
   - "stable"
   
-install: "npm i -g yarn && yarn"
-
 script: "npm run travis"
 
 after_success:

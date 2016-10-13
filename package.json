@@ -38,7 +38,7 @@
     "@types/escodegen": "0.0.6",
     "@types/esprima": "2.1.33",
     "@types/estraverse": "0.0.6",
-    "@types/estree": "0.0.32",
+    "@types/estree": "0.0.34",
     "@types/format-unicorn": "0.0.29",
     "@types/joi": "9.0.32",
     "@types/mkdirp": "0.3.29",

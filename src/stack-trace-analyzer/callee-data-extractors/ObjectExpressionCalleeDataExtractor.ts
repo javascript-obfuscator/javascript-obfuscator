@@ -142,7 +142,7 @@ export class ObjectExpressionCalleeDataExtractor implements ICalleeDataExtractor
                 Boolean(propertyNode.key.value) &&
                 propertyNode.key.value === nextItemInCallsChain;
 
-            if (!isTargetPropertyNodeWithIdentifierKey || isTargetPropertyNodeWithLiteralKey) {
+            if (!isTargetPropertyNodeWithIdentifierKey && !isTargetPropertyNodeWithLiteralKey) {
                 continue;
             }
 

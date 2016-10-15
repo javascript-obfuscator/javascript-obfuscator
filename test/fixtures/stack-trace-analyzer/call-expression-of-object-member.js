@@ -21,7 +21,7 @@ var object1 = {
         }
     },
 
-    bar: function () {
+    'bar': function () {
         function inner1 () {
 
         }

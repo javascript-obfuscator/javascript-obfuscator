@@ -127,8 +127,10 @@ function getObjectFunctionExpressionByName (astTree: ESTree.Node, objectName: st
             if (
                 Nodes.isPropertyNode(node) &&
                 Nodes.isFunctionExpressionNode(node.value) &&
-                Nodes.isIdentifierNode(node.key) &&
-                node.key.name === name
+                (
+                    (Nodes.isIdentifierNode(node.key) && node.key.name === name) ||
+                    (Nodes.isLiteralNode(node.key) && node.key.value === name)
+                )
             ) {
                 functionExpressionNode = node.value;
 

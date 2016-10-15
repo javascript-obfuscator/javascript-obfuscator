@@ -88,7 +88,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 81);
+/******/ 	return __webpack_require__(__webpack_require__.s = 82);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -3820,7 +3820,7 @@ var ObjectExpressionCalleeDataExtractor = function () {
 
                     var isTargetPropertyNodeWithIdentifierKey = Nodes_1.Nodes.isIdentifierNode(propertyNode.key) && propertyNode.key.name === nextItemInCallsChain;
                     var isTargetPropertyNodeWithLiteralKey = Nodes_1.Nodes.isLiteralNode(propertyNode.key) && Boolean(propertyNode.key.value) && propertyNode.key.value === nextItemInCallsChain;
-                    if (!isTargetPropertyNodeWithIdentifierKey || isTargetPropertyNodeWithLiteralKey) {
+                    if (!isTargetPropertyNodeWithIdentifierKey && !isTargetPropertyNodeWithLiteralKey) {
                         continue;
                     }
                     if (Nodes_1.Nodes.isObjectExpressionNode(propertyNode.value)) {
@@ -4052,7 +4052,8 @@ module.exports = require("fs");
 module.exports = require("mkdirp");
 
 /***/ },
-/* 81 */
+/* 81 */,
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

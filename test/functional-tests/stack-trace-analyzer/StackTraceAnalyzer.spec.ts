@@ -301,6 +301,11 @@ describe('StackTraceAnalyzer', () => {
                     stackTrace: []
                 },
                 {
+                    name: 'func',
+                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'func')).body,
+                    stackTrace: []
+                },
+                {
                     name: 'bar',
                     callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'bar')).body,
                     stackTrace: [

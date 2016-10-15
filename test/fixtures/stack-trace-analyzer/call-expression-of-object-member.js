@@ -18,6 +18,10 @@ var object1 = {
     foo: {
         baz: function () {
 
+        },
+
+        func: function () {
+
         }
     },
 
@@ -32,6 +36,7 @@ var object1 = {
 
 object1.foo.baz();
 object1['foo'].baz();
+object1['foo'].func();
 object1.bar();
 
 object.bar();

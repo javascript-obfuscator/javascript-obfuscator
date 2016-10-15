@@ -11,6 +11,8 @@ import { NodeType } from '../enums/NodeType';
 
 import { FunctionDeclarationCalleeDataExtractor } from './callee-data-extractors/FunctionDeclarationCalleeDataExtractor';
 import { FunctionExpressionCalleeDataExtractor } from './callee-data-extractors/FunctionExpressionCalleeDataExtractor';
+import { ObjectExpressionCalleeDataExtractor } from './callee-data-extractors/ObjectExpressionCalleeDataExtractor';
+
 import { Nodes } from '../Nodes';
 import { NodeUtils } from '../NodeUtils';
 
@@ -56,7 +58,8 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
      */
     private calleeDataExtractors: Map <string, TCalleeDataExtractor> = new Map <string, TCalleeDataExtractor> ([
         [NodeType.FunctionDeclaration, FunctionDeclarationCalleeDataExtractor],
-        [NodeType.FunctionExpression, FunctionExpressionCalleeDataExtractor]
+        [NodeType.FunctionExpression, FunctionExpressionCalleeDataExtractor],
+        [NodeType.ObjectExpression, ObjectExpressionCalleeDataExtractor]
     ]);
 
     /**

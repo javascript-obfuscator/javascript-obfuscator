@@ -68,6 +68,32 @@ function getFunctionExpressionByName (astTree: ESTree.Node, name: string): ESTre
 
 /**
  * @param astTree
+ * @param name
+ * @returns {ESTree.FunctionExpression|null}
+ */
+function getObjectFunctionExpressionByName (astTree: ESTree.Node, name: string): ESTree.FunctionExpression|null {
+    let functionExpressionNode: ESTree.FunctionExpression|null = null;
+
+    estraverse.traverse(astTree, {
+        enter: (node: ESTree.Node): any => {
+            if (
+                Nodes.isPropertyNode(node) &&
+                Nodes.isFunctionExpressionNode(node.value) &&
+                Nodes.isIdentifierNode(node.key) &&
+                node.key.name === name
+            ) {
+                functionExpressionNode = node.value;
+
+                return estraverse.VisitorOption.Break;
+            }
+        }
+    });
+
+    return functionExpressionNode;
+}
+
+/**
+ * @param astTree
  * @param id
  * @returns {ESTree.FunctionExpression|null}
  */
@@ -239,7 +265,31 @@ describe('StackTraceAnalyzer', () => {
                 false
             );
 
-            expectedStackTraceData = [];
+            expectedStackTraceData = [
+                {
+                    name: 'baz',
+                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'baz')).body,
+                    stackTrace: []
+                },
+                {
+                    name: 'baz',
+                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'baz')).body,
+                    stackTrace: []
+                },
+                {
+                    name: 'bar',
+                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'bar')).body,
+                    stackTrace: [
+                        {
+                            name: 'inner1',
+                            callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1')).body,
+                            stackTrace: [
+
+                            ]
+                        },
+                    ]
+                },
+            ];
 
             stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
 

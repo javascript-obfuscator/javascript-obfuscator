@@ -91,6 +91,14 @@ export class Nodes {
     }
 
     /**
+     * @param node
+     * @returns {boolean}
+     */
+    public static isObjectExpressionNode (node: ESTree.Node): node is ESTree.ObjectExpression {
+        return node.type === NodeType.ObjectExpression;
+    }
+
+    /**
      *
      * @param node
      * @returns {boolean}

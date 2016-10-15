@@ -6,6 +6,22 @@ var object = {
     },
 
     bar: function () {
+        function inner () {
+
+        }
+
+        inner();
+    }
+};
+
+var object1 = {
+    foo: {
+        baz: function () {
+
+        }
+    },
+
+    bar: function () {
         function inner1 () {
 
         }
@@ -14,6 +30,8 @@ var object = {
     }
 };
 
-object.foo.baz();
-object['foo'].baz();
+object1.foo.baz();
+object1['foo'].baz();
+object1.bar();
+
 object.bar();

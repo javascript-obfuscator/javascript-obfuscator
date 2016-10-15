@@ -68,32 +68,6 @@ function getFunctionExpressionByName (astTree: ESTree.Node, name: string): ESTre
 
 /**
  * @param astTree
- * @param name
- * @returns {ESTree.FunctionExpression|null}
- */
-function getObjectFunctionExpressionByName (astTree: ESTree.Node, name: string): ESTree.FunctionExpression|null {
-    let functionExpressionNode: ESTree.FunctionExpression|null = null;
-
-    estraverse.traverse(astTree, {
-        enter: (node: ESTree.Node): any => {
-            if (
-                Nodes.isPropertyNode(node) &&
-                Nodes.isFunctionExpressionNode(node.value) &&
-                Nodes.isIdentifierNode(node.key) &&
-                node.key.name === name
-            ) {
-                functionExpressionNode = node.value;
-
-                return estraverse.VisitorOption.Break;
-            }
-        }
-    });
-
-    return functionExpressionNode;
-}
-
-/**
- * @param astTree
  * @param id
  * @returns {ESTree.FunctionExpression|null}
  */
@@ -109,6 +83,54 @@ function getFunctionExpressionById (astTree: ESTree.Node, id: string): ESTree.Fu
                 node.id.name === id
             ) {
                 functionExpressionNode = node;
+
+                return estraverse.VisitorOption.Break;
+            }
+        }
+    });
+
+    return functionExpressionNode;
+}
+
+/**
+ * @param astTree
+ * @param objectName
+ * @param name
+ * @returns {ESTree.FunctionExpression|null}
+ */
+function getObjectFunctionExpressionByName (astTree: ESTree.Node, objectName: string, name: string): ESTree.FunctionExpression|null {
+    let functionExpressionNode: ESTree.FunctionExpression|null = null,
+        targetObjectExpressionNode: ESTree.ObjectExpression|null = null;
+
+    estraverse.traverse(astTree, {
+        enter: (node: ESTree.Node): any => {
+            if (
+                Nodes.isVariableDeclaratorNode(node) &&
+                Nodes.isIdentifierNode(node.id) &&
+                node.init &&
+                Nodes.isObjectExpressionNode(node.init) &&
+                node.id.name === objectName
+            ) {
+                targetObjectExpressionNode = node.init;
+
+                return estraverse.VisitorOption.Break;
+            }
+        }
+    });
+
+    if (!targetObjectExpressionNode) {
+        return null;
+    }
+
+    estraverse.traverse(targetObjectExpressionNode, {
+        enter: (node: ESTree.Node): any => {
+            if (
+                Nodes.isPropertyNode(node) &&
+                Nodes.isFunctionExpressionNode(node.value) &&
+                Nodes.isIdentifierNode(node.key) &&
+                node.key.name === name
+            ) {
+                functionExpressionNode = node.value;
 
                 return estraverse.VisitorOption.Break;
             }
@@ -268,17 +290,17 @@ describe('StackTraceAnalyzer', () => {
             expectedStackTraceData = [
                 {
                     name: 'baz',
-                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'baz')).body,
+                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'baz')).body,
                     stackTrace: []
                 },
                 {
                     name: 'baz',
-                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'baz')).body,
+                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'baz')).body,
                     stackTrace: []
                 },
                 {
                     name: 'bar',
-                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'bar')).body,
+                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'bar')).body,
                     stackTrace: [
                         {
                             name: 'inner1',
@@ -289,6 +311,19 @@ describe('StackTraceAnalyzer', () => {
                         },
                     ]
                 },
+                {
+                    name: 'bar',
+                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object', 'bar')).body,
+                    stackTrace: [
+                        {
+                            name: 'inner',
+                            callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner')).body,
+                            stackTrace: [
+
+                            ]
+                        },
+                    ]
+                }
             ];
 
             stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
@@ -345,6 +380,25 @@ describe('StackTraceAnalyzer', () => {
                             }]
                         }]
                     }]
+                }
+            ];
+
+            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+
+            assert.deepEqual(stackTraceData, expectedStackTraceData);
+        });
+
+        it('should returns correct BlockScopeTraceData - variant #9: no recursion', () => {
+            astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
+                readFileAsString('./test/fixtures/stack-trace-analyzer/no-recursion.js'),
+                false
+            );
+
+            expectedStackTraceData = [
+                {
+                    name: 'bar',
+                    callee: (<ESTree.FunctionExpression>getFunctionExpressionByName(astTree, 'bar')).body,
+                    stackTrace: []
                 }
             ];
 

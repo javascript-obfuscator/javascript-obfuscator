@@ -53,7 +53,7 @@ export class OptionsNormalizer {
     public static normalizeOptions (options: IOptions): IOptions {
         let normalizedOptions: IOptions = Object.assign({}, options);
 
-        for (let normalizerRule of OptionsNormalizer.normalizerRules) {
+        for (const normalizerRule of OptionsNormalizer.normalizerRules) {
             normalizedOptions = normalizerRule(normalizedOptions);
         }
 
@@ -68,7 +68,7 @@ export class OptionsNormalizer {
         if (options.domainLock.length) {
             let normalizedDomains: string[] = [];
 
-            for (let domain of options.domainLock) {
+            for (const domain of options.domainLock) {
                 normalizedDomains.push(Utils.extractDomainFromUrl(domain));
             }
 

@@ -134,7 +134,7 @@ export class ObjectExpressionCalleeDataExtractor implements ICalleeDataExtractor
             return null;
         }
 
-        for (let propertyNode of objectExpressionProperties) {
+        for (const propertyNode of objectExpressionProperties) {
             const isTargetPropertyNodeWithIdentifierKey: boolean =
                 Nodes.isIdentifierNode(propertyNode.key) && propertyNode.key.name === nextItemInCallsChain;
             const isTargetPropertyNodeWithLiteralKey: boolean =

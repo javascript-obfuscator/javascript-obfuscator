@@ -102,7 +102,7 @@ export class JavaScriptObfuscatorCLI {
         let obfuscatorOptions: IObfuscatorOptions = {},
             availableOptions: string[] = Object.keys(DEFAULT_PRESET);
 
-        for (let option in this.commands) {
+        for (const option in this.commands) {
             if (!this.commands.hasOwnProperty(option)) {
                 continue;
             }

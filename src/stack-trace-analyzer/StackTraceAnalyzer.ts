@@ -83,7 +83,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     private analyzeRecursive (blockScopeBody: ESTree.Node[]): IStackTraceData[] {
         const stackTraceData: IStackTraceData[] = [];
 
-        for (let rootNode of blockScopeBody) {
+        for (const rootNode of blockScopeBody) {
             estraverse.traverse(rootNode, {
                 enter: (node: ESTree.Node): any => {
                     if (!Nodes.isCallExpressionNode(node) || rootNode.parentNode !== NodeUtils.getBlockScopeOfNode(node)) {

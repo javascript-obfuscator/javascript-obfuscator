@@ -8,7 +8,7 @@ export class ValidationErrorsFormatter {
     public static format (validationErrors: ValidationError[]): string {
         let errorsArray: string[] = [];
 
-        for (let error of validationErrors) {
+        for (const error of validationErrors) {
             errorsArray.push(ValidationErrorsFormatter.formatError(error));
         }
 
@@ -23,7 +23,7 @@ export class ValidationErrorsFormatter {
         let errorString: string = `\`${validationError.property}\` errors:\n`,
             constraints: {[type: string]: string} = validationError.constraints;
 
-        for (let constraint in constraints) {
+        for (const constraint in constraints) {
             if (!constraints.hasOwnProperty(constraint)) {
                 continue;
             }

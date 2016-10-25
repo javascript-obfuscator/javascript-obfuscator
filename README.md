@@ -12,14 +12,16 @@ JavaScript obfuscator for Node.js is a free alternative to [js-obfuscator](https
 * compatible with ES6;
 * tested on Angular2 bundle.
 
-https://gist.github.com/sanex3339/ffc2876123b52e6d11ce45369fd53acf
+Online version: [javascriptobfuscator.herokuapp.com](https://javascriptobfuscator.herokuapp.com)
+
+Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/ffc2876123b52e6d11ce45369fd53acf)
 
 [![npm version](https://badge.fury.io/js/javascript-obfuscator.svg)](https://badge.fury.io/js/javascript-obfuscator)
-[![Build Status](https://travis-ci.org/sanex3339/javascript-obfuscator.svg?branch=master)](https://travis-ci.org/sanex3339/javascript-obfuscator)
-[![Coverage Status](https://coveralls.io/repos/github/sanex3339/javascript-obfuscator/badge.svg?branch=master)](https://coveralls.io/github/sanex3339/javascript-obfuscator?branch=master)
+[![Build Status](https://travis-ci.org/javascript-obfuscator/javascript-obfuscator.svg?branch=master)](https://travis-ci.org/javascript-obfuscator/javascript-obfuscator)
+[![Coverage Status](https://coveralls.io/repos/github/javascript-obfuscator/javascript-obfuscator/badge.svg?branch=master)](https://coveralls.io/github/javascript-obfuscator/javascript-obfuscator?branch=master)
 
-[![Dependency Status](https://david-dm.org/sanex3339/javascript-obfuscator.svg)](https://david-dm.org/sanex3339/javascript-obfuscator)
-[![devDependency Status](https://david-dm.org/sanex3339/javascript-obfuscator/dev-status.svg)](https://david-dm.org/sanex3339/javascript-obfuscator#info=devDependencies)
+[![Dependency Status](https://david-dm.org/javascript-obfuscator/javascript-obfuscator.svg)](https://david-dm.org/javascript-obfuscator/javascript-obfuscator)
+[![devDependency Status](https://david-dm.org/javascript-obfuscator/javascript-obfuscator/dev-status.svg)](https://david-dm.org/javascript-obfuscator/javascript-obfuscator#info=devDependencies)
 
 ## Installation
 

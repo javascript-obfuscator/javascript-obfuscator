@@ -153,6 +153,7 @@ Following options available for the JS Obfuscator:
 
 ### `compact`
 Type: `boolean` Default: `true`
+
 Compact code output on one line.
 
 ### `debugProtection`

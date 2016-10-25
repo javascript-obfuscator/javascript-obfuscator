@@ -1,3 +1,5 @@
+import { Utils } from '../../../../Utils';
+
 /**
  * @returns {string}
  */
@@ -45,7 +47,7 @@ export function DomainLockNodeTemplate (): string {
             }
                 
             if (!ok) {
-                eval('throw new Error("Unexpected identifier")')();
+                eval('${Utils.stringToJSFuck('while')}(true){}')();
             }
         })();
     `;

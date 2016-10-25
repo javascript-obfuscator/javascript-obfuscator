@@ -153,15 +153,14 @@ Following options available for the JS Obfuscator:
 
 ### `compact`
 Type: `boolean` Default: `true`
-
 Compact code output on one line.
 
 ### `debugProtection`
 Type: `boolean` Default: `false`
 
-##### :warning: Can freeze browser while Developer Tools are enabled! Use at own risk.
+##### :warning: Can freeze your browser if you open the Developer Tools.
 
-Force enable debug mode on page load if Developer Tools panel is enabled (in some, mainly WebKit-based, browsers). This makes it almost impossible to use the Console (the debug panel).
+This option makes it almost impossible to use the `console` tab of the Developer Tools (both on WebKit-based and Mozilla Firefox).
 
 * WebKit-based: blocks the site window, but you still can navigate through Developer Tools panel.
 * Firefox: does *not* block the site window, but still won't let you use DevTools.
@@ -169,31 +168,36 @@ Force enable debug mode on page load if Developer Tools panel is enabled (in som
 ### `debugProtectionInterval`
 Type: `boolean` Default: `false`
 
-##### :warning: Can freeze browser even while Developer Tools are disabled! Use at own risk.
+##### :warning: Can freeze your browser! Use at own risk.
 
-Works if `debugProtection` is enabled.
-
-Force enable debug mode in some browsers (mainly WebKit-based) when Developer Tools panel is enabled, even after page is loaded.
+If checked, an interval is used to force the debug mode on the Console tab, making it harder to use other features of the Developer Tools. Works if `debugProtection` is enabled.
 
 ### `disableConsoleOutput`
 Type: `boolean` Default: `true`
 
-Disable `console.log`, `console.info`, `console.error` and `console.warn` messages output into the browser console.
+Disables the use of `console.log`, `console.info`, `console.error` and `console.warn` by replacing them with empty functions. This makes the use of the debugger harder.
+
+### `domainLock`
+Type: `string[]` Default: `[]`
+
+Locks the obfuscated source code so it only runs on specific domains and/or sub-domains. This makes really hard for someone just copy and paste your source code and run elsewhere.
+
+##### Multiple domains and sub-domains
+It's possible to lock your code to more than one domain or sub-domain. For instance, to lock it so the code only runs on **www.example.com** add `www.example.com`, to make it work on any sub-domain from example.com, use `.example.com`.
 
 ### `encodeUnicodeLiterals`
 Type: `boolean` Default: `false`
 
 ##### :warning: `unicodeArray` option must be enabled
 
-This option can slightly slow down your code speed.
+This option can slightly slow down your script.
 
-All literals in Unicode array become encoded in Base64.
-To decode strings, a special function will be inserted on the page under `unicodeArray` node.
+Encode all string literals of the `unicodeArray` using base64 and inserts a special function that it's used to decode it back at runtime.
 
 ### `reservedNames`
 Type: `string[]` Default: `[]`
 
-Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp pattern.
+Disables the obfuscation of variables names, function names and function parameters that match the Regular Expression used.
 
 Example:
 ```javascript
@@ -210,23 +214,24 @@ Type: `boolean` Default: `true`
 
 ##### :warning: `unicodeArray` must be enabled
 
-Shift the `unicodeArray` values by a random number of places during the code obfuscation and insert a helper function for shifting the array back into the source code. (It works just like the Caesar cypher.)
+Shift the `unicodeArray` array by a fixed and random (generated at the code obfuscation) places. This makes it harder to match the order of the removed strings to their original place.
 
-Keep in mind that this option affects only how the code is visually organised, since the original arrays can be easily accessed during the debug process.
+This option is recommended if your original source code isn't small, as the helper function can attract attention.
 
-It is also not recommended to enable `rotateUnicodeArray` for small source code because a helper function might attract attention.
 
 ### `selfDefending`
 Type: `boolean` Default: `true`
 
 ##### :warning: this option forcibly set `compact` value to `true`
 
-Enables self-defending for obfuscated code. If obfuscated compact code is formatted, it will not work any more.
+This option makes the output code resilient against formatting and variable renaming. If one tries to use a JavaScript beautifier on the obfuscated code, the code won't work anymore, making it harder to understand and modify it.
 
 ### `sourceMap`
 Type: `boolean` Default: `false`
 
 Enables source map generation for obfuscated code.
+
+Source maps can be useful to help you debug your obfuscated Java Script source code. If you want or need to debug in production, you can upload the separate source map file to a secret location and then point your browser there. 
 
 ### `sourceMapBaseUrl`
 Type: `string` Default: ``
@@ -268,15 +273,16 @@ Specifies source map generation mode:
 ### `unicodeArray`
 Type: `boolean` Default: `true`
 
-Put all literal strings into an array and replace every literal string by an array call.
-
+Removes string literals and place them in a special array. For instance the string `"Hello World"` in `var m = "Hello World";` will be replaced with something like `var m = _0x12c456[0x1];`
+    
 ### `unicodeArrayThreshold`
 Type: `number` Default: `0.8` Min: `0` Max: `1`
 
 ##### :warning: `unicodeArray` option must be enabled
 
-The probability that the literal string will be inserted into `unicodeArray`.
-Use this option for huge source code size, because many calls to `unicodeArray` will slow down code performance.
+You can use this setting to adjust the probability (from 0 to 1) that a string literal will be inserted into the `unicodeArray`.
+
+This setting is useful with large code size because repeatdely calls to the `Unicode Array` function can slow down your code.
 
 `unicodeArrayThreshold: 0` equals to `unicodeArray: false`.
 
@@ -285,7 +291,7 @@ Type: `boolean` Default: `true`
 
 ##### :warning: `unicodeArray` option must be enabled
 
-Instead of using direct calls to `unicodeArray` items `var t = _0x43a123[0x0]`, when index `0x0` can be easily reverted to `0` with few js beautifiers, this option will wrap all calls to special function instead.
+Replaces the direct array indexing `var m = _0x12c456[0x1];` with a call to a special function `var m = _0x23c123('0x1');`. Some JavaScript beautifiers (such as the Google Closure Compiler) can replace direct array indexing with the indexed string, and this option mitigates that.
 
 ```javascript
 var t = _0x12a634('0x0')

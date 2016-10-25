@@ -4,6 +4,8 @@ import 'format-unicorn';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 
+import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
+
 import { AppendState } from '../../enums/AppendState';
 
 import { DomainLockNodeTemplate } from '../../templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
@@ -21,9 +23,11 @@ export class DomainLockNode extends AbstractCustomNode {
 
     /**
      * @param blockScopeNode
+     * @param stackTraceData
      */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
+    public appendNode (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
         CustomNodeAppender.appendNode(
+            stackTraceData,
             blockScopeNode.body,
             this.getNode(),
             CustomNodeAppender.getIndexByThreshold(blockScopeNode.body.length)

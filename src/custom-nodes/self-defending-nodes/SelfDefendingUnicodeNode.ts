@@ -2,6 +2,8 @@ import * as ESTree from 'estree';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 
+import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
+
 import { AppendState } from '../../enums/AppendState';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
@@ -21,9 +23,11 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
 
     /**
      * @param blockScopeNode
+     * @param stackTraceData
      */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
+    public appendNode (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
         CustomNodeAppender.appendNode(
+            stackTraceData,
             blockScopeNode.body,
             this.getNode(),
             CustomNodeAppender.getIndexByThreshold(blockScopeNode.body.length)

@@ -4,6 +4,7 @@ import * as ESTree from 'estree';
 import { ICustomNode } from './interfaces/custom-nodes/ICustomNode';
 import { IObfuscator } from './interfaces/IObfuscator';
 import { IOptions } from './interfaces/IOptions';
+import { IStackTraceData } from './interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { TNodeObfuscator } from './types/TNodeObfuscator';
 
@@ -25,6 +26,7 @@ import { ObjectExpressionObfuscator } from './node-obfuscators/ObjectExpressionO
 import { SelfDefendingNodesGroup } from './node-groups/SelfDefendingNodesGroup';
 import { UnicodeArrayNodesGroup } from './node-groups/UnicodeArrayNodesGroup';
 import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclarationObfuscator';
+import { StackTraceAnalyzer } from './stack-trace-analyzer/StackTraceAnalyzer';
 
 export class Obfuscator implements IObfuscator {
     /**
@@ -75,38 +77,42 @@ export class Obfuscator implements IObfuscator {
      * @param node
      * @returns {ESTree.Node}
      */
-    public obfuscateNode (node: ESTree.Node): ESTree.Node {
+    public obfuscateNode (node: ESTree.Program): ESTree.Node {
         if (Nodes.isProgramNode(node) && !node.body.length) {
             return node;
         }
 
         NodeUtils.parentize(node);
 
-        this.beforeObfuscation(node);
+        const stackTraceData: IStackTraceData[] = new StackTraceAnalyzer(node.body).analyze();
+
+        this.beforeObfuscation(node, stackTraceData);
         this.obfuscate(node);
-        this.afterObfuscation(node);
+        this.afterObfuscation(node, stackTraceData);
 
         return node;
     }
 
     /**
      * @param astTree
+     * @param stackTraceData
      */
-    private afterObfuscation (astTree: ESTree.Node): void {
+    private afterObfuscation (astTree: ESTree.Node, stackTraceData: IStackTraceData[]): void {
         this.nodes.forEach((node: ICustomNode) => {
             if (node.getAppendState() === AppendState.AfterObfuscation) {
-                node.appendNode(astTree);
+                node.appendNode(astTree, stackTraceData);
             }
         });
     }
 
     /**
      * @param astTree
+     * @param stackTraceData
      */
-    private beforeObfuscation (astTree: ESTree.Node): void {
+    private beforeObfuscation (astTree: ESTree.Node, stackTraceData: IStackTraceData[]): void {
         this.nodes.forEach((node: ICustomNode) => {
             if (node.getAppendState() === AppendState.BeforeObfuscation) {
-                node.appendNode(astTree);
+                node.appendNode(astTree, stackTraceData);
             }
         });
     };

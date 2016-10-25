@@ -88,7 +88,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 81);
+/******/ 	return __webpack_require__(__webpack_require__.s = 82);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -829,7 +829,6 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeUtils_1 = __webpack_require__(1);
-var StackTraceAnalyzer_1 = __webpack_require__(58);
 var Utils_1 = __webpack_require__(0);
 
 var CustomNodeAppender = function () {
@@ -839,15 +838,14 @@ var CustomNodeAppender = function () {
 
     _createClass(CustomNodeAppender, null, [{
         key: 'appendNode',
-        value: function appendNode(blockScopeBody, node) {
-            var index = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+        value: function appendNode(blockScopeStackTraceData, blockScopeBody, node) {
+            var index = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
 
-            var blockScopeTraceData = new StackTraceAnalyzer_1.StackTraceAnalyzer(blockScopeBody).analyze();
             var targetBlockScopeBody = void 0;
-            if (!blockScopeTraceData.length) {
+            if (!blockScopeStackTraceData.length) {
                 targetBlockScopeBody = blockScopeBody;
             } else {
-                targetBlockScopeBody = CustomNodeAppender.getOptimalBlockScopeBody(blockScopeTraceData, index);
+                targetBlockScopeBody = CustomNodeAppender.getOptimalBlockScopeBody(blockScopeStackTraceData, index);
             }
             NodeUtils_1.NodeUtils.prependNode(targetBlockScopeBody, node);
         }
@@ -1276,6 +1274,7 @@ var ObjectExpressionObfuscator_1 = __webpack_require__(52);
 var SelfDefendingNodesGroup_1 = __webpack_require__(44);
 var UnicodeArrayNodesGroup_1 = __webpack_require__(45);
 var VariableDeclarationObfuscator_1 = __webpack_require__(53);
+var StackTraceAnalyzer_1 = __webpack_require__(58);
 
 var Obfuscator = function () {
     function Obfuscator(options) {
@@ -1293,26 +1292,27 @@ var Obfuscator = function () {
                 return node;
             }
             NodeUtils_1.NodeUtils.parentize(node);
-            this.beforeObfuscation(node);
+            var stackTraceData = new StackTraceAnalyzer_1.StackTraceAnalyzer(node.body).analyze();
+            this.beforeObfuscation(node, stackTraceData);
             this.obfuscate(node);
-            this.afterObfuscation(node);
+            this.afterObfuscation(node, stackTraceData);
             return node;
         }
     }, {
         key: 'afterObfuscation',
-        value: function afterObfuscation(astTree) {
+        value: function afterObfuscation(astTree, stackTraceData) {
             this.nodes.forEach(function (node) {
                 if (node.getAppendState() === AppendState_1.AppendState.AfterObfuscation) {
-                    node.appendNode(astTree);
+                    node.appendNode(astTree, stackTraceData);
                 }
             });
         }
     }, {
         key: 'beforeObfuscation',
-        value: function beforeObfuscation(astTree) {
+        value: function beforeObfuscation(astTree, stackTraceData) {
             this.nodes.forEach(function (node) {
                 if (node.getAppendState() === AppendState_1.AppendState.BeforeObfuscation) {
-                    node.appendNode(astTree);
+                    node.appendNode(astTree, stackTraceData);
                 }
             });
         }
@@ -1722,8 +1722,8 @@ var ConsoleOutputDisableExpressionNode = function (_AbstractCustomNode_) {
 
     _createClass(ConsoleOutputDisableExpressionNode, [{
         key: 'appendNode',
-        value: function appendNode(blockScopeNode) {
-            CustomNodeAppender_1.CustomNodeAppender.appendNode(blockScopeNode.body, this.getNode(), CustomNodeAppender_1.CustomNodeAppender.getIndexByThreshold(blockScopeNode.body.length));
+        value: function appendNode(blockScopeNode, stackTraceData) {
+            CustomNodeAppender_1.CustomNodeAppender.appendNode(stackTraceData, blockScopeNode.body, this.getNode(), CustomNodeAppender_1.CustomNodeAppender.getIndexByThreshold(blockScopeNode.body.length));
         }
     }, {
         key: 'getNodeStructure',
@@ -1946,8 +1946,8 @@ var DomainLockNode = function (_AbstractCustomNode_) {
 
     _createClass(DomainLockNode, [{
         key: 'appendNode',
-        value: function appendNode(blockScopeNode) {
-            CustomNodeAppender_1.CustomNodeAppender.appendNode(blockScopeNode.body, this.getNode(), CustomNodeAppender_1.CustomNodeAppender.getIndexByThreshold(blockScopeNode.body.length));
+        value: function appendNode(blockScopeNode, stackTraceData) {
+            CustomNodeAppender_1.CustomNodeAppender.appendNode(stackTraceData, blockScopeNode.body, this.getNode(), CustomNodeAppender_1.CustomNodeAppender.getIndexByThreshold(blockScopeNode.body.length));
         }
     }, {
         key: 'getNodeStructure',
@@ -2009,8 +2009,8 @@ var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
 
     _createClass(SelfDefendingUnicodeNode, [{
         key: 'appendNode',
-        value: function appendNode(blockScopeNode) {
-            CustomNodeAppender_1.CustomNodeAppender.appendNode(blockScopeNode.body, this.getNode(), CustomNodeAppender_1.CustomNodeAppender.getIndexByThreshold(blockScopeNode.body.length));
+        value: function appendNode(blockScopeNode, stackTraceData) {
+            CustomNodeAppender_1.CustomNodeAppender.appendNode(stackTraceData, blockScopeNode.body, this.getNode(), CustomNodeAppender_1.CustomNodeAppender.getIndexByThreshold(blockScopeNode.body.length));
         }
     }, {
         key: 'getNodeStructure',
@@ -4053,7 +4053,8 @@ module.exports = require("fs");
 module.exports = require("mkdirp");
 
 /***/ },
-/* 81 */
+/* 81 */,
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

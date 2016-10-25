@@ -2,6 +2,7 @@ import * as ESTree from 'estree';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../interfaces/IOptions';
+import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { AppendState } from '../enums/AppendState';
 
@@ -25,8 +26,9 @@ export abstract class AbstractCustomNode implements ICustomNode {
 
     /**
      * @param astTree
+     * @param stackTraceData
      */
-    public abstract appendNode (astTree: ESTree.Node): void;
+    public abstract appendNode (astTree: ESTree.Node, stackTraceData?: IStackTraceData[]): void;
 
     /**
      * @returns {AppendState}

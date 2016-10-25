@@ -3,7 +3,6 @@ import * as ESTree from 'estree';
 import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { NodeUtils } from '../NodeUtils';
-import { StackTraceAnalyzer } from '../stack-trace-analyzer/StackTraceAnalyzer';
 import { Utils } from '../Utils';
 
 /**
@@ -25,19 +24,23 @@ import { Utils } from '../Utils';
  */
 export class CustomNodeAppender {
     /**
+     * @param blockScopeStackTraceData
      * @param blockScopeBody
      * @param node
      * @param index
      */
-    public static appendNode (blockScopeBody: ESTree.Node[], node: ESTree.Node, index: number = 0): void {
-        const blockScopeTraceData: IStackTraceData[] = new StackTraceAnalyzer(blockScopeBody).analyze();
-
+    public static appendNode (
+        blockScopeStackTraceData: IStackTraceData[],
+        blockScopeBody: ESTree.Node[],
+        node: ESTree.Node,
+        index: number = 0
+    ): void {
         let targetBlockScopeBody: ESTree.Node[];
 
-        if (!blockScopeTraceData.length) {
+        if (!blockScopeStackTraceData.length) {
             targetBlockScopeBody = blockScopeBody;
         } else {
-            targetBlockScopeBody = CustomNodeAppender.getOptimalBlockScopeBody(blockScopeTraceData, index);
+            targetBlockScopeBody = CustomNodeAppender.getOptimalBlockScopeBody(blockScopeStackTraceData, index);
         }
 
         NodeUtils.prependNode(targetBlockScopeBody, node);

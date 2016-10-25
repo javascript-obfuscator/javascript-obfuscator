@@ -1,8 +1,11 @@
 import * as chai from 'chai';
 import * as ESTree from 'estree';
 
+import { IStackTraceData } from '../../../src/interfaces/stack-trace-analyzer/IStackTraceData';
+
 import { CustomNodeAppender } from '../../../src/custom-nodes/CustomNodeAppender';
 import { NodeUtils } from '../../../src/NodeUtils';
+import { StackTraceAnalyzer } from '../../../src/stack-trace-analyzer/StackTraceAnalyzer';
 
 const assert: any = chai.assert;
 
@@ -10,7 +13,8 @@ describe('CustomNodeAppender', () => {
     describe('appendNode (blockScopeNode: TNodeWithBlockStatement, node: ESTree.Node): void', () => {
         let astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
-            node: ESTree.Node;
+            node: ESTree.Node,
+            stackTraceData: IStackTraceData[];
 
         beforeEach(() => {
             node = NodeUtils.convertCodeToStructure(`
@@ -80,7 +84,8 @@ describe('CustomNodeAppender', () => {
                 bar();
             `, false);
 
-            CustomNodeAppender.appendNode(astTree.body, node);
+            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+            CustomNodeAppender.appendNode(stackTraceData, astTree.body, node);
 
             NodeUtils.parentize(astTree);
 
@@ -150,7 +155,8 @@ describe('CustomNodeAppender', () => {
                 foo();
             `, false);
 
-            CustomNodeAppender.appendNode(astTree.body, node);
+            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+            CustomNodeAppender.appendNode(stackTraceData, astTree.body, node);
 
             NodeUtils.parentize(astTree);
 
@@ -225,7 +231,8 @@ describe('CustomNodeAppender', () => {
                     foo();
                 `, false);
 
-                CustomNodeAppender.appendNode(astTree.body, node, 2);
+                stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+                CustomNodeAppender.appendNode(stackTraceData, astTree.body, node, 2);
 
                 NodeUtils.parentize(astTree);
 
@@ -264,7 +271,8 @@ describe('CustomNodeAppender', () => {
                     foo();
                 `, false);
 
-                CustomNodeAppender.appendNode(astTree.body, node, 1);
+                stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+                CustomNodeAppender.appendNode(stackTraceData, astTree.body, node, 1);
 
                 NodeUtils.parentize(astTree);
 

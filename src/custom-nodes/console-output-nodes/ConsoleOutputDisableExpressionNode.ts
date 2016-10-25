@@ -2,6 +2,8 @@ import * as ESTree from 'estree';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 
+import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
+
 import { AppendState } from '../../enums/AppendState';
 
 import { ConsoleOutputDisableExpressionTemplate } from '../../templates/custom-nodes/console-output-nodes/console-output-disable-expression-node/ConsoleOutputDisableExpressionTemplate';
@@ -18,9 +20,11 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
 
     /**
      * @param blockScopeNode
+     * @param stackTraceData
      */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
+    public appendNode (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
         CustomNodeAppender.appendNode(
+            stackTraceData,
             blockScopeNode.body,
             this.getNode(),
             CustomNodeAppender.getIndexByThreshold(blockScopeNode.body.length)

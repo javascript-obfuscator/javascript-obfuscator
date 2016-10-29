@@ -2,24 +2,24 @@
  * @returns {string}
  */
 export function UnicodeArrayAtobDecodeNodeTemplate (): string {
-    return `        
-        {atobPolyfill}
+    return `      
+        if (!{unicodeArrayCallsWrapperName}.atobPolyfillAppended) {
+            {atobPolyfill}
+            
+            {unicodeArrayCallsWrapperName}.atobPolyfillAppended = true;
+        }
                 
         var decodedValues = {unicodeArrayCallsWrapperName}.data || {};
         
-        var {decodeFunctionName} = function (decodedValues, index, value) {
-            if (!decodedValues[index]) {
-                value = decodeURI(atob(value));
-                decodedValues[index] = value;
-            } else {
-                value = decodedValues[index];
-            }  
+        if (!decodedValues[index]) {
+            {code}
             
-            {unicodeArrayCallsWrapperName}.data = decodedValues;
-                                    
-            return value;
-        }
+            value = decodeURI(atob(value));
+            decodedValues[index] = value;
+        } else {
+            value = decodedValues[index];
+        }  
         
-        {code}
+        {unicodeArrayCallsWrapperName}.data = decodedValues;                             
     `;
 }

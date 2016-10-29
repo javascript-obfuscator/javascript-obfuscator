@@ -6,7 +6,8 @@ import { Utils } from '../../../../Utils';
 export function SelfDefendingTemplate (): string {
     return `
         var func = function(){return 'dev';};
+        var object = []['filter']['constructor'];
                            
-        !{unicodeArrayCallsWrapperName}.flag ? ({unicodeArrayCallsWrapperName}.flag = true, Function(${Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})()['test'](func['toString']()) !== true && !{unicodeArrayName}++ ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(true){}')() : (value = Function('a', 'b', 'c', 'd', 'return a.call(null, b, c, d)')({decodeFunctionName}, decodedValues, index, value)) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(false){}')() : []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(false){}')()) : (value = Function('a', 'b', 'c', 'd', 'return a.call(null, b, c, d)')({decodeFunctionName}, decodedValues, index, value));
+        !{unicodeArrayCallsWrapperName}.flag ? ({unicodeArrayCallsWrapperName}.flag = true, Function(${Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})()['test'](func['toString']()) !== true && !{unicodeArrayName}++ ? object(${Utils.stringToJSFuck('while')} + '(true){}')() : false ? object(${Utils.stringToJSFuck('while')} + '(false){}')() : object(${Utils.stringToJSFuck('while')} + '(false){}')()) : false;
     `;
 }

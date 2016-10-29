@@ -2086,15 +2086,13 @@ var UnicodeArrayCallsWrapper = function (_AbstractCustomNode_) {
         key: 'getDecodeUnicodeArrayTemplate',
         value: function getDecodeUnicodeArrayTemplate() {
             var decodeFunctionName = 'decodeFunction';
-            var code = void 0;
+            var code = '';
             if (this.options.selfDefending) {
                 code = SelfDefendingTemplate_1.SelfDefendingTemplate().formatUnicorn({
                     decodeFunctionName: decodeFunctionName,
                     unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName,
                     unicodeArrayName: this.unicodeArrayName
                 });
-            } else {
-                code = 'value = ' + decodeFunctionName + '(decodedValues, index, value);';
             }
             return UnicodeArrayAtobDecodeNodeTemplate_1.UnicodeArrayAtobDecodeNodeTemplate().formatUnicorn({
                 atobPolyfill: AtobTemplate_1.AtobTemplate(),
@@ -3884,7 +3882,7 @@ exports.SelfDefendingTemplate = SelfDefendingTemplate;
 
 var Utils_1 = __webpack_require__(0);
 function SelfDefendingTemplate() {
-    return '\n        var func = function(){return \'dev\';};\n                           \n        !{unicodeArrayCallsWrapperName}.flag ? ({unicodeArrayCallsWrapperName}.flag = true, Function(' + Utils_1.Utils.stringToUnicode('return/\\w+ *\\(\\) *{\\w+ *[\'|"].+[\'|"];? *}/') + ')()[\'test\'](func[\'toString\']()) !== true && !{unicodeArrayName}++ ? [][\'filter\'][\'constructor\'](' + Utils_1.Utils.stringToJSFuck('while') + ' + \'(true){}\')() : (value = Function(\'a\', \'b\', \'c\', \'d\', \'return a.call(null, b, c, d)\')({decodeFunctionName}, decodedValues, index, value)) ? [][\'filter\'][\'constructor\'](' + Utils_1.Utils.stringToJSFuck('while') + ' + \'(false){}\')() : [][\'filter\'][\'constructor\'](' + Utils_1.Utils.stringToJSFuck('while') + ' + \'(false){}\')()) : (value = Function(\'a\', \'b\', \'c\', \'d\', \'return a.call(null, b, c, d)\')({decodeFunctionName}, decodedValues, index, value));\n    ';
+    return '\n        var func = function(){return \'dev\';};\n        var object = [][\'filter\'][\'constructor\'];\n                           \n        !{unicodeArrayCallsWrapperName}.flag ? ({unicodeArrayCallsWrapperName}.flag = true, Function(' + Utils_1.Utils.stringToUnicode('return/\\w+ *\\(\\) *{\\w+ *[\'|"].+[\'|"];? *}/') + ')()[\'test\'](func[\'toString\']()) !== true && !{unicodeArrayName}++ ? object(' + Utils_1.Utils.stringToJSFuck('while') + ' + \'(true){}\')() : false ? object(' + Utils_1.Utils.stringToJSFuck('while') + ' + \'(false){}\')() : object(' + Utils_1.Utils.stringToJSFuck('while') + ' + \'(false){}\')()) : false;\n    ';
 }
 exports.SelfDefendingTemplate = SelfDefendingTemplate;
 
@@ -3896,7 +3894,7 @@ exports.SelfDefendingTemplate = SelfDefendingTemplate;
 "use strict";
 
 function UnicodeArrayAtobDecodeNodeTemplate() {
-    return "        \n        {atobPolyfill}\n                \n        var decodedValues = {unicodeArrayCallsWrapperName}.data || {};\n        \n        var {decodeFunctionName} = function (decodedValues, index, value) {\n            if (!decodedValues[index]) {\n                value = decodeURI(atob(value));\n                decodedValues[index] = value;\n            } else {\n                value = decodedValues[index];\n            }  \n            \n            {unicodeArrayCallsWrapperName}.data = decodedValues;\n                                    \n            return value;\n        }\n        \n        {code}\n    ";
+    return "      \n        if (!{unicodeArrayCallsWrapperName}.atobPolyfillAppended) {\n            {atobPolyfill}\n            \n            {unicodeArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n                \n        var decodedValues = {unicodeArrayCallsWrapperName}.data || {};\n        \n        if (!decodedValues[index]) {\n            {code}\n            \n            value = decodeURI(atob(value));\n            decodedValues[index] = value;\n        } else {\n            value = decodedValues[index];\n        }  \n        \n        {unicodeArrayCallsWrapperName}.data = decodedValues;                             \n    ";
 }
 exports.UnicodeArrayAtobDecodeNodeTemplate = UnicodeArrayAtobDecodeNodeTemplate;
 

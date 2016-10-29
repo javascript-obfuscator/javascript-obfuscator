@@ -12,13 +12,13 @@ import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset
 
 import { AtobTemplate } from '../../templates/custom-nodes/AtobTemplate';
 import { SelfDefendingTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/SelfDefendingTemplate';
+import { UnicodeArrayAtobDecodeNodeTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayAtobDecodeNodeTemplate';
 import { UnicodeArrayCallsWrapperTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayCallsWrapperTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeUtils } from '../../NodeUtils';
 import { UnicodeArray } from '../../UnicodeArray';
-import { UnicodeArrayAtobDecodeNodeTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayAtobDecodeNodeTemplate';
 
 export class UnicodeArrayCallsWrapper extends AbstractCustomNode {
     /**
@@ -86,27 +86,28 @@ export class UnicodeArrayCallsWrapper extends AbstractCustomNode {
     }
 
     /**
-     * @returns {any}
+     * @returns {string}
      */
     protected getDecodeUnicodeArrayTemplate (): string {
-        const forLoopFunctionName: string = 'forLoopFunc';
+        const decodeFunctionName: string = 'decodeFunction';
 
         let code: string;
 
         if (this.options.selfDefending) {
             code = SelfDefendingTemplate().formatUnicorn({
-                forLoopFunctionName,
+                decodeFunctionName,
+                unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName,
                 unicodeArrayName: this.unicodeArrayName
             });
         } else {
-            code = `${forLoopFunctionName}();`;
+            code = `value = ${decodeFunctionName}(decodedValues, index, value);`;
         }
 
         return UnicodeArrayAtobDecodeNodeTemplate().formatUnicorn({
             atobPolyfill: AtobTemplate(),
             code,
-            forLoopFunctionName,
-            unicodeArrayName: this.unicodeArrayName
+            decodeFunctionName,
+            unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName
         })
     }
 
@@ -114,12 +115,14 @@ export class UnicodeArrayCallsWrapper extends AbstractCustomNode {
      * @returns {ESTree.Node}
      */
     protected getNodeStructure (): ESTree.Node {
-        let decodeNodeTemplate: string = this.options.encodeUnicodeLiterals ? this.getDecodeUnicodeArrayTemplate() : '';
+        const decodeNodeTemplate: string = this.options.encodeUnicodeLiterals ?
+            this.getDecodeUnicodeArrayTemplate() :
+            '';
 
         return NodeUtils.convertCodeToStructure(
             JavaScriptObfuscator.obfuscate(
                 UnicodeArrayCallsWrapperTemplate().formatUnicorn({
-                    decodeNodeTemplate: decodeNodeTemplate,
+                    decodeNodeTemplate,
                     unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName,
                     unicodeArrayName: this.unicodeArrayName
                 }),

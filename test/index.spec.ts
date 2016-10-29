@@ -37,7 +37,7 @@ import './functional-tests/node-obfuscators/ObjectExpressionObfuscator.spec';
 import './functional-tests/node-obfuscators/VariableDeclarationObfuscator.spec';
 import './functional-tests/stack-trace-analyzer/StackTraceAnalyzer.spec';
 import './functional-tests/templates/custom-nodes/domain-lock-nodes/DomainLockNodeTemplate.spec';
-import './functional-tests/templates/custom-nodes/unicode-array-nodes/UnicodeArrayDecodeNodeTemplate.spec';
+import './functional-tests/templates/custom-nodes/unicode-array-nodes/UnicodeArrayCallsWrapperNodeTemplate.spec';
 
 /**
  * Performance tests

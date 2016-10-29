@@ -6,7 +6,7 @@ import { Utils } from '../../../../Utils';
 export function SelfDefendingTemplate (): string {
     return `
         var func = function(){return 'dev';};
-           
-        Function(${Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})()['test'](func['toString']()) !== true && !{unicodeArrayName}++ ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(true){}')() : Function('a', atob(${Utils.stringToUnicode(Utils.btoa('a.call()'))}))({forLoopFunctionName}) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(false){}')() : []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(false){}')();
+                           
+        !{unicodeArrayCallsWrapperName}.flag ? ({unicodeArrayCallsWrapperName}.flag = true, Function(${Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})()['test'](func['toString']()) !== true && !{unicodeArrayName}++ ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(true){}')() : (value = Function('a', 'b', 'c', 'd', 'return a.call(null, b, c, d)')({decodeFunctionName}, decodedValues, index, value)) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(false){}')() : []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(false){}')()) : (value = Function('a', 'b', 'c', 'd', 'return a.call(null, b, c, d)')({decodeFunctionName}, decodedValues, index, value));
     `;
 }

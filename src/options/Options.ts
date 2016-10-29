@@ -140,12 +140,6 @@ export class Options implements IOptions {
     public readonly unicodeArrayThreshold: number;
 
     /**
-     * @type {boolean}
-     */
-    @IsBoolean()
-    public readonly wrapUnicodeArrayCalls: boolean;
-
-    /**
      * @param obfuscatorOptions
      */
     constructor (obfuscatorOptions: IObfuscatorOptions) {

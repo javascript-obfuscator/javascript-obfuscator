@@ -3,7 +3,6 @@ import { IOptions } from '../interfaces/IOptions';
 import { AbstractNodesGroup } from './AbstractNodesGroup';
 import { UnicodeArray } from '../UnicodeArray';
 import { UnicodeArrayCallsWrapper } from '../custom-nodes/unicode-array-nodes/UnicodeArrayCallsWrapper';
-import { UnicodeArrayDecodeNode } from '../custom-nodes/unicode-array-nodes/UnicodeArrayDecodeNode';
 import { UnicodeArrayNode } from '../custom-nodes/unicode-array-nodes/UnicodeArrayNode';
 import { UnicodeArrayRotateFunctionNode } from '../custom-nodes/unicode-array-nodes/UnicodeArrayRotateFunctionNode';
 import { Utils } from '../Utils';
@@ -51,33 +50,16 @@ export class UnicodeArrayNodesGroup extends AbstractNodesGroup {
                 this.options
             );
 
+        this.nodes.set('unicodeArrayNode', unicodeArrayNode);
         this.nodes.set(
-            'unicodeArrayNode',
-            unicodeArrayNode
+            'unicodeArrayCallsWrapper',
+            new UnicodeArrayCallsWrapper(
+                this.unicodeArrayTranslatorName,
+                this.unicodeArrayName,
+                unicodeArray,
+                this.options
+            )
         );
-
-        if (this.options.wrapUnicodeArrayCalls) {
-            this.nodes.set(
-                'unicodeArrayCallsWrapper',
-                new UnicodeArrayCallsWrapper(
-                    this.unicodeArrayTranslatorName,
-                    this.unicodeArrayName,
-                    unicodeArray,
-                    this.options
-                )
-            );
-        }
-
-        if (this.options.encodeUnicodeLiterals) {
-            this.nodes.set(
-                'unicodeArrayDecodeNode',
-                new UnicodeArrayDecodeNode (
-                    this.unicodeArrayName,
-                    unicodeArray,
-                    this.options
-                )
-            );
-        }
 
         if (this.options.rotateUnicodeArray) {
             this.nodes.set(

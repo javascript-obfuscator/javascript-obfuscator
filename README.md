@@ -126,8 +126,7 @@ Following options available for the JS Obfuscator:
     sourceMapFileName: '',
     sourceMapMode: 'separate',
     unicodeArray: true,
-    unicodeArrayThreshold: 0.8,
-    wrapUnicodeArrayCalls: true
+    unicodeArrayThreshold: 0.8
 }
 ```
 
@@ -153,7 +152,6 @@ Following options available for the JS Obfuscator:
     --sourceMapMode <string> [inline, separate]
     --unicodeArray <boolean>
     --unicodeArrayThreshold <number>
-    --wrapUnicodeArrayCalls <boolean>
 ```
 
 ### `compact`
@@ -291,17 +289,6 @@ You can use this setting to adjust the probability (from 0 to 1) that a string l
 This setting is useful with large code size because repeatdely calls to the `Unicode Array` function can slow down your code.
 
 `unicodeArrayThreshold: 0` equals to `unicodeArray: false`.
-
-### `wrapUnicodeArrayCalls`
-Type: `boolean` Default: `true`
-
-##### :warning: `unicodeArray` option must be enabled
-
-Replaces the direct array indexing `var m = _0x12c456[0x1];` with a call to a special function `var m = _0x23c123('0x1');`. Some JavaScript beautifiers (such as the Google Closure Compiler) can replace direct array indexing with the indexed string, and this option mitigates that.
-
-```javascript
-var t = _0x12a634('0x0')
-```
 
 ## License
 Copyright (C) 2016 [Timofey Kachalov](http://github.com/sanex3339).

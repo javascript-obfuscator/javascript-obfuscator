@@ -16,6 +16,5 @@ export interface IObfuscatorOptions {
     sourceMapMode?: TSourceMapMode;
     unicodeArray?: boolean;
     unicodeArrayThreshold?: number;
-    wrapUnicodeArrayCalls?: boolean;
     [key: string]: any;
 }

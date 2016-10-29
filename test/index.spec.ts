@@ -27,7 +27,6 @@ import './functional-tests/JavaScriptObfuscatorInternal.spec';
 import './functional-tests/custom-nodes/console-output-nodes/ConsoleOutputDisableExpressionNode.spec';
 import './functional-tests/custom-nodes/domain-lock-nodes/DomainLockNode.spec';
 import './functional-tests/custom-nodes/unicode-array-nodes/UnicodeArrayCallsWrapper.spec';
-import './functional-tests/custom-nodes/unicode-array-nodes/UnicodeArrayDecodeNode.spec';
 import './functional-tests/custom-nodes/unicode-array-nodes/UnicodeArrayRotateFunctionNode.spec';
 import './functional-tests/custom-nodes/unicode-array-nodes/UnicodeArrayNode.spec';
 import './functional-tests/node-obfuscators/FunctionObfuscator.spec';

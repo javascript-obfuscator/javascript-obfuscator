@@ -5,7 +5,7 @@ import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
 const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('UnicodeArrayCallsWrapper', () => {
-    it('should correctly appendNode `UnicodeArrayCallsWrapper` custom node into the obfuscated code if `wrapUnicodeArrayCalls` option is set', () => {
+    it('should correctly appendNode `UnicodeArrayCallsWrapper` custom node into the obfuscated code', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `var test = 'test';`,
             {
@@ -13,17 +13,9 @@ describe('UnicodeArrayCallsWrapper', () => {
             }
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(), /return _0x([a-z0-9]){4}\[parseInt\(_0x([a-z0-9]){4,6}, *0x010\)\];/);
-    });
-
-    it('should\'t appendNode `UnicodeArrayDecodeNode` custom node into the obfuscated code if `wrapUnicodeArrayCalls` option is not set', () => {
-        let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            `var test = 'test';`,
-            {
-                wrapUnicodeArrayCalls: false
-            }
+        assert.match(
+            obfuscationResult.getObfuscatedCode(),
+            /var *_0x([a-z0-9]){4,6} *= *_0x([a-z0-9]){4}\[parseInt\(_0x([a-z0-9]){4,6}, *0x10\)\];/
         );
-
-        assert.notMatch(obfuscationResult.getObfuscatedCode(), /return _0x([a-z0-9]){4}\[parseInt\(_0x([a-z0-9]){4,6}, *0x010\)\];/);
     });
 });

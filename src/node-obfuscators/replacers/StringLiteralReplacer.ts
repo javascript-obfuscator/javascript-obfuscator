@@ -53,16 +53,12 @@ export class StringLiteralReplacer extends AbstractReplacer {
         hexadecimalIndex = new NumberLiteralReplacer(this.nodes, this.options)
             .replace(indexOfValue);
 
-        if (this.options.wrapUnicodeArrayCalls) {
-            const unicodeArrayCallsWrapper: TUnicodeArrayCallsWrapper = <TUnicodeArrayCallsWrapper>this.nodes.get('unicodeArrayCallsWrapper');
+        const unicodeArrayCallsWrapper: TUnicodeArrayCallsWrapper = <TUnicodeArrayCallsWrapper>this.nodes.get('unicodeArrayCallsWrapper');
 
-            if (!unicodeArrayCallsWrapper) {
-                throw new ReferenceError('`unicodeArrayCallsWrapper` node is not found in Map with custom nodes.');
-            }
-
-            return `${unicodeArrayCallsWrapper.getNodeIdentifier()}('${hexadecimalIndex}')`;
+        if (!unicodeArrayCallsWrapper) {
+            throw new ReferenceError('`unicodeArrayCallsWrapper` node is not found in Map with custom nodes.');
         }
 
-        return `${unicodeArrayNode.getNodeIdentifier()}[${hexadecimalIndex}]`;
+        return `${unicodeArrayCallsWrapper.getNodeIdentifier()}('${hexadecimalIndex}')`;
     }
 }

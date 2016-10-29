@@ -16,5 +16,4 @@ export interface IOptions {
     readonly sourceMapMode: TSourceMapMode;
     readonly unicodeArray: boolean;
     readonly unicodeArrayThreshold: number;
-    readonly wrapUnicodeArrayCalls: boolean;
 }

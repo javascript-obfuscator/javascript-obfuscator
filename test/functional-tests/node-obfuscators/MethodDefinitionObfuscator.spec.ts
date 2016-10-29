@@ -33,7 +33,7 @@ describe('MethodDefinitionObfuscator', () => {
         );
 
         assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-z0-9]){4} *= *\['\\x62\\x61\\x72'\];/);
-        assert.match(obfuscationResult.getObfuscatedCode(),  /\[_0x([a-z0-9]){4}\[0x0\]\]\(\)\{\}/);
+        assert.match(obfuscationResult.getObfuscatedCode(),  /\[_0x([a-z0-9]){4}\('0x0'\)\]\(\)\{\}/);
     });
 
     it('should not obfuscate method definition node with `constructor` key', () => {

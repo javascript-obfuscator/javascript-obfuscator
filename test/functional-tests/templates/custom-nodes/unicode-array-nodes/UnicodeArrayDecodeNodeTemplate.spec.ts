@@ -1,7 +1,7 @@
 import 'format-unicorn';
 
 import { AtobTemplate } from '../../../../../src/templates/custom-nodes/AtobTemplate';
-import { UnicodeArrayDecodeNodeTemplate } from '../../../../../src/templates/custom-nodes/unicode-array-nodes/unicode-array-decode-node/UnicodeArrayDecodeNodeTemplate';
+import { UnicodeArrayAtobDecodeNodeTemplate } from '../../../../../src/templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayAtobDecodeNodeTemplate';
 
 import { Utils } from '../../../../../src/Utils';
 
@@ -13,7 +13,7 @@ const assert: Chai.AssertStatic = require('chai').assert;
  * @returns {Function}
  */
 function getFunctionFromTemplate (templateData: any, unicodeArrayName: string) {
-    let domainLockTemplate: string = UnicodeArrayDecodeNodeTemplate().formatUnicorn(templateData);
+    let domainLockTemplate: string = UnicodeArrayAtobDecodeNodeTemplate().formatUnicorn(templateData);
 
     return Function(`
         var ${unicodeArrayName} = ['${Utils.btoa('test1')}', '${Utils.btoa('test2')}'];
@@ -24,7 +24,7 @@ function getFunctionFromTemplate (templateData: any, unicodeArrayName: string) {
     `)();
 }
 
-describe('UnicodeArrayDecodeNodeTemplate (): string', () => {
+describe('UnicodeArrayAtobDecodeNodeTemplate (): string', () => {
     let forLoopFunctionName: string = 'forLoop',
         code: string = `${forLoopFunctionName}();`,
         unicodeArrayName: string = 'unicodeArray';

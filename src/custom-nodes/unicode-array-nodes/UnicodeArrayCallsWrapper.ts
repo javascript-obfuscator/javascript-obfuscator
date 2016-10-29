@@ -8,12 +8,17 @@ import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 
 import { AppendState } from '../../enums/AppendState';
 
+import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
+
+import { AtobTemplate } from '../../templates/custom-nodes/AtobTemplate';
+import { SelfDefendingTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/SelfDefendingTemplate';
 import { UnicodeArrayCallsWrapperTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayCallsWrapperTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
+import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeUtils } from '../../NodeUtils';
 import { UnicodeArray } from '../../UnicodeArray';
-import { Utils } from '../../Utils';
+import { UnicodeArrayAtobDecodeNodeTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayAtobDecodeNodeTemplate';
 
 export class UnicodeArrayCallsWrapper extends AbstractCustomNode {
     /**
@@ -81,17 +86,45 @@ export class UnicodeArrayCallsWrapper extends AbstractCustomNode {
     }
 
     /**
+     * @returns {any}
+     */
+    protected getDecodeUnicodeArrayTemplate (): string {
+        const forLoopFunctionName: string = 'forLoopFunc';
+
+        let code: string;
+
+        if (this.options.selfDefending) {
+            code = SelfDefendingTemplate().formatUnicorn({
+                forLoopFunctionName,
+                unicodeArrayName: this.unicodeArrayName
+            });
+        } else {
+            code = `${forLoopFunctionName}();`;
+        }
+
+        return UnicodeArrayAtobDecodeNodeTemplate().formatUnicorn({
+            atobPolyfill: AtobTemplate(),
+            code,
+            forLoopFunctionName,
+            unicodeArrayName: this.unicodeArrayName
+        })
+    }
+
+    /**
      * @returns {ESTree.Node}
      */
     protected getNodeStructure (): ESTree.Node {
-        let keyName: string = Utils.getRandomVariableName();
+        let decodeNodeTemplate: string = this.options.encodeUnicodeLiterals ? this.getDecodeUnicodeArrayTemplate() : '';
 
         return NodeUtils.convertCodeToStructure(
-            UnicodeArrayCallsWrapperTemplate().formatUnicorn({
-                keyName: keyName,
-                unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName,
-                unicodeArrayName: this.unicodeArrayName
-            })
+            JavaScriptObfuscator.obfuscate(
+                UnicodeArrayCallsWrapperTemplate().formatUnicorn({
+                    decodeNodeTemplate: decodeNodeTemplate,
+                    unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName,
+                    unicodeArrayName: this.unicodeArrayName
+                }),
+                NO_CUSTOM_NODES_PRESET
+            ).getObfuscatedCode()
         );
     }
 }

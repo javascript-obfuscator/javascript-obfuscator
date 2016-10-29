@@ -938,14 +938,11 @@ var StringLiteralReplacer = function (_AbstractReplacer_1$A) {
                 unicodeArrayNode.updateNodeData(value);
             }
             hexadecimalIndex = new NumberLiteralReplacer_1.NumberLiteralReplacer(this.nodes, this.options).replace(indexOfValue);
-            if (this.options.wrapUnicodeArrayCalls) {
-                var unicodeArrayCallsWrapper = this.nodes.get('unicodeArrayCallsWrapper');
-                if (!unicodeArrayCallsWrapper) {
-                    throw new ReferenceError('`unicodeArrayCallsWrapper` node is not found in Map with custom nodes.');
-                }
-                return unicodeArrayCallsWrapper.getNodeIdentifier() + '(\'' + hexadecimalIndex + '\')';
+            var unicodeArrayCallsWrapper = this.nodes.get('unicodeArrayCallsWrapper');
+            if (!unicodeArrayCallsWrapper) {
+                throw new ReferenceError('`unicodeArrayCallsWrapper` node is not found in Map with custom nodes.');
             }
-            return unicodeArrayNode.getNodeIdentifier() + '[' + hexadecimalIndex + ']';
+            return unicodeArrayCallsWrapper.getNodeIdentifier() + '(\'' + hexadecimalIndex + '\')';
         }
     }]);
 
@@ -1614,11 +1611,11 @@ var JavaScriptObfuscatorCLI = function () {
     }, {
         key: 'configureCommands',
         value: function configureCommands() {
-            this.commands = new commander.Command().version(JavaScriptObfuscatorCLI.getBuildVersion(), '-v, --version').usage('<inputPath> [options]').option('-o, --output <path>', 'Output path for obfuscated code').option('--compact <boolean>', 'Disable one line output code compacting', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtection <boolean>', 'Disable browser Debug panel (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtectionInterval <boolean>', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--disableConsoleOutput <boolean>', 'Allow console.log, console.info, console.error and console.warn messages output into browser console', JavaScriptObfuscatorCLI.parseBoolean).option('--encodeUnicodeLiterals <boolean>', 'All literals in Unicode array become encoded in Base64 (this option can slightly slow down your code speed)', JavaScriptObfuscatorCLI.parseBoolean).option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', function (val) {
+            this.commands = new commander.Command().version(JavaScriptObfuscatorCLI.getBuildVersion(), '-v, --version').usage('<inputPath> [options]').option('-o, --output <path>', 'Output path for obfuscated code').option('--compact <boolean>', 'Disable one line output code compacting', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtection <boolean>', 'Disable browser Debug panel (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtectionInterval <boolean>', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--disableConsoleOutput <boolean>', 'Allow console.log, console.info, console.error and console.warn messages output into browser console', JavaScriptObfuscatorCLI.parseBoolean).option('--domainLock <list>', 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)', function (val) {
                 return val.split(',');
-            }).option('--rotateUnicodeArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMapBaseUrl <string>', 'Sets base url to the source map import url when `--sourceMapMode=separate`').option('--sourceMapFileName <string>', 'Sets file name for output source map when `--sourceMapMode=separate`').option('--sourceMapMode <string> [inline, separate]', 'Specify source map output mode', JavaScriptObfuscatorCLI.parseSourceMapMode).option('--unicodeArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean).option('--unicodeArrayThreshold <number>', 'The probability that the literal string will be inserted into unicodeArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).option('--wrapUnicodeArrayCalls <boolean>', 'Disables usage of special access function instead of direct array call', JavaScriptObfuscatorCLI.parseBoolean).option('--domainLock <list>', 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)', function (val) {
+            }).option('--encodeUnicodeLiterals <boolean>', 'All literals in Unicode array become encoded in Base64 (this option can slightly slow down your code speed)', JavaScriptObfuscatorCLI.parseBoolean).option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', function (val) {
                 return val.split(',');
-            }).parse(this.rawArguments);
+            }).option('--rotateUnicodeArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMapBaseUrl <string>', 'Sets base url to the source map import url when `--sourceMapMode=separate`').option('--sourceMapFileName <string>', 'Sets file name for output source map when `--sourceMapMode=separate`').option('--sourceMapMode <string> [inline, separate]', 'Specify source map output mode', JavaScriptObfuscatorCLI.parseSourceMapMode).option('--unicodeArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean).option('--unicodeArrayThreshold <number>', 'The probability that the literal string will be inserted into unicodeArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).parse(this.rawArguments);
             this.commands.on('--help', function () {
                 console.log('  Examples:\n');
                 console.log('    %> javascript-obfuscator in.js --compact true --selfDefending false');
@@ -2043,10 +2040,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 __webpack_require__(8);
 var AppendState_1 = __webpack_require__(4);
+var NoCustomNodesPreset_1 = __webpack_require__(17);
+var AtobTemplate_1 = __webpack_require__(62);
+var SelfDefendingTemplate_1 = __webpack_require__(83);
 var UnicodeArrayCallsWrapperTemplate_1 = __webpack_require__(69);
 var AbstractCustomNode_1 = __webpack_require__(5);
+var JavaScriptObfuscator_1 = __webpack_require__(9);
 var NodeUtils_1 = __webpack_require__(1);
-var Utils_1 = __webpack_require__(0);
+var UnicodeArrayAtobDecodeNodeTemplate_1 = __webpack_require__(84);
 
 var UnicodeArrayCallsWrapper = function (_AbstractCustomNode_) {
     _inherits(UnicodeArrayCallsWrapper, _AbstractCustomNode_);
@@ -2082,79 +2083,8 @@ var UnicodeArrayCallsWrapper = function (_AbstractCustomNode_) {
             return _get(UnicodeArrayCallsWrapper.prototype.__proto__ || Object.getPrototypeOf(UnicodeArrayCallsWrapper.prototype), 'getNode', this).call(this);
         }
     }, {
-        key: 'getNodeStructure',
-        value: function getNodeStructure() {
-            var keyName = Utils_1.Utils.getRandomVariableName();
-            return NodeUtils_1.NodeUtils.convertCodeToStructure(UnicodeArrayCallsWrapperTemplate_1.UnicodeArrayCallsWrapperTemplate().formatUnicorn({
-                keyName: keyName,
-                unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName,
-                unicodeArrayName: this.unicodeArrayName
-            }));
-        }
-    }]);
-
-    return UnicodeArrayCallsWrapper;
-}(AbstractCustomNode_1.AbstractCustomNode);
-
-exports.UnicodeArrayCallsWrapper = UnicodeArrayCallsWrapper;
-
-/***/ },
-/* 38 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-"use strict";
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = (function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } });
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-__webpack_require__(8);
-var AppendState_1 = __webpack_require__(4);
-var NoCustomNodesPreset_1 = __webpack_require__(17);
-var AtobTemplate_1 = __webpack_require__(62);
-var SelfDefendingTemplate_1 = __webpack_require__(70);
-var UnicodeArrayDecodeNodeTemplate_1 = __webpack_require__(71);
-var AbstractCustomNode_1 = __webpack_require__(5);
-var JavaScriptObfuscator_1 = __webpack_require__(9);
-var NodeUtils_1 = __webpack_require__(1);
-
-var UnicodeArrayDecodeNode = function (_AbstractCustomNode_) {
-    _inherits(UnicodeArrayDecodeNode, _AbstractCustomNode_);
-
-    function UnicodeArrayDecodeNode(unicodeArrayName, unicodeArray, options) {
-        _classCallCheck(this, UnicodeArrayDecodeNode);
-
-        var _this = _possibleConstructorReturn(this, (UnicodeArrayDecodeNode.__proto__ || Object.getPrototypeOf(UnicodeArrayDecodeNode)).call(this, options));
-
-        _this.appendState = AppendState_1.AppendState.AfterObfuscation;
-        _this.unicodeArrayName = unicodeArrayName;
-        _this.unicodeArray = unicodeArray;
-        return _this;
-    }
-
-    _createClass(UnicodeArrayDecodeNode, [{
-        key: 'appendNode',
-        value: function appendNode(blockScopeNode) {
-            if (!this.unicodeArray.getLength()) {
-                return;
-            }
-            NodeUtils_1.NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), 1);
-        }
-    }, {
-        key: 'getNode',
-        value: function getNode() {
-            return _get(UnicodeArrayDecodeNode.prototype.__proto__ || Object.getPrototypeOf(UnicodeArrayDecodeNode.prototype), 'getNode', this).call(this);
-        }
-    }, {
-        key: 'getNodeStructure',
-        value: function getNodeStructure() {
+        key: 'getDecodeUnicodeArrayTemplate',
+        value: function getDecodeUnicodeArrayTemplate() {
             var forLoopFunctionName = 'forLoopFunc';
             var code = void 0;
             if (this.options.selfDefending) {
@@ -2165,21 +2095,32 @@ var UnicodeArrayDecodeNode = function (_AbstractCustomNode_) {
             } else {
                 code = forLoopFunctionName + '();';
             }
-            return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(UnicodeArrayDecodeNodeTemplate_1.UnicodeArrayDecodeNodeTemplate().formatUnicorn({
+            return UnicodeArrayAtobDecodeNodeTemplate_1.UnicodeArrayAtobDecodeNodeTemplate().formatUnicorn({
                 atobPolyfill: AtobTemplate_1.AtobTemplate(),
                 code: code,
                 forLoopFunctionName: forLoopFunctionName,
+                unicodeArrayName: this.unicodeArrayName
+            });
+        }
+    }, {
+        key: 'getNodeStructure',
+        value: function getNodeStructure() {
+            var decodeNodeTemplate = this.options.encodeUnicodeLiterals ? this.getDecodeUnicodeArrayTemplate() : '';
+            return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(UnicodeArrayCallsWrapperTemplate_1.UnicodeArrayCallsWrapperTemplate().formatUnicorn({
+                decodeNodeTemplate: decodeNodeTemplate,
+                unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName,
                 unicodeArrayName: this.unicodeArrayName
             }), NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET).getObfuscatedCode());
         }
     }]);
 
-    return UnicodeArrayDecodeNode;
+    return UnicodeArrayCallsWrapper;
 }(AbstractCustomNode_1.AbstractCustomNode);
 
-exports.UnicodeArrayDecodeNode = UnicodeArrayDecodeNode;
+exports.UnicodeArrayCallsWrapper = UnicodeArrayCallsWrapper;
 
 /***/ },
+/* 38 */,
 /* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -2517,7 +2458,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var AbstractNodesGroup_1 = __webpack_require__(10);
 var UnicodeArray_1 = __webpack_require__(28);
 var UnicodeArrayCallsWrapper_1 = __webpack_require__(37);
-var UnicodeArrayDecodeNode_1 = __webpack_require__(38);
 var UnicodeArrayNode_1 = __webpack_require__(39);
 var UnicodeArrayRotateFunctionNode_1 = __webpack_require__(40);
 var Utils_1 = __webpack_require__(0);
@@ -2546,12 +2486,7 @@ var UnicodeArrayNodesGroup = function (_AbstractNodesGroup_) {
         var unicodeArray = new UnicodeArray_1.UnicodeArray(),
             unicodeArrayNode = new UnicodeArrayNode_1.UnicodeArrayNode(unicodeArray, _this.unicodeArrayName, _this.unicodeArrayRotateValue, _this.options);
         _this.nodes.set('unicodeArrayNode', unicodeArrayNode);
-        if (_this.options.wrapUnicodeArrayCalls) {
-            _this.nodes.set('unicodeArrayCallsWrapper', new UnicodeArrayCallsWrapper_1.UnicodeArrayCallsWrapper(_this.unicodeArrayTranslatorName, _this.unicodeArrayName, unicodeArray, _this.options));
-        }
-        if (_this.options.encodeUnicodeLiterals) {
-            _this.nodes.set('unicodeArrayDecodeNode', new UnicodeArrayDecodeNode_1.UnicodeArrayDecodeNode(_this.unicodeArrayName, unicodeArray, _this.options));
-        }
+        _this.nodes.set('unicodeArrayCallsWrapper', new UnicodeArrayCallsWrapper_1.UnicodeArrayCallsWrapper(_this.unicodeArrayTranslatorName, _this.unicodeArrayName, unicodeArray, _this.options));
         if (_this.options.rotateUnicodeArray) {
             _this.nodes.set('unicodeArrayRotateFunctionNode', new UnicodeArrayRotateFunctionNode_1.UnicodeArrayRotateFunctionNode(_this.unicodeArrayName, unicodeArray, _this.unicodeArrayRotateValue, _this.options));
         }
@@ -3271,7 +3206,6 @@ __decorate([class_validator_1.IsString(), __metadata('design:type', String)], Op
 __decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata('design:type', typeof (_a = typeof TSourceMapMode_1.TSourceMapMode !== 'undefined' && TSourceMapMode_1.TSourceMapMode) === 'function' && _a || Object)], Options.prototype, "sourceMapMode", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "unicodeArray", void 0);
 __decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata('design:type', Number)], Options.prototype, "unicodeArrayThreshold", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "wrapUnicodeArrayCalls", void 0);
 exports.Options = Options;
 var _a;
 
@@ -3949,36 +3883,13 @@ exports.SelfDefendingTemplate = SelfDefendingTemplate;
 "use strict";
 
 function UnicodeArrayCallsWrapperTemplate() {
-    return "\n        var {unicodeArrayCallsWrapperName} = function ({keyName}) {\n            return {unicodeArrayName}[parseInt({keyName}, 0x010)];\n        };\n    ";
+    return "\n        var {unicodeArrayCallsWrapperName} = function (index, key) {\n            var value = {unicodeArrayName}[parseInt(index, 0x010)]\n            \n            {decodeNodeTemplate}\n        \n            return value;\n        };\n    ";
 }
 exports.UnicodeArrayCallsWrapperTemplate = UnicodeArrayCallsWrapperTemplate;
 
 /***/ },
-/* 70 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-"use strict";
-
-var Utils_1 = __webpack_require__(0);
-function SelfDefendingTemplate() {
-    return '\n        var func = function(){return \'dev\';};\n           \n        Function(' + Utils_1.Utils.stringToUnicode('return/\\w+ *\\(\\) *{\\w+ *[\'|"].+[\'|"];? *}/') + ')()[\'test\'](func[\'toString\']()) !== true && !{unicodeArrayName}++ ? [][\'filter\'][\'constructor\'](' + Utils_1.Utils.stringToJSFuck('while') + ' + \'(true){}\')() : Function(\'a\', atob(' + Utils_1.Utils.stringToUnicode(Utils_1.Utils.btoa('a.call()')) + '))({forLoopFunctionName}) ? [][\'filter\'][\'constructor\'](' + Utils_1.Utils.stringToJSFuck('while') + ' + \'(false){}\')() : [][\'filter\'][\'constructor\'](' + Utils_1.Utils.stringToJSFuck('while') + ' + \'(false){}\')();\n    ';
-}
-exports.SelfDefendingTemplate = SelfDefendingTemplate;
-
-/***/ },
-/* 71 */
-/***/ function(module, exports) {
-
-"use strict";
-"use strict";
-
-function UnicodeArrayDecodeNodeTemplate() {
-    return "\n        (function () {\n           {atobPolyfill}\n          \n            var {forLoopFunctionName} = function () {\n                var array = [];\n                \n                for (var i in {unicodeArrayName}) {\n                    array['push'](decodeURI(atob({unicodeArrayName}[i])));\n                }\n                \n                {unicodeArrayName} = array;\n            };\n            \n            {code}\n        })();\n    ";
-}
-exports.UnicodeArrayDecodeNodeTemplate = UnicodeArrayDecodeNodeTemplate;
-
-/***/ },
+/* 70 */,
+/* 71 */,
 /* 72 */
 /***/ function(module, exports) {
 
@@ -4065,6 +3976,31 @@ if (!global._babelPolyfill) {
     __webpack_require__(24);
 }
 module.exports = JavaScriptObfuscator_1.JavaScriptObfuscator;
+
+/***/ },
+/* 83 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+"use strict";
+
+var Utils_1 = __webpack_require__(0);
+function SelfDefendingTemplate() {
+    return '\n        var func = function(){return \'dev\';};\n           \n        Function(' + Utils_1.Utils.stringToUnicode('return/\\w+ *\\(\\) *{\\w+ *[\'|"].+[\'|"];? *}/') + ')()[\'test\'](func[\'toString\']()) !== true && !{unicodeArrayName}++ ? [][\'filter\'][\'constructor\'](' + Utils_1.Utils.stringToJSFuck('while') + ' + \'(true){}\')() : Function(\'a\', atob(' + Utils_1.Utils.stringToUnicode(Utils_1.Utils.btoa('a.call()')) + '))({forLoopFunctionName}) ? [][\'filter\'][\'constructor\'](' + Utils_1.Utils.stringToJSFuck('while') + ' + \'(false){}\')() : [][\'filter\'][\'constructor\'](' + Utils_1.Utils.stringToJSFuck('while') + ' + \'(false){}\')();\n    ';
+}
+exports.SelfDefendingTemplate = SelfDefendingTemplate;
+
+/***/ },
+/* 84 */
+/***/ function(module, exports) {
+
+"use strict";
+"use strict";
+
+function UnicodeArrayAtobDecodeNodeTemplate() {
+    return "\n        var decodedIndices = [];\n    \n        if (decodedIndices.indexOf(index) === -1) {\n            value = atob(value);\n        }\n    ";
+}
+exports.UnicodeArrayAtobDecodeNodeTemplate = UnicodeArrayAtobDecodeNodeTemplate;
 
 /***/ }
 /******/ ]);

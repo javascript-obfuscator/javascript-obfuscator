@@ -50,5 +50,4 @@ describe('UnicodeArrayCallsWrapperNodeTemplate (): string', () => {
             unicodeArrayName
         }, unicodeArrayName, unicodeArrayCallsWrapperName, '0x0'), 'test1');
     });
-
 });

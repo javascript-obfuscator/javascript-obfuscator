@@ -10,33 +10,23 @@ import { Utils } from '../../Utils';
 
 export class StringLiteralReplacer extends AbstractReplacer {
     /**
+     * @type {string[]}
+     */
+    private static rc4Keys: string[] = Utils.getRandomGenerator()
+        .n(() => Utils.getRandomGenerator().string({length: 4}), 50);
+
+    /**
      * @param nodeValue
      * @returns {string}
      */
     public replace (nodeValue: string): string {
         const replaceWithUnicodeArrayFlag: boolean = Math.random() <= this.options.unicodeArrayThreshold;
 
-        if (replaceWithUnicodeArrayFlag) {
-            switch (this.options.unicodeArrayEncoding) {
-                case UnicodeArrayEncoding.base64:
-                    nodeValue = Utils.btoa(nodeValue);
-
-                    break;
-
-                case UnicodeArrayEncoding.rc4:
-                    nodeValue = Utils.btoa(nodeValue);
-
-                    break;
-            }
-        }
-
-        nodeValue = Utils.stringToUnicode(nodeValue);
-
         if (this.options.unicodeArray && replaceWithUnicodeArrayFlag) {
             return this.replaceStringLiteralWithUnicodeArrayCall(nodeValue);
         }
 
-        return nodeValue;
+        return Utils.stringToUnicode(nodeValue);
     }
 
     /**
@@ -49,6 +39,23 @@ export class StringLiteralReplacer extends AbstractReplacer {
         if (!unicodeArrayNode) {
             throw new ReferenceError('`unicodeArrayNode` node is not found in Map with custom nodes.');
         }
+
+        let rc4Key: string = '';
+
+        switch (this.options.unicodeArrayEncoding) {
+            case UnicodeArrayEncoding.base64:
+                value = Utils.btoa(value);
+
+                break;
+
+            case UnicodeArrayEncoding.rc4:
+                rc4Key = Utils.getRandomGenerator().pickone(StringLiteralReplacer.rc4Keys);
+                value = Utils.btoa(Utils.rc4(value, rc4Key));
+
+                break;
+        }
+
+        value = Utils.stringToUnicode(value);
 
         let unicodeArray: UnicodeArray = unicodeArrayNode.getNodeData(),
             indexOfExistingValue: number = unicodeArray.getIndexOf(value),
@@ -69,6 +76,10 @@ export class StringLiteralReplacer extends AbstractReplacer {
 
         if (!unicodeArrayCallsWrapper) {
             throw new ReferenceError('`unicodeArrayCallsWrapper` node is not found in Map with custom nodes.');
+        }
+
+        if (this.options.unicodeArrayEncoding === UnicodeArrayEncoding.rc4) {
+            return `${unicodeArrayCallsWrapper.getNodeIdentifier()}('${hexadecimalIndex}', ${Utils.stringToUnicode(rc4Key)})`;
         }
 
         return `${unicodeArrayCallsWrapper.getNodeIdentifier()}('${hexadecimalIndex}')`;

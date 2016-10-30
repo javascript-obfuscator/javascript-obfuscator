@@ -68,7 +68,7 @@ export class SourceMapCorrector implements ISourceMapCorrector {
 
         switch (this.sourceMapMode) {
             case SourceMapMode.Inline:
-                sourceMappingUrl += `data:application/json;base64,${Utils.btoa(this.sourceMap, false)}`;
+                sourceMappingUrl += `data:application/json;base64,${Utils.btoa(this.sourceMap)}`;
 
                 break;
 

@@ -103,7 +103,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var chance_1 = __webpack_require__(77);
-var JSFuck_1 = __webpack_require__(19);
+var JSFuck_1 = __webpack_require__(20);
 
 var Utils = function () {
     function Utils() {
@@ -135,9 +135,19 @@ var Utils = function () {
     }, {
         key: 'btoa',
         value: function btoa(string) {
-            var encode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-
-            return new Buffer(encode ? encodeURI(string) : string).toString('base64');
+            var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+            var output = '';
+            string = encodeURIComponent(string).replace(/%([0-9A-F]{2})/g, function (match, p1) {
+                return String.fromCharCode(parseInt('0x' + p1));
+            });
+            for (var block, charCode, idx = 0, map = chars; string.charAt(idx | 0) || (map = '=', idx % 1); output += map.charAt(63 & block >> 8 - idx % 1 * 8)) {
+                charCode = string.charCodeAt(idx += 3 / 4);
+                if (charCode > 0xFF) {
+                    throw new Error("'btoa' failed: The string to be encoded contains characters outside of the Latin1 range.");
+                }
+                block = block << 8 | charCode;
+            }
+            return output;
         }
     }, {
         key: 'decToHex',
@@ -208,6 +218,34 @@ var Utils = function () {
             return number % 1 === 0;
         }
     }, {
+        key: 'rc4',
+        value: function rc4(string, key) {
+            var s = [],
+                j = 0,
+                x = void 0,
+                result = '';
+            for (var i = 0; i < 256; i++) {
+                s[i] = i;
+            }
+            for (i = 0; i < 256; i++) {
+                j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;
+                x = s[i];
+                s[i] = s[j];
+                s[j] = x;
+            }
+            i = 0;
+            j = 0;
+            for (var y = 0; y < string.length; y++) {
+                i = (i + 1) % 256;
+                j = (j + s[i]) % 256;
+                x = s[i];
+                s[i] = s[j];
+                s[j] = x;
+                result += String.fromCharCode(string.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);
+            }
+            return result;
+        }
+    }, {
         key: 'strEnumify',
         value: function strEnumify(obj) {
             return obj;
@@ -257,7 +295,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var escodegen = __webpack_require__(11);
-var esprima = __webpack_require__(22);
+var esprima = __webpack_require__(23);
 var estraverse = __webpack_require__(3);
 var NodeType_1 = __webpack_require__(5);
 var Nodes_1 = __webpack_require__(2);
@@ -661,8 +699,8 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var JavaScriptObfuscatorCLI_1 = __webpack_require__(30);
-var JavaScriptObfuscatorInternal_1 = __webpack_require__(25);
+var JavaScriptObfuscatorCLI_1 = __webpack_require__(31);
+var JavaScriptObfuscatorInternal_1 = __webpack_require__(26);
 
 var JavaScriptObfuscator = function () {
     function JavaScriptObfuscator() {
@@ -881,6 +919,18 @@ exports.CustomNodeAppender = CustomNodeAppender;
 
 /***/ },
 /* 16 */
+/***/ function(module, exports) {
+
+"use strict";
+"use strict";
+
+exports.UnicodeArrayEncoding = {
+    base64: 'base64',
+    rc4: 'rc4'
+};
+
+/***/ },
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -894,9 +944,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var UnicodeArrayEncoding_1 = __webpack_require__(40);
+var UnicodeArrayEncoding_1 = __webpack_require__(16);
 var AbstractReplacer_1 = __webpack_require__(13);
-var NumberLiteralReplacer_1 = __webpack_require__(20);
+var NumberLiteralReplacer_1 = __webpack_require__(21);
 var Utils_1 = __webpack_require__(0);
 
 var StringLiteralReplacer = function (_AbstractReplacer_1$A) {
@@ -912,21 +962,10 @@ var StringLiteralReplacer = function (_AbstractReplacer_1$A) {
         key: 'replace',
         value: function replace(nodeValue) {
             var replaceWithUnicodeArrayFlag = Math.random() <= this.options.unicodeArrayThreshold;
-            if (replaceWithUnicodeArrayFlag) {
-                switch (this.options.unicodeArrayEncoding) {
-                    case UnicodeArrayEncoding_1.UnicodeArrayEncoding.base64:
-                        nodeValue = Utils_1.Utils.btoa(nodeValue);
-                        break;
-                    case UnicodeArrayEncoding_1.UnicodeArrayEncoding.rc4:
-                        nodeValue = Utils_1.Utils.btoa(nodeValue);
-                        break;
-                }
-            }
-            nodeValue = Utils_1.Utils.stringToUnicode(nodeValue);
             if (this.options.unicodeArray && replaceWithUnicodeArrayFlag) {
                 return this.replaceStringLiteralWithUnicodeArrayCall(nodeValue);
             }
-            return nodeValue;
+            return Utils_1.Utils.stringToUnicode(nodeValue);
         }
     }, {
         key: 'replaceStringLiteralWithUnicodeArrayCall',
@@ -935,6 +974,17 @@ var StringLiteralReplacer = function (_AbstractReplacer_1$A) {
             if (!unicodeArrayNode) {
                 throw new ReferenceError('`unicodeArrayNode` node is not found in Map with custom nodes.');
             }
+            var rc4Key = '';
+            switch (this.options.unicodeArrayEncoding) {
+                case UnicodeArrayEncoding_1.UnicodeArrayEncoding.base64:
+                    value = Utils_1.Utils.btoa(value);
+                    break;
+                case UnicodeArrayEncoding_1.UnicodeArrayEncoding.rc4:
+                    rc4Key = Utils_1.Utils.getRandomGenerator().pickone(StringLiteralReplacer.rc4Keys);
+                    value = Utils_1.Utils.btoa(Utils_1.Utils.rc4(value, rc4Key));
+                    break;
+            }
+            value = Utils_1.Utils.stringToUnicode(value);
             var unicodeArray = unicodeArrayNode.getNodeData(),
                 indexOfExistingValue = unicodeArray.getIndexOf(value),
                 indexOfValue = void 0,
@@ -950,6 +1000,9 @@ var StringLiteralReplacer = function (_AbstractReplacer_1$A) {
             if (!unicodeArrayCallsWrapper) {
                 throw new ReferenceError('`unicodeArrayCallsWrapper` node is not found in Map with custom nodes.');
             }
+            if (this.options.unicodeArrayEncoding === UnicodeArrayEncoding_1.UnicodeArrayEncoding.rc4) {
+                return unicodeArrayCallsWrapper.getNodeIdentifier() + '(\'' + hexadecimalIndex + '\', ' + Utils_1.Utils.stringToUnicode(rc4Key) + ')';
+            }
             return unicodeArrayCallsWrapper.getNodeIdentifier() + '(\'' + hexadecimalIndex + '\')';
         }
     }]);
@@ -957,10 +1010,13 @@ var StringLiteralReplacer = function (_AbstractReplacer_1$A) {
     return StringLiteralReplacer;
 }(AbstractReplacer_1.AbstractReplacer);
 
+StringLiteralReplacer.rc4Keys = Utils_1.Utils.getRandomGenerator().n(function () {
+    return Utils_1.Utils.getRandomGenerator().string({ length: 4 });
+}, 50);
 exports.StringLiteralReplacer = StringLiteralReplacer;
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -986,7 +1042,7 @@ exports.NO_CUSTOM_NODES_PRESET = Object.freeze({
 });
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -1027,7 +1083,7 @@ var ObfuscationResult = function () {
 exports.ObfuscationResult = ObfuscationResult;
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -1092,7 +1148,7 @@ exports.JSFuck = {
 };
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1135,7 +1191,7 @@ var NumberLiteralReplacer = function (_AbstractReplacer_1$A) {
 exports.NumberLiteralReplacer = NumberLiteralReplacer;
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1161,25 +1217,25 @@ exports.DEFAULT_PRESET = Object.freeze({
 });
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 module.exports = require("esprima");
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 module.exports = require("path");
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports) {
 
 module.exports = require("babel-polyfill");
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1189,12 +1245,12 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var esprima = __webpack_require__(22);
+var esprima = __webpack_require__(23);
 var escodegen = __webpack_require__(11);
-var ObfuscationResult_1 = __webpack_require__(18);
-var Obfuscator_1 = __webpack_require__(26);
+var ObfuscationResult_1 = __webpack_require__(19);
+var Obfuscator_1 = __webpack_require__(27);
 var Options_1 = __webpack_require__(55);
-var SourceMapCorrector_1 = __webpack_require__(27);
+var SourceMapCorrector_1 = __webpack_require__(28);
 
 var JavaScriptObfuscatorInternal = function () {
     function JavaScriptObfuscatorInternal(sourceCode) {
@@ -1247,7 +1303,7 @@ JavaScriptObfuscatorInternal.escodegenParams = {
 exports.JavaScriptObfuscatorInternal = JavaScriptObfuscatorInternal;
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1351,7 +1407,7 @@ var Obfuscator = function () {
 exports.Obfuscator = Obfuscator;
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1362,7 +1418,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var SourceMapMode_1 = __webpack_require__(12);
-var ObfuscationResult_1 = __webpack_require__(18);
+var ObfuscationResult_1 = __webpack_require__(19);
 var Utils_1 = __webpack_require__(0);
 
 var SourceMapCorrector = function () {
@@ -1389,7 +1445,7 @@ var SourceMapCorrector = function () {
             var sourceMappingUrl = '//# sourceMappingURL=';
             switch (this.sourceMapMode) {
                 case SourceMapMode_1.SourceMapMode.Inline:
-                    sourceMappingUrl += 'data:application/json;base64,' + Utils_1.Utils.btoa(this.sourceMap, false);
+                    sourceMappingUrl += 'data:application/json;base64,' + Utils_1.Utils.btoa(this.sourceMap);
                     break;
                 case SourceMapMode_1.SourceMapMode.Separate:
                 default:
@@ -1409,7 +1465,7 @@ var SourceMapCorrector = function () {
 exports.SourceMapCorrector = SourceMapCorrector;
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1466,7 +1522,7 @@ var UnicodeArray = function () {
 exports.UnicodeArray = UnicodeArray;
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1478,7 +1534,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var fs = __webpack_require__(80);
 var mkdirp = __webpack_require__(81);
-var path = __webpack_require__(23);
+var path = __webpack_require__(24);
 var Utils_1 = __webpack_require__(0);
 
 var CLIUtils = function () {
@@ -1558,7 +1614,7 @@ CLIUtils.encoding = 'utf8';
 exports.CLIUtils = CLIUtils;
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1569,11 +1625,11 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var commander = __webpack_require__(79);
-var path = __webpack_require__(23);
+var path = __webpack_require__(24);
 var SourceMapMode_1 = __webpack_require__(12);
-var UnicodeArrayEncoding_1 = __webpack_require__(40);
-var DefaultPreset_1 = __webpack_require__(21);
-var CLIUtils_1 = __webpack_require__(29);
+var UnicodeArrayEncoding_1 = __webpack_require__(16);
+var DefaultPreset_1 = __webpack_require__(22);
+var CLIUtils_1 = __webpack_require__(30);
 var JavaScriptObfuscator_1 = __webpack_require__(9);
 var Utils_1 = __webpack_require__(0);
 
@@ -1695,7 +1751,7 @@ var JavaScriptObfuscatorCLI = function () {
                 case UnicodeArrayEncoding_1.UnicodeArrayEncoding.rc4:
                     return UnicodeArrayEncoding_1.UnicodeArrayEncoding.rc4;
                 default:
-                    throw new ReferenceError('Invalid value of `--unicodeArrayEncoding` option');
+                    return false;
             }
         }
     }]);
@@ -1706,7 +1762,7 @@ var JavaScriptObfuscatorCLI = function () {
 exports.JavaScriptObfuscatorCLI = JavaScriptObfuscatorCLI;
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1756,7 +1812,7 @@ var ConsoleOutputDisableExpressionNode = function (_AbstractCustomNode_) {
 exports.ConsoleOutputDisableExpressionNode = ConsoleOutputDisableExpressionNode;
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1809,7 +1865,7 @@ var DebugProtectionFunctionCallNode = function (_AbstractCustomNode_) {
 exports.DebugProtectionFunctionCallNode = DebugProtectionFunctionCallNode;
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1862,7 +1918,7 @@ var DebugProtectionFunctionIntervalNode = function (_AbstractCustomNode_) {
 exports.DebugProtectionFunctionIntervalNode = DebugProtectionFunctionIntervalNode;
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1926,7 +1982,7 @@ var DebugProtectionFunctionNode = function (_AbstractCustomNode_) {
 exports.DebugProtectionFunctionNode = DebugProtectionFunctionNode;
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1991,7 +2047,7 @@ var DomainLockNode = function (_AbstractCustomNode_) {
 exports.DomainLockNode = DomainLockNode;
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2006,7 +2062,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var AppendState_1 = __webpack_require__(4);
-var NoCustomNodesPreset_1 = __webpack_require__(17);
+var NoCustomNodesPreset_1 = __webpack_require__(18);
 var SelfDefendingTemplate_1 = __webpack_require__(68);
 var AbstractCustomNode_1 = __webpack_require__(6);
 var JavaScriptObfuscator_1 = __webpack_require__(9);
@@ -2043,7 +2099,7 @@ var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
 exports.SelfDefendingUnicodeNode = SelfDefendingUnicodeNode;
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2061,12 +2117,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 __webpack_require__(8);
 var AppendState_1 = __webpack_require__(4);
-var UnicodeArrayEncoding_1 = __webpack_require__(40);
-var NoCustomNodesPreset_1 = __webpack_require__(17);
+var UnicodeArrayEncoding_1 = __webpack_require__(16);
+var NoCustomNodesPreset_1 = __webpack_require__(18);
 var AtobTemplate_1 = __webpack_require__(62);
+var Rc4Template_1 = __webpack_require__(85);
 var SelfDefendingTemplate_1 = __webpack_require__(69);
-var UnicodeArrayBase64DecodeNodeTemplate_1 = __webpack_require__(84);
+var UnicodeArrayBase64DecodeNodeTemplate_1 = __webpack_require__(70);
 var UnicodeArrayCallsWrapperTemplate_1 = __webpack_require__(71);
+var UnicodeArrayRC4DecodeNodeTemplate_1 = __webpack_require__(84);
 var AbstractCustomNode_1 = __webpack_require__(6);
 var JavaScriptObfuscator_1 = __webpack_require__(9);
 var NodeUtils_1 = __webpack_require__(1);
@@ -2124,7 +2182,12 @@ var UnicodeArrayCallsWrapper = function (_AbstractCustomNode_) {
                     });
                     break;
                 case UnicodeArrayEncoding_1.UnicodeArrayEncoding.rc4:
-                    decodeUnicodeArrayTemplate = '';
+                    decodeUnicodeArrayTemplate = UnicodeArrayRC4DecodeNodeTemplate_1.UnicodeArrayRc4DecodeNodeTemplate().formatUnicorn({
+                        atobPolyfill: AtobTemplate_1.AtobTemplate(),
+                        rc4Polyfill: Rc4Template_1.Rc4Template(),
+                        selfDefendingCode: selfDefendingCode,
+                        unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName
+                    });
                     break;
             }
             return decodeUnicodeArrayTemplate;
@@ -2147,7 +2210,7 @@ var UnicodeArrayCallsWrapper = function (_AbstractCustomNode_) {
 exports.UnicodeArrayCallsWrapper = UnicodeArrayCallsWrapper;
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2233,7 +2296,7 @@ UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH = 4;
 exports.UnicodeArrayNode = UnicodeArrayNode;
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2251,7 +2314,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 __webpack_require__(8);
 var AppendState_1 = __webpack_require__(4);
-var NoCustomNodesPreset_1 = __webpack_require__(17);
+var NoCustomNodesPreset_1 = __webpack_require__(18);
 var SelfDefendingTemplate_1 = __webpack_require__(73);
 var UnicodeArrayRotateFunctionTemplate_1 = __webpack_require__(74);
 var AbstractCustomNode_1 = __webpack_require__(6);
@@ -2317,18 +2380,6 @@ var UnicodeArrayRotateFunctionNode = function (_AbstractCustomNode_) {
 exports.UnicodeArrayRotateFunctionNode = UnicodeArrayRotateFunctionNode;
 
 /***/ },
-/* 40 */
-/***/ function(module, exports) {
-
-"use strict";
-"use strict";
-
-exports.UnicodeArrayEncoding = {
-    base64: 'base64',
-    rc4: 'rc4'
-};
-
-/***/ },
 /* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -2342,7 +2393,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var AbstractNodesGroup_1 = __webpack_require__(10);
-var ConsoleOutputDisableExpressionNode_1 = __webpack_require__(31);
+var ConsoleOutputDisableExpressionNode_1 = __webpack_require__(32);
 
 var ConsoleOutputNodesGroup = function (_AbstractNodesGroup_) {
     _inherits(ConsoleOutputNodesGroup, _AbstractNodesGroup_);
@@ -2377,9 +2428,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var DebugProtectionFunctionCallNode_1 = __webpack_require__(32);
-var DebugProtectionFunctionIntervalNode_1 = __webpack_require__(33);
-var DebugProtectionFunctionNode_1 = __webpack_require__(34);
+var DebugProtectionFunctionCallNode_1 = __webpack_require__(33);
+var DebugProtectionFunctionIntervalNode_1 = __webpack_require__(34);
+var DebugProtectionFunctionNode_1 = __webpack_require__(35);
 var AbstractNodesGroup_1 = __webpack_require__(10);
 var Utils_1 = __webpack_require__(0);
 
@@ -2422,7 +2473,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var AbstractNodesGroup_1 = __webpack_require__(10);
-var DomainLockNode_1 = __webpack_require__(35);
+var DomainLockNode_1 = __webpack_require__(36);
 
 var DomainLockNodesGroup = function (_AbstractNodesGroup_) {
     _inherits(DomainLockNodesGroup, _AbstractNodesGroup_);
@@ -2458,7 +2509,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var AbstractNodesGroup_1 = __webpack_require__(10);
-var SelfDefendingUnicodeNode_1 = __webpack_require__(36);
+var SelfDefendingUnicodeNode_1 = __webpack_require__(37);
 
 var SelfDefendingNodesGroup = function (_AbstractNodesGroup_) {
     _inherits(SelfDefendingNodesGroup, _AbstractNodesGroup_);
@@ -2494,10 +2545,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var AbstractNodesGroup_1 = __webpack_require__(10);
-var UnicodeArray_1 = __webpack_require__(28);
-var UnicodeArrayCallsWrapper_1 = __webpack_require__(37);
-var UnicodeArrayNode_1 = __webpack_require__(38);
-var UnicodeArrayRotateFunctionNode_1 = __webpack_require__(39);
+var UnicodeArray_1 = __webpack_require__(29);
+var UnicodeArrayCallsWrapper_1 = __webpack_require__(38);
+var UnicodeArrayNode_1 = __webpack_require__(39);
+var UnicodeArrayRotateFunctionNode_1 = __webpack_require__(40);
 var Utils_1 = __webpack_require__(0);
 
 var UnicodeArrayNodesGroup = function (_AbstractNodesGroup_) {
@@ -2784,8 +2835,8 @@ var escodegen = __webpack_require__(11);
 var AbstractNodeObfuscator_1 = __webpack_require__(7);
 var BooleanLiteralReplacer_1 = __webpack_require__(54);
 var Nodes_1 = __webpack_require__(2);
-var NumberLiteralReplacer_1 = __webpack_require__(20);
-var StringLiteralReplacer_1 = __webpack_require__(16);
+var NumberLiteralReplacer_1 = __webpack_require__(21);
+var StringLiteralReplacer_1 = __webpack_require__(17);
 
 var LiteralObfuscator = function (_AbstractNodeObfuscat) {
     _inherits(LiteralObfuscator, _AbstractNodeObfuscat);
@@ -2848,7 +2899,7 @@ var estraverse = __webpack_require__(3);
 var NodeType_1 = __webpack_require__(5);
 var AbstractNodeObfuscator_1 = __webpack_require__(7);
 var Nodes_1 = __webpack_require__(2);
-var StringLiteralReplacer_1 = __webpack_require__(16);
+var StringLiteralReplacer_1 = __webpack_require__(17);
 
 var MemberExpressionObfuscator = function (_AbstractNodeObfuscat) {
     _inherits(MemberExpressionObfuscator, _AbstractNodeObfuscat);
@@ -2932,7 +2983,7 @@ var estraverse = __webpack_require__(3);
 var AbstractNodeObfuscator_1 = __webpack_require__(7);
 var Nodes_1 = __webpack_require__(2);
 var Utils_1 = __webpack_require__(0);
-var StringLiteralReplacer_1 = __webpack_require__(16);
+var StringLiteralReplacer_1 = __webpack_require__(17);
 
 var MethodDefinitionObfuscator = function (_AbstractNodeObfuscat) {
     _inherits(MethodDefinitionObfuscator, _AbstractNodeObfuscat);
@@ -3152,7 +3203,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var JSFuck_1 = __webpack_require__(19);
+var JSFuck_1 = __webpack_require__(20);
 var AbstractReplacer_1 = __webpack_require__(13);
 
 var BooleanLiteralReplacer = function (_AbstractReplacer_1$A) {
@@ -3201,7 +3252,7 @@ var __metadata = undefined && undefined.__metadata || function (k, v) {
 var class_validator_1 = __webpack_require__(78);
 var TSourceMapMode_1 = __webpack_require__(75);
 var TUnicodeArrayEncoding_1 = __webpack_require__(76);
-var DefaultPreset_1 = __webpack_require__(21);
+var DefaultPreset_1 = __webpack_require__(22);
 var OptionsNormalizer_1 = __webpack_require__(56);
 var ValidationErrorsFormatter_1 = __webpack_require__(57);
 
@@ -3926,7 +3977,18 @@ function SelfDefendingTemplate() {
 exports.SelfDefendingTemplate = SelfDefendingTemplate;
 
 /***/ },
-/* 70 */,
+/* 70 */
+/***/ function(module, exports) {
+
+"use strict";
+"use strict";
+
+function UnicodeArrayBase64DecodeNodeTemplate() {
+    return "      \n        if (!{unicodeArrayCallsWrapperName}.atobPolyfillAppended) {\n            {atobPolyfill}\n            \n            {unicodeArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n                \n        var decodedValues = {unicodeArrayCallsWrapperName}.data || {};\n        \n        if (!decodedValues[index]) {\n            var base64DecodeUnicode = function (str) {\n                return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {\n                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);\n                }).join(''));\n            }\n            \n            {selfDefendingCode}\n            \n            value = base64DecodeUnicode(value);\n            decodedValues[index] = value;\n        } else {\n            value = decodedValues[index];\n        }  \n        \n        {unicodeArrayCallsWrapperName}.data = decodedValues;                             \n    ";
+}
+exports.UnicodeArrayBase64DecodeNodeTemplate = UnicodeArrayBase64DecodeNodeTemplate;
+
+/***/ },
 /* 71 */
 /***/ function(module, exports) {
 
@@ -4029,7 +4091,7 @@ module.exports = require("mkdirp");
 
 var JavaScriptObfuscator_1 = __webpack_require__(9);
 if (!global._babelPolyfill) {
-    __webpack_require__(24);
+    __webpack_require__(25);
 }
 module.exports = JavaScriptObfuscator_1.JavaScriptObfuscator;
 
@@ -4040,10 +4102,22 @@ module.exports = JavaScriptObfuscator_1.JavaScriptObfuscator;
 "use strict";
 "use strict";
 
-function UnicodeArrayBase64DecodeNodeTemplate() {
-    return "      \n        if (!{unicodeArrayCallsWrapperName}.atobPolyfillAppended) {\n            {atobPolyfill}\n            \n            {unicodeArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n                \n        var decodedValues = {unicodeArrayCallsWrapperName}.data || {};\n        \n        if (!decodedValues[index]) {\n            {selfDefendingCode}\n            \n            value = decodeURI(atob(value));\n            decodedValues[index] = value;\n        } else {\n            value = decodedValues[index];\n        }  \n        \n        {unicodeArrayCallsWrapperName}.data = decodedValues;                             \n    ";
+function UnicodeArrayRc4DecodeNodeTemplate() {
+    return "\n        if (!{unicodeArrayCallsWrapperName}.atobPolyfillAppended) {\n            {atobPolyfill}\n            \n            {unicodeArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n        \n        {rc4Polyfill}\n                \n        var decodedValues = {unicodeArrayCallsWrapperName}.data || {};\n        \n        if (!decodedValues[index]) {\n            var base64DecodeUnicode = function (str) {\n                return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {\n                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);\n                }).join(''));\n            }\n        \n            {selfDefendingCode}\n            \n            value = rc4(base64DecodeUnicode(value), key);\n            decodedValues[index] = value;\n        } else {\n            value = decodedValues[index];\n        }  \n                \n        {unicodeArrayCallsWrapperName}.data = decodedValues;                             \n    ";
 }
-exports.UnicodeArrayBase64DecodeNodeTemplate = UnicodeArrayBase64DecodeNodeTemplate;
+exports.UnicodeArrayRc4DecodeNodeTemplate = UnicodeArrayRc4DecodeNodeTemplate;
+
+/***/ },
+/* 85 */
+/***/ function(module, exports) {
+
+"use strict";
+"use strict";
+
+function Rc4Template() {
+    return "\n        function rc4 (str, key) {\n\t        var s = [], j = 0, x, res = '';\n\t        \n            for (var i = 0; i < 256; i++) {\n                s[i] = i;\n            }\n            \n            for (i = 0; i < 256; i++) {\n                j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;\n                x = s[i];\n                s[i] = s[j];\n                s[j] = x;\n            }\n            \n            i = 0;\n            j = 0;\n            \n            for (var y = 0; y < str.length; y++) {\n                i = (i + 1) % 256;\n                j = (j + s[i]) % 256;\n                x = s[i];\n                s[i] = s[j];\n                s[j] = x;\n                res += String.fromCharCode(str.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);\n            }\n            \n            return res;\n        }\n    ";
+}
+exports.Rc4Template = Rc4Template;
 
 /***/ }
 /******/ ]);

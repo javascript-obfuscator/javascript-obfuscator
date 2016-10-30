@@ -97,7 +97,7 @@ export class JavaScriptObfuscatorCLI {
                 return UnicodeArrayEncoding.rc4;
 
             default:
-                throw new ReferenceError('Invalid value of `--unicodeArrayEncoding` option');
+                return false;
         }
     }
 

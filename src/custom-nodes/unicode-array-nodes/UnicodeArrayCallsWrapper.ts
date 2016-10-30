@@ -12,9 +12,11 @@ import { UnicodeArrayEncoding } from '../../enums/UnicodeArrayEncoding';
 import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
 
 import { AtobTemplate } from '../../templates/custom-nodes/AtobTemplate';
+import { Rc4Template } from '../../templates/custom-nodes/Rc4Template';
 import { SelfDefendingTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/SelfDefendingTemplate';
 import { UnicodeArrayBase64DecodeNodeTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayBase64DecodeNodeTemplate';
 import { UnicodeArrayCallsWrapperTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayCallsWrapperTemplate';
+import { UnicodeArrayRc4DecodeNodeTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayRC4DecodeNodeTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
@@ -111,7 +113,12 @@ export class UnicodeArrayCallsWrapper extends AbstractCustomNode {
                 break;
 
             case UnicodeArrayEncoding.rc4:
-                decodeUnicodeArrayTemplate = '';
+                decodeUnicodeArrayTemplate = UnicodeArrayRc4DecodeNodeTemplate().formatUnicorn({
+                    atobPolyfill: AtobTemplate(),
+                    rc4Polyfill: Rc4Template(),
+                    selfDefendingCode,
+                    unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName
+                });
 
                 break;
         }

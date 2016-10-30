@@ -27,7 +27,7 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
             stackTraceData,
             blockScopeNode.body,
             this.getNode(),
-            CustomNodeAppender.getIndexByThreshold(blockScopeNode.body.length)
+            CustomNodeAppender.getStackTraceIndexByThreshold(stackTraceData.length)
         );
     }
 

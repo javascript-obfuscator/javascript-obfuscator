@@ -8,6 +8,12 @@ const JavaScriptObfuscator: any = require("../../index");
 
 let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
     `
+    var start = new Date();
+
+    var log = console.log;
+    
+    console.log = function () {};
+    
     (function(){
         var result = 1,
             term1 = 0,
@@ -66,6 +72,10 @@ let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
             console.log(error);
         }
     })();
+    
+    console.log = log;
+
+    console.log(new Date() - start);
     `,
     {
         disableConsoleOutput: false,

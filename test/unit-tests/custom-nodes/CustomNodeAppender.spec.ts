@@ -278,31 +278,91 @@ describe('CustomNodeAppender', () => {
 
                 assert.deepEqual(astTree, expectedAstTree);
             });
+
+            it('should append node into deepest function call by specified index in calls trace - variant #3', () => {
+                astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(`
+                    var start = new Date();
+                    var log = console.log;
+                    
+                    console.log = function () {};
+                
+                    (function () {
+                        function bar () {
+                            function inner1 () {
+                            
+                            }
+                        
+                            function inner2 () {
+                                var inner3 = function () {
+                                
+                                }
+                                
+                                inner3();
+                            }
+                            
+                            inner2();
+                            inner1();
+                        }
+                        
+                        bar();
+                    })();
+                    console.log = log;
+                    console.log(new Date() - start);
+                `, false);
+                expectedAstTree = <ESTree.Program>NodeUtils.convertCodeToStructure(`
+                    var start = new Date();
+                    var log = console.log;
+                    
+                    console.log = function () {};
+                
+                    (function () {
+                        function bar () {
+                            function inner1 () {
+                            
+                            }
+                        
+                            function inner2 () {
+                                var inner3 = function () {
+                                    var test = 1;
+                                }
+                                
+                                inner3();
+                            }
+                            
+                            inner2();
+                            inner1();
+                        }
+                        
+                        bar();
+                    })();
+                    console.log = log;
+                    console.log(new Date() - start);
+                `, false);
+
+                stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+                CustomNodeAppender.appendNode(
+                    stackTraceData,
+                    astTree.body,
+                    node,
+                    CustomNodeAppender.getRandomStackTraceIndex(stackTraceData.length)
+                );
+
+                NodeUtils.parentize(astTree);
+
+                assert.deepEqual(astTree, expectedAstTree);
+            });
         });
     });
 
-    describe('getIndexByThreshold (blockStatementBodyLength: number, threshold: number = 0.1): number', () => {
-        it('should returns random index between 0 and index based on threshold value', () => {
+    describe('getRandomStackTraceIndex (stackTraceRootLength: number): number', () => {
+        it('should returns random index between 0 and stack trace deata root length', () => {
             let index: number;
 
-            for (let i: number = 0; i < 10; i++) {
-                index = CustomNodeAppender.getIndexByThreshold(100, 0.1);
+            for (let i: number = 0; i < 100; i++) {
+                index = CustomNodeAppender.getRandomStackTraceIndex(100);
 
                 assert.isAtLeast(index, 0);
-                assert.isAtMost(index, 10);
-            }
-
-            for (let i: number = 0; i < 10; i++) {
-                index = CustomNodeAppender.getIndexByThreshold(10, 0.5);
-
-                assert.isAtLeast(index, 0);
-                assert.isAtMost(index, 5);
-            }
-
-            for (let i: number = 0; i < 10; i++) {
-                index = CustomNodeAppender.getIndexByThreshold(1, 1);
-
-                assert.equal(index, 0);
+                assert.isAtMost(index, 100);
             }
         });
     });

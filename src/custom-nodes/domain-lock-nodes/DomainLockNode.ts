@@ -30,7 +30,7 @@ export class DomainLockNode extends AbstractCustomNode {
             stackTraceData,
             blockScopeNode.body,
             this.getNode(),
-            CustomNodeAppender.getIndexByThreshold(blockScopeNode.body.length)
+            CustomNodeAppender.getRandomStackTraceIndex(stackTraceData.length)
         );
     }
 

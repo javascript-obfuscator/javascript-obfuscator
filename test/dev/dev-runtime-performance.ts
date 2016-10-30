@@ -4,11 +4,16 @@ if (!(<any>global)._babelPolyfill) {
     require('babel-polyfill');
 }
 
-const JavaScriptObfuscator: any = require("../../index");
+(function () {
+    const JavaScriptObfuscator: any = require("../../index");
 
-let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-    `
-    (function(){
+    let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+        `
+    var start = new Date();
+    var log = console.log;
+    console.log = function () {};
+    
+    ${String(`
         var result = 1,
             term1 = 0,
             term2 = 1,
@@ -65,13 +70,15 @@ let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         } catch (error) {
             console.log(error);
         }
-    })();
+    `).repeat(200)}
+    
+    console.log = log;
+    console.log(new Date() - start);
     `,
-    {
-        disableConsoleOutput: false,
-        unicodeArrayEncoding: 'rc4'
-    }
-).getObfuscatedCode();
+        {
+            disableConsoleOutput: false,
+        }
+    ).getObfuscatedCode();
 
-console.log(obfuscatedCode);
-console.log(eval(obfuscatedCode));
+    console.log(eval(obfuscatedCode));
+})();

@@ -47,17 +47,12 @@ export class CustomNodeAppender {
     }
 
     /**
-     * @param blockStatementBodyLength
-     * @param threshold
+     * @param stackTraceRootLength
      */
-    public static getIndexByThreshold (blockStatementBodyLength: number, threshold: number = 0.1): number {
-        if (threshold < 0 || threshold > 1) {
-            throw new RangeError('`threshold` parameter should has value between 0 and 1');
-        }
-
+    public static getRandomStackTraceIndex (stackTraceRootLength: number): number {
         return Utils.getRandomGenerator().integer({
             min: 0,
-            max: Math.round((blockStatementBodyLength - 1) * threshold)
+            max: Math.max(0, Math.round(stackTraceRootLength - 1))
         });
     }
 

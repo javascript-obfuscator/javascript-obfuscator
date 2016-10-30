@@ -17,6 +17,7 @@ import './unit-tests/custom-nodes/CustomNodeAppender.spec';
 import './unit-tests/node-obfuscators/CatchClauseObfuscator.spec';
 import './unit-tests/node-obfuscators/FunctionDeclarationObfuscator.spec';
 import './unit-tests/node-obfuscators/FunctionObfuscator.spec';
+import './unit-tests/stack-trace-analyzer/StackTraceAnalyzer.spec';
 
 /**
  * Functional tests

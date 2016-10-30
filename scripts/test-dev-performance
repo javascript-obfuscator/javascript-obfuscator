@@ -1,3 +1,0 @@
-#!/bin/bash
-
-$(npm bin)/ts-node test/dev/test-performance.ts

@@ -88,7 +88,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 84);
+/******/ 	return __webpack_require__(__webpack_require__.s = 85);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -888,16 +888,11 @@ var CustomNodeAppender = function () {
             NodeUtils_1.NodeUtils.prependNode(targetBlockScopeBody, node);
         }
     }, {
-        key: 'getIndexByThreshold',
-        value: function getIndexByThreshold(blockStatementBodyLength) {
-            var threshold = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.1;
-
-            if (threshold < 0 || threshold > 1) {
-                throw new RangeError('`threshold` parameter should has value between 0 and 1');
-            }
+        key: 'getRandomStackTraceIndex',
+        value: function getRandomStackTraceIndex(stackTraceRootLength) {
             return Utils_1.Utils.getRandomGenerator().integer({
                 min: 0,
-                max: Math.round((blockStatementBodyLength - 1) * threshold)
+                max: Math.max(0, Math.round(stackTraceRootLength - 1))
             });
         }
     }, {
@@ -1797,7 +1792,7 @@ var ConsoleOutputDisableExpressionNode = function (_AbstractCustomNode_) {
     _createClass(ConsoleOutputDisableExpressionNode, [{
         key: 'appendNode',
         value: function appendNode(blockScopeNode, stackTraceData) {
-            CustomNodeAppender_1.CustomNodeAppender.appendNode(stackTraceData, blockScopeNode.body, this.getNode(), CustomNodeAppender_1.CustomNodeAppender.getIndexByThreshold(blockScopeNode.body.length));
+            CustomNodeAppender_1.CustomNodeAppender.appendNode(stackTraceData, blockScopeNode.body, this.getNode(), CustomNodeAppender_1.CustomNodeAppender.getRandomStackTraceIndex(stackTraceData.length));
         }
     }, {
         key: 'getNodeStructure',
@@ -2021,7 +2016,7 @@ var DomainLockNode = function (_AbstractCustomNode_) {
     _createClass(DomainLockNode, [{
         key: 'appendNode',
         value: function appendNode(blockScopeNode, stackTraceData) {
-            CustomNodeAppender_1.CustomNodeAppender.appendNode(stackTraceData, blockScopeNode.body, this.getNode(), CustomNodeAppender_1.CustomNodeAppender.getIndexByThreshold(blockScopeNode.body.length));
+            CustomNodeAppender_1.CustomNodeAppender.appendNode(stackTraceData, blockScopeNode.body, this.getNode(), CustomNodeAppender_1.CustomNodeAppender.getRandomStackTraceIndex(stackTraceData.length));
         }
     }, {
         key: 'getNodeStructure',
@@ -2084,7 +2079,7 @@ var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
     _createClass(SelfDefendingUnicodeNode, [{
         key: 'appendNode',
         value: function appendNode(blockScopeNode, stackTraceData) {
-            CustomNodeAppender_1.CustomNodeAppender.appendNode(stackTraceData, blockScopeNode.body, this.getNode(), CustomNodeAppender_1.CustomNodeAppender.getIndexByThreshold(blockScopeNode.body.length));
+            CustomNodeAppender_1.CustomNodeAppender.appendNode(stackTraceData, blockScopeNode.body, this.getNode(), CustomNodeAppender_1.CustomNodeAppender.getRandomStackTraceIndex(stackTraceData.length));
         }
     }, {
         key: 'getNodeStructure',
@@ -3570,58 +3565,52 @@ var StackTraceAnalyzer = function () {
         value: function analyzeRecursive(blockScopeBody) {
             var _this = this;
 
+            var limitIndex = StackTraceAnalyzer.getLimitIndex(blockScopeBody.length);
             var stackTraceData = [];
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
-
-            try {
-                var _loop = function _loop() {
-                    var rootNode = _step.value;
-
-                    estraverse.traverse(rootNode, {
-                        enter: function enter(node) {
-                            if (!Nodes_1.Nodes.isCallExpressionNode(node) || rootNode.parentNode !== NodeUtils_1.NodeUtils.getBlockScopeOfNode(node)) {
+            blockScopeBody.forEach(function (rootNode, index) {
+                if (index > limitIndex) {
+                    return;
+                }
+                estraverse.traverse(rootNode, {
+                    enter: function enter(node) {
+                        if (!Nodes_1.Nodes.isCallExpressionNode(node) || rootNode.parentNode !== NodeUtils_1.NodeUtils.getBlockScopeOfNode(node)) {
+                            return;
+                        }
+                        _this.calleeDataExtractors.forEach(function (calleeDataExtractor) {
+                            var calleeData = new calleeDataExtractor(blockScopeBody, node.callee).extract();
+                            if (!calleeData) {
                                 return;
                             }
-                            _this.calleeDataExtractors.forEach(function (calleeDataExtractor) {
-                                var calleeData = new calleeDataExtractor(blockScopeBody, node.callee).extract();
-                                if (!calleeData) {
-                                    return;
-                                }
-                                stackTraceData.push(Object.assign({}, calleeData, {
-                                    stackTrace: _this.analyzeRecursive(calleeData.callee.body)
-                                }));
-                            });
-                        }
-                    });
-                };
-
-                for (var _iterator = blockScopeBody[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    _loop();
-                }
-            } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
+                            stackTraceData.push(Object.assign({}, calleeData, {
+                                stackTrace: _this.analyzeRecursive(calleeData.callee.body)
+                            }));
+                        });
                     }
-                } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
-                    }
+                });
+            });
+            return stackTraceData;
+        }
+    }], [{
+        key: 'getLimitIndex',
+        value: function getLimitIndex(blockScopeBodyLength) {
+            var lastIndex = blockScopeBodyLength - 1;
+            var limitThresholdActivationIndex = StackTraceAnalyzer.limitThresholdActivationLength - 1;
+            var limitIndex = lastIndex;
+            if (lastIndex > limitThresholdActivationIndex) {
+                limitIndex = Math.round(limitThresholdActivationIndex + lastIndex * StackTraceAnalyzer.limitThreshold);
+                if (limitIndex > lastIndex) {
+                    limitIndex = lastIndex;
                 }
             }
-
-            return stackTraceData;
+            return limitIndex;
         }
     }]);
 
     return StackTraceAnalyzer;
 }();
 
+StackTraceAnalyzer.limitThresholdActivationLength = 25;
+StackTraceAnalyzer.limitThreshold = 0.1;
 exports.StackTraceAnalyzer = StackTraceAnalyzer;
 
 /***/ },
@@ -4106,7 +4095,8 @@ module.exports = require("fs");
 module.exports = require("mkdirp");
 
 /***/ },
-/* 84 */
+/* 84 */,
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

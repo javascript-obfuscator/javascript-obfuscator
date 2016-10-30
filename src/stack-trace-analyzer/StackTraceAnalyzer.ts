@@ -49,6 +49,16 @@ import { NodeUtils } from '../NodeUtils';
  */
 export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     /**
+     * @type {number}
+     */
+    private static limitThresholdActivationLength: number = 25;
+
+    /**
+     * @type {number}
+     */
+    private static limitThreshold: number = 0.1;
+
+    /**
      * @type {ESTree.Node[]}
      */
     private blockScopeBody: ESTree.Node[];
@@ -61,6 +71,29 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
         [NodeType.FunctionExpression, FunctionExpressionCalleeDataExtractor],
         [NodeType.ObjectExpression, ObjectExpressionCalleeDataExtractor]
     ]);
+
+    /**
+     * @param blockScopeBodyLength
+     * @returns {number}
+     */
+    public static getLimitIndex (blockScopeBodyLength: number): number {
+        const lastIndex: number = blockScopeBodyLength - 1;
+        const limitThresholdActivationIndex: number = StackTraceAnalyzer.limitThresholdActivationLength - 1;
+
+        let limitIndex: number = lastIndex;
+
+        if (lastIndex > limitThresholdActivationIndex) {
+            limitIndex = Math.round(
+                limitThresholdActivationIndex + (lastIndex * StackTraceAnalyzer.limitThreshold)
+            );
+
+            if (limitIndex > lastIndex) {
+                limitIndex = lastIndex;
+            }
+        }
+
+        return limitIndex;
+    }
 
     /**
      * @param blockScopeBody
@@ -81,9 +114,14 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
      * @returns {IStackTraceData[]}
      */
     private analyzeRecursive (blockScopeBody: ESTree.Node[]): IStackTraceData[] {
+        const limitIndex: number = StackTraceAnalyzer.getLimitIndex(blockScopeBody.length);
         const stackTraceData: IStackTraceData[] = [];
 
-        for (const rootNode of blockScopeBody) {
+        blockScopeBody.forEach((rootNode, index) => {
+            if (index > limitIndex) {
+                return;
+            }
+
             estraverse.traverse(rootNode, {
                 enter: (node: ESTree.Node): any => {
                     if (!Nodes.isCallExpressionNode(node) || rootNode.parentNode !== NodeUtils.getBlockScopeOfNode(node)) {
@@ -106,7 +144,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
                     });
                 }
             });
-        }
+        });
 
         return stackTraceData;
     }

@@ -161,7 +161,7 @@ export class JavaScriptObfuscatorCLI {
                 JavaScriptObfuscatorCLI.parseSourceMapMode
             )
             .option('--unicodeArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean)
-            .option('--unicodeArrayEncoding <boolean|string> [base64, rc4]', 'All literals in Unicode array become encoded in using base64 or rc4 (this option can slightly slow down your code speed', JavaScriptObfuscatorCLI.parseUnicodeArrayEncoding)
+            .option('--unicodeArrayEncoding <boolean|string> [true, false, base64, rc4]', 'All literals in Unicode array become encoded in using base64 or rc4 (this option can slightly slow down your code speed', JavaScriptObfuscatorCLI.parseUnicodeArrayEncoding)
             .option('--unicodeArrayThreshold <number>', 'The probability that the literal string will be inserted into unicodeArray (Default: 0.8, Min: 0, Max: 1)', parseFloat)
             .parse(this.rawArguments);
 

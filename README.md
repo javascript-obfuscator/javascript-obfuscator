@@ -148,7 +148,7 @@ Following options available for the JS Obfuscator:
     --sourceMapFileName <string>
     --sourceMapMode <string> [inline, separate]
     --unicodeArray <boolean>
-    --unicodeArrayEncoding <boolean|string> ['base64', 'rc4']
+    --unicodeArrayEncoding <boolean|string> [true, false, base64, rc4]
     --unicodeArrayThreshold <number>
 ```
 

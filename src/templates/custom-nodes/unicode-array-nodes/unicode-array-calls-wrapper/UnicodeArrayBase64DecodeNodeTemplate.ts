@@ -13,9 +13,14 @@ export function UnicodeArrayBase64DecodeNodeTemplate (): string {
         
         if (!decodedValues[index]) {
             var base64DecodeUnicode = function (str) {
-                return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {
-                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                }).join(''));
+                var stringChars = atob(str).split('');
+                var newStringChars = '';
+                
+                for (var char in stringChars) {
+                    newStringChars += '%' + ('00' + stringChars[char].charCodeAt(0).toString(16)).slice(-2);
+                }
+                
+                return decodeURIComponent(newStringChars);
             }
             
             {selfDefendingCode}

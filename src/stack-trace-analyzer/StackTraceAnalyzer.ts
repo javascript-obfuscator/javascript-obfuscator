@@ -73,6 +73,13 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     ]);
 
     /**
+     * @param blockScopeBody
+     */
+    constructor (blockScopeBody: ESTree.Node[]) {
+        this.blockScopeBody = blockScopeBody;
+    }
+
+    /**
      * @param blockScopeBodyLength
      * @returns {number}
      */
@@ -93,13 +100,6 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
         }
 
         return limitIndex;
-    }
-
-    /**
-     * @param blockScopeBody
-     */
-    constructor (blockScopeBody: ESTree.Node[]) {
-        this.blockScopeBody = blockScopeBody;
     }
 
     /**

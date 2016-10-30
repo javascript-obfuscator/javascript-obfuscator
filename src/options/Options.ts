@@ -18,6 +18,7 @@ import { IObfuscatorOptions } from '../interfaces/IObfuscatorOptions';
 import { IOptions } from '../interfaces/IOptions';
 
 import { TSourceMapMode } from '../types/TSourceMapMode';
+import { TUnicodeArrayEncoding } from '../types/TUnicodeArrayEncoding';
 
 import { DEFAULT_PRESET } from '../preset-options/DefaultPreset';
 
@@ -67,12 +68,6 @@ export class Options implements IOptions {
         each: true
     })
     public readonly domainLock: string[];
-
-    /**
-     * @type {boolean}
-     */
-    @IsBoolean()
-    public readonly encodeUnicodeLiterals: boolean;
 
     /**
      * @type {string[]}
@@ -130,6 +125,12 @@ export class Options implements IOptions {
      */
     @IsBoolean()
     public readonly unicodeArray: boolean;
+
+    /**
+     * @type {TUnicodeArrayEncoding}
+     */
+    @IsIn([true, false, 'base64', 'rc4'])
+    public readonly unicodeArrayEncoding: TUnicodeArrayEncoding;
 
     /**
      * @type {number}

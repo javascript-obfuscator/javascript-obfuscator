@@ -1,7 +1,7 @@
 /**
  * @returns {string}
  */
-export function UnicodeArrayAtobDecodeNodeTemplate (): string {
+export function UnicodeArrayBase64DecodeNodeTemplate (): string {
     return `      
         if (!{unicodeArrayCallsWrapperName}.atobPolyfillAppended) {
             {atobPolyfill}

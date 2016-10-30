@@ -53,7 +53,6 @@
     "coveralls": "2.11.14",
     "istanbul": "1.1.0-alpha.1",
     "mocha": "3.1.2",
-    "optimize-js-plugin": "0.0.4",
     "sinon": "2.0.0-pre.3",
     "ts-node": "1.6.0",
     "tslint": "3.15.1",

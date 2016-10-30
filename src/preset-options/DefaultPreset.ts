@@ -8,7 +8,6 @@ export const DEFAULT_PRESET: IObfuscatorOptions = Object.freeze({
     debugProtectionInterval: false,
     disableConsoleOutput: true,
     domainLock: [],
-    encodeUnicodeLiterals: false,
     reservedNames: [],
     rotateUnicodeArray: true,
     selfDefending: true,
@@ -17,6 +16,6 @@ export const DEFAULT_PRESET: IObfuscatorOptions = Object.freeze({
     sourceMapFileName: '',
     sourceMapMode: SourceMapMode.Separate,
     unicodeArray: true,
-    unicodeArrayThreshold: 0.8,
-    wrapUnicodeArrayCalls: true
+    unicodeArrayEncoding: false,
+    unicodeArrayThreshold: 0.8
 });

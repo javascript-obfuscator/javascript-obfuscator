@@ -1,11 +1,16 @@
 Change Log
 ===
 
+v0.8.0
+---
+* **Breaking options change:** `encodeUnicodeArray` has been renamed to `unicodeArrayEncoding` and now accepts following values: `true|false|'base64'|'rc4`.
+* **Breaking change:** option `wrapUnicodeArrayCalls` was removed and now all calls to `unicodeArray` are always wrapped by special wrapper function.
+
 v0.7.1
 ---
 * IE error fix [#14](https://github.com/sanex3339/javascript-obfuscator/issues/14)
 
-v0.7.0-dev.3
+v0.7.0
 ---
 * Obfuscator now returns an empty string instead of obfuscated code if source code is empty
 

@@ -116,8 +116,6 @@ Following options available for the JS Obfuscator:
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: true,
-    encodeUnicodeLiterals: false,
-    optimize: false,
     reservedNames: [],
     rotateUnicodeArray: true,
     selfDefending: true,
@@ -126,6 +124,7 @@ Following options available for the JS Obfuscator:
     sourceMapFileName: '',
     sourceMapMode: 'separate',
     unicodeArray: true,
+    unicodeArrayEncoding: false,
     unicodeArrayThreshold: 0.8
 }
 ```
@@ -141,8 +140,6 @@ Following options available for the JS Obfuscator:
     --debugProtection <boolean>
     --debugProtectionInterval <boolean>
     --disableConsoleOutput <boolean>
-    --encodeUnicodeLiterals <boolean>
-    --optimize <boolean>
     --reservedNames <list> (comma separated)
     --rotateUnicodeArray <boolean>
     --selfDefending <boolean>
@@ -151,6 +148,7 @@ Following options available for the JS Obfuscator:
     --sourceMapFileName <string>
     --sourceMapMode <string> [inline, separate]
     --unicodeArray <boolean>
+    --unicodeArrayEncoding <boolean|string> ['base64', 'rc4']
     --unicodeArrayThreshold <number>
 ```
 
@@ -188,15 +186,6 @@ Locks the obfuscated source code so it only runs on specific domains and/or sub-
 
 ##### Multiple domains and sub-domains
 It's possible to lock your code to more than one domain or sub-domain. For instance, to lock it so the code only runs on **www.example.com** add `www.example.com`, to make it work on any sub-domain from example.com, use `.example.com`.
-
-### `encodeUnicodeLiterals`
-Type: `boolean` Default: `false`
-
-##### :warning: `unicodeArray` option must be enabled
-
-This option can slightly slow down your script.
-
-Encode all string literals of the `unicodeArray` using base64 and inserts a special function that it's used to decode it back at runtime.
 
 ### `reservedNames`
 Type: `string[]` Default: `[]`
@@ -278,6 +267,21 @@ Specifies source map generation mode:
 Type: `boolean` Default: `true`
 
 Removes string literals and place them in a special array. For instance the string `"Hello World"` in `var m = "Hello World";` will be replaced with something like `var m = _0x12c456[0x1];`
+    
+### `unicodeArrayEncoding`
+Type: `boolean|string` Default: `false`
+
+##### :warning: `unicodeArray` option must be enabled
+
+This option can slightly slow down your script.
+
+Encode all string literals of the `unicodeArray` using `base64` or `rc4` and inserts a special code that used to decode it back at runtime.
+
+Available values:
+* `true` (`boolean`): encode `unicodeArray` values using `base64`
+* `false` (`boolean`): don't encode `unicodeArray` values
+* `'base64'` (`string`): encode `unicodeArray` values using `base64`
+* `'rc4'` (`string`): encode `unicodeArray` values using `rc4`
     
 ### `unicodeArrayThreshold`
 Type: `number` Default: `0.8` Min: `0` Max: `1`

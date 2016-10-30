@@ -1,7 +1,7 @@
 import 'format-unicorn';
 
 import { AtobTemplate } from '../../../../../src/templates/custom-nodes/AtobTemplate';
-import { UnicodeArrayAtobDecodeNodeTemplate } from '../../../../../src/templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayAtobDecodeNodeTemplate';
+import { UnicodeArrayBase64DecodeNodeTemplate } from '../../../../../src/templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayBase64DecodeNodeTemplate';
 import { UnicodeArrayCallsWrapperTemplate } from '../../../../../src/templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayCallsWrapperTemplate';
 
 import { Utils } from '../../../../../src/Utils';
@@ -35,7 +35,7 @@ function getFunctionFromTemplate (
 describe('UnicodeArrayCallsWrapperNodeTemplate (): string', () => {
     let unicodeArrayName: string = 'unicodeArrayName',
         unicodeArrayCallsWrapperName: string = 'unicodeArrayCallsWrapperName',
-        atobDecodeNodeTemplate: string = UnicodeArrayAtobDecodeNodeTemplate().formatUnicorn({
+        atobDecodeNodeTemplate: string = UnicodeArrayBase64DecodeNodeTemplate().formatUnicorn({
             atobPolyfill: AtobTemplate(),
             selfDefendingCode: '',
             unicodeArrayCallsWrapperName

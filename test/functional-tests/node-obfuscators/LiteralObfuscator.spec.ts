@@ -17,12 +17,12 @@ describe('LiteralObfuscator', () => {
             assert.match(obfuscationResult.getObfuscatedCode(),  /^var *test *= *'\\x74\\x65\\x73\\x74';$/);
         });
 
-        it('should replace literal node value with unicode value with encoding to base64', () => {
+        it('should replace literal node value with unicode value encoded to base64', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'test';`,
                 Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                    encodeUnicodeLiterals: true,
                     unicodeArray: true,
+                    unicodeArrayEncoding: 'base64',
                     unicodeArrayThreshold: 1
                 })
             );
@@ -36,7 +36,6 @@ describe('LiteralObfuscator', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `var test = true;`,
             Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                encodeUnicodeLiterals: true,
                 unicodeArray: true,
                 unicodeArrayThreshold: 1
             })
@@ -49,7 +48,6 @@ describe('LiteralObfuscator', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `var test = 0;`,
             Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                encodeUnicodeLiterals: true,
                 unicodeArray: true,
                 unicodeArrayThreshold: 1
             })

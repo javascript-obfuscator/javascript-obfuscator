@@ -7,12 +7,13 @@ import { IOptions } from '../../interfaces/IOptions';
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 
 import { AppendState } from '../../enums/AppendState';
+import { UnicodeArrayEncoding } from '../../enums/UnicodeArrayEncoding';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
 
 import { AtobTemplate } from '../../templates/custom-nodes/AtobTemplate';
 import { SelfDefendingTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/SelfDefendingTemplate';
-import { UnicodeArrayAtobDecodeNodeTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayAtobDecodeNodeTemplate';
+import { UnicodeArrayBase64DecodeNodeTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayBase64DecodeNodeTemplate';
 import { UnicodeArrayCallsWrapperTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayCallsWrapperTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
@@ -89,7 +90,8 @@ export class UnicodeArrayCallsWrapper extends AbstractCustomNode {
      * @returns {string}
      */
     protected getDecodeUnicodeArrayTemplate (): string {
-        let selfDefendingCode: string = '';
+        let decodeUnicodeArrayTemplate: string = '',
+            selfDefendingCode: string = '';
 
         if (this.options.selfDefending) {
             selfDefendingCode = SelfDefendingTemplate().formatUnicorn({
@@ -98,20 +100,30 @@ export class UnicodeArrayCallsWrapper extends AbstractCustomNode {
             });
         }
 
-        return UnicodeArrayAtobDecodeNodeTemplate().formatUnicorn({
-            atobPolyfill: AtobTemplate(),
-            selfDefendingCode,
-            unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName
-        })
+        switch (this.options.unicodeArrayEncoding) {
+            case UnicodeArrayEncoding.base64:
+                decodeUnicodeArrayTemplate = UnicodeArrayBase64DecodeNodeTemplate().formatUnicorn({
+                    atobPolyfill: AtobTemplate(),
+                    selfDefendingCode,
+                    unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName
+                });
+
+                break;
+
+            case UnicodeArrayEncoding.rc4:
+                decodeUnicodeArrayTemplate = '';
+
+                break;
+        }
+
+        return decodeUnicodeArrayTemplate;
     }
 
     /**
      * @returns {ESTree.Node}
      */
     protected getNodeStructure (): ESTree.Node {
-        const decodeNodeTemplate: string = this.options.encodeUnicodeLiterals ?
-            this.getDecodeUnicodeArrayTemplate() :
-            '';
+        const decodeNodeTemplate: string = this.getDecodeUnicodeArrayTemplate();
 
         return NodeUtils.convertCodeToStructure(
             JavaScriptObfuscator.obfuscate(

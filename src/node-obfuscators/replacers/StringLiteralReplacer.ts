@@ -1,6 +1,8 @@
 import { TUnicodeArrayCallsWrapper } from '../../types/custom-nodes/TUnicodeArrayCallsWrapper';
 import { TUnicodeArrayNode } from '../../types/custom-nodes/TUnicodeArrayNode';
 
+import { UnicodeArrayEncoding } from '../../enums/UnicodeArrayEncoding';
+
 import { AbstractReplacer } from './AbstractReplacer';
 import { NumberLiteralReplacer } from './NumberLiteralReplacer';
 import { UnicodeArray } from '../../UnicodeArray';
@@ -14,8 +16,18 @@ export class StringLiteralReplacer extends AbstractReplacer {
     public replace (nodeValue: string): string {
         const replaceWithUnicodeArrayFlag: boolean = Math.random() <= this.options.unicodeArrayThreshold;
 
-        if (this.options.encodeUnicodeLiterals && replaceWithUnicodeArrayFlag) {
-            nodeValue = Utils.btoa(nodeValue);
+        if (replaceWithUnicodeArrayFlag) {
+            switch (this.options.unicodeArrayEncoding) {
+                case UnicodeArrayEncoding.base64:
+                    nodeValue = Utils.btoa(nodeValue);
+
+                    break;
+
+                case UnicodeArrayEncoding.rc4:
+                    nodeValue = Utils.btoa(nodeValue);
+
+                    break;
+            }
         }
 
         nodeValue = Utils.stringToUnicode(nodeValue);

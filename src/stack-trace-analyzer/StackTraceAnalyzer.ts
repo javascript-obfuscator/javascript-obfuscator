@@ -56,7 +56,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     /**
      * @type {number}
      */
-    private static limitThreshold: number = 0.1;
+    private static limitThreshold: number = 0.002;
 
     /**
      * @type {ESTree.Node[]}

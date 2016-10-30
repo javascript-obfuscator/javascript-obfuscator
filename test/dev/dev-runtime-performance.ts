@@ -70,7 +70,7 @@ if (!(<any>global)._babelPolyfill) {
         } catch (error) {
             console.log(error);
         }
-    `).repeat(200)}
+    `).repeat(1000)}
     
     console.log = log;
     console.log(new Date() - start);

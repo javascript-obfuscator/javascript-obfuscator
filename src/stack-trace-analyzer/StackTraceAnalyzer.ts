@@ -117,9 +117,15 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
         const limitIndex: number = StackTraceAnalyzer.getLimitIndex(blockScopeBody.length);
         const stackTraceData: IStackTraceData[] = [];
 
-        blockScopeBody.forEach((rootNode: ESTree.Node, index: number) => {
+        for (
+            let index: number = 0, blockScopeBodyLength: number = blockScopeBody.length;
+            index < blockScopeBodyLength;
+            index++
+        ) {
+            let rootNode: ESTree.Node = blockScopeBody[index];
+
             if (index > limitIndex) {
-                return;
+                break;
             }
 
             estraverse.traverse(rootNode, {
@@ -144,7 +150,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
                     });
                 }
             });
-        });
+        }
 
         return stackTraceData;
     }

@@ -3567,9 +3567,11 @@ var StackTraceAnalyzer = function () {
 
             var limitIndex = StackTraceAnalyzer.getLimitIndex(blockScopeBody.length);
             var stackTraceData = [];
-            blockScopeBody.forEach(function (rootNode, index) {
+
+            var _loop = function _loop(index, blockScopeBodyLength) {
+                var rootNode = blockScopeBody[index];
                 if (index > limitIndex) {
-                    return;
+                    return 'break';
                 }
                 estraverse.traverse(rootNode, {
                     enter: function enter(node) {
@@ -3587,7 +3589,13 @@ var StackTraceAnalyzer = function () {
                         });
                     }
                 });
-            });
+            };
+
+            for (var index = 0, blockScopeBodyLength = blockScopeBody.length; index < blockScopeBodyLength; index++) {
+                var _ret = _loop(index, blockScopeBodyLength);
+
+                if (_ret === 'break') break;
+            }
             return stackTraceData;
         }
     }], [{

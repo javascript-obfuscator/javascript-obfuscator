@@ -71,6 +71,7 @@
     "watch": "scripts/watch",
     "test:compile": "scripts/test-compile",
     "test:dev": "scripts/test-dev",
+    "test:devPerformance": "scripts/test-dev-performance",
     "test:full": "scripts/test-full",
     "test:coveralls": "scripts/test-coveralls",
     "test:mocha": "scripts/test-mocha",

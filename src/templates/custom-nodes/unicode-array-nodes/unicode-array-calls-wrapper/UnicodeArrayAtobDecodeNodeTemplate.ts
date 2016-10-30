@@ -12,7 +12,7 @@ export function UnicodeArrayAtobDecodeNodeTemplate (): string {
         var decodedValues = {unicodeArrayCallsWrapperName}.data || {};
         
         if (!decodedValues[index]) {
-            {code}
+            {selfDefendingCode}
             
             value = decodeURI(atob(value));
             decodedValues[index] = value;

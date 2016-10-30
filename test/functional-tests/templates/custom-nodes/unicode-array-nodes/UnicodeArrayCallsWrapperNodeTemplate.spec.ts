@@ -33,13 +33,11 @@ function getFunctionFromTemplate (
 }
 
 describe('UnicodeArrayCallsWrapperNodeTemplate (): string', () => {
-    let decodeFunctionName: string = 'decodeFunction',
-        unicodeArrayName: string = 'unicodeArrayName',
+    let unicodeArrayName: string = 'unicodeArrayName',
         unicodeArrayCallsWrapperName: string = 'unicodeArrayCallsWrapperName',
         atobDecodeNodeTemplate: string = UnicodeArrayAtobDecodeNodeTemplate().formatUnicorn({
             atobPolyfill: AtobTemplate(),
-            code: `value = ${decodeFunctionName}(decodedValues, index, value);`,
-            decodeFunctionName,
+            selfDefendingCode: '',
             unicodeArrayCallsWrapperName
         });
 

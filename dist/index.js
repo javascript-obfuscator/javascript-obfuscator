@@ -2085,19 +2085,16 @@ var UnicodeArrayCallsWrapper = function (_AbstractCustomNode_) {
     }, {
         key: 'getDecodeUnicodeArrayTemplate',
         value: function getDecodeUnicodeArrayTemplate() {
-            var decodeFunctionName = 'decodeFunction';
-            var code = '';
+            var selfDefendingCode = '';
             if (this.options.selfDefending) {
-                code = SelfDefendingTemplate_1.SelfDefendingTemplate().formatUnicorn({
-                    decodeFunctionName: decodeFunctionName,
+                selfDefendingCode = SelfDefendingTemplate_1.SelfDefendingTemplate().formatUnicorn({
                     unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName,
                     unicodeArrayName: this.unicodeArrayName
                 });
             }
             return UnicodeArrayAtobDecodeNodeTemplate_1.UnicodeArrayAtobDecodeNodeTemplate().formatUnicorn({
                 atobPolyfill: AtobTemplate_1.AtobTemplate(),
-                code: code,
-                decodeFunctionName: decodeFunctionName,
+                selfDefendingCode: selfDefendingCode,
                 unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName
             });
         }
@@ -3894,7 +3891,7 @@ exports.SelfDefendingTemplate = SelfDefendingTemplate;
 "use strict";
 
 function UnicodeArrayAtobDecodeNodeTemplate() {
-    return "      \n        if (!{unicodeArrayCallsWrapperName}.atobPolyfillAppended) {\n            {atobPolyfill}\n            \n            {unicodeArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n                \n        var decodedValues = {unicodeArrayCallsWrapperName}.data || {};\n        \n        if (!decodedValues[index]) {\n            {code}\n            \n            value = decodeURI(atob(value));\n            decodedValues[index] = value;\n        } else {\n            value = decodedValues[index];\n        }  \n        \n        {unicodeArrayCallsWrapperName}.data = decodedValues;                             \n    ";
+    return "      \n        if (!{unicodeArrayCallsWrapperName}.atobPolyfillAppended) {\n            {atobPolyfill}\n            \n            {unicodeArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n                \n        var decodedValues = {unicodeArrayCallsWrapperName}.data || {};\n        \n        if (!decodedValues[index]) {\n            {selfDefendingCode}\n            \n            value = decodeURI(atob(value));\n            decodedValues[index] = value;\n        } else {\n            value = decodedValues[index];\n        }  \n        \n        {unicodeArrayCallsWrapperName}.data = decodedValues;                             \n    ";
 }
 exports.UnicodeArrayAtobDecodeNodeTemplate = UnicodeArrayAtobDecodeNodeTemplate;
 

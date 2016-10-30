@@ -89,13 +89,10 @@ export class UnicodeArrayCallsWrapper extends AbstractCustomNode {
      * @returns {string}
      */
     protected getDecodeUnicodeArrayTemplate (): string {
-        const decodeFunctionName: string = 'decodeFunction';
-
-        let code: string = '';
+        let selfDefendingCode: string = '';
 
         if (this.options.selfDefending) {
-            code = SelfDefendingTemplate().formatUnicorn({
-                decodeFunctionName,
+            selfDefendingCode = SelfDefendingTemplate().formatUnicorn({
                 unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName,
                 unicodeArrayName: this.unicodeArrayName
             });
@@ -103,8 +100,7 @@ export class UnicodeArrayCallsWrapper extends AbstractCustomNode {
 
         return UnicodeArrayAtobDecodeNodeTemplate().formatUnicorn({
             atobPolyfill: AtobTemplate(),
-            code,
-            decodeFunctionName,
+            selfDefendingCode,
             unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName
         })
     }

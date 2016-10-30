@@ -46,10 +46,6 @@ describe('LiteralObfuscator', () => {
 
             assert.match(
                 obfuscationResult.getObfuscatedCode(),
-                /^var *_0x([a-z0-9]){4} *= *\['(\\x[a-f0-9]*){8}'\];/
-            );
-            assert.match(
-                obfuscationResult.getObfuscatedCode(),
                 /var *test *= *_0x([a-z0-9]){4}\('0x0', '(\\x[a-f0-9]*){4}'\);/
             );
         });

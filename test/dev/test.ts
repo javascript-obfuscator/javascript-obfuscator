@@ -69,7 +69,7 @@ let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
     `,
     {
         disableConsoleOutput: false,
-        unicodeArrayEncoding: true
+        unicodeArrayEncoding: 'rc4'
     }
 ).getObfuscatedCode();
 

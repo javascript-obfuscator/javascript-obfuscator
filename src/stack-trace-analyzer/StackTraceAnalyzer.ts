@@ -117,7 +117,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
         const limitIndex: number = StackTraceAnalyzer.getLimitIndex(blockScopeBody.length);
         const stackTraceData: IStackTraceData[] = [];
 
-        blockScopeBody.forEach((rootNode, index) => {
+        blockScopeBody.forEach((rootNode: ESTree.Node, index: number) => {
             if (index > limitIndex) {
                 return;
             }

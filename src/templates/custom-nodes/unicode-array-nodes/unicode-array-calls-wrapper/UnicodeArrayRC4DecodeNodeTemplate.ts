@@ -12,8 +12,8 @@ export function UnicodeArrayRc4DecodeNodeTemplate (): string {
         {rc4Polyfill}
                 
         var decodedValues = {unicodeArrayCallsWrapperName}.data || {};
-        
-        if (!decodedValues[index]) {
+
+        if (decodedValues[index] === undefined) {
             var base64DecodeUnicode = function (str) {
                 var stringChars = atob(str).split('');
                 var newStringChars = '';

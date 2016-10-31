@@ -4005,7 +4005,7 @@ exports.UnicodeArrayBase64DecodeNodeTemplate = UnicodeArrayBase64DecodeNodeTempl
 "use strict";
 
 function UnicodeArrayCallsWrapperTemplate() {
-    return "\n        var {unicodeArrayCallsWrapperName} = function (index, key) {\n            var index = parseInt(index, 0x010);\n            var value = {unicodeArrayName}[index];\n            \n            {decodeNodeTemplate}\n        \n            return value;\n        };\n    ";
+    return "\n        var {unicodeArrayCallsWrapperName} = function (index, key) {\n            var index = parseInt(index, 0x10);\n            var value = {unicodeArrayName}[index];\n            \n            {decodeNodeTemplate}\n        \n            return value;\n        };\n    ";
 }
 exports.UnicodeArrayCallsWrapperTemplate = UnicodeArrayCallsWrapperTemplate;
 
@@ -4017,7 +4017,7 @@ exports.UnicodeArrayCallsWrapperTemplate = UnicodeArrayCallsWrapperTemplate;
 "use strict";
 
 function UnicodeArrayRc4DecodeNodeTemplate() {
-    return "\n        if (!{unicodeArrayCallsWrapperName}.atobPolyfillAppended) {\n            {atobPolyfill}\n            \n            {unicodeArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n        \n        {rc4Polyfill}\n                \n        var decodedValues = {unicodeArrayCallsWrapperName}.data || {};\n        \n        if (!decodedValues[index]) {\n            var base64DecodeUnicode = function (str) {\n                var stringChars = atob(str).split('');\n                var newStringChars = '';\n                \n                for (var char in stringChars) {\n                    newStringChars += '%' + ('00' + stringChars[char].charCodeAt(0).toString(16)).slice(-2);\n                }\n                \n                return decodeURIComponent(newStringChars);\n            }\n\n            {selfDefendingCode}\n            \n            value = rc4(base64DecodeUnicode(value), key);\n            decodedValues[index] = value;\n        } else {\n            value = decodedValues[index];\n        }  \n                \n        {unicodeArrayCallsWrapperName}.data = decodedValues;                             \n    ";
+    return "\n        if (!{unicodeArrayCallsWrapperName}.atobPolyfillAppended) {\n            {atobPolyfill}\n            \n            {unicodeArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n        \n        {rc4Polyfill}\n                \n        var decodedValues = {unicodeArrayCallsWrapperName}.data || {};\n\n        if (decodedValues[index] === undefined) {\n            var base64DecodeUnicode = function (str) {\n                var stringChars = atob(str).split('');\n                var newStringChars = '';\n                \n                for (var char in stringChars) {\n                    newStringChars += '%' + ('00' + stringChars[char].charCodeAt(0).toString(16)).slice(-2);\n                }\n                \n                return decodeURIComponent(newStringChars);\n            }\n\n            {selfDefendingCode}\n            \n            value = rc4(base64DecodeUnicode(value), key);\n            decodedValues[index] = value;\n        } else {\n            value = decodedValues[index];\n        }  \n                \n        {unicodeArrayCallsWrapperName}.data = decodedValues;                             \n    ";
 }
 exports.UnicodeArrayRc4DecodeNodeTemplate = UnicodeArrayRc4DecodeNodeTemplate;
 

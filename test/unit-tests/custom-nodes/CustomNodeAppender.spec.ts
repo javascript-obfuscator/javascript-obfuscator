@@ -1,19 +1,22 @@
 import * as chai from 'chai';
 import * as ESTree from 'estree';
 
+import { TStatement } from '../../../src/types/TStatement';
+
 import { IStackTraceData } from '../../../src/interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { CustomNodeAppender } from '../../../src/custom-nodes/CustomNodeAppender';
+import { NodeMocks } from '../../mocks/NodeMocks';
 import { NodeUtils } from '../../../src/NodeUtils';
 import { StackTraceAnalyzer } from '../../../src/stack-trace-analyzer/StackTraceAnalyzer';
 
 const assert: any = chai.assert;
 
 describe('CustomNodeAppender', () => {
-    describe('appendNode (blockScopeNode: TNodeWithBlockStatement, node: ESTree.Node): void', () => {
+    describe('appendNode (blockScopeStackTraceData: IStackTraceData[], blockScopeNode: TNodeWithBlockStatement, nodeBodyStatements: TStatement[], index: number = 0)', () => {
         let astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
-            node: ESTree.Node,
+            node: TStatement[],
             stackTraceData: IStackTraceData[];
 
         beforeEach(() => {
@@ -23,142 +26,146 @@ describe('CustomNodeAppender', () => {
         });
 
         it('should append node into first and deepest function call in calls trace - variant #1', () => {
-            astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(`
-                function foo () {
-                
-                }
-                
-                function bar () {
-                    function inner1 () {
+            astTree = NodeMocks.getProgramNode(
+                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(`
+                    function foo () {
                     
                     }
-                
-                    function inner2 () {
-                        var inner3 = function () {
+                    
+                    function bar () {
+                        function inner1 () {
+                        
+                        }
+                    
+                        function inner2 () {
+                            var inner3 = function () {
+                                
+                            }
                             
+                            inner3();
                         }
                         
-                        inner3();
+                        inner2();
+                        inner1();
                     }
                     
-                    inner2();
-                    inner1();
-                }
-                
-                function baz () {
-                
-                }
-                
-                baz();
-                foo();
-                bar();
-            `, false);
+                    function baz () {
+                    
+                    }
+                    
+                    baz();
+                    foo();
+                    bar();
+                `)
+            );
 
-            expectedAstTree = <ESTree.Program>NodeUtils.convertCodeToStructure(`
-                function foo () {
-                
-                }
-                
-                function bar () {
-                    function inner1 () {
+            expectedAstTree = NodeMocks.getProgramNode(
+                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(`
+                    function foo () {
                     
                     }
-                
-                    function inner2 () {
-                        var inner3 = function () {
+                    
+                    function bar () {
+                        function inner1 () {
+                        
+                        }
+                    
+                        function inner2 () {
+                            var inner3 = function () {
+                            }
+                            
+                            inner3();
                         }
                         
-                        inner3();
+                        inner2();
+                        inner1();
                     }
                     
-                    inner2();
-                    inner1();
-                }
-                
-                function baz () {
-                    var test = 1;
-                }
-                
-                baz();
-                foo();
-                bar();
-            `, false);
+                    function baz () {
+                        var test = 1;
+                    }
+                    
+                    baz();
+                    foo();
+                    bar();
+                `)
+            );
 
             stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
-            CustomNodeAppender.appendNode(stackTraceData, astTree.body, node);
-
-            NodeUtils.parentize(astTree);
+            CustomNodeAppender.appendNode(stackTraceData, astTree, node);
 
             assert.deepEqual(astTree, expectedAstTree);
         });
 
         it('should append node into first and deepest function call in calls trace - variant #2', () => {
-            astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(`
-                function foo () {
-                
-                }
-                
-                function bar () {
-                    function inner1 () {
+            astTree = NodeMocks.getProgramNode(
+                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(`
+                    function foo () {
                     
                     }
-                
-                    function inner2 () {
-                        var inner3 = function () {
+                    
+                    function bar () {
+                        function inner1 () {
+                        
+                        }
+                    
+                        function inner2 () {
+                            var inner3 = function () {
+                                
+                            }
                             
+                            inner3();
                         }
                         
-                        inner3();
+                        inner2();
+                        inner1();
                     }
                     
-                    inner2();
-                    inner1();
-                }
-                
-                function baz () {
-                
-                }
-                
-                bar();
-                baz();
-                foo();
-            `, false);
+                    function baz () {
+                    
+                    }
+                    
+                    bar();
+                    baz();
+                    foo();
+                `)
+            );
 
-            expectedAstTree = <ESTree.Program>NodeUtils.convertCodeToStructure(`
-                function foo () {
-                
-                }
-                
-                function bar () {
-                    function inner1 () {
+            expectedAstTree = NodeMocks.getProgramNode(
+                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(`
+                    function foo () {
                     
                     }
-                
-                    function inner2 () {
-                        var inner3 = function () {
-                            var test = 1;
+                    
+                    function bar () {
+                        function inner1 () {
+                        
+                        }
+                    
+                        function inner2 () {
+                            var inner3 = function () {
+                                var test = 1;
+                            }
+                            
+                            inner3();
                         }
                         
-                        inner3();
+                        inner2();
+                        inner1();
                     }
                     
-                    inner2();
-                    inner1();
-                }
-                
-                function baz () {
-                
-                }
-                
-                bar();
-                baz();
-                foo();
-            `, false);
+                    function baz () {
+                    
+                    }
+                    
+                    bar();
+                    baz();
+                    foo();
+                `)
+            );
 
             stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
-            CustomNodeAppender.appendNode(stackTraceData, astTree.body, node);
-
-            NodeUtils.parentize(astTree);
+            CustomNodeAppender.appendNode(stackTraceData, astTree, node);
 
             assert.deepEqual(astTree, expectedAstTree);
         });
@@ -167,187 +174,191 @@ describe('CustomNodeAppender', () => {
             let astTree: ESTree.Program;
 
             beforeEach(() => {
-                astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(`
-                    function foo () {
-                    
-                    }
-                    
-                    function bar () {
-                        function inner1 () {
+                astTree = NodeMocks.getProgramNode(
+                    <ESTree.Statement[]>NodeUtils.convertCodeToStructure(`
+                        function foo () {
                         
                         }
-                    
-                        function inner2 () {
-                            var inner3 = function () {
-                               
+                        
+                        function bar () {
+                            function inner1 () {
+                            
+                            }
+                        
+                            function inner2 () {
+                                var inner3 = function () {
+                                   
+                                }
+                                
+                                inner3();
                             }
                             
-                            inner3();
+                            inner2();
+                            inner1();
                         }
                         
-                        inner2();
-                        inner1();
-                    }
-                    
-                    function baz () {
-                    
-                    }
-                    
-                    bar();
-                    baz();
-                    foo();
-                `, false);
+                        function baz () {
+                        
+                        }
+                        
+                        bar();
+                        baz();
+                        foo();
+                    `)
+                );
             });
 
             it('should append node into deepest function call by specified index in calls trace - variant #1', () => {
-                expectedAstTree = <ESTree.Program>NodeUtils.convertCodeToStructure(`
-                    function foo () {
-                        var test = 1;
-                    }
-                    
-                    function bar () {
-                        function inner1 () {
-                        
+                expectedAstTree = NodeMocks.getProgramNode(
+                    <ESTree.Statement[]>NodeUtils.convertCodeToStructure(`
+                        function foo () {
+                            var test = 1;
                         }
-                    
-                        function inner2 () {
-                            var inner3 = function () {
+                        
+                        function bar () {
+                            function inner1 () {
+                            
+                            }
+                        
+                            function inner2 () {
+                                var inner3 = function () {
+                                    
+                                }
                                 
+                                inner3();
                             }
                             
-                            inner3();
+                            inner2();
+                            inner1();
                         }
                         
-                        inner2();
-                        inner1();
-                    }
-                    
-                    function baz () {
-                    
-                    }
-                    
-                    bar();
-                    baz();
-                    foo();
-                `, false);
+                        function baz () {
+                        
+                        }
+                        
+                        bar();
+                        baz();
+                        foo();
+                    `)
+                );
 
                 stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
-                CustomNodeAppender.appendNode(stackTraceData, astTree.body, node, 2);
-
-                NodeUtils.parentize(astTree);
+                CustomNodeAppender.appendNode(stackTraceData, astTree, node, 2);
 
                 assert.deepEqual(astTree, expectedAstTree);
             });
 
             it('should append node into deepest function call by specified index in calls trace - variant #2', () => {
-                expectedAstTree = <ESTree.Program>NodeUtils.convertCodeToStructure(`
-                    function foo () {
-                        
-                    }
-                    
-                    function bar () {
-                        function inner1 () {
-                        
+                expectedAstTree = NodeMocks.getProgramNode(
+                    <ESTree.Statement[]>NodeUtils.convertCodeToStructure(`
+                        function foo () {
+                            
                         }
-                    
-                        function inner2 () {
-                            var inner3 = function () {
+                        
+                        function bar () {
+                            function inner1 () {
+                            
+                            }
+                        
+                            function inner2 () {
+                                var inner3 = function () {
+                                    
+                                }
                                 
+                                inner3();
                             }
                             
-                            inner3();
+                            inner2();
+                            inner1();
                         }
                         
-                        inner2();
-                        inner1();
-                    }
-                    
-                    function baz () {
-                        var test = 1;
-                    }
-                    
-                    bar();
-                    baz();
-                    foo();
-                `, false);
+                        function baz () {
+                            var test = 1;
+                        }
+                        
+                        bar();
+                        baz();
+                        foo();
+                    `)
+                );
 
                 stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
-                CustomNodeAppender.appendNode(stackTraceData, astTree.body, node, 1);
-
-                NodeUtils.parentize(astTree);
+                CustomNodeAppender.appendNode(stackTraceData, astTree, node, 1);
 
                 assert.deepEqual(astTree, expectedAstTree);
             });
 
             it('should append node into deepest function call by specified index in calls trace - variant #3', () => {
-                astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(`
-                    var start = new Date();
-                    var log = console.log;
-                    
-                    console.log = function () {};
-                
-                    (function () {
-                        function bar () {
-                            function inner1 () {
-                            
-                            }
+                astTree = NodeMocks.getProgramNode(
+                    <ESTree.Statement[]>NodeUtils.convertCodeToStructure(`
+                        var start = new Date();
+                        var log = console.log;
                         
-                            function inner2 () {
-                                var inner3 = function () {
+                        console.log = function () {};
+                    
+                        (function () {
+                            function bar () {
+                                function inner1 () {
                                 
                                 }
-                                
-                                inner3();
-                            }
                             
-                            inner2();
-                            inner1();
-                        }
-                        
-                        bar();
-                    })();
-                    console.log = log;
-                    console.log(new Date() - start);
-                `, false);
-                expectedAstTree = <ESTree.Program>NodeUtils.convertCodeToStructure(`
-                    var start = new Date();
-                    var log = console.log;
-                    
-                    console.log = function () {};
-                
-                    (function () {
-                        function bar () {
-                            function inner1 () {
-                            
-                            }
-                        
-                            function inner2 () {
-                                var inner3 = function () {
-                                    var test = 1;
+                                function inner2 () {
+                                    var inner3 = function () {
+                                    
+                                    }
+                                    
+                                    inner3();
                                 }
                                 
-                                inner3();
+                                inner2();
+                                inner1();
                             }
                             
-                            inner2();
-                            inner1();
-                        }
+                            bar();
+                        })();
+                        console.log = log;
+                        console.log(new Date() - start);
+                    `)
+                );
+                expectedAstTree = NodeMocks.getProgramNode(
+                    <ESTree.Statement[]>NodeUtils.convertCodeToStructure(`
+                        var start = new Date();
+                        var log = console.log;
                         
-                        bar();
-                    })();
-                    console.log = log;
-                    console.log(new Date() - start);
-                `, false);
+                        console.log = function () {};
+                    
+                        (function () {
+                            function bar () {
+                                function inner1 () {
+                                
+                                }
+                            
+                                function inner2 () {
+                                    var inner3 = function () {
+                                        var test = 1;
+                                    }
+                                    
+                                    inner3();
+                                }
+                                
+                                inner2();
+                                inner1();
+                            }
+                            
+                            bar();
+                        })();
+                        console.log = log;
+                        console.log(new Date() - start);
+                    `)
+                );
 
                 stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
                 CustomNodeAppender.appendNode(
                     stackTraceData,
-                    astTree.body,
+                    astTree,
                     node,
                     CustomNodeAppender.getRandomStackTraceIndex(stackTraceData.length)
                 );
-
-                NodeUtils.parentize(astTree);
 
                 assert.deepEqual(astTree, expectedAstTree);
             });
@@ -355,7 +366,7 @@ describe('CustomNodeAppender', () => {
     });
 
     describe('getRandomStackTraceIndex (stackTraceRootLength: number): number', () => {
-        it('should returns random index between 0 and stack trace deata root length', () => {
+        it('should returns random index between 0 and stack trace data root length', () => {
             let index: number;
 
             for (let i: number = 0; i < 100; i++) {

@@ -1,10 +1,9 @@
-import * as ESTree from 'estree';
-
 import 'format-unicorn';
 
-import { IOptions } from '../../interfaces/IOptions';
-
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TStatement } from '../../types/TStatement';
+
+import { IOptions } from '../../interfaces/IOptions';
 
 import { AppendState } from '../../enums/AppendState';
 
@@ -68,7 +67,7 @@ export class UnicodeArrayNode extends AbstractCustomNode {
             return;
         }
 
-        NodeUtils.prependNode(blockScopeNode.body, this.getNode());
+        NodeUtils.prependNode(blockScopeNode, this.getNode());
     }
 
     /**
@@ -86,9 +85,9 @@ export class UnicodeArrayNode extends AbstractCustomNode {
     }
 
     /**
-     * @returns {ESTree.Node}
+     * @returns {TStatement[]}
      */
-    public getNode (): ESTree.Node {
+    public getNode (): TStatement[] {
         this.unicodeArray.rotateArray(this.unicodeArrayRotateValue);
 
         return super.getNode();
@@ -102,9 +101,9 @@ export class UnicodeArrayNode extends AbstractCustomNode {
     }
 
     /**
-     * @returns {ESTree.Node}
+     * @returns {TStatement[]}
      */
-    protected getNodeStructure (): ESTree.Node {
+    protected getNodeStructure (): TStatement[] {
         return NodeUtils.convertCodeToStructure(
             UnicodeArrayTemplate().formatUnicorn({
                 unicodeArrayName: this.unicodeArrayName,

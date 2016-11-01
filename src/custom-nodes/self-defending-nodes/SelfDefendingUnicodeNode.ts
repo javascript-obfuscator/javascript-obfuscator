@@ -1,6 +1,5 @@
-import * as ESTree from 'estree';
-
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TStatement } from '../../types/TStatement';
 
 import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
 
@@ -11,9 +10,10 @@ import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset
 import { SelfDefendingTemplate } from '../../templates/custom-nodes/self-defending-nodes/self-defending-unicode-node/SelfDefendingTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
+import { CustomNodeAppender } from '../CustomNodeAppender';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeUtils } from '../../NodeUtils';
-import { CustomNodeAppender } from '../CustomNodeAppender';
+import { Utils } from '../../Utils';
 
 export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     /**
@@ -28,19 +28,21 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     public appendNode (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
         CustomNodeAppender.appendNode(
             stackTraceData,
-            blockScopeNode.body,
+            blockScopeNode,
             this.getNode(),
             CustomNodeAppender.getRandomStackTraceIndex(stackTraceData.length)
         );
     }
 
     /**
-     * @returns {ESTree.Node}
+     * @returns {TStatement[]}
      */
-    protected getNodeStructure (): ESTree.Node {
+    protected getNodeStructure (): TStatement[] {
         return NodeUtils.convertCodeToStructure(
             JavaScriptObfuscator.obfuscate(
-                SelfDefendingTemplate(),
+                SelfDefendingTemplate().formatUnicorn({
+                    selfDefendingFunctionName: Utils.getRandomVariableName()
+                }),
                 NO_CUSTOM_NODES_PRESET
             ).getObfuscatedCode()
         );

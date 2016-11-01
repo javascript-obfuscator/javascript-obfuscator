@@ -1,5 +1,7 @@
 import * as ESTree from 'estree';
 
+import { TStatement } from '../../types/TStatement';
+
 import { IStackTraceData } from '../stack-trace-analyzer/IStackTraceData';
 
 import { AppendState } from '../../enums/AppendState';
@@ -17,7 +19,7 @@ export interface ICustomNode {
     getAppendState (): AppendState;
 
     /**
-     * @returns INode
+     * @returns ESTree.Node[]
      */
-    getNode (): ESTree.Node;
+    getNode (): TStatement[];
 }

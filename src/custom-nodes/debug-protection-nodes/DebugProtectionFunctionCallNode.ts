@@ -1,10 +1,9 @@
-import * as ESTree from 'estree';
-
 import 'format-unicorn';
 
-import { IOptions } from '../../interfaces/IOptions';
-
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TStatement } from '../../types/TStatement';
+
+import { IOptions } from '../../interfaces/IOptions';
 
 import { AppendState } from '../../enums/AppendState';
 
@@ -38,13 +37,13 @@ export class DebugProtectionFunctionCallNode extends AbstractCustomNode {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        NodeUtils.appendNode(blockScopeNode.body, this.getNode());
+        NodeUtils.appendNode(blockScopeNode, this.getNode());
     }
 
     /**
-     * @returns {ESTree.Node}
+     * @returns {TStatement[]}
      */
-    protected getNodeStructure (): ESTree.Node {
+    protected getNodeStructure (): TStatement[] {
         return NodeUtils.convertCodeToStructure(
             DebugProtectionFunctionCallTemplate().formatUnicorn({
                 debugProtectionFunctionName: this.debugProtectionFunctionName

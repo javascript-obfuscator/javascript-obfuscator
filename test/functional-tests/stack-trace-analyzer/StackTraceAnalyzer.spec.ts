@@ -9,6 +9,7 @@ import { IStackTraceData } from '../../../src/interfaces/stack-trace-analyzer/IS
 import { readFileAsString } from '../../helpers/readFileAsString';
 
 import { Nodes } from '../../../src/Nodes';
+import { NodeMocks } from '../../mocks/NodeMocks';
 import { NodeUtils } from '../../../src/NodeUtils';
 import { StackTraceAnalyzer } from '../../../src/stack-trace-analyzer/StackTraceAnalyzer';
 
@@ -149,9 +150,10 @@ describe('StackTraceAnalyzer', () => {
             expectedStackTraceData: IStackTraceData[];
 
         it('should returns correct IStackTraceData - variant #1: basic-1', () => {
-            astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
-                readFileAsString('./test/fixtures/stack-trace-analyzer/basic-1.js'),
-                false
+            astTree = NodeMocks.getProgramNode(
+                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/stack-trace-analyzer/basic-1.js')
+                )
             );
 
             expectedStackTraceData = [
@@ -195,9 +197,10 @@ describe('StackTraceAnalyzer', () => {
         });
 
         it('should returns correct BlockScopeTraceData - variant #2: basic-2', () => {
-            astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
-                readFileAsString('./test/fixtures/stack-trace-analyzer/basic-2.js'),
-                false
+            astTree = NodeMocks.getProgramNode(
+                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/stack-trace-analyzer/basic-2.js')
+                )
             );
 
             expectedStackTraceData = [
@@ -230,9 +233,10 @@ describe('StackTraceAnalyzer', () => {
         });
 
         it('should returns correct BlockScopeTraceData - variant #3: deep conditions nesting', () => {
-            astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
-                readFileAsString('./test/fixtures/stack-trace-analyzer/deep-conditions-nesting.js'),
-                false
+            astTree = NodeMocks.getProgramNode(
+                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/stack-trace-analyzer/deep-conditions-nesting.js')
+                )
             );
 
             expectedStackTraceData = [
@@ -265,9 +269,10 @@ describe('StackTraceAnalyzer', () => {
         });
 
         it('should returns correct BlockScopeTraceData - variant #4: call before declaration', () => {
-            astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
-                readFileAsString('./test/fixtures/stack-trace-analyzer/call-before-declaration.js'),
-                false
+            astTree = NodeMocks.getProgramNode(
+                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/stack-trace-analyzer/call-before-declaration.js')
+                )
             );
 
             expectedStackTraceData = [
@@ -284,9 +289,10 @@ describe('StackTraceAnalyzer', () => {
         });
 
         it('should returns correct BlockScopeTraceData - variant #5: call expression of object member', () => {
-            astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
-                readFileAsString('./test/fixtures/stack-trace-analyzer/call-expression-of-object-member.js'),
-                false
+            astTree = NodeMocks.getProgramNode(
+                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/stack-trace-analyzer/call-expression-of-object-member.js')
+                )
             );
 
             expectedStackTraceData = [
@@ -339,9 +345,10 @@ describe('StackTraceAnalyzer', () => {
         });
 
         it('should returns correct BlockScopeTraceData - variant #6: no call expressions', () => {
-            astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
-                readFileAsString('./test/fixtures/stack-trace-analyzer/no-call-expressions.js'),
-                false
+            astTree = NodeMocks.getProgramNode(
+                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/stack-trace-analyzer/no-call-expressions.js')
+                )
             );
 
             expectedStackTraceData = [];
@@ -352,9 +359,10 @@ describe('StackTraceAnalyzer', () => {
         });
 
         it('should returns correct BlockScopeTraceData - variant #7: only call expression', () => {
-            astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
-                readFileAsString('./test/fixtures/stack-trace-analyzer/only-call-expression.js'),
-                false
+            astTree = NodeMocks.getProgramNode(
+                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/stack-trace-analyzer/only-call-expression.js')
+                )
             );
 
             expectedStackTraceData = [];
@@ -365,9 +373,10 @@ describe('StackTraceAnalyzer', () => {
         });
 
         it('should returns correct BlockScopeTraceData - variant #8: self-invoking functions', () => {
-            astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
-                readFileAsString('./test/fixtures/stack-trace-analyzer/self-invoking-functions.js'),
-                false
+            astTree = NodeMocks.getProgramNode(
+                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/stack-trace-analyzer/self-invoking-functions.js')
+                )
             );
 
             expectedStackTraceData = [
@@ -396,9 +405,10 @@ describe('StackTraceAnalyzer', () => {
         });
 
         it('should returns correct BlockScopeTraceData - variant #9: no recursion', () => {
-            astTree = <ESTree.Program>NodeUtils.convertCodeToStructure(
-                readFileAsString('./test/fixtures/stack-trace-analyzer/no-recursion.js'),
-                false
+            astTree = NodeMocks.getProgramNode(
+                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/stack-trace-analyzer/no-recursion.js')
+                )
             );
 
             expectedStackTraceData = [

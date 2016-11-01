@@ -1,5 +1,8 @@
 import * as ESTree from 'estree';
 
+import { TNodeWithBlockStatement } from '../types/TNodeWithBlockStatement';
+import { TStatement } from '../types/TStatement';
+
 import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { NodeUtils } from '../NodeUtils';
@@ -25,25 +28,28 @@ import { Utils } from '../Utils';
 export class CustomNodeAppender {
     /**
      * @param blockScopeStackTraceData
-     * @param blockScopeBody
-     * @param node
+     * @param blockScopeNode
+     * @param nodeBodyStatements
      * @param index
      */
     public static appendNode (
         blockScopeStackTraceData: IStackTraceData[],
-        blockScopeBody: ESTree.Node[],
-        node: ESTree.Node,
+        blockScopeNode: TNodeWithBlockStatement,
+        nodeBodyStatements: TStatement[],
         index: number = 0
     ): void {
-        let targetBlockScopeBody: ESTree.Node[];
+        let targetBlockScope: TNodeWithBlockStatement;
 
         if (!blockScopeStackTraceData.length) {
-            targetBlockScopeBody = blockScopeBody;
+            targetBlockScope = blockScopeNode;
         } else {
-            targetBlockScopeBody = CustomNodeAppender.getOptimalBlockScopeBody(blockScopeStackTraceData, index);
+            targetBlockScope = CustomNodeAppender.getOptimalBlockScope(
+                blockScopeStackTraceData,
+                index
+            );
         }
 
-        NodeUtils.prependNode(targetBlockScopeBody, node);
+        NodeUtils.prependNode(targetBlockScope, nodeBodyStatements);
     }
 
     /**
@@ -59,15 +65,18 @@ export class CustomNodeAppender {
     /**
      * @param blockScopeTraceData
      * @param index
-     * @returns {ESTree.Node[]}
+     * @returns {ESTree.BlockStatement}
      */
-    private static getOptimalBlockScopeBody (blockScopeTraceData: IStackTraceData[], index: number): ESTree.Node[] {
+    private static getOptimalBlockScope (
+        blockScopeTraceData: IStackTraceData[],
+        index: number
+    ): ESTree.BlockStatement {
         const firstCall: IStackTraceData = blockScopeTraceData[index];
 
         if (firstCall.stackTrace.length) {
-            return CustomNodeAppender.getOptimalBlockScopeBody(firstCall.stackTrace, 0);
+            return CustomNodeAppender.getOptimalBlockScope(firstCall.stackTrace, 0);
         } else {
-            return firstCall.callee.body;
+            return firstCall.callee;
         }
     }
 }

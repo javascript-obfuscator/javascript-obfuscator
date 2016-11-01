@@ -1,12 +1,79 @@
 import { Utils } from '../../../../Utils';
 
 /**
+ * SelfDefendingTemplate. Enter code in infinity loop.
+ *
  * @returns {string}
  */
 export function SelfDefendingTemplate (): string {
-    return `(function () {
-        var func = function(){return 'dev';};
-                            
-        !Function(${Utils.stringToUnicode(`return/\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}/`)})().test(func.toString()) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(true){}')() : Function('a', 'b', 'a(++b)')({whileFunctionName}, {timesName}) ? []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(false){}')() : []['filter']['constructor'](${Utils.stringToJSFuck('while')} + '(false){}')();
-    })();`;
+    return `
+        var selfDefendingFunc = function () {            
+            var object = {
+                data: {
+                    key: 'cookie',
+                    value: 'timeout'
+                },
+                setCookie: function (options, name, value, document) {
+                    document = document || {};
+                    
+                    var updatedCookie = name + "=" + value;
+
+                    var i = 0;
+                                                            
+                    for (var i = 0, len = options.length; i < len; i++) {                          
+                        var propName = options[i];
+                                     
+                        updatedCookie += "; " + propName;
+                        
+                        var propValue = options[propName];
+                        
+                        options.push(propValue);
+                        len = options.length;
+                                                                        
+                        if (propValue !== true) {
+                            updatedCookie += "=" + propValue;
+                        }
+                    }
+
+                    document['cookie'] = updatedCookie;
+                },
+                removeCookie: function(){return 'dev';},
+                getCookie: function (document, name) {    
+                    document = document || function (value) { return value };
+                    var matches = document(new RegExp(
+                        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+                    ));
+                    
+                    var func = function (param1, param2) {
+                        param1(++param2);
+                    };
+                    
+                    func({whileFunctionName}, {timesName});
+                                        
+                    return matches ? decodeURIComponent(matches[1]) : undefined;
+                }
+            };
+            
+            var test1 = function () {
+                var regExp = new RegExp(${Utils.stringToUnicode(`\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}`)});
+                
+                return regExp.test(object.removeCookie.toString());
+            };
+            
+            object['updateCookie'] = test1;
+            
+            var cookie = '';
+            var result = object['updateCookie']();
+                                    
+            if (!result) {
+                object['setCookie'](['*'], 'counter', 1);
+            } else if (result) {
+                cookie = object['getCookie'](null, 'counter');     
+            } else {
+                object['removeCookie']();
+            }
+        };
+        
+        selfDefendingFunc();
+    `;
 }

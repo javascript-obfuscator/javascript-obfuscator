@@ -1,5 +1,7 @@
 import * as ESTree from 'estree';
 
+import { TStatement } from '../types/TStatement';
+
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../interfaces/IOptions';
 import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
@@ -38,14 +40,14 @@ export abstract class AbstractCustomNode implements ICustomNode {
     }
 
     /**
-     * @returns {ESTree.Node}
+     * @returns {TStatement[]}
      */
-    public getNode (): ESTree.Node {
+    public getNode (): TStatement[] {
         return this.getNodeStructure();
     }
 
     /**
-     * @returns {ESTree.Node}
+     * @returns {TStatement[]}
      */
-    protected abstract getNodeStructure (): ESTree.Node;
+    protected abstract getNodeStructure (): TStatement[];
 }

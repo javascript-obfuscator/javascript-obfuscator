@@ -1,10 +1,9 @@
-import * as ESTree from 'estree';
-
 import 'format-unicorn';
 
-import { IOptions } from '../../interfaces/IOptions';
-
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TStatement } from '../../types/TStatement';
+
+import { IOptions } from '../../interfaces/IOptions';
 
 import { AppendState } from '../../enums/AppendState';
 
@@ -67,20 +66,20 @@ export class UnicodeArrayRotateFunctionNode extends AbstractCustomNode {
             return;
         }
 
-        NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), 1);
+        NodeUtils.insertNodeAtIndex(blockScopeNode, this.getNode(), 1);
     }
 
     /**
-     * @returns {ESTree.Node}
+     * @returns {TStatement[]}
      */
-    public getNode (): ESTree.Node {
+    public getNode (): TStatement[] {
         return super.getNode();
     }
 
     /**
-     * @returns {ESTree.Node}
+     * @returns {TStatement[]}
      */
-    protected getNodeStructure (): ESTree.Node {
+    protected getNodeStructure (): TStatement[] {
         let code: string = '',
             timesName: string = Utils.getRandomVariableName(),
             whileFunctionName: string = Utils.getRandomVariableName();

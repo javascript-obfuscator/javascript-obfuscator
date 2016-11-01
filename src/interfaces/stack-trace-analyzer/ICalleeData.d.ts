@@ -1,6 +1,6 @@
-import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import * as ESTree from 'estree';
 
 export interface ICalleeData {
-    callee: TNodeWithBlockStatement;
+    callee: ESTree.BlockStatement;
     name: string | null;
 }

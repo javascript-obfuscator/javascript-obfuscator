@@ -1,10 +1,9 @@
-import * as ESTree from 'estree';
-
 import 'format-unicorn';
 
-import { IOptions } from '../../interfaces/IOptions';
-
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TStatement } from '../../types/TStatement';
+
+import { IOptions } from '../../interfaces/IOptions';
 
 import { AppendState } from '../../enums/AppendState';
 
@@ -45,7 +44,7 @@ export class DebugProtectionFunctionNode extends AbstractCustomNode {
                 max: programBodyLength
             });
 
-        NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), randomIndex);
+        NodeUtils.insertNodeAtIndex(blockScopeNode, this.getNode(), randomIndex);
     }
 
     /**
@@ -58,9 +57,9 @@ export class DebugProtectionFunctionNode extends AbstractCustomNode {
     /**
      * Found this trick in JScrambler
      *
-     * @returns {ESTree.Node}
+     * @returns {TStatement[]}
      */
-    protected getNodeStructure (): ESTree.Node {
+    protected getNodeStructure (): TStatement[] {
         return NodeUtils.convertCodeToStructure(
             DebugProtectionFunctionTemplate().formatUnicorn({
                 debugProtectionFunctionName: this.debugProtectionFunctionName

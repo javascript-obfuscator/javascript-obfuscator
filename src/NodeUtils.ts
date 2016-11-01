@@ -4,6 +4,7 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TNodeWithBlockStatement } from './types/TNodeWithBlockStatement';
+import { TStatement } from './types/TStatement';
 
 import { NodeType } from './enums/NodeType';
 
@@ -37,33 +38,36 @@ export class NodeUtils {
     }
 
     /**
-     * @param blockScopeBody
-     * @param node
+     * @param blockScopeNode
+     * @param nodeBodyStatements
      */
-    public static appendNode (blockScopeBody: ESTree.Node[], node: ESTree.Node): void {
-        if (!NodeUtils.validateNode(node)) {
-            return;
+    public static appendNode (
+        blockScopeNode: TNodeWithBlockStatement,
+        nodeBodyStatements: TStatement[]
+    ): void {
+        if (!NodeUtils.validateBodyStatements(nodeBodyStatements)) {
+            nodeBodyStatements = [];
         }
 
-        blockScopeBody.push(node);
+        nodeBodyStatements = NodeUtils.parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements);
+
+        blockScopeNode.body = [
+            ...blockScopeNode.body,
+            ...nodeBodyStatements
+        ];
     }
 
     /**
      * @param code
-     * @param getBlockStatementNodeByIndex
-     * @returns {ESTree.Program|ESTree.Node}
+     * @returns {TStatement[]}
      */
-    public static convertCodeToStructure (code: string, getBlockStatementNodeByIndex: boolean = true): ESTree.Program|ESTree.Node {
+    public static convertCodeToStructure (code: string): TStatement[] {
         let structure: ESTree.Program = esprima.parse(code);
 
         NodeUtils.addXVerbatimPropertyToLiterals(structure);
         NodeUtils.parentize(structure);
 
-        if (!getBlockStatementNodeByIndex) {
-            return structure;
-        }
-
-        return NodeUtils.getBlockStatementNodeByIndex(structure);
+        return <TStatement[]>structure.body;
     }
 
     /**
@@ -117,16 +121,26 @@ export class NodeUtils {
     }
 
     /**
-     * @param blockScopeBody
-     * @param node
+     * @param blockScopeNode
+     * @param nodeBodyStatements
      * @param index
      */
-    public static insertNodeAtIndex (blockScopeBody: ESTree.Node[], node: ESTree.Node, index: number): void {
-        if (!NodeUtils.validateNode(node)) {
-            return;
+    public static insertNodeAtIndex (
+        blockScopeNode: TNodeWithBlockStatement,
+        nodeBodyStatements: TStatement[],
+        index: number
+    ): void {
+        if (!NodeUtils.validateBodyStatements(nodeBodyStatements)) {
+            nodeBodyStatements = [];
         }
 
-        blockScopeBody.splice(index, 0, node);
+        nodeBodyStatements = NodeUtils.parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements);
+
+        blockScopeNode.body = [
+            ...blockScopeNode.body.slice(0, index),
+            ...nodeBodyStatements,
+            ...blockScopeNode.body.slice(index)
+        ];
     }
 
     /**
@@ -143,7 +157,7 @@ export class NodeUtils {
                     if (node.type === NodeType.Program) {
                         value = node;
                     } else {
-                        value = Nodes.getProgramNode(<ESTree.Statement[]>[node]);
+                        value = Nodes.getProgramNode(<TStatement[]>[node]);
                         value['parentNode'] = value;
                     }
 
@@ -159,15 +173,23 @@ export class NodeUtils {
     }
 
     /**
-     * @param blockScopeBody
-     * @param node
+     * @param blockScopeNode
+     * @param nodeBodyStatements
      */
-    public static prependNode (blockScopeBody: ESTree.Node[], node: ESTree.Node): void {
-        if (!NodeUtils.validateNode(node)) {
-            return;
+    public static prependNode (
+        blockScopeNode: TNodeWithBlockStatement,
+        nodeBodyStatements: TStatement[]
+    ): void {
+        if (!NodeUtils.validateBodyStatements(nodeBodyStatements)) {
+            nodeBodyStatements = [];
         }
 
-        blockScopeBody.unshift(node);
+        nodeBodyStatements = NodeUtils.parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements);
+
+        blockScopeNode.body = [
+            ...nodeBodyStatements,
+            ...blockScopeNode.body,
+        ];
     }
 
     /**
@@ -210,10 +232,27 @@ export class NodeUtils {
     }
 
     /**
-     * @param node
+     * @param blockScopeNode
+     * @param nodeBodyStatements
+     */
+    private static parentizeBodyStatementsBeforeAppend (
+        blockScopeNode: TNodeWithBlockStatement,
+        nodeBodyStatements: TStatement[]
+    ): TStatement[] {
+        for (let statement of nodeBodyStatements) {
+            statement.parentNode = blockScopeNode;
+        }
+
+        return nodeBodyStatements;
+    }
+
+    /**
+     * @param nodeBodyStatements
      * @returns {boolean}
      */
-    private static validateNode (node: ESTree.Node): boolean {
-        return !!node && node.hasOwnProperty('type');
+    private static validateBodyStatements (nodeBodyStatements: TStatement[]): boolean {
+        return nodeBodyStatements.every(statementNode => {
+            return !!statementNode && statementNode.hasOwnProperty('type');
+        });
     }
 }

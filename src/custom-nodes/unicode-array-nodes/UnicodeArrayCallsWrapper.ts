@@ -1,10 +1,9 @@
-import * as ESTree from 'estree';
-
 import 'format-unicorn';
 
-import { IOptions } from '../../interfaces/IOptions';
-
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TStatement } from '../../types/TStatement';
+
+import { IOptions } from '../../interfaces/IOptions';
 
 import { AppendState } from '../../enums/AppendState';
 import { UnicodeArrayEncoding } from '../../enums/UnicodeArrayEncoding';
@@ -71,7 +70,7 @@ export class UnicodeArrayCallsWrapper extends AbstractCustomNode {
             return;
         }
 
-        NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), 1);
+        NodeUtils.insertNodeAtIndex(blockScopeNode, this.getNode(), 1);
     }
 
     /**
@@ -82,9 +81,9 @@ export class UnicodeArrayCallsWrapper extends AbstractCustomNode {
     };
 
     /**
-     * @returns {ESTree.Node}
+     * @returns {TStatement[]}
      */
-    public getNode (): ESTree.Node {
+    public getNode (): TStatement[] {
         return super.getNode();
     }
 
@@ -127,9 +126,9 @@ export class UnicodeArrayCallsWrapper extends AbstractCustomNode {
     }
 
     /**
-     * @returns {ESTree.Node}
+     * @returns {TStatement[]}
      */
-    protected getNodeStructure (): ESTree.Node {
+    protected getNodeStructure (): TStatement[] {
         const decodeNodeTemplate: string = this.getDecodeUnicodeArrayTemplate();
 
         return NodeUtils.convertCodeToStructure(

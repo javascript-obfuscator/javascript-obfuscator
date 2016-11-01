@@ -1,8 +1,7 @@
-import * as ESTree from 'estree';
-
 import 'format-unicorn';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TStatement } from '../../types/TStatement';
 
 import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
 
@@ -28,16 +27,16 @@ export class DomainLockNode extends AbstractCustomNode {
     public appendNode (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
         CustomNodeAppender.appendNode(
             stackTraceData,
-            blockScopeNode.body,
+            blockScopeNode,
             this.getNode(),
             CustomNodeAppender.getRandomStackTraceIndex(stackTraceData.length)
         );
     }
 
     /**
-     * @returns {ESTree.Node}
+     * @returns {TStatement[]}
      */
-    protected getNodeStructure (): ESTree.Node {
+    protected getNodeStructure (): TStatement[] {
         let domainsString: string = this.options.domainLock.join(';'),
             [hiddenDomainsString, diff]: string[] = Utils.hideString(domainsString, domainsString.length * 3);
 

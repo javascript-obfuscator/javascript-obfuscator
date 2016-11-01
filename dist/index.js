@@ -292,6 +292,8 @@ exports.Utils = Utils;
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var escodegen = __webpack_require__(11);
@@ -320,24 +322,20 @@ var NodeUtils = function () {
         }
     }, {
         key: 'appendNode',
-        value: function appendNode(blockScopeBody, node) {
-            if (!NodeUtils.validateNode(node)) {
-                return;
+        value: function appendNode(blockScopeNode, nodeBodyStatements) {
+            if (!NodeUtils.validateBodyStatements(nodeBodyStatements)) {
+                nodeBodyStatements = [];
             }
-            blockScopeBody.push(node);
+            nodeBodyStatements = NodeUtils.parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements);
+            blockScopeNode.body = [].concat(_toConsumableArray(blockScopeNode.body), _toConsumableArray(nodeBodyStatements));
         }
     }, {
         key: 'convertCodeToStructure',
         value: function convertCodeToStructure(code) {
-            var getBlockStatementNodeByIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-
             var structure = esprima.parse(code);
             NodeUtils.addXVerbatimPropertyToLiterals(structure);
             NodeUtils.parentize(structure);
-            if (!getBlockStatementNodeByIndex) {
-                return structure;
-            }
-            return NodeUtils.getBlockStatementNodeByIndex(structure);
+            return structure.body;
         }
     }, {
         key: 'getBlockStatementNodeByIndex',
@@ -379,11 +377,12 @@ var NodeUtils = function () {
         }
     }, {
         key: 'insertNodeAtIndex',
-        value: function insertNodeAtIndex(blockScopeBody, node, index) {
-            if (!NodeUtils.validateNode(node)) {
-                return;
+        value: function insertNodeAtIndex(blockScopeNode, nodeBodyStatements, index) {
+            if (!NodeUtils.validateBodyStatements(nodeBodyStatements)) {
+                nodeBodyStatements = [];
             }
-            blockScopeBody.splice(index, 0, node);
+            nodeBodyStatements = NodeUtils.parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements);
+            blockScopeNode.body = [].concat(_toConsumableArray(blockScopeNode.body.slice(0, index)), _toConsumableArray(nodeBodyStatements), _toConsumableArray(blockScopeNode.body.slice(index)));
         }
     }, {
         key: 'parentize',
@@ -410,11 +409,12 @@ var NodeUtils = function () {
         }
     }, {
         key: 'prependNode',
-        value: function prependNode(blockScopeBody, node) {
-            if (!NodeUtils.validateNode(node)) {
-                return;
+        value: function prependNode(blockScopeNode, nodeBodyStatements) {
+            if (!NodeUtils.validateBodyStatements(nodeBodyStatements)) {
+                nodeBodyStatements = [];
             }
-            blockScopeBody.unshift(node);
+            nodeBodyStatements = NodeUtils.parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements);
+            blockScopeNode.body = [].concat(_toConsumableArray(nodeBodyStatements), _toConsumableArray(blockScopeNode.body));
         }
     }, {
         key: 'typedReplace',
@@ -440,9 +440,41 @@ var NodeUtils = function () {
             });
         }
     }, {
-        key: 'validateNode',
-        value: function validateNode(node) {
-            return !!node && node.hasOwnProperty('type');
+        key: 'parentizeBodyStatementsBeforeAppend',
+        value: function parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements) {
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = nodeBodyStatements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var statement = _step.value;
+
+                    statement.parentNode = blockScopeNode;
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
+            return nodeBodyStatements;
+        }
+    }, {
+        key: 'validateBodyStatements',
+        value: function validateBodyStatements(nodeBodyStatements) {
+            return nodeBodyStatements.every(function (statementNode) {
+                return !!statementNode && statementNode.hasOwnProperty('type');
+            });
         }
     }]);
 
@@ -876,16 +908,16 @@ var CustomNodeAppender = function () {
 
     _createClass(CustomNodeAppender, null, [{
         key: 'appendNode',
-        value: function appendNode(blockScopeStackTraceData, blockScopeBody, node) {
+        value: function appendNode(blockScopeStackTraceData, blockScopeNode, nodeBodyStatements) {
             var index = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
 
-            var targetBlockScopeBody = void 0;
+            var targetBlockScope = void 0;
             if (!blockScopeStackTraceData.length) {
-                targetBlockScopeBody = blockScopeBody;
+                targetBlockScope = blockScopeNode;
             } else {
-                targetBlockScopeBody = CustomNodeAppender.getOptimalBlockScopeBody(blockScopeStackTraceData, index);
+                targetBlockScope = CustomNodeAppender.getOptimalBlockScope(blockScopeStackTraceData, index);
             }
-            NodeUtils_1.NodeUtils.prependNode(targetBlockScopeBody, node);
+            NodeUtils_1.NodeUtils.prependNode(targetBlockScope, nodeBodyStatements);
         }
     }, {
         key: 'getRandomStackTraceIndex',
@@ -896,13 +928,13 @@ var CustomNodeAppender = function () {
             });
         }
     }, {
-        key: 'getOptimalBlockScopeBody',
-        value: function getOptimalBlockScopeBody(blockScopeTraceData, index) {
+        key: 'getOptimalBlockScope',
+        value: function getOptimalBlockScope(blockScopeTraceData, index) {
             var firstCall = blockScopeTraceData[index];
             if (firstCall.stackTrace.length) {
-                return CustomNodeAppender.getOptimalBlockScopeBody(firstCall.stackTrace, 0);
+                return CustomNodeAppender.getOptimalBlockScope(firstCall.stackTrace, 0);
             } else {
-                return firstCall.callee.body;
+                return firstCall.callee;
             }
         }
     }]);
@@ -1792,7 +1824,7 @@ var ConsoleOutputDisableExpressionNode = function (_AbstractCustomNode_) {
     _createClass(ConsoleOutputDisableExpressionNode, [{
         key: 'appendNode',
         value: function appendNode(blockScopeNode, stackTraceData) {
-            CustomNodeAppender_1.CustomNodeAppender.appendNode(stackTraceData, blockScopeNode.body, this.getNode(), CustomNodeAppender_1.CustomNodeAppender.getRandomStackTraceIndex(stackTraceData.length));
+            CustomNodeAppender_1.CustomNodeAppender.appendNode(stackTraceData, blockScopeNode, this.getNode(), CustomNodeAppender_1.CustomNodeAppender.getRandomStackTraceIndex(stackTraceData.length));
         }
     }, {
         key: 'getNodeStructure',
@@ -1843,7 +1875,7 @@ var DebugProtectionFunctionCallNode = function (_AbstractCustomNode_) {
     _createClass(DebugProtectionFunctionCallNode, [{
         key: 'appendNode',
         value: function appendNode(blockScopeNode) {
-            NodeUtils_1.NodeUtils.appendNode(blockScopeNode.body, this.getNode());
+            NodeUtils_1.NodeUtils.appendNode(blockScopeNode, this.getNode());
         }
     }, {
         key: 'getNodeStructure',
@@ -1896,7 +1928,7 @@ var DebugProtectionFunctionIntervalNode = function (_AbstractCustomNode_) {
     _createClass(DebugProtectionFunctionIntervalNode, [{
         key: 'appendNode',
         value: function appendNode(blockScopeNode) {
-            NodeUtils_1.NodeUtils.appendNode(blockScopeNode.body, this.getNode());
+            NodeUtils_1.NodeUtils.appendNode(blockScopeNode, this.getNode());
         }
     }, {
         key: 'getNodeStructure',
@@ -1955,7 +1987,7 @@ var DebugProtectionFunctionNode = function (_AbstractCustomNode_) {
                 min: 0,
                 max: programBodyLength
             });
-            NodeUtils_1.NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), randomIndex);
+            NodeUtils_1.NodeUtils.insertNodeAtIndex(blockScopeNode, this.getNode(), randomIndex);
         }
     }, {
         key: 'getNodeIdentifier',
@@ -2016,7 +2048,7 @@ var DomainLockNode = function (_AbstractCustomNode_) {
     _createClass(DomainLockNode, [{
         key: 'appendNode',
         value: function appendNode(blockScopeNode, stackTraceData) {
-            CustomNodeAppender_1.CustomNodeAppender.appendNode(stackTraceData, blockScopeNode.body, this.getNode(), CustomNodeAppender_1.CustomNodeAppender.getRandomStackTraceIndex(stackTraceData.length));
+            CustomNodeAppender_1.CustomNodeAppender.appendNode(stackTraceData, blockScopeNode, this.getNode(), CustomNodeAppender_1.CustomNodeAppender.getRandomStackTraceIndex(stackTraceData.length));
         }
     }, {
         key: 'getNodeStructure',
@@ -2060,9 +2092,10 @@ var AppendState_1 = __webpack_require__(4);
 var NoCustomNodesPreset_1 = __webpack_require__(18);
 var SelfDefendingTemplate_1 = __webpack_require__(69);
 var AbstractCustomNode_1 = __webpack_require__(6);
+var CustomNodeAppender_1 = __webpack_require__(15);
 var JavaScriptObfuscator_1 = __webpack_require__(9);
 var NodeUtils_1 = __webpack_require__(1);
-var CustomNodeAppender_1 = __webpack_require__(15);
+var Utils_1 = __webpack_require__(0);
 
 var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
     _inherits(SelfDefendingUnicodeNode, _AbstractCustomNode_);
@@ -2079,12 +2112,14 @@ var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
     _createClass(SelfDefendingUnicodeNode, [{
         key: 'appendNode',
         value: function appendNode(blockScopeNode, stackTraceData) {
-            CustomNodeAppender_1.CustomNodeAppender.appendNode(stackTraceData, blockScopeNode.body, this.getNode(), CustomNodeAppender_1.CustomNodeAppender.getRandomStackTraceIndex(stackTraceData.length));
+            CustomNodeAppender_1.CustomNodeAppender.appendNode(stackTraceData, blockScopeNode, this.getNode(), CustomNodeAppender_1.CustomNodeAppender.getRandomStackTraceIndex(stackTraceData.length));
         }
     }, {
         key: 'getNodeStructure',
         value: function getNodeStructure() {
-            return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(SelfDefendingTemplate_1.SelfDefendingTemplate(), NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET).getObfuscatedCode());
+            return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(SelfDefendingTemplate_1.SelfDefendingTemplate().formatUnicorn({
+                selfDefendingFunctionName: Utils_1.Utils.getRandomVariableName()
+            }), NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET).getObfuscatedCode());
         }
     }]);
 
@@ -2145,7 +2180,7 @@ var UnicodeArrayCallsWrapper = function (_AbstractCustomNode_) {
             if (!this.unicodeArray.getLength()) {
                 return;
             }
-            NodeUtils_1.NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), 1);
+            NodeUtils_1.NodeUtils.insertNodeAtIndex(blockScopeNode, this.getNode(), 1);
         }
     }, {
         key: 'getNodeIdentifier',
@@ -2251,7 +2286,7 @@ var UnicodeArrayNode = function (_AbstractCustomNode_) {
             if (!this.unicodeArray.getLength()) {
                 return;
             }
-            NodeUtils_1.NodeUtils.prependNode(blockScopeNode.body, this.getNode());
+            NodeUtils_1.NodeUtils.prependNode(blockScopeNode, this.getNode());
         }
     }, {
         key: 'getNodeIdentifier',
@@ -2338,7 +2373,7 @@ var UnicodeArrayRotateFunctionNode = function (_AbstractCustomNode_) {
             if (!this.unicodeArray.getLength()) {
                 return;
             }
-            NodeUtils_1.NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), 1);
+            NodeUtils_1.NodeUtils.insertNodeAtIndex(blockScopeNode, this.getNode(), 1);
         }
     }, {
         key: 'getNode',
@@ -3968,20 +4003,19 @@ exports.DomainLockNodeTemplate = DomainLockNodeTemplate;
 
 var Utils_1 = __webpack_require__(0);
 function SelfDefendingTemplate() {
-    return "\n        (function () {                                \n            var func1 = function(){return 'dev';},\n                func2 = function () {\n                    return 'window';\n                };\n                \n            var test1 = function () {\n                var regExp = new RegExp(" + Utils_1.Utils.stringToUnicode("return/\\w+ *\\(\\) *{\\w+ *['|\"].+['|\"];? *}/") + ");\n                \n                return !regExp.test(func1.toString());\n            };\n            \n            var test2 = function () {\n                var regExp = new RegExp(" + Utils_1.Utils.stringToUnicode("return/(\\\\[x|u](\\w){2,4})+/") + ");\n                \n                return regExp.test(func2.toString());\n            };\n            \n            var recursiveFunc1 = function (string) {\n                var i = ~1 >> 1 + 255 % 0;\n                \n                if (string.indexOf(([false]+undefined)[10]) === i) {\n                    recursiveFunc2(string)\n                }\n            };\n            \n            var recursiveFunc2 = function (string) {\n                var i = ~-4 >> 1 + 255 % 0;\n                \n                if (string.indexOf((true+\"\")[3]) !== i) {\n                    recursiveFunc1(string)\n                }\n            };\n            \n            !test1() ? test2() ? (function () { recursiveFunc1('indexOf') })() : (function () { recursiveFunc1('ind\u0435xOf') })() : (function () { recursiveFunc1('indexOf') })();\n        })();\n    ";
+    return "\n        function {selfDefendingFunctionName} () {\n            if ({selfDefendingFunctionName}.firstRun) {\n                return false;\n            }\n                                        \n            {selfDefendingFunctionName}.firstRun = true;\n            \n            var func1 = function(){return 'dev';},\n                func2 = function () {\n                    return 'window';\n                };\n                \n            var test1 = function () {\n                var regExp = new RegExp(" + Utils_1.Utils.stringToUnicode("\\w+ *\\(\\) *{\\w+ *['|\"].+['|\"];? *}") + ");\n                \n                return !regExp.test(func1.toString());\n            };\n            \n            var test2 = function () {\n                var regExp = new RegExp(" + Utils_1.Utils.stringToUnicode("(\\\\[x|u](\\w){2,4})+") + ");\n                \n                return regExp.test(func2.toString());\n            };\n            \n            var recursiveFunc1 = function (string) {\n                var i = ~-1 >> 1 + 255 % 0;\n                                \n                if (string.indexOf('i' === i)) {\n                    recursiveFunc2(string)\n                }\n            };\n            \n            var recursiveFunc2 = function (string) {\n                var i = ~-4 >> 1 + 255 % 0;\n                \n                if (string.indexOf((true+\"\")[3]) !== i) {\n                    recursiveFunc1(string)\n                }\n            };\n            \n            if (!test1()) {\n                if (!test2()) {\n                    recursiveFunc1('ind\u0435xOf');\n                } else {\n                    recursiveFunc1('indexOf');\n                }\n            } else {\n                recursiveFunc1('ind\u0435xOf');\n            }\n        }\n        \n        {selfDefendingFunctionName}();\n    ";
 }
 exports.SelfDefendingTemplate = SelfDefendingTemplate;
 
 /***/ },
 /* 70 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 "use strict";
 "use strict";
 
-var Utils_1 = __webpack_require__(0);
 function SelfDefendingTemplate() {
-    return '\n        var func = function(){return \'dev\';};\n        var object = [][\'filter\'][\'constructor\'];\n                           \n        !{unicodeArrayCallsWrapperName}.flag ? ({unicodeArrayCallsWrapperName}.flag = true, Function(' + Utils_1.Utils.stringToUnicode('return/\\w+ *\\(\\) *{\\w+ *[\'|"].+[\'|"];? *}/') + ')()[\'test\'](func[\'toString\']()) !== true && !{unicodeArrayName}++ ? object(' + Utils_1.Utils.stringToJSFuck('while') + ' + \'(true){}\')() : false ? object(' + Utils_1.Utils.stringToJSFuck('while') + ' + \'(false){}\')() : object(' + Utils_1.Utils.stringToJSFuck('while') + ' + \'(false){}\')()) : false;\n    ';
+    return "\n        \n    ";
 }
 exports.SelfDefendingTemplate = SelfDefendingTemplate;
 
@@ -4042,7 +4076,7 @@ exports.UnicodeArrayTemplate = UnicodeArrayTemplate;
 
 var Utils_1 = __webpack_require__(0);
 function SelfDefendingTemplate() {
-    return '(function () {\n        var func = function(){return \'dev\';};\n                            \n        !Function(' + Utils_1.Utils.stringToUnicode('return/\\w+ *\\(\\) *{\\w+ *[\'|"].+[\'|"];? *}/') + ')().test(func.toString()) ? [][\'filter\'][\'constructor\'](' + Utils_1.Utils.stringToJSFuck('while') + ' + \'(true){}\')() : Function(\'a\', \'b\', \'a(++b)\')({whileFunctionName}, {timesName}) ? [][\'filter\'][\'constructor\'](' + Utils_1.Utils.stringToJSFuck('while') + ' + \'(false){}\')() : [][\'filter\'][\'constructor\'](' + Utils_1.Utils.stringToJSFuck('while') + ' + \'(false){}\')();\n    })();';
+    return "\n        var selfDefendingFunc = function () {            \n            var object = {\n                data: {\n                    key: 'cookie',\n                    value: 'timeout'\n                },\n                setCookie: function (options, name, value, document) {\n                    document = document || {};\n                    \n                    var updatedCookie = name + \"=\" + value;\n\n                    var i = 0;\n                                                            \n                    for (var i = 0, len = options.length; i < len; i++) {                          \n                        var propName = options[i];\n                                     \n                        updatedCookie += \"; \" + propName;\n                        \n                        var propValue = options[propName];\n                        \n                        options.push(propValue);\n                        len = options.length;\n                                                                        \n                        if (propValue !== true) {\n                            updatedCookie += \"=\" + propValue;\n                        }\n                    }\n\n                    document['cookie'] = updatedCookie;\n                },\n                removeCookie: function(){return 'dev';},\n                getCookie: function (document, name) {    \n                    document = document || function (value) { return value };\n                    var matches = document(new RegExp(\n                        \"(?:^|; )\" + name.replace(/([.$?*|{}()[]\\/+^])/g, '\\$1') + \"=([^;]*)\"\n                    ));\n                    \n                    var func = function (param1, param2) {\n                        param1(++param2);\n                    };\n                    \n                    func({whileFunctionName}, {timesName});\n                                        \n                    return matches ? decodeURIComponent(matches[1]) : undefined;\n                }\n            };\n            \n            var test1 = function () {\n                var regExp = new RegExp(" + Utils_1.Utils.stringToUnicode("\\w+ *\\(\\) *{\\w+ *['|\"].+['|\"];? *}") + ");\n                \n                return regExp.test(object.removeCookie.toString());\n            };\n            \n            object['updateCookie'] = test1;\n            \n            var cookie = '';\n            var result = object['updateCookie']();\n                                    \n            if (!result) {\n                object['setCookie'](['*'], 'counter', 1);\n            } else if (result) {\n                cookie = object['getCookie'](null, 'counter');     \n            } else {\n                object['removeCookie']();\n            }\n        };\n        \n        selfDefendingFunc();\n    ";
 }
 exports.SelfDefendingTemplate = SelfDefendingTemplate;
 

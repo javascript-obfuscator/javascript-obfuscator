@@ -16,7 +16,6 @@ function getFunctionFromTemplate (templateData: any, currentDomain: string) {
     let domainLockTemplate: string = DomainLockNodeTemplate().formatUnicorn(templateData);
 
     return Function(`
-        
         document = {
             domain: '${currentDomain}'
         };
@@ -74,5 +73,9 @@ describe('DomainLockNodeTemplate (): string', () => {
             diff: diff,
             domains: hiddenDomainsString
         }, currentDomain));
+    });
+
+    afterEach(() => {
+        delete (<any>global).argv;
     });
 });

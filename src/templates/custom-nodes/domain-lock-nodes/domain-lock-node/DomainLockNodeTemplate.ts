@@ -19,13 +19,11 @@ export function DomainLockNodeTemplate (): string {
                     }()
                 };
             };
-        
+  
             if (
                 !getGlobal().argv ||
                 !getGlobal().argv.appParams
-            ) {
-                console.log(2222);
-            
+            ) {            
                 getGlobal().argv = {
                     appParams: -1
                 };
@@ -69,7 +67,7 @@ export function DomainLockNodeTemplate (): string {
                         break;
                     }
                 }
-                    
+                   
                 if (!ok) {
                     data;
                 } else {

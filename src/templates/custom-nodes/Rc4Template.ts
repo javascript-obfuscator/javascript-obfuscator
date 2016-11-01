@@ -3,7 +3,7 @@
  */
 export function Rc4Template (): string {
     return `
-        function rc4 (str, key) {
+        var rc4 = function (str, key) {
             var s = [], j = 0, x, res = '', newStr = '';
            
             str = atob(str);

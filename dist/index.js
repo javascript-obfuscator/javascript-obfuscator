@@ -1360,14 +1360,13 @@ var NodeUtils_1 = __webpack_require__(1);
 var ObjectExpressionObfuscator_1 = __webpack_require__(52);
 var SelfDefendingNodesGroup_1 = __webpack_require__(44);
 var UnicodeArrayNodesGroup_1 = __webpack_require__(45);
-var VariableDeclarationObfuscator_1 = __webpack_require__(53);
 var StackTraceAnalyzer_1 = __webpack_require__(58);
 
 var Obfuscator = function () {
     function Obfuscator(options) {
         _classCallCheck(this, Obfuscator);
 
-        this.nodeObfuscators = new Map([[NodeType_1.NodeType.ArrowFunctionExpression, [FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.ClassDeclaration, [FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator]], [NodeType_1.NodeType.CatchClause, [CatchClauseObfuscator_1.CatchClauseObfuscator]], [NodeType_1.NodeType.FunctionDeclaration, [FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator, FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.FunctionExpression, [FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.MemberExpression, [MemberExpressionObfuscator_1.MemberExpressionObfuscator]], [NodeType_1.NodeType.MethodDefinition, [MethodDefinitionObfuscator_1.MethodDefinitionObfuscator]], [NodeType_1.NodeType.ObjectExpression, [ObjectExpressionObfuscator_1.ObjectExpressionObfuscator]], [NodeType_1.NodeType.VariableDeclaration, [VariableDeclarationObfuscator_1.VariableDeclarationObfuscator]], [NodeType_1.NodeType.Literal, [LiteralObfuscator_1.LiteralObfuscator]]]);
+        this.nodeObfuscators = new Map([[NodeType_1.NodeType.ArrowFunctionExpression, [FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.ClassDeclaration, [FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator]], [NodeType_1.NodeType.CatchClause, [CatchClauseObfuscator_1.CatchClauseObfuscator]], [NodeType_1.NodeType.MemberExpression, [MemberExpressionObfuscator_1.MemberExpressionObfuscator]], [NodeType_1.NodeType.MethodDefinition, [MethodDefinitionObfuscator_1.MethodDefinitionObfuscator]], [NodeType_1.NodeType.ObjectExpression, [ObjectExpressionObfuscator_1.ObjectExpressionObfuscator]], [NodeType_1.NodeType.Literal, [LiteralObfuscator_1.LiteralObfuscator]]]);
         this.options = options;
         this.nodes = new Map([].concat(_toConsumableArray(new DomainLockNodesGroup_1.DomainLockNodesGroup(this.options).getNodes()), _toConsumableArray(new SelfDefendingNodesGroup_1.SelfDefendingNodesGroup(this.options).getNodes()), _toConsumableArray(new ConsoleOutputNodesGroup_1.ConsoleOutputNodesGroup(this.options).getNodes()), _toConsumableArray(new DebugProtectionNodesGroup_1.DebugProtectionNodesGroup(this.options).getNodes()), _toConsumableArray(new UnicodeArrayNodesGroup_1.UnicodeArrayNodesGroup(this.options).getNodes())));
     }
@@ -3148,83 +3147,7 @@ var ObjectExpressionObfuscator = function (_AbstractNodeObfuscat) {
 exports.ObjectExpressionObfuscator = ObjectExpressionObfuscator;
 
 /***/ },
-/* 53 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-"use strict";
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var estraverse = __webpack_require__(3);
-var NodeType_1 = __webpack_require__(5);
-var AbstractNodeObfuscator_1 = __webpack_require__(7);
-var IdentifierReplacer_1 = __webpack_require__(14);
-var Nodes_1 = __webpack_require__(2);
-var NodeUtils_1 = __webpack_require__(1);
-
-var VariableDeclarationObfuscator = function (_AbstractNodeObfuscat) {
-    _inherits(VariableDeclarationObfuscator, _AbstractNodeObfuscat);
-
-    function VariableDeclarationObfuscator(nodes, options) {
-        _classCallCheck(this, VariableDeclarationObfuscator);
-
-        var _this = _possibleConstructorReturn(this, (VariableDeclarationObfuscator.__proto__ || Object.getPrototypeOf(VariableDeclarationObfuscator)).call(this, nodes, options));
-
-        _this.identifierReplacer = new IdentifierReplacer_1.IdentifierReplacer(_this.nodes, _this.options);
-        return _this;
-    }
-
-    _createClass(VariableDeclarationObfuscator, [{
-        key: 'obfuscateNode',
-        value: function obfuscateNode(variableDeclarationNode, parentNode) {
-            if (parentNode.type === NodeType_1.NodeType.Program) {
-                return;
-            }
-            this.storeVariableNames(variableDeclarationNode);
-            this.replaceVariableNames(variableDeclarationNode, parentNode);
-        }
-    }, {
-        key: 'storeVariableNames',
-        value: function storeVariableNames(variableDeclarationNode) {
-            var _this2 = this;
-
-            variableDeclarationNode.declarations.forEach(function (declarationNode) {
-                NodeUtils_1.NodeUtils.typedReplace(declarationNode.id, NodeType_1.NodeType.Identifier, {
-                    enter: function enter(node) {
-                        return _this2.identifierReplacer.storeNames(node.name);
-                    }
-                });
-            });
-        }
-    }, {
-        key: 'replaceVariableNames',
-        value: function replaceVariableNames(variableDeclarationNode, variableParentNode) {
-            var _this3 = this;
-
-            var scopeNode = variableDeclarationNode.kind === 'var' ? NodeUtils_1.NodeUtils.getBlockScopeOfNode(variableDeclarationNode) : variableParentNode;
-            estraverse.replace(scopeNode, {
-                enter: function enter(node, parentNode) {
-                    if (!node.obfuscated && Nodes_1.Nodes.isReplaceableIdentifierNode(node, parentNode)) {
-                        node.name = _this3.identifierReplacer.replace(node.name);
-                    }
-                }
-            });
-        }
-    }]);
-
-    return VariableDeclarationObfuscator;
-}(AbstractNodeObfuscator_1.AbstractNodeObfuscator);
-
-exports.VariableDeclarationObfuscator = VariableDeclarationObfuscator;
-
-/***/ },
+/* 53 */,
 /* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -3934,7 +3857,7 @@ exports.AtobTemplate = AtobTemplate;
 "use strict";
 
 function Rc4Template() {
-    return "\n        var rc4 = function (str, key) {\n\t        var s = [], j = 0, x, res = '';\n\t        \n\t        if (!rc4.s) {\n                for (var i = 0; i < 256; i++) {\n                    s[i] = i;\n                }\n                \n                rc4.s = s;\n\t        } else {\n\t            s = rc4.s.slice(0);\n\t        }\n            \n            for (i = 0; i < 256; i++) {\n                j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;\n                x = s[i];\n                s[i] = s[j];\n                s[j] = x;\n            }\n            \n            i = 0;\n            j = 0;\n            \n            for (var y = 0; y < str.length; y++) {\n                i = (i + 1) % 256;\n                j = (j + s[i]) % 256;\n                x = s[i];\n                s[i] = s[j];\n                s[j] = x;\n                res += String.fromCharCode(str.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);\n            }\n            \n            return res;\n        }\n    ";
+    return "\n        function rc4 (str, key) {\n\t        var s = [], j = 0, x, res = '';\n\t        \n\t        for (var i = 0; i < 256; i++) {\n                s[i] = i;\n            }\n            \n            for (i = 0; i < 256; i++) {\n                j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;\n                x = s[i];\n                s[i] = s[j];\n                s[j] = x;\n            }\n            \n            i = 0;\n            j = 0;\n            \n            for (var y = 0; y < str.length; y++) {\n                i = (i + 1) % 256;\n                j = (j + s[i]) % 256;\n                x = s[i];\n                s[i] = s[j];\n                s[j] = x;\n                res += String.fromCharCode(str.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);\n            }\n            \n            return res;\n        }\n    ";
 }
 exports.Rc4Template = Rc4Template;
 
@@ -4056,7 +3979,7 @@ exports.UnicodeArrayCallsWrapperTemplate = UnicodeArrayCallsWrapperTemplate;
 "use strict";
 
 function UnicodeArrayRc4DecodeNodeTemplate() {
-    return "\n        if (!{unicodeArrayCallsWrapperName}.atobPolyfillAppended) {\n            {atobPolyfill}\n            \n            {unicodeArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n        \n        {rc4Polyfill}\n                \n        var decodedValues = {unicodeArrayCallsWrapperName}.data || {};\n\n        if (decodedValues[index] === undefined) {\n            var base64DecodeUnicode = function (str) {\n                var stringChars = atob(str).split('');\n                var newStringChars = '';\n                \n                for (var char in stringChars) {\n                    newStringChars += '%' + ('00' + stringChars[char].charCodeAt(0).toString(16)).slice(-2);\n                }\n                \n                return decodeURIComponent(newStringChars);\n            }\n\n            {selfDefendingCode}\n            \n            value = rc4(base64DecodeUnicode(value), key);\n            decodedValues[index] = value;\n        } else {\n            value = decodedValues[index];\n        }  \n                \n        {unicodeArrayCallsWrapperName}.data = decodedValues;                             \n    ";
+    return "\n        if (!{unicodeArrayCallsWrapperName}.atobPolyfillAppended) {            \n            {atobPolyfill}\n            \n            {unicodeArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n        \n        if (!{unicodeArrayCallsWrapperName}.rc4) {            \n            {rc4Polyfill}\n            \n            {unicodeArrayCallsWrapperName}.rc4 = rc4;\n        }\n                        \n        if (!{unicodeArrayCallsWrapperName}.data) {\n            {unicodeArrayCallsWrapperName}.data = {};\n        }\n\n        if ({unicodeArrayCallsWrapperName}.data[index] === undefined) {\n            var base64DecodeUnicode = function (str) {\n                var string = atob(str);\n                var newStringChars = [];\n                \n                for (var i = 0, length = string.length; i < length; i++) {\n                    newStringChars += '%' + ('00' + string.charCodeAt(i).toString(16)).slice(-2);\n                }\n                \n                return decodeURIComponent(newStringChars);\n            }\n\n            {selfDefendingCode}\n            \n            value = {unicodeArrayCallsWrapperName}.rc4(base64DecodeUnicode(value), key);\n            {unicodeArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = {unicodeArrayCallsWrapperName}.data[index];\n        }\n    ";
 }
 exports.UnicodeArrayRc4DecodeNodeTemplate = UnicodeArrayRc4DecodeNodeTemplate;
 

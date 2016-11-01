@@ -3,23 +3,29 @@
  */
 export function UnicodeArrayRc4DecodeNodeTemplate (): string {
     return `
-        if (!{unicodeArrayCallsWrapperName}.atobPolyfillAppended) {
+        if (!{unicodeArrayCallsWrapperName}.atobPolyfillAppended) {            
             {atobPolyfill}
             
             {unicodeArrayCallsWrapperName}.atobPolyfillAppended = true;
         }
         
-        {rc4Polyfill}
-                
-        var decodedValues = {unicodeArrayCallsWrapperName}.data || {};
+        if (!{unicodeArrayCallsWrapperName}.rc4) {            
+            {rc4Polyfill}
+            
+            {unicodeArrayCallsWrapperName}.rc4 = rc4;
+        }
+                        
+        if (!{unicodeArrayCallsWrapperName}.data) {
+            {unicodeArrayCallsWrapperName}.data = {};
+        }
 
-        if (decodedValues[index] === undefined) {
+        if ({unicodeArrayCallsWrapperName}.data[index] === undefined) {
             var base64DecodeUnicode = function (str) {
-                var stringChars = atob(str).split('');
-                var newStringChars = '';
+                var string = atob(str);
+                var newStringChars = [];
                 
-                for (var char in stringChars) {
-                    newStringChars += '%' + ('00' + stringChars[char].charCodeAt(0).toString(16)).slice(-2);
+                for (var i = 0, length = string.length; i < length; i++) {
+                    newStringChars += '%' + ('00' + string.charCodeAt(i).toString(16)).slice(-2);
                 }
                 
                 return decodeURIComponent(newStringChars);
@@ -27,12 +33,10 @@ export function UnicodeArrayRc4DecodeNodeTemplate (): string {
 
             {selfDefendingCode}
             
-            value = rc4(base64DecodeUnicode(value), key);
-            decodedValues[index] = value;
+            value = {unicodeArrayCallsWrapperName}.rc4(base64DecodeUnicode(value), key);
+            {unicodeArrayCallsWrapperName}.data[index] = value;
         } else {
-            value = decodedValues[index];
-        }  
-                
-        {unicodeArrayCallsWrapperName}.data = decodedValues;                             
+            value = {unicodeArrayCallsWrapperName}.data[index];
+        }
     `;
 }

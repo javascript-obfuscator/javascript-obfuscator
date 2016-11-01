@@ -3,18 +3,12 @@
  */
 export function Rc4Template (): string {
     return `
-        var rc4 = function (str, key) {
+        function rc4 (str, key) {
 	        var s = [], j = 0, x, res = '';
 	        
-	        if (!rc4.s) {
-                for (var i = 0; i < 256; i++) {
-                    s[i] = i;
-                }
-                
-                rc4.s = s;
-	        } else {
-	            s = rc4.s.slice(0);
-	        }
+	        for (var i = 0; i < 256; i++) {
+                s[i] = i;
+            }
             
             for (i = 0; i < 256; i++) {
                 j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;

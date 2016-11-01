@@ -1,3 +1,5 @@
+import 'format-unicorn';
+
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 
 import { TStatement } from '../../types/TStatement';
@@ -11,6 +13,7 @@ import { ConsoleOutputDisableExpressionTemplate } from '../../templates/custom-n
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { CustomNodeAppender } from '../CustomNodeAppender';
 import { NodeUtils } from '../../NodeUtils';
+import { Utils } from '../../Utils';
 
 export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
     /**
@@ -49,7 +52,9 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
      */
     protected getNodeStructure (): TStatement[] {
         return NodeUtils.convertCodeToStructure(
-            ConsoleOutputDisableExpressionTemplate()
+            ConsoleOutputDisableExpressionTemplate().formatUnicorn({
+                consoleLogDisableFunctionName: Utils.getRandomVariableName()
+            })
         );
     }
 }

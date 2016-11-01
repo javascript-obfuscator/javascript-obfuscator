@@ -76,6 +76,6 @@ describe('DomainLockNodeTemplate (): string', () => {
     });
 
     afterEach(() => {
-        delete (<any>global).argv;
+        delete (<any>global).promisePolyfillActivationFlag;
     });
 });

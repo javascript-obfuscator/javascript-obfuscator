@@ -10,6 +10,11 @@ import { Utils } from '../../Utils';
 
 export class StringLiteralReplacer extends AbstractReplacer {
     /**
+     * @type {number}
+     */
+    private static minimumLengthForUnicodeArray: number = 2;
+
+    /**
      * @type {string[]}
      */
     private static rc4Keys: string[] = Utils.getRandomGenerator()
@@ -20,7 +25,10 @@ export class StringLiteralReplacer extends AbstractReplacer {
      * @returns {string}
      */
     public replace (nodeValue: string): string {
-        const replaceWithUnicodeArrayFlag: boolean = Math.random() <= this.options.unicodeArrayThreshold;
+        const replaceWithUnicodeArrayFlag: boolean = (
+            nodeValue.length > StringLiteralReplacer.minimumLengthForUnicodeArray
+            && Math.random() <= this.options.unicodeArrayThreshold
+        );
 
         if (this.options.unicodeArray && replaceWithUnicodeArrayFlag) {
             return this.replaceStringLiteralWithUnicodeArrayCall(nodeValue);

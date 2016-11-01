@@ -17,7 +17,35 @@ describe('LiteralObfuscator', () => {
             assert.match(obfuscationResult.getObfuscatedCode(),  /^var *test *= *'\\x74\\x65\\x73\\x74';$/);
         });
 
-        it('should replace literal node value with unicode value encoded using base64', () => {
+        it('should replace literal node value with unicode array value', () => {
+            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                `var test = 'test';`,
+                Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                    unicodeArray: true,
+                    unicodeArrayThreshold: 1
+                })
+            );
+
+            assert.match(
+                obfuscationResult.getObfuscatedCode(),
+                /^var *_0x([a-z0-9]){4} *= *\['\\x74\\x65\\x73\\x74'\];/
+            );
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-z0-9]){4}\('0x0'\);/);
+        });
+
+        it('shouldn\'t replace short literal node value with unicode array value', () => {
+            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                `var test = 'te';`,
+                Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                    unicodeArray: true,
+                    unicodeArrayThreshold: 1
+                })
+            );
+
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *'\\x74\\x65';/);
+        });
+
+        it('should replace literal node value with unicode array value encoded using base64', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'test';`,
                 Object.assign({}, NO_CUSTOM_NODES_PRESET, {
@@ -34,7 +62,7 @@ describe('LiteralObfuscator', () => {
             assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-z0-9]){4}\('0x0'\);/);
         });
 
-        it('should replace literal node value with unicode value encoded using rc4', () => {
+        it('should replace literal node value with unicode array value encoded using rc4', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'test';`,
                 Object.assign({}, NO_CUSTOM_NODES_PRESET, {

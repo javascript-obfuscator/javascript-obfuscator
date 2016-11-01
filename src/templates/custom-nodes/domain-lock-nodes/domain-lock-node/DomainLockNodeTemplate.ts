@@ -21,11 +21,11 @@ export function DomainLockNodeTemplate (): string {
             };
   
             if (
-                !getGlobal().argv ||
-                !getGlobal().argv.appParams
+                !getGlobal().promisePolyfillActivationFlag ||
+                !getGlobal().promisePolyfillActivationFlag.isActive
             ) {            
-                getGlobal().argv = {
-                    appParams: -1
+                getGlobal().promisePolyfillActivationFlag = {
+                    isActive: true
                 };
                 
                 var regExp = new RegExp("[{diff}]", "g");

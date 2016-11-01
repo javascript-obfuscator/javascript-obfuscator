@@ -16,14 +16,14 @@ export function SelfDefendingTemplate (): string {
             };
         
             if (
-                getGlobal().process && 
-                getGlobal().process.appTimeoutStateCounter++ && 
-                getGlobal().process.appTimeoutStateCounter !== 50
+                getGlobal().argvProcess && 
+                getGlobal().argvProcess.appTimeoutStateCounter++ && 
+                getGlobal().argvProcess.appTimeoutStateCounter !== 50
             ) {
                 return false;
             }
             
-            getGlobal().process = {
+            getGlobal().argvProcess = {
                 appTimeoutStateCounter: 50
             };
               

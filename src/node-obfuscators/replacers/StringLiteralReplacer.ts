@@ -12,7 +12,7 @@ export class StringLiteralReplacer extends AbstractReplacer {
     /**
      * @type {number}
      */
-    private static minimumLengthForUnicodeArray: number = 2;
+    private static minimumLengthForUnicodeArray: number = 3;
 
     /**
      * @type {string[]}
@@ -26,7 +26,7 @@ export class StringLiteralReplacer extends AbstractReplacer {
      */
     public replace (nodeValue: string): string {
         const replaceWithUnicodeArrayFlag: boolean = (
-            nodeValue.length > StringLiteralReplacer.minimumLengthForUnicodeArray
+            nodeValue.length >= StringLiteralReplacer.minimumLengthForUnicodeArray
             && Math.random() <= this.options.unicodeArrayThreshold
         );
 

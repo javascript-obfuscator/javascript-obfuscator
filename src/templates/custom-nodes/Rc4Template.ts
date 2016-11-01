@@ -4,13 +4,21 @@
 export function Rc4Template (): string {
     return `
         function rc4 (str, key) {
-	        var s = [], j = 0, x, res = '';
-	        
-	        for (var i = 0; i < 256; i++) {
+            var s = [], j = 0, x, res = '', newStr = '';
+           
+            str = atob(str);
+                
+            for (var k = 0, length = str.length; k < length; k++) {
+                newStr += '%' + ('00' + str.charCodeAt(k).toString(16)).slice(-2);
+            }
+        
+            str = decodeURIComponent(newStr);
+                    	        
+	        for (var i = 0; i < 255; i++) {
                 s[i] = i;
             }
-            
-            for (i = 0; i < 256; i++) {
+ 
+            for (i = 0; i < 255; i++) {
                 j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;
                 x = s[i];
                 s[i] = s[j];
@@ -28,7 +36,7 @@ export function Rc4Template (): string {
                 s[j] = x;
                 res += String.fromCharCode(str.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);
             }
-            
+                      
             return res;
         }
     `;

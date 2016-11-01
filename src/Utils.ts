@@ -187,11 +187,11 @@ export class Utils {
             x: number,
             result: string = '';
 
-        for (var i = 0; i < 256; i++) {
+        for (var i = 0; i < 255; i++) {
             s[i] = i;
         }
 
-        for (i = 0; i < 256; i++) {
+        for (i = 0; i < 255; i++) {
             j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;
             x = s[i];
             s[i] = s[j];

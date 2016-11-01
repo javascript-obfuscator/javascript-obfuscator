@@ -14,13 +14,9 @@ export function UnicodeArrayRc4DecodeNodeTemplate (): string {
             
             {unicodeArrayCallsWrapperName}.rc4 = rc4;
         }
-                        
-        if (!{unicodeArrayCallsWrapperName}.data) {
-            {unicodeArrayCallsWrapperName}.data = {};
-        }
-
-        if ({unicodeArrayCallsWrapperName}.data[index] === undefined) {
-            var base64DecodeUnicode = function (str) {
+        
+        if (!{unicodeArrayCallsWrapperName}.base64DecodeUnicode) {                
+            {unicodeArrayCallsWrapperName}.base64DecodeUnicode = function (str) {
                 var string = atob(str);
                 var newStringChars = [];
                 
@@ -29,11 +25,24 @@ export function UnicodeArrayRc4DecodeNodeTemplate (): string {
                 }
                 
                 return decodeURIComponent(newStringChars);
-            }
+            };
+        }
+                        
+        if (!{unicodeArrayCallsWrapperName}.data) {
+            {unicodeArrayCallsWrapperName}.data = {};
+        }
 
-            {selfDefendingCode}
+        if ({unicodeArrayCallsWrapperName}.data[index] === undefined) {
+            if (!{unicodeArrayCallsWrapperName}.once) {
+                {selfDefendingCode}
+                
+                {unicodeArrayCallsWrapperName}.once = true;
+            }
             
-            value = {unicodeArrayCallsWrapperName}.rc4(base64DecodeUnicode(value), key);
+            value = {unicodeArrayCallsWrapperName}.rc4(
+                {unicodeArrayCallsWrapperName}.base64DecodeUnicode(value), 
+                key
+            );
             {unicodeArrayCallsWrapperName}.data[index] = value;
         } else {
             value = {unicodeArrayCallsWrapperName}.data[index];

@@ -8,29 +8,31 @@ export function UnicodeArrayBase64DecodeNodeTemplate (): string {
             
             {unicodeArrayCallsWrapperName}.atobPolyfillAppended = true;
         }
-                
-        var decodedValues = {unicodeArrayCallsWrapperName}.data || {};
         
-        if (!decodedValues[index]) {
-            var base64DecodeUnicode = function (str) {
-                var stringChars = atob(str).split('');
-                var newStringChars = '';
+        if (!{unicodeArrayCallsWrapperName}.base64DecodeUnicode) {                
+            {unicodeArrayCallsWrapperName}.base64DecodeUnicode = function (str) {
+                var string = atob(str);
+                var newStringChars = [];
                 
-                for (var char in stringChars) {
-                    newStringChars += '%' + ('00' + stringChars[char].charCodeAt(0).toString(16)).slice(-2);
+                for (var i = 0, length = string.length; i < length; i++) {
+                    newStringChars += '%' + ('00' + string.charCodeAt(i).toString(16)).slice(-2);
                 }
                 
                 return decodeURIComponent(newStringChars);
-            }
-            
+            };
+        }
+        
+        if (!{unicodeArrayCallsWrapperName}.data) {
+            {unicodeArrayCallsWrapperName}.data = {};
+        }
+                        
+        if (!{unicodeArrayCallsWrapperName}.data[index]) {
             {selfDefendingCode}
             
-            value = base64DecodeUnicode(value);
-            decodedValues[index] = value;
+            value = {unicodeArrayCallsWrapperName}.base64DecodeUnicode(value);
+            {unicodeArrayCallsWrapperName}.data[index] = value;
         } else {
-            value = decodedValues[index];
+            value = {unicodeArrayCallsWrapperName}.data[index];
         }  
-        
-        {unicodeArrayCallsWrapperName}.data = decodedValues;                             
     `;
 }

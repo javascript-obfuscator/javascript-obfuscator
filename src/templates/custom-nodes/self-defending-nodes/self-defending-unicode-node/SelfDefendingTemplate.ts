@@ -9,12 +9,24 @@ import { Utils } from '../../../../Utils';
 export function SelfDefendingTemplate (): string {
     return `
         function {selfDefendingFunctionName} () {
-            if ({selfDefendingFunctionName}.firstRun) {
+            var getGlobal = function () {
+                if (typeof self !== 'undefined') { return self; }
+                if (typeof window !== 'undefined') { return window; }
+                if (typeof global !== 'undefined') { return global; }
+            };
+        
+            if (
+                getGlobal().process && 
+                getGlobal().process.appTimeoutStateCounter++ && 
+                getGlobal().process.appTimeoutStateCounter !== 50
+            ) {
                 return false;
             }
-                                        
-            {selfDefendingFunctionName}.firstRun = true;
             
+            getGlobal().process = {
+                appTimeoutStateCounter: 50
+            };
+              
             var func1 = function(){return 'dev';},
                 func2 = function () {
                     return 'window';

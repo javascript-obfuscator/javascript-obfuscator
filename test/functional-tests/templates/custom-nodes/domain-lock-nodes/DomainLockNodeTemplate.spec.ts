@@ -16,6 +16,7 @@ function getFunctionFromTemplate (templateData: any, currentDomain: string) {
     let domainLockTemplate: string = DomainLockNodeTemplate().formatUnicorn(templateData);
 
     return Function(`
+        
         document = {
             domain: '${currentDomain}'
         };
@@ -39,6 +40,7 @@ describe('DomainLockNodeTemplate (): string', () => {
         ] = Utils.hideString(domainsString, domainsString.length * 3);
 
         assert.doesNotThrow(() => getFunctionFromTemplate({
+            domainLockFunctionName: 'func',
             diff: diff,
             domains: hiddenDomainsString
         }, currentDomain));
@@ -53,6 +55,7 @@ describe('DomainLockNodeTemplate (): string', () => {
         ] = Utils.hideString(domainsString, domainsString.length * 3);
 
         assert.doesNotThrow(() => getFunctionFromTemplate({
+            domainLockFunctionName: 'func',
             diff: diff,
             domains: hiddenDomainsString
         }, currentDomain));
@@ -67,6 +70,7 @@ describe('DomainLockNodeTemplate (): string', () => {
         ] = Utils.hideString(domainsString, domainsString.length * 3);
 
         assert.throws(() => getFunctionFromTemplate({
+            domainLockFunctionName: 'func',
             diff: diff,
             domains: hiddenDomainsString
         }, currentDomain));

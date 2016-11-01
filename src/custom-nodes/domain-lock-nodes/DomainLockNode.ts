@@ -42,6 +42,7 @@ export class DomainLockNode extends AbstractCustomNode {
 
         return NodeUtils.convertCodeToStructure(
             DomainLockNodeTemplate().formatUnicorn({
+                domainLockFunctionName: Utils.getRandomVariableName(),
                 diff: diff,
                 domains: hiddenDomainsString
             })

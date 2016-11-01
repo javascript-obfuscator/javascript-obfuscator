@@ -1,6 +1,8 @@
 import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
+import { TStatement } from '../../src/types/TStatement';
+
 import { NodeType } from '../../src/enums/NodeType';
 
 export class NodeMocks {
@@ -8,7 +10,7 @@ export class NodeMocks {
      * @param bodyNodes
      * @returns {ESTree.Program}
      */
-    public static getProgramNode (bodyNodes: ESTree.Statement[] = []): ESTree.Program {
+    public static getProgramNode (bodyNodes: TStatement[] = []): ESTree.Program {
         return {
             type: NodeType.Program,
             body: bodyNodes,

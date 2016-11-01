@@ -27,7 +27,7 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('appendNode (blockScopeNode: TNodeWithBlockStatement[], nodeBodyStatements: TStatement[])', () => {
+    describe('appendNode (blockScopeNode: TNodeWithBlockStatement[], nodeBodyStatements: TStatement[]): void', () => {
         let blockStatementNode: ESTree.BlockStatement,
             expectedBlockStatementNode: ESTree.BlockStatement,
             expectedExpressionStatementNode: ESTree.ExpressionStatement,
@@ -198,7 +198,7 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('insertNodeAtIndex (blockScopeNode: TNodeWithBlockStatement[], nodeBodyStatements: TStatement[], index: number): TNodeWithBlockStatement[]', () => {
+    describe('insertNodeAtIndex (blockScopeNode: TNodeWithBlockStatement[], nodeBodyStatements: TStatement[], index: number): void', () => {
         let blockStatementNode: ESTree.BlockStatement,
             expectedBlockStatementNode: ESTree.BlockStatement,
             expressionStatementNode1: ESTree.ExpressionStatement,
@@ -296,7 +296,7 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('prependNode (blockScopeNode: TNodeWithBlockStatement[], nodeBodyStatements: TStatement[]): TNodeWithBlockStatement[]', () => {
+    describe('prependNode (blockScopeNode: TNodeWithBlockStatement[], nodeBodyStatements: TStatement[]): void', () => {
         let blockStatementNode: ESTree.BlockStatement,
             expectedBlockStatementNode: ESTree.BlockStatement,
             expressionStatementNode1: ESTree.ExpressionStatement,

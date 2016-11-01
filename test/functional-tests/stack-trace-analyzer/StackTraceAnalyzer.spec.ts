@@ -151,7 +151,7 @@ describe('StackTraceAnalyzer', () => {
 
         it('should returns correct IStackTraceData - variant #1: basic-1', () => {
             astTree = NodeMocks.getProgramNode(
-                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(
+                NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/stack-trace-analyzer/basic-1.js')
                 )
             );
@@ -198,7 +198,7 @@ describe('StackTraceAnalyzer', () => {
 
         it('should returns correct BlockScopeTraceData - variant #2: basic-2', () => {
             astTree = NodeMocks.getProgramNode(
-                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(
+                NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/stack-trace-analyzer/basic-2.js')
                 )
             );
@@ -234,7 +234,7 @@ describe('StackTraceAnalyzer', () => {
 
         it('should returns correct BlockScopeTraceData - variant #3: deep conditions nesting', () => {
             astTree = NodeMocks.getProgramNode(
-                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(
+                NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/stack-trace-analyzer/deep-conditions-nesting.js')
                 )
             );
@@ -270,7 +270,7 @@ describe('StackTraceAnalyzer', () => {
 
         it('should returns correct BlockScopeTraceData - variant #4: call before declaration', () => {
             astTree = NodeMocks.getProgramNode(
-                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(
+                NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/stack-trace-analyzer/call-before-declaration.js')
                 )
             );
@@ -290,7 +290,7 @@ describe('StackTraceAnalyzer', () => {
 
         it('should returns correct BlockScopeTraceData - variant #5: call expression of object member', () => {
             astTree = NodeMocks.getProgramNode(
-                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(
+                NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/stack-trace-analyzer/call-expression-of-object-member.js')
                 )
             );
@@ -346,7 +346,7 @@ describe('StackTraceAnalyzer', () => {
 
         it('should returns correct BlockScopeTraceData - variant #6: no call expressions', () => {
             astTree = NodeMocks.getProgramNode(
-                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(
+                NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/stack-trace-analyzer/no-call-expressions.js')
                 )
             );
@@ -360,7 +360,7 @@ describe('StackTraceAnalyzer', () => {
 
         it('should returns correct BlockScopeTraceData - variant #7: only call expression', () => {
             astTree = NodeMocks.getProgramNode(
-                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(
+                NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/stack-trace-analyzer/only-call-expression.js')
                 )
             );
@@ -374,7 +374,7 @@ describe('StackTraceAnalyzer', () => {
 
         it('should returns correct BlockScopeTraceData - variant #8: self-invoking functions', () => {
             astTree = NodeMocks.getProgramNode(
-                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(
+                NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/stack-trace-analyzer/self-invoking-functions.js')
                 )
             );
@@ -406,7 +406,7 @@ describe('StackTraceAnalyzer', () => {
 
         it('should returns correct BlockScopeTraceData - variant #9: no recursion', () => {
             astTree = NodeMocks.getProgramNode(
-                <ESTree.Statement[]>NodeUtils.convertCodeToStructure(
+                NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/stack-trace-analyzer/no-recursion.js')
                 )
             );

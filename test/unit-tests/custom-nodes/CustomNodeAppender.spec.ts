@@ -13,7 +13,7 @@ import { StackTraceAnalyzer } from '../../../src/stack-trace-analyzer/StackTrace
 const assert: any = chai.assert;
 
 describe('CustomNodeAppender', () => {
-    describe('appendNode (blockScopeStackTraceData: IStackTraceData[], blockScopeNode: TNodeWithBlockStatement, nodeBodyStatements: TStatement[], index: number = 0)', () => {
+    describe('appendNode (blockScopeStackTraceData: IStackTraceData[], blockScopeNode: TNodeWithBlockStatement, nodeBodyStatements: TStatement[], index: number = 0): void', () => {
         let astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
             node: TStatement[],

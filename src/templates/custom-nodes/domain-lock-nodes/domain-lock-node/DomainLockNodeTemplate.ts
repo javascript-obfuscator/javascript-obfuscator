@@ -10,8 +10,14 @@ export function DomainLockNodeTemplate (): string {
                 if (typeof global !== 'undefined') { return global; }
             };
             
-            var func = function () {
-                eval('while(true){}')();
+            var func = function () { 
+                return {
+                    key: 'item',
+                    value: 'attribute',
+                    getAttribute: function () {
+                        getGlobal()['eval']('while(true){}')();
+                    }()
+                };
             };
         
             if (

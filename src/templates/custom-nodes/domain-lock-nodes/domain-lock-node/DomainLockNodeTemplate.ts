@@ -65,8 +65,12 @@ export function DomainLockNodeTemplate (): string {
                 }
                     
                 if (!ok) {
-                    func();
+                    data;
+                } else {
+                    return;
                 }
+                
+                func();
             }
         };
         

@@ -70,7 +70,8 @@ if (!(<any>global)._babelPolyfill) {
     `,
         {
             disableConsoleOutput: false,
-            unicodeArrayEncoding: 'rc4'
+            unicodeArrayEncoding: 'rc4',
+            domainLock: ['google.ru']
         }
     ).getObfuscatedCode();
 

@@ -9,17 +9,26 @@ const assert: Chai.AssertStatic = require('chai').assert;
 
 /**
  * @param templateData
+ * @param callsControllerFunctionName
  * @param currentDomain
  * @returns {Function}
  */
-function getFunctionFromTemplate (templateData: any, currentDomain: string) {
+function getFunctionFromTemplate (templateData: any, callsControllerFunctionName: string,  currentDomain: string) {
     let domainLockTemplate: string = DomainLockNodeTemplate().formatUnicorn(templateData);
 
     return Function(`
         document = {
             domain: '${currentDomain}'
         };
-        
+
+        var ${callsControllerFunctionName} = (function(){            
+            return function (context, fn){	
+                return function () {
+                    return fn.apply(context, arguments);
+                };
+            }
+        })();
+
         ${domainLockTemplate}
     `)();
 }
@@ -28,7 +37,8 @@ describe('DomainLockNodeTemplate (): string', () => {
     let domainsString: string,
         currentDomain: string,
         hiddenDomainsString: string,
-        diff: string;
+        diff: string,
+        singleNodeCallControllerFunctionName: string = 'callsController';
 
     it('should correctly runs code inside template if current domain matches with `domainsString`', () => {
         domainsString = ['www.example.com'].join(';');
@@ -39,10 +49,11 @@ describe('DomainLockNodeTemplate (): string', () => {
         ] = Utils.hideString(domainsString, domainsString.length * 3);
 
         assert.doesNotThrow(() => getFunctionFromTemplate({
-            domainLockFunctionName: 'func',
+            domainLockFunctionName: 'domainLockFunction',
             diff: diff,
-            domains: hiddenDomainsString
-        }, currentDomain));
+            domains: hiddenDomainsString,
+            singleNodeCallControllerFunctionName
+        }, singleNodeCallControllerFunctionName, currentDomain));
     });
 
     it('should correctly runs code inside template if current domain matches with base domain of `domainsString` item', () => {
@@ -54,10 +65,11 @@ describe('DomainLockNodeTemplate (): string', () => {
         ] = Utils.hideString(domainsString, domainsString.length * 3);
 
         assert.doesNotThrow(() => getFunctionFromTemplate({
-            domainLockFunctionName: 'func',
+            domainLockFunctionName: 'domainLockFunction',
             diff: diff,
-            domains: hiddenDomainsString
-        }, currentDomain));
+            domains: hiddenDomainsString,
+            singleNodeCallControllerFunctionName
+        }, singleNodeCallControllerFunctionName, currentDomain));
     });
 
     it('should throw an error if current domain doesn\'t match with `domainsString`', () => {
@@ -69,10 +81,11 @@ describe('DomainLockNodeTemplate (): string', () => {
         ] = Utils.hideString(domainsString, domainsString.length * 3);
 
         assert.throws(() => getFunctionFromTemplate({
-            domainLockFunctionName: 'func',
+            domainLockFunctionName: 'domainLockFunction',
             diff: diff,
-            domains: hiddenDomainsString
-        }, currentDomain));
+            domains: hiddenDomainsString,
+            singleNodeCallControllerFunctionName
+        }, singleNodeCallControllerFunctionName, currentDomain));
     });
 
     afterEach(() => {

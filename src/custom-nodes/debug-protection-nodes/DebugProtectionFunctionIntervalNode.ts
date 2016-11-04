@@ -10,6 +10,7 @@ import { AppendState } from '../../enums/AppendState';
 import { DebugProtectionFunctionIntervalTemplate } from '../../templates/custom-nodes/debug-protection-nodes/debug-protection-function-interval-node/DebugProtectionFunctionIntervalTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
+import { NodeAppender } from '../../NodeAppender';
 import { NodeUtils } from '../../NodeUtils';
 
 export class DebugProtectionFunctionIntervalNode extends AbstractCustomNode {
@@ -37,7 +38,7 @@ export class DebugProtectionFunctionIntervalNode extends AbstractCustomNode {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        NodeUtils.appendNode(blockScopeNode, this.getNode());
+        NodeAppender.appendNode(blockScopeNode, this.getNode());
     }
 
     /**

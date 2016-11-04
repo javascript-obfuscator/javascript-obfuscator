@@ -14,6 +14,7 @@ import { UnicodeArrayRotateFunctionTemplate } from '../../templates/custom-nodes
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
+import { NodeAppender } from '../../NodeAppender';
 import { NodeUtils } from '../../NodeUtils';
 import { UnicodeArray } from '../../UnicodeArray';
 import { Utils } from '../../Utils';
@@ -66,7 +67,7 @@ export class UnicodeArrayRotateFunctionNode extends AbstractCustomNode {
             return;
         }
 
-        NodeUtils.insertNodeAtIndex(blockScopeNode, this.getNode(), 1);
+        NodeAppender.insertNodeAtIndex(blockScopeNode, this.getNode(), 1);
     }
 
     /**

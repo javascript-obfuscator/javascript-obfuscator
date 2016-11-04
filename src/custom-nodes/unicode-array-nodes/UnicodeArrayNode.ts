@@ -12,6 +12,7 @@ import { UnicodeArray } from '../../UnicodeArray';
 import { UnicodeArrayTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-node/UnicodeArrayTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
+import { NodeAppender } from '../../NodeAppender';
 import { NodeUtils } from '../../NodeUtils';
 
 export class UnicodeArrayNode extends AbstractCustomNode {
@@ -67,7 +68,7 @@ export class UnicodeArrayNode extends AbstractCustomNode {
             return;
         }
 
-        NodeUtils.prependNode(blockScopeNode, this.getNode());
+        NodeAppender.prependNode(blockScopeNode, this.getNode());
     }
 
     /**

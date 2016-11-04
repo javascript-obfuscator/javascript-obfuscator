@@ -1,4 +1,5 @@
 import { IOptions } from '../interfaces/IOptions';
+import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { DebugProtectionFunctionCallNode } from '../custom-nodes/debug-protection-nodes/DebugProtectionFunctionCallNode';
 import { DebugProtectionFunctionIntervalNode } from '../custom-nodes/debug-protection-nodes/DebugProtectionFunctionIntervalNode';
@@ -14,10 +15,11 @@ export class DebugProtectionNodesGroup extends AbstractNodesGroup {
     private debugProtectionFunctionIdentifier: string = Utils.getRandomVariableName();
 
     /**
+     * @param stackTraceData
      * @param options
      */
-    constructor (options: IOptions) {
-        super(options);
+    constructor (stackTraceData: IStackTraceData[], options: IOptions) {
+        super(stackTraceData, options);
 
         if (!this.options.debugProtection) {
             return;

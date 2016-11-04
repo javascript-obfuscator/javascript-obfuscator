@@ -1,4 +1,5 @@
 import { IOptions } from '../interfaces/IOptions';
+import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { AbstractNodesGroup } from './AbstractNodesGroup';
 import { UnicodeArray } from '../UnicodeArray';
@@ -24,10 +25,11 @@ export class UnicodeArrayNodesGroup extends AbstractNodesGroup {
     private unicodeArrayTranslatorName: string = Utils.getRandomVariableName(UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
 
     /**
+     * @param stackTraceData
      * @param options
      */
-    constructor (options: IOptions) {
-        super(options);
+    constructor (stackTraceData: IStackTraceData[], options: IOptions) {
+        super(stackTraceData, options);
 
         if (!this.options.unicodeArray) {
             return;

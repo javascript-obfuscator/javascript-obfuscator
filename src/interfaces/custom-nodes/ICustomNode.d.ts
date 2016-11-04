@@ -2,16 +2,13 @@ import * as ESTree from 'estree';
 
 import { TStatement } from '../../types/TStatement';
 
-import { IStackTraceData } from '../stack-trace-analyzer/IStackTraceData';
-
 import { AppendState } from '../../enums/AppendState';
 
 export interface ICustomNode {
     /**
      * @param astTree
-     * @param stackTraceData
      */
-    appendNode (astTree: ESTree.Node, stackTraceData?: IStackTraceData[]): void;
+    appendNode (astTree: ESTree.Node): void;
 
     /**
      * @returns {AppendState}

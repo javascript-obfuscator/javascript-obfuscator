@@ -19,6 +19,7 @@ import { UnicodeArrayRc4DecodeNodeTemplate } from '../../templates/custom-nodes/
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
+import { NodeAppender } from '../../NodeAppender';
 import { NodeUtils } from '../../NodeUtils';
 import { UnicodeArray } from '../../UnicodeArray';
 
@@ -70,7 +71,7 @@ export class UnicodeArrayCallsWrapper extends AbstractCustomNode {
             return;
         }
 
-        NodeUtils.insertNodeAtIndex(blockScopeNode, this.getNode(), 1);
+        NodeAppender.insertNodeAtIndex(blockScopeNode, this.getNode(), 1);
     }
 
     /**

@@ -8,14 +8,13 @@ import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTra
 
 import { AppendState } from '../../enums/AppendState';
 
-import { DomainLockNodeTemplate } from '../../templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
+import { SingleNodeCallControllerTemplate } from '../../templates/custom-nodes/SingleNodeCallControllerTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeAppender } from '../../NodeAppender';
 import { NodeUtils } from '../../NodeUtils';
-import { Utils } from '../../Utils';
 
-export class DomainLockNode extends AbstractCustomNode {
+export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     /**
      * @type {AppendState}
      */
@@ -59,26 +58,24 @@ export class DomainLockNode extends AbstractCustomNode {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        NodeAppender.appendNodeToOptimalBlockScope(
-            this.stackTraceData,
-            blockScopeNode,
-            this.getNode(),
-            this.randomStackTraceIndex
-        );
+        let targetBlockScope: TNodeWithBlockStatement;
+
+        if (this.stackTraceData.length) {
+            targetBlockScope = NodeAppender
+                .getOptimalBlockScope(this.stackTraceData, this.randomStackTraceIndex, 1);
+        } else {
+            targetBlockScope = blockScopeNode;
+        }
+
+        NodeAppender.prependNode(targetBlockScope, this.getNode());
     }
 
     /**
      * @returns {TStatement[]}
      */
     protected getNodeStructure (): TStatement[] {
-        let domainsString: string = this.options.domainLock.join(';'),
-            [hiddenDomainsString, diff]: string[] = Utils.hideString(domainsString, domainsString.length * 3);
-
         return NodeUtils.convertCodeToStructure(
-            DomainLockNodeTemplate().formatUnicorn({
-                domainLockFunctionName: Utils.getRandomVariableName(),
-                diff: diff,
-                domains: hiddenDomainsString,
+            SingleNodeCallControllerTemplate().formatUnicorn({
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
             })
         );

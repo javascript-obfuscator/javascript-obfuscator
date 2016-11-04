@@ -38,26 +38,6 @@ export class NodeUtils {
     }
 
     /**
-     * @param blockScopeNode
-     * @param nodeBodyStatements
-     */
-    public static appendNode (
-        blockScopeNode: TNodeWithBlockStatement,
-        nodeBodyStatements: TStatement[]
-    ): void {
-        if (!NodeUtils.validateBodyStatements(nodeBodyStatements)) {
-            nodeBodyStatements = [];
-        }
-
-        nodeBodyStatements = NodeUtils.parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements);
-
-        blockScopeNode.body = [
-            ...blockScopeNode.body,
-            ...nodeBodyStatements
-        ];
-    }
-
-    /**
      * @param code
      * @returns {TStatement[]}
      */
@@ -121,29 +101,6 @@ export class NodeUtils {
     }
 
     /**
-     * @param blockScopeNode
-     * @param nodeBodyStatements
-     * @param index
-     */
-    public static insertNodeAtIndex (
-        blockScopeNode: TNodeWithBlockStatement,
-        nodeBodyStatements: TStatement[],
-        index: number
-    ): void {
-        if (!NodeUtils.validateBodyStatements(nodeBodyStatements)) {
-            nodeBodyStatements = [];
-        }
-
-        nodeBodyStatements = NodeUtils.parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements);
-
-        blockScopeNode.body = [
-            ...blockScopeNode.body.slice(0, index),
-            ...nodeBodyStatements,
-            ...blockScopeNode.body.slice(index)
-        ];
-    }
-
-    /**
      * @param node
      */
     public static parentize (node: ESTree.Node): void {
@@ -170,26 +127,6 @@ export class NodeUtils {
                 node['obfuscated'] = false;
             }
         });
-    }
-
-    /**
-     * @param blockScopeNode
-     * @param nodeBodyStatements
-     */
-    public static prependNode (
-        blockScopeNode: TNodeWithBlockStatement,
-        nodeBodyStatements: TStatement[]
-    ): void {
-        if (!NodeUtils.validateBodyStatements(nodeBodyStatements)) {
-            nodeBodyStatements = [];
-        }
-
-        nodeBodyStatements = NodeUtils.parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements);
-
-        blockScopeNode.body = [
-            ...nodeBodyStatements,
-            ...blockScopeNode.body,
-        ];
     }
 
     /**
@@ -228,31 +165,6 @@ export class NodeUtils {
                     visitor.leave(node, parentNode);
                 }
             }
-        });
-    }
-
-    /**
-     * @param blockScopeNode
-     * @param nodeBodyStatements
-     */
-    private static parentizeBodyStatementsBeforeAppend (
-        blockScopeNode: TNodeWithBlockStatement,
-        nodeBodyStatements: TStatement[]
-    ): TStatement[] {
-        for (let statement of nodeBodyStatements) {
-            statement.parentNode = blockScopeNode;
-        }
-
-        return nodeBodyStatements;
-    }
-
-    /**
-     * @param nodeBodyStatements
-     * @returns {boolean}
-     */
-    private static validateBodyStatements (nodeBodyStatements: TStatement[]): boolean {
-        return nodeBodyStatements.every(statementNode => {
-            return !!statementNode && statementNode.hasOwnProperty('type');
         });
     }
 }

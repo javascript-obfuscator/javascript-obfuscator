@@ -281,7 +281,7 @@ Available values:
 * `true` (`boolean`): encode `unicodeArray` values using `base64`
 * `false` (`boolean`): don't encode `unicodeArray` values
 * `'base64'` (`string`): encode `unicodeArray` values using `base64`
-* `'rc4'` (`string`): encode `unicodeArray` values using `rc4`. **Much slower then `base64`!**
+* `'rc4'` (`string`): encode `unicodeArray` values using `rc4`. **About 30-35% slower then `base64`, but more harder to get initial values**
     
 ### `unicodeArrayThreshold`
 Type: `number` Default: `0.8` Min: `0` Max: `1`

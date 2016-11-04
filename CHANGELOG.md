@@ -3,8 +3,10 @@ Change Log
 
 v0.8.0
 ---
-* **Breaking options change:** `encodeUnicodeArray` has been renamed to `unicodeArrayEncoding` and now accepts following values: `true|false|'base64'|'rc4`.
+* **Breaking options change:** `encodeUnicodeArray` has been renamed to `unicodeArrayEncoding` and now accepts following values: `true|false|'base64'|'rc4'`.
 * **Breaking change:** option `wrapUnicodeArrayCalls` was removed and now all calls to `unicodeArray` are always wrapped by special wrapper function.
+* Custom nodes like `selfDefendingNode` or `consoleOutputNode` now inserted into deepest stack trace function call.
+* Rewrite of many custom nodes.
 
 v0.7.1
 ---

@@ -1,8 +1,6 @@
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-
 import { ICalleeData } from '../../interfaces/stack-trace-analyzer/ICalleeData';
 import { ICalleeDataExtractor } from '../../interfaces/stack-trace-analyzer/ICalleeDataExtractor';
 
@@ -33,7 +31,7 @@ export class FunctionExpressionCalleeDataExtractor implements ICalleeDataExtract
      * @returns {ICalleeData|null}
      */
     public extract (): ICalleeData|null {
-        let calleeBlockStatement: TNodeWithBlockStatement|null = null;
+        let calleeBlockStatement: ESTree.BlockStatement|null = null;
 
         if (Nodes.isIdentifierNode(this.callee)) {
             calleeBlockStatement = this.getCalleeBlockStatement(
@@ -59,10 +57,10 @@ export class FunctionExpressionCalleeDataExtractor implements ICalleeDataExtract
     /**
      * @param node
      * @param name
-     * @returns {TNodeWithBlockStatement|null}
+     * @returns {ESTree.BlockStatement|null}
      */
-    private getCalleeBlockStatement (node: ESTree.Node, name: string): TNodeWithBlockStatement|null {
-        let calleeBlockStatement: TNodeWithBlockStatement|null = null;
+    private getCalleeBlockStatement (node: ESTree.Node, name: string): ESTree.BlockStatement|null {
+        let calleeBlockStatement: ESTree.BlockStatement|null = null;
 
         estraverse.traverse(node, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {

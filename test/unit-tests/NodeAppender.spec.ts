@@ -1,0 +1,244 @@
+import * as chai from 'chai';
+import * as ESTree from 'estree';
+
+import { TStatement } from '../../src/types/TStatement';
+
+import { IStackTraceData } from '../../src/interfaces/stack-trace-analyzer/IStackTraceData';
+
+import { readFileAsString } from '../helpers/readFileAsString';
+
+import { NodeAppender } from '../../src/NodeAppender';
+import { NodeMocks } from '../mocks/NodeMocks';
+import { NodeUtils } from '../../src/NodeUtils';
+import { StackTraceAnalyzer } from '../../src/stack-trace-analyzer/StackTraceAnalyzer';
+
+const assert: any = chai.assert;
+
+describe('NodeAppender', () => {
+    describe('appendNode (blockScopeNode: TNodeWithBlockStatement[], nodeBodyStatements: TStatement[]): void', () => {
+        let astTree: ESTree.Program,
+            expectedAstTree: ESTree.Program,
+            node: TStatement[];
+
+        beforeEach(() => {
+            node = NodeUtils.convertCodeToStructure(`
+                var test = 1;
+            `);
+
+            astTree = NodeMocks.getProgramNode(
+                NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/node-appender/append-node.js')
+                )
+            );
+
+            expectedAstTree = NodeMocks.getProgramNode(
+                NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/node-appender/append-node-expected.js')
+                )
+            );
+
+            NodeUtils.parentize(astTree);
+            NodeUtils.parentize(expectedAstTree);
+
+            NodeAppender.appendNode(astTree, node);
+        });
+
+        it('should append given node to a `BlockStatement` node body', () => {
+            assert.deepEqual(astTree, expectedAstTree);
+        });
+    });
+
+    describe('appendNodeToOptimalBlockScope (blockScopeStackTraceData: IStackTraceData[], blockScopeNode: TNodeWithBlockStatement, nodeBodyStatements: TStatement[], index: number = 0): void', () => {
+        let astTree: ESTree.Program,
+            expectedAstTree: ESTree.Program,
+            node: TStatement[],
+            stackTraceData: IStackTraceData[];
+
+        beforeEach(() => {
+            node = NodeUtils.convertCodeToStructure(`
+                var test = 1;
+            `);
+        });
+
+        it('should append node into first and deepest function call in calls trace - variant #1', () => {
+            astTree = NodeMocks.getProgramNode(
+                NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/node-appender/append-node-to-optimal-block-scope/variant-1.js')
+                )
+            );
+
+            expectedAstTree = NodeMocks.getProgramNode(
+                NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/node-appender/append-node-to-optimal-block-scope/variant-1-expected.js')
+                )
+            );
+
+            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+            NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node);
+
+            assert.deepEqual(astTree, expectedAstTree);
+        });
+
+        it('should append node into first and deepest function call in calls trace - variant #2', () => {
+            astTree = NodeMocks.getProgramNode(
+                NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/node-appender/append-node-to-optimal-block-scope/variant-2.js')
+                )
+            );
+
+            expectedAstTree = NodeMocks.getProgramNode(
+                NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/node-appender/append-node-to-optimal-block-scope/variant-2-expected.js')
+                )
+            );
+
+            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+            NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node);
+
+            assert.deepEqual(astTree, expectedAstTree);
+        });
+
+        describe('append by specific index', () => {
+            let astTree: ESTree.Program;
+
+            beforeEach(() => {
+                astTree = NodeMocks.getProgramNode(
+                    NodeUtils.convertCodeToStructure(
+                        readFileAsString('./test/fixtures/node-appender/append-node-to-optimal-block-scope/by-index.js')
+
+                    )
+                );
+            });
+
+            it('should append node into deepest function call by specified index in calls trace - variant #1', () => {
+                expectedAstTree = NodeMocks.getProgramNode(
+                    NodeUtils.convertCodeToStructure(
+                        readFileAsString('./test/fixtures/node-appender/append-node-to-optimal-block-scope/by-index-variant-1-expected.js')
+
+                    )
+                );
+
+                stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+                NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node, 2);
+
+                assert.deepEqual(astTree, expectedAstTree);
+            });
+
+            it('should append node into deepest function call by specified index in calls trace - variant #2', () => {
+                expectedAstTree = NodeMocks.getProgramNode(
+                    NodeUtils.convertCodeToStructure(
+                        readFileAsString('./test/fixtures/node-appender/append-node-to-optimal-block-scope/by-index-variant-2-expected.js')
+
+                    )
+                );
+
+                stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+                NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node, 1);
+
+                assert.deepEqual(astTree, expectedAstTree);
+            });
+
+            it('should append node into deepest function call by specified index in calls trace - variant #3', () => {
+                astTree = NodeMocks.getProgramNode(
+                    NodeUtils.convertCodeToStructure(
+                        readFileAsString('./test/fixtures/node-appender/append-node-to-optimal-block-scope/by-index-variant-3.js')
+                    )
+                );
+                expectedAstTree = NodeMocks.getProgramNode(
+                    NodeUtils.convertCodeToStructure(
+                        readFileAsString('./test/fixtures/node-appender/append-node-to-optimal-block-scope/by-index-variant-3-expected.js')
+                    )
+                );
+
+                stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+                NodeAppender.appendNodeToOptimalBlockScope(
+                    stackTraceData,
+                    astTree,
+                    node,
+                    NodeAppender.getRandomStackTraceIndex(stackTraceData.length)
+                );
+
+                assert.deepEqual(astTree, expectedAstTree);
+            });
+        });
+    });
+
+    describe('getRandomStackTraceIndex (stackTraceRootLength: number): number', () => {
+        it('should returns random index between 0 and stack trace data root length', () => {
+            let index: number;
+
+            for (let i: number = 0; i < 100; i++) {
+                index = NodeAppender.getRandomStackTraceIndex(100);
+
+                assert.isAtLeast(index, 0);
+                assert.isAtMost(index, 100);
+            }
+        });
+    });
+
+    describe('insertNodeAtIndex (blockScopeNode: TNodeWithBlockStatement[], nodeBodyStatements: TStatement[], index: number): void', () => {
+        let astTree: ESTree.Program,
+            expectedAstTree: ESTree.Program,
+            node: TStatement[];
+
+        beforeEach(() => {
+            node = NodeUtils.convertCodeToStructure(`
+                var test = 1;
+            `);
+
+            astTree = NodeMocks.getProgramNode(
+                NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/node-appender/insert-node-at-index.js')
+                )
+            );
+
+            expectedAstTree = NodeMocks.getProgramNode(
+                NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/node-appender/insert-node-at-index-expected.js')
+                )
+            );
+
+            NodeUtils.parentize(astTree);
+            NodeUtils.parentize(expectedAstTree);
+
+            NodeAppender.insertNodeAtIndex(astTree, node, 2);
+        });
+
+        it('should insert given node in `BlockStatement` node body at index', () => {
+            assert.deepEqual(astTree, expectedAstTree);
+        });
+    });
+
+    describe('prependNode (blockScopeNode: TNodeWithBlockStatement[], nodeBodyStatements: TStatement[]): void', () => {
+        let astTree: ESTree.Program,
+            expectedAstTree: ESTree.Program,
+            node: TStatement[];
+
+        beforeEach(() => {
+            node = NodeUtils.convertCodeToStructure(`
+                var test = 1;
+            `);
+
+            astTree = NodeMocks.getProgramNode(
+                NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/node-appender/prepend-node.js')
+                )
+            );
+
+            expectedAstTree = NodeMocks.getProgramNode(
+                NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/node-appender/prepend-node-expected.js')
+                )
+            );
+
+            NodeUtils.parentize(astTree);
+            NodeUtils.parentize(expectedAstTree);
+
+            NodeAppender.prependNode(astTree, node);
+        });
+
+        it('should prepend given node to a `BlockStatement` node body', () => {
+            assert.deepEqual(astTree, expectedAstTree);
+        });
+    });
+});

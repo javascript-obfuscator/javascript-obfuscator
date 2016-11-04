@@ -1,14 +1,20 @@
-import { IOptions } from '../interfaces/IOptions';
+import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
+
+import { AppendState } from '../enums/AppendState';
 
 import { AbstractNodesGroup } from './AbstractNodesGroup';
 import { UnicodeArray } from '../UnicodeArray';
 import { UnicodeArrayCallsWrapper } from '../custom-nodes/unicode-array-nodes/UnicodeArrayCallsWrapper';
-import { UnicodeArrayDecodeNode } from '../custom-nodes/unicode-array-nodes/UnicodeArrayDecodeNode';
 import { UnicodeArrayNode } from '../custom-nodes/unicode-array-nodes/UnicodeArrayNode';
 import { UnicodeArrayRotateFunctionNode } from '../custom-nodes/unicode-array-nodes/UnicodeArrayRotateFunctionNode';
 import { Utils } from '../Utils';
 
 export class UnicodeArrayNodesGroup extends AbstractNodesGroup {
+    /**
+     * @type {AppendState}
+     */
+    protected appendState: AppendState = AppendState.AfterObfuscation;
+
     /**
      * @type {string}
      */
@@ -25,11 +31,9 @@ export class UnicodeArrayNodesGroup extends AbstractNodesGroup {
     private unicodeArrayTranslatorName: string = Utils.getRandomVariableName(UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
 
     /**
-     * @param options
+     * @returns {Map<string, ICustomNode> | undefined}
      */
-    constructor (options: IOptions) {
-        super(options);
-
+    public getNodes (): Map <string, ICustomNode> | undefined {
         if (!this.options.unicodeArray) {
             return;
         }
@@ -43,21 +47,18 @@ export class UnicodeArrayNodesGroup extends AbstractNodesGroup {
             this.unicodeArrayRotateValue = 0;
         }
 
-        let unicodeArray: UnicodeArray = new UnicodeArray(),
-            unicodeArrayNode: UnicodeArrayNode = new UnicodeArrayNode(
-                unicodeArray,
-                this.unicodeArrayName,
-                this.unicodeArrayRotateValue,
-                this.options
-            );
-
-        this.nodes.set(
-            'unicodeArrayNode',
-            unicodeArrayNode
+        const unicodeArray: UnicodeArray = new UnicodeArray();
+        const unicodeArrayNode: ICustomNode = new UnicodeArrayNode(
+            unicodeArray,
+            this.unicodeArrayName,
+            this.unicodeArrayRotateValue,
+            this.options
         );
-
-        if (this.options.wrapUnicodeArrayCalls) {
-            this.nodes.set(
+        const customNodes: Map <string, ICustomNode> = new Map <string, ICustomNode> ([
+            [
+                'unicodeArrayNode', unicodeArrayNode,
+            ],
+            [
                 'unicodeArrayCallsWrapper',
                 new UnicodeArrayCallsWrapper(
                     this.unicodeArrayTranslatorName,
@@ -65,22 +66,11 @@ export class UnicodeArrayNodesGroup extends AbstractNodesGroup {
                     unicodeArray,
                     this.options
                 )
-            );
-        }
-
-        if (this.options.encodeUnicodeLiterals) {
-            this.nodes.set(
-                'unicodeArrayDecodeNode',
-                new UnicodeArrayDecodeNode (
-                    this.unicodeArrayName,
-                    unicodeArray,
-                    this.options
-                )
-            );
-        }
+            ]
+        ]);
 
         if (this.options.rotateUnicodeArray) {
-            this.nodes.set(
+            customNodes.set(
                 'unicodeArrayRotateFunctionNode',
                 new UnicodeArrayRotateFunctionNode(
                     this.unicodeArrayName,
@@ -90,5 +80,7 @@ export class UnicodeArrayNodesGroup extends AbstractNodesGroup {
                 )
             );
         }
+
+        return this.syncCustomNodesWithNodesGroup(customNodes);
     }
 }

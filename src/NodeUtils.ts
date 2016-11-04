@@ -4,6 +4,7 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TNodeWithBlockStatement } from './types/TNodeWithBlockStatement';
+import { TStatement } from './types/TStatement';
 
 import { NodeType } from './enums/NodeType';
 
@@ -37,33 +38,16 @@ export class NodeUtils {
     }
 
     /**
-     * @param blockScopeBody
-     * @param node
-     */
-    public static appendNode (blockScopeBody: ESTree.Node[], node: ESTree.Node): void {
-        if (!NodeUtils.validateNode(node)) {
-            return;
-        }
-
-        blockScopeBody.push(node);
-    }
-
-    /**
      * @param code
-     * @param getBlockStatementNodeByIndex
-     * @returns {ESTree.Program|ESTree.Node}
+     * @returns {TStatement[]}
      */
-    public static convertCodeToStructure (code: string, getBlockStatementNodeByIndex: boolean = true): ESTree.Program|ESTree.Node {
+    public static convertCodeToStructure (code: string): TStatement[] {
         let structure: ESTree.Program = esprima.parse(code);
 
         NodeUtils.addXVerbatimPropertyToLiterals(structure);
         NodeUtils.parentize(structure);
 
-        if (!getBlockStatementNodeByIndex) {
-            return structure;
-        }
-
-        return NodeUtils.getBlockStatementNodeByIndex(structure);
+        return <TStatement[]>structure.body;
     }
 
     /**
@@ -117,19 +101,6 @@ export class NodeUtils {
     }
 
     /**
-     * @param blockScopeBody
-     * @param node
-     * @param index
-     */
-    public static insertNodeAtIndex (blockScopeBody: ESTree.Node[], node: ESTree.Node, index: number): void {
-        if (!NodeUtils.validateNode(node)) {
-            return;
-        }
-
-        blockScopeBody.splice(index, 0, node);
-    }
-
-    /**
      * @param node
      */
     public static parentize (node: ESTree.Node): void {
@@ -143,7 +114,7 @@ export class NodeUtils {
                     if (node.type === NodeType.Program) {
                         value = node;
                     } else {
-                        value = Nodes.getProgramNode(<ESTree.Statement[]>[node]);
+                        value = Nodes.getProgramNode(<TStatement[]>[node]);
                         value['parentNode'] = value;
                     }
 
@@ -156,18 +127,6 @@ export class NodeUtils {
                 node['obfuscated'] = false;
             }
         });
-    }
-
-    /**
-     * @param blockScopeBody
-     * @param node
-     */
-    public static prependNode (blockScopeBody: ESTree.Node[], node: ESTree.Node): void {
-        if (!NodeUtils.validateNode(node)) {
-            return;
-        }
-
-        blockScopeBody.unshift(node);
     }
 
     /**
@@ -207,13 +166,5 @@ export class NodeUtils {
                 }
             }
         });
-    }
-
-    /**
-     * @param node
-     * @returns {boolean}
-     */
-    private static validateNode (node: ESTree.Node): boolean {
-        return !!node && node.hasOwnProperty('type');
     }
 }

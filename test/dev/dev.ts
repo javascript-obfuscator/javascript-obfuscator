@@ -4,10 +4,11 @@ if (!(<any>global)._babelPolyfill) {
     require('babel-polyfill');
 }
 
-const JavaScriptObfuscator: any = require("../../index");
+(function () {
+    const JavaScriptObfuscator: any = require("../../index");
 
-let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-    `
+    let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+        `
     (function(){
         var result = 1,
             term1 = 0,
@@ -67,11 +68,14 @@ let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         }
     })();
     `,
-    {
-        disableConsoleOutput: false,
-        encodeUnicodeLiterals: true
-    }
-).getObfuscatedCode();
+        {
+            disableConsoleOutput: false,
+            unicodeArrayEncoding: 'rc4',
+            domainLock: ['google.ru'],
+            selfDefending: true
+        }
+    ).getObfuscatedCode();
 
-console.log(obfuscatedCode);
-console.log(eval(obfuscatedCode));
+    console.log(obfuscatedCode);
+    console.log(eval(obfuscatedCode));
+})();

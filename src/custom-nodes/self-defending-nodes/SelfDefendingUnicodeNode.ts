@@ -1,7 +1,7 @@
-import * as ESTree from 'estree';
-
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TStatement } from '../../types/TStatement';
 
+import { IOptions } from '../../interfaces/IOptions';
 import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { AppendState } from '../../enums/AppendState';
@@ -11,9 +11,10 @@ import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset
 import { SelfDefendingTemplate } from '../../templates/custom-nodes/self-defending-nodes/self-defending-unicode-node/SelfDefendingTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
+import { NodeAppender } from '../../NodeAppender';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeUtils } from '../../NodeUtils';
-import { CustomNodeAppender } from '../CustomNodeAppender';
+import { Utils } from '../../Utils';
 
 export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     /**
@@ -22,25 +23,61 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     protected appendState: AppendState = AppendState.AfterObfuscation;
 
     /**
-     * @param blockScopeNode
-     * @param stackTraceData
+     * @type {string}
      */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
-        CustomNodeAppender.appendNode(
-            stackTraceData,
-            blockScopeNode.body,
+    protected callsControllerFunctionName: string;
+
+    /**
+     * @type {number}
+     */
+    protected randomStackTraceIndex: number;
+
+    /**
+     * @type {IStackTraceData[]}
+     */
+    protected stackTraceData: IStackTraceData[];
+
+    /**
+     * @param stackTraceData
+     * @param callsControllerFunctionName
+     * @param randomStackTraceIndex
+     * @param options
+     */
+    constructor (
+        stackTraceData: IStackTraceData[],
+        callsControllerFunctionName: string,
+        randomStackTraceIndex: number,
+        options: IOptions
+    ) {
+        super(options);
+
+        this.stackTraceData = stackTraceData;
+        this.callsControllerFunctionName = callsControllerFunctionName;
+        this.randomStackTraceIndex = randomStackTraceIndex;
+    }
+
+    /**
+     * @param blockScopeNode
+     */
+    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
+        NodeAppender.appendNodeToOptimalBlockScope(
+            this.stackTraceData,
+            blockScopeNode,
             this.getNode(),
-            CustomNodeAppender.getStackTraceIndexByThreshold(stackTraceData.length)
+            this.randomStackTraceIndex
         );
     }
 
     /**
-     * @returns {ESTree.Node}
+     * @returns {TStatement[]}
      */
-    protected getNodeStructure (): ESTree.Node {
+    protected getNodeStructure (): TStatement[] {
         return NodeUtils.convertCodeToStructure(
             JavaScriptObfuscator.obfuscate(
-                SelfDefendingTemplate(),
+                SelfDefendingTemplate().formatUnicorn({
+                    selfDefendingFunctionName: Utils.getRandomVariableName(),
+                    singleNodeCallControllerFunctionName: this.callsControllerFunctionName
+                }),
                 NO_CUSTOM_NODES_PRESET
             ).getObfuscatedCode()
         );

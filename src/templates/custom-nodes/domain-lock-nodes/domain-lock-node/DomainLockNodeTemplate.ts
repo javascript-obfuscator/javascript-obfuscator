@@ -1,34 +1,54 @@
-import { Utils } from '../../../../Utils';
-
 /**
  * @returns {string}
  */
 export function DomainLockNodeTemplate (): string {
     return `
-        (function () {
+        var {domainLockFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {
+            var getGlobal = function () {
+                if (typeof self !== 'undefined') { return self; }
+                if (typeof window !== 'undefined') { return window; }
+                if (typeof global !== 'undefined') { return global; }
+            };
+            
+            var func = function () { 
+                return {
+                    key: 'item',
+                    value: 'attribute',
+                    getAttribute: function () {
+                        getGlobal()['eval']('while(true){}')();
+                    }()
+                };
+            };
+                        
             var regExp = new RegExp("[{diff}]", "g");
             var domains = "{domains}".replace(regExp, "").split(";");
             var eval = []["forEach"]["constructor"];
-            var window = eval("return this")();
-            
-            for (var d in window) {
+            var windowObject = eval("return this")();
+            var document;
+            var domain;
+                        
+            for (var d in windowObject) {
                 if (d.length == 8 && d.charCodeAt(7) == 116 && d.charCodeAt(5) == 101 && d.charCodeAt(3) == 117 && d.charCodeAt(0) == 100) {
+                    document = d;
+                
                     break;
                 }
             }
 
-            for (var d1 in window[d]) {
+            for (var d1 in windowObject[document]) {
                 if (d1.length == 6 && d1.charCodeAt(5) == 110 && d1.charCodeAt(0) == 100) {
+                    domain = d1;
+                    
                     break;
                 }
             }
-
-            var currentDomain = window[d][d1];
             
-            if (!currentDomain) {
+            if ((!document && !domain) || (!windowObject[document] && !windowObject[document][domain])) {
                 return;
             }
             
+            var currentDomain = windowObject[document][domain];
+
             var ok = false;
                         
             for (var i = 0; i < domains.length; i++) {
@@ -45,10 +65,16 @@ export function DomainLockNodeTemplate (): string {
                     break;
                 }
             }
-                
+               
             if (!ok) {
-                eval('${Utils.stringToJSFuck('while')}(true){}')();
+                data;
+            } else {
+                return;
             }
-        })();
+            
+            func();
+        });
+
+        {domainLockFunctionName}();
     `;
 }

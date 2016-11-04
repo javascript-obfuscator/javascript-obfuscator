@@ -1,4 +1,5 @@
 import { TSourceMapMode } from '../types/TSourceMapMode';
+import { TUnicodeArrayEncoding } from '../types/TUnicodeArrayEncoding';
 
 export interface IOptions {
     readonly compact: boolean;
@@ -6,7 +7,6 @@ export interface IOptions {
     readonly debugProtectionInterval: boolean;
     readonly disableConsoleOutput: boolean;
     readonly domainLock: string[];
-    readonly encodeUnicodeLiterals: boolean;
     readonly reservedNames: string[];
     readonly rotateUnicodeArray: boolean;
     readonly selfDefending: boolean;
@@ -15,6 +15,6 @@ export interface IOptions {
     readonly sourceMapFileName: string;
     readonly sourceMapMode: TSourceMapMode;
     readonly unicodeArray: boolean;
+    readonly unicodeArrayEncoding: TUnicodeArrayEncoding;
     readonly unicodeArrayThreshold: number;
-    readonly wrapUnicodeArrayCalls: boolean;
 }

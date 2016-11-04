@@ -49,6 +49,16 @@ import { NodeUtils } from '../NodeUtils';
  */
 export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     /**
+     * @type {number}
+     */
+    private static limitThresholdActivationLength: number = 25;
+
+    /**
+     * @type {number}
+     */
+    private static limitThreshold: number = 0.002;
+
+    /**
      * @type {ESTree.Node[]}
      */
     private blockScopeBody: ESTree.Node[];
@@ -70,6 +80,29 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     }
 
     /**
+     * @param blockScopeBodyLength
+     * @returns {number}
+     */
+    public static getLimitIndex (blockScopeBodyLength: number): number {
+        const lastIndex: number = blockScopeBodyLength - 1;
+        const limitThresholdActivationIndex: number = StackTraceAnalyzer.limitThresholdActivationLength - 1;
+
+        let limitIndex: number = lastIndex;
+
+        if (lastIndex > limitThresholdActivationIndex) {
+            limitIndex = Math.round(
+                limitThresholdActivationIndex + (lastIndex * StackTraceAnalyzer.limitThreshold)
+            );
+
+            if (limitIndex > lastIndex) {
+                limitIndex = lastIndex;
+            }
+        }
+
+        return limitIndex;
+    }
+
+    /**
      * @returns {IStackTraceData[]}
      */
     public analyze (): IStackTraceData[] {
@@ -81,9 +114,20 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
      * @returns {IStackTraceData[]}
      */
     private analyzeRecursive (blockScopeBody: ESTree.Node[]): IStackTraceData[] {
+        const limitIndex: number = StackTraceAnalyzer.getLimitIndex(blockScopeBody.length);
         const stackTraceData: IStackTraceData[] = [];
 
-        for (const rootNode of blockScopeBody) {
+        for (
+            let index: number = 0, blockScopeBodyLength: number = blockScopeBody.length;
+            index < blockScopeBodyLength;
+            index++
+        ) {
+            let rootNode: ESTree.Node = blockScopeBody[index];
+
+            if (index > limitIndex) {
+                break;
+            }
+
             estraverse.traverse(rootNode, {
                 enter: (node: ESTree.Node): any => {
                     if (!Nodes.isCallExpressionNode(node) || rootNode.parentNode !== NodeUtils.getBlockScopeOfNode(node)) {

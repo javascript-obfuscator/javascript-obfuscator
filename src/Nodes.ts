@@ -1,6 +1,7 @@
 import * as ESTree from 'estree';
 
 import { TNodeWithBlockStatement } from './types/TNodeWithBlockStatement';
+import { TStatement } from './types/TStatement';
 
 import { NodeType } from './enums/NodeType';
 
@@ -9,7 +10,7 @@ export class Nodes {
      * @param bodyNode
      * @returns ESTree.Program
      */
-    public static getProgramNode (bodyNode: ESTree.Statement[]): ESTree.Program {
+    public static getProgramNode (bodyNode: TStatement[]): ESTree.Program {
         return {
             'type': NodeType.Program,
             'body': bodyNode,

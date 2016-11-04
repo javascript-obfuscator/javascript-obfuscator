@@ -26,23 +26,21 @@ describe('OptionsNormalizer', () => {
                 rotateUnicodeArray: true,
                 sourceMapBaseUrl: 'http://localhost:9000',
                 unicodeArray: false,
-                unicodeArrayThreshold: 0.5,
-                wrapUnicodeArrayCalls: true
+                unicodeArrayEncoding: 'rc4',
+                unicodeArrayThreshold: 0.5
             });
             optionsPreset2 = Object.assign({}, DEFAULT_PRESET, {
                 rotateUnicodeArray: true,
                 sourceMapBaseUrl: 'http://localhost:9000',
                 sourceMapFileName: '//outputSourceMapName',
                 unicodeArray: true,
-                unicodeArrayThreshold: 0,
-                wrapUnicodeArrayCalls: true
+                unicodeArrayThreshold: 0
             });
             optionsPreset3 = Object.assign({}, DEFAULT_PRESET, {
                 domainLock: ['//localhost:9000', 'https://google.ru/abc?cde=fgh'],
                 sourceMapFileName: '/outputSourceMapName.map',
                 unicodeArray: true,
-                encodeUnicodeLiterals: true,
-                wrapUnicodeArrayCalls: false
+                unicodeArrayEncoding: true
             });
 
             expectedOptionsPreset1 = Object.assign({}, DEFAULT_PRESET, {
@@ -50,23 +48,21 @@ describe('OptionsNormalizer', () => {
                 rotateUnicodeArray: false,
                 sourceMapBaseUrl: '',
                 unicodeArray: false,
-                unicodeArrayThreshold: 0,
-                wrapUnicodeArrayCalls: false
+                unicodeArrayEncoding: false,
+                unicodeArrayThreshold: 0
             });
             expectedOptionsPreset2 = Object.assign({}, DEFAULT_PRESET, {
                 rotateUnicodeArray: false,
                 sourceMapBaseUrl: 'http://localhost:9000/',
                 sourceMapFileName: 'outputSourceMapName.js.map',
                 unicodeArray: false,
-                unicodeArrayThreshold: 0,
-                wrapUnicodeArrayCalls: false
+                unicodeArrayThreshold: 0
             });
             expectedOptionsPreset3 = Object.assign({}, DEFAULT_PRESET, {
                 domainLock: ['localhost', 'google.ru'],
                 sourceMapFileName: 'outputSourceMapName.js.map',
                 unicodeArray: true,
-                encodeUnicodeLiterals: true,
-                wrapUnicodeArrayCalls: true
+                unicodeArrayEncoding: 'base64'
             });
 
             options1 = new Options(optionsPreset1);

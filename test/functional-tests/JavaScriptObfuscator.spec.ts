@@ -102,29 +102,28 @@ describe('JavaScriptObfuscator', () => {
         });
 
         it('should obfuscate simple code with literal variable value', () => {
-            let pattern: RegExp = /^var _0x(\w){4} *= *\['(\\[x|u]\d+)+'\]; *var *test *= *_0x(\w){4}\[0x0\];$/;
-
-            assert.match(
-                JavaScriptObfuscator.obfuscate(
+            let pattern1: RegExp = /^var _0x(\w){4} *= *\['(\\[x|u]\d+)+'\];/,
+                pattern2: RegExp = /var *test *= *_0x(\w){4}\('0x0'\);$/,
+                obfuscatedCode1: string = JavaScriptObfuscator.obfuscate(
                     `var test = 'abc';`,
                     Object.assign({}, NO_CUSTOM_NODES_PRESET, {
                         unicodeArray: true,
                         unicodeArrayThreshold: 1
                     })
                 ).getObfuscatedCode(),
-                pattern
-            );
-
-            assert.match(
-                JavaScriptObfuscator.obfuscate(
+                obfuscatedCode2: string = JavaScriptObfuscator.obfuscate(
                     `var test = 'абц';`,
                     Object.assign({}, NO_CUSTOM_NODES_PRESET, {
                         unicodeArray: true,
                         unicodeArrayThreshold: 1
                     })
-                ).getObfuscatedCode(),
-                pattern
-            );
+                ).getObfuscatedCode();
+
+            assert.match(obfuscatedCode1, pattern1);
+            assert.match(obfuscatedCode1, pattern2);
+
+            assert.match(obfuscatedCode2, pattern1);
+            assert.match(obfuscatedCode2, pattern2);
         });
     });
 });

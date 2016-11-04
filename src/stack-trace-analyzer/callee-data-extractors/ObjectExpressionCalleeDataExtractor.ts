@@ -1,8 +1,6 @@
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-
 import { ICalleeData } from '../../interfaces/stack-trace-analyzer/ICalleeData';
 import { ICalleeDataExtractor } from '../../interfaces/stack-trace-analyzer/ICalleeDataExtractor';
 
@@ -38,7 +36,7 @@ export class ObjectExpressionCalleeDataExtractor implements ICalleeDataExtractor
      * @returns {ICalleeData|null}
      */
     public extract (): ICalleeData|null {
-        let calleeBlockStatement: TNodeWithBlockStatement|null = null,
+        let calleeBlockStatement: ESTree.BlockStatement|null = null,
             functionExpressionName: string|null = null;
 
         if (Nodes.isMemberExpressionNode(this.callee)) {
@@ -98,12 +96,12 @@ export class ObjectExpressionCalleeDataExtractor implements ICalleeDataExtractor
     /**
      * @param node
      * @param objectMembersCallsChain
-     * @returns {TNodeWithBlockStatement|null}
+     * @returns {ESTree.BlockStatement|null}
      */
-    private getCalleeBlockStatement (node: ESTree.Node, objectMembersCallsChain: string[]): TNodeWithBlockStatement|null {
+    private getCalleeBlockStatement (node: ESTree.Node, objectMembersCallsChain: string[]): ESTree.BlockStatement|null {
         const objectName: string = <string>objectMembersCallsChain.shift();
 
-        let calleeBlockStatement: TNodeWithBlockStatement|null = null;
+        let calleeBlockStatement: ESTree.BlockStatement|null = null;
 
         estraverse.traverse(node, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
@@ -124,10 +122,15 @@ export class ObjectExpressionCalleeDataExtractor implements ICalleeDataExtractor
         return calleeBlockStatement;
     }
 
+    /**
+     * @param objectExpressionProperties
+     * @param objectMembersCallsChain
+     * @returns {ESTree.BlockStatement|null}
+     */
     private findCalleeBlockStatement (
         objectExpressionProperties: ESTree.Property[],
         objectMembersCallsChain: string[]
-    ): TNodeWithBlockStatement|null {
+    ): ESTree.BlockStatement|null {
         const nextItemInCallsChain: string|undefined = objectMembersCallsChain.shift();
 
         if (!nextItemInCallsChain) {

@@ -44,12 +44,31 @@ export class Utils {
 
     /**
      * @param string
-     * @param encode
      */
-    public static btoa (string: string, encode: boolean = true): string {
-        return new Buffer(
-            encode ? encodeURI(string) : string
-        ).toString('base64');
+    public static btoa (string: string): string {
+        const chars: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+
+        let output: string = '';
+
+        string = encodeURIComponent(string).replace(/%([0-9A-F]{2})/g, (match, p1) => {
+            return String.fromCharCode(parseInt('0x' + p1));
+        });
+
+        for (
+            let block: number|undefined, charCode: number, idx: number = 0, map: string = chars;
+            string.charAt(idx | 0) || (map = '=', idx % 1);
+            output += map.charAt(63 & block >> 8 - idx % 1 * 8)
+        ) {
+            charCode = string.charCodeAt(idx += 3/4);
+
+            if (charCode > 0xFF) {
+                throw new Error("'btoa' failed: The string to be encoded contains characters outside of the Latin1 range.");
+            }
+
+            block = block << 8 | charCode;
+        }
+
+        return output;
     }
 
     /**
@@ -152,6 +171,46 @@ export class Utils {
      */
     public static isInteger (number: number): boolean {
         return number % 1 === 0;
+    }
+
+    /**
+     * RC4 symmetric cipher encryption/decryption
+     * https://gist.github.com/farhadi/2185197
+     *
+     * @param key
+     * @param string
+     * @returns {string}
+     */
+    public static rc4 (string: string, key: string) {
+        let s: number[] = [],
+            j: number = 0,
+            x: number,
+            result: string = '';
+
+        for (var i = 0; i < 256; i++) {
+            s[i] = i;
+        }
+
+        for (i = 0; i < 256; i++) {
+            j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;
+            x = s[i];
+            s[i] = s[j];
+            s[j] = x;
+        }
+
+        i = 0;
+        j = 0;
+
+        for (let y = 0; y < string.length; y++) {
+            i = (i + 1) % 256;
+            j = (j + s[i]) % 256;
+            x = s[i];
+            s[i] = s[j];
+            s[j] = x;
+            result += String.fromCharCode(string.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);
+        }
+
+        return result;
     }
 
     /**

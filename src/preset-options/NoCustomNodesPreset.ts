@@ -8,7 +8,6 @@ export const NO_CUSTOM_NODES_PRESET: IObfuscatorOptions = Object.freeze({
     debugProtectionInterval: false,
     disableConsoleOutput: false,
     domainLock: [],
-    encodeUnicodeLiterals: false,
     reservedNames: [],
     rotateUnicodeArray: false,
     selfDefending: false,
@@ -17,6 +16,6 @@ export const NO_CUSTOM_NODES_PRESET: IObfuscatorOptions = Object.freeze({
     sourceMapFileName: '',
     sourceMapMode: SourceMapMode.Separate,
     unicodeArray: false,
-    unicodeArrayThreshold: 0,
-    wrapUnicodeArrayCalls: false
+    unicodeArrayEncoding: false,
+    unicodeArrayThreshold: 0
 });

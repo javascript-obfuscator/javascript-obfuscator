@@ -25,37 +25,7 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('appendNode (blockScopeBody: ESTree.Node[], node: ESTree.Node): void', () => {
-        let blockStatementNode: ESTree.BlockStatement,
-            expectedBlockStatementNode: ESTree.BlockStatement,
-            expressionStatementNode: ESTree.ExpressionStatement;
-
-        beforeEach(() => {
-            expressionStatementNode = NodeMocks.getExpressionStatementNode();
-
-            blockStatementNode = NodeMocks.getBlockStatementNode();
-
-            expectedBlockStatementNode = NodeMocks.getBlockStatementNode([
-                expressionStatementNode
-            ]);
-
-            NodeUtils.appendNode(blockStatementNode.body, expressionStatementNode);
-        });
-
-        it('should appendNode given node to a `BlockStatement` node body', () => {
-            assert.deepEqual(blockStatementNode, expectedBlockStatementNode);
-        });
-
-        it('should does not change `BlockStatement` node body if given node is not a valid Node', () => {
-            assert.doesNotChange(
-                () => NodeUtils.appendNode(blockStatementNode.body, <ESTree.Node>{}),
-                blockStatementNode,
-                'body'
-            );
-        });
-    });
-
-    describe('convertCodeToStructure (code: string): ESTree.Node', () => {
+    describe('convertCodeToStructure (code: string): ESTree.Node[]', () => {
         let code: string,
             identifierNode: ESTree.Identifier,
             literalNode: ESTree.Literal,
@@ -89,8 +59,8 @@ describe('NodeUtils', () => {
             literalNode['parentNode'] = variableDeclaratorNode;
         });
 
-        it('should convert code to `ESTree.Node` structure', () => {
-            assert.deepEqual(NodeUtils.convertCodeToStructure(code), variableDeclarationNode);
+        it('should convert code to `ESTree.Node[]` structure array', () => {
+            assert.deepEqual(NodeUtils.convertCodeToStructure(code), [variableDeclarationNode]);
         });
     });
 
@@ -189,41 +159,6 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('insertNodeAtIndex (blockScopeBody: ESTree.Node[], node: ESTree.Node, index: number): void', () => {
-        let blockStatementNode: ESTree.BlockStatement,
-            expectedBlockStatementNode: ESTree.BlockStatement,
-            expressionStatementNode1: ESTree.ExpressionStatement,
-            expressionStatementNode2: ESTree.ExpressionStatement;
-
-        beforeEach(() => {
-            expressionStatementNode1 = NodeMocks.getExpressionStatementNode();
-            expressionStatementNode2 = NodeMocks.getExpressionStatementNode();
-
-            blockStatementNode = NodeMocks.getBlockStatementNode([
-                expressionStatementNode1
-            ]);
-
-            expectedBlockStatementNode = NodeMocks.getBlockStatementNode([
-                expressionStatementNode1,
-                expressionStatementNode1
-            ]);
-
-            NodeUtils.insertNodeAtIndex(blockStatementNode.body, expressionStatementNode2, 1);
-        });
-
-        it('should insert given node in `BlockStatement` node body at index', () => {
-            assert.deepEqual(blockStatementNode, expectedBlockStatementNode);
-        });
-
-        it('should does not change `BlockStatement` node body if given node is not a valid Node', () => {
-            assert.doesNotChange(
-                () => NodeUtils.insertNodeAtIndex(blockStatementNode.body, <ESTree.Node>{}, 1),
-                blockStatementNode,
-                'body'
-            );
-        });
-    });
-
     describe('parentize (node: ESTree.Node): void', () => {
         let ifStatementNode: ESTree.IfStatement,
             ifStatementBlockStatementNode: ESTree.BlockStatement,
@@ -269,41 +204,6 @@ describe('NodeUtils', () => {
             assert.deepEqual(ifStatementBlockStatementNode['parentNode'], ifStatementNode);
             assert.deepEqual(expressionStatementNode1['parentNode'], ifStatementBlockStatementNode);
             assert.deepEqual(expressionStatementNode2['parentNode'], ifStatementBlockStatementNode);
-        });
-    });
-
-    describe('prependNode (blockScopeBody: ESTree.Node[], node: ESTree.Node): void', () => {
-        let blockStatementNode: ESTree.BlockStatement,
-            expectedBlockStatementNode: ESTree.BlockStatement,
-            expressionStatementNode1: ESTree.ExpressionStatement,
-            expressionStatementNode2: ESTree.ExpressionStatement;
-
-        beforeEach(() => {
-            expressionStatementNode1 = NodeMocks.getExpressionStatementNode();
-            expressionStatementNode2 = NodeMocks.getExpressionStatementNode();
-
-            blockStatementNode = NodeMocks.getBlockStatementNode([
-                expressionStatementNode1
-            ]);
-
-            expectedBlockStatementNode = NodeMocks.getBlockStatementNode([
-                expressionStatementNode2,
-                expressionStatementNode1
-            ]);
-
-            NodeUtils.prependNode(blockStatementNode.body, expressionStatementNode2);
-        });
-
-        it('should prepend given node to a `BlockStatement` node body', () => {
-            assert.deepEqual(blockStatementNode, expectedBlockStatementNode);
-        });
-
-        it('should does not change `BlockStatement` node body if given node is not a valid Node', () => {
-            assert.doesNotChange(
-                () => NodeUtils.prependNode(blockStatementNode.body, <ESTree.Node>{}),
-                blockStatementNode,
-                'body'
-            );
         });
     });
 });

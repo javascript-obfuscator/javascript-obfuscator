@@ -10,19 +10,10 @@ export class OptionsNormalizer {
      * @type {IObfuscatorOptions}
      */
     private static DISABLED_UNICODE_ARRAY_OPTIONS: IObfuscatorOptions = {
-        encodeUnicodeLiterals: false,
         rotateUnicodeArray: false,
         unicodeArray: false,
-        unicodeArrayThreshold: 0,
-        wrapUnicodeArrayCalls: false
-    };
-
-    /**
-     * @type {IObfuscatorOptions}
-     */
-    private static ENCODE_UNICODE_LITERALS_OPTIONS: IObfuscatorOptions = {
-        encodeUnicodeLiterals: true,
-        wrapUnicodeArrayCalls: true
+        unicodeArrayEncoding: false,
+        unicodeArrayThreshold: 0
     };
 
     /**
@@ -34,16 +25,23 @@ export class OptionsNormalizer {
     };
 
     /**
+     * @type {IObfuscatorOptions}
+     */
+    private static UNICODE_ARRAY_ENCODING_OPTIONS: IObfuscatorOptions = {
+        unicodeArrayEncoding: 'base64'
+    };
+
+    /**
      * @type {TOptionsNormalizerRule[]}
      */
     private static normalizerRules: TOptionsNormalizerRule[] = [
         OptionsNormalizer.domainLockRule,
-        OptionsNormalizer.unicodeArrayRule,
-        OptionsNormalizer.unicodeArrayThresholdRule,
-        OptionsNormalizer.encodeUnicodeLiteralsRule,
+        OptionsNormalizer.selfDefendingRule,
         OptionsNormalizer.sourceMapBaseUrl,
         OptionsNormalizer.sourceMapFileName,
-        OptionsNormalizer.selfDefendingRule
+        OptionsNormalizer.unicodeArrayRule,
+        OptionsNormalizer.unicodeArrayEncodingRule,
+        OptionsNormalizer.unicodeArrayThresholdRule,
     ];
 
     /**
@@ -75,18 +73,6 @@ export class OptionsNormalizer {
             Object.assign(options, {
                 domainLock: normalizedDomains
             });
-        }
-
-        return options;
-    }
-
-    /**
-     * @param options
-     * @returns {IOptions}
-     */
-    private static encodeUnicodeLiteralsRule (options: IOptions): IOptions {
-        if (options.unicodeArray && options.encodeUnicodeLiterals) {
-            Object.assign(options, OptionsNormalizer.ENCODE_UNICODE_LITERALS_OPTIONS);
         }
 
         return options;
@@ -155,6 +141,18 @@ export class OptionsNormalizer {
     private static unicodeArrayRule (options: IOptions): IOptions {
         if (!options.unicodeArray) {
             Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
+        }
+
+        return options;
+    }
+
+    /**
+     * @param options
+     * @returns {IOptions}
+     */
+    private static unicodeArrayEncodingRule (options: IOptions): IOptions {
+        if (options.unicodeArrayEncoding === true) {
+            Object.assign(options, OptionsNormalizer.UNICODE_ARRAY_ENCODING_OPTIONS);
         }
 
         return options;

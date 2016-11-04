@@ -81,6 +81,6 @@ export class UnicodeArrayNodesGroup extends AbstractNodesGroup {
             );
         }
 
-       return this.syncCustomNodesWithNodesGroup(customNodes);
+        return this.syncCustomNodesWithNodesGroup(customNodes);
     }
 }

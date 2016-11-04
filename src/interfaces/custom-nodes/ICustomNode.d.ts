@@ -19,4 +19,9 @@ export interface ICustomNode {
      * @returns ESTree.Node[]
      */
     getNode (): TStatement[];
+
+    /**
+     * @param appendState
+     */
+    setAppendState (appendState: AppendState): void;
 }

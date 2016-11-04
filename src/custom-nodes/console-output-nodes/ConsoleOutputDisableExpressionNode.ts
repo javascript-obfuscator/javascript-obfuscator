@@ -86,7 +86,8 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
     protected getNodeStructure (): TStatement[] {
         return NodeUtils.convertCodeToStructure(
             ConsoleOutputDisableExpressionTemplate().formatUnicorn({
-                consoleLogDisableFunctionName: Utils.getRandomVariableName()
+                consoleLogDisableFunctionName: Utils.getRandomVariableName(),
+                singleNodeCallControllerFunctionName: this.callsControllerFunctionName
             })
         );
     }

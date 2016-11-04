@@ -1,3 +1,4 @@
+import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../interfaces/IOptions';
 import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
@@ -44,13 +45,13 @@ export class UnicodeArrayNodesGroup extends AbstractNodesGroup {
             this.unicodeArrayRotateValue = 0;
         }
 
-        let unicodeArray: UnicodeArray = new UnicodeArray(),
-            unicodeArrayNode: UnicodeArrayNode = new UnicodeArrayNode(
-                unicodeArray,
-                this.unicodeArrayName,
-                this.unicodeArrayRotateValue,
-                this.options
-            );
+        const unicodeArray: UnicodeArray = new UnicodeArray();
+        const unicodeArrayNode: ICustomNode = new UnicodeArrayNode(
+            unicodeArray,
+            this.unicodeArrayName,
+            this.unicodeArrayRotateValue,
+            this.options
+        );
 
         this.nodes.set('unicodeArrayNode', unicodeArrayNode);
         this.nodes.set(

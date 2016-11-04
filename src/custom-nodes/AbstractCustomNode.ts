@@ -44,6 +44,13 @@ export abstract class AbstractCustomNode implements ICustomNode {
     }
 
     /**
+     * @param appendState
+     */
+    public setAppendState (appendState: AppendState): void {
+        this.appendState = appendState;
+    }
+
+    /**
      * @returns {TStatement[]}
      */
     protected abstract getNodeStructure (): TStatement[];

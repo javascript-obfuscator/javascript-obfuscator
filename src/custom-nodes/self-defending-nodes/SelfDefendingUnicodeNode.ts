@@ -75,7 +75,8 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
         return NodeUtils.convertCodeToStructure(
             JavaScriptObfuscator.obfuscate(
                 SelfDefendingTemplate().formatUnicorn({
-                    selfDefendingFunctionName: Utils.getRandomVariableName()
+                    selfDefendingFunctionName: Utils.getRandomVariableName(),
+                    singleNodeCallControllerFunctionName: this.callsControllerFunctionName
                 }),
                 NO_CUSTOM_NODES_PRESET
             ).getObfuscatedCode()

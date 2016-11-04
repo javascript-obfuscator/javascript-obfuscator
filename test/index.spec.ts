@@ -7,13 +7,13 @@ BabelPolyfill.append();
 /**
  * Unit tests
  */
+import './unit-tests/NodeAppender.spec';
 import './unit-tests/NodeUtils.spec';
 import './unit-tests/ObfuscationResult.spec';
 import './unit-tests/OptionsNormalizer.spec';
 import './unit-tests/SourceMapCorrector.spec';
 import './unit-tests/Utils.spec';
 import './unit-tests/cli/CLIUtils.spec';
-import './unit-tests/custom-nodes/NodeAppender.spec';
 import './unit-tests/node-obfuscators/CatchClauseObfuscator.spec';
 import './unit-tests/node-obfuscators/FunctionDeclarationObfuscator.spec';
 import './unit-tests/node-obfuscators/FunctionObfuscator.spec';

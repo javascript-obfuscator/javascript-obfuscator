@@ -1,5 +1,8 @@
+import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../interfaces/IOptions';
 import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
+
+import { AppendState } from '../enums/AppendState';
 
 import { AbstractNodesGroup } from './AbstractNodesGroup';
 import { NodeAppender } from '../NodeAppender';
@@ -18,26 +21,31 @@ export class SelfDefendingNodesGroup extends AbstractNodesGroup {
             return;
         }
 
-        const callsControllerFunctionName: string = 'domainLockCallsControllerFunction';
+        const callsControllerFunctionName: string = 'selfDefendingNodeCallsControllerFunction';
         const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
+        const selfDefendingUnicodeNode: ICustomNode = new SelfDefendingUnicodeNode(
+            this.stackTraceData,
+            callsControllerFunctionName,
+            randomStackTraceIndex,
+            this.options
+        );
+        const nodeCallsControllerFunctionNode: ICustomNode = new NodeCallsControllerFunctionNode(
+            this.stackTraceData,
+            callsControllerFunctionName,
+            randomStackTraceIndex,
+            this.options
+        );
+
+        selfDefendingUnicodeNode.setAppendState(AppendState.AfterObfuscation);
+        nodeCallsControllerFunctionNode.setAppendState(AppendState.AfterObfuscation);
 
         this.nodes.set(
             'selfDefendingUnicodeNode',
-            new SelfDefendingUnicodeNode(
-                this.stackTraceData,
-                callsControllerFunctionName,
-                randomStackTraceIndex,
-                this.options
-            )
+            selfDefendingUnicodeNode
         );
         this.nodes.set(
             'SelfDefendingNodeCallsControllerFunctionNode',
-            new NodeCallsControllerFunctionNode(
-                this.stackTraceData,
-                callsControllerFunctionName,
-                randomStackTraceIndex,
-                this.options
-            )
+            nodeCallsControllerFunctionNode
         );
     }
 }

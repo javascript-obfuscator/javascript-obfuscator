@@ -712,6 +712,11 @@ var AbstractCustomNode = function () {
         value: function getNode() {
             return this.getNodeStructure();
         }
+    }, {
+        key: "setAppendState",
+        value: function setAppendState(appendState) {
+            this.appendState = appendState;
+        }
     }]);
 
     return AbstractCustomNode;
@@ -967,7 +972,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 __webpack_require__(8);
 var AppendState_1 = __webpack_require__(5);
 var SingleNodeCallControllerTemplate_1 = __webpack_require__(65);
+var NoCustomNodesPreset_1 = __webpack_require__(19);
 var AbstractCustomNode_1 = __webpack_require__(6);
+var JavaScriptObfuscator_1 = __webpack_require__(10);
 var NodeAppender_1 = __webpack_require__(3);
 var NodeUtils_1 = __webpack_require__(1);
 
@@ -1000,6 +1007,11 @@ var NodeCallsControllerFunctionNode = function (_AbstractCustomNode_) {
     }, {
         key: 'getNodeStructure',
         value: function getNodeStructure() {
+            if (this.appendState === AppendState_1.AppendState.AfterObfuscation) {
+                return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(SingleNodeCallControllerTemplate_1.SingleNodeCallControllerTemplate().formatUnicorn({
+                    singleNodeCallControllerFunctionName: this.callsControllerFunctionName
+                }), NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET).getObfuscatedCode());
+            }
             return NodeUtils_1.NodeUtils.convertCodeToStructure(SingleNodeCallControllerTemplate_1.SingleNodeCallControllerTemplate().formatUnicorn({
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
             }));
@@ -1914,7 +1926,8 @@ var ConsoleOutputDisableExpressionNode = function (_AbstractCustomNode_) {
         key: 'getNodeStructure',
         value: function getNodeStructure() {
             return NodeUtils_1.NodeUtils.convertCodeToStructure(ConsoleOutputDisableExpressionTemplate_1.ConsoleOutputDisableExpressionTemplate().formatUnicorn({
-                consoleLogDisableFunctionName: Utils_1.Utils.getRandomVariableName()
+                consoleLogDisableFunctionName: Utils_1.Utils.getRandomVariableName(),
+                singleNodeCallControllerFunctionName: this.callsControllerFunctionName
             }));
         }
     }]);
@@ -2215,7 +2228,8 @@ var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
         key: 'getNodeStructure',
         value: function getNodeStructure() {
             return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(SelfDefendingTemplate_1.SelfDefendingTemplate().formatUnicorn({
-                selfDefendingFunctionName: Utils_1.Utils.getRandomVariableName()
+                selfDefendingFunctionName: Utils_1.Utils.getRandomVariableName(),
+                singleNodeCallControllerFunctionName: this.callsControllerFunctionName
             }), NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET).getObfuscatedCode());
         }
     }]);
@@ -2538,7 +2552,7 @@ var ConsoleOutputNodesGroup = function (_AbstractNodesGroup_) {
         if (!_this.options.disableConsoleOutput) {
             return _possibleConstructorReturn(_this);
         }
-        var callsControllerFunctionName = 'domainLockCallsControllerFunction';
+        var callsControllerFunctionName = 'consoleOutputNodeCallsControllerFunction';
         var randomStackTraceIndex = NodeAppender_1.NodeAppender.getRandomStackTraceIndex(_this.stackTraceData.length);
         _this.nodes.set('consoleOutputDisableExpressionNode', new ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode(_this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, _this.options));
         _this.nodes.set('ConsoleOutputNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(_this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, _this.options));
@@ -2648,6 +2662,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var AppendState_1 = __webpack_require__(5);
 var AbstractNodesGroup_1 = __webpack_require__(11);
 var NodeAppender_1 = __webpack_require__(3);
 var NodeCallsControllerFunctionNode_1 = __webpack_require__(16);
@@ -2664,10 +2679,14 @@ var SelfDefendingNodesGroup = function (_AbstractNodesGroup_) {
         if (!_this.options.selfDefending) {
             return _possibleConstructorReturn(_this);
         }
-        var callsControllerFunctionName = 'domainLockCallsControllerFunction';
+        var callsControllerFunctionName = 'selfDefendingNodeCallsControllerFunction';
         var randomStackTraceIndex = NodeAppender_1.NodeAppender.getRandomStackTraceIndex(_this.stackTraceData.length);
-        _this.nodes.set('selfDefendingUnicodeNode', new SelfDefendingUnicodeNode_1.SelfDefendingUnicodeNode(_this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, _this.options));
-        _this.nodes.set('SelfDefendingNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(_this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, _this.options));
+        var selfDefendingUnicodeNode = new SelfDefendingUnicodeNode_1.SelfDefendingUnicodeNode(_this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, _this.options);
+        var nodeCallsControllerFunctionNode = new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(_this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, _this.options);
+        selfDefendingUnicodeNode.setAppendState(AppendState_1.AppendState.AfterObfuscation);
+        nodeCallsControllerFunctionNode.setAppendState(AppendState_1.AppendState.AfterObfuscation);
+        _this.nodes.set('selfDefendingUnicodeNode', selfDefendingUnicodeNode);
+        _this.nodes.set('SelfDefendingNodeCallsControllerFunctionNode', nodeCallsControllerFunctionNode);
         return _this;
     }
 
@@ -2717,8 +2736,8 @@ var UnicodeArrayNodesGroup = function (_AbstractNodesGroup_) {
         } else {
             _this.unicodeArrayRotateValue = 0;
         }
-        var unicodeArray = new UnicodeArray_1.UnicodeArray(),
-            unicodeArrayNode = new UnicodeArrayNode_1.UnicodeArrayNode(unicodeArray, _this.unicodeArrayName, _this.unicodeArrayRotateValue, _this.options);
+        var unicodeArray = new UnicodeArray_1.UnicodeArray();
+        var unicodeArrayNode = new UnicodeArrayNode_1.UnicodeArrayNode(unicodeArray, _this.unicodeArrayName, _this.unicodeArrayRotateValue, _this.options);
         _this.nodes.set('unicodeArrayNode', unicodeArrayNode);
         _this.nodes.set('unicodeArrayCallsWrapper', new UnicodeArrayCallsWrapper_1.UnicodeArrayCallsWrapper(_this.unicodeArrayTranslatorName, _this.unicodeArrayName, unicodeArray, _this.options));
         if (_this.options.rotateUnicodeArray) {
@@ -4067,7 +4086,7 @@ exports.SingleNodeCallControllerTemplate = SingleNodeCallControllerTemplate;
 "use strict";
 
 function ConsoleOutputDisableExpressionTemplate() {
-    return "\n        var {consoleLogDisableFunctionName} = function () {\n            var getGlobal = function () {\n                if (typeof self !== 'undefined') { return self; }\n                if (typeof window !== 'undefined') { return window; }\n                if (typeof global !== 'undefined') { return global; }\n            };\n            \n            if (getGlobal().fetchPolyfillDisabledFlag) {\n                return;\n            }\n                                                          \n            getGlobal().fetchPolyfillDisabledFlag = true;\n            \n            var _ = '(\x04\x06\x03\x05[]' + '[\"filter\"][\"\x07tructor\"]' + '(\"return this\")()' + '.' + '\x03;\x06\x02\x05\x04};' + '_\x03.log\x01.in' + 'fo\x01.' + 'war' + 'n\x01.er' + 'r' + 'or\x01})();' + '\x01\x05_\x02;' + '_\x03\x02function' + '\x03\x07ole\x04\x02 ()' + '{\x05 = \x06var ' + '_\x07cons', \n                Y, \n                $;\n            \n            for (Y in $ = \"\x07\x06\x05\x04\x03\x02\x01\") {\n              var arr = _.split($[Y]);\n              _ = arr.join(arr.pop());\n            }\n            \n            [][\"filter\"][\"constructor\"](_)();\n        };\n        \n        {consoleLogDisableFunctionName}();\n    ";
+    return "\n        var {consoleLogDisableFunctionName} = {singleNodeCallControllerFunctionName}(this, function () { \n            var _ = '(\x04\x06\x03\x05[]' + '[\"filter\"][\"\x07tructor\"]' + '(\"return this\")()' + '.' + '\x03;\x06\x02\x05\x04};' + '_\x03.log\x01.in' + 'fo\x01.' + 'war' + 'n\x01.er' + 'r' + 'or\x01})();' + '\x01\x05_\x02;' + '_\x03\x02function' + '\x03\x07ole\x04\x02 ()' + '{\x05 = \x06var ' + '_\x07cons', \n                Y, \n                $;\n            \n            for (Y in $ = \"\x07\x06\x05\x04\x03\x02\x01\") {\n              var arr = _.split($[Y]);\n              _ = arr.join(arr.pop());\n            }\n            \n            [][\"filter\"][\"constructor\"](_)();\n        });\n        \n        {consoleLogDisableFunctionName}();\n    ";
 }
 exports.ConsoleOutputDisableExpressionTemplate = ConsoleOutputDisableExpressionTemplate;
 
@@ -4129,7 +4148,7 @@ exports.DomainLockNodeTemplate = DomainLockNodeTemplate;
 
 var Utils_1 = __webpack_require__(0);
 function SelfDefendingTemplate() {
-    return "\n        function {selfDefendingFunctionName} () {\n            var getGlobal = function () {\n                if (typeof self !== 'undefined') { return self; }\n                if (typeof window !== 'undefined') { return window; }\n                if (typeof global !== 'undefined') { return global; }\n            };\n        \n            if (\n                getGlobal().argvProcess && \n                getGlobal().argvProcess.appTimeoutStateCounter++ && \n                getGlobal().argvProcess.appTimeoutStateCounter !== 50\n            ) {\n                return false;\n            }\n            \n            getGlobal().argvProcess = {\n                appTimeoutStateCounter: 50\n            };\n              \n            var func1 = function(){return 'dev';},\n                func2 = function () {\n                    return 'window';\n                };\n                \n            var test1 = function () {\n                var regExp = new RegExp(" + Utils_1.Utils.stringToUnicode("\\w+ *\\(\\) *{\\w+ *['|\"].+['|\"];? *}") + ");\n                \n                return !regExp.test(func1.toString());\n            };\n            \n            var test2 = function () {\n                var regExp = new RegExp(" + Utils_1.Utils.stringToUnicode("(\\\\[x|u](\\w){2,4})+") + ");\n                \n                return regExp.test(func2.toString());\n            };\n            \n            var recursiveFunc1 = function (string) {\n                var i = ~-1 >> 1 + 255 % 0;\n                                \n                if (string.indexOf('i' === i)) {\n                    recursiveFunc2(string)\n                }\n            };\n            \n            var recursiveFunc2 = function (string) {\n                var i = ~-4 >> 1 + 255 % 0;\n                \n                if (string.indexOf((true+\"\")[3]) !== i) {\n                    recursiveFunc1(string)\n                }\n            };\n            \n            if (!test1()) {\n                if (!test2()) {\n                    recursiveFunc1('ind\u0435xOf');\n                } else {\n                    recursiveFunc1('indexOf');\n                }\n            } else {\n                recursiveFunc1('ind\u0435xOf');\n            }\n        }\n        \n        {selfDefendingFunctionName}();\n    ";
+    return "\n        var {selfDefendingFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {\n            var func1 = function(){return 'dev';},\n                func2 = function () {\n                    return 'window';\n                };\n                \n            var test1 = function () {\n                var regExp = new RegExp(" + Utils_1.Utils.stringToUnicode("\\w+ *\\(\\) *{\\w+ *['|\"].+['|\"];? *}") + ");\n                \n                return !regExp.test(func1.toString());\n            };\n            \n            var test2 = function () {\n                var regExp = new RegExp(" + Utils_1.Utils.stringToUnicode("(\\\\[x|u](\\w){2,4})+") + ");\n                \n                return regExp.test(func2.toString());\n            };\n            \n            var recursiveFunc1 = function (string) {\n                var i = ~-1 >> 1 + 255 % 0;\n                                \n                if (string.indexOf('i' === i)) {\n                    recursiveFunc2(string)\n                }\n            };\n            \n            var recursiveFunc2 = function (string) {\n                var i = ~-4 >> 1 + 255 % 0;\n                \n                if (string.indexOf((true+\"\")[3]) !== i) {\n                    recursiveFunc1(string)\n                }\n            };\n            \n            if (!test1()) {\n                if (!test2()) {\n                    recursiveFunc1('ind\u0435xOf');\n                } else {\n                    recursiveFunc1('indexOf');\n                }\n            } else {\n                recursiveFunc1('ind\u0435xOf');\n            }\n        })\n        \n        {selfDefendingFunctionName}();\n    ";
 }
 exports.SelfDefendingTemplate = SelfDefendingTemplate;
 

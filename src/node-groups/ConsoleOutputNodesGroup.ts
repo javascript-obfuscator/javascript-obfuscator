@@ -18,7 +18,7 @@ export class ConsoleOutputNodesGroup extends AbstractNodesGroup {
             return;
         }
 
-        const callsControllerFunctionName: string = 'domainLockCallsControllerFunction';
+        const callsControllerFunctionName: string = 'consoleOutputNodeCallsControllerFunction';
         const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
 
         this.nodes.set(

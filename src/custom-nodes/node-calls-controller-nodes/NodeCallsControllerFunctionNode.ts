@@ -10,7 +10,10 @@ import { AppendState } from '../../enums/AppendState';
 
 import { SingleNodeCallControllerTemplate } from '../../templates/custom-nodes/SingleNodeCallControllerTemplate';
 
+import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
+
 import { AbstractCustomNode } from '../AbstractCustomNode';
+import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeAppender } from '../../NodeAppender';
 import { NodeUtils } from '../../NodeUtils';
 
@@ -74,6 +77,14 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
      * @returns {TStatement[]}
      */
     protected getNodeStructure (): TStatement[] {
+        if (this.appendState === AppendState.AfterObfuscation) {
+            return NodeUtils.convertCodeToStructure(
+                JavaScriptObfuscator.obfuscate(SingleNodeCallControllerTemplate().formatUnicorn({
+                    singleNodeCallControllerFunctionName: this.callsControllerFunctionName
+                }), NO_CUSTOM_NODES_PRESET).getObfuscatedCode()
+            );
+        }
+
         return NodeUtils.convertCodeToStructure(
             SingleNodeCallControllerTemplate().formatUnicorn({
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName

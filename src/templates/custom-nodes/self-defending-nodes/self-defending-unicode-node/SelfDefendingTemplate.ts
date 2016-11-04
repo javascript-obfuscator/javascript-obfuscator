@@ -8,25 +8,7 @@ import { Utils } from '../../../../Utils';
  */
 export function SelfDefendingTemplate (): string {
     return `
-        function {selfDefendingFunctionName} () {
-            var getGlobal = function () {
-                if (typeof self !== 'undefined') { return self; }
-                if (typeof window !== 'undefined') { return window; }
-                if (typeof global !== 'undefined') { return global; }
-            };
-        
-            if (
-                getGlobal().argvProcess && 
-                getGlobal().argvProcess.appTimeoutStateCounter++ && 
-                getGlobal().argvProcess.appTimeoutStateCounter !== 50
-            ) {
-                return false;
-            }
-            
-            getGlobal().argvProcess = {
-                appTimeoutStateCounter: 50
-            };
-              
+        var {selfDefendingFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {
             var func1 = function(){return 'dev';},
                 func2 = function () {
                     return 'window';
@@ -69,7 +51,7 @@ export function SelfDefendingTemplate (): string {
             } else {
                 recursiveFunc1('indеxOf');
             }
-        }
+        })
         
         {selfDefendingFunctionName}();
     `;

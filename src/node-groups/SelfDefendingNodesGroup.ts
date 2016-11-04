@@ -8,6 +8,7 @@ import { AbstractNodesGroup } from './AbstractNodesGroup';
 import { NodeAppender } from '../NodeAppender';
 import { NodeCallsControllerFunctionNode } from '../custom-nodes/node-calls-controller-nodes/NodeCallsControllerFunctionNode';
 import { SelfDefendingUnicodeNode } from '../custom-nodes/self-defending-nodes/SelfDefendingUnicodeNode';
+import { Utils } from '../Utils';
 
 export class SelfDefendingNodesGroup extends AbstractNodesGroup {
     /**
@@ -21,7 +22,7 @@ export class SelfDefendingNodesGroup extends AbstractNodesGroup {
             return;
         }
 
-        const callsControllerFunctionName: string = 'selfDefendingNodeCallsControllerFunction';
+        const callsControllerFunctionName: string = Utils.getRandomVariableName();
         const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
         const selfDefendingUnicodeNode: ICustomNode = new SelfDefendingUnicodeNode(
             this.stackTraceData,

@@ -1,6 +1,4 @@
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
-import { IOptions } from '../interfaces/IOptions';
-import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { AppendState } from '../enums/AppendState';
 
@@ -12,41 +10,40 @@ import { Utils } from '../Utils';
 
 export class SelfDefendingNodesGroup extends AbstractNodesGroup {
     /**
-     * @param stackTraceData
-     * @param options
+     * @type {AppendState}
      */
-    constructor (stackTraceData: IStackTraceData[], options: IOptions) {
-        super(stackTraceData, options);
+    protected appendState: AppendState = AppendState.AfterObfuscation;
 
+    /**
+     * @returns {Map<string, ICustomNode> | undefined}
+     */
+    public getNodes (): Map <string, ICustomNode> | undefined {
         if (!this.options.selfDefending) {
             return;
         }
 
         const callsControllerFunctionName: string = Utils.getRandomVariableName();
         const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
-        const selfDefendingUnicodeNode: ICustomNode = new SelfDefendingUnicodeNode(
-            this.stackTraceData,
-            callsControllerFunctionName,
-            randomStackTraceIndex,
-            this.options
-        );
-        const nodeCallsControllerFunctionNode: ICustomNode = new NodeCallsControllerFunctionNode(
-            this.stackTraceData,
-            callsControllerFunctionName,
-            randomStackTraceIndex,
-            this.options
-        );
 
-        selfDefendingUnicodeNode.setAppendState(AppendState.AfterObfuscation);
-        nodeCallsControllerFunctionNode.setAppendState(AppendState.AfterObfuscation);
-
-        this.nodes.set(
-            'selfDefendingUnicodeNode',
-            selfDefendingUnicodeNode
-        );
-        this.nodes.set(
-            'SelfDefendingNodeCallsControllerFunctionNode',
-            nodeCallsControllerFunctionNode
-        );
+        return this.syncCustomNodesWithNodesGroup(new Map <string, ICustomNode> ([
+            [
+                'selfDefendingUnicodeNode',
+                new SelfDefendingUnicodeNode(
+                    this.stackTraceData,
+                    callsControllerFunctionName,
+                    randomStackTraceIndex,
+                    this.options
+                )
+            ],
+            [
+                'SelfDefendingNodeCallsControllerFunctionNode',
+                new NodeCallsControllerFunctionNode(
+                    this.stackTraceData,
+                    callsControllerFunctionName,
+                    randomStackTraceIndex,
+                    this.options
+                )
+            ]
+        ]));
     }
 }

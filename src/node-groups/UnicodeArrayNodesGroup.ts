@@ -1,6 +1,6 @@
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
-import { IOptions } from '../interfaces/IOptions';
-import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
+
+import { AppendState } from '../enums/AppendState';
 
 import { AbstractNodesGroup } from './AbstractNodesGroup';
 import { UnicodeArray } from '../UnicodeArray';
@@ -10,6 +10,11 @@ import { UnicodeArrayRotateFunctionNode } from '../custom-nodes/unicode-array-no
 import { Utils } from '../Utils';
 
 export class UnicodeArrayNodesGroup extends AbstractNodesGroup {
+    /**
+     * @type {AppendState}
+     */
+    protected appendState: AppendState = AppendState.AfterObfuscation;
+
     /**
      * @type {string}
      */
@@ -26,12 +31,9 @@ export class UnicodeArrayNodesGroup extends AbstractNodesGroup {
     private unicodeArrayTranslatorName: string = Utils.getRandomVariableName(UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
 
     /**
-     * @param stackTraceData
-     * @param options
+     * @returns {Map<string, ICustomNode> | undefined}
      */
-    constructor (stackTraceData: IStackTraceData[], options: IOptions) {
-        super(stackTraceData, options);
-
+    public getNodes (): Map <string, ICustomNode> | undefined {
         if (!this.options.unicodeArray) {
             return;
         }
@@ -52,20 +54,23 @@ export class UnicodeArrayNodesGroup extends AbstractNodesGroup {
             this.unicodeArrayRotateValue,
             this.options
         );
-
-        this.nodes.set('unicodeArrayNode', unicodeArrayNode);
-        this.nodes.set(
-            'unicodeArrayCallsWrapper',
-            new UnicodeArrayCallsWrapper(
-                this.unicodeArrayTranslatorName,
-                this.unicodeArrayName,
-                unicodeArray,
-                this.options
-            )
-        );
+        const customNodes: Map <string, ICustomNode> = new Map <string, ICustomNode> ([
+            [
+                'unicodeArrayNode', unicodeArrayNode,
+            ],
+            [
+                'unicodeArrayCallsWrapper',
+                new UnicodeArrayCallsWrapper(
+                    this.unicodeArrayTranslatorName,
+                    this.unicodeArrayName,
+                    unicodeArray,
+                    this.options
+                )
+            ]
+        ]);
 
         if (this.options.rotateUnicodeArray) {
-            this.nodes.set(
+            customNodes.set(
                 'unicodeArrayRotateFunctionNode',
                 new UnicodeArrayRotateFunctionNode(
                     this.unicodeArrayName,
@@ -75,5 +80,7 @@ export class UnicodeArrayNodesGroup extends AbstractNodesGroup {
                 )
             );
         }
+
+       return this.syncCustomNodesWithNodesGroup(customNodes);
     }
 }

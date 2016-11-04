@@ -1,5 +1,4 @@
-import { IOptions } from '../interfaces/IOptions';
-import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
+import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 
 import { AbstractNodesGroup } from './AbstractNodesGroup';
 import { ConsoleOutputDisableExpressionNode } from '../custom-nodes/console-output-nodes/ConsoleOutputDisableExpressionNode';
@@ -8,12 +7,9 @@ import { NodeCallsControllerFunctionNode } from '../custom-nodes/node-calls-cont
 
 export class ConsoleOutputNodesGroup extends AbstractNodesGroup {
     /**
-     * @param stackTraceData
-     * @param options
+     * @returns {Map<string, ICustomNode>}
      */
-    constructor (stackTraceData: IStackTraceData[], options: IOptions) {
-        super(stackTraceData, options);
-
+    public getNodes (): Map <string, ICustomNode> | undefined {
         if (!this.options.disableConsoleOutput) {
             return;
         }
@@ -21,23 +17,25 @@ export class ConsoleOutputNodesGroup extends AbstractNodesGroup {
         const callsControllerFunctionName: string = 'consoleOutputNodeCallsControllerFunction';
         const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
 
-        this.nodes.set(
-            'consoleOutputDisableExpressionNode',
-            new ConsoleOutputDisableExpressionNode(
-                this.stackTraceData,
-                callsControllerFunctionName,
-                randomStackTraceIndex,
-                this.options
-            )
-        );
-        this.nodes.set(
-            'ConsoleOutputNodeCallsControllerFunctionNode',
-            new NodeCallsControllerFunctionNode(
-                this.stackTraceData,
-                callsControllerFunctionName,
-                randomStackTraceIndex,
-                this.options
-            )
-        );
+        return this.syncCustomNodesWithNodesGroup(new Map <string, ICustomNode> ([
+            [
+                'consoleOutputDisableExpressionNode',
+                new ConsoleOutputDisableExpressionNode(
+                    this.stackTraceData,
+                    callsControllerFunctionName,
+                    randomStackTraceIndex,
+                    this.options
+                )
+            ],
+            [
+                'ConsoleOutputNodeCallsControllerFunctionNode',
+                new NodeCallsControllerFunctionNode(
+                    this.stackTraceData,
+                    callsControllerFunctionName,
+                    randomStackTraceIndex,
+                    this.options
+                )
+            ]
+        ]));
     }
 }

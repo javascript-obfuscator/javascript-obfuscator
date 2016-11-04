@@ -3,10 +3,10 @@ import * as ESTree from 'estree';
 
 import { ICustomNode } from './interfaces/custom-nodes/ICustomNode';
 import { IObfuscator } from './interfaces/IObfuscator';
-import { INodesGroup } from './interfaces/INodesGroup';
 import { IOptions } from './interfaces/IOptions';
 import { IStackTraceData } from './interfaces/stack-trace-analyzer/IStackTraceData';
 
+import { TNodeGroup } from './types/TNodeGroup';
 import { TNodeObfuscator } from './types/TNodeObfuscator';
 
 import { AppendState } from './enums/AppendState';
@@ -31,9 +31,9 @@ import { StackTraceAnalyzer } from './stack-trace-analyzer/StackTraceAnalyzer';
 
 export class Obfuscator implements IObfuscator {
     /**
-     * @type {(new (stackTraceData: IStackTraceData[], options: IOptions) => INodesGroup)[]}
+     * @type {TNodeGroup[]}
      */
-    private static nodeGroups: (new (stackTraceData: IStackTraceData[], options: IOptions) => INodesGroup)[] = [
+    private static nodeGroups: TNodeGroup[] = [
         DomainLockNodesGroup,
         SelfDefendingNodesGroup,
         ConsoleOutputNodesGroup,
@@ -125,10 +125,18 @@ export class Obfuscator implements IObfuscator {
      * @param stackTraceData
      */
     private initializeCustomNodes (stackTraceData: IStackTraceData[]): void {
-        Obfuscator.nodeGroups.map((nodeGroupConstructor) => {
+        Obfuscator.nodeGroups.forEach((nodeGroupConstructor: TNodeGroup) => {
+            const nodeGroupNodes: Map <string, ICustomNode> | undefined = new nodeGroupConstructor(
+                stackTraceData, this.options
+            ).getNodes();
+
+            if (!nodeGroupNodes) {
+                return;
+            }
+
             this.customNodes = new Map <string, ICustomNode> ([
                 ...this.customNodes,
-                ...new nodeGroupConstructor(stackTraceData, this.options).getNodes()
+                ...nodeGroupNodes
             ]);
         });
     }

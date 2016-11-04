@@ -1,19 +1,14 @@
-import { IOptions } from '../interfaces/IOptions';
-import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
-
 import { AbstractNodesGroup } from './AbstractNodesGroup';
 import { NodeAppender } from '../NodeAppender';
 import { DomainLockNode } from '../custom-nodes/domain-lock-nodes/DomainLockNode';
 import { NodeCallsControllerFunctionNode } from '../custom-nodes/node-calls-controller-nodes/NodeCallsControllerFunctionNode';
+import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 
 export class DomainLockNodesGroup extends AbstractNodesGroup {
     /**
-     * @param stackTraceData
-     * @param options
+     * @returns {Map<string, ICustomNode> | undefined}
      */
-    constructor (stackTraceData: IStackTraceData[], options: IOptions) {
-        super(stackTraceData, options);
-
+    public getNodes (): Map <string, ICustomNode> | undefined {
         if (!this.options.domainLock.length) {
             return;
         }
@@ -21,23 +16,25 @@ export class DomainLockNodesGroup extends AbstractNodesGroup {
         const callsControllerFunctionName: string = 'domainLockCallsControllerFunction';
         const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
 
-        this.nodes.set(
-            'DomainLockNode',
-            new DomainLockNode(
-                this.stackTraceData,
-                callsControllerFunctionName,
-                randomStackTraceIndex,
-                this.options
-            )
-        );
-        this.nodes.set(
-            'DomainLockNodeCallsControllerFunctionNode',
-            new NodeCallsControllerFunctionNode(
-                this.stackTraceData,
-                callsControllerFunctionName,
-                randomStackTraceIndex,
-                this.options
-            )
-        );
+        return this.syncCustomNodesWithNodesGroup(new Map <string, ICustomNode> ([
+            [
+                'DomainLockNode',
+                new DomainLockNode(
+                    this.stackTraceData,
+                    callsControllerFunctionName,
+                    randomStackTraceIndex,
+                    this.options
+                )
+            ],
+            [
+                'DomainLockNodeCallsControllerFunctionNode',
+                new NodeCallsControllerFunctionNode(
+                    this.stackTraceData,
+                    callsControllerFunctionName,
+                    randomStackTraceIndex,
+                    this.options
+                )
+            ]
+        ]));
     }
 }

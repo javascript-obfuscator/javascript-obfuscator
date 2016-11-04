@@ -1,44 +1,39 @@
-import { IOptions } from '../interfaces/IOptions';
-import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
+import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 
 import { DebugProtectionFunctionCallNode } from '../custom-nodes/debug-protection-nodes/DebugProtectionFunctionCallNode';
 import { DebugProtectionFunctionIntervalNode } from '../custom-nodes/debug-protection-nodes/DebugProtectionFunctionIntervalNode';
 import { DebugProtectionFunctionNode } from '../custom-nodes/debug-protection-nodes/DebugProtectionFunctionNode';
 
 import { AbstractNodesGroup } from './AbstractNodesGroup';
-import { Utils } from '../Utils';
 
 export class DebugProtectionNodesGroup extends AbstractNodesGroup {
     /**
-     * @type {string}
+     * @returns {Map<string, ICustomNode> | undefined}
      */
-    private debugProtectionFunctionIdentifier: string = Utils.getRandomVariableName();
-
-    /**
-     * @param stackTraceData
-     * @param options
-     */
-    constructor (stackTraceData: IStackTraceData[], options: IOptions) {
-        super(stackTraceData, options);
-
+    public getNodes (): Map <string, ICustomNode> | undefined {
         if (!this.options.debugProtection) {
             return;
         }
 
-        this.nodes.set(
-            'debugProtectionFunctionNode',
-            new DebugProtectionFunctionNode(this.debugProtectionFunctionIdentifier, this.options)
-        );
-        this.nodes.set(
-            'debugProtectionFunctionCallNode',
-            new DebugProtectionFunctionCallNode(this.debugProtectionFunctionIdentifier, this.options)
-        );
+        const debugProtectionFunctionName: string = 'debugProtectionFunction';
+        const customNodes: Map <string, ICustomNode> = new Map <string, ICustomNode> ([
+            [
+                'debugProtectionFunctionNode',
+                new DebugProtectionFunctionNode(debugProtectionFunctionName, this.options)
+            ],
+            [
+                'debugProtectionFunctionCallNode',
+                new DebugProtectionFunctionCallNode(debugProtectionFunctionName, this.options)
+            ]
+        ]);
 
         if (this.options.debugProtectionInterval) {
-            this.nodes.set(
+            customNodes.set(
                 'debugProtectionFunctionIntervalNode',
-                new DebugProtectionFunctionIntervalNode(this.debugProtectionFunctionIdentifier, this.options)
+                new DebugProtectionFunctionIntervalNode(debugProtectionFunctionName, this.options)
             );
         }
+
+        return this.syncCustomNodesWithNodesGroup(customNodes);
     }
 }

@@ -1,14 +1,15 @@
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
-
 import { INodesGroup } from '../interfaces/INodesGroup';
 import { IOptions } from '../interfaces/IOptions';
 import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
+import { AppendState } from '../enums/AppendState';
+
 export abstract class AbstractNodesGroup implements INodesGroup {
     /**
-     * @type {Map<string, AbstractCustomNode>}
+     * @type {AppendState}
      */
-    protected nodes: Map <string, ICustomNode> = new Map <string, ICustomNode> ();
+    protected appendState: AppendState = AppendState.BeforeObfuscation;
 
     /**
      * @type {IStackTraceData[]}
@@ -30,9 +31,19 @@ export abstract class AbstractNodesGroup implements INodesGroup {
     }
 
     /**
+     * @returns {Map<string, ICustomNode> | undefined}
+     */
+    public abstract getNodes (): Map <string, ICustomNode> | undefined;
+
+    /**
+     * @param customNodes
      * @returns {Map<string, ICustomNode>}
      */
-    public getNodes (): Map <string, ICustomNode> {
-        return this.nodes;
+    protected syncCustomNodesWithNodesGroup (customNodes: Map <string, ICustomNode>): Map <string, ICustomNode> {
+        customNodes.forEach((node: ICustomNode) => {
+            node.setAppendState(this.appendState);
+        });
+
+        return customNodes;
     }
 }

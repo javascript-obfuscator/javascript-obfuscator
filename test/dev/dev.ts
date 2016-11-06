@@ -69,7 +69,7 @@ if (!(<any>global)._babelPolyfill) {
     })();
     `,
         {
-            disableConsoleOutput: false,
+            disableConsoleOutput: true,
             unicodeArrayEncoding: 'rc4',
             selfDefending: true
         }

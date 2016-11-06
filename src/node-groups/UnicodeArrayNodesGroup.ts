@@ -21,14 +21,14 @@ export class UnicodeArrayNodesGroup extends AbstractNodesGroup {
     private unicodeArrayName: string = Utils.getRandomVariableName(UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
 
     /**
+     * @type {string}
+     */
+    private unicodeArrayCallsWrapper: string = Utils.getRandomVariableName(UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
+
+    /**
      * @type {number}
      */
     private unicodeArrayRotateValue: number;
-
-    /**
-     * @type {string}
-     */
-    private unicodeArrayTranslatorName: string = Utils.getRandomVariableName(UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
 
     /**
      * @returns {Map<string, ICustomNode> | undefined}
@@ -61,7 +61,7 @@ export class UnicodeArrayNodesGroup extends AbstractNodesGroup {
             [
                 'unicodeArrayCallsWrapper',
                 new UnicodeArrayCallsWrapper(
-                    this.unicodeArrayTranslatorName,
+                    this.unicodeArrayCallsWrapper,
                     this.unicodeArrayName,
                     unicodeArray,
                     this.options

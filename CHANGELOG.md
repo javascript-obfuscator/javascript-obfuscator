@@ -5,6 +5,7 @@ v0.8.0
 ---
 * **Breaking options change:** `encodeUnicodeArray` has been renamed to `unicodeArrayEncoding` and now accepts following values: `true|false|'base64'|'rc4'`.
 * **Breaking change:** option `wrapUnicodeArrayCalls` was removed and now all calls to `unicodeArray` are always wrapped by special wrapper function.
+* New option `sourceMapBaseUrl` sets base url to the source map import url when `sourceMapMode: 'separate'`.
 * Custom nodes like `selfDefendingNode` or `consoleOutputNode` now inserted into deepest stack trace function call.
 * Rewrite of many custom nodes.
 

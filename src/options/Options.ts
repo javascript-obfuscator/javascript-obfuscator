@@ -1,14 +1,29 @@
-import { IsBoolean, IsIn, IsNumber, IsString, Min, Max, validateSync, ValidationError, ValidatorOptions } from 'class-validator';
+import {
+    ArrayUnique,
+    IsBoolean,
+    IsArray,
+    IsIn,
+    IsNumber,
+    IsString,
+    IsUrl,
+    Min,
+    Max,
+    ValidateIf,
+    validateSync,
+    ValidationError,
+    ValidatorOptions
+} from 'class-validator';
 
-import { IObfuscatorOptions } from "../interfaces/IObfuscatorOptions";
-import { IOptions } from "../interfaces/IOptions";
+import { IObfuscatorOptions } from '../interfaces/IObfuscatorOptions';
+import { IOptions } from '../interfaces/IOptions';
 
-import { TSourceMapMode } from "../types/TSourceMapMode";
+import { TSourceMapMode } from '../types/TSourceMapMode';
+import { TUnicodeArrayEncoding } from '../types/TUnicodeArrayEncoding';
 
-import { DEFAULT_PRESET } from "../preset-options/DefaultPreset";
+import { DEFAULT_PRESET } from '../preset-options/DefaultPreset';
 
-import { OptionsNormalizer } from "./OptionsNormalizer";
-import { ValidationErrorsFormatter } from "./ValidationErrorsFormatter";
+import { OptionsNormalizer } from './OptionsNormalizer';
+import { ValidationErrorsFormatter } from './ValidationErrorsFormatter';
 
 export class Options implements IOptions {
     /**
@@ -45,14 +60,20 @@ export class Options implements IOptions {
     public readonly disableConsoleOutput: boolean;
 
     /**
-     * @type {boolean}
+     * @type {string[]}
      */
-    @IsBoolean()
-    public readonly encodeUnicodeLiterals: boolean;
+    @IsArray()
+    @ArrayUnique()
+    @IsString({
+        each: true
+    })
+    public readonly domainLock: string[];
 
     /**
      * @type {string[]}
      */
+    @IsArray()
+    @ArrayUnique()
     @IsString({
         each: true
     })
@@ -77,6 +98,23 @@ export class Options implements IOptions {
     public readonly sourceMap: boolean;
 
     /**
+     * @type {string}
+     */
+    @IsString()
+    @ValidateIf((options: IOptions) => Boolean(options.sourceMapBaseUrl))
+    @IsUrl({
+        require_protocol: true,
+        require_valid_protocol: true
+    })
+    public readonly sourceMapBaseUrl: string;
+
+    /**
+     * @type {string}
+     */
+    @IsString()
+    public readonly sourceMapFileName: string;
+
+    /**
      * @type {TSourceMapMode}
      */
     @IsIn(['inline', 'separate'])
@@ -89,18 +127,18 @@ export class Options implements IOptions {
     public readonly unicodeArray: boolean;
 
     /**
+     * @type {TUnicodeArrayEncoding}
+     */
+    @IsIn([true, false, 'base64', 'rc4'])
+    public readonly unicodeArrayEncoding: TUnicodeArrayEncoding;
+
+    /**
      * @type {number}
      */
     @IsNumber()
     @Min(0)
     @Max(1)
     public readonly unicodeArrayThreshold: number;
-
-    /**
-     * @type {boolean}
-     */
-    @IsBoolean()
-    public readonly wrapUnicodeArrayCalls: boolean;
 
     /**
      * @param obfuscatorOptions

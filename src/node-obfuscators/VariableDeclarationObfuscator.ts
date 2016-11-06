@@ -1,13 +1,15 @@
 import * as estraverse from 'estraverse';
+import * as ESTree from 'estree';
 
-import { INode } from "../interfaces/nodes/INode";
-import { IVariableDeclarationNode } from "../interfaces/nodes/IVariableDeclarationNode";
-import { IVariableDeclaratorNode } from "../interfaces/nodes/IVariableDeclaratorNode";
+import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../interfaces/IOptions';
 
-import { NodeType } from "../enums/NodeType";
+import { NodeType } from '../enums/NodeType';
 
-import { NodeObfuscator } from './NodeObfuscator';
-import { NodeUtils } from "../NodeUtils";
+import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
+import { IdentifierReplacer } from './replacers/IdentifierReplacer';
+import { Nodes } from '../Nodes';
+import { NodeUtils } from '../NodeUtils';
 
 /**
  * replaces:
@@ -19,17 +21,27 @@ import { NodeUtils } from "../NodeUtils";
  *     _0x12d45f++;
  *
  */
-export class VariableDeclarationObfuscator extends NodeObfuscator {
+export class VariableDeclarationObfuscator extends AbstractNodeObfuscator {
     /**
-     * @type {Map<string, string>}
+     * @type {IdentifierReplacer}
      */
-    private variableNames: Map <string, string> = new Map <string, string> ();
+    private identifierReplacer: IdentifierReplacer;
+
+    /**
+     * @param nodes
+     * @param options
+     */
+    constructor(nodes: Map <string, ICustomNode>, options: IOptions) {
+        super(nodes, options);
+
+        this.identifierReplacer = new IdentifierReplacer(this.nodes, this.options);
+    }
 
     /**
      * @param variableDeclarationNode
      * @param parentNode
      */
-    public obfuscateNode (variableDeclarationNode: IVariableDeclarationNode, parentNode: INode): void {
+    public obfuscateNode (variableDeclarationNode: ESTree.VariableDeclaration, parentNode: ESTree.Node): void {
         if (parentNode.type === NodeType.Program) {
             return;
         }
@@ -41,11 +53,11 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
     /**
      * @param variableDeclarationNode
      */
-    private storeVariableNames (variableDeclarationNode: IVariableDeclarationNode): void {
+    private storeVariableNames (variableDeclarationNode: ESTree.VariableDeclaration): void {
         variableDeclarationNode.declarations
-            .forEach((declarationNode: IVariableDeclaratorNode) => {
-                estraverse.traverse(declarationNode.id, {
-                    enter: (node: INode): any => this.storeIdentifiersNames(node, this.variableNames)
+            .forEach((declarationNode: ESTree.VariableDeclarator) => {
+                NodeUtils.typedReplace(declarationNode.id, NodeType.Identifier, {
+                    enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
                 });
             });
     }
@@ -54,15 +66,15 @@ export class VariableDeclarationObfuscator extends NodeObfuscator {
      * @param variableDeclarationNode
      * @param variableParentNode
      */
-    private replaceVariableNames (variableDeclarationNode: IVariableDeclarationNode, variableParentNode: INode): void {
-        let scopeNode: INode = variableDeclarationNode.kind === 'var' ? NodeUtils.getBlockScopeOfNode(
+    private replaceVariableNames (variableDeclarationNode: ESTree.VariableDeclaration, variableParentNode: ESTree.Node): void {
+        let scopeNode: ESTree.Node = variableDeclarationNode.kind === 'var' ? NodeUtils.getBlockScopeOfNode(
                 variableDeclarationNode
             ) : variableParentNode;
 
         estraverse.replace(scopeNode, {
-            enter: (node: INode, parentNode: INode): any => {
-                if (!node.obfuscated) {
-                    this.replaceIdentifiersWithRandomNames(node, parentNode, this.variableNames);
+            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+                if (!node.obfuscated && Nodes.isReplaceableIdentifierNode(node, parentNode)) {
+                    node.name = this.identifierReplacer.replace(node.name);
                 }
             }
         });

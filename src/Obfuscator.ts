@@ -1,40 +1,50 @@
 import * as estraverse from 'estraverse';
+import * as ESTree from 'estree';
 
 import { ICustomNode } from './interfaces/custom-nodes/ICustomNode';
-import { INode } from './interfaces/nodes/INode';
-import { IObfuscator } from "./interfaces/IObfuscator";
-import { IOptions } from "./interfaces/IOptions";
+import { IObfuscator } from './interfaces/IObfuscator';
+import { IOptions } from './interfaces/IOptions';
+import { IStackTraceData } from './interfaces/stack-trace-analyzer/IStackTraceData';
 
-import { TNodeObfuscator } from "./types/TNodeObfuscator";
+import { TNodeGroup } from './types/TNodeGroup';
+import { TNodeObfuscator } from './types/TNodeObfuscator';
 
 import { AppendState } from './enums/AppendState';
 import { NodeType } from './enums/NodeType';
 
 import { CatchClauseObfuscator } from './node-obfuscators/CatchClauseObfuscator';
-import { ConsoleOutputNodesGroup } from "./node-groups/ConsoleOutputNodesGroup";
+import { ConsoleOutputNodesGroup } from './node-groups/ConsoleOutputNodesGroup';
 import { DebugProtectionNodesGroup } from './node-groups/DebugProtectionNodesGroup';
+import { DomainLockNodesGroup } from './node-groups/DomainLockNodesGroup';
 import { FunctionDeclarationObfuscator } from './node-obfuscators/FunctionDeclarationObfuscator';
 import { FunctionObfuscator } from './node-obfuscators/FunctionObfuscator';
 import { LiteralObfuscator } from './node-obfuscators/LiteralObfuscator';
 import { MemberExpressionObfuscator } from './node-obfuscators/MemberExpressionObfuscator';
 import { MethodDefinitionObfuscator } from './node-obfuscators/MethodDefinitionObfuscator';
-import { Nodes } from "./Nodes";
-import { NodeUtils } from "./NodeUtils";
+import { Nodes } from './Nodes';
+import { NodeUtils } from './NodeUtils';
 import { ObjectExpressionObfuscator } from './node-obfuscators/ObjectExpressionObfuscator';
-import { SelfDefendingNodesGroup } from "./node-groups/SelfDefendingNodesGroup";
+import { SelfDefendingNodesGroup } from './node-groups/SelfDefendingNodesGroup';
 import { UnicodeArrayNodesGroup } from './node-groups/UnicodeArrayNodesGroup';
 import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclarationObfuscator';
+import { StackTraceAnalyzer } from './stack-trace-analyzer/StackTraceAnalyzer';
 
 export class Obfuscator implements IObfuscator {
     /**
-     * @type {Map<string, Node>}
+     * @type {TNodeGroup[]}
      */
-    private nodes: Map <string, ICustomNode>;
+    private static nodeGroups: TNodeGroup[] = [
+        DomainLockNodesGroup,
+        SelfDefendingNodesGroup,
+        ConsoleOutputNodesGroup,
+        DebugProtectionNodesGroup,
+        UnicodeArrayNodesGroup
+    ];
 
     /**
      * @type {Map<string, TNodeObfuscator[]>}
      */
-    private nodeObfuscators: Map <string, TNodeObfuscator[]> = new Map <string, TNodeObfuscator[]> ([
+    private static nodeObfuscators: Map <string, TNodeObfuscator[]> = new Map <string, TNodeObfuscator[]> ([
         [NodeType.ArrowFunctionExpression, [FunctionObfuscator]],
         [NodeType.ClassDeclaration, [FunctionDeclarationObfuscator]],
         [NodeType.CatchClause, [CatchClauseObfuscator]],
@@ -51,6 +61,11 @@ export class Obfuscator implements IObfuscator {
     ]);
 
     /**
+     * @type {Map<string, AbstractCustomNode>}
+     */
+    private customNodes: Map <string, ICustomNode> = new Map <string, ICustomNode> ();
+
+    /**
      * @type {IOptions}
      */
     private options: IOptions;
@@ -60,25 +75,22 @@ export class Obfuscator implements IObfuscator {
      */
     constructor (options: IOptions) {
         this.options = options;
-
-        this.nodes = new Map <string, ICustomNode> ([
-            ...new SelfDefendingNodesGroup(this.options).getNodes(),
-            ...new ConsoleOutputNodesGroup(this.options).getNodes(),
-            ...new DebugProtectionNodesGroup(this.options).getNodes(),
-            ...new UnicodeArrayNodesGroup(this.options).getNodes()
-        ]);
     }
 
     /**
      * @param node
-     * @returns {INode}
+     * @returns {ESTree.Node}
      */
-    public obfuscateNode (node: INode): INode {
+    public obfuscateNode (node: ESTree.Program): ESTree.Node {
         if (Nodes.isProgramNode(node) && !node.body.length) {
             return node;
         }
 
         NodeUtils.parentize(node);
+
+        const stackTraceData: IStackTraceData[] = new StackTraceAnalyzer(node.body).analyze();
+
+        this.initializeCustomNodes(stackTraceData);
 
         this.beforeObfuscation(node);
         this.obfuscate(node);
@@ -90,8 +102,8 @@ export class Obfuscator implements IObfuscator {
     /**
      * @param astTree
      */
-    private afterObfuscation (astTree: INode): void {
-        this.nodes.forEach((node: ICustomNode) => {
+    private afterObfuscation (astTree: ESTree.Node): void {
+        this.customNodes.forEach((node: ICustomNode) => {
             if (node.getAppendState() === AppendState.AfterObfuscation) {
                 node.appendNode(astTree);
             }
@@ -101,37 +113,57 @@ export class Obfuscator implements IObfuscator {
     /**
      * @param astTree
      */
-    private beforeObfuscation (astTree: INode): void {
-        this.nodes.forEach((node: ICustomNode) => {
+    private beforeObfuscation (astTree: ESTree.Node): void {
+        this.customNodes.forEach((node: ICustomNode) => {
             if (node.getAppendState() === AppendState.BeforeObfuscation) {
                 node.appendNode(astTree);
             }
         });
     };
 
+    /**
+     * @param stackTraceData
+     */
+    private initializeCustomNodes (stackTraceData: IStackTraceData[]): void {
+        Obfuscator.nodeGroups.forEach((nodeGroupConstructor: TNodeGroup) => {
+            const nodeGroupNodes: Map <string, ICustomNode> | undefined = new nodeGroupConstructor(
+                stackTraceData, this.options
+            ).getNodes();
+
+            if (!nodeGroupNodes) {
+                return;
+            }
+
+            this.customNodes = new Map <string, ICustomNode> ([
+                ...this.customNodes,
+                ...nodeGroupNodes
+            ]);
+        });
+    }
+
 
     /**
      * @param node
      * @param parentNode
      */
-    private initializeNodeObfuscators (node: INode, parentNode: INode): void {
-        let nodeObfuscators: TNodeObfuscator[] | undefined = this.nodeObfuscators.get(node.type);
+    private initializeNodeObfuscators (node: ESTree.Node, parentNode: ESTree.Node): void {
+        let nodeObfuscators: TNodeObfuscator[] | undefined = Obfuscator.nodeObfuscators.get(node.type);
 
         if (!nodeObfuscators) {
             return;
         }
 
         nodeObfuscators.forEach((obfuscator: TNodeObfuscator) => {
-            new obfuscator(this.nodes, this.options).obfuscateNode(node, parentNode);
+            new obfuscator(this.customNodes, this.options).obfuscateNode(node, parentNode);
         });
     }
 
     /**
      * @param node
      */
-    private obfuscate (node: INode): void {
+    private obfuscate (node: ESTree.Node): void {
         estraverse.replace(node, {
-            enter: (node: INode, parentNode: INode): any => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 this.initializeNodeObfuscators(node, parentNode);
             }
         });

@@ -1,5 +1,5 @@
-import { INode } from "./nodes/INode";
+import * as ESTree from 'estree';
 
 export interface IObfuscator {
-    obfuscateNode (node: INode): INode;
+    obfuscateNode (node: ESTree.Node): ESTree.Node;
 }

@@ -1,25 +1,70 @@
-import { INode } from "../../interfaces/nodes/INode";
+import 'format-unicorn';
 
-import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
+import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TStatement } from '../../types/TStatement';
 
-import { AppendState } from "../../enums/AppendState";
+import { IOptions } from '../../interfaces/IOptions';
+import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
 
-import { ConsoleOutputDisableExpressionTemplate } from "../../templates/custom-nodes/console-output-nodes/console-output-disable-expression-node/ConsoleOutputDisableExpressionTemplate";
+import { AppendState } from '../../enums/AppendState';
 
-import { Node } from '../Node';
-import { NodeUtils } from "../../NodeUtils";
+import { ConsoleOutputDisableExpressionTemplate } from '../../templates/custom-nodes/console-output-nodes/console-output-disable-expression-node/ConsoleOutputDisableExpressionTemplate';
 
-export class ConsoleOutputDisableExpressionNode extends Node {
+import { AbstractCustomNode } from '../AbstractCustomNode';
+import { NodeAppender } from '../../NodeAppender';
+import { NodeUtils } from '../../NodeUtils';
+import { Utils } from '../../Utils';
+
+export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
     /**
      * @type {AppendState}
      */
     protected appendState: AppendState = AppendState.BeforeObfuscation;
 
     /**
+     * @type {string}
+     */
+    protected callsControllerFunctionName: string;
+
+    /**
+     * @type {number}
+     */
+    protected randomStackTraceIndex: number;
+
+    /**
+     * @type {IStackTraceData[]}
+     */
+    protected stackTraceData: IStackTraceData[];
+
+    /**
+     * @param stackTraceData
+     * @param callsControllerFunctionName
+     * @param randomStackTraceIndex
+     * @param options
+     */
+    constructor (
+        stackTraceData: IStackTraceData[],
+        callsControllerFunctionName: string,
+        randomStackTraceIndex: number,
+        options: IOptions
+    ) {
+        super(options);
+
+        this.stackTraceData = stackTraceData;
+        this.callsControllerFunctionName = callsControllerFunctionName;
+        this.randomStackTraceIndex = randomStackTraceIndex;
+    }
+
+    /**
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        NodeUtils.prependNode(blockScopeNode.body, this.getNode());
+        NodeAppender.appendNodeToOptimalBlockScope(
+            this.stackTraceData,
+            blockScopeNode,
+            this.getNode(),
+            this.randomStackTraceIndex
+        );
     }
 
     /**
@@ -36,11 +81,14 @@ export class ConsoleOutputDisableExpressionNode extends Node {
      *  _console
      *  })();
      *
-     * @returns {INode}
+     * @returns {TStatement[]}
      */
-    protected getNodeStructure (): INode {
+    protected getNodeStructure (): TStatement[] {
         return NodeUtils.convertCodeToStructure(
-            ConsoleOutputDisableExpressionTemplate()
+            ConsoleOutputDisableExpressionTemplate().formatUnicorn({
+                consoleLogDisableFunctionName: Utils.getRandomVariableName(),
+                singleNodeCallControllerFunctionName: this.callsControllerFunctionName
+            })
         );
     }
 }

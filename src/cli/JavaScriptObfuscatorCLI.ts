@@ -1,17 +1,19 @@
 import * as commander from 'commander';
 import * as path from 'path';
 
-import { IObfuscationResult } from "../interfaces/IObfuscationResult";
-import { IObfuscatorOptions } from "../interfaces/IObfuscatorOptions";
+import { TUnicodeArrayEncoding } from '../types/TUnicodeArrayEncoding';
 
-import { SourceMapMode } from "../enums/SourceMapMode";
+import { IObfuscationResult } from '../interfaces/IObfuscationResult';
+import { IObfuscatorOptions } from '../interfaces/IObfuscatorOptions';
 
-import { DEFAULT_PRESET } from "../preset-options/DefaultPreset";
+import { SourceMapMode } from '../enums/SourceMapMode';
+import { UnicodeArrayEncoding } from '../enums/UnicodeArrayEncoding';
 
-import { CLIUtils } from "./CLIUtils";
-import { JavaScriptObfuscator } from "../JavaScriptObfuscator";
-import { JavaScriptObfuscatorInternal } from "../JavaScriptObfuscatorInternal";
-import { Utils } from "../Utils";
+import { DEFAULT_PRESET } from '../preset-options/DefaultPreset';
+
+import { CLIUtils } from './CLIUtils';
+import { JavaScriptObfuscator } from '../JavaScriptObfuscator';
+import { Utils } from '../Utils';
 
 export class JavaScriptObfuscatorCLI {
     /**
@@ -80,6 +82,25 @@ export class JavaScriptObfuscatorCLI {
         return value;
     }
 
+    /**
+     * @param value
+     * @returns {TUnicodeArrayEncoding}
+     */
+    private static parseUnicodeArrayEncoding (value: string): TUnicodeArrayEncoding {
+        switch (value) {
+            case 'true':
+            case '1':
+            case UnicodeArrayEncoding.base64:
+                return true;
+
+            case UnicodeArrayEncoding.rc4:
+                return UnicodeArrayEncoding.rc4;
+
+            default:
+                return false;
+        }
+    }
+
     public run (): void {
         this.configureCommands();
 
@@ -103,7 +124,7 @@ export class JavaScriptObfuscatorCLI {
         let obfuscatorOptions: IObfuscatorOptions = {},
             availableOptions: string[] = Object.keys(DEFAULT_PRESET);
 
-        for (let option in this.commands) {
+        for (const option in this.commands) {
             if (!this.commands.hasOwnProperty(option)) {
                 continue;
             }
@@ -127,19 +148,21 @@ export class JavaScriptObfuscatorCLI {
             .option('--debugProtection <boolean>', 'Disable browser Debug panel (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--debugProtectionInterval <boolean>', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--disableConsoleOutput <boolean>', 'Allow console.log, console.info, console.error and console.warn messages output into browser console', JavaScriptObfuscatorCLI.parseBoolean)
-            .option('--encodeUnicodeLiterals <boolean>', 'All literals in Unicode array become encoded in Base64 (this option can slightly slow down your code speed)', JavaScriptObfuscatorCLI.parseBoolean)
+            .option('--domainLock <list>', 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)', (val: string) => val.split(','))
             .option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', (val: string) => val.split(','))
             .option('--rotateUnicodeArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean)
+            .option('--sourceMapBaseUrl <string>', 'Sets base url to the source map import url when `--sourceMapMode=separate`')
+            .option('--sourceMapFileName <string>', 'Sets file name for output source map when `--sourceMapMode=separate`')
             .option(
                 '--sourceMapMode <string> [inline, separate]',
                 'Specify source map output mode',
                 JavaScriptObfuscatorCLI.parseSourceMapMode
             )
             .option('--unicodeArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean)
+            .option('--unicodeArrayEncoding <boolean|string> [true, false, base64, rc4]', 'All literals in Unicode array become encoded in using base64 or rc4 (this option can slightly slow down your code speed', JavaScriptObfuscatorCLI.parseUnicodeArrayEncoding)
             .option('--unicodeArrayThreshold <number>', 'The probability that the literal string will be inserted into unicodeArray (Default: 0.8, Min: 0, Max: 1)', parseFloat)
-            .option('--wrapUnicodeArrayCalls <boolean>', 'Disables usage of special access function instead of direct array call', JavaScriptObfuscatorCLI.parseBoolean)
             .parse(this.rawArguments);
 
         this.commands.on('--help', () => {
@@ -180,23 +203,18 @@ export class JavaScriptObfuscatorCLI {
      * @param options
      */
     private processDataWithSourceMap (outputCodePath: string, options: IObfuscatorOptions): void {
-        let javaScriptObfuscator: JavaScriptObfuscatorInternal = new JavaScriptObfuscatorInternal(this.data, options),
-            obfuscationResult: IObfuscationResult,
-            outputSourceMapPath: string = CLIUtils.getOutputSourceMapPath(outputCodePath);
+        let outputSourceMapPath: string = CLIUtils.getOutputSourceMapPath(
+            outputCodePath,
+            options.sourceMapFileName || ''
+        );
 
-        javaScriptObfuscator.obfuscate();
+        options.sourceMapFileName = path.basename(outputSourceMapPath);
 
-        if (options.sourceMapMode === SourceMapMode.Separate) {
-            javaScriptObfuscator.setSourceMapUrl(
-                path.basename(outputSourceMapPath)
-            );
-        }
-
-        obfuscationResult = javaScriptObfuscator.getObfuscationResult();
+        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(this.data, options);
 
         CLIUtils.writeFile(outputCodePath, obfuscationResult.getObfuscatedCode());
 
-        if (obfuscationResult.getSourceMap()) {
+        if (options.sourceMapMode === 'separate' && obfuscationResult.getSourceMap()) {
             CLIUtils.writeFile(outputSourceMapPath, obfuscationResult.getSourceMap());
         }
     }

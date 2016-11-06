@@ -1,28 +1,38 @@
 import 'format-unicorn';
 
-import { INode } from "../../interfaces/nodes/INode";
-import { IOptions } from "../../interfaces/IOptions";
+import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TStatement } from '../../types/TStatement';
 
-import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
+import { IOptions } from '../../interfaces/IOptions';
 
-import { AppendState } from "../../enums/AppendState";
+import { AppendState } from '../../enums/AppendState';
+import { UnicodeArrayEncoding } from '../../enums/UnicodeArrayEncoding';
 
-import { UnicodeArrayCallsWrapperTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayCallsWrapperTemplate";
+import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
 
-import { Node } from '../Node';
-import { NodeUtils } from "../../NodeUtils";
-import { Utils } from "../../Utils";
+import { AtobTemplate } from '../../templates/custom-nodes/AtobTemplate';
+import { Rc4Template } from '../../templates/custom-nodes/Rc4Template';
+import { SelfDefendingTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/SelfDefendingTemplate';
+import { UnicodeArrayBase64DecodeNodeTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayBase64DecodeNodeTemplate';
+import { UnicodeArrayCallsWrapperTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayCallsWrapperTemplate';
+import { UnicodeArrayRc4DecodeNodeTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-calls-wrapper/UnicodeArrayRC4DecodeNodeTemplate';
 
-export class UnicodeArrayCallsWrapper extends Node {
+import { AbstractCustomNode } from '../AbstractCustomNode';
+import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
+import { NodeAppender } from '../../NodeAppender';
+import { NodeUtils } from '../../NodeUtils';
+import { UnicodeArray } from '../../UnicodeArray';
+
+export class UnicodeArrayCallsWrapper extends AbstractCustomNode {
     /**
      * @type {AppendState}
      */
     protected appendState: AppendState = AppendState.AfterObfuscation;
 
     /**
-     * @type {string[]}
+     * @type {UnicodeArray}
      */
-    private unicodeArray: string[];
+    private unicodeArray: UnicodeArray;
 
     /**
      * @type {string}
@@ -43,7 +53,7 @@ export class UnicodeArrayCallsWrapper extends Node {
     constructor (
         unicodeArrayCallsWrapperName: string,
         unicodeArrayName: string,
-        unicodeArray: string[],
+        unicodeArray: UnicodeArray,
         options: IOptions
     ) {
         super(options);
@@ -57,11 +67,11 @@ export class UnicodeArrayCallsWrapper extends Node {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        if (!this.unicodeArray.length) {
+        if (!this.unicodeArray.getLength()) {
             return;
         }
 
-        NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), 1);
+        NodeAppender.insertNodeAtIndex(blockScopeNode, this.getNode(), 1);
     }
 
     /**
@@ -72,24 +82,65 @@ export class UnicodeArrayCallsWrapper extends Node {
     };
 
     /**
-     * @returns {INode}
+     * @returns {TStatement[]}
      */
-    public getNode (): INode {
+    public getNode (): TStatement[] {
         return super.getNode();
     }
 
     /**
-     * @returns {INode}
+     * @returns {string}
      */
-    protected getNodeStructure (): INode {
-        let keyName: string = Utils.getRandomVariableName();
+    protected getDecodeUnicodeArrayTemplate (): string {
+        let decodeUnicodeArrayTemplate: string = '',
+            selfDefendingCode: string = '';
 
-        return NodeUtils.convertCodeToStructure(
-            UnicodeArrayCallsWrapperTemplate().formatUnicorn({
-                keyName: keyName,
+        if (this.options.selfDefending) {
+            selfDefendingCode = SelfDefendingTemplate().formatUnicorn({
                 unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName,
                 unicodeArrayName: this.unicodeArrayName
-            })
+            });
+        }
+
+        switch (this.options.unicodeArrayEncoding) {
+            case UnicodeArrayEncoding.base64:
+                decodeUnicodeArrayTemplate = UnicodeArrayBase64DecodeNodeTemplate().formatUnicorn({
+                    atobPolyfill: AtobTemplate(),
+                    selfDefendingCode,
+                    unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName
+                });
+
+                break;
+
+            case UnicodeArrayEncoding.rc4:
+                decodeUnicodeArrayTemplate = UnicodeArrayRc4DecodeNodeTemplate().formatUnicorn({
+                    atobPolyfill: AtobTemplate(),
+                    rc4Polyfill: Rc4Template(),
+                    selfDefendingCode,
+                    unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName
+                });
+
+                break;
+        }
+
+        return decodeUnicodeArrayTemplate;
+    }
+
+    /**
+     * @returns {TStatement[]}
+     */
+    protected getNodeStructure (): TStatement[] {
+        const decodeNodeTemplate: string = this.getDecodeUnicodeArrayTemplate();
+
+        return NodeUtils.convertCodeToStructure(
+            JavaScriptObfuscator.obfuscate(
+                UnicodeArrayCallsWrapperTemplate().formatUnicorn({
+                    decodeNodeTemplate,
+                    unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName,
+                    unicodeArrayName: this.unicodeArrayName
+                }),
+                NO_CUSTOM_NODES_PRESET
+            ).getObfuscatedCode()
         );
     }
 }

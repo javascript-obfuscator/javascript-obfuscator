@@ -1,10 +1,15 @@
 import * as estraverse from 'estraverse';
+import * as ESTree from 'estree';
 
-import { IFunctionNode } from "../interfaces/nodes/IFunctionNode";
-import { INode } from "../interfaces/nodes/INode";
+import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../interfaces/IOptions';
 
-import { NodeObfuscator } from './NodeObfuscator';
-import { Nodes } from "../Nodes";
+import { NodeType } from '../enums/NodeType';
+
+import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
+import { IdentifierReplacer } from './replacers/IdentifierReplacer';
+import { Nodes } from '../Nodes';
+import { NodeUtils } from '../NodeUtils';
 
 /**
  * replaces:
@@ -14,16 +19,26 @@ import { Nodes } from "../Nodes";
  *     function foo (_0x12d45f) { return _0x12d45f; };
  *
  */
-export class FunctionObfuscator extends NodeObfuscator {
+export class FunctionObfuscator extends AbstractNodeObfuscator {
     /**
-     * @type {Map<string, string>}
+     * @type {IdentifierReplacer}
      */
-    private functionParams: Map <string, string> = new Map <string, string> ();
+    private identifierReplacer: IdentifierReplacer;
+
+    /**
+     * @param nodes
+     * @param options
+     */
+    constructor(nodes: Map <string, ICustomNode>, options: IOptions) {
+        super(nodes, options);
+
+        this.identifierReplacer = new IdentifierReplacer(this.nodes, this.options);
+    }
 
     /**
      * @param functionNode
      */
-    public obfuscateNode (functionNode: IFunctionNode): void {
+    public obfuscateNode (functionNode: ESTree.Function): void {
         this.storeFunctionParams(functionNode);
         this.replaceFunctionParams(functionNode);
     }
@@ -31,11 +46,11 @@ export class FunctionObfuscator extends NodeObfuscator {
     /**
      * @param functionNode
      */
-    private storeFunctionParams (functionNode: IFunctionNode): void {
+    private storeFunctionParams (functionNode: ESTree.Function): void {
         functionNode.params
-            .forEach((paramsNode: INode) => {
-                estraverse.traverse(paramsNode, {
-                    enter: (node: INode): any => this.storeIdentifiersNames(node, this.functionParams)
+            .forEach((paramsNode: ESTree.Node) => {
+                NodeUtils.typedReplace(paramsNode, NodeType.Identifier, {
+                    enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
                 });
             });
     }
@@ -43,19 +58,14 @@ export class FunctionObfuscator extends NodeObfuscator {
     /**
      * @param functionNode
      */
-    private replaceFunctionParams (functionNode: IFunctionNode): void {
+    private replaceFunctionParams (functionNode: ESTree.Function): void {
         let replaceVisitor: estraverse.Visitor = {
-            enter: (node: INode, parentNode: INode): any => {
-                let newNodeName: string = '';
+            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+                if (Nodes.isReplaceableIdentifierNode(node, parentNode)) {
+                    const newNodeName: string = this.identifierReplacer.replace(node.name);
 
-                if (Nodes.isIdentifierNode(node)) {
-                    newNodeName = node.name;
-                }
-
-                this.replaceIdentifiersWithRandomNames(node, parentNode, this.functionParams);
-
-                if (Nodes.isIdentifierNode(node)) {
                     if (node.name !== newNodeName) {
+                        node.name = newNodeName;
                         node.obfuscated = true;
                     }
                 }
@@ -63,7 +73,7 @@ export class FunctionObfuscator extends NodeObfuscator {
         };
 
         functionNode.params
-            .forEach((paramsNode: INode) => {
+            .forEach((paramsNode: ESTree.Node) => {
                 estraverse.replace(paramsNode, replaceVisitor);
             });
 

@@ -44,12 +44,31 @@ export class Utils {
 
     /**
      * @param string
-     * @param encode
      */
-    public static btoa (string: string, encode: boolean = true): string {
-        return new Buffer(
-            encode ? encodeURI(string) : string
-        ).toString('base64');
+    public static btoa (string: string): string {
+        const chars: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+
+        let output: string = '';
+
+        string = encodeURIComponent(string).replace(/%([0-9A-F]{2})/g, (match, p1) => {
+            return String.fromCharCode(parseInt('0x' + p1));
+        });
+
+        for (
+            let block: number|undefined, charCode: number, idx: number = 0, map: string = chars;
+            string.charAt(idx | 0) || (map = '=', idx % 1);
+            output += map.charAt(63 & block >> 8 - idx % 1 * 8)
+        ) {
+            charCode = string.charCodeAt(idx += 3/4);
+
+            if (charCode > 0xFF) {
+                throw new Error("'btoa' failed: The string to be encoded contains characters outside of the Latin1 range.");
+            }
+
+            block = block << 8 | charCode;
+        }
+
+        return output;
     }
 
     /**
@@ -63,6 +82,24 @@ export class Utils {
     }
 
     /**
+     * @param url
+     * @returns {string}
+     */
+    public static extractDomainFromUrl (url: string): string {
+        let domain: string;
+
+        if (url.indexOf('://') > -1 || url.indexOf('//') === 0) {
+            domain = url.split('/')[2];
+        } else {
+            domain = url.split('/')[0];
+        }
+
+        domain = domain.split(':')[0];
+
+        return domain;
+    }
+
+    /**
      * @returns {Chance.Chance}
      */
     public static getRandomGenerator (): Chance.Chance {
@@ -71,7 +108,7 @@ export class Utils {
 
     /**
      * @param length
-     * @returns any
+     * @returns {string}
      */
     public static getRandomVariableName (length: number = 6): string {
         const rangeMinInteger: number = 10000,
@@ -89,11 +126,91 @@ export class Utils {
     }
 
     /**
+     * @param str
+     * @param length
+     * @returns {string[]}
+     */
+    public static hideString(str: string, length: number): [string, string] {
+        const escapeRegExp: (s: string) => string = (s: string) =>
+            s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+
+        const randomMerge: (s1: string, s2: string) => string = function (s1: string, s2: string): string {
+            let i1: number = -1,
+                i2: number = -1,
+                result: string = '';
+
+            while (i1 < s1.length || i2 < s2.length) {
+                if (Math.random() < 0.5 && i2 < s2.length) {
+                    result += s2.charAt(++i2);
+                } else {
+                    result += s1.charAt(++i1);
+                }
+            }
+
+            return result;
+        };
+
+        const customPool: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+        let randomString: string = Utils.randomGenerator.string({length: length, pool: customPool}),
+            randomStringDiff: string = randomString.replace(
+                new RegExp('[' + escapeRegExp(str) + ']', 'g'),
+            ''),
+            randomStringDiffArray: string[] = randomStringDiff.split('');
+
+        Utils.randomGenerator.shuffle(randomStringDiffArray);
+        randomStringDiff = randomStringDiffArray.join('');
+
+        return [randomMerge(str, randomStringDiff), randomStringDiff];
+
+    }
+
+    /**
      * @param number
      * @returns {boolean}
      */
     public static isInteger (number: number): boolean {
         return number % 1 === 0;
+    }
+
+    /**
+     * RC4 symmetric cipher encryption/decryption
+     * https://gist.github.com/farhadi/2185197
+     *
+     * @param key
+     * @param string
+     * @returns {string}
+     */
+    public static rc4 (string: string, key: string) {
+        let s: number[] = [],
+            j: number = 0,
+            x: number,
+            result: string = '';
+
+        for (var i = 0; i < 256; i++) {
+            s[i] = i;
+        }
+
+        for (i = 0; i < 256; i++) {
+            j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;
+            x = s[i];
+            s[i] = s[j];
+            s[j] = x;
+        }
+
+        i = 0;
+        j = 0;
+
+        for (let y = 0; y < string.length; y++) {
+            i = (i + 1) % 256;
+            j = (j + s[i]) % 256;
+            x = s[i];
+            s[i] = s[j];
+            s[j] = x;
+            result += String.fromCharCode(string.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);
+        }
+
+        return result;
     }
 
     /**
@@ -134,9 +251,9 @@ export class Utils {
                 template = '0'.repeat(2);
             } else {
                 prefix = '\\u';
-                template = '0'.repeat(4);  
+                template = '0'.repeat(4);
             }
-            
+
             return `${prefix}${(template + escape.charCodeAt(0).toString(radix)).slice(-template.length)}`;
         })}'`;
     }

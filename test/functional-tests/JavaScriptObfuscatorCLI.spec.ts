@@ -2,9 +2,9 @@ import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as sinon from 'sinon';
 
-import { StdoutWriteMock } from "../mocks/StdoutWriteMock";
+import { StdoutWriteMock } from '../mocks/StdoutWriteMock';
 
-import { JavaScriptObfuscator } from "../../src/JavaScriptObfuscator";
+import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscator';
 
 const assert: Chai.AssertStatic = require('chai').assert;
 
@@ -87,34 +87,125 @@ describe('JavaScriptObfuscatorCLI', function (): void {
         describe('--sourceMap option is set', () => {
             let outputSourceMapPath: string = `${outputFilePath}.map`;
 
-            it('should creates file with source map in the same directory as output file', () => {
-                JavaScriptObfuscator.runCLI([
-                    'node',
-                    'javascript-obfuscator',
-                    fixtureFilePath,
-                    '--output',
-                    outputFilePath,
-                    '--compact',
-                    'true',
-                    '--selfDefending',
-                    '0',
-                    '--sourceMap',
-                    'true'
-                ]);
+            describe('--sourceMapMode option is `separate`', () => {
+                it('should creates file with source map in the same directory as output file', () => {
+                    JavaScriptObfuscator.runCLI([
+                        'node',
+                        'javascript-obfuscator',
+                        fixtureFilePath,
+                        '--output',
+                        outputFilePath,
+                        '--compact',
+                        'true',
+                        '--selfDefending',
+                        '0',
+                        '--sourceMap',
+                        'true'
+                    ]);
 
-                assert.equal(fs.existsSync(outputSourceMapPath), true);
+                    assert.equal(fs.existsSync(outputSourceMapPath), true);
 
-                const content: string = fs.readFileSync(outputSourceMapPath, { encoding: 'utf8' }),
-                    sourceMap: any = JSON.parse(content);
+                    const content: string = fs.readFileSync(outputSourceMapPath, { encoding: 'utf8' }),
+                        sourceMap: any = JSON.parse(content);
 
-                assert.property(sourceMap, 'version');
-                assert.property(sourceMap, 'sources');
-                assert.property(sourceMap, 'names');
+                    assert.property(sourceMap, 'version');
+                    assert.property(sourceMap, 'sources');
+                    assert.property(sourceMap, 'names');
+                });
+
+                it('should creates file with source map in the same directory as output file if `sourceMapBaseUrl` is set', () => {
+                    JavaScriptObfuscator.runCLI([
+                        'node',
+                        'javascript-obfuscator',
+                        fixtureFilePath,
+                        '--output',
+                        outputFilePath,
+                        '--compact',
+                        'true',
+                        '--selfDefending',
+                        '0',
+                        '--sourceMap',
+                        'true',
+                        '--sourceMapBaseUrl',
+                        'http://localhost:9000/'
+                    ]);
+
+                    assert.equal(fs.existsSync(outputSourceMapPath), true);
+
+                    const content: string = fs.readFileSync(outputSourceMapPath, { encoding: 'utf8' }),
+                        sourceMap: any = JSON.parse(content);
+
+                    assert.property(sourceMap, 'version');
+                    assert.property(sourceMap, 'sources');
+                    assert.property(sourceMap, 'names');
+                });
+
+                afterEach(() => {
+                    fs.unlinkSync(outputSourceMapPath);
+                });
+            });
+
+            describe('--sourceMapFileName option is set', () => {
+                let sourceMapFileName: string = 'test',
+                    sourceMapFilePath: string = `${sourceMapFileName}.js.map`,
+                    outputSourceMapFilePath: string = `${outputDirName}/${sourceMapFilePath}`;
+
+                it('should creates source map file with given name in the same directory as output file', () => {
+                    JavaScriptObfuscator.runCLI([
+                        'node',
+                        'javascript-obfuscator',
+                        fixtureFilePath,
+                        '--output',
+                        outputFilePath,
+                        '--compact',
+                        'true',
+                        '--selfDefending',
+                        '0',
+                        '--sourceMap',
+                        'true',
+                        '--sourceMapFileName',
+                        sourceMapFileName
+                    ]);
+
+                    assert.equal(fs.existsSync(outputSourceMapFilePath), true);
+
+                    const content: string = fs.readFileSync(outputSourceMapFilePath, { encoding: 'utf8' }),
+                        sourceMap: any = JSON.parse(content);
+
+                    assert.property(sourceMap, 'version');
+                    assert.property(sourceMap, 'sources');
+                    assert.property(sourceMap, 'names');
+                });
+
+                afterEach(() => {
+                    fs.unlinkSync(outputSourceMapFilePath);
+                });
+            });
+
+            describe('--sourceMapMode option is `inline`', () => {
+                it('shouldn\'t create file with source map if `sourceMapMode` is `inline`', () => {
+                    JavaScriptObfuscator.runCLI([
+                        'node',
+                        'javascript-obfuscator',
+                        fixtureFilePath,
+                        '--output',
+                        outputFilePath,
+                        '--compact',
+                        'true',
+                        '--selfDefending',
+                        '0',
+                        '--sourceMap',
+                        'true',
+                        '--sourceMapMode',
+                        'inline'
+                    ]);
+
+                    assert.equal(fs.existsSync(outputSourceMapPath), false);
+                });
             });
 
             afterEach(() => {
                 fs.unlinkSync(outputFilePath);
-                fs.unlinkSync(outputSourceMapPath);
             });
         });
 

@@ -1,19 +1,20 @@
 import 'format-unicorn';
 
-import { INode } from "../../interfaces/nodes/INode";
-import { IOptions } from "../../interfaces/IOptions";
+import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TStatement } from '../../types/TStatement';
 
-import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
+import { IOptions } from '../../interfaces/IOptions';
 
-import { AppendState } from "../../enums/AppendState";
+import { AppendState } from '../../enums/AppendState';
 
-import { DebugProtectionFunctionTemplate } from "../../templates/custom-nodes/debug-protection-nodes/debug-protection-function-node/DebugProtectionFunctionTemplate";
+import { DebugProtectionFunctionTemplate } from '../../templates/custom-nodes/debug-protection-nodes/debug-protection-function-node/DebugProtectionFunctionTemplate';
 
-import { Node } from '../Node';
+import { AbstractCustomNode } from '../AbstractCustomNode';
+import { NodeAppender } from '../../NodeAppender';
 import { NodeUtils } from '../../NodeUtils';
-import { Utils } from "../../Utils";
+import { Utils } from '../../Utils';
 
-export class DebugProtectionFunctionNode extends Node {
+export class DebugProtectionFunctionNode extends AbstractCustomNode {
     /**
      * @type {AppendState}
      */
@@ -44,7 +45,7 @@ export class DebugProtectionFunctionNode extends Node {
                 max: programBodyLength
             });
 
-        NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), randomIndex);
+        NodeAppender.insertNodeAtIndex(blockScopeNode, this.getNode(), randomIndex);
     }
 
     /**
@@ -57,9 +58,9 @@ export class DebugProtectionFunctionNode extends Node {
     /**
      * Found this trick in JScrambler
      *
-     * @returns {INode}
+     * @returns {TStatement[]}
      */
-    protected getNodeStructure (): INode {
+    protected getNodeStructure (): TStatement[] {
         return NodeUtils.convertCodeToStructure(
             DebugProtectionFunctionTemplate().formatUnicorn({
                 debugProtectionFunctionName: this.debugProtectionFunctionName

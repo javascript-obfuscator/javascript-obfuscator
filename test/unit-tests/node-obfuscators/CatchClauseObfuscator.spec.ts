@@ -1,24 +1,24 @@
-import { ICatchClauseNode } from "../../../src/interfaces/nodes/ICatchClauseNode";
-import { ICustomNode } from "../../../src/interfaces/custom-nodes/ICustomNode";
-import { IExpressionStatementNode } from "../../../src/interfaces/nodes/IExpressionStatementNode";
+import * as ESTree from 'estree';
 
-import { DEFAULT_PRESET } from "../../../src/preset-options/DefaultPreset";
+import { ICustomNode } from '../../../src/interfaces/custom-nodes/ICustomNode';
 
-import { NodeType } from "../../../src/enums/NodeType";
+import { DEFAULT_PRESET } from '../../../src/preset-options/DefaultPreset';
+
+import { NodeType } from '../../../src/enums/NodeType';
 
 import { CatchClauseObfuscator } from '../../../src/node-obfuscators/CatchClauseObfuscator';
-import { NodeMocks } from "../../mocks/NodeMocks";
-import { Options } from "../../../src/options/Options";
+import { NodeMocks } from '../../mocks/NodeMocks';
+import { Options } from '../../../src/options/Options';
 
 const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('CatchClauseObfuscator', () => {
     describe('obfuscateNode (catchClauseNode: ICatchClauseNode): void', () => {
         let catchClauseObfuscator: CatchClauseObfuscator,
-            catchClauseNode: ICatchClauseNode;
+            catchClauseNode: ESTree.CatchClause;
 
         beforeEach(() => {
-            let expressionStatementNode: IExpressionStatementNode = {
+            let expressionStatementNode: ESTree.ExpressionStatement = {
                 type: NodeType.ExpressionStatement,
                 expression: {
                     type: NodeType.CallExpression,
@@ -64,7 +64,7 @@ describe('CatchClauseObfuscator', () => {
 
         it('should obfuscate catch clause param calls in catch clause node body', () => {
             assert.match(
-                catchClauseNode.param.name,
+                (<ESTree.Identifier>catchClauseNode.param).name,
                 /^_0x\w+$/
             );
         });

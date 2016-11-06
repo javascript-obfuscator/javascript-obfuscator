@@ -2,9 +2,9 @@ import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as path from 'path';
 
-import { IPackageConfig } from "../interfaces/IPackageConfig";
+import { IPackageConfig } from '../interfaces/IPackageConfig';
 
-import { Utils } from "../Utils";
+import { Utils } from '../Utils';
 
 export class CLIUtils {
     /**
@@ -38,15 +38,24 @@ export class CLIUtils {
     }
 
     /**
+     * @param outputCodePath
+     * @param sourceMapFileName
      * @returns {string}
      */
-    public static getOutputSourceMapPath (outputCodePath: string): string {
-        return outputCodePath
-            .split('.')
-            .map<string>((value: string, index: number, array: string[]) => {
-                return index === array.length - 1 ? `${value}.map` : value;
-            })
-            .join('.');
+    public static getOutputSourceMapPath (outputCodePath: string, sourceMapFileName: string = ''): string {
+        if (sourceMapFileName) {
+            outputCodePath = `${outputCodePath.substr(
+                0, outputCodePath.lastIndexOf('/')
+            )}/${sourceMapFileName}`;
+        }
+
+        if (!/\.js\.map$/.test(outputCodePath)) {
+            outputCodePath = `${outputCodePath.split('.')[0]}.js.map`;
+        } else if (/\.js$/.test(outputCodePath)) {
+            outputCodePath += '.map';
+        }
+
+        return outputCodePath;
     }
 
     /**

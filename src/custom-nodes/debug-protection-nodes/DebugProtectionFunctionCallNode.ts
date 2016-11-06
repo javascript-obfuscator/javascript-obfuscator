@@ -1,18 +1,19 @@
 import 'format-unicorn';
 
-import { INode } from "../../interfaces/nodes/INode";
-import { IOptions } from "../../interfaces/IOptions";
+import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TStatement } from '../../types/TStatement';
 
-import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
+import { IOptions } from '../../interfaces/IOptions';
 
-import { AppendState } from "../../enums/AppendState";
+import { AppendState } from '../../enums/AppendState';
 
-import { DebugProtectionFunctionCallTemplate } from "../../templates/custom-nodes/debug-protection-nodes/debug-protection-function-call-node/DebufProtectionFunctionCallTemplate";
+import { DebugProtectionFunctionCallTemplate } from '../../templates/custom-nodes/debug-protection-nodes/debug-protection-function-call-node/DebufProtectionFunctionCallTemplate';
 
-import { Node } from '../Node';
-import { NodeUtils } from "../../NodeUtils";
+import { AbstractCustomNode } from '../AbstractCustomNode';
+import { NodeAppender } from '../../NodeAppender';
+import { NodeUtils } from '../../NodeUtils';
 
-export class DebugProtectionFunctionCallNode extends Node {
+export class DebugProtectionFunctionCallNode extends AbstractCustomNode {
     /**
      * @type {AppendState}
      */
@@ -37,13 +38,13 @@ export class DebugProtectionFunctionCallNode extends Node {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        NodeUtils.appendNode(blockScopeNode.body, this.getNode());
+        NodeAppender.appendNode(blockScopeNode, this.getNode());
     }
 
     /**
-     * @returns {INode}
+     * @returns {TStatement[]}
      */
-    protected getNodeStructure (): INode {
+    protected getNodeStructure (): TStatement[] {
         return NodeUtils.convertCodeToStructure(
             DebugProtectionFunctionCallTemplate().formatUnicorn({
                 debugProtectionFunctionName: this.debugProtectionFunctionName

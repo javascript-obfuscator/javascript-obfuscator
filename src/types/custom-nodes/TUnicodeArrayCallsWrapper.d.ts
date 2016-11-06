@@ -1,3 +1,3 @@
-import { ICustomNodeWithIdentifier } from "../../interfaces/custom-nodes/ICustomNodeWithIdentifier";
+import { ICustomNodeWithIdentifier } from '../../interfaces/custom-nodes/ICustomNodeWithIdentifier';
 
 export type TUnicodeArrayCallsWrapper = ICustomNodeWithIdentifier;

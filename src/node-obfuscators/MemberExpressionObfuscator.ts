@@ -1,23 +1,20 @@
 import * as escodegen from 'escodegen';
 import * as estraverse from 'estraverse';
+import * as ESTree from 'estree';
 
-import { IIdentifierNode } from "../interfaces/nodes/IIdentifierNode";
-import { ILiteralNode } from "../interfaces/nodes/ILiteralNode";
-import { IMemberExpressionNode } from "../interfaces/nodes/IMemberExpressionNode";
-import { INode } from "../interfaces/nodes/INode";
+import { NodeType } from '../enums/NodeType';
 
-import { NodeType } from "../enums/NodeType";
+import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
+import { Nodes } from '../Nodes';
+import { StringLiteralReplacer } from './replacers/StringLiteralReplacer';
 
-import { NodeObfuscator } from './NodeObfuscator';
-import { Nodes } from "../Nodes";
-
-export class MemberExpressionObfuscator extends NodeObfuscator {
+export class MemberExpressionObfuscator extends AbstractNodeObfuscator {
     /**
      * @param memberExpressionNode
      */
-    public obfuscateNode (memberExpressionNode: IMemberExpressionNode): void {
+    public obfuscateNode (memberExpressionNode: ESTree.MemberExpression): void {
         estraverse.replace(memberExpressionNode.property, {
-            enter: (node: INode, parentNode: INode): any => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Nodes.isLiteralNode(node)) {
                     this.obfuscateLiteralProperty(node);
 
@@ -48,12 +45,12 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
      *
      * @param node
      */
-    private obfuscateIdentifierProperty (node: IIdentifierNode): void {
+    private obfuscateIdentifierProperty (node: ESTree.Identifier): void {
         let nodeValue: string = node.name,
-            literalNode: ILiteralNode = {
+            literalNode: ESTree.Literal = {
                 raw: `'${nodeValue}'`,
                 'x-verbatim-property': {
-                    content : this.replaceLiteralValueWithUnicodeValue(nodeValue),
+                    content : new StringLiteralReplacer(this.nodes, this.options).replace(nodeValue),
                     precedence: escodegen.Precedence.Primary
                 },
                 type: NodeType.Literal,
@@ -74,10 +71,10 @@ export class MemberExpressionObfuscator extends NodeObfuscator {
      *
      * @param node
      */
-    private obfuscateLiteralProperty (node: ILiteralNode): void {
+    private obfuscateLiteralProperty (node: ESTree.Literal): void {
         if (typeof node.value === 'string' && !node['x-verbatim-property']) {
             node['x-verbatim-property'] = {
-                content : this.replaceLiteralValueWithUnicodeValue(node.value),
+                content : new StringLiteralReplacer(this.nodes, this.options).replace(node.value),
                 precedence: escodegen.Precedence.Primary
             };
         }

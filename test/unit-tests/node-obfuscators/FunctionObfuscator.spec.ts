@@ -1,33 +1,30 @@
-import { IBlockStatementNode } from "../../../src/interfaces/nodes/IBlockStatementNode";
-import { ICustomNode } from "../../../src/interfaces/custom-nodes/ICustomNode";
-import { IExpressionStatementNode } from "../../../src/interfaces/nodes/IExpressionStatementNode";
-import { IFunctionDeclarationNode } from "../../../src/interfaces/nodes/IFunctionDeclarationNode";
-import { IIdentifierNode } from "../../../src/interfaces/nodes/IIdentifierNode";
-import { IProgramNode } from "../../../src/interfaces/nodes/IProgramNode";
+import * as ESTree from 'estree';
 
-import { DEFAULT_PRESET } from "../../../src/preset-options/DefaultPreset";
+import { ICustomNode } from '../../../src/interfaces/custom-nodes/ICustomNode';
 
-import { FunctionObfuscator } from "../../../src/node-obfuscators/FunctionObfuscator";
-import { NodeMocks } from "../../mocks/NodeMocks";
-import { Options } from "../../../src/options/Options";
+import { DEFAULT_PRESET } from '../../../src/preset-options/DefaultPreset';
+
+import { FunctionObfuscator } from '../../../src/node-obfuscators/FunctionObfuscator';
+import { NodeMocks } from '../../mocks/NodeMocks';
+import { Options } from '../../../src/options/Options';
 
 
 const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('FunctionObfuscator', () => {
     describe('obfuscateNode (functionNode: IFunctionNode): void', () => {
-        let blockStatementNode: IBlockStatementNode,
-            expressionStatementNode1: IExpressionStatementNode,
-            expressionStatementNode2: IExpressionStatementNode,
+        let blockStatementNode: ESTree.BlockStatement,
+            expressionStatementNode1: ESTree.ExpressionStatement,
+            expressionStatementNode2: ESTree.ExpressionStatement,
             functionObfuscator: FunctionObfuscator,
-            functionDeclarationNode: IFunctionDeclarationNode,
+            functionDeclarationNode: ESTree.FunctionDeclaration,
             functionName: string = 'functionDeclaration',
             identifierName: string = 'identifierName',
-            identifierNode1: IIdentifierNode,
-            identifierNode2: IIdentifierNode,
-            identifierNode3: IIdentifierNode,
+            identifierNode1: ESTree.Identifier,
+            identifierNode2: ESTree.Identifier,
+            identifierNode3: ESTree.Identifier,
             paramName: string = 'param1',
-            programNode: IProgramNode;
+            programNode: ESTree.Program;
 
         before(() => {
             identifierNode1 = NodeMocks.getIdentifierNode(paramName);

@@ -1,5 +1,5 @@
 #!/bin/bash
 
-npm run test:compile
-$(npm bin)/mocha test-tmp/test/index.spec.js
+npm run test:compile &&
+$(npm bin)/mocha test-tmp/test/index.spec.js &&
 npm run test:removeTmpDir

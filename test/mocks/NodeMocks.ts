@@ -1,30 +1,16 @@
 import * as escodegen from 'escodegen';
+import * as ESTree from 'estree';
 
-import { TExpression } from "../../src/types/nodes/TExpression";
-import { TStatement } from "../../src/types/nodes/TStatement";
+import { TStatement } from '../../src/types/TStatement';
 
-import { IBlockStatementNode } from "../../src/interfaces/nodes/IBlockStatementNode";
-import { ICallExpressionNode } from "../../src/interfaces/nodes/ICallExpressionNode";
-import { ICatchClauseNode } from "../../src/interfaces/nodes/ICatchClauseNode";
-import { IExpressionStatementNode } from "../../src/interfaces/nodes/IExpressionStatementNode";
-import { IFunctionDeclarationNode } from "../../src/interfaces/nodes/IFunctionDeclarationNode";
-import { IIdentifierNode } from "../../src/interfaces/nodes/IIdentifierNode";
-import { IIfStatementNode } from "../../src/interfaces/nodes/IIfStatementNode";
-import { ILiteralNode } from "../../src/interfaces/nodes/ILiteralNode";
-import { IMemberExpressionNode } from "../../src/interfaces/nodes/IMemberExpressionNode";
-import { IProgramNode } from "../../src/interfaces/nodes/IProgramNode";
-import { ISpreadElementNode } from "../../src/interfaces/nodes/ISpreadElementNode";
-import { IVariableDeclarationNode } from "../../src/interfaces/nodes/IVariableDeclarationNode";
-import { IVariableDeclaratorNode } from "../../src/interfaces/nodes/IVariableDeclaratorNode";
-
-import { NodeType } from "../../src/enums/NodeType";
+import { NodeType } from '../../src/enums/NodeType';
 
 export class NodeMocks {
     /**
      * @param bodyNodes
-     * @returns {IProgramNode}
+     * @returns {ESTree.Program}
      */
-    public static getProgramNode (bodyNodes: TStatement[] = []): IProgramNode {
+    public static getProgramNode (bodyNodes: TStatement[] = []): ESTree.Program {
         return {
             type: NodeType.Program,
             body: bodyNodes,
@@ -35,9 +21,9 @@ export class NodeMocks {
 
     /**
      * @param bodyNodes
-     * @returns {IBlockStatementNode}
+     * @returns {ESTree.BlockStatement}
      */
-    public static getBlockStatementNode (bodyNodes: TStatement[] = []): IBlockStatementNode {
+    public static getBlockStatementNode (bodyNodes: ESTree.Statement[] = []): ESTree.BlockStatement {
         return {
             type: NodeType.BlockStatement,
             body: bodyNodes,
@@ -47,9 +33,9 @@ export class NodeMocks {
 
     /**
      * @param bodyNodes
-     * @returns {ICatchClauseNode}
+     * @returns {ESTree.CatchClause}
      */
-    public static getCatchClauseNode (bodyNodes: TStatement[] = []): ICatchClauseNode {
+    public static getCatchClauseNode (bodyNodes: ESTree.Statement[] = []): ESTree.CatchClause {
         return {
             type: NodeType.CatchClause,
             param: NodeMocks.getIdentifierNode('err'),
@@ -61,12 +47,12 @@ export class NodeMocks {
     /**
      * @param callee
      * @param args
-     * @returns {ICallExpressionNode}
+     * @returns {ESTree.CallExpression}
      */
     public static getCallExpressionNode (
-        callee: TExpression,
-        args: TExpression[] | ISpreadElementNode[] = []
-    ): ICallExpressionNode {
+        callee: ESTree.Expression,
+        args: ESTree.Expression[] | ESTree.SpreadElement[] = []
+    ): ESTree.CallExpression {
         return {
             type: NodeType.CallExpression,
             callee: callee,
@@ -77,11 +63,11 @@ export class NodeMocks {
 
     /**
      * @param expression
-     * @returns {IExpressionStatementNode}
+     * @returns {ESTree.ExpressionStatement}
      */
     public static getExpressionStatementNode (
-        expression: TExpression = NodeMocks.getIdentifierNode()
-    ): IExpressionStatementNode {
+        expression: ESTree.Expression = NodeMocks.getIdentifierNode()
+    ): ESTree.ExpressionStatement {
         return {
             type: NodeType.ExpressionStatement,
             expression: expression,
@@ -93,29 +79,28 @@ export class NodeMocks {
      * @param functionName
      * @param blockStatementNode
      * @param params
-     * @returns {IFunctionDeclarationNode}
+     * @returns {ESTree.FunctionDeclaration}
      */
     public static getFunctionDeclarationNode (
         functionName: string,
-        blockStatementNode: IBlockStatementNode,
-        params: IIdentifierNode[] = []
-    ): IFunctionDeclarationNode {
+        blockStatementNode: ESTree.BlockStatement,
+        params: ESTree.Identifier[] = []
+    ): ESTree.FunctionDeclaration {
         return {
             type: NodeType.FunctionDeclaration,
             id: NodeMocks.getIdentifierNode(functionName),
             params: params,
             body: blockStatementNode,
             generator: false,
-            expression: false,
             obfuscated: false
         };
     }
 
     /**
      * @param blockStatementNode
-     * @returns {IIfStatementNode}
+     * @returns {ESTree.IfStatement}
      */
-    public static getIfStatementNode (blockStatementNode: IBlockStatementNode): IIfStatementNode {
+    public static getIfStatementNode (blockStatementNode: ESTree.BlockStatement): ESTree.IfStatement {
         return {
             type: 'IfStatement',
             test: {
@@ -125,16 +110,15 @@ export class NodeMocks {
                 obfuscated: false
             },
             consequent: blockStatementNode,
-            alternate: null,
             obfuscated: false
         };
     }
 
     /**
      * @param identifierName
-     * @returns {IIdentifierNode}
+     * @returns {ESTree.Identifier}
      */
-    public static getIdentifierNode (identifierName: string = 'identifier'): IIdentifierNode {
+    public static getIdentifierNode (identifierName: string = 'identifier'): ESTree.Identifier {
         return {
             type: NodeType.Identifier,
             name: identifierName,
@@ -144,9 +128,9 @@ export class NodeMocks {
 
     /**
      * @param value
-     * @returns {ILiteralNode}
+     * @returns {ESTree.Literal}
      */
-    public static getLiteralNode (value: boolean|number|string = 'value'): ILiteralNode {
+    public static getLiteralNode (value: boolean|number|string = 'value'): ESTree.Literal {
         return {
             type: NodeType.Literal,
             value: value,
@@ -162,12 +146,12 @@ export class NodeMocks {
     /**
      * @param object
      * @param property
-     * @return {IMemberExpressionNode}
+     * @return {ESTree.MemberExpression}
      */
     public static getMemberExpressionNode (
-        object: IIdentifierNode,
-        property: IIdentifierNode|ILiteralNode
-    ): IMemberExpressionNode {
+        object: ESTree.Identifier,
+        property: ESTree.Identifier|ESTree.Literal
+    ): ESTree.MemberExpression {
         return {
             type: NodeType.MemberExpression,
             computed: false,
@@ -180,12 +164,12 @@ export class NodeMocks {
     /**
      * @param declarations
      * @param kind
-     * @returns {IVariableDeclarationNode}
+     * @returns {ESTree.VariableDeclaration}
      */
     public static getVariableDeclarationNode (
-        declarations: IVariableDeclaratorNode[] = [],
-        kind: string = 'var'
-    ): IVariableDeclarationNode {
+        declarations: ESTree.VariableDeclarator[] = [],
+        kind: 'var' | 'let' | 'const' = 'var'
+    ): ESTree.VariableDeclaration {
         return {
             type: NodeType.VariableDeclaration,
             declarations: declarations,
@@ -197,9 +181,9 @@ export class NodeMocks {
     /**
      * @param id
      * @param init
-     * @returns {IVariableDeclaratorNode}
+     * @returns {ESTree.VariableDeclarator}
      */
-    public static getVariableDeclaratorNode (id: IIdentifierNode, init: any): IVariableDeclaratorNode {
+    public static getVariableDeclaratorNode (id: ESTree.Identifier, init: any): ESTree.VariableDeclarator {
         return {
             type: NodeType.VariableDeclarator,
             id: id,

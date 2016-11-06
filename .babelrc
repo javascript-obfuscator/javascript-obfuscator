@@ -1,3 +1,6 @@
 {
+  "generatorOpts": {
+    "retainFunctionParens": true
+  },
   "presets": ["es2015"]
 }

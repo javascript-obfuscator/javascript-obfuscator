@@ -1,22 +1,50 @@
-import { IOptions } from "../interfaces/IOptions";
+import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 
-import { NodesGroup } from './NodesGroup';
-import { SelfDefendingUnicodeNode } from "../custom-nodes/self-defending-nodes/SelfDefendingUnicodeNode";
+import { AppendState } from '../enums/AppendState';
 
-export class SelfDefendingNodesGroup extends NodesGroup {
+import { NodeCallsControllerFunctionNode } from '../custom-nodes/node-calls-controller-nodes/NodeCallsControllerFunctionNode';
+import { SelfDefendingUnicodeNode } from '../custom-nodes/self-defending-nodes/SelfDefendingUnicodeNode';
+
+import { AbstractNodesGroup } from './AbstractNodesGroup';
+import { NodeAppender } from '../NodeAppender';
+import { Utils } from '../Utils';
+
+export class SelfDefendingNodesGroup extends AbstractNodesGroup {
     /**
-     * @param options
+     * @type {AppendState}
      */
-    constructor (options: IOptions) {
-        super(options);
+    protected appendState: AppendState = AppendState.AfterObfuscation;
 
+    /**
+     * @returns {Map<string, ICustomNode> | undefined}
+     */
+    public getNodes (): Map <string, ICustomNode> | undefined {
         if (!this.options.selfDefending) {
             return;
         }
 
-        this.nodes.set(
-            'selfDefendingUnicodeNode',
-            new SelfDefendingUnicodeNode(this.options)
-        );
+        const callsControllerFunctionName: string = Utils.getRandomVariableName();
+        const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
+
+        return this.syncCustomNodesWithNodesGroup(new Map <string, ICustomNode> ([
+            [
+                'selfDefendingUnicodeNode',
+                new SelfDefendingUnicodeNode(
+                    this.stackTraceData,
+                    callsControllerFunctionName,
+                    randomStackTraceIndex,
+                    this.options
+                )
+            ],
+            [
+                'SelfDefendingNodeCallsControllerFunctionNode',
+                new NodeCallsControllerFunctionNode(
+                    this.stackTraceData,
+                    callsControllerFunctionName,
+                    randomStackTraceIndex,
+                    this.options
+                )
+            ]
+        ]));
     }
 }

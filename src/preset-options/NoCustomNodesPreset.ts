@@ -1,19 +1,21 @@
-import { IObfuscatorOptions } from "../interfaces/IObfuscatorOptions";
+import { IObfuscatorOptions } from '../interfaces/IObfuscatorOptions';
 
-import { SourceMapMode } from "../enums/SourceMapMode";
+import { SourceMapMode } from '../enums/SourceMapMode';
 
 export const NO_CUSTOM_NODES_PRESET: IObfuscatorOptions = Object.freeze({
     compact: true,
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: false,
-    encodeUnicodeLiterals: false,
+    domainLock: [],
     reservedNames: [],
     rotateUnicodeArray: false,
     selfDefending: false,
     sourceMap: false,
+    sourceMapBaseUrl: '',
+    sourceMapFileName: '',
     sourceMapMode: SourceMapMode.Separate,
     unicodeArray: false,
-    unicodeArrayThreshold: 0,
-    wrapUnicodeArrayCalls: false
+    unicodeArrayEncoding: false,
+    unicodeArrayThreshold: 0
 });

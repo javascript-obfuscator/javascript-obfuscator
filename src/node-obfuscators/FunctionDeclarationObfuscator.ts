@@ -1,12 +1,15 @@
 import * as estraverse from 'estraverse';
+import * as ESTree from 'estree';
 
-import { IFunctionDeclarationNode } from "../interfaces/nodes/IFunctionDeclarationNode";
-import { INode } from "../interfaces/nodes/INode";
+import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../interfaces/IOptions';
 
-import { NodeType } from "../enums/NodeType";
+import { NodeType } from '../enums/NodeType';
 
-import { NodeObfuscator } from './NodeObfuscator';
-import { NodeUtils } from "../NodeUtils";
+import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
+import { IdentifierReplacer } from './replacers/IdentifierReplacer';
+import { Nodes } from '../Nodes';
+import { NodeUtils } from '../NodeUtils';
 
 /**
  * replaces:
@@ -17,17 +20,27 @@ import { NodeUtils } from "../NodeUtils";
  *     function _0x12d45f () { //... };
  *     _0x12d45f();
  */
-export class FunctionDeclarationObfuscator extends NodeObfuscator {
+export class FunctionDeclarationObfuscator extends AbstractNodeObfuscator {
     /**
-     * @type {Map<string, string>}
+     * @type {IdentifierReplacer}
      */
-    private functionName: Map <string, string> = new Map <string, string> ();
+    private identifierReplacer: IdentifierReplacer;
+
+    /**
+     * @param nodes
+     * @param options
+     */
+    constructor(nodes: Map <string, ICustomNode>, options: IOptions) {
+        super(nodes, options);
+
+        this.identifierReplacer = new IdentifierReplacer(this.nodes, this.options);
+    }
 
     /**
      * @param functionDeclarationNode
      * @param parentNode
      */
-    public obfuscateNode (functionDeclarationNode: IFunctionDeclarationNode, parentNode: INode): void {
+    public obfuscateNode (functionDeclarationNode: ESTree.FunctionDeclaration, parentNode: ESTree.Node): void {
         if (parentNode.type === NodeType.Program) {
             return;
         }
@@ -39,23 +52,25 @@ export class FunctionDeclarationObfuscator extends NodeObfuscator {
     /**
      * @param functionDeclarationNode
      */
-    private storeFunctionName (functionDeclarationNode: IFunctionDeclarationNode): void {
-        estraverse.traverse(functionDeclarationNode.id, {
-            enter: (node: INode): any => this.storeIdentifiersNames(node, this.functionName)
+    private storeFunctionName (functionDeclarationNode: ESTree.FunctionDeclaration): void {
+        NodeUtils.typedReplace(functionDeclarationNode.id, NodeType.Identifier, {
+            enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
         });
     }
 
     /**
      * @param functionDeclarationNode
      */
-    private replaceFunctionName (functionDeclarationNode: IFunctionDeclarationNode): void {
-        let scopeNode: INode = NodeUtils.getBlockScopeOfNode(
+    private replaceFunctionName (functionDeclarationNode: ESTree.FunctionDeclaration): void {
+        let scopeNode: ESTree.Node = NodeUtils.getBlockScopeOfNode(
             functionDeclarationNode
         );
 
         estraverse.replace(scopeNode, {
-            enter: (node: INode, parentNode: INode): any => {
-                this.replaceIdentifiersWithRandomNames(node, parentNode, this.functionName);
+            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+                if (Nodes.isReplaceableIdentifierNode(node, parentNode)) {
+                    node.name = this.identifierReplacer.replace(node.name);
+                }
             }
         });
     }

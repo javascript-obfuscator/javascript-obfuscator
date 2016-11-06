@@ -1,32 +1,34 @@
 import 'format-unicorn';
 
-import { INode } from "../../interfaces/nodes/INode";
-import { IOptions } from "../../interfaces/IOptions";
+import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TStatement } from '../../types/TStatement';
 
-import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
+import { IOptions } from '../../interfaces/IOptions';
 
-import { AppendState } from "../../enums/AppendState";
+import { AppendState } from '../../enums/AppendState';
 
-import { NO_CUSTOM_NODES_PRESET } from "../../preset-options/NoCustomNodesPreset";
+import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
 
-import { SelfDefendingTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-rotate-function-node/SelfDefendingTemplate";
-import { UnicodeArrayRotateFunctionTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-rotate-function-node/UnicodeArrayRotateFunctionTemplate";
+import { SelfDefendingTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-rotate-function-node/SelfDefendingTemplate';
+import { UnicodeArrayRotateFunctionTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-rotate-function-node/UnicodeArrayRotateFunctionTemplate';
 
-import { JavaScriptObfuscator } from "../../JavaScriptObfuscator";
-import { Node } from '../Node';
-import { NodeUtils } from "../../NodeUtils";
-import { Utils } from "../../Utils";
+import { AbstractCustomNode } from '../AbstractCustomNode';
+import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
+import { NodeAppender } from '../../NodeAppender';
+import { NodeUtils } from '../../NodeUtils';
+import { UnicodeArray } from '../../UnicodeArray';
+import { Utils } from '../../Utils';
 
-export class UnicodeArrayRotateFunctionNode extends Node {
+export class UnicodeArrayRotateFunctionNode extends AbstractCustomNode {
     /**
      * @type {AppendState}
      */
     protected appendState: AppendState = AppendState.AfterObfuscation;
 
     /**
-     * @type {string[]}
+     * @type {UnicodeArray}
      */
-    private unicodeArray: string[];
+    private unicodeArray: UnicodeArray;
 
     /**
      * @type {string}
@@ -46,7 +48,7 @@ export class UnicodeArrayRotateFunctionNode extends Node {
      */
     constructor (
         unicodeArrayName: string,
-        unicodeArray: string[],
+        unicodeArray: UnicodeArray,
         unicodeArrayRotateValue: number,
         options: IOptions
     ) {
@@ -61,24 +63,24 @@ export class UnicodeArrayRotateFunctionNode extends Node {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        if (!this.unicodeArray.length) {
+        if (!this.unicodeArray.getLength()) {
             return;
         }
 
-        NodeUtils.insertNodeAtIndex(blockScopeNode.body, this.getNode(), 1);
+        NodeAppender.insertNodeAtIndex(blockScopeNode, this.getNode(), 1);
     }
 
     /**
-     * @returns {INode}
+     * @returns {TStatement[]}
      */
-    public getNode (): INode {
+    public getNode (): TStatement[] {
         return super.getNode();
     }
 
     /**
-     * @returns {INode}
+     * @returns {TStatement[]}
      */
-    protected getNodeStructure (): INode {
+    protected getNodeStructure (): TStatement[] {
         let code: string = '',
             timesName: string = Utils.getRandomVariableName(),
             whileFunctionName: string = Utils.getRandomVariableName();

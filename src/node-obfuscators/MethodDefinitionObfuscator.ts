@@ -1,11 +1,10 @@
 import * as estraverse from 'estraverse';
+import * as ESTree from 'estree';
 
-import { IMethodDefinitionNode } from "../interfaces/nodes/IMethodDefinitionNode";
-import { INode } from "../interfaces/nodes/INode";
-
-import { NodeObfuscator } from './NodeObfuscator';
-import { Nodes } from "../Nodes";
-import { Utils } from "../Utils";
+import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
+import { Nodes } from '../Nodes';
+import { Utils } from '../Utils';
+import { StringLiteralReplacer } from './replacers/StringLiteralReplacer';
 
 /**
  * replaces:
@@ -14,7 +13,7 @@ import { Utils } from "../Utils";
  * on:
  *     [_0x9a4e('0x0')] { //... };
  */
-export class MethodDefinitionObfuscator extends NodeObfuscator {
+export class MethodDefinitionObfuscator extends AbstractNodeObfuscator {
     /**
      * @type {string[]}
      */
@@ -24,23 +23,24 @@ export class MethodDefinitionObfuscator extends NodeObfuscator {
      * @param methodDefinitionNode
      * @param parentNode
      */
-    public obfuscateNode (methodDefinitionNode: IMethodDefinitionNode, parentNode: INode): void {
+    public obfuscateNode (methodDefinitionNode: ESTree.MethodDefinition, parentNode: ESTree.Node): void {
         this.replaceMethodName(methodDefinitionNode);
     }
 
     /**
      * @param methodDefinitionNode
      */
-    private replaceMethodName (methodDefinitionNode: IMethodDefinitionNode): void {
+    private replaceMethodName (methodDefinitionNode: ESTree.MethodDefinition): void {
         estraverse.replace(methodDefinitionNode.key, {
-            leave: (node: INode): any => {
+            enter: (node: ESTree.Node): any => {
                 if (
                     Nodes.isIdentifierNode(node) &&
                     !Utils.arrayContains(this.ignoredNames, node.name) &&
                     methodDefinitionNode.computed === false
                 ) {
                     methodDefinitionNode.computed = true;
-                    node.name = this.replaceLiteralValueWithUnicodeValue(node.name);
+                    node.name = new StringLiteralReplacer(this.nodes, this.options)
+                        .replace(node.name);
 
                     return;
                 }

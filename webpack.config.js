@@ -2,7 +2,8 @@
 
 var fs = require("fs"),
     nodeExternals = require('webpack-node-externals'),
-    webpack = require('webpack');
+    webpack = require('webpack'),
+    ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
 
 function getLicenseText () {
     return "/*\nCopyright (C) 2016 Timofey Kachalov <sanex3339@yandex.ru>\n\n" +
@@ -18,13 +19,22 @@ module.exports = {
     externals: [nodeExternals()],
     module: {
         loaders: [
-            { test: /\.ts(x?)$/, loader: 'babel-loader!ts-loader' }
+            {
+                test: /\.ts(x?)$/,
+                loader: 'awesome-typescript-loader',
+                query: {
+                    forkChecker: true,
+                    useBabel: true,
+                    useCache: true
+                }
+            }
         ]
     },
     resolve: {
         extensions: ['.ts']
     },
     plugins: [
+        new ForkCheckerPlugin(),
         new webpack.BannerPlugin(
             {
                 banner: getLicenseText() + '\n\nrequire("source-map-support").install();\n',

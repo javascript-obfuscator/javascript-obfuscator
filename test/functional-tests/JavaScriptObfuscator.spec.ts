@@ -1,8 +1,8 @@
-import { IObfuscationResult } from "../../src/interfaces/IObfuscationResult";
+import { IObfuscationResult } from '../../src/interfaces/IObfuscationResult';
 
-import { JavaScriptObfuscator } from "../../src/JavaScriptObfuscator";
+import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscator';
 
-import { NO_CUSTOM_NODES_PRESET } from "../../src/preset-options/NoCustomNodesPreset";
+import { NO_CUSTOM_NODES_PRESET } from '../../src/preset-options/NoCustomNodesPreset';
 
 const assert: Chai.AssertStatic = require('chai').assert;
 
@@ -33,7 +33,7 @@ describe('JavaScriptObfuscator', () => {
                 assert.isOk(JSON.parse(obfuscationResult.getSourceMap()).mappings);
             });
 
-            it('should returns object with obfuscated code with inline source map and empty `sourceMap` if `sourceMapMode` is `inline', () => {
+            it('should returns object with obfuscated code with inline source map as Base64 string', () => {
                 let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     `var test = 1;`,
                     Object.assign({}, NO_CUSTOM_NODES_PRESET, {
@@ -47,7 +47,7 @@ describe('JavaScriptObfuscator', () => {
                     obfuscationResult.getObfuscatedCode(),
                     /sourceMappingURL=data:application\/json;base64/
                 );
-                assert.isNotOk(obfuscationResult.getSourceMap());
+                assert.isOk(obfuscationResult.getSourceMap());
             });
 
             it('should returns object with empty obfuscated code and source map with empty data if source code is empty', () => {
@@ -102,29 +102,28 @@ describe('JavaScriptObfuscator', () => {
         });
 
         it('should obfuscate simple code with literal variable value', () => {
-            let pattern: RegExp = /^var _0x(\w){4} *= *\['(\\[x|u]\d+)+'\]; *var *test *= *_0x(\w){4}\[0x0\];$/;
-
-            assert.match(
-                JavaScriptObfuscator.obfuscate(
+            let pattern1: RegExp = /^var _0x(\w){4} *= *\['(\\[x|u]\d+)+'\];/,
+                pattern2: RegExp = /var *test *= *_0x(\w){4}\('0x0'\);$/,
+                obfuscatedCode1: string = JavaScriptObfuscator.obfuscate(
                     `var test = 'abc';`,
                     Object.assign({}, NO_CUSTOM_NODES_PRESET, {
                         unicodeArray: true,
                         unicodeArrayThreshold: 1
                     })
                 ).getObfuscatedCode(),
-                pattern
-            );
-
-            assert.match(
-                JavaScriptObfuscator.obfuscate(
+                obfuscatedCode2: string = JavaScriptObfuscator.obfuscate(
                     `var test = 'абц';`,
                     Object.assign({}, NO_CUSTOM_NODES_PRESET, {
                         unicodeArray: true,
                         unicodeArrayThreshold: 1
                     })
-                ).getObfuscatedCode(),
-                pattern
-            );
+                ).getObfuscatedCode();
+
+            assert.match(obfuscatedCode1, pattern1);
+            assert.match(obfuscatedCode1, pattern2);
+
+            assert.match(obfuscatedCode2, pattern1);
+            assert.match(obfuscatedCode2, pattern2);
         });
     });
 });

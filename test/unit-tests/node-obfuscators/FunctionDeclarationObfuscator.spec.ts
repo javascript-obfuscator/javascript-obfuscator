@@ -1,24 +1,22 @@
-import { IBlockStatementNode } from "../../../src/interfaces/nodes/IBlockStatementNode";
-import { ICustomNode } from "../../../src/interfaces/custom-nodes/ICustomNode";
-import { IExpressionStatementNode } from "../../../src/interfaces/nodes/IExpressionStatementNode";
-import { IFunctionDeclarationNode } from "../../../src/interfaces/nodes/IFunctionDeclarationNode";
-import { IProgramNode } from "../../../src/interfaces/nodes/IProgramNode";
+import * as ESTree from 'estree';
 
-import { DEFAULT_PRESET } from "../../../src/preset-options/DefaultPreset";
+import { ICustomNode } from '../../../src/interfaces/custom-nodes/ICustomNode';
+
+import { DEFAULT_PRESET } from '../../../src/preset-options/DefaultPreset';
 
 import { FunctionDeclarationObfuscator } from '../../../src/node-obfuscators/FunctionDeclarationObfuscator';
-import { NodeMocks } from "../../mocks/NodeMocks";
-import { Options } from "../../../src/options/Options";
+import { NodeMocks } from '../../mocks/NodeMocks';
+import { Options } from '../../../src/options/Options';
 
 const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('FunctionDeclarationObfuscator', () => {
     describe('obfuscateNode (functionDeclarationNode: IFunctionDeclarationNode, parentNode: INode): void', () => {
-        let expressionStatementNode: IExpressionStatementNode,
+        let expressionStatementNode: ESTree.ExpressionStatement,
             functionDeclarationObfuscator: FunctionDeclarationObfuscator,
-            functionDeclarationNode: IFunctionDeclarationNode,
+            functionDeclarationNode: ESTree.FunctionDeclaration,
             functionName: string = 'functionDeclaration',
-            programNode: IProgramNode;
+            programNode: ESTree.Program;
 
         beforeEach(() => {
             expressionStatementNode = NodeMocks.getExpressionStatementNode(
@@ -37,8 +35,8 @@ describe('FunctionDeclarationObfuscator', () => {
         });
 
         describe('if `functionDeclaration` node parent node is not a Program node', () => {
-            let blockStatementNode: IBlockStatementNode,
-                functionDeclarationParentNode: IFunctionDeclarationNode;
+            let blockStatementNode: ESTree.BlockStatement,
+                functionDeclarationParentNode: ESTree.FunctionDeclaration;
 
             beforeEach(() => {
                 blockStatementNode = NodeMocks.getBlockStatementNode([

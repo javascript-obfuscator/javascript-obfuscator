@@ -1,4 +1,4 @@
-import { IObfuscationResult } from "./interfaces/IObfuscationResult";
+import { IObfuscationResult } from './interfaces/IObfuscationResult';
 
 export class ObfuscationResult implements IObfuscationResult {
     /**

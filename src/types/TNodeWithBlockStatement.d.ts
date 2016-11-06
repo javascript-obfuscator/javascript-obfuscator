@@ -1,4 +1,3 @@
-import { IBlockStatementNode } from "../interfaces/nodes/IBlockStatementNode";
-import { IProgramNode } from "../interfaces/nodes/IProgramNode";
+import * as ESTree from 'estree';
 
-export type TNodeWithBlockStatement = IBlockStatementNode|IProgramNode;
+export type TNodeWithBlockStatement = ESTree.BlockStatement|ESTree.Program;

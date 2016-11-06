@@ -1,8 +1,8 @@
-import { IObfuscationResult } from "./interfaces/IObfuscationResult";
-import { IObfuscatorOptions } from "./interfaces/IObfuscatorOptions";
+import { IObfuscationResult } from './interfaces/IObfuscationResult';
+import { IObfuscatorOptions } from './interfaces/IObfuscatorOptions';
 
-import { JavaScriptObfuscatorCLI } from "./cli/JavaScriptObfuscatorCLI";
-import { JavaScriptObfuscatorInternal } from "./JavaScriptObfuscatorInternal";
+import { JavaScriptObfuscatorCLI } from './cli/JavaScriptObfuscatorCLI';
+import { JavaScriptObfuscatorInternal } from './JavaScriptObfuscatorInternal';
 
 export class JavaScriptObfuscator {
     /**

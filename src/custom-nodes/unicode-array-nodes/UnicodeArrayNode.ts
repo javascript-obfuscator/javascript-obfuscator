@@ -1,19 +1,21 @@
 import 'format-unicorn';
 
-import { INode } from '../../interfaces/nodes/INode';
-import { IOptions } from "../../interfaces/IOptions";
+import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TStatement } from '../../types/TStatement';
 
-import { TNodeWithBlockStatement } from "../../types/TNodeWithBlockStatement";
+import { IOptions } from '../../interfaces/IOptions';
 
 import { AppendState } from '../../enums/AppendState';
 
-import { UnicodeArrayTemplate } from "../../templates/custom-nodes/unicode-array-nodes/unicode-array-node/UnicodeArrayTemplate";
+import { UnicodeArray } from '../../UnicodeArray';
 
-import { Node } from '../Node';
-import { NodeUtils } from "../../NodeUtils";
-import { Utils } from '../../Utils';
+import { UnicodeArrayTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-node/UnicodeArrayTemplate';
 
-export class UnicodeArrayNode extends Node {
+import { AbstractCustomNode } from '../AbstractCustomNode';
+import { NodeAppender } from '../../NodeAppender';
+import { NodeUtils } from '../../NodeUtils';
+
+export class UnicodeArrayNode extends AbstractCustomNode {
     /**
      * @type {number}
      */
@@ -25,9 +27,9 @@ export class UnicodeArrayNode extends Node {
     protected appendState: AppendState = AppendState.AfterObfuscation;
 
     /**
-     * @type {string[]}
+     * @type {UnicodeArray}
      */
-    private unicodeArray: string[] = [];
+    private unicodeArray: UnicodeArray;
 
     /**
      * @type {string}
@@ -40,17 +42,20 @@ export class UnicodeArrayNode extends Node {
     private unicodeArrayRotateValue: number;
 
     /**
+     * @param unicodeArray
      * @param unicodeArrayName
      * @param unicodeArrayRotateValue
      * @param options
      */
     constructor (
+        unicodeArray: UnicodeArray,
         unicodeArrayName: string,
         unicodeArrayRotateValue: number = 0,
         options: IOptions
     ) {
         super(options);
 
+        this.unicodeArray = unicodeArray;
         this.unicodeArrayName = unicodeArrayName;
         this.unicodeArrayRotateValue = unicodeArrayRotateValue;
     }
@@ -59,11 +64,11 @@ export class UnicodeArrayNode extends Node {
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        if (!this.unicodeArray.length) {
+        if (!this.unicodeArray.getLength()) {
             return;
         }
 
-        NodeUtils.prependNode(blockScopeNode.body, this.getNode());
+        NodeAppender.prependNode(blockScopeNode, this.getNode());
     }
 
     /**
@@ -74,17 +79,17 @@ export class UnicodeArrayNode extends Node {
     }
 
     /**
-     * @returns {string[]}
+     * @returns {UnicodeArray}
      */
-    public getNodeData (): string[] {
+    public getNodeData (): UnicodeArray {
         return this.unicodeArray;
     }
 
     /**
-     * @returns {INode}
+     * @returns {TStatement[]}
      */
-    public getNode (): INode {
-        Utils.arrayRotate <string> (this.unicodeArray, this.unicodeArrayRotateValue);
+    public getNode (): TStatement[] {
+        this.unicodeArray.rotateArray(this.unicodeArrayRotateValue);
 
         return super.getNode();
     }
@@ -93,17 +98,17 @@ export class UnicodeArrayNode extends Node {
      * @param data
      */
     public updateNodeData (data: string): void {
-        this.unicodeArray.push(data);
+        this.unicodeArray.addToArray(data);
     }
 
     /**
-     * @returns {INode}
+     * @returns {TStatement[]}
      */
-    protected getNodeStructure (): INode {
+    protected getNodeStructure (): TStatement[] {
         return NodeUtils.convertCodeToStructure(
             UnicodeArrayTemplate().formatUnicorn({
                 unicodeArrayName: this.unicodeArrayName,
-                unicodeArray: this.unicodeArray.join(',')
+                unicodeArray: this.unicodeArray.toString()
             })
         );
     }

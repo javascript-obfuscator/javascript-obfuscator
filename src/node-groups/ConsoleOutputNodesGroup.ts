@@ -1,9 +1,11 @@
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 
-import { AbstractNodesGroup } from './AbstractNodesGroup';
 import { ConsoleOutputDisableExpressionNode } from '../custom-nodes/console-output-nodes/ConsoleOutputDisableExpressionNode';
-import { NodeAppender } from '../NodeAppender';
 import { NodeCallsControllerFunctionNode } from '../custom-nodes/node-calls-controller-nodes/NodeCallsControllerFunctionNode';
+
+import { AbstractNodesGroup } from './AbstractNodesGroup';
+import { NodeAppender } from '../NodeAppender';
+import { Utils } from '../Utils';
 
 export class ConsoleOutputNodesGroup extends AbstractNodesGroup {
     /**
@@ -14,7 +16,7 @@ export class ConsoleOutputNodesGroup extends AbstractNodesGroup {
             return;
         }
 
-        const callsControllerFunctionName: string = 'consoleOutputNodeCallsControllerFunction';
+        const callsControllerFunctionName: string = Utils.getRandomVariableName();
         const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
 
         return this.syncCustomNodesWithNodesGroup(new Map <string, ICustomNode> ([

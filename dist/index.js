@@ -2549,10 +2549,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var AbstractNodesGroup_1 = __webpack_require__(11);
 var ConsoleOutputDisableExpressionNode_1 = __webpack_require__(33);
-var NodeAppender_1 = __webpack_require__(4);
 var NodeCallsControllerFunctionNode_1 = __webpack_require__(17);
+var AbstractNodesGroup_1 = __webpack_require__(11);
+var NodeAppender_1 = __webpack_require__(4);
+var Utils_1 = __webpack_require__(0);
 
 var ConsoleOutputNodesGroup = function (_AbstractNodesGroup_) {
     _inherits(ConsoleOutputNodesGroup, _AbstractNodesGroup_);
@@ -2569,7 +2570,7 @@ var ConsoleOutputNodesGroup = function (_AbstractNodesGroup_) {
             if (!this.options.disableConsoleOutput) {
                 return;
             }
-            var callsControllerFunctionName = 'consoleOutputNodeCallsControllerFunction';
+            var callsControllerFunctionName = Utils_1.Utils.getRandomVariableName();
             var randomStackTraceIndex = NodeAppender_1.NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
             return this.syncCustomNodesWithNodesGroup(new Map([['consoleOutputDisableExpressionNode', new ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['ConsoleOutputNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
         }
@@ -2599,6 +2600,7 @@ var DebugProtectionFunctionCallNode_1 = __webpack_require__(34);
 var DebugProtectionFunctionIntervalNode_1 = __webpack_require__(35);
 var DebugProtectionFunctionNode_1 = __webpack_require__(36);
 var AbstractNodesGroup_1 = __webpack_require__(11);
+var Utils_1 = __webpack_require__(0);
 
 var DebugProtectionNodesGroup = function (_AbstractNodesGroup_) {
     _inherits(DebugProtectionNodesGroup, _AbstractNodesGroup_);
@@ -2615,7 +2617,7 @@ var DebugProtectionNodesGroup = function (_AbstractNodesGroup_) {
             if (!this.options.debugProtection) {
                 return;
             }
-            var debugProtectionFunctionName = 'debugProtectionFunction';
+            var debugProtectionFunctionName = Utils_1.Utils.getRandomVariableName();
             var customNodes = new Map([['debugProtectionFunctionNode', new DebugProtectionFunctionNode_1.DebugProtectionFunctionNode(debugProtectionFunctionName, this.options)], ['debugProtectionFunctionCallNode', new DebugProtectionFunctionCallNode_1.DebugProtectionFunctionCallNode(debugProtectionFunctionName, this.options)]]);
             if (this.options.debugProtectionInterval) {
                 customNodes.set('debugProtectionFunctionIntervalNode', new DebugProtectionFunctionIntervalNode_1.DebugProtectionFunctionIntervalNode(debugProtectionFunctionName, this.options));
@@ -2644,10 +2646,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var AbstractNodesGroup_1 = __webpack_require__(11);
-var NodeAppender_1 = __webpack_require__(4);
 var DomainLockNode_1 = __webpack_require__(37);
 var NodeCallsControllerFunctionNode_1 = __webpack_require__(17);
+var AbstractNodesGroup_1 = __webpack_require__(11);
+var NodeAppender_1 = __webpack_require__(4);
+var Utils_1 = __webpack_require__(0);
 
 var DomainLockNodesGroup = function (_AbstractNodesGroup_) {
     _inherits(DomainLockNodesGroup, _AbstractNodesGroup_);
@@ -2664,7 +2667,7 @@ var DomainLockNodesGroup = function (_AbstractNodesGroup_) {
             if (!this.options.domainLock.length) {
                 return;
             }
-            var callsControllerFunctionName = 'domainLockCallsControllerFunction';
+            var callsControllerFunctionName = Utils_1.Utils.getRandomVariableName();
             var randomStackTraceIndex = NodeAppender_1.NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
             return this.syncCustomNodesWithNodesGroup(new Map([['DomainLockNode', new DomainLockNode_1.DomainLockNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['DomainLockNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
         }
@@ -2691,10 +2694,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var AppendState_1 = __webpack_require__(3);
-var AbstractNodesGroup_1 = __webpack_require__(11);
-var NodeAppender_1 = __webpack_require__(4);
 var NodeCallsControllerFunctionNode_1 = __webpack_require__(17);
 var SelfDefendingUnicodeNode_1 = __webpack_require__(38);
+var AbstractNodesGroup_1 = __webpack_require__(11);
+var NodeAppender_1 = __webpack_require__(4);
 var Utils_1 = __webpack_require__(0);
 
 var SelfDefendingNodesGroup = function (_AbstractNodesGroup_) {
@@ -2742,11 +2745,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var AppendState_1 = __webpack_require__(3);
-var AbstractNodesGroup_1 = __webpack_require__(11);
-var UnicodeArray_1 = __webpack_require__(30);
 var UnicodeArrayCallsWrapper_1 = __webpack_require__(39);
 var UnicodeArrayNode_1 = __webpack_require__(40);
 var UnicodeArrayRotateFunctionNode_1 = __webpack_require__(41);
+var AbstractNodesGroup_1 = __webpack_require__(11);
+var UnicodeArray_1 = __webpack_require__(30);
 var Utils_1 = __webpack_require__(0);
 
 var UnicodeArrayNodesGroup = function (_AbstractNodesGroup_) {
@@ -3493,7 +3496,7 @@ __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], 
 __decorate([class_validator_1.IsString(), class_validator_1.ValidateIf(function (options) {
     return Boolean(options.sourceMapBaseUrl);
 }), class_validator_1.IsUrl({
-    require_protocol: false,
+    require_protocol: true,
     require_valid_protocol: true
 }), __metadata('design:type', String)], Options.prototype, "sourceMapBaseUrl", void 0);
 __decorate([class_validator_1.IsString(), __metadata('design:type', String)], Options.prototype, "sourceMapFileName", void 0);

@@ -7,16 +7,17 @@ import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
 const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('ConsoleOutputDisableExpressionNode', () => {
+    const regExp = /(_0x([a-z0-9]){4,6}\['(\\x[a-f0-9]*)*'\]\['(\\x[a-f0-9]*)*'\] *= *_0x([a-z0-9]){4,6};){4}/;
+
     it('should correctly appendNodeToOptimalBlockScope `ConsoleOutputDisableExpressionNode` custom node into the obfuscated code if `disableConsoleOutput` option is set', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `var test = 'test';`,
             Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                disableConsoleOutput: true,
-                unicodeArrayThreshold: 1
+                disableConsoleOutput: true
             })
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(), /for *\(_0x([a-z0-9]){4,6} in _0x([a-z0-9]){4,6} *= *'(\\x[a-f0-9]*)*'\)/);
+        assert.match(obfuscationResult.getObfuscatedCode(), regExp);
     });
 
     it('should\'t appendNodeToOptimalBlockScope `ConsoleOutputDisableExpressionNode` custom node into the obfuscated code if `disableConsoleOutput` option is not set', () => {
@@ -28,6 +29,6 @@ describe('ConsoleOutputDisableExpressionNode', () => {
             })
         );
 
-        assert.notMatch(obfuscationResult.getObfuscatedCode(), /for *\(_0x([a-z0-9]){4,6} in _0x([a-z0-9]){4,6} *= *_0x([a-z0-9]){4}\('0x.*'\)\)/);
+        assert.notMatch(obfuscationResult.getObfuscatedCode(), regExp);
     });
 });

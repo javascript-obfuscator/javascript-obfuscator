@@ -5,6 +5,7 @@ import { DebugProtectionFunctionIntervalNode } from '../custom-nodes/debug-prote
 import { DebugProtectionFunctionNode } from '../custom-nodes/debug-protection-nodes/DebugProtectionFunctionNode';
 
 import { AbstractNodesGroup } from './AbstractNodesGroup';
+import { Utils } from '../Utils';
 
 export class DebugProtectionNodesGroup extends AbstractNodesGroup {
     /**
@@ -15,7 +16,7 @@ export class DebugProtectionNodesGroup extends AbstractNodesGroup {
             return;
         }
 
-        const debugProtectionFunctionName: string = 'debugProtectionFunction';
+        const debugProtectionFunctionName: string = Utils.getRandomVariableName();
         const customNodes: Map <string, ICustomNode> = new Map <string, ICustomNode> ([
             [
                 'debugProtectionFunctionNode',

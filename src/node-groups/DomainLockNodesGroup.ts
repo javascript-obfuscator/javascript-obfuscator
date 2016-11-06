@@ -1,8 +1,11 @@
-import { AbstractNodesGroup } from './AbstractNodesGroup';
-import { NodeAppender } from '../NodeAppender';
+import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
+
 import { DomainLockNode } from '../custom-nodes/domain-lock-nodes/DomainLockNode';
 import { NodeCallsControllerFunctionNode } from '../custom-nodes/node-calls-controller-nodes/NodeCallsControllerFunctionNode';
-import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
+
+import { AbstractNodesGroup } from './AbstractNodesGroup';
+import { NodeAppender } from '../NodeAppender';
+import { Utils } from '../Utils';
 
 export class DomainLockNodesGroup extends AbstractNodesGroup {
     /**
@@ -13,7 +16,7 @@ export class DomainLockNodesGroup extends AbstractNodesGroup {
             return;
         }
 
-        const callsControllerFunctionName: string = 'domainLockCallsControllerFunction';
+        const callsControllerFunctionName: string = Utils.getRandomVariableName();
         const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
 
         return this.syncCustomNodesWithNodesGroup(new Map <string, ICustomNode> ([

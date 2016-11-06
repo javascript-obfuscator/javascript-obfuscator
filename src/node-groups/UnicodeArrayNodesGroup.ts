@@ -2,11 +2,12 @@ import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 
 import { AppendState } from '../enums/AppendState';
 
-import { AbstractNodesGroup } from './AbstractNodesGroup';
-import { UnicodeArray } from '../UnicodeArray';
 import { UnicodeArrayCallsWrapper } from '../custom-nodes/unicode-array-nodes/UnicodeArrayCallsWrapper';
 import { UnicodeArrayNode } from '../custom-nodes/unicode-array-nodes/UnicodeArrayNode';
 import { UnicodeArrayRotateFunctionNode } from '../custom-nodes/unicode-array-nodes/UnicodeArrayRotateFunctionNode';
+
+import { AbstractNodesGroup } from './AbstractNodesGroup';
+import { UnicodeArray } from '../UnicodeArray';
 import { Utils } from '../Utils';
 
 export class UnicodeArrayNodesGroup extends AbstractNodesGroup {

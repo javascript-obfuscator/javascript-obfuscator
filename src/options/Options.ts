@@ -103,7 +103,7 @@ export class Options implements IOptions {
     @IsString()
     @ValidateIf((options: IOptions) => Boolean(options.sourceMapBaseUrl))
     @IsUrl({
-        require_protocol: false,
+        require_protocol: true,
         require_valid_protocol: true
     })
     public readonly sourceMapBaseUrl: string;

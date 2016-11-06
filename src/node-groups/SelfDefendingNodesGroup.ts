@@ -2,10 +2,11 @@ import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 
 import { AppendState } from '../enums/AppendState';
 
-import { AbstractNodesGroup } from './AbstractNodesGroup';
-import { NodeAppender } from '../NodeAppender';
 import { NodeCallsControllerFunctionNode } from '../custom-nodes/node-calls-controller-nodes/NodeCallsControllerFunctionNode';
 import { SelfDefendingUnicodeNode } from '../custom-nodes/self-defending-nodes/SelfDefendingUnicodeNode';
+
+import { AbstractNodesGroup } from './AbstractNodesGroup';
+import { NodeAppender } from '../NodeAppender';
 import { Utils } from '../Utils';
 
 export class SelfDefendingNodesGroup extends AbstractNodesGroup {

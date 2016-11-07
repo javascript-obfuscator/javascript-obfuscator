@@ -4,7 +4,9 @@
 export function AtobTemplate (): string {
     return `
         (function () {
-            var object = []['filter']['constructor']('return this')();
+            var getGlobal = Function('return (function () ' + '{}.constructor("return this")()' + ');');
+
+            var object = getGlobal();
             var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
             object.atob || (

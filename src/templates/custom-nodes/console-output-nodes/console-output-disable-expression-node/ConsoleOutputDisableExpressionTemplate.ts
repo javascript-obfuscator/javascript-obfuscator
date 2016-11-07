@@ -4,7 +4,7 @@
 export function ConsoleOutputDisableExpressionTemplate (): string {
     return `
         var {consoleLogDisableFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {
-            var getGlobal = Function('return typeof self !== "undefined"' + ' ? self : ' + 'typeof window !== "undefined"' + ' ? window : ' + 'typeof global !== "undefined"' + ' ? global : ' + '[]["filter"]["constructor"]("return this")()');
+            var getGlobal = Function('return (function () ' + '{}.constructor("return this")()' + ');');
             
             var func = Function('for ' + '(;;)' + ' {}');
             var that = getGlobal();

@@ -4,8 +4,8 @@
 export function DomainLockNodeTemplate (): string {
     return `
         var {domainLockFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {
-            var getGlobal = Function('return typeof self !== "undefined"' + ' ? self : ' + 'typeof window !== "undefined"' + ' ? window : ' + 'typeof global !== "undefined"' + ' ? global : ' + '[]["filter"]["constructor"]("return this")()');
-            
+            var getGlobal = Function('return (function () ' + '{}.constructor("return this")()' + ');');
+
             var func = function () { 
                 return {
                     key: 'item',

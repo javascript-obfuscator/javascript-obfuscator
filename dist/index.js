@@ -1454,6 +1454,7 @@ var Obfuscator = function () {
         _classCallCheck(this, Obfuscator);
 
         this.customNodes = new Map();
+        this.obfuscatorsCache = new Map();
         this.options = options;
     }
 
@@ -1494,13 +1495,15 @@ var Obfuscator = function () {
         value: function initializeCustomNodes(stackTraceData) {
             var _this = this;
 
+            var customNodes = [];
             Obfuscator.nodeGroups.forEach(function (nodeGroupConstructor) {
                 var nodeGroupNodes = new nodeGroupConstructor(stackTraceData, _this.options).getNodes();
                 if (!nodeGroupNodes) {
                     return;
                 }
-                _this.customNodes = new Map([].concat(_toConsumableArray(_this.customNodes), _toConsumableArray(nodeGroupNodes)));
+                customNodes.push.apply(customNodes, _toConsumableArray(nodeGroupNodes));
             });
+            this.customNodes = new Map(customNodes);
         }
     }, {
         key: 'initializeNodeObfuscators',
@@ -1512,7 +1515,12 @@ var Obfuscator = function () {
                 return;
             }
             nodeObfuscators.forEach(function (obfuscator) {
-                new obfuscator(_this2.customNodes, _this2.options).obfuscateNode(node, parentNode);
+                var cachedObfuscator = _this2.obfuscatorsCache.get(obfuscator);
+                if (!cachedObfuscator) {
+                    cachedObfuscator = new obfuscator(_this2.customNodes, _this2.options);
+                    _this2.obfuscatorsCache.set(obfuscator, cachedObfuscator);
+                }
+                cachedObfuscator.obfuscateNode(node, parentNode);
             });
         }
     }, {
@@ -1520,7 +1528,7 @@ var Obfuscator = function () {
         value: function obfuscate(node) {
             var _this3 = this;
 
-            estraverse.replace(node, {
+            estraverse.traverse(node, {
                 enter: function enter(node, parentNode) {
                     _this3.initializeNodeObfuscators(node, parentNode);
                 }
@@ -1531,6 +1539,7 @@ var Obfuscator = function () {
     return Obfuscator;
 }();
 
+Obfuscator.counter = 0;
 Obfuscator.nodeGroups = [DomainLockNodesGroup_1.DomainLockNodesGroup, SelfDefendingNodesGroup_1.SelfDefendingNodesGroup, ConsoleOutputNodesGroup_1.ConsoleOutputNodesGroup, DebugProtectionNodesGroup_1.DebugProtectionNodesGroup, UnicodeArrayNodesGroup_1.UnicodeArrayNodesGroup];
 Obfuscator.nodeObfuscators = new Map([[NodeType_1.NodeType.ArrowFunctionExpression, [FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.ClassDeclaration, [FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator]], [NodeType_1.NodeType.CatchClause, [CatchClauseObfuscator_1.CatchClauseObfuscator]], [NodeType_1.NodeType.FunctionDeclaration, [FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator, FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.FunctionExpression, [FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.MemberExpression, [MemberExpressionObfuscator_1.MemberExpressionObfuscator]], [NodeType_1.NodeType.MethodDefinition, [MethodDefinitionObfuscator_1.MethodDefinitionObfuscator]], [NodeType_1.NodeType.ObjectExpression, [ObjectExpressionObfuscator_1.ObjectExpressionObfuscator]], [NodeType_1.NodeType.VariableDeclaration, [VariableDeclarationObfuscator_1.VariableDeclarationObfuscator]], [NodeType_1.NodeType.Literal, [LiteralObfuscator_1.LiteralObfuscator]]]);
 exports.Obfuscator = Obfuscator;
@@ -3971,7 +3980,6 @@ var ObjectExpressionCalleeDataExtractor = function () {
     function ObjectExpressionCalleeDataExtractor(blockScopeBody, callee) {
         _classCallCheck(this, ObjectExpressionCalleeDataExtractor);
 
-        this.objectMembersCallsChain = [];
         this.blockScopeBody = blockScopeBody;
         this.callee = callee;
     }
@@ -3982,12 +3990,12 @@ var ObjectExpressionCalleeDataExtractor = function () {
             var calleeBlockStatement = null,
                 functionExpressionName = null;
             if (Nodes_1.Nodes.isMemberExpressionNode(this.callee)) {
-                this.objectMembersCallsChain = this.createObjectMembersCallsChain(this.objectMembersCallsChain, this.callee);
-                if (!this.objectMembersCallsChain.length) {
+                var objectMembersCallsChain = this.createObjectMembersCallsChain([], this.callee);
+                if (!objectMembersCallsChain.length) {
                     return null;
                 }
-                functionExpressionName = this.objectMembersCallsChain[this.objectMembersCallsChain.length - 1];
-                calleeBlockStatement = this.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopeOfNode(this.blockScopeBody[0]), this.objectMembersCallsChain);
+                functionExpressionName = objectMembersCallsChain[objectMembersCallsChain.length - 1];
+                calleeBlockStatement = this.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopeOfNode(this.blockScopeBody[0]), objectMembersCallsChain);
             }
             if (!calleeBlockStatement) {
                 return null;
@@ -4000,17 +4008,16 @@ var ObjectExpressionCalleeDataExtractor = function () {
     }, {
         key: 'createObjectMembersCallsChain',
         value: function createObjectMembersCallsChain(currentChain, memberExpression) {
-            if (Nodes_1.Nodes.isIdentifierNode(memberExpression.property)) {
+            if (Nodes_1.Nodes.isIdentifierNode(memberExpression.property) && memberExpression.computed === false) {
                 currentChain.unshift(memberExpression.property.name);
-            } else if (Nodes_1.Nodes.isLiteralNode(memberExpression.property) && typeof memberExpression.property.value === 'string') {
+            } else if (Nodes_1.Nodes.isLiteralNode(memberExpression.property) && (typeof memberExpression.property.value === 'string' || typeof memberExpression.property.value === 'number')) {
                 currentChain.unshift(memberExpression.property.value);
             } else {
                 return currentChain;
             }
             if (Nodes_1.Nodes.isMemberExpressionNode(memberExpression.object)) {
                 return this.createObjectMembersCallsChain(currentChain, memberExpression.object);
-            }
-            if (Nodes_1.Nodes.isIdentifierNode(memberExpression.object)) {
+            } else if (Nodes_1.Nodes.isIdentifierNode(memberExpression.object)) {
                 currentChain.unshift(memberExpression.object.name);
             }
             return currentChain;
@@ -4021,6 +4028,9 @@ var ObjectExpressionCalleeDataExtractor = function () {
             var _this = this;
 
             var objectName = objectMembersCallsChain.shift();
+            if (!objectName) {
+                return null;
+            }
             var calleeBlockStatement = null;
             estraverse.traverse(node, {
                 enter: function enter(node, parentNode) {

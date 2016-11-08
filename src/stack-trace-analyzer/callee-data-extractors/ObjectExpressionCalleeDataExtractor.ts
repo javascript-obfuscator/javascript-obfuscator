@@ -1,6 +1,8 @@
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
+import { TObjectMembersCallsChain } from '../../types/TObjectMembersCallsChain';
+
 import { ICalleeData } from '../../interfaces/stack-trace-analyzer/ICalleeData';
 import { ICalleeDataExtractor } from '../../interfaces/stack-trace-analyzer/ICalleeDataExtractor';
 
@@ -19,11 +21,6 @@ export class ObjectExpressionCalleeDataExtractor implements ICalleeDataExtractor
     private callee: ESTree.MemberExpression;
 
     /**
-     * @type {Array}
-     */
-    private objectMembersCallsChain: string[] = [];
-
-    /**
      * @param blockScopeBody
      * @param callee
      */
@@ -37,20 +34,22 @@ export class ObjectExpressionCalleeDataExtractor implements ICalleeDataExtractor
      */
     public extract (): ICalleeData|null {
         let calleeBlockStatement: ESTree.BlockStatement|null = null,
-            functionExpressionName: string|null = null;
+            functionExpressionName: string|number|null = null;
 
         if (Nodes.isMemberExpressionNode(this.callee)) {
-            this.objectMembersCallsChain = this.createObjectMembersCallsChain(this.objectMembersCallsChain, this.callee);
+            const objectMembersCallsChain: TObjectMembersCallsChain = this.createObjectMembersCallsChain(
+                [],
+                this.callee
+            );
 
-            if (!this.objectMembersCallsChain.length) {
+            if (!objectMembersCallsChain.length) {
                 return null;
             }
 
-            functionExpressionName = this.objectMembersCallsChain[this.objectMembersCallsChain.length - 1];
-
+            functionExpressionName = objectMembersCallsChain[objectMembersCallsChain.length - 1];
             calleeBlockStatement = this.getCalleeBlockStatement(
                 NodeUtils.getBlockScopeOfNode(this.blockScopeBody[0]),
-                this.objectMembersCallsChain
+                objectMembersCallsChain
             );
         }
 
@@ -71,22 +70,31 @@ export class ObjectExpressionCalleeDataExtractor implements ICalleeDataExtractor
      *
      * @param currentChain
      * @param memberExpression
-     * @returns {string[]}
+     * @returns {TObjectMembersCallsChain}
      */
-    private createObjectMembersCallsChain (currentChain: string[], memberExpression: ESTree.MemberExpression): string[] {
-        if (Nodes.isIdentifierNode(memberExpression.property)) {
+    private createObjectMembersCallsChain (
+        currentChain: TObjectMembersCallsChain,
+        memberExpression: ESTree.MemberExpression
+    ): TObjectMembersCallsChain {
+        // first step: processing memberExpression `property` property
+        if (Nodes.isIdentifierNode(memberExpression.property) && memberExpression.computed === false) {
             currentChain.unshift(memberExpression.property.name);
-        } else if (Nodes.isLiteralNode(memberExpression.property) && typeof memberExpression.property.value === 'string') {
+        } else if (
+            Nodes.isLiteralNode(memberExpression.property) &&
+            (
+                typeof memberExpression.property.value === 'string' ||
+                typeof memberExpression.property.value === 'number'
+            )
+        ) {
             currentChain.unshift(memberExpression.property.value);
         } else {
             return currentChain;
         }
 
+        // second step: processing memberExpression `object` property
         if (Nodes.isMemberExpressionNode(memberExpression.object)) {
             return this.createObjectMembersCallsChain(currentChain, memberExpression.object);
-        }
-
-        if (Nodes.isIdentifierNode(memberExpression.object)) {
+        } else if (Nodes.isIdentifierNode(memberExpression.object)) {
             currentChain.unshift(memberExpression.object.name);
         }
 
@@ -98,8 +106,15 @@ export class ObjectExpressionCalleeDataExtractor implements ICalleeDataExtractor
      * @param objectMembersCallsChain
      * @returns {ESTree.BlockStatement|null}
      */
-    private getCalleeBlockStatement (node: ESTree.Node, objectMembersCallsChain: string[]): ESTree.BlockStatement|null {
-        const objectName: string = <string>objectMembersCallsChain.shift();
+    private getCalleeBlockStatement (
+        node: ESTree.Node,
+        objectMembersCallsChain: TObjectMembersCallsChain
+    ): ESTree.BlockStatement|null {
+        const objectName: string|number|undefined = objectMembersCallsChain.shift();
+
+        if (!objectName) {
+            return null;
+        }
 
         let calleeBlockStatement: ESTree.BlockStatement|null = null;
 
@@ -129,9 +144,9 @@ export class ObjectExpressionCalleeDataExtractor implements ICalleeDataExtractor
      */
     private findCalleeBlockStatement (
         objectExpressionProperties: ESTree.Property[],
-        objectMembersCallsChain: string[]
+        objectMembersCallsChain: TObjectMembersCallsChain
     ): ESTree.BlockStatement|null {
-        const nextItemInCallsChain: string|undefined = objectMembersCallsChain.shift();
+        const nextItemInCallsChain: string|number|undefined = objectMembersCallsChain.shift();
 
         if (!nextItemInCallsChain) {
             return null;

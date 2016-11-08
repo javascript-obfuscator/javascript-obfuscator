@@ -99,7 +99,7 @@ function getFunctionExpressionById (astTree: ESTree.Node, id: string): ESTree.Fu
  * @param name
  * @returns {ESTree.FunctionExpression|null}
  */
-function getObjectFunctionExpressionByName (astTree: ESTree.Node, objectName: string, name: string): ESTree.FunctionExpression|null {
+function getObjectFunctionExpressionByName (astTree: ESTree.Node, objectName: string, name: string|number): ESTree.FunctionExpression|null {
     let functionExpressionNode: ESTree.FunctionExpression|null = null,
         targetObjectExpressionNode: ESTree.ObjectExpression|null = null;
 
@@ -288,10 +288,10 @@ describe('StackTraceAnalyzer', () => {
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
 
-        it('should returns correct BlockScopeTraceData - variant #5: call expression of object member', () => {
+        it('should returns correct BlockScopeTraceData - variant #5: call expression of object member #1', () => {
             astTree = NodeMocks.getProgramNode(
                 NodeUtils.convertCodeToStructure(
-                    readFileAsString('./test/fixtures/stack-trace-analyzer/call-expression-of-object-member.js')
+                    readFileAsString('./test/fixtures/stack-trace-analyzer/call-expression-of-object-member-1.js')
                 )
             );
 
@@ -337,6 +337,31 @@ describe('StackTraceAnalyzer', () => {
                         },
                     ]
                 }
+            ];
+
+            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+
+            assert.deepEqual(stackTraceData, expectedStackTraceData);
+        });
+
+        it('should returns correct BlockScopeTraceData - variant #5: call expression of object member #2', () => {
+            astTree = NodeMocks.getProgramNode(
+                NodeUtils.convertCodeToStructure(
+                    readFileAsString('./test/fixtures/stack-trace-analyzer/call-expression-of-object-member-2.js')
+                )
+            );
+
+            expectedStackTraceData = [
+                {
+                    name: 'baz',
+                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object', 'baz')).body,
+                    stackTrace: []
+                },
+                {
+                    name: 1,
+                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 1)).body,
+                    stackTrace: []
+                },
             ];
 
             stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();

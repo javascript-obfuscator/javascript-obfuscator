@@ -68,8 +68,8 @@ export class VariableDeclarationObfuscator extends AbstractNodeObfuscator {
      */
     private replaceVariableNames (variableDeclarationNode: ESTree.VariableDeclaration, variableParentNode: ESTree.Node): void {
         let scopeNode: ESTree.Node = variableDeclarationNode.kind === 'var' ? NodeUtils.getBlockScopeOfNode(
-                variableDeclarationNode
-            ) : variableParentNode;
+            variableDeclarationNode
+        ) : variableParentNode;
 
         estraverse.replace(scopeNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {

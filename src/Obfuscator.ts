@@ -1,13 +1,14 @@
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
+import { TNodeGroup } from './types/TNodeGroup';
+import { TNodeObfuscator } from './types/TNodeObfuscator';
+
 import { ICustomNode } from './interfaces/custom-nodes/ICustomNode';
+import { INodeObfuscator } from './interfaces/INodeObfuscator';
 import { IObfuscator } from './interfaces/IObfuscator';
 import { IOptions } from './interfaces/IOptions';
 import { IStackTraceData } from './interfaces/stack-trace-analyzer/IStackTraceData';
-
-import { TNodeGroup } from './types/TNodeGroup';
-import { TNodeObfuscator } from './types/TNodeObfuscator';
 
 import { AppendState } from './enums/AppendState';
 import { NodeType } from './enums/NodeType';
@@ -30,6 +31,8 @@ import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclar
 import { StackTraceAnalyzer } from './stack-trace-analyzer/StackTraceAnalyzer';
 
 export class Obfuscator implements IObfuscator {
+    static counter: number = 0;
+
     /**
      * @type {TNodeGroup[]}
      */
@@ -64,6 +67,11 @@ export class Obfuscator implements IObfuscator {
      * @type {Map<string, AbstractCustomNode>}
      */
     private customNodes: Map <string, ICustomNode> = new Map <string, ICustomNode> ();
+
+    /**
+     * @type {Map<TNodeObfuscator, INodeObfuscator>}
+     */
+    private obfuscatorsCache: Map <TNodeObfuscator, INodeObfuscator> = new Map <TNodeObfuscator, INodeObfuscator> ();
 
     /**
      * @type {IOptions}
@@ -125,6 +133,8 @@ export class Obfuscator implements IObfuscator {
      * @param stackTraceData
      */
     private initializeCustomNodes (stackTraceData: IStackTraceData[]): void {
+        let customNodes: [string, ICustomNode][] = [];
+
         Obfuscator.nodeGroups.forEach((nodeGroupConstructor: TNodeGroup) => {
             const nodeGroupNodes: Map <string, ICustomNode> | undefined = new nodeGroupConstructor(
                 stackTraceData, this.options
@@ -134,11 +144,10 @@ export class Obfuscator implements IObfuscator {
                 return;
             }
 
-            this.customNodes = new Map <string, ICustomNode> ([
-                ...this.customNodes,
-                ...nodeGroupNodes
-            ]);
+            customNodes.push(...nodeGroupNodes);
         });
+
+        this.customNodes = new Map <string, ICustomNode> (customNodes);
     }
 
 
@@ -154,7 +163,14 @@ export class Obfuscator implements IObfuscator {
         }
 
         nodeObfuscators.forEach((obfuscator: TNodeObfuscator) => {
-            new obfuscator(this.customNodes, this.options).obfuscateNode(node, parentNode);
+            let cachedObfuscator: INodeObfuscator|undefined = this.obfuscatorsCache.get(obfuscator);
+
+            if (!cachedObfuscator) {
+                cachedObfuscator = new obfuscator(this.customNodes, this.options);
+                this.obfuscatorsCache.set(obfuscator,  cachedObfuscator);
+            }
+
+            cachedObfuscator.obfuscateNode(node, parentNode);
         });
     }
 
@@ -162,8 +178,8 @@ export class Obfuscator implements IObfuscator {
      * @param node
      */
     private obfuscate (node: ESTree.Node): void {
-        estraverse.replace(node, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+        estraverse.traverse(node, {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node): void => {
                 this.initializeNodeObfuscators(node, parentNode);
             }
         });

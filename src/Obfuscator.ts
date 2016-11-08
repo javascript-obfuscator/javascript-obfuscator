@@ -5,7 +5,6 @@ import { TNodeGroup } from './types/TNodeGroup';
 import { TNodeObfuscator } from './types/TNodeObfuscator';
 
 import { ICustomNode } from './interfaces/custom-nodes/ICustomNode';
-import { INodeObfuscator } from './interfaces/INodeObfuscator';
 import { IObfuscator } from './interfaces/IObfuscator';
 import { IOptions } from './interfaces/IOptions';
 import { IStackTraceData } from './interfaces/stack-trace-analyzer/IStackTraceData';
@@ -65,11 +64,6 @@ export class Obfuscator implements IObfuscator {
      * @type {Map<string, AbstractCustomNode>}
      */
     private customNodes: Map <string, ICustomNode> = new Map <string, ICustomNode> ();
-
-    /**
-     * @type {Map<TNodeObfuscator, INodeObfuscator>}
-     */
-    private obfuscatorsCache: Map <TNodeObfuscator, INodeObfuscator> = new Map <TNodeObfuscator, INodeObfuscator> ();
 
     /**
      * @type {IOptions}
@@ -161,14 +155,7 @@ export class Obfuscator implements IObfuscator {
         }
 
         nodeObfuscators.forEach((obfuscator: TNodeObfuscator) => {
-            let cachedObfuscator: INodeObfuscator|undefined = this.obfuscatorsCache.get(obfuscator);
-
-            if (!cachedObfuscator) {
-                cachedObfuscator = new obfuscator(this.customNodes, this.options);
-                this.obfuscatorsCache.set(obfuscator,  cachedObfuscator);
-            }
-
-            cachedObfuscator.obfuscateNode(node, parentNode);
+            new obfuscator(this.customNodes, this.options).obfuscateNode(node, parentNode);
         });
     }
 

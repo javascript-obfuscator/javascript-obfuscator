@@ -17,7 +17,7 @@ export class MethodDefinitionObfuscator extends AbstractNodeObfuscator {
     /**
      * @type {string[]}
      */
-    private ignoredNames: string[] = ['constructor'];
+    private static ignoredNames: string[] = ['constructor'];
 
     /**
      * @param methodDefinitionNode
@@ -35,7 +35,7 @@ export class MethodDefinitionObfuscator extends AbstractNodeObfuscator {
             enter: (node: ESTree.Node): any => {
                 if (
                     Node.isIdentifierNode(node) &&
-                    !Utils.arrayContains(this.ignoredNames, node.name) &&
+                    !Utils.arrayContains(MethodDefinitionObfuscator.ignoredNames, node.name) &&
                     methodDefinitionNode.computed === false
                 ) {
                     methodDefinitionNode.computed = true;

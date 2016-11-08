@@ -1454,7 +1454,6 @@ var Obfuscator = function () {
         _classCallCheck(this, Obfuscator);
 
         this.customNodes = new Map();
-        this.obfuscatorsCache = new Map();
         this.options = options;
     }
 
@@ -1515,12 +1514,7 @@ var Obfuscator = function () {
                 return;
             }
             nodeObfuscators.forEach(function (obfuscator) {
-                var cachedObfuscator = _this2.obfuscatorsCache.get(obfuscator);
-                if (!cachedObfuscator) {
-                    cachedObfuscator = new obfuscator(_this2.customNodes, _this2.options);
-                    _this2.obfuscatorsCache.set(obfuscator, cachedObfuscator);
-                }
-                cachedObfuscator.obfuscateNode(node, parentNode);
+                new obfuscator(_this2.customNodes, _this2.options).obfuscateNode(node, parentNode);
             });
         }
     }, {
@@ -3204,10 +3198,7 @@ var MethodDefinitionObfuscator = function (_AbstractNodeObfuscat) {
     function MethodDefinitionObfuscator() {
         _classCallCheck(this, MethodDefinitionObfuscator);
 
-        var _this = _possibleConstructorReturn(this, (MethodDefinitionObfuscator.__proto__ || Object.getPrototypeOf(MethodDefinitionObfuscator)).apply(this, arguments));
-
-        _this.ignoredNames = ['constructor'];
-        return _this;
+        return _possibleConstructorReturn(this, (MethodDefinitionObfuscator.__proto__ || Object.getPrototypeOf(MethodDefinitionObfuscator)).apply(this, arguments));
     }
 
     _createClass(MethodDefinitionObfuscator, [{
@@ -3222,7 +3213,7 @@ var MethodDefinitionObfuscator = function (_AbstractNodeObfuscat) {
 
             estraverse.replace(methodDefinitionNode.key, {
                 enter: function enter(node) {
-                    if (Node_1.Node.isIdentifierNode(node) && !Utils_1.Utils.arrayContains(_this2.ignoredNames, node.name) && methodDefinitionNode.computed === false) {
+                    if (Node_1.Node.isIdentifierNode(node) && !Utils_1.Utils.arrayContains(MethodDefinitionObfuscator.ignoredNames, node.name) && methodDefinitionNode.computed === false) {
                         methodDefinitionNode.computed = true;
                         node.name = new StringLiteralReplacer_1.StringLiteralReplacer(_this2.nodes, _this2.options).replace(node.name);
                         return;
@@ -3236,6 +3227,7 @@ var MethodDefinitionObfuscator = function (_AbstractNodeObfuscat) {
     return MethodDefinitionObfuscator;
 }(AbstractNodeObfuscator_1.AbstractNodeObfuscator);
 
+MethodDefinitionObfuscator.ignoredNames = ['constructor'];
 exports.MethodDefinitionObfuscator = MethodDefinitionObfuscator;
 
 /***/ },

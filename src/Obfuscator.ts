@@ -31,8 +31,6 @@ import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclar
 import { StackTraceAnalyzer } from './stack-trace-analyzer/StackTraceAnalyzer';
 
 export class Obfuscator implements IObfuscator {
-    static counter: number = 0;
-
     /**
      * @type {TNodeGroup[]}
      */

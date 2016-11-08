@@ -170,7 +170,7 @@ export class NodeAppender {
      * @returns {boolean}
      */
     private static validateBodyStatements (nodeBodyStatements: TStatement[]): boolean {
-        return nodeBodyStatements.every(statementNode => {
+        return nodeBodyStatements.every((statementNode: TStatement) => {
             return !!statementNode && statementNode.hasOwnProperty('type');
         });
     }

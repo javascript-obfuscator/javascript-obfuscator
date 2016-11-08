@@ -115,7 +115,7 @@ export class NodeUtils {
                         value = node;
                     } else {
                         value = Node.getProgramNode(<TStatement[]>[node]);
-                        value['parentNode'] = value;
+                        value.parentNode = value;
                     }
 
                     isRootNode = false;
@@ -123,8 +123,8 @@ export class NodeUtils {
                     value = parentNode || node;
                 }
 
-                node['parentNode'] = value;
-                node['obfuscated'] = false;
+                node.parentNode = value;
+                node.obfuscated = false;
             }
         });
     }

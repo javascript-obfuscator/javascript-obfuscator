@@ -2908,11 +2908,12 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeObfuscat) {
     _createClass(FunctionDeclarationObfuscator, [{
         key: 'obfuscateNode',
         value: function obfuscateNode(functionDeclarationNode, parentNode) {
-            if (parentNode.type === NodeType_1.NodeType.Program) {
+            var blockScopeOfFunctionDeclarationNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(functionDeclarationNode);
+            if (blockScopeOfFunctionDeclarationNode.type === NodeType_1.NodeType.Program) {
                 return;
             }
             this.storeFunctionName(functionDeclarationNode);
-            this.replaceFunctionName(functionDeclarationNode);
+            this.replaceFunctionName(blockScopeOfFunctionDeclarationNode);
         }
     }, {
         key: 'storeFunctionName',
@@ -2927,10 +2928,9 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeObfuscat) {
         }
     }, {
         key: 'replaceFunctionName',
-        value: function replaceFunctionName(functionDeclarationNode) {
+        value: function replaceFunctionName(scopeNode) {
             var _this3 = this;
 
-            var scopeNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(functionDeclarationNode);
             estraverse.replace(scopeNode, {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
@@ -3361,11 +3361,13 @@ var VariableDeclarationObfuscator = function (_AbstractNodeObfuscat) {
     _createClass(VariableDeclarationObfuscator, [{
         key: 'obfuscateNode',
         value: function obfuscateNode(variableDeclarationNode, parentNode) {
-            if (parentNode.type === NodeType_1.NodeType.Program) {
+            var blockScopeOfVariableDeclarationNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(variableDeclarationNode);
+            if (blockScopeOfVariableDeclarationNode.type === NodeType_1.NodeType.Program) {
                 return;
             }
+            var scopeNode = variableDeclarationNode.kind === 'var' ? blockScopeOfVariableDeclarationNode : parentNode;
             this.storeVariableNames(variableDeclarationNode);
-            this.replaceVariableNames(variableDeclarationNode, parentNode);
+            this.replaceVariableNames(scopeNode);
         }
     }, {
         key: 'storeVariableNames',
@@ -3382,10 +3384,9 @@ var VariableDeclarationObfuscator = function (_AbstractNodeObfuscat) {
         }
     }, {
         key: 'replaceVariableNames',
-        value: function replaceVariableNames(variableDeclarationNode, variableParentNode) {
+        value: function replaceVariableNames(scopeNode) {
             var _this3 = this;
 
-            var scopeNode = variableDeclarationNode.kind === 'var' ? NodeUtils_1.NodeUtils.getBlockScopeOfNode(variableDeclarationNode) : variableParentNode;
             estraverse.replace(scopeNode, {
                 enter: function enter(node, parentNode) {
                     if (!node.obfuscated && Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {

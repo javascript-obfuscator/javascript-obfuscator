@@ -34,7 +34,7 @@ describe('FunctionDeclarationObfuscator', () => {
             );
         });
 
-        describe('if `functionDeclaration` node parent node is not a Program node', () => {
+        describe('if `functionDeclaration` node parent block scope is not a Program node', () => {
             let blockStatementNode: ESTree.BlockStatement,
                 functionDeclarationParentNode: ESTree.FunctionDeclaration;
 
@@ -74,7 +74,7 @@ describe('FunctionDeclarationObfuscator', () => {
             });
         });
 
-        describe('if `functionDeclaration` node parent node is a Program node', () => {
+        describe('if `functionDeclaration` node parent block scope node is a Program node', () => {
             beforeEach(() => {
                 programNode = NodeMocks.getProgramNode([
                     functionDeclarationNode

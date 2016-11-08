@@ -1,6 +1,8 @@
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
+import { TNodeWithBlockStatement } from '../types/TNodeWithBlockStatement';
+
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../interfaces/IOptions';
 
@@ -42,12 +44,19 @@ export class VariableDeclarationObfuscator extends AbstractNodeObfuscator {
      * @param parentNode
      */
     public obfuscateNode (variableDeclarationNode: ESTree.VariableDeclaration, parentNode: ESTree.Node): void {
-        if (parentNode.type === NodeType.Program) {
+        const blockScopeOfVariableDeclarationNode: TNodeWithBlockStatement = NodeUtils
+            .getBlockScopeOfNode(variableDeclarationNode);
+
+        if (blockScopeOfVariableDeclarationNode.type === NodeType.Program) {
             return;
         }
 
+        const scopeNode: ESTree.Node = variableDeclarationNode.kind === 'var'
+            ? blockScopeOfVariableDeclarationNode
+            : parentNode;
+
         this.storeVariableNames(variableDeclarationNode);
-        this.replaceVariableNames(variableDeclarationNode, parentNode);
+        this.replaceVariableNames(scopeNode);
     }
 
     /**
@@ -63,14 +72,9 @@ export class VariableDeclarationObfuscator extends AbstractNodeObfuscator {
     }
 
     /**
-     * @param variableDeclarationNode
-     * @param variableParentNode
+     * @param scopeNode
      */
-    private replaceVariableNames (variableDeclarationNode: ESTree.VariableDeclaration, variableParentNode: ESTree.Node): void {
-        let scopeNode: ESTree.Node = variableDeclarationNode.kind === 'var' ? NodeUtils.getBlockScopeOfNode(
-            variableDeclarationNode
-        ) : variableParentNode;
-
+    private replaceVariableNames (scopeNode: ESTree.Node): void {
         estraverse.replace(scopeNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (!node.obfuscated && Node.isReplaceableIdentifierNode(node, parentNode)) {

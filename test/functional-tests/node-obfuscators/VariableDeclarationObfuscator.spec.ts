@@ -22,15 +22,32 @@ describe('VariableDeclarationObfuscator', () => {
         assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-z0-9]){4,6}\);/);
     });
 
-    it('should obfuscate variable call (`identifier` node) outside of block scope of node in which this variable was declared with `var` kind', () => {
+    it('should not obfuscate `variableDeclaration` node if parent block scope node is `Program` node', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `
-                if (true)
-                {
+                if (true) {
                     var test = 10;
                 }
         
                 console.log(test);
+            `,
+            Object.assign({}, NO_CUSTOM_NODES_PRESET)
+        );
+
+        assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *0xa;/);
+        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(test\);/);
+    });
+
+    it('should obfuscate variable call (`identifier` node) outside of block scope of node in which this variable was declared with `var` kind', () => {
+        let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+            `
+                (function () {
+                    if (true) {
+                        var test = 10;
+                    }
+            
+                    console.log(test);
+                })();
             `,
             Object.assign({}, NO_CUSTOM_NODES_PRESET)
         );
@@ -41,12 +58,13 @@ describe('VariableDeclarationObfuscator', () => {
     it('should not obfuscate variable call (`identifier` node) outside of block scope of node in which this variable was declared with `let` kind', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `
-                if (true)
-                {
-                    let test = 10;
-                }
-        
-                console.log(test);
+                (function () {
+                    if (true) {
+                        let test = 10;
+                    }
+                    
+                    console.log(test);
+                })();
             `,
             Object.assign({}, NO_CUSTOM_NODES_PRESET)
         );

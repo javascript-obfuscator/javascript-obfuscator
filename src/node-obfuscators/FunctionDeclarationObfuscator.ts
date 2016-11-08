@@ -1,6 +1,8 @@
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
+import { TNodeWithBlockStatement } from '../types/TNodeWithBlockStatement';
+
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../interfaces/IOptions';
 
@@ -41,12 +43,15 @@ export class FunctionDeclarationObfuscator extends AbstractNodeObfuscator {
      * @param parentNode
      */
     public obfuscateNode (functionDeclarationNode: ESTree.FunctionDeclaration, parentNode: ESTree.Node): void {
-        if (parentNode.type === NodeType.Program) {
+        const blockScopeOfFunctionDeclarationNode: TNodeWithBlockStatement = NodeUtils
+            .getBlockScopeOfNode(functionDeclarationNode);
+
+        if (blockScopeOfFunctionDeclarationNode.type === NodeType.Program) {
             return;
         }
 
         this.storeFunctionName(functionDeclarationNode);
-        this.replaceFunctionName(functionDeclarationNode);
+        this.replaceFunctionName(blockScopeOfFunctionDeclarationNode);
     }
 
     /**
@@ -59,13 +64,9 @@ export class FunctionDeclarationObfuscator extends AbstractNodeObfuscator {
     }
 
     /**
-     * @param functionDeclarationNode
+     * @param scopeNode
      */
-    private replaceFunctionName (functionDeclarationNode: ESTree.FunctionDeclaration): void {
-        let scopeNode: ESTree.Node = NodeUtils.getBlockScopeOfNode(
-            functionDeclarationNode
-        );
-
+    private replaceFunctionName (scopeNode: ESTree.Node): void {
         estraverse.replace(scopeNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isReplaceableIdentifierNode(node, parentNode)) {

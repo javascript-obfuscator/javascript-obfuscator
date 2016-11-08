@@ -14,8 +14,8 @@ import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
-import { NodeAppender } from '../../NodeAppender';
-import { NodeUtils } from '../../NodeUtils';
+import { NodeAppender } from '../../node/NodeAppender';
+import { NodeUtils } from '../../node/NodeUtils';
 
 export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     /**

@@ -5,7 +5,7 @@ import * as ESTree from 'estree';
 import { NodeType } from '../enums/NodeType';
 
 import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
-import { Nodes } from '../Nodes';
+import { Node } from '../node/Node';
 import { StringLiteralReplacer } from './replacers/StringLiteralReplacer';
 
 export class MemberExpressionObfuscator extends AbstractNodeObfuscator {
@@ -15,13 +15,13 @@ export class MemberExpressionObfuscator extends AbstractNodeObfuscator {
     public obfuscateNode (memberExpressionNode: ESTree.MemberExpression): void {
         estraverse.replace(memberExpressionNode.property, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (Nodes.isLiteralNode(node)) {
+                if (Node.isLiteralNode(node)) {
                     this.obfuscateLiteralProperty(node);
 
                     return;
                 }
 
-                if (Nodes.isIdentifierNode(node)) {
+                if (Node.isIdentifierNode(node)) {
                     if (memberExpressionNode.computed) {
                         return;
                     }

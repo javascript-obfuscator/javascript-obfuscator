@@ -10,8 +10,8 @@ import { AppendState } from '../../enums/AppendState';
 import { DebugProtectionFunctionIntervalTemplate } from '../../templates/custom-nodes/debug-protection-nodes/debug-protection-function-interval-node/DebugProtectionFunctionIntervalTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { NodeAppender } from '../../NodeAppender';
-import { NodeUtils } from '../../NodeUtils';
+import { NodeAppender } from '../../node/NodeAppender';
+import { NodeUtils } from '../../node/NodeUtils';
 
 export class DebugProtectionFunctionIntervalNode extends AbstractCustomNode {
     /**

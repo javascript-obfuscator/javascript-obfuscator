@@ -1,16 +1,16 @@
 import * as chai from 'chai';
 import * as ESTree from 'estree';
 
-import { TStatement } from '../../src/types/TStatement';
+import { TStatement } from '../../../src/types/TStatement';
 
-import { IStackTraceData } from '../../src/interfaces/stack-trace-analyzer/IStackTraceData';
+import { IStackTraceData } from '../../../src/interfaces/stack-trace-analyzer/IStackTraceData';
 
-import { readFileAsString } from '../helpers/readFileAsString';
+import { readFileAsString } from '../../helpers/readFileAsString';
 
-import { NodeAppender } from '../../src/NodeAppender';
-import { NodeMocks } from '../mocks/NodeMocks';
-import { NodeUtils } from '../../src/NodeUtils';
-import { StackTraceAnalyzer } from '../../src/stack-trace-analyzer/StackTraceAnalyzer';
+import { NodeAppender } from '../../../src/node/NodeAppender';
+import { NodeMocks } from '../../mocks/NodeMocks';
+import { NodeUtils } from '../../../src/node/NodeUtils';
+import { StackTraceAnalyzer } from '../../../src/stack-trace-analyzer/StackTraceAnalyzer';
 
 const assert: any = chai.assert;
 

@@ -12,8 +12,8 @@ import { UnicodeArray } from '../../UnicodeArray';
 import { UnicodeArrayTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-node/UnicodeArrayTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { NodeAppender } from '../../NodeAppender';
-import { NodeUtils } from '../../NodeUtils';
+import { NodeAppender } from '../../node/NodeAppender';
+import { NodeUtils } from '../../node/NodeUtils';
 
 export class UnicodeArrayNode extends AbstractCustomNode {
     /**

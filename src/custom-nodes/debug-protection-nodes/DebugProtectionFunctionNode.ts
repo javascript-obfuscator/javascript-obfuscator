@@ -10,8 +10,8 @@ import { AppendState } from '../../enums/AppendState';
 import { DebugProtectionFunctionTemplate } from '../../templates/custom-nodes/debug-protection-nodes/debug-protection-function-node/DebugProtectionFunctionTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { NodeAppender } from '../../NodeAppender';
-import { NodeUtils } from '../../NodeUtils';
+import { NodeAppender } from '../../node/NodeAppender';
+import { NodeUtils } from '../../node/NodeUtils';
 import { Utils } from '../../Utils';
 
 export class DebugProtectionFunctionNode extends AbstractCustomNode {

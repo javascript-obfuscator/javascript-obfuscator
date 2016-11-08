@@ -8,8 +8,8 @@ import { NodeType } from '../enums/NodeType';
 
 import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
 import { IdentifierReplacer } from './replacers/IdentifierReplacer';
-import { Nodes } from '../Nodes';
-import { NodeUtils } from '../NodeUtils';
+import { Node } from '../node/Node';
+import { NodeUtils } from '../node/NodeUtils';
 
 /**
  * replaces:
@@ -73,7 +73,7 @@ export class VariableDeclarationObfuscator extends AbstractNodeObfuscator {
 
         estraverse.replace(scopeNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (!node.obfuscated && Nodes.isReplaceableIdentifierNode(node, parentNode)) {
+                if (!node.obfuscated && Node.isReplaceableIdentifierNode(node, parentNode)) {
                     node.name = this.identifierReplacer.replace(node.name);
                 }
             }

@@ -8,9 +8,9 @@ import { IStackTraceData } from '../../../src/interfaces/stack-trace-analyzer/IS
 
 import { readFileAsString } from '../../helpers/readFileAsString';
 
-import { Nodes } from '../../../src/Nodes';
+import { Node } from '../../../src/node/Node';
 import { NodeMocks } from '../../mocks/NodeMocks';
-import { NodeUtils } from '../../../src/NodeUtils';
+import { NodeUtils } from '../../../src/node/NodeUtils';
 import { StackTraceAnalyzer } from '../../../src/stack-trace-analyzer/StackTraceAnalyzer';
 
 const assert: any = chai.assert;
@@ -26,8 +26,8 @@ function getFunctionDeclarationByName (astTree: ESTree.Node, name: string): ESTr
     estraverse.traverse(astTree, {
         enter: (node: ESTree.Node): any => {
             if (
-                Nodes.isFunctionDeclarationNode(node) &&
-                Nodes.isIdentifierNode(node.id) &&
+                Node.isFunctionDeclarationNode(node) &&
+                Node.isIdentifierNode(node.id) &&
                 node.id.name === name
             ) {
                 functionDeclarationNode = node;
@@ -51,10 +51,10 @@ function getFunctionExpressionByName (astTree: ESTree.Node, name: string): ESTre
     estraverse.traverse(astTree, {
         enter: (node: ESTree.Node): any => {
             if (
-                Nodes.isVariableDeclaratorNode(node) &&
+                Node.isVariableDeclaratorNode(node) &&
                 node.init &&
-                Nodes.isFunctionExpressionNode(node.init) &&
-                Nodes.isIdentifierNode(node.id) &&
+                Node.isFunctionExpressionNode(node.init) &&
+                Node.isIdentifierNode(node.id) &&
                 node.id.name === name
             ) {
                 functionExpressionNode = node.init;
@@ -78,9 +78,9 @@ function getFunctionExpressionById (astTree: ESTree.Node, id: string): ESTree.Fu
     estraverse.traverse(astTree, {
         enter: (node: ESTree.Node): any => {
             if (
-                Nodes.isFunctionExpressionNode(node) &&
+                Node.isFunctionExpressionNode(node) &&
                 node.id &&
-                Nodes.isIdentifierNode(node.id) &&
+                Node.isIdentifierNode(node.id) &&
                 node.id.name === id
             ) {
                 functionExpressionNode = node;
@@ -106,10 +106,10 @@ function getObjectFunctionExpressionByName (astTree: ESTree.Node, objectName: st
     estraverse.traverse(astTree, {
         enter: (node: ESTree.Node): any => {
             if (
-                Nodes.isVariableDeclaratorNode(node) &&
-                Nodes.isIdentifierNode(node.id) &&
+                Node.isVariableDeclaratorNode(node) &&
+                Node.isIdentifierNode(node.id) &&
                 node.init &&
-                Nodes.isObjectExpressionNode(node.init) &&
+                Node.isObjectExpressionNode(node.init) &&
                 node.id.name === objectName
             ) {
                 targetObjectExpressionNode = node.init;
@@ -126,11 +126,11 @@ function getObjectFunctionExpressionByName (astTree: ESTree.Node, objectName: st
     estraverse.traverse(targetObjectExpressionNode, {
         enter: (node: ESTree.Node): any => {
             if (
-                Nodes.isPropertyNode(node) &&
-                Nodes.isFunctionExpressionNode(node.value) &&
+                Node.isPropertyNode(node) &&
+                Node.isFunctionExpressionNode(node.value) &&
                 (
-                    (Nodes.isIdentifierNode(node.key) && node.key.name === name) ||
-                    (Nodes.isLiteralNode(node.key) && node.key.value === name)
+                    (Node.isIdentifierNode(node.key) && node.key.name === name) ||
+                    (Node.isLiteralNode(node.key) && node.key.value === name)
                 )
             ) {
                 functionExpressionNode = node.value;

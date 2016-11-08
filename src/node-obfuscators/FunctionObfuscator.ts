@@ -8,8 +8,8 @@ import { NodeType } from '../enums/NodeType';
 
 import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
 import { IdentifierReplacer } from './replacers/IdentifierReplacer';
-import { Nodes } from '../Nodes';
-import { NodeUtils } from '../NodeUtils';
+import { Node } from '../node/Node';
+import { NodeUtils } from '../node/NodeUtils';
 
 /**
  * replaces:
@@ -61,7 +61,7 @@ export class FunctionObfuscator extends AbstractNodeObfuscator {
     private replaceFunctionParams (functionNode: ESTree.Function): void {
         let replaceVisitor: estraverse.Visitor = {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (Nodes.isReplaceableIdentifierNode(node, parentNode)) {
+                if (Node.isReplaceableIdentifierNode(node, parentNode)) {
                     const newNodeName: string = this.identifierReplacer.replace(node.name);
 
                     if (node.name !== newNodeName) {

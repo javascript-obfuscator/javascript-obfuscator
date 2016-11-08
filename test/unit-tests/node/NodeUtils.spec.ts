@@ -1,8 +1,8 @@
 import * as chai from 'chai';
 import * as ESTree from 'estree';
 
-import { NodeMocks } from '../mocks/NodeMocks';
-import { NodeUtils } from '../../src/NodeUtils';
+import { NodeMocks } from '../../mocks/NodeMocks';
+import { NodeUtils } from '../../../src/node/NodeUtils';
 
 const assert: any = chai.assert;
 

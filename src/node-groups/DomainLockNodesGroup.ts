@@ -4,7 +4,7 @@ import { DomainLockNode } from '../custom-nodes/domain-lock-nodes/DomainLockNode
 import { NodeCallsControllerFunctionNode } from '../custom-nodes/node-calls-controller-nodes/NodeCallsControllerFunctionNode';
 
 import { AbstractNodesGroup } from './AbstractNodesGroup';
-import { NodeAppender } from '../NodeAppender';
+import { NodeAppender } from '../node/NodeAppender';
 import { Utils } from '../Utils';
 
 export class DomainLockNodesGroup extends AbstractNodesGroup {

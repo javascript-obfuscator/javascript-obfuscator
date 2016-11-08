@@ -11,8 +11,8 @@ import { AppendState } from '../../enums/AppendState';
 import { ConsoleOutputDisableExpressionTemplate } from '../../templates/custom-nodes/console-output-nodes/console-output-disable-expression-node/ConsoleOutputDisableExpressionTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { NodeAppender } from '../../NodeAppender';
-import { NodeUtils } from '../../NodeUtils';
+import { NodeAppender } from '../../node/NodeAppender';
+import { NodeUtils } from '../../node/NodeUtils';
 import { Utils } from '../../Utils';
 
 export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {

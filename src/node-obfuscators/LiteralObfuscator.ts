@@ -3,7 +3,7 @@ import * as ESTree from 'estree';
 
 import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
 import { BooleanLiteralReplacer } from './replacers/BooleanLiteralReplacer';
-import { Nodes } from '../Nodes';
+import { Node } from '../node/Node';
 import { NumberLiteralReplacer } from './replacers/NumberLiteralReplacer';
 import { StringLiteralReplacer } from './replacers/StringLiteralReplacer';
 
@@ -13,7 +13,7 @@ export class LiteralObfuscator extends AbstractNodeObfuscator {
      * @param parentNode
      */
     public obfuscateNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): void {
-        if (Nodes.isPropertyNode(parentNode) && parentNode.key === literalNode) {
+        if (Node.isPropertyNode(parentNode) && parentNode.key === literalNode) {
             return;
         }
 

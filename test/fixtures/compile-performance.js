@@ -28644,7 +28644,7 @@
          *       <some-element *ngSwitchCase="match_expression_2">...</some-element>
          *       <some-other-element *ngSwitchCase="match_expression_3">...</some-other-element>
          *       <ng-container *ngSwitchCase="match_expression_3">
-         *         <!-- use a ng-container to group multiple root nodes -->
+         *         <!-- use a ng-container to group multiple root node -->
          *         <inner-element></inner-element>
          *         <inner-other-element></inner-other-element>
          *       </ng-container>
@@ -30197,7 +30197,7 @@
                 return new ExtractionResult(this._messages, this._errors);
             };
             /**
-             * Returns a tree where all translatable nodes are translated
+             * Returns a tree where all translatable node are translated
              */
             _Visitor.prototype.merge = function (nodes, translations, interpolationConfig) {
                 this._init(_VisitorMode.Merge, interpolationConfig);
@@ -30286,7 +30286,7 @@
                 var wasInI18nNode = this._inI18nNode;
                 var wasInImplicitNode = this._inImplicitNode;
                 var childNodes;
-                // Extract only top level nodes with the (implicit) "i18n" attribute if not in a block or an ICU
+                // Extract only top level node with the (implicit) "i18n" attribute if not in a block or an ICU
                 // message
                 var i18nAttr = _getI18nAttr(el);
                 var isImplicit = this._implicitTags.some(function (tag) { return el.name === tag; }) &&
@@ -30333,7 +30333,7 @@
                         this._reportError(el, 'Could not mark an element as translatable inside a translatable section');
                     }
                     if (this._mode == _VisitorMode.Extract) {
-                        // Descend into child nodes for extraction
+                        // Descend into child node for extraction
                         __WEBPACK_IMPORTED_MODULE_0__ml_parser_ast__["g" /* visitAll */](this, el.children);
                     }
                     if (this._mode == _VisitorMode.Merge) {
@@ -30354,7 +30354,7 @@
                 this._inI18nNode = wasInI18nNode;
                 this._inImplicitNode = wasInImplicitNode;
                 if (this._mode === _VisitorMode.Merge) {
-                    // There are no childNodes in translatable sections - those nodes will be replace anyway
+                    // There are no childNodes in translatable sections - those node will be replace anyway
                     var translatedAttrs = this._translateAttributes(el);
                     return new __WEBPACK_IMPORTED_MODULE_0__ml_parser_ast__["e" /* Element */](el.name, translatedAttrs, childNodes, el.sourceSpan, el.startSourceSpan, el.endSourceSpan);
                 }
@@ -30483,7 +30483,7 @@
                 /**
                  * A translatable section could be:
                  * - a translatable element,
-                 * - nodes between `<!-- i18n -->` and `<!-- /i18n -->` comments
+                 * - node between `<!-- i18n -->` and `<!-- /i18n -->` comments
                  */
                 get: function () {
                     return this._msgCountAtSectionStart !== void 0;
@@ -30893,7 +30893,7 @@
             };
             Xliff.prototype.load = function (content, url, messageBundle) {
                 var _this = this;
-                // Parse the xtb file into xml nodes
+                // Parse the xtb file into xml node
                 var result = new __WEBPACK_IMPORTED_MODULE_2__ml_parser_xml_parser__["a" /* XmlParser */]().parse(content, url);
                 if (result.errors.length) {
                     throw new Error("xtb parse errors:\n" + result.errors.join('\n'));
@@ -31301,7 +31301,7 @@
             Xtb.prototype.write = function (messageMap) { throw new Error('Unsupported'); };
             Xtb.prototype.load = function (content, url, messageBundle) {
                 var _this = this;
-                // Parse the xtb file into xml nodes
+                // Parse the xtb file into xml node
                 var result = new __WEBPACK_IMPORTED_MODULE_1__ml_parser_xml_parser__["a" /* XmlParser */]().parse(content, url);
                 if (result.errors.length) {
                     throw new Error("xtb parse errors:\n" + result.errors.join('\n'));
@@ -33874,7 +33874,7 @@
                 this.declarationElement = declarationElement;
                 this.templateVariableBindings = templateVariableBindings;
                 this.nodes = [];
-                // root nodes or AppElements for ViewContainers
+                // root node or AppElements for ViewContainers
                 this.rootNodesOrAppElements = [];
                 this.bindings = [];
                 this.classStatements = [];
@@ -34337,7 +34337,7 @@
                 // Recursively convert the node now without the guarded member access.
                 var access = this.visit(ast, _Mode.Expression);
                 // Remove the mapping. This is not strictly required as the converter only traverses each node
-                // once but is safer if the conversion is changed to traverse the nodes more than once.
+                // once but is safer if the conversion is changed to traverse the node more than once.
                 this._nodeMap.delete(leftMostSafe);
                 // If we allcoated a temporary, release it.
                 if (temporary) {
@@ -34583,7 +34583,7 @@
                 return renderNode;
             };
             ViewBuilderVisitor.prototype.visitNgContent = function (ast, parent) {
-                // the projected nodes originate from a different view, so we don't
+                // the projected node originate from a different view, so we don't
                 // have debug information for them...
                 this.view.createMethod.resetDebugInfo(null, ast);
                 var parentRenderNode = this._getParentRenderNode(parent);
@@ -34599,7 +34599,7 @@
                 }
                 else if (this._isRootNode(parent)) {
                     if (this.view.viewType !== __WEBPACK_IMPORTED_MODULE_7__private_import_core__["j" /* ViewType */].COMPONENT) {
-                        // store root nodes only for embedded/host views
+                        // store root node only for embedded/host views
                         this.view.rootNodesOrAppElements.push(nodesExpression);
                     }
                 }
@@ -34718,7 +34718,7 @@
             return ViewBuilderVisitor;
         }());
         /**
-         * Walks up the nodes while the direct parent is a container.
+         * Walks up the node while the direct parent is a container.
          *
          * Returns the outer container or the node itself when it is not a direct child of a container.
          *
@@ -34732,7 +34732,7 @@
             return node;
         }
         /**
-         * Walks up the nodes while they are container and returns the first parent which is not.
+         * Walks up the node while they are container and returns the first parent which is not.
          *
          * Returns the parent of the outer container or the node itself when it is not a container.
          *
@@ -36547,7 +36547,7 @@
                 });
             }
         }
-// Need to keep the nodes in a global Map so that multiple angular apps are supported.
+// Need to keep the node in a global Map so that multiple angular apps are supported.
         var _nativeNodeToDebugNode = new Map();
         /**
          * @experimental
@@ -49968,7 +49968,7 @@
 
         var _expParser = new __WEBPACK_IMPORTED_MODULE_1__expression_parser_parser__["a" /* Parser */](new __WEBPACK_IMPORTED_MODULE_0__expression_parser_lexer__["c" /* Lexer */]());
         /**
-         * Returns a function converting html nodes to an i18n Message given an interpolationConfig
+         * Returns a function converting html node to an i18n Message given an interpolationConfig
          */
         function createI18nMessageFactory(interpolationConfig) {
             var visitor = new _I18nVisitor(_expParser, interpolationConfig);
@@ -50566,7 +50566,7 @@
             /**
              * @param _file The html source
              * @param _getTagDefinition
-             * @param _tokenizeIcu Whether to tokenize ICU messages (considered as text nodes when false)
+             * @param _tokenizeIcu Whether to tokenize ICU messages (considered as text node when false)
              * @param _interpolationConfig
              */
             function _Tokenizer(_file, _getTagDefinition, _tokenizeIcu, _interpolationConfig) {
@@ -55685,7 +55685,7 @@
                 this.disposables = disposables;
                 this.subscriptions = subscriptions;
                 if (this.type === __WEBPACK_IMPORTED_MODULE_13__view_type__["a" /* ViewType */].COMPONENT) {
-                    // Note: the render nodes have been attached to their host element
+                    // Note: the render node have been attached to their host element
                     // in the ViewFactory already.
                     this.declarationAppElement.parentView.viewChildren.push(this);
                     this.dirtyParentQueriesInternal();
@@ -55967,7 +55967,7 @@
                 var appEl = node;
                 lastNode = appEl.nativeElement;
                 if (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_6__facade_lang__["e" /* isPresent */])(appEl.nestedViews)) {
-                    // Note: Views might have no root nodes at all!
+                    // Note: Views might have no root node at all!
                     for (var i = appEl.nestedViews.length - 1; i >= 0; i--) {
                         var nestedView = appEl.nestedViews[i];
                         if (nestedView.rootNodesOrAppElements.length > 0) {
@@ -58103,7 +58103,7 @@
                         this.chars(DOM.nodeValue(current));
                     }
                     else {
-                        // Strip non-element, non-text nodes.
+                        // Strip non-element, non-text node.
                         this.sanitizedSomething = true;
                     }
                     if (DOM.firstChild(current)) {

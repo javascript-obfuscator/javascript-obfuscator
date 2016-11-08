@@ -4,8 +4,8 @@ import * as ESTree from 'estree';
 import { ICalleeData } from '../../interfaces/stack-trace-analyzer/ICalleeData';
 import { ICalleeDataExtractor } from '../../interfaces/stack-trace-analyzer/ICalleeDataExtractor';
 
-import { Nodes } from '../../Nodes';
-import { NodeUtils } from '../../NodeUtils';
+import { Node } from '../../node/Node';
+import { NodeUtils } from '../../node/NodeUtils';
 
 export class FunctionDeclarationCalleeDataExtractor implements ICalleeDataExtractor {
     /**
@@ -33,7 +33,7 @@ export class FunctionDeclarationCalleeDataExtractor implements ICalleeDataExtrac
     public extract (): ICalleeData|null {
         let calleeBlockStatement: ESTree.BlockStatement|null = null;
 
-        if (Nodes.isIdentifierNode(this.callee)) {
+        if (Node.isIdentifierNode(this.callee)) {
             calleeBlockStatement = this.getCalleeBlockStatement(
                 NodeUtils.getBlockScopeOfNode(this.blockScopeBody[0]),
                 this.callee.name
@@ -60,7 +60,7 @@ export class FunctionDeclarationCalleeDataExtractor implements ICalleeDataExtrac
 
         estraverse.traverse(node, {
             enter: (node: ESTree.Node): any => {
-                if (Nodes.isFunctionDeclarationNode(node) && node.id.name === name) {
+                if (Node.isFunctionDeclarationNode(node) && node.id.name === name) {
                     calleeBlockStatement = node.body;
 
                     return estraverse.VisitorOption.Break;

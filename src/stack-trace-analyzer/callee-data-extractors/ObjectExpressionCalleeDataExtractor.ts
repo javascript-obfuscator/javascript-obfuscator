@@ -6,8 +6,8 @@ import { TObjectMembersCallsChain } from '../../types/TObjectMembersCallsChain';
 import { ICalleeData } from '../../interfaces/stack-trace-analyzer/ICalleeData';
 import { ICalleeDataExtractor } from '../../interfaces/stack-trace-analyzer/ICalleeDataExtractor';
 
-import { Nodes } from '../../Nodes';
-import { NodeUtils } from '../../NodeUtils';
+import { Node } from '../../node/Node';
+import { NodeUtils } from '../../node/NodeUtils';
 
 export class ObjectExpressionCalleeDataExtractor implements ICalleeDataExtractor {
     /**
@@ -36,7 +36,7 @@ export class ObjectExpressionCalleeDataExtractor implements ICalleeDataExtractor
         let calleeBlockStatement: ESTree.BlockStatement|null = null,
             functionExpressionName: string|number|null = null;
 
-        if (Nodes.isMemberExpressionNode(this.callee)) {
+        if (Node.isMemberExpressionNode(this.callee)) {
             const objectMembersCallsChain: TObjectMembersCallsChain = this.createObjectMembersCallsChain(
                 [],
                 this.callee
@@ -77,10 +77,10 @@ export class ObjectExpressionCalleeDataExtractor implements ICalleeDataExtractor
         memberExpression: ESTree.MemberExpression
     ): TObjectMembersCallsChain {
         // first step: processing memberExpression `property` property
-        if (Nodes.isIdentifierNode(memberExpression.property) && memberExpression.computed === false) {
+        if (Node.isIdentifierNode(memberExpression.property) && memberExpression.computed === false) {
             currentChain.unshift(memberExpression.property.name);
         } else if (
-            Nodes.isLiteralNode(memberExpression.property) &&
+            Node.isLiteralNode(memberExpression.property) &&
             (
                 typeof memberExpression.property.value === 'string' ||
                 typeof memberExpression.property.value === 'number'
@@ -92,9 +92,9 @@ export class ObjectExpressionCalleeDataExtractor implements ICalleeDataExtractor
         }
 
         // second step: processing memberExpression `object` property
-        if (Nodes.isMemberExpressionNode(memberExpression.object)) {
+        if (Node.isMemberExpressionNode(memberExpression.object)) {
             return this.createObjectMembersCallsChain(currentChain, memberExpression.object);
-        } else if (Nodes.isIdentifierNode(memberExpression.object)) {
+        } else if (Node.isIdentifierNode(memberExpression.object)) {
             currentChain.unshift(memberExpression.object.name);
         }
 
@@ -121,10 +121,10 @@ export class ObjectExpressionCalleeDataExtractor implements ICalleeDataExtractor
         estraverse.traverse(node, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (
-                    Nodes.isVariableDeclaratorNode(node) &&
-                    Nodes.isIdentifierNode(node.id) &&
+                    Node.isVariableDeclaratorNode(node) &&
+                    Node.isIdentifierNode(node.id) &&
                     node.init &&
-                    Nodes.isObjectExpressionNode(node.init) &&
+                    Node.isObjectExpressionNode(node.init) &&
                     node.id.name === objectName
                 ) {
                     calleeBlockStatement = this.findCalleeBlockStatement(node.init.properties, objectMembersCallsChain);
@@ -154,9 +154,9 @@ export class ObjectExpressionCalleeDataExtractor implements ICalleeDataExtractor
 
         for (const propertyNode of objectExpressionProperties) {
             const isTargetPropertyNodeWithIdentifierKey: boolean =
-                Nodes.isIdentifierNode(propertyNode.key) && propertyNode.key.name === nextItemInCallsChain;
+                Node.isIdentifierNode(propertyNode.key) && propertyNode.key.name === nextItemInCallsChain;
             const isTargetPropertyNodeWithLiteralKey: boolean =
-                Nodes.isLiteralNode(propertyNode.key) &&
+                Node.isLiteralNode(propertyNode.key) &&
                 Boolean(propertyNode.key.value) &&
                 propertyNode.key.value === nextItemInCallsChain;
 
@@ -164,11 +164,11 @@ export class ObjectExpressionCalleeDataExtractor implements ICalleeDataExtractor
                 continue;
             }
 
-            if (Nodes.isObjectExpressionNode(propertyNode.value)) {
+            if (Node.isObjectExpressionNode(propertyNode.value)) {
                 return this.findCalleeBlockStatement(propertyNode.value.properties, objectMembersCallsChain);
             }
 
-            if (Nodes.isFunctionExpressionNode(propertyNode.value)) {
+            if (Node.isFunctionExpressionNode(propertyNode.value)) {
                 return propertyNode.value.body;
             }
         }

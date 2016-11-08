@@ -13,8 +13,8 @@ import { FunctionDeclarationCalleeDataExtractor } from './callee-data-extractors
 import { FunctionExpressionCalleeDataExtractor } from './callee-data-extractors/FunctionExpressionCalleeDataExtractor';
 import { ObjectExpressionCalleeDataExtractor } from './callee-data-extractors/ObjectExpressionCalleeDataExtractor';
 
-import { Nodes } from '../Nodes';
-import { NodeUtils } from '../NodeUtils';
+import { Node } from '../node/Node';
+import { NodeUtils } from '../node/NodeUtils';
 
 /**
  * This class generates a data with code stack trace functions calls
@@ -130,7 +130,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
 
             estraverse.traverse(rootNode, {
                 enter: (node: ESTree.Node): any => {
-                    if (!Nodes.isCallExpressionNode(node) || rootNode.parentNode !== NodeUtils.getBlockScopeOfNode(node)) {
+                    if (!Node.isCallExpressionNode(node) || rootNode.parentNode !== NodeUtils.getBlockScopeOfNode(node)) {
                         return;
                     }
 

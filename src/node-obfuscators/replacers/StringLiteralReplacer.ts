@@ -45,7 +45,7 @@ export class StringLiteralReplacer extends AbstractReplacer {
         const unicodeArrayNode: TUnicodeArrayNode = <TUnicodeArrayNode>this.nodes.get('unicodeArrayNode');
 
         if (!unicodeArrayNode) {
-            throw new ReferenceError('`unicodeArrayNode` node is not found in Map with custom nodes.');
+            throw new ReferenceError('`unicodeArrayNode` node is not found in Map with custom node.');
         }
 
         let rc4Key: string = '';
@@ -83,7 +83,7 @@ export class StringLiteralReplacer extends AbstractReplacer {
         const unicodeArrayCallsWrapper: TUnicodeArrayCallsWrapper = <TUnicodeArrayCallsWrapper>this.nodes.get('unicodeArrayCallsWrapper');
 
         if (!unicodeArrayCallsWrapper) {
-            throw new ReferenceError('`unicodeArrayCallsWrapper` node is not found in Map with custom nodes.');
+            throw new ReferenceError('`unicodeArrayCallsWrapper` node is not found in Map with custom node.');
         }
 
         if (this.options.unicodeArrayEncoding === UnicodeArrayEncoding.rc4) {

@@ -2,7 +2,7 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
-import { Nodes } from '../Nodes';
+import { Node } from '../node/Node';
 import { Utils } from '../Utils';
 import { StringLiteralReplacer } from './replacers/StringLiteralReplacer';
 
@@ -34,7 +34,7 @@ export class MethodDefinitionObfuscator extends AbstractNodeObfuscator {
         estraverse.replace(methodDefinitionNode.key, {
             enter: (node: ESTree.Node): any => {
                 if (
-                    Nodes.isIdentifierNode(node) &&
+                    Node.isIdentifierNode(node) &&
                     !Utils.arrayContains(this.ignoredNames, node.name) &&
                     methodDefinitionNode.computed === false
                 ) {

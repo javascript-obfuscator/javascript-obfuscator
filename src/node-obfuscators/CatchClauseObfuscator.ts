@@ -8,8 +8,8 @@ import { NodeType } from '../enums/NodeType';
 
 import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
 import { IdentifierReplacer } from './replacers/IdentifierReplacer';
-import { Nodes } from '../Nodes';
-import { NodeUtils } from '../NodeUtils';
+import { Node } from '../node/Node';
+import { NodeUtils } from '../node/NodeUtils';
 
 /**
  * replaces:
@@ -58,7 +58,7 @@ export class CatchClauseObfuscator extends AbstractNodeObfuscator {
     private replaceCatchClauseParam (catchClauseNode: ESTree.CatchClause): void {
         estraverse.replace(catchClauseNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (Nodes.isReplaceableIdentifierNode(node, parentNode)) {
+                if (Node.isReplaceableIdentifierNode(node, parentNode)) {
                     node.name = this.identifierReplacer.replace(node.name);
                 }
             }

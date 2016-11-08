@@ -1,11 +1,11 @@
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockStatement } from './types/TNodeWithBlockStatement';
-import { TStatement } from './types/TStatement';
+import { TNodeWithBlockStatement } from '../types/TNodeWithBlockStatement';
+import { TStatement } from '../types/TStatement';
 
-import { NodeType } from './enums/NodeType';
+import { NodeType } from '../enums/NodeType';
 
-export class Nodes {
+export class Node {
     /**
      * @param bodyNode
      * @returns ESTree.Program
@@ -123,13 +123,13 @@ export class Nodes {
      * @returns {boolean}
      */
     public static isReplaceableIdentifierNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
-        if (!Nodes.isIdentifierNode(node)) {
+        if (!Node.isIdentifierNode(node)) {
             return false;
         }
 
-        const parentNodeIsPropertyNode: boolean = Nodes.isPropertyNode(parentNode) && parentNode.key === node;
+        const parentNodeIsPropertyNode: boolean = Node.isPropertyNode(parentNode) && parentNode.key === node;
         const parentNodeIsMemberExpressionNode: boolean = (
-            Nodes.isMemberExpressionNode(parentNode) &&
+            Node.isMemberExpressionNode(parentNode) &&
             parentNode.computed === false &&
             parentNode.property === node
         );

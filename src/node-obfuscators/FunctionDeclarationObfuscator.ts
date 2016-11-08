@@ -8,8 +8,8 @@ import { NodeType } from '../enums/NodeType';
 
 import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
 import { IdentifierReplacer } from './replacers/IdentifierReplacer';
-import { Nodes } from '../Nodes';
-import { NodeUtils } from '../NodeUtils';
+import { Node } from '../node/Node';
+import { NodeUtils } from '../node/NodeUtils';
 
 /**
  * replaces:
@@ -68,7 +68,7 @@ export class FunctionDeclarationObfuscator extends AbstractNodeObfuscator {
 
         estraverse.replace(scopeNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (Nodes.isReplaceableIdentifierNode(node, parentNode)) {
+                if (Node.isReplaceableIdentifierNode(node, parentNode)) {
                     node.name = this.identifierReplacer.replace(node.name);
                 }
             }

@@ -4,7 +4,7 @@ import { ConsoleOutputDisableExpressionNode } from '../custom-nodes/console-outp
 import { NodeCallsControllerFunctionNode } from '../custom-nodes/node-calls-controller-nodes/NodeCallsControllerFunctionNode';
 
 import { AbstractNodesGroup } from './AbstractNodesGroup';
-import { NodeAppender } from '../NodeAppender';
+import { NodeAppender } from '../node/NodeAppender';
 import { Utils } from '../Utils';
 
 export class ConsoleOutputNodesGroup extends AbstractNodesGroup {

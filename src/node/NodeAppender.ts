@@ -1,11 +1,11 @@
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockStatement } from './types/TNodeWithBlockStatement';
-import { TStatement } from './types/TStatement';
+import { TNodeWithBlockStatement } from '../types/TNodeWithBlockStatement';
+import { TStatement } from '../types/TStatement';
 
-import { IStackTraceData } from './interfaces/stack-trace-analyzer/IStackTraceData';
+import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
-import { Utils } from './Utils';
+import { Utils } from '../Utils';
 
 /**
  * This class appends node into a first deepest BlockStatement in order of function calls

@@ -7,8 +7,8 @@ BabelPolyfill.append();
 /**
  * Unit tests
  */
-import './unit-tests/NodeAppender.spec';
-import './unit-tests/NodeUtils.spec';
+import './unit-tests/node/NodeAppender.spec';
+import './unit-tests/node/NodeUtils.spec';
 import './unit-tests/ObfuscationResult.spec';
 import './unit-tests/OptionsNormalizer.spec';
 import './unit-tests/SourceMapCorrector.spec';

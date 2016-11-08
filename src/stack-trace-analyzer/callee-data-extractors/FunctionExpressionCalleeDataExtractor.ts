@@ -4,8 +4,8 @@ import * as ESTree from 'estree';
 import { ICalleeData } from '../../interfaces/stack-trace-analyzer/ICalleeData';
 import { ICalleeDataExtractor } from '../../interfaces/stack-trace-analyzer/ICalleeDataExtractor';
 
-import { Nodes } from '../../Nodes';
-import { NodeUtils } from '../../NodeUtils';
+import { Node } from '../../node/Node';
+import { NodeUtils } from '../../node/NodeUtils';
 
 export class FunctionExpressionCalleeDataExtractor implements ICalleeDataExtractor {
     /**
@@ -33,14 +33,14 @@ export class FunctionExpressionCalleeDataExtractor implements ICalleeDataExtract
     public extract (): ICalleeData|null {
         let calleeBlockStatement: ESTree.BlockStatement|null = null;
 
-        if (Nodes.isIdentifierNode(this.callee)) {
+        if (Node.isIdentifierNode(this.callee)) {
             calleeBlockStatement = this.getCalleeBlockStatement(
                 NodeUtils.getBlockScopeOfNode(this.blockScopeBody[0]),
                 this.callee.name
             );
         }
 
-        if (Nodes.isFunctionExpressionNode(this.callee)) {
+        if (Node.isFunctionExpressionNode(this.callee)) {
             calleeBlockStatement = this.callee.body;
         }
 
@@ -65,9 +65,9 @@ export class FunctionExpressionCalleeDataExtractor implements ICalleeDataExtract
         estraverse.traverse(node, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (
-                    Nodes.isFunctionExpressionNode(node) &&
-                    Nodes.isVariableDeclaratorNode(parentNode) &&
-                    Nodes.isIdentifierNode(parentNode.id) &&
+                    Node.isFunctionExpressionNode(node) &&
+                    Node.isVariableDeclaratorNode(parentNode) &&
+                    Node.isIdentifierNode(parentNode.id) &&
                     parentNode.id.name === name
                 ) {
                     calleeBlockStatement = node.body;

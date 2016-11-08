@@ -22,8 +22,8 @@ import { FunctionObfuscator } from './node-obfuscators/FunctionObfuscator';
 import { LiteralObfuscator } from './node-obfuscators/LiteralObfuscator';
 import { MemberExpressionObfuscator } from './node-obfuscators/MemberExpressionObfuscator';
 import { MethodDefinitionObfuscator } from './node-obfuscators/MethodDefinitionObfuscator';
-import { Nodes } from './Nodes';
-import { NodeUtils } from './NodeUtils';
+import { Node } from './node/Node';
+import { NodeUtils } from './node/NodeUtils';
 import { ObjectExpressionObfuscator } from './node-obfuscators/ObjectExpressionObfuscator';
 import { SelfDefendingNodesGroup } from './node-groups/SelfDefendingNodesGroup';
 import { UnicodeArrayNodesGroup } from './node-groups/UnicodeArrayNodesGroup';
@@ -90,7 +90,7 @@ export class Obfuscator implements IObfuscator {
      * @returns {ESTree.Node}
      */
     public obfuscateNode (node: ESTree.Program): ESTree.Node {
-        if (Nodes.isProgramNode(node) && !node.body.length) {
+        if (Node.isProgramNode(node) && !node.body.length) {
             return node;
         }
 

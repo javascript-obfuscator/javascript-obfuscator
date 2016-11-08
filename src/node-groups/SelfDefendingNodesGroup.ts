@@ -6,7 +6,7 @@ import { NodeCallsControllerFunctionNode } from '../custom-nodes/node-calls-cont
 import { SelfDefendingUnicodeNode } from '../custom-nodes/self-defending-nodes/SelfDefendingUnicodeNode';
 
 import { AbstractNodesGroup } from './AbstractNodesGroup';
-import { NodeAppender } from '../NodeAppender';
+import { NodeAppender } from '../node/NodeAppender';
 import { Utils } from '../Utils';
 
 export class SelfDefendingNodesGroup extends AbstractNodesGroup {

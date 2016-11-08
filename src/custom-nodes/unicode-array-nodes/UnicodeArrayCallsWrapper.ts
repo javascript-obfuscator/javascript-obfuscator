@@ -19,8 +19,8 @@ import { UnicodeArrayRc4DecodeNodeTemplate } from '../../templates/custom-nodes/
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
-import { NodeAppender } from '../../NodeAppender';
-import { NodeUtils } from '../../NodeUtils';
+import { NodeAppender } from '../../node/NodeAppender';
+import { NodeUtils } from '../../node/NodeUtils';
 import { UnicodeArray } from '../../UnicodeArray';
 
 export class UnicodeArrayCallsWrapper extends AbstractCustomNode {

@@ -11,8 +11,8 @@ import { AppendState } from '../../enums/AppendState';
 import { DomainLockNodeTemplate } from '../../templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { NodeAppender } from '../../NodeAppender';
-import { NodeUtils } from '../../NodeUtils';
+import { NodeAppender } from '../../node/NodeAppender';
+import { NodeUtils } from '../../node/NodeUtils';
 import { Utils } from '../../Utils';
 
 export class DomainLockNode extends AbstractCustomNode {

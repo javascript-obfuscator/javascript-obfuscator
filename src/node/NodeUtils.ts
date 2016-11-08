@@ -3,13 +3,13 @@ import * as esprima from 'esprima';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockStatement } from './types/TNodeWithBlockStatement';
-import { TStatement } from './types/TStatement';
+import { TNodeWithBlockStatement } from '../types/TNodeWithBlockStatement';
+import { TStatement } from '../types/TStatement';
 
-import { NodeType } from './enums/NodeType';
+import { NodeType } from '../enums/NodeType';
 
-import { Nodes } from './Nodes';
-import { Utils } from './Utils';
+import { Node } from './Node';
+import { Utils } from '../Utils';
 
 export class NodeUtils {
     /**
@@ -56,7 +56,7 @@ export class NodeUtils {
      * @returns {ESTree.Node}
      */
     public static getBlockStatementNodeByIndex (node: ESTree.Node, index: number = 0): ESTree.Node {
-        if (Nodes.isNodeHasBlockStatement(node)) {
+        if (Node.isNodeHasBlockStatement(node)) {
             if (node.body[index] === undefined) {
                 throw new ReferenceError(`Wrong index \`${index}\`. Block-statement body length is \`${node.body.length}\``);
             }
@@ -79,7 +79,7 @@ export class NodeUtils {
             throw new ReferenceError('`parentNode` property of given node is `undefined`');
         }
 
-        if (Nodes.isBlockStatementNode(parentNode)) {
+        if (Node.isBlockStatementNode(parentNode)) {
             if (!parentNode.parentNode) {
                 throw new ReferenceError('`parentNode` property of `parentNode` of given node is `undefined`');
             }
@@ -93,7 +93,7 @@ export class NodeUtils {
             return parentNode;
         }
 
-        if (Nodes.isProgramNode(parentNode)) {
+        if (Node.isProgramNode(parentNode)) {
             return parentNode;
         }
 
@@ -114,7 +114,7 @@ export class NodeUtils {
                     if (node.type === NodeType.Program) {
                         value = node;
                     } else {
-                        value = Nodes.getProgramNode(<TStatement[]>[node]);
+                        value = Node.getProgramNode(<TStatement[]>[node]);
                         value['parentNode'] = value;
                     }
 

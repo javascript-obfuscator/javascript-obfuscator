@@ -11,9 +11,9 @@ import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset
 import { SelfDefendingTemplate } from '../../templates/custom-nodes/self-defending-nodes/self-defending-unicode-node/SelfDefendingTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { NodeAppender } from '../../NodeAppender';
+import { NodeAppender } from '../../node/NodeAppender';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
-import { NodeUtils } from '../../NodeUtils';
+import { NodeUtils } from '../../node/NodeUtils';
 import { Utils } from '../../Utils';
 
 export class SelfDefendingUnicodeNode extends AbstractCustomNode {

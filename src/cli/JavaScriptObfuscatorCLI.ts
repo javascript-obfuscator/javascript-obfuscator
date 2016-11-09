@@ -1,13 +1,13 @@
 import * as commander from 'commander';
 import * as path from 'path';
 
-import { TStringsArrayEncoding } from '../types/TStringsArrayEncoding';
+import { TStringArrayEncoding } from '../types/TStringArrayEncoding';
 
 import { IObfuscationResult } from '../interfaces/IObfuscationResult';
 import { IObfuscatorOptions } from '../interfaces/IObfuscatorOptions';
 
 import { SourceMapMode } from '../enums/SourceMapMode';
-import { StringsArrayEncoding } from '../enums/StringsArrayEncoding';
+import { StringArrayEncoding } from '../enums/StringArrayEncoding';
 
 import { DEFAULT_PRESET } from '../preset-options/DefaultPreset';
 
@@ -84,17 +84,17 @@ export class JavaScriptObfuscatorCLI {
 
     /**
      * @param value
-     * @returns {TStringsArrayEncoding}
+     * @returns {TStringArrayEncoding}
      */
-    private static parseStringsArrayEncoding (value: string): TStringsArrayEncoding {
+    private static parseStringArrayEncoding (value: string): TStringArrayEncoding {
         switch (value) {
             case 'true':
             case '1':
-            case StringsArrayEncoding.base64:
+            case StringArrayEncoding.base64:
                 return true;
 
-            case StringsArrayEncoding.rc4:
-                return StringsArrayEncoding.rc4;
+            case StringArrayEncoding.rc4:
+                return StringArrayEncoding.rc4;
 
             default:
                 return false;
@@ -150,7 +150,7 @@ export class JavaScriptObfuscatorCLI {
             .option('--disableConsoleOutput <boolean>', 'Allow console.log, console.info, console.error and console.warn messages output into browser console', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--domainLock <list>', 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)', (val: string) => val.split(','))
             .option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', (val: string) => val.split(','))
-            .option('--rotateStringsArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean)
+            .option('--rotateStringArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--sourceMapBaseUrl <string>', 'Sets base url to the source map import url when `--sourceMapMode=separate`')
@@ -160,10 +160,10 @@ export class JavaScriptObfuscatorCLI {
                 'Specify source map output mode',
                 JavaScriptObfuscatorCLI.parseSourceMapMode
             )
-            .option('--stringsArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean)
-            .option('--stringsArrayEncoding <boolean|string> [true, false, base64, rc4]', 'Encodes all strings in strings array using base64 or rc4 (this option can slow down your code speed', JavaScriptObfuscatorCLI.parseStringsArrayEncoding)
-            .option('--stringsArrayThreshold <number>', 'The probability that the literal string will be inserted into stringsArray (Default: 0.8, Min: 0, Max: 1)', parseFloat)
-            .option('--unicodeEscapeSequence <boolean>', 'Allows to enable/disable strings conversion to unicode escape sequence', JavaScriptObfuscatorCLI.parseBoolean)
+            .option('--stringArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean)
+            .option('--stringArrayEncoding <boolean|string> [true, false, base64, rc4]', 'Encodes all strings in strings array using base64 or rc4 (this option can slow down your code speed', JavaScriptObfuscatorCLI.parseStringArrayEncoding)
+            .option('--stringArrayThreshold <number>', 'The probability that the literal string will be inserted into stringArray (Default: 0.8, Min: 0, Max: 1)', parseFloat)
+            .option('--unicodeEscapeSequence <boolean>', 'Allows to enable/disable string conversion to unicode escape sequence', JavaScriptObfuscatorCLI.parseBoolean)
             .parse(this.rawArguments);
 
         this.commands.on('--help', () => {

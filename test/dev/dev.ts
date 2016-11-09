@@ -71,7 +71,7 @@ if (!(<any>global)._babelPolyfill) {
         {
             disableConsoleOutput: false,
             selfDefending: true,
-            stringsArrayEncoding: 'rc4'
+            stringArrayEncoding: 'rc4'
         }
     ).getObfuscatedCode();
 

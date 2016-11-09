@@ -51,7 +51,7 @@ var obfuscationResult = JavaScriptObfuscator.obfuscate(
     })();
     `,
     {
-        rotateStringsArray: false
+        rotateStringArray: false
     }
 );
 
@@ -117,15 +117,15 @@ Following options available for the JS Obfuscator:
     debugProtectionInterval: false,
     disableConsoleOutput: true,
     reservedNames: [],
-    rotateStringsArray: true,
+    rotateStringArray: true,
     selfDefending: true,
     sourceMap: false,
     sourceMapBaseUrl: '',
     sourceMapFileName: '',
     sourceMapMode: 'separate',
-    stringsArray: true,
-    stringsArrayEncoding: false,
-    stringsArrayThreshold: 0.8
+    stringArray: true,
+    stringArrayEncoding: false,
+    stringArrayThreshold: 0.8
 }
 ```
 
@@ -141,15 +141,15 @@ Following options available for the JS Obfuscator:
     --debugProtectionInterval <boolean>
     --disableConsoleOutput <boolean>
     --reservedNames <list> (comma separated)
-    --rotateStringsArray <boolean>
+    --rotateStringArray <boolean>
     --selfDefending <boolean>
     --sourceMap <boolean>
     --sourceMapBaseUrl <string>
     --sourceMapFileName <string>
     --sourceMapMode <string> [inline, separate]
-    --stringsArray <boolean>
-    --stringsArrayEncoding <boolean|string> [true, false, base64, rc4]
-    --stringsArrayThreshold <number>
+    --stringArray <boolean>
+    --stringArrayEncoding <boolean|string> [true, false, base64, rc4]
+    --stringArrayThreshold <number>
 ```
 
 ### `compact`
@@ -202,12 +202,12 @@ Example:
 	}
 ```
 
-### `rotateStringsArray`
+### `rotateStringArray`
 Type: `boolean` Default: `true`
 
-##### :warning: `stringsArray` must be enabled
+##### :warning: `stringArray` must be enabled
 
-Shift the `stringsArray` array by a fixed and random (generated at the code obfuscation) places. This makes it harder to match the order of the removed strings to their original place.
+Shift the `stringArray` array by a fixed and random (generated at the code obfuscation) places. This makes it harder to match the order of the removed strings to their original place.
 
 This option is recommended if your original source code isn't small, as the helper function can attract attention.
 
@@ -263,41 +263,41 @@ Specifies source map generation mode:
 * `inline` - emit a single file with source maps instead of having a separate file;
 * `separate` - generates corresponding '.map' file with source map. If obfuscator run through CLI - adds link to source map file to the end of file with obfuscated code `//# sourceMappingUrl=file.js.map`.
 
-### `stringsArray`
+### `stringArray`
 Type: `boolean` Default: `true`
 
 Removes string literals and place them in a special array. For instance the string `"Hello World"` in `var m = "Hello World";` will be replaced with something like `var m = _0x12c456[0x1];`
     
-### `stringsArrayEncoding`
+### `stringArrayEncoding`
 Type: `boolean|string` Default: `false`
 
-##### :warning: `stringsArray` option must be enabled
+##### :warning: `stringArray` option must be enabled
 
 This option can slightly slow down your script.
 
-Encode all string literals of the `stringsArray` using `base64` or `rc4` and inserts a special code that used to decode it back at runtime.
+Encode all string literals of the `stringArray` using `base64` or `rc4` and inserts a special code that used to decode it back at runtime.
 
 Available values:
-* `true` (`boolean`): encode `stringsArray` values using `base64`
-* `false` (`boolean`): don't encode `stringsArray` values
-* `'base64'` (`string`): encode `stringsArray` values using `base64`
-* `'rc4'` (`string`): encode `stringsArray` values using `rc4`. **About 30-35% slower then `base64`, but more harder to get initial values**
+* `true` (`boolean`): encode `stringArray` values using `base64`
+* `false` (`boolean`): don't encode `stringArray` values
+* `'base64'` (`string`): encode `stringArray` values using `base64`
+* `'rc4'` (`string`): encode `stringArray` values using `rc4`. **About 30-35% slower then `base64`, but more harder to get initial values**
     
-### `stringsArrayThreshold`
+### `stringArrayThreshold`
 Type: `number` Default: `0.8` Min: `0` Max: `1`
 
-##### :warning: `stringsArray` option must be enabled
+##### :warning: `stringArray` option must be enabled
 
-You can use this setting to adjust the probability (from 0 to 1) that a string literal will be inserted into the `stringsArray`.
+You can use this setting to adjust the probability (from 0 to 1) that a string literal will be inserted into the `stringArray`.
 
-This setting is useful with large code size because repeatdely calls to the `stringsArray` array can slightly slow down your code.
+This setting is useful with large code size because repeatdely calls to the `stringArray` array can slightly slow down your code.
 
-`stringsArrayThreshold: 0` equals to `stringsArray: false`.
+`stringArrayThreshold: 0` equals to `stringArray: false`.
 
 ### `unicodeEscapeSequence`
 Type: `boolean` Default: `true`
 
-Allows to enable/disable strings conversion to unicode escape sequence.
+Allows to enable/disable string conversion to unicode escape sequence.
 
 Unicode escape sequence greatly increases code size. Recommended to disable this option when using `stringArrayEncoding` (especially with `rc4` encoding).
 

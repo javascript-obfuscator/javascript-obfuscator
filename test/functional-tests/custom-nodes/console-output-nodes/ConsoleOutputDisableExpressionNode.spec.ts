@@ -25,7 +25,7 @@ describe('ConsoleOutputDisableExpressionNode', () => {
             `var test = 'test';`,
             Object.assign({}, NO_CUSTOM_NODES_PRESET, {
                 disableConsoleOutput: false,
-                stringsArrayThreshold: 1
+                stringArrayThreshold: 1
             })
         );
 

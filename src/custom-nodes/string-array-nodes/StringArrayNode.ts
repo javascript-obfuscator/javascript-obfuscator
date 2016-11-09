@@ -7,15 +7,15 @@ import { IOptions } from '../../interfaces/IOptions';
 
 import { AppendState } from '../../enums/AppendState';
 
-import { StringsArray } from '../../StringsArray';
+import { StringArray } from '../../StringArray';
 
-import { StringsArrayTemplate } from '../../templates/custom-nodes/strings-array-nodes/strings-array-node/StringsArrayTemplate';
+import { StringArrayTemplate } from '../../templates/custom-nodes/string-array-nodes/string-array-node/StringArrayTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeAppender } from '../../node/NodeAppender';
 import { NodeUtils } from '../../node/NodeUtils';
 
-export class StringsArrayNode extends AbstractCustomNode {
+export class StringArrayNode extends AbstractCustomNode {
     /**
      * @type {number}
      */
@@ -27,44 +27,44 @@ export class StringsArrayNode extends AbstractCustomNode {
     protected appendState: AppendState = AppendState.AfterObfuscation;
 
     /**
-     * @type {StringsArray}
+     * @type {StringArray}
      */
-    private stringsArray: StringsArray;
+    private stringArray: StringArray;
 
     /**
      * @type {string}
      */
-    private stringsArrayName: string;
+    private stringArrayName: string;
 
     /**
      * @type {number}
      */
-    private stringsArrayRotateValue: number;
+    private stringArrayRotateValue: number;
 
     /**
-     * @param stringsArray
-     * @param stringsArrayName
-     * @param stringsArrayRotateValue
+     * @param stringArray
+     * @param stringArrayName
+     * @param stringArrayRotateValue
      * @param options
      */
     constructor (
-        stringsArray: StringsArray,
-        stringsArrayName: string,
-        stringsArrayRotateValue: number = 0,
+        stringArray: StringArray,
+        stringArrayName: string,
+        stringArrayRotateValue: number = 0,
         options: IOptions
     ) {
         super(options);
 
-        this.stringsArray = stringsArray;
-        this.stringsArrayName = stringsArrayName;
-        this.stringsArrayRotateValue = stringsArrayRotateValue;
+        this.stringArray = stringArray;
+        this.stringArrayName = stringArrayName;
+        this.stringArrayRotateValue = stringArrayRotateValue;
     }
 
     /**
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        if (!this.stringsArray.getLength()) {
+        if (!this.stringArray.getLength()) {
             return;
         }
 
@@ -75,21 +75,21 @@ export class StringsArrayNode extends AbstractCustomNode {
      * @returns {string}
      */
     public getNodeIdentifier (): string {
-        return this.stringsArrayName;
+        return this.stringArrayName;
     }
 
     /**
-     * @returns {StringsArray}
+     * @returns {StringArray}
      */
-    public getNodeData (): StringsArray {
-        return this.stringsArray;
+    public getNodeData (): StringArray {
+        return this.stringArray;
     }
 
     /**
      * @returns {TStatement[]}
      */
     public getNode (): TStatement[] {
-        this.stringsArray.rotateArray(this.stringsArrayRotateValue);
+        this.stringArray.rotateArray(this.stringArrayRotateValue);
 
         return super.getNode();
     }
@@ -98,7 +98,7 @@ export class StringsArrayNode extends AbstractCustomNode {
      * @param data
      */
     public updateNodeData (data: string): void {
-        this.stringsArray.addToArray(data);
+        this.stringArray.addToArray(data);
     }
 
     /**
@@ -106,9 +106,9 @@ export class StringsArrayNode extends AbstractCustomNode {
      */
     protected getNodeStructure (): TStatement[] {
         return NodeUtils.convertCodeToStructure(
-            StringsArrayTemplate().formatUnicorn({
-                stringsArrayName: this.stringsArrayName,
-                stringsArray: this.stringsArray.toString()
+            StringArrayTemplate().formatUnicorn({
+                stringArrayName: this.stringArrayName,
+                stringArray: this.stringArray.toString()
             })
         );
     }

@@ -107,15 +107,15 @@ describe('JavaScriptObfuscator', () => {
                 obfuscatedCode1: string = JavaScriptObfuscator.obfuscate(
                     `var test = 'abc';`,
                     Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                        stringsArray: true,
-                        stringsArrayThreshold: 1
+                        stringArray: true,
+                        stringArrayThreshold: 1
                     })
                 ).getObfuscatedCode(),
                 obfuscatedCode2: string = JavaScriptObfuscator.obfuscate(
                     `var test = 'абц';`,
                     Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                        stringsArray: true,
-                        stringsArrayThreshold: 1
+                        stringArray: true,
+                        stringArrayThreshold: 1
                     })
                 ).getObfuscatedCode();
 

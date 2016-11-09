@@ -976,15 +976,15 @@ exports.NO_CUSTOM_NODES_PRESET = Object.freeze({
     disableConsoleOutput: false,
     domainLock: [],
     reservedNames: [],
-    rotateStringsArray: false,
+    rotateStringArray: false,
     selfDefending: false,
     sourceMap: false,
     sourceMapBaseUrl: '',
     sourceMapFileName: '',
     sourceMapMode: SourceMapMode_1.SourceMapMode.Separate,
-    stringsArray: false,
-    stringsArrayEncoding: false,
-    stringsArrayThreshold: 0,
+    stringArray: false,
+    stringArrayEncoding: false,
+    stringArrayThreshold: 0,
     unicodeEscapeSequence: true
 });
 
@@ -1064,7 +1064,7 @@ exports.NodeCallsControllerFunctionNode = NodeCallsControllerFunctionNode;
 "use strict";
 "use strict";
 
-exports.StringsArrayEncoding = {
+exports.StringArrayEncoding = {
     base64: 'base64',
     rc4: 'rc4'
 };
@@ -1084,7 +1084,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var StringsArrayEncoding_1 = __webpack_require__(18);
+var StringArrayEncoding_1 = __webpack_require__(18);
 var AbstractReplacer_1 = __webpack_require__(14);
 var NumberLiteralReplacer_1 = __webpack_require__(22);
 var Utils_1 = __webpack_require__(0);
@@ -1101,25 +1101,25 @@ var StringLiteralReplacer = function (_AbstractReplacer_1$A) {
     _createClass(StringLiteralReplacer, [{
         key: 'replace',
         value: function replace(nodeValue) {
-            var replaceWithStringsArrayFlag = nodeValue.length >= StringLiteralReplacer.minimumLengthForStringsArray && Math.random() <= this.options.stringsArrayThreshold;
-            if (this.options.stringsArray && replaceWithStringsArrayFlag) {
-                return this.replaceStringLiteralWithStringsArrayCall(nodeValue);
+            var replaceWithStringArrayFlag = nodeValue.length >= StringLiteralReplacer.minimumLengthForStringArray && Math.random() <= this.options.stringArrayThreshold;
+            if (this.options.stringArray && replaceWithStringArrayFlag) {
+                return this.replaceStringLiteralWithStringArrayCall(nodeValue);
             }
             return '\'' + Utils_1.Utils.stringToUnicodeEscapeSequence(nodeValue) + '\'';
         }
     }, {
-        key: 'replaceStringLiteralWithStringsArrayCall',
-        value: function replaceStringLiteralWithStringsArrayCall(value) {
-            var stringsArrayNode = this.nodes.get('stringsArrayNode');
-            if (!stringsArrayNode) {
-                throw new ReferenceError('`stringsArrayNode` node is not found in Map with custom node.');
+        key: 'replaceStringLiteralWithStringArrayCall',
+        value: function replaceStringLiteralWithStringArrayCall(value) {
+            var stringArrayNode = this.nodes.get('stringArrayNode');
+            if (!stringArrayNode) {
+                throw new ReferenceError('`stringArrayNode` node is not found in Map with custom node.');
             }
             var rc4Key = '';
-            switch (this.options.stringsArrayEncoding) {
-                case StringsArrayEncoding_1.StringsArrayEncoding.base64:
+            switch (this.options.stringArrayEncoding) {
+                case StringArrayEncoding_1.StringArrayEncoding.base64:
                     value = Utils_1.Utils.btoa(value);
                     break;
-                case StringsArrayEncoding_1.StringsArrayEncoding.rc4:
+                case StringArrayEncoding_1.StringArrayEncoding.rc4:
                     rc4Key = Utils_1.Utils.getRandomGenerator().pickone(StringLiteralReplacer.rc4Keys);
                     value = Utils_1.Utils.btoa(Utils_1.Utils.rc4(value, rc4Key));
                     break;
@@ -1127,32 +1127,32 @@ var StringLiteralReplacer = function (_AbstractReplacer_1$A) {
             if (this.options.unicodeEscapeSequence) {
                 value = Utils_1.Utils.stringToUnicodeEscapeSequence(value);
             }
-            var stringsArray = stringsArrayNode.getNodeData(),
-                indexOfExistingValue = stringsArray.getIndexOf(value),
+            var stringArray = stringArrayNode.getNodeData(),
+                indexOfExistingValue = stringArray.getIndexOf(value),
                 indexOfValue = void 0,
                 hexadecimalIndex = void 0;
             if (indexOfExistingValue >= 0) {
                 indexOfValue = indexOfExistingValue;
             } else {
-                indexOfValue = stringsArray.getLength();
-                stringsArrayNode.updateNodeData(value);
+                indexOfValue = stringArray.getLength();
+                stringArrayNode.updateNodeData(value);
             }
             hexadecimalIndex = new NumberLiteralReplacer_1.NumberLiteralReplacer(this.nodes, this.options).replace(indexOfValue);
-            var stringsArrayCallsWrapper = this.nodes.get('stringsArrayCallsWrapper');
-            if (!stringsArrayCallsWrapper) {
-                throw new ReferenceError('`stringsArrayCallsWrapper` node is not found in Map with custom node.');
+            var stringArrayCallsWrapper = this.nodes.get('stringArrayCallsWrapper');
+            if (!stringArrayCallsWrapper) {
+                throw new ReferenceError('`stringArrayCallsWrapper` node is not found in Map with custom node.');
             }
-            if (this.options.stringsArrayEncoding === StringsArrayEncoding_1.StringsArrayEncoding.rc4) {
-                return stringsArrayCallsWrapper.getNodeIdentifier() + '(\'' + hexadecimalIndex + '\', \'' + Utils_1.Utils.stringToUnicodeEscapeSequence(rc4Key) + '\')';
+            if (this.options.stringArrayEncoding === StringArrayEncoding_1.StringArrayEncoding.rc4) {
+                return stringArrayCallsWrapper.getNodeIdentifier() + '(\'' + hexadecimalIndex + '\', \'' + Utils_1.Utils.stringToUnicodeEscapeSequence(rc4Key) + '\')';
             }
-            return stringsArrayCallsWrapper.getNodeIdentifier() + '(\'' + hexadecimalIndex + '\')';
+            return stringArrayCallsWrapper.getNodeIdentifier() + '(\'' + hexadecimalIndex + '\')';
         }
     }]);
 
     return StringLiteralReplacer;
 }(AbstractReplacer_1.AbstractReplacer);
 
-StringLiteralReplacer.minimumLengthForStringsArray = 3;
+StringLiteralReplacer.minimumLengthForStringArray = 3;
 StringLiteralReplacer.rc4Keys = Utils_1.Utils.getRandomGenerator().n(function () {
     return Utils_1.Utils.getRandomGenerator().string({ length: 4 });
 }, 50);
@@ -1322,15 +1322,15 @@ exports.DEFAULT_PRESET = Object.freeze({
     disableConsoleOutput: true,
     domainLock: [],
     reservedNames: [],
-    rotateStringsArray: true,
+    rotateStringArray: true,
     selfDefending: true,
     sourceMap: false,
     sourceMapBaseUrl: '',
     sourceMapFileName: '',
     sourceMapMode: SourceMapMode_1.SourceMapMode.Separate,
-    stringsArray: true,
-    stringsArrayEncoding: false,
-    stringsArrayThreshold: 0.8,
+    stringArray: true,
+    stringArrayEncoding: false,
+    stringArrayThreshold: 0.8,
     unicodeEscapeSequence: true
 });
 
@@ -1450,7 +1450,7 @@ var NodeUtils_1 = __webpack_require__(1);
 var ObjectExpressionObfuscator_1 = __webpack_require__(53);
 var SelfDefendingNodesGroup_1 = __webpack_require__(45);
 var StackTraceAnalyzer_1 = __webpack_require__(59);
-var StringsArrayNodesGroup_1 = __webpack_require__(46);
+var StringArrayNodesGroup_1 = __webpack_require__(46);
 var VariableDeclarationObfuscator_1 = __webpack_require__(54);
 
 var Obfuscator = function () {
@@ -1537,7 +1537,7 @@ var Obfuscator = function () {
     return Obfuscator;
 }();
 
-Obfuscator.nodeGroups = [DomainLockNodesGroup_1.DomainLockNodesGroup, SelfDefendingNodesGroup_1.SelfDefendingNodesGroup, ConsoleOutputNodesGroup_1.ConsoleOutputNodesGroup, DebugProtectionNodesGroup_1.DebugProtectionNodesGroup, StringsArrayNodesGroup_1.StringsArrayNodesGroup];
+Obfuscator.nodeGroups = [DomainLockNodesGroup_1.DomainLockNodesGroup, SelfDefendingNodesGroup_1.SelfDefendingNodesGroup, ConsoleOutputNodesGroup_1.ConsoleOutputNodesGroup, DebugProtectionNodesGroup_1.DebugProtectionNodesGroup, StringArrayNodesGroup_1.StringArrayNodesGroup];
 Obfuscator.nodeObfuscators = new Map([[NodeType_1.NodeType.ArrowFunctionExpression, [FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.ClassDeclaration, [FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator]], [NodeType_1.NodeType.CatchClause, [CatchClauseObfuscator_1.CatchClauseObfuscator]], [NodeType_1.NodeType.FunctionDeclaration, [FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator, FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.FunctionExpression, [FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.MemberExpression, [MemberExpressionObfuscator_1.MemberExpressionObfuscator]], [NodeType_1.NodeType.MethodDefinition, [MethodDefinitionObfuscator_1.MethodDefinitionObfuscator]], [NodeType_1.NodeType.ObjectExpression, [ObjectExpressionObfuscator_1.ObjectExpressionObfuscator]], [NodeType_1.NodeType.VariableDeclaration, [VariableDeclarationObfuscator_1.VariableDeclarationObfuscator]], [NodeType_1.NodeType.Literal, [LiteralObfuscator_1.LiteralObfuscator]]]);
 exports.Obfuscator = Obfuscator;
 
@@ -1612,14 +1612,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Utils_1 = __webpack_require__(0);
 
-var StringsArray = function () {
-    function StringsArray() {
-        _classCallCheck(this, StringsArray);
+var StringArray = function () {
+    function StringArray() {
+        _classCallCheck(this, StringArray);
 
         this.array = [];
     }
 
-    _createClass(StringsArray, [{
+    _createClass(StringArray, [{
         key: "addToArray",
         value: function addToArray(value) {
             this.array.push(value);
@@ -1653,10 +1653,10 @@ var StringsArray = function () {
         }
     }]);
 
-    return StringsArray;
+    return StringArray;
 }();
 
-exports.StringsArray = StringsArray;
+exports.StringArray = StringArray;
 
 /***/ },
 /* 31 */
@@ -1764,7 +1764,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var commander = __webpack_require__(83);
 var path = __webpack_require__(25);
 var SourceMapMode_1 = __webpack_require__(13);
-var StringsArrayEncoding_1 = __webpack_require__(18);
+var StringArrayEncoding_1 = __webpack_require__(18);
 var DefaultPreset_1 = __webpack_require__(23);
 var CLIUtils_1 = __webpack_require__(31);
 var JavaScriptObfuscator_1 = __webpack_require__(10);
@@ -1815,7 +1815,7 @@ var JavaScriptObfuscatorCLI = function () {
                 return val.split(',');
             }).option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', function (val) {
                 return val.split(',');
-            }).option('--rotateStringsArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMapBaseUrl <string>', 'Sets base url to the source map import url when `--sourceMapMode=separate`').option('--sourceMapFileName <string>', 'Sets file name for output source map when `--sourceMapMode=separate`').option('--sourceMapMode <string> [inline, separate]', 'Specify source map output mode', JavaScriptObfuscatorCLI.parseSourceMapMode).option('--stringsArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean).option('--stringsArrayEncoding <boolean|string> [true, false, base64, rc4]', 'Encodes all strings in strings array using base64 or rc4 (this option can slow down your code speed', JavaScriptObfuscatorCLI.parseStringsArrayEncoding).option('--stringsArrayThreshold <number>', 'The probability that the literal string will be inserted into stringsArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).option('--unicodeEscapeSequence <boolean>', 'Allows to enable/disable strings conversion to unicode escape sequence', JavaScriptObfuscatorCLI.parseBoolean).parse(this.rawArguments);
+            }).option('--rotateStringArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMapBaseUrl <string>', 'Sets base url to the source map import url when `--sourceMapMode=separate`').option('--sourceMapFileName <string>', 'Sets file name for output source map when `--sourceMapMode=separate`').option('--sourceMapMode <string> [inline, separate]', 'Specify source map output mode', JavaScriptObfuscatorCLI.parseSourceMapMode).option('--stringArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean).option('--stringArrayEncoding <boolean|string> [true, false, base64, rc4]', 'Encodes all strings in strings array using base64 or rc4 (this option can slow down your code speed', JavaScriptObfuscatorCLI.parseStringArrayEncoding).option('--stringArrayThreshold <number>', 'The probability that the literal string will be inserted into stringArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).option('--unicodeEscapeSequence <boolean>', 'Allows to enable/disable string conversion to unicode escape sequence', JavaScriptObfuscatorCLI.parseBoolean).parse(this.rawArguments);
             this.commands.on('--help', function () {
                 console.log('  Examples:\n');
                 console.log('    %> javascript-obfuscator in.js --compact true --selfDefending false');
@@ -1878,15 +1878,15 @@ var JavaScriptObfuscatorCLI = function () {
             return value;
         }
     }, {
-        key: 'parseStringsArrayEncoding',
-        value: function parseStringsArrayEncoding(value) {
+        key: 'parseStringArrayEncoding',
+        value: function parseStringArrayEncoding(value) {
             switch (value) {
                 case 'true':
                 case '1':
-                case StringsArrayEncoding_1.StringsArrayEncoding.base64:
+                case StringArrayEncoding_1.StringArrayEncoding.base64:
                     return true;
-                case StringsArrayEncoding_1.StringsArrayEncoding.rc4:
-                    return StringsArrayEncoding_1.StringsArrayEncoding.rc4;
+                case StringArrayEncoding_1.StringArrayEncoding.rc4:
+                    return StringArrayEncoding_1.StringArrayEncoding.rc4;
                 default:
                     return false;
             }
@@ -2274,38 +2274,38 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 __webpack_require__(8);
 var AppendState_1 = __webpack_require__(2);
-var StringsArrayEncoding_1 = __webpack_require__(18);
+var StringArrayEncoding_1 = __webpack_require__(18);
 var NoCustomNodesPreset_1 = __webpack_require__(16);
 var AtobTemplate_1 = __webpack_require__(63);
 var Rc4Template_1 = __webpack_require__(64);
 var SelfDefendingTemplate_1 = __webpack_require__(72);
-var StringsArrayBase64DecodeNodeTemplate_1 = __webpack_require__(73);
-var StringsArrayCallsWrapperTemplate_1 = __webpack_require__(74);
-var StringsArrayRC4DecodeNodeTemplate_1 = __webpack_require__(75);
+var StringArrayBase64DecodeNodeTemplate_1 = __webpack_require__(73);
+var StringArrayCallsWrapperTemplate_1 = __webpack_require__(74);
+var StringArrayRC4DecodeNodeTemplate_1 = __webpack_require__(75);
 var AbstractCustomNode_1 = __webpack_require__(6);
 var JavaScriptObfuscator_1 = __webpack_require__(10);
 var NodeAppender_1 = __webpack_require__(4);
 var NodeUtils_1 = __webpack_require__(1);
 
-var StringsArrayCallsWrapper = function (_AbstractCustomNode_) {
-    _inherits(StringsArrayCallsWrapper, _AbstractCustomNode_);
+var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
+    _inherits(StringArrayCallsWrapper, _AbstractCustomNode_);
 
-    function StringsArrayCallsWrapper(stringsArrayCallsWrapperName, stringsArrayName, stringsArray, options) {
-        _classCallCheck(this, StringsArrayCallsWrapper);
+    function StringArrayCallsWrapper(stringArrayCallsWrapperName, stringArrayName, stringArray, options) {
+        _classCallCheck(this, StringArrayCallsWrapper);
 
-        var _this = _possibleConstructorReturn(this, (StringsArrayCallsWrapper.__proto__ || Object.getPrototypeOf(StringsArrayCallsWrapper)).call(this, options));
+        var _this = _possibleConstructorReturn(this, (StringArrayCallsWrapper.__proto__ || Object.getPrototypeOf(StringArrayCallsWrapper)).call(this, options));
 
         _this.appendState = AppendState_1.AppendState.AfterObfuscation;
-        _this.stringsArrayCallsWrapperName = stringsArrayCallsWrapperName;
-        _this.stringsArrayName = stringsArrayName;
-        _this.stringsArray = stringsArray;
+        _this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
+        _this.stringArrayName = stringArrayName;
+        _this.stringArray = stringArray;
         return _this;
     }
 
-    _createClass(StringsArrayCallsWrapper, [{
+    _createClass(StringArrayCallsWrapper, [{
         key: 'appendNode',
         value: function appendNode(blockScopeNode) {
-            if (!this.stringsArray.getLength()) {
+            if (!this.stringArray.getLength()) {
                 return;
             }
             NodeAppender_1.NodeAppender.insertNodeAtIndex(blockScopeNode, this.getNode(), 1);
@@ -2313,59 +2313,59 @@ var StringsArrayCallsWrapper = function (_AbstractCustomNode_) {
     }, {
         key: 'getNodeIdentifier',
         value: function getNodeIdentifier() {
-            return this.stringsArrayCallsWrapperName;
+            return this.stringArrayCallsWrapperName;
         }
     }, {
         key: 'getNode',
         value: function getNode() {
-            return _get(StringsArrayCallsWrapper.prototype.__proto__ || Object.getPrototypeOf(StringsArrayCallsWrapper.prototype), 'getNode', this).call(this);
+            return _get(StringArrayCallsWrapper.prototype.__proto__ || Object.getPrototypeOf(StringArrayCallsWrapper.prototype), 'getNode', this).call(this);
         }
     }, {
-        key: 'getDecodeStringsArrayTemplate',
-        value: function getDecodeStringsArrayTemplate() {
-            var decodeStringsArrayTemplate = '',
+        key: 'getDecodeStringArrayTemplate',
+        value: function getDecodeStringArrayTemplate() {
+            var decodeStringArrayTemplate = '',
                 selfDefendingCode = '';
             if (this.options.selfDefending) {
                 selfDefendingCode = SelfDefendingTemplate_1.SelfDefendingTemplate().formatUnicorn({
-                    stringsArrayCallsWrapperName: this.stringsArrayCallsWrapperName,
-                    stringsArrayName: this.stringsArrayName
+                    stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
+                    stringArrayName: this.stringArrayName
                 });
             }
-            switch (this.options.stringsArrayEncoding) {
-                case StringsArrayEncoding_1.StringsArrayEncoding.base64:
-                    decodeStringsArrayTemplate = StringsArrayBase64DecodeNodeTemplate_1.StringsArrayBase64DecodeNodeTemplate().formatUnicorn({
+            switch (this.options.stringArrayEncoding) {
+                case StringArrayEncoding_1.StringArrayEncoding.base64:
+                    decodeStringArrayTemplate = StringArrayBase64DecodeNodeTemplate_1.StringArrayBase64DecodeNodeTemplate().formatUnicorn({
                         atobPolyfill: AtobTemplate_1.AtobTemplate(),
                         selfDefendingCode: selfDefendingCode,
-                        stringsArrayCallsWrapperName: this.stringsArrayCallsWrapperName
+                        stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
                     });
                     break;
-                case StringsArrayEncoding_1.StringsArrayEncoding.rc4:
-                    decodeStringsArrayTemplate = StringsArrayRC4DecodeNodeTemplate_1.StringsArrayRc4DecodeNodeTemplate().formatUnicorn({
+                case StringArrayEncoding_1.StringArrayEncoding.rc4:
+                    decodeStringArrayTemplate = StringArrayRC4DecodeNodeTemplate_1.StringArrayRc4DecodeNodeTemplate().formatUnicorn({
                         atobPolyfill: AtobTemplate_1.AtobTemplate(),
                         rc4Polyfill: Rc4Template_1.Rc4Template(),
                         selfDefendingCode: selfDefendingCode,
-                        stringsArrayCallsWrapperName: this.stringsArrayCallsWrapperName
+                        stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
                     });
                     break;
             }
-            return decodeStringsArrayTemplate;
+            return decodeStringArrayTemplate;
         }
     }, {
         key: 'getNodeStructure',
         value: function getNodeStructure() {
-            var decodeNodeTemplate = this.getDecodeStringsArrayTemplate();
-            return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(StringsArrayCallsWrapperTemplate_1.StringsArrayCallsWrapperTemplate().formatUnicorn({
+            var decodeNodeTemplate = this.getDecodeStringArrayTemplate();
+            return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(StringArrayCallsWrapperTemplate_1.StringArrayCallsWrapperTemplate().formatUnicorn({
                 decodeNodeTemplate: decodeNodeTemplate,
-                stringsArrayCallsWrapperName: this.stringsArrayCallsWrapperName,
-                stringsArrayName: this.stringsArrayName
+                stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
+                stringArrayName: this.stringArrayName
             }), NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET).getObfuscatedCode());
         }
     }]);
 
-    return StringsArrayCallsWrapper;
+    return StringArrayCallsWrapper;
 }(AbstractCustomNode_1.AbstractCustomNode);
 
-exports.StringsArrayCallsWrapper = StringsArrayCallsWrapper;
+exports.StringArrayCallsWrapper = StringArrayCallsWrapper;
 
 /***/ },
 /* 40 */
@@ -2386,33 +2386,33 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 __webpack_require__(8);
 var AppendState_1 = __webpack_require__(2);
-var StringsArrayTemplate_1 = __webpack_require__(76);
+var StringArrayTemplate_1 = __webpack_require__(76);
 var AbstractCustomNode_1 = __webpack_require__(6);
 var NodeAppender_1 = __webpack_require__(4);
 var NodeUtils_1 = __webpack_require__(1);
 
-var StringsArrayNode = function (_AbstractCustomNode_) {
-    _inherits(StringsArrayNode, _AbstractCustomNode_);
+var StringArrayNode = function (_AbstractCustomNode_) {
+    _inherits(StringArrayNode, _AbstractCustomNode_);
 
-    function StringsArrayNode(stringsArray, stringsArrayName) {
-        var stringsArrayRotateValue = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+    function StringArrayNode(stringArray, stringArrayName) {
+        var stringArrayRotateValue = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
         var options = arguments[3];
 
-        _classCallCheck(this, StringsArrayNode);
+        _classCallCheck(this, StringArrayNode);
 
-        var _this = _possibleConstructorReturn(this, (StringsArrayNode.__proto__ || Object.getPrototypeOf(StringsArrayNode)).call(this, options));
+        var _this = _possibleConstructorReturn(this, (StringArrayNode.__proto__ || Object.getPrototypeOf(StringArrayNode)).call(this, options));
 
         _this.appendState = AppendState_1.AppendState.AfterObfuscation;
-        _this.stringsArray = stringsArray;
-        _this.stringsArrayName = stringsArrayName;
-        _this.stringsArrayRotateValue = stringsArrayRotateValue;
+        _this.stringArray = stringArray;
+        _this.stringArrayName = stringArrayName;
+        _this.stringArrayRotateValue = stringArrayRotateValue;
         return _this;
     }
 
-    _createClass(StringsArrayNode, [{
+    _createClass(StringArrayNode, [{
         key: 'appendNode',
         value: function appendNode(blockScopeNode) {
-            if (!this.stringsArray.getLength()) {
+            if (!this.stringArray.getLength()) {
                 return;
             }
             NodeAppender_1.NodeAppender.prependNode(blockScopeNode, this.getNode());
@@ -2420,39 +2420,39 @@ var StringsArrayNode = function (_AbstractCustomNode_) {
     }, {
         key: 'getNodeIdentifier',
         value: function getNodeIdentifier() {
-            return this.stringsArrayName;
+            return this.stringArrayName;
         }
     }, {
         key: 'getNodeData',
         value: function getNodeData() {
-            return this.stringsArray;
+            return this.stringArray;
         }
     }, {
         key: 'getNode',
         value: function getNode() {
-            this.stringsArray.rotateArray(this.stringsArrayRotateValue);
-            return _get(StringsArrayNode.prototype.__proto__ || Object.getPrototypeOf(StringsArrayNode.prototype), 'getNode', this).call(this);
+            this.stringArray.rotateArray(this.stringArrayRotateValue);
+            return _get(StringArrayNode.prototype.__proto__ || Object.getPrototypeOf(StringArrayNode.prototype), 'getNode', this).call(this);
         }
     }, {
         key: 'updateNodeData',
         value: function updateNodeData(data) {
-            this.stringsArray.addToArray(data);
+            this.stringArray.addToArray(data);
         }
     }, {
         key: 'getNodeStructure',
         value: function getNodeStructure() {
-            return NodeUtils_1.NodeUtils.convertCodeToStructure(StringsArrayTemplate_1.StringsArrayTemplate().formatUnicorn({
-                stringsArrayName: this.stringsArrayName,
-                stringsArray: this.stringsArray.toString()
+            return NodeUtils_1.NodeUtils.convertCodeToStructure(StringArrayTemplate_1.StringArrayTemplate().formatUnicorn({
+                stringArrayName: this.stringArrayName,
+                stringArray: this.stringArray.toString()
             }));
         }
     }]);
 
-    return StringsArrayNode;
+    return StringArrayNode;
 }(AbstractCustomNode_1.AbstractCustomNode);
 
-StringsArrayNode.ARRAY_RANDOM_LENGTH = 4;
-exports.StringsArrayNode = StringsArrayNode;
+StringArrayNode.ARRAY_RANDOM_LENGTH = 4;
+exports.StringArrayNode = StringArrayNode;
 
 /***/ },
 /* 41 */
@@ -2475,32 +2475,32 @@ __webpack_require__(8);
 var AppendState_1 = __webpack_require__(2);
 var NoCustomNodesPreset_1 = __webpack_require__(16);
 var SelfDefendingTemplate_1 = __webpack_require__(77);
-var StringsArrayRotateFunctionTemplate_1 = __webpack_require__(78);
+var StringArrayRotateFunctionTemplate_1 = __webpack_require__(78);
 var AbstractCustomNode_1 = __webpack_require__(6);
 var JavaScriptObfuscator_1 = __webpack_require__(10);
 var NodeAppender_1 = __webpack_require__(4);
 var NodeUtils_1 = __webpack_require__(1);
 var Utils_1 = __webpack_require__(0);
 
-var StringsArrayRotateFunctionNode = function (_AbstractCustomNode_) {
-    _inherits(StringsArrayRotateFunctionNode, _AbstractCustomNode_);
+var StringArrayRotateFunctionNode = function (_AbstractCustomNode_) {
+    _inherits(StringArrayRotateFunctionNode, _AbstractCustomNode_);
 
-    function StringsArrayRotateFunctionNode(stringsArrayName, stringsArray, stringsArrayRotateValue, options) {
-        _classCallCheck(this, StringsArrayRotateFunctionNode);
+    function StringArrayRotateFunctionNode(stringArrayName, stringArray, stringArrayRotateValue, options) {
+        _classCallCheck(this, StringArrayRotateFunctionNode);
 
-        var _this = _possibleConstructorReturn(this, (StringsArrayRotateFunctionNode.__proto__ || Object.getPrototypeOf(StringsArrayRotateFunctionNode)).call(this, options));
+        var _this = _possibleConstructorReturn(this, (StringArrayRotateFunctionNode.__proto__ || Object.getPrototypeOf(StringArrayRotateFunctionNode)).call(this, options));
 
         _this.appendState = AppendState_1.AppendState.AfterObfuscation;
-        _this.stringsArrayName = stringsArrayName;
-        _this.stringsArray = stringsArray;
-        _this.stringsArrayRotateValue = stringsArrayRotateValue;
+        _this.stringArrayName = stringArrayName;
+        _this.stringArray = stringArray;
+        _this.stringArrayRotateValue = stringArrayRotateValue;
         return _this;
     }
 
-    _createClass(StringsArrayRotateFunctionNode, [{
+    _createClass(StringArrayRotateFunctionNode, [{
         key: 'appendNode',
         value: function appendNode(blockScopeNode) {
-            if (!this.stringsArray.getLength()) {
+            if (!this.stringArray.getLength()) {
                 return;
             }
             NodeAppender_1.NodeAppender.insertNodeAtIndex(blockScopeNode, this.getNode(), 1);
@@ -2508,7 +2508,7 @@ var StringsArrayRotateFunctionNode = function (_AbstractCustomNode_) {
     }, {
         key: 'getNode',
         value: function getNode() {
-            return _get(StringsArrayRotateFunctionNode.prototype.__proto__ || Object.getPrototypeOf(StringsArrayRotateFunctionNode.prototype), 'getNode', this).call(this);
+            return _get(StringArrayRotateFunctionNode.prototype.__proto__ || Object.getPrototypeOf(StringArrayRotateFunctionNode.prototype), 'getNode', this).call(this);
         }
     }, {
         key: 'getNodeStructure',
@@ -2524,20 +2524,20 @@ var StringsArrayRotateFunctionNode = function (_AbstractCustomNode_) {
             } else {
                 code = whileFunctionName + '(++' + timesName + ')';
             }
-            return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(StringsArrayRotateFunctionTemplate_1.StringsArrayRotateFunctionTemplate().formatUnicorn({
+            return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(StringArrayRotateFunctionTemplate_1.StringArrayRotateFunctionTemplate().formatUnicorn({
                 code: code,
                 timesName: timesName,
-                stringsArrayName: this.stringsArrayName,
-                stringsArrayRotateValue: Utils_1.Utils.decToHex(this.stringsArrayRotateValue),
+                stringArrayName: this.stringArrayName,
+                stringArrayRotateValue: Utils_1.Utils.decToHex(this.stringArrayRotateValue),
                 whileFunctionName: whileFunctionName
             }), NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET).getObfuscatedCode());
         }
     }]);
 
-    return StringsArrayRotateFunctionNode;
+    return StringArrayRotateFunctionNode;
 }(AbstractCustomNode_1.AbstractCustomNode);
 
-exports.StringsArrayRotateFunctionNode = StringsArrayRotateFunctionNode;
+exports.StringArrayRotateFunctionNode = StringArrayRotateFunctionNode;
 
 /***/ },
 /* 42 */
@@ -2750,55 +2750,55 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var AppendState_1 = __webpack_require__(2);
-var StringsArrayCallsWrapper_1 = __webpack_require__(39);
-var StringsArrayNode_1 = __webpack_require__(40);
-var StringsArrayRotateFunctionNode_1 = __webpack_require__(41);
+var StringArrayCallsWrapper_1 = __webpack_require__(39);
+var StringArrayNode_1 = __webpack_require__(40);
+var StringArrayRotateFunctionNode_1 = __webpack_require__(41);
 var AbstractNodesGroup_1 = __webpack_require__(11);
-var StringsArray_1 = __webpack_require__(30);
+var StringArray_1 = __webpack_require__(30);
 var Utils_1 = __webpack_require__(0);
 
-var StringsArrayNodesGroup = function (_AbstractNodesGroup_) {
-    _inherits(StringsArrayNodesGroup, _AbstractNodesGroup_);
+var StringArrayNodesGroup = function (_AbstractNodesGroup_) {
+    _inherits(StringArrayNodesGroup, _AbstractNodesGroup_);
 
-    function StringsArrayNodesGroup() {
-        _classCallCheck(this, StringsArrayNodesGroup);
+    function StringArrayNodesGroup() {
+        _classCallCheck(this, StringArrayNodesGroup);
 
-        var _this = _possibleConstructorReturn(this, (StringsArrayNodesGroup.__proto__ || Object.getPrototypeOf(StringsArrayNodesGroup)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (StringArrayNodesGroup.__proto__ || Object.getPrototypeOf(StringArrayNodesGroup)).apply(this, arguments));
 
         _this.appendState = AppendState_1.AppendState.AfterObfuscation;
-        _this.stringsArrayName = Utils_1.Utils.getRandomVariableName(StringsArrayNode_1.StringsArrayNode.ARRAY_RANDOM_LENGTH);
-        _this.stringsArrayCallsWrapper = Utils_1.Utils.getRandomVariableName(StringsArrayNode_1.StringsArrayNode.ARRAY_RANDOM_LENGTH);
+        _this.stringArrayName = Utils_1.Utils.getRandomVariableName(StringArrayNode_1.StringArrayNode.ARRAY_RANDOM_LENGTH);
+        _this.stringArrayCallsWrapper = Utils_1.Utils.getRandomVariableName(StringArrayNode_1.StringArrayNode.ARRAY_RANDOM_LENGTH);
         return _this;
     }
 
-    _createClass(StringsArrayNodesGroup, [{
+    _createClass(StringArrayNodesGroup, [{
         key: 'getNodes',
         value: function getNodes() {
-            if (!this.options.stringsArray) {
+            if (!this.options.stringArray) {
                 return;
             }
-            if (this.options.rotateStringsArray) {
-                this.stringsArrayRotateValue = Utils_1.Utils.getRandomGenerator().integer({
+            if (this.options.rotateStringArray) {
+                this.stringArrayRotateValue = Utils_1.Utils.getRandomGenerator().integer({
                     min: 100,
                     max: 500
                 });
             } else {
-                this.stringsArrayRotateValue = 0;
+                this.stringArrayRotateValue = 0;
             }
-            var stringsArray = new StringsArray_1.StringsArray();
-            var stringsArrayNode = new StringsArrayNode_1.StringsArrayNode(stringsArray, this.stringsArrayName, this.stringsArrayRotateValue, this.options);
-            var customNodes = new Map([['stringsArrayNode', stringsArrayNode], ['stringsArrayCallsWrapper', new StringsArrayCallsWrapper_1.StringsArrayCallsWrapper(this.stringsArrayCallsWrapper, this.stringsArrayName, stringsArray, this.options)]]);
-            if (this.options.rotateStringsArray) {
-                customNodes.set('stringsArrayRotateFunctionNode', new StringsArrayRotateFunctionNode_1.StringsArrayRotateFunctionNode(this.stringsArrayName, stringsArray, this.stringsArrayRotateValue, this.options));
+            var stringArray = new StringArray_1.StringArray();
+            var stringArrayNode = new StringArrayNode_1.StringArrayNode(stringArray, this.stringArrayName, this.stringArrayRotateValue, this.options);
+            var customNodes = new Map([['stringArrayNode', stringArrayNode], ['stringArrayCallsWrapper', new StringArrayCallsWrapper_1.StringArrayCallsWrapper(this.stringArrayCallsWrapper, this.stringArrayName, stringArray, this.options)]]);
+            if (this.options.rotateStringArray) {
+                customNodes.set('stringArrayRotateFunctionNode', new StringArrayRotateFunctionNode_1.StringArrayRotateFunctionNode(this.stringArrayName, stringArray, this.stringArrayRotateValue, this.options));
             }
             return this.syncCustomNodesWithNodesGroup(customNodes);
         }
     }]);
 
-    return StringsArrayNodesGroup;
+    return StringArrayNodesGroup;
 }(AbstractNodesGroup_1.AbstractNodesGroup);
 
-exports.StringsArrayNodesGroup = StringsArrayNodesGroup;
+exports.StringArrayNodesGroup = StringArrayNodesGroup;
 
 /***/ },
 /* 47 */
@@ -3463,7 +3463,7 @@ var __metadata = undefined && undefined.__metadata || function (k, v) {
 };
 var class_validator_1 = __webpack_require__(82);
 var TSourceMapMode_1 = __webpack_require__(79);
-var TStringsArrayEncoding_1 = __webpack_require__(80);
+var TStringArrayEncoding_1 = __webpack_require__(80);
 var DefaultPreset_1 = __webpack_require__(23);
 var OptionsNormalizer_1 = __webpack_require__(57);
 var ValidationErrorsFormatter_1 = __webpack_require__(58);
@@ -3494,7 +3494,7 @@ __decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_
 __decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
 }), __metadata('design:type', Array)], Options.prototype, "reservedNames", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "rotateStringsArray", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "rotateStringArray", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "selfDefending", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "sourceMap", void 0);
 __decorate([class_validator_1.IsString(), class_validator_1.ValidateIf(function (options) {
@@ -3505,9 +3505,9 @@ __decorate([class_validator_1.IsString(), class_validator_1.ValidateIf(function 
 }), __metadata('design:type', String)], Options.prototype, "sourceMapBaseUrl", void 0);
 __decorate([class_validator_1.IsString(), __metadata('design:type', String)], Options.prototype, "sourceMapFileName", void 0);
 __decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata('design:type', typeof (_a = typeof TSourceMapMode_1.TSourceMapMode !== 'undefined' && TSourceMapMode_1.TSourceMapMode) === 'function' && _a || Object)], Options.prototype, "sourceMapMode", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "stringsArray", void 0);
-__decorate([class_validator_1.IsIn([true, false, 'base64', 'rc4']), __metadata('design:type', typeof (_b = typeof TStringsArrayEncoding_1.TStringsArrayEncoding !== 'undefined' && TStringsArrayEncoding_1.TStringsArrayEncoding) === 'function' && _b || Object)], Options.prototype, "stringsArrayEncoding", void 0);
-__decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata('design:type', Number)], Options.prototype, "stringsArrayThreshold", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "stringArray", void 0);
+__decorate([class_validator_1.IsIn([true, false, 'base64', 'rc4']), __metadata('design:type', typeof (_b = typeof TStringArrayEncoding_1.TStringArrayEncoding !== 'undefined' && TStringArrayEncoding_1.TStringArrayEncoding) === 'function' && _b || Object)], Options.prototype, "stringArrayEncoding", void 0);
+__decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata('design:type', Number)], Options.prototype, "stringArrayThreshold", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "unicodeEscapeSequence", void 0);
 exports.Options = Options;
 var _a, _b;
@@ -3635,25 +3635,25 @@ var OptionsNormalizer = function () {
             return options;
         }
     }, {
-        key: 'stringsArrayRule',
-        value: function stringsArrayRule(options) {
-            if (!options.stringsArray) {
+        key: 'stringArrayRule',
+        value: function stringArrayRule(options) {
+            if (!options.stringArray) {
                 Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
             }
             return options;
         }
     }, {
-        key: 'stringsArrayEncodingRule',
-        value: function stringsArrayEncodingRule(options) {
-            if (options.stringsArrayEncoding === true) {
+        key: 'stringArrayEncodingRule',
+        value: function stringArrayEncodingRule(options) {
+            if (options.stringArrayEncoding === true) {
                 Object.assign(options, OptionsNormalizer.UNICODE_ARRAY_ENCODING_OPTIONS);
             }
             return options;
         }
     }, {
-        key: 'stringsArrayThresholdRule',
-        value: function stringsArrayThresholdRule(options) {
-            if (options.stringsArrayThreshold === 0) {
+        key: 'stringArrayThresholdRule',
+        value: function stringArrayThresholdRule(options) {
+            if (options.stringArrayThreshold === 0) {
                 Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
             }
             return options;
@@ -3664,19 +3664,19 @@ var OptionsNormalizer = function () {
 }();
 
 OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS = {
-    rotateStringsArray: false,
-    stringsArray: false,
-    stringsArrayEncoding: false,
-    stringsArrayThreshold: 0
+    rotateStringArray: false,
+    stringArray: false,
+    stringArrayEncoding: false,
+    stringArrayThreshold: 0
 };
 OptionsNormalizer.SELF_DEFENDING_OPTIONS = {
     compact: true,
     selfDefending: true
 };
 OptionsNormalizer.UNICODE_ARRAY_ENCODING_OPTIONS = {
-    stringsArrayEncoding: 'base64'
+    stringArrayEncoding: 'base64'
 };
-OptionsNormalizer.normalizerRules = [OptionsNormalizer.domainLockRule, OptionsNormalizer.selfDefendingRule, OptionsNormalizer.sourceMapBaseUrl, OptionsNormalizer.sourceMapFileName, OptionsNormalizer.stringsArrayRule, OptionsNormalizer.stringsArrayEncodingRule, OptionsNormalizer.stringsArrayThresholdRule];
+OptionsNormalizer.normalizerRules = [OptionsNormalizer.domainLockRule, OptionsNormalizer.selfDefendingRule, OptionsNormalizer.sourceMapBaseUrl, OptionsNormalizer.sourceMapFileName, OptionsNormalizer.stringArrayRule, OptionsNormalizer.stringArrayEncodingRule, OptionsNormalizer.stringArrayThresholdRule];
 exports.OptionsNormalizer = OptionsNormalizer;
 
 /***/ },
@@ -4211,7 +4211,7 @@ exports.SelfDefendingTemplate = SelfDefendingTemplate;
 
 var Utils_1 = __webpack_require__(0);
 function SelfDefendingTemplate() {
-    return "\n        var StatesClass = function (rc4Bytes) {\n            this.rc4Bytes = rc4Bytes;\n            this.states = [1, 0, 0];\n            this.newState = function(){return 'newState';};\n            this.firstState = '" + Utils_1.Utils.stringToUnicodeEscapeSequence("\\w+ *\\(\\) *{\\w+ *") + "';\n            this.secondState = '" + Utils_1.Utils.stringToUnicodeEscapeSequence("['|\"].+['|\"];? *}") + "';\n        };\n        \n        StatesClass.prototype.checkState = function () {\n            var regExp = new RegExp(this.firstState + this.secondState);\n\n            return this.runState(regExp.test(this.newState.toString()) ? --this.states[1] : --this.states[0]);\n        };\n        \n        StatesClass.prototype.runState = function (stateResult) {\n            if (!Boolean(~stateResult)) {\n                return stateResult;\n            }\n            \n            return this.getState(this.rc4Bytes);\n        };\n\n        StatesClass.prototype.getState = function (rc4Bytes) {\n            for (var i = 0, len = this.states.length; i < len; i++) {\n                this.states.push(Math.round(Math.random()));\n                len = this.states.length;\n            }\n            \n            return rc4Bytes(this.states[0]);\n        };\n\n        new StatesClass({stringsArrayCallsWrapperName}).checkState();\n    ";
+    return "\n        var StatesClass = function (rc4Bytes) {\n            this.rc4Bytes = rc4Bytes;\n            this.states = [1, 0, 0];\n            this.newState = function(){return 'newState';};\n            this.firstState = '" + Utils_1.Utils.stringToUnicodeEscapeSequence("\\w+ *\\(\\) *{\\w+ *") + "';\n            this.secondState = '" + Utils_1.Utils.stringToUnicodeEscapeSequence("['|\"].+['|\"];? *}") + "';\n        };\n        \n        StatesClass.prototype.checkState = function () {\n            var regExp = new RegExp(this.firstState + this.secondState);\n\n            return this.runState(regExp.test(this.newState.toString()) ? --this.states[1] : --this.states[0]);\n        };\n        \n        StatesClass.prototype.runState = function (stateResult) {\n            if (!Boolean(~stateResult)) {\n                return stateResult;\n            }\n            \n            return this.getState(this.rc4Bytes);\n        };\n\n        StatesClass.prototype.getState = function (rc4Bytes) {\n            for (var i = 0, len = this.states.length; i < len; i++) {\n                this.states.push(Math.round(Math.random()));\n                len = this.states.length;\n            }\n            \n            return rc4Bytes(this.states[0]);\n        };\n\n        new StatesClass({stringArrayCallsWrapperName}).checkState();\n    ";
 }
 exports.SelfDefendingTemplate = SelfDefendingTemplate;
 
@@ -4222,10 +4222,10 @@ exports.SelfDefendingTemplate = SelfDefendingTemplate;
 "use strict";
 "use strict";
 
-function StringsArrayBase64DecodeNodeTemplate() {
-    return "      \n        if (!{stringsArrayCallsWrapperName}.atobPolyfillAppended) {\n            {atobPolyfill}\n            \n            {stringsArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n        \n        if (!{stringsArrayCallsWrapperName}.base64DecodeUnicode) {                \n            {stringsArrayCallsWrapperName}.base64DecodeUnicode = function (str) {\n                var string = atob(str);\n                var newStringChars = [];\n                \n                for (var i = 0, length = string.length; i < length; i++) {\n                    newStringChars += '%' + ('00' + string.charCodeAt(i).toString(16)).slice(-2);\n                }\n                \n                return decodeURIComponent(newStringChars);\n            };\n        }\n        \n        if (!{stringsArrayCallsWrapperName}.data) {\n            {stringsArrayCallsWrapperName}.data = {};\n        }\n                        \n        if (!{stringsArrayCallsWrapperName}.data[index]) {\n            {selfDefendingCode}\n            \n            value = {stringsArrayCallsWrapperName}.base64DecodeUnicode(value);\n            {stringsArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = {stringsArrayCallsWrapperName}.data[index];\n        }  \n    ";
+function StringArrayBase64DecodeNodeTemplate() {
+    return "      \n        if (!{stringArrayCallsWrapperName}.atobPolyfillAppended) {\n            {atobPolyfill}\n            \n            {stringArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n        \n        if (!{stringArrayCallsWrapperName}.base64DecodeUnicode) {                \n            {stringArrayCallsWrapperName}.base64DecodeUnicode = function (str) {\n                var string = atob(str);\n                var newStringChars = [];\n                \n                for (var i = 0, length = string.length; i < length; i++) {\n                    newStringChars += '%' + ('00' + string.charCodeAt(i).toString(16)).slice(-2);\n                }\n                \n                return decodeURIComponent(newStringChars);\n            };\n        }\n        \n        if (!{stringArrayCallsWrapperName}.data) {\n            {stringArrayCallsWrapperName}.data = {};\n        }\n                        \n        if (!{stringArrayCallsWrapperName}.data[index]) {\n            {selfDefendingCode}\n            \n            value = {stringArrayCallsWrapperName}.base64DecodeUnicode(value);\n            {stringArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = {stringArrayCallsWrapperName}.data[index];\n        }  \n    ";
 }
-exports.StringsArrayBase64DecodeNodeTemplate = StringsArrayBase64DecodeNodeTemplate;
+exports.StringArrayBase64DecodeNodeTemplate = StringArrayBase64DecodeNodeTemplate;
 
 /***/ },
 /* 74 */
@@ -4234,10 +4234,10 @@ exports.StringsArrayBase64DecodeNodeTemplate = StringsArrayBase64DecodeNodeTempl
 "use strict";
 "use strict";
 
-function StringsArrayCallsWrapperTemplate() {
-    return "\n        var {stringsArrayCallsWrapperName} = function (index, key) {\n            var index = parseInt(index, 0x10);\n            var value = {stringsArrayName}[index];\n            \n            {decodeNodeTemplate}\n        \n            return value;\n        };\n    ";
+function StringArrayCallsWrapperTemplate() {
+    return "\n        var {stringArrayCallsWrapperName} = function (index, key) {\n            var index = parseInt(index, 0x10);\n            var value = {stringArrayName}[index];\n            \n            {decodeNodeTemplate}\n        \n            return value;\n        };\n    ";
 }
-exports.StringsArrayCallsWrapperTemplate = StringsArrayCallsWrapperTemplate;
+exports.StringArrayCallsWrapperTemplate = StringArrayCallsWrapperTemplate;
 
 /***/ },
 /* 75 */
@@ -4246,10 +4246,10 @@ exports.StringsArrayCallsWrapperTemplate = StringsArrayCallsWrapperTemplate;
 "use strict";
 "use strict";
 
-function StringsArrayRc4DecodeNodeTemplate() {
-    return "\n        if (!{stringsArrayCallsWrapperName}.atobPolyfillAppended) {            \n            {atobPolyfill}\n            \n            {stringsArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n        \n        if (!{stringsArrayCallsWrapperName}.rc4) {            \n            {rc4Polyfill}\n            \n            {stringsArrayCallsWrapperName}.rc4 = rc4;\n        }\n                        \n        if (!{stringsArrayCallsWrapperName}.data) {\n            {stringsArrayCallsWrapperName}.data = {};\n        }\n\n        if ({stringsArrayCallsWrapperName}.data[index] === undefined) {\n            if (!{stringsArrayCallsWrapperName}.once) {\n                {selfDefendingCode}\n                \n                {stringsArrayCallsWrapperName}.once = true;\n            }\n            \n            value = {stringsArrayCallsWrapperName}.rc4(value, key);\n            {stringsArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = {stringsArrayCallsWrapperName}.data[index];\n        }\n    ";
+function StringArrayRc4DecodeNodeTemplate() {
+    return "\n        if (!{stringArrayCallsWrapperName}.atobPolyfillAppended) {            \n            {atobPolyfill}\n            \n            {stringArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n        \n        if (!{stringArrayCallsWrapperName}.rc4) {            \n            {rc4Polyfill}\n            \n            {stringArrayCallsWrapperName}.rc4 = rc4;\n        }\n                        \n        if (!{stringArrayCallsWrapperName}.data) {\n            {stringArrayCallsWrapperName}.data = {};\n        }\n\n        if ({stringArrayCallsWrapperName}.data[index] === undefined) {\n            if (!{stringArrayCallsWrapperName}.once) {\n                {selfDefendingCode}\n                \n                {stringArrayCallsWrapperName}.once = true;\n            }\n            \n            value = {stringArrayCallsWrapperName}.rc4(value, key);\n            {stringArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = {stringArrayCallsWrapperName}.data[index];\n        }\n    ";
 }
-exports.StringsArrayRc4DecodeNodeTemplate = StringsArrayRc4DecodeNodeTemplate;
+exports.StringArrayRc4DecodeNodeTemplate = StringArrayRc4DecodeNodeTemplate;
 
 /***/ },
 /* 76 */
@@ -4258,10 +4258,10 @@ exports.StringsArrayRc4DecodeNodeTemplate = StringsArrayRc4DecodeNodeTemplate;
 "use strict";
 "use strict";
 
-function StringsArrayTemplate() {
-    return "\n        var {stringsArrayName} = [{stringsArray}];\n    ";
+function StringArrayTemplate() {
+    return "\n        var {stringArrayName} = [{stringArray}];\n    ";
 }
-exports.StringsArrayTemplate = StringsArrayTemplate;
+exports.StringArrayTemplate = StringArrayTemplate;
 
 /***/ },
 /* 77 */
@@ -4283,10 +4283,10 @@ exports.SelfDefendingTemplate = SelfDefendingTemplate;
 "use strict";
 "use strict";
 
-function StringsArrayRotateFunctionTemplate() {
-    return "\n        (function (array, {timesName}) {\n            var {whileFunctionName} = function (times) {\n                while (--times) {\n                    array['push'](array['shift']());\n                }\n            };\n            \n            {code}\n        })({stringsArrayName}, 0x{stringsArrayRotateValue});\n    ";
+function StringArrayRotateFunctionTemplate() {
+    return "\n        (function (array, {timesName}) {\n            var {whileFunctionName} = function (times) {\n                while (--times) {\n                    array['push'](array['shift']());\n                }\n            };\n            \n            {code}\n        })({stringArrayName}, 0x{stringArrayRotateValue});\n    ";
 }
-exports.StringsArrayRotateFunctionTemplate = StringsArrayRotateFunctionTemplate;
+exports.StringArrayRotateFunctionTemplate = StringArrayRotateFunctionTemplate;
 
 /***/ },
 /* 79 */

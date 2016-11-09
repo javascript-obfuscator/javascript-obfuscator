@@ -6,14 +6,14 @@ import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
 
 const assert: Chai.AssertStatic = require('chai').assert;
 
-describe('StringsArrayCallsWrapper', () => {
-    it('should correctly append `StringsArrayCallsWrapper` custom node into the obfuscated code', () => {
+describe('StringArrayCallsWrapper', () => {
+    it('should correctly append `StringArrayCallsWrapper` custom node into the obfuscated code', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `var test = 'test';`,
             Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                stringsArray: true,
-                stringsArrayThreshold: 1,
-                wrapStringsArrayCalls: true
+                stringArray: true,
+                stringArrayThreshold: 1,
+                wrapStringArrayCalls: true
             })
         );
 

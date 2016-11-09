@@ -2,10 +2,10 @@ Change Log
 ===
 v0.8.0
 ---
-* **Breaking options change:** `unicodeArray` option has been renamed to `stringsArray`.
-* **Breaking options change:** `unicodeArrayThreshold` option has been renamed to `stringsArrayThreshold`.
-* **Breaking options change:** `encodeUnicodeArray` option has been renamed to `stringsArrayEncoding` and now accepts following values: `true|false|'base64'|'rc4'`.
-* **Breaking change:** option `wrapUnicodeArrayCalls` was removed and now all calls to `stringsArray` are always wrapped by special wrapper function.
+* **Breaking options change:** `unicodeArray` option has been renamed to `stringArray`.
+* **Breaking options change:** `unicodeArrayThreshold` option has been renamed to `stringArrayThreshold`.
+* **Breaking options change:** `encodeUnicodeArray` option has been renamed to `stringArrayEncoding` and now accepts following values: `true|false|'base64'|'rc4'`.
+* **Breaking change:** option `wrapUnicodeArrayCalls` was removed and now all calls to `stringArray` are always wrapped by special wrapper function.
 * New option `unicodeEscapeSequence` allows to enable/disable strings conversion to unicode escape sequence.
 * New option `domainLock` locks the obfuscated source code so it only runs on specific domains and/or sub-domains.
 * New option `sourceMapBaseUrl` sets base url to the source map import url when `sourceMapMode: 'separate'`.

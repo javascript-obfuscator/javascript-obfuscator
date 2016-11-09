@@ -21,8 +21,8 @@ describe('MemberExpressionObfuscator', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = console.log;`,
                 Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                    stringsArray: true,
-                    stringsArrayThreshold: 1
+                    stringArray: true,
+                    stringArrayThreshold: 1
                 })
             );
 
@@ -36,8 +36,8 @@ describe('MemberExpressionObfuscator', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = console['log'];`,
                 Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                    stringsArray: true,
-                    stringsArrayThreshold: 1
+                    stringArray: true,
+                    stringArrayThreshold: 1
                 })
             );
 

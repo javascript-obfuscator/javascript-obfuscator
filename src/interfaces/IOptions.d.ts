@@ -1,5 +1,5 @@
 import { TSourceMapMode } from '../types/TSourceMapMode';
-import { TStringsArrayEncoding } from '../types/TStringsArrayEncoding';
+import { TStringArrayEncoding } from '../types/TStringArrayEncoding';
 
 export interface IOptions {
     readonly compact: boolean;
@@ -8,14 +8,14 @@ export interface IOptions {
     readonly disableConsoleOutput: boolean;
     readonly domainLock: string[];
     readonly reservedNames: string[];
-    readonly rotateStringsArray: boolean;
+    readonly rotateStringArray: boolean;
     readonly selfDefending: boolean;
     readonly sourceMap: boolean;
     readonly sourceMapBaseUrl: string;
     readonly sourceMapFileName: string;
     readonly sourceMapMode: TSourceMapMode;
-    readonly stringsArray: boolean;
-    readonly stringsArrayEncoding: TStringsArrayEncoding;
-    readonly stringsArrayThreshold: number;
+    readonly stringArray: boolean;
+    readonly stringArrayEncoding: TStringArrayEncoding;
+    readonly stringArrayThreshold: number;
     readonly unicodeEscapeSequence: boolean;
 }

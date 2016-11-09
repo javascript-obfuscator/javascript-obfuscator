@@ -1,6 +1,6 @@
 import { Utils } from './Utils';
 
-export class StringsArray {
+export class StringArray {
     /**
      * @type {string[]}
      */

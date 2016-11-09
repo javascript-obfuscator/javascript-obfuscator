@@ -26,7 +26,7 @@ import { NodeUtils } from './node/NodeUtils';
 import { ObjectExpressionObfuscator } from './node-obfuscators/ObjectExpressionObfuscator';
 import { SelfDefendingNodesGroup } from './node-groups/SelfDefendingNodesGroup';
 import { StackTraceAnalyzer } from './stack-trace-analyzer/StackTraceAnalyzer';
-import { StringsArrayNodesGroup } from './node-groups/StringsArrayNodesGroup';
+import { StringArrayNodesGroup } from './node-groups/StringArrayNodesGroup';
 import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclarationObfuscator';
 
 export class Obfuscator implements IObfuscator {
@@ -38,7 +38,7 @@ export class Obfuscator implements IObfuscator {
         SelfDefendingNodesGroup,
         ConsoleOutputNodesGroup,
         DebugProtectionNodesGroup,
-        StringsArrayNodesGroup
+        StringArrayNodesGroup
     ];
 
     /**

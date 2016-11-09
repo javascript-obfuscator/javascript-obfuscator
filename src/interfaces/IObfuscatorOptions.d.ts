@@ -1,5 +1,5 @@
 import { TSourceMapMode } from '../types/TSourceMapMode';
-import { TStringsArrayEncoding } from '../types/TStringsArrayEncoding';
+import { TStringArrayEncoding } from '../types/TStringArrayEncoding';
 
 export interface IObfuscatorOptions {
     compact?: boolean;
@@ -8,15 +8,15 @@ export interface IObfuscatorOptions {
     disableConsoleOutput?: boolean;
     domainLock?: string[];
     reservedNames?: string[];
-    rotateStringsArray?: boolean;
+    rotateStringArray?: boolean;
     selfDefending?: boolean;
     sourceMap?: boolean;
     sourceMapBaseUrl?: string;
     sourceMapFileName?: string;
     sourceMapMode?: TSourceMapMode;
-    stringsArray?: boolean;
-    stringsArrayEncoding?: TStringsArrayEncoding;
-    stringsArrayThreshold?: number;
+    stringArray?: boolean;
+    stringArrayEncoding?: TStringArrayEncoding;
+    stringArrayThreshold?: number;
     unicodeEscapeSequence?: boolean;
     [key: string]: any;
 }

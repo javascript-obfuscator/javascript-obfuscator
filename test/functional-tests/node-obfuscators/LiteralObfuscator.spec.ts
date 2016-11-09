@@ -21,8 +21,8 @@ describe('LiteralObfuscator', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'test';`,
                 Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                    stringsArray: true,
-                    stringsArrayThreshold: 1
+                    stringArray: true,
+                    stringArrayThreshold: 1
                 })
             );
 
@@ -37,8 +37,8 @@ describe('LiteralObfuscator', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'test';`,
                 Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                    stringsArray: true,
-                    stringsArrayThreshold: 1,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
                     unicodeEscapeSequence: false
                 })
             );
@@ -54,8 +54,8 @@ describe('LiteralObfuscator', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'te';`,
                 Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                    stringsArray: true,
-                    stringsArrayThreshold: 1
+                    stringArray: true,
+                    stringArrayThreshold: 1
                 })
             );
 
@@ -66,9 +66,9 @@ describe('LiteralObfuscator', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'test';`,
                 Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                    stringsArray: true,
-                    stringsArrayEncoding: 'base64',
-                    stringsArrayThreshold: 1
+                    stringArray: true,
+                    stringArrayEncoding: 'base64',
+                    stringArrayThreshold: 1
                 })
             );
 
@@ -83,9 +83,9 @@ describe('LiteralObfuscator', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'test';`,
                 Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                    stringsArray: true,
-                    stringsArrayEncoding: 'rc4',
-                    stringsArrayThreshold: 1
+                    stringArray: true,
+                    stringArrayEncoding: 'rc4',
+                    stringArrayThreshold: 1
                 })
             );
 
@@ -100,8 +100,8 @@ describe('LiteralObfuscator', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `var test = true;`,
             Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                stringsArray: true,
-                stringsArrayThreshold: 1
+                stringArray: true,
+                stringArrayThreshold: 1
             })
         );
 
@@ -112,8 +112,8 @@ describe('LiteralObfuscator', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `var test = 0;`,
             Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                stringsArray: true,
-                stringsArrayThreshold: 1
+                stringArray: true,
+                stringArrayThreshold: 1
             })
         );
 

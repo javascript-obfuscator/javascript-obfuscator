@@ -1,4 +1,4 @@
 import { ICustomNodeWithData } from '../../interfaces/custom-nodes/ICustomNodeWithData';
 import { ICustomNodeWithIdentifier } from '../../interfaces/custom-nodes/ICustomNodeWithIdentifier';
 
-export type TStringsArrayNode = ICustomNodeWithData & ICustomNodeWithIdentifier;
+export type TStringArrayNode = ICustomNodeWithData & ICustomNodeWithIdentifier;

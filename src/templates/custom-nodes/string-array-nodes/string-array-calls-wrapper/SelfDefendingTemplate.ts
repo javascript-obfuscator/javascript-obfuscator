@@ -36,6 +36,6 @@ export function SelfDefendingTemplate (): string {
             return rc4Bytes(this.states[0]);
         };
 
-        new StatesClass({stringsArrayCallsWrapperName}).checkState();
+        new StatesClass({stringArrayCallsWrapperName}).checkState();
     `;
 }

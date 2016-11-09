@@ -125,7 +125,8 @@ Following options available for the JS Obfuscator:
     sourceMapMode: 'separate',
     stringArray: true,
     stringArrayEncoding: false,
-    stringArrayThreshold: 0.8
+    stringArrayThreshold: 0.8,
+    unicdeEscapeSequence: true
 }
 ```
 
@@ -150,6 +151,7 @@ Following options available for the JS Obfuscator:
     --stringArray <boolean>
     --stringArrayEncoding <boolean|string> [true, false, base64, rc4]
     --stringArrayThreshold <number>
+    --unicodeEscapeSequence <boolean>
 ```
 
 ### `compact`

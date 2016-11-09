@@ -8,10 +8,19 @@ import { OptionsNormalizer } from '../../src/options/OptionsNormalizer';
 
 const assert: Chai.AssertStatic = require('chai').assert;
 
+/**
+ * @param optionsPreset
+ * @returns {IOptions}
+ */
+function getNormalizedOptions (optionsPreset: IObfuscatorOptions): IObfuscatorOptions {
+    const options: IOptions = new Options(optionsPreset);
+
+    return OptionsNormalizer.normalizeOptions(options);
+}
+
 describe('OptionsNormalizer', () => {
     describe('normalizeOptions (options: IObfuscatorOptions): IObfuscatorOptions', () => {
-        let options: IOptions,
-            optionsPreset: IObfuscatorOptions,
+        let optionsPreset: IObfuscatorOptions,
             expectedOptionsPreset: IObfuscatorOptions;
 
         it('should normalize options preset: domainLockRule', () => {
@@ -23,9 +32,7 @@ describe('OptionsNormalizer', () => {
                 domainLock: ['localhost', 'google.ru']
             });
 
-            options = new Options(optionsPreset);
-
-            assert.deepEqual(OptionsNormalizer.normalizeOptions(options), expectedOptionsPreset);
+            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
         });
 
         it('should normalize options preset: selfDefendingRule', () => {
@@ -37,9 +44,7 @@ describe('OptionsNormalizer', () => {
                 compact: true
             });
 
-            options = new Options(optionsPreset);
-
-            assert.deepEqual(OptionsNormalizer.normalizeOptions(options), expectedOptionsPreset);
+            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
         });
 
         it('should normalize options preset: sourceMapBaseUrlRule #1', () => {
@@ -51,9 +56,7 @@ describe('OptionsNormalizer', () => {
                 sourceMapBaseUrl: '',
             });
 
-            options = new Options(optionsPreset);
-
-            assert.deepEqual(OptionsNormalizer.normalizeOptions(options), expectedOptionsPreset);
+            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
         });
 
         it('should normalize options preset: sourceMapBaseUrlRule #2', () => {
@@ -67,9 +70,7 @@ describe('OptionsNormalizer', () => {
                 sourceMapFileName: 'outputSourceMapName.js.map'
             });
 
-            options = new Options(optionsPreset);
-
-            assert.deepEqual(OptionsNormalizer.normalizeOptions(options), expectedOptionsPreset);
+            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
         });
 
         it('should normalize options preset: sourceMapFileNameRule', () => {
@@ -83,9 +84,7 @@ describe('OptionsNormalizer', () => {
                 sourceMapFileName: 'outputSourceMapName.js.map',
             });
 
-            options = new Options(optionsPreset);
-
-            assert.deepEqual(OptionsNormalizer.normalizeOptions(options), expectedOptionsPreset);
+            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
         });
 
         it('should normalize options preset: stringArrayRule', () => {
@@ -103,9 +102,7 @@ describe('OptionsNormalizer', () => {
                 rotateStringArray: false
             });
 
-            options = new Options(optionsPreset);
-
-            assert.deepEqual(OptionsNormalizer.normalizeOptions(options), expectedOptionsPreset);
+            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
         });
 
         it('should normalize options preset: stringArrayEncodingRule', () => {
@@ -117,9 +114,7 @@ describe('OptionsNormalizer', () => {
                 stringArrayEncoding: 'base64'
             });
 
-            options = new Options(optionsPreset);
-
-            assert.deepEqual(OptionsNormalizer.normalizeOptions(options), expectedOptionsPreset);
+            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
         });
 
         it('should normalize options preset: stringArrayThresholdRule', () => {
@@ -135,9 +130,7 @@ describe('OptionsNormalizer', () => {
                 stringArrayThreshold: 0
             });
 
-            options = new Options(optionsPreset);
-
-            assert.deepEqual(OptionsNormalizer.normalizeOptions(options), expectedOptionsPreset);
+            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
         });
     });
 });

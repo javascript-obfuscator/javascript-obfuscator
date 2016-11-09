@@ -10,70 +10,134 @@ const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('OptionsNormalizer', () => {
     describe('normalizeOptions (options: IObfuscatorOptions): IObfuscatorOptions', () => {
-        let options1: IOptions,
-            options2: IOptions,
-            options3: IOptions,
-            optionsPreset1: IObfuscatorOptions,
-            optionsPreset2: IObfuscatorOptions,
-            optionsPreset3: IObfuscatorOptions,
-            expectedOptionsPreset1: IObfuscatorOptions,
-            expectedOptionsPreset2: IObfuscatorOptions,
-            expectedOptionsPreset3: IObfuscatorOptions;
+        let options: IOptions,
+            optionsPreset: IObfuscatorOptions,
+            expectedOptionsPreset: IObfuscatorOptions;
 
-        beforeEach(() => {
-            optionsPreset1 = Object.assign({}, DEFAULT_PRESET, {
-                compact: false,
-                rotateStringArray: true,
-                sourceMapBaseUrl: 'http://localhost:9000',
-                stringArray: false,
-                stringArrayEncoding: 'rc4',
-                stringArrayThreshold: 0.5
+        it('should normalize options preset: domainLockRule', () => {
+            optionsPreset = Object.assign({}, DEFAULT_PRESET, {
+                domainLock: ['//localhost:9000', 'https://google.ru/abc?cde=fgh']
             });
-            optionsPreset2 = Object.assign({}, DEFAULT_PRESET, {
-                rotateStringArray: true,
+
+            expectedOptionsPreset = Object.assign({}, DEFAULT_PRESET, {
+                domainLock: ['localhost', 'google.ru']
+            });
+
+            options = new Options(optionsPreset);
+
+            assert.deepEqual(OptionsNormalizer.normalizeOptions(options), expectedOptionsPreset);
+        });
+
+        it('should normalize options preset: selfDefendingRule', () => {
+            optionsPreset = Object.assign({}, DEFAULT_PRESET, {
+                compact: false
+            });
+
+            expectedOptionsPreset = Object.assign({}, DEFAULT_PRESET, {
+                compact: true
+            });
+
+            options = new Options(optionsPreset);
+
+            assert.deepEqual(OptionsNormalizer.normalizeOptions(options), expectedOptionsPreset);
+        });
+
+        it('should normalize options preset: sourceMapBaseUrlRule #1', () => {
+            optionsPreset = Object.assign({}, DEFAULT_PRESET, {
+                sourceMapBaseUrl: 'http://localhost:9000',
+            });
+
+            expectedOptionsPreset = Object.assign({}, DEFAULT_PRESET, {
+                sourceMapBaseUrl: '',
+            });
+
+            options = new Options(optionsPreset);
+
+            assert.deepEqual(OptionsNormalizer.normalizeOptions(options), expectedOptionsPreset);
+        });
+
+        it('should normalize options preset: sourceMapBaseUrlRule #2', () => {
+            optionsPreset = Object.assign({}, DEFAULT_PRESET, {
+                sourceMapBaseUrl: 'http://localhost:9000',
+                sourceMapFileName: '/outputSourceMapName.map'
+            });
+
+            expectedOptionsPreset = Object.assign({}, DEFAULT_PRESET, {
+                sourceMapBaseUrl: 'http://localhost:9000/',
+                sourceMapFileName: 'outputSourceMapName.js.map'
+            });
+
+            options = new Options(optionsPreset);
+
+            assert.deepEqual(OptionsNormalizer.normalizeOptions(options), expectedOptionsPreset);
+        });
+
+        it('should normalize options preset: sourceMapFileNameRule', () => {
+            optionsPreset = Object.assign({}, DEFAULT_PRESET, {
                 sourceMapBaseUrl: 'http://localhost:9000',
                 sourceMapFileName: '//outputSourceMapName',
-                stringArray: true,
-                stringArrayThreshold: 0
             });
-            optionsPreset3 = Object.assign({}, DEFAULT_PRESET, {
-                domainLock: ['//localhost:9000', 'https://google.ru/abc?cde=fgh'],
-                sourceMapFileName: '/outputSourceMapName.map',
-                stringArray: true,
+
+            expectedOptionsPreset = Object.assign({}, DEFAULT_PRESET, {
+                sourceMapBaseUrl: 'http://localhost:9000/',
+                sourceMapFileName: 'outputSourceMapName.js.map',
+            });
+
+            options = new Options(optionsPreset);
+
+            assert.deepEqual(OptionsNormalizer.normalizeOptions(options), expectedOptionsPreset);
+        });
+
+        it('should normalize options preset: stringArrayRule', () => {
+            optionsPreset = Object.assign({}, DEFAULT_PRESET, {
+                stringArray: false,
+                stringArrayEncoding: 'rc4',
+                stringArrayThreshold: 0.5,
+                rotateStringArray: true
+            });
+
+            expectedOptionsPreset = Object.assign({}, DEFAULT_PRESET, {
+                stringArray: false,
+                stringArrayEncoding: false,
+                stringArrayThreshold: 0,
+                rotateStringArray: false
+            });
+
+            options = new Options(optionsPreset);
+
+            assert.deepEqual(OptionsNormalizer.normalizeOptions(options), expectedOptionsPreset);
+        });
+
+        it('should normalize options preset: stringArrayEncodingRule', () => {
+            optionsPreset = Object.assign({}, DEFAULT_PRESET, {
                 stringArrayEncoding: true
             });
 
-            expectedOptionsPreset1 = Object.assign({}, DEFAULT_PRESET, {
-                compact: true,
-                rotateStringArray: false,
-                sourceMapBaseUrl: '',
-                stringArray: false,
-                stringArrayEncoding: false,
-                stringArrayThreshold: 0
-            });
-            expectedOptionsPreset2 = Object.assign({}, DEFAULT_PRESET, {
-                rotateStringArray: false,
-                sourceMapBaseUrl: 'http://localhost:9000/',
-                sourceMapFileName: 'outputSourceMapName.js.map',
-                stringArray: false,
-                stringArrayThreshold: 0
-            });
-            expectedOptionsPreset3 = Object.assign({}, DEFAULT_PRESET, {
-                domainLock: ['localhost', 'google.ru'],
-                sourceMapFileName: 'outputSourceMapName.js.map',
-                stringArray: true,
+            expectedOptionsPreset = Object.assign({}, DEFAULT_PRESET, {
                 stringArrayEncoding: 'base64'
             });
 
-            options1 = new Options(optionsPreset1);
-            options2 = new Options(optionsPreset2);
-            options3 = new Options(optionsPreset3);
+            options = new Options(optionsPreset);
+
+            assert.deepEqual(OptionsNormalizer.normalizeOptions(options), expectedOptionsPreset);
         });
 
-        it('should normalize options preset', () => {
-            assert.deepEqual(OptionsNormalizer.normalizeOptions(options1), expectedOptionsPreset1);
-            assert.deepEqual(OptionsNormalizer.normalizeOptions(options2), expectedOptionsPreset2);
-            assert.deepEqual(OptionsNormalizer.normalizeOptions(options3), expectedOptionsPreset3);
+        it('should normalize options preset: stringArrayThresholdRule', () => {
+            optionsPreset = Object.assign({}, DEFAULT_PRESET, {
+                rotateStringArray: true,
+                stringArray: true,
+                stringArrayThreshold: 0
+            });
+
+            expectedOptionsPreset = Object.assign({}, DEFAULT_PRESET, {
+                rotateStringArray: false,
+                stringArray: false,
+                stringArrayThreshold: 0
+            });
+
+            options = new Options(optionsPreset);
+
+            assert.deepEqual(OptionsNormalizer.normalizeOptions(options), expectedOptionsPreset);
         });
     });
 });

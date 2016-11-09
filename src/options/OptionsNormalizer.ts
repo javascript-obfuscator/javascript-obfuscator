@@ -37,8 +37,8 @@ export class OptionsNormalizer {
     private static normalizerRules: TOptionsNormalizerRule[] = [
         OptionsNormalizer.domainLockRule,
         OptionsNormalizer.selfDefendingRule,
-        OptionsNormalizer.sourceMapBaseUrl,
-        OptionsNormalizer.sourceMapFileName,
+        OptionsNormalizer.sourceMapBaseUrlRule,
+        OptionsNormalizer.sourceMapFileNameRule,
         OptionsNormalizer.stringArrayRule,
         OptionsNormalizer.stringArrayEncodingRule,
         OptionsNormalizer.stringArrayThresholdRule,
@@ -94,7 +94,7 @@ export class OptionsNormalizer {
      * @param options
      * @returns {IOptions}
      */
-    private static sourceMapBaseUrl (options: IOptions): IOptions {
+    private static sourceMapBaseUrlRule (options: IOptions): IOptions {
         let sourceMapBaseUrl: string = options.sourceMapBaseUrl;
 
         if (!options.sourceMapFileName) {
@@ -118,7 +118,7 @@ export class OptionsNormalizer {
      * @param options
      * @returns {IOptions}
      */
-    private static sourceMapFileName (options: IOptions): IOptions {
+    private static sourceMapFileNameRule (options: IOptions): IOptions {
         let sourceMapFileName: string = options.sourceMapFileName;
 
         if (sourceMapFileName) {

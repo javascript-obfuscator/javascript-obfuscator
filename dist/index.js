@@ -3606,8 +3606,8 @@ var OptionsNormalizer = function () {
             return options;
         }
     }, {
-        key: 'sourceMapBaseUrl',
-        value: function sourceMapBaseUrl(options) {
+        key: 'sourceMapBaseUrlRule',
+        value: function sourceMapBaseUrlRule(options) {
             var sourceMapBaseUrl = options.sourceMapBaseUrl;
             if (!options.sourceMapFileName) {
                 Object.assign(options, {
@@ -3623,8 +3623,8 @@ var OptionsNormalizer = function () {
             return options;
         }
     }, {
-        key: 'sourceMapFileName',
-        value: function sourceMapFileName(options) {
+        key: 'sourceMapFileNameRule',
+        value: function sourceMapFileNameRule(options) {
             var sourceMapFileName = options.sourceMapFileName;
             if (sourceMapFileName) {
                 sourceMapFileName = sourceMapFileName.replace(/^\/+/, '').split('.')[0];
@@ -3676,7 +3676,7 @@ OptionsNormalizer.SELF_DEFENDING_OPTIONS = {
 OptionsNormalizer.UNICODE_ARRAY_ENCODING_OPTIONS = {
     stringArrayEncoding: 'base64'
 };
-OptionsNormalizer.normalizerRules = [OptionsNormalizer.domainLockRule, OptionsNormalizer.selfDefendingRule, OptionsNormalizer.sourceMapBaseUrl, OptionsNormalizer.sourceMapFileName, OptionsNormalizer.stringArrayRule, OptionsNormalizer.stringArrayEncodingRule, OptionsNormalizer.stringArrayThresholdRule];
+OptionsNormalizer.normalizerRules = [OptionsNormalizer.domainLockRule, OptionsNormalizer.selfDefendingRule, OptionsNormalizer.sourceMapBaseUrlRule, OptionsNormalizer.sourceMapFileNameRule, OptionsNormalizer.stringArrayRule, OptionsNormalizer.stringArrayEncodingRule, OptionsNormalizer.stringArrayThresholdRule];
 exports.OptionsNormalizer = OptionsNormalizer;
 
 /***/ },

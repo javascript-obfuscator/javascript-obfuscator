@@ -18,7 +18,7 @@ import { IObfuscatorOptions } from '../interfaces/IObfuscatorOptions';
 import { IOptions } from '../interfaces/IOptions';
 
 import { TSourceMapMode } from '../types/TSourceMapMode';
-import { TUnicodeArrayEncoding } from '../types/TUnicodeArrayEncoding';
+import { TStringsArrayEncoding } from '../types/TStringsArrayEncoding';
 
 import { DEFAULT_PRESET } from '../preset-options/DefaultPreset';
 
@@ -83,7 +83,7 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly rotateUnicodeArray: boolean;
+    public readonly rotateStringsArray: boolean;
 
     /**
      * @type {boolean}
@@ -124,13 +124,13 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly unicodeArray: boolean;
+    public readonly stringsArray: boolean;
 
     /**
-     * @type {TUnicodeArrayEncoding}
+     * @type {TStringsArrayEncoding}
      */
     @IsIn([true, false, 'base64', 'rc4'])
-    public readonly unicodeArrayEncoding: TUnicodeArrayEncoding;
+    public readonly stringsArrayEncoding: TStringsArrayEncoding;
 
     /**
      * @type {number}
@@ -138,7 +138,13 @@ export class Options implements IOptions {
     @IsNumber()
     @Min(0)
     @Max(1)
-    public readonly unicodeArrayThreshold: number;
+    public readonly stringsArrayThreshold: number;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
+    public readonly unicodeEscapeSequence: boolean;
 
     /**
      * @param obfuscatorOptions

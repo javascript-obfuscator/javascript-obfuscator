@@ -1,11 +1,11 @@
 /**
  * @returns {string}
  */
-export function UnicodeArrayCallsWrapperTemplate (): string {
+export function StringsArrayCallsWrapperTemplate (): string {
     return `
-        var {unicodeArrayCallsWrapperName} = function (index, key) {
+        var {stringsArrayCallsWrapperName} = function (index, key) {
             var index = parseInt(index, 0x10);
-            var value = {unicodeArrayName}[index];
+            var value = {stringsArrayName}[index];
             
             {decodeNodeTemplate}
         

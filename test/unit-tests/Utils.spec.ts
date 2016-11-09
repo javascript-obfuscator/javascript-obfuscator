@@ -83,11 +83,11 @@ describe('Utils', () => {
         });
     });
 
-    describe('stringToUnicode (string: string): string', () => {
-        let expected: string = `'\\x73\\x74\\x72\\x69\\x6e\\x67'`;
+    describe('stringToUnicodeEscapeSequence (string: string): string', () => {
+        let expected: string = '\\x73\\x74\\x72\\x69\\x6e\\x67';
 
-        it('should return a unicode encoded string from a given string', () => {
-            assert.equal(Utils.stringToUnicode('string'), expected);
+        it('should return a unicode escape sequence based on a given string', () => {
+            assert.equal(Utils.stringToUnicodeEscapeSequence('string'), expected);
         });
     });
 

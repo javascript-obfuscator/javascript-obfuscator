@@ -51,7 +51,7 @@ var obfuscationResult = JavaScriptObfuscator.obfuscate(
     })();
     `,
     {
-        rotateUnicodeArray: false
+        rotateStringsArray: false
     }
 );
 
@@ -117,15 +117,15 @@ Following options available for the JS Obfuscator:
     debugProtectionInterval: false,
     disableConsoleOutput: true,
     reservedNames: [],
-    rotateUnicodeArray: true,
+    rotateStringsArray: true,
     selfDefending: true,
     sourceMap: false,
     sourceMapBaseUrl: '',
     sourceMapFileName: '',
     sourceMapMode: 'separate',
-    unicodeArray: true,
-    unicodeArrayEncoding: false,
-    unicodeArrayThreshold: 0.8
+    stringsArray: true,
+    stringsArrayEncoding: false,
+    stringsArrayThreshold: 0.8
 }
 ```
 
@@ -141,15 +141,15 @@ Following options available for the JS Obfuscator:
     --debugProtectionInterval <boolean>
     --disableConsoleOutput <boolean>
     --reservedNames <list> (comma separated)
-    --rotateUnicodeArray <boolean>
+    --rotateStringsArray <boolean>
     --selfDefending <boolean>
     --sourceMap <boolean>
     --sourceMapBaseUrl <string>
     --sourceMapFileName <string>
     --sourceMapMode <string> [inline, separate]
-    --unicodeArray <boolean>
-    --unicodeArrayEncoding <boolean|string> [true, false, base64, rc4]
-    --unicodeArrayThreshold <number>
+    --stringsArray <boolean>
+    --stringsArrayEncoding <boolean|string> [true, false, base64, rc4]
+    --stringsArrayThreshold <number>
 ```
 
 ### `compact`
@@ -202,12 +202,12 @@ Example:
 	}
 ```
 
-### `rotateUnicodeArray`
+### `rotateStringsArray`
 Type: `boolean` Default: `true`
 
-##### :warning: `unicodeArray` must be enabled
+##### :warning: `stringsArray` must be enabled
 
-Shift the `unicodeArray` array by a fixed and random (generated at the code obfuscation) places. This makes it harder to match the order of the removed strings to their original place.
+Shift the `stringsArray` array by a fixed and random (generated at the code obfuscation) places. This makes it harder to match the order of the removed strings to their original place.
 
 This option is recommended if your original source code isn't small, as the helper function can attract attention.
 
@@ -263,36 +263,43 @@ Specifies source map generation mode:
 * `inline` - emit a single file with source maps instead of having a separate file;
 * `separate` - generates corresponding '.map' file with source map. If obfuscator run through CLI - adds link to source map file to the end of file with obfuscated code `//# sourceMappingUrl=file.js.map`.
 
-### `unicodeArray`
+### `stringsArray`
 Type: `boolean` Default: `true`
 
 Removes string literals and place them in a special array. For instance the string `"Hello World"` in `var m = "Hello World";` will be replaced with something like `var m = _0x12c456[0x1];`
     
-### `unicodeArrayEncoding`
+### `stringsArrayEncoding`
 Type: `boolean|string` Default: `false`
 
-##### :warning: `unicodeArray` option must be enabled
+##### :warning: `stringsArray` option must be enabled
 
 This option can slightly slow down your script.
 
-Encode all string literals of the `unicodeArray` using `base64` or `rc4` and inserts a special code that used to decode it back at runtime.
+Encode all string literals of the `stringsArray` using `base64` or `rc4` and inserts a special code that used to decode it back at runtime.
 
 Available values:
-* `true` (`boolean`): encode `unicodeArray` values using `base64`
-* `false` (`boolean`): don't encode `unicodeArray` values
-* `'base64'` (`string`): encode `unicodeArray` values using `base64`
-* `'rc4'` (`string`): encode `unicodeArray` values using `rc4`. **About 30-35% slower then `base64`, but more harder to get initial values**
+* `true` (`boolean`): encode `stringsArray` values using `base64`
+* `false` (`boolean`): don't encode `stringsArray` values
+* `'base64'` (`string`): encode `stringsArray` values using `base64`
+* `'rc4'` (`string`): encode `stringsArray` values using `rc4`. **About 30-35% slower then `base64`, but more harder to get initial values**
     
-### `unicodeArrayThreshold`
+### `stringsArrayThreshold`
 Type: `number` Default: `0.8` Min: `0` Max: `1`
 
-##### :warning: `unicodeArray` option must be enabled
+##### :warning: `stringsArray` option must be enabled
 
-You can use this setting to adjust the probability (from 0 to 1) that a string literal will be inserted into the `unicodeArray`.
+You can use this setting to adjust the probability (from 0 to 1) that a string literal will be inserted into the `stringsArray`.
 
-This setting is useful with large code size because repeatdely calls to the `Unicode Array` function can slow down your code.
+This setting is useful with large code size because repeatdely calls to the `stringsArray` array can slightly slow down your code.
 
-`unicodeArrayThreshold: 0` equals to `unicodeArray: false`.
+`stringsArrayThreshold: 0` equals to `stringsArray: false`.
+
+### `unicodeEscapeSequence`
+Type: `boolean` Default: `true`
+
+Allows to enable/disable strings conversion to unicode escape sequence.
+
+Unicode escape sequence greatly increases code size. Recommended to disable this option when using `stringArrayEncoding` (especially with `rc4` encoding).
 
 ## License
 Copyright (C) 2016 [Timofey Kachalov](http://github.com/sanex3339).

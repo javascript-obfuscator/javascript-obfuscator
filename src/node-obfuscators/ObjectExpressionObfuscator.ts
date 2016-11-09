@@ -51,7 +51,7 @@ export class ObjectExpressionObfuscator extends AbstractNodeObfuscator {
     private obfuscateLiteralPropertyKey (node: ESTree.Literal): void {
         if (typeof node.value === 'string' && !node['x-verbatim-property']) {
             node['x-verbatim-property'] = {
-                content : Utils.stringToUnicode(node.value),
+                content : `'${Utils.stringToUnicodeEscapeSequence(node.value)}'`,
                 precedence: escodegen.Precedence.Primary
             };
         }
@@ -65,7 +65,7 @@ export class ObjectExpressionObfuscator extends AbstractNodeObfuscator {
             literalNode: ESTree.Literal = {
                 raw: `'${nodeValue}'`,
                 'x-verbatim-property': {
-                    content : Utils.stringToUnicode(nodeValue),
+                    content : `'${Utils.stringToUnicodeEscapeSequence(nodeValue)}'`,
                     precedence: escodegen.Precedence.Primary
                 },
                 type: NodeType.Literal,

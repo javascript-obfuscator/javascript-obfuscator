@@ -1,7 +1,7 @@
 /**
  * @returns {string}
  */
-export function UnicodeArrayRotateFunctionTemplate (): string {
+export function StringsArrayRotateFunctionTemplate (): string {
     return `
         (function (array, {timesName}) {
             var {whileFunctionName} = function (times) {
@@ -11,6 +11,6 @@ export function UnicodeArrayRotateFunctionTemplate (): string {
             };
             
             {code}
-        })({unicodeArrayName}, 0x{unicodeArrayRotateValue});
+        })({stringsArrayName}, 0x{stringsArrayRotateValue});
     `;
 }

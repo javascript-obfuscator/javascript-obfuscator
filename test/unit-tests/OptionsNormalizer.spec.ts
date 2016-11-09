@@ -23,46 +23,46 @@ describe('OptionsNormalizer', () => {
         beforeEach(() => {
             optionsPreset1 = Object.assign({}, DEFAULT_PRESET, {
                 compact: false,
-                rotateUnicodeArray: true,
+                rotateStringsArray: true,
                 sourceMapBaseUrl: 'http://localhost:9000',
-                unicodeArray: false,
-                unicodeArrayEncoding: 'rc4',
-                unicodeArrayThreshold: 0.5
+                stringsArray: false,
+                stringsArrayEncoding: 'rc4',
+                stringsArrayThreshold: 0.5
             });
             optionsPreset2 = Object.assign({}, DEFAULT_PRESET, {
-                rotateUnicodeArray: true,
+                rotateStringsArray: true,
                 sourceMapBaseUrl: 'http://localhost:9000',
                 sourceMapFileName: '//outputSourceMapName',
-                unicodeArray: true,
-                unicodeArrayThreshold: 0
+                stringsArray: true,
+                stringsArrayThreshold: 0
             });
             optionsPreset3 = Object.assign({}, DEFAULT_PRESET, {
                 domainLock: ['//localhost:9000', 'https://google.ru/abc?cde=fgh'],
                 sourceMapFileName: '/outputSourceMapName.map',
-                unicodeArray: true,
-                unicodeArrayEncoding: true
+                stringsArray: true,
+                stringsArrayEncoding: true
             });
 
             expectedOptionsPreset1 = Object.assign({}, DEFAULT_PRESET, {
                 compact: true,
-                rotateUnicodeArray: false,
+                rotateStringsArray: false,
                 sourceMapBaseUrl: '',
-                unicodeArray: false,
-                unicodeArrayEncoding: false,
-                unicodeArrayThreshold: 0
+                stringsArray: false,
+                stringsArrayEncoding: false,
+                stringsArrayThreshold: 0
             });
             expectedOptionsPreset2 = Object.assign({}, DEFAULT_PRESET, {
-                rotateUnicodeArray: false,
+                rotateStringsArray: false,
                 sourceMapBaseUrl: 'http://localhost:9000/',
                 sourceMapFileName: 'outputSourceMapName.js.map',
-                unicodeArray: false,
-                unicodeArrayThreshold: 0
+                stringsArray: false,
+                stringsArrayThreshold: 0
             });
             expectedOptionsPreset3 = Object.assign({}, DEFAULT_PRESET, {
                 domainLock: ['localhost', 'google.ru'],
                 sourceMapFileName: 'outputSourceMapName.js.map',
-                unicodeArray: true,
-                unicodeArrayEncoding: 'base64'
+                stringsArray: true,
+                stringsArrayEncoding: 'base64'
             });
 
             options1 = new Options(optionsPreset1);

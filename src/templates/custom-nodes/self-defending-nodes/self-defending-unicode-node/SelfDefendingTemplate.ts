@@ -15,13 +15,13 @@ export function SelfDefendingTemplate (): string {
                 };
                 
             var test1 = function () {
-                var regExp = new RegExp(${Utils.stringToUnicode(`\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}`)});
+                var regExp = new RegExp('${Utils.stringToUnicodeEscapeSequence(`\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}`)}');
                 
                 return !regExp.test(func1.toString());
             };
             
             var test2 = function () {
-                var regExp = new RegExp(${Utils.stringToUnicode(`(\\\\[x|u](\\w){2,4})+`)});
+                var regExp = new RegExp('${Utils.stringToUnicodeEscapeSequence(`(\\\\[x|u](\\w){2,4})+`)}');
                 
                 return regExp.test(func2.toString());
             };

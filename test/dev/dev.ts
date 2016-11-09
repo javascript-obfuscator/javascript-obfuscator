@@ -70,8 +70,8 @@ if (!(<any>global)._babelPolyfill) {
     `,
         {
             disableConsoleOutput: false,
-            unicodeArrayEncoding: 'rc4',
-            selfDefending: true
+            selfDefending: true,
+            stringsArrayEncoding: 'rc4'
         }
     ).getObfuscatedCode();
 

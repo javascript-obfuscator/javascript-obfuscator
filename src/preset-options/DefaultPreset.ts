@@ -9,13 +9,14 @@ export const DEFAULT_PRESET: IObfuscatorOptions = Object.freeze({
     disableConsoleOutput: true,
     domainLock: [],
     reservedNames: [],
-    rotateUnicodeArray: true,
+    rotateStringsArray: true,
     selfDefending: true,
     sourceMap: false,
     sourceMapBaseUrl: '',
     sourceMapFileName: '',
     sourceMapMode: SourceMapMode.Separate,
-    unicodeArray: true,
-    unicodeArrayEncoding: false,
-    unicodeArrayThreshold: 0.8
+    stringsArray: true,
+    stringsArrayEncoding: false,
+    stringsArrayThreshold: 0.8,
+    unicodeEscapeSequence: true
 });

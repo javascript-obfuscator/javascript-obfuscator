@@ -9,8 +9,8 @@ export function SelfDefendingTemplate (): string {
             this.rc4Bytes = rc4Bytes;
             this.states = [1, 0, 0];
             this.newState = function(){return 'newState';};
-            this.firstState = ${Utils.stringToUnicode(`\\w+ *\\(\\) *{\\w+ *`)};
-            this.secondState = ${Utils.stringToUnicode(`['|"].+['|"];? *}`)};
+            this.firstState = '${Utils.stringToUnicodeEscapeSequence(`\\w+ *\\(\\) *{\\w+ *`)}';
+            this.secondState = '${Utils.stringToUnicodeEscapeSequence(`['|"].+['|"];? *}`)}';
         };
         
         StatesClass.prototype.checkState = function () {
@@ -36,6 +36,6 @@ export function SelfDefendingTemplate (): string {
             return rc4Bytes(this.states[0]);
         };
 
-        new StatesClass({unicodeArrayCallsWrapperName}).checkState();
+        new StatesClass({stringsArrayCallsWrapperName}).checkState();
     `;
 }

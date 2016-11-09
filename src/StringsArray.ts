@@ -1,6 +1,6 @@
 import { Utils } from './Utils';
 
-export class UnicodeArray {
+export class StringsArray {
     /**
      * @type {string[]}
      */
@@ -46,6 +46,8 @@ export class UnicodeArray {
      * @returns {string}
      */
     public toString (): string {
-        return this.array.toString();
+        return this.array.map((value: string) => {
+            return `'${value}'`;
+        }).toString()
     }
 }

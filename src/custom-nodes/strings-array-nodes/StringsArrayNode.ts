@@ -7,19 +7,19 @@ import { IOptions } from '../../interfaces/IOptions';
 
 import { AppendState } from '../../enums/AppendState';
 
-import { UnicodeArray } from '../../UnicodeArray';
+import { StringsArray } from '../../StringsArray';
 
-import { UnicodeArrayTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-node/UnicodeArrayTemplate';
+import { StringsArrayTemplate } from '../../templates/custom-nodes/strings-array-nodes/strings-array-node/StringsArrayTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeAppender } from '../../node/NodeAppender';
 import { NodeUtils } from '../../node/NodeUtils';
 
-export class UnicodeArrayNode extends AbstractCustomNode {
+export class StringsArrayNode extends AbstractCustomNode {
     /**
      * @type {number}
      */
-    public static UNICODE_ARRAY_RANDOM_LENGTH: number = 4;
+    public static ARRAY_RANDOM_LENGTH: number = 4;
 
     /**
      * @type {AppendState}
@@ -27,44 +27,44 @@ export class UnicodeArrayNode extends AbstractCustomNode {
     protected appendState: AppendState = AppendState.AfterObfuscation;
 
     /**
-     * @type {UnicodeArray}
+     * @type {StringsArray}
      */
-    private unicodeArray: UnicodeArray;
+    private stringsArray: StringsArray;
 
     /**
      * @type {string}
      */
-    private unicodeArrayName: string;
+    private stringsArrayName: string;
 
     /**
      * @type {number}
      */
-    private unicodeArrayRotateValue: number;
+    private stringsArrayRotateValue: number;
 
     /**
-     * @param unicodeArray
-     * @param unicodeArrayName
-     * @param unicodeArrayRotateValue
+     * @param stringsArray
+     * @param stringsArrayName
+     * @param stringsArrayRotateValue
      * @param options
      */
     constructor (
-        unicodeArray: UnicodeArray,
-        unicodeArrayName: string,
-        unicodeArrayRotateValue: number = 0,
+        stringsArray: StringsArray,
+        stringsArrayName: string,
+        stringsArrayRotateValue: number = 0,
         options: IOptions
     ) {
         super(options);
 
-        this.unicodeArray = unicodeArray;
-        this.unicodeArrayName = unicodeArrayName;
-        this.unicodeArrayRotateValue = unicodeArrayRotateValue;
+        this.stringsArray = stringsArray;
+        this.stringsArrayName = stringsArrayName;
+        this.stringsArrayRotateValue = stringsArrayRotateValue;
     }
 
     /**
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        if (!this.unicodeArray.getLength()) {
+        if (!this.stringsArray.getLength()) {
             return;
         }
 
@@ -75,21 +75,21 @@ export class UnicodeArrayNode extends AbstractCustomNode {
      * @returns {string}
      */
     public getNodeIdentifier (): string {
-        return this.unicodeArrayName;
+        return this.stringsArrayName;
     }
 
     /**
-     * @returns {UnicodeArray}
+     * @returns {StringsArray}
      */
-    public getNodeData (): UnicodeArray {
-        return this.unicodeArray;
+    public getNodeData (): StringsArray {
+        return this.stringsArray;
     }
 
     /**
      * @returns {TStatement[]}
      */
     public getNode (): TStatement[] {
-        this.unicodeArray.rotateArray(this.unicodeArrayRotateValue);
+        this.stringsArray.rotateArray(this.stringsArrayRotateValue);
 
         return super.getNode();
     }
@@ -98,7 +98,7 @@ export class UnicodeArrayNode extends AbstractCustomNode {
      * @param data
      */
     public updateNodeData (data: string): void {
-        this.unicodeArray.addToArray(data);
+        this.stringsArray.addToArray(data);
     }
 
     /**
@@ -106,9 +106,9 @@ export class UnicodeArrayNode extends AbstractCustomNode {
      */
     protected getNodeStructure (): TStatement[] {
         return NodeUtils.convertCodeToStructure(
-            UnicodeArrayTemplate().formatUnicorn({
-                unicodeArrayName: this.unicodeArrayName,
-                unicodeArray: this.unicodeArray.toString()
+            StringsArrayTemplate().formatUnicorn({
+                stringsArrayName: this.stringsArrayName,
+                stringsArray: this.stringsArray.toString()
             })
         );
     }

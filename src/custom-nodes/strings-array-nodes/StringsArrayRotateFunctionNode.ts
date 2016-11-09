@@ -9,61 +9,61 @@ import { AppendState } from '../../enums/AppendState';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
 
-import { SelfDefendingTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-rotate-function-node/SelfDefendingTemplate';
-import { UnicodeArrayRotateFunctionTemplate } from '../../templates/custom-nodes/unicode-array-nodes/unicode-array-rotate-function-node/UnicodeArrayRotateFunctionTemplate';
+import { SelfDefendingTemplate } from '../../templates/custom-nodes/strings-array-nodes/strings-array-rotate-function-node/SelfDefendingTemplate';
+import { StringsArrayRotateFunctionTemplate } from '../../templates/custom-nodes/strings-array-nodes/strings-array-rotate-function-node/StringsArrayRotateFunctionTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeAppender } from '../../node/NodeAppender';
 import { NodeUtils } from '../../node/NodeUtils';
-import { UnicodeArray } from '../../UnicodeArray';
+import { StringsArray } from '../../StringsArray';
 import { Utils } from '../../Utils';
 
-export class UnicodeArrayRotateFunctionNode extends AbstractCustomNode {
+export class StringsArrayRotateFunctionNode extends AbstractCustomNode {
     /**
      * @type {AppendState}
      */
     protected appendState: AppendState = AppendState.AfterObfuscation;
 
     /**
-     * @type {UnicodeArray}
+     * @type {StringsArray}
      */
-    private unicodeArray: UnicodeArray;
+    private stringsArray: StringsArray;
 
     /**
      * @type {string}
      */
-    private unicodeArrayName: string;
+    private stringsArrayName: string;
 
     /**
      * @param {number}
      */
-    private unicodeArrayRotateValue: number;
+    private stringsArrayRotateValue: number;
 
     /**
-     * @param unicodeArrayName
-     * @param unicodeArray
-     * @param unicodeArrayRotateValue
+     * @param stringsArrayName
+     * @param stringsArray
+     * @param stringsArrayRotateValue
      * @param options
      */
     constructor (
-        unicodeArrayName: string,
-        unicodeArray: UnicodeArray,
-        unicodeArrayRotateValue: number,
+        stringsArrayName: string,
+        stringsArray: StringsArray,
+        stringsArrayRotateValue: number,
         options: IOptions
     ) {
         super(options);
 
-        this.unicodeArrayName = unicodeArrayName;
-        this.unicodeArray = unicodeArray;
-        this.unicodeArrayRotateValue = unicodeArrayRotateValue;
+        this.stringsArrayName = stringsArrayName;
+        this.stringsArray = stringsArray;
+        this.stringsArrayRotateValue = stringsArrayRotateValue;
     }
 
     /**
      * @param blockScopeNode
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        if (!this.unicodeArray.getLength()) {
+        if (!this.stringsArray.getLength()) {
             return;
         }
 
@@ -96,11 +96,11 @@ export class UnicodeArrayRotateFunctionNode extends AbstractCustomNode {
 
         return NodeUtils.convertCodeToStructure(
             JavaScriptObfuscator.obfuscate(
-                UnicodeArrayRotateFunctionTemplate().formatUnicorn({
+                StringsArrayRotateFunctionTemplate().formatUnicorn({
                     code,
                     timesName,
-                    unicodeArrayName: this.unicodeArrayName,
-                    unicodeArrayRotateValue: Utils.decToHex(this.unicodeArrayRotateValue),
+                    stringsArrayName: this.stringsArrayName,
+                    stringsArrayRotateValue: Utils.decToHex(this.stringsArrayRotateValue),
                     whileFunctionName
                 }),
                 NO_CUSTOM_NODES_PRESET

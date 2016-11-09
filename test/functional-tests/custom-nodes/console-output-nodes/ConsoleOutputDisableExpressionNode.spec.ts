@@ -9,7 +9,7 @@ const assert: Chai.AssertStatic = require('chai').assert;
 describe('ConsoleOutputDisableExpressionNode', () => {
     const regExp = /(_0x([a-z0-9]){4,6}\['(\\x[a-f0-9]*)*'\]\['(\\x[a-f0-9]*)*'\] *= *_0x([a-z0-9]){4,6};){4}/;
 
-    it('should correctly appendNodeToOptimalBlockScope `ConsoleOutputDisableExpressionNode` custom node into the obfuscated code if `disableConsoleOutput` option is set', () => {
+    it('should correctly append `ConsoleOutputDisableExpressionNode` custom node into the obfuscated code if `disableConsoleOutput` option is set', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `var test = 'test';`,
             Object.assign({}, NO_CUSTOM_NODES_PRESET, {
@@ -20,12 +20,12 @@ describe('ConsoleOutputDisableExpressionNode', () => {
         assert.match(obfuscationResult.getObfuscatedCode(), regExp);
     });
 
-    it('should\'t appendNodeToOptimalBlockScope `ConsoleOutputDisableExpressionNode` custom node into the obfuscated code if `disableConsoleOutput` option is not set', () => {
+    it('should\'t append `ConsoleOutputDisableExpressionNode` custom node into the obfuscated code if `disableConsoleOutput` option is not set', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `var test = 'test';`,
             Object.assign({}, NO_CUSTOM_NODES_PRESET, {
                 disableConsoleOutput: false,
-                unicodeArrayThreshold: 1
+                stringsArrayThreshold: 1
             })
         );
 

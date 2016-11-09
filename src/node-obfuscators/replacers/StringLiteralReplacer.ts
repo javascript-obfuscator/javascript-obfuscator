@@ -1,18 +1,18 @@
-import { TUnicodeArrayCallsWrapper } from '../../types/custom-nodes/TUnicodeArrayCallsWrapper';
-import { TUnicodeArrayNode } from '../../types/custom-nodes/TUnicodeArrayNode';
+import { TStringsArrayCallsWrapper } from '../../types/custom-nodes/TStringsArrayCallsWrapper';
+import { TStringsArrayNode } from '../../types/custom-nodes/TStringsArrayNode';
 
-import { UnicodeArrayEncoding } from '../../enums/UnicodeArrayEncoding';
+import { StringsArrayEncoding } from '../../enums/StringsArrayEncoding';
 
 import { AbstractReplacer } from './AbstractReplacer';
 import { NumberLiteralReplacer } from './NumberLiteralReplacer';
-import { UnicodeArray } from '../../UnicodeArray';
+import { StringsArray } from '../../StringsArray';
 import { Utils } from '../../Utils';
 
 export class StringLiteralReplacer extends AbstractReplacer {
     /**
      * @type {number}
      */
-    private static minimumLengthForUnicodeArray: number = 3;
+    private static minimumLengthForStringsArray: number = 3;
 
     /**
      * @type {string[]}
@@ -25,71 +25,73 @@ export class StringLiteralReplacer extends AbstractReplacer {
      * @returns {string}
      */
     public replace (nodeValue: string): string {
-        const replaceWithUnicodeArrayFlag: boolean = (
-            nodeValue.length >= StringLiteralReplacer.minimumLengthForUnicodeArray
-            && Math.random() <= this.options.unicodeArrayThreshold
+        const replaceWithStringsArrayFlag: boolean = (
+            nodeValue.length >= StringLiteralReplacer.minimumLengthForStringsArray
+            && Math.random() <= this.options.stringsArrayThreshold
         );
 
-        if (this.options.unicodeArray && replaceWithUnicodeArrayFlag) {
-            return this.replaceStringLiteralWithUnicodeArrayCall(nodeValue);
+        if (this.options.stringsArray && replaceWithStringsArrayFlag) {
+            return this.replaceStringLiteralWithStringsArrayCall(nodeValue);
         }
 
-        return Utils.stringToUnicode(nodeValue);
+        return `'${Utils.stringToUnicodeEscapeSequence(nodeValue)}'`;
     }
 
     /**
      * @param value
      * @returns {string}
      */
-    private replaceStringLiteralWithUnicodeArrayCall (value: string): string {
-        const unicodeArrayNode: TUnicodeArrayNode = <TUnicodeArrayNode>this.nodes.get('unicodeArrayNode');
+    private replaceStringLiteralWithStringsArrayCall (value: string): string {
+        const stringsArrayNode: TStringsArrayNode = <TStringsArrayNode>this.nodes.get('stringsArrayNode');
 
-        if (!unicodeArrayNode) {
-            throw new ReferenceError('`unicodeArrayNode` node is not found in Map with custom node.');
+        if (!stringsArrayNode) {
+            throw new ReferenceError('`stringsArrayNode` node is not found in Map with custom node.');
         }
 
         let rc4Key: string = '';
 
-        switch (this.options.unicodeArrayEncoding) {
-            case UnicodeArrayEncoding.base64:
+        switch (this.options.stringsArrayEncoding) {
+            case StringsArrayEncoding.base64:
                 value = Utils.btoa(value);
 
                 break;
 
-            case UnicodeArrayEncoding.rc4:
+            case StringsArrayEncoding.rc4:
                 rc4Key = Utils.getRandomGenerator().pickone(StringLiteralReplacer.rc4Keys);
                 value = Utils.btoa(Utils.rc4(value, rc4Key));
 
                 break;
         }
 
-        value = Utils.stringToUnicode(value);
+        if (this.options.unicodeEscapeSequence) {
+            value = Utils.stringToUnicodeEscapeSequence(value);
+        }
 
-        let unicodeArray: UnicodeArray = unicodeArrayNode.getNodeData(),
-            indexOfExistingValue: number = unicodeArray.getIndexOf(value),
+        let stringsArray: StringsArray = stringsArrayNode.getNodeData(),
+            indexOfExistingValue: number = stringsArray.getIndexOf(value),
             indexOfValue: number,
             hexadecimalIndex: string;
 
         if (indexOfExistingValue >= 0) {
             indexOfValue = indexOfExistingValue;
         } else {
-            indexOfValue = unicodeArray.getLength();
-            unicodeArrayNode.updateNodeData(value);
+            indexOfValue = stringsArray.getLength();
+            stringsArrayNode.updateNodeData(value);
         }
 
         hexadecimalIndex = new NumberLiteralReplacer(this.nodes, this.options)
             .replace(indexOfValue);
 
-        const unicodeArrayCallsWrapper: TUnicodeArrayCallsWrapper = <TUnicodeArrayCallsWrapper>this.nodes.get('unicodeArrayCallsWrapper');
+        const stringsArrayCallsWrapper: TStringsArrayCallsWrapper = <TStringsArrayCallsWrapper>this.nodes.get('stringsArrayCallsWrapper');
 
-        if (!unicodeArrayCallsWrapper) {
-            throw new ReferenceError('`unicodeArrayCallsWrapper` node is not found in Map with custom node.');
+        if (!stringsArrayCallsWrapper) {
+            throw new ReferenceError('`stringsArrayCallsWrapper` node is not found in Map with custom node.');
         }
 
-        if (this.options.unicodeArrayEncoding === UnicodeArrayEncoding.rc4) {
-            return `${unicodeArrayCallsWrapper.getNodeIdentifier()}('${hexadecimalIndex}', ${Utils.stringToUnicode(rc4Key)})`;
+        if (this.options.stringsArrayEncoding === StringsArrayEncoding.rc4) {
+            return `${stringsArrayCallsWrapper.getNodeIdentifier()}('${hexadecimalIndex}', '${Utils.stringToUnicodeEscapeSequence(rc4Key)}')`;
         }
 
-        return `${unicodeArrayCallsWrapper.getNodeIdentifier()}('${hexadecimalIndex}')`;
+        return `${stringsArrayCallsWrapper.getNodeIdentifier()}('${hexadecimalIndex}')`;
     }
 }

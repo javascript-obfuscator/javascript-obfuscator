@@ -9,13 +9,14 @@ export const NO_CUSTOM_NODES_PRESET: IObfuscatorOptions = Object.freeze({
     disableConsoleOutput: false,
     domainLock: [],
     reservedNames: [],
-    rotateUnicodeArray: false,
+    rotateStringsArray: false,
     selfDefending: false,
     sourceMap: false,
     sourceMapBaseUrl: '',
     sourceMapFileName: '',
     sourceMapMode: SourceMapMode.Separate,
-    unicodeArray: false,
-    unicodeArrayEncoding: false,
-    unicodeArrayThreshold: 0
+    stringsArray: false,
+    stringsArrayEncoding: false,
+    stringsArrayThreshold: 0,
+    unicodeEscapeSequence: true
 });

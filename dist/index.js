@@ -258,13 +258,13 @@ var Utils = function () {
             }).join(' + ');
         }
     }, {
-        key: 'stringToUnicode',
-        value: function stringToUnicode(string) {
+        key: 'stringToUnicodeEscapeSequence',
+        value: function stringToUnicodeEscapeSequence(string) {
             var radix = 16;
             var prefix = void 0,
                 regexp = new RegExp('[\x00-\x7F]'),
                 template = void 0;
-            return '\'' + string.replace(/[\s\S]/g, function (escape) {
+            return '' + string.replace(/[\s\S]/g, function (escape) {
                 if (regexp.test(escape)) {
                     prefix = '\\x';
                     template = '0'.repeat(2);
@@ -273,7 +273,7 @@ var Utils = function () {
                     template = '0'.repeat(4);
                 }
                 return '' + prefix + (template + escape.charCodeAt(0).toString(radix)).slice(-template.length);
-            }) + '\'';
+            });
         }
     }]);
 
@@ -976,15 +976,16 @@ exports.NO_CUSTOM_NODES_PRESET = Object.freeze({
     disableConsoleOutput: false,
     domainLock: [],
     reservedNames: [],
-    rotateUnicodeArray: false,
+    rotateStringsArray: false,
     selfDefending: false,
     sourceMap: false,
     sourceMapBaseUrl: '',
     sourceMapFileName: '',
     sourceMapMode: SourceMapMode_1.SourceMapMode.Separate,
-    unicodeArray: false,
-    unicodeArrayEncoding: false,
-    unicodeArrayThreshold: 0
+    stringsArray: false,
+    stringsArrayEncoding: false,
+    stringsArrayThreshold: 0,
+    unicodeEscapeSequence: true
 });
 
 /***/ },
@@ -1063,7 +1064,7 @@ exports.NodeCallsControllerFunctionNode = NodeCallsControllerFunctionNode;
 "use strict";
 "use strict";
 
-exports.UnicodeArrayEncoding = {
+exports.StringsArrayEncoding = {
     base64: 'base64',
     rc4: 'rc4'
 };
@@ -1083,7 +1084,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var UnicodeArrayEncoding_1 = __webpack_require__(18);
+var StringsArrayEncoding_1 = __webpack_require__(18);
 var AbstractReplacer_1 = __webpack_require__(14);
 var NumberLiteralReplacer_1 = __webpack_require__(22);
 var Utils_1 = __webpack_require__(0);
@@ -1100,56 +1101,58 @@ var StringLiteralReplacer = function (_AbstractReplacer_1$A) {
     _createClass(StringLiteralReplacer, [{
         key: 'replace',
         value: function replace(nodeValue) {
-            var replaceWithUnicodeArrayFlag = nodeValue.length >= StringLiteralReplacer.minimumLengthForUnicodeArray && Math.random() <= this.options.unicodeArrayThreshold;
-            if (this.options.unicodeArray && replaceWithUnicodeArrayFlag) {
-                return this.replaceStringLiteralWithUnicodeArrayCall(nodeValue);
+            var replaceWithStringsArrayFlag = nodeValue.length >= StringLiteralReplacer.minimumLengthForStringsArray && Math.random() <= this.options.stringsArrayThreshold;
+            if (this.options.stringsArray && replaceWithStringsArrayFlag) {
+                return this.replaceStringLiteralWithStringsArrayCall(nodeValue);
             }
-            return Utils_1.Utils.stringToUnicode(nodeValue);
+            return '\'' + Utils_1.Utils.stringToUnicodeEscapeSequence(nodeValue) + '\'';
         }
     }, {
-        key: 'replaceStringLiteralWithUnicodeArrayCall',
-        value: function replaceStringLiteralWithUnicodeArrayCall(value) {
-            var unicodeArrayNode = this.nodes.get('unicodeArrayNode');
-            if (!unicodeArrayNode) {
-                throw new ReferenceError('`unicodeArrayNode` node is not found in Map with custom node.');
+        key: 'replaceStringLiteralWithStringsArrayCall',
+        value: function replaceStringLiteralWithStringsArrayCall(value) {
+            var stringsArrayNode = this.nodes.get('stringsArrayNode');
+            if (!stringsArrayNode) {
+                throw new ReferenceError('`stringsArrayNode` node is not found in Map with custom node.');
             }
             var rc4Key = '';
-            switch (this.options.unicodeArrayEncoding) {
-                case UnicodeArrayEncoding_1.UnicodeArrayEncoding.base64:
+            switch (this.options.stringsArrayEncoding) {
+                case StringsArrayEncoding_1.StringsArrayEncoding.base64:
                     value = Utils_1.Utils.btoa(value);
                     break;
-                case UnicodeArrayEncoding_1.UnicodeArrayEncoding.rc4:
+                case StringsArrayEncoding_1.StringsArrayEncoding.rc4:
                     rc4Key = Utils_1.Utils.getRandomGenerator().pickone(StringLiteralReplacer.rc4Keys);
                     value = Utils_1.Utils.btoa(Utils_1.Utils.rc4(value, rc4Key));
                     break;
             }
-            value = Utils_1.Utils.stringToUnicode(value);
-            var unicodeArray = unicodeArrayNode.getNodeData(),
-                indexOfExistingValue = unicodeArray.getIndexOf(value),
+            if (this.options.unicodeEscapeSequence) {
+                value = Utils_1.Utils.stringToUnicodeEscapeSequence(value);
+            }
+            var stringsArray = stringsArrayNode.getNodeData(),
+                indexOfExistingValue = stringsArray.getIndexOf(value),
                 indexOfValue = void 0,
                 hexadecimalIndex = void 0;
             if (indexOfExistingValue >= 0) {
                 indexOfValue = indexOfExistingValue;
             } else {
-                indexOfValue = unicodeArray.getLength();
-                unicodeArrayNode.updateNodeData(value);
+                indexOfValue = stringsArray.getLength();
+                stringsArrayNode.updateNodeData(value);
             }
             hexadecimalIndex = new NumberLiteralReplacer_1.NumberLiteralReplacer(this.nodes, this.options).replace(indexOfValue);
-            var unicodeArrayCallsWrapper = this.nodes.get('unicodeArrayCallsWrapper');
-            if (!unicodeArrayCallsWrapper) {
-                throw new ReferenceError('`unicodeArrayCallsWrapper` node is not found in Map with custom node.');
+            var stringsArrayCallsWrapper = this.nodes.get('stringsArrayCallsWrapper');
+            if (!stringsArrayCallsWrapper) {
+                throw new ReferenceError('`stringsArrayCallsWrapper` node is not found in Map with custom node.');
             }
-            if (this.options.unicodeArrayEncoding === UnicodeArrayEncoding_1.UnicodeArrayEncoding.rc4) {
-                return unicodeArrayCallsWrapper.getNodeIdentifier() + '(\'' + hexadecimalIndex + '\', ' + Utils_1.Utils.stringToUnicode(rc4Key) + ')';
+            if (this.options.stringsArrayEncoding === StringsArrayEncoding_1.StringsArrayEncoding.rc4) {
+                return stringsArrayCallsWrapper.getNodeIdentifier() + '(\'' + hexadecimalIndex + '\', \'' + Utils_1.Utils.stringToUnicodeEscapeSequence(rc4Key) + '\')';
             }
-            return unicodeArrayCallsWrapper.getNodeIdentifier() + '(\'' + hexadecimalIndex + '\')';
+            return stringsArrayCallsWrapper.getNodeIdentifier() + '(\'' + hexadecimalIndex + '\')';
         }
     }]);
 
     return StringLiteralReplacer;
 }(AbstractReplacer_1.AbstractReplacer);
 
-StringLiteralReplacer.minimumLengthForUnicodeArray = 3;
+StringLiteralReplacer.minimumLengthForStringsArray = 3;
 StringLiteralReplacer.rc4Keys = Utils_1.Utils.getRandomGenerator().n(function () {
     return Utils_1.Utils.getRandomGenerator().string({ length: 4 });
 }, 50);
@@ -1319,15 +1322,16 @@ exports.DEFAULT_PRESET = Object.freeze({
     disableConsoleOutput: true,
     domainLock: [],
     reservedNames: [],
-    rotateUnicodeArray: true,
+    rotateStringsArray: true,
     selfDefending: true,
     sourceMap: false,
     sourceMapBaseUrl: '',
     sourceMapFileName: '',
     sourceMapMode: SourceMapMode_1.SourceMapMode.Separate,
-    unicodeArray: true,
-    unicodeArrayEncoding: false,
-    unicodeArrayThreshold: 0.8
+    stringsArray: true,
+    stringsArrayEncoding: false,
+    stringsArrayThreshold: 0.8,
+    unicodeEscapeSequence: true
 });
 
 /***/ },
@@ -1445,9 +1449,9 @@ var Node_1 = __webpack_require__(3);
 var NodeUtils_1 = __webpack_require__(1);
 var ObjectExpressionObfuscator_1 = __webpack_require__(53);
 var SelfDefendingNodesGroup_1 = __webpack_require__(45);
-var UnicodeArrayNodesGroup_1 = __webpack_require__(46);
-var VariableDeclarationObfuscator_1 = __webpack_require__(54);
 var StackTraceAnalyzer_1 = __webpack_require__(59);
+var StringsArrayNodesGroup_1 = __webpack_require__(46);
+var VariableDeclarationObfuscator_1 = __webpack_require__(54);
 
 var Obfuscator = function () {
     function Obfuscator(options) {
@@ -1533,7 +1537,7 @@ var Obfuscator = function () {
     return Obfuscator;
 }();
 
-Obfuscator.nodeGroups = [DomainLockNodesGroup_1.DomainLockNodesGroup, SelfDefendingNodesGroup_1.SelfDefendingNodesGroup, ConsoleOutputNodesGroup_1.ConsoleOutputNodesGroup, DebugProtectionNodesGroup_1.DebugProtectionNodesGroup, UnicodeArrayNodesGroup_1.UnicodeArrayNodesGroup];
+Obfuscator.nodeGroups = [DomainLockNodesGroup_1.DomainLockNodesGroup, SelfDefendingNodesGroup_1.SelfDefendingNodesGroup, ConsoleOutputNodesGroup_1.ConsoleOutputNodesGroup, DebugProtectionNodesGroup_1.DebugProtectionNodesGroup, StringsArrayNodesGroup_1.StringsArrayNodesGroup];
 Obfuscator.nodeObfuscators = new Map([[NodeType_1.NodeType.ArrowFunctionExpression, [FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.ClassDeclaration, [FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator]], [NodeType_1.NodeType.CatchClause, [CatchClauseObfuscator_1.CatchClauseObfuscator]], [NodeType_1.NodeType.FunctionDeclaration, [FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator, FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.FunctionExpression, [FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.MemberExpression, [MemberExpressionObfuscator_1.MemberExpressionObfuscator]], [NodeType_1.NodeType.MethodDefinition, [MethodDefinitionObfuscator_1.MethodDefinitionObfuscator]], [NodeType_1.NodeType.ObjectExpression, [ObjectExpressionObfuscator_1.ObjectExpressionObfuscator]], [NodeType_1.NodeType.VariableDeclaration, [VariableDeclarationObfuscator_1.VariableDeclarationObfuscator]], [NodeType_1.NodeType.Literal, [LiteralObfuscator_1.LiteralObfuscator]]]);
 exports.Obfuscator = Obfuscator;
 
@@ -1608,14 +1612,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Utils_1 = __webpack_require__(0);
 
-var UnicodeArray = function () {
-    function UnicodeArray() {
-        _classCallCheck(this, UnicodeArray);
+var StringsArray = function () {
+    function StringsArray() {
+        _classCallCheck(this, StringsArray);
 
         this.array = [];
     }
 
-    _createClass(UnicodeArray, [{
+    _createClass(StringsArray, [{
         key: "addToArray",
         value: function addToArray(value) {
             this.array.push(value);
@@ -1643,14 +1647,16 @@ var UnicodeArray = function () {
     }, {
         key: "toString",
         value: function toString() {
-            return this.array.toString();
+            return this.array.map(function (value) {
+                return "'" + value + "'";
+            }).toString();
         }
     }]);
 
-    return UnicodeArray;
+    return StringsArray;
 }();
 
-exports.UnicodeArray = UnicodeArray;
+exports.StringsArray = StringsArray;
 
 /***/ },
 /* 31 */
@@ -1758,7 +1764,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var commander = __webpack_require__(83);
 var path = __webpack_require__(25);
 var SourceMapMode_1 = __webpack_require__(13);
-var UnicodeArrayEncoding_1 = __webpack_require__(18);
+var StringsArrayEncoding_1 = __webpack_require__(18);
 var DefaultPreset_1 = __webpack_require__(23);
 var CLIUtils_1 = __webpack_require__(31);
 var JavaScriptObfuscator_1 = __webpack_require__(10);
@@ -1809,7 +1815,7 @@ var JavaScriptObfuscatorCLI = function () {
                 return val.split(',');
             }).option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', function (val) {
                 return val.split(',');
-            }).option('--rotateUnicodeArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMapBaseUrl <string>', 'Sets base url to the source map import url when `--sourceMapMode=separate`').option('--sourceMapFileName <string>', 'Sets file name for output source map when `--sourceMapMode=separate`').option('--sourceMapMode <string> [inline, separate]', 'Specify source map output mode', JavaScriptObfuscatorCLI.parseSourceMapMode).option('--unicodeArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean).option('--unicodeArrayEncoding <boolean|string> [true, false, base64, rc4]', 'All literals in Unicode array become encoded in using base64 or rc4 (this option can slightly slow down your code speed', JavaScriptObfuscatorCLI.parseUnicodeArrayEncoding).option('--unicodeArrayThreshold <number>', 'The probability that the literal string will be inserted into unicodeArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).parse(this.rawArguments);
+            }).option('--rotateStringsArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMapBaseUrl <string>', 'Sets base url to the source map import url when `--sourceMapMode=separate`').option('--sourceMapFileName <string>', 'Sets file name for output source map when `--sourceMapMode=separate`').option('--sourceMapMode <string> [inline, separate]', 'Specify source map output mode', JavaScriptObfuscatorCLI.parseSourceMapMode).option('--stringsArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean).option('--stringsArrayEncoding <boolean|string> [true, false, base64, rc4]', 'Encodes all strings in strings array using base64 or rc4 (this option can slow down your code speed', JavaScriptObfuscatorCLI.parseStringsArrayEncoding).option('--stringsArrayThreshold <number>', 'The probability that the literal string will be inserted into stringsArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).option('--unicodeEscapeSequence <boolean>', 'Allows to enable/disable strings conversion to unicode escape sequence', JavaScriptObfuscatorCLI.parseBoolean).parse(this.rawArguments);
             this.commands.on('--help', function () {
                 console.log('  Examples:\n');
                 console.log('    %> javascript-obfuscator in.js --compact true --selfDefending false');
@@ -1872,15 +1878,15 @@ var JavaScriptObfuscatorCLI = function () {
             return value;
         }
     }, {
-        key: 'parseUnicodeArrayEncoding',
-        value: function parseUnicodeArrayEncoding(value) {
+        key: 'parseStringsArrayEncoding',
+        value: function parseStringsArrayEncoding(value) {
             switch (value) {
                 case 'true':
                 case '1':
-                case UnicodeArrayEncoding_1.UnicodeArrayEncoding.base64:
+                case StringsArrayEncoding_1.StringsArrayEncoding.base64:
                     return true;
-                case UnicodeArrayEncoding_1.UnicodeArrayEncoding.rc4:
-                    return UnicodeArrayEncoding_1.UnicodeArrayEncoding.rc4;
+                case StringsArrayEncoding_1.StringsArrayEncoding.rc4:
+                    return StringsArrayEncoding_1.StringsArrayEncoding.rc4;
                 default:
                     return false;
             }
@@ -2268,38 +2274,38 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 __webpack_require__(8);
 var AppendState_1 = __webpack_require__(2);
-var UnicodeArrayEncoding_1 = __webpack_require__(18);
+var StringsArrayEncoding_1 = __webpack_require__(18);
 var NoCustomNodesPreset_1 = __webpack_require__(16);
 var AtobTemplate_1 = __webpack_require__(63);
 var Rc4Template_1 = __webpack_require__(64);
 var SelfDefendingTemplate_1 = __webpack_require__(72);
-var UnicodeArrayBase64DecodeNodeTemplate_1 = __webpack_require__(73);
-var UnicodeArrayCallsWrapperTemplate_1 = __webpack_require__(74);
-var UnicodeArrayRC4DecodeNodeTemplate_1 = __webpack_require__(75);
+var StringsArrayBase64DecodeNodeTemplate_1 = __webpack_require__(73);
+var StringsArrayCallsWrapperTemplate_1 = __webpack_require__(74);
+var StringsArrayRC4DecodeNodeTemplate_1 = __webpack_require__(75);
 var AbstractCustomNode_1 = __webpack_require__(6);
 var JavaScriptObfuscator_1 = __webpack_require__(10);
 var NodeAppender_1 = __webpack_require__(4);
 var NodeUtils_1 = __webpack_require__(1);
 
-var UnicodeArrayCallsWrapper = function (_AbstractCustomNode_) {
-    _inherits(UnicodeArrayCallsWrapper, _AbstractCustomNode_);
+var StringsArrayCallsWrapper = function (_AbstractCustomNode_) {
+    _inherits(StringsArrayCallsWrapper, _AbstractCustomNode_);
 
-    function UnicodeArrayCallsWrapper(unicodeArrayCallsWrapperName, unicodeArrayName, unicodeArray, options) {
-        _classCallCheck(this, UnicodeArrayCallsWrapper);
+    function StringsArrayCallsWrapper(stringsArrayCallsWrapperName, stringsArrayName, stringsArray, options) {
+        _classCallCheck(this, StringsArrayCallsWrapper);
 
-        var _this = _possibleConstructorReturn(this, (UnicodeArrayCallsWrapper.__proto__ || Object.getPrototypeOf(UnicodeArrayCallsWrapper)).call(this, options));
+        var _this = _possibleConstructorReturn(this, (StringsArrayCallsWrapper.__proto__ || Object.getPrototypeOf(StringsArrayCallsWrapper)).call(this, options));
 
         _this.appendState = AppendState_1.AppendState.AfterObfuscation;
-        _this.unicodeArrayCallsWrapperName = unicodeArrayCallsWrapperName;
-        _this.unicodeArrayName = unicodeArrayName;
-        _this.unicodeArray = unicodeArray;
+        _this.stringsArrayCallsWrapperName = stringsArrayCallsWrapperName;
+        _this.stringsArrayName = stringsArrayName;
+        _this.stringsArray = stringsArray;
         return _this;
     }
 
-    _createClass(UnicodeArrayCallsWrapper, [{
+    _createClass(StringsArrayCallsWrapper, [{
         key: 'appendNode',
         value: function appendNode(blockScopeNode) {
-            if (!this.unicodeArray.getLength()) {
+            if (!this.stringsArray.getLength()) {
                 return;
             }
             NodeAppender_1.NodeAppender.insertNodeAtIndex(blockScopeNode, this.getNode(), 1);
@@ -2307,59 +2313,59 @@ var UnicodeArrayCallsWrapper = function (_AbstractCustomNode_) {
     }, {
         key: 'getNodeIdentifier',
         value: function getNodeIdentifier() {
-            return this.unicodeArrayCallsWrapperName;
+            return this.stringsArrayCallsWrapperName;
         }
     }, {
         key: 'getNode',
         value: function getNode() {
-            return _get(UnicodeArrayCallsWrapper.prototype.__proto__ || Object.getPrototypeOf(UnicodeArrayCallsWrapper.prototype), 'getNode', this).call(this);
+            return _get(StringsArrayCallsWrapper.prototype.__proto__ || Object.getPrototypeOf(StringsArrayCallsWrapper.prototype), 'getNode', this).call(this);
         }
     }, {
-        key: 'getDecodeUnicodeArrayTemplate',
-        value: function getDecodeUnicodeArrayTemplate() {
-            var decodeUnicodeArrayTemplate = '',
+        key: 'getDecodeStringsArrayTemplate',
+        value: function getDecodeStringsArrayTemplate() {
+            var decodeStringsArrayTemplate = '',
                 selfDefendingCode = '';
             if (this.options.selfDefending) {
                 selfDefendingCode = SelfDefendingTemplate_1.SelfDefendingTemplate().formatUnicorn({
-                    unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName,
-                    unicodeArrayName: this.unicodeArrayName
+                    stringsArrayCallsWrapperName: this.stringsArrayCallsWrapperName,
+                    stringsArrayName: this.stringsArrayName
                 });
             }
-            switch (this.options.unicodeArrayEncoding) {
-                case UnicodeArrayEncoding_1.UnicodeArrayEncoding.base64:
-                    decodeUnicodeArrayTemplate = UnicodeArrayBase64DecodeNodeTemplate_1.UnicodeArrayBase64DecodeNodeTemplate().formatUnicorn({
+            switch (this.options.stringsArrayEncoding) {
+                case StringsArrayEncoding_1.StringsArrayEncoding.base64:
+                    decodeStringsArrayTemplate = StringsArrayBase64DecodeNodeTemplate_1.StringsArrayBase64DecodeNodeTemplate().formatUnicorn({
                         atobPolyfill: AtobTemplate_1.AtobTemplate(),
                         selfDefendingCode: selfDefendingCode,
-                        unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName
+                        stringsArrayCallsWrapperName: this.stringsArrayCallsWrapperName
                     });
                     break;
-                case UnicodeArrayEncoding_1.UnicodeArrayEncoding.rc4:
-                    decodeUnicodeArrayTemplate = UnicodeArrayRC4DecodeNodeTemplate_1.UnicodeArrayRc4DecodeNodeTemplate().formatUnicorn({
+                case StringsArrayEncoding_1.StringsArrayEncoding.rc4:
+                    decodeStringsArrayTemplate = StringsArrayRC4DecodeNodeTemplate_1.StringsArrayRc4DecodeNodeTemplate().formatUnicorn({
                         atobPolyfill: AtobTemplate_1.AtobTemplate(),
                         rc4Polyfill: Rc4Template_1.Rc4Template(),
                         selfDefendingCode: selfDefendingCode,
-                        unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName
+                        stringsArrayCallsWrapperName: this.stringsArrayCallsWrapperName
                     });
                     break;
             }
-            return decodeUnicodeArrayTemplate;
+            return decodeStringsArrayTemplate;
         }
     }, {
         key: 'getNodeStructure',
         value: function getNodeStructure() {
-            var decodeNodeTemplate = this.getDecodeUnicodeArrayTemplate();
-            return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(UnicodeArrayCallsWrapperTemplate_1.UnicodeArrayCallsWrapperTemplate().formatUnicorn({
+            var decodeNodeTemplate = this.getDecodeStringsArrayTemplate();
+            return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(StringsArrayCallsWrapperTemplate_1.StringsArrayCallsWrapperTemplate().formatUnicorn({
                 decodeNodeTemplate: decodeNodeTemplate,
-                unicodeArrayCallsWrapperName: this.unicodeArrayCallsWrapperName,
-                unicodeArrayName: this.unicodeArrayName
+                stringsArrayCallsWrapperName: this.stringsArrayCallsWrapperName,
+                stringsArrayName: this.stringsArrayName
             }), NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET).getObfuscatedCode());
         }
     }]);
 
-    return UnicodeArrayCallsWrapper;
+    return StringsArrayCallsWrapper;
 }(AbstractCustomNode_1.AbstractCustomNode);
 
-exports.UnicodeArrayCallsWrapper = UnicodeArrayCallsWrapper;
+exports.StringsArrayCallsWrapper = StringsArrayCallsWrapper;
 
 /***/ },
 /* 40 */
@@ -2380,33 +2386,33 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 __webpack_require__(8);
 var AppendState_1 = __webpack_require__(2);
-var UnicodeArrayTemplate_1 = __webpack_require__(76);
+var StringsArrayTemplate_1 = __webpack_require__(76);
 var AbstractCustomNode_1 = __webpack_require__(6);
 var NodeAppender_1 = __webpack_require__(4);
 var NodeUtils_1 = __webpack_require__(1);
 
-var UnicodeArrayNode = function (_AbstractCustomNode_) {
-    _inherits(UnicodeArrayNode, _AbstractCustomNode_);
+var StringsArrayNode = function (_AbstractCustomNode_) {
+    _inherits(StringsArrayNode, _AbstractCustomNode_);
 
-    function UnicodeArrayNode(unicodeArray, unicodeArrayName) {
-        var unicodeArrayRotateValue = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+    function StringsArrayNode(stringsArray, stringsArrayName) {
+        var stringsArrayRotateValue = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
         var options = arguments[3];
 
-        _classCallCheck(this, UnicodeArrayNode);
+        _classCallCheck(this, StringsArrayNode);
 
-        var _this = _possibleConstructorReturn(this, (UnicodeArrayNode.__proto__ || Object.getPrototypeOf(UnicodeArrayNode)).call(this, options));
+        var _this = _possibleConstructorReturn(this, (StringsArrayNode.__proto__ || Object.getPrototypeOf(StringsArrayNode)).call(this, options));
 
         _this.appendState = AppendState_1.AppendState.AfterObfuscation;
-        _this.unicodeArray = unicodeArray;
-        _this.unicodeArrayName = unicodeArrayName;
-        _this.unicodeArrayRotateValue = unicodeArrayRotateValue;
+        _this.stringsArray = stringsArray;
+        _this.stringsArrayName = stringsArrayName;
+        _this.stringsArrayRotateValue = stringsArrayRotateValue;
         return _this;
     }
 
-    _createClass(UnicodeArrayNode, [{
+    _createClass(StringsArrayNode, [{
         key: 'appendNode',
         value: function appendNode(blockScopeNode) {
-            if (!this.unicodeArray.getLength()) {
+            if (!this.stringsArray.getLength()) {
                 return;
             }
             NodeAppender_1.NodeAppender.prependNode(blockScopeNode, this.getNode());
@@ -2414,39 +2420,39 @@ var UnicodeArrayNode = function (_AbstractCustomNode_) {
     }, {
         key: 'getNodeIdentifier',
         value: function getNodeIdentifier() {
-            return this.unicodeArrayName;
+            return this.stringsArrayName;
         }
     }, {
         key: 'getNodeData',
         value: function getNodeData() {
-            return this.unicodeArray;
+            return this.stringsArray;
         }
     }, {
         key: 'getNode',
         value: function getNode() {
-            this.unicodeArray.rotateArray(this.unicodeArrayRotateValue);
-            return _get(UnicodeArrayNode.prototype.__proto__ || Object.getPrototypeOf(UnicodeArrayNode.prototype), 'getNode', this).call(this);
+            this.stringsArray.rotateArray(this.stringsArrayRotateValue);
+            return _get(StringsArrayNode.prototype.__proto__ || Object.getPrototypeOf(StringsArrayNode.prototype), 'getNode', this).call(this);
         }
     }, {
         key: 'updateNodeData',
         value: function updateNodeData(data) {
-            this.unicodeArray.addToArray(data);
+            this.stringsArray.addToArray(data);
         }
     }, {
         key: 'getNodeStructure',
         value: function getNodeStructure() {
-            return NodeUtils_1.NodeUtils.convertCodeToStructure(UnicodeArrayTemplate_1.UnicodeArrayTemplate().formatUnicorn({
-                unicodeArrayName: this.unicodeArrayName,
-                unicodeArray: this.unicodeArray.toString()
+            return NodeUtils_1.NodeUtils.convertCodeToStructure(StringsArrayTemplate_1.StringsArrayTemplate().formatUnicorn({
+                stringsArrayName: this.stringsArrayName,
+                stringsArray: this.stringsArray.toString()
             }));
         }
     }]);
 
-    return UnicodeArrayNode;
+    return StringsArrayNode;
 }(AbstractCustomNode_1.AbstractCustomNode);
 
-UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH = 4;
-exports.UnicodeArrayNode = UnicodeArrayNode;
+StringsArrayNode.ARRAY_RANDOM_LENGTH = 4;
+exports.StringsArrayNode = StringsArrayNode;
 
 /***/ },
 /* 41 */
@@ -2469,32 +2475,32 @@ __webpack_require__(8);
 var AppendState_1 = __webpack_require__(2);
 var NoCustomNodesPreset_1 = __webpack_require__(16);
 var SelfDefendingTemplate_1 = __webpack_require__(77);
-var UnicodeArrayRotateFunctionTemplate_1 = __webpack_require__(78);
+var StringsArrayRotateFunctionTemplate_1 = __webpack_require__(78);
 var AbstractCustomNode_1 = __webpack_require__(6);
 var JavaScriptObfuscator_1 = __webpack_require__(10);
 var NodeAppender_1 = __webpack_require__(4);
 var NodeUtils_1 = __webpack_require__(1);
 var Utils_1 = __webpack_require__(0);
 
-var UnicodeArrayRotateFunctionNode = function (_AbstractCustomNode_) {
-    _inherits(UnicodeArrayRotateFunctionNode, _AbstractCustomNode_);
+var StringsArrayRotateFunctionNode = function (_AbstractCustomNode_) {
+    _inherits(StringsArrayRotateFunctionNode, _AbstractCustomNode_);
 
-    function UnicodeArrayRotateFunctionNode(unicodeArrayName, unicodeArray, unicodeArrayRotateValue, options) {
-        _classCallCheck(this, UnicodeArrayRotateFunctionNode);
+    function StringsArrayRotateFunctionNode(stringsArrayName, stringsArray, stringsArrayRotateValue, options) {
+        _classCallCheck(this, StringsArrayRotateFunctionNode);
 
-        var _this = _possibleConstructorReturn(this, (UnicodeArrayRotateFunctionNode.__proto__ || Object.getPrototypeOf(UnicodeArrayRotateFunctionNode)).call(this, options));
+        var _this = _possibleConstructorReturn(this, (StringsArrayRotateFunctionNode.__proto__ || Object.getPrototypeOf(StringsArrayRotateFunctionNode)).call(this, options));
 
         _this.appendState = AppendState_1.AppendState.AfterObfuscation;
-        _this.unicodeArrayName = unicodeArrayName;
-        _this.unicodeArray = unicodeArray;
-        _this.unicodeArrayRotateValue = unicodeArrayRotateValue;
+        _this.stringsArrayName = stringsArrayName;
+        _this.stringsArray = stringsArray;
+        _this.stringsArrayRotateValue = stringsArrayRotateValue;
         return _this;
     }
 
-    _createClass(UnicodeArrayRotateFunctionNode, [{
+    _createClass(StringsArrayRotateFunctionNode, [{
         key: 'appendNode',
         value: function appendNode(blockScopeNode) {
-            if (!this.unicodeArray.getLength()) {
+            if (!this.stringsArray.getLength()) {
                 return;
             }
             NodeAppender_1.NodeAppender.insertNodeAtIndex(blockScopeNode, this.getNode(), 1);
@@ -2502,7 +2508,7 @@ var UnicodeArrayRotateFunctionNode = function (_AbstractCustomNode_) {
     }, {
         key: 'getNode',
         value: function getNode() {
-            return _get(UnicodeArrayRotateFunctionNode.prototype.__proto__ || Object.getPrototypeOf(UnicodeArrayRotateFunctionNode.prototype), 'getNode', this).call(this);
+            return _get(StringsArrayRotateFunctionNode.prototype.__proto__ || Object.getPrototypeOf(StringsArrayRotateFunctionNode.prototype), 'getNode', this).call(this);
         }
     }, {
         key: 'getNodeStructure',
@@ -2518,20 +2524,20 @@ var UnicodeArrayRotateFunctionNode = function (_AbstractCustomNode_) {
             } else {
                 code = whileFunctionName + '(++' + timesName + ')';
             }
-            return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(UnicodeArrayRotateFunctionTemplate_1.UnicodeArrayRotateFunctionTemplate().formatUnicorn({
+            return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(StringsArrayRotateFunctionTemplate_1.StringsArrayRotateFunctionTemplate().formatUnicorn({
                 code: code,
                 timesName: timesName,
-                unicodeArrayName: this.unicodeArrayName,
-                unicodeArrayRotateValue: Utils_1.Utils.decToHex(this.unicodeArrayRotateValue),
+                stringsArrayName: this.stringsArrayName,
+                stringsArrayRotateValue: Utils_1.Utils.decToHex(this.stringsArrayRotateValue),
                 whileFunctionName: whileFunctionName
             }), NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET).getObfuscatedCode());
         }
     }]);
 
-    return UnicodeArrayRotateFunctionNode;
+    return StringsArrayRotateFunctionNode;
 }(AbstractCustomNode_1.AbstractCustomNode);
 
-exports.UnicodeArrayRotateFunctionNode = UnicodeArrayRotateFunctionNode;
+exports.StringsArrayRotateFunctionNode = StringsArrayRotateFunctionNode;
 
 /***/ },
 /* 42 */
@@ -2744,55 +2750,55 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var AppendState_1 = __webpack_require__(2);
-var UnicodeArrayCallsWrapper_1 = __webpack_require__(39);
-var UnicodeArrayNode_1 = __webpack_require__(40);
-var UnicodeArrayRotateFunctionNode_1 = __webpack_require__(41);
+var StringsArrayCallsWrapper_1 = __webpack_require__(39);
+var StringsArrayNode_1 = __webpack_require__(40);
+var StringsArrayRotateFunctionNode_1 = __webpack_require__(41);
 var AbstractNodesGroup_1 = __webpack_require__(11);
-var UnicodeArray_1 = __webpack_require__(30);
+var StringsArray_1 = __webpack_require__(30);
 var Utils_1 = __webpack_require__(0);
 
-var UnicodeArrayNodesGroup = function (_AbstractNodesGroup_) {
-    _inherits(UnicodeArrayNodesGroup, _AbstractNodesGroup_);
+var StringsArrayNodesGroup = function (_AbstractNodesGroup_) {
+    _inherits(StringsArrayNodesGroup, _AbstractNodesGroup_);
 
-    function UnicodeArrayNodesGroup() {
-        _classCallCheck(this, UnicodeArrayNodesGroup);
+    function StringsArrayNodesGroup() {
+        _classCallCheck(this, StringsArrayNodesGroup);
 
-        var _this = _possibleConstructorReturn(this, (UnicodeArrayNodesGroup.__proto__ || Object.getPrototypeOf(UnicodeArrayNodesGroup)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (StringsArrayNodesGroup.__proto__ || Object.getPrototypeOf(StringsArrayNodesGroup)).apply(this, arguments));
 
         _this.appendState = AppendState_1.AppendState.AfterObfuscation;
-        _this.unicodeArrayName = Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
-        _this.unicodeArrayCallsWrapper = Utils_1.Utils.getRandomVariableName(UnicodeArrayNode_1.UnicodeArrayNode.UNICODE_ARRAY_RANDOM_LENGTH);
+        _this.stringsArrayName = Utils_1.Utils.getRandomVariableName(StringsArrayNode_1.StringsArrayNode.ARRAY_RANDOM_LENGTH);
+        _this.stringsArrayCallsWrapper = Utils_1.Utils.getRandomVariableName(StringsArrayNode_1.StringsArrayNode.ARRAY_RANDOM_LENGTH);
         return _this;
     }
 
-    _createClass(UnicodeArrayNodesGroup, [{
+    _createClass(StringsArrayNodesGroup, [{
         key: 'getNodes',
         value: function getNodes() {
-            if (!this.options.unicodeArray) {
+            if (!this.options.stringsArray) {
                 return;
             }
-            if (this.options.rotateUnicodeArray) {
-                this.unicodeArrayRotateValue = Utils_1.Utils.getRandomGenerator().integer({
+            if (this.options.rotateStringsArray) {
+                this.stringsArrayRotateValue = Utils_1.Utils.getRandomGenerator().integer({
                     min: 100,
                     max: 500
                 });
             } else {
-                this.unicodeArrayRotateValue = 0;
+                this.stringsArrayRotateValue = 0;
             }
-            var unicodeArray = new UnicodeArray_1.UnicodeArray();
-            var unicodeArrayNode = new UnicodeArrayNode_1.UnicodeArrayNode(unicodeArray, this.unicodeArrayName, this.unicodeArrayRotateValue, this.options);
-            var customNodes = new Map([['unicodeArrayNode', unicodeArrayNode], ['unicodeArrayCallsWrapper', new UnicodeArrayCallsWrapper_1.UnicodeArrayCallsWrapper(this.unicodeArrayCallsWrapper, this.unicodeArrayName, unicodeArray, this.options)]]);
-            if (this.options.rotateUnicodeArray) {
-                customNodes.set('unicodeArrayRotateFunctionNode', new UnicodeArrayRotateFunctionNode_1.UnicodeArrayRotateFunctionNode(this.unicodeArrayName, unicodeArray, this.unicodeArrayRotateValue, this.options));
+            var stringsArray = new StringsArray_1.StringsArray();
+            var stringsArrayNode = new StringsArrayNode_1.StringsArrayNode(stringsArray, this.stringsArrayName, this.stringsArrayRotateValue, this.options);
+            var customNodes = new Map([['stringsArrayNode', stringsArrayNode], ['stringsArrayCallsWrapper', new StringsArrayCallsWrapper_1.StringsArrayCallsWrapper(this.stringsArrayCallsWrapper, this.stringsArrayName, stringsArray, this.options)]]);
+            if (this.options.rotateStringsArray) {
+                customNodes.set('stringsArrayRotateFunctionNode', new StringsArrayRotateFunctionNode_1.StringsArrayRotateFunctionNode(this.stringsArrayName, stringsArray, this.stringsArrayRotateValue, this.options));
             }
             return this.syncCustomNodesWithNodesGroup(customNodes);
         }
     }]);
 
-    return UnicodeArrayNodesGroup;
+    return StringsArrayNodesGroup;
 }(AbstractNodesGroup_1.AbstractNodesGroup);
 
-exports.UnicodeArrayNodesGroup = UnicodeArrayNodesGroup;
+exports.StringsArrayNodesGroup = StringsArrayNodesGroup;
 
 /***/ },
 /* 47 */
@@ -3288,7 +3294,7 @@ var ObjectExpressionObfuscator = function (_AbstractNodeObfuscat) {
         value: function obfuscateLiteralPropertyKey(node) {
             if (typeof node.value === 'string' && !node['x-verbatim-property']) {
                 node['x-verbatim-property'] = {
-                    content: Utils_1.Utils.stringToUnicode(node.value),
+                    content: '\'' + Utils_1.Utils.stringToUnicodeEscapeSequence(node.value) + '\'',
                     precedence: escodegen.Precedence.Primary
                 };
             }
@@ -3300,7 +3306,7 @@ var ObjectExpressionObfuscator = function (_AbstractNodeObfuscat) {
                 literalNode = {
                 raw: '\'' + nodeValue + '\'',
                 'x-verbatim-property': {
-                    content: Utils_1.Utils.stringToUnicode(nodeValue),
+                    content: '\'' + Utils_1.Utils.stringToUnicodeEscapeSequence(nodeValue) + '\'',
                     precedence: escodegen.Precedence.Primary
                 },
                 type: NodeType_1.NodeType.Literal,
@@ -3457,7 +3463,7 @@ var __metadata = undefined && undefined.__metadata || function (k, v) {
 };
 var class_validator_1 = __webpack_require__(82);
 var TSourceMapMode_1 = __webpack_require__(79);
-var TUnicodeArrayEncoding_1 = __webpack_require__(80);
+var TStringsArrayEncoding_1 = __webpack_require__(80);
 var DefaultPreset_1 = __webpack_require__(23);
 var OptionsNormalizer_1 = __webpack_require__(57);
 var ValidationErrorsFormatter_1 = __webpack_require__(58);
@@ -3488,7 +3494,7 @@ __decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_
 __decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
 }), __metadata('design:type', Array)], Options.prototype, "reservedNames", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "rotateUnicodeArray", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "rotateStringsArray", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "selfDefending", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "sourceMap", void 0);
 __decorate([class_validator_1.IsString(), class_validator_1.ValidateIf(function (options) {
@@ -3499,9 +3505,10 @@ __decorate([class_validator_1.IsString(), class_validator_1.ValidateIf(function 
 }), __metadata('design:type', String)], Options.prototype, "sourceMapBaseUrl", void 0);
 __decorate([class_validator_1.IsString(), __metadata('design:type', String)], Options.prototype, "sourceMapFileName", void 0);
 __decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata('design:type', typeof (_a = typeof TSourceMapMode_1.TSourceMapMode !== 'undefined' && TSourceMapMode_1.TSourceMapMode) === 'function' && _a || Object)], Options.prototype, "sourceMapMode", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "unicodeArray", void 0);
-__decorate([class_validator_1.IsIn([true, false, 'base64', 'rc4']), __metadata('design:type', typeof (_b = typeof TUnicodeArrayEncoding_1.TUnicodeArrayEncoding !== 'undefined' && TUnicodeArrayEncoding_1.TUnicodeArrayEncoding) === 'function' && _b || Object)], Options.prototype, "unicodeArrayEncoding", void 0);
-__decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata('design:type', Number)], Options.prototype, "unicodeArrayThreshold", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "stringsArray", void 0);
+__decorate([class_validator_1.IsIn([true, false, 'base64', 'rc4']), __metadata('design:type', typeof (_b = typeof TStringsArrayEncoding_1.TStringsArrayEncoding !== 'undefined' && TStringsArrayEncoding_1.TStringsArrayEncoding) === 'function' && _b || Object)], Options.prototype, "stringsArrayEncoding", void 0);
+__decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata('design:type', Number)], Options.prototype, "stringsArrayThreshold", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "unicodeEscapeSequence", void 0);
 exports.Options = Options;
 var _a, _b;
 
@@ -3628,25 +3635,25 @@ var OptionsNormalizer = function () {
             return options;
         }
     }, {
-        key: 'unicodeArrayRule',
-        value: function unicodeArrayRule(options) {
-            if (!options.unicodeArray) {
+        key: 'stringsArrayRule',
+        value: function stringsArrayRule(options) {
+            if (!options.stringsArray) {
                 Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
             }
             return options;
         }
     }, {
-        key: 'unicodeArrayEncodingRule',
-        value: function unicodeArrayEncodingRule(options) {
-            if (options.unicodeArrayEncoding === true) {
+        key: 'stringsArrayEncodingRule',
+        value: function stringsArrayEncodingRule(options) {
+            if (options.stringsArrayEncoding === true) {
                 Object.assign(options, OptionsNormalizer.UNICODE_ARRAY_ENCODING_OPTIONS);
             }
             return options;
         }
     }, {
-        key: 'unicodeArrayThresholdRule',
-        value: function unicodeArrayThresholdRule(options) {
-            if (options.unicodeArrayThreshold === 0) {
+        key: 'stringsArrayThresholdRule',
+        value: function stringsArrayThresholdRule(options) {
+            if (options.stringsArrayThreshold === 0) {
                 Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
             }
             return options;
@@ -3657,19 +3664,19 @@ var OptionsNormalizer = function () {
 }();
 
 OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS = {
-    rotateUnicodeArray: false,
-    unicodeArray: false,
-    unicodeArrayEncoding: false,
-    unicodeArrayThreshold: 0
+    rotateStringsArray: false,
+    stringsArray: false,
+    stringsArrayEncoding: false,
+    stringsArrayThreshold: 0
 };
 OptionsNormalizer.SELF_DEFENDING_OPTIONS = {
     compact: true,
     selfDefending: true
 };
 OptionsNormalizer.UNICODE_ARRAY_ENCODING_OPTIONS = {
-    unicodeArrayEncoding: 'base64'
+    stringsArrayEncoding: 'base64'
 };
-OptionsNormalizer.normalizerRules = [OptionsNormalizer.domainLockRule, OptionsNormalizer.selfDefendingRule, OptionsNormalizer.sourceMapBaseUrl, OptionsNormalizer.sourceMapFileName, OptionsNormalizer.unicodeArrayRule, OptionsNormalizer.unicodeArrayEncodingRule, OptionsNormalizer.unicodeArrayThresholdRule];
+OptionsNormalizer.normalizerRules = [OptionsNormalizer.domainLockRule, OptionsNormalizer.selfDefendingRule, OptionsNormalizer.sourceMapBaseUrl, OptionsNormalizer.sourceMapFileName, OptionsNormalizer.stringsArrayRule, OptionsNormalizer.stringsArrayEncodingRule, OptionsNormalizer.stringsArrayThresholdRule];
 exports.OptionsNormalizer = OptionsNormalizer;
 
 /***/ },
@@ -4191,7 +4198,7 @@ exports.DomainLockNodeTemplate = DomainLockNodeTemplate;
 
 var Utils_1 = __webpack_require__(0);
 function SelfDefendingTemplate() {
-    return "\n        var {selfDefendingFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {\n            var func1 = function(){return 'dev';},\n                func2 = function () {\n                    return 'window';\n                };\n                \n            var test1 = function () {\n                var regExp = new RegExp(" + Utils_1.Utils.stringToUnicode("\\w+ *\\(\\) *{\\w+ *['|\"].+['|\"];? *}") + ");\n                \n                return !regExp.test(func1.toString());\n            };\n            \n            var test2 = function () {\n                var regExp = new RegExp(" + Utils_1.Utils.stringToUnicode("(\\\\[x|u](\\w){2,4})+") + ");\n                \n                return regExp.test(func2.toString());\n            };\n            \n            var recursiveFunc1 = function (string) {\n                var i = ~-1 >> 1 + 255 % 0;\n                                \n                if (string.indexOf('i' === i)) {\n                    recursiveFunc2(string)\n                }\n            };\n            \n            var recursiveFunc2 = function (string) {\n                var i = ~-4 >> 1 + 255 % 0;\n                \n                if (string.indexOf((true+\"\")[3]) !== i) {\n                    recursiveFunc1(string)\n                }\n            };\n            \n            if (!test1()) {\n                if (!test2()) {\n                    recursiveFunc1('ind\u0435xOf');\n                } else {\n                    recursiveFunc1('indexOf');\n                }\n            } else {\n                recursiveFunc1('ind\u0435xOf');\n            }\n        })\n        \n        {selfDefendingFunctionName}();\n    ";
+    return "\n        var {selfDefendingFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {\n            var func1 = function(){return 'dev';},\n                func2 = function () {\n                    return 'window';\n                };\n                \n            var test1 = function () {\n                var regExp = new RegExp('" + Utils_1.Utils.stringToUnicodeEscapeSequence("\\w+ *\\(\\) *{\\w+ *['|\"].+['|\"];? *}") + "');\n                \n                return !regExp.test(func1.toString());\n            };\n            \n            var test2 = function () {\n                var regExp = new RegExp('" + Utils_1.Utils.stringToUnicodeEscapeSequence("(\\\\[x|u](\\w){2,4})+") + "');\n                \n                return regExp.test(func2.toString());\n            };\n            \n            var recursiveFunc1 = function (string) {\n                var i = ~-1 >> 1 + 255 % 0;\n                                \n                if (string.indexOf('i' === i)) {\n                    recursiveFunc2(string)\n                }\n            };\n            \n            var recursiveFunc2 = function (string) {\n                var i = ~-4 >> 1 + 255 % 0;\n                \n                if (string.indexOf((true+\"\")[3]) !== i) {\n                    recursiveFunc1(string)\n                }\n            };\n            \n            if (!test1()) {\n                if (!test2()) {\n                    recursiveFunc1('ind\u0435xOf');\n                } else {\n                    recursiveFunc1('indexOf');\n                }\n            } else {\n                recursiveFunc1('ind\u0435xOf');\n            }\n        })\n        \n        {selfDefendingFunctionName}();\n    ";
 }
 exports.SelfDefendingTemplate = SelfDefendingTemplate;
 
@@ -4204,7 +4211,7 @@ exports.SelfDefendingTemplate = SelfDefendingTemplate;
 
 var Utils_1 = __webpack_require__(0);
 function SelfDefendingTemplate() {
-    return "\n        var StatesClass = function (rc4Bytes) {\n            this.rc4Bytes = rc4Bytes;\n            this.states = [1, 0, 0];\n            this.newState = function(){return 'newState';};\n            this.firstState = " + Utils_1.Utils.stringToUnicode("\\w+ *\\(\\) *{\\w+ *") + ";\n            this.secondState = " + Utils_1.Utils.stringToUnicode("['|\"].+['|\"];? *}") + ";\n        };\n        \n        StatesClass.prototype.checkState = function () {\n            var regExp = new RegExp(this.firstState + this.secondState);\n\n            return this.runState(regExp.test(this.newState.toString()) ? --this.states[1] : --this.states[0]);\n        };\n        \n        StatesClass.prototype.runState = function (stateResult) {\n            if (!Boolean(~stateResult)) {\n                return stateResult;\n            }\n            \n            return this.getState(this.rc4Bytes);\n        };\n\n        StatesClass.prototype.getState = function (rc4Bytes) {\n            for (var i = 0, len = this.states.length; i < len; i++) {\n                this.states.push(Math.round(Math.random()));\n                len = this.states.length;\n            }\n            \n            return rc4Bytes(this.states[0]);\n        };\n\n        new StatesClass({unicodeArrayCallsWrapperName}).checkState();\n    ";
+    return "\n        var StatesClass = function (rc4Bytes) {\n            this.rc4Bytes = rc4Bytes;\n            this.states = [1, 0, 0];\n            this.newState = function(){return 'newState';};\n            this.firstState = '" + Utils_1.Utils.stringToUnicodeEscapeSequence("\\w+ *\\(\\) *{\\w+ *") + "';\n            this.secondState = '" + Utils_1.Utils.stringToUnicodeEscapeSequence("['|\"].+['|\"];? *}") + "';\n        };\n        \n        StatesClass.prototype.checkState = function () {\n            var regExp = new RegExp(this.firstState + this.secondState);\n\n            return this.runState(regExp.test(this.newState.toString()) ? --this.states[1] : --this.states[0]);\n        };\n        \n        StatesClass.prototype.runState = function (stateResult) {\n            if (!Boolean(~stateResult)) {\n                return stateResult;\n            }\n            \n            return this.getState(this.rc4Bytes);\n        };\n\n        StatesClass.prototype.getState = function (rc4Bytes) {\n            for (var i = 0, len = this.states.length; i < len; i++) {\n                this.states.push(Math.round(Math.random()));\n                len = this.states.length;\n            }\n            \n            return rc4Bytes(this.states[0]);\n        };\n\n        new StatesClass({stringsArrayCallsWrapperName}).checkState();\n    ";
 }
 exports.SelfDefendingTemplate = SelfDefendingTemplate;
 
@@ -4215,10 +4222,10 @@ exports.SelfDefendingTemplate = SelfDefendingTemplate;
 "use strict";
 "use strict";
 
-function UnicodeArrayBase64DecodeNodeTemplate() {
-    return "      \n        if (!{unicodeArrayCallsWrapperName}.atobPolyfillAppended) {\n            {atobPolyfill}\n            \n            {unicodeArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n        \n        if (!{unicodeArrayCallsWrapperName}.base64DecodeUnicode) {                \n            {unicodeArrayCallsWrapperName}.base64DecodeUnicode = function (str) {\n                var string = atob(str);\n                var newStringChars = [];\n                \n                for (var i = 0, length = string.length; i < length; i++) {\n                    newStringChars += '%' + ('00' + string.charCodeAt(i).toString(16)).slice(-2);\n                }\n                \n                return decodeURIComponent(newStringChars);\n            };\n        }\n        \n        if (!{unicodeArrayCallsWrapperName}.data) {\n            {unicodeArrayCallsWrapperName}.data = {};\n        }\n                        \n        if (!{unicodeArrayCallsWrapperName}.data[index]) {\n            {selfDefendingCode}\n            \n            value = {unicodeArrayCallsWrapperName}.base64DecodeUnicode(value);\n            {unicodeArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = {unicodeArrayCallsWrapperName}.data[index];\n        }  \n    ";
+function StringsArrayBase64DecodeNodeTemplate() {
+    return "      \n        if (!{stringsArrayCallsWrapperName}.atobPolyfillAppended) {\n            {atobPolyfill}\n            \n            {stringsArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n        \n        if (!{stringsArrayCallsWrapperName}.base64DecodeUnicode) {                \n            {stringsArrayCallsWrapperName}.base64DecodeUnicode = function (str) {\n                var string = atob(str);\n                var newStringChars = [];\n                \n                for (var i = 0, length = string.length; i < length; i++) {\n                    newStringChars += '%' + ('00' + string.charCodeAt(i).toString(16)).slice(-2);\n                }\n                \n                return decodeURIComponent(newStringChars);\n            };\n        }\n        \n        if (!{stringsArrayCallsWrapperName}.data) {\n            {stringsArrayCallsWrapperName}.data = {};\n        }\n                        \n        if (!{stringsArrayCallsWrapperName}.data[index]) {\n            {selfDefendingCode}\n            \n            value = {stringsArrayCallsWrapperName}.base64DecodeUnicode(value);\n            {stringsArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = {stringsArrayCallsWrapperName}.data[index];\n        }  \n    ";
 }
-exports.UnicodeArrayBase64DecodeNodeTemplate = UnicodeArrayBase64DecodeNodeTemplate;
+exports.StringsArrayBase64DecodeNodeTemplate = StringsArrayBase64DecodeNodeTemplate;
 
 /***/ },
 /* 74 */
@@ -4227,10 +4234,10 @@ exports.UnicodeArrayBase64DecodeNodeTemplate = UnicodeArrayBase64DecodeNodeTempl
 "use strict";
 "use strict";
 
-function UnicodeArrayCallsWrapperTemplate() {
-    return "\n        var {unicodeArrayCallsWrapperName} = function (index, key) {\n            var index = parseInt(index, 0x10);\n            var value = {unicodeArrayName}[index];\n            \n            {decodeNodeTemplate}\n        \n            return value;\n        };\n    ";
+function StringsArrayCallsWrapperTemplate() {
+    return "\n        var {stringsArrayCallsWrapperName} = function (index, key) {\n            var index = parseInt(index, 0x10);\n            var value = {stringsArrayName}[index];\n            \n            {decodeNodeTemplate}\n        \n            return value;\n        };\n    ";
 }
-exports.UnicodeArrayCallsWrapperTemplate = UnicodeArrayCallsWrapperTemplate;
+exports.StringsArrayCallsWrapperTemplate = StringsArrayCallsWrapperTemplate;
 
 /***/ },
 /* 75 */
@@ -4239,10 +4246,10 @@ exports.UnicodeArrayCallsWrapperTemplate = UnicodeArrayCallsWrapperTemplate;
 "use strict";
 "use strict";
 
-function UnicodeArrayRc4DecodeNodeTemplate() {
-    return "\n        if (!{unicodeArrayCallsWrapperName}.atobPolyfillAppended) {            \n            {atobPolyfill}\n            \n            {unicodeArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n        \n        if (!{unicodeArrayCallsWrapperName}.rc4) {            \n            {rc4Polyfill}\n            \n            {unicodeArrayCallsWrapperName}.rc4 = rc4;\n        }\n                        \n        if (!{unicodeArrayCallsWrapperName}.data) {\n            {unicodeArrayCallsWrapperName}.data = {};\n        }\n\n        if ({unicodeArrayCallsWrapperName}.data[index] === undefined) {\n            if (!{unicodeArrayCallsWrapperName}.once) {\n                {selfDefendingCode}\n                \n                {unicodeArrayCallsWrapperName}.once = true;\n            }\n            \n            value = {unicodeArrayCallsWrapperName}.rc4(value, key);\n            {unicodeArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = {unicodeArrayCallsWrapperName}.data[index];\n        }\n    ";
+function StringsArrayRc4DecodeNodeTemplate() {
+    return "\n        if (!{stringsArrayCallsWrapperName}.atobPolyfillAppended) {            \n            {atobPolyfill}\n            \n            {stringsArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n        \n        if (!{stringsArrayCallsWrapperName}.rc4) {            \n            {rc4Polyfill}\n            \n            {stringsArrayCallsWrapperName}.rc4 = rc4;\n        }\n                        \n        if (!{stringsArrayCallsWrapperName}.data) {\n            {stringsArrayCallsWrapperName}.data = {};\n        }\n\n        if ({stringsArrayCallsWrapperName}.data[index] === undefined) {\n            if (!{stringsArrayCallsWrapperName}.once) {\n                {selfDefendingCode}\n                \n                {stringsArrayCallsWrapperName}.once = true;\n            }\n            \n            value = {stringsArrayCallsWrapperName}.rc4(value, key);\n            {stringsArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = {stringsArrayCallsWrapperName}.data[index];\n        }\n    ";
 }
-exports.UnicodeArrayRc4DecodeNodeTemplate = UnicodeArrayRc4DecodeNodeTemplate;
+exports.StringsArrayRc4DecodeNodeTemplate = StringsArrayRc4DecodeNodeTemplate;
 
 /***/ },
 /* 76 */
@@ -4251,10 +4258,10 @@ exports.UnicodeArrayRc4DecodeNodeTemplate = UnicodeArrayRc4DecodeNodeTemplate;
 "use strict";
 "use strict";
 
-function UnicodeArrayTemplate() {
-    return "\n        var {unicodeArrayName} = [{unicodeArray}];\n    ";
+function StringsArrayTemplate() {
+    return "\n        var {stringsArrayName} = [{stringsArray}];\n    ";
 }
-exports.UnicodeArrayTemplate = UnicodeArrayTemplate;
+exports.StringsArrayTemplate = StringsArrayTemplate;
 
 /***/ },
 /* 77 */
@@ -4265,7 +4272,7 @@ exports.UnicodeArrayTemplate = UnicodeArrayTemplate;
 
 var Utils_1 = __webpack_require__(0);
 function SelfDefendingTemplate() {
-    return "\n        var selfDefendingFunc = function () {            \n            var object = {\n                data: {\n                    key: 'cookie',\n                    value: 'timeout'\n                },\n                setCookie: function (options, name, value, document) {\n                    document = document || {};\n                    \n                    var updatedCookie = name + \"=\" + value;\n\n                    var i = 0;\n                                                            \n                    for (var i = 0, len = options.length; i < len; i++) {                          \n                        var propName = options[i];\n                                     \n                        updatedCookie += \"; \" + propName;\n                        \n                        var propValue = options[propName];\n                        \n                        options.push(propValue);\n                        len = options.length;\n                                                                        \n                        if (propValue !== true) {\n                            updatedCookie += \"=\" + propValue;\n                        }\n                    }\n\n                    document['cookie'] = updatedCookie;\n                },\n                removeCookie: function(){return 'dev';},\n                getCookie: function (document, name) {    \n                    document = document || function (value) { return value };\n                    var matches = document(new RegExp(\n                        \"(?:^|; )\" + name.replace(/([.$?*|{}()[]\\/+^])/g, '\\$1') + \"=([^;]*)\"\n                    ));\n                    \n                    var func = function (param1, param2) {\n                        param1(++param2);\n                    };\n                    \n                    func({whileFunctionName}, {timesName});\n                                        \n                    return matches ? decodeURIComponent(matches[1]) : undefined;\n                }\n            };\n            \n            var test1 = function () {\n                var regExp = new RegExp(" + Utils_1.Utils.stringToUnicode("\\w+ *\\(\\) *{\\w+ *['|\"].+['|\"];? *}") + ");\n                \n                return regExp.test(object.removeCookie.toString());\n            };\n            \n            object['updateCookie'] = test1;\n            \n            var cookie = '';\n            var result = object['updateCookie']();\n                                    \n            if (!result) {\n                object['setCookie'](['*'], 'counter', 1);\n            } else if (result) {\n                cookie = object['getCookie'](null, 'counter');     \n            } else {\n                object['removeCookie']();\n            }\n        };\n        \n        selfDefendingFunc();\n    ";
+    return "\n        var selfDefendingFunc = function () {            \n            var object = {\n                data: {\n                    key: 'cookie',\n                    value: 'timeout'\n                },\n                setCookie: function (options, name, value, document) {\n                    document = document || {};\n                    \n                    var updatedCookie = name + \"=\" + value;\n\n                    var i = 0;\n                                                            \n                    for (var i = 0, len = options.length; i < len; i++) {                          \n                        var propName = options[i];\n                                     \n                        updatedCookie += \"; \" + propName;\n                        \n                        var propValue = options[propName];\n                        \n                        options.push(propValue);\n                        len = options.length;\n                                                                        \n                        if (propValue !== true) {\n                            updatedCookie += \"=\" + propValue;\n                        }\n                    }\n\n                    document['cookie'] = updatedCookie;\n                },\n                removeCookie: function(){return 'dev';},\n                getCookie: function (document, name) {    \n                    document = document || function (value) { return value };\n                    var matches = document(new RegExp(\n                        \"(?:^|; )\" + name.replace(/([.$?*|{}()[]\\/+^])/g, '\\$1') + \"=([^;]*)\"\n                    ));\n                    \n                    var func = function (param1, param2) {\n                        param1(++param2);\n                    };\n                    \n                    func({whileFunctionName}, {timesName});\n                                        \n                    return matches ? decodeURIComponent(matches[1]) : undefined;\n                }\n            };\n            \n            var test1 = function () {\n                var regExp = new RegExp('" + Utils_1.Utils.stringToUnicodeEscapeSequence("\\w+ *\\(\\) *{\\w+ *['|\"].+['|\"];? *}") + "');\n                \n                return regExp.test(object.removeCookie.toString());\n            };\n            \n            object['updateCookie'] = test1;\n            \n            var cookie = '';\n            var result = object['updateCookie']();\n                                    \n            if (!result) {\n                object['setCookie'](['*'], 'counter', 1);\n            } else if (result) {\n                cookie = object['getCookie'](null, 'counter');     \n            } else {\n                object['removeCookie']();\n            }\n        };\n        \n        selfDefendingFunc();\n    ";
 }
 exports.SelfDefendingTemplate = SelfDefendingTemplate;
 
@@ -4276,10 +4283,10 @@ exports.SelfDefendingTemplate = SelfDefendingTemplate;
 "use strict";
 "use strict";
 
-function UnicodeArrayRotateFunctionTemplate() {
-    return "\n        (function (array, {timesName}) {\n            var {whileFunctionName} = function (times) {\n                while (--times) {\n                    array['push'](array['shift']());\n                }\n            };\n            \n            {code}\n        })({unicodeArrayName}, 0x{unicodeArrayRotateValue});\n    ";
+function StringsArrayRotateFunctionTemplate() {
+    return "\n        (function (array, {timesName}) {\n            var {whileFunctionName} = function (times) {\n                while (--times) {\n                    array['push'](array['shift']());\n                }\n            };\n            \n            {code}\n        })({stringsArrayName}, 0x{stringsArrayRotateValue});\n    ";
 }
-exports.UnicodeArrayRotateFunctionTemplate = UnicodeArrayRotateFunctionTemplate;
+exports.StringsArrayRotateFunctionTemplate = StringsArrayRotateFunctionTemplate;
 
 /***/ },
 /* 79 */

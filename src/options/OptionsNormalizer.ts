@@ -10,10 +10,10 @@ export class OptionsNormalizer {
      * @type {IObfuscatorOptions}
      */
     private static DISABLED_UNICODE_ARRAY_OPTIONS: IObfuscatorOptions = {
-        rotateUnicodeArray: false,
-        unicodeArray: false,
-        unicodeArrayEncoding: false,
-        unicodeArrayThreshold: 0
+        rotateStringsArray: false,
+        stringsArray: false,
+        stringsArrayEncoding: false,
+        stringsArrayThreshold: 0
     };
 
     /**
@@ -28,7 +28,7 @@ export class OptionsNormalizer {
      * @type {IObfuscatorOptions}
      */
     private static UNICODE_ARRAY_ENCODING_OPTIONS: IObfuscatorOptions = {
-        unicodeArrayEncoding: 'base64'
+        stringsArrayEncoding: 'base64'
     };
 
     /**
@@ -39,9 +39,9 @@ export class OptionsNormalizer {
         OptionsNormalizer.selfDefendingRule,
         OptionsNormalizer.sourceMapBaseUrl,
         OptionsNormalizer.sourceMapFileName,
-        OptionsNormalizer.unicodeArrayRule,
-        OptionsNormalizer.unicodeArrayEncodingRule,
-        OptionsNormalizer.unicodeArrayThresholdRule,
+        OptionsNormalizer.stringsArrayRule,
+        OptionsNormalizer.stringsArrayEncodingRule,
+        OptionsNormalizer.stringsArrayThresholdRule,
     ];
 
     /**
@@ -138,8 +138,8 @@ export class OptionsNormalizer {
      * @param options
      * @returns {IOptions}
      */
-    private static unicodeArrayRule (options: IOptions): IOptions {
-        if (!options.unicodeArray) {
+    private static stringsArrayRule (options: IOptions): IOptions {
+        if (!options.stringsArray) {
             Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
         }
 
@@ -150,8 +150,8 @@ export class OptionsNormalizer {
      * @param options
      * @returns {IOptions}
      */
-    private static unicodeArrayEncodingRule (options: IOptions): IOptions {
-        if (options.unicodeArrayEncoding === true) {
+    private static stringsArrayEncodingRule (options: IOptions): IOptions {
+        if (options.stringsArrayEncoding === true) {
             Object.assign(options, OptionsNormalizer.UNICODE_ARRAY_ENCODING_OPTIONS);
         }
 
@@ -162,8 +162,8 @@ export class OptionsNormalizer {
      * @param options
      * @returns {IOptions}
      */
-    private static unicodeArrayThresholdRule (options: IOptions): IOptions {
-        if (options.unicodeArrayThreshold === 0) {
+    private static stringsArrayThresholdRule (options: IOptions): IOptions {
+        if (options.stringsArrayThreshold === 0) {
             Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
         }
 

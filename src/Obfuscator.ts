@@ -25,9 +25,9 @@ import { Node } from './node/Node';
 import { NodeUtils } from './node/NodeUtils';
 import { ObjectExpressionObfuscator } from './node-obfuscators/ObjectExpressionObfuscator';
 import { SelfDefendingNodesGroup } from './node-groups/SelfDefendingNodesGroup';
-import { UnicodeArrayNodesGroup } from './node-groups/UnicodeArrayNodesGroup';
-import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclarationObfuscator';
 import { StackTraceAnalyzer } from './stack-trace-analyzer/StackTraceAnalyzer';
+import { StringsArrayNodesGroup } from './node-groups/StringsArrayNodesGroup';
+import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclarationObfuscator';
 
 export class Obfuscator implements IObfuscator {
     /**
@@ -38,7 +38,7 @@ export class Obfuscator implements IObfuscator {
         SelfDefendingNodesGroup,
         ConsoleOutputNodesGroup,
         DebugProtectionNodesGroup,
-        UnicodeArrayNodesGroup
+        StringsArrayNodesGroup
     ];
 
     /**

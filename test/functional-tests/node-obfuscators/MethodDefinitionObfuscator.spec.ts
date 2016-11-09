@@ -27,8 +27,8 @@ describe('MethodDefinitionObfuscator', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             code,
             Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                unicodeArray: true,
-                unicodeArrayThreshold: 1
+                stringsArray: true,
+                stringsArrayThreshold: 1
             })
         );
 

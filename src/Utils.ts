@@ -238,14 +238,14 @@ export class Utils {
      * @param string
      * @returns {string}
      */
-    public static stringToUnicode (string: string): string {
+    public static stringToUnicodeEscapeSequence (string: string): string {
         const radix: number = 16;
 
         let prefix: string,
             regexp: RegExp = new RegExp('[\x00-\x7F]'),
             template: string;
 
-        return `'${string.replace(/[\s\S]/g, (escape: string): string => {
+        return `${string.replace(/[\s\S]/g, (escape: string): string => {
             if (regexp.test(escape)) {
                 prefix = '\\x';
                 template = '0'.repeat(2);
@@ -255,6 +255,6 @@ export class Utils {
             }
 
             return `${prefix}${(template + escape.charCodeAt(0).toString(radix)).slice(-template.length)}`;
-        })}'`;
+        })}`;
     }
 }

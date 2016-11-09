@@ -301,7 +301,7 @@ Type: `boolean` Default: `true`
 
 Allows to enable/disable string conversion to unicode escape sequence.
 
-Unicode escape sequence greatly increases code size. Recommended to disable this option when using `stringArrayEncoding` (especially with `rc4` encoding).
+Unicode escape sequence greatly increases code size. Recommend to disable this option when using `stringArrayEncoding` (especially with `rc4` encoding).
 
 ## License
 Copyright (C) 2016 [Timofey Kachalov](http://github.com/sanex3339).

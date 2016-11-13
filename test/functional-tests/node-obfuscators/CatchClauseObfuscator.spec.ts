@@ -9,7 +9,7 @@ import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscator';
 const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('CatchClauseObfuscator', () => {
-    describe('obfuscateNode (catchClauseNode: ICatchClauseNode): void', () => {
+    describe('obfuscateNode (catchClauseNode: ESTree.CatchClause): void', () => {
         const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             readFileAsString('./test/fixtures/node-obfuscators/catch-clause-obfuscator/catch-clause-obfuscator.js'),
             Object.assign({}, NO_CUSTOM_NODES_PRESET)

@@ -88,7 +88,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 86);
+/******/ 	return __webpack_require__(__webpack_require__.s = 87);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -470,9 +470,19 @@ var Node = function () {
             return node.type === NodeType_1.NodeType.BlockStatement;
         }
     }, {
+        key: 'isBreakStatementNode',
+        value: function isBreakStatementNode(node) {
+            return node.type === NodeType_1.NodeType.BreakStatement;
+        }
+    }, {
         key: 'isCallExpressionNode',
         value: function isCallExpressionNode(node) {
             return node.type === NodeType_1.NodeType.CallExpression;
+        }
+    }, {
+        key: 'isContinueStatementNode',
+        value: function isContinueStatementNode(node) {
+            return node.type === NodeType_1.NodeType.ContinueStatement;
         }
     }, {
         key: 'isExpressionStatementNode',
@@ -493,6 +503,19 @@ var Node = function () {
         key: 'isIdentifierNode',
         value: function isIdentifierNode(node) {
             return node.type === NodeType_1.NodeType.Identifier;
+        }
+    }, {
+        key: 'isLabelIdentifierNode',
+        value: function isLabelIdentifierNode(node, parentNode) {
+            var parentNodeIsLabeledStatementNode = Node.isLabeledStatementNode(parentNode) && parentNode.label === node;
+            var parentNodeIsContinueStatementNode = Node.isContinueStatementNode(parentNode) && parentNode.label === node;
+            var parentNodeIsBreakStatementNode = Node.isBreakStatementNode(parentNode) && parentNode.label === node;
+            return parentNodeIsLabeledStatementNode || parentNodeIsContinueStatementNode || parentNodeIsBreakStatementNode;
+        }
+    }, {
+        key: 'isLabeledStatementNode',
+        value: function isLabeledStatementNode(node) {
+            return node.type === NodeType_1.NodeType.LabeledStatement;
         }
     }, {
         key: 'isLiteralNode',
@@ -527,7 +550,7 @@ var Node = function () {
             }
             var parentNodeIsPropertyNode = Node.isPropertyNode(parentNode) && parentNode.key === node;
             var parentNodeIsMemberExpressionNode = Node.isMemberExpressionNode(parentNode) && parentNode.computed === false && parentNode.property === node;
-            return !parentNodeIsPropertyNode && !parentNodeIsMemberExpressionNode;
+            return !parentNodeIsPropertyNode && !parentNodeIsMemberExpressionNode && !Node.isLabelIdentifierNode(node, parentNode);
         }
     }, {
         key: 'isVariableDeclarationNode',
@@ -738,14 +761,17 @@ exports.NodeType = Utils_1.Utils.strEnumify({
     AssignmentExpression: 'AssignmentExpression',
     BinaryExpression: 'BinaryExpression',
     BlockStatement: 'BlockStatement',
+    BreakStatement: 'BreakStatement',
     CallExpression: 'CallExpression',
     CatchClause: 'CatchClause',
     ClassDeclaration: 'ClassDeclaration',
+    ContinueStatement: 'ContinueStatement',
     ExpressionStatement: 'ExpressionStatement',
     FunctionDeclaration: 'FunctionDeclaration',
     FunctionExpression: 'FunctionExpression',
     Identifier: 'Identifier',
     IfStatement: 'IfStatement',
+    LabeledStatement: 'LabeledStatement',
     Literal: 'Literal',
     LogicalExpression: 'LogicalExpression',
     MemberExpression: 'MemberExpression',
@@ -1442,6 +1468,7 @@ var DebugProtectionNodesGroup_1 = __webpack_require__(43);
 var DomainLockNodesGroup_1 = __webpack_require__(44);
 var FunctionDeclarationObfuscator_1 = __webpack_require__(48);
 var FunctionObfuscator_1 = __webpack_require__(49);
+var LabeledStatementObfuscator_1 = __webpack_require__(88);
 var LiteralObfuscator_1 = __webpack_require__(50);
 var MemberExpressionObfuscator_1 = __webpack_require__(51);
 var MethodDefinitionObfuscator_1 = __webpack_require__(52);
@@ -1538,7 +1565,7 @@ var Obfuscator = function () {
 }();
 
 Obfuscator.nodeGroups = [DomainLockNodesGroup_1.DomainLockNodesGroup, SelfDefendingNodesGroup_1.SelfDefendingNodesGroup, ConsoleOutputNodesGroup_1.ConsoleOutputNodesGroup, DebugProtectionNodesGroup_1.DebugProtectionNodesGroup, StringArrayNodesGroup_1.StringArrayNodesGroup];
-Obfuscator.nodeObfuscators = new Map([[NodeType_1.NodeType.ArrowFunctionExpression, [FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.ClassDeclaration, [FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator]], [NodeType_1.NodeType.CatchClause, [CatchClauseObfuscator_1.CatchClauseObfuscator]], [NodeType_1.NodeType.FunctionDeclaration, [FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator, FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.FunctionExpression, [FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.MemberExpression, [MemberExpressionObfuscator_1.MemberExpressionObfuscator]], [NodeType_1.NodeType.MethodDefinition, [MethodDefinitionObfuscator_1.MethodDefinitionObfuscator]], [NodeType_1.NodeType.ObjectExpression, [ObjectExpressionObfuscator_1.ObjectExpressionObfuscator]], [NodeType_1.NodeType.VariableDeclaration, [VariableDeclarationObfuscator_1.VariableDeclarationObfuscator]], [NodeType_1.NodeType.Literal, [LiteralObfuscator_1.LiteralObfuscator]]]);
+Obfuscator.nodeObfuscators = new Map([[NodeType_1.NodeType.ArrowFunctionExpression, [FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.ClassDeclaration, [FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator]], [NodeType_1.NodeType.CatchClause, [CatchClauseObfuscator_1.CatchClauseObfuscator]], [NodeType_1.NodeType.FunctionDeclaration, [FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator, FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.FunctionExpression, [FunctionObfuscator_1.FunctionObfuscator]], [NodeType_1.NodeType.MemberExpression, [MemberExpressionObfuscator_1.MemberExpressionObfuscator]], [NodeType_1.NodeType.MethodDefinition, [MethodDefinitionObfuscator_1.MethodDefinitionObfuscator]], [NodeType_1.NodeType.ObjectExpression, [ObjectExpressionObfuscator_1.ObjectExpressionObfuscator]], [NodeType_1.NodeType.VariableDeclaration, [VariableDeclarationObfuscator_1.VariableDeclarationObfuscator]], [NodeType_1.NodeType.LabeledStatement, [LabeledStatementObfuscator_1.LabeledStatementObfuscator]], [NodeType_1.NodeType.Literal, [LiteralObfuscator_1.LiteralObfuscator]]]);
 exports.Obfuscator = Obfuscator;
 
 /***/ },
@@ -4333,7 +4360,8 @@ module.exports = require("fs");
 module.exports = require("mkdirp");
 
 /***/ },
-/* 86 */
+/* 86 */,
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4344,6 +4372,77 @@ if (!global._babelPolyfill) {
     __webpack_require__(26);
 }
 module.exports = JavaScriptObfuscator_1.JavaScriptObfuscator;
+
+/***/ },
+/* 88 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+"use strict";
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var estraverse = __webpack_require__(5);
+var NodeType_1 = __webpack_require__(7);
+var AbstractNodeObfuscator_1 = __webpack_require__(9);
+var IdentifierReplacer_1 = __webpack_require__(15);
+var Node_1 = __webpack_require__(3);
+var NodeUtils_1 = __webpack_require__(1);
+
+var LabeledStatementObfuscator = function (_AbstractNodeObfuscat) {
+    _inherits(LabeledStatementObfuscator, _AbstractNodeObfuscat);
+
+    function LabeledStatementObfuscator(nodes, options) {
+        _classCallCheck(this, LabeledStatementObfuscator);
+
+        var _this = _possibleConstructorReturn(this, (LabeledStatementObfuscator.__proto__ || Object.getPrototypeOf(LabeledStatementObfuscator)).call(this, nodes, options));
+
+        _this.identifierReplacer = new IdentifierReplacer_1.IdentifierReplacer(_this.nodes, _this.options);
+        return _this;
+    }
+
+    _createClass(LabeledStatementObfuscator, [{
+        key: 'obfuscateNode',
+        value: function obfuscateNode(labeledStatementNode) {
+            this.storeLabeledStatementName(labeledStatementNode);
+            this.replaceLabeledStatementName(labeledStatementNode);
+        }
+    }, {
+        key: 'storeLabeledStatementName',
+        value: function storeLabeledStatementName(labeledStatementNode) {
+            var _this2 = this;
+
+            NodeUtils_1.NodeUtils.typedReplace(labeledStatementNode.label, NodeType_1.NodeType.Identifier, {
+                enter: function enter(node) {
+                    return _this2.identifierReplacer.storeNames(node.name);
+                }
+            });
+        }
+    }, {
+        key: 'replaceLabeledStatementName',
+        value: function replaceLabeledStatementName(labeledStatementNode) {
+            var _this3 = this;
+
+            estraverse.replace(labeledStatementNode, {
+                enter: function enter(node, parentNode) {
+                    if (Node_1.Node.isLabelIdentifierNode(node, parentNode)) {
+                        node.name = _this3.identifierReplacer.replace(node.name);
+                    }
+                }
+            });
+        }
+    }]);
+
+    return LabeledStatementObfuscator;
+}(AbstractNodeObfuscator_1.AbstractNodeObfuscator);
+
+exports.LabeledStatementObfuscator = LabeledStatementObfuscator;
 
 /***/ }
 /******/ ]);

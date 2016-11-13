@@ -10,7 +10,8 @@ v0.8.0
 * New option `domainLock` locks the obfuscated source code so it only runs on specific domains and/or sub-domains.
 * New option `sourceMapBaseUrl` sets base url to the source map import url when `sourceMapMode: 'separate'`.
 * Custom nodes like `selfDefendingNode` or `consoleOutputNode` now inserted into deepest stack trace function call.
-* Fixed obfuscation of global variables and function names in some cases
+* Fixed obfuscation of global variables and function names in some cases.
+* Fixed wrong obfuscation of labels.
 * Rewrite of many custom nodes.
 
 v0.7.3

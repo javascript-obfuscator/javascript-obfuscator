@@ -39,8 +39,24 @@ export class Node {
      * @param node
      * @returns {boolean}
      */
+    public static isBreakStatementNode (node: ESTree.Node): node is ESTree.BreakStatement {
+        return node.type === NodeType.BreakStatement;
+    }
+
+    /**
+     * @param node
+     * @returns {boolean}
+     */
     public static isCallExpressionNode (node: ESTree.Node): node is ESTree.CallExpression {
         return node.type === NodeType.CallExpression;
+    }
+
+    /**
+     * @param node
+     * @returns {boolean}
+     */
+    public static isContinueStatementNode (node: ESTree.Node): node is ESTree.ContinueStatement {
+        return node.type === NodeType.ContinueStatement;
     }
 
     /**
@@ -73,6 +89,29 @@ export class Node {
      */
     public static isIdentifierNode (node: ESTree.Node): node is ESTree.Identifier {
         return node.type === NodeType.Identifier;
+    }
+
+    /**
+     * @param node
+     * @param parentNode
+     * @returns {boolean}
+     */
+    public static isLabelIdentifierNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
+        const parentNodeIsLabeledStatementNode: boolean = Node.isLabeledStatementNode(parentNode) && parentNode.label === node;
+        const parentNodeIsContinueStatementNode: boolean = Node.isContinueStatementNode(parentNode) && parentNode.label === node;
+        const parentNodeIsBreakStatementNode: boolean = Node.isBreakStatementNode(parentNode) && parentNode.label === node;
+
+        return parentNodeIsLabeledStatementNode ||
+            parentNodeIsContinueStatementNode ||
+            parentNodeIsBreakStatementNode;
+    }
+
+    /**
+     * @param node
+     * @returns {boolean}
+     */
+    public static isLabeledStatementNode (node: ESTree.Node): node is ESTree.LabeledStatement {
+        return node.type === NodeType.LabeledStatement;
     }
 
     /**
@@ -134,7 +173,9 @@ export class Node {
             parentNode.property === node
         );
 
-        return !parentNodeIsPropertyNode && !parentNodeIsMemberExpressionNode;
+        return !parentNodeIsPropertyNode &&
+            !parentNodeIsMemberExpressionNode &&
+            !Node.isLabelIdentifierNode(node, parentNode);
     }
 
     /**

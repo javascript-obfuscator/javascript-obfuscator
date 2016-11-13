@@ -18,6 +18,7 @@ import { DebugProtectionNodesGroup } from './node-groups/DebugProtectionNodesGro
 import { DomainLockNodesGroup } from './node-groups/DomainLockNodesGroup';
 import { FunctionDeclarationObfuscator } from './node-obfuscators/FunctionDeclarationObfuscator';
 import { FunctionObfuscator } from './node-obfuscators/FunctionObfuscator';
+import { LabeledStatementObfuscator } from './node-obfuscators/LabeledStatementObfuscator';
 import { LiteralObfuscator } from './node-obfuscators/LiteralObfuscator';
 import { MemberExpressionObfuscator } from './node-obfuscators/MemberExpressionObfuscator';
 import { MethodDefinitionObfuscator } from './node-obfuscators/MethodDefinitionObfuscator';
@@ -57,6 +58,7 @@ export class Obfuscator implements IObfuscator {
         [NodeType.MethodDefinition, [MethodDefinitionObfuscator]],
         [NodeType.ObjectExpression, [ObjectExpressionObfuscator]],
         [NodeType.VariableDeclaration, [VariableDeclarationObfuscator]],
+        [NodeType.LabeledStatement, [LabeledStatementObfuscator]],
         [NodeType.Literal, [LiteralObfuscator]]
     ]);
 

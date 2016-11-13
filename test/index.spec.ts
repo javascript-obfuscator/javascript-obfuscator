@@ -31,6 +31,7 @@ import './functional-tests/custom-nodes/string-array-nodes/StringArrayRotateFunc
 import './functional-tests/custom-nodes/string-array-nodes/StringArrayNode.spec';
 import './functional-tests/node-obfuscators/CatchClauseObfuscator.spec';
 import './functional-tests/node-obfuscators/FunctionObfuscator.spec';
+import './functional-tests/node-obfuscators/LabeledStatementObfuscator.spec';
 import './functional-tests/node-obfuscators/LiteralObfuscator.spec';
 import './functional-tests/node-obfuscators/MemberExpressionObfuscator.spec';
 import './functional-tests/node-obfuscators/MethodDefinitionObfuscator.spec';

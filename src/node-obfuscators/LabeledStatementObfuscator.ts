@@ -13,10 +13,18 @@ import { NodeUtils } from '../node/NodeUtils';
 
 /**
  * replaces:
- *     try {} catch (e) { console.log(e); };
+ *     label: {
+ *          for (var i = 0; i < 1000; i++) {
+ *              break label;
+ *          }
+ *     }
  *
  * on:
- *     try {} catch (_0x12d45f) { console.log(_0x12d45f); };
+ *     _0x12d45f: {
+ *          for (var i = 0; i < 1000; i++) {
+ *              break _0x12d45f;
+ *          }
+ *     }
  *
  */
 export class LabeledStatementObfuscator extends AbstractNodeObfuscator {

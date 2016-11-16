@@ -28,6 +28,11 @@ Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/
 [![Dependency Status](https://david-dm.org/javascript-obfuscator/javascript-obfuscator.svg)](https://david-dm.org/javascript-obfuscator/javascript-obfuscator)
 [![devDependency Status](https://david-dm.org/javascript-obfuscator/javascript-obfuscator/dev-status.svg)](https://david-dm.org/javascript-obfuscator/javascript-obfuscator#info=devDependencies)
 
+## :warning: Important
+#####Obfuscate only the code that belongs to you. 
+
+It is not recommended to obfuscate vendor scripts and polyfills, since the obfuscated code is 25-30% slower and the files are significantly larger.
+
 ## Installation
 
 Install the package from NPM and add it to your `devDependencies`:

@@ -6,7 +6,7 @@ export function ConsoleOutputDisableExpressionTemplate (): string {
         var {consoleLogDisableFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {
             var getGlobal = Function('return (function() ' + '{}.constructor("return this")( )' + ');');
             
-            var func = Function('for ' + '(;;)' + ' {}');
+            var func = function () {};
             var that = getGlobal();
                         
             that.console.log = func; 

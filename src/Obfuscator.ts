@@ -104,13 +104,13 @@ export class Obfuscator implements IObfuscator {
 
         this.initializeCustomNodes(stackTraceData);
 
-        this.beforeObfuscation(node);
-        this.obfuscate(node);
-        this.afterObfuscation(node);
-
         if (this.options.controlFlow) {
             this.changeControlFlow(node);
         }
+
+        this.beforeObfuscation(node);
+        this.obfuscate(node);
+        this.afterObfuscation(node);
 
         return node;
     }

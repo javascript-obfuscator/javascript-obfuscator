@@ -1564,12 +1564,12 @@ var Obfuscator = function () {
             NodeUtils_1.NodeUtils.parentize(node);
             var stackTraceData = new StackTraceAnalyzer_1.StackTraceAnalyzer(node.body).analyze();
             this.initializeCustomNodes(stackTraceData);
-            this.beforeObfuscation(node);
-            this.obfuscate(node);
-            this.afterObfuscation(node);
             if (this.options.controlFlow) {
                 this.changeControlFlow(node);
             }
+            this.beforeObfuscation(node);
+            this.obfuscate(node);
+            this.afterObfuscation(node);
             return node;
         }
     }, {
@@ -3151,7 +3151,7 @@ var AbstractControlFlowReplacer = function () {
         key: 'getStorageKey',
         value: function getStorageKey() {
             return Utils_1.Utils.getRandomGenerator().string({
-                length: 4,
+                length: 3,
                 pool: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
             });
         }

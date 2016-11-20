@@ -33,43 +33,18 @@ if (!(<any>global)._babelPolyfill) {
             if (true) {
                 var test = 5
             }
-            
-            return test;
         }
         
-        console.log(test(1));
-        
-        function test2 (abc) {
-            function test1 () {
-              console.log('inside', abc.item);
+        function t () {
+            return function () {
+                return 100 * 2;
             }
-            
-            console.log('тест', abc);
-            
-            var abc = {};
-            
-            return abc.item = 15, test1();
-        };
-        
-        var regexptest = /version\\/(\\d+)/i;
-        console.log(regexptest);
-        
-        test2(22);
-        console.log(105.4);
-        console.log(true, false);
-        
-        var sA = 'shorthand1';
-        var sB = 'shorthand2';
-        
-        console.log({sA, sB});
-        
-        try {
-        } catch (error) {
-            console.log(error);
         }
         
-        var left = 5;
-        console.log(left + 15);
+        var s = 100 + 50;
+        
+        console.log(t()());
+        console.log(s);
     })();
     `,
         Object.assign({}, NO_CUSTOM_NODES_PRESET, {

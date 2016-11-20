@@ -9,7 +9,7 @@ import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscator';
 const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('LabeledStatementObfuscator', () => {
-    describe('obfuscateNode (labeledStatementNode: ESTree.LabeledStatement): void', () => {
+    describe('changeControlFlow (labeledStatementNode: ESTree.LabeledStatement): void', () => {
         const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             readFileAsString('./test/fixtures/node-obfuscators/labeled-statement-obfuscator/labeled-statement-obfuscator.js'),
             Object.assign({}, NO_CUSTOM_NODES_PRESET)

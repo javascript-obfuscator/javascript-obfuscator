@@ -3,6 +3,7 @@ import { TStringArrayEncoding } from '../types/TStringArrayEncoding';
 
 export interface IObfuscatorOptions {
     compact?: boolean;
+    controlFlow?: boolean;
     debugProtection?: boolean;
     debugProtectionInterval?: boolean;
     disableConsoleOutput?: boolean;

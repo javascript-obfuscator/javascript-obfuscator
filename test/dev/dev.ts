@@ -1,4 +1,5 @@
 'use strict';
+import { NO_CUSTOM_NODES_PRESET } from '../../src/preset-options/NoCustomNodesPreset';
 
 if (!(<any>global)._babelPolyfill) {
     require('babel-polyfill');
@@ -66,13 +67,14 @@ if (!(<any>global)._babelPolyfill) {
         } catch (error) {
             console.log(error);
         }
+        
+        var left = 5;
+        console.log(left + 15);
     })();
     `,
-        {
-            disableConsoleOutput: false,
-            selfDefending: true,
-            stringArrayEncoding: 'rc4'
-        }
+        Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+            controlFlow: true
+        })
     ).getObfuscatedCode();
 
     console.log(obfuscatedCode);

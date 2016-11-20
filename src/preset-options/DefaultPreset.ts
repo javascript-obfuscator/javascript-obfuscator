@@ -4,6 +4,7 @@ import { SourceMapMode } from '../enums/SourceMapMode';
 
 export const DEFAULT_PRESET: IObfuscatorOptions = Object.freeze({
     compact: true,
+    controlFlow: false,
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: true,

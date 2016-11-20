@@ -5,6 +5,7 @@ import { IOptions } from '../interfaces/IOptions';
 import { TStatement } from '../types/TStatement';
 
 import { AppendState } from '../enums/AppendState';
+import { NodeUtils } from '../node/NodeUtils';
 
 export abstract class AbstractCustomNode implements ICustomNode {
     /**
@@ -37,6 +38,11 @@ export abstract class AbstractCustomNode implements ICustomNode {
     }
 
     /**
+     * @returns {string}
+     */
+    public abstract getCode (): string;
+
+    /**
      * @returns {TStatement[]}
      */
     public getNode (): TStatement[] {
@@ -53,5 +59,7 @@ export abstract class AbstractCustomNode implements ICustomNode {
     /**
      * @returns {TStatement[]}
      */
-    protected abstract getNodeStructure (): TStatement[];
+    protected getNodeStructure (): TStatement[] {
+        return NodeUtils.convertCodeToStructure(this.getCode());
+    }
 }

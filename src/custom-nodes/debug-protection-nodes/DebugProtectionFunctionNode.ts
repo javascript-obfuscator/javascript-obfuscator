@@ -1,7 +1,6 @@
 import 'format-unicorn';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-import { TStatement } from '../../types/TStatement';
 
 import { IOptions } from '../../interfaces/IOptions';
 
@@ -11,7 +10,6 @@ import { DebugProtectionFunctionTemplate } from '../../templates/custom-nodes/de
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeAppender } from '../../node/NodeAppender';
-import { NodeUtils } from '../../node/NodeUtils';
 import { Utils } from '../../Utils';
 
 export class DebugProtectionFunctionNode extends AbstractCustomNode {
@@ -51,20 +49,16 @@ export class DebugProtectionFunctionNode extends AbstractCustomNode {
     /**
      * @returns {string}
      */
-    public getNodeIdentifier (): string {
-        return this.debugProtectionFunctionName;
+    public getCode (): string {
+        return DebugProtectionFunctionTemplate().formatUnicorn({
+            debugProtectionFunctionName: this.debugProtectionFunctionName
+        });
     }
 
     /**
-     * Found this trick in JScrambler
-     *
-     * @returns {TStatement[]}
+     * @returns {string}
      */
-    protected getNodeStructure (): TStatement[] {
-        return NodeUtils.convertCodeToStructure(
-            DebugProtectionFunctionTemplate().formatUnicorn({
-                debugProtectionFunctionName: this.debugProtectionFunctionName
-            })
-        );
+    public getNodeIdentifier (): string {
+        return this.debugProtectionFunctionName;
     }
 }

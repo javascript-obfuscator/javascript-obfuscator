@@ -1,6 +1,7 @@
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
+import { TNodeControlFlowChanger } from './types/TNodeControlFlowChanger';
 import { TNodeGroup } from './types/TNodeGroup';
 import { TNodeObfuscator } from './types/TNodeObfuscator';
 
@@ -29,8 +30,17 @@ import { SelfDefendingNodesGroup } from './node-groups/SelfDefendingNodesGroup';
 import { StackTraceAnalyzer } from './stack-trace-analyzer/StackTraceAnalyzer';
 import { StringArrayNodesGroup } from './node-groups/StringArrayNodesGroup';
 import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclarationObfuscator';
+import { FunctionControlFlowChanger } from './node-control-flow-changers/FunctionControlFlowChanger';
 
 export class Obfuscator implements IObfuscator {
+    /**
+     * @type {Map<string, TNodeControlFlowChanger[]>}
+     */
+    private static nodeControlFlowChangers: Map <string, TNodeControlFlowChanger[]> = new Map <string, TNodeControlFlowChanger[]> ([
+        [NodeType.FunctionDeclaration, [FunctionControlFlowChanger]],
+        [NodeType.FunctionExpression, [FunctionControlFlowChanger]]
+    ]);
+
     /**
      * @type {TNodeGroup[]}
      */
@@ -98,6 +108,10 @@ export class Obfuscator implements IObfuscator {
         this.obfuscate(node);
         this.afterObfuscation(node);
 
+        if (this.options.controlFlow) {
+            this.changeControlFlow(node);
+        }
+
         return node;
     }
 
@@ -124,6 +138,17 @@ export class Obfuscator implements IObfuscator {
     };
 
     /**
+     * @param node
+     */
+    private changeControlFlow (node: ESTree.Node): void {
+        estraverse.traverse(node, {
+            leave: (node: ESTree.Node, parentNode: ESTree.Node): void => {
+                this.initializeNodeControlFlowChangers(node, parentNode);
+            }
+        });
+    }
+
+    /**
      * @param stackTraceData
      */
     private initializeCustomNodes (stackTraceData: IStackTraceData[]): void {
@@ -144,6 +169,21 @@ export class Obfuscator implements IObfuscator {
         this.customNodes = new Map <string, ICustomNode> (customNodes);
     }
 
+    /**
+     * @param node
+     * @param parentNode
+     */
+    private initializeNodeControlFlowChangers (node: ESTree.Node, parentNode: ESTree.Node): void {
+        let nodeControlFlowChangers: TNodeControlFlowChanger[] | undefined = Obfuscator.nodeControlFlowChangers.get(node.type);
+
+        if (!nodeControlFlowChangers) {
+            return;
+        }
+
+        nodeControlFlowChangers.forEach((controlFlowChanger: TNodeControlFlowChanger) => {
+            new controlFlowChanger(this.customNodes, this.options).changeControlFlow(node, parentNode);
+        });
+    }
 
     /**
      * @param node

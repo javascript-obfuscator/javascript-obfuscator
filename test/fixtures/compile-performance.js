@@ -6371,7 +6371,7 @@
     /* 42 */
     /***/ function(module, exports, __webpack_require__) {
 
-// to indexed object, toObject with fallback for non-array-like ES3 strings
+// to indexed object, toString with fallback for non-array-like ES3 strings
         var IObject = __webpack_require__(118)
             , defined = __webpack_require__(59);
         module.exports = function(it){

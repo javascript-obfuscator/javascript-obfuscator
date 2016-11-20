@@ -11,7 +11,7 @@ import { Options } from '../../../src/options/Options';
 const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('FunctionDeclarationObfuscator', () => {
-    describe('obfuscateNode (functionDeclarationNode: IFunctionDeclarationNode, parentNode: INode): void', () => {
+    describe('changeControlFlow (functionDeclarationNode: IFunctionDeclarationNode, parentNode: INode): void', () => {
         let expressionStatementNode: ESTree.ExpressionStatement,
             functionDeclarationObfuscator: FunctionDeclarationObfuscator,
             functionDeclarationNode: ESTree.FunctionDeclaration,

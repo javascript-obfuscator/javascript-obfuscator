@@ -13,7 +13,6 @@ import { StringArrayTemplate } from '../../templates/custom-nodes/string-array-n
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeAppender } from '../../node/NodeAppender';
-import { NodeUtils } from '../../node/NodeUtils';
 
 export class StringArrayNode extends AbstractCustomNode {
     /**
@@ -74,6 +73,16 @@ export class StringArrayNode extends AbstractCustomNode {
     /**
      * @returns {string}
      */
+    public getCode (): string {
+        return StringArrayTemplate().formatUnicorn({
+            stringArrayName: this.stringArrayName,
+            stringArray: this.stringArray.toString()
+        });
+    }
+
+    /**
+     * @returns {string}
+     */
     public getNodeIdentifier (): string {
         return this.stringArrayName;
     }
@@ -99,17 +108,5 @@ export class StringArrayNode extends AbstractCustomNode {
      */
     public updateNodeData (data: string): void {
         this.stringArray.addToArray(data);
-    }
-
-    /**
-     * @returns {TStatement[]}
-     */
-    protected getNodeStructure (): TStatement[] {
-        return NodeUtils.convertCodeToStructure(
-            StringArrayTemplate().formatUnicorn({
-                stringArrayName: this.stringArrayName,
-                stringArray: this.stringArray.toString()
-            })
-        );
     }
 }

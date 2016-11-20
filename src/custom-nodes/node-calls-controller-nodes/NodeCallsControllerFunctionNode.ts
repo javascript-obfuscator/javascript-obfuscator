@@ -1,7 +1,6 @@
 import 'format-unicorn';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-import { TStatement } from '../../types/TStatement';
 
 import { IOptions } from '../../interfaces/IOptions';
 import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
@@ -15,7 +14,6 @@ import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeAppender } from '../../node/NodeAppender';
-import { NodeUtils } from '../../node/NodeUtils';
 
 export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     /**
@@ -74,21 +72,20 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     }
 
     /**
-     * @returns {TStatement[]}
+     * @returns {string}
      */
-    protected getNodeStructure (): TStatement[] {
+    public getCode (): string {
         if (this.appendState === AppendState.AfterObfuscation) {
-            return NodeUtils.convertCodeToStructure(
-                JavaScriptObfuscator.obfuscate(SingleNodeCallControllerTemplate().formatUnicorn({
+            return JavaScriptObfuscator.obfuscate(
+                SingleNodeCallControllerTemplate().formatUnicorn({
                     singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-                }), NO_CUSTOM_NODES_PRESET).getObfuscatedCode()
-            );
+                }),
+                NO_CUSTOM_NODES_PRESET
+            ).getObfuscatedCode();
         }
 
-        return NodeUtils.convertCodeToStructure(
-            SingleNodeCallControllerTemplate().formatUnicorn({
-                singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-            })
-        );
+        return SingleNodeCallControllerTemplate().formatUnicorn({
+            singleNodeCallControllerFunctionName: this.callsControllerFunctionName
+        });
     }
 }

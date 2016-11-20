@@ -1,5 +1,4 @@
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-import { TStatement } from '../../types/TStatement';
 
 import { IOptions } from '../../interfaces/IOptions';
 import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
@@ -13,7 +12,6 @@ import { SelfDefendingTemplate } from '../../templates/custom-nodes/self-defendi
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeAppender } from '../../node/NodeAppender';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
-import { NodeUtils } from '../../node/NodeUtils';
 import { Utils } from '../../Utils';
 
 export class SelfDefendingUnicodeNode extends AbstractCustomNode {
@@ -69,17 +67,15 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     }
 
     /**
-     * @returns {TStatement[]}
+     * @returns {string}
      */
-    protected getNodeStructure (): TStatement[] {
-        return NodeUtils.convertCodeToStructure(
-            JavaScriptObfuscator.obfuscate(
-                SelfDefendingTemplate().formatUnicorn({
-                    selfDefendingFunctionName: Utils.getRandomVariableName(),
-                    singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-                }),
-                NO_CUSTOM_NODES_PRESET
-            ).getObfuscatedCode()
-        );
+    public getCode (): string {
+        return JavaScriptObfuscator.obfuscate(
+            SelfDefendingTemplate().formatUnicorn({
+                selfDefendingFunctionName: Utils.getRandomVariableName(),
+                singleNodeCallControllerFunctionName: this.callsControllerFunctionName
+            }),
+            NO_CUSTOM_NODES_PRESET
+        ).getObfuscatedCode();
     }
 }

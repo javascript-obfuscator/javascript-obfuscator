@@ -1,7 +1,6 @@
 import 'format-unicorn';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-import { TStatement } from '../../types/TStatement';
 
 import { IOptions } from '../../interfaces/IOptions';
 import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
@@ -12,7 +11,6 @@ import { ConsoleOutputDisableExpressionTemplate } from '../../templates/custom-n
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeAppender } from '../../node/NodeAppender';
-import { NodeUtils } from '../../node/NodeUtils';
 import { Utils } from '../../Utils';
 
 export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
@@ -68,27 +66,12 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
     }
 
     /**
-     *  JSCrush version of following code
-     *
-     *  (function () {
-     *      var _console = []["filter"]["constructor"]("return this")().console;
-     *      var _function = function () {};
-     *
-     *      _console.log = _function;
-     *      _console.info = _function;
-     *      _console.warn = _function;
-     *      _console.error = _function;
-     *  _console
-     *  })();
-     *
-     * @returns {TStatement[]}
+     * @returns {string}
      */
-    protected getNodeStructure (): TStatement[] {
-        return NodeUtils.convertCodeToStructure(
-            ConsoleOutputDisableExpressionTemplate().formatUnicorn({
-                consoleLogDisableFunctionName: Utils.getRandomVariableName(),
-                singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-            })
-        );
+    public getCode (): string {
+        return ConsoleOutputDisableExpressionTemplate().formatUnicorn({
+            consoleLogDisableFunctionName: Utils.getRandomVariableName(),
+            singleNodeCallControllerFunctionName: this.callsControllerFunctionName
+        });
     }
 }

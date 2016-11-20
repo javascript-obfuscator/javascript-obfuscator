@@ -20,7 +20,6 @@ import { StringArrayRc4DecodeNodeTemplate } from '../../templates/custom-nodes/s
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeAppender } from '../../node/NodeAppender';
-import { NodeUtils } from '../../node/NodeUtils';
 import { StringArray } from '../../StringArray';
 
 export class StringArrayCallsWrapper extends AbstractCustomNode {
@@ -77,6 +76,22 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
     /**
      * @returns {string}
      */
+    public getCode (): string {
+        const decodeNodeTemplate: string = this.getDecodeStringArrayTemplate();
+
+        return JavaScriptObfuscator.obfuscate(
+            StringArrayCallsWrapperTemplate().formatUnicorn({
+                decodeNodeTemplate,
+                stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
+                stringArrayName: this.stringArrayName
+            }),
+            NO_CUSTOM_NODES_PRESET
+        ).getObfuscatedCode();
+    }
+
+    /**
+     * @returns {string}
+     */
     public getNodeIdentifier (): string {
         return this.stringArrayCallsWrapperName;
     };
@@ -124,23 +139,5 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
         }
 
         return decodeStringArrayTemplate;
-    }
-
-    /**
-     * @returns {TStatement[]}
-     */
-    protected getNodeStructure (): TStatement[] {
-        const decodeNodeTemplate: string = this.getDecodeStringArrayTemplate();
-
-        return NodeUtils.convertCodeToStructure(
-            JavaScriptObfuscator.obfuscate(
-                StringArrayCallsWrapperTemplate().formatUnicorn({
-                    decodeNodeTemplate,
-                    stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
-                    stringArrayName: this.stringArrayName
-                }),
-                NO_CUSTOM_NODES_PRESET
-            ).getObfuscatedCode()
-        );
     }
 }

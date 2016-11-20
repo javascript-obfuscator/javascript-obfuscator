@@ -1,7 +1,6 @@
 import 'format-unicorn';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-import { TStatement } from '../../types/TStatement';
 
 import { IOptions } from '../../interfaces/IOptions';
 
@@ -15,7 +14,6 @@ import { StringArrayRotateFunctionTemplate } from '../../templates/custom-nodes/
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeAppender } from '../../node/NodeAppender';
-import { NodeUtils } from '../../node/NodeUtils';
 import { StringArray } from '../../StringArray';
 import { Utils } from '../../Utils';
 
@@ -71,16 +69,9 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     }
 
     /**
-     * @returns {TStatement[]}
+     * @returns {string}
      */
-    public getNode (): TStatement[] {
-        return super.getNode();
-    }
-
-    /**
-     * @returns {TStatement[]}
-     */
-    protected getNodeStructure (): TStatement[] {
+    public getCode (): string {
         let code: string = '',
             timesName: string = Utils.getRandomVariableName(),
             whileFunctionName: string = Utils.getRandomVariableName();
@@ -94,17 +85,15 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
             code = `${whileFunctionName}(++${timesName})`;
         }
 
-        return NodeUtils.convertCodeToStructure(
-            JavaScriptObfuscator.obfuscate(
-                StringArrayRotateFunctionTemplate().formatUnicorn({
-                    code,
-                    timesName,
-                    stringArrayName: this.stringArrayName,
-                    stringArrayRotateValue: Utils.decToHex(this.stringArrayRotateValue),
-                    whileFunctionName
-                }),
-                NO_CUSTOM_NODES_PRESET
-            ).getObfuscatedCode()
-        );
+        return JavaScriptObfuscator.obfuscate(
+            StringArrayRotateFunctionTemplate().formatUnicorn({
+                code,
+                timesName,
+                stringArrayName: this.stringArrayName,
+                stringArrayRotateValue: Utils.decToHex(this.stringArrayRotateValue),
+                whileFunctionName
+            }),
+            NO_CUSTOM_NODES_PRESET
+        ).getObfuscatedCode();
     }
 }

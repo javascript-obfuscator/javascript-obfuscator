@@ -1,4 +1,4 @@
-import 'format-unicorn';
+import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 import { TStatement } from '../../types/TStatement';
@@ -80,7 +80,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
         const decodeNodeTemplate: string = this.getDecodeStringArrayTemplate();
 
         return JavaScriptObfuscator.obfuscate(
-            StringArrayCallsWrapperTemplate().formatUnicorn({
+            format(StringArrayCallsWrapperTemplate(), {
                 decodeNodeTemplate,
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
                 stringArrayName: this.stringArrayName
@@ -111,7 +111,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
             selfDefendingCode: string = '';
 
         if (this.options.selfDefending) {
-            selfDefendingCode = SelfDefendingTemplate().formatUnicorn({
+            selfDefendingCode = format(SelfDefendingTemplate(), {
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
                 stringArrayName: this.stringArrayName
             });
@@ -119,7 +119,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
 
         switch (this.options.stringArrayEncoding) {
             case StringArrayEncoding.base64:
-                decodeStringArrayTemplate = StringArrayBase64DecodeNodeTemplate().formatUnicorn({
+                decodeStringArrayTemplate = format(StringArrayBase64DecodeNodeTemplate(), {
                     atobPolyfill: AtobTemplate(),
                     selfDefendingCode,
                     stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
@@ -128,7 +128,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
                 break;
 
             case StringArrayEncoding.rc4:
-                decodeStringArrayTemplate = StringArrayRc4DecodeNodeTemplate().formatUnicorn({
+                decodeStringArrayTemplate = format(StringArrayRc4DecodeNodeTemplate(), {
                     atobPolyfill: AtobTemplate(),
                     rc4Polyfill: Rc4Template(),
                     selfDefendingCode,

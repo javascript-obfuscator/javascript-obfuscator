@@ -1,4 +1,4 @@
-import 'format-unicorn';
+import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 
@@ -77,7 +77,7 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
             whileFunctionName: string = Utils.getRandomVariableName();
 
         if (this.options.selfDefending) {
-            code = SelfDefendingTemplate().formatUnicorn({
+            code = format(SelfDefendingTemplate(), {
                 timesName,
                 whileFunctionName
             });
@@ -86,7 +86,7 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
         }
 
         return JavaScriptObfuscator.obfuscate(
-            StringArrayRotateFunctionTemplate().formatUnicorn({
+            format(StringArrayRotateFunctionTemplate(), {
                 code,
                 timesName,
                 stringArrayName: this.stringArrayName,

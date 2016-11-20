@@ -1,4 +1,4 @@
-import 'format-unicorn';
+import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../../types/TNodeWithBlockStatement';
 
@@ -30,7 +30,7 @@ export class BinaryExpressionSumFunctionNode extends AbstractCustomNode {
      */
     public getCode (): string {
         return JavaScriptObfuscator.obfuscate(
-            BinaryExpressionSumFunctionTemplate().formatUnicorn({
+            format(BinaryExpressionSumFunctionTemplate(), {
                 functionName: Utils.getRandomVariableName()
             }),
             NO_CUSTOM_NODES_PRESET

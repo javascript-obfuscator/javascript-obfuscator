@@ -1,3 +1,5 @@
+import * as format from 'string-template';
+
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 
 import { IOptions } from '../../interfaces/IOptions';
@@ -71,7 +73,7 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
      */
     public getCode (): string {
         return JavaScriptObfuscator.obfuscate(
-            SelfDefendingTemplate().formatUnicorn({
+            format(SelfDefendingTemplate(), {
                 selfDefendingFunctionName: Utils.getRandomVariableName(),
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
             }),

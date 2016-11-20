@@ -1,4 +1,4 @@
-import 'format-unicorn';
+import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 
@@ -57,7 +57,7 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
      * @returns {string}
      */
     public getCode (): string {
-        return ControlFlowStorageTemplate().formatUnicorn({
+        return format(ControlFlowStorageTemplate(), {
             controlFlowStorage: this.controlFlowStorage.toString(),
             controlFlowStorageName: this.controlFlowStorageName
         });

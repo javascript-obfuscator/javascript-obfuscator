@@ -1,4 +1,4 @@
-import 'format-unicorn';
+import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 
@@ -50,7 +50,7 @@ export class DebugProtectionFunctionNode extends AbstractCustomNode {
      * @returns {string}
      */
     public getCode (): string {
-        return DebugProtectionFunctionTemplate().formatUnicorn({
+        return format(DebugProtectionFunctionTemplate(), {
             debugProtectionFunctionName: this.debugProtectionFunctionName
         });
     }

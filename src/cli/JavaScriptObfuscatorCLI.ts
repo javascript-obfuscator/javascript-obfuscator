@@ -145,6 +145,7 @@ export class JavaScriptObfuscatorCLI {
             .usage('<inputPath> [options]')
             .option('-o, --output <path>', 'Output path for obfuscated code')
             .option('--compact <boolean>', 'Disable one line output code compacting', JavaScriptObfuscatorCLI.parseBoolean)
+            .option('--controlFlow <boolean>', 'Enables control flow change', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--debugProtection <boolean>', 'Disable browser Debug panel (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--debugProtectionInterval <boolean>', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--disableConsoleOutput <boolean>', 'Allow console.log, console.info, console.error and console.warn messages output into browser console', JavaScriptObfuscatorCLI.parseBoolean)

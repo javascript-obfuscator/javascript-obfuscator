@@ -1,4 +1,4 @@
-import 'format-unicorn';
+import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 
@@ -77,14 +77,14 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     public getCode (): string {
         if (this.appendState === AppendState.AfterObfuscation) {
             return JavaScriptObfuscator.obfuscate(
-                SingleNodeCallControllerTemplate().formatUnicorn({
+                format(SingleNodeCallControllerTemplate(), {
                     singleNodeCallControllerFunctionName: this.callsControllerFunctionName
                 }),
                 NO_CUSTOM_NODES_PRESET
             ).getObfuscatedCode();
         }
 
-        return SingleNodeCallControllerTemplate().formatUnicorn({
+        return format(SingleNodeCallControllerTemplate(), {
             singleNodeCallControllerFunctionName: this.callsControllerFunctionName
         });
     }

@@ -37,14 +37,17 @@ if (!(<any>global)._babelPolyfill) {
         
         function t () {
             return function () {
-                return 100 * 2;
+                return 100 * 2 - 70;
             }
         }
         
-        var s = 100 + 50;
+        var n = 100 + 50;
+        var b = true + true;
+        var s = 'str' + 'ing';
+        var r = /re/ + /g/;
         
         console.log(t()());
-        console.log(s);
+        console.log(n);
     })();
     `,
         Object.assign({}, NO_CUSTOM_NODES_PRESET, {

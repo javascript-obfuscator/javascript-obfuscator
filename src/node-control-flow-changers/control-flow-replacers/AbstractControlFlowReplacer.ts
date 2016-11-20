@@ -32,7 +32,7 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
      */
     protected static getStorageKey (): string {
         return Utils.getRandomGenerator().string({
-            length: 3,
+            length: 4,
             pool: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
         });
     }

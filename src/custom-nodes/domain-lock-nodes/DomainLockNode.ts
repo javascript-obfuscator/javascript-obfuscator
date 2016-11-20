@@ -1,4 +1,4 @@
-import 'format-unicorn';
+import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 
@@ -72,7 +72,7 @@ export class DomainLockNode extends AbstractCustomNode {
         let domainsString: string = this.options.domainLock.join(';'),
             [hiddenDomainsString, diff]: string[] = Utils.hideString(domainsString, domainsString.length * 3);
 
-        return DomainLockNodeTemplate().formatUnicorn({
+        return format(DomainLockNodeTemplate(), {
             domainLockFunctionName: Utils.getRandomVariableName(),
             diff: diff,
             domains: hiddenDomainsString,

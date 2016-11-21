@@ -1,6 +1,6 @@
 Change Log
 ===
-v0.8.1
+v0.8.2
 ---
 * New option `seed` sets seed for random generator. This is useful for creating repeatable results.
 * IE8 runtime error fix.

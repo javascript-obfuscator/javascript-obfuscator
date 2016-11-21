@@ -9,6 +9,7 @@ export interface IObfuscatorOptions {
     domainLock?: string[];
     reservedNames?: string[];
     rotateStringArray?: boolean;
+    seed?: number;
     selfDefending?: boolean;
     sourceMap?: boolean;
     sourceMapBaseUrl?: string;

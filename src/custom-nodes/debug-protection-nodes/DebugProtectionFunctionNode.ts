@@ -40,10 +40,7 @@ export class DebugProtectionFunctionNode extends AbstractCustomNode {
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
         let programBodyLength: number = blockScopeNode.body.length,
-            randomIndex: number = Utils.getRandomGenerator().integer({
-                min: 0,
-                max: programBodyLength
-            });
+            randomIndex: number = Utils.getRandomInteger(0, programBodyLength);
 
         NodeAppender.insertNodeAtIndex(blockScopeNode, this.getNode(), randomIndex);
     }

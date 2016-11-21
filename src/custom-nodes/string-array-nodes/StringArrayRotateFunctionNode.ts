@@ -103,7 +103,9 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
                     stringArrayRotateValue: Utils.decToHex(this.stringArrayRotateValue),
                     whileFunctionName
                 }),
-                NO_CUSTOM_NODES_PRESET
+                Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                    seed: this.options.seed
+                })
             ).getObfuscatedCode()
         );
     }

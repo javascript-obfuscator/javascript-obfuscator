@@ -4,9 +4,9 @@ import { JSFuck } from './enums/JSFuck';
 
 export class Utils {
     /**
-     * @type {Chance.Chance}
+     * @type {Chance.Chance | Chance.SeededChance}
      */
-    private static randomGenerator: Chance.Chance = new Chance();
+    private static randomGenerator: Chance.Chance | Chance.SeededChance = new Chance();
 
     /**
      * @param array
@@ -100,10 +100,41 @@ export class Utils {
     }
 
     /**
+     * @param min
+     * @param max
+     * @returns {number}
+     */
+    public static getRandomFloat (min: number, max: number): number {
+        return Utils.getRandomGenerator().floating({
+            min: min,
+            max: max,
+            fixed: 7
+        });
+    }
+
+    /**
      * @returns {Chance.Chance}
      */
     public static getRandomGenerator (): Chance.Chance {
+        const randomGenerator: Chance.Chance = Utils.randomGenerator;
+
+        if (!randomGenerator) {
+            throw new Error(`\`randomGenerator\` static property is undefined`);
+        }
+
         return Utils.randomGenerator;
+    }
+
+    /**
+     * @param min
+     * @param max
+     * @returns {number}
+     */
+    public static getRandomInteger (min: number, max: number): number {
+        return Utils.getRandomGenerator().integer({
+            min: min,
+            max: max
+        });
     }
 
     /**
@@ -117,10 +148,7 @@ export class Utils {
 
         return `${prefix}${(
             Utils.decToHex(
-                Utils.getRandomGenerator().integer({
-                    min: rangeMinInteger,
-                    max: rangeMaxInteger
-                })
+                Utils.getRandomInteger(rangeMinInteger, rangeMaxInteger)
             )
         ).substr(0, length)}`;
     }
@@ -140,7 +168,7 @@ export class Utils {
                 result: string = '';
 
             while (i1 < s1.length || i2 < s2.length) {
-                if (Math.random() < 0.5 && i2 < s2.length) {
+                if (Utils.getRandomFloat(0, 1) < 0.5 && i2 < s2.length) {
                     result += s2.charAt(++i2);
                 } else {
                     result += s1.charAt(++i1);
@@ -211,6 +239,13 @@ export class Utils {
         }
 
         return result;
+    }
+
+    /**
+     * @param randomGenerator
+     */
+    public static setRandomGenerator (randomGenerator: Chance.Chance | Chance.SeededChance): void {
+        Utils.randomGenerator = randomGenerator;
     }
 
     /**

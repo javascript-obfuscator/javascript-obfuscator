@@ -225,6 +225,8 @@ Type: `number` Default: `0`
 
 This option sets seed for random generator. This is useful for creating repeatable results.
 
+If seed is `0` - random generator will work without seed.
+
 ### `selfDefending`
 Type: `boolean` Default: `true`
 

@@ -27,7 +27,7 @@ export class StringLiteralReplacer extends AbstractReplacer {
     public replace (nodeValue: string): string {
         const replaceWithStringArrayFlag: boolean = (
             nodeValue.length >= StringLiteralReplacer.minimumLengthForStringArray
-            && Math.random() <= this.options.stringArrayThreshold
+            && Utils.getRandomFloat(0, 1) <= this.options.stringArrayThreshold
         );
 
         if (this.options.stringArray && replaceWithStringArrayFlag) {

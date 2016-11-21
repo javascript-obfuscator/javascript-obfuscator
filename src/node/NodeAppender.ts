@@ -101,10 +101,7 @@ export class NodeAppender {
      * @param stackTraceRootLength
      */
     public static getRandomStackTraceIndex (stackTraceRootLength: number): number {
-        return Utils.getRandomGenerator().integer({
-            min: 0,
-            max: Math.max(0, Math.round(stackTraceRootLength - 1))
-        });
+        return Utils.getRandomInteger(0, Math.max(0, Math.round(stackTraceRootLength - 1)));
     }
 
     /**

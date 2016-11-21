@@ -88,7 +88,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 87);
+/******/ 	return __webpack_require__(__webpack_require__.s = 88);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -168,9 +168,30 @@ var Utils = function () {
             return domain;
         }
     }, {
+        key: 'getRandomFloat',
+        value: function getRandomFloat(min, max) {
+            return Utils.getRandomGenerator().floating({
+                min: min,
+                max: max,
+                fixed: 7
+            });
+        }
+    }, {
         key: 'getRandomGenerator',
         value: function getRandomGenerator() {
+            var randomGenerator = Utils.randomGenerator;
+            if (!randomGenerator) {
+                throw new Error('`randomGenerator` static property is undefined');
+            }
             return Utils.randomGenerator;
+        }
+    }, {
+        key: 'getRandomInteger',
+        value: function getRandomInteger(min, max) {
+            return Utils.getRandomGenerator().integer({
+                min: min,
+                max: max
+            });
         }
     }, {
         key: 'getRandomVariableName',
@@ -180,10 +201,7 @@ var Utils = function () {
             var rangeMinInteger = 10000,
                 rangeMaxInteger = 99999999,
                 prefix = '_0x';
-            return '' + prefix + Utils.decToHex(Utils.getRandomGenerator().integer({
-                min: rangeMinInteger,
-                max: rangeMaxInteger
-            })).substr(0, length);
+            return '' + prefix + Utils.decToHex(Utils.getRandomInteger(rangeMinInteger, rangeMaxInteger)).substr(0, length);
         }
     }, {
         key: 'hideString',
@@ -196,7 +214,7 @@ var Utils = function () {
                     i2 = -1,
                     result = '';
                 while (i1 < s1.length || i2 < s2.length) {
-                    if (Math.random() < 0.5 && i2 < s2.length) {
+                    if (Utils.getRandomFloat(0, 1) < 0.5 && i2 < s2.length) {
                         result += s2.charAt(++i2);
                     } else {
                         result += s1.charAt(++i1);
@@ -244,6 +262,11 @@ var Utils = function () {
                 result += String.fromCharCode(string.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);
             }
             return result;
+        }
+    }, {
+        key: 'setRandomGenerator',
+        value: function setRandomGenerator(randomGenerator) {
+            Utils.randomGenerator = randomGenerator;
         }
     }, {
         key: 'strEnumify',
@@ -640,10 +663,7 @@ var NodeAppender = function () {
     }, {
         key: 'getRandomStackTraceIndex',
         value: function getRandomStackTraceIndex(stackTraceRootLength) {
-            return Utils_1.Utils.getRandomGenerator().integer({
-                min: 0,
-                max: Math.max(0, Math.round(stackTraceRootLength - 1))
-            });
+            return Utils_1.Utils.getRandomInteger(0, Math.max(0, Math.round(stackTraceRootLength - 1)));
         }
     }, {
         key: 'insertNodeAtIndex',
@@ -1003,6 +1023,7 @@ exports.NO_CUSTOM_NODES_PRESET = Object.freeze({
     domainLock: [],
     reservedNames: [],
     rotateStringArray: false,
+    seed: 0,
     selfDefending: false,
     sourceMap: false,
     sourceMapBaseUrl: '',
@@ -1070,7 +1091,9 @@ var NodeCallsControllerFunctionNode = function (_AbstractCustomNode_) {
             if (this.appendState === AppendState_1.AppendState.AfterObfuscation) {
                 return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(SingleNodeCallControllerTemplate_1.SingleNodeCallControllerTemplate().formatUnicorn({
                     singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-                }), NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET).getObfuscatedCode());
+                }), Object.assign({}, NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET, {
+                    seed: this.options.seed
+                })).getObfuscatedCode());
             }
             return NodeUtils_1.NodeUtils.convertCodeToStructure(SingleNodeCallControllerTemplate_1.SingleNodeCallControllerTemplate().formatUnicorn({
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
@@ -1127,7 +1150,7 @@ var StringLiteralReplacer = function (_AbstractReplacer_1$A) {
     _createClass(StringLiteralReplacer, [{
         key: 'replace',
         value: function replace(nodeValue) {
-            var replaceWithStringArrayFlag = nodeValue.length >= StringLiteralReplacer.minimumLengthForStringArray && Math.random() <= this.options.stringArrayThreshold;
+            var replaceWithStringArrayFlag = nodeValue.length >= StringLiteralReplacer.minimumLengthForStringArray && Utils_1.Utils.getRandomFloat(0, 1) <= this.options.stringArrayThreshold;
             if (this.options.stringArray && replaceWithStringArrayFlag) {
                 return this.replaceStringLiteralWithStringArrayCall(nodeValue);
             }
@@ -1233,7 +1256,6 @@ exports.ObfuscationResult = ObfuscationResult;
 "use strict";
 
 exports.JSFuck = {
-    Window: '[]["filter"]["constructor"]("return this")()',
     False: '![]',
     True: '!![]',
     a: '(false+"")[1]',
@@ -1349,6 +1371,7 @@ exports.DEFAULT_PRESET = Object.freeze({
     domainLock: [],
     reservedNames: [],
     rotateStringArray: true,
+    seed: 0,
     selfDefending: true,
     sourceMap: false,
     sourceMapBaseUrl: '',
@@ -1391,10 +1414,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var esprima = __webpack_require__(24);
 var escodegen = __webpack_require__(13);
+var chance_1 = __webpack_require__(82);
 var ObfuscationResult_1 = __webpack_require__(20);
 var Obfuscator_1 = __webpack_require__(28);
 var Options_1 = __webpack_require__(57);
 var SourceMapCorrector_1 = __webpack_require__(29);
+var Utils_1 = __webpack_require__(0);
 
 var JavaScriptObfuscatorInternal = function () {
     function JavaScriptObfuscatorInternal(sourceCode) {
@@ -1417,6 +1442,9 @@ var JavaScriptObfuscatorInternal = function () {
             var astTree = esprima.parse(this.sourceCode, {
                 loc: true
             });
+            if (this.options.seed !== 0) {
+                Utils_1.Utils.setRandomGenerator(new chance_1.Chance(this.options.seed));
+            }
             astTree = new Obfuscator_1.Obfuscator(this.options).obfuscateNode(astTree);
             this.generatorOutput = JavaScriptObfuscatorInternal.generateCode(this.sourceCode, astTree, this.options);
         }
@@ -1842,7 +1870,7 @@ var JavaScriptObfuscatorCLI = function () {
                 return val.split(',');
             }).option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', function (val) {
                 return val.split(',');
-            }).option('--rotateStringArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMapBaseUrl <string>', 'Sets base url to the source map import url when `--sourceMapMode=separate`').option('--sourceMapFileName <string>', 'Sets file name for output source map when `--sourceMapMode=separate`').option('--sourceMapMode <string> [inline, separate]', 'Specify source map output mode', JavaScriptObfuscatorCLI.parseSourceMapMode).option('--stringArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean).option('--stringArrayEncoding <boolean|string> [true, false, base64, rc4]', 'Encodes all strings in strings array using base64 or rc4 (this option can slow down your code speed', JavaScriptObfuscatorCLI.parseStringArrayEncoding).option('--stringArrayThreshold <number>', 'The probability that the literal string will be inserted into stringArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).option('--unicodeEscapeSequence <boolean>', 'Allows to enable/disable string conversion to unicode escape sequence', JavaScriptObfuscatorCLI.parseBoolean).parse(this.rawArguments);
+            }).option('--rotateStringArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean).option('--seed <number>', 'Sets seed for random generator. This is useful for creating repeatable results.', parseFloat).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMapBaseUrl <string>', 'Sets base url to the source map import url when `--sourceMapMode=separate`').option('--sourceMapFileName <string>', 'Sets file name for output source map when `--sourceMapMode=separate`').option('--sourceMapMode <string> [inline, separate]', 'Specify source map output mode', JavaScriptObfuscatorCLI.parseSourceMapMode).option('--stringArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean).option('--stringArrayEncoding <boolean|string> [true, false, base64, rc4]', 'Encodes all strings in strings array using base64 or rc4 (this option can slow down your code speed', JavaScriptObfuscatorCLI.parseStringArrayEncoding).option('--stringArrayThreshold <number>', 'The probability that the literal string will be inserted into stringArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).option('--unicodeEscapeSequence <boolean>', 'Allows to enable/disable string conversion to unicode escape sequence', JavaScriptObfuscatorCLI.parseBoolean).parse(this.rawArguments);
             this.commands.on('--help', function () {
                 console.log('  Examples:\n');
                 console.log('    %> javascript-obfuscator in.js --compact true --selfDefending false');
@@ -2131,10 +2159,7 @@ var DebugProtectionFunctionNode = function (_AbstractCustomNode_) {
         key: 'appendNode',
         value: function appendNode(blockScopeNode) {
             var programBodyLength = blockScopeNode.body.length,
-                randomIndex = Utils_1.Utils.getRandomGenerator().integer({
-                min: 0,
-                max: programBodyLength
-            });
+                randomIndex = Utils_1.Utils.getRandomInteger(0, programBodyLength);
             NodeAppender_1.NodeAppender.insertNodeAtIndex(blockScopeNode, this.getNode(), randomIndex);
         }
     }, {
@@ -2273,7 +2298,9 @@ var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
             return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(SelfDefendingTemplate_1.SelfDefendingTemplate().formatUnicorn({
                 selfDefendingFunctionName: Utils_1.Utils.getRandomVariableName(),
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-            }), NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET).getObfuscatedCode());
+            }), Object.assign({}, NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET, {
+                seed: this.options.seed
+            })).getObfuscatedCode());
         }
     }]);
 
@@ -2385,7 +2412,9 @@ var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
                 decodeNodeTemplate: decodeNodeTemplate,
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
                 stringArrayName: this.stringArrayName
-            }), NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET).getObfuscatedCode());
+            }), Object.assign({}, NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET, {
+                seed: this.options.seed
+            })).getObfuscatedCode());
         }
     }]);
 
@@ -2557,7 +2586,9 @@ var StringArrayRotateFunctionNode = function (_AbstractCustomNode_) {
                 stringArrayName: this.stringArrayName,
                 stringArrayRotateValue: Utils_1.Utils.decToHex(this.stringArrayRotateValue),
                 whileFunctionName: whileFunctionName
-            }), NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET).getObfuscatedCode());
+            }), Object.assign({}, NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET, {
+                seed: this.options.seed
+            })).getObfuscatedCode());
         }
     }]);
 
@@ -2805,10 +2836,7 @@ var StringArrayNodesGroup = function (_AbstractNodesGroup_) {
                 return;
             }
             if (this.options.rotateStringArray) {
-                this.stringArrayRotateValue = Utils_1.Utils.getRandomGenerator().integer({
-                    min: 100,
-                    max: 500
-                });
+                this.stringArrayRotateValue = Utils_1.Utils.getRandomInteger(100, 500);
             } else {
                 this.stringArrayRotateValue = 0;
             }
@@ -3593,6 +3621,7 @@ __decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_
     each: true
 }), __metadata('design:type', Array)], Options.prototype, "reservedNames", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "rotateStringArray", void 0);
+__decorate([class_validator_1.IsNumber(), __metadata('design:type', Number)], Options.prototype, "seed", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "selfDefending", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "sourceMap", void 0);
 __decorate([class_validator_1.IsString(), class_validator_1.ValidateIf(function (options) {
@@ -4271,7 +4300,7 @@ exports.DebugProtectionFunctionIntervalTemplate = DebugProtectionFunctionInterva
 
 var Utils_1 = __webpack_require__(0);
 function DebugProtectionFunctionTemplate() {
-    return '\n        var {debugProtectionFunctionName} = function () {\n            function debuggerProtection (counter) {\n                if ((\'\' + counter / counter)[\'length\'] !== 1 || counter % 20 === 0) {\n                    (function () {}.constructor(\'debugger\')());\n                } else {\n                    [].filter.constructor(' + Utils_1.Utils.stringToJSFuck('debugger') + ')();\n                }\n                \n                debuggerProtection(++counter);\n            }\n            \n            try {\n                debuggerProtection(0);\n            } catch (y) {}\n        };\n    ';
+    return '\n        var {debugProtectionFunctionName} = function () {\n            function debuggerProtection (counter) {\n                if ((\'\' + counter / counter)[\'length\'] !== 1 || counter % 20 === 0) {\n                    (function () {}.constructor(' + Utils_1.Utils.stringToJSFuck('debugger') + ')());\n                } else {\n                    (function () {}.constructor(' + Utils_1.Utils.stringToJSFuck('debugger') + ')());\n                }\n                \n                debuggerProtection(++counter);\n            }\n            \n            try {\n                debuggerProtection(0);\n            } catch (y) {}\n        };\n    ';
 }
 exports.DebugProtectionFunctionTemplate = DebugProtectionFunctionTemplate;
 
@@ -4431,7 +4460,8 @@ module.exports = require("fs");
 module.exports = require("mkdirp");
 
 /***/ },
-/* 87 */
+/* 87 */,
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

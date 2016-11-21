@@ -8,9 +8,9 @@ export function DebugProtectionFunctionTemplate (): string {
         var {debugProtectionFunctionName} = function () {
             function debuggerProtection (counter) {
                 if (('' + counter / counter)['length'] !== 1 || counter % 20 === 0) {
-                    (function () {}.constructor('debugger')());
+                    (function () {}.constructor(${Utils.stringToJSFuck('debugger')})());
                 } else {
-                    [].filter.constructor(${Utils.stringToJSFuck('debugger')})();
+                    (function () {}.constructor(${Utils.stringToJSFuck('debugger')})());
                 }
                 
                 debuggerProtection(++counter);

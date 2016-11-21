@@ -79,9 +79,14 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     protected getNodeStructure (): TStatement[] {
         if (this.appendState === AppendState.AfterObfuscation) {
             return NodeUtils.convertCodeToStructure(
-                JavaScriptObfuscator.obfuscate(SingleNodeCallControllerTemplate().formatUnicorn({
-                    singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-                }), NO_CUSTOM_NODES_PRESET).getObfuscatedCode()
+                JavaScriptObfuscator.obfuscate(
+                    SingleNodeCallControllerTemplate().formatUnicorn({
+                        singleNodeCallControllerFunctionName: this.callsControllerFunctionName
+                    }),
+                    Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                        seed: this.options.seed
+                    })
+                ).getObfuscatedCode()
             );
         }
 

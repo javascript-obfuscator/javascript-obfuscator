@@ -2,6 +2,8 @@ import * as esprima from 'esprima';
 import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
+import { Chance } from 'chance';
+
 import { IObfuscatorOptions } from './interfaces/IObfuscatorOptions';
 import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
@@ -11,6 +13,7 @@ import { ObfuscationResult } from './ObfuscationResult';
 import { Obfuscator } from './Obfuscator';
 import { Options } from './options/Options';
 import { SourceMapCorrector } from './SourceMapCorrector';
+import { Utils } from './Utils';
 
 export class JavaScriptObfuscatorInternal {
     /**
@@ -90,6 +93,10 @@ export class JavaScriptObfuscatorInternal {
         let astTree: ESTree.Node = esprima.parse(this.sourceCode, {
             loc: true
         });
+
+        if (this.options.seed !== 0) {
+            Utils.setRandomGenerator(new Chance(this.options.seed));
+        }
 
         astTree = new Obfuscator(this.options).obfuscateNode(astTree);
 

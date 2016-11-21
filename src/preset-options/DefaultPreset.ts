@@ -10,6 +10,7 @@ export const DEFAULT_PRESET: IObfuscatorOptions = Object.freeze({
     domainLock: [],
     reservedNames: [],
     rotateStringArray: true,
+    seed: 0,
     selfDefending: true,
     sourceMap: false,
     sourceMapBaseUrl: '',

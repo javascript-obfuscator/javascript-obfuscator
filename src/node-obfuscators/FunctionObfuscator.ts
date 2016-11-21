@@ -38,7 +38,7 @@ export class FunctionObfuscator extends AbstractNodeObfuscator {
     /**
      * @param functionNode
      */
-    public obfuscateNode (functionNode: ESTree.Function): void {
+    public transformNode (functionNode: ESTree.Function): void {
         this.storeFunctionParams(functionNode);
         this.replaceFunctionParams(functionNode);
     }

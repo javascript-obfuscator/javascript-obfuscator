@@ -22,7 +22,7 @@ export class ObjectExpressionObfuscator extends AbstractNodeObfuscator {
     /**
      * @param objectExpressionNode
      */
-    public obfuscateNode (objectExpressionNode: ESTree.ObjectExpression): void {
+    public transformNode (objectExpressionNode: ESTree.ObjectExpression): void {
         objectExpressionNode.properties
             .forEach((property: ESTree.Property) => {
                 if (property.shorthand) {

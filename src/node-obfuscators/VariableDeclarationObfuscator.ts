@@ -43,7 +43,7 @@ export class VariableDeclarationObfuscator extends AbstractNodeObfuscator {
      * @param variableDeclarationNode
      * @param parentNode
      */
-    public obfuscateNode (variableDeclarationNode: ESTree.VariableDeclaration, parentNode: ESTree.Node): void {
+    public transformNode (variableDeclarationNode: ESTree.VariableDeclaration, parentNode: ESTree.Node): void {
         const blockScopeOfVariableDeclarationNode: TNodeWithBlockStatement = NodeUtils
             .getBlockScopeOfNode(variableDeclarationNode);
 

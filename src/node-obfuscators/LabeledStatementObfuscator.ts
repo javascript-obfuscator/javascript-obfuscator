@@ -46,7 +46,7 @@ export class LabeledStatementObfuscator extends AbstractNodeObfuscator {
     /**
      * @param labeledStatementNode
      */
-    public obfuscateNode (labeledStatementNode: ESTree.LabeledStatement): void {
+    public transformNode (labeledStatementNode: ESTree.LabeledStatement): void {
         this.storeLabeledStatementName(labeledStatementNode);
         this.replaceLabeledStatementName(labeledStatementNode);
     }

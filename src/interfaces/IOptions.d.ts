@@ -10,6 +10,7 @@ export interface IOptions {
     readonly domainLock: string[];
     readonly reservedNames: string[];
     readonly rotateStringArray: boolean;
+    readonly seed: number;
     readonly selfDefending: boolean;
     readonly sourceMap: boolean;
     readonly sourceMapBaseUrl: string;

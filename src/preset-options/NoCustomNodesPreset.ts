@@ -11,6 +11,7 @@ export const NO_CUSTOM_NODES_PRESET: IObfuscatorOptions = Object.freeze({
     domainLock: [],
     reservedNames: [],
     rotateStringArray: false,
+    seed: 0,
     selfDefending: false,
     sourceMap: false,
     sourceMapBaseUrl: '',

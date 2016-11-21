@@ -40,10 +40,7 @@ export class StringArrayNodesGroup extends AbstractNodesGroup {
         }
 
         if (this.options.rotateStringArray) {
-            this.stringArrayRotateValue = Utils.getRandomGenerator().integer({
-                min: 100,
-                max: 500
-            });
+            this.stringArrayRotateValue = Utils.getRandomInteger(100, 500);
         } else {
             this.stringArrayRotateValue = 0;
         }

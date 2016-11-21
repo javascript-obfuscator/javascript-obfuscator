@@ -3,6 +3,7 @@ import { IObfuscationResult } from '../../src/interfaces/IObfuscationResult';
 import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscator';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../src/preset-options/NoCustomNodesPreset';
+import { readFileAsString } from '../helpers/readFileAsString';
 
 const assert: Chai.AssertStatic = require('chai').assert;
 
@@ -124,6 +125,41 @@ describe('JavaScriptObfuscator', () => {
 
             assert.match(obfuscatedCode2, pattern1);
             assert.match(obfuscatedCode2, pattern2);
+        });
+
+        it('should returns same code every time with same `seed`', () => {
+            const code: string = readFileAsString('./test/fixtures/sample.js');
+            const seed: number = 12345;
+
+            const obfuscationResult1: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code, { seed: seed }
+            );
+            const obfuscationResult2: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code, { seed: seed }
+            );
+
+            assert.equal(obfuscationResult1.getObfuscatedCode(), obfuscationResult2.getObfuscatedCode());
+        });
+
+        it('should returns different code with different `seed` option value', () => {
+            const code: string = readFileAsString('./test/fixtures/sample.js');
+
+            const obfuscationResult1: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code, { seed: 12345 }
+            );
+            const obfuscationResult2: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code, { seed: 12346 }
+            );
+
+            const obfuscationResult3: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code, { seed: 0 }
+            );
+            const obfuscationResult4: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code, { seed: 0 }
+            );
+
+            assert.notEqual(obfuscationResult1.getObfuscatedCode(), obfuscationResult2.getObfuscatedCode());
+            assert.notEqual(obfuscationResult3.getObfuscatedCode(), obfuscationResult4.getObfuscatedCode());
         });
     });
 });

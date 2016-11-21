@@ -77,7 +77,9 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
                 selfDefendingFunctionName: Utils.getRandomVariableName(),
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
             }),
-            NO_CUSTOM_NODES_PRESET
+            Object.assign({},  NO_CUSTOM_NODES_PRESET, {
+                seed: this.options.seed
+            })
         ).getObfuscatedCode();
     }
 }

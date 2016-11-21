@@ -1,5 +1,10 @@
 Change Log
 ===
+v0.8.2
+---
+* New option `seed` sets seed for random generator. This is useful for creating repeatable results.
+* IE8 runtime error fix.
+
 v0.8.1
 ---
 * `disableConsoleOutput` option now replaces `console.xxx` functions on empty function instead of infinity loop.

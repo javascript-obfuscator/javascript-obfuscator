@@ -131,7 +131,7 @@ Following options available for the JS Obfuscator:
     stringArray: true,
     stringArrayEncoding: false,
     stringArrayThreshold: 0.8,
-    unicdeEscapeSequence: true
+    unicodeEscapeSequence: true
 }
 ```
 

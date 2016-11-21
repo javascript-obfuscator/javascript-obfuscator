@@ -1,5 +1,9 @@
 Change Log
 ===
+v0.8.1
+---
+* `disableConsoleOutput` option now replaces `console.xxx` functions on empty function instead of infinity loop.
+
 v0.8.0
 ---
 * **Breaking options change:** `unicodeArray` option has been renamed to `stringArray`.

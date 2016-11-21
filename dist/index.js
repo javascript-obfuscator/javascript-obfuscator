@@ -88,7 +88,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 87);
+/******/ 	return __webpack_require__(__webpack_require__.s = 89);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -111,15 +111,15 @@ var Utils = function () {
     }
 
     _createClass(Utils, null, [{
-        key: "arrayContains",
+        key: 'arrayContains',
         value: function arrayContains(array, searchElement) {
             return array.indexOf(searchElement) >= 0;
         }
     }, {
-        key: "arrayRotate",
+        key: 'arrayRotate',
         value: function arrayRotate(array, times) {
             if (!array.length) {
-                throw new ReferenceError("Cannot rotate empty array.");
+                throw new ReferenceError('Cannot rotate empty array.');
             }
             if (times <= 0) {
                 return array;
@@ -133,7 +133,7 @@ var Utils = function () {
             return newArray;
         }
     }, {
-        key: "btoa",
+        key: 'btoa',
         value: function btoa(string) {
             var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
             var output = '';
@@ -150,13 +150,13 @@ var Utils = function () {
             return output;
         }
     }, {
-        key: "decToHex",
+        key: 'decToHex',
         value: function decToHex(dec) {
             var radix = 16;
             return Number(dec).toString(radix);
         }
     }, {
-        key: "extractDomainFromUrl",
+        key: 'extractDomainFromUrl',
         value: function extractDomainFromUrl(url) {
             var domain = void 0;
             if (url.indexOf('://') > -1 || url.indexOf('//') === 0) {
@@ -168,25 +168,25 @@ var Utils = function () {
             return domain;
         }
     }, {
-        key: "getRandomGenerator",
+        key: 'getRandomGenerator',
         value: function getRandomGenerator() {
             return Utils.randomGenerator;
         }
     }, {
-        key: "getRandomVariableName",
+        key: 'getRandomVariableName',
         value: function getRandomVariableName() {
             var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 6;
 
             var rangeMinInteger = 10000,
                 rangeMaxInteger = 99999999,
                 prefix = '_0x';
-            return "" + prefix + Utils.decToHex(Utils.getRandomGenerator().integer({
+            return '' + prefix + Utils.decToHex(Utils.getRandomGenerator().integer({
                 min: rangeMinInteger,
                 max: rangeMaxInteger
             })).substr(0, length);
         }
     }, {
-        key: "hideString",
+        key: 'hideString',
         value: function hideString(str, length) {
             var escapeRegExp = function escapeRegExp(s) {
                 return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
@@ -213,12 +213,12 @@ var Utils = function () {
             return [randomMerge(str, randomStringDiff), randomStringDiff];
         }
     }, {
-        key: "isInteger",
+        key: 'isInteger',
         value: function isInteger(number) {
             return number % 1 === 0;
         }
     }, {
-        key: "rc4",
+        key: 'rc4',
         value: function rc4(string, key) {
             var s = [],
                 j = 0,
@@ -246,33 +246,33 @@ var Utils = function () {
             return result;
         }
     }, {
-        key: "strEnumify",
+        key: 'strEnumify',
         value: function strEnumify(obj) {
             return obj;
         }
     }, {
-        key: "stringToJSFuck",
+        key: 'stringToJSFuck',
         value: function stringToJSFuck(string) {
             return Array.from(string).map(function (character) {
                 return JSFuck_1.JSFuck[character] || character;
             }).join(' + ');
         }
     }, {
-        key: "stringToUnicodeEscapeSequence",
+        key: 'stringToUnicodeEscapeSequence',
         value: function stringToUnicodeEscapeSequence(string) {
             var radix = 16;
             var prefix = void 0,
                 regexp = new RegExp('[\x00-\x7F]'),
                 template = void 0;
-            return "" + string.replace(/[\s\S]/g, function (escape) {
+            return '' + string.replace(/[\s\S]/g, function (escape) {
                 if (regexp.test(escape)) {
                     prefix = '\\x';
                     template = '0'.repeat(2);
                 } else {
-                    prefix = "\\u";
+                    prefix = '\\u';
                     template = '0'.repeat(4);
                 }
-                return "" + prefix + (template + escape.charCodeAt(0).toString(radix)).slice(-template.length);
+                return '' + prefix + (template + escape.charCodeAt(0).toString(radix)).slice(-template.length);
             });
         }
     }]);
@@ -307,7 +307,7 @@ var NodeUtils = function () {
     }
 
     _createClass(NodeUtils, null, [{
-        key: "addXVerbatimPropertyToLiterals",
+        key: 'addXVerbatimPropertyToLiterals',
         value: function addXVerbatimPropertyToLiterals(node) {
             NodeUtils.typedReplace(node, NodeType_1.NodeType.Literal, {
                 leave: function leave(node) {
@@ -319,7 +319,7 @@ var NodeUtils = function () {
             });
         }
     }, {
-        key: "convertCodeToStructure",
+        key: 'convertCodeToStructure',
         value: function convertCodeToStructure(code) {
             var structure = esprima.parse(code);
             NodeUtils.addXVerbatimPropertyToLiterals(structure);
@@ -327,20 +327,20 @@ var NodeUtils = function () {
             return structure.body;
         }
     }, {
-        key: "getBlockStatementNodeByIndex",
+        key: 'getBlockStatementNodeByIndex',
         value: function getBlockStatementNodeByIndex(node) {
             var index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
             if (Node_1.Node.isNodeHasBlockStatement(node)) {
                 if (node.body[index] === undefined) {
-                    throw new ReferenceError("Wrong index `" + index + "`. Block-statement body length is `" + node.body.length + "`");
+                    throw new ReferenceError('Wrong index `' + index + '`. Block-statement body length is `' + node.body.length + '`');
                 }
                 return node.body[index];
             }
             throw new TypeError('The specified node have no a block-statement');
         }
     }, {
-        key: "getBlockScopeOfNode",
+        key: 'getBlockScopeOfNode',
         value: function getBlockScopeOfNode(node) {
             var depth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
@@ -365,7 +365,7 @@ var NodeUtils = function () {
             return NodeUtils.getBlockScopeOfNode(parentNode);
         }
     }, {
-        key: "parentize",
+        key: 'parentize',
         value: function parentize(node) {
             var isRootNode = true;
             estraverse.replace(node, {
@@ -388,12 +388,12 @@ var NodeUtils = function () {
             });
         }
     }, {
-        key: "typedReplace",
+        key: 'typedReplace',
         value: function typedReplace(node, nodeType, visitor) {
             NodeUtils.typedTraverse(node, nodeType, visitor, 'replace');
         }
     }, {
-        key: "typedTraverse",
+        key: 'typedTraverse',
         value: function typedTraverse(node, nodeType, visitor) {
             var traverseType = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'traverse';
 
@@ -437,7 +437,7 @@ var Node = function () {
     }
 
     _createClass(Node, null, [{
-        key: "getProgramNode",
+        key: 'getProgramNode',
         value: function getProgramNode(bodyNode) {
             return {
                 'type': NodeType_1.NodeType.Program,
@@ -447,52 +447,52 @@ var Node = function () {
             };
         }
     }, {
-        key: "isArrowFunctionExpressionNode",
+        key: 'isArrowFunctionExpressionNode',
         value: function isArrowFunctionExpressionNode(node) {
             return node.type === NodeType_1.NodeType.ArrowFunctionExpression;
         }
     }, {
-        key: "isBlockStatementNode",
+        key: 'isBlockStatementNode',
         value: function isBlockStatementNode(node) {
             return node.type === NodeType_1.NodeType.BlockStatement;
         }
     }, {
-        key: "isBreakStatementNode",
+        key: 'isBreakStatementNode',
         value: function isBreakStatementNode(node) {
             return node.type === NodeType_1.NodeType.BreakStatement;
         }
     }, {
-        key: "isCallExpressionNode",
+        key: 'isCallExpressionNode',
         value: function isCallExpressionNode(node) {
             return node.type === NodeType_1.NodeType.CallExpression;
         }
     }, {
-        key: "isContinueStatementNode",
+        key: 'isContinueStatementNode',
         value: function isContinueStatementNode(node) {
             return node.type === NodeType_1.NodeType.ContinueStatement;
         }
     }, {
-        key: "isExpressionStatementNode",
+        key: 'isExpressionStatementNode',
         value: function isExpressionStatementNode(node) {
             return node.type === NodeType_1.NodeType.ExpressionStatement;
         }
     }, {
-        key: "isFunctionDeclarationNode",
+        key: 'isFunctionDeclarationNode',
         value: function isFunctionDeclarationNode(node) {
             return node.type === NodeType_1.NodeType.FunctionDeclaration;
         }
     }, {
-        key: "isFunctionExpressionNode",
+        key: 'isFunctionExpressionNode',
         value: function isFunctionExpressionNode(node) {
             return node.type === NodeType_1.NodeType.FunctionExpression;
         }
     }, {
-        key: "isIdentifierNode",
+        key: 'isIdentifierNode',
         value: function isIdentifierNode(node) {
             return node.type === NodeType_1.NodeType.Identifier;
         }
     }, {
-        key: "isLabelIdentifierNode",
+        key: 'isLabelIdentifierNode',
         value: function isLabelIdentifierNode(node, parentNode) {
             var parentNodeIsLabeledStatementNode = Node.isLabeledStatementNode(parentNode) && parentNode.label === node;
             var parentNodeIsContinueStatementNode = Node.isContinueStatementNode(parentNode) && parentNode.label === node;
@@ -500,37 +500,37 @@ var Node = function () {
             return parentNodeIsLabeledStatementNode || parentNodeIsContinueStatementNode || parentNodeIsBreakStatementNode;
         }
     }, {
-        key: "isLabeledStatementNode",
+        key: 'isLabeledStatementNode',
         value: function isLabeledStatementNode(node) {
             return node.type === NodeType_1.NodeType.LabeledStatement;
         }
     }, {
-        key: "isLiteralNode",
+        key: 'isLiteralNode',
         value: function isLiteralNode(node) {
             return node.type === NodeType_1.NodeType.Literal;
         }
     }, {
-        key: "isMemberExpressionNode",
+        key: 'isMemberExpressionNode',
         value: function isMemberExpressionNode(node) {
             return node.type === NodeType_1.NodeType.MemberExpression;
         }
     }, {
-        key: "isObjectExpressionNode",
+        key: 'isObjectExpressionNode',
         value: function isObjectExpressionNode(node) {
             return node.type === NodeType_1.NodeType.ObjectExpression;
         }
     }, {
-        key: "isProgramNode",
+        key: 'isProgramNode',
         value: function isProgramNode(node) {
             return node.type === NodeType_1.NodeType.Program;
         }
     }, {
-        key: "isPropertyNode",
+        key: 'isPropertyNode',
         value: function isPropertyNode(node) {
             return node.type === NodeType_1.NodeType.Property;
         }
     }, {
-        key: "isReplaceableIdentifierNode",
+        key: 'isReplaceableIdentifierNode',
         value: function isReplaceableIdentifierNode(node, parentNode) {
             if (!Node.isIdentifierNode(node)) {
                 return false;
@@ -540,17 +540,17 @@ var Node = function () {
             return !parentNodeIsPropertyNode && !parentNodeIsMemberExpressionNode && !Node.isLabelIdentifierNode(node, parentNode);
         }
     }, {
-        key: "isVariableDeclarationNode",
+        key: 'isVariableDeclarationNode',
         value: function isVariableDeclarationNode(node) {
             return node.type === NodeType_1.NodeType.VariableDeclaration;
         }
     }, {
-        key: "isVariableDeclaratorNode",
+        key: 'isVariableDeclaratorNode',
         value: function isVariableDeclaratorNode(node) {
             return node.type === NodeType_1.NodeType.VariableDeclarator;
         }
     }, {
-        key: "isNodeHasBlockStatement",
+        key: 'isNodeHasBlockStatement',
         value: function isNodeHasBlockStatement(node) {
             return node.hasOwnProperty('body') && Array.isArray(node.body);
         }
@@ -568,11 +568,11 @@ exports.Node = Node;
 "use strict";
 "use strict";
 
-var AppendState;
 (function (AppendState) {
     AppendState[AppendState["AfterObfuscation"] = 0] = "AfterObfuscation";
     AppendState[AppendState["BeforeObfuscation"] = 1] = "BeforeObfuscation";
-})(AppendState = exports.AppendState || (exports.AppendState = {}));
+})(exports.AppendState || (exports.AppendState = {}));
+var AppendState = exports.AppendState;
 
 /***/ },
 /* 4 */
@@ -601,7 +601,7 @@ var NodeAppender = function () {
     }
 
     _createClass(NodeAppender, null, [{
-        key: "appendNode",
+        key: 'appendNode',
         value: function appendNode(blockScopeNode, nodeBodyStatements) {
             if (!NodeAppender.validateBodyStatements(nodeBodyStatements)) {
                 nodeBodyStatements = [];
@@ -610,7 +610,7 @@ var NodeAppender = function () {
             blockScopeNode.body = [].concat(_toConsumableArray(blockScopeNode.body), _toConsumableArray(nodeBodyStatements));
         }
     }, {
-        key: "appendNodeToOptimalBlockScope",
+        key: 'appendNodeToOptimalBlockScope',
         value: function appendNodeToOptimalBlockScope(blockScopeStackTraceData, blockScopeNode, nodeBodyStatements) {
             var index = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
 
@@ -623,13 +623,13 @@ var NodeAppender = function () {
             NodeAppender.prependNode(targetBlockScope, nodeBodyStatements);
         }
     }, {
-        key: "getOptimalBlockScope",
+        key: 'getOptimalBlockScope',
         value: function getOptimalBlockScope(blockScopeTraceData, index) {
             var deep = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : Infinity;
 
             var firstCall = blockScopeTraceData[index];
             if (deep <= 0) {
-                throw new Error("Invalid `deep` argument value. Value should be bigger then 0.");
+                throw new Error('Invalid `deep` argument value. Value should be bigger then 0.');
             }
             if (deep > 1 && firstCall.stackTrace.length) {
                 return NodeAppender.getOptimalBlockScope(firstCall.stackTrace, 0, --deep);
@@ -638,7 +638,7 @@ var NodeAppender = function () {
             }
         }
     }, {
-        key: "getRandomStackTraceIndex",
+        key: 'getRandomStackTraceIndex',
         value: function getRandomStackTraceIndex(stackTraceRootLength) {
             return Utils_1.Utils.getRandomGenerator().integer({
                 min: 0,
@@ -646,7 +646,7 @@ var NodeAppender = function () {
             });
         }
     }, {
-        key: "insertNodeAtIndex",
+        key: 'insertNodeAtIndex',
         value: function insertNodeAtIndex(blockScopeNode, nodeBodyStatements, index) {
             if (!NodeAppender.validateBodyStatements(nodeBodyStatements)) {
                 nodeBodyStatements = [];
@@ -655,7 +655,7 @@ var NodeAppender = function () {
             blockScopeNode.body = [].concat(_toConsumableArray(blockScopeNode.body.slice(0, index)), _toConsumableArray(nodeBodyStatements), _toConsumableArray(blockScopeNode.body.slice(index)));
         }
     }, {
-        key: "prependNode",
+        key: 'prependNode',
         value: function prependNode(blockScopeNode, nodeBodyStatements) {
             if (!NodeAppender.validateBodyStatements(nodeBodyStatements)) {
                 nodeBodyStatements = [];
@@ -664,7 +664,7 @@ var NodeAppender = function () {
             blockScopeNode.body = [].concat(_toConsumableArray(nodeBodyStatements), _toConsumableArray(blockScopeNode.body));
         }
     }, {
-        key: "parentizeBodyStatementsBeforeAppend",
+        key: 'parentizeBodyStatementsBeforeAppend',
         value: function parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements) {
             var _iteratorNormalCompletion = true;
             var _didIteratorError = false;
@@ -694,7 +694,7 @@ var NodeAppender = function () {
             return nodeBodyStatements;
         }
     }, {
-        key: "validateBodyStatements",
+        key: 'validateBodyStatements',
         value: function validateBodyStatements(nodeBodyStatements) {
             return nodeBodyStatements.every(function (statementNode) {
                 return !!statementNode && statementNode.hasOwnProperty('type');
@@ -832,7 +832,7 @@ var JavaScriptObfuscator = function () {
     }
 
     _createClass(JavaScriptObfuscator, null, [{
-        key: "obfuscate",
+        key: 'obfuscate',
         value: function obfuscate(sourceCode) {
             var obfuscatorOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -841,7 +841,7 @@ var JavaScriptObfuscator = function () {
             return javaScriptObfuscator.getObfuscationResult();
         }
     }, {
-        key: "runCLI",
+        key: 'runCLI',
         value: function runCLI(argv) {
             new JavaScriptObfuscatorCLI_1.JavaScriptObfuscatorCLI(argv).run();
         }
@@ -922,7 +922,7 @@ var IdentifierReplacer = function (_AbstractReplacer_1$A) {
     }
 
     _createClass(IdentifierReplacer, [{
-        key: "replace",
+        key: 'replace',
         value: function replace(nodeValue) {
             var obfuscatedIdentifierName = this.namesMap.get(nodeValue);
             if (!obfuscatedIdentifierName) {
@@ -931,14 +931,14 @@ var IdentifierReplacer = function (_AbstractReplacer_1$A) {
             return obfuscatedIdentifierName;
         }
     }, {
-        key: "storeNames",
+        key: 'storeNames',
         value: function storeNames(nodeName) {
             if (!this.isReservedName(nodeName)) {
                 this.namesMap.set(nodeName, Utils_1.Utils.getRandomVariableName());
             }
         }
     }, {
-        key: "isReservedName",
+        key: 'isReservedName',
         value: function isReservedName(name) {
             return this.options.reservedNames.some(function (reservedName) {
                 return new RegExp(reservedName, 'g').test(name);
@@ -1054,7 +1054,7 @@ var NodeCallsControllerFunctionNode = function (_AbstractCustomNode_) {
     }
 
     _createClass(NodeCallsControllerFunctionNode, [{
-        key: "appendNode",
+        key: 'appendNode',
         value: function appendNode(blockScopeNode) {
             var targetBlockScope = void 0;
             if (this.stackTraceData.length) {
@@ -1065,7 +1065,7 @@ var NodeCallsControllerFunctionNode = function (_AbstractCustomNode_) {
             NodeAppender_1.NodeAppender.prependNode(targetBlockScope, this.getNode());
         }
     }, {
-        key: "getNodeStructure",
+        key: 'getNodeStructure',
         value: function getNodeStructure() {
             if (this.appendState === AppendState_1.AppendState.AfterObfuscation) {
                 return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(SingleNodeCallControllerTemplate_1.SingleNodeCallControllerTemplate().formatUnicorn({
@@ -1125,16 +1125,16 @@ var StringLiteralReplacer = function (_AbstractReplacer_1$A) {
     }
 
     _createClass(StringLiteralReplacer, [{
-        key: "replace",
+        key: 'replace',
         value: function replace(nodeValue) {
             var replaceWithStringArrayFlag = nodeValue.length >= StringLiteralReplacer.minimumLengthForStringArray && Math.random() <= this.options.stringArrayThreshold;
             if (this.options.stringArray && replaceWithStringArrayFlag) {
                 return this.replaceStringLiteralWithStringArrayCall(nodeValue);
             }
-            return "'" + Utils_1.Utils.stringToUnicodeEscapeSequence(nodeValue) + "'";
+            return '\'' + Utils_1.Utils.stringToUnicodeEscapeSequence(nodeValue) + '\'';
         }
     }, {
-        key: "replaceStringLiteralWithStringArrayCall",
+        key: 'replaceStringLiteralWithStringArrayCall',
         value: function replaceStringLiteralWithStringArrayCall(value) {
             var stringArrayNode = this.nodes.get('stringArrayNode');
             if (!stringArrayNode) {
@@ -1169,9 +1169,9 @@ var StringLiteralReplacer = function (_AbstractReplacer_1$A) {
                 throw new ReferenceError('`stringArrayCallsWrapper` node is not found in Map with custom node.');
             }
             if (this.options.stringArrayEncoding === StringArrayEncoding_1.StringArrayEncoding.rc4) {
-                return stringArrayCallsWrapper.getNodeIdentifier() + "('" + hexadecimalIndex + "', '" + Utils_1.Utils.stringToUnicodeEscapeSequence(rc4Key) + "')";
+                return stringArrayCallsWrapper.getNodeIdentifier() + '(\'' + hexadecimalIndex + '\', \'' + Utils_1.Utils.stringToUnicodeEscapeSequence(rc4Key) + '\')';
             }
-            return stringArrayCallsWrapper.getNodeIdentifier() + "('" + hexadecimalIndex + "')";
+            return stringArrayCallsWrapper.getNodeIdentifier() + '(\'' + hexadecimalIndex + '\')';
         }
     }]);
 
@@ -1318,13 +1318,13 @@ var NumberLiteralReplacer = function (_AbstractReplacer_1$A) {
     }
 
     _createClass(NumberLiteralReplacer, [{
-        key: "replace",
+        key: 'replace',
         value: function replace(nodeValue) {
             var prefix = '0x';
             if (!Utils_1.Utils.isInteger(nodeValue)) {
                 return String(nodeValue);
             }
-            return "" + prefix + Utils_1.Utils.decToHex(nodeValue);
+            return '' + prefix + Utils_1.Utils.decToHex(nodeValue);
         }
     }]);
 
@@ -1407,12 +1407,12 @@ var JavaScriptObfuscatorInternal = function () {
     }
 
     _createClass(JavaScriptObfuscatorInternal, [{
-        key: "getObfuscationResult",
+        key: 'getObfuscationResult',
         value: function getObfuscationResult() {
             return new SourceMapCorrector_1.SourceMapCorrector(new ObfuscationResult_1.ObfuscationResult(this.generatorOutput.code, this.generatorOutput.map), this.options.sourceMapBaseUrl + this.options.sourceMapFileName, this.options.sourceMapMode).correct();
         }
     }, {
-        key: "obfuscate",
+        key: 'obfuscate',
         value: function obfuscate() {
             var astTree = esprima.parse(this.sourceCode, {
                 loc: true
@@ -1421,7 +1421,7 @@ var JavaScriptObfuscatorInternal = function () {
             this.generatorOutput = JavaScriptObfuscatorInternal.generateCode(this.sourceCode, astTree, this.options);
         }
     }], [{
-        key: "generateCode",
+        key: 'generateCode',
         value: function generateCode(sourceCode, astTree, options) {
             var escodegenParams = Object.assign({}, JavaScriptObfuscatorInternal.escodegenParams);
             if (options.sourceMap) {
@@ -1489,7 +1489,7 @@ var Obfuscator = function () {
     }
 
     _createClass(Obfuscator, [{
-        key: "obfuscateNode",
+        key: 'obfuscateNode',
         value: function obfuscateNode(node) {
             if (Node_1.Node.isProgramNode(node) && !node.body.length) {
                 return node;
@@ -1503,7 +1503,7 @@ var Obfuscator = function () {
             return node;
         }
     }, {
-        key: "afterObfuscation",
+        key: 'afterObfuscation',
         value: function afterObfuscation(astTree) {
             this.customNodes.forEach(function (node) {
                 if (node.getAppendState() === AppendState_1.AppendState.AfterObfuscation) {
@@ -1512,7 +1512,7 @@ var Obfuscator = function () {
             });
         }
     }, {
-        key: "beforeObfuscation",
+        key: 'beforeObfuscation',
         value: function beforeObfuscation(astTree) {
             this.customNodes.forEach(function (node) {
                 if (node.getAppendState() === AppendState_1.AppendState.BeforeObfuscation) {
@@ -1521,7 +1521,7 @@ var Obfuscator = function () {
             });
         }
     }, {
-        key: "initializeCustomNodes",
+        key: 'initializeCustomNodes',
         value: function initializeCustomNodes(stackTraceData) {
             var _this = this;
 
@@ -1536,7 +1536,7 @@ var Obfuscator = function () {
             this.customNodes = new Map(customNodes);
         }
     }, {
-        key: "initializeNodeObfuscators",
+        key: 'initializeNodeObfuscators',
         value: function initializeNodeObfuscators(node, parentNode) {
             var _this2 = this;
 
@@ -1549,7 +1549,7 @@ var Obfuscator = function () {
             });
         }
     }, {
-        key: "obfuscate",
+        key: 'obfuscate',
         value: function obfuscate(node) {
             var _this3 = this;
 
@@ -1594,12 +1594,12 @@ var SourceMapCorrector = function () {
     }
 
     _createClass(SourceMapCorrector, [{
-        key: "correct",
+        key: 'correct',
         value: function correct() {
             return new ObfuscationResult_1.ObfuscationResult(this.correctObfuscatedCode(), this.sourceMap);
         }
     }, {
-        key: "correctObfuscatedCode",
+        key: 'correctObfuscatedCode',
         value: function correctObfuscatedCode() {
             if (!this.sourceMap) {
                 return this.obfuscatedCode;
@@ -1607,7 +1607,7 @@ var SourceMapCorrector = function () {
             var sourceMappingUrl = '//# sourceMappingURL=';
             switch (this.sourceMapMode) {
                 case SourceMapMode_1.SourceMapMode.Inline:
-                    sourceMappingUrl += "data:application/json;base64," + Utils_1.Utils.btoa(this.sourceMap);
+                    sourceMappingUrl += 'data:application/json;base64,' + Utils_1.Utils.btoa(this.sourceMap);
                     break;
                 case SourceMapMode_1.SourceMapMode.Separate:
                 default:
@@ -1617,7 +1617,7 @@ var SourceMapCorrector = function () {
                     sourceMappingUrl += this.sourceMapUrl;
                     break;
             }
-            return this.obfuscatedCode + "\n" + sourceMappingUrl;
+            return this.obfuscatedCode + '\n' + sourceMappingUrl;
         }
     }]);
 
@@ -1707,37 +1707,37 @@ var CLIUtils = function () {
     }
 
     _createClass(CLIUtils, null, [{
-        key: "getOutputCodePath",
+        key: 'getOutputCodePath',
         value: function getOutputCodePath(outputPath, inputPath) {
             if (outputPath) {
                 return outputPath;
             }
             return inputPath.split('.').map(function (value, index) {
-                return index === 0 ? value + "-obfuscated" : value;
+                return index === 0 ? value + '-obfuscated' : value;
             }).join('.');
         }
     }, {
-        key: "getOutputSourceMapPath",
+        key: 'getOutputSourceMapPath',
         value: function getOutputSourceMapPath(outputCodePath) {
             var sourceMapFileName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
 
             if (sourceMapFileName) {
-                outputCodePath = outputCodePath.substr(0, outputCodePath.lastIndexOf('/')) + "/" + sourceMapFileName;
+                outputCodePath = outputCodePath.substr(0, outputCodePath.lastIndexOf('/')) + '/' + sourceMapFileName;
             }
             if (!/\.js\.map$/.test(outputCodePath)) {
-                outputCodePath = outputCodePath.split('.')[0] + ".js.map";
+                outputCodePath = outputCodePath.split('.')[0] + '.js.map';
             } else if (/\.js$/.test(outputCodePath)) {
                 outputCodePath += '.map';
             }
             return outputCodePath;
         }
     }, {
-        key: "getPackageConfig",
+        key: 'getPackageConfig',
         value: function getPackageConfig() {
             return JSON.parse(fs.readFileSync(path.join(path.dirname(fs.realpathSync(process.argv[1])), '../package.json'), CLIUtils.encoding));
         }
     }, {
-        key: "isFilePath",
+        key: 'isFilePath',
         value: function isFilePath(filePath) {
             try {
                 return fs.statSync(filePath).isFile();
@@ -1746,22 +1746,22 @@ var CLIUtils = function () {
             }
         }
     }, {
-        key: "readFile",
+        key: 'readFile',
         value: function readFile(inputPath) {
             return fs.readFileSync(inputPath, CLIUtils.encoding);
         }
     }, {
-        key: "validateInputPath",
+        key: 'validateInputPath',
         value: function validateInputPath(inputPath) {
             if (!CLIUtils.isFilePath(inputPath)) {
-                throw new ReferenceError("Given input path must be a valid file path");
+                throw new ReferenceError('Given input path must be a valid file path');
             }
             if (!Utils_1.Utils.arrayContains(CLIUtils.availableInputExtensions, path.extname(inputPath))) {
-                throw new ReferenceError("Input file must have .js extension");
+                throw new ReferenceError('Input file must have .js extension');
             }
         }
     }, {
-        key: "writeFile",
+        key: 'writeFile',
         value: function writeFile(outputPath, data) {
             mkdirp.sync(path.dirname(outputPath));
             fs.writeFileSync(outputPath, data, {
@@ -1807,7 +1807,7 @@ var JavaScriptObfuscatorCLI = function () {
     }
 
     _createClass(JavaScriptObfuscatorCLI, [{
-        key: "run",
+        key: 'run',
         value: function run() {
             this.configureCommands();
             if (!this.arguments.length || Utils_1.Utils.arrayContains(this.arguments, '--help')) {
@@ -1820,7 +1820,7 @@ var JavaScriptObfuscatorCLI = function () {
             this.processData();
         }
     }, {
-        key: "buildOptions",
+        key: 'buildOptions',
         value: function buildOptions() {
             var obfuscatorOptions = {},
                 availableOptions = Object.keys(DefaultPreset_1.DEFAULT_PRESET);
@@ -1836,7 +1836,7 @@ var JavaScriptObfuscatorCLI = function () {
             return Object.assign({}, DefaultPreset_1.DEFAULT_PRESET, obfuscatorOptions);
         }
     }, {
-        key: "configureCommands",
+        key: 'configureCommands',
         value: function configureCommands() {
             this.commands = new commander.Command().version(JavaScriptObfuscatorCLI.getBuildVersion(), '-v, --version').usage('<inputPath> [options]').option('-o, --output <path>', 'Output path for obfuscated code').option('--compact <boolean>', 'Disable one line output code compacting', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtection <boolean>', 'Disable browser Debug panel (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtectionInterval <boolean>', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--disableConsoleOutput <boolean>', 'Allow console.log, console.info, console.error and console.warn messages output into browser console', JavaScriptObfuscatorCLI.parseBoolean).option('--domainLock <list>', 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)', function (val) {
                 return val.split(',');
@@ -1851,12 +1851,12 @@ var JavaScriptObfuscatorCLI = function () {
             });
         }
     }, {
-        key: "getData",
+        key: 'getData',
         value: function getData() {
             this.data = CLIUtils_1.CLIUtils.readFile(this.inputPath);
         }
     }, {
-        key: "processData",
+        key: 'processData',
         value: function processData() {
             var options = this.buildOptions(),
                 outputCodePath = CLIUtils_1.CLIUtils.getOutputCodePath(this.commands.output, this.inputPath);
@@ -1867,13 +1867,13 @@ var JavaScriptObfuscatorCLI = function () {
             }
         }
     }, {
-        key: "processDataWithoutSourceMap",
+        key: 'processDataWithoutSourceMap',
         value: function processDataWithoutSourceMap(outputCodePath, options) {
             var obfuscatedCode = JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(this.data, options).getObfuscatedCode();
             CLIUtils_1.CLIUtils.writeFile(outputCodePath, obfuscatedCode);
         }
     }, {
-        key: "processDataWithSourceMap",
+        key: 'processDataWithSourceMap',
         value: function processDataWithSourceMap(outputCodePath, options) {
             var outputSourceMapPath = CLIUtils_1.CLIUtils.getOutputSourceMapPath(outputCodePath, options.sourceMapFileName || '');
             options.sourceMapFileName = path.basename(outputSourceMapPath);
@@ -1884,17 +1884,17 @@ var JavaScriptObfuscatorCLI = function () {
             }
         }
     }], [{
-        key: "getBuildVersion",
+        key: 'getBuildVersion',
         value: function getBuildVersion() {
             return CLIUtils_1.CLIUtils.getPackageConfig().version;
         }
     }, {
-        key: "parseBoolean",
+        key: 'parseBoolean',
         value: function parseBoolean(value) {
             return value === 'true' || value === '1';
         }
     }, {
-        key: "parseSourceMapMode",
+        key: 'parseSourceMapMode',
         value: function parseSourceMapMode(value) {
             var availableMode = Object.keys(SourceMapMode_1.SourceMapMode).some(function (key) {
                 return SourceMapMode_1.SourceMapMode[key] === value;
@@ -1905,7 +1905,7 @@ var JavaScriptObfuscatorCLI = function () {
             return value;
         }
     }, {
-        key: "parseStringArrayEncoding",
+        key: 'parseStringArrayEncoding',
         value: function parseStringArrayEncoding(value) {
             switch (value) {
                 case 'true':
@@ -1964,12 +1964,12 @@ var ConsoleOutputDisableExpressionNode = function (_AbstractCustomNode_) {
     }
 
     _createClass(ConsoleOutputDisableExpressionNode, [{
-        key: "appendNode",
+        key: 'appendNode',
         value: function appendNode(blockScopeNode) {
             NodeAppender_1.NodeAppender.appendNodeToOptimalBlockScope(this.stackTraceData, blockScopeNode, this.getNode(), this.randomStackTraceIndex);
         }
     }, {
-        key: "getNodeStructure",
+        key: 'getNodeStructure',
         value: function getNodeStructure() {
             return NodeUtils_1.NodeUtils.convertCodeToStructure(ConsoleOutputDisableExpressionTemplate_1.ConsoleOutputDisableExpressionTemplate().formatUnicorn({
                 consoleLogDisableFunctionName: Utils_1.Utils.getRandomVariableName(),
@@ -2019,12 +2019,12 @@ var DebugProtectionFunctionCallNode = function (_AbstractCustomNode_) {
     }
 
     _createClass(DebugProtectionFunctionCallNode, [{
-        key: "appendNode",
+        key: 'appendNode',
         value: function appendNode(blockScopeNode) {
             NodeAppender_1.NodeAppender.appendNode(blockScopeNode, this.getNode());
         }
     }, {
-        key: "getNodeStructure",
+        key: 'getNodeStructure',
         value: function getNodeStructure() {
             return NodeUtils_1.NodeUtils.convertCodeToStructure(DebufProtectionFunctionCallTemplate_1.DebugProtectionFunctionCallTemplate().formatUnicorn({
                 debugProtectionFunctionName: this.debugProtectionFunctionName
@@ -2073,12 +2073,12 @@ var DebugProtectionFunctionIntervalNode = function (_AbstractCustomNode_) {
     }
 
     _createClass(DebugProtectionFunctionIntervalNode, [{
-        key: "appendNode",
+        key: 'appendNode',
         value: function appendNode(blockScopeNode) {
             NodeAppender_1.NodeAppender.appendNode(blockScopeNode, this.getNode());
         }
     }, {
-        key: "getNodeStructure",
+        key: 'getNodeStructure',
         value: function getNodeStructure() {
             return NodeUtils_1.NodeUtils.convertCodeToStructure(DebugProtectionFunctionIntervalTemplate_1.DebugProtectionFunctionIntervalTemplate().formatUnicorn({
                 debugProtectionFunctionName: this.debugProtectionFunctionName
@@ -2128,7 +2128,7 @@ var DebugProtectionFunctionNode = function (_AbstractCustomNode_) {
     }
 
     _createClass(DebugProtectionFunctionNode, [{
-        key: "appendNode",
+        key: 'appendNode',
         value: function appendNode(blockScopeNode) {
             var programBodyLength = blockScopeNode.body.length,
                 randomIndex = Utils_1.Utils.getRandomGenerator().integer({
@@ -2138,12 +2138,12 @@ var DebugProtectionFunctionNode = function (_AbstractCustomNode_) {
             NodeAppender_1.NodeAppender.insertNodeAtIndex(blockScopeNode, this.getNode(), randomIndex);
         }
     }, {
-        key: "getNodeIdentifier",
+        key: 'getNodeIdentifier',
         value: function getNodeIdentifier() {
             return this.debugProtectionFunctionName;
         }
     }, {
-        key: "getNodeStructure",
+        key: 'getNodeStructure',
         value: function getNodeStructure() {
             return NodeUtils_1.NodeUtils.convertCodeToStructure(DebugProtectionFunctionTemplate_1.DebugProtectionFunctionTemplate().formatUnicorn({
                 debugProtectionFunctionName: this.debugProtectionFunctionName
@@ -2197,12 +2197,12 @@ var DomainLockNode = function (_AbstractCustomNode_) {
     }
 
     _createClass(DomainLockNode, [{
-        key: "appendNode",
+        key: 'appendNode',
         value: function appendNode(blockScopeNode) {
             NodeAppender_1.NodeAppender.appendNodeToOptimalBlockScope(this.stackTraceData, blockScopeNode, this.getNode(), this.randomStackTraceIndex);
         }
     }, {
-        key: "getNodeStructure",
+        key: 'getNodeStructure',
         value: function getNodeStructure() {
             var domainsString = this.options.domainLock.join(';'),
                 _Utils_1$Utils$hideSt = Utils_1.Utils.hideString(domainsString, domainsString.length * 3),
@@ -2263,12 +2263,12 @@ var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
     }
 
     _createClass(SelfDefendingUnicodeNode, [{
-        key: "appendNode",
+        key: 'appendNode',
         value: function appendNode(blockScopeNode) {
             NodeAppender_1.NodeAppender.appendNodeToOptimalBlockScope(this.stackTraceData, blockScopeNode, this.getNode(), this.randomStackTraceIndex);
         }
     }, {
-        key: "getNodeStructure",
+        key: 'getNodeStructure',
         value: function getNodeStructure() {
             return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(SelfDefendingTemplate_1.SelfDefendingTemplate().formatUnicorn({
                 selfDefendingFunctionName: Utils_1.Utils.getRandomVariableName(),
@@ -2330,7 +2330,7 @@ var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
     }
 
     _createClass(StringArrayCallsWrapper, [{
-        key: "appendNode",
+        key: 'appendNode',
         value: function appendNode(blockScopeNode) {
             if (!this.stringArray.getLength()) {
                 return;
@@ -2338,17 +2338,17 @@ var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
             NodeAppender_1.NodeAppender.insertNodeAtIndex(blockScopeNode, this.getNode(), 1);
         }
     }, {
-        key: "getNodeIdentifier",
+        key: 'getNodeIdentifier',
         value: function getNodeIdentifier() {
             return this.stringArrayCallsWrapperName;
         }
     }, {
-        key: "getNode",
+        key: 'getNode',
         value: function getNode() {
-            return _get(StringArrayCallsWrapper.prototype.__proto__ || Object.getPrototypeOf(StringArrayCallsWrapper.prototype), "getNode", this).call(this);
+            return _get(StringArrayCallsWrapper.prototype.__proto__ || Object.getPrototypeOf(StringArrayCallsWrapper.prototype), 'getNode', this).call(this);
         }
     }, {
-        key: "getDecodeStringArrayTemplate",
+        key: 'getDecodeStringArrayTemplate',
         value: function getDecodeStringArrayTemplate() {
             var decodeStringArrayTemplate = '',
                 selfDefendingCode = '';
@@ -2378,7 +2378,7 @@ var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
             return decodeStringArrayTemplate;
         }
     }, {
-        key: "getNodeStructure",
+        key: 'getNodeStructure',
         value: function getNodeStructure() {
             var decodeNodeTemplate = this.getDecodeStringArrayTemplate();
             return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(StringArrayCallsWrapperTemplate_1.StringArrayCallsWrapperTemplate().formatUnicorn({
@@ -2437,7 +2437,7 @@ var StringArrayNode = function (_AbstractCustomNode_) {
     }
 
     _createClass(StringArrayNode, [{
-        key: "appendNode",
+        key: 'appendNode',
         value: function appendNode(blockScopeNode) {
             if (!this.stringArray.getLength()) {
                 return;
@@ -2445,28 +2445,28 @@ var StringArrayNode = function (_AbstractCustomNode_) {
             NodeAppender_1.NodeAppender.prependNode(blockScopeNode, this.getNode());
         }
     }, {
-        key: "getNodeIdentifier",
+        key: 'getNodeIdentifier',
         value: function getNodeIdentifier() {
             return this.stringArrayName;
         }
     }, {
-        key: "getNodeData",
+        key: 'getNodeData',
         value: function getNodeData() {
             return this.stringArray;
         }
     }, {
-        key: "getNode",
+        key: 'getNode',
         value: function getNode() {
             this.stringArray.rotateArray(this.stringArrayRotateValue);
-            return _get(StringArrayNode.prototype.__proto__ || Object.getPrototypeOf(StringArrayNode.prototype), "getNode", this).call(this);
+            return _get(StringArrayNode.prototype.__proto__ || Object.getPrototypeOf(StringArrayNode.prototype), 'getNode', this).call(this);
         }
     }, {
-        key: "updateNodeData",
+        key: 'updateNodeData',
         value: function updateNodeData(data) {
             this.stringArray.addToArray(data);
         }
     }, {
-        key: "getNodeStructure",
+        key: 'getNodeStructure',
         value: function getNodeStructure() {
             return NodeUtils_1.NodeUtils.convertCodeToStructure(StringArrayTemplate_1.StringArrayTemplate().formatUnicorn({
                 stringArrayName: this.stringArrayName,
@@ -2525,7 +2525,7 @@ var StringArrayRotateFunctionNode = function (_AbstractCustomNode_) {
     }
 
     _createClass(StringArrayRotateFunctionNode, [{
-        key: "appendNode",
+        key: 'appendNode',
         value: function appendNode(blockScopeNode) {
             if (!this.stringArray.getLength()) {
                 return;
@@ -2533,12 +2533,12 @@ var StringArrayRotateFunctionNode = function (_AbstractCustomNode_) {
             NodeAppender_1.NodeAppender.insertNodeAtIndex(blockScopeNode, this.getNode(), 1);
         }
     }, {
-        key: "getNode",
+        key: 'getNode',
         value: function getNode() {
-            return _get(StringArrayRotateFunctionNode.prototype.__proto__ || Object.getPrototypeOf(StringArrayRotateFunctionNode.prototype), "getNode", this).call(this);
+            return _get(StringArrayRotateFunctionNode.prototype.__proto__ || Object.getPrototypeOf(StringArrayRotateFunctionNode.prototype), 'getNode', this).call(this);
         }
     }, {
-        key: "getNodeStructure",
+        key: 'getNodeStructure',
         value: function getNodeStructure() {
             var code = '',
                 timesName = Utils_1.Utils.getRandomVariableName(),
@@ -2549,7 +2549,7 @@ var StringArrayRotateFunctionNode = function (_AbstractCustomNode_) {
                     whileFunctionName: whileFunctionName
                 });
             } else {
-                code = whileFunctionName + "(++" + timesName + ")";
+                code = whileFunctionName + '(++' + timesName + ')';
             }
             return NodeUtils_1.NodeUtils.convertCodeToStructure(JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(StringArrayRotateFunctionTemplate_1.StringArrayRotateFunctionTemplate().formatUnicorn({
                 code: code,
@@ -2597,7 +2597,7 @@ var ConsoleOutputNodesGroup = function (_AbstractNodesGroup_) {
     }
 
     _createClass(ConsoleOutputNodesGroup, [{
-        key: "getNodes",
+        key: 'getNodes',
         value: function getNodes() {
             if (!this.options.disableConsoleOutput) {
                 return;
@@ -2644,7 +2644,7 @@ var DebugProtectionNodesGroup = function (_AbstractNodesGroup_) {
     }
 
     _createClass(DebugProtectionNodesGroup, [{
-        key: "getNodes",
+        key: 'getNodes',
         value: function getNodes() {
             if (!this.options.debugProtection) {
                 return;
@@ -2694,7 +2694,7 @@ var DomainLockNodesGroup = function (_AbstractNodesGroup_) {
     }
 
     _createClass(DomainLockNodesGroup, [{
-        key: "getNodes",
+        key: 'getNodes',
         value: function getNodes() {
             if (!this.options.domainLock.length) {
                 return;
@@ -2745,7 +2745,7 @@ var SelfDefendingNodesGroup = function (_AbstractNodesGroup_) {
     }
 
     _createClass(SelfDefendingNodesGroup, [{
-        key: "getNodes",
+        key: 'getNodes',
         value: function getNodes() {
             if (!this.options.selfDefending) {
                 return;
@@ -2799,7 +2799,7 @@ var StringArrayNodesGroup = function (_AbstractNodesGroup_) {
     }
 
     _createClass(StringArrayNodesGroup, [{
-        key: "getNodes",
+        key: 'getNodes',
         value: function getNodes() {
             if (!this.options.stringArray) {
                 return;
@@ -2862,13 +2862,13 @@ var CatchClauseObfuscator = function (_AbstractNodeObfuscat) {
     }
 
     _createClass(CatchClauseObfuscator, [{
-        key: "obfuscateNode",
+        key: 'obfuscateNode',
         value: function obfuscateNode(catchClauseNode) {
             this.storeCatchClauseParam(catchClauseNode);
             this.replaceCatchClauseParam(catchClauseNode);
         }
     }, {
-        key: "storeCatchClauseParam",
+        key: 'storeCatchClauseParam',
         value: function storeCatchClauseParam(catchClauseNode) {
             var _this2 = this;
 
@@ -2879,7 +2879,7 @@ var CatchClauseObfuscator = function (_AbstractNodeObfuscat) {
             });
         }
     }, {
-        key: "replaceCatchClauseParam",
+        key: 'replaceCatchClauseParam',
         value: function replaceCatchClauseParam(catchClauseNode) {
             var _this3 = this;
 
@@ -2933,7 +2933,7 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeObfuscat) {
     }
 
     _createClass(FunctionDeclarationObfuscator, [{
-        key: "obfuscateNode",
+        key: 'obfuscateNode',
         value: function obfuscateNode(functionDeclarationNode, parentNode) {
             var blockScopeOfFunctionDeclarationNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(functionDeclarationNode);
             if (blockScopeOfFunctionDeclarationNode.type === NodeType_1.NodeType.Program) {
@@ -2943,7 +2943,7 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeObfuscat) {
             this.replaceFunctionName(blockScopeOfFunctionDeclarationNode);
         }
     }, {
-        key: "storeFunctionName",
+        key: 'storeFunctionName',
         value: function storeFunctionName(functionDeclarationNode) {
             var _this2 = this;
 
@@ -2954,7 +2954,7 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeObfuscat) {
             });
         }
     }, {
-        key: "replaceFunctionName",
+        key: 'replaceFunctionName',
         value: function replaceFunctionName(scopeNode) {
             var _this3 = this;
 
@@ -3008,13 +3008,13 @@ var FunctionObfuscator = function (_AbstractNodeObfuscat) {
     }
 
     _createClass(FunctionObfuscator, [{
-        key: "obfuscateNode",
+        key: 'obfuscateNode',
         value: function obfuscateNode(functionNode) {
             this.storeFunctionParams(functionNode);
             this.replaceFunctionParams(functionNode);
         }
     }, {
-        key: "storeFunctionParams",
+        key: 'storeFunctionParams',
         value: function storeFunctionParams(functionNode) {
             var _this2 = this;
 
@@ -3027,7 +3027,7 @@ var FunctionObfuscator = function (_AbstractNodeObfuscat) {
             });
         }
     }, {
-        key: "replaceFunctionParams",
+        key: 'replaceFunctionParams',
         value: function replaceFunctionParams(functionNode) {
             var _this3 = this;
 
@@ -3089,13 +3089,13 @@ var LabeledStatementObfuscator = function (_AbstractNodeObfuscat) {
     }
 
     _createClass(LabeledStatementObfuscator, [{
-        key: "obfuscateNode",
+        key: 'obfuscateNode',
         value: function obfuscateNode(labeledStatementNode) {
             this.storeLabeledStatementName(labeledStatementNode);
             this.replaceLabeledStatementName(labeledStatementNode);
         }
     }, {
-        key: "storeLabeledStatementName",
+        key: 'storeLabeledStatementName',
         value: function storeLabeledStatementName(labeledStatementNode) {
             var _this2 = this;
 
@@ -3106,7 +3106,7 @@ var LabeledStatementObfuscator = function (_AbstractNodeObfuscat) {
             });
         }
     }, {
-        key: "replaceLabeledStatementName",
+        key: 'replaceLabeledStatementName',
         value: function replaceLabeledStatementName(labeledStatementNode) {
             var _this3 = this;
 
@@ -3159,7 +3159,7 @@ var LiteralObfuscator = function (_AbstractNodeObfuscat) {
     }
 
     _createClass(LiteralObfuscator, [{
-        key: "obfuscateNode",
+        key: 'obfuscateNode',
         value: function obfuscateNode(literalNode, parentNode) {
             if (Node_1.Node.isPropertyNode(parentNode) && parentNode.key === literalNode) {
                 return;
@@ -3222,7 +3222,7 @@ var MemberExpressionObfuscator = function (_AbstractNodeObfuscat) {
     }
 
     _createClass(MemberExpressionObfuscator, [{
-        key: "obfuscateNode",
+        key: 'obfuscateNode',
         value: function obfuscateNode(memberExpressionNode) {
             var _this2 = this;
 
@@ -3243,11 +3243,11 @@ var MemberExpressionObfuscator = function (_AbstractNodeObfuscat) {
             });
         }
     }, {
-        key: "obfuscateIdentifierProperty",
+        key: 'obfuscateIdentifierProperty',
         value: function obfuscateIdentifierProperty(node) {
             var nodeValue = node.name,
                 literalNode = {
-                raw: "'" + nodeValue + "'",
+                raw: '\'' + nodeValue + '\'',
                 'x-verbatim-property': {
                     content: new StringLiteralReplacer_1.StringLiteralReplacer(this.nodes, this.options).replace(nodeValue),
                     precedence: escodegen.Precedence.Primary
@@ -3259,7 +3259,7 @@ var MemberExpressionObfuscator = function (_AbstractNodeObfuscat) {
             Object.assign(node, literalNode);
         }
     }, {
-        key: "obfuscateLiteralProperty",
+        key: 'obfuscateLiteralProperty',
         value: function obfuscateLiteralProperty(node) {
             if (typeof node.value === 'string' && !node['x-verbatim-property']) {
                 node['x-verbatim-property'] = {
@@ -3306,12 +3306,12 @@ var MethodDefinitionObfuscator = function (_AbstractNodeObfuscat) {
     }
 
     _createClass(MethodDefinitionObfuscator, [{
-        key: "obfuscateNode",
+        key: 'obfuscateNode',
         value: function obfuscateNode(methodDefinitionNode, parentNode) {
             this.replaceMethodName(methodDefinitionNode);
         }
     }, {
-        key: "replaceMethodName",
+        key: 'replaceMethodName',
         value: function replaceMethodName(methodDefinitionNode) {
             var _this2 = this;
 
@@ -3366,7 +3366,7 @@ var ObjectExpressionObfuscator = function (_AbstractNodeObfuscat) {
     }
 
     _createClass(ObjectExpressionObfuscator, [{
-        key: "obfuscateNode",
+        key: 'obfuscateNode',
         value: function obfuscateNode(objectExpressionNode) {
             var _this2 = this;
 
@@ -3388,23 +3388,23 @@ var ObjectExpressionObfuscator = function (_AbstractNodeObfuscat) {
             });
         }
     }, {
-        key: "obfuscateLiteralPropertyKey",
+        key: 'obfuscateLiteralPropertyKey',
         value: function obfuscateLiteralPropertyKey(node) {
             if (typeof node.value === 'string' && !node['x-verbatim-property']) {
                 node['x-verbatim-property'] = {
-                    content: "'" + Utils_1.Utils.stringToUnicodeEscapeSequence(node.value) + "'",
+                    content: '\'' + Utils_1.Utils.stringToUnicodeEscapeSequence(node.value) + '\'',
                     precedence: escodegen.Precedence.Primary
                 };
             }
         }
     }, {
-        key: "obfuscateIdentifierPropertyKey",
+        key: 'obfuscateIdentifierPropertyKey',
         value: function obfuscateIdentifierPropertyKey(node) {
             var nodeValue = node.name,
                 literalNode = {
-                raw: "'" + nodeValue + "'",
+                raw: '\'' + nodeValue + '\'',
                 'x-verbatim-property': {
-                    content: "'" + Utils_1.Utils.stringToUnicodeEscapeSequence(nodeValue) + "'",
+                    content: '\'' + Utils_1.Utils.stringToUnicodeEscapeSequence(nodeValue) + '\'',
                     precedence: escodegen.Precedence.Primary
                 },
                 type: NodeType_1.NodeType.Literal,
@@ -3455,7 +3455,7 @@ var VariableDeclarationObfuscator = function (_AbstractNodeObfuscat) {
     }
 
     _createClass(VariableDeclarationObfuscator, [{
-        key: "obfuscateNode",
+        key: 'obfuscateNode',
         value: function obfuscateNode(variableDeclarationNode, parentNode) {
             var blockScopeOfVariableDeclarationNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(variableDeclarationNode);
             if (blockScopeOfVariableDeclarationNode.type === NodeType_1.NodeType.Program) {
@@ -3466,7 +3466,7 @@ var VariableDeclarationObfuscator = function (_AbstractNodeObfuscat) {
             this.replaceVariableNames(scopeNode);
         }
     }, {
-        key: "storeVariableNames",
+        key: 'storeVariableNames',
         value: function storeVariableNames(variableDeclarationNode) {
             var _this2 = this;
 
@@ -3479,7 +3479,7 @@ var VariableDeclarationObfuscator = function (_AbstractNodeObfuscat) {
             });
         }
     }, {
-        key: "replaceVariableNames",
+        key: 'replaceVariableNames',
         value: function replaceVariableNames(scopeNode) {
             var _this3 = this;
 
@@ -3526,7 +3526,7 @@ var BooleanLiteralReplacer = function (_AbstractReplacer_1$A) {
     }
 
     _createClass(BooleanLiteralReplacer, [{
-        key: "replace",
+        key: 'replace',
         value: function replace(nodeValue) {
             return nodeValue ? JSFuck_1.JSFuck.True : JSFuck_1.JSFuck.False;
         }
@@ -3582,31 +3582,31 @@ Options.validatorOptions = {
         target: false
     }
 };
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "compact", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "debugProtection", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "debugProtectionInterval", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "disableConsoleOutput", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "compact", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "debugProtection", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "debugProtectionInterval", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "disableConsoleOutput", void 0);
 __decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
-}), __metadata("design:type", Array)], Options.prototype, "domainLock", void 0);
+}), __metadata('design:type', Array)], Options.prototype, "domainLock", void 0);
 __decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
-}), __metadata("design:type", Array)], Options.prototype, "reservedNames", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "rotateStringArray", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "selfDefending", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "sourceMap", void 0);
+}), __metadata('design:type', Array)], Options.prototype, "reservedNames", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "rotateStringArray", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "selfDefending", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "sourceMap", void 0);
 __decorate([class_validator_1.IsString(), class_validator_1.ValidateIf(function (options) {
     return Boolean(options.sourceMapBaseUrl);
 }), class_validator_1.IsUrl({
     require_protocol: true,
     require_valid_protocol: true
-}), __metadata("design:type", String)], Options.prototype, "sourceMapBaseUrl", void 0);
-__decorate([class_validator_1.IsString(), __metadata("design:type", String)], Options.prototype, "sourceMapFileName", void 0);
-__decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata("design:type", typeof (_a = typeof TSourceMapMode_1.TSourceMapMode !== "undefined" && TSourceMapMode_1.TSourceMapMode) === "function" && _a || Object)], Options.prototype, "sourceMapMode", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "stringArray", void 0);
-__decorate([class_validator_1.IsIn([true, false, 'base64', 'rc4']), __metadata("design:type", typeof (_b = typeof TStringArrayEncoding_1.TStringArrayEncoding !== "undefined" && TStringArrayEncoding_1.TStringArrayEncoding) === "function" && _b || Object)], Options.prototype, "stringArrayEncoding", void 0);
-__decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata("design:type", Number)], Options.prototype, "stringArrayThreshold", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "unicodeEscapeSequence", void 0);
+}), __metadata('design:type', String)], Options.prototype, "sourceMapBaseUrl", void 0);
+__decorate([class_validator_1.IsString(), __metadata('design:type', String)], Options.prototype, "sourceMapFileName", void 0);
+__decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata('design:type', typeof (_a = typeof TSourceMapMode_1.TSourceMapMode !== 'undefined' && TSourceMapMode_1.TSourceMapMode) === 'function' && _a || Object)], Options.prototype, "sourceMapMode", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "stringArray", void 0);
+__decorate([class_validator_1.IsIn([true, false, 'base64', 'rc4']), __metadata('design:type', typeof (_b = typeof TStringArrayEncoding_1.TStringArrayEncoding !== 'undefined' && TStringArrayEncoding_1.TStringArrayEncoding) === 'function' && _b || Object)], Options.prototype, "stringArrayEncoding", void 0);
+__decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata('design:type', Number)], Options.prototype, "stringArrayThreshold", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "unicodeEscapeSequence", void 0);
 exports.Options = Options;
 var _a, _b;
 
@@ -3629,7 +3629,7 @@ var OptionsNormalizer = function () {
     }
 
     _createClass(OptionsNormalizer, null, [{
-        key: "normalizeOptions",
+        key: 'normalizeOptions',
         value: function normalizeOptions(options) {
             var normalizedOptions = Object.assign({}, options);
             var _iteratorNormalCompletion = true;
@@ -3660,7 +3660,7 @@ var OptionsNormalizer = function () {
             return normalizedOptions;
         }
     }, {
-        key: "domainLockRule",
+        key: 'domainLockRule',
         value: function domainLockRule(options) {
             if (options.domainLock.length) {
                 var normalizedDomains = [];
@@ -3696,7 +3696,7 @@ var OptionsNormalizer = function () {
             return options;
         }
     }, {
-        key: "selfDefendingRule",
+        key: 'selfDefendingRule',
         value: function selfDefendingRule(options) {
             if (options.selfDefending) {
                 Object.assign(options, OptionsNormalizer.SELF_DEFENDING_OPTIONS);
@@ -3704,7 +3704,7 @@ var OptionsNormalizer = function () {
             return options;
         }
     }, {
-        key: "sourceMapBaseUrlRule",
+        key: 'sourceMapBaseUrlRule',
         value: function sourceMapBaseUrlRule(options) {
             var sourceMapBaseUrl = options.sourceMapBaseUrl;
             if (!options.sourceMapFileName) {
@@ -3715,25 +3715,25 @@ var OptionsNormalizer = function () {
             }
             if (sourceMapBaseUrl && !sourceMapBaseUrl.endsWith('/')) {
                 Object.assign(options, {
-                    sourceMapBaseUrl: sourceMapBaseUrl + "/"
+                    sourceMapBaseUrl: sourceMapBaseUrl + '/'
                 });
             }
             return options;
         }
     }, {
-        key: "sourceMapFileNameRule",
+        key: 'sourceMapFileNameRule',
         value: function sourceMapFileNameRule(options) {
             var sourceMapFileName = options.sourceMapFileName;
             if (sourceMapFileName) {
                 sourceMapFileName = sourceMapFileName.replace(/^\/+/, '').split('.')[0];
                 Object.assign(options, {
-                    sourceMapFileName: sourceMapFileName + ".js.map"
+                    sourceMapFileName: sourceMapFileName + '.js.map'
                 });
             }
             return options;
         }
     }, {
-        key: "stringArrayRule",
+        key: 'stringArrayRule',
         value: function stringArrayRule(options) {
             if (!options.stringArray) {
                 Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
@@ -3741,7 +3741,7 @@ var OptionsNormalizer = function () {
             return options;
         }
     }, {
-        key: "stringArrayEncodingRule",
+        key: 'stringArrayEncodingRule',
         value: function stringArrayEncodingRule(options) {
             if (options.stringArrayEncoding === true) {
                 Object.assign(options, OptionsNormalizer.UNICODE_ARRAY_ENCODING_OPTIONS);
@@ -3749,7 +3749,7 @@ var OptionsNormalizer = function () {
             return options;
         }
     }, {
-        key: "stringArrayThresholdRule",
+        key: 'stringArrayThresholdRule',
         value: function stringArrayThresholdRule(options) {
             if (options.stringArrayThreshold === 0) {
                 Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
@@ -3872,12 +3872,12 @@ var StackTraceAnalyzer = function () {
     }
 
     _createClass(StackTraceAnalyzer, [{
-        key: "analyze",
+        key: 'analyze',
         value: function analyze() {
             return this.analyzeRecursive(this.blockScopeBody);
         }
     }, {
-        key: "analyzeRecursive",
+        key: 'analyzeRecursive',
         value: function analyzeRecursive(blockScopeBody) {
             var _this = this;
 
@@ -3887,7 +3887,7 @@ var StackTraceAnalyzer = function () {
             var _loop = function _loop(index, blockScopeBodyLength) {
                 var rootNode = blockScopeBody[index];
                 if (index > limitIndex) {
-                    return "break";
+                    return 'break';
                 }
                 estraverse.traverse(rootNode, {
                     enter: function enter(node) {
@@ -3910,12 +3910,12 @@ var StackTraceAnalyzer = function () {
             for (var index = 0, blockScopeBodyLength = blockScopeBody.length; index < blockScopeBodyLength; index++) {
                 var _ret = _loop(index, blockScopeBodyLength);
 
-                if (_ret === "break") break;
+                if (_ret === 'break') break;
             }
             return stackTraceData;
         }
     }], [{
-        key: "getLimitIndex",
+        key: 'getLimitIndex',
         value: function getLimitIndex(blockScopeBodyLength) {
             var lastIndex = blockScopeBodyLength - 1;
             var limitThresholdActivationIndex = StackTraceAnalyzer.limitThresholdActivationLength - 1;
@@ -3961,7 +3961,7 @@ var FunctionDeclarationCalleeDataExtractor = function () {
     }
 
     _createClass(FunctionDeclarationCalleeDataExtractor, [{
-        key: "extract",
+        key: 'extract',
         value: function extract() {
             var calleeBlockStatement = null;
             if (Node_1.Node.isIdentifierNode(this.callee)) {
@@ -3976,7 +3976,7 @@ var FunctionDeclarationCalleeDataExtractor = function () {
             };
         }
     }, {
-        key: "getCalleeBlockStatement",
+        key: 'getCalleeBlockStatement',
         value: function getCalleeBlockStatement(node, name) {
             var calleeBlockStatement = null;
             estraverse.traverse(node, {
@@ -4020,7 +4020,7 @@ var FunctionExpressionCalleeDataExtractor = function () {
     }
 
     _createClass(FunctionExpressionCalleeDataExtractor, [{
-        key: "extract",
+        key: 'extract',
         value: function extract() {
             var calleeBlockStatement = null;
             if (Node_1.Node.isIdentifierNode(this.callee)) {
@@ -4038,7 +4038,7 @@ var FunctionExpressionCalleeDataExtractor = function () {
             };
         }
     }, {
-        key: "getCalleeBlockStatement",
+        key: 'getCalleeBlockStatement',
         value: function getCalleeBlockStatement(node, name) {
             var calleeBlockStatement = null;
             estraverse.traverse(node, {
@@ -4082,7 +4082,7 @@ var ObjectExpressionCalleeDataExtractor = function () {
     }
 
     _createClass(ObjectExpressionCalleeDataExtractor, [{
-        key: "extract",
+        key: 'extract',
         value: function extract() {
             var calleeBlockStatement = null,
                 functionExpressionName = null;
@@ -4103,7 +4103,7 @@ var ObjectExpressionCalleeDataExtractor = function () {
             };
         }
     }, {
-        key: "createObjectMembersCallsChain",
+        key: 'createObjectMembersCallsChain',
         value: function createObjectMembersCallsChain(currentChain, memberExpression) {
             if (Node_1.Node.isIdentifierNode(memberExpression.property) && memberExpression.computed === false) {
                 currentChain.unshift(memberExpression.property.name);
@@ -4120,7 +4120,7 @@ var ObjectExpressionCalleeDataExtractor = function () {
             return currentChain;
         }
     }, {
-        key: "getCalleeBlockStatement",
+        key: 'getCalleeBlockStatement',
         value: function getCalleeBlockStatement(node, objectMembersCallsChain) {
             var _this = this;
 
@@ -4140,7 +4140,7 @@ var ObjectExpressionCalleeDataExtractor = function () {
             return calleeBlockStatement;
         }
     }, {
-        key: "findCalleeBlockStatement",
+        key: 'findCalleeBlockStatement',
         value: function findCalleeBlockStatement(objectExpressionProperties, objectMembersCallsChain) {
             var nextItemInCallsChain = objectMembersCallsChain.shift();
             if (!nextItemInCallsChain) {
@@ -4234,7 +4234,7 @@ exports.SingleNodeCallControllerTemplate = SingleNodeCallControllerTemplate;
 "use strict";
 
 function ConsoleOutputDisableExpressionTemplate() {
-    return "\n        var {consoleLogDisableFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {\n            var getGlobal = Function('return (function() ' + '{}.constructor(\"return this\")( )' + ');');\n            \n            var func = Function('for ' + '(;;)' + ' {}');\n            var that = getGlobal();\n                        \n            that.console.log = func; \n            that.console.error = func;\n            that.console.warn = func;\n            that.console.info = func;\n        });\n        \n        {consoleLogDisableFunctionName}();\n    ";
+    return "\n        var {consoleLogDisableFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {\n            var getGlobal = Function('return (function() ' + '{}.constructor(\"return this\")( )' + ');');\n            \n            var func = function () {};\n            var that = getGlobal();\n                        \n            that.console.log = func; \n            that.console.error = func;\n            that.console.warn = func;\n            that.console.info = func;\n        });\n        \n        {consoleLogDisableFunctionName}();\n    ";
 }
 exports.ConsoleOutputDisableExpressionTemplate = ConsoleOutputDisableExpressionTemplate;
 
@@ -4271,7 +4271,7 @@ exports.DebugProtectionFunctionIntervalTemplate = DebugProtectionFunctionInterva
 
 var Utils_1 = __webpack_require__(0);
 function DebugProtectionFunctionTemplate() {
-    return "\n        var {debugProtectionFunctionName} = function () {\n            function debuggerProtection (counter) {\n                if (('' + counter / counter)['length'] !== 1 || counter % 20 === 0) {\n                    (function () {}.constructor('debugger')());\n                } else {\n                    [].filter.constructor(" + Utils_1.Utils.stringToJSFuck('debugger') + ")();\n                }\n                \n                debuggerProtection(++counter);\n            }\n            \n            try {\n                debuggerProtection(0);\n            } catch (y) {}\n        };\n    ";
+    return '\n        var {debugProtectionFunctionName} = function () {\n            function debuggerProtection (counter) {\n                if ((\'\' + counter / counter)[\'length\'] !== 1 || counter % 20 === 0) {\n                    (function () {}.constructor(\'debugger\')());\n                } else {\n                    [].filter.constructor(' + Utils_1.Utils.stringToJSFuck('debugger') + ')();\n                }\n                \n                debuggerProtection(++counter);\n            }\n            \n            try {\n                debuggerProtection(0);\n            } catch (y) {}\n        };\n    ';
 }
 exports.DebugProtectionFunctionTemplate = DebugProtectionFunctionTemplate;
 
@@ -4431,7 +4431,9 @@ module.exports = require("fs");
 module.exports = require("mkdirp");
 
 /***/ },
-/* 87 */
+/* 87 */,
+/* 88 */,
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

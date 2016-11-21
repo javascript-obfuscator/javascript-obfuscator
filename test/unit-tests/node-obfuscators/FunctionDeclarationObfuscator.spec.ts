@@ -59,7 +59,7 @@ describe('FunctionDeclarationObfuscator', () => {
                 functionDeclarationNode['parentNode'] = blockStatementNode;
                 expressionStatementNode['parentNode'] = blockStatementNode;
 
-                functionDeclarationObfuscator.obfuscateNode(
+                functionDeclarationObfuscator.transformNode(
                     functionDeclarationNode,
                     blockStatementNode
                 );
@@ -83,7 +83,7 @@ describe('FunctionDeclarationObfuscator', () => {
                 functionDeclarationNode['parentNode'] = programNode;
                 expressionStatementNode['parentNode'] = programNode;
 
-                functionDeclarationObfuscator.obfuscateNode(
+                functionDeclarationObfuscator.transformNode(
                     functionDeclarationNode,
                     programNode
                 );

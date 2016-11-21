@@ -3,6 +3,6 @@
  */
 export function ControlFlowStorageTemplate (): string {
     return `
-        var {controlFlowStorageName} = {controlFlowStorage};
+        var {controlFlowStorageName} = { {controlFlowStorage} };
     `;
 }

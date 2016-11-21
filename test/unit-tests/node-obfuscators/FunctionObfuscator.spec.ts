@@ -66,7 +66,7 @@ describe('FunctionObfuscator', () => {
                 new Options(DEFAULT_PRESET)
             );
 
-            functionObfuscator.obfuscateNode(functionDeclarationNode);
+            functionObfuscator.transformNode(functionDeclarationNode);
         });
 
         it('should obfuscate function parameter', () => {

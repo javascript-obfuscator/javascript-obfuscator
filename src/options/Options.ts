@@ -45,7 +45,7 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly controlFlow: boolean;
+    public readonly controlFlowFlattening: boolean;
 
     /**
      * @type {boolean}

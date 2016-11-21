@@ -12,7 +12,7 @@ export class MemberExpressionObfuscator extends AbstractNodeObfuscator {
     /**
      * @param memberExpressionNode
      */
-    public obfuscateNode (memberExpressionNode: ESTree.MemberExpression): void {
+    public transformNode (memberExpressionNode: ESTree.MemberExpression): void {
         estraverse.replace(memberExpressionNode.property, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isLiteralNode(node)) {

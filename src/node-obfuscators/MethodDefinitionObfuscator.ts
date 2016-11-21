@@ -23,7 +23,7 @@ export class MethodDefinitionObfuscator extends AbstractNodeObfuscator {
      * @param methodDefinitionNode
      * @param parentNode
      */
-    public obfuscateNode (methodDefinitionNode: ESTree.MethodDefinition, parentNode: ESTree.Node): void {
+    public transformNode (methodDefinitionNode: ESTree.MethodDefinition, parentNode: ESTree.Node): void {
         this.replaceMethodName(methodDefinitionNode);
     }
 

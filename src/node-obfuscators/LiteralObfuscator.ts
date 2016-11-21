@@ -12,7 +12,7 @@ export class LiteralObfuscator extends AbstractNodeObfuscator {
      * @param literalNode
      * @param parentNode
      */
-    public obfuscateNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): void {
+    public transformNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): void {
         if (Node.isPropertyNode(parentNode) && parentNode.key === literalNode) {
             return;
         }

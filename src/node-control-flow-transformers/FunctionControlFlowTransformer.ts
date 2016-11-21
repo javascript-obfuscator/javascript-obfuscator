@@ -2,21 +2,23 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TControlFlowReplacer } from '../types/TControlFlowReplacer';
+import { TStatement } from '../types/TStatement';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../interfaces/IOptions';
 
 import { NodeType } from '../enums/NodeType';
 
-import { AbstractNodeControlFlowChanger } from './AbstractNodeControlFlowChanger';
+import { AbstractNodeControlFlowTransformer } from './AbstractNodeControlFlowTransformer';
 import { BinaryExpressionControlFlowReplacer } from './control-flow-replacers/BinaryExpressionControlFlowReplacer';
 import { ControlFlowStorage } from '../ControlFlowStorage';
 import { ControlFlowStorageNode } from '../custom-nodes/control-flow-storage-nodes/ControlFlowStorageNode';
 import { Node } from '../node/Node';
 import { NodeAppender } from '../node/NodeAppender';
 import { Utils } from '../Utils';
+import { NodeUtils } from '../node/NodeUtils';
 
-export class FunctionControlFlowChanger extends AbstractNodeControlFlowChanger {
+export class FunctionControlFlowTransformer extends AbstractNodeControlFlowTransformer {
     /**
      * @type {Map <string, IReplacer>}
      */
@@ -35,7 +37,7 @@ export class FunctionControlFlowChanger extends AbstractNodeControlFlowChanger {
     /**
      * @param functionNode
      */
-    public changeControlFlow (functionNode: ESTree.Function): void {
+    public transformNode (functionNode: ESTree.Function): void {
         this.changeFunctionBodyControlFlow(functionNode);
     }
 
@@ -43,36 +45,43 @@ export class FunctionControlFlowChanger extends AbstractNodeControlFlowChanger {
      * @param functionNode
      */
     private changeFunctionBodyControlFlow (functionNode: ESTree.Function): void {
-        const controlFlowStorage: ControlFlowStorage = new ControlFlowStorage();
-        const controlFlowStorageCustomNodeName: string = Utils.getRandomVariableName(6);
-
-        if (!Node.isFunctionDeclarationNode(functionNode) && !Node.isFunctionExpressionNode(functionNode)) {
+        if (Node.isArrowFunctionExpressionNode(functionNode)) {
             return;
         }
 
+        const controlFlowStorage: ControlFlowStorage = new ControlFlowStorage();
+        const controlFlowStorageCustomNodeName: string = Utils.getRandomVariableName(6);
+
+        console.log(NodeUtils.getNodeBlockScopeDepth(functionNode.body));
+
         estraverse.replace(functionNode.body, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                const controlFlowReplacerConstructor: TControlFlowReplacer | undefined = FunctionControlFlowChanger.controlFlowReplacers
-                    .get(node.type);
+                const controlFlowReplacer: TControlFlowReplacer | undefined = FunctionControlFlowTransformer
+                    .controlFlowReplacers.get(node.type);
 
-                if (!controlFlowReplacerConstructor) {
+                if (!controlFlowReplacer) {
                     return;
                 }
 
-                const controlFlowStorageCallCustomNode: ICustomNode | undefined = new controlFlowReplacerConstructor(
-                    this.nodes,
-                    this.options
+                const controlFlowStorageCallCustomNode: ICustomNode | undefined = new controlFlowReplacer(
+                    this.nodes, this.options
                 ).replace(node, parentNode, controlFlowStorage, controlFlowStorageCustomNodeName);
 
                 if (!controlFlowStorageCallCustomNode) {
                     return;
                 }
 
-                // controlFlowStorageCallCustomNode will always has only one TStatement node,
+                // controlFlowStorageCallCustomNode will always have only one TStatement node,
                 // so we can get it by index `0`
-                // also we need to `expression` property of `ExpressionStatement` node because bug:
+                // also we need to return `expression` property of `ExpressionStatement` node because bug:
                 // https://github.com/estools/escodegen/issues/289
-                return (<ESTree.ExpressionStatement>controlFlowStorageCallCustomNode.getNode()[0]).expression;
+                const statementNode: TStatement | undefined = controlFlowStorageCallCustomNode.getNode()[0];
+
+                if (!statementNode || !Node.isExpressionStatementNode(statementNode)) {
+                    throw new Error(`\`controlFlowStorageCallCustomNode.getNode()\` should returns array with \`ExpressionStatement\` node`);
+                }
+
+                return statementNode.expression;
             }
         });
 

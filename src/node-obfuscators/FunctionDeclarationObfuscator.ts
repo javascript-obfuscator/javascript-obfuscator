@@ -42,7 +42,7 @@ export class FunctionDeclarationObfuscator extends AbstractNodeObfuscator {
      * @param functionDeclarationNode
      * @param parentNode
      */
-    public obfuscateNode (functionDeclarationNode: ESTree.FunctionDeclaration, parentNode: ESTree.Node): void {
+    public transformNode (functionDeclarationNode: ESTree.FunctionDeclaration, parentNode: ESTree.Node): void {
         const blockScopeOfFunctionDeclarationNode: TNodeWithBlockStatement = NodeUtils
             .getBlockScopeOfNode(functionDeclarationNode);
 

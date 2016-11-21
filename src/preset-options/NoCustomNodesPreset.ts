@@ -4,7 +4,7 @@ import { SourceMapMode } from '../enums/SourceMapMode';
 
 export const NO_CUSTOM_NODES_PRESET: IObfuscatorOptions = Object.freeze({
     compact: true,
-    controlFlow: false,
+    controlFlowFlattening: false,
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: false,

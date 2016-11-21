@@ -102,6 +102,29 @@ export class NodeUtils {
 
     /**
      * @param node
+     * @param depth
+     * @returns {number}
+     */
+    public static getNodeBlockScopeDepth (node: ESTree.Node, depth: number = 0): number {
+        let parentNode: ESTree.Node | undefined = node.parentNode;
+
+        if (!parentNode) {
+            throw new ReferenceError('`parentNode` property of given node is `undefined`');
+        }
+
+        if (Node.isProgramNode(parentNode)) {
+            return depth;
+        }
+
+        if (Node.isBlockStatementNode(node)) {
+            return NodeUtils.getNodeBlockScopeDepth(parentNode, ++depth);
+        }
+
+        return NodeUtils.getNodeBlockScopeDepth(parentNode, depth);
+    }
+
+    /**
+     * @param node
      */
     public static parentize (node: ESTree.Node): void {
         let isRootNode: boolean = true;

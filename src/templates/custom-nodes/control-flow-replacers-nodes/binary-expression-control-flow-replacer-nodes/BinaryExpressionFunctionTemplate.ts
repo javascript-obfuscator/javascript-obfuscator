@@ -1,10 +1,10 @@
 /**
  * @returns {string}
  */
-export function BinaryExpressionSubtractFunctionTemplate (): string {
+export function BinaryExpressionFunctionTemplate (): string {
     return `
         function {functionName} (x, y) {
-            return x - y;
+            return x {operator} y;
         }
     `;
 }

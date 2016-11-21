@@ -3,7 +3,7 @@ import { TStringArrayEncoding } from '../types/TStringArrayEncoding';
 
 export interface IOptions {
     readonly compact: boolean;
-    readonly controlFlow: boolean;
+    readonly controlFlowFlattening: boolean;
     readonly debugProtection: boolean;
     readonly debugProtectionInterval: boolean;
     readonly disableConsoleOutput: boolean;

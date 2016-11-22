@@ -57,6 +57,6 @@ export class StringArrayStorage extends AbstractStorage <string> {
     public toString (): string {
         return this.storage.map((value: string) => {
             return `'${value}'`;
-        }).toString()
+        }).toString();
     }
 }

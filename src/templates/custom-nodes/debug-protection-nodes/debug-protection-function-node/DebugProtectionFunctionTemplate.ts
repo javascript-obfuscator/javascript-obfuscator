@@ -1,5 +1,3 @@
-import { Utils } from '../../../../Utils';
-
 /**
  * @returns {string}
  */
@@ -8,9 +6,9 @@ export function DebugProtectionFunctionTemplate (): string {
         var {debugProtectionFunctionName} = function () {
             function debuggerProtection (counter) {
                 if (('' + counter / counter)['length'] !== 1 || counter % 20 === 0) {
-                    (function () {}.constructor(${Utils.stringToJSFuck('debugger')})());
+                    (function () {}.constructor('debugger')());
                 } else {
-                    (function () {}.constructor(${Utils.stringToJSFuck('debugger')})());
+                    (function () {}.constructor('debugger')());
                 }
                 
                 debuggerProtection(++counter);

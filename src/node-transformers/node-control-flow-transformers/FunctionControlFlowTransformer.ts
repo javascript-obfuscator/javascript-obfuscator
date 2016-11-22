@@ -17,6 +17,7 @@ import { Node } from '../../node/Node';
 import { NodeAppender } from '../../node/NodeAppender';
 import { Utils } from '../../Utils';
 import { NodeUtils } from '../../node/NodeUtils';
+import { IStorage } from '../../interfaces/IStorage';
 
 export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**
@@ -49,7 +50,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
             return;
         }
 
-        const controlFlowStorage: ControlFlowStorage = new ControlFlowStorage();
+        const controlFlowStorage: IStorage <ICustomNode> = new ControlFlowStorage();
         const controlFlowStorageCustomNodeName: string = Utils.getRandomVariableName(6);
 
         console.log(NodeUtils.getNodeBlockScopeDepth(functionNode.body));

@@ -4,10 +4,9 @@ import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/IOptions';
+import { IStorage } from '../../interfaces/IStorage';
 
 import { AppendState } from '../../enums/AppendState';
-
-import { ControlFlowStorage } from '../../storages/ControlFlowStorage';
 
 import { ControlFlowStorageTemplate } from '../../templates/custom-nodes/control-flow-storage-nodes/ControlFlowStorageTemplate';
 
@@ -21,9 +20,9 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
     protected appendState: AppendState = AppendState.AfterObfuscation;
 
     /**
-     * @type {ControlFlowStorage}
+     * @type {IStorage <ICustomNode>}
      */
-    private controlFlowStorage: ControlFlowStorage;
+    private controlFlowStorage: IStorage <ICustomNode>;
 
     /**
      * @type {string}
@@ -36,7 +35,7 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
      * @param options
      */
     constructor (
-        controlFlowStorage: ControlFlowStorage,
+        controlFlowStorage: IStorage <ICustomNode>,
         controlFlowStorageName: string,
         options: IOptions
     ) {
@@ -61,27 +60,5 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
             controlFlowStorage: this.controlFlowStorage.toString(),
             controlFlowStorageName: this.controlFlowStorageName
         });
-    }
-
-    /**
-     * @returns {string}
-     */
-    public getNodeIdentifier (): string {
-        return this.controlFlowStorageName;
-    }
-
-    /**
-     * @returns {StringArray}
-     */
-    public getNodeData (): ControlFlowStorage {
-        return this.controlFlowStorage;
-    }
-
-    /**
-     * @param key
-     * @param value
-     */
-    public updateNodeData (key: string, value: ICustomNode): void {
-        this.controlFlowStorage.addToStorage(key, value);
     }
 }

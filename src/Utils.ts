@@ -2,6 +2,8 @@ import { Chance } from 'chance';
 
 import { JSFuck } from './enums/JSFuck';
 
+const isEqual = require('is-equal');
+
 export class Utils {
     /**
      * @type {Chance.Chance | Chance.SeededChance}
@@ -199,6 +201,21 @@ export class Utils {
      */
     public static isInteger (number: number): boolean {
         return number % 1 === 0;
+    }
+
+    /**
+     * @param map
+     * @param value
+     * @returns {any}
+     */
+    public static mapGetFirstKeyOf(map: Map <any, any>, value: any): any {
+        for (var [key, storageValue] of map) {
+            if (isEqual(value, storageValue)) {
+                return key;
+            }
+        }
+
+        return null;
     }
 
     /**

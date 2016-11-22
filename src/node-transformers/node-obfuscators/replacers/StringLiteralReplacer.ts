@@ -1,12 +1,12 @@
-import { TStringArrayCallsWrapper } from '../../../types/custom-nodes/TStringArrayCallsWrapper';
-import { TStringArrayNode } from '../../../types/custom-nodes/TStringArrayNode';
+import { ICustomNodeWithData } from '../../../interfaces/custom-nodes/ICustomNodeWithData';
+import { IStorage } from '../../../interfaces/IStorage';
 
 import { StringArrayEncoding } from '../../../enums/StringArrayEncoding';
 
 import { AbstractReplacer } from './AbstractReplacer';
 import { NumberLiteralReplacer } from './NumberLiteralReplacer';
-import { StringArray } from '../../../storages/StringArray';
 import { Utils } from '../../../Utils';
+import { ICustomNodeWithIdentifier } from '../../../interfaces/custom-nodes/ICustomNodeWithIdentifier';
 
 export class StringLiteralReplacer extends AbstractReplacer {
     /**
@@ -42,7 +42,7 @@ export class StringLiteralReplacer extends AbstractReplacer {
      * @returns {string}
      */
     private replaceStringLiteralWithStringArrayCall (value: string): string {
-        const stringArrayNode: TStringArrayNode = <TStringArrayNode>this.nodes.get('stringArrayNode');
+        const stringArrayNode: ICustomNodeWithData = <ICustomNodeWithData>this.nodes.get('stringArrayNode');
 
         if (!stringArrayNode) {
             throw new ReferenceError('`stringArrayNode` node is not found in Map with custom node.');
@@ -67,8 +67,8 @@ export class StringLiteralReplacer extends AbstractReplacer {
             value = Utils.stringToUnicodeEscapeSequence(value);
         }
 
-        let stringArray: StringArray = stringArrayNode.getNodeData(),
-            indexOfExistingValue: number = stringArray.getIndexOf(value),
+        let stringArray: IStorage <string> = stringArrayNode.getNodeData(),
+            indexOfExistingValue: number = <number>stringArray.getKeyOf(value),
             indexOfValue: number,
             hexadecimalIndex: string;
 
@@ -76,13 +76,13 @@ export class StringLiteralReplacer extends AbstractReplacer {
             indexOfValue = indexOfExistingValue;
         } else {
             indexOfValue = stringArray.getLength();
-            stringArrayNode.updateNodeData(value);
+            stringArray.set(null, value);
         }
 
         hexadecimalIndex = new NumberLiteralReplacer(this.nodes, this.options)
             .replace(indexOfValue);
 
-        const stringArrayCallsWrapper: TStringArrayCallsWrapper = <TStringArrayCallsWrapper>this.nodes.get('stringArrayCallsWrapper');
+        const stringArrayCallsWrapper: ICustomNodeWithIdentifier = <ICustomNodeWithIdentifier>this.nodes.get('stringArrayCallsWrapper');
 
         if (!stringArrayCallsWrapper) {
             throw new ReferenceError('`stringArrayCallsWrapper` node is not found in Map with custom node.');

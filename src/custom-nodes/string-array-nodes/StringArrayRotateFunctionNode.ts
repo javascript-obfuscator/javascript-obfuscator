@@ -3,6 +3,7 @@ import * as format from 'string-template';
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 
 import { IOptions } from '../../interfaces/IOptions';
+import { IStorage } from '../../interfaces/IStorage';
 
 import { AppendState } from '../../enums/AppendState';
 
@@ -14,7 +15,6 @@ import { StringArrayRotateFunctionTemplate } from '../../templates/custom-nodes/
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeAppender } from '../../node/NodeAppender';
-import { StringArray } from '../../storages/StringArray';
 import { Utils } from '../../Utils';
 
 export class StringArrayRotateFunctionNode extends AbstractCustomNode {
@@ -24,9 +24,9 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     protected appendState: AppendState = AppendState.AfterObfuscation;
 
     /**
-     * @type {StringArray}
+     * @type {IStorage <string>}
      */
-    private stringArray: StringArray;
+    private stringArray: IStorage <string>;
 
     /**
      * @type {string}
@@ -46,7 +46,7 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
      */
     constructor (
         stringArrayName: string,
-        stringArray: StringArray,
+        stringArray: IStorage <string>,
         stringArrayRotateValue: number,
         options: IOptions
     ) {

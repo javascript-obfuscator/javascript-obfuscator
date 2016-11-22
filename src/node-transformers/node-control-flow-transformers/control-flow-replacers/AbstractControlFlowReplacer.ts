@@ -3,8 +3,8 @@ import * as ESTree from 'estree';
 import { IControlFlowReplacer } from '../../../interfaces/IControlFlowReplacer';
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/IOptions';
+import { IStorage } from '../../../interfaces/IStorage';
 
-import { ControlFlowStorage } from '../../../storages/ControlFlowStorage';
 import { Utils } from '../../../Utils';
 
 export abstract class AbstractControlFlowReplacer implements IControlFlowReplacer {
@@ -47,7 +47,7 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
     public abstract replace (
         node: ESTree.Node,
         parentNode: ESTree.Node,
-        controlFlowStorage: ControlFlowStorage,
+        controlFlowStorage: IStorage <ICustomNode>,
         controlFlowStorageCustomNodeName: string
     ): ICustomNode | undefined;
 }

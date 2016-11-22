@@ -3,7 +3,9 @@ import * as format from 'string-template';
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 import { TStatement } from '../../types/TStatement';
 
+import { ICustomNodeWithIdentifier } from '../../interfaces/custom-nodes/ICustomNodeWithIdentifier';
 import { IOptions } from '../../interfaces/IOptions';
+import { IStorage } from '../../interfaces/IStorage';
 
 import { AppendState } from '../../enums/AppendState';
 import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
@@ -20,18 +22,17 @@ import { StringArrayRc4DecodeNodeTemplate } from '../../templates/custom-nodes/s
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeAppender } from '../../node/NodeAppender';
-import { StringArray } from '../../storages/StringArray';
 
-export class StringArrayCallsWrapper extends AbstractCustomNode {
+export class StringArrayCallsWrapper extends AbstractCustomNode implements ICustomNodeWithIdentifier {
     /**
      * @type {AppendState}
      */
     protected appendState: AppendState = AppendState.AfterObfuscation;
 
     /**
-     * @type {StringArray}
+     * @type {IStorage <string>}
      */
-    private stringArray: StringArray;
+    private stringArray: IStorage <string>;
 
     /**
      * @type {string}
@@ -52,7 +53,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
     constructor (
         stringArrayCallsWrapperName: string,
         stringArrayName: string,
-        stringArray: StringArray,
+        stringArray: IStorage <string>,
         options: IOptions
     ) {
         super(options);

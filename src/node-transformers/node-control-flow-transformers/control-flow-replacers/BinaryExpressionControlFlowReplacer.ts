@@ -2,10 +2,10 @@ import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { IStorage } from '../../../interfaces/IStorage';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
 import { BinaryExpressionFunctionNode } from '../../../custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/BinaryExpressionFunctionNode';
-import { ControlFlowStorage } from '../../../storages/ControlFlowStorage';
 import { ControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/ControlFlowStorageCallNode';
 
 export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowReplacer {
@@ -29,12 +29,12 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
     public replace (
         binaryExpressionNode: ESTree.BinaryExpression,
         parentNode: ESTree.Node,
-        controlFlowStorage: ControlFlowStorage,
+        controlFlowStorage: IStorage <ICustomNode>,
         controlFlowStorageCustomNodeName: string
     ): ICustomNode | undefined {
         const key: string = AbstractControlFlowReplacer.getStorageKey();
 
-        controlFlowStorage.addToStorage(key, new BinaryExpressionFunctionNode(binaryExpressionNode.operator, this.options));
+        controlFlowStorage.set(key, new BinaryExpressionFunctionNode(binaryExpressionNode.operator, this.options));
 
         return new ControlFlowStorageCallNode(
             controlFlowStorageCustomNodeName,

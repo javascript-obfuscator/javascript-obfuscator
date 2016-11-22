@@ -75,6 +75,34 @@ describe('Utils', () => {
         });
     });
 
+    describe('mapGetFirstKeyOf(map: Map <any, any>, value: any): any', () => {
+        it('should returns key of map item', () => {
+            const map: Map <any, any> = new Map();
+
+            map.set('number1', 1);
+            map.set('number2', 2);
+            map.set('number3', 2);
+
+            map.set('string1', 'foo');
+            map.set('string2', 'bar');
+
+            map.set('object1', {item: 'value'});
+            map.set('object2', {item: 'value'});
+            map.set({key: 'object'}, [1, 2, 3]);
+
+            assert.deepEqual(Utils.mapGetFirstKeyOf(map, 1), 'number1');
+            assert.deepEqual(Utils.mapGetFirstKeyOf(map, 2), 'number2');
+
+            assert.deepEqual(Utils.mapGetFirstKeyOf(map, 'foo'), 'string1');
+            assert.deepEqual(Utils.mapGetFirstKeyOf(map, 'bar'), 'string2');
+
+            assert.deepEqual(Utils.mapGetFirstKeyOf(map, {item: 'value'}), 'object1');
+            assert.deepEqual(Utils.mapGetFirstKeyOf(map, [1, 2, 3]), {key: 'object'});
+
+            assert.deepEqual(Utils.mapGetFirstKeyOf(map, 3), null);
+        });
+    });
+
     describe('stringToJSFuck (string: string): string', () => {
         let expected: string = `${JSFuck.s} + ${JSFuck.t} + ${JSFuck.r} + ${JSFuck.i} + ${JSFuck.n} + ${JSFuck.g}`;
 

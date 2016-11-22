@@ -51,11 +51,4 @@ export class DebugProtectionFunctionNode extends AbstractCustomNode {
             debugProtectionFunctionName: this.debugProtectionFunctionName
         });
     }
-
-    /**
-     * @returns {string}
-     */
-    public getNodeIdentifier (): string {
-        return this.debugProtectionFunctionName;
-    }
 }

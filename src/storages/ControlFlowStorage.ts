@@ -1,31 +1,19 @@
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 
-export class ControlFlowStorage {
+import { AbstractStorage } from './AbstractStorage';
+import { Utils } from '../Utils';
+
+export class ControlFlowStorage extends AbstractStorage <ICustomNode> {
     /**
      * @type {Map <string, ICustomNode>}
      */
-    private storage: Map <string, ICustomNode> = new Map <string, ICustomNode> ();
+    protected storage: Map <string, ICustomNode> = new Map <string, ICustomNode> ();
 
     /**
      * @param key
-     * @param value
+     * @returns {ICustomNode}
      */
-    public addToStorage (key: string, value: ICustomNode): void {
-        this.storage.set(key, value);
-    }
-
-    /**
-     * @returns {Map <string, Function>}
-     */
-    public getStorage (): Map <string, ICustomNode> {
-        return this.storage;
-    }
-
-    /**
-     * @param key
-     * @returns {Function}
-     */
-    public getStorageItem(key: string): ICustomNode {
+    public get (key: string): ICustomNode {
         const value: ICustomNode | undefined = this.storage.get(key);
 
         if (!value) {
@@ -33,6 +21,36 @@ export class ControlFlowStorage {
         }
 
         return value;
+    }
+
+    /**
+     * @param value
+     * @returns {string | number | null}
+     */
+    public getKeyOf (value: ICustomNode): string | number | null {
+        return Utils.mapGetFirstKeyOf(this.storage, value);
+    }
+
+    /**
+     * @returns {number}
+     */
+    public getLength (): number {
+        return Array.from(this.storage).length;
+    }
+
+    /**
+     * @returns {Map <string, ICustomNode>}
+     */
+    public getStorage (): Map <string, ICustomNode> {
+        return this.storage;
+    }
+
+    /**
+     * @param key
+     * @param value
+     */
+    public set (key: string, value: ICustomNode): void {
+        this.storage.set(key, value);
     }
 
     /**

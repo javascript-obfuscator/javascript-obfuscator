@@ -4,7 +4,7 @@ import { IControlFlowReplacer } from '../../../interfaces/IControlFlowReplacer';
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/IOptions';
 
-import { ControlFlowStorage } from '../../../ControlFlowStorage';
+import { ControlFlowStorage } from '../../../storages/ControlFlowStorage';
 import { Utils } from '../../../Utils';
 
 export abstract class AbstractControlFlowReplacer implements IControlFlowReplacer {

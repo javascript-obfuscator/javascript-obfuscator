@@ -14,7 +14,7 @@ import { StringArrayRotateFunctionTemplate } from '../../templates/custom-nodes/
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeAppender } from '../../node/NodeAppender';
-import { StringArray } from '../../StringArray';
+import { StringArray } from '../../storages/StringArray';
 import { Utils } from '../../Utils';
 
 export class StringArrayRotateFunctionNode extends AbstractCustomNode {

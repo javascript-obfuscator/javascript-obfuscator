@@ -20,7 +20,7 @@ import { StringArrayRc4DecodeNodeTemplate } from '../../templates/custom-nodes/s
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeAppender } from '../../node/NodeAppender';
-import { StringArray } from '../../StringArray';
+import { StringArray } from '../../storages/StringArray';
 
 export class StringArrayCallsWrapper extends AbstractCustomNode {
     /**

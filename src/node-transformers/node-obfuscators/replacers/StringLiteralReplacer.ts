@@ -5,7 +5,7 @@ import { StringArrayEncoding } from '../../../enums/StringArrayEncoding';
 
 import { AbstractReplacer } from './AbstractReplacer';
 import { NumberLiteralReplacer } from './NumberLiteralReplacer';
-import { StringArray } from '../../../StringArray';
+import { StringArray } from '../../../storages/StringArray';
 import { Utils } from '../../../Utils';
 
 export class StringLiteralReplacer extends AbstractReplacer {

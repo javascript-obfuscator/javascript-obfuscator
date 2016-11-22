@@ -5,7 +5,7 @@ import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
 import { BinaryExpressionFunctionNode } from '../../../custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/BinaryExpressionFunctionNode';
-import { ControlFlowStorage } from '../../../ControlFlowStorage';
+import { ControlFlowStorage } from '../../../storages/ControlFlowStorage';
 import { ControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/ControlFlowStorageCallNode';
 
 export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowReplacer {

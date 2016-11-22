@@ -7,7 +7,7 @@ import { StringArrayNode } from '../custom-nodes/string-array-nodes/StringArrayN
 import { StringArrayRotateFunctionNode } from '../custom-nodes/string-array-nodes/StringArrayRotateFunctionNode';
 
 import { AbstractNodesGroup } from './AbstractNodesGroup';
-import { StringArray } from '../StringArray';
+import { StringArray } from '../storages/StringArray';
 import { Utils } from '../Utils';
 
 export class StringArrayNodesGroup extends AbstractNodesGroup {

@@ -7,7 +7,7 @@ import { IOptions } from '../../interfaces/IOptions';
 
 import { AppendState } from '../../enums/AppendState';
 
-import { ControlFlowStorage } from '../../ControlFlowStorage';
+import { ControlFlowStorage } from '../../storages/ControlFlowStorage';
 
 import { ControlFlowStorageTemplate } from '../../templates/custom-nodes/control-flow-storage-nodes/ControlFlowStorageTemplate';
 

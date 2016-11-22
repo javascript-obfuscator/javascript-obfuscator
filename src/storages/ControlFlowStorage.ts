@@ -1,4 +1,4 @@
-import { ICustomNode } from './interfaces/custom-nodes/ICustomNode';
+import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 
 export class ControlFlowStorage {
     /**

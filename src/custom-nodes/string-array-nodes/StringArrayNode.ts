@@ -7,7 +7,7 @@ import { IOptions } from '../../interfaces/IOptions';
 
 import { AppendState } from '../../enums/AppendState';
 
-import { StringArray } from '../../StringArray';
+import { StringArray } from '../../storages/StringArray';
 
 import { StringArrayTemplate } from '../../templates/custom-nodes/string-array-nodes/string-array-node/StringArrayTemplate';
 

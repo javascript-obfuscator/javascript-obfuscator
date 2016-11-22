@@ -6,12 +6,9 @@ import { IOptions } from '../../../interfaces/IOptions';
 
 import { AppendState } from '../../../enums/AppendState';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../../preset-options/NoCustomNodesPreset';
-
 import { BinaryExpressionFunctionTemplate } from '../../../templates/custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/BinaryExpressionFunctionTemplate';
 
 import { AbstractCustomNode } from '../../AbstractCustomNode';
-import { JavaScriptObfuscator } from '../../../JavaScriptObfuscator';
 import { Utils } from '../../../Utils';
 
 export class BinaryExpressionFunctionNode extends AbstractCustomNode {
@@ -44,12 +41,9 @@ export class BinaryExpressionFunctionNode extends AbstractCustomNode {
      * @returns {string}
      */
     public getCode (): string {
-        return JavaScriptObfuscator.obfuscate(
-            format(BinaryExpressionFunctionTemplate(), {
-                functionName: Utils.getRandomVariableName(),
-                operator: this.operator
-            }),
-            NO_CUSTOM_NODES_PRESET
-        ).getObfuscatedCode();
+        return format(BinaryExpressionFunctionTemplate(), {
+            functionName: Utils.getRandomVariableName(1),
+            operator: this.operator
+        });
     }
 }

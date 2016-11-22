@@ -12,24 +12,24 @@ import { IStackTraceData } from './interfaces/stack-trace-analyzer/IStackTraceDa
 import { AppendState } from './enums/AppendState';
 import { NodeType } from './enums/NodeType';
 
-import { CatchClauseObfuscator } from './node-obfuscators/CatchClauseObfuscator';
+import { CatchClauseObfuscator } from './node-transformers/node-obfuscators/CatchClauseObfuscator';
 import { ConsoleOutputNodesGroup } from './node-groups/ConsoleOutputNodesGroup';
 import { DebugProtectionNodesGroup } from './node-groups/DebugProtectionNodesGroup';
 import { DomainLockNodesGroup } from './node-groups/DomainLockNodesGroup';
-import { FunctionDeclarationObfuscator } from './node-obfuscators/FunctionDeclarationObfuscator';
-import { FunctionObfuscator } from './node-obfuscators/FunctionObfuscator';
-import { LabeledStatementObfuscator } from './node-obfuscators/LabeledStatementObfuscator';
-import { LiteralObfuscator } from './node-obfuscators/LiteralObfuscator';
-import { MemberExpressionObfuscator } from './node-obfuscators/MemberExpressionObfuscator';
-import { MethodDefinitionObfuscator } from './node-obfuscators/MethodDefinitionObfuscator';
+import { FunctionDeclarationObfuscator } from './node-transformers/node-obfuscators/FunctionDeclarationObfuscator';
+import { FunctionObfuscator } from './node-transformers/node-obfuscators/FunctionObfuscator';
+import { LabeledStatementObfuscator } from './node-transformers/node-obfuscators/LabeledStatementObfuscator';
+import { LiteralObfuscator } from './node-transformers/node-obfuscators/LiteralObfuscator';
+import { MemberExpressionObfuscator } from './node-transformers/node-obfuscators/MemberExpressionObfuscator';
+import { MethodDefinitionObfuscator } from './node-transformers/node-obfuscators/MethodDefinitionObfuscator';
 import { Node } from './node/Node';
 import { NodeUtils } from './node/NodeUtils';
-import { ObjectExpressionObfuscator } from './node-obfuscators/ObjectExpressionObfuscator';
+import { ObjectExpressionObfuscator } from './node-transformers/node-obfuscators/ObjectExpressionObfuscator';
 import { SelfDefendingNodesGroup } from './node-groups/SelfDefendingNodesGroup';
 import { StackTraceAnalyzer } from './stack-trace-analyzer/StackTraceAnalyzer';
 import { StringArrayNodesGroup } from './node-groups/StringArrayNodesGroup';
-import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclarationObfuscator';
-import { FunctionControlFlowTransformer } from './node-control-flow-transformers/FunctionControlFlowTransformer';
+import { VariableDeclarationObfuscator } from './node-transformers/node-obfuscators/VariableDeclarationObfuscator';
+import { FunctionControlFlowTransformer } from './node-transformers/node-control-flow-transformers/FunctionControlFlowTransformer';
 
 export class Obfuscator implements IObfuscator {
     /**

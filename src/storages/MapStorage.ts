@@ -1,7 +1,8 @@
-import { AbstractStorage } from './AbstractStorage';
+import { IStorage } from '../interfaces/IStorage';
+
 import { Utils } from '../Utils';
 
-export abstract class MapStorage <T> extends AbstractStorage <T> {
+export abstract class MapStorage <T> implements IStorage <T> {
     /**
      * @type {Map <string | number, T>}
      */

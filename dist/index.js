@@ -104,7 +104,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var chance_1 = __webpack_require__(25);
+var chance_1 = __webpack_require__(24);
 var JSFuck_1 = __webpack_require__(21);
 var isEqual = __webpack_require__(99);
 
@@ -735,7 +735,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var escodegen = __webpack_require__(11);
-var esprima = __webpack_require__(26);
+var esprima = __webpack_require__(25);
 var estraverse = __webpack_require__(4);
 var NodeType_1 = __webpack_require__(7);
 var Node_1 = __webpack_require__(2);
@@ -904,8 +904,8 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var JavaScriptObfuscatorCLI_1 = __webpack_require__(33);
-var JavaScriptObfuscatorInternal_1 = __webpack_require__(29);
+var JavaScriptObfuscatorCLI_1 = __webpack_require__(32);
+var JavaScriptObfuscatorInternal_1 = __webpack_require__(28);
 
 var JavaScriptObfuscator = function () {
     function JavaScriptObfuscator() {
@@ -1446,32 +1446,31 @@ exports.DEFAULT_PRESET = Object.freeze({
 });
 
 /***/ },
-/* 24 */,
-/* 25 */
+/* 24 */
 /***/ function(module, exports) {
 
 module.exports = require("chance");
 
 /***/ },
-/* 26 */
+/* 25 */
 /***/ function(module, exports) {
 
 module.exports = require("esprima");
 
 /***/ },
-/* 27 */
+/* 26 */
 /***/ function(module, exports) {
 
 module.exports = require("path");
 
 /***/ },
-/* 28 */
+/* 27 */
 /***/ function(module, exports) {
 
 module.exports = require("babel-polyfill");
 
 /***/ },
-/* 29 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1481,13 +1480,13 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var esprima = __webpack_require__(26);
+var esprima = __webpack_require__(25);
 var escodegen = __webpack_require__(11);
-var chance_1 = __webpack_require__(25);
+var chance_1 = __webpack_require__(24);
 var ObfuscationResult_1 = __webpack_require__(20);
-var Obfuscator_1 = __webpack_require__(30);
-var Options_1 = __webpack_require__(64);
-var SourceMapCorrector_1 = __webpack_require__(31);
+var Obfuscator_1 = __webpack_require__(29);
+var Options_1 = __webpack_require__(63);
+var SourceMapCorrector_1 = __webpack_require__(30);
 var Utils_1 = __webpack_require__(0);
 
 var JavaScriptObfuscatorInternal = function () {
@@ -1544,7 +1543,7 @@ JavaScriptObfuscatorInternal.escodegenParams = {
 exports.JavaScriptObfuscatorInternal = JavaScriptObfuscatorInternal;
 
 /***/ },
-/* 30 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1559,24 +1558,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var estraverse = __webpack_require__(4);
 var AppendState_1 = __webpack_require__(1);
 var NodeType_1 = __webpack_require__(7);
-var CatchClauseObfuscator_1 = __webpack_require__(54);
-var ConsoleOutputNodesGroup_1 = __webpack_require__(46);
-var DebugProtectionNodesGroup_1 = __webpack_require__(47);
-var DomainLockNodesGroup_1 = __webpack_require__(48);
-var FunctionDeclarationObfuscator_1 = __webpack_require__(55);
-var FunctionObfuscator_1 = __webpack_require__(56);
-var LabeledStatementObfuscator_1 = __webpack_require__(57);
-var LiteralObfuscator_1 = __webpack_require__(58);
-var MemberExpressionObfuscator_1 = __webpack_require__(59);
-var MethodDefinitionObfuscator_1 = __webpack_require__(60);
+var CatchClauseObfuscator_1 = __webpack_require__(53);
+var ConsoleOutputNodesGroup_1 = __webpack_require__(45);
+var DebugProtectionNodesGroup_1 = __webpack_require__(46);
+var DomainLockNodesGroup_1 = __webpack_require__(47);
+var FunctionDeclarationObfuscator_1 = __webpack_require__(54);
+var FunctionObfuscator_1 = __webpack_require__(55);
+var LabeledStatementObfuscator_1 = __webpack_require__(56);
+var LiteralObfuscator_1 = __webpack_require__(57);
+var MemberExpressionObfuscator_1 = __webpack_require__(58);
+var MethodDefinitionObfuscator_1 = __webpack_require__(59);
 var Node_1 = __webpack_require__(2);
 var NodeUtils_1 = __webpack_require__(8);
-var ObjectExpressionObfuscator_1 = __webpack_require__(61);
-var SelfDefendingNodesGroup_1 = __webpack_require__(49);
-var StackTraceAnalyzer_1 = __webpack_require__(67);
-var StringArrayNodesGroup_1 = __webpack_require__(50);
-var VariableDeclarationObfuscator_1 = __webpack_require__(62);
-var FunctionControlFlowTransformer_1 = __webpack_require__(51);
+var ObjectExpressionObfuscator_1 = __webpack_require__(60);
+var SelfDefendingNodesGroup_1 = __webpack_require__(48);
+var StackTraceAnalyzer_1 = __webpack_require__(66);
+var StringArrayNodesGroup_1 = __webpack_require__(49);
+var VariableDeclarationObfuscator_1 = __webpack_require__(61);
+var FunctionControlFlowTransformer_1 = __webpack_require__(50);
 
 var Obfuscator = function () {
     function Obfuscator(options) {
@@ -1685,7 +1684,7 @@ Obfuscator.nodeObfuscators = new Map([[NodeType_1.NodeType.ArrowFunctionExpressi
 exports.Obfuscator = Obfuscator;
 
 /***/ },
-/* 31 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1743,7 +1742,7 @@ var SourceMapCorrector = function () {
 exports.SourceMapCorrector = SourceMapCorrector;
 
 /***/ },
-/* 32 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1755,7 +1754,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var fs = __webpack_require__(98);
 var mkdirp = __webpack_require__(100);
-var path = __webpack_require__(27);
+var path = __webpack_require__(26);
 var Utils_1 = __webpack_require__(0);
 
 var CLIUtils = function () {
@@ -1835,7 +1834,7 @@ CLIUtils.encoding = 'utf8';
 exports.CLIUtils = CLIUtils;
 
 /***/ },
-/* 33 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1846,11 +1845,11 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var commander = __webpack_require__(97);
-var path = __webpack_require__(27);
+var path = __webpack_require__(26);
 var SourceMapMode_1 = __webpack_require__(14);
 var StringArrayEncoding_1 = __webpack_require__(18);
 var DefaultPreset_1 = __webpack_require__(23);
-var CLIUtils_1 = __webpack_require__(32);
+var CLIUtils_1 = __webpack_require__(31);
 var JavaScriptObfuscator_1 = __webpack_require__(10);
 var Utils_1 = __webpack_require__(0);
 
@@ -1983,7 +1982,7 @@ var JavaScriptObfuscatorCLI = function () {
 exports.JavaScriptObfuscatorCLI = JavaScriptObfuscatorCLI;
 
 /***/ },
-/* 34 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2040,7 +2039,7 @@ var ConsoleOutputDisableExpressionNode = function (_AbstractCustomNode_) {
 exports.ConsoleOutputDisableExpressionNode = ConsoleOutputDisableExpressionNode;
 
 /***/ },
-/* 35 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2092,7 +2091,7 @@ var BinaryExpressionFunctionNode = function (_AbstractCustomNode_) {
 exports.BinaryExpressionFunctionNode = BinaryExpressionFunctionNode;
 
 /***/ },
-/* 36 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2151,7 +2150,7 @@ var ControlFlowStorageCallNode = function (_AbstractCustomNode_) {
 exports.ControlFlowStorageCallNode = ControlFlowStorageCallNode;
 
 /***/ },
-/* 37 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2206,7 +2205,7 @@ var ControlFlowStorageNode = function (_AbstractCustomNode_) {
 exports.ControlFlowStorageNode = ControlFlowStorageNode;
 
 /***/ },
-/* 38 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2259,7 +2258,7 @@ var DebugProtectionFunctionCallNode = function (_AbstractCustomNode_) {
 exports.DebugProtectionFunctionCallNode = DebugProtectionFunctionCallNode;
 
 /***/ },
-/* 39 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2312,7 +2311,7 @@ var DebugProtectionFunctionIntervalNode = function (_AbstractCustomNode_) {
 exports.DebugProtectionFunctionIntervalNode = DebugProtectionFunctionIntervalNode;
 
 /***/ },
-/* 40 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2368,7 +2367,7 @@ var DebugProtectionFunctionNode = function (_AbstractCustomNode_) {
 exports.DebugProtectionFunctionNode = DebugProtectionFunctionNode;
 
 /***/ },
-/* 41 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2434,7 +2433,7 @@ var DomainLockNode = function (_AbstractCustomNode_) {
 exports.DomainLockNode = DomainLockNode;
 
 /***/ },
-/* 42 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2495,7 +2494,7 @@ var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
 exports.SelfDefendingUnicodeNode = SelfDefendingUnicodeNode;
 
 /***/ },
-/* 43 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2608,7 +2607,7 @@ var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
 exports.StringArrayCallsWrapper = StringArrayCallsWrapper;
 
 /***/ },
-/* 44 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2684,7 +2683,7 @@ StringArrayNode.ARRAY_RANDOM_LENGTH = 4;
 exports.StringArrayNode = StringArrayNode;
 
 /***/ },
-/* 45 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2763,7 +2762,7 @@ var StringArrayRotateFunctionNode = function (_AbstractCustomNode_) {
 exports.StringArrayRotateFunctionNode = StringArrayRotateFunctionNode;
 
 /***/ },
-/* 46 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2777,7 +2776,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var ConsoleOutputDisableExpressionNode_1 = __webpack_require__(34);
+var ConsoleOutputDisableExpressionNode_1 = __webpack_require__(33);
 var NodeCallsControllerFunctionNode_1 = __webpack_require__(17);
 var AbstractNodesGroup_1 = __webpack_require__(12);
 var NodeAppender_1 = __webpack_require__(3);
@@ -2810,7 +2809,7 @@ var ConsoleOutputNodesGroup = function (_AbstractNodesGroup_) {
 exports.ConsoleOutputNodesGroup = ConsoleOutputNodesGroup;
 
 /***/ },
-/* 47 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2824,9 +2823,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var DebugProtectionFunctionCallNode_1 = __webpack_require__(38);
-var DebugProtectionFunctionIntervalNode_1 = __webpack_require__(39);
-var DebugProtectionFunctionNode_1 = __webpack_require__(40);
+var DebugProtectionFunctionCallNode_1 = __webpack_require__(37);
+var DebugProtectionFunctionIntervalNode_1 = __webpack_require__(38);
+var DebugProtectionFunctionNode_1 = __webpack_require__(39);
 var AbstractNodesGroup_1 = __webpack_require__(12);
 var Utils_1 = __webpack_require__(0);
 
@@ -2860,7 +2859,7 @@ var DebugProtectionNodesGroup = function (_AbstractNodesGroup_) {
 exports.DebugProtectionNodesGroup = DebugProtectionNodesGroup;
 
 /***/ },
-/* 48 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2874,7 +2873,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var DomainLockNode_1 = __webpack_require__(41);
+var DomainLockNode_1 = __webpack_require__(40);
 var NodeCallsControllerFunctionNode_1 = __webpack_require__(17);
 var AbstractNodesGroup_1 = __webpack_require__(12);
 var NodeAppender_1 = __webpack_require__(3);
@@ -2907,7 +2906,7 @@ var DomainLockNodesGroup = function (_AbstractNodesGroup_) {
 exports.DomainLockNodesGroup = DomainLockNodesGroup;
 
 /***/ },
-/* 49 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2923,7 +2922,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var AppendState_1 = __webpack_require__(1);
 var NodeCallsControllerFunctionNode_1 = __webpack_require__(17);
-var SelfDefendingUnicodeNode_1 = __webpack_require__(42);
+var SelfDefendingUnicodeNode_1 = __webpack_require__(41);
 var AbstractNodesGroup_1 = __webpack_require__(12);
 var NodeAppender_1 = __webpack_require__(3);
 var Utils_1 = __webpack_require__(0);
@@ -2958,7 +2957,7 @@ var SelfDefendingNodesGroup = function (_AbstractNodesGroup_) {
 exports.SelfDefendingNodesGroup = SelfDefendingNodesGroup;
 
 /***/ },
-/* 50 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2973,9 +2972,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var AppendState_1 = __webpack_require__(1);
-var StringArrayCallsWrapper_1 = __webpack_require__(43);
-var StringArrayNode_1 = __webpack_require__(44);
-var StringArrayRotateFunctionNode_1 = __webpack_require__(45);
+var StringArrayCallsWrapper_1 = __webpack_require__(42);
+var StringArrayNode_1 = __webpack_require__(43);
+var StringArrayRotateFunctionNode_1 = __webpack_require__(44);
 var AbstractNodesGroup_1 = __webpack_require__(12);
 var StringArrayStorage_1 = __webpack_require__(74);
 var Utils_1 = __webpack_require__(0);
@@ -3021,7 +3020,7 @@ var StringArrayNodesGroup = function (_AbstractNodesGroup_) {
 exports.StringArrayNodesGroup = StringArrayNodesGroup;
 
 /***/ },
-/* 51 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3038,9 +3037,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var estraverse = __webpack_require__(4);
 var NodeType_1 = __webpack_require__(7);
 var AbstractNodeTransformer_1 = __webpack_require__(9);
-var BinaryExpressionControlFlowReplacer_1 = __webpack_require__(53);
-var ControlFlowStorage_1 = __webpack_require__(72);
-var ControlFlowStorageNode_1 = __webpack_require__(37);
+var BinaryExpressionControlFlowReplacer_1 = __webpack_require__(52);
+var ControlFlowStorage_1 = __webpack_require__(73);
+var ControlFlowStorageNode_1 = __webpack_require__(36);
 var Node_1 = __webpack_require__(2);
 var NodeAppender_1 = __webpack_require__(3);
 var Utils_1 = __webpack_require__(0);
@@ -3100,7 +3099,7 @@ FunctionControlFlowTransformer.controlFlowReplacers = new Map([[NodeType_1.NodeT
 exports.FunctionControlFlowTransformer = FunctionControlFlowTransformer;
 
 /***/ },
-/* 52 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3136,7 +3135,7 @@ var AbstractControlFlowReplacer = function () {
 exports.AbstractControlFlowReplacer = AbstractControlFlowReplacer;
 
 /***/ },
-/* 53 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3151,9 +3150,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var escodegen = __webpack_require__(11);
-var AbstractControlFlowReplacer_1 = __webpack_require__(52);
-var BinaryExpressionFunctionNode_1 = __webpack_require__(35);
-var ControlFlowStorageCallNode_1 = __webpack_require__(36);
+var AbstractControlFlowReplacer_1 = __webpack_require__(51);
+var BinaryExpressionFunctionNode_1 = __webpack_require__(34);
+var ControlFlowStorageCallNode_1 = __webpack_require__(35);
 
 var BinaryExpressionControlFlowReplacer = function (_AbstractControlFlowR) {
     _inherits(BinaryExpressionControlFlowReplacer, _AbstractControlFlowR);
@@ -3186,7 +3185,7 @@ var BinaryExpressionControlFlowReplacer = function (_AbstractControlFlowR) {
 exports.BinaryExpressionControlFlowReplacer = BinaryExpressionControlFlowReplacer;
 
 /***/ },
-/* 54 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3257,7 +3256,7 @@ var CatchClauseObfuscator = function (_AbstractNodeTransfor) {
 exports.CatchClauseObfuscator = CatchClauseObfuscator;
 
 /***/ },
-/* 55 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3332,7 +3331,7 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeTransfor) {
 exports.FunctionDeclarationObfuscator = FunctionDeclarationObfuscator;
 
 /***/ },
-/* 56 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3413,7 +3412,7 @@ var FunctionObfuscator = function (_AbstractNodeTransfor) {
 exports.FunctionObfuscator = FunctionObfuscator;
 
 /***/ },
-/* 57 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3484,7 +3483,7 @@ var LabeledStatementObfuscator = function (_AbstractNodeTransfor) {
 exports.LabeledStatementObfuscator = LabeledStatementObfuscator;
 
 /***/ },
-/* 58 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3502,7 +3501,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var escodegen = __webpack_require__(11);
 var AbstractNodeTransformer_1 = __webpack_require__(9);
-var BooleanLiteralReplacer_1 = __webpack_require__(63);
+var BooleanLiteralReplacer_1 = __webpack_require__(62);
 var Node_1 = __webpack_require__(2);
 var NumberLiteralReplacer_1 = __webpack_require__(22);
 var StringLiteralReplacer_1 = __webpack_require__(19);
@@ -3549,7 +3548,7 @@ var LiteralObfuscator = function (_AbstractNodeTransfor) {
 exports.LiteralObfuscator = LiteralObfuscator;
 
 /***/ },
-/* 59 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3634,7 +3633,7 @@ var MemberExpressionObfuscator = function (_AbstractNodeTransfor) {
 exports.MemberExpressionObfuscator = MemberExpressionObfuscator;
 
 /***/ },
-/* 60 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3693,7 +3692,7 @@ MethodDefinitionObfuscator.ignoredNames = ['constructor'];
 exports.MethodDefinitionObfuscator = MethodDefinitionObfuscator;
 
 /***/ },
-/* 61 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3779,7 +3778,7 @@ var ObjectExpressionObfuscator = function (_AbstractNodeTransfor) {
 exports.ObjectExpressionObfuscator = ObjectExpressionObfuscator;
 
 /***/ },
-/* 62 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3857,7 +3856,7 @@ var VariableDeclarationObfuscator = function (_AbstractNodeTransfor) {
 exports.VariableDeclarationObfuscator = VariableDeclarationObfuscator;
 
 /***/ },
-/* 63 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3896,7 +3895,7 @@ var BooleanLiteralReplacer = function (_AbstractReplacer_1$A) {
 exports.BooleanLiteralReplacer = BooleanLiteralReplacer;
 
 /***/ },
-/* 64 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3921,8 +3920,8 @@ var class_validator_1 = __webpack_require__(96);
 var TSourceMapMode_1 = __webpack_require__(94);
 var TStringArrayEncoding_1 = __webpack_require__(95);
 var DefaultPreset_1 = __webpack_require__(23);
-var OptionsNormalizer_1 = __webpack_require__(65);
-var ValidationErrorsFormatter_1 = __webpack_require__(66);
+var OptionsNormalizer_1 = __webpack_require__(64);
+var ValidationErrorsFormatter_1 = __webpack_require__(65);
 
 var Options = function Options(obfuscatorOptions) {
     _classCallCheck(this, Options);
@@ -3971,7 +3970,7 @@ exports.Options = Options;
 var _a, _b;
 
 /***/ },
-/* 65 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4138,7 +4137,7 @@ OptionsNormalizer.normalizerRules = [OptionsNormalizer.domainLockRule, OptionsNo
 exports.OptionsNormalizer = OptionsNormalizer;
 
 /***/ },
-/* 66 */
+/* 65 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -4205,7 +4204,7 @@ var ValidationErrorsFormatter = function () {
 exports.ValidationErrorsFormatter = ValidationErrorsFormatter;
 
 /***/ },
-/* 67 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4217,9 +4216,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var estraverse = __webpack_require__(4);
 var NodeType_1 = __webpack_require__(7);
-var FunctionDeclarationCalleeDataExtractor_1 = __webpack_require__(68);
-var FunctionExpressionCalleeDataExtractor_1 = __webpack_require__(69);
-var ObjectExpressionCalleeDataExtractor_1 = __webpack_require__(70);
+var FunctionDeclarationCalleeDataExtractor_1 = __webpack_require__(67);
+var FunctionExpressionCalleeDataExtractor_1 = __webpack_require__(68);
+var ObjectExpressionCalleeDataExtractor_1 = __webpack_require__(69);
 var Node_1 = __webpack_require__(2);
 var NodeUtils_1 = __webpack_require__(8);
 
@@ -4298,7 +4297,7 @@ StackTraceAnalyzer.limitThreshold = 0.002;
 exports.StackTraceAnalyzer = StackTraceAnalyzer;
 
 /***/ },
-/* 68 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4357,7 +4356,7 @@ var FunctionDeclarationCalleeDataExtractor = function () {
 exports.FunctionDeclarationCalleeDataExtractor = FunctionDeclarationCalleeDataExtractor;
 
 /***/ },
-/* 69 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4419,7 +4418,7 @@ var FunctionExpressionCalleeDataExtractor = function () {
 exports.FunctionExpressionCalleeDataExtractor = FunctionExpressionCalleeDataExtractor;
 
 /***/ },
-/* 70 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4551,18 +4550,208 @@ var ObjectExpressionCalleeDataExtractor = function () {
 exports.ObjectExpressionCalleeDataExtractor = ObjectExpressionCalleeDataExtractor;
 
 /***/ },
-/* 71 */,
-/* 72 */
+/* 70 */,
+/* 71 */
 /***/ function(module, exports) {
 
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open '/Users/sanex/PhpstormProjects/javascript-obfuscator/src/storages/ControlFlowStorage.ts'");
+"use strict";
+"use strict";
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ArrayStorage = function () {
+    function ArrayStorage() {
+        _classCallCheck(this, ArrayStorage);
+
+        this.storage = [];
+    }
+
+    _createClass(ArrayStorage, [{
+        key: "get",
+        value: function get(key) {
+            var value = this.storage[key];
+            if (!value) {
+                throw new Error("No value found in array storage with key `" + key + "`");
+            }
+            return value;
+        }
+    }, {
+        key: "getKeyOf",
+        value: function getKeyOf(value) {
+            return this.storage.indexOf(value);
+        }
+    }, {
+        key: "getLength",
+        value: function getLength() {
+            return this.storage.length;
+        }
+    }, {
+        key: "getStorage",
+        value: function getStorage() {
+            return this.storage;
+        }
+    }, {
+        key: "set",
+        value: function set(key, value) {
+            this.storage.push(value);
+        }
+    }]);
+
+    return ArrayStorage;
+}();
+
+exports.ArrayStorage = ArrayStorage;
 
 /***/ },
-/* 73 */,
-/* 74 */
-/***/ function(module, exports) {
+/* 72 */
+/***/ function(module, exports, __webpack_require__) {
 
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open '/Users/sanex/PhpstormProjects/javascript-obfuscator/src/storages/StringArrayStorage.ts'");
+"use strict";
+"use strict";
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Utils_1 = __webpack_require__(0);
+
+var MapStorage = function () {
+    function MapStorage() {
+        _classCallCheck(this, MapStorage);
+
+        this.storage = new Map();
+    }
+
+    _createClass(MapStorage, [{
+        key: "get",
+        value: function get(key) {
+            var value = this.storage.get(key);
+            if (!value) {
+                throw new Error("No value found in map storage with key `" + key + "`");
+            }
+            return value;
+        }
+    }, {
+        key: "getKeyOf",
+        value: function getKeyOf(value) {
+            return Utils_1.Utils.mapGetFirstKeyOf(this.storage, value);
+        }
+    }, {
+        key: "getLength",
+        value: function getLength() {
+            return Array.from(this.storage).length;
+        }
+    }, {
+        key: "getStorage",
+        value: function getStorage() {
+            return this.storage;
+        }
+    }, {
+        key: "set",
+        value: function set(key, value) {
+            this.storage.set(key, value);
+        }
+    }]);
+
+    return MapStorage;
+}();
+
+exports.MapStorage = MapStorage;
+
+/***/ },
+/* 73 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+"use strict";
+
+var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; })();
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var MapStorage_1 = __webpack_require__(72);
+
+var ControlFlowStorage = function (_MapStorage_1$MapStor) {
+    _inherits(ControlFlowStorage, _MapStorage_1$MapStor);
+
+    function ControlFlowStorage() {
+        _classCallCheck(this, ControlFlowStorage);
+
+        return _possibleConstructorReturn(this, (ControlFlowStorage.__proto__ || Object.getPrototypeOf(ControlFlowStorage)).apply(this, arguments));
+    }
+
+    _createClass(ControlFlowStorage, [{
+        key: 'toString',
+        value: function toString() {
+            return Array.from(this.storage).reduce(function (controlFlowStorageItems, _ref) {
+                var _ref2 = _slicedToArray(_ref, 2),
+                    key = _ref2[0],
+                    value = _ref2[1];
+
+                controlFlowStorageItems.push(key + ': ' + value.getCode());
+                return controlFlowStorageItems;
+            }, []).join(',');
+        }
+    }]);
+
+    return ControlFlowStorage;
+}(MapStorage_1.MapStorage);
+
+exports.ControlFlowStorage = ControlFlowStorage;
+
+/***/ },
+/* 74 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+"use strict";
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ArrayStorage_1 = __webpack_require__(71);
+var Utils_1 = __webpack_require__(0);
+
+var StringArrayStorage = function (_ArrayStorage_1$Array) {
+    _inherits(StringArrayStorage, _ArrayStorage_1$Array);
+
+    function StringArrayStorage() {
+        _classCallCheck(this, StringArrayStorage);
+
+        return _possibleConstructorReturn(this, (StringArrayStorage.__proto__ || Object.getPrototypeOf(StringArrayStorage)).apply(this, arguments));
+    }
+
+    _createClass(StringArrayStorage, [{
+        key: 'rotateArray',
+        value: function rotateArray(rotationValue) {
+            this.storage = Utils_1.Utils.arrayRotate(this.storage, rotationValue);
+        }
+    }, {
+        key: 'toString',
+        value: function toString() {
+            return this.storage.map(function (value) {
+                return '\'' + value + '\'';
+            }).toString();
+        }
+    }]);
+
+    return StringArrayStorage;
+}(ArrayStorage_1.ArrayStorage);
+
+exports.StringArrayStorage = StringArrayStorage;
 
 /***/ },
 /* 75 */
@@ -4849,7 +5038,7 @@ module.exports = require("mkdirp");
 
 var JavaScriptObfuscator_1 = __webpack_require__(10);
 if (!global._babelPolyfill) {
-    __webpack_require__(28);
+    __webpack_require__(27);
 }
 module.exports = JavaScriptObfuscator_1.JavaScriptObfuscator;
 

@@ -1,6 +1,6 @@
-import { AbstractStorage } from './AbstractStorage';
+import { IStorage } from '../interfaces/IStorage';
 
-export abstract class ArrayStorage <T> extends AbstractStorage <T> {
+export abstract class ArrayStorage <T> implements IStorage <T> {
     /**
      * @type {T[]}
      */
@@ -33,6 +33,13 @@ export abstract class ArrayStorage <T> extends AbstractStorage <T> {
      */
     public getLength (): number {
         return this.storage.length;
+    }
+
+    /**
+     * @returns {T[]}
+     */
+    public getStorage (): T[] {
+        return this.storage;
     }
 
     /**

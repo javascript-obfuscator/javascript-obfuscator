@@ -6,6 +6,11 @@ const isEqual = require('is-equal');
 
 export class Utils {
     /**
+     * @type {string}
+     */
+    public static randomGeneratorPool: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    /**
      * @type {Chance.Chance | Chance.SeededChance}
      */
     private static randomGenerator: Chance.Chance | Chance.SeededChance = new Chance();
@@ -180,13 +185,16 @@ export class Utils {
             return result;
         };
 
-        const customPool: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        const randomString: string = Utils.randomGenerator.string({
+            length: length,
+            pool: Utils.randomGeneratorPool
+        });
 
-        let randomString: string = Utils.randomGenerator.string({length: length, pool: customPool}),
-            randomStringDiff: string = randomString.replace(
-                new RegExp('[' + escapeRegExp(str) + ']', 'g'),
-            ''),
-            randomStringDiffArray: string[] = randomStringDiff.split('');
+        let randomStringDiff: string = randomString.replace(
+            new RegExp('[' + escapeRegExp(str) + ']', 'g'),
+        '');
+
+        const randomStringDiffArray: string[] = randomStringDiff.split('');
 
         Utils.randomGenerator.shuffle(randomStringDiffArray);
         randomStringDiff = randomStringDiffArray.join('');

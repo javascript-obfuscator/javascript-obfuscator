@@ -45,7 +45,7 @@ export class StringLiteralReplacer extends AbstractReplacer {
         const stringArrayNode: ICustomNodeWithData = <ICustomNodeWithData>this.nodes.get('stringArrayNode');
 
         if (!stringArrayNode) {
-            throw new ReferenceError('`stringArrayNode` node is not found in Map with custom node.');
+            throw new ReferenceError('`stringArrayNode` node is not found in Map with custom nodes.');
         }
 
         let rc4Key: string = '';

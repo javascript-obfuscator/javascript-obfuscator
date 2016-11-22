@@ -225,10 +225,12 @@ var Utils = function () {
                 }
                 return result;
             };
-            var customPool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            var randomString = Utils.randomGenerator.string({ length: length, pool: customPool }),
-                randomStringDiff = randomString.replace(new RegExp('[' + escapeRegExp(str) + ']', 'g'), ''),
-                randomStringDiffArray = randomStringDiff.split('');
+            var randomString = Utils.randomGenerator.string({
+                length: length,
+                pool: Utils.randomGeneratorPool
+            });
+            var randomStringDiff = randomString.replace(new RegExp('[' + escapeRegExp(str) + ']', 'g'), '');
+            var randomStringDiffArray = randomStringDiff.split('');
             Utils.randomGenerator.shuffle(randomStringDiffArray);
             randomStringDiff = randomStringDiffArray.join('');
             return [randomMerge(str, randomStringDiff), randomStringDiff];
@@ -340,6 +342,7 @@ var Utils = function () {
     return Utils;
 }();
 
+Utils.randomGeneratorPool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 Utils.randomGenerator = new chance_1.Chance();
 exports.Utils = Utils;
 
@@ -1222,7 +1225,7 @@ var StringLiteralReplacer = function (_AbstractReplacer_1$A) {
         value: function replaceStringLiteralWithStringArrayCall(value) {
             var stringArrayNode = this.nodes.get('stringArrayNode');
             if (!stringArrayNode) {
-                throw new ReferenceError('`stringArrayNode` node is not found in Map with custom node.');
+                throw new ReferenceError('`stringArrayNode` node is not found in Map with custom nodes.');
             }
             var rc4Key = '';
             switch (this.options.stringArrayEncoding) {
@@ -3120,11 +3123,11 @@ var AbstractControlFlowReplacer = function () {
     }
 
     _createClass(AbstractControlFlowReplacer, null, [{
-        key: 'getStorageKey',
+        key: "getStorageKey",
         value: function getStorageKey() {
             return Utils_1.Utils.getRandomGenerator().string({
                 length: 3,
-                pool: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+                pool: Utils_1.Utils.randomGeneratorPool
             });
         }
     }]);

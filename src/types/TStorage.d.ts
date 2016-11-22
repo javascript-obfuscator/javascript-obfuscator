@@ -1,1 +1,1 @@
-export type TStorage <T> = Map <string, T> | T[];
+export type TStorage <T> = Map <string | number, T> | T[];

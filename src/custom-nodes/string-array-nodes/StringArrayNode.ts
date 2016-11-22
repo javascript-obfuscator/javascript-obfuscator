@@ -13,7 +13,7 @@ import { StringArrayTemplate } from '../../templates/custom-nodes/string-array-n
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeAppender } from '../../node/NodeAppender';
-import { StringArrayStorage } from '../../storages/StringArrayStorage';
+import { StringArrayStorage } from '../../storages/string-array/StringArrayStorage';
 
 export class StringArrayNode extends AbstractCustomNode implements ICustomNodeWithData {
     /**

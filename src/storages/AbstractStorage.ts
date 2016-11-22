@@ -36,7 +36,7 @@ export abstract class AbstractStorage <T> implements IStorage <T> {
      * @param key
      * @param value
      */
-    public abstract set (key: string | null, value: T): void;
+    public abstract set (key: string | number | null, value: T): void;
 
     /**
      * @returns {string}

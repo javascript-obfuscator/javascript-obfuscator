@@ -11,7 +11,7 @@ import { NodeType } from '../../enums/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { BinaryExpressionControlFlowReplacer } from './control-flow-replacers/BinaryExpressionControlFlowReplacer';
-import { ControlFlowStorage } from '../../storages/ControlFlowStorage';
+import { ControlFlowStorage } from '../../storages/control-flow/ControlFlowStorage';
 import { ControlFlowStorageNode } from '../../custom-nodes/control-flow-storage-nodes/ControlFlowStorageNode';
 import { Node } from '../../node/Node';
 import { NodeAppender } from '../../node/NodeAppender';

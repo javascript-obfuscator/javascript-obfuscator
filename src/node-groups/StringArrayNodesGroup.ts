@@ -7,7 +7,7 @@ import { StringArrayNode } from '../custom-nodes/string-array-nodes/StringArrayN
 import { StringArrayRotateFunctionNode } from '../custom-nodes/string-array-nodes/StringArrayRotateFunctionNode';
 
 import { AbstractNodesGroup } from './AbstractNodesGroup';
-import { StringArrayStorage } from '../storages/StringArrayStorage';
+import { StringArrayStorage } from '../storages/string-array/StringArrayStorage';
 import { Utils } from '../Utils';
 import { IStorage } from '../interfaces/IStorage';
 

@@ -27,7 +27,7 @@ export class VariableDeclarationObfuscator extends AbstractNodeTransformer {
     /**
      * @type {IdentifierReplacer}
      */
-    private identifierReplacer: IdentifierReplacer;
+    private readonly identifierReplacer: IdentifierReplacer;
 
     /**
      * @param nodes
@@ -65,7 +65,7 @@ export class VariableDeclarationObfuscator extends AbstractNodeTransformer {
     private storeVariableNames (variableDeclarationNode: ESTree.VariableDeclaration): void {
         variableDeclarationNode.declarations
             .forEach((declarationNode: ESTree.VariableDeclarator) => {
-                NodeUtils.typedReplace(declarationNode.id, NodeType.Identifier, {
+                NodeUtils.typedTraverse(declarationNode.id, NodeType.Identifier, {
                     enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
                 });
             });

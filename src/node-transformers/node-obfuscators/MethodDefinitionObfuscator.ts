@@ -17,7 +17,7 @@ export class MethodDefinitionObfuscator extends AbstractNodeTransformer {
     /**
      * @type {string[]}
      */
-    private static ignoredNames: string[] = ['constructor'];
+    private static readonly ignoredNames: string[] = ['constructor'];
 
     /**
      * @param methodDefinitionNode

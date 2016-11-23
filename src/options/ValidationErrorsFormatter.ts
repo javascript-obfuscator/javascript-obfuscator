@@ -6,7 +6,7 @@ export class ValidationErrorsFormatter {
      * @returns {string}
      */
     public static format (validationErrors: ValidationError[]): string {
-        let errorsArray: string[] = [];
+        const errorsArray: string[] = [];
 
         for (const error of validationErrors) {
             errorsArray.push(ValidationErrorsFormatter.formatError(error));
@@ -20,8 +20,9 @@ export class ValidationErrorsFormatter {
      * @returns {string}
      */
     private static formatError (validationError: ValidationError): string {
-        let errorString: string = `\`${validationError.property}\` errors:\n`,
-            constraints: {[type: string]: string} = validationError.constraints;
+        const constraints: {[type: string]: string} = validationError.constraints;
+
+        let errorString: string = `\`${validationError.property}\` errors:\n`;
 
         for (const constraint in constraints) {
             if (!constraints.hasOwnProperty(constraint)) {

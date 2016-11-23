@@ -31,7 +31,7 @@ export class LabeledStatementObfuscator extends AbstractNodeTransformer {
     /**
      * @type {IdentifierReplacer}
      */
-    private identifierReplacer: IdentifierReplacer;
+    private readonly identifierReplacer: IdentifierReplacer;
 
     /**
      * @param nodes
@@ -55,7 +55,7 @@ export class LabeledStatementObfuscator extends AbstractNodeTransformer {
      * @param labeledStatementNode
      */
     private storeLabeledStatementName (labeledStatementNode: ESTree.LabeledStatement): void {
-        NodeUtils.typedReplace(labeledStatementNode.label, NodeType.Identifier, {
+        NodeUtils.typedTraverse(labeledStatementNode.label, NodeType.Identifier, {
             enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
         });
     }

@@ -8,7 +8,7 @@ export class Utils {
     /**
      * @type {string}
      */
-    public static randomGeneratorPool: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    public static readonly randomGeneratorPool: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     /**
      * @type {Chance.Chance | Chance.SeededChance}

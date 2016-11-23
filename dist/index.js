@@ -88,7 +88,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 104);
+/******/ 	return __webpack_require__(__webpack_require__.s = 105);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1240,18 +1240,17 @@ var StringLiteralReplacer = function (_AbstractReplacer_1$A) {
             if (this.options.unicodeEscapeSequence) {
                 value = Utils_1.Utils.stringToUnicodeEscapeSequence(value);
             }
-            var stringArray = stringArrayNode.getNodeData(),
-                indexOfExistingValue = stringArray.getKeyOf(value),
-                indexOfValue = void 0,
-                hexadecimalIndex = void 0;
+            var stringArray = stringArrayNode.getNodeData();
+            var indexOfExistingValue = stringArray.getKeyOf(value);
+            var indexOfValue = void 0;
             if (indexOfExistingValue >= 0) {
                 indexOfValue = indexOfExistingValue;
             } else {
                 indexOfValue = stringArray.getLength();
                 stringArray.set(null, value);
             }
-            hexadecimalIndex = new NumberLiteralReplacer_1.NumberLiteralReplacer(this.nodes, this.options).replace(indexOfValue);
             var stringArrayCallsWrapper = this.nodes.get('stringArrayCallsWrapper');
+            var hexadecimalIndex = new NumberLiteralReplacer_1.NumberLiteralReplacer(this.nodes, this.options).replace(indexOfValue);
             if (!stringArrayCallsWrapper) {
                 throw new ReferenceError('`stringArrayCallsWrapper` node is not found in Map with custom node.');
             }
@@ -1879,8 +1878,8 @@ var JavaScriptObfuscatorCLI = function () {
     }, {
         key: 'buildOptions',
         value: function buildOptions() {
-            var obfuscatorOptions = {},
-                availableOptions = Object.keys(DefaultPreset_1.DEFAULT_PRESET);
+            var obfuscatorOptions = {};
+            var availableOptions = Object.keys(DefaultPreset_1.DEFAULT_PRESET);
             for (var option in this.commands) {
                 if (!this.commands.hasOwnProperty(option)) {
                     continue;
@@ -1915,8 +1914,8 @@ var JavaScriptObfuscatorCLI = function () {
     }, {
         key: 'processData',
         value: function processData() {
-            var options = this.buildOptions(),
-                outputCodePath = CLIUtils_1.CLIUtils.getOutputCodePath(this.commands.output, this.inputPath);
+            var options = this.buildOptions();
+            var outputCodePath = CLIUtils_1.CLIUtils.getOutputCodePath(this.commands.output, this.inputPath);
             if (options.sourceMap) {
                 this.processDataWithSourceMap(outputCodePath, options);
             } else {
@@ -3277,7 +3276,7 @@ var CatchClauseObfuscator = function (_AbstractNodeTransfor) {
         value: function storeCatchClauseParam(catchClauseNode) {
             var _this2 = this;
 
-            NodeUtils_1.NodeUtils.typedReplace(catchClauseNode.param, NodeType_1.NodeType.Identifier, {
+            NodeUtils_1.NodeUtils.typedTraverse(catchClauseNode.param, NodeType_1.NodeType.Identifier, {
                 enter: function enter(node) {
                     return _this2.identifierReplacer.storeNames(node.name);
                 }
@@ -3352,7 +3351,7 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeTransfor) {
         value: function storeFunctionName(functionDeclarationNode) {
             var _this2 = this;
 
-            NodeUtils_1.NodeUtils.typedReplace(functionDeclarationNode.id, NodeType_1.NodeType.Identifier, {
+            NodeUtils_1.NodeUtils.typedTraverse(functionDeclarationNode.id, NodeType_1.NodeType.Identifier, {
                 enter: function enter(node) {
                     return _this2.identifierReplacer.storeNames(node.name);
                 }
@@ -3424,7 +3423,7 @@ var FunctionObfuscator = function (_AbstractNodeTransfor) {
             var _this2 = this;
 
             functionNode.params.forEach(function (paramsNode) {
-                NodeUtils_1.NodeUtils.typedReplace(paramsNode, NodeType_1.NodeType.Identifier, {
+                NodeUtils_1.NodeUtils.typedTraverse(paramsNode, NodeType_1.NodeType.Identifier, {
                     enter: function enter(node) {
                         return _this2.identifierReplacer.storeNames(node.name);
                     }
@@ -3436,7 +3435,7 @@ var FunctionObfuscator = function (_AbstractNodeTransfor) {
         value: function replaceFunctionParams(functionNode) {
             var _this3 = this;
 
-            var replaceVisitor = {
+            var traverseVisitor = {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
                         var newNodeName = _this3.identifierReplacer.replace(node.name);
@@ -3448,9 +3447,9 @@ var FunctionObfuscator = function (_AbstractNodeTransfor) {
                 }
             };
             functionNode.params.forEach(function (paramsNode) {
-                estraverse.replace(paramsNode, replaceVisitor);
+                return estraverse.replace(paramsNode, traverseVisitor);
             });
-            estraverse.replace(functionNode.body, replaceVisitor);
+            estraverse.replace(functionNode.body, traverseVisitor);
         }
     }]);
 
@@ -3504,7 +3503,7 @@ var LabeledStatementObfuscator = function (_AbstractNodeTransfor) {
         value: function storeLabeledStatementName(labeledStatementNode) {
             var _this2 = this;
 
-            NodeUtils_1.NodeUtils.typedReplace(labeledStatementNode.label, NodeType_1.NodeType.Identifier, {
+            NodeUtils_1.NodeUtils.typedTraverse(labeledStatementNode.label, NodeType_1.NodeType.Identifier, {
                 enter: function enter(node) {
                     return _this2.identifierReplacer.storeNames(node.name);
                 }
@@ -3631,7 +3630,7 @@ var MemberExpressionObfuscator = function (_AbstractNodeTransfor) {
         value: function transformNode(memberExpressionNode) {
             var _this2 = this;
 
-            estraverse.replace(memberExpressionNode.property, {
+            estraverse.traverse(memberExpressionNode.property, {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isLiteralNode(node)) {
                         _this2.obfuscateLiteralProperty(node);
@@ -3650,8 +3649,8 @@ var MemberExpressionObfuscator = function (_AbstractNodeTransfor) {
     }, {
         key: 'obfuscateIdentifierProperty',
         value: function obfuscateIdentifierProperty(node) {
-            var nodeValue = node.name,
-                literalNode = {
+            var nodeValue = node.name;
+            var literalNode = {
                 raw: '\'' + nodeValue + '\'',
                 'x-verbatim-property': {
                     content: new StringLiteralReplacer_1.StringLiteralReplacer(this.nodes, this.options).replace(nodeValue),
@@ -3779,7 +3778,7 @@ var ObjectExpressionObfuscator = function (_AbstractNodeTransfor) {
                 if (property.shorthand) {
                     property.shorthand = false;
                 }
-                estraverse.replace(property.key, {
+                estraverse.traverse(property.key, {
                     enter: function enter(node, parentNode) {
                         if (Node_1.Node.isLiteralNode(node)) {
                             _this2.obfuscateLiteralPropertyKey(node);
@@ -3805,8 +3804,8 @@ var ObjectExpressionObfuscator = function (_AbstractNodeTransfor) {
     }, {
         key: 'obfuscateIdentifierPropertyKey',
         value: function obfuscateIdentifierPropertyKey(node) {
-            var nodeValue = node.name,
-                literalNode = {
+            var nodeValue = node.name;
+            var literalNode = {
                 raw: '\'' + nodeValue + '\'',
                 'x-verbatim-property': {
                     content: '\'' + Utils_1.Utils.stringToUnicodeEscapeSequence(nodeValue) + '\'',
@@ -3876,7 +3875,7 @@ var VariableDeclarationObfuscator = function (_AbstractNodeTransfor) {
             var _this2 = this;
 
             variableDeclarationNode.declarations.forEach(function (declarationNode) {
-                NodeUtils_1.NodeUtils.typedReplace(declarationNode.id, NodeType_1.NodeType.Identifier, {
+                NodeUtils_1.NodeUtils.typedTraverse(declarationNode.id, NodeType_1.NodeType.Identifier, {
                     enter: function enter(node) {
                         return _this2.identifierReplacer.storeNames(node.name);
                     }
@@ -4276,8 +4275,8 @@ var ValidationErrorsFormatter = function () {
     }, {
         key: "formatError",
         value: function formatError(validationError) {
-            var errorString = "`" + validationError.property + "` errors:\n",
-                constraints = validationError.constraints;
+            var constraints = validationError.constraints;
+            var errorString = "`" + validationError.property + "` errors:\n";
             for (var constraint in constraints) {
                 if (!constraints.hasOwnProperty(constraint)) {
                     continue;
@@ -5117,7 +5116,8 @@ module.exports = require("is-equal");
 module.exports = require("mkdirp");
 
 /***/ },
-/* 104 */
+/* 104 */,
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

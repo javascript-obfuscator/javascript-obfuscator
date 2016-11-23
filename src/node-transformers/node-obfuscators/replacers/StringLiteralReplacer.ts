@@ -12,12 +12,12 @@ export class StringLiteralReplacer extends AbstractReplacer {
     /**
      * @type {number}
      */
-    private static minimumLengthForStringArray: number = 3;
+    private static readonly minimumLengthForStringArray: number = 3;
 
     /**
      * @type {string[]}
      */
-    private static rc4Keys: string[] = Utils.getRandomGenerator()
+    private static readonly rc4Keys: string[] = Utils.getRandomGenerator()
         .n(() => Utils.getRandomGenerator().string({length: 4}), 50);
 
     /**
@@ -67,10 +67,10 @@ export class StringLiteralReplacer extends AbstractReplacer {
             value = Utils.stringToUnicodeEscapeSequence(value);
         }
 
-        let stringArray: IStorage <string> = stringArrayNode.getNodeData(),
-            indexOfExistingValue: number = <number>stringArray.getKeyOf(value),
-            indexOfValue: number,
-            hexadecimalIndex: string;
+        const stringArray: IStorage <string> = stringArrayNode.getNodeData();
+        const indexOfExistingValue: number = <number>stringArray.getKeyOf(value);
+
+        let indexOfValue: number;
 
         if (indexOfExistingValue >= 0) {
             indexOfValue = indexOfExistingValue;
@@ -79,10 +79,8 @@ export class StringLiteralReplacer extends AbstractReplacer {
             stringArray.set(null, value);
         }
 
-        hexadecimalIndex = new NumberLiteralReplacer(this.nodes, this.options)
-            .replace(indexOfValue);
-
         const stringArrayCallsWrapper: ICustomNodeWithIdentifier = <ICustomNodeWithIdentifier>this.nodes.get('stringArrayCallsWrapper');
+        const hexadecimalIndex: string = new NumberLiteralReplacer(this.nodes, this.options).replace(indexOfValue);
 
         if (!stringArrayCallsWrapper) {
             throw new ReferenceError('`stringArrayCallsWrapper` node is not found in Map with custom node.');

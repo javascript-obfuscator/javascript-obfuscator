@@ -6,12 +6,12 @@ export abstract class AbstractReplacer implements IReplacer {
     /**
      * @type Map <string, AbstractCustomNode>
      */
-    protected nodes: Map <string, ICustomNode>;
+    protected readonly nodes: Map <string, ICustomNode>;
 
     /**
      * @type {IOptions}
      */
-    protected options : IOptions;
+    protected readonly options : IOptions;
 
     /**
      * @param nodes

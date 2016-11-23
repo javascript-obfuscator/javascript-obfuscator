@@ -23,7 +23,7 @@ export class CatchClauseObfuscator extends AbstractNodeTransformer {
     /**
      * @type {IdentifierReplacer}
      */
-    private identifierReplacer: IdentifierReplacer;
+    private readonly identifierReplacer: IdentifierReplacer;
 
     /**
      * @param nodes
@@ -47,7 +47,7 @@ export class CatchClauseObfuscator extends AbstractNodeTransformer {
      * @param catchClauseNode
      */
     private storeCatchClauseParam (catchClauseNode: ESTree.CatchClause): void {
-        NodeUtils.typedReplace(catchClauseNode.param, NodeType.Identifier, {
+        NodeUtils.typedTraverse(catchClauseNode.param, NodeType.Identifier, {
             enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
         });
     }

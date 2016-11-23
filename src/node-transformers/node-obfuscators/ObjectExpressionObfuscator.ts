@@ -29,7 +29,7 @@ export class ObjectExpressionObfuscator extends AbstractNodeTransformer {
                     property.shorthand = false;
                 }
 
-                estraverse.replace(property.key, {
+                estraverse.traverse(property.key, {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                         if (Node.isLiteralNode(node)) {
                             this.obfuscateLiteralPropertyKey(node);
@@ -61,16 +61,16 @@ export class ObjectExpressionObfuscator extends AbstractNodeTransformer {
      * @param node
      */
     private obfuscateIdentifierPropertyKey (node: ESTree.Identifier): void {
-        let nodeValue: string = node.name,
-            literalNode: ESTree.Literal = {
-                raw: `'${nodeValue}'`,
-                'x-verbatim-property': {
-                    content : `'${Utils.stringToUnicodeEscapeSequence(nodeValue)}'`,
-                    precedence: escodegen.Precedence.Primary
-                },
-                type: NodeType.Literal,
-                value: nodeValue
-            };
+        const nodeValue: string = node.name;
+        const literalNode: ESTree.Literal = {
+            raw: `'${nodeValue}'`,
+            'x-verbatim-property': {
+                content : `'${Utils.stringToUnicodeEscapeSequence(nodeValue)}'`,
+                precedence: escodegen.Precedence.Primary
+            },
+            type: NodeType.Literal,
+            value: nodeValue
+        };
 
         delete node.name;
 

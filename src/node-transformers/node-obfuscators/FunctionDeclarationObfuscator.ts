@@ -26,7 +26,7 @@ export class FunctionDeclarationObfuscator extends AbstractNodeTransformer {
     /**
      * @type {IdentifierReplacer}
      */
-    private identifierReplacer: IdentifierReplacer;
+    private readonly identifierReplacer: IdentifierReplacer;
 
     /**
      * @param nodes
@@ -58,7 +58,7 @@ export class FunctionDeclarationObfuscator extends AbstractNodeTransformer {
      * @param functionDeclarationNode
      */
     private storeFunctionName (functionDeclarationNode: ESTree.FunctionDeclaration): void {
-        NodeUtils.typedReplace(functionDeclarationNode.id, NodeType.Identifier, {
+        NodeUtils.typedTraverse(functionDeclarationNode.id, NodeType.Identifier, {
             enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
         });
     }

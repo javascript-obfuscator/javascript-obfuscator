@@ -6,6 +6,7 @@ import { TStatement } from '../../types/TStatement';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/IOptions';
+import { IStorage } from '../../interfaces/IStorage';
 
 import { NodeType } from '../../enums/NodeType';
 
@@ -17,13 +18,12 @@ import { Node } from '../../node/Node';
 import { NodeAppender } from '../../node/NodeAppender';
 import { Utils } from '../../Utils';
 import { NodeUtils } from '../../node/NodeUtils';
-import { IStorage } from '../../interfaces/IStorage';
 
 export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**
      * @type {Map <string, IReplacer>}
      */
-    private static controlFlowReplacers: Map <string, TControlFlowReplacer> = new Map <string, TControlFlowReplacer> ([
+    private static readonly controlFlowReplacers: Map <string, TControlFlowReplacer> = new Map <string, TControlFlowReplacer> ([
         [NodeType.BinaryExpression, BinaryExpressionControlFlowReplacer]
     ]);
 
@@ -31,7 +31,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @param nodes
      * @param options
      */
-    constructor(nodes: Map <string, ICustomNode>, options: IOptions) {
+    constructor (nodes: Map <string, ICustomNode>, options: IOptions) {
         super(nodes, options);
     }
 
@@ -65,7 +65,8 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
                 }
 
                 const controlFlowStorageCallCustomNode: ICustomNode | undefined = new controlFlowReplacer(
-                    this.nodes, this.options
+                    this.nodes,
+                    this.options
                 ).replace(node, parentNode, controlFlowStorage, controlFlowStorageCustomNodeName);
 
                 if (!controlFlowStorageCallCustomNode) {
@@ -86,7 +87,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
             }
         });
 
-        const controlFlowStorageCustomNode: ControlFlowStorageNode = new ControlFlowStorageNode(
+        const controlFlowStorageCustomNode: ICustomNode = new ControlFlowStorageNode(
             controlFlowStorage,
             controlFlowStorageCustomNodeName,
             this.options

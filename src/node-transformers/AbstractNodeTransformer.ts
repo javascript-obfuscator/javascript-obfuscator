@@ -8,18 +8,18 @@ export abstract class AbstractNodeTransformer implements INodeTransformer {
     /**
      * @type Map <string, AbstractCustomNode>
      */
-    protected nodes: Map <string, ICustomNode>;
+    protected readonly nodes: Map <string, ICustomNode>;
 
     /**
      * @type {IOptions}
      */
-    protected options: IOptions;
+    protected readonly options: IOptions;
 
     /**
      * @param nodes
      * @param options
      */
-    constructor(nodes: Map <string, ICustomNode>, options: IOptions) {
+    constructor (nodes: Map <string, ICustomNode>, options: IOptions) {
         this.nodes = nodes;
         this.options = options;
     }

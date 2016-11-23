@@ -51,17 +51,17 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     /**
      * @type {number}
      */
-    private static limitThresholdActivationLength: number = 25;
+    private static readonly limitThresholdActivationLength: number = 25;
 
     /**
      * @type {number}
      */
-    private static limitThreshold: number = 0.002;
+    private static readonly limitThreshold: number = 0.002;
 
     /**
      * @type {Map<string, TCalleeDataExtractor>}
      */
-    private calleeDataExtractors: Map <string, TCalleeDataExtractor> = new Map <string, TCalleeDataExtractor> ([
+    private readonly calleeDataExtractors: Map <string, TCalleeDataExtractor> = new Map <string, TCalleeDataExtractor> ([
         [NodeType.FunctionDeclaration, FunctionDeclarationCalleeDataExtractor],
         [NodeType.FunctionExpression, FunctionExpressionCalleeDataExtractor],
         [NodeType.ObjectExpression, ObjectExpressionCalleeDataExtractor]
@@ -111,7 +111,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
             index < blockScopeBodyLength;
             index++
         ) {
-            let rootNode: ESTree.Node = blockScopeBody[index];
+            const rootNode: ESTree.Node = blockScopeBody[index];
 
             if (index > limitIndex) {
                 break;

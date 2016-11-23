@@ -19,7 +19,7 @@ export class JavaScriptObfuscatorCLI {
     /**
      * @type {string[]}
      */
-    private arguments: string[];
+    private readonly arguments: string[];
 
     /**
      * @type {commander.ICommand}
@@ -69,7 +69,7 @@ export class JavaScriptObfuscatorCLI {
      * @returns {string}
      */
     private static parseSourceMapMode (value: string): string {
-        let availableMode: boolean = Object
+        const availableMode: boolean = Object
             .keys(SourceMapMode)
             .some((key: string): boolean => {
                 return SourceMapMode[key] === value;
@@ -121,8 +121,8 @@ export class JavaScriptObfuscatorCLI {
      * @returns {IObfuscatorOptions}
      */
     private buildOptions (): IObfuscatorOptions {
-        let obfuscatorOptions: IObfuscatorOptions = {},
-            availableOptions: string[] = Object.keys(DEFAULT_PRESET);
+        const obfuscatorOptions: IObfuscatorOptions = {};
+        const availableOptions: string[] = Object.keys(DEFAULT_PRESET);
 
         for (const option in this.commands) {
             if (!this.commands.hasOwnProperty(option)) {
@@ -181,8 +181,8 @@ export class JavaScriptObfuscatorCLI {
     }
 
     private processData (): void {
-        let options: IObfuscatorOptions = this.buildOptions(),
-            outputCodePath: string = CLIUtils.getOutputCodePath((<any>this.commands).output, this.inputPath);
+        const options: IObfuscatorOptions = this.buildOptions();
+        const outputCodePath: string = CLIUtils.getOutputCodePath((<any>this.commands).output, this.inputPath);
 
         if (options.sourceMap) {
             this.processDataWithSourceMap(outputCodePath, options);
@@ -196,7 +196,7 @@ export class JavaScriptObfuscatorCLI {
      * @param options
      */
     private processDataWithoutSourceMap (outputCodePath: string, options: IObfuscatorOptions): void {
-        let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(this.data, options).getObfuscatedCode();
+        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(this.data, options).getObfuscatedCode();
 
         CLIUtils.writeFile(outputCodePath, obfuscatedCode);
     }
@@ -206,7 +206,7 @@ export class JavaScriptObfuscatorCLI {
      * @param options
      */
     private processDataWithSourceMap (outputCodePath: string, options: IObfuscatorOptions): void {
-        let outputSourceMapPath: string = CLIUtils.getOutputSourceMapPath(
+        const outputSourceMapPath: string = CLIUtils.getOutputSourceMapPath(
             outputCodePath,
             options.sourceMapFileName || ''
         );

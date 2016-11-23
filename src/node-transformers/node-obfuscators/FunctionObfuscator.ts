@@ -23,7 +23,7 @@ export class FunctionObfuscator extends AbstractNodeTransformer {
     /**
      * @type {IdentifierReplacer}
      */
-    private identifierReplacer: IdentifierReplacer;
+    private readonly identifierReplacer: IdentifierReplacer;
 
     /**
      * @param nodes
@@ -49,7 +49,7 @@ export class FunctionObfuscator extends AbstractNodeTransformer {
     private storeFunctionParams (functionNode: ESTree.Function): void {
         functionNode.params
             .forEach((paramsNode: ESTree.Node) => {
-                NodeUtils.typedReplace(paramsNode, NodeType.Identifier, {
+                NodeUtils.typedTraverse(paramsNode, NodeType.Identifier, {
                     enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
                 });
             });
@@ -59,7 +59,7 @@ export class FunctionObfuscator extends AbstractNodeTransformer {
      * @param functionNode
      */
     private replaceFunctionParams (functionNode: ESTree.Function): void {
-        let replaceVisitor: estraverse.Visitor = {
+        let traverseVisitor: estraverse.Visitor = {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isReplaceableIdentifierNode(node, parentNode)) {
                     const newNodeName: string = this.identifierReplacer.replace(node.name);
@@ -72,11 +72,8 @@ export class FunctionObfuscator extends AbstractNodeTransformer {
             }
         };
 
-        functionNode.params
-            .forEach((paramsNode: ESTree.Node) => {
-                estraverse.replace(paramsNode, replaceVisitor);
-            });
+        functionNode.params.forEach((paramsNode: ESTree.Node) => estraverse.replace(paramsNode, traverseVisitor));
 
-        estraverse.replace(functionNode.body, replaceVisitor);
+        estraverse.replace(functionNode.body, traverseVisitor);
     }
 }

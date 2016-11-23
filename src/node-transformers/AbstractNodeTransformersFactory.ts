@@ -25,7 +25,7 @@ export abstract class AbstractNodeTransformersFactory implements INodeTransforme
      * @param customNodes
      * @param options
      */
-    constructor(customNodes: Map <string, ICustomNode>, options: IOptions) {
+    constructor (customNodes: Map <string, ICustomNode>, options: IOptions) {
         this.customNodes = customNodes;
         this.options = options;
     }

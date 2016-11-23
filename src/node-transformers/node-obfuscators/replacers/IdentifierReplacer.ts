@@ -5,7 +5,7 @@ export class IdentifierReplacer extends AbstractReplacer {
     /**
      * @type {Map<string, string>}
      */
-    private namesMap: Map<string, string> = new Map<string, string>();
+    private readonly namesMap: Map<string, string> = new Map<string, string>();
 
     /**
      * @param nodeValue

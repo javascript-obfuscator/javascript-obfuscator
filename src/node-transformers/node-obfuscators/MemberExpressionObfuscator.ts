@@ -13,7 +13,7 @@ export class MemberExpressionObfuscator extends AbstractNodeTransformer {
      * @param memberExpressionNode
      */
     public transformNode (memberExpressionNode: ESTree.MemberExpression): void {
-        estraverse.replace(memberExpressionNode.property, {
+        estraverse.traverse(memberExpressionNode.property, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isLiteralNode(node)) {
                     this.obfuscateLiteralProperty(node);
@@ -46,16 +46,16 @@ export class MemberExpressionObfuscator extends AbstractNodeTransformer {
      * @param node
      */
     private obfuscateIdentifierProperty (node: ESTree.Identifier): void {
-        let nodeValue: string = node.name,
-            literalNode: ESTree.Literal = {
-                raw: `'${nodeValue}'`,
-                'x-verbatim-property': {
-                    content : new StringLiteralReplacer(this.nodes, this.options).replace(nodeValue),
-                    precedence: escodegen.Precedence.Primary
-                },
-                type: NodeType.Literal,
-                value: nodeValue
-            };
+        const nodeValue: string = node.name;
+        const literalNode: ESTree.Literal = {
+            raw: `'${nodeValue}'`,
+            'x-verbatim-property': {
+                content : new StringLiteralReplacer(this.nodes, this.options).replace(nodeValue),
+                precedence: escodegen.Precedence.Primary
+            },
+            type: NodeType.Literal,
+            value: nodeValue
+        };
 
         delete node.name;
 

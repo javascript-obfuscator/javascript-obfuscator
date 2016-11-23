@@ -16,7 +16,7 @@ export abstract class AbstractCustomNode implements ICustomNode {
     /**
      * @type {IOptions}
      */
-    protected options: IOptions;
+    protected readonly options: IOptions;
 
     /**
      * @param options

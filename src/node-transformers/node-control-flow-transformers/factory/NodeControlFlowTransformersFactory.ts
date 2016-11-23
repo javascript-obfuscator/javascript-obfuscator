@@ -1,9 +1,9 @@
-import { TNodeTransformer } from '../types/TNodeTransformer';
+import { TNodeTransformer } from '../../../types/TNodeTransformer';
 
-import { NodeType } from '../enums/NodeType';
+import { NodeType } from '../../../enums/NodeType';
 
-import { FunctionControlFlowTransformer } from './node-control-flow-transformers/FunctionControlFlowTransformer';
-import { AbstractNodeTransformersFactory } from './AbstractNodeTransformersFactory';
+import { FunctionControlFlowTransformer } from '../FunctionControlFlowTransformer';
+import { AbstractNodeTransformersFactory } from '../../AbstractNodeTransformersFactory';
 
 export class NodeControlFlowTransformersFactory extends AbstractNodeTransformersFactory {
     /**

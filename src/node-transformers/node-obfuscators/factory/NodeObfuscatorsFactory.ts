@@ -1,17 +1,17 @@
-import { TNodeTransformer } from '../types/TNodeTransformer';
+import { TNodeTransformer } from '../../../types/TNodeTransformer';
 
-import { NodeType } from '../enums/NodeType';
+import { NodeType } from '../../../enums/NodeType';
 
-import { CatchClauseObfuscator } from './node-obfuscators/CatchClauseObfuscator';
-import { FunctionDeclarationObfuscator } from './node-obfuscators/FunctionDeclarationObfuscator';
-import { FunctionObfuscator } from './node-obfuscators/FunctionObfuscator';
-import { LabeledStatementObfuscator } from './node-obfuscators/LabeledStatementObfuscator';
-import { LiteralObfuscator } from './node-obfuscators/LiteralObfuscator';
-import { MemberExpressionObfuscator } from './node-obfuscators/MemberExpressionObfuscator';
-import { MethodDefinitionObfuscator } from './node-obfuscators/MethodDefinitionObfuscator';
-import { ObjectExpressionObfuscator } from './node-obfuscators/ObjectExpressionObfuscator';
-import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclarationObfuscator';
-import { AbstractNodeTransformersFactory } from './AbstractNodeTransformersFactory';
+import { CatchClauseObfuscator } from '../CatchClauseObfuscator';
+import { FunctionDeclarationObfuscator } from '../FunctionDeclarationObfuscator';
+import { FunctionObfuscator } from '../FunctionObfuscator';
+import { LabeledStatementObfuscator } from '../LabeledStatementObfuscator';
+import { LiteralObfuscator } from '../LiteralObfuscator';
+import { MemberExpressionObfuscator } from '../MemberExpressionObfuscator';
+import { MethodDefinitionObfuscator } from '../MethodDefinitionObfuscator';
+import { ObjectExpressionObfuscator } from '../ObjectExpressionObfuscator';
+import { VariableDeclarationObfuscator } from '../VariableDeclarationObfuscator';
+import { AbstractNodeTransformersFactory } from '../../AbstractNodeTransformersFactory';
 
 export class NodeObfuscatorsFactory extends AbstractNodeTransformersFactory {
     /**

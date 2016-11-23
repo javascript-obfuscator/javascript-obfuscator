@@ -9,7 +9,6 @@ import { NodeType } from '../enums/NodeType';
 
 import { FunctionControlFlowTransformer } from './node-control-flow-transformers/FunctionControlFlowTransformer';
 
-
 export class NodeControlFlowTransformersFactory implements INodeTransformersFactory {
     /**
      * @type {Map<string, TNodeTransformer[]>}

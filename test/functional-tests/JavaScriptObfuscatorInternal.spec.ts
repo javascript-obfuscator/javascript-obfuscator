@@ -4,6 +4,8 @@ import { JavaScriptObfuscatorInternal } from '../../src/JavaScriptObfuscatorInte
 
 import { NO_CUSTOM_NODES_PRESET } from '../../src/preset-options/NoCustomNodesPreset';
 
+import { Options } from '../../src/options/Options';
+
 const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('JavaScriptObfuscatorInternal', () => {
@@ -14,16 +16,15 @@ describe('JavaScriptObfuscatorInternal', () => {
 
         it('should link obfuscated code with source map', () => {
             javaScriptObfuscator = new JavaScriptObfuscatorInternal(
-                `var test = 1;`,
-                Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                    sourceMap: true,
-                    sourceMapFileName: sourceMapUrl
-                })
+                new Options(
+                    Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                        sourceMap: true,
+                        sourceMapFileName: sourceMapUrl
+                    })
+                )
             );
 
-            javaScriptObfuscator.obfuscate();
-
-            obfuscationResult = javaScriptObfuscator.getObfuscationResult();
+            obfuscationResult = javaScriptObfuscator.obfuscate('var test = 1;');
 
             assert.match(
                 obfuscationResult.getObfuscatedCode(),
@@ -36,17 +37,16 @@ describe('JavaScriptObfuscatorInternal', () => {
             let sourceMapBaseUrl: string = 'http://localhost:9000';
 
             javaScriptObfuscator = new JavaScriptObfuscatorInternal(
-                `var test = 1;`,
-                Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                    sourceMap: true,
-                    sourceMapBaseUrl: sourceMapBaseUrl,
-                    sourceMapFileName: sourceMapUrl
-                })
+                new Options(
+                    Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                        sourceMap: true,
+                        sourceMapBaseUrl: sourceMapBaseUrl,
+                        sourceMapFileName: sourceMapUrl
+                    })
+                )
             );
 
-            javaScriptObfuscator.obfuscate();
-
-            obfuscationResult = javaScriptObfuscator.getObfuscationResult();
+            obfuscationResult = javaScriptObfuscator.obfuscate('var test = 1;');
 
             assert.match(
                 obfuscationResult.getObfuscatedCode(),

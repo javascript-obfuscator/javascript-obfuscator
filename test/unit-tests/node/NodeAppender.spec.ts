@@ -3,6 +3,7 @@ import * as ESTree from 'estree';
 
 import { TStatement } from '../../../src/types/TStatement';
 
+import { IStackTraceAnalyzer } from '../../../src/interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
 import { IStackTraceData } from '../../../src/interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { readFileAsString } from '../../helpers/readFileAsString';
@@ -49,6 +50,8 @@ describe('NodeAppender', () => {
     });
 
     describe('appendNodeToOptimalBlockScope (blockScopeStackTraceData: IStackTraceData[], blockScopeNode: TNodeWithBlockStatement, nodeBodyStatements: TStatement[], index: number = 0): void', () => {
+        const stackTraceAnalyzer: IStackTraceAnalyzer = new StackTraceAnalyzer();
+
         let astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
             node: TStatement[],
@@ -73,7 +76,7 @@ describe('NodeAppender', () => {
                 )
             );
 
-            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
             NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node);
 
             assert.deepEqual(astTree, expectedAstTree);
@@ -92,7 +95,7 @@ describe('NodeAppender', () => {
                 )
             );
 
-            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
             NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node);
 
             assert.deepEqual(astTree, expectedAstTree);
@@ -118,7 +121,7 @@ describe('NodeAppender', () => {
                     )
                 );
 
-                stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
                 NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node, 2);
 
                 assert.deepEqual(astTree, expectedAstTree);
@@ -132,7 +135,7 @@ describe('NodeAppender', () => {
                     )
                 );
 
-                stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
                 NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node, 1);
 
                 assert.deepEqual(astTree, expectedAstTree);
@@ -150,7 +153,7 @@ describe('NodeAppender', () => {
                     )
                 );
 
-                stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
                 NodeAppender.appendNodeToOptimalBlockScope(
                     stackTraceData,
                     astTree,

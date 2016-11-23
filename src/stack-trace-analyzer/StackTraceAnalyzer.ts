@@ -59,11 +59,6 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     private static limitThreshold: number = 0.002;
 
     /**
-     * @type {ESTree.Node[]}
-     */
-    private blockScopeBody: ESTree.Node[];
-
-    /**
      * @type {Map<string, TCalleeDataExtractor>}
      */
     private calleeDataExtractors: Map <string, TCalleeDataExtractor> = new Map <string, TCalleeDataExtractor> ([
@@ -71,13 +66,6 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
         [NodeType.FunctionExpression, FunctionExpressionCalleeDataExtractor],
         [NodeType.ObjectExpression, ObjectExpressionCalleeDataExtractor]
     ]);
-
-    /**
-     * @param blockScopeBody
-     */
-    constructor (blockScopeBody: ESTree.Node[]) {
-        this.blockScopeBody = blockScopeBody;
-    }
 
     /**
      * @param blockScopeBodyLength
@@ -103,10 +91,11 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     }
 
     /**
+     * @param blockScopeBody
      * @returns {IStackTraceData[]}
      */
-    public analyze (): IStackTraceData[] {
-        return this.analyzeRecursive(this.blockScopeBody);
+    public analyze (blockScopeBody: ESTree.Node[]): IStackTraceData[] {
+        return this.analyzeRecursive(blockScopeBody);
     }
 
     /**

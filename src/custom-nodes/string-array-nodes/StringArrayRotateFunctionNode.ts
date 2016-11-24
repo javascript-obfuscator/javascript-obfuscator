@@ -1,9 +1,9 @@
-import 'format-unicorn';
+import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-import { TStatement } from '../../types/TStatement';
 
 import { IOptions } from '../../interfaces/IOptions';
+import { IStorage } from '../../interfaces/IStorage';
 
 import { AppendState } from '../../enums/AppendState';
 
@@ -15,8 +15,6 @@ import { StringArrayRotateFunctionTemplate } from '../../templates/custom-nodes/
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeAppender } from '../../node/NodeAppender';
-import { NodeUtils } from '../../node/NodeUtils';
-import { StringArray } from '../../StringArray';
 import { Utils } from '../../Utils';
 
 export class StringArrayRotateFunctionNode extends AbstractCustomNode {
@@ -26,9 +24,9 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     protected appendState: AppendState = AppendState.AfterObfuscation;
 
     /**
-     * @type {StringArray}
+     * @type {IStorage <string>}
      */
-    private stringArray: StringArray;
+    private stringArray: IStorage <string>;
 
     /**
      * @type {string}
@@ -48,7 +46,7 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
      */
     constructor (
         stringArrayName: string,
-        stringArray: StringArray,
+        stringArray: IStorage <string>,
         stringArrayRotateValue: number,
         options: IOptions
     ) {
@@ -71,22 +69,15 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     }
 
     /**
-     * @returns {TStatement[]}
+     * @returns {string}
      */
-    public getNode (): TStatement[] {
-        return super.getNode();
-    }
-
-    /**
-     * @returns {TStatement[]}
-     */
-    protected getNodeStructure (): TStatement[] {
+    public getCode (): string {
         let code: string = '',
             timesName: string = Utils.getRandomVariableName(),
             whileFunctionName: string = Utils.getRandomVariableName();
 
         if (this.options.selfDefending) {
-            code = SelfDefendingTemplate().formatUnicorn({
+            code = format(SelfDefendingTemplate(), {
                 timesName,
                 whileFunctionName
             });
@@ -94,17 +85,17 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
             code = `${whileFunctionName}(++${timesName})`;
         }
 
-        return NodeUtils.convertCodeToStructure(
-            JavaScriptObfuscator.obfuscate(
-                StringArrayRotateFunctionTemplate().formatUnicorn({
-                    code,
-                    timesName,
-                    stringArrayName: this.stringArrayName,
-                    stringArrayRotateValue: Utils.decToHex(this.stringArrayRotateValue),
-                    whileFunctionName
-                }),
-                NO_CUSTOM_NODES_PRESET
-            ).getObfuscatedCode()
-        );
+        return JavaScriptObfuscator.obfuscate(
+            format(StringArrayRotateFunctionTemplate(), {
+                code,
+                timesName,
+                stringArrayName: this.stringArrayName,
+                stringArrayRotateValue: Utils.decToHex(this.stringArrayRotateValue),
+                whileFunctionName
+            }),
+            Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                seed: this.options.seed
+            })
+        ).getObfuscatedCode();
     }
 }

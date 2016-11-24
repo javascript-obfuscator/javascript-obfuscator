@@ -1,4 +1,4 @@
-import 'format-unicorn';
+import * as format from 'string-template';
 
 import { DomainLockNodeTemplate } from '../../../../../src/templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
 
@@ -14,7 +14,7 @@ const assert: Chai.AssertStatic = require('chai').assert;
  * @returns {Function}
  */
 function getFunctionFromTemplate (templateData: any, callsControllerFunctionName: string,  currentDomain: string) {
-    let domainLockTemplate: string = DomainLockNodeTemplate().formatUnicorn(templateData);
+    let domainLockTemplate: string = format(DomainLockNodeTemplate(), templateData);
 
     return Function(`
         document = {

@@ -1,5 +1,7 @@
+import * as ESTree from 'estree';
+
 import { IStackTraceData } from './IStackTraceData';
 
 export interface IStackTraceAnalyzer {
-    analyze (): IStackTraceData[];
+    analyze (blockScopeBody: ESTree.Node[]): IStackTraceData[];
 }

@@ -16,6 +16,11 @@ export interface ICustomNode {
     getAppendState (): AppendState;
 
     /**
+     * @returns {string}
+     */
+    getCode (): string;
+
+    /**
      * @returns ESTree.Node[]
      */
     getNode (): TStatement[];

@@ -3,6 +3,7 @@ import { IObfuscatorOptions } from './interfaces/IObfuscatorOptions';
 
 import { JavaScriptObfuscatorCLI } from './cli/JavaScriptObfuscatorCLI';
 import { JavaScriptObfuscatorInternal } from './JavaScriptObfuscatorInternal';
+import { Options } from './options/Options';
 
 export class JavaScriptObfuscator {
     /**
@@ -11,14 +12,11 @@ export class JavaScriptObfuscator {
      * @returns {string}
      */
     public static obfuscate (sourceCode: string, obfuscatorOptions: IObfuscatorOptions = {}): IObfuscationResult {
-        let javaScriptObfuscator: JavaScriptObfuscatorInternal = new JavaScriptObfuscatorInternal(
-            sourceCode,
-            obfuscatorOptions
+        const javaScriptObfuscator: JavaScriptObfuscatorInternal = new JavaScriptObfuscatorInternal(
+            new Options(obfuscatorOptions)
         );
 
-        javaScriptObfuscator.obfuscate();
-
-        return javaScriptObfuscator.getObfuscationResult();
+        return javaScriptObfuscator.obfuscate(sourceCode);
     }
 
     /**

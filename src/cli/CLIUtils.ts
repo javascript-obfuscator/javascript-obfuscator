@@ -10,14 +10,14 @@ export class CLIUtils {
     /**
      * @type {string[]}
      */
-    private static availableInputExtensions: string[] = [
+    private static readonly availableInputExtensions: string[] = [
         '.js'
     ];
 
     /**
      * @type {BufferEncoding}
      */
-    private static encoding: BufferEncoding = 'utf8';
+    private static readonly encoding: BufferEncoding = 'utf8';
 
     /**
      * @param outputPath

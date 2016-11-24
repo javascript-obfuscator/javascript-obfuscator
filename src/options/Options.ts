@@ -45,6 +45,12 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
+    public readonly controlFlowFlattening: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
     public readonly debugProtection: boolean;
 
     /**
@@ -84,6 +90,12 @@ export class Options implements IOptions {
      */
     @IsBoolean()
     public readonly rotateStringArray: boolean;
+
+    /**
+     * @type {number}
+     */
+    @IsNumber()
+    public readonly seed: number;
 
     /**
      * @type {boolean}
@@ -152,7 +164,7 @@ export class Options implements IOptions {
     constructor (obfuscatorOptions: IObfuscatorOptions) {
         Object.assign(this, DEFAULT_PRESET, obfuscatorOptions);
 
-        let errors: ValidationError[] = validateSync(this, Options.validatorOptions);
+        const errors: ValidationError[] = validateSync(this, Options.validatorOptions);
 
         if (errors.length) {
             throw new ReferenceError(`Validation failed. errors:\n${ValidationErrorsFormatter.format(errors)}`);

@@ -12,22 +12,22 @@ export class SourceMapCorrector implements ISourceMapCorrector {
     /**
      * @type {string}
      */
-    private obfuscatedCode: string;
+    private readonly obfuscatedCode: string;
 
     /**
      * @type {string}
      */
-    private sourceMap: string;
+    private readonly sourceMap: string;
 
     /**
      * @type {TSourceMapMode}
      */
-    private sourceMapMode: TSourceMapMode;
+    private readonly sourceMapMode: TSourceMapMode;
 
     /**
      * @type {string}
      */
-    private sourceMapUrl: string;
+    private readonly sourceMapUrl: string;
 
     /**
      * @param obfuscationResult

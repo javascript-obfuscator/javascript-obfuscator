@@ -4,12 +4,14 @@ import { SourceMapMode } from '../enums/SourceMapMode';
 
 export const NO_CUSTOM_NODES_PRESET: IObfuscatorOptions = Object.freeze({
     compact: true,
+    controlFlowFlattening: false,
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: false,
     domainLock: [],
     reservedNames: [],
     rotateStringArray: false,
+    seed: 0,
     selfDefending: false,
     sourceMap: false,
     sourceMapBaseUrl: '',

@@ -2,11 +2,18 @@ import { Chance } from 'chance';
 
 import { JSFuck } from './enums/JSFuck';
 
+const isEqual = require('is-equal');
+
 export class Utils {
     /**
-     * @type {Chance.Chance}
+     * @type {string}
      */
-    private static randomGenerator: Chance.Chance = new Chance();
+    public static readonly randomGeneratorPool: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    /**
+     * @type {Chance.Chance | Chance.SeededChance}
+     */
+    private static randomGenerator: Chance.Chance | Chance.SeededChance = new Chance();
 
     /**
      * @param array
@@ -100,10 +107,41 @@ export class Utils {
     }
 
     /**
+     * @param min
+     * @param max
+     * @returns {number}
+     */
+    public static getRandomFloat (min: number, max: number): number {
+        return Utils.getRandomGenerator().floating({
+            min: min,
+            max: max,
+            fixed: 7
+        });
+    }
+
+    /**
      * @returns {Chance.Chance}
      */
     public static getRandomGenerator (): Chance.Chance {
+        const randomGenerator: Chance.Chance = Utils.randomGenerator;
+
+        if (!randomGenerator) {
+            throw new Error(`\`randomGenerator\` static property is undefined`);
+        }
+
         return Utils.randomGenerator;
+    }
+
+    /**
+     * @param min
+     * @param max
+     * @returns {number}
+     */
+    public static getRandomInteger (min: number, max: number): number {
+        return Utils.getRandomGenerator().integer({
+            min: min,
+            max: max
+        });
     }
 
     /**
@@ -117,10 +155,7 @@ export class Utils {
 
         return `${prefix}${(
             Utils.decToHex(
-                Utils.getRandomGenerator().integer({
-                    min: rangeMinInteger,
-                    max: rangeMaxInteger
-                })
+                Utils.getRandomInteger(rangeMinInteger, rangeMaxInteger)
             )
         ).substr(0, length)}`;
     }
@@ -140,7 +175,7 @@ export class Utils {
                 result: string = '';
 
             while (i1 < s1.length || i2 < s2.length) {
-                if (Math.random() < 0.5 && i2 < s2.length) {
+                if (Utils.getRandomFloat(0, 1) < 0.5 && i2 < s2.length) {
                     result += s2.charAt(++i2);
                 } else {
                     result += s1.charAt(++i1);
@@ -150,13 +185,16 @@ export class Utils {
             return result;
         };
 
-        const customPool: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        const randomString: string = Utils.randomGenerator.string({
+            length: length,
+            pool: Utils.randomGeneratorPool
+        });
 
-        let randomString: string = Utils.randomGenerator.string({length: length, pool: customPool}),
-            randomStringDiff: string = randomString.replace(
-                new RegExp('[' + escapeRegExp(str) + ']', 'g'),
-            ''),
-            randomStringDiffArray: string[] = randomStringDiff.split('');
+        let randomStringDiff: string = randomString.replace(
+            new RegExp('[' + escapeRegExp(str) + ']', 'g'),
+        '');
+
+        const randomStringDiffArray: string[] = randomStringDiff.split('');
 
         Utils.randomGenerator.shuffle(randomStringDiffArray);
         randomStringDiff = randomStringDiffArray.join('');
@@ -171,6 +209,21 @@ export class Utils {
      */
     public static isInteger (number: number): boolean {
         return number % 1 === 0;
+    }
+
+    /**
+     * @param map
+     * @param value
+     * @returns {any}
+     */
+    public static mapGetFirstKeyOf(map: Map <any, any>, value: any): any {
+        for (var [key, storageValue] of map) {
+            if (isEqual(value, storageValue)) {
+                return key;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -211,6 +264,13 @@ export class Utils {
         }
 
         return result;
+    }
+
+    /**
+     * @param randomGenerator
+     */
+    public static setRandomGenerator (randomGenerator: Chance.Chance | Chance.SeededChance): void {
+        Utils.randomGenerator = randomGenerator;
     }
 
     /**

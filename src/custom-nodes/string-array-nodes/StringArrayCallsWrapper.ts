@@ -1,9 +1,11 @@
-import 'format-unicorn';
+import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
 import { TStatement } from '../../types/TStatement';
 
+import { ICustomNodeWithIdentifier } from '../../interfaces/custom-nodes/ICustomNodeWithIdentifier';
 import { IOptions } from '../../interfaces/IOptions';
+import { IStorage } from '../../interfaces/IStorage';
 
 import { AppendState } from '../../enums/AppendState';
 import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
@@ -20,19 +22,17 @@ import { StringArrayRc4DecodeNodeTemplate } from '../../templates/custom-nodes/s
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeAppender } from '../../node/NodeAppender';
-import { NodeUtils } from '../../node/NodeUtils';
-import { StringArray } from '../../StringArray';
 
-export class StringArrayCallsWrapper extends AbstractCustomNode {
+export class StringArrayCallsWrapper extends AbstractCustomNode implements ICustomNodeWithIdentifier {
     /**
      * @type {AppendState}
      */
     protected appendState: AppendState = AppendState.AfterObfuscation;
 
     /**
-     * @type {StringArray}
+     * @type {IStorage <string>}
      */
-    private stringArray: StringArray;
+    private stringArray: IStorage <string>;
 
     /**
      * @type {string}
@@ -53,7 +53,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
     constructor (
         stringArrayCallsWrapperName: string,
         stringArrayName: string,
-        stringArray: StringArray,
+        stringArray: IStorage <string>,
         options: IOptions
     ) {
         super(options);
@@ -72,6 +72,24 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
         }
 
         NodeAppender.insertNodeAtIndex(blockScopeNode, this.getNode(), 1);
+    }
+
+    /**
+     * @returns {string}
+     */
+    public getCode (): string {
+        const decodeNodeTemplate: string = this.getDecodeStringArrayTemplate();
+
+        return JavaScriptObfuscator.obfuscate(
+            format(StringArrayCallsWrapperTemplate(), {
+                decodeNodeTemplate,
+                stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
+                stringArrayName: this.stringArrayName
+            }),
+            Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                seed: this.options.seed
+            })
+        ).getObfuscatedCode();
     }
 
     /**
@@ -96,7 +114,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
             selfDefendingCode: string = '';
 
         if (this.options.selfDefending) {
-            selfDefendingCode = SelfDefendingTemplate().formatUnicorn({
+            selfDefendingCode = format(SelfDefendingTemplate(), {
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
                 stringArrayName: this.stringArrayName
             });
@@ -104,7 +122,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
 
         switch (this.options.stringArrayEncoding) {
             case StringArrayEncoding.base64:
-                decodeStringArrayTemplate = StringArrayBase64DecodeNodeTemplate().formatUnicorn({
+                decodeStringArrayTemplate = format(StringArrayBase64DecodeNodeTemplate(), {
                     atobPolyfill: AtobTemplate(),
                     selfDefendingCode,
                     stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
@@ -113,7 +131,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
                 break;
 
             case StringArrayEncoding.rc4:
-                decodeStringArrayTemplate = StringArrayRc4DecodeNodeTemplate().formatUnicorn({
+                decodeStringArrayTemplate = format(StringArrayRc4DecodeNodeTemplate(), {
                     atobPolyfill: AtobTemplate(),
                     rc4Polyfill: Rc4Template(),
                     selfDefendingCode,
@@ -124,23 +142,5 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
         }
 
         return decodeStringArrayTemplate;
-    }
-
-    /**
-     * @returns {TStatement[]}
-     */
-    protected getNodeStructure (): TStatement[] {
-        const decodeNodeTemplate: string = this.getDecodeStringArrayTemplate();
-
-        return NodeUtils.convertCodeToStructure(
-            JavaScriptObfuscator.obfuscate(
-                StringArrayCallsWrapperTemplate().formatUnicorn({
-                    decodeNodeTemplate,
-                    stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
-                    stringArrayName: this.stringArrayName
-                }),
-                NO_CUSTOM_NODES_PRESET
-            ).getObfuscatedCode()
-        );
     }
 }

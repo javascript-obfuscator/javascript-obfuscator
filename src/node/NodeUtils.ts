@@ -15,7 +15,7 @@ export class NodeUtils {
     /**
      * @type {string[]}
      */
-    private static nodesWithBlockScope: string[] = [
+    private static readonly nodesWithBlockScope: string[] = [
         NodeType.ArrowFunctionExpression,
         NodeType.FunctionDeclaration,
         NodeType.FunctionExpression,
@@ -42,7 +42,7 @@ export class NodeUtils {
      * @returns {TStatement[]}
      */
     public static convertCodeToStructure (code: string): TStatement[] {
-        let structure: ESTree.Program = esprima.parse(code);
+        const structure: ESTree.Program = esprima.parse(code);
 
         NodeUtils.addXVerbatimPropertyToLiterals(structure);
         NodeUtils.parentize(structure);
@@ -73,7 +73,7 @@ export class NodeUtils {
      * @returns {ESTree.Node}
      */
     public static getBlockScopeOfNode (node: ESTree.Node, depth: number = 0): TNodeWithBlockStatement {
-        let parentNode: ESTree.Node | undefined = node.parentNode;
+        const parentNode: ESTree.Node | undefined = node.parentNode;
 
         if (!parentNode) {
             throw new ReferenceError('`parentNode` property of given node is `undefined`');
@@ -98,6 +98,29 @@ export class NodeUtils {
         }
 
         return NodeUtils.getBlockScopeOfNode(parentNode);
+    }
+
+    /**
+     * @param node
+     * @param depth
+     * @returns {number}
+     */
+    public static getNodeBlockScopeDepth (node: ESTree.Node, depth: number = 0): number {
+        const parentNode: ESTree.Node | undefined = node.parentNode;
+
+        if (!parentNode) {
+            throw new ReferenceError('`parentNode` property of given node is `undefined`');
+        }
+
+        if (Node.isProgramNode(parentNode)) {
+            return depth;
+        }
+
+        if (Node.isBlockStatementNode(node)) {
+            return NodeUtils.getNodeBlockScopeDepth(parentNode, ++depth);
+        }
+
+        return NodeUtils.getNodeBlockScopeDepth(parentNode, depth);
     }
 
     /**

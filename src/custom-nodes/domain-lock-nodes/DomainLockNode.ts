@@ -1,7 +1,6 @@
-import 'format-unicorn';
+import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-import { TStatement } from '../../types/TStatement';
 
 import { IOptions } from '../../interfaces/IOptions';
 import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
@@ -12,7 +11,6 @@ import { DomainLockNodeTemplate } from '../../templates/custom-nodes/domain-lock
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeAppender } from '../../node/NodeAppender';
-import { NodeUtils } from '../../node/NodeUtils';
 import { Utils } from '../../Utils';
 
 export class DomainLockNode extends AbstractCustomNode {
@@ -68,19 +66,17 @@ export class DomainLockNode extends AbstractCustomNode {
     }
 
     /**
-     * @returns {TStatement[]}
+     * @returns {string}
      */
-    protected getNodeStructure (): TStatement[] {
+    public getCode (): string {
         let domainsString: string = this.options.domainLock.join(';'),
             [hiddenDomainsString, diff]: string[] = Utils.hideString(domainsString, domainsString.length * 3);
 
-        return NodeUtils.convertCodeToStructure(
-            DomainLockNodeTemplate().formatUnicorn({
-                domainLockFunctionName: Utils.getRandomVariableName(),
-                diff: diff,
-                domains: hiddenDomainsString,
-                singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-            })
-        );
+        return format(DomainLockNodeTemplate(), {
+            domainLockFunctionName: Utils.getRandomVariableName(),
+            diff: diff,
+            domains: hiddenDomainsString,
+            singleNodeCallControllerFunctionName: this.callsControllerFunctionName
+        });
     }
 }

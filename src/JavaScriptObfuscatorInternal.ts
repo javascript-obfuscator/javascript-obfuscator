@@ -2,47 +2,43 @@ import * as esprima from 'esprima';
 import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
-import { IObfuscatorOptions } from './interfaces/IObfuscatorOptions';
+import { Chance } from 'chance';
+
 import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
 import { IOptions } from './interfaces/IOptions';
 
 import { ObfuscationResult } from './ObfuscationResult';
 import { Obfuscator } from './Obfuscator';
-import { Options } from './options/Options';
 import { SourceMapCorrector } from './SourceMapCorrector';
+import { Utils } from './Utils';
 
 export class JavaScriptObfuscatorInternal {
     /**
      * @type {GenerateOptions}
      */
-    private static escodegenParams: escodegen.GenerateOptions = {
+    private static readonly escodegenParams: escodegen.GenerateOptions = {
         verbatim: 'x-verbatim-property',
         sourceMapWithCode: true
     };
 
     /**
-     * @type {IGeneratorOutput}
+     * @type {esprima.Options}
      */
-    private generatorOutput: IGeneratorOutput;
+    private static readonly esprimaParams: esprima.Options = {
+        loc: true
+    };
 
     /**
      * @type {IOptions}
      */
-    private options: IOptions;
+    private readonly options: IOptions;
 
     /**
-     * @type {string}
+     * @param options
      */
-    private sourceCode: string;
-
-    /**
-     * @param sourceCode
-     * @param obfuscatorOptions
-     */
-    constructor (sourceCode: string, obfuscatorOptions: IObfuscatorOptions = {}) {
-        this.sourceCode = sourceCode;
-        this.options = new Options(obfuscatorOptions);
+    constructor (options: IOptions) {
+        this.options = options;
     }
 
     /**
@@ -50,7 +46,7 @@ export class JavaScriptObfuscatorInternal {
      * @param astTree
      * @param options
      */
-    private static generateCode (sourceCode: string, astTree: ESTree.Node, options: IOptions): IGeneratorOutput {
+    private static generateCode (sourceCode: string, astTree: ESTree.Program, options: IOptions): IGeneratorOutput {
         const escodegenParams: escodegen.GenerateOptions = Object.assign(
             {},
             JavaScriptObfuscatorInternal.escodegenParams
@@ -73,26 +69,37 @@ export class JavaScriptObfuscatorInternal {
     }
 
     /**
+     * @param generatorOutput
      * @returns {IObfuscationResult}
      */
-    public getObfuscationResult (): IObfuscationResult {
+    public getObfuscationResult (generatorOutput: IGeneratorOutput): IObfuscationResult {
         return new SourceMapCorrector(
             new ObfuscationResult(
-                this.generatorOutput.code,
-                this.generatorOutput.map
+                generatorOutput.code,
+                generatorOutput.map
             ),
             this.options.sourceMapBaseUrl + this.options.sourceMapFileName,
             this.options.sourceMapMode
         ).correct();
     }
 
-    public obfuscate (): void {
-        let astTree: ESTree.Node = esprima.parse(this.sourceCode, {
-            loc: true
-        });
+    /**
+     * @param sourceCode
+     * @returns {IObfuscationResult}
+     */
+    public obfuscate (sourceCode: string): IObfuscationResult {
+        if (this.options.seed !== 0) {
+            Utils.setRandomGenerator(new Chance(this.options.seed));
+        }
 
-        astTree = new Obfuscator(this.options).obfuscateNode(astTree);
+        const astTree: ESTree.Program = esprima.parse(sourceCode, JavaScriptObfuscatorInternal.esprimaParams);
+        const obfuscatedAstTree: ESTree.Program = new Obfuscator(this.options).obfuscateAstTree(astTree);
+        const generatorOutput: IGeneratorOutput = JavaScriptObfuscatorInternal.generateCode(
+            sourceCode,
+            obfuscatedAstTree,
+            this.options
+        );
 
-        this.generatorOutput = JavaScriptObfuscatorInternal.generateCode(this.sourceCode, astTree, this.options);
+        return this.getObfuscationResult(generatorOutput);
     }
 }

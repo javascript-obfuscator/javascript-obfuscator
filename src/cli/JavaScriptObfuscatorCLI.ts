@@ -19,7 +19,7 @@ export class JavaScriptObfuscatorCLI {
     /**
      * @type {string[]}
      */
-    private arguments: string[];
+    private readonly arguments: string[];
 
     /**
      * @type {commander.ICommand}
@@ -69,7 +69,7 @@ export class JavaScriptObfuscatorCLI {
      * @returns {string}
      */
     private static parseSourceMapMode (value: string): string {
-        let availableMode: boolean = Object
+        const availableMode: boolean = Object
             .keys(SourceMapMode)
             .some((key: string): boolean => {
                 return SourceMapMode[key] === value;
@@ -121,8 +121,8 @@ export class JavaScriptObfuscatorCLI {
      * @returns {IObfuscatorOptions}
      */
     private buildOptions (): IObfuscatorOptions {
-        let obfuscatorOptions: IObfuscatorOptions = {},
-            availableOptions: string[] = Object.keys(DEFAULT_PRESET);
+        const obfuscatorOptions: IObfuscatorOptions = {};
+        const availableOptions: string[] = Object.keys(DEFAULT_PRESET);
 
         for (const option in this.commands) {
             if (!this.commands.hasOwnProperty(option)) {
@@ -145,12 +145,14 @@ export class JavaScriptObfuscatorCLI {
             .usage('<inputPath> [options]')
             .option('-o, --output <path>', 'Output path for obfuscated code')
             .option('--compact <boolean>', 'Disable one line output code compacting', JavaScriptObfuscatorCLI.parseBoolean)
+            .option('--controlFlowFlattening <boolean>', 'Enables control flow flattening', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--debugProtection <boolean>', 'Disable browser Debug panel (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--debugProtectionInterval <boolean>', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--disableConsoleOutput <boolean>', 'Allow console.log, console.info, console.error and console.warn messages output into browser console', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--domainLock <list>', 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)', (val: string) => val.split(','))
             .option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', (val: string) => val.split(','))
             .option('--rotateStringArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean)
+            .option('--seed <number>', 'Sets seed for random generator. This is useful for creating repeatable results.', parseFloat)
             .option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean)
             .option('--sourceMapBaseUrl <string>', 'Sets base url to the source map import url when `--sourceMapMode=separate`')
@@ -179,8 +181,8 @@ export class JavaScriptObfuscatorCLI {
     }
 
     private processData (): void {
-        let options: IObfuscatorOptions = this.buildOptions(),
-            outputCodePath: string = CLIUtils.getOutputCodePath((<any>this.commands).output, this.inputPath);
+        const options: IObfuscatorOptions = this.buildOptions();
+        const outputCodePath: string = CLIUtils.getOutputCodePath((<any>this.commands).output, this.inputPath);
 
         if (options.sourceMap) {
             this.processDataWithSourceMap(outputCodePath, options);
@@ -194,7 +196,7 @@ export class JavaScriptObfuscatorCLI {
      * @param options
      */
     private processDataWithoutSourceMap (outputCodePath: string, options: IObfuscatorOptions): void {
-        let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(this.data, options).getObfuscatedCode();
+        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(this.data, options).getObfuscatedCode();
 
         CLIUtils.writeFile(outputCodePath, obfuscatedCode);
     }
@@ -204,7 +206,7 @@ export class JavaScriptObfuscatorCLI {
      * @param options
      */
     private processDataWithSourceMap (outputCodePath: string, options: IObfuscatorOptions): void {
-        let outputSourceMapPath: string = CLIUtils.getOutputSourceMapPath(
+        const outputSourceMapPath: string = CLIUtils.getOutputSourceMapPath(
             outputCodePath,
             options.sourceMapFileName || ''
         );

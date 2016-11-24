@@ -1,7 +1,6 @@
-import 'format-unicorn';
+import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-import { TStatement } from '../../types/TStatement';
 
 import { IOptions } from '../../interfaces/IOptions';
 
@@ -11,7 +10,6 @@ import { DebugProtectionFunctionIntervalTemplate } from '../../templates/custom-
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeAppender } from '../../node/NodeAppender';
-import { NodeUtils } from '../../node/NodeUtils';
 
 export class DebugProtectionFunctionIntervalNode extends AbstractCustomNode {
     /**
@@ -42,13 +40,11 @@ export class DebugProtectionFunctionIntervalNode extends AbstractCustomNode {
     }
 
     /**
-     * @returns {TStatement[]}
+     * @returns {string}
      */
-    protected getNodeStructure (): TStatement[] {
-        return NodeUtils.convertCodeToStructure(
-            DebugProtectionFunctionIntervalTemplate().formatUnicorn({
-                debugProtectionFunctionName: this.debugProtectionFunctionName
-            })
-        );
+    public getCode (): string {
+        return format(DebugProtectionFunctionIntervalTemplate(), {
+            debugProtectionFunctionName: this.debugProtectionFunctionName
+        });
     }
 }

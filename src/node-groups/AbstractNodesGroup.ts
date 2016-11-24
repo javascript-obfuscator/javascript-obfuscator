@@ -9,17 +9,17 @@ export abstract class AbstractNodesGroup implements INodesGroup {
     /**
      * @type {AppendState}
      */
-    protected appendState: AppendState = AppendState.BeforeObfuscation;
+    protected readonly appendState: AppendState = AppendState.BeforeObfuscation;
 
     /**
      * @type {IStackTraceData[]}
      */
-    protected stackTraceData: IStackTraceData[];
+    protected readonly stackTraceData: IStackTraceData[];
 
     /**
      * @type {IOptions}
      */
-    protected options: IOptions;
+    protected readonly options: IOptions;
 
     /**
      * @param stackTraceData

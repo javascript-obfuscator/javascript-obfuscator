@@ -2,39 +2,34 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TNodeGroup } from './types/TNodeGroup';
-import { TNodeObfuscator } from './types/TNodeObfuscator';
+import { TVisitorDirection } from './types/TVisitorDirection';
 
 import { ICustomNode } from './interfaces/custom-nodes/ICustomNode';
 import { IObfuscator } from './interfaces/IObfuscator';
 import { IOptions } from './interfaces/IOptions';
+import { INodeTransformer } from './interfaces/INodeTransformer';
+import { INodeTransformersFactory } from './interfaces/INodeTransformersFactory';
 import { IStackTraceData } from './interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { AppendState } from './enums/AppendState';
-import { NodeType } from './enums/NodeType';
+import { VisitorDirection } from './enums/VisitorDirection';
 
-import { CatchClauseObfuscator } from './node-obfuscators/CatchClauseObfuscator';
 import { ConsoleOutputNodesGroup } from './node-groups/ConsoleOutputNodesGroup';
 import { DebugProtectionNodesGroup } from './node-groups/DebugProtectionNodesGroup';
 import { DomainLockNodesGroup } from './node-groups/DomainLockNodesGroup';
-import { FunctionDeclarationObfuscator } from './node-obfuscators/FunctionDeclarationObfuscator';
-import { FunctionObfuscator } from './node-obfuscators/FunctionObfuscator';
-import { LabeledStatementObfuscator } from './node-obfuscators/LabeledStatementObfuscator';
-import { LiteralObfuscator } from './node-obfuscators/LiteralObfuscator';
-import { MemberExpressionObfuscator } from './node-obfuscators/MemberExpressionObfuscator';
-import { MethodDefinitionObfuscator } from './node-obfuscators/MethodDefinitionObfuscator';
 import { Node } from './node/Node';
+import { NodeControlFlowTransformersFactory } from './node-transformers/node-control-flow-transformers/factory/NodeControlFlowTransformersFactory';
+import { NodeObfuscatorsFactory } from './node-transformers/node-obfuscators/factory/NodeObfuscatorsFactory';
 import { NodeUtils } from './node/NodeUtils';
-import { ObjectExpressionObfuscator } from './node-obfuscators/ObjectExpressionObfuscator';
 import { SelfDefendingNodesGroup } from './node-groups/SelfDefendingNodesGroup';
 import { StackTraceAnalyzer } from './stack-trace-analyzer/StackTraceAnalyzer';
 import { StringArrayNodesGroup } from './node-groups/StringArrayNodesGroup';
-import { VariableDeclarationObfuscator } from './node-obfuscators/VariableDeclarationObfuscator';
 
 export class Obfuscator implements IObfuscator {
     /**
      * @type {TNodeGroup[]}
      */
-    private static nodeGroups: TNodeGroup[] = [
+    private static readonly nodeGroups: TNodeGroup[] = [
         DomainLockNodesGroup,
         SelfDefendingNodesGroup,
         ConsoleOutputNodesGroup,
@@ -43,34 +38,14 @@ export class Obfuscator implements IObfuscator {
     ];
 
     /**
-     * @type {Map<string, TNodeObfuscator[]>}
-     */
-    private static nodeObfuscators: Map <string, TNodeObfuscator[]> = new Map <string, TNodeObfuscator[]> ([
-        [NodeType.ArrowFunctionExpression, [FunctionObfuscator]],
-        [NodeType.ClassDeclaration, [FunctionDeclarationObfuscator]],
-        [NodeType.CatchClause, [CatchClauseObfuscator]],
-        [NodeType.FunctionDeclaration, [
-            FunctionDeclarationObfuscator,
-            FunctionObfuscator
-        ]],
-        [NodeType.FunctionExpression, [FunctionObfuscator]],
-        [NodeType.MemberExpression, [MemberExpressionObfuscator]],
-        [NodeType.MethodDefinition, [MethodDefinitionObfuscator]],
-        [NodeType.ObjectExpression, [ObjectExpressionObfuscator]],
-        [NodeType.VariableDeclaration, [VariableDeclarationObfuscator]],
-        [NodeType.LabeledStatement, [LabeledStatementObfuscator]],
-        [NodeType.Literal, [LiteralObfuscator]]
-    ]);
-
-    /**
      * @type {Map<string, AbstractCustomNode>}
      */
-    private customNodes: Map <string, ICustomNode> = new Map <string, ICustomNode> ();
+    private customNodes: Map <string, ICustomNode>;
 
     /**
      * @type {IOptions}
      */
-    private options: IOptions;
+    private readonly options: IOptions;
 
     /**
      * @param options
@@ -80,34 +55,47 @@ export class Obfuscator implements IObfuscator {
     }
 
     /**
-     * @param node
-     * @returns {ESTree.Node}
+     * @param astTree
+     * @returns {ESTree.Program}
      */
-    public obfuscateNode (node: ESTree.Program): ESTree.Node {
-        if (Node.isProgramNode(node) && !node.body.length) {
-            return node;
+    public obfuscateAstTree (astTree: ESTree.Program): ESTree.Program {
+        if (Node.isProgramNode(astTree) && !astTree.body.length) {
+            return astTree;
         }
 
-        NodeUtils.parentize(node);
+        NodeUtils.parentize(astTree);
+        this.initializeCustomNodes(new StackTraceAnalyzer().analyze(astTree.body));
 
-        const stackTraceData: IStackTraceData[] = new StackTraceAnalyzer(node.body).analyze();
+        // tasks before nodes transformation
+        this.beforeTransform(astTree);
 
-        this.initializeCustomNodes(stackTraceData);
+        // first pass: control flow flattening
+        if (this.options.controlFlowFlattening) {
+            this.transformAstTree(astTree, VisitorDirection.leave, new NodeControlFlowTransformersFactory(
+                this.customNodes,
+                this.options
+            ));
+        }
 
-        this.beforeObfuscation(node);
-        this.obfuscate(node);
-        this.afterObfuscation(node);
+        // second pass: nodes obfuscation
+        this.transformAstTree(astTree, VisitorDirection.enter, new NodeObfuscatorsFactory(
+            this.customNodes,
+            this.options
+        ));
 
-        return node;
+        // tasks after nodes transformation
+        this.afterTransform(astTree);
+
+        return astTree;
     }
 
     /**
      * @param astTree
      */
-    private afterObfuscation (astTree: ESTree.Node): void {
-        this.customNodes.forEach((node: ICustomNode) => {
-            if (node.getAppendState() === AppendState.AfterObfuscation) {
-                node.appendNode(astTree);
+    private afterTransform (astTree: ESTree.Program): void {
+        this.customNodes.forEach((customNode: ICustomNode) => {
+            if (customNode.getAppendState() === AppendState.AfterObfuscation) {
+                customNode.appendNode(astTree);
             }
         });
     }
@@ -115,10 +103,10 @@ export class Obfuscator implements IObfuscator {
     /**
      * @param astTree
      */
-    private beforeObfuscation (astTree: ESTree.Node): void {
-        this.customNodes.forEach((node: ICustomNode) => {
-            if (node.getAppendState() === AppendState.BeforeObfuscation) {
-                node.appendNode(astTree);
+    private beforeTransform (astTree: ESTree.Program): void {
+        this.customNodes.forEach((customNode: ICustomNode) => {
+            if (customNode.getAppendState() === AppendState.BeforeObfuscation) {
+                customNode.appendNode(astTree);
             }
         });
     };
@@ -127,7 +115,7 @@ export class Obfuscator implements IObfuscator {
      * @param stackTraceData
      */
     private initializeCustomNodes (stackTraceData: IStackTraceData[]): void {
-        let customNodes: [string, ICustomNode][] = [];
+        const customNodes: [string, ICustomNode][] = [];
 
         Obfuscator.nodeGroups.forEach((nodeGroupConstructor: TNodeGroup) => {
             const nodeGroupNodes: Map <string, ICustomNode> | undefined = new nodeGroupConstructor(
@@ -144,30 +132,23 @@ export class Obfuscator implements IObfuscator {
         this.customNodes = new Map <string, ICustomNode> (customNodes);
     }
 
-
     /**
-     * @param node
-     * @param parentNode
+     * @param astTree
+     * @param direction
+     * @param nodeTransformersFactory
      */
-    private initializeNodeObfuscators (node: ESTree.Node, parentNode: ESTree.Node): void {
-        let nodeObfuscators: TNodeObfuscator[] | undefined = Obfuscator.nodeObfuscators.get(node.type);
+    private transformAstTree (
+        astTree: ESTree.Program,
+        direction: TVisitorDirection,
+        nodeTransformersFactory: INodeTransformersFactory
+    ): void {
+        estraverse.traverse(astTree, {
+            [direction]: (node: ESTree.Node, parentNode: ESTree.Node): void => {
+                const nodeTransformers: INodeTransformer[] = nodeTransformersFactory.initializeNodeTransformers(node.type);
 
-        if (!nodeObfuscators) {
-            return;
-        }
-
-        nodeObfuscators.forEach((obfuscator: TNodeObfuscator) => {
-            new obfuscator(this.customNodes, this.options).obfuscateNode(node, parentNode);
-        });
-    }
-
-    /**
-     * @param node
-     */
-    private obfuscate (node: ESTree.Node): void {
-        estraverse.traverse(node, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node): void => {
-                this.initializeNodeObfuscators(node, parentNode);
+                nodeTransformers.forEach((nodeTransformer: INodeTransformer) => {
+                    nodeTransformer.transformNode(node, parentNode);
+                });
             }
         });
     }

@@ -1,7 +1,6 @@
-import 'format-unicorn';
+import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-import { TStatement } from '../../types/TStatement';
 
 import { IOptions } from '../../interfaces/IOptions';
 
@@ -11,7 +10,6 @@ import { DebugProtectionFunctionTemplate } from '../../templates/custom-nodes/de
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeAppender } from '../../node/NodeAppender';
-import { NodeUtils } from '../../node/NodeUtils';
 import { Utils } from '../../Utils';
 
 export class DebugProtectionFunctionNode extends AbstractCustomNode {
@@ -40,10 +38,7 @@ export class DebugProtectionFunctionNode extends AbstractCustomNode {
      */
     public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
         let programBodyLength: number = blockScopeNode.body.length,
-            randomIndex: number = Utils.getRandomGenerator().integer({
-                min: 0,
-                max: programBodyLength
-            });
+            randomIndex: number = Utils.getRandomInteger(0, programBodyLength);
 
         NodeAppender.insertNodeAtIndex(blockScopeNode, this.getNode(), randomIndex);
     }
@@ -51,20 +46,9 @@ export class DebugProtectionFunctionNode extends AbstractCustomNode {
     /**
      * @returns {string}
      */
-    public getNodeIdentifier (): string {
-        return this.debugProtectionFunctionName;
-    }
-
-    /**
-     * Found this trick in JScrambler
-     *
-     * @returns {TStatement[]}
-     */
-    protected getNodeStructure (): TStatement[] {
-        return NodeUtils.convertCodeToStructure(
-            DebugProtectionFunctionTemplate().formatUnicorn({
-                debugProtectionFunctionName: this.debugProtectionFunctionName
-            })
-        );
+    public getCode (): string {
+        return format(DebugProtectionFunctionTemplate(), {
+            debugProtectionFunctionName: this.debugProtectionFunctionName
+        });
     }
 }

@@ -4,6 +4,7 @@ import * as ESTree from 'estree';
 
 import { TNodeWithBlockStatement } from '../../../src/types/TNodeWithBlockStatement';
 
+import { IStackTraceAnalyzer } from '../../../src/interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
 import { IStackTraceData } from '../../../src/interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { readFileAsString } from '../../helpers/readFileAsString';
@@ -145,6 +146,8 @@ function getObjectFunctionExpressionByName (astTree: ESTree.Node, objectName: st
 
 describe('StackTraceAnalyzer', () => {
     describe('extract (): IStackTraceData[]', () => {
+        const stackTraceAnalyzer: IStackTraceAnalyzer = new StackTraceAnalyzer();
+
         let astTree: TNodeWithBlockStatement,
             stackTraceData: IStackTraceData[],
             expectedStackTraceData: IStackTraceData[];
@@ -191,7 +194,7 @@ describe('StackTraceAnalyzer', () => {
                 }
             ];
 
-            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
 
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
@@ -227,7 +230,7 @@ describe('StackTraceAnalyzer', () => {
                 }
             ];
 
-            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
 
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
@@ -263,7 +266,7 @@ describe('StackTraceAnalyzer', () => {
                 }
             ];
 
-            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
 
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
@@ -283,7 +286,7 @@ describe('StackTraceAnalyzer', () => {
                 }
             ];
 
-            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
 
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
@@ -339,7 +342,7 @@ describe('StackTraceAnalyzer', () => {
                 }
             ];
 
-            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
 
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
@@ -364,7 +367,7 @@ describe('StackTraceAnalyzer', () => {
                 },
             ];
 
-            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
 
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
@@ -378,7 +381,7 @@ describe('StackTraceAnalyzer', () => {
 
             expectedStackTraceData = [];
 
-            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
 
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
@@ -392,7 +395,7 @@ describe('StackTraceAnalyzer', () => {
 
             expectedStackTraceData = [];
 
-            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
 
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
@@ -424,7 +427,7 @@ describe('StackTraceAnalyzer', () => {
                 }
             ];
 
-            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
 
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
@@ -444,7 +447,7 @@ describe('StackTraceAnalyzer', () => {
                 }
             ];
 
-            stackTraceData = new StackTraceAnalyzer(astTree.body).analyze();
+            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
 
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });

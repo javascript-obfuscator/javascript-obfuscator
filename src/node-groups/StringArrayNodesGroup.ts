@@ -7,8 +7,9 @@ import { StringArrayNode } from '../custom-nodes/string-array-nodes/StringArrayN
 import { StringArrayRotateFunctionNode } from '../custom-nodes/string-array-nodes/StringArrayRotateFunctionNode';
 
 import { AbstractNodesGroup } from './AbstractNodesGroup';
-import { StringArray } from '../StringArray';
+import { StringArrayStorage } from '../storages/string-array/StringArrayStorage';
 import { Utils } from '../Utils';
+import { IStorage } from '../interfaces/IStorage';
 
 export class StringArrayNodesGroup extends AbstractNodesGroup {
     /**
@@ -40,15 +41,12 @@ export class StringArrayNodesGroup extends AbstractNodesGroup {
         }
 
         if (this.options.rotateStringArray) {
-            this.stringArrayRotateValue = Utils.getRandomGenerator().integer({
-                min: 100,
-                max: 500
-            });
+            this.stringArrayRotateValue = Utils.getRandomInteger(100, 500);
         } else {
             this.stringArrayRotateValue = 0;
         }
 
-        const stringArray: StringArray = new StringArray();
+        const stringArray: IStorage <string> = new StringArrayStorage();
         const stringArrayNode: ICustomNode = new StringArrayNode(
             stringArray,
             this.stringArrayName,

@@ -51,33 +51,21 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     /**
      * @type {number}
      */
-    private static limitThresholdActivationLength: number = 25;
+    private static readonly limitThresholdActivationLength: number = 25;
 
     /**
      * @type {number}
      */
-    private static limitThreshold: number = 0.002;
-
-    /**
-     * @type {ESTree.Node[]}
-     */
-    private blockScopeBody: ESTree.Node[];
+    private static readonly limitThreshold: number = 0.002;
 
     /**
      * @type {Map<string, TCalleeDataExtractor>}
      */
-    private calleeDataExtractors: Map <string, TCalleeDataExtractor> = new Map <string, TCalleeDataExtractor> ([
+    private readonly calleeDataExtractors: Map <string, TCalleeDataExtractor> = new Map <string, TCalleeDataExtractor> ([
         [NodeType.FunctionDeclaration, FunctionDeclarationCalleeDataExtractor],
         [NodeType.FunctionExpression, FunctionExpressionCalleeDataExtractor],
         [NodeType.ObjectExpression, ObjectExpressionCalleeDataExtractor]
     ]);
-
-    /**
-     * @param blockScopeBody
-     */
-    constructor (blockScopeBody: ESTree.Node[]) {
-        this.blockScopeBody = blockScopeBody;
-    }
 
     /**
      * @param blockScopeBodyLength
@@ -103,10 +91,11 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     }
 
     /**
+     * @param blockScopeBody
      * @returns {IStackTraceData[]}
      */
-    public analyze (): IStackTraceData[] {
-        return this.analyzeRecursive(this.blockScopeBody);
+    public analyze (blockScopeBody: ESTree.Node[]): IStackTraceData[] {
+        return this.analyzeRecursive(blockScopeBody);
     }
 
     /**
@@ -122,7 +111,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
             index < blockScopeBodyLength;
             index++
         ) {
-            let rootNode: ESTree.Node = blockScopeBody[index];
+            const rootNode: ESTree.Node = blockScopeBody[index];
 
             if (index > limitIndex) {
                 break;

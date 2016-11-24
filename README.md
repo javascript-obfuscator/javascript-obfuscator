@@ -123,6 +123,7 @@ Following options available for the JS Obfuscator:
     disableConsoleOutput: true,
     reservedNames: [],
     rotateStringArray: true,
+    seed: 0,
     selfDefending: true,
     sourceMap: false,
     sourceMapBaseUrl: '',
@@ -131,7 +132,7 @@ Following options available for the JS Obfuscator:
     stringArray: true,
     stringArrayEncoding: false,
     stringArrayThreshold: 0.8,
-    unicdeEscapeSequence: true
+    unicodeEscapeSequence: true
 }
 ```
 
@@ -148,6 +149,7 @@ Following options available for the JS Obfuscator:
     --disableConsoleOutput <boolean>
     --reservedNames <list> (comma separated)
     --rotateStringArray <boolean>
+    --seed <number>
     --selfDefending <boolean>
     --sourceMap <boolean>
     --sourceMapBaseUrl <string>
@@ -218,6 +220,12 @@ Shift the `stringArray` array by a fixed and random (generated at the code obfus
 
 This option is recommended if your original source code isn't small, as the helper function can attract attention.
 
+### `seed`
+Type: `number` Default: `0`
+
+This option sets seed for random generator. This is useful for creating repeatable results.
+
+If seed is `0` - random generator will work without seed.
 
 ### `selfDefending`
 Type: `boolean` Default: `true`

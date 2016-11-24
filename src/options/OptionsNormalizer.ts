@@ -9,7 +9,7 @@ export class OptionsNormalizer {
     /**
      * @type {IObfuscatorOptions}
      */
-    private static DISABLED_UNICODE_ARRAY_OPTIONS: IObfuscatorOptions = {
+    private static readonly DISABLED_UNICODE_ARRAY_OPTIONS: IObfuscatorOptions = {
         rotateStringArray: false,
         stringArray: false,
         stringArrayEncoding: false,
@@ -19,7 +19,7 @@ export class OptionsNormalizer {
     /**
      * @type {IObfuscatorOptions}
      */
-    private static SELF_DEFENDING_OPTIONS: IObfuscatorOptions = {
+    private static readonly SELF_DEFENDING_OPTIONS: IObfuscatorOptions = {
         compact: true,
         selfDefending: true
     };
@@ -27,14 +27,14 @@ export class OptionsNormalizer {
     /**
      * @type {IObfuscatorOptions}
      */
-    private static UNICODE_ARRAY_ENCODING_OPTIONS: IObfuscatorOptions = {
+    private static readonly UNICODE_ARRAY_ENCODING_OPTIONS: IObfuscatorOptions = {
         stringArrayEncoding: 'base64'
     };
 
     /**
      * @type {TOptionsNormalizerRule[]}
      */
-    private static normalizerRules: TOptionsNormalizerRule[] = [
+    private static readonly normalizerRules: TOptionsNormalizerRule[] = [
         OptionsNormalizer.domainLockRule,
         OptionsNormalizer.selfDefendingRule,
         OptionsNormalizer.sourceMapBaseUrlRule,
@@ -64,7 +64,7 @@ export class OptionsNormalizer {
      */
     private static domainLockRule (options: IOptions): IOptions {
         if (options.domainLock.length) {
-            let normalizedDomains: string[] = [];
+            const normalizedDomains: string[] = [];
 
             for (const domain of options.domainLock) {
                 normalizedDomains.push(Utils.extractDomainFromUrl(domain));
@@ -95,7 +95,7 @@ export class OptionsNormalizer {
      * @returns {IOptions}
      */
     private static sourceMapBaseUrlRule (options: IOptions): IOptions {
-        let sourceMapBaseUrl: string = options.sourceMapBaseUrl;
+        const sourceMapBaseUrl: string = options.sourceMapBaseUrl;
 
         if (!options.sourceMapFileName) {
             Object.assign(options, {

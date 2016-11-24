@@ -1,4 +1,4 @@
-import { IObfuscatorOptions } from '../interfaces/IObfuscatorOptions';
+import { IInputOptions } from '../interfaces/IInputOptions';
 import { IOptions } from '../interfaces/IOptions';
 
 import { TOptionsNormalizerRule } from '../types/TOptionsNormalizerRule';
@@ -7,9 +7,9 @@ import { Utils } from '../Utils';
 
 export class OptionsNormalizer {
     /**
-     * @type {IObfuscatorOptions}
+     * @type {IInputOptions}
      */
-    private static readonly DISABLED_UNICODE_ARRAY_OPTIONS: IObfuscatorOptions = {
+    private static readonly DISABLED_UNICODE_ARRAY_OPTIONS: IInputOptions = {
         rotateStringArray: false,
         stringArray: false,
         stringArrayEncoding: false,
@@ -17,17 +17,17 @@ export class OptionsNormalizer {
     };
 
     /**
-     * @type {IObfuscatorOptions}
+     * @type {IInputOptions}
      */
-    private static readonly SELF_DEFENDING_OPTIONS: IObfuscatorOptions = {
+    private static readonly SELF_DEFENDING_OPTIONS: IInputOptions = {
         compact: true,
         selfDefending: true
     };
 
     /**
-     * @type {IObfuscatorOptions}
+     * @type {IInputOptions}
      */
-    private static readonly UNICODE_ARRAY_ENCODING_OPTIONS: IObfuscatorOptions = {
+    private static readonly UNICODE_ARRAY_ENCODING_OPTIONS: IInputOptions = {
         stringArrayEncoding: 'base64'
     };
 

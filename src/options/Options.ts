@@ -14,7 +14,7 @@ import {
     ValidatorOptions
 } from 'class-validator';
 
-import { IObfuscatorOptions } from '../interfaces/IObfuscatorOptions';
+import { IInputOptions } from '../interfaces/IInputOptions';
 import { IOptions } from '../interfaces/IOptions';
 
 import { TSourceMapMode } from '../types/TSourceMapMode';
@@ -159,10 +159,10 @@ export class Options implements IOptions {
     public readonly unicodeEscapeSequence: boolean;
 
     /**
-     * @param obfuscatorOptions
+     * @param inputOptions
      */
-    constructor (obfuscatorOptions: IObfuscatorOptions) {
-        Object.assign(this, DEFAULT_PRESET, obfuscatorOptions);
+    constructor (inputOptions: IInputOptions) {
+        Object.assign(this, DEFAULT_PRESET, inputOptions);
 
         const errors: ValidationError[] = validateSync(this, Options.validatorOptions);
 

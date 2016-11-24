@@ -1,7 +1,7 @@
 import { TSourceMapMode } from '../types/TSourceMapMode';
 import { TStringArrayEncoding } from '../types/TStringArrayEncoding';
 
-export interface IObfuscatorOptions {
+export interface IInputOptions {
     compact?: boolean;
     controlFlowFlattening?: boolean;
     debugProtection?: boolean;

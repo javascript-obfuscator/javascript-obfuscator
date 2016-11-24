@@ -1,17 +1,17 @@
-import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
+import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 
-import { AppendState } from '../enums/AppendState';
+import { AppendState } from '../../../enums/AppendState';
 
-import { StringArrayCallsWrapper } from '../custom-nodes/string-array-nodes/StringArrayCallsWrapper';
-import { StringArrayNode } from '../custom-nodes/string-array-nodes/StringArrayNode';
-import { StringArrayRotateFunctionNode } from '../custom-nodes/string-array-nodes/StringArrayRotateFunctionNode';
+import { StringArrayCallsWrapper } from '../StringArrayCallsWrapper';
+import { StringArrayNode } from '../StringArrayNode';
+import { StringArrayRotateFunctionNode } from '../StringArrayRotateFunctionNode';
 
-import { AbstractNodesGroup } from './AbstractNodesGroup';
-import { StringArrayStorage } from '../storages/string-array/StringArrayStorage';
-import { Utils } from '../Utils';
-import { IStorage } from '../interfaces/IStorage';
+import { AbstractCustomNodesFactory } from '../../AbstractCustomNodesFactory';
+import { StringArrayStorage } from '../../../storages/string-array/StringArrayStorage';
+import { Utils } from '../../../Utils';
+import { IStorage } from '../../../interfaces/IStorage';
 
-export class StringArrayNodesGroup extends AbstractNodesGroup {
+export class StringArrayCustomNodesFactory extends AbstractCustomNodesFactory {
     /**
      * @type {AppendState}
      */

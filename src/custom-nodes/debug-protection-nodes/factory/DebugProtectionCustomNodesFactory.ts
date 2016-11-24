@@ -1,13 +1,13 @@
-import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
+import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 
-import { DebugProtectionFunctionCallNode } from '../custom-nodes/debug-protection-nodes/DebugProtectionFunctionCallNode';
-import { DebugProtectionFunctionIntervalNode } from '../custom-nodes/debug-protection-nodes/DebugProtectionFunctionIntervalNode';
-import { DebugProtectionFunctionNode } from '../custom-nodes/debug-protection-nodes/DebugProtectionFunctionNode';
+import { DebugProtectionFunctionCallNode } from '../DebugProtectionFunctionCallNode';
+import { DebugProtectionFunctionIntervalNode } from '../DebugProtectionFunctionIntervalNode';
+import { DebugProtectionFunctionNode } from '../DebugProtectionFunctionNode';
 
-import { AbstractNodesGroup } from './AbstractNodesGroup';
-import { Utils } from '../Utils';
+import { AbstractCustomNodesFactory } from '../../AbstractCustomNodesFactory';
+import { Utils } from '../../../Utils';
 
-export class DebugProtectionNodesGroup extends AbstractNodesGroup {
+export class DebugProtectionCustomNodesFactory extends AbstractCustomNodesFactory {
     /**
      * @returns {Map<string, ICustomNode> | undefined}
      */

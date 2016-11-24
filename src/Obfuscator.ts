@@ -1,7 +1,7 @@
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TNodeGroup } from './types/TNodeGroup';
+import { TCustomNodesFactory } from './types/TCustomNodesFactory';
 import { TVisitorDirection } from './types/TVisitorDirection';
 
 import { ICustomNode } from './interfaces/custom-nodes/ICustomNode';
@@ -14,27 +14,28 @@ import { IStackTraceData } from './interfaces/stack-trace-analyzer/IStackTraceDa
 import { AppendState } from './enums/AppendState';
 import { VisitorDirection } from './enums/VisitorDirection';
 
-import { ConsoleOutputNodesGroup } from './node-groups/ConsoleOutputNodesGroup';
-import { DebugProtectionNodesGroup } from './node-groups/DebugProtectionNodesGroup';
-import { DomainLockNodesGroup } from './node-groups/DomainLockNodesGroup';
-import { Node } from './node/Node';
+import { ConsoleOutputCustomNodesFactory } from './custom-nodes/console-output-nodes/factory/ConsoleOutputCustomNodesFactory';
+import { DebugProtectionCustomNodesFactory } from './custom-nodes/debug-protection-nodes/factory/DebugProtectionCustomNodesFactory';
+import { DomainLockCustomNodesFactory } from './custom-nodes/domain-lock-nodes/factory/DomainLockCustomNodesFactory';
 import { NodeControlFlowTransformersFactory } from './node-transformers/node-control-flow-transformers/factory/NodeControlFlowTransformersFactory';
 import { NodeObfuscatorsFactory } from './node-transformers/node-obfuscators/factory/NodeObfuscatorsFactory';
+import { SelfDefendingCustomNodesFactory } from './custom-nodes/self-defending-nodes/factory/SelfDefendingCustomNodesFactory';
+import { StringArrayCustomNodesFactory } from './custom-nodes/string-array-nodes/factory/StringArrayCustomNodesFactory';
+
+import { Node } from './node/Node';
 import { NodeUtils } from './node/NodeUtils';
-import { SelfDefendingNodesGroup } from './node-groups/SelfDefendingNodesGroup';
 import { StackTraceAnalyzer } from './stack-trace-analyzer/StackTraceAnalyzer';
-import { StringArrayNodesGroup } from './node-groups/StringArrayNodesGroup';
 
 export class Obfuscator implements IObfuscator {
     /**
-     * @type {TNodeGroup[]}
+     * @type {TCustomNodesFactory[]}
      */
-    private static readonly nodeGroups: TNodeGroup[] = [
-        DomainLockNodesGroup,
-        SelfDefendingNodesGroup,
-        ConsoleOutputNodesGroup,
-        DebugProtectionNodesGroup,
-        StringArrayNodesGroup
+    private static readonly customNodesFactories: TCustomNodesFactory[] = [
+        DomainLockCustomNodesFactory,
+        SelfDefendingCustomNodesFactory,
+        ConsoleOutputCustomNodesFactory,
+        DebugProtectionCustomNodesFactory,
+        StringArrayCustomNodesFactory
     ];
 
     /**
@@ -117,7 +118,7 @@ export class Obfuscator implements IObfuscator {
     private initializeCustomNodes (stackTraceData: IStackTraceData[]): void {
         const customNodes: [string, ICustomNode][] = [];
 
-        Obfuscator.nodeGroups.forEach((nodeGroupConstructor: TNodeGroup) => {
+        Obfuscator.customNodesFactories.forEach((nodeGroupConstructor: TCustomNodesFactory) => {
             const nodeGroupNodes: Map <string, ICustomNode> | undefined = new nodeGroupConstructor(
                 stackTraceData, this.options
             ).getNodes();

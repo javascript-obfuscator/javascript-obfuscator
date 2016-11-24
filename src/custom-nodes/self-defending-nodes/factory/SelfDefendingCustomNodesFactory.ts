@@ -1,18 +1,25 @@
-import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
+import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 
-import { DomainLockNode } from '../custom-nodes/domain-lock-nodes/DomainLockNode';
-import { NodeCallsControllerFunctionNode } from '../custom-nodes/node-calls-controller-nodes/NodeCallsControllerFunctionNode';
+import { AppendState } from '../../../enums/AppendState';
 
-import { AbstractNodesGroup } from './AbstractNodesGroup';
-import { NodeAppender } from '../node/NodeAppender';
-import { Utils } from '../Utils';
+import { NodeCallsControllerFunctionNode } from '../../node-calls-controller-nodes/NodeCallsControllerFunctionNode';
+import { SelfDefendingUnicodeNode } from '../SelfDefendingUnicodeNode';
 
-export class DomainLockNodesGroup extends AbstractNodesGroup {
+import { AbstractCustomNodesFactory } from '../../AbstractCustomNodesFactory';
+import { NodeAppender } from '../../../node/NodeAppender';
+import { Utils } from '../../../Utils';
+
+export class SelfDefendingCustomNodesFactory extends AbstractCustomNodesFactory {
+    /**
+     * @type {AppendState}
+     */
+    protected appendState: AppendState = AppendState.AfterObfuscation;
+
     /**
      * @returns {Map<string, ICustomNode> | undefined}
      */
     public getNodes (): Map <string, ICustomNode> | undefined {
-        if (!this.options.domainLock.length) {
+        if (!this.options.selfDefending) {
             return;
         }
 
@@ -21,8 +28,8 @@ export class DomainLockNodesGroup extends AbstractNodesGroup {
 
         return this.syncCustomNodesWithNodesGroup(new Map <string, ICustomNode> ([
             [
-                'DomainLockNode',
-                new DomainLockNode(
+                'selfDefendingUnicodeNode',
+                new SelfDefendingUnicodeNode(
                     this.stackTraceData,
                     callsControllerFunctionName,
                     randomStackTraceIndex,
@@ -30,7 +37,7 @@ export class DomainLockNodesGroup extends AbstractNodesGroup {
                 )
             ],
             [
-                'DomainLockNodeCallsControllerFunctionNode',
+                'SelfDefendingNodeCallsControllerFunctionNode',
                 new NodeCallsControllerFunctionNode(
                     this.stackTraceData,
                     callsControllerFunctionName,

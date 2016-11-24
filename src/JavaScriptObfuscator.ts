@@ -1,5 +1,5 @@
+import { IInputOptions } from './interfaces/IInputOptions';
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
-import { IObfuscatorOptions } from './interfaces/IObfuscatorOptions';
 
 import { JavaScriptObfuscatorCLI } from './cli/JavaScriptObfuscatorCLI';
 import { JavaScriptObfuscatorInternal } from './JavaScriptObfuscatorInternal';
@@ -8,12 +8,12 @@ import { Options } from './options/Options';
 export class JavaScriptObfuscator {
     /**
      * @param sourceCode
-     * @param obfuscatorOptions
+     * @param inputOptions
      * @returns {string}
      */
-    public static obfuscate (sourceCode: string, obfuscatorOptions: IObfuscatorOptions = {}): IObfuscationResult {
+    public static obfuscate (sourceCode: string, inputOptions: IInputOptions = {}): IObfuscationResult {
         const javaScriptObfuscator: JavaScriptObfuscatorInternal = new JavaScriptObfuscatorInternal(
-            new Options(obfuscatorOptions)
+            new Options(inputOptions)
         );
 
         return javaScriptObfuscator.obfuscate(sourceCode);

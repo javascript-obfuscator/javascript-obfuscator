@@ -3,8 +3,8 @@ import * as path from 'path';
 
 import { TStringArrayEncoding } from '../types/TStringArrayEncoding';
 
+import { IInputOptions } from '../interfaces/IInputOptions';
 import { IObfuscationResult } from '../interfaces/IObfuscationResult';
-import { IObfuscatorOptions } from '../interfaces/IObfuscatorOptions';
 
 import { SourceMapMode } from '../enums/SourceMapMode';
 import { StringArrayEncoding } from '../enums/StringArrayEncoding';
@@ -118,10 +118,10 @@ export class JavaScriptObfuscatorCLI {
     }
 
     /**
-     * @returns {IObfuscatorOptions}
+     * @returns {IInputOptions}
      */
-    private buildOptions (): IObfuscatorOptions {
-        const obfuscatorOptions: IObfuscatorOptions = {};
+    private buildOptions (): IInputOptions {
+        const inputOptions: IInputOptions = {};
         const availableOptions: string[] = Object.keys(DEFAULT_PRESET);
 
         for (const option in this.commands) {
@@ -133,10 +133,10 @@ export class JavaScriptObfuscatorCLI {
                 continue;
             }
 
-            obfuscatorOptions[option] = (<any>this.commands)[option];
+            inputOptions[option] = (<any>this.commands)[option];
         }
 
-        return Object.assign({}, DEFAULT_PRESET, obfuscatorOptions);
+        return Object.assign({}, DEFAULT_PRESET, inputOptions);
     }
 
     private configureCommands (): void {
@@ -181,7 +181,7 @@ export class JavaScriptObfuscatorCLI {
     }
 
     private processData (): void {
-        const options: IObfuscatorOptions = this.buildOptions();
+        const options: IInputOptions = this.buildOptions();
         const outputCodePath: string = CLIUtils.getOutputCodePath((<any>this.commands).output, this.inputPath);
 
         if (options.sourceMap) {
@@ -195,7 +195,7 @@ export class JavaScriptObfuscatorCLI {
      * @param outputCodePath
      * @param options
      */
-    private processDataWithoutSourceMap (outputCodePath: string, options: IObfuscatorOptions): void {
+    private processDataWithoutSourceMap (outputCodePath: string, options: IInputOptions): void {
         const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(this.data, options).getObfuscatedCode();
 
         CLIUtils.writeFile(outputCodePath, obfuscatedCode);
@@ -205,7 +205,7 @@ export class JavaScriptObfuscatorCLI {
      * @param outputCodePath
      * @param options
      */
-    private processDataWithSourceMap (outputCodePath: string, options: IObfuscatorOptions): void {
+    private processDataWithSourceMap (outputCodePath: string, options: IInputOptions): void {
         const outputSourceMapPath: string = CLIUtils.getOutputSourceMapPath(
             outputCodePath,
             options.sourceMapFileName || ''

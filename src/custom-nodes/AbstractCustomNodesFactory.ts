@@ -1,11 +1,11 @@
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
-import { INodesGroup } from '../interfaces/INodesGroup';
+import { ICustomNodesFactory } from '../interfaces/ICustomNodesFactory';
 import { IOptions } from '../interfaces/IOptions';
 import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { AppendState } from '../enums/AppendState';
 
-export abstract class AbstractNodesGroup implements INodesGroup {
+export abstract class AbstractCustomNodesFactory implements ICustomNodesFactory {
     /**
      * @type {AppendState}
      */

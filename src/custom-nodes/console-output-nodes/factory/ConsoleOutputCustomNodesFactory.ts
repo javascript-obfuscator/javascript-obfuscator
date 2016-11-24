@@ -1,13 +1,13 @@
-import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
+import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 
-import { ConsoleOutputDisableExpressionNode } from '../custom-nodes/console-output-nodes/ConsoleOutputDisableExpressionNode';
-import { NodeCallsControllerFunctionNode } from '../custom-nodes/node-calls-controller-nodes/NodeCallsControllerFunctionNode';
+import { ConsoleOutputDisableExpressionNode } from '../ConsoleOutputDisableExpressionNode';
+import { NodeCallsControllerFunctionNode } from '../../node-calls-controller-nodes/NodeCallsControllerFunctionNode';
 
-import { AbstractNodesGroup } from './AbstractNodesGroup';
-import { NodeAppender } from '../node/NodeAppender';
-import { Utils } from '../Utils';
+import { AbstractCustomNodesFactory } from '../../AbstractCustomNodesFactory';
+import { NodeAppender } from '../../../node/NodeAppender';
+import { Utils } from '../../../Utils';
 
-export class ConsoleOutputNodesGroup extends AbstractNodesGroup {
+export class ConsoleOutputCustomNodesFactory extends AbstractCustomNodesFactory {
     /**
      * @returns {Map<string, ICustomNode>}
      */

@@ -88,7 +88,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 107);
+/******/ 	return __webpack_require__(__webpack_require__.s = 108);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1591,6 +1591,21 @@ var JavaScriptObfuscatorInternal = function () {
     }
 
     _createClass(JavaScriptObfuscatorInternal, [{
+        key: 'generateCode',
+        value: function generateCode(sourceCode, astTree) {
+            var escodegenParams = Object.assign({}, JavaScriptObfuscatorInternal.escodegenParams);
+            if (this.options.sourceMap) {
+                escodegenParams.sourceMap = 'sourceMap';
+                escodegenParams.sourceContent = sourceCode;
+            }
+            escodegenParams.format = {
+                compact: this.options.compact
+            };
+            var generatorOutput = escodegen.generate(astTree, escodegenParams);
+            generatorOutput.map = generatorOutput.map ? generatorOutput.map.toString() : '';
+            return generatorOutput;
+        }
+    }, {
         key: 'getObfuscationResult',
         value: function getObfuscationResult(generatorOutput) {
             return new SourceMapCorrector_1.SourceMapCorrector(new ObfuscationResult_1.ObfuscationResult(generatorOutput.code, generatorOutput.map), this.options.sourceMapBaseUrl + this.options.sourceMapFileName, this.options.sourceMapMode).correct();
@@ -1603,23 +1618,8 @@ var JavaScriptObfuscatorInternal = function () {
             }
             var astTree = esprima.parse(sourceCode, JavaScriptObfuscatorInternal.esprimaParams);
             var obfuscatedAstTree = new Obfuscator_1.Obfuscator(new ObfuscationEventEmitter_1.ObfuscationEventEmitter(), new StackTraceAnalyzer_1.StackTraceAnalyzer(), new CustomNodesStorage_1.CustomNodesStorage(this.options), this.options).obfuscateAstTree(astTree);
-            var generatorOutput = JavaScriptObfuscatorInternal.generateCode(sourceCode, obfuscatedAstTree, this.options);
+            var generatorOutput = this.generateCode(sourceCode, obfuscatedAstTree);
             return this.getObfuscationResult(generatorOutput);
-        }
-    }], [{
-        key: 'generateCode',
-        value: function generateCode(sourceCode, astTree, options) {
-            var escodegenParams = Object.assign({}, JavaScriptObfuscatorInternal.escodegenParams);
-            if (options.sourceMap) {
-                escodegenParams.sourceMap = 'sourceMap';
-                escodegenParams.sourceContent = sourceCode;
-            }
-            escodegenParams.format = {
-                compact: options.compact
-            };
-            var generatorOutput = escodegen.generate(astTree, escodegenParams);
-            generatorOutput.map = generatorOutput.map ? generatorOutput.map.toString() : '';
-            return generatorOutput;
         }
     }]);
 
@@ -5178,7 +5178,8 @@ module.exports = require("is-equal");
 module.exports = require("mkdirp");
 
 /***/ },
-/* 107 */
+/* 107 */,
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

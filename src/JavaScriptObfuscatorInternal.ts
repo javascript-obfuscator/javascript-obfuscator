@@ -47,21 +47,20 @@ export class JavaScriptObfuscatorInternal {
     /**
      * @param sourceCode
      * @param astTree
-     * @param options
      */
-    private static generateCode (sourceCode: string, astTree: ESTree.Program, options: IOptions): IGeneratorOutput {
+    private generateCode (sourceCode: string, astTree: ESTree.Program): IGeneratorOutput {
         const escodegenParams: escodegen.GenerateOptions = Object.assign(
             {},
             JavaScriptObfuscatorInternal.escodegenParams
         );
 
-        if (options.sourceMap) {
+        if (this.options.sourceMap) {
             escodegenParams.sourceMap = 'sourceMap';
             escodegenParams.sourceContent = sourceCode;
         }
 
         escodegenParams.format = {
-            compact: options.compact
+            compact: this.options.compact
         };
 
         const generatorOutput: IGeneratorOutput = escodegen.generate(astTree, escodegenParams);
@@ -107,8 +106,7 @@ export class JavaScriptObfuscatorInternal {
         ).obfuscateAstTree(astTree);
 
         // generate code
-        const generatorOutput: IGeneratorOutput = JavaScriptObfuscatorInternal
-            .generateCode(sourceCode, obfuscatedAstTree, this.options);
+        const generatorOutput: IGeneratorOutput = this.generateCode(sourceCode, obfuscatedAstTree);
 
         return this.getObfuscationResult(generatorOutput);
     }

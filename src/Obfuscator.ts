@@ -26,6 +26,7 @@ export class Obfuscator implements IObfuscator {
      * @type {IStorage<ICustomNode>}
      */
     private readonly customNodesStorage: IStorage<ICustomNode>;
+
     /**
      * @type {IObfuscationEventEmitter}
      */

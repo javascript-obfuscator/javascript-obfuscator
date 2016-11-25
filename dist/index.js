@@ -1677,7 +1677,7 @@ var Obfuscator = function () {
             NodeUtils_1.NodeUtils.parentize(astTree);
             this.customNodesStorage.initialize(this.stackTraceAnalyzer.analyze(astTree.body));
             this.customNodesStorage.getStorage().forEach(function (customNode) {
-                _this.obfuscationEventEmitter.on(customNode.getAppendEvent(), customNode.appendNode.bind(customNode));
+                _this.obfuscationEventEmitter.once(customNode.getAppendEvent(), customNode.appendNode.bind(customNode));
             });
             this.obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation, astTree);
             if (this.options.controlFlowFlattening) {

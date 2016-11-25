@@ -77,7 +77,7 @@ export class Obfuscator implements IObfuscator {
         this.customNodesStorage
             .getStorage()
             .forEach((customNode: ICustomNode) => {
-                this.obfuscationEventEmitter.on(customNode.getAppendEvent(), customNode.appendNode.bind(customNode));
+                this.obfuscationEventEmitter.once(customNode.getAppendEvent(), customNode.appendNode.bind(customNode));
             });
 
         this.obfuscationEventEmitter.emit(ObfuscationEvents.BeforeObfuscation, astTree);

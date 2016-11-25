@@ -1,13 +1,14 @@
 import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TObfuscationEvent } from '../../types/TObfuscationEvent';
 import { TStatement } from '../../types/TStatement';
 
 import { ICustomNodeWithData } from '../../interfaces/custom-nodes/ICustomNodeWithData';
 import { IOptions } from '../../interfaces/IOptions';
 import { IStorage } from '../../interfaces/IStorage';
 
-import { AppendState } from '../../enums/AppendState';
+import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
 import { StringArrayTemplate } from '../../templates/custom-nodes/string-array-nodes/string-array-node/StringArrayTemplate';
 
@@ -22,9 +23,9 @@ export class StringArrayNode extends AbstractCustomNode implements ICustomNodeWi
     public static ARRAY_RANDOM_LENGTH: number = 4;
 
     /**
-     * @type {AppendState}
+     * @type {TObfuscationEvent}
      */
-    protected appendState: AppendState = AppendState.AfterObfuscation;
+    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.AfterObfuscation;
 
     /**
      * @type {IStorage <string>}

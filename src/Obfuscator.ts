@@ -5,13 +5,15 @@ import { TCustomNodesFactory } from './types/TCustomNodesFactory';
 import { TVisitorDirection } from './types/TVisitorDirection';
 
 import { ICustomNode } from './interfaces/custom-nodes/ICustomNode';
+import { IObfuscationEventEmitter } from './interfaces/IObfuscationEventEmitter';
 import { IObfuscator } from './interfaces/IObfuscator';
 import { IOptions } from './interfaces/IOptions';
 import { INodeTransformer } from './interfaces/INodeTransformer';
 import { INodeTransformersFactory } from './interfaces/INodeTransformersFactory';
+import { IStackTraceAnalyzer } from './interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
 import { IStackTraceData } from './interfaces/stack-trace-analyzer/IStackTraceData';
 
-import { AppendState } from './enums/AppendState';
+import { ObfuscationEvents } from './enums/ObfuscationEvents';
 import { VisitorDirection } from './enums/VisitorDirection';
 
 import { ConsoleOutputCustomNodesFactory } from './custom-nodes/console-output-nodes/factory/ConsoleOutputCustomNodesFactory';
@@ -25,6 +27,7 @@ import { StringArrayCustomNodesFactory } from './custom-nodes/string-array-nodes
 import { Node } from './node/Node';
 import { NodeUtils } from './node/NodeUtils';
 import { StackTraceAnalyzer } from './stack-trace-analyzer/StackTraceAnalyzer';
+import { ObfuscationEventEmitter } from './event-emitters/ObfuscationEventEmitter';
 
 export class Obfuscator implements IObfuscator {
     /**
@@ -65,10 +68,13 @@ export class Obfuscator implements IObfuscator {
         }
 
         NodeUtils.parentize(astTree);
-        this.initializeCustomNodes(new StackTraceAnalyzer().analyze(astTree.body));
 
-        // tasks before nodes transformation
-        this.beforeTransform(astTree);
+        const obfuscationEventEmitter: IObfuscationEventEmitter = new ObfuscationEventEmitter();
+        const stackTraceAnalyzer: IStackTraceAnalyzer = new StackTraceAnalyzer();
+
+        this.initializeCustomNodes(obfuscationEventEmitter, stackTraceAnalyzer.analyze(astTree.body));
+
+        obfuscationEventEmitter.emit(ObfuscationEvents.BeforeObfuscation, astTree);
 
         // first pass: control flow flattening
         if (this.options.controlFlowFlattening) {
@@ -84,44 +90,25 @@ export class Obfuscator implements IObfuscator {
             this.options
         ));
 
-        // tasks after nodes transformation
-        this.afterTransform(astTree);
+        obfuscationEventEmitter.emit(ObfuscationEvents.AfterObfuscation, astTree);
 
         return astTree;
     }
 
     /**
-     * @param astTree
-     */
-    private afterTransform (astTree: ESTree.Program): void {
-        this.customNodes.forEach((customNode: ICustomNode) => {
-            if (customNode.getAppendState() === AppendState.AfterObfuscation) {
-                customNode.appendNode(astTree);
-            }
-        });
-    }
-
-    /**
-     * @param astTree
-     */
-    private beforeTransform (astTree: ESTree.Program): void {
-        this.customNodes.forEach((customNode: ICustomNode) => {
-            if (customNode.getAppendState() === AppendState.BeforeObfuscation) {
-                customNode.appendNode(astTree);
-            }
-        });
-    };
-
-    /**
+     * @param obfuscationEventEmitter
      * @param stackTraceData
      */
-    private initializeCustomNodes (stackTraceData: IStackTraceData[]): void {
+    private initializeCustomNodes (obfuscationEventEmitter: IObfuscationEventEmitter, stackTraceData: IStackTraceData[]): void {
         const customNodes: [string, ICustomNode][] = [];
 
         Obfuscator.customNodesFactories.forEach((customNodesFactoryConstructor: TCustomNodesFactory) => {
             const customNodesFactory: Map <string, ICustomNode> | undefined = new customNodesFactoryConstructor(
-                stackTraceData, this.options
-            ).initializeCustomNodes();
+                this.options
+            ).initializeCustomNodes(
+                obfuscationEventEmitter,
+                stackTraceData
+            );
 
             if (!customNodesFactory) {
                 return;

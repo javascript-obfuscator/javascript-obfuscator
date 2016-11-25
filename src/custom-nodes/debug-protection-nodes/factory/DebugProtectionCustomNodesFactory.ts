@@ -1,4 +1,6 @@
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { IObfuscationEventEmitter } from '../../../interfaces/IObfuscationEventEmitter';
+import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { DebugProtectionFunctionCallNode } from '../DebugProtectionFunctionCallNode';
 import { DebugProtectionFunctionIntervalNode } from '../DebugProtectionFunctionIntervalNode';
@@ -9,9 +11,14 @@ import { Utils } from '../../../Utils';
 
 export class DebugProtectionCustomNodesFactory extends AbstractCustomNodesFactory {
     /**
-     * @returns {Map<string, ICustomNode> | undefined}
+     * @param obfuscationEventEmitter
+     * @param stackTraceData
+     * @returns {Map<string, ICustomNode>}
      */
-    public initializeCustomNodes (): Map <string, ICustomNode> | undefined {
+    public initializeCustomNodes (
+        obfuscationEventEmitter: IObfuscationEventEmitter,
+        stackTraceData: IStackTraceData[]
+    ): Map <string, ICustomNode> | undefined {
         if (!this.options.debugProtection) {
             return;
         }
@@ -35,6 +42,6 @@ export class DebugProtectionCustomNodesFactory extends AbstractCustomNodesFactor
             );
         }
 
-        return this.syncCustomNodesWithNodesFactory(customNodes);
+        return this.syncCustomNodesWithNodesFactory(obfuscationEventEmitter, customNodes);
     }
 }

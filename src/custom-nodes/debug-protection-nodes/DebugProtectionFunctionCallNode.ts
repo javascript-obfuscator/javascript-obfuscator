@@ -1,10 +1,11 @@
 import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TObfuscationEvent } from '../../types/TObfuscationEvent';
 
 import { IOptions } from '../../interfaces/IOptions';
 
-import { AppendState } from '../../enums/AppendState';
+import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
 import { DebugProtectionFunctionCallTemplate } from '../../templates/custom-nodes/debug-protection-nodes/debug-protection-function-call-node/DebufProtectionFunctionCallTemplate';
 
@@ -13,9 +14,9 @@ import { NodeAppender } from '../../node/NodeAppender';
 
 export class DebugProtectionFunctionCallNode extends AbstractCustomNode {
     /**
-     * @type {AppendState}
+     * @type {TObfuscationEvent}
      */
-    protected appendState: AppendState = AppendState.BeforeObfuscation;
+    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.BeforeObfuscation;
 
     /**
      * @type {string}

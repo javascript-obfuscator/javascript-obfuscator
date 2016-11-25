@@ -1,6 +1,10 @@
-import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { TObfuscationEvent } from '../../../types/TObfuscationEvent';
 
-import { AppendState } from '../../../enums/AppendState';
+import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { IObfuscationEventEmitter } from '../../../interfaces/IObfuscationEventEmitter';
+import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStackTraceData';
+
+import { ObfuscationEvents } from '../../../enums/ObfuscationEvents';
 
 import { NodeCallsControllerFunctionNode } from '../../node-calls-controller-nodes/NodeCallsControllerFunctionNode';
 import { SelfDefendingUnicodeNode } from '../SelfDefendingUnicodeNode';
@@ -11,26 +15,31 @@ import { Utils } from '../../../Utils';
 
 export class SelfDefendingCustomNodesFactory extends AbstractCustomNodesFactory {
     /**
-     * @type {AppendState}
+     * @type {TObfuscationEvent}
      */
-    protected appendState: AppendState = AppendState.AfterObfuscation;
+    protected appendEvent: TObfuscationEvent = ObfuscationEvents.AfterObfuscation;
 
     /**
-     * @returns {Map<string, ICustomNode> | undefined}
+     * @param obfuscationEventEmitter
+     * @param stackTraceData
+     * @returns {Map<string, ICustomNode>}
      */
-    public initializeCustomNodes (): Map <string, ICustomNode> | undefined {
+    public initializeCustomNodes (
+        obfuscationEventEmitter: IObfuscationEventEmitter,
+        stackTraceData: IStackTraceData[]
+    ): Map <string, ICustomNode> | undefined {
         if (!this.options.selfDefending) {
             return;
         }
 
         const callsControllerFunctionName: string = Utils.getRandomVariableName();
-        const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
+        const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(stackTraceData.length);
 
-        return this.syncCustomNodesWithNodesFactory(new Map <string, ICustomNode> ([
+        return this.syncCustomNodesWithNodesFactory(obfuscationEventEmitter, new Map <string, ICustomNode> ([
             [
                 'selfDefendingUnicodeNode',
                 new SelfDefendingUnicodeNode(
-                    this.stackTraceData,
+                    stackTraceData,
                     callsControllerFunctionName,
                     randomStackTraceIndex,
                     this.options
@@ -39,7 +48,7 @@ export class SelfDefendingCustomNodesFactory extends AbstractCustomNodesFactory 
             [
                 'SelfDefendingNodeCallsControllerFunctionNode',
                 new NodeCallsControllerFunctionNode(
-                    this.stackTraceData,
+                    stackTraceData,
                     callsControllerFunctionName,
                     randomStackTraceIndex,
                     this.options

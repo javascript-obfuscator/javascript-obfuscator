@@ -1,11 +1,12 @@
 import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TObfuscationEvent } from '../../types/TObfuscationEvent';
 
 import { IOptions } from '../../interfaces/IOptions';
 import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
 
-import { AppendState } from '../../enums/AppendState';
+import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
 import { ConsoleOutputDisableExpressionTemplate } from '../../templates/custom-nodes/console-output-nodes/console-output-disable-expression-node/ConsoleOutputDisableExpressionTemplate';
 
@@ -15,9 +16,9 @@ import { Utils } from '../../Utils';
 
 export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
     /**
-     * @type {AppendState}
+     * @type {TObfuscationEvent}
      */
-    protected appendState: AppendState = AppendState.BeforeObfuscation;
+    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.BeforeObfuscation;
 
     /**
      * @type {string}

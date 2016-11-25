@@ -1,11 +1,12 @@
 import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TObfuscationEvent } from '../../types/TObfuscationEvent';
 
 import { IOptions } from '../../interfaces/IOptions';
 import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
 
-import { AppendState } from '../../enums/AppendState';
+import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
 import { DomainLockNodeTemplate } from '../../templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
 
@@ -15,9 +16,9 @@ import { Utils } from '../../Utils';
 
 export class DomainLockNode extends AbstractCustomNode {
     /**
-     * @type {AppendState}
+     * @type {TObfuscationEvent}
      */
-    protected appendState: AppendState = AppendState.BeforeObfuscation;
+    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.BeforeObfuscation;
 
     /**
      * @type {string}

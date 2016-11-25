@@ -1,12 +1,13 @@
 import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TObfuscationEvent } from '../../types/TObfuscationEvent';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/IOptions';
 import { IStorage } from '../../interfaces/IStorage';
 
-import { AppendState } from '../../enums/AppendState';
+import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
 import { ControlFlowStorageTemplate } from '../../templates/custom-nodes/control-flow-storage-nodes/ControlFlowStorageTemplate';
 
@@ -15,9 +16,9 @@ import { NodeAppender } from '../../node/NodeAppender';
 
 export class ControlFlowStorageNode extends AbstractCustomNode {
     /**
-     * @type {AppendState}
+     * @type {TObfuscationEvent}
      */
-    protected appendState: AppendState = AppendState.AfterObfuscation;
+    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.AfterObfuscation;
 
     /**
      * @type {IStorage <ICustomNode>}

@@ -1,6 +1,10 @@
-import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { TObfuscationEvent } from '../../../types/TObfuscationEvent';
 
-import { AppendState } from '../../../enums/AppendState';
+import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { IObfuscationEventEmitter } from '../../../interfaces/IObfuscationEventEmitter';
+import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStackTraceData';
+
+import { ObfuscationEvents } from '../../../enums/ObfuscationEvents';
 
 import { StringArrayCallsWrapper } from '../StringArrayCallsWrapper';
 import { StringArrayNode } from '../StringArrayNode';
@@ -13,9 +17,9 @@ import { IStorage } from '../../../interfaces/IStorage';
 
 export class StringArrayCustomNodesFactory extends AbstractCustomNodesFactory {
     /**
-     * @type {AppendState}
+     * @type {TObfuscationEvent}
      */
-    protected appendState: AppendState = AppendState.AfterObfuscation;
+    protected appendEvent: TObfuscationEvent = ObfuscationEvents.AfterObfuscation;
 
     /**
      * @type {string}
@@ -33,9 +37,14 @@ export class StringArrayCustomNodesFactory extends AbstractCustomNodesFactory {
     private stringArrayRotateValue: number;
 
     /**
-     * @returns {Map<string, ICustomNode> | undefined}
+     * @param obfuscationEventEmitter
+     * @param stackTraceData
+     * @returns {Map<string, ICustomNode>}
      */
-    public initializeCustomNodes (): Map <string, ICustomNode> | undefined {
+    public initializeCustomNodes (
+        obfuscationEventEmitter: IObfuscationEventEmitter,
+        stackTraceData: IStackTraceData[]
+    ): Map <string, ICustomNode> | undefined {
         if (!this.options.stringArray) {
             return;
         }
@@ -80,6 +89,6 @@ export class StringArrayCustomNodesFactory extends AbstractCustomNodesFactory {
             );
         }
 
-        return this.syncCustomNodesWithNodesFactory(customNodes);
+        return this.syncCustomNodesWithNodesFactory(obfuscationEventEmitter, customNodes);
     }
 }

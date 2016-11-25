@@ -1,17 +1,18 @@
 import * as ESTree from 'estree';
 
+import { TObfuscationEvent } from '../types/TObfuscationEvent';
+
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../interfaces/IOptions';
 import { TStatement } from '../types/TStatement';
 
-import { AppendState } from '../enums/AppendState';
 import { NodeUtils } from '../node/NodeUtils';
 
 export abstract class AbstractCustomNode implements ICustomNode {
     /**
-     * @type {AppendState}
+     * @type {TObfuscationEvent}
      */
-    protected abstract appendState: AppendState;
+    protected abstract appendEvent: TObfuscationEvent;
 
     /**
      * @type {IOptions}
@@ -31,10 +32,10 @@ export abstract class AbstractCustomNode implements ICustomNode {
     public abstract appendNode (astTree: ESTree.Node): void;
 
     /**
-     * @returns {AppendState}
+     * @returns {TObfuscationEvent}
      */
-    public getAppendState (): AppendState {
-        return this.appendState;
+    public getAppendEvent (): TObfuscationEvent {
+        return this.appendEvent;
     }
 
     /**
@@ -50,10 +51,10 @@ export abstract class AbstractCustomNode implements ICustomNode {
     }
 
     /**
-     * @param appendState
+     * @param appendEvent
      */
-    public setAppendState (appendState: AppendState): void {
-        this.appendState = appendState;
+    public setAppendEvent (appendEvent: TObfuscationEvent): void {
+        this.appendEvent = appendEvent;
     }
 
     /**

@@ -1,8 +1,7 @@
 import * as ESTree from 'estree';
 
+import { TObfuscationEvent } from '../../types/TObfuscationEvent';
 import { TStatement } from '../../types/TStatement';
-
-import { AppendState } from '../../enums/AppendState';
 
 export interface ICustomNode {
     /**
@@ -11,9 +10,9 @@ export interface ICustomNode {
     appendNode (astTree: ESTree.Node): void;
 
     /**
-     * @returns {AppendState}
+     * @returns {TObfuscationEvent}
      */
-    getAppendState (): AppendState;
+    getAppendEvent (): TObfuscationEvent;
 
     /**
      * @returns {string}
@@ -28,5 +27,5 @@ export interface ICustomNode {
     /**
      * @param appendState
      */
-    setAppendState (appendState: AppendState): void;
+    setAppendEvent (appendState: TObfuscationEvent): void;
 }

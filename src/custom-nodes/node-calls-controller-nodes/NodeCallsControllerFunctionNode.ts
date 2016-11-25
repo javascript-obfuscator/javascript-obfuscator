@@ -1,11 +1,12 @@
 import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TObfuscationEvent } from '../../types/TObfuscationEvent';
 
 import { IOptions } from '../../interfaces/IOptions';
 import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
 
-import { AppendState } from '../../enums/AppendState';
+import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
 import { SingleNodeCallControllerTemplate } from '../../templates/custom-nodes/SingleNodeCallControllerTemplate';
 
@@ -17,9 +18,9 @@ import { NodeAppender } from '../../node/NodeAppender';
 
 export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     /**
-     * @type {AppendState}
+     * @type {TObfuscationEvent}
      */
-    protected appendState: AppendState = AppendState.BeforeObfuscation;
+    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.BeforeObfuscation;
 
     /**
      * @type {string}
@@ -75,7 +76,7 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
      * @returns {string}
      */
     public getCode (): string {
-        if (this.appendState === AppendState.AfterObfuscation) {
+        if (this.appendEvent === ObfuscationEvents.AfterObfuscation) {
             return JavaScriptObfuscator.obfuscate(
                 format(SingleNodeCallControllerTemplate(), {
                     singleNodeCallControllerFunctionName: this.callsControllerFunctionName

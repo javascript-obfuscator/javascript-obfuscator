@@ -1,13 +1,14 @@
 import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TObfuscationEvent } from '../../types/TObfuscationEvent';
 import { TStatement } from '../../types/TStatement';
 
 import { ICustomNodeWithIdentifier } from '../../interfaces/custom-nodes/ICustomNodeWithIdentifier';
 import { IOptions } from '../../interfaces/IOptions';
 import { IStorage } from '../../interfaces/IStorage';
 
-import { AppendState } from '../../enums/AppendState';
+import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
@@ -25,9 +26,9 @@ import { NodeAppender } from '../../node/NodeAppender';
 
 export class StringArrayCallsWrapper extends AbstractCustomNode implements ICustomNodeWithIdentifier {
     /**
-     * @type {AppendState}
+     * @type {TObfuscationEvent}
      */
-    protected appendState: AppendState = AppendState.AfterObfuscation;
+    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.AfterObfuscation;
 
     /**
      * @type {IStorage <string>}

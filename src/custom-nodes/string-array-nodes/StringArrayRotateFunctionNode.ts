@@ -1,11 +1,12 @@
 import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TObfuscationEvent } from '../../types/TObfuscationEvent';
 
 import { IOptions } from '../../interfaces/IOptions';
 import { IStorage } from '../../interfaces/IStorage';
 
-import { AppendState } from '../../enums/AppendState';
+import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
 
@@ -19,9 +20,9 @@ import { Utils } from '../../Utils';
 
 export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     /**
-     * @type {AppendState}
+     * @type {TObfuscationEvent}
      */
-    protected appendState: AppendState = AppendState.AfterObfuscation;
+    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.AfterObfuscation;
 
     /**
      * @type {IStorage <string>}

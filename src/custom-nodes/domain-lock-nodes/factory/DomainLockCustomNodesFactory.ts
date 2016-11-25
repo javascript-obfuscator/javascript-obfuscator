@@ -1,4 +1,6 @@
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { IObfuscationEventEmitter } from '../../../interfaces/IObfuscationEventEmitter';
+import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { DomainLockNode } from '../DomainLockNode';
 import { NodeCallsControllerFunctionNode } from '../../node-calls-controller-nodes/NodeCallsControllerFunctionNode';
@@ -9,21 +11,26 @@ import { Utils } from '../../../Utils';
 
 export class DomainLockCustomNodesFactory extends AbstractCustomNodesFactory {
     /**
-     * @returns {Map<string, ICustomNode> | undefined}
+     * @param obfuscationEventEmitter
+     * @param stackTraceData
+     * @returns {Map<string, ICustomNode>}
      */
-    public initializeCustomNodes (): Map <string, ICustomNode> | undefined {
+    public initializeCustomNodes (
+        obfuscationEventEmitter: IObfuscationEventEmitter,
+        stackTraceData: IStackTraceData[]
+    ): Map <string, ICustomNode> | undefined {
         if (!this.options.domainLock.length) {
             return;
         }
 
         const callsControllerFunctionName: string = Utils.getRandomVariableName();
-        const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
+        const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(stackTraceData.length);
 
-        return this.syncCustomNodesWithNodesFactory(new Map <string, ICustomNode> ([
+        return this.syncCustomNodesWithNodesFactory(obfuscationEventEmitter, new Map <string, ICustomNode> ([
             [
                 'DomainLockNode',
                 new DomainLockNode(
-                    this.stackTraceData,
+                    stackTraceData,
                     callsControllerFunctionName,
                     randomStackTraceIndex,
                     this.options
@@ -32,7 +39,7 @@ export class DomainLockCustomNodesFactory extends AbstractCustomNodesFactory {
             [
                 'DomainLockNodeCallsControllerFunctionNode',
                 new NodeCallsControllerFunctionNode(
-                    this.stackTraceData,
+                    stackTraceData,
                     callsControllerFunctionName,
                     randomStackTraceIndex,
                     this.options

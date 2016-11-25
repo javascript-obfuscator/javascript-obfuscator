@@ -347,19 +347,7 @@ Utils.randomGenerator = new chance_1.Chance();
 exports.Utils = Utils;
 
 /***/ },
-/* 1 */
-/***/ function(module, exports) {
-
-"use strict";
-"use strict";
-
-(function (AppendState) {
-    AppendState[AppendState["AfterObfuscation"] = 0] = "AfterObfuscation";
-    AppendState[AppendState["BeforeObfuscation"] = 1] = "BeforeObfuscation";
-})(exports.AppendState || (exports.AppendState = {}));
-var AppendState = exports.AppendState;
-
-/***/ },
+/* 1 */,
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -653,9 +641,9 @@ var AbstractCustomNode = function () {
     }
 
     _createClass(AbstractCustomNode, [{
-        key: "getAppendState",
-        value: function getAppendState() {
-            return this.appendState;
+        key: "getAppendEvent",
+        value: function getAppendEvent() {
+            return this.appendEvent;
         }
     }, {
         key: "getNode",
@@ -663,9 +651,9 @@ var AbstractCustomNode = function () {
             return this.getNodeStructure();
         }
     }, {
-        key: "setAppendState",
-        value: function setAppendState(appendState) {
-            this.appendState = appendState;
+        key: "setAppendEvent",
+        value: function setAppendEvent(appendEvent) {
+            this.appendEvent = appendEvent;
         }
     }, {
         key: "getNodeStructure",
@@ -953,24 +941,24 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var AppendState_1 = __webpack_require__(1);
+var ObfuscationEvents_1 = __webpack_require__(107);
 
 var AbstractCustomNodesFactory = function () {
-    function AbstractCustomNodesFactory(stackTraceData, options) {
+    function AbstractCustomNodesFactory(options) {
         _classCallCheck(this, AbstractCustomNodesFactory);
 
-        this.appendState = AppendState_1.AppendState.BeforeObfuscation;
-        this.stackTraceData = stackTraceData;
+        this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation;
         this.options = options;
     }
 
     _createClass(AbstractCustomNodesFactory, [{
         key: "syncCustomNodesWithNodesFactory",
-        value: function syncCustomNodesWithNodesFactory(customNodes) {
+        value: function syncCustomNodesWithNodesFactory(obfuscationEventEmitter, customNodes) {
             var _this = this;
 
             customNodes.forEach(function (node) {
-                node.setAppendState(_this.appendState);
+                node.setAppendEvent(_this.appendEvent);
+                obfuscationEventEmitter.on(node.getAppendEvent(), node.appendNode.bind(node));
             });
             return customNodes;
         }
@@ -1116,7 +1104,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var format = __webpack_require__(7);
-var AppendState_1 = __webpack_require__(1);
+var ObfuscationEvents_1 = __webpack_require__(107);
 var SingleNodeCallControllerTemplate_1 = __webpack_require__(80);
 var NoCustomNodesPreset_1 = __webpack_require__(16);
 var AbstractCustomNode_1 = __webpack_require__(5);
@@ -1131,7 +1119,7 @@ var NodeCallsControllerFunctionNode = function (_AbstractCustomNode_) {
 
         var _this = _possibleConstructorReturn(this, (NodeCallsControllerFunctionNode.__proto__ || Object.getPrototypeOf(NodeCallsControllerFunctionNode)).call(this, options));
 
-        _this.appendState = AppendState_1.AppendState.BeforeObfuscation;
+        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation;
         _this.stackTraceData = stackTraceData;
         _this.callsControllerFunctionName = callsControllerFunctionName;
         _this.randomStackTraceIndex = randomStackTraceIndex;
@@ -1152,7 +1140,7 @@ var NodeCallsControllerFunctionNode = function (_AbstractCustomNode_) {
     }, {
         key: 'getCode',
         value: function getCode() {
-            if (this.appendState === AppendState_1.AppendState.AfterObfuscation) {
+            if (this.appendEvent === ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation) {
                 return JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(format(SingleNodeCallControllerTemplate_1.SingleNodeCallControllerTemplate(), {
                     singleNodeCallControllerFunctionName: this.callsControllerFunctionName
                 }), Object.assign({}, NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET, {
@@ -1596,7 +1584,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var estraverse = __webpack_require__(4);
-var AppendState_1 = __webpack_require__(1);
+var ObfuscationEvents_1 = __webpack_require__(107);
 var VisitorDirection_1 = __webpack_require__(51);
 var ConsoleOutputCustomNodesFactory_1 = __webpack_require__(35);
 var DebugProtectionCustomNodesFactory_1 = __webpack_require__(42);
@@ -1608,6 +1596,7 @@ var StringArrayCustomNodesFactory_1 = __webpack_require__(50);
 var Node_1 = __webpack_require__(2);
 var NodeUtils_1 = __webpack_require__(8);
 var StackTraceAnalyzer_1 = __webpack_require__(70);
+var ObfuscationEventEmitter_1 = __webpack_require__(108);
 
 var Obfuscator = function () {
     function Obfuscator(options) {
@@ -1623,41 +1612,25 @@ var Obfuscator = function () {
                 return astTree;
             }
             NodeUtils_1.NodeUtils.parentize(astTree);
-            this.initializeCustomNodes(new StackTraceAnalyzer_1.StackTraceAnalyzer().analyze(astTree.body));
-            this.beforeTransform(astTree);
+            var obfuscationEventEmitter = new ObfuscationEventEmitter_1.ObfuscationEventEmitter();
+            var stackTraceAnalyzer = new StackTraceAnalyzer_1.StackTraceAnalyzer();
+            this.initializeCustomNodes(obfuscationEventEmitter, stackTraceAnalyzer.analyze(astTree.body));
+            obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation, astTree);
             if (this.options.controlFlowFlattening) {
                 this.transformAstTree(astTree, VisitorDirection_1.VisitorDirection.leave, new NodeControlFlowTransformersFactory_1.NodeControlFlowTransformersFactory(this.customNodes, this.options));
             }
             this.transformAstTree(astTree, VisitorDirection_1.VisitorDirection.enter, new NodeObfuscatorsFactory_1.NodeObfuscatorsFactory(this.customNodes, this.options));
-            this.afterTransform(astTree);
+            obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation, astTree);
             return astTree;
         }
     }, {
-        key: 'afterTransform',
-        value: function afterTransform(astTree) {
-            this.customNodes.forEach(function (customNode) {
-                if (customNode.getAppendState() === AppendState_1.AppendState.AfterObfuscation) {
-                    customNode.appendNode(astTree);
-                }
-            });
-        }
-    }, {
-        key: 'beforeTransform',
-        value: function beforeTransform(astTree) {
-            this.customNodes.forEach(function (customNode) {
-                if (customNode.getAppendState() === AppendState_1.AppendState.BeforeObfuscation) {
-                    customNode.appendNode(astTree);
-                }
-            });
-        }
-    }, {
         key: 'initializeCustomNodes',
-        value: function initializeCustomNodes(stackTraceData) {
+        value: function initializeCustomNodes(obfuscationEventEmitter, stackTraceData) {
             var _this = this;
 
             var customNodes = [];
             Obfuscator.customNodesFactories.forEach(function (customNodesFactoryConstructor) {
-                var customNodesFactory = new customNodesFactoryConstructor(stackTraceData, _this.options).initializeCustomNodes();
+                var customNodesFactory = new customNodesFactoryConstructor(_this.options).initializeCustomNodes(obfuscationEventEmitter, stackTraceData);
                 if (!customNodesFactory) {
                     return;
                 }
@@ -1997,7 +1970,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var format = __webpack_require__(7);
-var AppendState_1 = __webpack_require__(1);
+var ObfuscationEvents_1 = __webpack_require__(107);
 var ConsoleOutputDisableExpressionTemplate_1 = __webpack_require__(81);
 var AbstractCustomNode_1 = __webpack_require__(5);
 var NodeAppender_1 = __webpack_require__(3);
@@ -2011,7 +1984,7 @@ var ConsoleOutputDisableExpressionNode = function (_AbstractCustomNode_) {
 
         var _this = _possibleConstructorReturn(this, (ConsoleOutputDisableExpressionNode.__proto__ || Object.getPrototypeOf(ConsoleOutputDisableExpressionNode)).call(this, options));
 
-        _this.appendState = AppendState_1.AppendState.BeforeObfuscation;
+        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation;
         _this.stackTraceData = stackTraceData;
         _this.callsControllerFunctionName = callsControllerFunctionName;
         _this.randomStackTraceIndex = randomStackTraceIndex;
@@ -2070,13 +2043,13 @@ var ConsoleOutputCustomNodesFactory = function (_AbstractCustomNodesF) {
 
     _createClass(ConsoleOutputCustomNodesFactory, [{
         key: 'initializeCustomNodes',
-        value: function initializeCustomNodes() {
+        value: function initializeCustomNodes(obfuscationEventEmitter, stackTraceData) {
             if (!this.options.disableConsoleOutput) {
                 return;
             }
             var callsControllerFunctionName = Utils_1.Utils.getRandomVariableName();
-            var randomStackTraceIndex = NodeAppender_1.NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
-            return this.syncCustomNodesWithNodesFactory(new Map([['consoleOutputDisableExpressionNode', new ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['ConsoleOutputNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
+            var randomStackTraceIndex = NodeAppender_1.NodeAppender.getRandomStackTraceIndex(stackTraceData.length);
+            return this.syncCustomNodesWithNodesFactory(obfuscationEventEmitter, new Map([['consoleOutputDisableExpressionNode', new ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode(stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['ConsoleOutputNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
         }
     }]);
 
@@ -2101,7 +2074,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var format = __webpack_require__(7);
-var AppendState_1 = __webpack_require__(1);
+var ObfuscationEvents_1 = __webpack_require__(107);
 var BinaryExpressionFunctionTemplate_1 = __webpack_require__(82);
 var AbstractCustomNode_1 = __webpack_require__(5);
 var Utils_1 = __webpack_require__(0);
@@ -2114,7 +2087,7 @@ var BinaryExpressionFunctionNode = function (_AbstractCustomNode_) {
 
         var _this = _possibleConstructorReturn(this, (BinaryExpressionFunctionNode.__proto__ || Object.getPrototypeOf(BinaryExpressionFunctionNode)).call(this, options));
 
-        _this.appendState = AppendState_1.AppendState.BeforeObfuscation;
+        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation;
         _this.operator = operator;
         return _this;
     }
@@ -2153,7 +2126,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var format = __webpack_require__(7);
-var AppendState_1 = __webpack_require__(1);
+var ObfuscationEvents_1 = __webpack_require__(107);
 var ControlFlowStorageCallTemplate_1 = __webpack_require__(83);
 var AbstractCustomNode_1 = __webpack_require__(5);
 var NodeAppender_1 = __webpack_require__(3);
@@ -2166,7 +2139,7 @@ var ControlFlowStorageCallNode = function (_AbstractCustomNode_) {
 
         var _this = _possibleConstructorReturn(this, (ControlFlowStorageCallNode.__proto__ || Object.getPrototypeOf(ControlFlowStorageCallNode)).call(this, options));
 
-        _this.appendState = AppendState_1.AppendState.AfterObfuscation;
+        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation;
         _this.controlFlowStorageName = controlFlowStorageName;
         _this.controlFlowStorageKey = controlFlowStorageKey;
         _this.leftValue = leftValue;
@@ -2212,7 +2185,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var format = __webpack_require__(7);
-var AppendState_1 = __webpack_require__(1);
+var ObfuscationEvents_1 = __webpack_require__(107);
 var ControlFlowStorageTemplate_1 = __webpack_require__(84);
 var AbstractCustomNode_1 = __webpack_require__(5);
 var NodeAppender_1 = __webpack_require__(3);
@@ -2225,7 +2198,7 @@ var ControlFlowStorageNode = function (_AbstractCustomNode_) {
 
         var _this = _possibleConstructorReturn(this, (ControlFlowStorageNode.__proto__ || Object.getPrototypeOf(ControlFlowStorageNode)).call(this, options));
 
-        _this.appendState = AppendState_1.AppendState.AfterObfuscation;
+        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation;
         _this.controlFlowStorage = controlFlowStorage;
         _this.controlFlowStorageName = controlFlowStorageName;
         return _this;
@@ -2267,7 +2240,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var format = __webpack_require__(7);
-var AppendState_1 = __webpack_require__(1);
+var ObfuscationEvents_1 = __webpack_require__(107);
 var DebufProtectionFunctionCallTemplate_1 = __webpack_require__(85);
 var AbstractCustomNode_1 = __webpack_require__(5);
 var NodeAppender_1 = __webpack_require__(3);
@@ -2280,7 +2253,7 @@ var DebugProtectionFunctionCallNode = function (_AbstractCustomNode_) {
 
         var _this = _possibleConstructorReturn(this, (DebugProtectionFunctionCallNode.__proto__ || Object.getPrototypeOf(DebugProtectionFunctionCallNode)).call(this, options));
 
-        _this.appendState = AppendState_1.AppendState.BeforeObfuscation;
+        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation;
         _this.debugProtectionFunctionName = debugProtectionFunctionName;
         return _this;
     }
@@ -2320,7 +2293,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var format = __webpack_require__(7);
-var AppendState_1 = __webpack_require__(1);
+var ObfuscationEvents_1 = __webpack_require__(107);
 var DebugProtectionFunctionIntervalTemplate_1 = __webpack_require__(86);
 var AbstractCustomNode_1 = __webpack_require__(5);
 var NodeAppender_1 = __webpack_require__(3);
@@ -2333,7 +2306,7 @@ var DebugProtectionFunctionIntervalNode = function (_AbstractCustomNode_) {
 
         var _this = _possibleConstructorReturn(this, (DebugProtectionFunctionIntervalNode.__proto__ || Object.getPrototypeOf(DebugProtectionFunctionIntervalNode)).call(this, options));
 
-        _this.appendState = AppendState_1.AppendState.BeforeObfuscation;
+        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation;
         _this.debugProtectionFunctionName = debugProtectionFunctionName;
         return _this;
     }
@@ -2373,7 +2346,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var format = __webpack_require__(7);
-var AppendState_1 = __webpack_require__(1);
+var ObfuscationEvents_1 = __webpack_require__(107);
 var DebugProtectionFunctionTemplate_1 = __webpack_require__(87);
 var AbstractCustomNode_1 = __webpack_require__(5);
 var NodeAppender_1 = __webpack_require__(3);
@@ -2387,7 +2360,7 @@ var DebugProtectionFunctionNode = function (_AbstractCustomNode_) {
 
         var _this = _possibleConstructorReturn(this, (DebugProtectionFunctionNode.__proto__ || Object.getPrototypeOf(DebugProtectionFunctionNode)).call(this, options));
 
-        _this.appendState = AppendState_1.AppendState.BeforeObfuscation;
+        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation;
         _this.debugProtectionFunctionName = debugProtectionFunctionName;
         return _this;
     }
@@ -2445,7 +2418,7 @@ var DebugProtectionCustomNodesFactory = function (_AbstractCustomNodesF) {
 
     _createClass(DebugProtectionCustomNodesFactory, [{
         key: 'initializeCustomNodes',
-        value: function initializeCustomNodes() {
+        value: function initializeCustomNodes(obfuscationEventEmitter, stackTraceData) {
             if (!this.options.debugProtection) {
                 return;
             }
@@ -2454,7 +2427,7 @@ var DebugProtectionCustomNodesFactory = function (_AbstractCustomNodesF) {
             if (this.options.debugProtectionInterval) {
                 customNodes.set('debugProtectionFunctionIntervalNode', new DebugProtectionFunctionIntervalNode_1.DebugProtectionFunctionIntervalNode(debugProtectionFunctionName, this.options));
             }
-            return this.syncCustomNodesWithNodesFactory(customNodes);
+            return this.syncCustomNodesWithNodesFactory(obfuscationEventEmitter, customNodes);
         }
     }]);
 
@@ -2481,7 +2454,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var format = __webpack_require__(7);
-var AppendState_1 = __webpack_require__(1);
+var ObfuscationEvents_1 = __webpack_require__(107);
 var DomainLockNodeTemplate_1 = __webpack_require__(88);
 var AbstractCustomNode_1 = __webpack_require__(5);
 var NodeAppender_1 = __webpack_require__(3);
@@ -2495,7 +2468,7 @@ var DomainLockNode = function (_AbstractCustomNode_) {
 
         var _this = _possibleConstructorReturn(this, (DomainLockNode.__proto__ || Object.getPrototypeOf(DomainLockNode)).call(this, options));
 
-        _this.appendState = AppendState_1.AppendState.BeforeObfuscation;
+        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation;
         _this.stackTraceData = stackTraceData;
         _this.callsControllerFunctionName = callsControllerFunctionName;
         _this.randomStackTraceIndex = randomStackTraceIndex;
@@ -2561,13 +2534,13 @@ var DomainLockCustomNodesFactory = function (_AbstractCustomNodesF) {
 
     _createClass(DomainLockCustomNodesFactory, [{
         key: 'initializeCustomNodes',
-        value: function initializeCustomNodes() {
+        value: function initializeCustomNodes(obfuscationEventEmitter, stackTraceData) {
             if (!this.options.domainLock.length) {
                 return;
             }
             var callsControllerFunctionName = Utils_1.Utils.getRandomVariableName();
-            var randomStackTraceIndex = NodeAppender_1.NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
-            return this.syncCustomNodesWithNodesFactory(new Map([['DomainLockNode', new DomainLockNode_1.DomainLockNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['DomainLockNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
+            var randomStackTraceIndex = NodeAppender_1.NodeAppender.getRandomStackTraceIndex(stackTraceData.length);
+            return this.syncCustomNodesWithNodesFactory(obfuscationEventEmitter, new Map([['DomainLockNode', new DomainLockNode_1.DomainLockNode(stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['DomainLockNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
         }
     }]);
 
@@ -2592,7 +2565,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var format = __webpack_require__(7);
-var AppendState_1 = __webpack_require__(1);
+var ObfuscationEvents_1 = __webpack_require__(107);
 var NoCustomNodesPreset_1 = __webpack_require__(16);
 var SelfDefendingTemplate_1 = __webpack_require__(89);
 var AbstractCustomNode_1 = __webpack_require__(5);
@@ -2608,7 +2581,7 @@ var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
 
         var _this = _possibleConstructorReturn(this, (SelfDefendingUnicodeNode.__proto__ || Object.getPrototypeOf(SelfDefendingUnicodeNode)).call(this, options));
 
-        _this.appendState = AppendState_1.AppendState.AfterObfuscation;
+        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation;
         _this.stackTraceData = stackTraceData;
         _this.callsControllerFunctionName = callsControllerFunctionName;
         _this.randomStackTraceIndex = randomStackTraceIndex;
@@ -2652,7 +2625,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var AppendState_1 = __webpack_require__(1);
+var ObfuscationEvents_1 = __webpack_require__(107);
 var NodeCallsControllerFunctionNode_1 = __webpack_require__(17);
 var SelfDefendingUnicodeNode_1 = __webpack_require__(45);
 var AbstractCustomNodesFactory_1 = __webpack_require__(12);
@@ -2667,19 +2640,19 @@ var SelfDefendingCustomNodesFactory = function (_AbstractCustomNodesF) {
 
         var _this = _possibleConstructorReturn(this, (SelfDefendingCustomNodesFactory.__proto__ || Object.getPrototypeOf(SelfDefendingCustomNodesFactory)).apply(this, arguments));
 
-        _this.appendState = AppendState_1.AppendState.AfterObfuscation;
+        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation;
         return _this;
     }
 
     _createClass(SelfDefendingCustomNodesFactory, [{
         key: 'initializeCustomNodes',
-        value: function initializeCustomNodes() {
+        value: function initializeCustomNodes(obfuscationEventEmitter, stackTraceData) {
             if (!this.options.selfDefending) {
                 return;
             }
             var callsControllerFunctionName = Utils_1.Utils.getRandomVariableName();
-            var randomStackTraceIndex = NodeAppender_1.NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
-            return this.syncCustomNodesWithNodesFactory(new Map([['selfDefendingUnicodeNode', new SelfDefendingUnicodeNode_1.SelfDefendingUnicodeNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['SelfDefendingNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
+            var randomStackTraceIndex = NodeAppender_1.NodeAppender.getRandomStackTraceIndex(stackTraceData.length);
+            return this.syncCustomNodesWithNodesFactory(obfuscationEventEmitter, new Map([['selfDefendingUnicodeNode', new SelfDefendingUnicodeNode_1.SelfDefendingUnicodeNode(stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['SelfDefendingNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
         }
     }]);
 
@@ -2706,7 +2679,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var format = __webpack_require__(7);
-var AppendState_1 = __webpack_require__(1);
+var ObfuscationEvents_1 = __webpack_require__(107);
 var StringArrayEncoding_1 = __webpack_require__(18);
 var NoCustomNodesPreset_1 = __webpack_require__(16);
 var AtobTemplate_1 = __webpack_require__(78);
@@ -2727,7 +2700,7 @@ var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
 
         var _this = _possibleConstructorReturn(this, (StringArrayCallsWrapper.__proto__ || Object.getPrototypeOf(StringArrayCallsWrapper)).call(this, options));
 
-        _this.appendState = AppendState_1.AppendState.AfterObfuscation;
+        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation;
         _this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
         _this.stringArrayName = stringArrayName;
         _this.stringArray = stringArray;
@@ -2819,7 +2792,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var format = __webpack_require__(7);
-var AppendState_1 = __webpack_require__(1);
+var ObfuscationEvents_1 = __webpack_require__(107);
 var StringArrayTemplate_1 = __webpack_require__(94);
 var AbstractCustomNode_1 = __webpack_require__(5);
 var NodeAppender_1 = __webpack_require__(3);
@@ -2835,7 +2808,7 @@ var StringArrayNode = function (_AbstractCustomNode_) {
 
         var _this = _possibleConstructorReturn(this, (StringArrayNode.__proto__ || Object.getPrototypeOf(StringArrayNode)).call(this, options));
 
-        _this.appendState = AppendState_1.AppendState.AfterObfuscation;
+        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation;
         _this.stringArray = stringArray;
         _this.stringArrayName = stringArrayName;
         _this.stringArrayRotateValue = stringArrayRotateValue;
@@ -2893,7 +2866,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var format = __webpack_require__(7);
-var AppendState_1 = __webpack_require__(1);
+var ObfuscationEvents_1 = __webpack_require__(107);
 var NoCustomNodesPreset_1 = __webpack_require__(16);
 var SelfDefendingTemplate_1 = __webpack_require__(95);
 var StringArrayRotateFunctionTemplate_1 = __webpack_require__(96);
@@ -2910,7 +2883,7 @@ var StringArrayRotateFunctionNode = function (_AbstractCustomNode_) {
 
         var _this = _possibleConstructorReturn(this, (StringArrayRotateFunctionNode.__proto__ || Object.getPrototypeOf(StringArrayRotateFunctionNode)).call(this, options));
 
-        _this.appendState = AppendState_1.AppendState.AfterObfuscation;
+        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation;
         _this.stringArrayName = stringArrayName;
         _this.stringArray = stringArray;
         _this.stringArrayRotateValue = stringArrayRotateValue;
@@ -2971,7 +2944,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var AppendState_1 = __webpack_require__(1);
+var ObfuscationEvents_1 = __webpack_require__(107);
 var StringArrayCallsWrapper_1 = __webpack_require__(47);
 var StringArrayNode_1 = __webpack_require__(48);
 var StringArrayRotateFunctionNode_1 = __webpack_require__(49);
@@ -2987,7 +2960,7 @@ var StringArrayCustomNodesFactory = function (_AbstractCustomNodesF) {
 
         var _this = _possibleConstructorReturn(this, (StringArrayCustomNodesFactory.__proto__ || Object.getPrototypeOf(StringArrayCustomNodesFactory)).apply(this, arguments));
 
-        _this.appendState = AppendState_1.AppendState.AfterObfuscation;
+        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation;
         _this.stringArrayName = Utils_1.Utils.getRandomVariableName(StringArrayNode_1.StringArrayNode.ARRAY_RANDOM_LENGTH);
         _this.stringArrayCallsWrapper = Utils_1.Utils.getRandomVariableName(StringArrayNode_1.StringArrayNode.ARRAY_RANDOM_LENGTH);
         return _this;
@@ -2995,7 +2968,7 @@ var StringArrayCustomNodesFactory = function (_AbstractCustomNodesF) {
 
     _createClass(StringArrayCustomNodesFactory, [{
         key: 'initializeCustomNodes',
-        value: function initializeCustomNodes() {
+        value: function initializeCustomNodes(obfuscationEventEmitter, stackTraceData) {
             if (!this.options.stringArray) {
                 return;
             }
@@ -3010,7 +2983,7 @@ var StringArrayCustomNodesFactory = function (_AbstractCustomNodesF) {
             if (this.options.rotateStringArray) {
                 customNodes.set('stringArrayRotateFunctionNode', new StringArrayRotateFunctionNode_1.StringArrayRotateFunctionNode(this.stringArrayName, stringArray, this.stringArrayRotateValue, this.options));
             }
-            return this.syncCustomNodesWithNodesFactory(customNodes);
+            return this.syncCustomNodesWithNodesFactory(obfuscationEventEmitter, customNodes);
         }
     }]);
 
@@ -5128,6 +5101,54 @@ if (!global._babelPolyfill) {
     __webpack_require__(28);
 }
 module.exports = JavaScriptObfuscator_1.JavaScriptObfuscator;
+
+/***/ },
+/* 106 */
+/***/ function(module, exports) {
+
+module.exports = require("events");
+
+/***/ },
+/* 107 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+"use strict";
+
+var Utils_1 = __webpack_require__(0);
+exports.ObfuscationEvents = Utils_1.Utils.strEnumify({
+    AfterObfuscation: 'afterObfuscation',
+    BeforeObfuscation: 'beforeObfuscation'
+});
+
+/***/ },
+/* 108 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var events_1 = __webpack_require__(106);
+
+var ObfuscationEventEmitter = function (_events_1$EventEmitte) {
+  _inherits(ObfuscationEventEmitter, _events_1$EventEmitte);
+
+  function ObfuscationEventEmitter() {
+    _classCallCheck(this, ObfuscationEventEmitter);
+
+    return _possibleConstructorReturn(this, (ObfuscationEventEmitter.__proto__ || Object.getPrototypeOf(ObfuscationEventEmitter)).apply(this, arguments));
+  }
+
+  return ObfuscationEventEmitter;
+}(events_1.EventEmitter);
+
+exports.ObfuscationEventEmitter = ObfuscationEventEmitter;
 
 /***/ }
 /******/ ]);

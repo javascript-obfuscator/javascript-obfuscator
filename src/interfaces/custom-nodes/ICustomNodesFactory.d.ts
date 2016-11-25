@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 
-import { ICustomNode } from './custom-nodes/ICustomNode';
-import { IStackTraceData } from './stack-trace-analyzer/IStackTraceData';
+import { ICustomNode } from './ICustomNode';
+import { IStackTraceData } from '../stack-trace-analyzer/IStackTraceData';
 
 export interface ICustomNodesFactory {
     /**

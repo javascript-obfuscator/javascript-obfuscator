@@ -1,7 +1,7 @@
 import { TObfuscationEvent } from '../types/TObfuscationEvent';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
-import { ICustomNodesFactory } from '../interfaces/ICustomNodesFactory';
+import { ICustomNodesFactory } from '../interfaces/custom-nodes/ICustomNodesFactory';
 import { IOptions } from '../interfaces/IOptions';
 import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 

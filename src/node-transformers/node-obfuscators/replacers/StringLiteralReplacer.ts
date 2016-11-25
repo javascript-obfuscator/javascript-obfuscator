@@ -42,11 +42,7 @@ export class StringLiteralReplacer extends AbstractReplacer {
      * @returns {string}
      */
     private replaceStringLiteralWithStringArrayCall (value: string): string {
-        const stringArrayNode: ICustomNodeWithData = <ICustomNodeWithData>this.nodes.get('stringArrayNode');
-
-        if (!stringArrayNode) {
-            throw new ReferenceError('`stringArrayNode` node is not found in Map with custom nodes.');
-        }
+        const stringArrayNode: ICustomNodeWithData = <ICustomNodeWithData>this.customNodesStorage.get('stringArrayNode');
 
         let rc4Key: string = '';
 
@@ -79,12 +75,8 @@ export class StringLiteralReplacer extends AbstractReplacer {
             stringArray.set(null, value);
         }
 
-        const stringArrayCallsWrapper: ICustomNodeWithIdentifier = <ICustomNodeWithIdentifier>this.nodes.get('stringArrayCallsWrapper');
-        const hexadecimalIndex: string = new NumberLiteralReplacer(this.nodes, this.options).replace(indexOfValue);
-
-        if (!stringArrayCallsWrapper) {
-            throw new ReferenceError('`stringArrayCallsWrapper` node is not found in Map with custom node.');
-        }
+        const stringArrayCallsWrapper: ICustomNodeWithIdentifier = <ICustomNodeWithIdentifier>this.customNodesStorage.get('stringArrayCallsWrapper');
+        const hexadecimalIndex: string = new NumberLiteralReplacer(this.customNodesStorage, this.options).replace(indexOfValue);
 
         if (this.options.stringArrayEncoding === StringArrayEncoding.rc4) {
             return `${stringArrayCallsWrapper.getNodeIdentifier()}('${hexadecimalIndex}', '${Utils.stringToUnicodeEscapeSequence(rc4Key)}')`;

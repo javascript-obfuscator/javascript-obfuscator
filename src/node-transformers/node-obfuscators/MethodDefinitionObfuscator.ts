@@ -39,7 +39,7 @@ export class MethodDefinitionObfuscator extends AbstractNodeTransformer {
                     methodDefinitionNode.computed === false
                 ) {
                     methodDefinitionNode.computed = true;
-                    node.name = new StringLiteralReplacer(this.nodes, this.options)
+                    node.name = new StringLiteralReplacer(this.customNodesStorage, this.options)
                         .replace(node.name);
 
                     return;

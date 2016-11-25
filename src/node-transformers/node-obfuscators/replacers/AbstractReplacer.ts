@@ -1,12 +1,13 @@
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/IOptions';
 import { IReplacer } from '../../../interfaces/IReplacer';
+import { IStorage } from '../../../interfaces/IStorage';
 
 export abstract class AbstractReplacer implements IReplacer {
     /**
-     * @type Map <string, AbstractCustomNode>
+     * @type IStorage<ICustomNode>
      */
-    protected readonly nodes: Map <string, ICustomNode>;
+    protected readonly customNodesStorage: IStorage<ICustomNode>;
 
     /**
      * @type {IOptions}
@@ -14,11 +15,11 @@ export abstract class AbstractReplacer implements IReplacer {
     protected readonly options : IOptions;
 
     /**
-     * @param nodes
+     * @param customNodesStorage
      * @param options
      */
-    constructor (nodes: Map <string, ICustomNode>, options: IOptions) {
-        this.nodes = nodes;
+    constructor (customNodesStorage: IStorage<ICustomNode>, options: IOptions) {
+        this.customNodesStorage = customNodesStorage;
         this.options = options;
     }
 

@@ -1,9 +1,10 @@
 import * as ESTree from 'estree';
 
-import { ICustomNode } from '../../../../src/interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../../../../src/interfaces/IOptions';
 
 import { DEFAULT_PRESET } from '../../../../src/preset-options/DefaultPreset';
 
+import { CustomNodesStorage } from '../../../../src/storages/custom-nodes/CustomNodesStorage';
 import { FunctionDeclarationObfuscator } from '../../../../src/node-transformers/node-obfuscators/FunctionDeclarationObfuscator';
 import { NodeMocks } from '../../../mocks/NodeMocks';
 import { Options } from '../../../../src/options/Options';
@@ -23,9 +24,11 @@ describe('FunctionDeclarationObfuscator', () => {
                 NodeMocks.getCallExpressionNode(NodeMocks.getIdentifierNode(functionName))
             );
 
+            const options: IOptions = new Options(DEFAULT_PRESET);
+
             functionDeclarationObfuscator = new FunctionDeclarationObfuscator(
-                new Map<string, ICustomNode>(),
-                new Options(DEFAULT_PRESET)
+                new CustomNodesStorage(options),
+                options
             );
 
             functionDeclarationNode = NodeMocks.getFunctionDeclarationNode(

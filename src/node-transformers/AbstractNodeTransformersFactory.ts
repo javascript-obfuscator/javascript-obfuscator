@@ -4,6 +4,7 @@ import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { INodeTransformer } from '../interfaces/INodeTransformer';
 import { INodeTransformersFactory } from '../interfaces/INodeTransformersFactory';
 import { IOptions } from '../interfaces/IOptions';
+import { IStorage } from '../interfaces/IStorage';
 
 export abstract class AbstractNodeTransformersFactory implements INodeTransformersFactory {
     /**
@@ -12,9 +13,9 @@ export abstract class AbstractNodeTransformersFactory implements INodeTransforme
     protected abstract readonly nodeTransformers: Map <string, TNodeTransformer[]>;
 
     /**
-     * @type Map <string, AbstractCustomNode>
+     * @type IStorage<ICustomNode>
      */
-    protected readonly customNodes: Map <string, ICustomNode>;
+    protected readonly customNodesStorage: IStorage<ICustomNode>;
 
     /**
      * @type {IOptions}
@@ -22,11 +23,11 @@ export abstract class AbstractNodeTransformersFactory implements INodeTransforme
     protected readonly options: IOptions;
 
     /**
-     * @param customNodes
+     * @param customNodesStorage
      * @param options
      */
-    constructor (customNodes: Map <string, ICustomNode>, options: IOptions) {
-        this.customNodes = customNodes;
+    constructor (customNodesStorage: IStorage<ICustomNode>, options: IOptions) {
+        this.customNodesStorage = customNodesStorage;
         this.options = options;
     }
 
@@ -40,7 +41,7 @@ export abstract class AbstractNodeTransformersFactory implements INodeTransforme
 
         nodeTransformers.forEach((transformer: TNodeTransformer) => {
             instancesArray.push(
-                new transformer(this.customNodes, this.options)
+                new transformer(this.customNodesStorage, this.options)
             );
         });
 

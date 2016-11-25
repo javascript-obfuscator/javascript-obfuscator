@@ -50,7 +50,7 @@ export class MemberExpressionObfuscator extends AbstractNodeTransformer {
         const literalNode: ESTree.Literal = {
             raw: `'${nodeValue}'`,
             'x-verbatim-property': {
-                content : new StringLiteralReplacer(this.nodes, this.options).replace(nodeValue),
+                content : new StringLiteralReplacer(this.customNodesStorage, this.options).replace(nodeValue),
                 precedence: escodegen.Precedence.Primary
             },
             type: NodeType.Literal,
@@ -74,7 +74,7 @@ export class MemberExpressionObfuscator extends AbstractNodeTransformer {
     private obfuscateLiteralProperty (node: ESTree.Literal): void {
         if (typeof node.value === 'string' && !node['x-verbatim-property']) {
             node['x-verbatim-property'] = {
-                content : new StringLiteralReplacer(this.nodes, this.options).replace(node.value),
+                content : new StringLiteralReplacer(this.customNodesStorage, this.options).replace(node.value),
                 precedence: escodegen.Precedence.Primary
             };
         }

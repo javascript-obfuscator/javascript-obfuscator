@@ -43,6 +43,11 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
     }
 
     /**
+     * @param args
+     */
+    public initialize (...args: any[]): void {}
+
+    /**
      * @param key
      * @param value
      */

@@ -3,12 +3,13 @@ import * as ESTree from 'estree';
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { INodeTransformer } from '../interfaces/INodeTransformer';
 import { IOptions } from '../interfaces/IOptions';
+import { IStorage } from '../interfaces/IStorage';
 
 export abstract class AbstractNodeTransformer implements INodeTransformer {
     /**
-     * @type Map <string, AbstractCustomNode>
+     * @type IStorage<ICustomNode>
      */
-    protected readonly nodes: Map <string, ICustomNode>;
+    protected readonly customNodesStorage: IStorage<ICustomNode>;
 
     /**
      * @type {IOptions}
@@ -16,11 +17,11 @@ export abstract class AbstractNodeTransformer implements INodeTransformer {
     protected readonly options: IOptions;
 
     /**
-     * @param nodes
+     * @param customNodesStorage
      * @param options
      */
-    constructor (nodes: Map <string, ICustomNode>, options: IOptions) {
-        this.nodes = nodes;
+    constructor (customNodesStorage: IStorage<ICustomNode>, options: IOptions) {
+        this.customNodesStorage = customNodesStorage;
         this.options = options;
     }
 

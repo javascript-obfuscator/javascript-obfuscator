@@ -21,19 +21,19 @@ export class LiteralObfuscator extends AbstractNodeTransformer {
 
         switch (typeof literalNode.value) {
             case 'boolean':
-                content = new BooleanLiteralReplacer(this.nodes, this.options)
+                content = new BooleanLiteralReplacer(this.customNodesStorage, this.options)
                     .replace(<boolean>literalNode.value);
 
                 break;
 
             case 'number':
-                content = new NumberLiteralReplacer(this.nodes, this.options)
+                content = new NumberLiteralReplacer(this.customNodesStorage, this.options)
                     .replace(<number>literalNode.value);
 
                 break;
 
             case 'string':
-                content = new StringLiteralReplacer(this.nodes, this.options)
+                content = new StringLiteralReplacer(this.customNodesStorage, this.options)
                     .replace(<string>literalNode.value);
 
                 break;

@@ -1,9 +1,10 @@
 import * as ESTree from 'estree';
 
-import { ICustomNode } from '../../../../src/interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../../../../src/interfaces/IOptions';
 
 import { DEFAULT_PRESET } from '../../../../src/preset-options/DefaultPreset';
 
+import { CustomNodesStorage } from '../../../../src/storages/custom-nodes/CustomNodesStorage';
 import { FunctionObfuscator } from '../../../../src/node-transformers/node-obfuscators/FunctionObfuscator';
 import { NodeMocks } from '../../../mocks/NodeMocks';
 import { Options } from '../../../../src/options/Options';
@@ -61,9 +62,11 @@ describe('FunctionObfuscator', () => {
             identifierNode1['parentNode'] = functionDeclarationNode;
             expressionStatementNode1['parentNode'] = blockStatementNode;
 
+            const options: IOptions = new Options(DEFAULT_PRESET);
+
             functionObfuscator = new FunctionObfuscator(
-                new Map<string, ICustomNode>(),
-                new Options(DEFAULT_PRESET)
+                new CustomNodesStorage(options),
+                options
             );
 
             functionObfuscator.transformNode(functionDeclarationNode);

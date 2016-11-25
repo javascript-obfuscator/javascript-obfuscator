@@ -3,6 +3,7 @@ import * as ESTree from 'estree';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/IOptions';
+import { IStorage } from '../../interfaces/IStorage';
 
 import { NodeType } from '../../enums/NodeType';
 
@@ -26,13 +27,13 @@ export class FunctionObfuscator extends AbstractNodeTransformer {
     private readonly identifierReplacer: IdentifierReplacer;
 
     /**
-     * @param nodes
+     * @param customNodesStorage
      * @param options
      */
-    constructor(nodes: Map <string, ICustomNode>, options: IOptions) {
-        super(nodes, options);
+    constructor(customNodesStorage: IStorage<ICustomNode>, options: IOptions) {
+        super(customNodesStorage, options);
 
-        this.identifierReplacer = new IdentifierReplacer(this.nodes, this.options);
+        this.identifierReplacer = new IdentifierReplacer(this.customNodesStorage, this.options);
     }
 
     /**

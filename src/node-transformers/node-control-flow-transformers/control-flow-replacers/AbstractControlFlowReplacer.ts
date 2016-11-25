@@ -9,9 +9,9 @@ import { Utils } from '../../../Utils';
 
 export abstract class AbstractControlFlowReplacer implements IControlFlowReplacer {
     /**
-     * @type Map <string, AbstractCustomNode>
+     * @type IStorage<ICustomNode>
      */
-    protected readonly nodes: Map <string, ICustomNode>;
+    protected readonly customNodesStorage: IStorage<ICustomNode>;
 
     /**
      * @type {IOptions}
@@ -19,11 +19,11 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
     protected readonly options : IOptions;
 
     /**
-     * @param nodes
+     * @param customNodesStorage
      * @param options
      */
-    constructor (nodes: Map <string, ICustomNode>, options: IOptions) {
-        this.nodes = nodes;
+    constructor (customNodesStorage: IStorage<ICustomNode>, options: IOptions) {
+        this.customNodesStorage = customNodesStorage;
         this.options = options;
     }
 

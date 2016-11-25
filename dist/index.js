@@ -965,12 +965,11 @@ var AbstractCustomNodesFactory = function () {
 
     _createClass(AbstractCustomNodesFactory, [{
         key: "syncCustomNodesWithNodesFactory",
-        value: function syncCustomNodesWithNodesFactory(obfuscationEventEmitter, customNodes) {
+        value: function syncCustomNodesWithNodesFactory(customNodes) {
             var _this = this;
 
-            customNodes.forEach(function (node) {
-                node.setAppendEvent(_this.appendEvent);
-                obfuscationEventEmitter.on(node.getAppendEvent(), node.appendNode.bind(node));
+            customNodes.forEach(function (customNode) {
+                customNode.setAppendEvent(_this.appendEvent);
             });
             return customNodes;
         }
@@ -1576,9 +1575,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var esprima = __webpack_require__(27);
 var escodegen = __webpack_require__(11);
 var chance_1 = __webpack_require__(26);
+var CustomNodesStorage_1 = __webpack_require__(78);
+var ObfuscationEventEmitter_1 = __webpack_require__(53);
 var ObfuscationResult_1 = __webpack_require__(20);
 var Obfuscator_1 = __webpack_require__(31);
 var SourceMapCorrector_1 = __webpack_require__(32);
+var StackTraceAnalyzer_1 = __webpack_require__(72);
 var Utils_1 = __webpack_require__(0);
 
 var JavaScriptObfuscatorInternal = function () {
@@ -1600,7 +1602,7 @@ var JavaScriptObfuscatorInternal = function () {
                 Utils_1.Utils.setRandomGenerator(new chance_1.Chance(this.options.seed));
             }
             var astTree = esprima.parse(sourceCode, JavaScriptObfuscatorInternal.esprimaParams);
-            var obfuscatedAstTree = new Obfuscator_1.Obfuscator(this.options).obfuscateAstTree(astTree);
+            var obfuscatedAstTree = new Obfuscator_1.Obfuscator(new ObfuscationEventEmitter_1.ObfuscationEventEmitter(), new StackTraceAnalyzer_1.StackTraceAnalyzer(), new CustomNodesStorage_1.CustomNodesStorage(this.options), this.options).obfuscateAstTree(astTree);
             var generatorOutput = JavaScriptObfuscatorInternal.generateCode(sourceCode, obfuscatedAstTree, this.options);
             return this.getObfuscationResult(generatorOutput);
         }
@@ -1651,36 +1653,38 @@ var ObfuscationEvents_1 = __webpack_require__(1);
 var VisitorDirection_1 = __webpack_require__(52);
 var NodeControlFlowTransformersFactory_1 = __webpack_require__(57);
 var NodeObfuscatorsFactory_1 = __webpack_require__(67);
-var CustomNodesStorage_1 = __webpack_require__(78);
 var Node_1 = __webpack_require__(2);
 var NodeUtils_1 = __webpack_require__(8);
-var StackTraceAnalyzer_1 = __webpack_require__(72);
-var ObfuscationEventEmitter_1 = __webpack_require__(53);
 
 var Obfuscator = function () {
-    function Obfuscator(options) {
+    function Obfuscator(obfuscationEventEmitter, stackTraceAnalyzer, customNodesStorage, options) {
         _classCallCheck(this, Obfuscator);
 
+        this.obfuscationEventEmitter = obfuscationEventEmitter;
+        this.stackTraceAnalyzer = stackTraceAnalyzer;
+        this.customNodesStorage = customNodesStorage;
         this.options = options;
     }
 
     _createClass(Obfuscator, [{
         key: 'obfuscateAstTree',
         value: function obfuscateAstTree(astTree) {
+            var _this = this;
+
             if (Node_1.Node.isProgramNode(astTree) && !astTree.body.length) {
                 return astTree;
             }
             NodeUtils_1.NodeUtils.parentize(astTree);
-            var obfuscationEventEmitter = new ObfuscationEventEmitter_1.ObfuscationEventEmitter();
-            var stackTraceAnalyzer = new StackTraceAnalyzer_1.StackTraceAnalyzer();
-            var customNodesStorage = new CustomNodesStorage_1.CustomNodesStorage(this.options);
-            customNodesStorage.initialize(obfuscationEventEmitter, stackTraceAnalyzer.analyze(astTree.body));
-            obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation, astTree);
+            this.customNodesStorage.initialize(this.stackTraceAnalyzer.analyze(astTree.body));
+            this.customNodesStorage.getStorage().forEach(function (customNode) {
+                _this.obfuscationEventEmitter.on(customNode.getAppendEvent(), customNode.appendNode.bind(customNode));
+            });
+            this.obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation, astTree);
             if (this.options.controlFlowFlattening) {
-                this.transformAstTree(astTree, VisitorDirection_1.VisitorDirection.leave, new NodeControlFlowTransformersFactory_1.NodeControlFlowTransformersFactory(customNodesStorage, this.options));
+                this.transformAstTree(astTree, VisitorDirection_1.VisitorDirection.leave, new NodeControlFlowTransformersFactory_1.NodeControlFlowTransformersFactory(this.customNodesStorage, this.options));
             }
-            this.transformAstTree(astTree, VisitorDirection_1.VisitorDirection.enter, new NodeObfuscatorsFactory_1.NodeObfuscatorsFactory(customNodesStorage, this.options));
-            obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation, astTree);
+            this.transformAstTree(astTree, VisitorDirection_1.VisitorDirection.enter, new NodeObfuscatorsFactory_1.NodeObfuscatorsFactory(this.customNodesStorage, this.options));
+            this.obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation, astTree);
             return astTree;
         }
     }, {
@@ -2087,13 +2091,13 @@ var ConsoleOutputCustomNodesFactory = function (_AbstractCustomNodesF) {
 
     _createClass(ConsoleOutputCustomNodesFactory, [{
         key: 'initializeCustomNodes',
-        value: function initializeCustomNodes(obfuscationEventEmitter, stackTraceData) {
+        value: function initializeCustomNodes(stackTraceData) {
             if (!this.options.disableConsoleOutput) {
                 return;
             }
             var callsControllerFunctionName = Utils_1.Utils.getRandomVariableName();
             var randomStackTraceIndex = NodeAppender_1.NodeAppender.getRandomStackTraceIndex(stackTraceData.length);
-            return this.syncCustomNodesWithNodesFactory(obfuscationEventEmitter, new Map([['consoleOutputDisableExpressionNode', new ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode(stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['ConsoleOutputNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
+            return this.syncCustomNodesWithNodesFactory(new Map([['consoleOutputDisableExpressionNode', new ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode(stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['ConsoleOutputNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
         }
     }]);
 
@@ -2462,7 +2466,7 @@ var DebugProtectionCustomNodesFactory = function (_AbstractCustomNodesF) {
 
     _createClass(DebugProtectionCustomNodesFactory, [{
         key: 'initializeCustomNodes',
-        value: function initializeCustomNodes(obfuscationEventEmitter, stackTraceData) {
+        value: function initializeCustomNodes(stackTraceData) {
             if (!this.options.debugProtection) {
                 return;
             }
@@ -2471,7 +2475,7 @@ var DebugProtectionCustomNodesFactory = function (_AbstractCustomNodesF) {
             if (this.options.debugProtectionInterval) {
                 customNodes.set('debugProtectionFunctionIntervalNode', new DebugProtectionFunctionIntervalNode_1.DebugProtectionFunctionIntervalNode(debugProtectionFunctionName, this.options));
             }
-            return this.syncCustomNodesWithNodesFactory(obfuscationEventEmitter, customNodes);
+            return this.syncCustomNodesWithNodesFactory(customNodes);
         }
     }]);
 
@@ -2578,13 +2582,13 @@ var DomainLockCustomNodesFactory = function (_AbstractCustomNodesF) {
 
     _createClass(DomainLockCustomNodesFactory, [{
         key: 'initializeCustomNodes',
-        value: function initializeCustomNodes(obfuscationEventEmitter, stackTraceData) {
+        value: function initializeCustomNodes(stackTraceData) {
             if (!this.options.domainLock.length) {
                 return;
             }
             var callsControllerFunctionName = Utils_1.Utils.getRandomVariableName();
             var randomStackTraceIndex = NodeAppender_1.NodeAppender.getRandomStackTraceIndex(stackTraceData.length);
-            return this.syncCustomNodesWithNodesFactory(obfuscationEventEmitter, new Map([['DomainLockNode', new DomainLockNode_1.DomainLockNode(stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['DomainLockNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
+            return this.syncCustomNodesWithNodesFactory(new Map([['DomainLockNode', new DomainLockNode_1.DomainLockNode(stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['DomainLockNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
         }
     }]);
 
@@ -2690,13 +2694,13 @@ var SelfDefendingCustomNodesFactory = function (_AbstractCustomNodesF) {
 
     _createClass(SelfDefendingCustomNodesFactory, [{
         key: 'initializeCustomNodes',
-        value: function initializeCustomNodes(obfuscationEventEmitter, stackTraceData) {
+        value: function initializeCustomNodes(stackTraceData) {
             if (!this.options.selfDefending) {
                 return;
             }
             var callsControllerFunctionName = Utils_1.Utils.getRandomVariableName();
             var randomStackTraceIndex = NodeAppender_1.NodeAppender.getRandomStackTraceIndex(stackTraceData.length);
-            return this.syncCustomNodesWithNodesFactory(obfuscationEventEmitter, new Map([['selfDefendingUnicodeNode', new SelfDefendingUnicodeNode_1.SelfDefendingUnicodeNode(stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['SelfDefendingNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
+            return this.syncCustomNodesWithNodesFactory(new Map([['selfDefendingUnicodeNode', new SelfDefendingUnicodeNode_1.SelfDefendingUnicodeNode(stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['SelfDefendingNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
         }
     }]);
 
@@ -3012,7 +3016,7 @@ var StringArrayCustomNodesFactory = function (_AbstractCustomNodesF) {
 
     _createClass(StringArrayCustomNodesFactory, [{
         key: 'initializeCustomNodes',
-        value: function initializeCustomNodes(obfuscationEventEmitter, stackTraceData) {
+        value: function initializeCustomNodes(stackTraceData) {
             if (!this.options.stringArray) {
                 return;
             }
@@ -3027,7 +3031,7 @@ var StringArrayCustomNodesFactory = function (_AbstractCustomNodesF) {
             if (this.options.rotateStringArray) {
                 customNodes.set('stringArrayRotateFunctionNode', new StringArrayRotateFunctionNode_1.StringArrayRotateFunctionNode(this.stringArrayName, stringArray, this.stringArrayRotateValue, this.options));
             }
-            return this.syncCustomNodesWithNodesFactory(obfuscationEventEmitter, customNodes);
+            return this.syncCustomNodesWithNodesFactory(customNodes);
         }
     }]);
 
@@ -4825,12 +4829,12 @@ var CustomNodesStorage = function (_MapStorage_1$MapStor) {
 
     _createClass(CustomNodesStorage, [{
         key: 'initialize',
-        value: function initialize(obfuscationEventEmitter, stackTraceData) {
+        value: function initialize(stackTraceData) {
             var _this2 = this;
 
             var customNodes = [];
             CustomNodesStorage.customNodesFactories.forEach(function (customNodesFactoryConstructor) {
-                var customNodesFactory = new customNodesFactoryConstructor(_this2.options).initializeCustomNodes(obfuscationEventEmitter, stackTraceData);
+                var customNodesFactory = new customNodesFactoryConstructor(_this2.options).initializeCustomNodes(stackTraceData);
                 if (!customNodesFactory) {
                     return;
                 }

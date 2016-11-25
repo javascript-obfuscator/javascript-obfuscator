@@ -1,7 +1,6 @@
 import { TObfuscationEvent } from '../../../types/TObfuscationEvent';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
-import { IObfuscationEventEmitter } from '../../../interfaces/IObfuscationEventEmitter';
 import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { ObfuscationEvents } from '../../../enums/ObfuscationEvents';
@@ -37,14 +36,10 @@ export class StringArrayCustomNodesFactory extends AbstractCustomNodesFactory {
     private stringArrayRotateValue: number;
 
     /**
-     * @param obfuscationEventEmitter
      * @param stackTraceData
      * @returns {Map<string, ICustomNode>}
      */
-    public initializeCustomNodes (
-        obfuscationEventEmitter: IObfuscationEventEmitter,
-        stackTraceData: IStackTraceData[]
-    ): Map <string, ICustomNode> | undefined {
+    public initializeCustomNodes (stackTraceData: IStackTraceData[]): Map <string, ICustomNode> | undefined {
         if (!this.options.stringArray) {
             return;
         }
@@ -89,6 +84,6 @@ export class StringArrayCustomNodesFactory extends AbstractCustomNodesFactory {
             );
         }
 
-        return this.syncCustomNodesWithNodesFactory(obfuscationEventEmitter, customNodes);
+        return this.syncCustomNodesWithNodesFactory(customNodes);
     }
 }

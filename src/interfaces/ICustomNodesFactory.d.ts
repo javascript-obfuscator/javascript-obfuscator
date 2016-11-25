@@ -7,5 +7,5 @@ export interface ICustomNodesFactory {
     /**
      * @returns {Map <string, ICustomNode> | undefined}
      */
-    initializeCustomNodes (eventEmitter: EventEmitter, stackTraceData: IStackTraceData[]): Map <string, ICustomNode> | undefined;
+    initializeCustomNodes (stackTraceData: IStackTraceData[]): Map <string, ICustomNode> | undefined;
 }

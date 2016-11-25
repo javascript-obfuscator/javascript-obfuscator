@@ -18,22 +18,44 @@ import { VisitorDirection } from './enums/VisitorDirection';
 import { NodeControlFlowTransformersFactory } from './node-transformers/node-control-flow-transformers/factory/NodeControlFlowTransformersFactory';
 import { NodeObfuscatorsFactory } from './node-transformers/node-obfuscators/factory/NodeObfuscatorsFactory';
 
-import { CustomNodesStorage } from './storages/custom-nodes/CustomNodesStorage';
 import { Node } from './node/Node';
 import { NodeUtils } from './node/NodeUtils';
-import { StackTraceAnalyzer } from './stack-trace-analyzer/StackTraceAnalyzer';
-import { ObfuscationEventEmitter } from './event-emitters/ObfuscationEventEmitter';
 
 export class Obfuscator implements IObfuscator {
+    /**
+     * @type {IStorage<ICustomNode>}
+     */
+    private readonly customNodesStorage: IStorage<ICustomNode>;
+    /**
+     * @type {IObfuscationEventEmitter}
+     */
+    private readonly obfuscationEventEmitter: IObfuscationEventEmitter;
+
     /**
      * @type {IOptions}
      */
     private readonly options: IOptions;
 
     /**
+     * @type {IStackTraceAnalyzer}
+     */
+    private readonly stackTraceAnalyzer: IStackTraceAnalyzer;
+
+    /**
+     * @param obfuscationEventEmitter
+     * @param stackTraceAnalyzer
+     * @param customNodesStorage
      * @param options
      */
-    constructor (options: IOptions) {
+    constructor (
+        obfuscationEventEmitter: IObfuscationEventEmitter,
+        stackTraceAnalyzer: IStackTraceAnalyzer,
+        customNodesStorage: IStorage<ICustomNode>,
+        options: IOptions
+    ) {
+        this.obfuscationEventEmitter = obfuscationEventEmitter;
+        this.stackTraceAnalyzer = stackTraceAnalyzer;
+        this.customNodesStorage = customNodesStorage;
         this.options = options;
     }
 
@@ -46,31 +68,34 @@ export class Obfuscator implements IObfuscator {
             return astTree;
         }
 
+        // zero pass: parentize all nodes
         NodeUtils.parentize(astTree);
 
-        const obfuscationEventEmitter: IObfuscationEventEmitter = new ObfuscationEventEmitter();
-        const stackTraceAnalyzer: IStackTraceAnalyzer = new StackTraceAnalyzer();
-        const customNodesStorage: IStorage<ICustomNode> = new CustomNodesStorage(this.options);
+        // prepare custom nodes
+        this.customNodesStorage.initialize(this.stackTraceAnalyzer.analyze(astTree.body));
+        this.customNodesStorage
+            .getStorage()
+            .forEach((customNode: ICustomNode) => {
+                this.obfuscationEventEmitter.on(customNode.getAppendEvent(), customNode.appendNode.bind(customNode));
+            });
 
-        customNodesStorage.initialize(obfuscationEventEmitter, stackTraceAnalyzer.analyze(astTree.body));
-
-        obfuscationEventEmitter.emit(ObfuscationEvents.BeforeObfuscation, astTree);
+        this.obfuscationEventEmitter.emit(ObfuscationEvents.BeforeObfuscation, astTree);
 
         // first pass: control flow flattening
         if (this.options.controlFlowFlattening) {
             this.transformAstTree(astTree, VisitorDirection.leave, new NodeControlFlowTransformersFactory(
-                customNodesStorage,
+                this.customNodesStorage,
                 this.options
             ));
         }
 
         // second pass: nodes obfuscation
         this.transformAstTree(astTree, VisitorDirection.enter, new NodeObfuscatorsFactory(
-            customNodesStorage,
+            this.customNodesStorage,
             this.options
         ));
 
-        obfuscationEventEmitter.emit(ObfuscationEvents.AfterObfuscation, astTree);
+        this.obfuscationEventEmitter.emit(ObfuscationEvents.AfterObfuscation, astTree);
 
         return astTree;
     }

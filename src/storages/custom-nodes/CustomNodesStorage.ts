@@ -1,7 +1,6 @@
 import { TCustomNodesFactory } from '../../types/TCustomNodesFactory';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
-import { IObfuscationEventEmitter } from '../../interfaces/IObfuscationEventEmitter';
 import { IOptions } from '../../interfaces/IOptions';
 import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
 
@@ -38,19 +37,15 @@ export class CustomNodesStorage extends MapStorage <ICustomNode> {
         this.options = options;
     }
     /**
-     * @param obfuscationEventEmitter
      * @param stackTraceData
      */
-    public initialize (obfuscationEventEmitter: IObfuscationEventEmitter, stackTraceData: IStackTraceData[]): void {
+    public initialize (stackTraceData: IStackTraceData[]): void {
         const customNodes: [string, ICustomNode][] = [];
 
         CustomNodesStorage.customNodesFactories.forEach((customNodesFactoryConstructor: TCustomNodesFactory) => {
             const customNodesFactory: Map <string, ICustomNode> | undefined = new customNodesFactoryConstructor(
                 this.options
-            ).initializeCustomNodes(
-                obfuscationEventEmitter,
-                stackTraceData
-            );
+            ).initializeCustomNodes(stackTraceData);
 
             if (!customNodesFactory) {
                 return;

@@ -8,9 +8,12 @@ import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
 import { IOptions } from './interfaces/IOptions';
 
+import { CustomNodesStorage } from './storages/custom-nodes/CustomNodesStorage';
+import { ObfuscationEventEmitter } from './event-emitters/ObfuscationEventEmitter';
 import { ObfuscationResult } from './ObfuscationResult';
 import { Obfuscator } from './Obfuscator';
 import { SourceMapCorrector } from './SourceMapCorrector';
+import { StackTraceAnalyzer } from './stack-trace-analyzer/StackTraceAnalyzer';
 import { Utils } from './Utils';
 
 export class JavaScriptObfuscatorInternal {
@@ -92,13 +95,20 @@ export class JavaScriptObfuscatorInternal {
             Utils.setRandomGenerator(new Chance(this.options.seed));
         }
 
+        // parse AST tree
         const astTree: ESTree.Program = esprima.parse(sourceCode, JavaScriptObfuscatorInternal.esprimaParams);
-        const obfuscatedAstTree: ESTree.Program = new Obfuscator(this.options).obfuscateAstTree(astTree);
-        const generatorOutput: IGeneratorOutput = JavaScriptObfuscatorInternal.generateCode(
-            sourceCode,
-            obfuscatedAstTree,
+
+        // obfuscate AST tree
+        const obfuscatedAstTree: ESTree.Program = new Obfuscator(
+            new ObfuscationEventEmitter(),
+            new StackTraceAnalyzer(),
+            new CustomNodesStorage(this.options),
             this.options
-        );
+        ).obfuscateAstTree(astTree);
+
+        // generate code
+        const generatorOutput: IGeneratorOutput = JavaScriptObfuscatorInternal
+            .generateCode(sourceCode, obfuscatedAstTree, this.options);
 
         return this.getObfuscationResult(generatorOutput);
     }

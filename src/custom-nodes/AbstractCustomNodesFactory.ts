@@ -2,7 +2,6 @@ import { TObfuscationEvent } from '../types/TObfuscationEvent';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { ICustomNodesFactory } from '../interfaces/ICustomNodesFactory';
-import { IObfuscationEventEmitter } from '../interfaces/IObfuscationEventEmitter';
 import { IOptions } from '../interfaces/IOptions';
 import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
@@ -32,28 +31,18 @@ export abstract class AbstractCustomNodesFactory implements ICustomNodesFactory 
     }
 
     /**
-     * @param obfuscationEventEmitter
      * @param stackTraceData
      * @returns {Map<string, ICustomNode> | undefined}
      */
-    public abstract initializeCustomNodes (
-        obfuscationEventEmitter: IObfuscationEventEmitter,
-        stackTraceData: IStackTraceData[]
-    ): Map <string, ICustomNode> | undefined;
+    public abstract initializeCustomNodes (stackTraceData: IStackTraceData[]): Map <string, ICustomNode> | undefined;
 
     /**
-     * @param obfuscationEventEmitter
      * @param customNodes
      * @returns {Map<string, ICustomNode>}
      */
-    protected syncCustomNodesWithNodesFactory (
-        obfuscationEventEmitter: IObfuscationEventEmitter,
-        customNodes: Map <string, ICustomNode>
-    ): Map <string, ICustomNode> {
-        customNodes.forEach((node: ICustomNode) => {
-            node.setAppendEvent(this.appendEvent);
-
-            obfuscationEventEmitter.on(node.getAppendEvent(), node.appendNode.bind(node));
+    protected syncCustomNodesWithNodesFactory (customNodes: Map <string, ICustomNode>): Map <string, ICustomNode> {
+        customNodes.forEach((customNode: ICustomNode) => {
+            customNode.setAppendEvent(this.appendEvent);
         });
 
         return customNodes;

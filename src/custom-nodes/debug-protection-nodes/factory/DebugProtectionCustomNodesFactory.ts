@@ -11,7 +11,7 @@ export class DebugProtectionCustomNodesFactory extends AbstractCustomNodesFactor
     /**
      * @returns {Map<string, ICustomNode> | undefined}
      */
-    public getNodes (): Map <string, ICustomNode> | undefined {
+    public initializeCustomNodes (): Map <string, ICustomNode> | undefined {
         if (!this.options.debugProtection) {
             return;
         }
@@ -35,6 +35,6 @@ export class DebugProtectionCustomNodesFactory extends AbstractCustomNodesFactor
             );
         }
 
-        return this.syncCustomNodesWithNodesGroup(customNodes);
+        return this.syncCustomNodesWithNodesFactory(customNodes);
     }
 }

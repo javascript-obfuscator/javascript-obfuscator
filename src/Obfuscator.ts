@@ -118,16 +118,16 @@ export class Obfuscator implements IObfuscator {
     private initializeCustomNodes (stackTraceData: IStackTraceData[]): void {
         const customNodes: [string, ICustomNode][] = [];
 
-        Obfuscator.customNodesFactories.forEach((nodeGroupConstructor: TCustomNodesFactory) => {
-            const nodeGroupNodes: Map <string, ICustomNode> | undefined = new nodeGroupConstructor(
+        Obfuscator.customNodesFactories.forEach((customNodesFactoryConstructor: TCustomNodesFactory) => {
+            const customNodesFactory: Map <string, ICustomNode> | undefined = new customNodesFactoryConstructor(
                 stackTraceData, this.options
-            ).getNodes();
+            ).initializeCustomNodes();
 
-            if (!nodeGroupNodes) {
+            if (!customNodesFactory) {
                 return;
             }
 
-            customNodes.push(...nodeGroupNodes);
+            customNodes.push(...customNodesFactory);
         });
 
         this.customNodes = new Map <string, ICustomNode> (customNodes);

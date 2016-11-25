@@ -35,7 +35,7 @@ export class StringArrayCustomNodesFactory extends AbstractCustomNodesFactory {
     /**
      * @returns {Map<string, ICustomNode> | undefined}
      */
-    public getNodes (): Map <string, ICustomNode> | undefined {
+    public initializeCustomNodes (): Map <string, ICustomNode> | undefined {
         if (!this.options.stringArray) {
             return;
         }
@@ -80,6 +80,6 @@ export class StringArrayCustomNodesFactory extends AbstractCustomNodesFactory {
             );
         }
 
-        return this.syncCustomNodesWithNodesGroup(customNodes);
+        return this.syncCustomNodesWithNodesFactory(customNodes);
     }
 }

@@ -965,8 +965,8 @@ var AbstractCustomNodesFactory = function () {
     }
 
     _createClass(AbstractCustomNodesFactory, [{
-        key: "syncCustomNodesWithNodesGroup",
-        value: function syncCustomNodesWithNodesGroup(customNodes) {
+        key: "syncCustomNodesWithNodesFactory",
+        value: function syncCustomNodesWithNodesFactory(customNodes) {
             var _this = this;
 
             customNodes.forEach(function (node) {
@@ -1656,12 +1656,12 @@ var Obfuscator = function () {
             var _this = this;
 
             var customNodes = [];
-            Obfuscator.customNodesFactories.forEach(function (nodeGroupConstructor) {
-                var nodeGroupNodes = new nodeGroupConstructor(stackTraceData, _this.options).getNodes();
-                if (!nodeGroupNodes) {
+            Obfuscator.customNodesFactories.forEach(function (customNodesFactoryConstructor) {
+                var customNodesFactory = new customNodesFactoryConstructor(stackTraceData, _this.options).initializeCustomNodes();
+                if (!customNodesFactory) {
                     return;
                 }
-                customNodes.push.apply(customNodes, _toConsumableArray(nodeGroupNodes));
+                customNodes.push.apply(customNodes, _toConsumableArray(customNodesFactory));
             });
             this.customNodes = new Map(customNodes);
         }
@@ -2069,14 +2069,14 @@ var ConsoleOutputCustomNodesFactory = function (_AbstractCustomNodesF) {
     }
 
     _createClass(ConsoleOutputCustomNodesFactory, [{
-        key: 'getNodes',
-        value: function getNodes() {
+        key: 'initializeCustomNodes',
+        value: function initializeCustomNodes() {
             if (!this.options.disableConsoleOutput) {
                 return;
             }
             var callsControllerFunctionName = Utils_1.Utils.getRandomVariableName();
             var randomStackTraceIndex = NodeAppender_1.NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
-            return this.syncCustomNodesWithNodesGroup(new Map([['consoleOutputDisableExpressionNode', new ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['ConsoleOutputNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
+            return this.syncCustomNodesWithNodesFactory(new Map([['consoleOutputDisableExpressionNode', new ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['ConsoleOutputNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
         }
     }]);
 
@@ -2444,8 +2444,8 @@ var DebugProtectionCustomNodesFactory = function (_AbstractCustomNodesF) {
     }
 
     _createClass(DebugProtectionCustomNodesFactory, [{
-        key: 'getNodes',
-        value: function getNodes() {
+        key: 'initializeCustomNodes',
+        value: function initializeCustomNodes() {
             if (!this.options.debugProtection) {
                 return;
             }
@@ -2454,7 +2454,7 @@ var DebugProtectionCustomNodesFactory = function (_AbstractCustomNodesF) {
             if (this.options.debugProtectionInterval) {
                 customNodes.set('debugProtectionFunctionIntervalNode', new DebugProtectionFunctionIntervalNode_1.DebugProtectionFunctionIntervalNode(debugProtectionFunctionName, this.options));
             }
-            return this.syncCustomNodesWithNodesGroup(customNodes);
+            return this.syncCustomNodesWithNodesFactory(customNodes);
         }
     }]);
 
@@ -2560,14 +2560,14 @@ var DomainLockCustomNodesFactory = function (_AbstractCustomNodesF) {
     }
 
     _createClass(DomainLockCustomNodesFactory, [{
-        key: 'getNodes',
-        value: function getNodes() {
+        key: 'initializeCustomNodes',
+        value: function initializeCustomNodes() {
             if (!this.options.domainLock.length) {
                 return;
             }
             var callsControllerFunctionName = Utils_1.Utils.getRandomVariableName();
             var randomStackTraceIndex = NodeAppender_1.NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
-            return this.syncCustomNodesWithNodesGroup(new Map([['DomainLockNode', new DomainLockNode_1.DomainLockNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['DomainLockNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
+            return this.syncCustomNodesWithNodesFactory(new Map([['DomainLockNode', new DomainLockNode_1.DomainLockNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['DomainLockNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
         }
     }]);
 
@@ -2672,14 +2672,14 @@ var SelfDefendingCustomNodesFactory = function (_AbstractCustomNodesF) {
     }
 
     _createClass(SelfDefendingCustomNodesFactory, [{
-        key: 'getNodes',
-        value: function getNodes() {
+        key: 'initializeCustomNodes',
+        value: function initializeCustomNodes() {
             if (!this.options.selfDefending) {
                 return;
             }
             var callsControllerFunctionName = Utils_1.Utils.getRandomVariableName();
             var randomStackTraceIndex = NodeAppender_1.NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
-            return this.syncCustomNodesWithNodesGroup(new Map([['selfDefendingUnicodeNode', new SelfDefendingUnicodeNode_1.SelfDefendingUnicodeNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['SelfDefendingNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
+            return this.syncCustomNodesWithNodesFactory(new Map([['selfDefendingUnicodeNode', new SelfDefendingUnicodeNode_1.SelfDefendingUnicodeNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)], ['SelfDefendingNodeCallsControllerFunctionNode', new NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode(this.stackTraceData, callsControllerFunctionName, randomStackTraceIndex, this.options)]]));
         }
     }]);
 
@@ -2994,8 +2994,8 @@ var StringArrayCustomNodesFactory = function (_AbstractCustomNodesF) {
     }
 
     _createClass(StringArrayCustomNodesFactory, [{
-        key: 'getNodes',
-        value: function getNodes() {
+        key: 'initializeCustomNodes',
+        value: function initializeCustomNodes() {
             if (!this.options.stringArray) {
                 return;
             }
@@ -3010,7 +3010,7 @@ var StringArrayCustomNodesFactory = function (_AbstractCustomNodesF) {
             if (this.options.rotateStringArray) {
                 customNodes.set('stringArrayRotateFunctionNode', new StringArrayRotateFunctionNode_1.StringArrayRotateFunctionNode(this.stringArrayName, stringArray, this.stringArrayRotateValue, this.options));
             }
-            return this.syncCustomNodesWithNodesGroup(customNodes);
+            return this.syncCustomNodesWithNodesFactory(customNodes);
         }
     }]);
 

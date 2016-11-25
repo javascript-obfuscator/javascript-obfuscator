@@ -33,13 +33,13 @@ export abstract class AbstractCustomNodesFactory implements ICustomNodesFactory 
     /**
      * @returns {Map<string, ICustomNode> | undefined}
      */
-    public abstract getNodes (): Map <string, ICustomNode> | undefined;
+    public abstract initializeCustomNodes (): Map <string, ICustomNode> | undefined;
 
     /**
      * @param customNodes
      * @returns {Map<string, ICustomNode>}
      */
-    protected syncCustomNodesWithNodesGroup (customNodes: Map <string, ICustomNode>): Map <string, ICustomNode> {
+    protected syncCustomNodesWithNodesFactory (customNodes: Map <string, ICustomNode>): Map <string, ICustomNode> {
         customNodes.forEach((node: ICustomNode) => {
             node.setAppendState(this.appendState);
         });

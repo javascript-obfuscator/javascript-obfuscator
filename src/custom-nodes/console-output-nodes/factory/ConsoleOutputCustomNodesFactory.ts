@@ -11,7 +11,7 @@ export class ConsoleOutputCustomNodesFactory extends AbstractCustomNodesFactory 
     /**
      * @returns {Map<string, ICustomNode>}
      */
-    public getNodes (): Map <string, ICustomNode> | undefined {
+    public initializeCustomNodes (): Map <string, ICustomNode> | undefined {
         if (!this.options.disableConsoleOutput) {
             return;
         }
@@ -19,7 +19,7 @@ export class ConsoleOutputCustomNodesFactory extends AbstractCustomNodesFactory 
         const callsControllerFunctionName: string = Utils.getRandomVariableName();
         const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
 
-        return this.syncCustomNodesWithNodesGroup(new Map <string, ICustomNode> ([
+        return this.syncCustomNodesWithNodesFactory(new Map <string, ICustomNode> ([
             [
                 'consoleOutputDisableExpressionNode',
                 new ConsoleOutputDisableExpressionNode(

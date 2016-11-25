@@ -18,7 +18,7 @@ export class SelfDefendingCustomNodesFactory extends AbstractCustomNodesFactory 
     /**
      * @returns {Map<string, ICustomNode> | undefined}
      */
-    public getNodes (): Map <string, ICustomNode> | undefined {
+    public initializeCustomNodes (): Map <string, ICustomNode> | undefined {
         if (!this.options.selfDefending) {
             return;
         }
@@ -26,7 +26,7 @@ export class SelfDefendingCustomNodesFactory extends AbstractCustomNodesFactory 
         const callsControllerFunctionName: string = Utils.getRandomVariableName();
         const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(this.stackTraceData.length);
 
-        return this.syncCustomNodesWithNodesGroup(new Map <string, ICustomNode> ([
+        return this.syncCustomNodesWithNodesFactory(new Map <string, ICustomNode> ([
             [
                 'selfDefendingUnicodeNode',
                 new SelfDefendingUnicodeNode(

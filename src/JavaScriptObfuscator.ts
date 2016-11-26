@@ -1,3 +1,9 @@
+import 'reflect-metadata';
+
+if (!(<any>global)._babelPolyfill) {
+    require('babel-polyfill');
+}
+
 import { IInputOptions } from './interfaces/IInputOptions';
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
 

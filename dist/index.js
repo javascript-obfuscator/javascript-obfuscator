@@ -913,6 +913,10 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+__webpack_require__(33);
+if (!global._babelPolyfill) {
+    __webpack_require__(32);
+}
 var JavaScriptObfuscatorCLI_1 = __webpack_require__(38);
 var JavaScriptObfuscatorInternal_1 = __webpack_require__(34);
 var Options_1 = __webpack_require__(26);
@@ -5322,11 +5326,7 @@ module.exports = require("mkdirp");
 "use strict";
 "use strict";
 
-__webpack_require__(33);
 var JavaScriptObfuscator_1 = __webpack_require__(11);
-if (!global._babelPolyfill) {
-    __webpack_require__(32);
-}
 module.exports = JavaScriptObfuscator_1.JavaScriptObfuscator;
 
 /***/ }

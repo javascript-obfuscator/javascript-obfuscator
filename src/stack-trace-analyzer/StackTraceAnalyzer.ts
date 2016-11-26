@@ -1,3 +1,5 @@
+import { injectable } from 'inversify';
+
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
@@ -47,6 +49,7 @@ import { NodeUtils } from '../node/NodeUtils';
  *      }
  * ]
  */
+@injectable()
 export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     /**
      * @type {number}

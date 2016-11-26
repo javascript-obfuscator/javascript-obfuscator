@@ -1,3 +1,6 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+
 import { TCustomNodesFactory } from '../../types/TCustomNodesFactory';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
@@ -11,6 +14,7 @@ import { MapStorage } from '../MapStorage';
 import { SelfDefendingCustomNodesFactory } from '../../custom-nodes/self-defending-nodes/factory/SelfDefendingCustomNodesFactory';
 import { StringArrayCustomNodesFactory } from '../../custom-nodes/string-array-nodes/factory/StringArrayCustomNodesFactory';
 
+@injectable()
 export class CustomNodesStorage extends MapStorage <ICustomNode> {
     /**
      * @type {TCustomNodesFactory[]}
@@ -31,7 +35,7 @@ export class CustomNodesStorage extends MapStorage <ICustomNode> {
     /**
      * @param options
      */
-    constructor (options: IOptions) {
+    constructor (@inject(ServiceIdentifiers.IOptions) options: IOptions) {
         super();
 
         this.options = options;

@@ -1,3 +1,6 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from './container/ServiceIdentifiers';
+
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
@@ -21,6 +24,7 @@ import { NodeObfuscatorsFactory } from './node-transformers/node-obfuscators/fac
 import { Node } from './node/Node';
 import { NodeUtils } from './node/NodeUtils';
 
+@injectable()
 export class Obfuscator implements IObfuscator {
     /**
      * @type {IStorage<ICustomNode>}
@@ -49,10 +53,10 @@ export class Obfuscator implements IObfuscator {
      * @param options
      */
     constructor (
-        obfuscationEventEmitter: IObfuscationEventEmitter,
-        stackTraceAnalyzer: IStackTraceAnalyzer,
-        customNodesStorage: IStorage<ICustomNode>,
-        options: IOptions
+        @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
+        @inject(ServiceIdentifiers.IStackTraceAnalyzer) stackTraceAnalyzer: IStackTraceAnalyzer,
+        @inject(ServiceIdentifiers.IStorage) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.obfuscationEventEmitter = obfuscationEventEmitter;
         this.stackTraceAnalyzer = stackTraceAnalyzer;

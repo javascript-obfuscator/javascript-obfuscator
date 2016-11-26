@@ -1,7 +1,10 @@
+import { injectable } from 'inversify';
+
 import { IStorage } from '../interfaces/IStorage';
 
 import { Utils } from '../Utils';
 
+@injectable()
 export abstract class MapStorage <T> implements IStorage <T> {
     /**
      * @type {Map <string | number, T>}

@@ -1,19 +1,20 @@
+import { InversifyContainerFacade } from "./container/InversifyContainerFacade";
+import { ServiceIdentifiers } from './container/ServiceIdentifiers';
+
 import * as esprima from 'esprima';
 import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
 import { Chance } from 'chance';
 
-import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
+import { IObfuscator } from './interfaces/IObfuscator';
+import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
+import { IInputOptions } from './interfaces/IInputOptions';
 import { IOptions } from './interfaces/IOptions';
 
-import { CustomNodesStorage } from './storages/custom-nodes/CustomNodesStorage';
-import { ObfuscationEventEmitter } from './event-emitters/ObfuscationEventEmitter';
 import { ObfuscationResult } from './ObfuscationResult';
-import { Obfuscator } from './Obfuscator';
 import { SourceMapCorrector } from './SourceMapCorrector';
-import { StackTraceAnalyzer } from './stack-trace-analyzer/StackTraceAnalyzer';
 import { Utils } from './Utils';
 
 export class JavaScriptObfuscatorInternal {
@@ -33,15 +34,28 @@ export class JavaScriptObfuscatorInternal {
     };
 
     /**
+     * @types {InversifyContainerFacade}
+     */
+    private readonly inversifyContainerFacade: InversifyContainerFacade;
+
+    /**
+     * @types {IObfuscator}
+     */
+    private readonly obfuscator: IObfuscator;
+
+    /**
      * @type {IOptions}
      */
     private readonly options: IOptions;
 
     /**
-     * @param options
+     * @param inputOptions
      */
-    constructor (options: IOptions) {
-        this.options = options;
+    constructor (inputOptions: IInputOptions) {
+        this.inversifyContainerFacade = new InversifyContainerFacade(inputOptions);
+
+        this.obfuscator = this.inversifyContainerFacade.get<IObfuscator>(ServiceIdentifiers.IObfuscator);
+        this.options = this.inversifyContainerFacade.get<IOptions>(ServiceIdentifiers.IOptions);
     }
 
     /**
@@ -98,12 +112,7 @@ export class JavaScriptObfuscatorInternal {
         const astTree: ESTree.Program = esprima.parse(sourceCode, JavaScriptObfuscatorInternal.esprimaParams);
 
         // obfuscate AST tree
-        const obfuscatedAstTree: ESTree.Program = new Obfuscator(
-            new ObfuscationEventEmitter(),
-            new StackTraceAnalyzer(),
-            new CustomNodesStorage(this.options),
-            this.options
-        ).obfuscateAstTree(astTree);
+        const obfuscatedAstTree: ESTree.Program = this.obfuscator.obfuscateAstTree(astTree);
 
         // generate code
         const generatorOutput: IGeneratorOutput = this.generateCode(sourceCode, obfuscatedAstTree);

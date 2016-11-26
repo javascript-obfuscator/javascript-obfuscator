@@ -1767,7 +1767,7 @@
                 d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
             };
 
-//// Types
+//// ServiceIdentifiers
         var TypeModifier;
         (function (TypeModifier) {
             TypeModifier[TypeModifier["Const"] = 0] = "Const";
@@ -11471,7 +11471,7 @@
             return CompilerConfig;
         }());
         /**
-         * Types used for the renderer.
+         * ServiceIdentifiers used for the renderer.
          * Can be replaced to specialize the generated output to a specific renderer
          * to help tree shaking.
          */

@@ -1,17 +1,19 @@
+import { injectable } from 'inversify';
+
 import {
-    ArrayUnique,
-    IsBoolean,
-    IsArray,
-    IsIn,
-    IsNumber,
-    IsString,
-    IsUrl,
-    Min,
-    Max,
-    ValidateIf,
-    validateSync,
-    ValidationError,
-    ValidatorOptions
+ArrayUnique,
+IsBoolean,
+IsArray,
+IsIn,
+IsNumber,
+IsString,
+IsUrl,
+Min,
+Max,
+ValidateIf,
+validateSync,
+ValidationError,
+ValidatorOptions
 } from 'class-validator';
 
 import { IInputOptions } from '../interfaces/IInputOptions';
@@ -25,6 +27,7 @@ import { DEFAULT_PRESET } from '../preset-options/DefaultPreset';
 import { OptionsNormalizer } from './OptionsNormalizer';
 import { ValidationErrorsFormatter } from './ValidationErrorsFormatter';
 
+@injectable()
 export class Options implements IOptions {
     /**
      * @type {ValidatorOptions}

@@ -88,7 +88,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 107);
+/******/ 	return __webpack_require__(__webpack_require__.s = 106);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -106,7 +106,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var chance_1 = __webpack_require__(26);
 var JSFuck_1 = __webpack_require__(21);
-var isEqual = __webpack_require__(105);
+var isEqual = __webpack_require__(103);
 
 var Utils = function () {
     function Utils() {
@@ -1773,8 +1773,8 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var fs = __webpack_require__(104);
-var mkdirp = __webpack_require__(106);
+var fs = __webpack_require__(102);
+var mkdirp = __webpack_require__(104);
 var path = __webpack_require__(28);
 var Utils_1 = __webpack_require__(0);
 
@@ -1865,7 +1865,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var commander = __webpack_require__(102);
+var commander = __webpack_require__(100);
 var path = __webpack_require__(28);
 var SourceMapMode_1 = __webpack_require__(14);
 var StringArrayEncoding_1 = __webpack_require__(18);
@@ -3066,7 +3066,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var events_1 = __webpack_require__(103);
+var events_1 = __webpack_require__(101);
 
 var ObfuscationEventEmitter = function (_events_1$EventEmitte) {
   _inherits(ObfuscationEventEmitter, _events_1$EventEmitte);
@@ -4055,9 +4055,7 @@ var __decorate = undefined && undefined.__decorate || function (decorators, targ
 var __metadata = undefined && undefined.__metadata || function (k, v) {
     if ((typeof Reflect === "undefined" ? "undefined" : _typeof(Reflect)) === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var class_validator_1 = __webpack_require__(101);
-var TSourceMapMode_1 = __webpack_require__(99);
-var TStringArrayEncoding_1 = __webpack_require__(100);
+var class_validator_1 = __webpack_require__(99);
 var DefaultPreset_1 = __webpack_require__(24);
 var OptionsNormalizer_1 = __webpack_require__(70);
 var ValidationErrorsFormatter_1 = __webpack_require__(71);
@@ -4100,13 +4098,12 @@ __decorate([class_validator_1.IsString(), class_validator_1.ValidateIf(function 
     require_valid_protocol: true
 }), __metadata('design:type', String)], Options.prototype, "sourceMapBaseUrl", void 0);
 __decorate([class_validator_1.IsString(), __metadata('design:type', String)], Options.prototype, "sourceMapFileName", void 0);
-__decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata('design:type', typeof (_a = typeof TSourceMapMode_1.TSourceMapMode !== 'undefined' && TSourceMapMode_1.TSourceMapMode) === 'function' && _a || Object)], Options.prototype, "sourceMapMode", void 0);
+__decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata('design:type', String)], Options.prototype, "sourceMapMode", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "stringArray", void 0);
-__decorate([class_validator_1.IsIn([true, false, 'base64', 'rc4']), __metadata('design:type', typeof (_b = typeof TStringArrayEncoding_1.TStringArrayEncoding !== 'undefined' && TStringArrayEncoding_1.TStringArrayEncoding) === 'function' && _b || Object)], Options.prototype, "stringArrayEncoding", void 0);
+__decorate([class_validator_1.IsIn([true, false, 'base64', 'rc4']), __metadata('design:type', Object)], Options.prototype, "stringArrayEncoding", void 0);
 __decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata('design:type', Number)], Options.prototype, "stringArrayThreshold", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "unicodeEscapeSequence", void 0);
 exports.Options = Options;
-var _a, _b;
 
 /***/ },
 /* 70 */
@@ -5131,54 +5128,41 @@ exports.StringArrayRotateFunctionTemplate = StringArrayRotateFunctionTemplate;
 /* 99 */
 /***/ function(module, exports) {
 
-"use strict";
-"use strict";
+module.exports = require("class-validator");
 
 /***/ },
 /* 100 */
 /***/ function(module, exports) {
 
-"use strict";
-"use strict";
+module.exports = require("commander");
 
 /***/ },
 /* 101 */
 /***/ function(module, exports) {
 
-module.exports = require("class-validator");
+module.exports = require("events");
 
 /***/ },
 /* 102 */
 /***/ function(module, exports) {
 
-module.exports = require("commander");
+module.exports = require("fs");
 
 /***/ },
 /* 103 */
 /***/ function(module, exports) {
 
-module.exports = require("events");
+module.exports = require("is-equal");
 
 /***/ },
 /* 104 */
 /***/ function(module, exports) {
 
-module.exports = require("fs");
-
-/***/ },
-/* 105 */
-/***/ function(module, exports) {
-
-module.exports = require("is-equal");
-
-/***/ },
-/* 106 */
-/***/ function(module, exports) {
-
 module.exports = require("mkdirp");
 
 /***/ },
-/* 107 */
+/* 105 */,
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

@@ -88,7 +88,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 112);
+/******/ 	return __webpack_require__(__webpack_require__.s = 109);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -106,7 +106,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var chance_1 = __webpack_require__(29);
 var JSFuck_1 = __webpack_require__(23);
-var isEqual = __webpack_require__(109);
+var isEqual = __webpack_require__(107);
 
 var Utils = function () {
     function Utils() {
@@ -1494,10 +1494,7 @@ var __metadata = undefined && undefined.__metadata || function (k, v) {
     if ((typeof Reflect === "undefined" ? "undefined" : _typeof(Reflect)) === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var inversify_1 = __webpack_require__(10);
-var class_validator_1 = __webpack_require__(105);
-var IInputOptions_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../interfaces/IInputOptions\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-var TSourceMapMode_1 = __webpack_require__(103);
-var TStringArrayEncoding_1 = __webpack_require__(104);
+var class_validator_1 = __webpack_require__(103);
 var DefaultPreset_1 = __webpack_require__(27);
 var OptionsNormalizer_1 = __webpack_require__(74);
 var ValidationErrorsFormatter_1 = __webpack_require__(75);
@@ -1539,14 +1536,13 @@ __decorate([class_validator_1.IsString(), class_validator_1.ValidateIf(function 
     require_valid_protocol: true
 }), __metadata('design:type', String)], Options.prototype, "sourceMapBaseUrl", void 0);
 __decorate([class_validator_1.IsString(), __metadata('design:type', String)], Options.prototype, "sourceMapFileName", void 0);
-__decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata('design:type', typeof (_a = typeof TSourceMapMode_1.TSourceMapMode !== 'undefined' && TSourceMapMode_1.TSourceMapMode) === 'function' && _a || Object)], Options.prototype, "sourceMapMode", void 0);
+__decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata('design:type', String)], Options.prototype, "sourceMapMode", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "stringArray", void 0);
-__decorate([class_validator_1.IsIn([true, false, 'base64', 'rc4']), __metadata('design:type', typeof (_b = typeof TStringArrayEncoding_1.TStringArrayEncoding !== 'undefined' && TStringArrayEncoding_1.TStringArrayEncoding) === 'function' && _b || Object)], Options.prototype, "stringArrayEncoding", void 0);
+__decorate([class_validator_1.IsIn([true, false, 'base64', 'rc4']), __metadata('design:type', Object)], Options.prototype, "stringArrayEncoding", void 0);
 __decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata('design:type', Number)], Options.prototype, "stringArrayThreshold", void 0);
 __decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "unicodeEscapeSequence", void 0);
-Options = Options_1 = __decorate([inversify_1.injectable(), __metadata('design:paramtypes', [typeof (_c = typeof IInputOptions_1.IInputOptions !== 'undefined' && IInputOptions_1.IInputOptions) === 'function' && _c || Object])], Options);
+Options = Options_1 = __decorate([inversify_1.injectable(), __metadata('design:paramtypes', [Object])], Options);
 exports.Options = Options;
-var _a, _b, _c;
 
 /***/ },
 /* 27 */
@@ -1787,10 +1783,6 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(10);
 var ServiceIdentifiers_1 = __webpack_require__(15);
 var estraverse = __webpack_require__(4);
-var IObfuscationEventEmitter_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./interfaces/IObfuscationEventEmitter\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-var IOptions_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./interfaces/IOptions\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-var IStackTraceAnalyzer_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./interfaces/stack-trace-analyzer/IStackTraceAnalyzer\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-var IStorage_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./interfaces/IStorage\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 var ObfuscationEvents_1 = __webpack_require__(1);
 var VisitorDirection_1 = __webpack_require__(57);
 var NodeControlFlowTransformersFactory_1 = __webpack_require__(62);
@@ -1842,9 +1834,8 @@ var Obfuscator = function () {
 
     return Obfuscator;
 }();
-Obfuscator = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscationEventEmitter)), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStackTraceAnalyzer)), __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStorage)), __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata('design:paramtypes', [typeof (_a = typeof IObfuscationEventEmitter_1.IObfuscationEventEmitter !== 'undefined' && IObfuscationEventEmitter_1.IObfuscationEventEmitter) === 'function' && _a || Object, typeof (_b = typeof IStackTraceAnalyzer_1.IStackTraceAnalyzer !== 'undefined' && IStackTraceAnalyzer_1.IStackTraceAnalyzer) === 'function' && _b || Object, typeof (_c = typeof IStorage_1.IStorage !== 'undefined' && IStorage_1.IStorage) === 'function' && _c || Object, typeof (_d = typeof IOptions_1.IOptions !== 'undefined' && IOptions_1.IOptions) === 'function' && _d || Object])], Obfuscator);
+Obfuscator = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscationEventEmitter)), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStackTraceAnalyzer)), __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStorage)), __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata('design:paramtypes', [Object, Object, Object, Object])], Obfuscator);
 exports.Obfuscator = Obfuscator;
-var _a, _b, _c, _d;
 
 /***/ },
 /* 36 */
@@ -1915,8 +1906,8 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var fs = __webpack_require__(108);
-var mkdirp = __webpack_require__(110);
+var fs = __webpack_require__(106);
+var mkdirp = __webpack_require__(108);
 var path = __webpack_require__(31);
 var Utils_1 = __webpack_require__(0);
 
@@ -2007,7 +1998,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var commander = __webpack_require__(106);
+var commander = __webpack_require__(104);
 var path = __webpack_require__(31);
 var SourceMapMode_1 = __webpack_require__(16);
 var StringArrayEncoding_1 = __webpack_require__(20);
@@ -3267,7 +3258,7 @@ var __metadata = undefined && undefined.__metadata || function (k, v) {
     if ((typeof Reflect === "undefined" ? "undefined" : _typeof(Reflect)) === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var inversify_1 = __webpack_require__(10);
-var events_1 = __webpack_require__(107);
+var events_1 = __webpack_require__(105);
 inversify_1.decorate(inversify_1.injectable(), events_1.EventEmitter);
 var ObfuscationEventEmitter = function (_events_1$EventEmitte) {
     _inherits(ObfuscationEventEmitter, _events_1$EventEmitte);
@@ -4968,7 +4959,6 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 };
 var inversify_1 = __webpack_require__(10);
 var ServiceIdentifiers_1 = __webpack_require__(15);
-var IOptions_1 = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../../interfaces/IOptions\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 var ConsoleOutputCustomNodesFactory_1 = __webpack_require__(41);
 var DebugProtectionCustomNodesFactory_1 = __webpack_require__(48);
 var DomainLockCustomNodesFactory_1 = __webpack_require__(50);
@@ -5008,9 +4998,8 @@ var CustomNodesStorage_1 = function (_MapStorage_1$MapStor) {
 }(MapStorage_1.MapStorage);
 var CustomNodesStorage = CustomNodesStorage_1;
 CustomNodesStorage.customNodesFactories = [DomainLockCustomNodesFactory_1.DomainLockCustomNodesFactory, SelfDefendingCustomNodesFactory_1.SelfDefendingCustomNodesFactory, ConsoleOutputCustomNodesFactory_1.ConsoleOutputCustomNodesFactory, DebugProtectionCustomNodesFactory_1.DebugProtectionCustomNodesFactory, StringArrayCustomNodesFactory_1.StringArrayCustomNodesFactory];
-CustomNodesStorage = CustomNodesStorage_1 = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata('design:paramtypes', [typeof (_a = typeof IOptions_1.IOptions !== 'undefined' && IOptions_1.IOptions) === 'function' && _a || Object])], CustomNodesStorage);
+CustomNodesStorage = CustomNodesStorage_1 = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata('design:paramtypes', [Object])], CustomNodesStorage);
 exports.CustomNodesStorage = CustomNodesStorage;
-var _a;
 
 /***/ },
 /* 83 */
@@ -5293,55 +5282,40 @@ exports.StringArrayRotateFunctionTemplate = StringArrayRotateFunctionTemplate;
 /* 103 */
 /***/ function(module, exports) {
 
-"use strict";
-"use strict";
+module.exports = require("class-validator");
 
 /***/ },
 /* 104 */
 /***/ function(module, exports) {
 
-"use strict";
-"use strict";
+module.exports = require("commander");
 
 /***/ },
 /* 105 */
 /***/ function(module, exports) {
 
-module.exports = require("class-validator");
+module.exports = require("events");
 
 /***/ },
 /* 106 */
 /***/ function(module, exports) {
 
-module.exports = require("commander");
+module.exports = require("fs");
 
 /***/ },
 /* 107 */
 /***/ function(module, exports) {
 
-module.exports = require("events");
+module.exports = require("is-equal");
 
 /***/ },
 /* 108 */
 /***/ function(module, exports) {
 
-module.exports = require("fs");
-
-/***/ },
-/* 109 */
-/***/ function(module, exports) {
-
-module.exports = require("is-equal");
-
-/***/ },
-/* 110 */
-/***/ function(module, exports) {
-
 module.exports = require("mkdirp");
 
 /***/ },
-/* 111 */,
-/* 112 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

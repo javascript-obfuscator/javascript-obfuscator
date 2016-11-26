@@ -24,7 +24,6 @@ export class InversifyContainerFacade {
     constructor (options: IInputOptions) {
         this.container = new Container();
 
-        // IOptions
         this.container
             .bind<IOptions>(ServiceIdentifiers.IOptions)
             .toDynamicValue(() => {
@@ -32,24 +31,20 @@ export class InversifyContainerFacade {
             })
             .inSingletonScope();
 
-        // IObfuscator
         this.container
             .bind<IObfuscator>(ServiceIdentifiers.IObfuscator)
             .to(Obfuscator);
 
-        // IObfuscationEventEmitter
         this.container
             .bind<IObfuscationEventEmitter>(ServiceIdentifiers.IObfuscationEventEmitter)
             .to(ObfuscationEventEmitter)
             .inSingletonScope();
 
-        // IStackTraceAnalyzer
         this.container
             .bind<IStackTraceAnalyzer>(ServiceIdentifiers.IStackTraceAnalyzer)
             .to(StackTraceAnalyzer)
             .inSingletonScope();
 
-        // IStorage<ICustomNode>
         this.container
             .bind<IStorage<ICustomNode>>(ServiceIdentifiers.IStorage)
             .to(CustomNodesStorage)
@@ -60,7 +55,7 @@ export class InversifyContainerFacade {
      * @param serviceIdentifier
      * @returns {T}
      */
-    public get <T> (serviceIdentifier: interfaces.ServiceIdentifier<T>) {
+    public get <T> (serviceIdentifier: interfaces.ServiceIdentifier<T>): T {
         return this.container.get<T>(serviceIdentifier);
     }
 }

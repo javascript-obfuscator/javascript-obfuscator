@@ -1,4 +1,6 @@
-let ServiceIdentifiers = {
+import { IContainerServiceIdentifiers } from '../interfaces/IContainerServiceIdentifiers';
+
+let ServiceIdentifiers: IContainerServiceIdentifiers = {
     IObfuscationEventEmitter: Symbol('IObfuscationEventEmitter'),
     IObfuscator: Symbol('IObfuscator'),
     IOptions: Symbol('IOptions'),

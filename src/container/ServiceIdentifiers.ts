@@ -2,7 +2,7 @@ import { IContainerServiceIdentifiers } from '../interfaces/IContainerServiceIde
 
 let ServiceIdentifiers: IContainerServiceIdentifiers = {
     'Factory<INodeTransformer[]>': Symbol('INodeTransformersFactory'),
-    INodeTransformersFactory: Symbol('INodeTransformersFactory'),
+    INodeTransformer: Symbol('INodeTransformer'),
     IObfuscationEventEmitter: Symbol('IObfuscationEventEmitter'),
     IObfuscator: Symbol('IObfuscator'),
     IOptions: Symbol('IOptions'),

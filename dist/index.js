@@ -374,7 +374,7 @@ exports.ObfuscationEvents = Utils_1.Utils.strEnumify({
 
 var ServiceIdentifiers = {
     'Factory<INodeTransformer[]>': Symbol('INodeTransformersFactory'),
-    INodeTransformersFactory: Symbol('INodeTransformersFactory'),
+    INodeTransformer: Symbol('INodeTransformer'),
     IObfuscationEventEmitter: Symbol('IObfuscationEventEmitter'),
     IObfuscator: Symbol('IObfuscator'),
     IOptions: Symbol('IOptions'),
@@ -2183,16 +2183,16 @@ var MethodDefinitionObfuscator_1 = __webpack_require__(67);
 var ObjectExpressionObfuscator_1 = __webpack_require__(68);
 var VariableDeclarationObfuscator_1 = __webpack_require__(69);
 exports.nodeTransformersModule = new inversify_1.ContainerModule(function (bind) {
-    bind('INodeTransformer').to(FunctionControlFlowTransformer_1.FunctionControlFlowTransformer).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.FunctionControlFlowTransformer);
-    bind('INodeTransformer').to(CatchClauseObfuscator_1.CatchClauseObfuscator).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.CatchClauseObfuscator);
-    bind('INodeTransformer').to(FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.FunctionDeclarationObfuscator);
-    bind('INodeTransformer').to(FunctionObfuscator_1.FunctionObfuscator).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.FunctionObfuscator);
-    bind('INodeTransformer').to(LabeledStatementObfuscator_1.LabeledStatementObfuscator).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.LabeledStatementObfuscator);
-    bind('INodeTransformer').to(LiteralObfuscator_1.LiteralObfuscator).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.LiteralObfuscator);
-    bind('INodeTransformer').to(MemberExpressionObfuscator_1.MemberExpressionObfuscator).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.MemberExpressionObfuscator);
-    bind('INodeTransformer').to(MethodDefinitionObfuscator_1.MethodDefinitionObfuscator).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.MethodDefinitionObfuscator);
-    bind('INodeTransformer').to(ObjectExpressionObfuscator_1.ObjectExpressionObfuscator).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.ObjectExpressionObfuscator);
-    bind('INodeTransformer').to(VariableDeclarationObfuscator_1.VariableDeclarationObfuscator).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.VariableDeclarationObfuscator);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(FunctionControlFlowTransformer_1.FunctionControlFlowTransformer).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.FunctionControlFlowTransformer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(CatchClauseObfuscator_1.CatchClauseObfuscator).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.CatchClauseObfuscator);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(FunctionDeclarationObfuscator_1.FunctionDeclarationObfuscator).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.FunctionDeclarationObfuscator);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(FunctionObfuscator_1.FunctionObfuscator).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.FunctionObfuscator);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(LabeledStatementObfuscator_1.LabeledStatementObfuscator).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.LabeledStatementObfuscator);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(LiteralObfuscator_1.LiteralObfuscator).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.LiteralObfuscator);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(MemberExpressionObfuscator_1.MemberExpressionObfuscator).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.MemberExpressionObfuscator);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(MethodDefinitionObfuscator_1.MethodDefinitionObfuscator).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.MethodDefinitionObfuscator);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(ObjectExpressionObfuscator_1.ObjectExpressionObfuscator).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.ObjectExpressionObfuscator);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(VariableDeclarationObfuscator_1.VariableDeclarationObfuscator).inSingletonScope().whenTargetNamed(NodeTransformers_1.NodeTransformers.VariableDeclarationObfuscator);
     bind(ServiceIdentifiers_1.ServiceIdentifiers['Factory<INodeTransformer[]>']).toFactory(function (context) {
         var cache = new Map();
         return function (nodeTransformersMap) {
@@ -2204,7 +2204,7 @@ exports.nodeTransformersModule = new inversify_1.ContainerModule(function (bind)
                     if (cache.has(transformer)) {
                         nodeTransformer = cache.get(transformer);
                     } else {
-                        nodeTransformer = context.container.getNamed('INodeTransformer', transformer);
+                        nodeTransformer = context.container.getNamed(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer, transformer);
                         cache.set(transformer, nodeTransformer);
                     }
                     instancesArray.push(nodeTransformer);

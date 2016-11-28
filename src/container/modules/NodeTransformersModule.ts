@@ -1,6 +1,9 @@
 import { ContainerModule, interfaces } from 'inversify';
+import { ServiceIdentifiers } from '../ServiceIdentifiers';
 
 import { INodeTransformer } from '../../interfaces/INodeTransformer';
+
+import { FunctionControlFlowTransformer } from '../../node-transformers/node-control-flow-transformers/FunctionControlFlowTransformer';
 
 import { CatchClauseObfuscator } from '../../node-transformers/node-obfuscators/CatchClauseObfuscator';
 import { FunctionDeclarationObfuscator } from '../../node-transformers/node-obfuscators/FunctionDeclarationObfuscator';
@@ -12,7 +15,12 @@ import { MethodDefinitionObfuscator } from '../../node-transformers/node-obfusca
 import { ObjectExpressionObfuscator } from '../../node-transformers/node-obfuscators/ObjectExpressionObfuscator';
 import { VariableDeclarationObfuscator } from '../../node-transformers/node-obfuscators/VariableDeclarationObfuscator';
 
-export const nodeObfuscatorsModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
+export const nodeTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
+    bind<INodeTransformer>('INodeTransformer')
+        .to(FunctionControlFlowTransformer)
+        .inSingletonScope()
+        .whenTargetNamed('FunctionControlFlowTransformer');
+
     bind<INodeTransformer>('INodeTransformer')
         .to(CatchClauseObfuscator)
         .inSingletonScope()
@@ -57,4 +65,29 @@ export const nodeObfuscatorsModule: interfaces.ContainerModule = new ContainerMo
         .to(VariableDeclarationObfuscator)
         .inSingletonScope()
         .whenTargetNamed('VariableDeclarationObfuscator');
+
+    bind<INodeTransformer[]>(ServiceIdentifiers['Factory<INodeTransformer[]>'])
+        .toFactory<INodeTransformer[]>((context: interfaces.Context) => {
+            const cache: Map <string, INodeTransformer> = new Map <string, INodeTransformer> ();
+
+            return (nodeTransformersMap: Map<string, string[]>) => (nodeType: string) => {
+                const nodeTransformers: string[] = nodeTransformersMap.get(nodeType) || [];
+                const instancesArray: INodeTransformer[] = [];
+
+                nodeTransformers.forEach((transformer: string) => {
+                    let nodeTransformer: INodeTransformer;
+
+                    if (!cache.has(transformer)) {
+                        nodeTransformer = context.container.getNamed<INodeTransformer>('INodeTransformer', transformer);
+                        cache.set(transformer, nodeTransformer);
+                    } else {
+                        nodeTransformer = <INodeTransformer>cache.get(transformer);
+                    }
+
+                    instancesArray.push(nodeTransformer);
+                });
+
+                return instancesArray;
+            };
+        });
 });

@@ -1,12 +1,10 @@
 import { Container, interfaces } from 'inversify';
 import { ServiceIdentifiers } from './ServiceIdentifiers';
 
-import { nodeControlFlowTransformersModule } from './modules/NodeControlFlowTransformersModule';
-import { nodeObfuscatorsModule } from './modules/NodeObfuscatorsModule';
+import { nodeTransformersModule } from './modules/NodeTransformersModule';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { IInputOptions } from '../interfaces/IInputOptions';
-import { INodeTransformer } from '../interfaces/INodeTransformer';
 import { IObfuscationEventEmitter } from '../interfaces/IObfuscationEventEmitter';
 import { IObfuscator } from '../interfaces/IObfuscator';
 import { IOptions } from '../interfaces/IOptions';
@@ -30,9 +28,6 @@ export class InversifyContainerFacade {
      */
     constructor (options: IInputOptions) {
         this.container = new Container();
-
-        this.container.load(nodeControlFlowTransformersModule);
-        this.container.load(nodeObfuscatorsModule);
 
         this.container
             .bind<IOptions>(ServiceIdentifiers.IOptions)
@@ -61,22 +56,8 @@ export class InversifyContainerFacade {
             .to(CustomNodesStorage)
             .inSingletonScope();
 
-        this.container
-            .bind<INodeTransformer[]>(ServiceIdentifiers['Factory<INodeTransformer[]>'])
-            .toFactory<INodeTransformer[]>((context: interfaces.Context) => {
-                return (nodeTransformersMap: Map<string, string[]>) => (nodeType: string) => {
-                    const nodeTransformers: string[] = nodeTransformersMap.get(nodeType) || [];
-                    const instancesArray: INodeTransformer[] = [];
-
-                    nodeTransformers.forEach((transformer: string) => {
-                        instancesArray.push(
-                            context.container.getNamed<INodeTransformer>('INodeTransformer', transformer)
-                        );
-                    });
-
-                    return instancesArray;
-                };
-            });
+        // modules
+        this.container.load(nodeTransformersModule);
     }
 
     /**

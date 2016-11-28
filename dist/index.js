@@ -88,7 +88,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 105);
+/******/ 	return __webpack_require__(__webpack_require__.s = 106);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1576,6 +1576,7 @@ var esprima = __webpack_require__(27);
 var escodegen = __webpack_require__(11);
 var chance_1 = __webpack_require__(26);
 var CustomNodesStorage_1 = __webpack_require__(78);
+var NodeUtils_1 = __webpack_require__(8);
 var ObfuscationEventEmitter_1 = __webpack_require__(53);
 var ObfuscationResult_1 = __webpack_require__(20);
 var Obfuscator_1 = __webpack_require__(31);
@@ -1617,7 +1618,10 @@ var JavaScriptObfuscatorInternal = function () {
                 Utils_1.Utils.setRandomGenerator(new chance_1.Chance(this.options.seed));
             }
             var astTree = esprima.parse(sourceCode, JavaScriptObfuscatorInternal.esprimaParams);
-            var obfuscatedAstTree = new Obfuscator_1.Obfuscator(new ObfuscationEventEmitter_1.ObfuscationEventEmitter(), new StackTraceAnalyzer_1.StackTraceAnalyzer(), new CustomNodesStorage_1.CustomNodesStorage(this.options), this.options).obfuscateAstTree(astTree);
+            NodeUtils_1.NodeUtils.parentize(astTree);
+            var customNodesStorage = new CustomNodesStorage_1.CustomNodesStorage(this.options);
+            customNodesStorage.initialize(new StackTraceAnalyzer_1.StackTraceAnalyzer().analyze(astTree.body));
+            var obfuscatedAstTree = new Obfuscator_1.Obfuscator(new ObfuscationEventEmitter_1.ObfuscationEventEmitter(), this.options).obfuscateAstTree(astTree, customNodesStorage);
             var generatorOutput = this.generateCode(sourceCode, obfuscatedAstTree);
             return this.getObfuscationResult(generatorOutput);
         }
@@ -1654,36 +1658,31 @@ var VisitorDirection_1 = __webpack_require__(52);
 var NodeControlFlowTransformersFactory_1 = __webpack_require__(57);
 var NodeObfuscatorsFactory_1 = __webpack_require__(67);
 var Node_1 = __webpack_require__(2);
-var NodeUtils_1 = __webpack_require__(8);
 
 var Obfuscator = function () {
-    function Obfuscator(obfuscationEventEmitter, stackTraceAnalyzer, customNodesStorage, options) {
+    function Obfuscator(obfuscationEventEmitter, options) {
         _classCallCheck(this, Obfuscator);
 
         this.obfuscationEventEmitter = obfuscationEventEmitter;
-        this.stackTraceAnalyzer = stackTraceAnalyzer;
-        this.customNodesStorage = customNodesStorage;
         this.options = options;
     }
 
     _createClass(Obfuscator, [{
         key: 'obfuscateAstTree',
-        value: function obfuscateAstTree(astTree) {
+        value: function obfuscateAstTree(astTree, customNodesStorage) {
             var _this = this;
 
             if (Node_1.Node.isProgramNode(astTree) && !astTree.body.length) {
                 return astTree;
             }
-            NodeUtils_1.NodeUtils.parentize(astTree);
-            this.customNodesStorage.initialize(this.stackTraceAnalyzer.analyze(astTree.body));
-            this.customNodesStorage.getStorage().forEach(function (customNode) {
+            customNodesStorage.getStorage().forEach(function (customNode) {
                 _this.obfuscationEventEmitter.once(customNode.getAppendEvent(), customNode.appendNode.bind(customNode));
             });
             this.obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation, astTree);
             if (this.options.controlFlowFlattening) {
-                this.transformAstTree(astTree, VisitorDirection_1.VisitorDirection.leave, new NodeControlFlowTransformersFactory_1.NodeControlFlowTransformersFactory(this.customNodesStorage, this.options));
+                this.transformAstTree(astTree, VisitorDirection_1.VisitorDirection.leave, new NodeControlFlowTransformersFactory_1.NodeControlFlowTransformersFactory(customNodesStorage, this.options));
             }
-            this.transformAstTree(astTree, VisitorDirection_1.VisitorDirection.enter, new NodeObfuscatorsFactory_1.NodeObfuscatorsFactory(this.customNodesStorage, this.options));
+            this.transformAstTree(astTree, VisitorDirection_1.VisitorDirection.enter, new NodeObfuscatorsFactory_1.NodeObfuscatorsFactory(customNodesStorage, this.options));
             this.obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation, astTree);
             return astTree;
         }
@@ -5161,7 +5160,8 @@ module.exports = require("is-equal");
 module.exports = require("mkdirp");
 
 /***/ },
-/* 105 */
+/* 105 */,
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

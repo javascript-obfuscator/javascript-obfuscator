@@ -4,11 +4,14 @@ import * as ESTree from 'estree';
 
 import { Chance } from 'chance';
 
+import { ICustomNode } from './interfaces/custom-nodes/ICustomNode';
 import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
 import { IOptions } from './interfaces/IOptions';
+import { IStorage } from './interfaces/IStorage';
 
 import { CustomNodesStorage } from './storages/custom-nodes/CustomNodesStorage';
+import { NodeUtils } from './node/NodeUtils';
 import { ObfuscationEventEmitter } from './event-emitters/ObfuscationEventEmitter';
 import { ObfuscationResult } from './ObfuscationResult';
 import { Obfuscator } from './Obfuscator';
@@ -97,13 +100,19 @@ export class JavaScriptObfuscatorInternal {
         // parse AST tree
         const astTree: ESTree.Program = esprima.parse(sourceCode, JavaScriptObfuscatorInternal.esprimaParams);
 
+        NodeUtils.parentize(astTree);
+
         // obfuscate AST tree
+        const customNodesStorage: IStorage<ICustomNode> = new CustomNodesStorage(this.options);
+
+        customNodesStorage.initialize(
+            new StackTraceAnalyzer().analyze(astTree.body)
+        );
+
         const obfuscatedAstTree: ESTree.Program = new Obfuscator(
             new ObfuscationEventEmitter(),
-            new StackTraceAnalyzer(),
-            new CustomNodesStorage(this.options),
             this.options
-        ).obfuscateAstTree(astTree);
+        ).obfuscateAstTree(astTree, customNodesStorage);
 
         // generate code
         const generatorOutput: IGeneratorOutput = this.generateCode(sourceCode, obfuscatedAstTree);

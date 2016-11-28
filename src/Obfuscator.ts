@@ -4,6 +4,7 @@ import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
+import { TNodeTransformersFactory } from './types/TNodeTransformersFactory';
 import { TVisitorDirection } from './types/TVisitorDirection';
 
 import { ICustomNode } from './interfaces/custom-nodes/ICustomNode';
@@ -14,6 +15,7 @@ import { INodeTransformer } from './interfaces/INodeTransformer';
 import { IStackTraceAnalyzer } from './interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
 import { IStorage } from './interfaces/IStorage';
 
+import { NodeTransformers } from './enums/NodeTransformers';
 import { NodeType } from './enums/NodeType';
 import { ObfuscationEvents } from './enums/ObfuscationEvents';
 import { VisitorDirection } from './enums/VisitorDirection';
@@ -27,34 +29,34 @@ export class Obfuscator implements IObfuscator {
      * @type {Map<string, string[]>}
      */
     private static readonly nodeControlFlowTransformersMap: Map <string, string[]> = new Map <string, string[]> ([
-        [NodeType.FunctionDeclaration, ['FunctionControlFlowTransformer']],
-        [NodeType.FunctionExpression, ['FunctionControlFlowTransformer']]
+        [NodeType.FunctionDeclaration, [NodeTransformers.FunctionControlFlowTransformer]],
+        [NodeType.FunctionExpression, [NodeTransformers.FunctionControlFlowTransformer]]
     ]);
 
     /**
      * @type {Map<string, string[]>}
      */
     private static readonly nodeObfuscatorsMap: Map <string, string[]> = new Map <string, string[]> ([
-        [NodeType.ArrowFunctionExpression, ['FunctionObfuscator']],
-        [NodeType.ClassDeclaration, ['FunctionDeclarationObfuscator']],
-        [NodeType.CatchClause, ['CatchClauseObfuscator']],
+        [NodeType.ArrowFunctionExpression, [NodeTransformers.FunctionObfuscator]],
+        [NodeType.ClassDeclaration, [NodeTransformers.FunctionDeclarationObfuscator]],
+        [NodeType.CatchClause, [NodeTransformers.CatchClauseObfuscator]],
         [NodeType.FunctionDeclaration, [
-            'FunctionDeclarationObfuscator',
-            'FunctionObfuscator'
+            NodeTransformers.FunctionDeclarationObfuscator,
+            NodeTransformers.FunctionObfuscator
         ]],
-        [NodeType.FunctionExpression, ['FunctionObfuscator']],
-        [NodeType.MemberExpression, ['MemberExpressionObfuscator']],
-        [NodeType.MethodDefinition, ['MethodDefinitionObfuscator']],
-        [NodeType.ObjectExpression, ['ObjectExpressionObfuscator']],
-        [NodeType.VariableDeclaration, ['VariableDeclarationObfuscator']],
-        [NodeType.LabeledStatement, ['LabeledStatementObfuscator']],
-        [NodeType.Literal, ['LiteralObfuscator']]
+        [NodeType.FunctionExpression, [NodeTransformers.FunctionObfuscator]],
+        [NodeType.MemberExpression, [NodeTransformers.MemberExpressionObfuscator]],
+        [NodeType.MethodDefinition, [NodeTransformers.MethodDefinitionObfuscator]],
+        [NodeType.ObjectExpression, [NodeTransformers.ObjectExpressionObfuscator]],
+        [NodeType.VariableDeclaration, [NodeTransformers.VariableDeclarationObfuscator]],
+        [NodeType.LabeledStatement, [NodeTransformers.LabeledStatementObfuscator]],
+        [NodeType.Literal, [NodeTransformers.LiteralObfuscator]]
     ]);
 
     /**
-     * @type {(nodeTransformersMap: Map<string, string[]>) => (nodeType: string) => INodeTransformer[],}
+     * @type {TNodeTransformersFactory}
      */
-    private readonly nodeTransformersFactory: (nodeTransformersMap: Map<string, string[]>) => (nodeType: string) => INodeTransformer[];
+    private readonly nodeTransformersFactory: TNodeTransformersFactory;
 
     /**
      * @type {IObfuscationEventEmitter}
@@ -80,7 +82,7 @@ export class Obfuscator implements IObfuscator {
     constructor (
         @inject(ServiceIdentifiers.IStackTraceAnalyzer) stackTraceAnalyzer: IStackTraceAnalyzer,
         @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
-        @inject(ServiceIdentifiers['Factory<INodeTransformer[]>']) nodeTransformersFactory: (nodeTransformersMap: Map<string, string[]>) => (nodeType: string) => INodeTransformer[],
+        @inject(ServiceIdentifiers['Factory<INodeTransformer[]>']) nodeTransformersFactory: TNodeTransformersFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.stackTraceAnalyzer = stackTraceAnalyzer;
@@ -135,16 +137,16 @@ export class Obfuscator implements IObfuscator {
     /**
      * @param astTree
      * @param direction
-     * @param nodeTransformersFactory
+     * @param nodeTransformersConcreteFactory
      */
     private transformAstTree (
         astTree: ESTree.Program,
         direction: TVisitorDirection,
-        nodeTransformersFactory: (nodeType: string) => INodeTransformer[]
+        nodeTransformersConcreteFactory: (nodeType: string) => INodeTransformer[]
     ): void {
         estraverse.traverse(astTree, {
             [direction]: (node: ESTree.Node, parentNode: ESTree.Node): void => {
-                const nodeTransformers: INodeTransformer[] = nodeTransformersFactory(node.type);
+                const nodeTransformers: INodeTransformer[] = nodeTransformersConcreteFactory(node.type);
 
                 nodeTransformers.forEach((nodeTransformer: INodeTransformer) => {
                     nodeTransformer.transformNode(node, parentNode);

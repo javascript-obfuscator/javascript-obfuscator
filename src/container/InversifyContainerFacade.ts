@@ -43,7 +43,8 @@ export class InversifyContainerFacade {
 
         this.container
             .bind<IObfuscator>(ServiceIdentifiers.IObfuscator)
-            .to(Obfuscator);
+            .to(Obfuscator)
+            .inSingletonScope();
 
         this.container
             .bind<IObfuscationEventEmitter>(ServiceIdentifiers.IObfuscationEventEmitter)

@@ -7,5 +7,6 @@ import { FunctionControlFlowTransformer } from '../../node-transformers/node-con
 export const nodeControlFlowTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     bind<INodeTransformer>('INodeTransformer')
         .to(FunctionControlFlowTransformer)
+        .inSingletonScope()
         .whenTargetNamed('FunctionControlFlowTransformer');
 });

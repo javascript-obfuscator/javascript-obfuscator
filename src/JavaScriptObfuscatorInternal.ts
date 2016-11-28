@@ -7,11 +7,13 @@ import * as ESTree from 'estree';
 
 import { Chance } from 'chance';
 
+import { ICustomNode } from './interfaces/custom-nodes/ICustomNode';
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
 import { IObfuscator } from './interfaces/IObfuscator';
 import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
 import { IInputOptions } from './interfaces/IInputOptions';
 import { IOptions } from './interfaces/IOptions';
+import { IStorage } from './interfaces/IStorage';
 
 import { ObfuscationResult } from './ObfuscationResult';
 import { SourceMapCorrector } from './SourceMapCorrector';
@@ -34,6 +36,11 @@ export class JavaScriptObfuscatorInternal {
     };
 
     /**
+     * @types {IStorage<ICustomNode>}
+     */
+    private readonly customNodesStorage: IStorage<ICustomNode>;
+
+    /**
      * @types {InversifyContainerFacade}
      */
     private readonly inversifyContainerFacade: InversifyContainerFacade;
@@ -54,8 +61,14 @@ export class JavaScriptObfuscatorInternal {
     constructor (inputOptions: IInputOptions) {
         this.inversifyContainerFacade = new InversifyContainerFacade(inputOptions);
 
-        this.obfuscator = this.inversifyContainerFacade.get<IObfuscator>(ServiceIdentifiers.IObfuscator);
-        this.options = this.inversifyContainerFacade.get<IOptions>(ServiceIdentifiers.IOptions);
+        this.obfuscator = this.inversifyContainerFacade
+            .get<IObfuscator>(ServiceIdentifiers.IObfuscator);
+
+        this.customNodesStorage = this.inversifyContainerFacade
+            .get<IStorage<ICustomNode>>(ServiceIdentifiers['IStorage<ICustomNode>']);
+
+        this.options = this.inversifyContainerFacade
+            .get<IOptions>(ServiceIdentifiers.IOptions);
     }
 
     /**
@@ -112,7 +125,7 @@ export class JavaScriptObfuscatorInternal {
         const astTree: ESTree.Program = esprima.parse(sourceCode, JavaScriptObfuscatorInternal.esprimaParams);
 
         // obfuscate AST tree
-        const obfuscatedAstTree: ESTree.Program = this.obfuscator.obfuscateAstTree(astTree);
+        const obfuscatedAstTree: ESTree.Program = this.obfuscator.obfuscateAstTree(astTree, this.customNodesStorage);
 
         // generate code
         const generatorOutput: IGeneratorOutput = this.generateCode(sourceCode, obfuscatedAstTree);

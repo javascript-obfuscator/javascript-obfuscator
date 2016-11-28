@@ -1,6 +1,13 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+
 import * as escodegen from 'escodegen';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
+
+import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../../interfaces/IOptions';
+import { IStorage } from '../../interfaces/IStorage';
 
 import { NodeType } from '../../enums/NodeType';
 
@@ -8,7 +15,19 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
 import { StringLiteralReplacer } from './replacers/StringLiteralReplacer';
 
+@injectable()
 export class MemberExpressionObfuscator extends AbstractNodeTransformer {
+    /**
+     * @param customNodesStorage
+     * @param options
+     */
+    constructor(
+        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
+        super(customNodesStorage, options);
+    }
+
     /**
      * @param memberExpressionNode
      */

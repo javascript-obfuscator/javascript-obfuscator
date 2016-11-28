@@ -1,7 +1,7 @@
 import { BabelPolyfill } from './polyfills/BabelPolyfill';
+import 'reflect-metadata';
 
 require('source-map-support').install();
-
 BabelPolyfill.append();
 
 /**

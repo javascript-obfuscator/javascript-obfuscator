@@ -1,3 +1,6 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
@@ -23,6 +26,7 @@ import { NodeUtils } from '../../node/NodeUtils';
  *     function _0x12d45f () { //... };
  *     _0x12d45f();
  */
+@injectable()
 export class FunctionDeclarationObfuscator extends AbstractNodeTransformer {
     /**
      * @type {IdentifierReplacer}
@@ -33,7 +37,10 @@ export class FunctionDeclarationObfuscator extends AbstractNodeTransformer {
      * @param customNodesStorage
      * @param options
      */
-    constructor(customNodesStorage: IStorage<ICustomNode>, options: IOptions) {
+    constructor(
+        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
         super(customNodesStorage, options);
 
         this.identifierReplacer = new IdentifierReplacer(this.customNodesStorage, this.options);

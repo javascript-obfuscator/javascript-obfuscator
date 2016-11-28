@@ -11,15 +11,12 @@ import { IObfuscationEventEmitter } from './interfaces/IObfuscationEventEmitter'
 import { IObfuscator } from './interfaces/IObfuscator';
 import { IOptions } from './interfaces/IOptions';
 import { INodeTransformer } from './interfaces/INodeTransformer';
-import { INodeTransformersFactory } from './interfaces/INodeTransformersFactory';
 import { IStackTraceAnalyzer } from './interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
 import { IStorage } from './interfaces/IStorage';
 
+import { NodeType } from './enums/NodeType';
 import { ObfuscationEvents } from './enums/ObfuscationEvents';
 import { VisitorDirection } from './enums/VisitorDirection';
-
-import { NodeControlFlowTransformersFactory } from './node-transformers/node-control-flow-transformers/factory/NodeControlFlowTransformersFactory';
-import { NodeObfuscatorsFactory } from './node-transformers/node-obfuscators/factory/NodeObfuscatorsFactory';
 
 import { Node } from './node/Node';
 import { NodeUtils } from './node/NodeUtils';
@@ -27,9 +24,37 @@ import { NodeUtils } from './node/NodeUtils';
 @injectable()
 export class Obfuscator implements IObfuscator {
     /**
-     * @type {IStorage<ICustomNode>}
+     * @type {Map<string, string[]>}
      */
-    private readonly customNodesStorage: IStorage<ICustomNode>;
+    private static readonly nodeControlFlowTransformersMap: Map <string, string[]> = new Map <string, string[]> ([
+        [NodeType.FunctionDeclaration, ['FunctionControlFlowTransformer']],
+        [NodeType.FunctionExpression, ['FunctionControlFlowTransformer']]
+    ]);
+
+    /**
+     * @type {Map<string, string[]>}
+     */
+    private static readonly nodeObfuscatorsMap: Map <string, string[]> = new Map <string, string[]> ([
+        [NodeType.ArrowFunctionExpression, ['FunctionObfuscator']],
+        [NodeType.ClassDeclaration, ['FunctionDeclarationObfuscator']],
+        [NodeType.CatchClause, ['CatchClauseObfuscator']],
+        [NodeType.FunctionDeclaration, [
+            'FunctionDeclarationObfuscator',
+            'FunctionObfuscator'
+        ]],
+        [NodeType.FunctionExpression, ['FunctionObfuscator']],
+        [NodeType.MemberExpression, ['MemberExpressionObfuscator']],
+        [NodeType.MethodDefinition, ['MethodDefinitionObfuscator']],
+        [NodeType.ObjectExpression, ['ObjectExpressionObfuscator']],
+        [NodeType.VariableDeclaration, ['VariableDeclarationObfuscator']],
+        [NodeType.LabeledStatement, ['LabeledStatementObfuscator']],
+        [NodeType.Literal, ['LiteralObfuscator']]
+    ]);
+
+    /**
+     * @type {(nodeTransformersMap: Map<string, string[]>) => (nodeType: string) => INodeTransformer[],}
+     */
+    private readonly nodeTransformersFactory: (nodeTransformersMap: Map<string, string[]>) => (nodeType: string) => INodeTransformer[];
 
     /**
      * @type {IObfuscationEventEmitter}
@@ -47,38 +72,38 @@ export class Obfuscator implements IObfuscator {
     private readonly stackTraceAnalyzer: IStackTraceAnalyzer;
 
     /**
-     * @param obfuscationEventEmitter
      * @param stackTraceAnalyzer
-     * @param customNodesStorage
+     * @param obfuscationEventEmitter
+     * @param nodeTransformersFactory
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
         @inject(ServiceIdentifiers.IStackTraceAnalyzer) stackTraceAnalyzer: IStackTraceAnalyzer,
-        @inject(ServiceIdentifiers.IStorage) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
+        @inject(ServiceIdentifiers['Factory<INodeTransformer[]>']) nodeTransformersFactory: (nodeTransformersMap: Map<string, string[]>) => (nodeType: string) => INodeTransformer[],
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        this.obfuscationEventEmitter = obfuscationEventEmitter;
         this.stackTraceAnalyzer = stackTraceAnalyzer;
-        this.customNodesStorage = customNodesStorage;
+        this.obfuscationEventEmitter = obfuscationEventEmitter;
+        this.nodeTransformersFactory = nodeTransformersFactory;
         this.options = options;
     }
 
     /**
      * @param astTree
+     * @param customNodesStorage
      * @returns {ESTree.Program}
      */
-    public obfuscateAstTree (astTree: ESTree.Program): ESTree.Program {
+    public obfuscateAstTree (astTree: ESTree.Program, customNodesStorage: IStorage<ICustomNode>): ESTree.Program {
         if (Node.isProgramNode(astTree) && !astTree.body.length) {
             return astTree;
         }
 
-        // zero pass: parentize all nodes
         NodeUtils.parentize(astTree);
 
         // prepare custom nodes
-        this.customNodesStorage.initialize(this.stackTraceAnalyzer.analyze(astTree.body));
-        this.customNodesStorage
+        customNodesStorage.initialize(this.stackTraceAnalyzer.analyze(astTree.body));
+        customNodesStorage
             .getStorage()
             .forEach((customNode: ICustomNode) => {
                 this.obfuscationEventEmitter.once(customNode.getAppendEvent(), customNode.appendNode.bind(customNode));
@@ -88,17 +113,19 @@ export class Obfuscator implements IObfuscator {
 
         // first pass: control flow flattening
         if (this.options.controlFlowFlattening) {
-            this.transformAstTree(astTree, VisitorDirection.leave, new NodeControlFlowTransformersFactory(
-                this.customNodesStorage,
-                this.options
-            ));
+            this.transformAstTree(
+                astTree,
+                VisitorDirection.leave,
+                this.nodeTransformersFactory(Obfuscator.nodeControlFlowTransformersMap)
+            );
         }
 
         // second pass: nodes obfuscation
-        this.transformAstTree(astTree, VisitorDirection.enter, new NodeObfuscatorsFactory(
-            this.customNodesStorage,
-            this.options
-        ));
+        this.transformAstTree(
+            astTree,
+            VisitorDirection.enter,
+            this.nodeTransformersFactory(Obfuscator.nodeObfuscatorsMap)
+        );
 
         this.obfuscationEventEmitter.emit(ObfuscationEvents.AfterObfuscation, astTree);
 
@@ -113,11 +140,11 @@ export class Obfuscator implements IObfuscator {
     private transformAstTree (
         astTree: ESTree.Program,
         direction: TVisitorDirection,
-        nodeTransformersFactory: INodeTransformersFactory
+        nodeTransformersFactory: (nodeType: string) => INodeTransformer[]
     ): void {
         estraverse.traverse(astTree, {
             [direction]: (node: ESTree.Node, parentNode: ESTree.Node): void => {
-                const nodeTransformers: INodeTransformer[] = nodeTransformersFactory.initializeNodeTransformers(node.type);
+                const nodeTransformers: INodeTransformer[] = nodeTransformersFactory(node.type);
 
                 nodeTransformers.forEach((nodeTransformer: INodeTransformer) => {
                     nodeTransformer.transformNode(node, parentNode);

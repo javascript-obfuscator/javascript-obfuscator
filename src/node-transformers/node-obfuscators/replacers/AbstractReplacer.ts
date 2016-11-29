@@ -32,8 +32,7 @@ export abstract class AbstractReplacer implements IReplacer {
 
     /**
      * @param nodeValue
-     * @param namesMap
      * @returns {string}
      */
-    public abstract replace (nodeValue: any, namesMap?: Map <string, string>): string;
+    public abstract replace (nodeValue: any): string;
 }

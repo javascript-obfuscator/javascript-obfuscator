@@ -26,17 +26,17 @@ import { NodeUtils } from './node/NodeUtils';
 @injectable()
 export class Obfuscator implements IObfuscator {
     /**
-     * @type {Map<string, string[]>}
+     * @type {Map<string, NodeTransformers[]>}
      */
-    private static readonly nodeControlFlowTransformersMap: Map <string, string[]> = new Map <string, string[]> ([
+    private static readonly nodeControlFlowTransformersMap: Map <string, NodeTransformers[]> = new Map <string, NodeTransformers[]> ([
         [NodeType.FunctionDeclaration, [NodeTransformers.FunctionControlFlowTransformer]],
         [NodeType.FunctionExpression, [NodeTransformers.FunctionControlFlowTransformer]]
     ]);
 
     /**
-     * @type {Map<string, string[]>}
+     * @type {Map<string, NodeTransformers[]>}
      */
-    private static readonly nodeObfuscatorsMap: Map <string, string[]> = new Map <string, string[]> ([
+    private static readonly nodeObfuscatorsMap: Map <string, NodeTransformers[]> = new Map <string, NodeTransformers[]> ([
         [NodeType.ArrowFunctionExpression, [NodeTransformers.FunctionObfuscator]],
         [NodeType.ClassDeclaration, [NodeTransformers.FunctionDeclarationObfuscator]],
         [NodeType.CatchClause, [NodeTransformers.CatchClauseObfuscator]],

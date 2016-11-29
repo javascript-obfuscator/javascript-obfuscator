@@ -1,3 +1,5 @@
 import { INodeTransformer } from '../interfaces/INodeTransformer';
 
-export type TNodeTransformersFactory = (nodeTransformersMap: Map<string, string[]>) => (nodeType: string) => INodeTransformer[];
+import { NodeTransformers } from '../enums/NodeTransformers';
+
+export type TNodeTransformersFactory = (nodeTransformersMap: Map<string, NodeTransformers[]>) => (nodeType: string) => INodeTransformer[];

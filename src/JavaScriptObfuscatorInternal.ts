@@ -1,4 +1,4 @@
-import { InversifyContainerFacade } from "./container/InversifyContainerFacade";
+import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 
 import * as esprima from 'esprima';
@@ -8,10 +8,10 @@ import * as ESTree from 'estree';
 import { Chance } from 'chance';
 
 import { ICustomNode } from './interfaces/custom-nodes/ICustomNode';
+import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
 import { IObfuscator } from './interfaces/IObfuscator';
 import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
-import { IInputOptions } from './interfaces/IInputOptions';
 import { IOptions } from './interfaces/IOptions';
 import { IStorage } from './interfaces/IStorage';
 
@@ -19,7 +19,8 @@ import { ObfuscationResult } from './ObfuscationResult';
 import { SourceMapCorrector } from './SourceMapCorrector';
 import { Utils } from './Utils';
 
-export class JavaScriptObfuscatorInternal {
+@injectable()
+export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
     /**
      * @type {GenerateOptions}
      */
@@ -41,11 +42,6 @@ export class JavaScriptObfuscatorInternal {
     private readonly customNodesStorage: IStorage<ICustomNode>;
 
     /**
-     * @types {InversifyContainerFacade}
-     */
-    private readonly inversifyContainerFacade: InversifyContainerFacade;
-
-    /**
      * @types {IObfuscator}
      */
     private readonly obfuscator: IObfuscator;
@@ -56,19 +52,18 @@ export class JavaScriptObfuscatorInternal {
     private readonly options: IOptions;
 
     /**
-     * @param inputOptions
+     * @param obfuscator
+     * @param customNodesStorage
+     * @param options
      */
-    constructor (inputOptions: IInputOptions) {
-        this.inversifyContainerFacade = new InversifyContainerFacade(inputOptions);
-
-        this.obfuscator = this.inversifyContainerFacade
-            .get<IObfuscator>(ServiceIdentifiers.IObfuscator);
-
-        this.customNodesStorage = this.inversifyContainerFacade
-            .get<IStorage<ICustomNode>>(ServiceIdentifiers['IStorage<ICustomNode>']);
-
-        this.options = this.inversifyContainerFacade
-            .get<IOptions>(ServiceIdentifiers.IOptions);
+    constructor (
+        @inject(ServiceIdentifiers.IObfuscator) obfuscator: IObfuscator,
+        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
+        this.obfuscator = obfuscator;
+        this.customNodesStorage = customNodesStorage;
+        this.options = options;
     }
 
     /**
@@ -101,7 +96,7 @@ export class JavaScriptObfuscatorInternal {
      * @param generatorOutput
      * @returns {IObfuscationResult}
      */
-    public getObfuscationResult (generatorOutput: IGeneratorOutput): IObfuscationResult {
+    private getObfuscationResult (generatorOutput: IGeneratorOutput): IObfuscationResult {
         return new SourceMapCorrector(
             new ObfuscationResult(
                 generatorOutput.code,

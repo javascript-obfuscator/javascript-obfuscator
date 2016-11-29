@@ -5,6 +5,7 @@ import { nodeTransformersModule } from './modules/NodeTransformersModule';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { IInputOptions } from '../interfaces/IInputOptions';
+import { IJavaScriptObfuscator } from '../interfaces/IJavaScriptObfsucator';
 import { IObfuscationEventEmitter } from '../interfaces/IObfuscationEventEmitter';
 import { IObfuscator } from '../interfaces/IObfuscator';
 import { IOptions } from '../interfaces/IOptions';
@@ -12,6 +13,7 @@ import { IStackTraceAnalyzer } from '../interfaces/stack-trace-analyzer/IStackTr
 import { IStorage } from '../interfaces/IStorage';
 
 import { CustomNodesStorage } from '../storages/custom-nodes/CustomNodesStorage';
+import { JavaScriptObfuscatorInternal } from '../JavaScriptObfuscatorInternal';
 import { ObfuscationEventEmitter } from '../event-emitters/ObfuscationEventEmitter';
 import { Obfuscator } from '../Obfuscator';
 import { Options } from "../options/Options";
@@ -21,13 +23,18 @@ export class InversifyContainerFacade {
     /**
      * @type {interfaces.Container}
      */
-    private container: interfaces.Container;
+    private readonly container: interfaces.Container;
 
     /**
      * @param options
      */
     constructor (options: IInputOptions) {
         this.container = new Container();
+
+        this.container
+            .bind<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator)
+            .to(JavaScriptObfuscatorInternal)
+            .inSingletonScope();
 
         this.container
             .bind<IOptions>(ServiceIdentifiers.IOptions)

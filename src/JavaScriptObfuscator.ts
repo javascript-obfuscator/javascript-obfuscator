@@ -5,11 +5,13 @@ if (!(<any>global)._babelPolyfill) {
 }
 
 import { IInputOptions } from './interfaces/IInputOptions';
+import { IInversifyContainerFacade } from './interfaces/container/IInversifyContainerFacade';
+import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
 
+import { InversifyContainerFacade } from './container/InversifyContainerFacade';
 import { JavaScriptObfuscatorCLI } from './cli/JavaScriptObfuscatorCLI';
-import { JavaScriptObfuscatorInternal } from './JavaScriptObfuscatorInternal';
-import { Options } from './options/Options';
+import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 
 export class JavaScriptObfuscator {
     /**
@@ -18,9 +20,9 @@ export class JavaScriptObfuscator {
      * @returns {string}
      */
     public static obfuscate (sourceCode: string, inputOptions: IInputOptions = {}): IObfuscationResult {
-        const javaScriptObfuscator: JavaScriptObfuscatorInternal = new JavaScriptObfuscatorInternal(
-            new Options(inputOptions)
-        );
+        const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade(inputOptions);
+        const javaScriptObfuscator: IJavaScriptObfuscator = inversifyContainerFacade
+            .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);
 
         return javaScriptObfuscator.obfuscate(sourceCode);
     }

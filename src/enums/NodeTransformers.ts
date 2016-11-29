@@ -1,4 +1,4 @@
-export enum NodeTransformers{
+export enum NodeTransformers {
     FunctionControlFlowTransformer,
     CatchClauseObfuscator,
     FunctionDeclarationObfuscator,

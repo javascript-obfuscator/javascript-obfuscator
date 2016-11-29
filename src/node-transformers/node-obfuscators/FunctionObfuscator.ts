@@ -6,8 +6,10 @@ import * as ESTree from 'estree';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/IOptions';
+import { IReplacer } from '../../interfaces/IReplacer';
 import { IStorage } from '../../interfaces/IStorage';
 
+import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscatorsReplacers';
 import { NodeType } from '../../enums/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
@@ -32,15 +34,17 @@ export class FunctionObfuscator extends AbstractNodeTransformer {
 
     /**
      * @param customNodesStorage
+     * @param nodeObfuscatorsReplacersFactory
      * @param options
      */
     constructor(
         @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers['Factory<IReplacer>']) nodeObfuscatorsReplacersFactory: (replacer: NodeObfuscatorsReplacers) => IReplacer,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(customNodesStorage, options);
 
-        this.identifierReplacer = new IdentifierReplacer(this.customNodesStorage, this.options);
+        this.identifierReplacer = <IdentifierReplacer>nodeObfuscatorsReplacersFactory(NodeObfuscatorsReplacers.IdentifierReplacer);
     }
 
     /**

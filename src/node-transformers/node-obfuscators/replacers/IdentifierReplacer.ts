@@ -1,11 +1,30 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
+
+import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../../../interfaces/IOptions';
+import { IStorage } from '../../../interfaces/IStorage';
+
 import { AbstractReplacer } from './AbstractReplacer';
 import { Utils } from '../../../Utils';
 
+@injectable()
 export class IdentifierReplacer extends AbstractReplacer {
     /**
      * @type {Map<string, string>}
      */
     private readonly namesMap: Map<string, string> = new Map<string, string>();
+
+    /**
+     * @param customNodesStorage
+     * @param options
+     */
+    constructor (
+        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
+        super(customNodesStorage, options);
+    }
 
     /**
      * @param nodeValue

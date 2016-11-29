@@ -1,4 +1,10 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
+
+import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { ICustomNodeWithData } from '../../../interfaces/custom-nodes/ICustomNodeWithData';
+import { ICustomNodeWithIdentifier } from '../../../interfaces/custom-nodes/ICustomNodeWithIdentifier';
+import { IOptions } from '../../../interfaces/IOptions';
 import { IStorage } from '../../../interfaces/IStorage';
 
 import { StringArrayEncoding } from '../../../enums/StringArrayEncoding';
@@ -6,8 +12,8 @@ import { StringArrayEncoding } from '../../../enums/StringArrayEncoding';
 import { AbstractReplacer } from './AbstractReplacer';
 import { NumberLiteralReplacer } from './NumberLiteralReplacer';
 import { Utils } from '../../../Utils';
-import { ICustomNodeWithIdentifier } from '../../../interfaces/custom-nodes/ICustomNodeWithIdentifier';
 
+@injectable()
 export class StringLiteralReplacer extends AbstractReplacer {
     /**
      * @type {number}
@@ -19,6 +25,17 @@ export class StringLiteralReplacer extends AbstractReplacer {
      */
     private static readonly rc4Keys: string[] = Utils.getRandomGenerator()
         .n(() => Utils.getRandomGenerator().string({length: 4}), 50);
+
+    /**
+     * @param customNodesStorage
+     * @param options
+     */
+    constructor (
+        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
+        super(customNodesStorage, options);
+    }
 
     /**
      * @param nodeValue

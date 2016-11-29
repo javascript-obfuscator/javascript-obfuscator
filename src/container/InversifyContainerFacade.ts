@@ -1,7 +1,9 @@
 import { Container, interfaces } from 'inversify';
 import { ServiceIdentifiers } from './ServiceIdentifiers';
 
-import { nodeTransformersModule } from './modules/NodeTransformersModule';
+import { nodeControlFlowTransformersModule } from './modules/node-transformers/NodeControlFlowTransformersModule';
+import { nodeObfuscatorsModule } from './modules/node-transformers/NodeObfuscatorsModule';
+import { nodeTransformersModule } from './modules/node-transformers/NodeTransformersModule';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { IInputOptions } from '../interfaces/IInputOptions';
@@ -65,6 +67,8 @@ export class InversifyContainerFacade {
 
         // modules
         this.container.load(nodeTransformersModule);
+        this.container.load(nodeControlFlowTransformersModule);
+        this.container.load(nodeObfuscatorsModule);
     }
 
     /**
@@ -73,5 +77,9 @@ export class InversifyContainerFacade {
      */
     public get <T> (serviceIdentifier: interfaces.ServiceIdentifier<T>): T {
         return this.container.get<T>(serviceIdentifier);
+    }
+
+    public getTagged <T> (serviceIdentifier: interfaces.ServiceIdentifier<T>, key: string, value: any): T {
+        return this.container.getTagged<T>(serviceIdentifier, key, value);
     }
 }

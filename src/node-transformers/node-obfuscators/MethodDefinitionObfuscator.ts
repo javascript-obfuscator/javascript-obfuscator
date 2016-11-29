@@ -6,12 +6,14 @@ import * as ESTree from 'estree';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/IOptions';
+import { IReplacer } from '../../interfaces/IReplacer';
 import { IStorage } from '../../interfaces/IStorage';
+
+import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscatorsReplacers';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
 import { Utils } from '../../Utils';
-import { StringLiteralReplacer } from './replacers/StringLiteralReplacer';
 
 /**
  * replaces:
@@ -23,19 +25,28 @@ import { StringLiteralReplacer } from './replacers/StringLiteralReplacer';
 @injectable()
 export class MethodDefinitionObfuscator extends AbstractNodeTransformer {
     /**
+     * @type {IReplacer}
+     */
+    private readonly stringLiteralReplacer: IReplacer;
+
+    /**
      * @type {string[]}
      */
     private static readonly ignoredNames: string[] = ['constructor'];
 
     /**
      * @param customNodesStorage
+     * @param replacersFactory
      * @param options
      */
     constructor(
         @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers['Factory<IReplacer>']) replacersFactory: (replacer: NodeObfuscatorsReplacers) => IReplacer,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(customNodesStorage, options);
+
+        this.stringLiteralReplacer = replacersFactory(NodeObfuscatorsReplacers.StringLiteralReplacer);
     }
 
     /**
@@ -58,8 +69,7 @@ export class MethodDefinitionObfuscator extends AbstractNodeTransformer {
                     methodDefinitionNode.computed === false
                 ) {
                     methodDefinitionNode.computed = true;
-                    node.name = new StringLiteralReplacer(this.customNodesStorage, this.options)
-                        .replace(node.name);
+                    node.name = this.stringLiteralReplacer.replace(node.name);
 
                     return;
                 }

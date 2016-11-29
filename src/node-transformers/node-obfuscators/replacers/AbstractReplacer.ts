@@ -1,8 +1,12 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
+
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/IOptions';
 import { IReplacer } from '../../../interfaces/IReplacer';
 import { IStorage } from '../../../interfaces/IStorage';
 
+@injectable()
 export abstract class AbstractReplacer implements IReplacer {
     /**
      * @type IStorage<ICustomNode>
@@ -18,7 +22,10 @@ export abstract class AbstractReplacer implements IReplacer {
      * @param customNodesStorage
      * @param options
      */
-    constructor (customNodesStorage: IStorage<ICustomNode>, options: IOptions) {
+    constructor (
+        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
         this.customNodesStorage = customNodesStorage;
         this.options = options;
     }

@@ -15,7 +15,7 @@ import { INodeTransformer } from './interfaces/INodeTransformer';
 import { IStackTraceAnalyzer } from './interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
 import { IStorage } from './interfaces/IStorage';
 
-import { NodeTransformers } from './enums/NodeTransformers';
+import { NodeTransformers } from './enums/container/NodeTransformers';
 import { NodeType } from './enums/NodeType';
 import { ObfuscationEvents } from './enums/ObfuscationEvents';
 import { VisitorDirection } from './enums/VisitorDirection';

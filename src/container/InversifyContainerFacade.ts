@@ -79,6 +79,12 @@ export class InversifyContainerFacade {
         return this.container.get<T>(serviceIdentifier);
     }
 
+    /**
+     * @param serviceIdentifier
+     * @param key
+     * @param value
+     * @returns {T}
+     */
     public getTagged <T> (serviceIdentifier: interfaces.ServiceIdentifier<T>, key: string, value: any): T {
         return this.container.getTagged<T>(serviceIdentifier, key, value);
     }

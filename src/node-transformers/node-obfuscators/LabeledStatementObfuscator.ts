@@ -16,6 +16,7 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { IdentifierReplacer } from './replacers/IdentifierReplacer';
 import { Node } from '../../node/Node';
 import { NodeUtils } from '../../node/NodeUtils';
+import { Utils } from '../../Utils';
 
 /**
  * replaces:
@@ -59,6 +60,11 @@ export class LabeledStatementObfuscator extends AbstractNodeTransformer {
      * @param labeledStatementNode
      */
     public transformNode (labeledStatementNode: ESTree.LabeledStatement): void {
+        this.identifierReplacer.setPrefix(Utils.getRandomGenerator().string({
+            length: 5,
+            pool: Utils.randomGeneratorPool
+        }));
+
         this.storeLabeledStatementName(labeledStatementNode);
         this.replaceLabeledStatementName(labeledStatementNode);
     }

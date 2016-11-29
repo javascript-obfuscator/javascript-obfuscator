@@ -16,6 +16,11 @@ export class IdentifierReplacer extends AbstractReplacer {
     private readonly namesMap: Map<string, string> = new Map<string, string>();
 
     /**
+     * @type {string}
+     */
+    private uniquePrefix: string;
+
+    /**
      * @param customNodesStorage
      * @param options
      */
@@ -31,13 +36,20 @@ export class IdentifierReplacer extends AbstractReplacer {
      * @returns {string}
      */
     public replace (nodeValue: string): string {
-        const obfuscatedIdentifierName: string|undefined = this.namesMap.get(nodeValue);
+        const obfuscatedIdentifierName: string|undefined = this.namesMap.get(`${nodeValue}-${this.uniquePrefix}`);
 
         if (!obfuscatedIdentifierName) {
             return nodeValue;
         }
 
         return obfuscatedIdentifierName;
+    }
+
+    /**
+     * @param uniquePrefix
+     */
+    public setPrefix (uniquePrefix: string): void {
+        this.uniquePrefix = uniquePrefix
     }
 
     /**
@@ -48,7 +60,7 @@ export class IdentifierReplacer extends AbstractReplacer {
      */
     public storeNames (nodeName: string): void {
         if (!this.isReservedName(nodeName)) {
-            this.namesMap.set(nodeName, Utils.getRandomVariableName());
+            this.namesMap.set(`${nodeName}-${this.uniquePrefix}`, Utils.getRandomVariableName());
         }
     }
 

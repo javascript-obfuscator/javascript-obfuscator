@@ -16,6 +16,7 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { IdentifierReplacer } from './replacers/IdentifierReplacer';
 import { Node } from '../../node/Node';
 import { NodeUtils } from '../../node/NodeUtils';
+import { Utils } from '../../Utils';
 
 /**
  * replaces:
@@ -51,6 +52,11 @@ export class CatchClauseObfuscator extends AbstractNodeTransformer {
      * @param catchClauseNode
      */
     public transformNode (catchClauseNode: ESTree.CatchClause): void {
+        this.identifierReplacer.setPrefix(Utils.getRandomGenerator().string({
+            length: 5,
+            pool: Utils.randomGeneratorPool
+        }));
+
         this.storeCatchClauseParam(catchClauseNode);
         this.replaceCatchClauseParam(catchClauseNode);
     }

@@ -3541,6 +3541,7 @@ var NodeType_1 = __webpack_require__(9);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(4);
 var NodeUtils_1 = __webpack_require__(10);
+var Utils_1 = __webpack_require__(0);
 var CatchClauseObfuscator = function (_AbstractNodeTransfor) {
     _inherits(CatchClauseObfuscator, _AbstractNodeTransfor);
 
@@ -3556,6 +3557,10 @@ var CatchClauseObfuscator = function (_AbstractNodeTransfor) {
     _createClass(CatchClauseObfuscator, [{
         key: "transformNode",
         value: function transformNode(catchClauseNode) {
+            this.identifierReplacer.setPrefix(Utils_1.Utils.getRandomGenerator().string({
+                length: 5,
+                pool: Utils_1.Utils.randomGeneratorPool
+            }));
             this.storeCatchClauseParam(catchClauseNode);
             this.replaceCatchClauseParam(catchClauseNode);
         }
@@ -3631,6 +3636,7 @@ var NodeType_1 = __webpack_require__(9);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(4);
 var NodeUtils_1 = __webpack_require__(10);
+var Utils_1 = __webpack_require__(0);
 var FunctionDeclarationObfuscator = function (_AbstractNodeTransfor) {
     _inherits(FunctionDeclarationObfuscator, _AbstractNodeTransfor);
 
@@ -3646,6 +3652,10 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeTransfor) {
     _createClass(FunctionDeclarationObfuscator, [{
         key: "transformNode",
         value: function transformNode(functionDeclarationNode, parentNode) {
+            this.identifierReplacer.setPrefix(Utils_1.Utils.getRandomGenerator().string({
+                length: 5,
+                pool: Utils_1.Utils.randomGeneratorPool
+            }));
             var blockScopeOfFunctionDeclarationNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(functionDeclarationNode);
             if (blockScopeOfFunctionDeclarationNode.type === NodeType_1.NodeType.Program) {
                 return;
@@ -3725,6 +3735,7 @@ var NodeType_1 = __webpack_require__(9);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(4);
 var NodeUtils_1 = __webpack_require__(10);
+var Utils_1 = __webpack_require__(0);
 var FunctionObfuscator = function (_AbstractNodeTransfor) {
     _inherits(FunctionObfuscator, _AbstractNodeTransfor);
 
@@ -3740,6 +3751,10 @@ var FunctionObfuscator = function (_AbstractNodeTransfor) {
     _createClass(FunctionObfuscator, [{
         key: "transformNode",
         value: function transformNode(functionNode) {
+            this.identifierReplacer.setPrefix(Utils_1.Utils.getRandomGenerator().string({
+                length: 5,
+                pool: Utils_1.Utils.randomGeneratorPool
+            }));
             this.storeFunctionParams(functionNode);
             this.replaceFunctionParams(functionNode);
         }
@@ -3825,6 +3840,7 @@ var NodeType_1 = __webpack_require__(9);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(4);
 var NodeUtils_1 = __webpack_require__(10);
+var Utils_1 = __webpack_require__(0);
 var LabeledStatementObfuscator = function (_AbstractNodeTransfor) {
     _inherits(LabeledStatementObfuscator, _AbstractNodeTransfor);
 
@@ -3840,6 +3856,10 @@ var LabeledStatementObfuscator = function (_AbstractNodeTransfor) {
     _createClass(LabeledStatementObfuscator, [{
         key: "transformNode",
         value: function transformNode(labeledStatementNode) {
+            this.identifierReplacer.setPrefix(Utils_1.Utils.getRandomGenerator().string({
+                length: 5,
+                pool: Utils_1.Utils.randomGeneratorPool
+            }));
             this.storeLabeledStatementName(labeledStatementNode);
             this.replaceLabeledStatementName(labeledStatementNode);
         }
@@ -4292,6 +4312,7 @@ var NodeType_1 = __webpack_require__(9);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(4);
 var NodeUtils_1 = __webpack_require__(10);
+var Utils_1 = __webpack_require__(0);
 var VariableDeclarationObfuscator = function (_AbstractNodeTransfor) {
     _inherits(VariableDeclarationObfuscator, _AbstractNodeTransfor);
 
@@ -4307,6 +4328,10 @@ var VariableDeclarationObfuscator = function (_AbstractNodeTransfor) {
     _createClass(VariableDeclarationObfuscator, [{
         key: "transformNode",
         value: function transformNode(variableDeclarationNode, parentNode) {
+            this.identifierReplacer.setPrefix(Utils_1.Utils.getRandomGenerator().string({
+                length: 5,
+                pool: Utils_1.Utils.randomGeneratorPool
+            }));
             var blockScopeOfVariableDeclarationNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(variableDeclarationNode);
             if (blockScopeOfVariableDeclarationNode.type === NodeType_1.NodeType.Program) {
                 return;
@@ -4458,17 +4483,22 @@ var IdentifierReplacer = function (_AbstractReplacer_1$A) {
     _createClass(IdentifierReplacer, [{
         key: "replace",
         value: function replace(nodeValue) {
-            var obfuscatedIdentifierName = this.namesMap.get(nodeValue);
+            var obfuscatedIdentifierName = this.namesMap.get(nodeValue + "-" + this.uniquePrefix);
             if (!obfuscatedIdentifierName) {
                 return nodeValue;
             }
             return obfuscatedIdentifierName;
         }
     }, {
+        key: "setPrefix",
+        value: function setPrefix(uniquePrefix) {
+            this.uniquePrefix = uniquePrefix;
+        }
+    }, {
         key: "storeNames",
         value: function storeNames(nodeName) {
             if (!this.isReservedName(nodeName)) {
-                this.namesMap.set(nodeName, Utils_1.Utils.getRandomVariableName());
+                this.namesMap.set(nodeName + "-" + this.uniquePrefix, Utils_1.Utils.getRandomVariableName());
             }
         }
     }, {

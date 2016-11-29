@@ -59,6 +59,10 @@ export class IdentifierReplacer extends AbstractReplacer {
      * @param nodeName
      */
     public storeNames (nodeName: string): void {
+        if (!this.uniquePrefix) {
+            throw new Error('`uniquePrefix` is `undefined`. Set it before `storeNames`');
+        }
+
         if (!this.isReservedName(nodeName)) {
             this.namesMap.set(`${nodeName}-${this.uniquePrefix}`, Utils.getRandomVariableName());
         }

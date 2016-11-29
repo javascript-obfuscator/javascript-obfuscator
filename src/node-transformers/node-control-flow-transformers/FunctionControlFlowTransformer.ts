@@ -20,7 +20,6 @@ import { ControlFlowStorageNode } from '../../custom-nodes/control-flow-storage-
 import { Node } from '../../node/Node';
 import { NodeAppender } from '../../node/NodeAppender';
 import { Utils } from '../../Utils';
-import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
@@ -60,8 +59,6 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         const controlFlowStorage: IStorage <ICustomNode> = new ControlFlowStorage();
         const controlFlowStorageCustomNodeName: string = Utils.getRandomVariableName(6);
 
-        console.log(NodeUtils.getNodeBlockScopeDepth(functionNode.body));
-
         estraverse.replace(functionNode.body, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 const controlFlowReplacer: TControlFlowReplacer | undefined = FunctionControlFlowTransformer
@@ -93,6 +90,10 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
                 return statementNode.expression;
             }
         });
+
+        if (!controlFlowStorage.getLength()) {
+            return;
+        }
 
         const controlFlowStorageCustomNode: ICustomNode = new ControlFlowStorageNode(
             controlFlowStorage,

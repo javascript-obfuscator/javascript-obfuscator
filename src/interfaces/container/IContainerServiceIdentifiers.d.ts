@@ -1,9 +1,11 @@
 import { interfaces } from 'inversify';
 
 export interface IContainerServiceIdentifiers {
+    'Factory<ICalleeDataExtractor>': interfaces.ServiceIdentifier<any>;
     'Factory<IControlFlowReplacer>': interfaces.ServiceIdentifier<any>;
     'Factory<INodeTransformer[]>': interfaces.ServiceIdentifier<any>;
     'Factory<IReplacer>': interfaces.ServiceIdentifier<any>;
+    ICalleeDataExtractor: interfaces.ServiceIdentifier<any>;
     IControlFlowReplacer: interfaces.ServiceIdentifier<any>;
     IJavaScriptObfuscator: interfaces.ServiceIdentifier<any>;
     INodeTransformer: interfaces.ServiceIdentifier<any>;

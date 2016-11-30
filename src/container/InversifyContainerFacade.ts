@@ -4,14 +4,15 @@ import { ServiceIdentifiers } from './ServiceIdentifiers';
 import { nodeControlFlowTransformersModule } from './modules/node-transformers/NodeControlFlowTransformersModule';
 import { nodeObfuscatorsModule } from './modules/node-transformers/NodeObfuscatorsModule';
 import { nodeTransformersModule } from './modules/node-transformers/NodeTransformersModule';
+import { stackTraceAnalyzerModule } from './modules/stack-trace-analyzer/StackTraceAnalyzerModule';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { IInputOptions } from '../interfaces/IInputOptions';
+import { IInversifyContainerFacade } from '../interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from '../interfaces/IJavaScriptObfsucator';
 import { IObfuscationEventEmitter } from '../interfaces/IObfuscationEventEmitter';
 import { IObfuscator } from '../interfaces/IObfuscator';
 import { IOptions } from '../interfaces/IOptions';
-import { IStackTraceAnalyzer } from '../interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
 import { IStorage } from '../interfaces/IStorage';
 
 import { CustomNodesStorage } from '../storages/custom-nodes/CustomNodesStorage';
@@ -19,9 +20,8 @@ import { JavaScriptObfuscatorInternal } from '../JavaScriptObfuscatorInternal';
 import { ObfuscationEventEmitter } from '../event-emitters/ObfuscationEventEmitter';
 import { Obfuscator } from '../Obfuscator';
 import { Options } from "../options/Options";
-import { StackTraceAnalyzer } from '../stack-trace-analyzer/StackTraceAnalyzer';
 
-export class InversifyContainerFacade {
+export class InversifyContainerFacade implements IInversifyContainerFacade {
     /**
      * @type {interfaces.Container}
      */
@@ -56,16 +56,12 @@ export class InversifyContainerFacade {
             .inSingletonScope();
 
         this.container
-            .bind<IStackTraceAnalyzer>(ServiceIdentifiers.IStackTraceAnalyzer)
-            .to(StackTraceAnalyzer)
-            .inSingletonScope();
-
-        this.container
             .bind<IStorage<ICustomNode>>(ServiceIdentifiers['IStorage<ICustomNode>'])
             .to(CustomNodesStorage)
             .inSingletonScope();
 
         // modules
+        this.container.load(stackTraceAnalyzerModule);
         this.container.load(nodeTransformersModule);
         this.container.load(nodeControlFlowTransformersModule);
         this.container.load(nodeObfuscatorsModule);

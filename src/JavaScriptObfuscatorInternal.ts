@@ -37,12 +37,12 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
     };
 
     /**
-     * @types {IStorage<ICustomNode>}
+     * @type {IStorage<ICustomNode>}
      */
     private readonly customNodesStorage: IStorage<ICustomNode>;
 
     /**
-     * @types {IObfuscator}
+     * @type {IObfuscator}
      */
     private readonly obfuscator: IObfuscator;
 

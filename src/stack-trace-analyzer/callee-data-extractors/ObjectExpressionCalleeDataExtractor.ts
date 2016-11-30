@@ -1,45 +1,31 @@
+import { injectable } from 'inversify';
+
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TObjectMembersCallsChain } from '../../types/TObjectMembersCallsChain';
 
 import { ICalleeData } from '../../interfaces/stack-trace-analyzer/ICalleeData';
-import { ICalleeDataExtractor } from '../../interfaces/stack-trace-analyzer/ICalleeDataExtractor';
 
 import { Node } from '../../node/Node';
 import { NodeUtils } from '../../node/NodeUtils';
+import { AbstractCalleeDataExtractor } from './AbstractCalleeDataExtractor';
 
-export class ObjectExpressionCalleeDataExtractor implements ICalleeDataExtractor {
-    /**
-     * @type {ESTree.Node[]}
-     */
-    private blockScopeBody: ESTree.Node[];
-
-    /**
-     * @type {ESTree.MemberExpression}
-     */
-    private callee: ESTree.MemberExpression;
-
+@injectable()
+export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtractor {
     /**
      * @param blockScopeBody
      * @param callee
-     */
-    constructor (blockScopeBody: ESTree.Node[], callee: ESTree.MemberExpression) {
-        this.blockScopeBody = blockScopeBody;
-        this.callee = callee;
-    }
-
-    /**
      * @returns {ICalleeData|null}
      */
-    public extract (): ICalleeData|null {
+    public extract (blockScopeBody: ESTree.Node[], callee: ESTree.MemberExpression): ICalleeData|null {
         let calleeBlockStatement: ESTree.BlockStatement|null = null,
             functionExpressionName: string|number|null = null;
 
-        if (Node.isMemberExpressionNode(this.callee)) {
+        if (Node.isMemberExpressionNode(callee)) {
             const objectMembersCallsChain: TObjectMembersCallsChain = this.createObjectMembersCallsChain(
                 [],
-                this.callee
+                callee
             );
 
             if (!objectMembersCallsChain.length) {
@@ -48,7 +34,7 @@ export class ObjectExpressionCalleeDataExtractor implements ICalleeDataExtractor
 
             functionExpressionName = objectMembersCallsChain[objectMembersCallsChain.length - 1];
             calleeBlockStatement = this.getCalleeBlockStatement(
-                NodeUtils.getBlockScopeOfNode(this.blockScopeBody[0]),
+                NodeUtils.getBlockScopeOfNode(blockScopeBody[0]),
                 objectMembersCallsChain
             );
         }

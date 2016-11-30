@@ -1,17 +1,20 @@
+import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
+
 import * as chai from 'chai';
 import * as ESTree from 'estree';
 
 import { TStatement } from '../../../src/types/TStatement';
 
+import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
 import { IStackTraceAnalyzer } from '../../../src/interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
 import { IStackTraceData } from '../../../src/interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { readFileAsString } from '../../helpers/readFileAsString';
 
+import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
 import { NodeAppender } from '../../../src/node/NodeAppender';
 import { NodeMocks } from '../../mocks/NodeMocks';
 import { NodeUtils } from '../../../src/node/NodeUtils';
-import { StackTraceAnalyzer } from '../../../src/stack-trace-analyzer/StackTraceAnalyzer';
 
 const assert: any = chai.assert;
 
@@ -50,7 +53,9 @@ describe('NodeAppender', () => {
     });
 
     describe('appendNodeToOptimalBlockScope (blockScopeStackTraceData: IStackTraceData[], blockScopeNode: TNodeWithBlockStatement, nodeBodyStatements: TStatement[], index: number = 0): void', () => {
-        const stackTraceAnalyzer: IStackTraceAnalyzer = new StackTraceAnalyzer();
+        const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade({});
+        const stackTraceAnalyzer: IStackTraceAnalyzer = inversifyContainerFacade
+            .get<IStackTraceAnalyzer>(ServiceIdentifiers.IStackTraceAnalyzer);
 
         let astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,

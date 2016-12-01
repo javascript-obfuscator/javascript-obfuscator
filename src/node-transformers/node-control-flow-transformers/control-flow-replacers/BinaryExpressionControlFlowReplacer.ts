@@ -5,8 +5,8 @@ import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
-import { IOptions } from '../../../interfaces/IOptions';
-import { IStorage } from '../../../interfaces/IStorage';
+import { IOptions } from '../../../interfaces/options/IOptions';
+import { IStorage } from '../../../interfaces/storages/IStorage';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
 import { BinaryExpressionFunctionNode } from '../../../custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/BinaryExpressionFunctionNode';
@@ -40,14 +40,14 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
      * @param parentNode
      * @param controlFlowStorage
      * @param controlFlowStorageCustomNodeName
-     * @returns {ICustomNode | undefined}
+     * @returns {ICustomNode}
      */
     public replace (
         binaryExpressionNode: ESTree.BinaryExpression,
         parentNode: ESTree.Node,
         controlFlowStorage: IStorage <ICustomNode>,
         controlFlowStorageCustomNodeName: string
-    ): ICustomNode | undefined {
+    ): ICustomNode {
         const key: string = AbstractControlFlowReplacer.getStorageKey();
 
         controlFlowStorage.set(key, new BinaryExpressionFunctionNode(binaryExpressionNode.operator, this.options));

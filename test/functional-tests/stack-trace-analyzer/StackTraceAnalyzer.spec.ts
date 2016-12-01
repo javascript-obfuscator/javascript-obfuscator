@@ -4,7 +4,7 @@ import * as chai from 'chai';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockStatement } from '../../../src/types/TNodeWithBlockStatement';
+import { TNodeWithBlockStatement } from '../../../src/types/node/TNodeWithBlockStatement';
 
 import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
 import { IStackTraceAnalyzer } from '../../../src/interfaces/stack-trace-analyzer/IStackTraceAnalyzer';

@@ -4,6 +4,7 @@ export interface IContainerServiceIdentifiers {
     'Factory<ICalleeDataExtractor>': interfaces.ServiceIdentifier<any>;
     'Factory<IControlFlowReplacer>': interfaces.ServiceIdentifier<any>;
     'Factory<INodeTransformer[]>': interfaces.ServiceIdentifier<any>;
+    'Factory<IObfuscationResult>': interfaces.ServiceIdentifier<any>;
     'Factory<IReplacer>': interfaces.ServiceIdentifier<any>;
     ICalleeDataExtractor: interfaces.ServiceIdentifier<any>;
     IControlFlowReplacer: interfaces.ServiceIdentifier<any>;
@@ -13,6 +14,7 @@ export interface IContainerServiceIdentifiers {
     IObfuscator: interfaces.ServiceIdentifier<any>;
     IOptions: interfaces.ServiceIdentifier<any>;
     IReplacer: interfaces.ServiceIdentifier<any>;
+    ISourceMapCorrector: interfaces.ServiceIdentifier<any>;
     IStackTraceAnalyzer: interfaces.ServiceIdentifier<any>;
     'IStorage<ICustomNode>': interfaces.ServiceIdentifier<any>;
     [key: string]: interfaces.ServiceIdentifier<any>;

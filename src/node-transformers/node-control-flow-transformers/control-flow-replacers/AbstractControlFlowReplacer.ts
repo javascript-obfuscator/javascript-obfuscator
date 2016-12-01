@@ -3,10 +3,10 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { IControlFlowReplacer } from '../../../interfaces/IControlFlowReplacer';
+import { IControlFlowReplacer } from '../../../interfaces/node-transformers/IControlFlowReplacer';
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
-import { IOptions } from '../../../interfaces/IOptions';
-import { IStorage } from '../../../interfaces/IStorage';
+import { IOptions } from '../../../interfaces/options/IOptions';
+import { IStorage } from '../../../interfaces/storages/IStorage';
 
 import { Utils } from '../../../Utils';
 

@@ -7,19 +7,23 @@ import { nodeTransformersModule } from './modules/node-transformers/NodeTransfor
 import { stackTraceAnalyzerModule } from './modules/stack-trace-analyzer/StackTraceAnalyzerModule';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
-import { IInputOptions } from '../interfaces/IInputOptions';
+import { IInputOptions } from '../interfaces/options/IInputOptions';
 import { IInversifyContainerFacade } from '../interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from '../interfaces/IJavaScriptObfsucator';
-import { IObfuscationEventEmitter } from '../interfaces/IObfuscationEventEmitter';
+import { IObfuscationEventEmitter } from '../interfaces/event-emitters/IObfuscationEventEmitter';
+import { IObfuscationResult } from '../interfaces/IObfuscationResult';
 import { IObfuscator } from '../interfaces/IObfuscator';
-import { IOptions } from '../interfaces/IOptions';
-import { IStorage } from '../interfaces/IStorage';
+import { IOptions } from '../interfaces/options/IOptions';
+import { ISourceMapCorrector } from '../interfaces/ISourceMapCorrector';
+import { IStorage } from '../interfaces/storages/IStorage';
 
 import { CustomNodesStorage } from '../storages/custom-nodes/CustomNodesStorage';
 import { JavaScriptObfuscatorInternal } from '../JavaScriptObfuscatorInternal';
 import { ObfuscationEventEmitter } from '../event-emitters/ObfuscationEventEmitter';
+import { ObfuscationResult } from '../ObfuscationResult';
 import { Obfuscator } from '../Obfuscator';
 import { Options } from "../options/Options";
+import { SourceMapCorrector } from '../SourceMapCorrector';
 
 export class InversifyContainerFacade implements IInversifyContainerFacade {
     /**
@@ -34,11 +38,6 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         this.container = new Container();
 
         this.container
-            .bind<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator)
-            .to(JavaScriptObfuscatorInternal)
-            .inSingletonScope();
-
-        this.container
             .bind<IOptions>(ServiceIdentifiers.IOptions)
             .toDynamicValue(() => {
                 return new Options(options);
@@ -46,8 +45,26 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
             .inSingletonScope();
 
         this.container
+            .bind<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator)
+            .to(JavaScriptObfuscatorInternal)
+            .inSingletonScope();
+
+        this.container
             .bind<IObfuscator>(ServiceIdentifiers.IObfuscator)
             .to(Obfuscator)
+            .inSingletonScope();
+
+        this.container
+            .bind<IObfuscationResult>(ServiceIdentifiers['Factory<IObfuscationResult>'])
+            .toFactory<IObfuscationResult>(() => {
+                return (obfuscatedCode: string, sourceMap: string) => {
+                    return new ObfuscationResult(obfuscatedCode, sourceMap);
+                };
+            });
+
+        this.container
+            .bind<ISourceMapCorrector>(ServiceIdentifiers.ISourceMapCorrector)
+            .to(SourceMapCorrector)
             .inSingletonScope();
 
         this.container
@@ -73,15 +90,5 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      */
     public get <T> (serviceIdentifier: interfaces.ServiceIdentifier<T>): T {
         return this.container.get<T>(serviceIdentifier);
-    }
-
-    /**
-     * @param serviceIdentifier
-     * @param key
-     * @param value
-     * @returns {T}
-     */
-    public getTagged <T> (serviceIdentifier: interfaces.ServiceIdentifier<T>, key: string, value: any): T {
-        return this.container.getTagged<T>(serviceIdentifier, key, value);
     }
 }

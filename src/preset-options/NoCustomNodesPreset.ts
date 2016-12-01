@@ -1,4 +1,4 @@
-import { IInputOptions } from '../interfaces/IInputOptions';
+import { IInputOptions } from '../interfaces/options/IInputOptions';
 
 import { SourceMapMode } from '../enums/SourceMapMode';
 

@@ -1,4 +1,4 @@
-import { IStorage } from '../interfaces/IStorage';
+import { IStorage } from '../interfaces/storages/IStorage';
 
 export abstract class ArrayStorage <T> implements IStorage <T> {
     /**

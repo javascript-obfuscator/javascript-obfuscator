@@ -1,12 +1,12 @@
 import * as format from 'string-template';
 
-import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-import { TObfuscationEvent } from '../../types/TObfuscationEvent';
-import { TStatement } from '../../types/TStatement';
+import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
+import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
+import { TStatement } from '../../types/node/TStatement';
 
 import { ICustomNodeWithData } from '../../interfaces/custom-nodes/ICustomNodeWithData';
-import { IOptions } from '../../interfaces/IOptions';
-import { IStorage } from '../../interfaces/IStorage';
+import { IOptions } from '../../interfaces/options/IOptions';
+import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 

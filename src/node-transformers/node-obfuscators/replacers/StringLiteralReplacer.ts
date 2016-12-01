@@ -4,13 +4,12 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { ICustomNodeWithData } from '../../../interfaces/custom-nodes/ICustomNodeWithData';
 import { ICustomNodeWithIdentifier } from '../../../interfaces/custom-nodes/ICustomNodeWithIdentifier';
-import { IOptions } from '../../../interfaces/IOptions';
-import { IStorage } from '../../../interfaces/IStorage';
+import { IOptions } from '../../../interfaces/options/IOptions';
+import { IStorage } from '../../../interfaces/storages/IStorage';
 
 import { StringArrayEncoding } from '../../../enums/StringArrayEncoding';
 
 import { AbstractReplacer } from './AbstractReplacer';
-import { NumberLiteralReplacer } from './NumberLiteralReplacer';
 import { Utils } from '../../../Utils';
 
 @injectable()
@@ -93,7 +92,7 @@ export class StringLiteralReplacer extends AbstractReplacer {
         }
 
         const stringArrayCallsWrapper: ICustomNodeWithIdentifier = <ICustomNodeWithIdentifier>this.customNodesStorage.get('stringArrayCallsWrapper');
-        const hexadecimalIndex: string = new NumberLiteralReplacer(this.customNodesStorage, this.options).replace(indexOfValue);
+        const hexadecimalIndex: string = `${Utils.hexadecimalPrefix}${Utils.decToHex(indexOfValue)}`;
 
         if (this.options.stringArrayEncoding === StringArrayEncoding.rc4) {
             return `${stringArrayCallsWrapper.getNodeIdentifier()}('${hexadecimalIndex}', '${Utils.stringToUnicodeEscapeSequence(rc4Key)}')`;

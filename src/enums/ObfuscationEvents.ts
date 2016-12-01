@@ -1,4 +1,4 @@
-import { TObfuscationEvent } from '../types/TObfuscationEvent';
+import { TObfuscationEvent } from '../types/event-emitters/TObfuscationEvent';
 
 import { Utils } from '../Utils';
 

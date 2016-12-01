@@ -3,8 +3,8 @@ import * as esprima from 'esprima';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockStatement } from '../types/TNodeWithBlockStatement';
-import { TStatement } from '../types/TStatement';
+import { TNodeWithBlockStatement } from '../types/node/TNodeWithBlockStatement';
+import { TStatement } from '../types/node/TStatement';
 
 import { NodeType } from '../enums/NodeType';
 
@@ -116,7 +116,7 @@ export class NodeUtils {
             return depth;
         }
 
-        if (Node.isBlockStatementNode(node)) {
+        if (Node.isBlockStatementNode(node) && Utils.arrayContains(NodeUtils.nodesWithBlockScope, parentNode.type)) {
             return NodeUtils.getNodeBlockScopeDepth(parentNode, ++depth);
         }
 

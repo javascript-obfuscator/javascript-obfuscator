@@ -1,4 +1,4 @@
-import { TObfuscationEvent } from '../../../types/TObfuscationEvent';
+import { TObfuscationEvent } from '../../../types/event-emitters/TObfuscationEvent';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStackTraceData';
@@ -12,7 +12,7 @@ import { StringArrayRotateFunctionNode } from '../StringArrayRotateFunctionNode'
 import { AbstractCustomNodesFactory } from '../../AbstractCustomNodesFactory';
 import { StringArrayStorage } from '../../../storages/string-array/StringArrayStorage';
 import { Utils } from '../../../Utils';
-import { IStorage } from '../../../interfaces/IStorage';
+import { IStorage } from '../../../interfaces/storages/IStorage';
 
 export class StringArrayCustomNodesFactory extends AbstractCustomNodesFactory {
     /**

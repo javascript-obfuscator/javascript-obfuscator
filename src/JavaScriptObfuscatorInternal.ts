@@ -5,18 +5,15 @@ import * as esprima from 'esprima';
 import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
-import { Chance } from 'chance';
-
 import { ICustomNode } from './interfaces/custom-nodes/ICustomNode';
 import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
 import { IObfuscator } from './interfaces/IObfuscator';
 import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
-import { IOptions } from './interfaces/IOptions';
-import { IStorage } from './interfaces/IStorage';
+import { IOptions } from './interfaces/options/IOptions';
+import { ISourceMapCorrector } from './interfaces/ISourceMapCorrector';
+import { IStorage } from './interfaces/storages/IStorage';
 
-import { ObfuscationResult } from './ObfuscationResult';
-import { SourceMapCorrector } from './SourceMapCorrector';
 import { Utils } from './Utils';
 
 @injectable()
@@ -52,16 +49,24 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
     private readonly options: IOptions;
 
     /**
+     * @type {ISourceMapCorrector}
+     */
+    private readonly sourceMapCorrector: ISourceMapCorrector;
+
+    /**
      * @param obfuscator
+     * @param sourceMapCorrector
      * @param customNodesStorage
      * @param options
      */
     constructor (
         @inject(ServiceIdentifiers.IObfuscator) obfuscator: IObfuscator,
+        @inject(ServiceIdentifiers.ISourceMapCorrector) sourceMapCorrector: ISourceMapCorrector,
         @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.obfuscator = obfuscator;
+        this.sourceMapCorrector = sourceMapCorrector;
         this.customNodesStorage = customNodesStorage;
         this.options = options;
     }
@@ -97,14 +102,10 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
      * @returns {IObfuscationResult}
      */
     private getObfuscationResult (generatorOutput: IGeneratorOutput): IObfuscationResult {
-        return new SourceMapCorrector(
-            new ObfuscationResult(
-                generatorOutput.code,
-                generatorOutput.map
-            ),
-            this.options.sourceMapBaseUrl + this.options.sourceMapFileName,
-            this.options.sourceMapMode
-        ).correct();
+        return this.sourceMapCorrector.correct(
+            generatorOutput.code,
+            generatorOutput.map
+        );
     }
 
     /**
@@ -113,7 +114,7 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
      */
     public obfuscate (sourceCode: string): IObfuscationResult {
         if (this.options.seed !== 0) {
-            Utils.setRandomGenerator(new Chance(this.options.seed));
+            Utils.setRandomGeneratorSeed(this.options.seed);
         }
 
         // parse AST tree

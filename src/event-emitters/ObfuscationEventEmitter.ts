@@ -1,6 +1,6 @@
 import { decorate, injectable } from 'inversify';
 
-import { IObfuscationEventEmitter } from '../interfaces/IObfuscationEventEmitter';
+import { IObfuscationEventEmitter } from '../interfaces/event-emitters/IObfuscationEventEmitter';
 
 import { EventEmitter } from 'events';
 

@@ -1,10 +1,10 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import { TCustomNodesFactory } from '../../types/TCustomNodesFactory';
+import { TCustomNodesFactory } from '../../types/container/TCustomNodesFactory';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
-import { IOptions } from '../../interfaces/IOptions';
+import { IOptions } from '../../interfaces/options/IOptions';
 import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { ConsoleOutputCustomNodesFactory } from '../../custom-nodes/console-output-nodes/factory/ConsoleOutputCustomNodesFactory';

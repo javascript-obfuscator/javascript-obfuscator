@@ -1,7 +1,7 @@
 import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
-import { INodeTransformer } from '../../../interfaces/INodeTransformer';
+import { INodeTransformer } from '../../../interfaces/node-transformers/INodeTransformer';
 
 import { NodeTransformers } from '../../../enums/container/NodeTransformers';
 

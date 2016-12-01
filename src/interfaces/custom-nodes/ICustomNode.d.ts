@@ -1,7 +1,7 @@
 import * as ESTree from 'estree';
 
-import { TObfuscationEvent } from '../../types/TObfuscationEvent';
-import { TStatement } from '../../types/TStatement';
+import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
+import { TStatement } from '../../types/node/TStatement';
 
 export interface ICustomNode {
     /**

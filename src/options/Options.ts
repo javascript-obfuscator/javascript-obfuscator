@@ -16,11 +16,11 @@ ValidationError,
 ValidatorOptions
 } from 'class-validator';
 
-import { IInputOptions } from '../interfaces/IInputOptions';
-import { IOptions } from '../interfaces/IOptions';
+import { IInputOptions } from '../interfaces/options/IInputOptions';
+import { IOptions } from '../interfaces/options/IOptions';
 
 import { TSourceMapMode } from '../types/TSourceMapMode';
-import { TStringArrayEncoding } from '../types/TStringArrayEncoding';
+import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 
 import { DEFAULT_PRESET } from '../preset-options/DefaultPreset';
 

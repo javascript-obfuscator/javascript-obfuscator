@@ -4,7 +4,7 @@ if (!(<any>global)._babelPolyfill) {
     require('babel-polyfill');
 }
 
-import { IInputOptions } from './interfaces/IInputOptions';
+import { IInputOptions } from './interfaces/options/IInputOptions';
 import { IInversifyContainerFacade } from './interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
 import { IObfuscationResult } from './interfaces/IObfuscationResult';

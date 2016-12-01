@@ -8,6 +8,11 @@ export class Utils {
     /**
      * @type {string}
      */
+    public static readonly hexadecimalPrefix: string = '0x';
+
+    /**
+     * @type {string}
+     */
     public static readonly randomGeneratorPool: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     /**
@@ -58,7 +63,7 @@ export class Utils {
         let output: string = '';
 
         string = encodeURIComponent(string).replace(/%([0-9A-F]{2})/g, (match, p1) => {
-            return String.fromCharCode(parseInt('0x' + p1));
+            return String.fromCharCode(parseInt(`${Utils.hexadecimalPrefix}${p1}`));
         });
 
         for (
@@ -112,7 +117,7 @@ export class Utils {
      * @returns {number}
      */
     public static getRandomFloat (min: number, max: number): number {
-        return Utils.getRandomGenerator().floating({
+        return Utils.randomGenerator.floating({
             min: min,
             max: max,
             fixed: 7
@@ -138,7 +143,7 @@ export class Utils {
      * @returns {number}
      */
     public static getRandomInteger (min: number, max: number): number {
-        return Utils.getRandomGenerator().integer({
+        return Utils.randomGenerator.integer({
             min: min,
             max: max
         });
@@ -150,10 +155,9 @@ export class Utils {
      */
     public static getRandomVariableName (length: number = 6): string {
         const rangeMinInteger: number = 10000,
-            rangeMaxInteger: number = 99999999,
-            prefix: string = '_0x';
+            rangeMaxInteger: number = 99999999;
 
-        return `${prefix}${(
+        return `_${Utils.hexadecimalPrefix}${(
             Utils.decToHex(
                 Utils.getRandomInteger(rangeMinInteger, rangeMaxInteger)
             )
@@ -267,10 +271,10 @@ export class Utils {
     }
 
     /**
-     * @param randomGenerator
+     * @param randomGeneratorSeed
      */
-    public static setRandomGenerator (randomGenerator: Chance.Chance | Chance.SeededChance): void {
-        Utils.randomGenerator = randomGenerator;
+    public static setRandomGeneratorSeed (randomGeneratorSeed: number): void {
+        Utils.randomGenerator = new Chance(randomGeneratorSeed);
     }
 
     /**

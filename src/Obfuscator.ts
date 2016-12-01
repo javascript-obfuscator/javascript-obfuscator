@@ -4,16 +4,16 @@ import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TNodeTransformersFactory } from './types/TNodeTransformersFactory';
+import { TNodeTransformersFactory } from './types/container/TNodeTransformersFactory';
 import { TVisitorDirection } from './types/TVisitorDirection';
 
 import { ICustomNode } from './interfaces/custom-nodes/ICustomNode';
-import { IObfuscationEventEmitter } from './interfaces/IObfuscationEventEmitter';
+import { IObfuscationEventEmitter } from './interfaces/event-emitters/IObfuscationEventEmitter';
 import { IObfuscator } from './interfaces/IObfuscator';
-import { IOptions } from './interfaces/IOptions';
-import { INodeTransformer } from './interfaces/INodeTransformer';
+import { IOptions } from './interfaces/options/IOptions';
+import { INodeTransformer } from './interfaces/node-transformers/INodeTransformer';
 import { IStackTraceAnalyzer } from './interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
-import { IStorage } from './interfaces/IStorage';
+import { IStorage } from './interfaces/storages/IStorage';
 
 import { NodeTransformers } from './enums/container/NodeTransformers';
 import { NodeType } from './enums/NodeType';

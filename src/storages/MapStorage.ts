@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 
-import { IStorage } from '../interfaces/IStorage';
+import { IStorage } from '../interfaces/storages/IStorage';
 
 import { Utils } from '../Utils';
 

@@ -3,9 +3,9 @@ import { injectable, inject } from 'inversify';
 import * as ESTree from 'estree';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
-import { INodeTransformer } from '../interfaces/INodeTransformer';
-import { IOptions } from '../interfaces/IOptions';
-import { IStorage } from '../interfaces/IStorage';
+import { INodeTransformer } from '../interfaces/node-transformers/INodeTransformer';
+import { IOptions } from '../interfaces/options/IOptions';
+import { IStorage } from '../interfaces/storages/IStorage';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
 @injectable()

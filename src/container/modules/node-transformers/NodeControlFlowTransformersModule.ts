@@ -1,7 +1,7 @@
 import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
-import { IControlFlowReplacer } from '../../../interfaces/IControlFlowReplacer';
+import { IControlFlowReplacer } from '../../../interfaces/node-transformers/IControlFlowReplacer';
 
 import { NodeControlFlowTransformersReplacers } from '../../../enums/container/NodeControlFlowTransformersReplacers';
 

@@ -2,8 +2,8 @@ import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
-import { IOptions } from '../../../interfaces/IOptions';
-import { IStorage } from '../../../interfaces/IStorage';
+import { IOptions } from '../../../interfaces/options/IOptions';
+import { IStorage } from '../../../interfaces/storages/IStorage';
 
 import { AbstractReplacer } from './AbstractReplacer';
 import { Utils } from '../../../Utils';

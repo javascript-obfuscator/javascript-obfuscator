@@ -3,7 +3,7 @@ import { injectable } from 'inversify';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TObjectMembersCallsChain } from '../../types/TObjectMembersCallsChain';
+import { TObjectMembersCallsChain } from '../../types/stack-trace-analyzer/TObjectMembersCallsChain';
 
 import { ICalleeData } from '../../interfaces/stack-trace-analyzer/ICalleeData';
 

@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
 import * as chai from 'chai';
 import * as ESTree from 'estree';
 
-import { TStatement } from '../../../src/types/TStatement';
+import { TStatement } from '../../../src/types/node/TStatement';
 
 import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
 import { IStackTraceAnalyzer } from '../../../src/interfaces/stack-trace-analyzer/IStackTraceAnalyzer';

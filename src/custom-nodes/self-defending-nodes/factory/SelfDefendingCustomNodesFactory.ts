@@ -1,4 +1,4 @@
-import { TObfuscationEvent } from '../../../types/TObfuscationEvent';
+import { TObfuscationEvent } from '../../../types/event-emitters/TObfuscationEvent';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStackTraceData';

@@ -1,5 +1,5 @@
-import { TSourceMapMode } from '../types/TSourceMapMode';
-import { TStringArrayEncoding } from '../types/TStringArrayEncoding';
+import { TSourceMapMode } from '../../types/TSourceMapMode';
+import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 
 export interface IInputOptions {
     compact?: boolean;

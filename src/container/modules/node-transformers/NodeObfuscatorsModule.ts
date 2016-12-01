@@ -1,7 +1,7 @@
 import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
-import { IReplacer } from '../../../interfaces/IReplacer';
+import { IReplacer } from '../../../interfaces/node-transformers/IReplacer';
 
 import { NodeObfuscatorsReplacers } from '../../../enums/container/NodeObfuscatorsReplacers';
 

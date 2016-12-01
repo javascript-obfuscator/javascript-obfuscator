@@ -4,12 +4,12 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TControlFlowReplacer } from '../../types/TControlFlowReplacer';
-import { TStatement } from '../../types/TStatement';
+import { TControlFlowReplacer } from '../../types/node-transformers/TControlFlowReplacer';
+import { TStatement } from '../../types/node/TStatement';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
-import { IOptions } from '../../interfaces/IOptions';
-import { IStorage } from '../../interfaces/IStorage';
+import { IOptions } from '../../interfaces/options/IOptions';
+import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { NodeType } from '../../enums/NodeType';
 

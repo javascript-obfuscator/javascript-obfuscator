@@ -1,10 +1,10 @@
 import * as ESTree from 'estree';
 
-import { TObfuscationEvent } from '../types/TObfuscationEvent';
+import { TObfuscationEvent } from '../types/event-emitters/TObfuscationEvent';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
-import { IOptions } from '../interfaces/IOptions';
-import { TStatement } from '../types/TStatement';
+import { IOptions } from '../interfaces/options/IOptions';
+import { TStatement } from '../types/node/TStatement';
 
 import { NodeUtils } from '../node/NodeUtils';
 

@@ -4,7 +4,7 @@ import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TCalleeDataExtractorsFactory } from '../types/TCalleeDataExtractorsFactory';
+import { TCalleeDataExtractorsFactory } from '../types/container/TCalleeDataExtractorsFactory';
 
 import { ICalleeData } from '../interfaces/stack-trace-analyzer/ICalleeData';
 import { ICalleeDataExtractor } from '../interfaces/stack-trace-analyzer/ICalleeDataExtractor';
@@ -117,42 +117,56 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     private analyzeRecursive (blockScopeBody: ESTree.Node[]): IStackTraceData[] {
         const limitIndex: number = StackTraceAnalyzer.getLimitIndex(blockScopeBody.length);
         const stackTraceData: IStackTraceData[] = [];
+        const blockScopeBodyLength: number = blockScopeBody.length;
 
-        for (
-            let index: number = 0, blockScopeBodyLength: number = blockScopeBody.length;
-            index < blockScopeBodyLength;
-            index++
-        ) {
-            const rootNode: ESTree.Node = blockScopeBody[index];
-
+        for (let index: number = 0; index < blockScopeBodyLength; index++) {
             if (index > limitIndex) {
                 break;
             }
 
-            estraverse.traverse(rootNode, {
-                enter: (node: ESTree.Node): any => {
-                    if (!Node.isCallExpressionNode(node) || rootNode.parentNode !== NodeUtils.getBlockScopeOfNode(node)) {
+            const blockScopeBodyNode: ESTree.Node = blockScopeBody[index];
+
+            estraverse.traverse(blockScopeBodyNode, {
+                enter: (node: ESTree.Node): void => {
+                    if (
+                        !Node.isCallExpressionNode(node) ||
+                        blockScopeBodyNode.parentNode !== NodeUtils.getBlockScopeOfNode(node)
+                    ) {
                         return;
                     }
 
-                    StackTraceAnalyzer.calleeDataExtractorsList.forEach((calleeDataExtractorName: CalleeDataExtractors) => {
-                        const calleeData: ICalleeData | null = this.calleeDataExtractorsFactory(calleeDataExtractorName)
-                            .extract(blockScopeBody, node.callee);
-
-                        if (!calleeData) {
-                            return;
-                        }
-
-                        stackTraceData.push(
-                            Object.assign({}, calleeData, {
-                                stackTrace: this.analyzeRecursive(calleeData.callee.body)
-                            })
-                        );
-                    });
+                    this.analyzeCallExpressionNode(stackTraceData, blockScopeBody, node);
                 }
             });
         }
 
         return stackTraceData;
+    }
+
+    /**
+     * @param stackTraceData
+     * @param blockScopeBody
+     * @param callExpressionNode
+     * @returns {IStackTraceData[]}
+     */
+    private analyzeCallExpressionNode (
+        stackTraceData: IStackTraceData[],
+        blockScopeBody: ESTree.Node[],
+        callExpressionNode: ESTree.CallExpression
+    ): void {
+        StackTraceAnalyzer.calleeDataExtractorsList.forEach((calleeDataExtractorName: CalleeDataExtractors) => {
+            const calleeData: ICalleeData | null = this.calleeDataExtractorsFactory(calleeDataExtractorName)
+                .extract(blockScopeBody, callExpressionNode.callee);
+
+            if (!calleeData) {
+                return;
+            }
+
+            stackTraceData.push(
+                Object.assign({}, calleeData, {
+                    stackTrace: this.analyzeRecursive(calleeData.callee.body)
+                })
+            );
+        });
     }
 }

@@ -1,3 +1,6 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+
 import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
@@ -6,6 +9,7 @@ import { TStatement } from '../../types/node/TStatement';
 
 import { ICustomNodeWithIdentifier } from '../../interfaces/custom-nodes/ICustomNodeWithIdentifier';
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
 import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
@@ -24,6 +28,7 @@ import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeAppender } from '../../node/NodeAppender';
 
+@injectable()
 export class StringArrayCallsWrapper extends AbstractCustomNode implements ICustomNodeWithIdentifier {
     /**
      * @type {TObfuscationEvent}
@@ -38,36 +43,44 @@ export class StringArrayCallsWrapper extends AbstractCustomNode implements ICust
     /**
      * @type {string}
      */
-    private stringArrayName: string;
+    private stringArrayCallsWrapperName: string;
 
     /**
      * @type {string}
      */
-    private stringArrayCallsWrapperName: string;
+    private stringArrayName: string;
 
     /**
-     * @param stringArrayCallsWrapperName
-     * @param stringArrayName
-     * @param stringArray
      * @param options
      */
     constructor (
-        stringArrayCallsWrapperName: string,
-        stringArrayName: string,
-        stringArray: IStorage <string>,
-        options: IOptions
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+    }
 
-        this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
-        this.stringArrayName = stringArrayName;
+    /**
+     * @param stringArray
+     * @param stringArrayName
+     * @param stringArrayCallsWrapperName
+     */
+    public initialize (
+        stringArray: IStorage <string>,
+        stringArrayName: string,
+        stringArrayCallsWrapperName: string
+    ): void {
         this.stringArray = stringArray;
+        this.stringArrayName = stringArrayName;
+        this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
+
+        super.initialize();
     }
 
     /**
      * @param blockScopeNode
+     * @param stackTraceData
      */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
+    public appendNode (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
         if (!this.stringArray.getLength()) {
             return;
         }
@@ -110,7 +123,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode implements ICust
     /**
      * @returns {string}
      */
-    protected getDecodeStringArrayTemplate (): string {
+    private getDecodeStringArrayTemplate (): string {
         let decodeStringArrayTemplate: string = '',
             selfDefendingCode: string = '';
 

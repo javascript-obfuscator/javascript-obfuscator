@@ -1,13 +1,17 @@
 import * as ESTree from 'estree';
 
 import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
+import { IStackTraceData } from '../stack-trace-analyzer/IStackTraceData';
 import { TStatement } from '../../types/node/TStatement';
 
-export interface ICustomNode {
+import { IInitializable } from '../IInitializable';
+
+export interface ICustomNode extends IInitializable {
     /**
      * @param astTree
+     * @param stackTraceData
      */
-    appendNode (astTree: ESTree.Node): void;
+    appendNode (astTree: ESTree.Node, stackTraceData: IStackTraceData[]): void;
 
     /**
      * @returns {TObfuscationEvent}

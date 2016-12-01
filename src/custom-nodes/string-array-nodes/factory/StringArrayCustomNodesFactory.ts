@@ -1,7 +1,12 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
+
 import { TObfuscationEvent } from '../../../types/event-emitters/TObfuscationEvent';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStackTraceData';
+import { IStorage } from '../../../interfaces/storages/IStorage';
 
 import { ObfuscationEvents } from '../../../enums/ObfuscationEvents';
 
@@ -12,8 +17,8 @@ import { StringArrayRotateFunctionNode } from '../StringArrayRotateFunctionNode'
 import { AbstractCustomNodesFactory } from '../../AbstractCustomNodesFactory';
 import { StringArrayStorage } from '../../../storages/string-array/StringArrayStorage';
 import { Utils } from '../../../Utils';
-import { IStorage } from '../../../interfaces/storages/IStorage';
 
+@injectable()
 export class StringArrayCustomNodesFactory extends AbstractCustomNodesFactory {
     /**
      * @type {TObfuscationEvent}
@@ -21,19 +26,13 @@ export class StringArrayCustomNodesFactory extends AbstractCustomNodesFactory {
     protected appendEvent: TObfuscationEvent = ObfuscationEvents.AfterObfuscation;
 
     /**
-     * @type {string}
+     * @param options
      */
-    private stringArrayName: string = Utils.getRandomVariableName(StringArrayNode.ARRAY_RANDOM_LENGTH);
-
-    /**
-     * @type {string}
-     */
-    private stringArrayCallsWrapper: string = Utils.getRandomVariableName(StringArrayNode.ARRAY_RANDOM_LENGTH);
-
-    /**
-     * @type {number}
-     */
-    private stringArrayRotateValue: number;
+    constructor (
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
+        super(options);
+    }
 
     /**
      * @param stackTraceData
@@ -44,44 +43,34 @@ export class StringArrayCustomNodesFactory extends AbstractCustomNodesFactory {
             return;
         }
 
+        const stringArray: IStorage <string> = new StringArrayStorage();
+
+        const stringArrayNode: ICustomNode = new StringArrayNode(this.options);
+        const stringArrayCallsWrapper: ICustomNode = new StringArrayCallsWrapper(this.options);
+        const stringArrayRotateFunctionNode: ICustomNode = new StringArrayRotateFunctionNode(this.options);
+
+        const stringArrayName: string = Utils.getRandomVariableName(StringArrayNode.ARRAY_RANDOM_LENGTH);
+        const stringArrayCallsWrapperName: string = Utils.getRandomVariableName(StringArrayNode.ARRAY_RANDOM_LENGTH);
+
+        let stringArrayRotateValue: number;
+
         if (this.options.rotateStringArray) {
-            this.stringArrayRotateValue = Utils.getRandomInteger(100, 500);
+            stringArrayRotateValue = Utils.getRandomInteger(100, 500);
         } else {
-            this.stringArrayRotateValue = 0;
+            stringArrayRotateValue = 0;
         }
 
-        const stringArray: IStorage <string> = new StringArrayStorage();
-        const stringArrayNode: ICustomNode = new StringArrayNode(
-            stringArray,
-            this.stringArrayName,
-            this.stringArrayRotateValue,
-            this.options
-        );
+        stringArrayNode.initialize(stringArray, stringArrayName, stringArrayRotateValue);
+        stringArrayCallsWrapper.initialize(stringArray, stringArrayName, stringArrayCallsWrapperName);
+        stringArrayRotateFunctionNode.initialize(stringArray, stringArrayName, stringArrayRotateValue);
+
         const customNodes: Map <string, ICustomNode> = new Map <string, ICustomNode> ([
-            [
-                'stringArrayNode', stringArrayNode,
-            ],
-            [
-                'stringArrayCallsWrapper',
-                new StringArrayCallsWrapper(
-                    this.stringArrayCallsWrapper,
-                    this.stringArrayName,
-                    stringArray,
-                    this.options
-                )
-            ]
+            ['stringArrayNode', stringArrayNode],
+            ['stringArrayCallsWrapper', stringArrayCallsWrapper]
         ]);
 
         if (this.options.rotateStringArray) {
-            customNodes.set(
-                'stringArrayRotateFunctionNode',
-                new StringArrayRotateFunctionNode(
-                    this.stringArrayName,
-                    stringArray,
-                    this.stringArrayRotateValue,
-                    this.options
-                )
-            );
+            customNodes.set('stringArrayRotateFunctionNode', stringArrayRotateFunctionNode);
         }
 
         return this.syncCustomNodesWithNodesFactory(customNodes);

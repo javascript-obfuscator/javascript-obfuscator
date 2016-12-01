@@ -1,3 +1,6 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
+
 import { TObfuscationEvent } from '../types/event-emitters/TObfuscationEvent';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
@@ -7,6 +10,7 @@ import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceD
 
 import { ObfuscationEvents } from '../enums/ObfuscationEvents';
 
+@injectable()
 export abstract class AbstractCustomNodesFactory implements ICustomNodesFactory {
     /**
      * @type {TObfuscationEvent}
@@ -26,7 +30,9 @@ export abstract class AbstractCustomNodesFactory implements ICustomNodesFactory 
     /**
      * @param options
      */
-    constructor (options: IOptions) {
+    constructor (
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
         this.options = options;
     }
 

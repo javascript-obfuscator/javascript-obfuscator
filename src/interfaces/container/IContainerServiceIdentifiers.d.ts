@@ -11,6 +11,7 @@ export interface IContainerServiceIdentifiers {
     IJavaScriptObfuscator: interfaces.ServiceIdentifier<any>;
     INodeTransformer: interfaces.ServiceIdentifier<any>;
     IObfuscationEventEmitter: interfaces.ServiceIdentifier<any>;
+    IObfuscationResult: interfaces.ServiceIdentifier<any>;
     IObfuscator: interfaces.ServiceIdentifier<any>;
     IOptions: interfaces.ServiceIdentifier<any>;
     IReplacer: interfaces.ServiceIdentifier<any>;

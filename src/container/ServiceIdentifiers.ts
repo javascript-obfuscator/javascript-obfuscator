@@ -11,6 +11,7 @@ export const ServiceIdentifiers: IContainerServiceIdentifiers = {
     IJavaScriptObfuscator: Symbol('IJavaScriptObfuscator'),
     INodeTransformer: Symbol('INodeTransformer'),
     IObfuscationEventEmitter: Symbol('IObfuscationEventEmitter'),
+    IObfuscationResult: Symbol('IObfuscationResult'),
     IObfuscator: Symbol('IObfuscator'),
     IOptions: Symbol('IOptions'),
     IReplacer: Symbol('IReplacer'),

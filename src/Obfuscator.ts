@@ -22,6 +22,7 @@ import { VisitorDirection } from './enums/VisitorDirection';
 
 import { Node } from './node/Node';
 import { NodeUtils } from './node/NodeUtils';
+import { IStackTraceData } from './interfaces/stack-trace-analyzer/IStackTraceData';
 
 @injectable()
 export class Obfuscator implements IObfuscator {
@@ -103,15 +104,17 @@ export class Obfuscator implements IObfuscator {
 
         NodeUtils.parentize(astTree);
 
+        const stackTraceData: IStackTraceData[] = this.stackTraceAnalyzer.analyze(astTree.body);
+
         // prepare custom nodes
-        customNodesStorage.initialize(this.stackTraceAnalyzer.analyze(astTree.body));
+        customNodesStorage.initialize(stackTraceData);
         customNodesStorage
             .getStorage()
             .forEach((customNode: ICustomNode) => {
                 this.obfuscationEventEmitter.once(customNode.getAppendEvent(), customNode.appendNode.bind(customNode));
             });
 
-        this.obfuscationEventEmitter.emit(ObfuscationEvents.BeforeObfuscation, astTree);
+        this.obfuscationEventEmitter.emit(ObfuscationEvents.BeforeObfuscation, astTree, stackTraceData);
 
         // first pass: control flow flattening
         if (this.options.controlFlowFlattening) {
@@ -129,7 +132,7 @@ export class Obfuscator implements IObfuscator {
             this.nodeTransformersFactory(Obfuscator.nodeObfuscatorsMap)
         );
 
-        this.obfuscationEventEmitter.emit(ObfuscationEvents.AfterObfuscation, astTree);
+        this.obfuscationEventEmitter.emit(ObfuscationEvents.AfterObfuscation, astTree, stackTraceData);
 
         return astTree;
     }

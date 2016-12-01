@@ -1,3 +1,6 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+
 import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
@@ -14,6 +17,7 @@ import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeAppender } from '../../node/NodeAppender';
 import { Utils } from '../../Utils';
 
+@injectable()
 export class DomainLockNode extends AbstractCustomNode {
     /**
      * @type {TObfuscationEvent}
@@ -31,35 +35,32 @@ export class DomainLockNode extends AbstractCustomNode {
     protected randomStackTraceIndex: number;
 
     /**
-     * @type {IStackTraceData[]}
-     */
-    protected stackTraceData: IStackTraceData[];
-
-    /**
-     * @param stackTraceData
-     * @param callsControllerFunctionName
-     * @param randomStackTraceIndex
      * @param options
      */
     constructor (
-        stackTraceData: IStackTraceData[],
-        callsControllerFunctionName: string,
-        randomStackTraceIndex: number,
-        options: IOptions
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+    }
 
-        this.stackTraceData = stackTraceData;
+    /**
+     * @param callsControllerFunctionName
+     * @param randomStackTraceIndex
+     */
+    public initialize (callsControllerFunctionName: string, randomStackTraceIndex: number): void {
         this.callsControllerFunctionName = callsControllerFunctionName;
         this.randomStackTraceIndex = randomStackTraceIndex;
+
+        super.initialize();
     }
 
     /**
      * @param blockScopeNode
+     * @param stackTraceData
      */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
+    public appendNode (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
         NodeAppender.appendNodeToOptimalBlockScope(
-            this.stackTraceData,
+            stackTraceData,
             blockScopeNode,
             this.getNode(),
             this.randomStackTraceIndex

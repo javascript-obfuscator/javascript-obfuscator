@@ -16,6 +16,11 @@ export class Utils {
     public static readonly randomGeneratorPool: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     /**
+     * @type {string}
+     */
+    public static readonly randomGeneratorPoolWithNumbers: string = `${Utils.randomGeneratorPool}0123456789`;
+
+    /**
      * @type {Chance.Chance | Chance.SeededChance}
      */
     private static randomGenerator: Chance.Chance | Chance.SeededChance = new Chance();

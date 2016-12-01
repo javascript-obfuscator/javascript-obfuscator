@@ -95,11 +95,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
             return;
         }
 
-        const controlFlowStorageCustomNode: ICustomNode = new ControlFlowStorageNode(
-            controlFlowStorage,
-            controlFlowStorageCustomNodeName,
-            this.options
-        );
+        const controlFlowStorageCustomNode: ICustomNode = new ControlFlowStorageNode(this.options);
+
+        controlFlowStorageCustomNode.initialize(controlFlowStorage, controlFlowStorageCustomNodeName);
 
         NodeAppender.prependNode(functionNode.body, controlFlowStorageCustomNode.getNode());
     }

@@ -1,9 +1,13 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+
 import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
 import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
 
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
 import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
@@ -18,6 +22,7 @@ import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeAppender } from '../../node/NodeAppender';
 import { Utils } from '../../Utils';
 
+@injectable()
 export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     /**
      * @type {TObfuscationEvent}
@@ -40,28 +45,36 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     private stringArrayRotateValue: number;
 
     /**
-     * @param stringArrayName
-     * @param stringArray
-     * @param stringArrayRotateValue
      * @param options
      */
     constructor (
-        stringArrayName: string,
-        stringArray: IStorage <string>,
-        stringArrayRotateValue: number,
-        options: IOptions
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+    }
 
-        this.stringArrayName = stringArrayName;
+    /**
+     * @param stringArray
+     * @param stringArrayName
+     * @param stringArrayRotateValue
+     */
+    public initialize (
+        stringArray: IStorage <string>,
+        stringArrayName: string,
+        stringArrayRotateValue: number
+    ): void {
         this.stringArray = stringArray;
+        this.stringArrayName = stringArrayName;
         this.stringArrayRotateValue = stringArrayRotateValue;
+
+        super.initialize();
     }
 
     /**
      * @param blockScopeNode
+     * @param stackTraceData
      */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
+    public appendNode (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
         if (!this.stringArray.getLength()) {
             return;
         }

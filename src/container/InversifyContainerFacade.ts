@@ -55,10 +55,20 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
             .inSingletonScope();
 
         this.container
+            .bind<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult)
+            .to(ObfuscationResult)
+            .inSingletonScope();
+
+        this.container
             .bind<IObfuscationResult>(ServiceIdentifiers['Factory<IObfuscationResult>'])
-            .toFactory<IObfuscationResult>(() => {
+            .toFactory<IObfuscationResult>((context: interfaces.Context) => {
                 return (obfuscatedCode: string, sourceMap: string) => {
-                    return new ObfuscationResult(obfuscatedCode, sourceMap);
+                    const obfuscationResult: IObfuscationResult = context.container
+                        .get<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult);
+
+                    obfuscationResult.initialize(obfuscatedCode, sourceMap);
+
+                    return obfuscationResult;
                 };
             });
 

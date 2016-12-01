@@ -13,9 +13,10 @@ import { DomainLockCustomNodesFactory } from '../../custom-nodes/domain-lock-nod
 import { MapStorage } from '../MapStorage';
 import { SelfDefendingCustomNodesFactory } from '../../custom-nodes/self-defending-nodes/factory/SelfDefendingCustomNodesFactory';
 import { StringArrayCustomNodesFactory } from '../../custom-nodes/string-array-nodes/factory/StringArrayCustomNodesFactory';
+import { IInitializable } from '../../interfaces/IInitializable';
 
 @injectable()
-export class CustomNodesStorage extends MapStorage <ICustomNode> {
+export class CustomNodesStorage extends MapStorage <ICustomNode> implements IInitializable {
     /**
      * @type {TCustomNodesFactory[]}
      */
@@ -26,6 +27,11 @@ export class CustomNodesStorage extends MapStorage <ICustomNode> {
         DebugProtectionCustomNodesFactory,
         StringArrayCustomNodesFactory
     ];
+
+    /**
+     * @type {boolean}
+     */
+    public initialized: boolean = false;
 
     /**
      * @type {IOptions}
@@ -40,6 +46,13 @@ export class CustomNodesStorage extends MapStorage <ICustomNode> {
 
         this.options = options;
     }
+
+    public checkInitialization (): void {
+        if (!this.initialized) {
+            throw new Error(`\`CustomNodesStorage\` should be initialized first by calling \`initialize\` method!`);
+        }
+    }
+
     /**
      * @param stackTraceData
      */
@@ -59,5 +72,44 @@ export class CustomNodesStorage extends MapStorage <ICustomNode> {
         });
 
         this.storage = new Map <string, ICustomNode> (customNodes);
+        this.initialized = true;
+    }
+
+    /**
+     * @param key
+     * @returns {ICustomNode}
+     */
+    public get (key: string | number): ICustomNode {
+        this.checkInitialization();
+
+        return super.get(key);
+    }
+
+    /**
+     * @param value
+     * @returns {string | number | null}
+     */
+    public getKeyOf (value: ICustomNode): string | number | null {
+        this.checkInitialization();
+
+        return super.getKeyOf(value);
+    }
+
+    /**
+     * @returns {number}
+     */
+    public getLength (): number {
+        this.checkInitialization();
+
+        return super.getLength();
+    }
+
+    /**
+     * @returns {Map <string | number, ICustomNode>}
+     */
+    public getStorage (): Map <string | number, ICustomNode> {
+        this.checkInitialization();
+
+        return super.getStorage();
     }
 }

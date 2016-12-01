@@ -49,15 +49,22 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
         controlFlowStorageCustomNodeName: string
     ): ICustomNode {
         const key: string = AbstractControlFlowReplacer.getStorageKey();
+        const binaryExpressionFunctionNode = new BinaryExpressionFunctionNode(this.options);
 
-        controlFlowStorage.set(key, new BinaryExpressionFunctionNode(binaryExpressionNode.operator, this.options));
+        // TODO: pass through real stackTraceData
+        binaryExpressionFunctionNode.initialize(binaryExpressionNode.operator);
 
-        return new ControlFlowStorageCallNode(
+        controlFlowStorage.set(key, binaryExpressionFunctionNode);
+
+        const controlFlowStorageCallNode: ICustomNode = new ControlFlowStorageCallNode(this.options);
+
+        controlFlowStorageCallNode.initialize(
             controlFlowStorageCustomNodeName,
             key,
             BinaryExpressionControlFlowReplacer.getExpressionValue(binaryExpressionNode.left),
-            BinaryExpressionControlFlowReplacer.getExpressionValue(binaryExpressionNode.right),
-            this.options
+            BinaryExpressionControlFlowReplacer.getExpressionValue(binaryExpressionNode.right)
         );
+
+        return controlFlowStorageCallNode;
     }
 }

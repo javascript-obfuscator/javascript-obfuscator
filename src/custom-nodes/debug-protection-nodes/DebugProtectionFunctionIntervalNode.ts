@@ -1,9 +1,13 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+
 import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
 import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
 
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
@@ -12,6 +16,7 @@ import { DebugProtectionFunctionIntervalTemplate } from '../../templates/custom-
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeAppender } from '../../node/NodeAppender';
 
+@injectable()
 export class DebugProtectionFunctionIntervalNode extends AbstractCustomNode {
     /**
      * @type {TObfuscationEvent}
@@ -24,19 +29,28 @@ export class DebugProtectionFunctionIntervalNode extends AbstractCustomNode {
     private debugProtectionFunctionName: string;
 
     /**
-     * @param debugProtectionFunctionName
      * @param options
      */
-    constructor (debugProtectionFunctionName: string, options: IOptions) {
+    constructor (
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
         super(options);
+    }
 
+    /**
+     * @param debugProtectionFunctionName
+     */
+    public initialize (debugProtectionFunctionName: string): void {
         this.debugProtectionFunctionName = debugProtectionFunctionName;
+
+        super.initialize();
     }
 
     /**
      * @param blockScopeNode
+     * @param stackTraceData
      */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
+    public appendNode (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
         NodeAppender.appendNode(blockScopeNode, this.getNode());
     }
 

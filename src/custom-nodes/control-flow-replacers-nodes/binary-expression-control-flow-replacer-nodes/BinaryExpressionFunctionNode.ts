@@ -11,6 +11,8 @@ import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStack
 
 import { ObfuscationEvents } from '../../../enums/ObfuscationEvents';
 
+import { initializable } from '../../../decorators/Initializable';
+
 import { BinaryExpressionFunctionTemplate } from '../../../templates/custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/BinaryExpressionFunctionTemplate';
 
 import { AbstractCustomNode } from '../../AbstractCustomNode';
@@ -26,6 +28,7 @@ export class BinaryExpressionFunctionNode extends AbstractCustomNode {
     /**
      * @type {string}
      */
+    @initializable()
     private operator: string;
 
     /**
@@ -42,8 +45,6 @@ export class BinaryExpressionFunctionNode extends AbstractCustomNode {
      */
     initialize (operator: string): void {
         this.operator = operator;
-
-        super.initialize();
     }
 
     /**

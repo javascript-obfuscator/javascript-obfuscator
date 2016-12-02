@@ -4,11 +4,11 @@ import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 import { ICalleeDataExtractor } from '../../../interfaces/stack-trace-analyzer/ICalleeDataExtractor';
 import { IStackTraceAnalyzer } from '../../../interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
 
+import { CalleeDataExtractors } from '../../../enums/container/CalleeDataExtractors';
 import { FunctionDeclarationCalleeDataExtractor } from '../../../stack-trace-analyzer/callee-data-extractors/FunctionDeclarationCalleeDataExtractor';
 import { FunctionExpressionCalleeDataExtractor } from '../../../stack-trace-analyzer/callee-data-extractors/FunctionExpressionCalleeDataExtractor';
 import { ObjectExpressionCalleeDataExtractor } from '../../../stack-trace-analyzer/callee-data-extractors/ObjectExpressionCalleeDataExtractor';
 import { StackTraceAnalyzer } from '../../../stack-trace-analyzer/StackTraceAnalyzer';
-import { CalleeDataExtractors } from '../../../enums/container/CalleeDataExtractors';
 
 export const stackTraceAnalyzerModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     const calleeDataExtractorsTag: string = 'calleeDataExtractors';

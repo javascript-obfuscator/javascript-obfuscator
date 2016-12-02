@@ -11,6 +11,8 @@ import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTra
 
 import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
+import { initializable } from '../../decorators/Initializable';
+
 import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
 
 import { SelfDefendingTemplate } from '../../templates/custom-nodes/self-defending-nodes/self-defending-unicode-node/SelfDefendingTemplate';
@@ -30,11 +32,13 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     /**
      * @type {string}
      */
+    @initializable()
     protected callsControllerFunctionName: string;
 
     /**
      * @type {number}
      */
+    @initializable()
     protected randomStackTraceIndex: number;
 
     /**
@@ -53,8 +57,6 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     public initialize (callsControllerFunctionName: string, randomStackTraceIndex: number): void {
         this.callsControllerFunctionName = callsControllerFunctionName;
         this.randomStackTraceIndex = randomStackTraceIndex;
-
-        super.initialize();
     }
 
     /**

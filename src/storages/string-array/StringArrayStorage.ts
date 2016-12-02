@@ -2,6 +2,12 @@ import { ArrayStorage } from '../ArrayStorage';
 import { Utils } from '../../Utils';
 
 export class StringArrayStorage extends ArrayStorage <string> {
+    constructor () {
+        super();
+
+        this.initialize();
+    }
+
     /**
      * @param rotationValue
      */

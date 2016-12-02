@@ -1,16 +1,15 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
+import { TCustomNodeFactory } from '../../../types/container/TCustomNodeFactory';
 import { TObfuscationEvent } from '../../../types/event-emitters/TObfuscationEvent';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStackTraceData';
 
+import { CustomNodes } from '../../../enums/container/CustomNodes';
 import { ObfuscationEvents } from '../../../enums/ObfuscationEvents';
-
-import { NodeCallsControllerFunctionNode } from '../../node-calls-controller-nodes/NodeCallsControllerFunctionNode';
-import { SelfDefendingUnicodeNode } from '../SelfDefendingUnicodeNode';
 
 import { AbstractCustomNodesFactory } from '../../AbstractCustomNodesFactory';
 import { NodeAppender } from '../../../node/NodeAppender';
@@ -24,12 +23,21 @@ export class SelfDefendingCustomNodesFactory extends AbstractCustomNodesFactory 
     protected appendEvent: TObfuscationEvent = ObfuscationEvents.AfterObfuscation;
 
     /**
+     * @type {TCustomNodeFactory}
+     */
+    private readonly customNodeFactory: TCustomNodeFactory;
+
+    /**
+     * @param customNodeFactory
      * @param options
      */
     constructor (
+        @inject(ServiceIdentifiers['Factory<ICustomNode>']) customNodeFactory: TCustomNodeFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+
+        this.customNodeFactory = customNodeFactory;
     }
 
     /**
@@ -44,8 +52,8 @@ export class SelfDefendingCustomNodesFactory extends AbstractCustomNodesFactory 
         const callsControllerFunctionName: string = Utils.getRandomVariableName();
         const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(stackTraceData.length);
 
-        const selfDefendingUnicodeNode: ICustomNode = new SelfDefendingUnicodeNode(this.options);
-        const nodeCallsControllerFunctionNode: ICustomNode = new NodeCallsControllerFunctionNode(this.options);
+        const selfDefendingUnicodeNode: ICustomNode = this.customNodeFactory(CustomNodes.SelfDefendingUnicodeNode);
+        const nodeCallsControllerFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.NodeCallsControllerFunctionNode);
 
         selfDefendingUnicodeNode.initialize(callsControllerFunctionName, randomStackTraceIndex);
         nodeCallsControllerFunctionNode.initialize(callsControllerFunctionName, randomStackTraceIndex);

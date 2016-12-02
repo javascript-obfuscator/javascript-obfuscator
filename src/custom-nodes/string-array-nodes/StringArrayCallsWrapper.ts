@@ -15,6 +15,8 @@ import { IStorage } from '../../interfaces/storages/IStorage';
 import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
 
+import { initializable } from '../../decorators/Initializable';
+
 import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
 
 import { AtobTemplate } from '../../templates/custom-nodes/AtobTemplate';
@@ -38,16 +40,19 @@ export class StringArrayCallsWrapper extends AbstractCustomNode implements ICust
     /**
      * @type {IStorage <string>}
      */
+    @initializable()
     private stringArray: IStorage <string>;
 
     /**
      * @type {string}
      */
+    @initializable()
     private stringArrayCallsWrapperName: string;
 
     /**
      * @type {string}
      */
+    @initializable()
     private stringArrayName: string;
 
     /**
@@ -72,8 +77,6 @@ export class StringArrayCallsWrapper extends AbstractCustomNode implements ICust
         this.stringArray = stringArray;
         this.stringArrayName = stringArrayName;
         this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
-
-        super.initialize();
     }
 
     /**

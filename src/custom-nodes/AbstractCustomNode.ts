@@ -15,11 +15,6 @@ import { NodeUtils } from '../node/NodeUtils';
 @injectable()
 export abstract class AbstractCustomNode implements ICustomNode {
     /**
-     * @type {boolean}
-     */
-    public initialized: boolean = false;
-
-    /**
      * @type {TObfuscationEvent}
      */
     protected abstract appendEvent: TObfuscationEvent;
@@ -38,18 +33,10 @@ export abstract class AbstractCustomNode implements ICustomNode {
         this.options = options;
     }
 
-    public checkInitialization (): void {
-        if (!this.initialized) {
-            throw new Error(`Custom node should be initialized first by calling \`initialize\` method!`);
-        }
-    }
-
     /**
      * @param args
      */
-    public initialize (...args: any[]): void {
-        this.initialized = true;
-    };
+    public abstract initialize (...args: any[]): void;
 
     /**
      * @param astTree
@@ -73,8 +60,6 @@ export abstract class AbstractCustomNode implements ICustomNode {
      * @returns {TStatement[]}
      */
     public getNode (): TStatement[] {
-        this.checkInitialization();
-
         return this.getNodeStructure();
     }
 

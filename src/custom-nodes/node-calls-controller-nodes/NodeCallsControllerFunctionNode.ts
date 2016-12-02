@@ -11,6 +11,8 @@ import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTra
 
 import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
+import { initializable } from '../../decorators/Initializable';
+
 import { SingleNodeCallControllerTemplate } from '../../templates/custom-nodes/SingleNodeCallControllerTemplate';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
@@ -29,11 +31,13 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     /**
      * @type {string}
      */
+    @initializable()
     protected callsControllerFunctionName: string;
 
     /**
      * @type {number}
      */
+    @initializable()
     protected randomStackTraceIndex: number;
 
     /**
@@ -52,8 +56,6 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     public initialize (callsControllerFunctionName: string, randomStackTraceIndex: number): void {
         this.callsControllerFunctionName = callsControllerFunctionName;
         this.randomStackTraceIndex = randomStackTraceIndex;
-
-        super.initialize();
     }
 
     /**

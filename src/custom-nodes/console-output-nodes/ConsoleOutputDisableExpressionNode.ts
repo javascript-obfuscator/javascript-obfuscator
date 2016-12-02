@@ -13,13 +13,15 @@ import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
 import { ConsoleOutputDisableExpressionTemplate } from '../../templates/custom-nodes/console-output-nodes/console-output-disable-expression-node/ConsoleOutputDisableExpressionTemplate';
 
+import { initializable } from '../../decorators/Initializable';
+
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeAppender } from '../../node/NodeAppender';
 import { Utils } from '../../Utils';
 
 @injectable()
 export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
-    /**
+/**
      * @type {TObfuscationEvent}
      */
     protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.BeforeObfuscation;
@@ -27,11 +29,13 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
     /**
      * @type {string}
      */
+    @initializable()
     protected callsControllerFunctionName: string;
 
     /**
      * @type {number}
      */
+    @initializable()
     protected randomStackTraceIndex: number;
 
     /**
@@ -50,8 +54,6 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
     public initialize (callsControllerFunctionName: string, randomStackTraceIndex: number): void {
         this.callsControllerFunctionName = callsControllerFunctionName;
         this.randomStackTraceIndex = randomStackTraceIndex;
-
-        super.initialize();
     }
 
     /**

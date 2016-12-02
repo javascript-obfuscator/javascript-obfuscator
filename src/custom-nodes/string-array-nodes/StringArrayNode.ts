@@ -14,6 +14,8 @@ import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
+import { initializable } from '../../decorators/Initializable';
+
 import { StringArrayTemplate } from '../../templates/custom-nodes/string-array-nodes/string-array-node/StringArrayTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
@@ -35,16 +37,19 @@ export class StringArrayNode extends AbstractCustomNode implements ICustomNodeWi
     /**
      * @type {IStorage <string>}
      */
+    @initializable()
     private stringArray: IStorage <string>;
 
     /**
      * @type {string}
      */
+    @initializable()
     private stringArrayName: string;
 
     /**
      * @type {number}
      */
+    @initializable()
     private stringArrayRotateValue: number;
 
     /**
@@ -69,8 +74,6 @@ export class StringArrayNode extends AbstractCustomNode implements ICustomNodeWi
         this.stringArray = stringArray;
         this.stringArrayName = stringArrayName;
         this.stringArrayRotateValue = stringArrayRotateValue;
-
-        super.initialize();
     }
 
     /**

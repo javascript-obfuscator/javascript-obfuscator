@@ -11,6 +11,8 @@ import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTra
 
 import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
+import { initializable } from '../../decorators/Initializable';
+
 import { DebugProtectionFunctionTemplate } from '../../templates/custom-nodes/debug-protection-nodes/debug-protection-function-node/DebugProtectionFunctionTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
@@ -27,6 +29,7 @@ export class DebugProtectionFunctionNode extends AbstractCustomNode {
     /**
      * @type {string}
      */
+    @initializable()
     private debugProtectionFunctionName: string;
 
     /**
@@ -43,8 +46,6 @@ export class DebugProtectionFunctionNode extends AbstractCustomNode {
      */
     public initialize (debugProtectionFunctionName: string): void {
         this.debugProtectionFunctionName = debugProtectionFunctionName;
-
-        super.initialize();
     }
 
     /**

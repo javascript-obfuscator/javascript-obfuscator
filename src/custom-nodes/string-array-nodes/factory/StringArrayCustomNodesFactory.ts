@@ -1,6 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
+import { TCustomNodeFactory } from '../../../types/container/TCustomNodeFactory';
 import { TObfuscationEvent } from '../../../types/event-emitters/TObfuscationEvent';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
@@ -8,11 +9,10 @@ import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStackTraceData';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
+import { CustomNodes } from '../../../enums/container/CustomNodes';
 import { ObfuscationEvents } from '../../../enums/ObfuscationEvents';
 
-import { StringArrayCallsWrapper } from '../StringArrayCallsWrapper';
 import { StringArrayNode } from '../StringArrayNode';
-import { StringArrayRotateFunctionNode } from '../StringArrayRotateFunctionNode';
 
 import { AbstractCustomNodesFactory } from '../../AbstractCustomNodesFactory';
 import { StringArrayStorage } from '../../../storages/string-array/StringArrayStorage';
@@ -26,12 +26,21 @@ export class StringArrayCustomNodesFactory extends AbstractCustomNodesFactory {
     protected appendEvent: TObfuscationEvent = ObfuscationEvents.AfterObfuscation;
 
     /**
+     * @type {TCustomNodeFactory}
+     */
+    private readonly customNodeFactory: TCustomNodeFactory;
+
+    /**
+     * @param customNodeFactory
      * @param options
      */
     constructor (
+        @inject(ServiceIdentifiers['Factory<ICustomNode>']) customNodeFactory: TCustomNodeFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+
+        this.customNodeFactory = customNodeFactory;
     }
 
     /**
@@ -45,9 +54,9 @@ export class StringArrayCustomNodesFactory extends AbstractCustomNodesFactory {
 
         const stringArray: IStorage <string> = new StringArrayStorage();
 
-        const stringArrayNode: ICustomNode = new StringArrayNode(this.options);
-        const stringArrayCallsWrapper: ICustomNode = new StringArrayCallsWrapper(this.options);
-        const stringArrayRotateFunctionNode: ICustomNode = new StringArrayRotateFunctionNode(this.options);
+        const stringArrayNode: ICustomNode = this.customNodeFactory(CustomNodes.StringArrayNode);
+        const stringArrayCallsWrapper: ICustomNode = this.customNodeFactory(CustomNodes.StringArrayCallsWrapper);
+        const stringArrayRotateFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.StringArrayRotateFunctionNode);
 
         const stringArrayName: string = Utils.getRandomVariableName(StringArrayNode.ARRAY_RANDOM_LENGTH);
         const stringArrayCallsWrapperName: string = Utils.getRandomVariableName(StringArrayNode.ARRAY_RANDOM_LENGTH);

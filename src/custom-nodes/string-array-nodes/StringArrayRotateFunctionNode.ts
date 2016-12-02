@@ -12,6 +12,8 @@ import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
+import { initializable } from '../../decorators/Initializable';
+
 import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
 
 import { SelfDefendingTemplate } from '../../templates/custom-nodes/string-array-nodes/string-array-rotate-function-node/SelfDefendingTemplate';
@@ -32,16 +34,19 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     /**
      * @type {IStorage <string>}
      */
+    @initializable()
     private stringArray: IStorage <string>;
 
     /**
      * @type {string}
      */
+    @initializable()
     private stringArrayName: string;
 
     /**
      * @param {number}
      */
+    @initializable()
     private stringArrayRotateValue: number;
 
     /**
@@ -66,8 +71,6 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
         this.stringArray = stringArray;
         this.stringArrayName = stringArrayName;
         this.stringArrayRotateValue = stringArrayRotateValue;
-
-        super.initialize();
     }
 
     /**

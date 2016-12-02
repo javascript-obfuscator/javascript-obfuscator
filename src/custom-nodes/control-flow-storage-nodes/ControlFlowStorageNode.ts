@@ -13,6 +13,8 @@ import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
+import { initializable } from '../../decorators/Initializable';
+
 import { ControlFlowStorageTemplate } from '../../templates/custom-nodes/control-flow-storage-nodes/ControlFlowStorageTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
@@ -28,11 +30,13 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
     /**
      * @type {IStorage <ICustomNode>}
      */
+    @initializable()
     private controlFlowStorage: IStorage <ICustomNode>;
 
     /**
      * @type {string}
      */
+    @initializable()
     private controlFlowStorageName: string;
 
     /**
@@ -51,8 +55,6 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
     public initialize (controlFlowStorage: IStorage <ICustomNode>, controlFlowStorageName: string): void {
         this.controlFlowStorage = controlFlowStorage;
         this.controlFlowStorageName = controlFlowStorageName;
-
-        super.initialize();
     }
 
     /**

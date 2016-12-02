@@ -11,6 +11,8 @@ import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTra
 
 import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
+import { initializable } from '../../decorators/Initializable';
+
 import { DomainLockNodeTemplate } from '../../templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
@@ -27,11 +29,13 @@ export class DomainLockNode extends AbstractCustomNode {
     /**
      * @type {string}
      */
+    @initializable()
     protected callsControllerFunctionName: string;
 
     /**
      * @type {number}
      */
+    @initializable()
     protected randomStackTraceIndex: number;
 
     /**
@@ -50,8 +54,6 @@ export class DomainLockNode extends AbstractCustomNode {
     public initialize (callsControllerFunctionName: string, randomStackTraceIndex: number): void {
         this.callsControllerFunctionName = callsControllerFunctionName;
         this.randomStackTraceIndex = randomStackTraceIndex;
-
-        super.initialize();
     }
 
     /**

@@ -1,6 +1,7 @@
 import { Container, interfaces } from 'inversify';
 import { ServiceIdentifiers } from './ServiceIdentifiers';
 
+import { customNodesModule } from './modules/custom-nodes/CustomNodesModule';
 import { nodeControlFlowTransformersModule } from './modules/node-transformers/NodeControlFlowTransformersModule';
 import { nodeObfuscatorsModule } from './modules/node-transformers/NodeObfuscatorsModule';
 import { nodeTransformersModule } from './modules/node-transformers/NodeTransformersModule';
@@ -89,6 +90,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
 
         // modules
         this.container.load(stackTraceAnalyzerModule);
+        this.container.load(customNodesModule);
         this.container.load(nodeTransformersModule);
         this.container.load(nodeControlFlowTransformersModule);
         this.container.load(nodeObfuscatorsModule);

@@ -11,6 +11,8 @@ import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStack
 
 import { ObfuscationEvents } from '../../../enums/ObfuscationEvents';
 
+import { initializable } from '../../../decorators/Initializable';
+
 import { ControlFlowStorageCallTemplate } from '../../../templates/custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/ControlFlowStorageCallTemplate';
 
 import { AbstractCustomNode } from '../../AbstractCustomNode';
@@ -26,21 +28,25 @@ export class ControlFlowStorageCallNode extends AbstractCustomNode {
     /**
      * @type {string}
      */
+    @initializable()
     private controlFlowStorageKey: string;
 
     /**
      * @type {string}
      */
+    @initializable()
     private controlFlowStorageName: string;
 
     /**
      * @type {string}
      */
+    @initializable()
     private leftValue: string;
 
     /**
      * @type {string}
      */
+    @initializable()
     private rightValue: string;
 
     /**
@@ -68,8 +74,6 @@ export class ControlFlowStorageCallNode extends AbstractCustomNode {
         this.controlFlowStorageKey = controlFlowStorageKey;
         this.leftValue = leftValue;
         this.rightValue = rightValue;
-
-        super.initialize();
     }
 
     /**

@@ -1,4 +1,6 @@
-export interface IStorage <T> {
+import { IInitializable } from '../IInitializable';
+
+export interface IStorage <T> extends IInitializable {
     get (key: string | number): T;
     getKeyOf (value: T): string | number | null;
     getLength (): number;

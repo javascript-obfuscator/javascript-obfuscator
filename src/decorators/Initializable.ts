@@ -1,3 +1,5 @@
+/* tslint:disable:no-invalid-this */
+
 import { IInitializable } from '../interfaces/IInitializable';
 
 /**
@@ -22,7 +24,7 @@ export function initializable (
         };
         const originalMethod: Function = methodDescriptor.value;
 
-        methodDescriptor.value = function () {
+        methodDescriptor.value = function (): void {
             originalMethod.apply(this, arguments);
 
             // call property getter to activate initialization check inside it
@@ -45,12 +47,12 @@ export function initializable (
             return this[metadataPropertyKey];
         };
 
-        propertyDescriptor.set = function (newVal: any) {
+        propertyDescriptor.set = function (newVal: any): void {
             this[metadataPropertyKey] = newVal;
         };
 
         Object.defineProperty(target, propertyKey, propertyDescriptor);
 
         return propertyDescriptor;
-    }
+    };
 }

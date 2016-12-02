@@ -1,12 +1,13 @@
 import { BabelPolyfill } from './polyfills/BabelPolyfill';
+import 'reflect-metadata';
 
 require('source-map-support').install();
-
 BabelPolyfill.append();
 
 /**
  * Unit tests
  */
+import './unit-tests/decorators/Initializable.spec';
 import './unit-tests/node/NodeAppender.spec';
 import './unit-tests/node/NodeUtils.spec';
 import './unit-tests/ObfuscationResult.spec';
@@ -14,8 +15,6 @@ import './unit-tests/OptionsNormalizer.spec';
 import './unit-tests/SourceMapCorrector.spec';
 import './unit-tests/Utils.spec';
 import './unit-tests/cli/CLIUtils.spec';
-import './unit-tests/node-transformers/node-obfuscators/FunctionDeclarationObfuscator.spec';
-import './unit-tests/node-transformers/node-obfuscators/FunctionObfuscator.spec';
 import './unit-tests/stack-trace-analyzer/StackTraceAnalyzer.spec';
 
 /**
@@ -30,6 +29,7 @@ import './functional-tests/custom-nodes/string-array-nodes/StringArrayCallsWrapp
 import './functional-tests/custom-nodes/string-array-nodes/StringArrayRotateFunctionNode.spec';
 import './functional-tests/custom-nodes/string-array-nodes/StringArrayNode.spec';
 import './functional-tests/node-transformers/node-obfuscators/CatchClauseObfuscator.spec';
+import './functional-tests/node-transformers/node-obfuscators/FunctionDeclarationObfuscator.spec';
 import './functional-tests/node-transformers/node-obfuscators/FunctionObfuscator.spec';
 import './functional-tests/node-transformers/node-obfuscators/LabeledStatementObfuscator.spec';
 import './functional-tests/node-transformers/node-obfuscators/LiteralObfuscator.spec';

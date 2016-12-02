@@ -1,6 +1,13 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+
 import * as escodegen from 'escodegen';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
+
+import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../../interfaces/options/IOptions';
+import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { NodeType } from '../../enums/NodeType';
 
@@ -18,7 +25,19 @@ import { Utils } from '../../Utils';
  * on:
  *     var object = { '\u0050\u0053\u0045\u0055\u0044\u004f': 1 };
  */
+@injectable()
 export class ObjectExpressionObfuscator extends AbstractNodeTransformer {
+    /**
+     * @param customNodesStorage
+     * @param options
+     */
+    constructor(
+        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
+        super(customNodesStorage, options);
+    }
+
     /**
      * @param objectExpressionNode
      */

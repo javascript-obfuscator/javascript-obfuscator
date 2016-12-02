@@ -1,8 +1,12 @@
-import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
-import { IOptions } from '../../../interfaces/IOptions';
-import { IReplacer } from '../../../interfaces/IReplacer';
-import { IStorage } from '../../../interfaces/IStorage';
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
+import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../../../interfaces/options/IOptions';
+import { IReplacer } from '../../../interfaces/node-transformers/IReplacer';
+import { IStorage } from '../../../interfaces/storages/IStorage';
+
+@injectable()
 export abstract class AbstractReplacer implements IReplacer {
     /**
      * @type IStorage<ICustomNode>
@@ -18,15 +22,17 @@ export abstract class AbstractReplacer implements IReplacer {
      * @param customNodesStorage
      * @param options
      */
-    constructor (customNodesStorage: IStorage<ICustomNode>, options: IOptions) {
+    constructor (
+        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
         this.customNodesStorage = customNodesStorage;
         this.options = options;
     }
 
     /**
      * @param nodeValue
-     * @param namesMap
      * @returns {string}
      */
-    public abstract replace (nodeValue: any, namesMap?: Map <string, string>): string;
+    public abstract replace (nodeValue: any): string;
 }

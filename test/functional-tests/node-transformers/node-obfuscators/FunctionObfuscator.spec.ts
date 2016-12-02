@@ -8,9 +8,8 @@ const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('FunctionObfuscator', () => {
     describe('identifiers obfuscation inside `FunctionDeclaration` and `FunctionExpression` node body', () => {
-        it('should correct obfuscate both function parameter identifier and function body identifier with same name', () => {
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                `
+        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+            `
                     (function () {
                         var test = function (test) {
                             console.log(test);
@@ -19,15 +18,17 @@ describe('FunctionObfuscator', () => {
                                 var test = 5
                             }
                             
+                            variable = 6;
+                            
                             return test;
                         }
                     })();
                 `,
-                Object.assign({}, NO_CUSTOM_NODES_PRESET)
-            );
+            Object.assign({}, NO_CUSTOM_NODES_PRESET)
+        );
+        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
 
-            const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
-
+        it('should correct obfuscate both function parameter identifier and function body identifier with same name', () => {
             const functionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
                 .match(/var _0x[a-z0-9]{4,6} *= *function *\((_0x[a-z0-9]{4,6})\) *\{/);
             const functionBodyIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
@@ -37,6 +38,10 @@ describe('FunctionObfuscator', () => {
             const functionBodyIdentifierName: string = (<RegExpMatchArray>functionBodyIdentifierMatch)[1];
 
             assert.equal(functionParamIdentifierName, functionBodyIdentifierName);
+        });
+
+        it('shouldn\'t obfuscate other variables in function body', () => {
+            assert.equal(/variable *= *0x6;/.test(obfuscatedCode), true);
         });
     });
 });

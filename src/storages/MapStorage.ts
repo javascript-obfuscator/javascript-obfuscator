@@ -1,12 +1,18 @@
-import { IStorage } from '../interfaces/IStorage';
+import { injectable } from 'inversify';
+
+import { IStorage } from '../interfaces/storages/IStorage';
+
+import { initializable } from '../decorators/Initializable';
 
 import { Utils } from '../Utils';
 
+@injectable()
 export abstract class MapStorage <T> implements IStorage <T> {
     /**
      * @type {Map <string | number, T>}
      */
-    protected storage: Map <string | number, T> = new Map <string | number, T> ();
+    @initializable()
+    protected storage: Map <string | number, T>;
 
     /**
      * @param key
@@ -47,7 +53,9 @@ export abstract class MapStorage <T> implements IStorage <T> {
     /**
      * @param args
      */
-    public initialize (...args: any[]): void {}
+    public initialize (...args: any[]): void {
+        this.storage = new Map <string | number, T> ();
+    }
 
     /**
      * @param key

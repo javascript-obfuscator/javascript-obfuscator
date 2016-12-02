@@ -1,7 +1,7 @@
 import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
-import { TStatement } from '../../src/types/TStatement';
+import { TStatement } from '../../src/types/node/TStatement';
 
 import { NodeType } from '../../src/enums/NodeType';
 

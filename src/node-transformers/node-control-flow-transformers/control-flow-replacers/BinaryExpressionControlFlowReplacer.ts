@@ -1,14 +1,30 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
+
 import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
-import { IStorage } from '../../../interfaces/IStorage';
+import { IOptions } from '../../../interfaces/options/IOptions';
+import { IStorage } from '../../../interfaces/storages/IStorage';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
 import { BinaryExpressionFunctionNode } from '../../../custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/BinaryExpressionFunctionNode';
 import { ControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/ControlFlowStorageCallNode';
 
+@injectable()
 export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowReplacer {
+    /**
+     * @param customNodesStorage
+     * @param options
+     */
+    constructor (
+        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
+        super(customNodesStorage, options);
+    }
+
     /**
      * @param expressionNode
      * @returns {string}
@@ -24,24 +40,31 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
      * @param parentNode
      * @param controlFlowStorage
      * @param controlFlowStorageCustomNodeName
-     * @returns {ICustomNode | undefined}
+     * @returns {ICustomNode}
      */
     public replace (
         binaryExpressionNode: ESTree.BinaryExpression,
         parentNode: ESTree.Node,
         controlFlowStorage: IStorage <ICustomNode>,
         controlFlowStorageCustomNodeName: string
-    ): ICustomNode | undefined {
+    ): ICustomNode {
         const key: string = AbstractControlFlowReplacer.getStorageKey();
+        const binaryExpressionFunctionNode = new BinaryExpressionFunctionNode(this.options);
 
-        controlFlowStorage.set(key, new BinaryExpressionFunctionNode(binaryExpressionNode.operator, this.options));
+        // TODO: pass through real stackTraceData
+        binaryExpressionFunctionNode.initialize(binaryExpressionNode.operator);
 
-        return new ControlFlowStorageCallNode(
+        controlFlowStorage.set(key, binaryExpressionFunctionNode);
+
+        const controlFlowStorageCallNode: ICustomNode = new ControlFlowStorageCallNode(this.options);
+
+        controlFlowStorageCallNode.initialize(
             controlFlowStorageCustomNodeName,
             key,
             BinaryExpressionControlFlowReplacer.getExpressionValue(binaryExpressionNode.left),
-            BinaryExpressionControlFlowReplacer.getExpressionValue(binaryExpressionNode.right),
-            this.options
+            BinaryExpressionControlFlowReplacer.getExpressionValue(binaryExpressionNode.right)
         );
+
+        return controlFlowStorageCallNode;
     }
 }

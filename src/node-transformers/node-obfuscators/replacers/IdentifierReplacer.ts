@@ -1,6 +1,14 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
+
+import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../../../interfaces/options/IOptions';
+import { IStorage } from '../../../interfaces/storages/IStorage';
+
 import { AbstractReplacer } from './AbstractReplacer';
 import { Utils } from '../../../Utils';
 
+@injectable()
 export class IdentifierReplacer extends AbstractReplacer {
     /**
      * @type {Map<string, string>}
@@ -8,11 +16,27 @@ export class IdentifierReplacer extends AbstractReplacer {
     private readonly namesMap: Map<string, string> = new Map<string, string>();
 
     /**
+     * @type {string}
+     */
+    private uniquePrefix: string;
+
+    /**
+     * @param customNodesStorage
+     * @param options
+     */
+    constructor (
+        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
+        super(customNodesStorage, options);
+    }
+
+    /**
      * @param nodeValue
      * @returns {string}
      */
     public replace (nodeValue: string): string {
-        const obfuscatedIdentifierName: string|undefined = this.namesMap.get(nodeValue);
+        const obfuscatedIdentifierName: string|undefined = this.namesMap.get(`${nodeValue}-${this.uniquePrefix}`);
 
         if (!obfuscatedIdentifierName) {
             return nodeValue;
@@ -22,14 +46,25 @@ export class IdentifierReplacer extends AbstractReplacer {
     }
 
     /**
+     * @param uniquePrefix
+     */
+    public setPrefix (uniquePrefix: string): void {
+        this.uniquePrefix = uniquePrefix
+    }
+
+    /**
      * Store all identifiers names as keys in given `namesMap` with random names as value.
      * Reserved names will be ignored.
      *
      * @param nodeName
      */
     public storeNames (nodeName: string): void {
+        if (!this.uniquePrefix) {
+            throw new Error('`uniquePrefix` is `undefined`. Set it before `storeNames`');
+        }
+
         if (!this.isReservedName(nodeName)) {
-            this.namesMap.set(nodeName, Utils.getRandomVariableName());
+            this.namesMap.set(`${nodeName}-${this.uniquePrefix}`, Utils.getRandomVariableName());
         }
     }
 

@@ -1,12 +1,15 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TControlFlowReplacer } from '../../types/TControlFlowReplacer';
-import { TStatement } from '../../types/TStatement';
+import { TControlFlowReplacer } from '../../types/node-transformers/TControlFlowReplacer';
+import { TStatement } from '../../types/node/TStatement';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
-import { IOptions } from '../../interfaces/IOptions';
-import { IStorage } from '../../interfaces/IStorage';
+import { IOptions } from '../../interfaces/options/IOptions';
+import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { NodeType } from '../../enums/NodeType';
 
@@ -17,8 +20,8 @@ import { ControlFlowStorageNode } from '../../custom-nodes/control-flow-storage-
 import { Node } from '../../node/Node';
 import { NodeAppender } from '../../node/NodeAppender';
 import { Utils } from '../../Utils';
-import { NodeUtils } from '../../node/NodeUtils';
 
+@injectable()
 export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**
      * @type {Map <string, IReplacer>}
@@ -31,7 +34,10 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @param customNodesStorage
      * @param options
      */
-    constructor (customNodesStorage: IStorage<ICustomNode>, options: IOptions) {
+    constructor (
+        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
         super(customNodesStorage, options);
     }
 
@@ -52,8 +58,6 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
         const controlFlowStorage: IStorage <ICustomNode> = new ControlFlowStorage();
         const controlFlowStorageCustomNodeName: string = Utils.getRandomVariableName(6);
-
-        console.log(NodeUtils.getNodeBlockScopeDepth(functionNode.body));
 
         estraverse.replace(functionNode.body, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
@@ -91,11 +95,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
             return;
         }
 
-        const controlFlowStorageCustomNode: ICustomNode = new ControlFlowStorageNode(
-            controlFlowStorage,
-            controlFlowStorageCustomNodeName,
-            this.options
-        );
+        const controlFlowStorageCustomNode: ICustomNode = new ControlFlowStorageNode(this.options);
+
+        controlFlowStorageCustomNode.initialize(controlFlowStorage, controlFlowStorageCustomNodeName);
 
         NodeAppender.prependNode(functionNode.body, controlFlowStorageCustomNode.getNode());
     }

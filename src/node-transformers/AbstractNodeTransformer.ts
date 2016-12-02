@@ -1,10 +1,14 @@
+import { injectable, inject } from 'inversify';
+
 import * as ESTree from 'estree';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
-import { INodeTransformer } from '../interfaces/INodeTransformer';
-import { IOptions } from '../interfaces/IOptions';
-import { IStorage } from '../interfaces/IStorage';
+import { INodeTransformer } from '../interfaces/node-transformers/INodeTransformer';
+import { IOptions } from '../interfaces/options/IOptions';
+import { IStorage } from '../interfaces/storages/IStorage';
+import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
+@injectable()
 export abstract class AbstractNodeTransformer implements INodeTransformer {
     /**
      * @type IStorage<ICustomNode>
@@ -20,7 +24,10 @@ export abstract class AbstractNodeTransformer implements INodeTransformer {
      * @param customNodesStorage
      * @param options
      */
-    constructor (customNodesStorage: IStorage<ICustomNode>, options: IOptions) {
+    constructor (
+        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
         this.customNodesStorage = customNodesStorage;
         this.options = options;
     }

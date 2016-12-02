@@ -1,4 +1,6 @@
-export interface IObfuscationResult {
+import { IInitializable } from './IInitializable';
+
+export interface IObfuscationResult extends IInitializable {
     /**
      * @return {string}
      */

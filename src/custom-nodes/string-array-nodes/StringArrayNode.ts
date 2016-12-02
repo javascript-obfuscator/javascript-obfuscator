@@ -1,14 +1,20 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+
 import * as format from 'string-template';
 
-import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-import { TObfuscationEvent } from '../../types/TObfuscationEvent';
-import { TStatement } from '../../types/TStatement';
+import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
+import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
+import { TStatement } from '../../types/node/TStatement';
 
 import { ICustomNodeWithData } from '../../interfaces/custom-nodes/ICustomNodeWithData';
-import { IOptions } from '../../interfaces/IOptions';
-import { IStorage } from '../../interfaces/IStorage';
+import { IOptions } from '../../interfaces/options/IOptions';
+import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
+import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
+
+import { initializable } from '../../decorators/Initializable';
 
 import { StringArrayTemplate } from '../../templates/custom-nodes/string-array-nodes/string-array-node/StringArrayTemplate';
 
@@ -16,6 +22,7 @@ import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeAppender } from '../../node/NodeAppender';
 import { StringArrayStorage } from '../../storages/string-array/StringArrayStorage';
 
+@injectable()
 export class StringArrayNode extends AbstractCustomNode implements ICustomNodeWithData {
     /**
      * @type {number}
@@ -30,32 +37,40 @@ export class StringArrayNode extends AbstractCustomNode implements ICustomNodeWi
     /**
      * @type {IStorage <string>}
      */
+    @initializable()
     private stringArray: IStorage <string>;
 
     /**
      * @type {string}
      */
+    @initializable()
     private stringArrayName: string;
 
     /**
      * @type {number}
      */
+    @initializable()
     private stringArrayRotateValue: number;
+
+    /**
+     * @param options
+     */
+    constructor (
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
+        super(options);
+    }
 
     /**
      * @param stringArray
      * @param stringArrayName
      * @param stringArrayRotateValue
-     * @param options
      */
-    constructor (
+    public initialize (
         stringArray: IStorage <string>,
         stringArrayName: string,
-        stringArrayRotateValue: number = 0,
-        options: IOptions
-    ) {
-        super(options);
-
+        stringArrayRotateValue: number
+    ): void {
         this.stringArray = stringArray;
         this.stringArrayName = stringArrayName;
         this.stringArrayRotateValue = stringArrayRotateValue;
@@ -63,8 +78,9 @@ export class StringArrayNode extends AbstractCustomNode implements ICustomNodeWi
 
     /**
      * @param blockScopeNode
+     * @param stackTraceData
      */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
+    public appendNode (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
         if (!this.stringArray.getLength()) {
             return;
         }

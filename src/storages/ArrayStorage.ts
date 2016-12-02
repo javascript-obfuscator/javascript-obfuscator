@@ -1,10 +1,13 @@
-import { IStorage } from '../interfaces/IStorage';
+import { IStorage } from '../interfaces/storages/IStorage';
+
+import { initializable } from '../decorators/Initializable';
 
 export abstract class ArrayStorage <T> implements IStorage <T> {
     /**
      * @type {T[]}
      */
-    protected storage: T[] = [];
+    @initializable()
+    protected storage: T[];
 
     /**
      * @param key
@@ -45,7 +48,9 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
     /**
      * @param args
      */
-    public initialize (...args: any[]): void {}
+    public initialize (...args: any[]): void {
+        this.storage = [];
+    }
 
     /**
      * @param key

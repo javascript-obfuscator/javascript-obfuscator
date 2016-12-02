@@ -1,8 +1,27 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
+
+import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../../../interfaces/options/IOptions';
+import { IStorage } from '../../../interfaces/storages/IStorage';
+
 import { JSFuck } from '../../../enums/JSFuck';
 
 import { AbstractReplacer } from './AbstractReplacer';
 
+@injectable()
 export class BooleanLiteralReplacer extends AbstractReplacer {
+    /**
+     * @param customNodesStorage
+     * @param options
+     */
+    constructor (
+        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
+        super(customNodesStorage, options);
+    }
+
     /**
      * @param nodeValue
      * @returns {string}

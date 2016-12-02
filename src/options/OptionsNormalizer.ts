@@ -1,7 +1,7 @@
-import { IInputOptions } from '../interfaces/IInputOptions';
-import { IOptions } from '../interfaces/IOptions';
+import { IInputOptions } from '../interfaces/options/IInputOptions';
+import { IOptions } from '../interfaces/options/IOptions';
 
-import { TOptionsNormalizerRule } from '../types/TOptionsNormalizerRule';
+import { TOptionsNormalizerRule } from '../types/options/TOptionsNormalizerRule';
 
 import { Utils } from '../Utils';
 

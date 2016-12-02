@@ -1,13 +1,41 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+
 import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
-import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { BooleanLiteralReplacer } from './replacers/BooleanLiteralReplacer';
-import { Node } from '../../node/Node';
-import { NumberLiteralReplacer } from './replacers/NumberLiteralReplacer';
-import { StringLiteralReplacer } from './replacers/StringLiteralReplacer';
+import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../../interfaces/options/IOptions';
+import { IReplacer } from '../../interfaces/node-transformers/IReplacer';
+import { IStorage } from '../../interfaces/storages/IStorage';
 
+import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscatorsReplacers';
+
+import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
+import { Node } from '../../node/Node';
+
+@injectable()
 export class LiteralObfuscator extends AbstractNodeTransformer {
+    /**
+     * @type {(replacer: NodeObfuscatorsReplacers) => IReplacer}
+     */
+    private readonly replacersFactory: (replacer: NodeObfuscatorsReplacers) => IReplacer;
+
+    /**
+     * @param customNodesStorage
+     * @param replacersFactory
+     * @param options
+     */
+    constructor(
+        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers['Factory<IReplacer>']) replacersFactory: (replacer: NodeObfuscatorsReplacers) => IReplacer,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
+        super(customNodesStorage, options);
+
+        this.replacersFactory = replacersFactory;
+    }
+
     /**
      * @param literalNode
      * @param parentNode
@@ -21,19 +49,19 @@ export class LiteralObfuscator extends AbstractNodeTransformer {
 
         switch (typeof literalNode.value) {
             case 'boolean':
-                content = new BooleanLiteralReplacer(this.customNodesStorage, this.options)
+                content = this.replacersFactory(NodeObfuscatorsReplacers.BooleanReplacer)
                     .replace(<boolean>literalNode.value);
 
                 break;
 
             case 'number':
-                content = new NumberLiteralReplacer(this.customNodesStorage, this.options)
+                content = this.replacersFactory(NodeObfuscatorsReplacers.NumberLiteralReplacer)
                     .replace(<number>literalNode.value);
 
                 break;
 
             case 'string':
-                content = new StringLiteralReplacer(this.customNodesStorage, this.options)
+                content = this.replacersFactory(NodeObfuscatorsReplacers.StringLiteralReplacer)
                     .replace(<string>literalNode.value);
 
                 break;

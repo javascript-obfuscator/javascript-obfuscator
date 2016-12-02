@@ -11,7 +11,8 @@ describe('ObfuscationResult', () => {
             sourceMap: string = 'sourceMap';
 
         beforeEach(() => {
-            obfuscationResult = new ObfuscationResult(obfuscatedCode, sourceMap);
+            obfuscationResult = new ObfuscationResult();
+            obfuscationResult.initialize(obfuscatedCode, sourceMap);
         });
 
         it('should returns obfuscated code if `.toString()` was called on `ObfuscationResult` object', () => {

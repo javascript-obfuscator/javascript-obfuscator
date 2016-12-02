@@ -1,12 +1,16 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
+
 import * as ESTree from 'estree';
 
-import { IControlFlowReplacer } from '../../../interfaces/IControlFlowReplacer';
+import { IControlFlowReplacer } from '../../../interfaces/node-transformers/IControlFlowReplacer';
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
-import { IOptions } from '../../../interfaces/IOptions';
-import { IStorage } from '../../../interfaces/IStorage';
+import { IOptions } from '../../../interfaces/options/IOptions';
+import { IStorage } from '../../../interfaces/storages/IStorage';
 
 import { Utils } from '../../../Utils';
 
+@injectable()
 export abstract class AbstractControlFlowReplacer implements IControlFlowReplacer {
     /**
      * @type IStorage<ICustomNode>
@@ -22,7 +26,10 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
      * @param customNodesStorage
      * @param options
      */
-    constructor (customNodesStorage: IStorage<ICustomNode>, options: IOptions) {
+    constructor (
+        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
         this.customNodesStorage = customNodesStorage;
         this.options = options;
     }

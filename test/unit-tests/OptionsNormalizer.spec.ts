@@ -1,5 +1,5 @@
-import { IInputOptions } from '../../src/interfaces/IInputOptions';
-import { IOptions } from '../../src/interfaces/IOptions';
+import { IInputOptions } from '../../src/interfaces/options/IInputOptions';
+import { IOptions } from '../../src/interfaces/options/IOptions';
 
 import { DEFAULT_PRESET } from '../../src/preset-options/DefaultPreset';
 

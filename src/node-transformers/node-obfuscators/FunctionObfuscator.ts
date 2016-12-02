@@ -1,16 +1,22 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
-import { IOptions } from '../../interfaces/IOptions';
-import { IStorage } from '../../interfaces/IStorage';
+import { IOptions } from '../../interfaces/options/IOptions';
+import { IReplacer } from '../../interfaces/node-transformers/IReplacer';
+import { IStorage } from '../../interfaces/storages/IStorage';
 
+import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscatorsReplacers';
 import { NodeType } from '../../enums/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { IdentifierReplacer } from './replacers/IdentifierReplacer';
 import { Node } from '../../node/Node';
 import { NodeUtils } from '../../node/NodeUtils';
+import { Utils } from '../../Utils';
 
 /**
  * replaces:
@@ -20,6 +26,7 @@ import { NodeUtils } from '../../node/NodeUtils';
  *     function foo (_0x12d45f) { return _0x12d45f; };
  *
  */
+@injectable()
 export class FunctionObfuscator extends AbstractNodeTransformer {
     /**
      * @type {IdentifierReplacer}
@@ -28,18 +35,28 @@ export class FunctionObfuscator extends AbstractNodeTransformer {
 
     /**
      * @param customNodesStorage
+     * @param nodeObfuscatorsReplacersFactory
      * @param options
      */
-    constructor(customNodesStorage: IStorage<ICustomNode>, options: IOptions) {
+    constructor(
+        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers['Factory<IReplacer>']) nodeObfuscatorsReplacersFactory: (replacer: NodeObfuscatorsReplacers) => IReplacer,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
         super(customNodesStorage, options);
 
-        this.identifierReplacer = new IdentifierReplacer(this.customNodesStorage, this.options);
+        this.identifierReplacer = <IdentifierReplacer>nodeObfuscatorsReplacersFactory(NodeObfuscatorsReplacers.IdentifierReplacer);
     }
 
     /**
      * @param functionNode
      */
     public transformNode (functionNode: ESTree.Function): void {
+        this.identifierReplacer.setPrefix(Utils.getRandomGenerator().string({
+            length: 5,
+            pool: Utils.randomGeneratorPool
+        }));
+
         this.storeFunctionParams(functionNode);
         this.replaceFunctionParams(functionNode);
     }

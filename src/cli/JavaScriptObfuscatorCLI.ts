@@ -1,9 +1,9 @@
 import * as commander from 'commander';
 import * as path from 'path';
 
-import { TStringArrayEncoding } from '../types/TStringArrayEncoding';
+import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 
-import { IInputOptions } from '../interfaces/IInputOptions';
+import { IInputOptions } from '../interfaces/options/IInputOptions';
 import { IObfuscationResult } from '../interfaces/IObfuscationResult';
 
 import { SourceMapMode } from '../enums/SourceMapMode';

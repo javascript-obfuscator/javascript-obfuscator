@@ -1,30 +1,33 @@
+import { injectable } from 'inversify';
+
 import {
-    ArrayUnique,
-    IsBoolean,
-    IsArray,
-    IsIn,
-    IsNumber,
-    IsString,
-    IsUrl,
-    Min,
-    Max,
-    ValidateIf,
-    validateSync,
-    ValidationError,
-    ValidatorOptions
+ArrayUnique,
+IsBoolean,
+IsArray,
+IsIn,
+IsNumber,
+IsString,
+IsUrl,
+Min,
+Max,
+ValidateIf,
+validateSync,
+ValidationError,
+ValidatorOptions
 } from 'class-validator';
 
-import { IInputOptions } from '../interfaces/IInputOptions';
-import { IOptions } from '../interfaces/IOptions';
+import { IInputOptions } from '../interfaces/options/IInputOptions';
+import { IOptions } from '../interfaces/options/IOptions';
 
 import { TSourceMapMode } from '../types/TSourceMapMode';
-import { TStringArrayEncoding } from '../types/TStringArrayEncoding';
+import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 
 import { DEFAULT_PRESET } from '../preset-options/DefaultPreset';
 
 import { OptionsNormalizer } from './OptionsNormalizer';
 import { ValidationErrorsFormatter } from './ValidationErrorsFormatter';
 
+@injectable()
 export class Options implements IOptions {
     /**
      * @type {ValidatorOptions}

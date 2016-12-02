@@ -1,17 +1,24 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
+
 import * as format from 'string-template';
 
-import { TNodeWithBlockStatement } from '../../../types/TNodeWithBlockStatement';
-import { TObfuscationEvent } from '../../../types/TObfuscationEvent';
+import { TNodeWithBlockStatement } from '../../../types/node/TNodeWithBlockStatement';
+import { TObfuscationEvent } from '../../../types/event-emitters/TObfuscationEvent';
 
-import { IOptions } from '../../../interfaces/IOptions';
+import { IOptions } from '../../../interfaces/options/IOptions';
+import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { ObfuscationEvents } from '../../../enums/ObfuscationEvents';
+
+import { initializable } from '../../../decorators/Initializable';
 
 import { ControlFlowStorageCallTemplate } from '../../../templates/custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/ControlFlowStorageCallTemplate';
 
 import { AbstractCustomNode } from '../../AbstractCustomNode';
 import { NodeAppender } from '../../../node/NodeAppender';
 
+@injectable()
 export class ControlFlowStorageCallNode extends AbstractCustomNode {
     /**
      * @type {TObfuscationEvent}
@@ -21,39 +28,48 @@ export class ControlFlowStorageCallNode extends AbstractCustomNode {
     /**
      * @type {string}
      */
+    @initializable()
     private controlFlowStorageKey: string;
 
     /**
      * @type {string}
      */
+    @initializable()
     private controlFlowStorageName: string;
 
     /**
      * @type {string}
      */
+    @initializable()
     private leftValue: string;
 
     /**
      * @type {string}
      */
+    @initializable()
     private rightValue: string;
+
+    /**
+     * @param options
+     */
+    constructor (
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
+        super(options);
+    }
 
     /**
      * @param controlFlowStorageName
      * @param controlFlowStorageKey
      * @param leftValue
      * @param rightValue
-     * @param options
      */
-    constructor (
+    public initialize (
         controlFlowStorageName: string,
         controlFlowStorageKey: string,
         leftValue: string,
         rightValue: string,
-        options: IOptions
-    ) {
-        super(options);
-
+    ): void {
         this.controlFlowStorageName = controlFlowStorageName;
         this.controlFlowStorageKey = controlFlowStorageKey;
         this.leftValue = leftValue;
@@ -62,8 +78,9 @@ export class ControlFlowStorageCallNode extends AbstractCustomNode {
 
     /**
      * @param blockScopeNode
+     * @param stackTraceData
      */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
+    public appendNode (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
         NodeAppender.prependNode(blockScopeNode, this.getNode());
     }
 

@@ -1,14 +1,43 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+
 import * as escodegen from 'escodegen';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
+import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../../interfaces/options/IOptions';
+import { IReplacer } from '../../interfaces/node-transformers/IReplacer';
+import { IStorage } from '../../interfaces/storages/IStorage';
+
+import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscatorsReplacers';
 import { NodeType } from '../../enums/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
-import { StringLiteralReplacer } from './replacers/StringLiteralReplacer';
 
+@injectable()
 export class MemberExpressionObfuscator extends AbstractNodeTransformer {
+    /**
+     * @type {IReplacer}
+     */
+    private readonly stringLiteralReplacer: IReplacer;
+
+    /**
+     * @param customNodesStorage
+     * @param replacersFactory
+     * @param options
+     */
+    constructor(
+        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
+        @inject(ServiceIdentifiers['Factory<IReplacer>']) replacersFactory: (replacer: NodeObfuscatorsReplacers) => IReplacer,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
+        super(customNodesStorage, options);
+
+        this.stringLiteralReplacer = replacersFactory(NodeObfuscatorsReplacers.StringLiteralReplacer);
+    }
+
     /**
      * @param memberExpressionNode
      */
@@ -50,7 +79,7 @@ export class MemberExpressionObfuscator extends AbstractNodeTransformer {
         const literalNode: ESTree.Literal = {
             raw: `'${nodeValue}'`,
             'x-verbatim-property': {
-                content : new StringLiteralReplacer(this.customNodesStorage, this.options).replace(nodeValue),
+                content: this.stringLiteralReplacer.replace(nodeValue),
                 precedence: escodegen.Precedence.Primary
             },
             type: NodeType.Literal,
@@ -74,7 +103,7 @@ export class MemberExpressionObfuscator extends AbstractNodeTransformer {
     private obfuscateLiteralProperty (node: ESTree.Literal): void {
         if (typeof node.value === 'string' && !node['x-verbatim-property']) {
             node['x-verbatim-property'] = {
-                content : new StringLiteralReplacer(this.customNodesStorage, this.options).replace(node.value),
+                content : this.stringLiteralReplacer.replace(node.value),
                 precedence: escodegen.Precedence.Primary
             };
         }

@@ -2,7 +2,6 @@ import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
-import { IInitializable } from '../../interfaces/IInitializable';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
 
@@ -12,7 +11,7 @@ import { MapStorage } from '../MapStorage';
 import { TCustomNodesFactoriesFactory } from '../../types/container/TCustomNodesFactoriesFactory';
 
 @injectable()
-export class CustomNodesStorage extends MapStorage <ICustomNode> implements IInitializable {
+export class CustomNodesStorage extends MapStorage <ICustomNode> {
     /**
      * @type {CustomNodesFactories[]}
      */

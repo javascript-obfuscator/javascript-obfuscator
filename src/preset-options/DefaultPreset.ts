@@ -12,7 +12,7 @@ export const DEFAULT_PRESET: IInputOptions = Object.freeze({
     reservedNames: [],
     rotateStringArray: true,
     seed: 0,
-    selfDefending: true,
+    selfDefending: false,
     sourceMap: false,
     sourceMapBaseUrl: '',
     sourceMapFileName: '',

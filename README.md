@@ -124,7 +124,7 @@ Following options available for the JS Obfuscator:
     reservedNames: [],
     rotateStringArray: true,
     seed: 0,
-    selfDefending: true,
+    selfDefending: false,
     sourceMap: false,
     sourceMapBaseUrl: '',
     sourceMapFileName: '',
@@ -228,8 +228,9 @@ This option sets seed for random generator. This is useful for creating repeatab
 If seed is `0` - random generator will work without seed.
 
 ### `selfDefending`
-Type: `boolean` Default: `true`
+Type: `boolean` Default: `false`
 
+##### :warning: Don't change obfuscated code in any way after obfuscation with this option, because any change like uglifying of code can trigger self defending and code wont work anymore!
 ##### :warning: this option forcibly set `compact` value to `true`
 
 This option makes the output code resilient against formatting and variable renaming. If one tries to use a JavaScript beautifier on the obfuscated code, the code won't work anymore, making it harder to understand and modify it.

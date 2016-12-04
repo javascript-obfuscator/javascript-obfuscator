@@ -27,7 +27,7 @@
     "escodegen": "1.8.1",
     "esprima": "3.1.2",
     "estraverse": "4.2.0",
-    "inversify": "^3.0.0-beta.2",
+    "inversify": "^3.0.0-beta.3",
     "is-equal": "^1.5.3",
     "mkdirp": "0.5.1",
     "reflect-metadata": "^0.1.8",

@@ -8,14 +8,9 @@ import { NodeControlFlowTransformersReplacers } from '../../../enums/container/N
 import { BinaryExpressionControlFlowReplacer } from '../../../node-transformers/node-control-flow-transformers/control-flow-replacers/BinaryExpressionControlFlowReplacer';
 
 export const nodeControlFlowTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
-    const nodeControlFlowTransformersReplacersTag: string = 'nodeControlFlowTransformersReplacers';
-
     bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
         .to(BinaryExpressionControlFlowReplacer)
-        .whenTargetTagged(
-            nodeControlFlowTransformersReplacersTag,
-            NodeControlFlowTransformersReplacers.BinaryExpressionControlFlowReplacer
-        );
+        .whenTargetNamed(NodeControlFlowTransformersReplacers.BinaryExpressionControlFlowReplacer);
 
     bind<IControlFlowReplacer>(ServiceIdentifiers['Factory<IControlFlowReplacer>'])
         .toFactory<IControlFlowReplacer>((context: interfaces.Context) => {
@@ -26,9 +21,8 @@ export const nodeControlFlowTransformersModule: interfaces.ContainerModule = new
                     return <IControlFlowReplacer>cache.get(replacer);
                 }
 
-                const controlFlowReplacer: IControlFlowReplacer = context.container.getTagged<IControlFlowReplacer>(
+                const controlFlowReplacer: IControlFlowReplacer = context.container.getNamed<IControlFlowReplacer>(
                     ServiceIdentifiers.IControlFlowReplacer,
-                    nodeControlFlowTransformersReplacersTag,
                     replacer
                 );
 

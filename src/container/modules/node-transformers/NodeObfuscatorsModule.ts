@@ -11,23 +11,21 @@ import { NumberLiteralReplacer } from '../../../node-transformers/node-obfuscato
 import { StringLiteralReplacer } from '../../../node-transformers/node-obfuscators/replacers/StringLiteralReplacer';
 
 export const nodeObfuscatorsModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
-    const nodeObfuscatorsReplacersTag: string = 'nodeObfuscatorsReplacers';
-
     bind<IReplacer>(ServiceIdentifiers.IReplacer)
         .to(BooleanLiteralReplacer)
-        .whenTargetTagged(nodeObfuscatorsReplacersTag, NodeObfuscatorsReplacers.BooleanReplacer);
+        .whenTargetNamed(NodeObfuscatorsReplacers.BooleanReplacer);
 
     bind<IReplacer>(ServiceIdentifiers.IReplacer)
         .to(IdentifierReplacer)
-        .whenTargetTagged(nodeObfuscatorsReplacersTag, NodeObfuscatorsReplacers.IdentifierReplacer);
+        .whenTargetNamed(NodeObfuscatorsReplacers.IdentifierReplacer);
 
     bind<IReplacer>(ServiceIdentifiers.IReplacer)
         .to(NumberLiteralReplacer)
-        .whenTargetTagged(nodeObfuscatorsReplacersTag, NodeObfuscatorsReplacers.NumberLiteralReplacer);
+        .whenTargetNamed(NodeObfuscatorsReplacers.NumberLiteralReplacer);
 
     bind<IReplacer>(ServiceIdentifiers.IReplacer)
         .to(StringLiteralReplacer)
-        .whenTargetTagged(nodeObfuscatorsReplacersTag, NodeObfuscatorsReplacers.StringLiteralReplacer);
+        .whenTargetNamed(NodeObfuscatorsReplacers.StringLiteralReplacer);
 
     bind<IReplacer>(ServiceIdentifiers['Factory<IReplacer>'])
         .toFactory<IReplacer>((context: interfaces.Context) => {
@@ -38,9 +36,8 @@ export const nodeObfuscatorsModule: interfaces.ContainerModule = new ContainerMo
                     return <IReplacer>cache.get(replacer);
                 }
 
-                const obfuscationReplacer: IReplacer = context.container.getTagged<IReplacer>(
+                const obfuscationReplacer: IReplacer = context.container.getNamed<IReplacer>(
                     ServiceIdentifiers.IReplacer,
-                    nodeObfuscatorsReplacersTag,
                     replacer
                 );
 

@@ -11,8 +11,6 @@ import { ObjectExpressionCalleeDataExtractor } from '../../../stack-trace-analyz
 import { StackTraceAnalyzer } from '../../../stack-trace-analyzer/StackTraceAnalyzer';
 
 export const stackTraceAnalyzerModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
-    const calleeDataExtractorsTag: string = 'calleeDataExtractors';
-
     // stack trace analyzer
     bind<IStackTraceAnalyzer>(ServiceIdentifiers.IStackTraceAnalyzer)
         .to(StackTraceAnalyzer)
@@ -21,15 +19,15 @@ export const stackTraceAnalyzerModule: interfaces.ContainerModule = new Containe
     // callee data extractors
     bind<ICalleeDataExtractor>(ServiceIdentifiers.ICalleeDataExtractor)
         .to(FunctionDeclarationCalleeDataExtractor)
-        .whenTargetTagged(calleeDataExtractorsTag, CalleeDataExtractors.FunctionDeclarationCalleeDataExtractor);
+        .whenTargetNamed(CalleeDataExtractors.FunctionDeclarationCalleeDataExtractor);
 
     bind<ICalleeDataExtractor>(ServiceIdentifiers.ICalleeDataExtractor)
         .to(FunctionExpressionCalleeDataExtractor)
-        .whenTargetTagged(calleeDataExtractorsTag, CalleeDataExtractors.FunctionExpressionCalleeDataExtractor);
+        .whenTargetNamed(CalleeDataExtractors.FunctionExpressionCalleeDataExtractor);
 
     bind<ICalleeDataExtractor>(ServiceIdentifiers.ICalleeDataExtractor)
         .to(ObjectExpressionCalleeDataExtractor)
-        .whenTargetTagged(calleeDataExtractorsTag, CalleeDataExtractors.ObjectExpressionCalleeDataExtractor);
+        .whenTargetNamed(CalleeDataExtractors.ObjectExpressionCalleeDataExtractor);
 
     // node transformers factory
     bind<ICalleeDataExtractor>(ServiceIdentifiers['Factory<ICalleeDataExtractor>'])
@@ -41,9 +39,8 @@ export const stackTraceAnalyzerModule: interfaces.ContainerModule = new Containe
                     return <ICalleeDataExtractor>cache.get(calleeDataExtractorName);
                 }
 
-                const calleeDataExtractor: ICalleeDataExtractor = context.container.getTagged<ICalleeDataExtractor>(
+                const calleeDataExtractor: ICalleeDataExtractor = context.container.getNamed<ICalleeDataExtractor>(
                     ServiceIdentifiers.ICalleeDataExtractor,
-                    calleeDataExtractorsTag,
                     calleeDataExtractorName
                 );
 

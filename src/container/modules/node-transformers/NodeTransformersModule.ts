@@ -18,49 +18,47 @@ import { ObjectExpressionObfuscator } from '../../../node-transformers/node-obfu
 import { VariableDeclarationObfuscator } from '../../../node-transformers/node-obfuscators/VariableDeclarationObfuscator';
 
 export const nodeTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
-    const nodeTransformersTag: string = 'nodeTransformers';
-
     // node control flow transformers
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(FunctionControlFlowTransformer)
-        .whenTargetTagged(nodeTransformersTag, NodeTransformers.FunctionControlFlowTransformer);
+        .whenTargetNamed(NodeTransformers.FunctionControlFlowTransformer);
 
     // node obfuscators
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(CatchClauseObfuscator)
-        .whenTargetTagged(nodeTransformersTag, NodeTransformers.CatchClauseObfuscator);
+        .whenTargetNamed(NodeTransformers.CatchClauseObfuscator);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(FunctionDeclarationObfuscator)
-        .whenTargetTagged(nodeTransformersTag, NodeTransformers.FunctionDeclarationObfuscator);
+        .whenTargetNamed(NodeTransformers.FunctionDeclarationObfuscator);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(FunctionObfuscator)
-        .whenTargetTagged(nodeTransformersTag, NodeTransformers.FunctionObfuscator);
+        .whenTargetNamed(NodeTransformers.FunctionObfuscator);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(LabeledStatementObfuscator)
-        .whenTargetTagged(nodeTransformersTag, NodeTransformers.LabeledStatementObfuscator);
+        .whenTargetNamed(NodeTransformers.LabeledStatementObfuscator);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(LiteralObfuscator)
-        .whenTargetTagged(nodeTransformersTag, NodeTransformers.LiteralObfuscator);
+        .whenTargetNamed(NodeTransformers.LiteralObfuscator);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(MemberExpressionObfuscator)
-        .whenTargetTagged(nodeTransformersTag, NodeTransformers.MemberExpressionObfuscator);
+        .whenTargetNamed(NodeTransformers.MemberExpressionObfuscator);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(MethodDefinitionObfuscator)
-        .whenTargetTagged(nodeTransformersTag, NodeTransformers.MethodDefinitionObfuscator);
+        .whenTargetNamed(NodeTransformers.MethodDefinitionObfuscator);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(ObjectExpressionObfuscator)
-        .whenTargetTagged(nodeTransformersTag, NodeTransformers.ObjectExpressionObfuscator);
+        .whenTargetNamed(NodeTransformers.ObjectExpressionObfuscator);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(VariableDeclarationObfuscator)
-        .whenTargetTagged(nodeTransformersTag, NodeTransformers.VariableDeclarationObfuscator);
+        .whenTargetNamed(NodeTransformers.VariableDeclarationObfuscator);
 
     // node transformers factory
     bind<INodeTransformer[]>(ServiceIdentifiers['Factory<INodeTransformer[]>'])
@@ -77,9 +75,8 @@ export const nodeTransformersModule: interfaces.ContainerModule = new ContainerM
                     if (cache.has(transformer)) {
                         nodeTransformer = <INodeTransformer>cache.get(transformer);
                     } else {
-                        nodeTransformer = context.container.getTagged<INodeTransformer>(
+                        nodeTransformer = context.container.getNamed<INodeTransformer>(
                             ServiceIdentifiers.INodeTransformer,
-                            nodeTransformersTag,
                             transformer
                         );
                         cache.set(transformer, nodeTransformer);

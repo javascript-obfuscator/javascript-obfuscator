@@ -37,10 +37,12 @@ describe('OptionsNormalizer', () => {
 
         it('should normalize options preset: selfDefendingRule', () => {
             optionsPreset = Object.assign({}, DEFAULT_PRESET, {
+                selfDefending: true,
                 compact: false
             });
 
             expectedOptionsPreset = Object.assign({}, DEFAULT_PRESET, {
+                selfDefending: true,
                 compact: true
             });
 

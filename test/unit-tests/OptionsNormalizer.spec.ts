@@ -37,11 +37,13 @@ describe('OptionsNormalizer', () => {
 
         it('should normalize options preset: selfDefendingRule', () => {
             optionsPreset = Object.assign({}, DEFAULT_PRESET, {
-                compact: false
+                compact: false,
+                selfDefending: true
             });
 
             expectedOptionsPreset = Object.assign({}, DEFAULT_PRESET, {
-                compact: true
+                compact: true,
+                selfDefending: true
             });
 
             assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);

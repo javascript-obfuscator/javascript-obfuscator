@@ -11,7 +11,7 @@ export const DEFAULT_PRESET: IObfuscatorOptions = Object.freeze({
     reservedNames: [],
     rotateStringArray: true,
     seed: 0,
-    selfDefending: true,
+    selfDefending: false,
     sourceMap: false,
     sourceMapBaseUrl: '',
     sourceMapFileName: '',

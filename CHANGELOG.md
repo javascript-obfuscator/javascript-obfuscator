@@ -1,5 +1,9 @@
 Change Log
 ===
+v0.8.3
+---
+* `selfDefending` option now disabled by default.
+
 v0.8.2
 ---
 * New option `seed` sets seed for random generator. This is useful for creating repeatable results.

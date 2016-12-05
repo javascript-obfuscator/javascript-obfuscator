@@ -1,6 +1,4 @@
-import { IContainerServiceIdentifiers } from '../interfaces/container/IContainerServiceIdentifiers';
-
-export const ServiceIdentifiers: IContainerServiceIdentifiers = {
+export const ServiceIdentifiers = {
     'Factory<ICalleeDataExtractor>': Symbol('Factory<ICalleeDataExtractor>'),
     'Factory<IControlFlowReplacer>': Symbol('Factory<IControlFlowReplacer>'),
     'Factory<ICustomNode>': Symbol('Factory<ICustomNode>'),

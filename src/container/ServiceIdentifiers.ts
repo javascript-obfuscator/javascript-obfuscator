@@ -1,4 +1,4 @@
-export const ServiceIdentifiers = {
+export const ServiceIdentifiers: any = {
     'Factory<ICalleeDataExtractor>': Symbol('Factory<ICalleeDataExtractor>'),
     'Factory<IControlFlowReplacer>': Symbol('Factory<IControlFlowReplacer>'),
     'Factory<ICustomNode>': Symbol('Factory<ICustomNode>'),

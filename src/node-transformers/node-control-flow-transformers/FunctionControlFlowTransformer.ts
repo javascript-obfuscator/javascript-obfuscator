@@ -31,14 +31,12 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     ]);
 
     /**
-     * @param customNodesStorage
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(customNodesStorage, options);
+        super(options);
     }
 
     /**
@@ -69,7 +67,6 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
                 }
 
                 const controlFlowStorageCallCustomNode: ICustomNode | undefined = new controlFlowReplacer(
-                    this.customNodesStorage,
                     this.options
                 ).replace(node, parentNode, controlFlowStorage, controlFlowStorageCustomNodeName);
 

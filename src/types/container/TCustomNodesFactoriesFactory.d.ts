@@ -1,5 +1,5 @@
-import { ICustomNodesFactory } from '../../interfaces/custom-nodes/ICustomNodesFactory';
+import { ICustomNodeGroup } from '../../interfaces/custom-nodes/ICustomNodeGroup';
 
-import { CustomNodesFactories } from '../../enums/container/CustomNodesFactories';
+import { CustomNodeGroups } from '../../enums/container/CustomNodeGroups';
 
-export type TCustomNodesFactoriesFactory = (customNodesFactoryName: CustomNodesFactories) => ICustomNodesFactory;
+export type TCustomNodeGroupsFactory = (customNodeGroupsName: CustomNodeGroups) => ICustomNodeGroup;

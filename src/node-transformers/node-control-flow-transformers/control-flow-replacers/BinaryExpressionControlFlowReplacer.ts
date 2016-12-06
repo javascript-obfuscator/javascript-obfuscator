@@ -15,14 +15,12 @@ import { ControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-r
 @injectable()
 export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowReplacer {
     /**
-     * @param customNodesStorage
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(customNodesStorage, options);
+        super(options);
     }
 
     /**

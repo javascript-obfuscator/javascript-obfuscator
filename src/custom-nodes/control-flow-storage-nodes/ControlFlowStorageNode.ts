@@ -3,12 +3,10 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as format from 'string-template';
 
-import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
 import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
-import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
 import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
@@ -18,7 +16,6 @@ import { initializable } from '../../decorators/Initializable';
 import { ControlFlowStorageTemplate } from '../../templates/custom-nodes/control-flow-storage-nodes/ControlFlowStorageTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { NodeAppender } from '../../node/NodeAppender';
 
 @injectable()
 export class ControlFlowStorageNode extends AbstractCustomNode {
@@ -55,14 +52,6 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
     public initialize (controlFlowStorage: IStorage <ICustomNode>, controlFlowStorageName: string): void {
         this.controlFlowStorage = controlFlowStorage;
         this.controlFlowStorageName = controlFlowStorageName;
-    }
-
-    /**
-     * @param blockScopeNode
-     * @param stackTraceData
-     */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
-        NodeAppender.prependNode(blockScopeNode, this.getNode());
     }
 
     /**

@@ -4,10 +4,8 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IReplacer } from '../../interfaces/node-transformers/IReplacer';
-import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscatorsReplacers';
 import { NodeType } from '../../enums/NodeType';
@@ -34,16 +32,14 @@ export class CatchClauseObfuscator extends AbstractNodeTransformer {
     private readonly identifierReplacer: IReplacer & IdentifierReplacer;
 
     /**
-     * @param customNodesStorage
      * @param replacersFactory
      * @param options
      */
     constructor(
-        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
         @inject(ServiceIdentifiers['Factory<IReplacer>']) replacersFactory: (replacer: NodeObfuscatorsReplacers) => IReplacer,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(customNodesStorage, options);
+        super(options);
 
         this.identifierReplacer = <IdentifierReplacer>replacersFactory(NodeObfuscatorsReplacers.IdentifierReplacer);
     }

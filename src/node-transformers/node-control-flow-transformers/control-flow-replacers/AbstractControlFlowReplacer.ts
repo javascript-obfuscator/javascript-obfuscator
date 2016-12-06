@@ -13,24 +13,16 @@ import { Utils } from '../../../Utils';
 @injectable()
 export abstract class AbstractControlFlowReplacer implements IControlFlowReplacer {
     /**
-     * @type IStorage<ICustomNode>
-     */
-    protected readonly customNodesStorage: IStorage<ICustomNode>;
-
-    /**
      * @type {IOptions}
      */
     protected readonly options : IOptions;
 
     /**
-     * @param customNodesStorage
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        this.customNodesStorage = customNodesStorage;
         this.options = options;
     }
 

@@ -3,11 +3,9 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as format from 'string-template';
 
-import { TNodeWithBlockStatement } from '../../../types/node/TNodeWithBlockStatement';
 import { TObfuscationEvent } from '../../../types/event-emitters/TObfuscationEvent';
 
 import { IOptions } from '../../../interfaces/options/IOptions';
-import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { ObfuscationEvents } from '../../../enums/ObfuscationEvents';
 
@@ -46,12 +44,6 @@ export class BinaryExpressionFunctionNode extends AbstractCustomNode {
     initialize (operator: string): void {
         this.operator = operator;
     }
-
-    /**
-     * @param blockScopeNode
-     * @param stackTraceData
-     */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {}
 
     /**
      * @returns {string}

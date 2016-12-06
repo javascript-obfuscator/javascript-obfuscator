@@ -2,13 +2,13 @@ export const ServiceIdentifiers: any = {
     'Factory<ICalleeDataExtractor>': Symbol('Factory<ICalleeDataExtractor>'),
     'Factory<IControlFlowReplacer>': Symbol('Factory<IControlFlowReplacer>'),
     'Factory<ICustomNode>': Symbol('Factory<ICustomNode>'),
-    'Factory<ICustomNodesFactory>': Symbol('Factory<ICustomNodesFactory>'),
+    'Factory<ICustomNodeGroup>': Symbol('Factory<ICustomNodeGroup>'),
     'Factory<INodeTransformer[]>': Symbol('Factory<INodeTransformer[]>'),
     'Factory<IObfuscationResult>': Symbol('Factory<IObfuscationResult>'),
     'Factory<IReplacer>': Symbol('Factory<IReplacer>'),
     ICalleeDataExtractor: Symbol('ICalleeDataExtractor'),
     ICustomNode: Symbol('ICustomNode'),
-    ICustomNodesFactory: Symbol('ICustomNodesFactory'),
+    ICustomNodeGroup: Symbol('ICustomNodeGroup'),
     IControlFlowReplacer: Symbol('IControlFlowReplacer'),
     IJavaScriptObfuscator: Symbol('IJavaScriptObfuscator'),
     INodeTransformer: Symbol('INodeTransformer'),
@@ -18,6 +18,5 @@ export const ServiceIdentifiers: any = {
     IOptions: Symbol('IOptions'),
     IReplacer: Symbol('IReplacer'),
     ISourceMapCorrector: Symbol('ISourceMapCorrector'),
-    IStackTraceAnalyzer: Symbol('IStackTraceAnalyzer'),
-    'IStorage<ICustomNode>': Symbol('IStorage<ICustomNode>')
+    IStackTraceAnalyzer: Symbol('IStackTraceAnalyzer')
 };

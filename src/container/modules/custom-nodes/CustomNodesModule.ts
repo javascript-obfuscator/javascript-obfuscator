@@ -2,16 +2,16 @@ import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
-import { ICustomNodesFactory } from '../../../interfaces/custom-nodes/ICustomNodesFactory';
+import { ICustomNodeGroup } from '../../../interfaces/custom-nodes/ICustomNodeGroup';
 
 import { CustomNodes } from '../../../enums/container/CustomNodes';
-import { CustomNodesFactories } from '../../../enums/container/CustomNodesFactories';
+import { CustomNodeGroups } from '../../../enums/container/CustomNodeGroups';
 
-import { ConsoleOutputCustomNodesFactory } from '../../../custom-nodes/console-output-nodes/factory/ConsoleOutputCustomNodesFactory';
-import { DebugProtectionCustomNodesFactory } from '../../../custom-nodes/debug-protection-nodes/factory/DebugProtectionCustomNodesFactory';
-import { DomainLockCustomNodesFactory } from '../../../custom-nodes/domain-lock-nodes/factory/DomainLockCustomNodesFactory';
-import { SelfDefendingCustomNodesFactory } from '../../../custom-nodes/self-defending-nodes/factory/SelfDefendingCustomNodesFactory';
-import { StringArrayCustomNodesFactory } from '../../../custom-nodes/string-array-nodes/factory/StringArrayCustomNodesFactory';
+import { ConsoleOutputCustomNodeGroup } from '../../../custom-nodes/console-output-nodes/group/ConsoleOutputCustomNodeGroup';
+import { DebugProtectionCustomNodeGroup } from '../../../custom-nodes/debug-protection-nodes/group/DebugProtectionCustomNodeGroup';
+import { DomainLockCustomNodeGroup } from '../../../custom-nodes/domain-lock-nodes/group/DomainLockCustomNodeGroup';
+import { SelfDefendingCustomNodeGroup } from '../../../custom-nodes/self-defending-nodes/group/SelfDefendingCustomNodeGroup';
+import { StringArrayCustomNodeGroup } from '../../../custom-nodes/string-array-nodes/group/StringArrayCustomNodeGroup';
 
 import { BinaryExpressionFunctionNode } from '../../../custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/BinaryExpressionFunctionNode';
 import { ControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/ControlFlowStorageCallNode';
@@ -81,26 +81,31 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
         .to(StringArrayRotateFunctionNode)
         .whenTargetNamed(CustomNodes.StringArrayRotateFunctionNode);
 
-    // custom nodes concrete factories
-    bind<ICustomNodesFactory>(ServiceIdentifiers.ICustomNodesFactory)
-        .to(ConsoleOutputCustomNodesFactory)
-        .whenTargetNamed(CustomNodesFactories.ConsoleOutputCustomNodesFactory);
+    // node groups
+    bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
+        .to(ConsoleOutputCustomNodeGroup)
+        .inSingletonScope()
+        .whenTargetNamed(CustomNodeGroups.ConsoleOutputCustomNodeGroup);
 
-    bind<ICustomNodesFactory>(ServiceIdentifiers.ICustomNodesFactory)
-        .to(DebugProtectionCustomNodesFactory)
-        .whenTargetNamed(CustomNodesFactories.DebugProtectionCustomNodesFactory);
+    bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
+        .to(DebugProtectionCustomNodeGroup)
+        .inSingletonScope()
+        .whenTargetNamed(CustomNodeGroups.DebugProtectionCustomNodeGroup);
 
-    bind<ICustomNodesFactory>(ServiceIdentifiers.ICustomNodesFactory)
-        .to(DomainLockCustomNodesFactory)
-        .whenTargetNamed(CustomNodesFactories.DomainLockCustomNodesFactory);
+    bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
+        .to(DomainLockCustomNodeGroup)
+        .inSingletonScope()
+        .whenTargetNamed(CustomNodeGroups.DomainLockCustomNodeGroup);
 
-    bind<ICustomNodesFactory>(ServiceIdentifiers.ICustomNodesFactory)
-        .to(SelfDefendingCustomNodesFactory)
-        .whenTargetNamed(CustomNodesFactories.SelfDefendingCustomNodesFactory);
+    bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
+        .to(SelfDefendingCustomNodeGroup)
+        .inSingletonScope()
+        .whenTargetNamed(CustomNodeGroups.SelfDefendingCustomNodeGroup);
 
-    bind<ICustomNodesFactory>(ServiceIdentifiers.ICustomNodesFactory)
-        .to(StringArrayCustomNodesFactory)
-        .whenTargetNamed(CustomNodesFactories.StringArrayCustomNodesFactory);
+    bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
+        .to(StringArrayCustomNodeGroup)
+        .inSingletonScope()
+        .whenTargetNamed(CustomNodeGroups.StringArrayCustomNodeGroup);
 
     // customNode factory
     bind<ICustomNode>(ServiceIdentifiers['Factory<ICustomNode>'])
@@ -113,14 +118,24 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
             };
         });
 
-    // customNodesFactory factory
-    bind<ICustomNodesFactory>(ServiceIdentifiers['Factory<ICustomNodesFactory>'])
-        .toFactory<ICustomNodesFactory>((context: interfaces.Context) => {
-            return (customNodesFactoryName: CustomNodesFactories) => {
-                return context.container.getNamed<ICustomNodesFactory>(
-                    ServiceIdentifiers.ICustomNodesFactory,
-                    customNodesFactoryName
+    // CustomNodeGroup factory
+    bind<ICustomNodeGroup>(ServiceIdentifiers['Factory<ICustomNodeGroup>'])
+        .toFactory<ICustomNodeGroup>((context: interfaces.Context) => {
+            const cache: Map <CustomNodeGroups, ICustomNodeGroup> = new Map <CustomNodeGroups, ICustomNodeGroup> ();
+
+            return (customNodeGroupName: CustomNodeGroups) => {
+                if (cache.has(customNodeGroupName)) {
+                    return <ICustomNodeGroup>cache.get(customNodeGroupName);
+                }
+
+                const customNodeGroup: ICustomNodeGroup = context.container.getNamed<ICustomNodeGroup>(
+                    ServiceIdentifiers.ICustomNodeGroup,
+                    customNodeGroupName
                 );
+
+                cache.set(customNodeGroupName, customNodeGroup);
+
+                return customNodeGroup;
             };
         });
 });

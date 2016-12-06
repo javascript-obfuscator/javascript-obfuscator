@@ -4,18 +4,28 @@ import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 import { TObfuscationEvent } from '../types/event-emitters/TObfuscationEvent';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
-import { ICustomNodesFactory } from '../interfaces/custom-nodes/ICustomNodesFactory';
+import { ICustomNodeGroup } from '../interfaces/custom-nodes/ICustomNodeGroup';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { ObfuscationEvents } from '../enums/ObfuscationEvents';
 
 @injectable()
-export abstract class AbstractCustomNodesFactory implements ICustomNodesFactory {
+export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     /**
      * @type {TObfuscationEvent}
      */
     protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.BeforeObfuscation;
+
+    /**
+     * @type {Map<string, ICustomNode>}
+     */
+    protected abstract customNodes: Map <string, ICustomNode>;
+
+    /**
+     * @type {string}
+     */
+    protected abstract readonly groupName: string;
 
     /**
      * @type {IStackTraceData[]}
@@ -37,20 +47,21 @@ export abstract class AbstractCustomNodesFactory implements ICustomNodesFactory 
     }
 
     /**
-     * @param stackTraceData
-     * @returns {Map<string, ICustomNode> | undefined}
-     */
-    public abstract initializeCustomNodes (stackTraceData: IStackTraceData[]): Map <string, ICustomNode> | undefined;
-
-    /**
-     * @param customNodes
      * @returns {Map<string, ICustomNode>}
      */
-    protected syncCustomNodesWithNodesFactory (customNodes: Map <string, ICustomNode>): Map <string, ICustomNode> {
-        customNodes.forEach((customNode: ICustomNode) => {
-            customNode.setAppendEvent(this.appendEvent);
-        });
-
-        return customNodes;
+    public getCustomNodes (): Map <string, ICustomNode> {
+        return this.customNodes;
     }
+
+    /**
+     * @returns {string}
+     */
+    public getGroupName (): string {
+        return this.groupName;
+    }
+
+    /**
+     * @param stackTraceData
+     */
+    public abstract initialize (stackTraceData: IStackTraceData[]): void;
 }

@@ -3,11 +3,9 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as format from 'string-template';
 
-import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
 import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
 
 import { IOptions } from '../../interfaces/options/IOptions';
-import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
@@ -16,7 +14,6 @@ import { initializable } from '../../decorators/Initializable';
 import { DebugProtectionFunctionCallTemplate } from '../../templates/custom-nodes/debug-protection-nodes/debug-protection-function-call-node/DebufProtectionFunctionCallTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { NodeAppender } from '../../node/NodeAppender';
 
 @injectable()
 export class DebugProtectionFunctionCallNode extends AbstractCustomNode {
@@ -45,14 +42,6 @@ export class DebugProtectionFunctionCallNode extends AbstractCustomNode {
      */
     public initialize (debugProtectionFunctionName: string): void {
         this.debugProtectionFunctionName = debugProtectionFunctionName;
-    }
-
-    /**
-     * @param blockScopeNode
-     * @param stackTraceData
-     */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
-        NodeAppender.appendNode(blockScopeNode, this.getNode());
     }
 
     /**

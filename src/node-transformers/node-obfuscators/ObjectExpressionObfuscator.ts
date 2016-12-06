@@ -5,9 +5,7 @@ import * as escodegen from 'escodegen';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
-import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { NodeType } from '../../enums/NodeType';
 
@@ -28,14 +26,12 @@ import { Utils } from '../../Utils';
 @injectable()
 export class ObjectExpressionObfuscator extends AbstractNodeTransformer {
     /**
-     * @param customNodesStorage
      * @param options
      */
     constructor(
-        @inject(ServiceIdentifiers['IStorage<ICustomNode>']) customNodesStorage: IStorage<ICustomNode>,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(customNodesStorage, options);
+        super(options);
     }
 
     /**

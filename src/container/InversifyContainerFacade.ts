@@ -7,7 +7,6 @@ import { nodeObfuscatorsModule } from './modules/node-transformers/NodeObfuscato
 import { nodeTransformersModule } from './modules/node-transformers/NodeTransformersModule';
 import { stackTraceAnalyzerModule } from './modules/stack-trace-analyzer/StackTraceAnalyzerModule';
 
-import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { IInputOptions } from '../interfaces/options/IInputOptions';
 import { IInversifyContainerFacade } from '../interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from '../interfaces/IJavaScriptObfsucator';
@@ -16,9 +15,7 @@ import { IObfuscationResult } from '../interfaces/IObfuscationResult';
 import { IObfuscator } from '../interfaces/IObfuscator';
 import { IOptions } from '../interfaces/options/IOptions';
 import { ISourceMapCorrector } from '../interfaces/ISourceMapCorrector';
-import { IStorage } from '../interfaces/storages/IStorage';
 
-import { CustomNodesStorage } from '../storages/custom-nodes/CustomNodesStorage';
 import { JavaScriptObfuscatorInternal } from '../JavaScriptObfuscatorInternal';
 import { ObfuscationEventEmitter } from '../event-emitters/ObfuscationEventEmitter';
 import { ObfuscationResult } from '../ObfuscationResult';
@@ -83,11 +80,6 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
             .to(ObfuscationEventEmitter)
             .inSingletonScope();
 
-        this.container
-            .bind<IStorage<ICustomNode>>(ServiceIdentifiers['IStorage<ICustomNode>'])
-            .to(CustomNodesStorage)
-            .inSingletonScope();
-
         // modules
         this.container.load(stackTraceAnalyzerModule);
         this.container.load(customNodesModule);
@@ -102,5 +94,14 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      */
     public get <T> (serviceIdentifier: interfaces.ServiceIdentifier<T>): T {
         return this.container.get<T>(serviceIdentifier);
+    }
+
+    /**
+     * @param serviceIdentifier
+     * @param named
+     * @returns {T}
+     */
+    public getNamed <T> (serviceIdentifier: interfaces.ServiceIdentifier<T>, named: string | number | symbol): T {
+        return this.container.getNamed<T>(serviceIdentifier, named);
     }
 }

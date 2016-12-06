@@ -2,24 +2,29 @@ import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomNodeFactory } from '../../../types/container/TCustomNodeFactory';
+import { TNodeWithBlockStatement } from '../../../types/node/TNodeWithBlockStatement';
 import { TObfuscationEvent } from '../../../types/event-emitters/TObfuscationEvent';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { IObfuscationEventEmitter } from '../../../interfaces/event-emitters/IObfuscationEventEmitter';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStackTraceData';
 import { IStorage } from '../../../interfaces/storages/IStorage';
+
+import { initializable } from '../../../decorators/Initializable';
 
 import { CustomNodes } from '../../../enums/container/CustomNodes';
 import { ObfuscationEvents } from '../../../enums/ObfuscationEvents';
 
 import { StringArrayNode } from '../StringArrayNode';
 
-import { AbstractCustomNodesFactory } from '../../AbstractCustomNodesFactory';
+import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
+import { NodeAppender } from '../../../node/NodeAppender';
 import { StringArrayStorage } from '../../../storages/string-array/StringArrayStorage';
 import { Utils } from '../../../Utils';
 
 @injectable()
-export class StringArrayCustomNodesFactory extends AbstractCustomNodesFactory {
+export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
     /**
      * @type {TObfuscationEvent}
      */
@@ -31,27 +36,41 @@ export class StringArrayCustomNodesFactory extends AbstractCustomNodesFactory {
     private readonly customNodeFactory: TCustomNodeFactory;
 
     /**
+     * @type {Map<string, ICustomNode>}
+     */
+    @initializable()
+    protected customNodes: Map <string, ICustomNode>;
+
+    /**
+     * @type {string}
+     */
+    protected readonly groupName: string = 'stringArrayCustomNodeGroup';
+
+    /**
+     * @type {IObfuscationEventEmitter}
+     */
+    private readonly obfuscationEventEmitter: IObfuscationEventEmitter;
+
+    /**
      * @param customNodeFactory
+     * @param obfuscationEventEmitter
      * @param options
      */
     constructor (
         @inject(ServiceIdentifiers['Factory<ICustomNode>']) customNodeFactory: TCustomNodeFactory,
+        @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
         this.customNodeFactory = customNodeFactory;
+        this.obfuscationEventEmitter = obfuscationEventEmitter;
     }
 
     /**
      * @param stackTraceData
-     * @returns {Map<string, ICustomNode>}
      */
-    public initializeCustomNodes (stackTraceData: IStackTraceData[]): Map <string, ICustomNode> | undefined {
-        if (!this.options.stringArray) {
-            return;
-        }
-
+    public initialize (stackTraceData: IStackTraceData[]): void {
         const stringArray: IStorage <string> = new StringArrayStorage();
 
         const stringArrayNode: ICustomNode = this.customNodeFactory(CustomNodes.StringArrayNode);
@@ -73,15 +92,40 @@ export class StringArrayCustomNodesFactory extends AbstractCustomNodesFactory {
         stringArrayCallsWrapper.initialize(stringArray, stringArrayName, stringArrayCallsWrapperName);
         stringArrayRotateFunctionNode.initialize(stringArray, stringArrayName, stringArrayRotateValue);
 
-        const customNodes: Map <string, ICustomNode> = new Map <string, ICustomNode> ([
+        this.customNodes = new Map <string, ICustomNode> ([
             ['stringArrayNode', stringArrayNode],
             ['stringArrayCallsWrapper', stringArrayCallsWrapper]
         ]);
 
-        if (this.options.rotateStringArray) {
-            customNodes.set('stringArrayRotateFunctionNode', stringArrayRotateFunctionNode);
-        }
+        this.obfuscationEventEmitter.once(
+            this.appendEvent,
+            (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]) => {
+                if (!this.options.stringArray || !stringArray.getLength()) {
+                    return;
+                }
 
-        return this.syncCustomNodesWithNodesFactory(customNodes);
+                // stringArrayNode append
+                NodeAppender.prependNode(blockScopeNode, stringArrayNode.getNode());
+
+                // stringArrayCallsWrapper append
+                NodeAppender.insertNodeAtIndex(blockScopeNode, stringArrayCallsWrapper.getNode(), 1);
+            }
+        );
+
+        if (this.options.rotateStringArray) {
+            this.customNodes.set('stringArrayRotateFunctionNode', stringArrayRotateFunctionNode);
+
+            this.obfuscationEventEmitter.once(
+                this.appendEvent,
+                (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]) => {
+                    if (!this.options.stringArray || !stringArray.getLength()) {
+                        return;
+                    }
+
+                    // stringArrayRotateFunctionNode append
+                    NodeAppender.insertNodeAtIndex(blockScopeNode, stringArrayRotateFunctionNode.getNode(), 1);
+                }
+            );
+        }
     }
 }

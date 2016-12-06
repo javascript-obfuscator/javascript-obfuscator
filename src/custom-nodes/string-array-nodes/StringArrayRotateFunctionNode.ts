@@ -3,14 +3,8 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as format from 'string-template';
 
-import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
-import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
-
 import { IOptions } from '../../interfaces/options/IOptions';
-import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
 import { IStorage } from '../../interfaces/storages/IStorage';
-
-import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
 import { initializable } from '../../decorators/Initializable';
 
@@ -21,16 +15,10 @@ import { StringArrayRotateFunctionTemplate } from '../../templates/custom-nodes/
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
-import { NodeAppender } from '../../node/NodeAppender';
 import { Utils } from '../../Utils';
 
 @injectable()
 export class StringArrayRotateFunctionNode extends AbstractCustomNode {
-    /**
-     * @type {TObfuscationEvent}
-     */
-    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.AfterObfuscation;
-
     /**
      * @type {IStorage <string>}
      */
@@ -71,18 +59,6 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
         this.stringArray = stringArray;
         this.stringArrayName = stringArrayName;
         this.stringArrayRotateValue = stringArrayRotateValue;
-    }
-
-    /**
-     * @param blockScopeNode
-     * @param stackTraceData
-     */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
-        if (!this.stringArray.getLength()) {
-            return;
-        }
-
-        NodeAppender.insertNodeAtIndex(blockScopeNode, this.getNode(), 1);
     }
 
     /**

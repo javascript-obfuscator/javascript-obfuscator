@@ -18,5 +18,6 @@ export const ServiceIdentifiers: any = {
     IOptions: Symbol('IOptions'),
     IReplacer: Symbol('IReplacer'),
     ISourceMapCorrector: Symbol('ISourceMapCorrector'),
-    IStackTraceAnalyzer: Symbol('IStackTraceAnalyzer')
+    IStackTraceAnalyzer: Symbol('IStackTraceAnalyzer'),
+    'IStorage<ICustomNodeGroup>': Symbol('IStorage<ICustomNodeGroup>')
 };

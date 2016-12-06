@@ -3,6 +3,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomNodeFactory } from '../../../types/container/TCustomNodeFactory';
 import { TNodeWithBlockStatement } from '../../../types/node/TNodeWithBlockStatement';
+import { TObfuscationEvent } from '../../../types/event-emitters/TObfuscationEvent';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IObfuscationEventEmitter } from '../../../interfaces/event-emitters/IObfuscationEventEmitter';
@@ -12,6 +13,7 @@ import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStack
 import { initializable } from '../../../decorators/Initializable';
 
 import { CustomNodes } from '../../../enums/container/CustomNodes';
+import { ObfuscationEvents } from '../../../enums/ObfuscationEvents';
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
@@ -20,20 +22,20 @@ import { Utils } from '../../../Utils';
 @injectable()
 export class DomainLockCustomNodeGroup extends AbstractCustomNodeGroup {
     /**
+     * @type {TObfuscationEvent}
+     */
+    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.BeforeObfuscation;
+
+    /**
      * @type {TCustomNodeFactory}
      */
     private readonly customNodeFactory: TCustomNodeFactory;
 
     /**
-     * @type {Map<string, ICustomNode>}
+     * @type {Map<CustomNodes, ICustomNode>}
      */
     @initializable()
-    protected customNodes: Map <string, ICustomNode>;
-
-    /**
-     * @type {string}
-     */
-    protected readonly groupName: string = 'domainLockCustomNodeGroup';
+    protected customNodes: Map <CustomNodes, ICustomNode>;
 
     /**
      * @type {IObfuscationEventEmitter}
@@ -57,11 +59,44 @@ export class DomainLockCustomNodeGroup extends AbstractCustomNodeGroup {
     }
 
     /**
+     * @param blockScopeNode
      * @param stackTraceData
      */
-    public initialize (stackTraceData: IStackTraceData[]): void {
-        const callsControllerFunctionName: string = Utils.getRandomVariableName();
+    public appendCustomNodes (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
         const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(stackTraceData.length);
+
+        // domainLockNode append
+        this.appendCustomNodeIfExist(CustomNodes.DomainLockNode, (customNode: ICustomNode) => {
+            NodeAppender.appendNodeToOptimalBlockScope(
+                stackTraceData,
+                blockScopeNode,
+                customNode.getNode(),
+                randomStackTraceIndex
+            );
+        });
+
+        // nodeCallsControllerFunctionNode append
+        this.appendCustomNodeIfExist(CustomNodes.NodeCallsControllerFunctionNode, (customNode: ICustomNode) => {
+            let targetBlockScope: TNodeWithBlockStatement;
+
+            if (stackTraceData.length) {
+                targetBlockScope = NodeAppender.getOptimalBlockScope(stackTraceData, randomStackTraceIndex, 1);
+            } else {
+                targetBlockScope = blockScopeNode;
+            }
+
+            NodeAppender.prependNode(targetBlockScope, customNode.getNode());
+        });
+    }
+
+    public initialize (): void {
+        this.customNodes = new Map <CustomNodes, ICustomNode> ();
+
+        if (!this.options.domainLock.length) {
+            return;
+        }
+
+        const callsControllerFunctionName: string = Utils.getRandomVariableName();
 
         const domainLockNode: ICustomNode = this.customNodeFactory(CustomNodes.DomainLockNode);
         const nodeCallsControllerFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.NodeCallsControllerFunctionNode);
@@ -69,38 +104,7 @@ export class DomainLockCustomNodeGroup extends AbstractCustomNodeGroup {
         domainLockNode.initialize(callsControllerFunctionName);
         nodeCallsControllerFunctionNode.initialize(this.appendEvent, callsControllerFunctionName);
 
-        this.customNodes = new Map <string, ICustomNode> ([
-            ['domainLockNode', domainLockNode],
-            ['nodeCallsControllerFunctionNode', nodeCallsControllerFunctionNode]
-        ]);
-
-        if (!this.options.domainLock.length) {
-            return;
-        }
-
-        this.obfuscationEventEmitter.once(
-            this.appendEvent,
-            (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]) => {
-                // domainLockNode append
-                NodeAppender.appendNodeToOptimalBlockScope(
-                    stackTraceData,
-                    blockScopeNode,
-                    domainLockNode.getNode(),
-                    randomStackTraceIndex
-                );
-
-                // nodeCallsControllerFunctionNode append
-                let targetBlockScope: TNodeWithBlockStatement;
-
-                if (stackTraceData.length) {
-                    targetBlockScope = NodeAppender
-                        .getOptimalBlockScope(stackTraceData, randomStackTraceIndex, 1);
-                } else {
-                    targetBlockScope = blockScopeNode;
-                }
-
-                NodeAppender.prependNode(targetBlockScope, nodeCallsControllerFunctionNode.getNode());
-            }
-        );
+        this.customNodes.set(CustomNodes.DomainLockNode, domainLockNode);
+        this.customNodes.set(CustomNodes.NodeCallsControllerFunctionNode, nodeCallsControllerFunctionNode);
     }
 }

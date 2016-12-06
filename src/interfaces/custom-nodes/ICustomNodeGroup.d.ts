@@ -1,20 +1,29 @@
+import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
+import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
+
 import { ICustomNode } from './ICustomNode';
 import { IInitializable } from '../IInitializable';
 import { IStackTraceData } from '../stack-trace-analyzer/IStackTraceData';
 
+import { CustomNodes } from '../../enums/container/CustomNodes';
+
 export interface ICustomNodeGroup extends IInitializable {
     /**
-     * @type {Map <string, ICustomNode>}
+     * @param blockScopeNode
+     * @param stackTraceData
      */
-    getCustomNodes (): Map <string, ICustomNode>;
+    appendCustomNodes (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void;
 
     /**
-     * @type {string}
+     * @returns {TObfuscationEvent}
      */
-    getGroupName (): string;
+    getAppendEvent (): TObfuscationEvent;
 
     /**
-     * @returns {Map <string, ICustomNode> | undefined}
+     * @type {Map <CustomNodes, ICustomNode>}
      */
-    initialize (stackTraceData: IStackTraceData[]): void;
+    getCustomNodes (): Map <CustomNodes, ICustomNode>;
+
+
+    initialize (): void;
 }

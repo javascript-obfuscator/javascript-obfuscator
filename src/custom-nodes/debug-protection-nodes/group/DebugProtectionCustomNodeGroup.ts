@@ -3,6 +3,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomNodeFactory } from '../../../types/container/TCustomNodeFactory';
 import { TNodeWithBlockStatement } from '../../../types/node/TNodeWithBlockStatement';
+import { TObfuscationEvent } from '../../../types/event-emitters/TObfuscationEvent';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IObfuscationEventEmitter } from '../../../interfaces/event-emitters/IObfuscationEventEmitter';
@@ -12,6 +13,7 @@ import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStack
 import { initializable } from '../../../decorators/Initializable';
 
 import { CustomNodes } from '../../../enums/container/CustomNodes';
+import { ObfuscationEvents } from '../../../enums/ObfuscationEvents';
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
@@ -20,20 +22,20 @@ import { Utils } from '../../../Utils';
 @injectable()
 export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
     /**
+     * @type {TObfuscationEvent}
+     */
+    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.BeforeObfuscation;
+
+    /**
      * @type {TCustomNodeFactory}
      */
     private readonly customNodeFactory: TCustomNodeFactory;
 
     /**
-     * @type {Map<string, ICustomNode>}
+     * @type {Map<CustomNodes, ICustomNode>}
      */
     @initializable()
-    protected customNodes: Map <string, ICustomNode>;
-
-    /**
-     * @type {string}
-     */
-    protected readonly groupName: string = 'debugProtectionCustomNodeGroup';
+    protected customNodes: Map <CustomNodes, ICustomNode>;
 
     /**
      * @type {IObfuscationEventEmitter}
@@ -57,9 +59,36 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
     }
 
     /**
+     * @param blockScopeNode
      * @param stackTraceData
      */
-    public initialize (stackTraceData: IStackTraceData[]): void {
+    public appendCustomNodes (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
+        // debugProtectionFunctionNode append
+        this.appendCustomNodeIfExist(CustomNodes.DebugProtectionFunctionNode, (customNode: ICustomNode) => {
+            NodeAppender.appendNode(blockScopeNode, customNode.getNode());
+        });
+
+        // debugProtectionFunctionCallNode append
+        this.appendCustomNodeIfExist(CustomNodes.DebugProtectionFunctionCallNode, (customNode: ICustomNode) => {
+            NodeAppender.appendNode(blockScopeNode, customNode.getNode());
+        });
+
+        // debugProtectionFunctionIntervalNode append
+        this.appendCustomNodeIfExist(CustomNodes.DebugProtectionFunctionIntervalNode, (customNode: ICustomNode) => {
+            let programBodyLength: number = blockScopeNode.body.length,
+                randomIndex: number = Utils.getRandomInteger(0, programBodyLength);
+
+            NodeAppender.insertNodeAtIndex(blockScopeNode, customNode.getNode(), randomIndex);
+        });
+    }
+
+    public initialize (): void {
+        this.customNodes = new Map <CustomNodes, ICustomNode> ();
+
+        if (!this.options.debugProtection) {
+            return;
+        }
+
         const debugProtectionFunctionName: string = Utils.getRandomVariableName();
 
         const debugProtectionFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.DebugProtectionFunctionNode);
@@ -70,45 +99,11 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
         debugProtectionFunctionCallNode.initialize(debugProtectionFunctionName);
         debugProtectionFunctionIntervalNode.initialize(debugProtectionFunctionName);
 
-        const customNodes: Map <string, ICustomNode> = new Map <string, ICustomNode> ([
-            ['debugProtectionFunctionNode', debugProtectionFunctionNode],
-            ['debugProtectionFunctionCallNode', debugProtectionFunctionCallNode]
-        ]);
-
-        this.obfuscationEventEmitter.once(
-            this.appendEvent,
-            (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]) => {
-                if (!this.options.debugProtection) {
-                    return;
-                }
-
-                // debugProtectionFunctionNode append
-                NodeAppender.appendNode(blockScopeNode, debugProtectionFunctionNode.getNode());
-
-                // debugProtectionFunctionCallNode append
-                NodeAppender.appendNode(blockScopeNode, debugProtectionFunctionCallNode.getNode());
-            }
-        );
+        this.customNodes.set(CustomNodes.DebugProtectionFunctionNode, debugProtectionFunctionNode);
+        this.customNodes.set(CustomNodes.DebugProtectionFunctionCallNode, debugProtectionFunctionCallNode);
 
         if (this.options.debugProtectionInterval) {
-            customNodes.set('debugProtectionFunctionIntervalNode', debugProtectionFunctionIntervalNode);
-
-            this.obfuscationEventEmitter.once(
-                this.appendEvent,
-                (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]) => {
-                    if (!this.options.debugProtection) {
-                        return;
-                    }
-
-                    // debugProtectionFunctionIntervalNode append
-                    let programBodyLength: number = blockScopeNode.body.length,
-                        randomIndex: number = Utils.getRandomInteger(0, programBodyLength);
-
-                    NodeAppender.insertNodeAtIndex(blockScopeNode, debugProtectionFunctionIntervalNode.getNode(), randomIndex);
-                }
-            );
+            this.customNodes.set(CustomNodes.DebugProtectionFunctionIntervalNode, debugProtectionFunctionIntervalNode);
         }
-
-        this.customNodes = customNodes;
     }
 }

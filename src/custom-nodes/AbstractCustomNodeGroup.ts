@@ -1,6 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
+import { TNodeWithBlockStatement } from '../types/node/TNodeWithBlockStatement';
 import { TObfuscationEvent } from '../types/event-emitters/TObfuscationEvent';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
@@ -8,24 +9,19 @@ import { ICustomNodeGroup } from '../interfaces/custom-nodes/ICustomNodeGroup';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
-import { ObfuscationEvents } from '../enums/ObfuscationEvents';
+import { CustomNodes } from '../enums/container/CustomNodes';
 
 @injectable()
 export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     /**
      * @type {TObfuscationEvent}
      */
-    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.BeforeObfuscation;
+    protected abstract readonly appendEvent: TObfuscationEvent;
 
     /**
-     * @type {Map<string, ICustomNode>}
+     * @type {Map<CustomNodes, ICustomNode>}
      */
-    protected abstract customNodes: Map <string, ICustomNode>;
-
-    /**
-     * @type {string}
-     */
-    protected abstract readonly groupName: string;
+    protected abstract customNodes: Map <CustomNodes, ICustomNode>;
 
     /**
      * @type {IStackTraceData[]}
@@ -47,21 +43,38 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     }
 
     /**
-     * @returns {Map<string, ICustomNode>}
+     * @param blockScopeNode
+     * @param stackTraceData
      */
-    public getCustomNodes (): Map <string, ICustomNode> {
+    public abstract appendCustomNodes (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void;
+
+    /**
+     * @returns {TObfuscationEvent}
+     */
+    public getAppendEvent (): TObfuscationEvent {
+        return this.appendEvent;
+    }
+
+    /**
+     * @returns {Map<CustomNodes, ICustomNode>}
+     */
+    public getCustomNodes (): Map <CustomNodes, ICustomNode> {
         return this.customNodes;
     }
 
-    /**
-     * @returns {string}
-     */
-    public getGroupName (): string {
-        return this.groupName;
-    }
+    public abstract initialize (): void;
 
     /**
-     * @param stackTraceData
+     * @param customNodeName
+     * @param callback
      */
-    public abstract initialize (stackTraceData: IStackTraceData[]): void;
+    protected appendCustomNodeIfExist (customNodeName: CustomNodes, callback: (customNode: ICustomNode) => void): void {
+        const customNode: ICustomNode | undefined = this.customNodes.get(customNodeName);
+
+        if (!customNode) {
+            return;
+        }
+
+        callback(customNode);
+    }
 }

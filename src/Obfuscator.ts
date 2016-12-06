@@ -7,14 +7,15 @@ import * as ESTree from 'estree';
 import { TNodeTransformersFactory } from './types/container/TNodeTransformersFactory';
 import { TVisitorDirection } from './types/TVisitorDirection';
 
+import { ICustomNodeGroup } from './interfaces/custom-nodes/ICustomNodeGroup';
 import { IObfuscationEventEmitter } from './interfaces/event-emitters/IObfuscationEventEmitter';
 import { IObfuscator } from './interfaces/IObfuscator';
 import { IOptions } from './interfaces/options/IOptions';
 import { INodeTransformer } from './interfaces/node-transformers/INodeTransformer';
 import { IStackTraceAnalyzer } from './interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
 import { IStackTraceData } from './interfaces/stack-trace-analyzer/IStackTraceData';
+import { IStorage } from './interfaces/storages/IStorage';
 
-import { CustomNodeGroups } from './enums/container/CustomNodeGroups';
 import { NodeTransformers } from './enums/container/NodeTransformers';
 import { NodeType } from './enums/NodeType';
 import { ObfuscationEvents } from './enums/ObfuscationEvents';
@@ -22,21 +23,9 @@ import { VisitorDirection } from './enums/VisitorDirection';
 
 import { Node } from './node/Node';
 import { NodeUtils } from './node/NodeUtils';
-import { TCustomNodeGroupsFactory } from './types/container/TCustomNodesFactoriesFactory';
 
 @injectable()
 export class Obfuscator implements IObfuscator {
-    /**
-     * @type {CustomNodeGroups[]}
-     */
-    private static readonly customNodeGroupsList: CustomNodeGroups[] = [
-        CustomNodeGroups.ConsoleOutputCustomNodeGroup,
-        CustomNodeGroups.DebugProtectionCustomNodeGroup,
-        CustomNodeGroups.DomainLockCustomNodeGroup,
-        CustomNodeGroups.SelfDefendingCustomNodeGroup,
-        CustomNodeGroups.StringArrayCustomNodeGroup
-    ];
-
     /**
      * @type {Map<string, NodeTransformers[]>}
      */
@@ -66,9 +55,9 @@ export class Obfuscator implements IObfuscator {
     ]);
 
     /**
-     * @type {TCustomNodeGroupsFactory}
+     * @type {IStorage<ICustomNodeGroup>}
      */
-    private readonly customNodeGroupsFactory: TCustomNodeGroupsFactory;
+    private readonly customNodeGroupStorage: IStorage<ICustomNodeGroup>;
 
     /**
      * @type {TNodeTransformersFactory}
@@ -93,20 +82,20 @@ export class Obfuscator implements IObfuscator {
     /**
      * @param stackTraceAnalyzer
      * @param obfuscationEventEmitter
-     * @param customNodeGroupsFactory
+     * @param customNodeGroupStorage
      * @param nodeTransformersFactory
      * @param options
      */
     constructor (
         @inject(ServiceIdentifiers.IStackTraceAnalyzer) stackTraceAnalyzer: IStackTraceAnalyzer,
         @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
-        @inject(ServiceIdentifiers['Factory<ICustomNodeGroup>']) customNodeGroupsFactory: TCustomNodeGroupsFactory,
+        @inject(ServiceIdentifiers['IStorage<ICustomNodeGroup>']) customNodeGroupStorage: IStorage<ICustomNodeGroup>,
         @inject(ServiceIdentifiers['Factory<INodeTransformer[]>']) nodeTransformersFactory: TNodeTransformersFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.stackTraceAnalyzer = stackTraceAnalyzer;
         this.obfuscationEventEmitter = obfuscationEventEmitter;
-        this.customNodeGroupsFactory = customNodeGroupsFactory;
+        this.customNodeGroupStorage = customNodeGroupStorage;
         this.nodeTransformersFactory = nodeTransformersFactory;
         this.options = options;
     }
@@ -124,10 +113,17 @@ export class Obfuscator implements IObfuscator {
 
         const stackTraceData: IStackTraceData[] = this.stackTraceAnalyzer.analyze(astTree.body);
 
-        // initialize custom node groups
-        Obfuscator.customNodeGroupsList.forEach((customNodeGroupName: CustomNodeGroups) => {
-            this.customNodeGroupsFactory(customNodeGroupName).initialize(stackTraceData);
-        });
+        // initialize custom node groups and configure custom nodes
+        this.customNodeGroupStorage
+            .getStorage()
+            .forEach((customNodeGroup: ICustomNodeGroup) => {
+                customNodeGroup.initialize();
+
+                this.obfuscationEventEmitter.once(
+                    customNodeGroup.getAppendEvent(),
+                    customNodeGroup.appendCustomNodes.bind(customNodeGroup)
+                );
+            });
 
         this.obfuscationEventEmitter.emit(ObfuscationEvents.BeforeObfuscation, astTree, stackTraceData);
 

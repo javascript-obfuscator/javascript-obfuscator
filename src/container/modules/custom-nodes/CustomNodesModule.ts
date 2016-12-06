@@ -84,27 +84,22 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
     // node groups
     bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
         .to(ConsoleOutputCustomNodeGroup)
-        .inSingletonScope()
         .whenTargetNamed(CustomNodeGroups.ConsoleOutputCustomNodeGroup);
 
     bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
         .to(DebugProtectionCustomNodeGroup)
-        .inSingletonScope()
         .whenTargetNamed(CustomNodeGroups.DebugProtectionCustomNodeGroup);
 
     bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
         .to(DomainLockCustomNodeGroup)
-        .inSingletonScope()
         .whenTargetNamed(CustomNodeGroups.DomainLockCustomNodeGroup);
 
     bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
         .to(SelfDefendingCustomNodeGroup)
-        .inSingletonScope()
         .whenTargetNamed(CustomNodeGroups.SelfDefendingCustomNodeGroup);
 
     bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
         .to(StringArrayCustomNodeGroup)
-        .inSingletonScope()
         .whenTargetNamed(CustomNodeGroups.StringArrayCustomNodeGroup);
 
     // customNode factory
@@ -121,21 +116,11 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
     // CustomNodeGroup factory
     bind<ICustomNodeGroup>(ServiceIdentifiers['Factory<ICustomNodeGroup>'])
         .toFactory<ICustomNodeGroup>((context: interfaces.Context) => {
-            const cache: Map <CustomNodeGroups, ICustomNodeGroup> = new Map <CustomNodeGroups, ICustomNodeGroup> ();
-
             return (customNodeGroupName: CustomNodeGroups) => {
-                if (cache.has(customNodeGroupName)) {
-                    return <ICustomNodeGroup>cache.get(customNodeGroupName);
-                }
-
-                const customNodeGroup: ICustomNodeGroup = context.container.getNamed<ICustomNodeGroup>(
+                return context.container.getNamed<ICustomNodeGroup>(
                     ServiceIdentifiers.ICustomNodeGroup,
                     customNodeGroupName
                 );
-
-                cache.set(customNodeGroupName, customNodeGroup);
-
-                return customNodeGroup;
             };
         });
 });

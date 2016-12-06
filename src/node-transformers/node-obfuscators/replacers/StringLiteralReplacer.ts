@@ -1,9 +1,8 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
-import { TCustomNodeGroupsFactory } from '../../../types/container/TCustomNodesFactoriesFactory';
-
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { ICustomNodeGroup } from '../../../interfaces/custom-nodes/ICustomNodeGroup';
 import { ICustomNodeWithData } from '../../../interfaces/custom-nodes/ICustomNodeWithData';
 import { ICustomNodeWithIdentifier } from '../../../interfaces/custom-nodes/ICustomNodeWithIdentifier';
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -14,6 +13,7 @@ import { StringArrayEncoding } from '../../../enums/StringArrayEncoding';
 import { AbstractReplacer } from './AbstractReplacer';
 import { CustomNodeGroups } from '../../../enums/container/CustomNodeGroups';
 import { Utils } from '../../../Utils';
+import { CustomNodes } from '../../../enums/container/CustomNodes';
 
 @injectable()
 export class StringLiteralReplacer extends AbstractReplacer {
@@ -29,21 +29,21 @@ export class StringLiteralReplacer extends AbstractReplacer {
         .n(() => Utils.getRandomGenerator().string({length: 4}), 50);
 
     /**
-     * @type {TCustomNodeGroupsFactory}
+     * @type {IStorage<ICustomNodeGroup>}
      */
-    private readonly customNodeGroupsFactory: TCustomNodeGroupsFactory;
+    private readonly customNodeGroupStorage: IStorage<ICustomNodeGroup>;
 
     /**
-     * @param customNodeGroupsFactory
+     * @param customNodeGroupStorage
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers['Factory<ICustomNodeGroup>']) customNodeGroupsFactory: TCustomNodeGroupsFactory,
+        @inject(ServiceIdentifiers['IStorage<ICustomNodeGroup>']) customNodeGroupStorage: IStorage<ICustomNodeGroup>,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
-        this.customNodeGroupsFactory = customNodeGroupsFactory;
+        this.customNodeGroupStorage = customNodeGroupStorage;
     }
 
     /**
@@ -68,11 +68,11 @@ export class StringLiteralReplacer extends AbstractReplacer {
      * @returns {string}
      */
     private replaceStringLiteralWithStringArrayCall (value: string): string {
-        const stringArrayCustomNodeGroupNodes: Map <string, ICustomNode> = this.customNodeGroupsFactory(
-            CustomNodeGroups.StringArrayCustomNodeGroup
-        ).getCustomNodes();
-
-        const stringArrayNode: ICustomNodeWithData = <ICustomNodeWithData>stringArrayCustomNodeGroupNodes.get('stringArrayNode');
+        const stringArrayCustomNodeGroupNodes: Map <CustomNodes, ICustomNode> = this.customNodeGroupStorage
+            .get(CustomNodeGroups.StringArrayCustomNodeGroup)
+            .getCustomNodes();
+        const stringArrayNode: ICustomNodeWithData = <ICustomNodeWithData>stringArrayCustomNodeGroupNodes
+            .get(CustomNodes.StringArrayNode);
 
         let rc4Key: string = '';
 
@@ -106,7 +106,7 @@ export class StringLiteralReplacer extends AbstractReplacer {
         }
 
         const stringArrayCallsWrapper: ICustomNodeWithIdentifier = <ICustomNodeWithIdentifier>stringArrayCustomNodeGroupNodes
-            .get('stringArrayCallsWrapper');
+            .get(CustomNodes.StringArrayCallsWrapper);
         const hexadecimalIndex: string = `${Utils.hexadecimalPrefix}${Utils.decToHex(indexOfValue)}`;
 
         if (this.options.stringArrayEncoding === StringArrayEncoding.rc4) {

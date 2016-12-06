@@ -36,20 +36,21 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
     private readonly customNodeFactory: TCustomNodeFactory;
 
     /**
-     * @type {Map<string, ICustomNode>}
+     * @type {Map<CustomNodes, ICustomNode>}
      */
     @initializable()
-    protected customNodes: Map <string, ICustomNode>;
-
-    /**
-     * @type {string}
-     */
-    protected readonly groupName: string = 'stringArrayCustomNodeGroup';
+    protected customNodes: Map <CustomNodes, ICustomNode>;
 
     /**
      * @type {IObfuscationEventEmitter}
      */
     private readonly obfuscationEventEmitter: IObfuscationEventEmitter;
+
+    /**
+     * @type {IStorage <string>}
+     */
+    @initializable()
+    private stringArray: IStorage <string>;
 
     /**
      * @param customNodeFactory
@@ -68,10 +69,37 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
     }
 
     /**
+     * @param blockScopeNode
      * @param stackTraceData
      */
-    public initialize (stackTraceData: IStackTraceData[]): void {
-        const stringArray: IStorage <string> = new StringArrayStorage();
+    public appendCustomNodes (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
+        if (!this.stringArray.getLength()) {
+            return;
+        }
+
+        // stringArrayNode append
+        this.appendCustomNodeIfExist(CustomNodes.StringArrayNode, (customNode: ICustomNode) => {
+            NodeAppender.prependNode(blockScopeNode, customNode.getNode());
+        });
+
+        // stringArrayCallsWrapper append
+        this.appendCustomNodeIfExist(CustomNodes.StringArrayCallsWrapper, (customNode: ICustomNode) => {
+            NodeAppender.insertNodeAtIndex(blockScopeNode, customNode.getNode(), 1);
+        });
+
+        // stringArrayRotateFunctionNode append
+        this.appendCustomNodeIfExist(CustomNodes.StringArrayRotateFunctionNode, (customNode: ICustomNode) => {
+            NodeAppender.insertNodeAtIndex(blockScopeNode, customNode.getNode(), 1);
+        });
+    }
+
+    public initialize (): void {
+        this.customNodes = new Map <CustomNodes, ICustomNode> ();
+        this.stringArray = new StringArrayStorage();
+
+        if (!this.options.stringArray) {
+            return;
+        }
 
         const stringArrayNode: ICustomNode = this.customNodeFactory(CustomNodes.StringArrayNode);
         const stringArrayCallsWrapper: ICustomNode = this.customNodeFactory(CustomNodes.StringArrayCallsWrapper);
@@ -88,44 +116,15 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
             stringArrayRotateValue = 0;
         }
 
-        stringArrayNode.initialize(stringArray, stringArrayName, stringArrayRotateValue);
-        stringArrayCallsWrapper.initialize(stringArray, stringArrayName, stringArrayCallsWrapperName);
-        stringArrayRotateFunctionNode.initialize(stringArray, stringArrayName, stringArrayRotateValue);
+        stringArrayNode.initialize(this.stringArray, stringArrayName, stringArrayRotateValue);
+        stringArrayCallsWrapper.initialize(this.stringArray, stringArrayName, stringArrayCallsWrapperName);
+        stringArrayRotateFunctionNode.initialize(this.stringArray, stringArrayName, stringArrayRotateValue);
 
-        this.customNodes = new Map <string, ICustomNode> ([
-            ['stringArrayNode', stringArrayNode],
-            ['stringArrayCallsWrapper', stringArrayCallsWrapper]
-        ]);
-
-        this.obfuscationEventEmitter.once(
-            this.appendEvent,
-            (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]) => {
-                if (!this.options.stringArray || !stringArray.getLength()) {
-                    return;
-                }
-
-                // stringArrayNode append
-                NodeAppender.prependNode(blockScopeNode, stringArrayNode.getNode());
-
-                // stringArrayCallsWrapper append
-                NodeAppender.insertNodeAtIndex(blockScopeNode, stringArrayCallsWrapper.getNode(), 1);
-            }
-        );
+        this.customNodes.set(CustomNodes.StringArrayNode, stringArrayNode);
+        this.customNodes.set(CustomNodes.StringArrayCallsWrapper, stringArrayCallsWrapper);
 
         if (this.options.rotateStringArray) {
-            this.customNodes.set('stringArrayRotateFunctionNode', stringArrayRotateFunctionNode);
-
-            this.obfuscationEventEmitter.once(
-                this.appendEvent,
-                (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]) => {
-                    if (!this.options.stringArray || !stringArray.getLength()) {
-                        return;
-                    }
-
-                    // stringArrayRotateFunctionNode append
-                    NodeAppender.insertNodeAtIndex(blockScopeNode, stringArrayRotateFunctionNode.getNode(), 1);
-                }
-            );
+            this.customNodes.set(CustomNodes.StringArrayRotateFunctionNode, stringArrayRotateFunctionNode);
         }
     }
 }

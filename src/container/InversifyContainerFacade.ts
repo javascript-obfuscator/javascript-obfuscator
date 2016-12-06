@@ -22,6 +22,9 @@ import { ObfuscationResult } from '../ObfuscationResult';
 import { Obfuscator } from '../Obfuscator';
 import { Options } from "../options/Options";
 import { SourceMapCorrector } from '../SourceMapCorrector';
+import { IStorage } from '../interfaces/storages/IStorage';
+import { ICustomNodeGroup } from '../interfaces/custom-nodes/ICustomNodeGroup';
+import { CustomNodeGroupStorage } from '../storages/custom-node-group/CustomNodeGroupStorage';
 
 export class InversifyContainerFacade implements IInversifyContainerFacade {
     /**
@@ -73,6 +76,11 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         this.container
             .bind<ISourceMapCorrector>(ServiceIdentifiers.ISourceMapCorrector)
             .to(SourceMapCorrector)
+            .inSingletonScope();
+
+        this.container
+            .bind<IStorage<ICustomNodeGroup>>(ServiceIdentifiers['IStorage<ICustomNodeGroup>'])
+            .to(CustomNodeGroupStorage)
             .inSingletonScope();
 
         this.container

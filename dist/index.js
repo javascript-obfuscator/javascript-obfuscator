@@ -88,7 +88,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 120);
+/******/ 	return __webpack_require__(__webpack_require__.s = 119);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -575,12 +575,25 @@ exports.Node = Node;
 
 /***/ },
 /* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+"use strict";
+
+var Utils_1 = __webpack_require__(2);
+exports.ObfuscationEvents = Utils_1.Utils.strEnumify({
+    AfterObfuscation: 'afterObfuscation',
+    BeforeObfuscation: 'beforeObfuscation'
+});
+
+/***/ },
+/* 6 */
 /***/ function(module, exports) {
 
 module.exports = require("estraverse");
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -634,19 +647,6 @@ var AbstractCustomNode = function () {
 }();
 AbstractCustomNode = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata('design:paramtypes', [Object])], AbstractCustomNode);
 exports.AbstractCustomNode = AbstractCustomNode;
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-"use strict";
-
-var Utils_1 = __webpack_require__(2);
-exports.ObfuscationEvents = Utils_1.Utils.strEnumify({
-    AfterObfuscation: 'afterObfuscation',
-    BeforeObfuscation: 'beforeObfuscation'
-});
 
 /***/ },
 /* 8 */
@@ -708,7 +708,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var escodegen = __webpack_require__(16);
 var esprima = __webpack_require__(34);
-var estraverse = __webpack_require__(5);
+var estraverse = __webpack_require__(6);
 var NodeType_1 = __webpack_require__(9);
 var Node_1 = __webpack_require__(4);
 var Utils_1 = __webpack_require__(2);
@@ -1333,10 +1333,10 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var format = __webpack_require__(8);
-var ObfuscationEvents_1 = __webpack_require__(7);
+var ObfuscationEvents_1 = __webpack_require__(5);
 var Initializable_1 = __webpack_require__(3);
 var BinaryExpressionFunctionTemplate_1 = __webpack_require__(95);
-var AbstractCustomNode_1 = __webpack_require__(6);
+var AbstractCustomNode_1 = __webpack_require__(7);
 var Utils_1 = __webpack_require__(2);
 var BinaryExpressionFunctionNode = function (_AbstractCustomNode_) {
     _inherits(BinaryExpressionFunctionNode, _AbstractCustomNode_);
@@ -1407,10 +1407,10 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var format = __webpack_require__(8);
-var ObfuscationEvents_1 = __webpack_require__(7);
+var ObfuscationEvents_1 = __webpack_require__(5);
 var Initializable_1 = __webpack_require__(3);
 var ControlFlowStorageCallTemplate_1 = __webpack_require__(96);
-var AbstractCustomNode_1 = __webpack_require__(6);
+var AbstractCustomNode_1 = __webpack_require__(7);
 var ControlFlowStorageCallNode = function (_AbstractCustomNode_) {
     _inherits(ControlFlowStorageCallNode, _AbstractCustomNode_);
 
@@ -1488,10 +1488,10 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var format = __webpack_require__(8);
-var ObfuscationEvents_1 = __webpack_require__(7);
+var ObfuscationEvents_1 = __webpack_require__(5);
 var Initializable_1 = __webpack_require__(3);
 var ControlFlowStorageTemplate_1 = __webpack_require__(97);
-var AbstractCustomNode_1 = __webpack_require__(6);
+var AbstractCustomNode_1 = __webpack_require__(7);
 var ControlFlowStorageNode = function (_AbstractCustomNode_) {
     _inherits(ControlFlowStorageNode, _AbstractCustomNode_);
 
@@ -1567,7 +1567,7 @@ var ServiceIdentifiers_1 = __webpack_require__(1);
 var format = __webpack_require__(8);
 var Initializable_1 = __webpack_require__(3);
 var StringArrayTemplate_1 = __webpack_require__(107);
-var AbstractCustomNode_1 = __webpack_require__(6);
+var AbstractCustomNode_1 = __webpack_require__(7);
 var StringArrayNode = function (_AbstractCustomNode_) {
     _inherits(StringArrayNode, _AbstractCustomNode_);
 
@@ -2085,10 +2085,10 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 };
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
-var estraverse = __webpack_require__(5);
+var estraverse = __webpack_require__(6);
 var NodeTransformers_1 = __webpack_require__(30);
 var NodeType_1 = __webpack_require__(9);
-var ObfuscationEvents_1 = __webpack_require__(7);
+var ObfuscationEvents_1 = __webpack_require__(5);
 var VisitorDirection_1 = __webpack_require__(62);
 var Node_1 = __webpack_require__(4);
 var NodeUtils_1 = __webpack_require__(10);
@@ -2770,10 +2770,10 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var format = __webpack_require__(8);
-var ObfuscationEvents_1 = __webpack_require__(7);
+var ObfuscationEvents_1 = __webpack_require__(5);
 var ConsoleOutputDisableExpressionTemplate_1 = __webpack_require__(94);
 var Initializable_1 = __webpack_require__(3);
-var AbstractCustomNode_1 = __webpack_require__(6);
+var AbstractCustomNode_1 = __webpack_require__(7);
 var Utils_1 = __webpack_require__(2);
 var ConsoleOutputDisableExpressionNode = function (_AbstractCustomNode_) {
     _inherits(ConsoleOutputDisableExpressionNode, _AbstractCustomNode_);
@@ -2846,7 +2846,7 @@ var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var Initializable_1 = __webpack_require__(3);
 var CustomNodes_1 = __webpack_require__(13);
-var ObfuscationEvents_1 = __webpack_require__(7);
+var ObfuscationEvents_1 = __webpack_require__(5);
 var AbstractCustomNodeGroup_1 = __webpack_require__(17);
 var NodeAppender_1 = __webpack_require__(15);
 var Utils_1 = __webpack_require__(2);
@@ -2940,10 +2940,10 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var format = __webpack_require__(8);
-var ObfuscationEvents_1 = __webpack_require__(7);
+var ObfuscationEvents_1 = __webpack_require__(5);
 var Initializable_1 = __webpack_require__(3);
 var DebufProtectionFunctionCallTemplate_1 = __webpack_require__(98);
-var AbstractCustomNode_1 = __webpack_require__(6);
+var AbstractCustomNode_1 = __webpack_require__(7);
 var DebugProtectionFunctionCallNode = function (_AbstractCustomNode_) {
     _inherits(DebugProtectionFunctionCallNode, _AbstractCustomNode_);
 
@@ -3012,10 +3012,10 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var format = __webpack_require__(8);
-var ObfuscationEvents_1 = __webpack_require__(7);
+var ObfuscationEvents_1 = __webpack_require__(5);
 var Initializable_1 = __webpack_require__(3);
 var DebugProtectionFunctionIntervalTemplate_1 = __webpack_require__(99);
-var AbstractCustomNode_1 = __webpack_require__(6);
+var AbstractCustomNode_1 = __webpack_require__(7);
 var DebugProtectionFunctionIntervalNode = function (_AbstractCustomNode_) {
     _inherits(DebugProtectionFunctionIntervalNode, _AbstractCustomNode_);
 
@@ -3084,10 +3084,10 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var format = __webpack_require__(8);
-var ObfuscationEvents_1 = __webpack_require__(7);
+var ObfuscationEvents_1 = __webpack_require__(5);
 var Initializable_1 = __webpack_require__(3);
 var DebugProtectionFunctionTemplate_1 = __webpack_require__(100);
-var AbstractCustomNode_1 = __webpack_require__(6);
+var AbstractCustomNode_1 = __webpack_require__(7);
 var DebugProtectionFunctionNode = function (_AbstractCustomNode_) {
     _inherits(DebugProtectionFunctionNode, _AbstractCustomNode_);
 
@@ -3157,7 +3157,7 @@ var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var Initializable_1 = __webpack_require__(3);
 var CustomNodes_1 = __webpack_require__(13);
-var ObfuscationEvents_1 = __webpack_require__(7);
+var ObfuscationEvents_1 = __webpack_require__(5);
 var AbstractCustomNodeGroup_1 = __webpack_require__(17);
 var NodeAppender_1 = __webpack_require__(15);
 var Utils_1 = __webpack_require__(2);
@@ -3256,10 +3256,10 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var format = __webpack_require__(8);
-var ObfuscationEvents_1 = __webpack_require__(7);
+var ObfuscationEvents_1 = __webpack_require__(5);
 var Initializable_1 = __webpack_require__(3);
 var DomainLockNodeTemplate_1 = __webpack_require__(101);
-var AbstractCustomNode_1 = __webpack_require__(6);
+var AbstractCustomNode_1 = __webpack_require__(7);
 var Utils_1 = __webpack_require__(2);
 var DomainLockNode = function (_AbstractCustomNode_) {
     _inherits(DomainLockNode, _AbstractCustomNode_);
@@ -3338,7 +3338,7 @@ var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var Initializable_1 = __webpack_require__(3);
 var CustomNodes_1 = __webpack_require__(13);
-var ObfuscationEvents_1 = __webpack_require__(7);
+var ObfuscationEvents_1 = __webpack_require__(5);
 var AbstractCustomNodeGroup_1 = __webpack_require__(17);
 var NodeAppender_1 = __webpack_require__(15);
 var Utils_1 = __webpack_require__(2);
@@ -3432,11 +3432,11 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var format = __webpack_require__(8);
-var ObfuscationEvents_1 = __webpack_require__(7);
+var ObfuscationEvents_1 = __webpack_require__(5);
 var Initializable_1 = __webpack_require__(3);
 var SingleNodeCallControllerTemplate_1 = __webpack_require__(93);
 var NoCustomNodesPreset_1 = __webpack_require__(20);
-var AbstractCustomNode_1 = __webpack_require__(6);
+var AbstractCustomNode_1 = __webpack_require__(7);
 var JavaScriptObfuscator_1 = __webpack_require__(14);
 var NodeCallsControllerFunctionNode = function (_AbstractCustomNode_) {
     _inherits(NodeCallsControllerFunctionNode, _AbstractCustomNode_);
@@ -3515,7 +3515,7 @@ var format = __webpack_require__(8);
 var Initializable_1 = __webpack_require__(3);
 var NoCustomNodesPreset_1 = __webpack_require__(20);
 var SelfDefendingTemplate_1 = __webpack_require__(102);
-var AbstractCustomNode_1 = __webpack_require__(6);
+var AbstractCustomNode_1 = __webpack_require__(7);
 var JavaScriptObfuscator_1 = __webpack_require__(14);
 var Utils_1 = __webpack_require__(2);
 var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
@@ -3587,7 +3587,7 @@ var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var Initializable_1 = __webpack_require__(3);
 var CustomNodes_1 = __webpack_require__(13);
-var ObfuscationEvents_1 = __webpack_require__(7);
+var ObfuscationEvents_1 = __webpack_require__(5);
 var AbstractCustomNodeGroup_1 = __webpack_require__(17);
 var NodeAppender_1 = __webpack_require__(15);
 var Utils_1 = __webpack_require__(2);
@@ -3692,7 +3692,7 @@ var SelfDefendingTemplate_1 = __webpack_require__(103);
 var StringArrayBase64DecodeNodeTemplate_1 = __webpack_require__(104);
 var StringArrayCallsWrapperTemplate_1 = __webpack_require__(105);
 var StringArrayRC4DecodeNodeTemplate_1 = __webpack_require__(106);
-var AbstractCustomNode_1 = __webpack_require__(6);
+var AbstractCustomNode_1 = __webpack_require__(7);
 var JavaScriptObfuscator_1 = __webpack_require__(14);
 var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
     _inherits(StringArrayCallsWrapper, _AbstractCustomNode_);
@@ -3812,7 +3812,7 @@ var Initializable_1 = __webpack_require__(3);
 var NoCustomNodesPreset_1 = __webpack_require__(20);
 var SelfDefendingTemplate_1 = __webpack_require__(108);
 var StringArrayRotateFunctionTemplate_1 = __webpack_require__(109);
-var AbstractCustomNode_1 = __webpack_require__(6);
+var AbstractCustomNode_1 = __webpack_require__(7);
 var JavaScriptObfuscator_1 = __webpack_require__(14);
 var Utils_1 = __webpack_require__(2);
 var StringArrayRotateFunctionNode = function (_AbstractCustomNode_) {
@@ -3902,7 +3902,7 @@ var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var Initializable_1 = __webpack_require__(3);
 var CustomNodes_1 = __webpack_require__(13);
-var ObfuscationEvents_1 = __webpack_require__(7);
+var ObfuscationEvents_1 = __webpack_require__(5);
 var StringArrayNode_1 = __webpack_require__(27);
 var AbstractCustomNodeGroup_1 = __webpack_require__(17);
 var NodeAppender_1 = __webpack_require__(15);
@@ -4078,7 +4078,7 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 };
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
-var estraverse = __webpack_require__(5);
+var estraverse = __webpack_require__(6);
 var NodeType_1 = __webpack_require__(9);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var BinaryExpressionControlFlowReplacer_1 = __webpack_require__(31);
@@ -4233,7 +4233,7 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 };
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
-var estraverse = __webpack_require__(5);
+var estraverse = __webpack_require__(6);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(12);
 var NodeType_1 = __webpack_require__(9);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
@@ -4328,7 +4328,7 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 };
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
-var estraverse = __webpack_require__(5);
+var estraverse = __webpack_require__(6);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(12);
 var NodeType_1 = __webpack_require__(9);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
@@ -4427,7 +4427,7 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 };
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
-var estraverse = __webpack_require__(5);
+var estraverse = __webpack_require__(6);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(12);
 var NodeType_1 = __webpack_require__(9);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
@@ -4532,7 +4532,7 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 };
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
-var estraverse = __webpack_require__(5);
+var estraverse = __webpack_require__(6);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(12);
 var NodeType_1 = __webpack_require__(9);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
@@ -4711,7 +4711,7 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var escodegen = __webpack_require__(16);
-var estraverse = __webpack_require__(5);
+var estraverse = __webpack_require__(6);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(12);
 var NodeType_1 = __webpack_require__(9);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
@@ -4817,7 +4817,7 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 };
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
-var estraverse = __webpack_require__(5);
+var estraverse = __webpack_require__(6);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(12);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(4);
@@ -4900,7 +4900,7 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var escodegen = __webpack_require__(16);
-var estraverse = __webpack_require__(5);
+var estraverse = __webpack_require__(6);
 var NodeType_1 = __webpack_require__(9);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(4);
@@ -5004,7 +5004,7 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 };
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
-var estraverse = __webpack_require__(5);
+var estraverse = __webpack_require__(6);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(12);
 var NodeType_1 = __webpack_require__(9);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
@@ -5722,7 +5722,7 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 };
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
-var estraverse = __webpack_require__(5);
+var estraverse = __webpack_require__(6);
 var CalleeDataExtractors_1 = __webpack_require__(29);
 var Node_1 = __webpack_require__(4);
 var NodeUtils_1 = __webpack_require__(10);
@@ -5838,7 +5838,7 @@ var __metadata = undefined && undefined.__metadata || function (k, v) {
     if ((typeof Reflect === "undefined" ? "undefined" : _typeof(Reflect)) === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var inversify_1 = __webpack_require__(0);
-var estraverse = __webpack_require__(5);
+var estraverse = __webpack_require__(6);
 var AbstractCalleeDataExtractor_1 = __webpack_require__(23);
 var Node_1 = __webpack_require__(4);
 var NodeUtils_1 = __webpack_require__(10);
@@ -5916,7 +5916,7 @@ var __metadata = undefined && undefined.__metadata || function (k, v) {
     if ((typeof Reflect === "undefined" ? "undefined" : _typeof(Reflect)) === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var inversify_1 = __webpack_require__(0);
-var estraverse = __webpack_require__(5);
+var estraverse = __webpack_require__(6);
 var AbstractCalleeDataExtractor_1 = __webpack_require__(23);
 var Node_1 = __webpack_require__(4);
 var NodeUtils_1 = __webpack_require__(10);
@@ -5997,7 +5997,7 @@ var __metadata = undefined && undefined.__metadata || function (k, v) {
     if ((typeof Reflect === "undefined" ? "undefined" : _typeof(Reflect)) === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var inversify_1 = __webpack_require__(0);
-var estraverse = __webpack_require__(5);
+var estraverse = __webpack_require__(6);
 var Node_1 = __webpack_require__(4);
 var NodeUtils_1 = __webpack_require__(10);
 var AbstractCalleeDataExtractor_1 = __webpack_require__(23);
@@ -6651,8 +6651,7 @@ module.exports = require("mkdirp");
 module.exports = require("reflect-metadata");
 
 /***/ },
-/* 119 */,
-/* 120 */
+/* 119 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

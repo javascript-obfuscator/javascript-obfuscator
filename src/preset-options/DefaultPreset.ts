@@ -1,8 +1,8 @@
-import { IInputOptions } from '../interfaces/options/IInputOptions';
+import { TInputOptions } from '../types/options/TInputOptions';
 
 import { SourceMapMode } from '../enums/SourceMapMode';
 
-export const DEFAULT_PRESET: IInputOptions = Object.freeze({
+export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     compact: true,
     controlFlowFlattening: false,
     debugProtection: false,

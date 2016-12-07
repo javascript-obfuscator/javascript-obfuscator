@@ -4,7 +4,8 @@ if (!(<any>global)._babelPolyfill) {
     require('babel-polyfill');
 }
 
-import { IInputOptions } from './interfaces/options/IInputOptions';
+import { TInputOptions } from './types/options/TInputOptions';
+
 import { IInversifyContainerFacade } from './interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
@@ -19,7 +20,7 @@ export class JavaScriptObfuscator {
      * @param inputOptions
      * @returns {string}
      */
-    public static obfuscate (sourceCode: string, inputOptions: IInputOptions = {}): IObfuscationResult {
+    public static obfuscate (sourceCode: string, inputOptions: TInputOptions = {}): IObfuscationResult {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade(inputOptions);
         const javaScriptObfuscator: IJavaScriptObfuscator = inversifyContainerFacade
             .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);

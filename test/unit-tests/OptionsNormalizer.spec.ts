@@ -1,4 +1,5 @@
-import { IInputOptions } from '../../src/interfaces/options/IInputOptions';
+import { TInputOptions } from '../../src/types/options/TInputOptions';
+
 import { IOptions } from '../../src/interfaces/options/IOptions';
 
 import { DEFAULT_PRESET } from '../../src/preset-options/DefaultPreset';
@@ -12,7 +13,7 @@ const assert: Chai.AssertStatic = require('chai').assert;
  * @param optionsPreset
  * @returns {IOptions}
  */
-function getNormalizedOptions (optionsPreset: IInputOptions): IInputOptions {
+function getNormalizedOptions (optionsPreset: TInputOptions): TInputOptions {
     const options: IOptions = new Options(optionsPreset);
 
     return OptionsNormalizer.normalizeOptions(options);
@@ -20,8 +21,8 @@ function getNormalizedOptions (optionsPreset: IInputOptions): IInputOptions {
 
 describe('OptionsNormalizer', () => {
     describe('normalizeOptions (options: IObfuscatorOptions): IObfuscatorOptions', () => {
-        let optionsPreset: IInputOptions,
-            expectedOptionsPreset: IInputOptions;
+        let optionsPreset: TInputOptions,
+            expectedOptionsPreset: TInputOptions;
 
         it('should normalize options preset: domainLockRule', () => {
             optionsPreset = Object.assign({}, DEFAULT_PRESET, {

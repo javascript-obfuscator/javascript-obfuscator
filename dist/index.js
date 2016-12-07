@@ -88,7 +88,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 121);
+/******/ 	return __webpack_require__(__webpack_require__.s = 122);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -839,16 +839,15 @@ var NodeObfuscatorsReplacers = exports.NodeObfuscatorsReplacers;
 
 /***/ },
 /* 13 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 "use strict";
 "use strict";
 
-var Utils_1 = __webpack_require__(4);
-exports.ObfuscationEvents = Utils_1.Utils.strEnumify({
+exports.ObfuscationEvents = {
     AfterObfuscation: 'afterObfuscation',
     BeforeObfuscation: 'beforeObfuscation'
-});
+};
 
 /***/ },
 /* 14 */
@@ -899,7 +898,7 @@ var JavaScriptObfuscator = function () {
     }
 
     _createClass(JavaScriptObfuscator, null, [{
-        key: 'obfuscate',
+        key: "obfuscate",
         value: function obfuscate(sourceCode) {
             var inputOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -908,7 +907,7 @@ var JavaScriptObfuscator = function () {
             return javaScriptObfuscator.obfuscate(sourceCode);
         }
     }, {
-        key: 'runCLI',
+        key: "runCLI",
         value: function runCLI(argv) {
             new JavaScriptObfuscatorCLI_1.JavaScriptObfuscatorCLI(argv).run();
         }
@@ -2381,7 +2380,7 @@ var JavaScriptObfuscatorCLI = function () {
     }
 
     _createClass(JavaScriptObfuscatorCLI, [{
-        key: 'run',
+        key: "run",
         value: function run() {
             this.configureCommands();
             if (!this.arguments.length || Utils_1.Utils.arrayContains(this.arguments, '--help')) {
@@ -2394,7 +2393,7 @@ var JavaScriptObfuscatorCLI = function () {
             this.processData();
         }
     }, {
-        key: 'buildOptions',
+        key: "buildOptions",
         value: function buildOptions() {
             var inputOptions = {};
             var availableOptions = Object.keys(DefaultPreset_1.DEFAULT_PRESET);
@@ -2410,7 +2409,7 @@ var JavaScriptObfuscatorCLI = function () {
             return Object.assign({}, DefaultPreset_1.DEFAULT_PRESET, inputOptions);
         }
     }, {
-        key: 'configureCommands',
+        key: "configureCommands",
         value: function configureCommands() {
             this.commands = new commander.Command().version(JavaScriptObfuscatorCLI.getBuildVersion(), '-v, --version').usage('<inputPath> [options]').option('-o, --output <path>', 'Output path for obfuscated code').option('--compact <boolean>', 'Disable one line output code compacting', JavaScriptObfuscatorCLI.parseBoolean).option('--controlFlowFlattening <boolean>', 'Enables control flow flattening', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtection <boolean>', 'Disable browser Debug panel (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtectionInterval <boolean>', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--disableConsoleOutput <boolean>', 'Allow console.log, console.info, console.error and console.warn messages output into browser console', JavaScriptObfuscatorCLI.parseBoolean).option('--domainLock <list>', 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)', function (val) {
                 return val.split(',');
@@ -2425,12 +2424,12 @@ var JavaScriptObfuscatorCLI = function () {
             });
         }
     }, {
-        key: 'getData',
+        key: "getData",
         value: function getData() {
             this.data = CLIUtils_1.CLIUtils.readFile(this.inputPath);
         }
     }, {
-        key: 'processData',
+        key: "processData",
         value: function processData() {
             var options = this.buildOptions();
             var outputCodePath = CLIUtils_1.CLIUtils.getOutputCodePath(this.commands.output, this.inputPath);
@@ -2441,13 +2440,13 @@ var JavaScriptObfuscatorCLI = function () {
             }
         }
     }, {
-        key: 'processDataWithoutSourceMap',
+        key: "processDataWithoutSourceMap",
         value: function processDataWithoutSourceMap(outputCodePath, options) {
             var obfuscatedCode = JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(this.data, options).getObfuscatedCode();
             CLIUtils_1.CLIUtils.writeFile(outputCodePath, obfuscatedCode);
         }
     }, {
-        key: 'processDataWithSourceMap',
+        key: "processDataWithSourceMap",
         value: function processDataWithSourceMap(outputCodePath, options) {
             var outputSourceMapPath = CLIUtils_1.CLIUtils.getOutputSourceMapPath(outputCodePath, options.sourceMapFileName || '');
             options.sourceMapFileName = path.basename(outputSourceMapPath);
@@ -2458,17 +2457,17 @@ var JavaScriptObfuscatorCLI = function () {
             }
         }
     }], [{
-        key: 'getBuildVersion',
+        key: "getBuildVersion",
         value: function getBuildVersion() {
             return CLIUtils_1.CLIUtils.getPackageConfig().version;
         }
     }, {
-        key: 'parseBoolean',
+        key: "parseBoolean",
         value: function parseBoolean(value) {
             return value === 'true' || value === '1';
         }
     }, {
-        key: 'parseSourceMapMode',
+        key: "parseSourceMapMode",
         value: function parseSourceMapMode(value) {
             var availableMode = Object.keys(SourceMapMode_1.SourceMapMode).some(function (key) {
                 return SourceMapMode_1.SourceMapMode[key] === value;
@@ -2479,7 +2478,7 @@ var JavaScriptObfuscatorCLI = function () {
             return value;
         }
     }, {
-        key: 'parseStringArrayEncoding',
+        key: "parseStringArrayEncoding",
         value: function parseStringArrayEncoding(value) {
             switch (value) {
                 case 'true':
@@ -2554,12 +2553,12 @@ var InversifyContainerFacade = function () {
     }
 
     _createClass(InversifyContainerFacade, [{
-        key: 'get',
+        key: "get",
         value: function get(serviceIdentifier) {
             return this.container.get(serviceIdentifier);
         }
     }, {
-        key: 'getNamed',
+        key: "getNamed",
         value: function getNamed(serviceIdentifier, named) {
             return this.container.getNamed(serviceIdentifier, named);
         }
@@ -5426,7 +5425,7 @@ var class_validator_1 = __webpack_require__(114);
 var DefaultPreset_1 = __webpack_require__(34);
 var OptionsNormalizer_1 = __webpack_require__(83);
 var ValidationErrorsFormatter_1 = __webpack_require__(84);
-var Options_1 = function Options(inputOptions) {
+var Options = Options_1 = function Options(inputOptions) {
     _classCallCheck(this, Options);
 
     Object.assign(this, DefaultPreset_1.DEFAULT_PRESET, inputOptions);
@@ -5436,41 +5435,41 @@ var Options_1 = function Options(inputOptions) {
     }
     Object.assign(this, OptionsNormalizer_1.OptionsNormalizer.normalizeOptions(this));
 };
-var Options = Options_1;
 Options.validatorOptions = {
     validationError: {
         target: false
     }
 };
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "compact", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "controlFlowFlattening", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "debugProtection", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "debugProtectionInterval", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "disableConsoleOutput", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "compact", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "controlFlowFlattening", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "debugProtection", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "debugProtectionInterval", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "disableConsoleOutput", void 0);
 __decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
-}), __metadata('design:type', Array)], Options.prototype, "domainLock", void 0);
+}), __metadata("design:type", Array)], Options.prototype, "domainLock", void 0);
 __decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
-}), __metadata('design:type', Array)], Options.prototype, "reservedNames", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "rotateStringArray", void 0);
-__decorate([class_validator_1.IsNumber(), __metadata('design:type', Number)], Options.prototype, "seed", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "selfDefending", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "sourceMap", void 0);
+}), __metadata("design:type", Array)], Options.prototype, "reservedNames", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "rotateStringArray", void 0);
+__decorate([class_validator_1.IsNumber(), __metadata("design:type", Number)], Options.prototype, "seed", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "selfDefending", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "sourceMap", void 0);
 __decorate([class_validator_1.IsString(), class_validator_1.ValidateIf(function (options) {
     return Boolean(options.sourceMapBaseUrl);
 }), class_validator_1.IsUrl({
     require_protocol: true,
     require_valid_protocol: true
-}), __metadata('design:type', String)], Options.prototype, "sourceMapBaseUrl", void 0);
-__decorate([class_validator_1.IsString(), __metadata('design:type', String)], Options.prototype, "sourceMapFileName", void 0);
-__decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata('design:type', String)], Options.prototype, "sourceMapMode", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "stringArray", void 0);
-__decorate([class_validator_1.IsIn([true, false, 'base64', 'rc4']), __metadata('design:type', Object)], Options.prototype, "stringArrayEncoding", void 0);
-__decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata('design:type', Number)], Options.prototype, "stringArrayThreshold", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "unicodeEscapeSequence", void 0);
-Options = Options_1 = __decorate([inversify_1.injectable(), __metadata('design:paramtypes', [Object])], Options);
+}), __metadata("design:type", String)], Options.prototype, "sourceMapBaseUrl", void 0);
+__decorate([class_validator_1.IsString(), __metadata("design:type", String)], Options.prototype, "sourceMapFileName", void 0);
+__decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata("design:type", String)], Options.prototype, "sourceMapMode", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "stringArray", void 0);
+__decorate([class_validator_1.IsIn([true, false, 'base64', 'rc4']), __metadata("design:type", Object)], Options.prototype, "stringArrayEncoding", void 0);
+__decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata("design:type", Number)], Options.prototype, "stringArrayThreshold", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "unicodeEscapeSequence", void 0);
+Options = Options_1 = __decorate([inversify_1.injectable(), __metadata("design:paramtypes", [Object])], Options);
 exports.Options = Options;
+var Options_1;
 
 /***/ },
 /* 83 */
@@ -5491,7 +5490,7 @@ var OptionsNormalizer = function () {
     }
 
     _createClass(OptionsNormalizer, null, [{
-        key: 'normalizeOptions',
+        key: "normalizeOptions",
         value: function normalizeOptions(options) {
             var normalizedOptions = Object.assign({}, options);
             var _iteratorNormalCompletion = true;
@@ -5522,7 +5521,7 @@ var OptionsNormalizer = function () {
             return normalizedOptions;
         }
     }, {
-        key: 'domainLockRule',
+        key: "domainLockRule",
         value: function domainLockRule(options) {
             if (options.domainLock.length) {
                 var normalizedDomains = [];
@@ -5558,7 +5557,7 @@ var OptionsNormalizer = function () {
             return options;
         }
     }, {
-        key: 'selfDefendingRule',
+        key: "selfDefendingRule",
         value: function selfDefendingRule(options) {
             if (options.selfDefending) {
                 Object.assign(options, OptionsNormalizer.SELF_DEFENDING_OPTIONS);
@@ -5566,7 +5565,7 @@ var OptionsNormalizer = function () {
             return options;
         }
     }, {
-        key: 'sourceMapBaseUrlRule',
+        key: "sourceMapBaseUrlRule",
         value: function sourceMapBaseUrlRule(options) {
             var sourceMapBaseUrl = options.sourceMapBaseUrl;
             if (!options.sourceMapFileName) {
@@ -5577,25 +5576,25 @@ var OptionsNormalizer = function () {
             }
             if (sourceMapBaseUrl && !sourceMapBaseUrl.endsWith('/')) {
                 Object.assign(options, {
-                    sourceMapBaseUrl: sourceMapBaseUrl + '/'
+                    sourceMapBaseUrl: sourceMapBaseUrl + "/"
                 });
             }
             return options;
         }
     }, {
-        key: 'sourceMapFileNameRule',
+        key: "sourceMapFileNameRule",
         value: function sourceMapFileNameRule(options) {
             var sourceMapFileName = options.sourceMapFileName;
             if (sourceMapFileName) {
                 sourceMapFileName = sourceMapFileName.replace(/^\/+/, '').split('.')[0];
                 Object.assign(options, {
-                    sourceMapFileName: sourceMapFileName + '.js.map'
+                    sourceMapFileName: sourceMapFileName + ".js.map"
                 });
             }
             return options;
         }
     }, {
-        key: 'stringArrayRule',
+        key: "stringArrayRule",
         value: function stringArrayRule(options) {
             if (!options.stringArray) {
                 Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
@@ -5603,7 +5602,7 @@ var OptionsNormalizer = function () {
             return options;
         }
     }, {
-        key: 'stringArrayEncodingRule',
+        key: "stringArrayEncodingRule",
         value: function stringArrayEncodingRule(options) {
             if (options.stringArrayEncoding === true) {
                 Object.assign(options, OptionsNormalizer.UNICODE_ARRAY_ENCODING_OPTIONS);
@@ -5611,7 +5610,7 @@ var OptionsNormalizer = function () {
             return options;
         }
     }, {
-        key: 'stringArrayThresholdRule',
+        key: "stringArrayThresholdRule",
         value: function stringArrayThresholdRule(options) {
             if (options.stringArrayThreshold === 0) {
                 Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
@@ -6666,7 +6665,8 @@ module.exports = require("mkdirp");
 module.exports = require("reflect-metadata");
 
 /***/ },
-/* 121 */
+/* 121 */,
+/* 122 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

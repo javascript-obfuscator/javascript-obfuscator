@@ -7,7 +7,8 @@ import { nodeObfuscatorsModule } from './modules/node-transformers/NodeObfuscato
 import { nodeTransformersModule } from './modules/node-transformers/NodeTransformersModule';
 import { stackTraceAnalyzerModule } from './modules/stack-trace-analyzer/StackTraceAnalyzerModule';
 
-import { IInputOptions } from '../interfaces/options/IInputOptions';
+import { TInputOptions } from '../types/options/TInputOptions';
+
 import { IInversifyContainerFacade } from '../interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from '../interfaces/IJavaScriptObfsucator';
 import { IObfuscationEventEmitter } from '../interfaces/event-emitters/IObfuscationEventEmitter';
@@ -35,7 +36,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
     /**
      * @param options
      */
-    constructor (options: IInputOptions) {
+    constructor (options: TInputOptions) {
         this.container = new Container();
 
         this.container

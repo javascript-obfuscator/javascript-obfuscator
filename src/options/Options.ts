@@ -16,7 +16,8 @@ ValidationError,
 ValidatorOptions
 } from 'class-validator';
 
-import { IInputOptions } from '../interfaces/options/IInputOptions';
+import { TInputOptions } from '../types/options/TInputOptions';
+
 import { IOptions } from '../interfaces/options/IOptions';
 
 import { TSourceMapMode } from '../types/TSourceMapMode';
@@ -164,7 +165,7 @@ export class Options implements IOptions {
     /**
      * @param inputOptions
      */
-    constructor (inputOptions: IInputOptions) {
+    constructor (inputOptions: TInputOptions) {
         Object.assign(this, DEFAULT_PRESET, inputOptions);
 
         const errors: ValidationError[] = validateSync(this, Options.validatorOptions);

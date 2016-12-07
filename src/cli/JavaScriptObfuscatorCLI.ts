@@ -1,9 +1,9 @@
 import * as commander from 'commander';
 import * as path from 'path';
 
+import { TInputOptions } from '../types/options/TInputOptions';
 import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 
-import { IInputOptions } from '../interfaces/options/IInputOptions';
 import { IObfuscationResult } from '../interfaces/IObfuscationResult';
 
 import { SourceMapMode } from '../enums/SourceMapMode';
@@ -118,10 +118,10 @@ export class JavaScriptObfuscatorCLI {
     }
 
     /**
-     * @returns {IInputOptions}
+     * @returns {TInputOptions}
      */
-    private buildOptions (): IInputOptions {
-        const inputOptions: IInputOptions = {};
+    private buildOptions (): TInputOptions {
+        const inputOptions: TInputOptions = {};
         const availableOptions: string[] = Object.keys(DEFAULT_PRESET);
 
         for (const option in this.commands) {
@@ -133,7 +133,7 @@ export class JavaScriptObfuscatorCLI {
                 continue;
             }
 
-            inputOptions[option] = (<any>this.commands)[option];
+            (<any>inputOptions)[option] = (<any>this.commands)[option];
         }
 
         return Object.assign({}, DEFAULT_PRESET, inputOptions);
@@ -181,7 +181,7 @@ export class JavaScriptObfuscatorCLI {
     }
 
     private processData (): void {
-        const options: IInputOptions = this.buildOptions();
+        const options: TInputOptions = this.buildOptions();
         const outputCodePath: string = CLIUtils.getOutputCodePath((<any>this.commands).output, this.inputPath);
 
         if (options.sourceMap) {
@@ -195,7 +195,7 @@ export class JavaScriptObfuscatorCLI {
      * @param outputCodePath
      * @param options
      */
-    private processDataWithoutSourceMap (outputCodePath: string, options: IInputOptions): void {
+    private processDataWithoutSourceMap (outputCodePath: string, options: TInputOptions): void {
         const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(this.data, options).getObfuscatedCode();
 
         CLIUtils.writeFile(outputCodePath, obfuscatedCode);
@@ -205,7 +205,7 @@ export class JavaScriptObfuscatorCLI {
      * @param outputCodePath
      * @param options
      */
-    private processDataWithSourceMap (outputCodePath: string, options: IInputOptions): void {
+    private processDataWithSourceMap (outputCodePath: string, options: TInputOptions): void {
         const outputSourceMapPath: string = CLIUtils.getOutputSourceMapPath(
             outputCodePath,
             options.sourceMapFileName || ''

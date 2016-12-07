@@ -1,4 +1,5 @@
-import { IInputOptions } from '../interfaces/options/IInputOptions';
+import { TInputOptions } from '../types/options/TInputOptions';
+
 import { IOptions } from '../interfaces/options/IOptions';
 
 import { TOptionsNormalizerRule } from '../types/options/TOptionsNormalizerRule';
@@ -7,9 +8,9 @@ import { Utils } from '../utils/Utils';
 
 export class OptionsNormalizer {
     /**
-     * @type {IInputOptions}
+     * @type {TInputOptions}
      */
-    private static readonly DISABLED_UNICODE_ARRAY_OPTIONS: IInputOptions = {
+    private static readonly DISABLED_UNICODE_ARRAY_OPTIONS: TInputOptions = {
         rotateStringArray: false,
         stringArray: false,
         stringArrayEncoding: false,
@@ -17,17 +18,17 @@ export class OptionsNormalizer {
     };
 
     /**
-     * @type {IInputOptions}
+     * @type {TInputOptions}
      */
-    private static readonly SELF_DEFENDING_OPTIONS: IInputOptions = {
+    private static readonly SELF_DEFENDING_OPTIONS: TInputOptions = {
         compact: true,
         selfDefending: true
     };
 
     /**
-     * @type {IInputOptions}
+     * @type {TInputOptions}
      */
-    private static readonly UNICODE_ARRAY_ENCODING_OPTIONS: IInputOptions = {
+    private static readonly UNICODE_ARRAY_ENCODING_OPTIONS: TInputOptions = {
         stringArrayEncoding: 'base64'
     };
 

@@ -5,6 +5,7 @@ export class CryptUtils {
     /**
      * @param string
      */
+    /* tslint:disable */
     public static btoa (string: string): string {
         const chars: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
@@ -30,6 +31,7 @@ export class CryptUtils {
 
         return output;
     }
+    /* tslint:enable */
 
     /**
      * @param str
@@ -82,6 +84,7 @@ export class CryptUtils {
      * @param string
      * @returns {string}
      */
+    /* tslint:disable */
     public static rc4 (string: string, key: string): string {
         let s: number[] = [],
             j: number = 0,
@@ -113,4 +116,5 @@ export class CryptUtils {
 
         return result;
     }
+    /* tslint:enable */
 }

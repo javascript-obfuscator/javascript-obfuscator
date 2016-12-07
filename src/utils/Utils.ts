@@ -1,6 +1,6 @@
 import { JSFuck } from '../enums/JSFuck';
 
-const isEqual = require('is-equal');
+const isEqual: any = require('is-equal');
 
 export class Utils {
     /**
@@ -84,7 +84,7 @@ export class Utils {
      * @returns {any}
      */
     public static mapGetFirstKeyOf(map: Map <any, any>, value: any): any {
-        for (var [key, storageValue] of map) {
+        for (let [key, storageValue] of map) {
             if (isEqual(value, storageValue)) {
                 return key;
             }

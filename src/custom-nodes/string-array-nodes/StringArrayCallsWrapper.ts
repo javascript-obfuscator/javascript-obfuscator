@@ -3,8 +3,6 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as format from 'string-template';
 
-import { TStatement } from '../../types/node/TStatement';
-
 import { ICustomNodeWithIdentifier } from '../../interfaces/custom-nodes/ICustomNodeWithIdentifier';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IStorage } from '../../interfaces/storages/IStorage';
@@ -93,13 +91,6 @@ export class StringArrayCallsWrapper extends AbstractCustomNode implements ICust
     public getNodeIdentifier (): string {
         return this.stringArrayCallsWrapperName;
     };
-
-    /**
-     * @returns {TStatement[]}
-     */
-    public getNode (): TStatement[] {
-        return super.getNode();
-    }
 
     /**
      * @returns {string}

@@ -3,11 +3,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as format from 'string-template';
 
-import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
-
 import { IOptions } from '../../interfaces/options/IOptions';
-
-import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
 import { initializable } from '../../decorators/Initializable';
 
@@ -17,11 +13,6 @@ import { AbstractCustomNode } from '../AbstractCustomNode';
 
 @injectable()
 export class DebugProtectionFunctionIntervalNode extends AbstractCustomNode {
-    /**
-     * @type {TObfuscationEvent}
-     */
-    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.BeforeObfuscation;
-
     /**
      * @type {string}
      */

@@ -88,7 +88,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 119);
+/******/ 	return __webpack_require__(__webpack_require__.s = 120);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1333,7 +1333,6 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var format = __webpack_require__(8);
-var ObfuscationEvents_1 = __webpack_require__(5);
 var Initializable_1 = __webpack_require__(3);
 var BinaryExpressionFunctionTemplate_1 = __webpack_require__(95);
 var AbstractCustomNode_1 = __webpack_require__(7);
@@ -1344,10 +1343,7 @@ var BinaryExpressionFunctionNode = function (_AbstractCustomNode_) {
     function BinaryExpressionFunctionNode(options) {
         _classCallCheck(this, BinaryExpressionFunctionNode);
 
-        var _this = _possibleConstructorReturn(this, (BinaryExpressionFunctionNode.__proto__ || Object.getPrototypeOf(BinaryExpressionFunctionNode)).call(this, options));
-
-        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation;
-        return _this;
+        return _possibleConstructorReturn(this, (BinaryExpressionFunctionNode.__proto__ || Object.getPrototypeOf(BinaryExpressionFunctionNode)).call(this, options));
     }
 
     _createClass(BinaryExpressionFunctionNode, [{
@@ -1407,7 +1403,6 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var format = __webpack_require__(8);
-var ObfuscationEvents_1 = __webpack_require__(5);
 var Initializable_1 = __webpack_require__(3);
 var ControlFlowStorageCallTemplate_1 = __webpack_require__(96);
 var AbstractCustomNode_1 = __webpack_require__(7);
@@ -1417,10 +1412,7 @@ var ControlFlowStorageCallNode = function (_AbstractCustomNode_) {
     function ControlFlowStorageCallNode(options) {
         _classCallCheck(this, ControlFlowStorageCallNode);
 
-        var _this = _possibleConstructorReturn(this, (ControlFlowStorageCallNode.__proto__ || Object.getPrototypeOf(ControlFlowStorageCallNode)).call(this, options));
-
-        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation;
-        return _this;
+        return _possibleConstructorReturn(this, (ControlFlowStorageCallNode.__proto__ || Object.getPrototypeOf(ControlFlowStorageCallNode)).call(this, options));
     }
 
     _createClass(ControlFlowStorageCallNode, [{
@@ -1488,7 +1480,6 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var format = __webpack_require__(8);
-var ObfuscationEvents_1 = __webpack_require__(5);
 var Initializable_1 = __webpack_require__(3);
 var ControlFlowStorageTemplate_1 = __webpack_require__(97);
 var AbstractCustomNode_1 = __webpack_require__(7);
@@ -1498,10 +1489,7 @@ var ControlFlowStorageNode = function (_AbstractCustomNode_) {
     function ControlFlowStorageNode(options) {
         _classCallCheck(this, ControlFlowStorageNode);
 
-        var _this = _possibleConstructorReturn(this, (ControlFlowStorageNode.__proto__ || Object.getPrototypeOf(ControlFlowStorageNode)).call(this, options));
-
-        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation;
-        return _this;
+        return _possibleConstructorReturn(this, (ControlFlowStorageNode.__proto__ || Object.getPrototypeOf(ControlFlowStorageNode)).call(this, options));
     }
 
     _createClass(ControlFlowStorageNode, [{
@@ -2770,7 +2758,6 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var format = __webpack_require__(8);
-var ObfuscationEvents_1 = __webpack_require__(5);
 var ConsoleOutputDisableExpressionTemplate_1 = __webpack_require__(94);
 var Initializable_1 = __webpack_require__(3);
 var AbstractCustomNode_1 = __webpack_require__(7);
@@ -2781,11 +2768,7 @@ var ConsoleOutputDisableExpressionNode = function (_AbstractCustomNode_) {
     function ConsoleOutputDisableExpressionNode(options) {
         _classCallCheck(this, ConsoleOutputDisableExpressionNode);
 
-        var _this = _possibleConstructorReturn(this, (ConsoleOutputDisableExpressionNode.__proto__ || Object.getPrototypeOf(ConsoleOutputDisableExpressionNode)).call(this, options));
-
-        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation;
-        _this.groupName = 'consoleOutputDisableExpressionNode';
-        return _this;
+        return _possibleConstructorReturn(this, (ConsoleOutputDisableExpressionNode.__proto__ || Object.getPrototypeOf(ConsoleOutputDisableExpressionNode)).call(this, options));
     }
 
     _createClass(ConsoleOutputDisableExpressionNode, [{
@@ -2940,7 +2923,6 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var format = __webpack_require__(8);
-var ObfuscationEvents_1 = __webpack_require__(5);
 var Initializable_1 = __webpack_require__(3);
 var DebufProtectionFunctionCallTemplate_1 = __webpack_require__(98);
 var AbstractCustomNode_1 = __webpack_require__(7);
@@ -2950,10 +2932,7 @@ var DebugProtectionFunctionCallNode = function (_AbstractCustomNode_) {
     function DebugProtectionFunctionCallNode(options) {
         _classCallCheck(this, DebugProtectionFunctionCallNode);
 
-        var _this = _possibleConstructorReturn(this, (DebugProtectionFunctionCallNode.__proto__ || Object.getPrototypeOf(DebugProtectionFunctionCallNode)).call(this, options));
-
-        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation;
-        return _this;
+        return _possibleConstructorReturn(this, (DebugProtectionFunctionCallNode.__proto__ || Object.getPrototypeOf(DebugProtectionFunctionCallNode)).call(this, options));
     }
 
     _createClass(DebugProtectionFunctionCallNode, [{
@@ -3012,7 +2991,6 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var format = __webpack_require__(8);
-var ObfuscationEvents_1 = __webpack_require__(5);
 var Initializable_1 = __webpack_require__(3);
 var DebugProtectionFunctionIntervalTemplate_1 = __webpack_require__(99);
 var AbstractCustomNode_1 = __webpack_require__(7);
@@ -3022,10 +3000,7 @@ var DebugProtectionFunctionIntervalNode = function (_AbstractCustomNode_) {
     function DebugProtectionFunctionIntervalNode(options) {
         _classCallCheck(this, DebugProtectionFunctionIntervalNode);
 
-        var _this = _possibleConstructorReturn(this, (DebugProtectionFunctionIntervalNode.__proto__ || Object.getPrototypeOf(DebugProtectionFunctionIntervalNode)).call(this, options));
-
-        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation;
-        return _this;
+        return _possibleConstructorReturn(this, (DebugProtectionFunctionIntervalNode.__proto__ || Object.getPrototypeOf(DebugProtectionFunctionIntervalNode)).call(this, options));
     }
 
     _createClass(DebugProtectionFunctionIntervalNode, [{
@@ -3084,7 +3059,6 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var format = __webpack_require__(8);
-var ObfuscationEvents_1 = __webpack_require__(5);
 var Initializable_1 = __webpack_require__(3);
 var DebugProtectionFunctionTemplate_1 = __webpack_require__(100);
 var AbstractCustomNode_1 = __webpack_require__(7);
@@ -3094,10 +3068,7 @@ var DebugProtectionFunctionNode = function (_AbstractCustomNode_) {
     function DebugProtectionFunctionNode(options) {
         _classCallCheck(this, DebugProtectionFunctionNode);
 
-        var _this = _possibleConstructorReturn(this, (DebugProtectionFunctionNode.__proto__ || Object.getPrototypeOf(DebugProtectionFunctionNode)).call(this, options));
-
-        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation;
-        return _this;
+        return _possibleConstructorReturn(this, (DebugProtectionFunctionNode.__proto__ || Object.getPrototypeOf(DebugProtectionFunctionNode)).call(this, options));
     }
 
     _createClass(DebugProtectionFunctionNode, [{
@@ -3185,8 +3156,8 @@ var DebugProtectionCustomNodeGroup = function (_AbstractCustomNodeGr) {
                 NodeAppender_1.NodeAppender.appendNode(blockScopeNode, customNode.getNode());
             });
             this.appendCustomNodeIfExist(CustomNodes_1.CustomNodes.DebugProtectionFunctionIntervalNode, function (customNode) {
-                var programBodyLength = blockScopeNode.body.length,
-                    randomIndex = Utils_1.Utils.getRandomInteger(0, programBodyLength);
+                var programBodyLength = blockScopeNode.body.length;
+                var randomIndex = Utils_1.Utils.getRandomInteger(0, programBodyLength);
                 NodeAppender_1.NodeAppender.insertNodeAtIndex(blockScopeNode, customNode.getNode(), randomIndex);
             });
         }
@@ -3256,7 +3227,6 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var format = __webpack_require__(8);
-var ObfuscationEvents_1 = __webpack_require__(5);
 var Initializable_1 = __webpack_require__(3);
 var DomainLockNodeTemplate_1 = __webpack_require__(101);
 var AbstractCustomNode_1 = __webpack_require__(7);
@@ -3267,10 +3237,7 @@ var DomainLockNode = function (_AbstractCustomNode_) {
     function DomainLockNode(options) {
         _classCallCheck(this, DomainLockNode);
 
-        var _this = _possibleConstructorReturn(this, (DomainLockNode.__proto__ || Object.getPrototypeOf(DomainLockNode)).call(this, options));
-
-        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation;
-        return _this;
+        return _possibleConstructorReturn(this, (DomainLockNode.__proto__ || Object.getPrototypeOf(DomainLockNode)).call(this, options));
     }
 
     _createClass(DomainLockNode, [{
@@ -3654,8 +3621,6 @@ exports.SelfDefendingCustomNodeGroup = SelfDefendingCustomNodeGroup;
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = (function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } });
-
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -3726,11 +3691,6 @@ var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
         key: "getNodeIdentifier",
         value: function getNodeIdentifier() {
             return this.stringArrayCallsWrapperName;
-        }
-    }, {
-        key: "getNode",
-        value: function getNode() {
-            return _get(StringArrayCallsWrapper.prototype.__proto__ || Object.getPrototypeOf(StringArrayCallsWrapper.prototype), "getNode", this).call(this);
         }
     }, {
         key: "getDecodeStringArrayTemplate",
@@ -6651,7 +6611,8 @@ module.exports = require("mkdirp");
 module.exports = require("reflect-metadata");
 
 /***/ },
-/* 119 */
+/* 119 */,
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

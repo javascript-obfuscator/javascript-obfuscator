@@ -3,11 +3,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as format from 'string-template';
 
-import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
-
 import { IOptions } from '../../interfaces/options/IOptions';
-
-import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
 import { ConsoleOutputDisableExpressionTemplate } from '../../templates/custom-nodes/console-output-nodes/console-output-disable-expression-node/ConsoleOutputDisableExpressionTemplate';
 
@@ -19,20 +15,10 @@ import { Utils } from '../../Utils';
 @injectable()
 export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
     /**
-     * @type {TObfuscationEvent}
-     */
-    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.BeforeObfuscation;
-
-    /**
      * @type {string}
      */
     @initializable()
-    protected callsControllerFunctionName: string;
-
-    /**
-     * @type {string}
-     */
-    protected readonly groupName: string = 'consoleOutputDisableExpressionNode';
+    private callsControllerFunctionName: string;
 
     /**
      * @param options

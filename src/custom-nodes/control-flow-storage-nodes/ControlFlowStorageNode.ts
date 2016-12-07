@@ -3,13 +3,9 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as format from 'string-template';
 
-import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
-
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IStorage } from '../../interfaces/storages/IStorage';
-
-import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
 
 import { initializable } from '../../decorators/Initializable';
 
@@ -19,11 +15,6 @@ import { AbstractCustomNode } from '../AbstractCustomNode';
 
 @injectable()
 export class ControlFlowStorageNode extends AbstractCustomNode {
-    /**
-     * @type {TObfuscationEvent}
-     */
-    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.AfterObfuscation;
-
     /**
      * @type {IStorage <ICustomNode>}
      */

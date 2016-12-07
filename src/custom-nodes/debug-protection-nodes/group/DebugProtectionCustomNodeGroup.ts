@@ -75,8 +75,8 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
 
         // debugProtectionFunctionIntervalNode append
         this.appendCustomNodeIfExist(CustomNodes.DebugProtectionFunctionIntervalNode, (customNode: ICustomNode) => {
-            let programBodyLength: number = blockScopeNode.body.length,
-                randomIndex: number = Utils.getRandomInteger(0, programBodyLength);
+            const programBodyLength: number = blockScopeNode.body.length;
+            const randomIndex: number = Utils.getRandomInteger(0, programBodyLength);
 
             NodeAppender.insertNodeAtIndex(blockScopeNode, customNode.getNode(), randomIndex);
         });

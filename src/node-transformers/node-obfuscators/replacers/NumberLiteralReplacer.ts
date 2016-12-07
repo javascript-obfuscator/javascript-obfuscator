@@ -4,7 +4,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 import { IOptions } from '../../../interfaces/options/IOptions';
 
 import { AbstractReplacer } from './AbstractReplacer';
-import { Utils } from '../../../Utils';
+import { Utils } from '../../../utils/Utils';
 
 @injectable()
 export class NumberLiteralReplacer extends AbstractReplacer {

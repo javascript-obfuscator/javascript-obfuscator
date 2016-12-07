@@ -4,7 +4,7 @@ import * as path from 'path';
 
 import { IPackageConfig } from '../interfaces/IPackageConfig';
 
-import { Utils } from '../Utils';
+import { Utils } from '../utils/Utils';
 
 export class CLIUtils {
     /**

@@ -1,6 +1,6 @@
-import { Utils } from '../../src/Utils';
+import { Utils } from '../../../src/utils/Utils';
 
-import { JSFuck } from '../../src/enums/JSFuck';
+import { JSFuck } from '../../../src/enums/JSFuck';
 
 const assert: Chai.AssertStatic = require('chai').assert;
 
@@ -35,12 +35,6 @@ describe('Utils', () => {
         });
     });
 
-    describe('btoa (string: string): string', () => {
-        it('should creates a base-64 encoded string from a given string', () => {
-            assert.equal(Utils.btoa('string'), 'c3RyaW5n');
-        });
-    });
-
     describe('decToHex (dec: number): string', () => {
         it('should creates a string with hexadecimal value from a given decimal number', () => {
             assert.equal(Utils.decToHex(0), '0');
@@ -57,13 +51,6 @@ describe('Utils', () => {
             assert.equal(Utils.extractDomainFromUrl('https://www.google.ru:9000'), 'www.google.ru');
             assert.equal(Utils.extractDomainFromUrl('//google.ru/abc'), 'google.ru');
             assert.equal(Utils.extractDomainFromUrl('//localhost:9000'), 'localhost');
-        });
-    });
-
-    describe('getRandomVariableName (length: number = 6): string', () => {
-        it('should return a string of given length with random variable name', () => {
-            assert.match(Utils.getRandomVariableName(4), /^_0x(\w){4}$/);
-            assert.match(Utils.getRandomVariableName(6), /^_0x(\w){4,6}$/);
         });
     });
 
@@ -117,16 +104,5 @@ describe('Utils', () => {
         it('should return a unicode escape sequence based on a given string', () => {
             assert.equal(Utils.stringToUnicodeEscapeSequence('string'), expected);
         });
-    });
-
-    describe('hideString (str: string, length: number): [string, string]', () => {
-        let original1: string = 'example.com',
-            [str1, diff] = Utils.hideString(original1, 30);
-
-        it('should return a string with the original string within', () => {
-            assert.isTrue(str1.length > original1.length);
-            assert.equal(str1.replace(new RegExp('[' + diff + ']', 'g'), ''), original1);
-        });
-
     });
 });

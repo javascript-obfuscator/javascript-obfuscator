@@ -5,7 +5,7 @@ import { TStatement } from '../types/node/TStatement';
 
 import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
-import { Utils } from '../Utils';
+import { RandomGeneratorUtils } from '../utils/RandomGeneratorUtils';
 
 /**
  * This class appends node into a first deepest BlockStatement in order of function calls
@@ -101,7 +101,7 @@ export class NodeAppender {
      * @param stackTraceRootLength
      */
     public static getRandomStackTraceIndex (stackTraceRootLength: number): number {
-        return Utils.getRandomInteger(0, Math.max(0, Math.round(stackTraceRootLength - 1)));
+        return RandomGeneratorUtils.getRandomInteger(0, Math.max(0, Math.round(stackTraceRootLength - 1)));
     }
 
     /**

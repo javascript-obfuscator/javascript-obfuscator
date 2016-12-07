@@ -12,7 +12,7 @@ import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
 import { IOptions } from './interfaces/options/IOptions';
 import { ISourceMapCorrector } from './interfaces/ISourceMapCorrector';
 
-import { Utils } from './Utils';
+import { RandomGeneratorUtils } from './utils/RandomGeneratorUtils';
 
 @injectable()
 export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
@@ -104,7 +104,7 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
      */
     public obfuscate (sourceCode: string): IObfuscationResult {
         if (this.options.seed !== 0) {
-            Utils.setRandomGeneratorSeed(this.options.seed);
+            RandomGeneratorUtils.setRandomGeneratorSeed(this.options.seed);
         }
 
         // parse AST tree

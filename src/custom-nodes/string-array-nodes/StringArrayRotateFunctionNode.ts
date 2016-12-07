@@ -15,7 +15,8 @@ import { StringArrayRotateFunctionTemplate } from '../../templates/custom-nodes/
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
-import { Utils } from '../../Utils';
+import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
+import { Utils } from '../../utils/Utils';
 
 @injectable()
 export class StringArrayRotateFunctionNode extends AbstractCustomNode {
@@ -66,8 +67,8 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
      */
     public getCode (): string {
         let code: string = '',
-            timesName: string = Utils.getRandomVariableName(),
-            whileFunctionName: string = Utils.getRandomVariableName();
+            timesName: string = RandomGeneratorUtils.getRandomVariableName(),
+            whileFunctionName: string = RandomGeneratorUtils.getRandomVariableName();
 
         if (this.options.selfDefending) {
             code = format(SelfDefendingTemplate(), {

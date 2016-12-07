@@ -9,7 +9,7 @@ import { ISourceMapCorrector } from './interfaces/ISourceMapCorrector';
 
 import { SourceMapMode } from './enums/SourceMapMode';
 
-import { Utils } from './Utils';
+import { CryptUtils } from './utils/CryptUtils';
 
 @injectable()
 export class SourceMapCorrector implements ISourceMapCorrector {
@@ -63,7 +63,7 @@ export class SourceMapCorrector implements ISourceMapCorrector {
 
         switch (this.options.sourceMapMode) {
             case SourceMapMode.Inline:
-                sourceMappingUrl += `data:application/json;base64,${Utils.btoa(sourceMap)}`;
+                sourceMappingUrl += `data:application/json;base64,${CryptUtils.btoa(sourceMap)}`;
 
                 break;
 

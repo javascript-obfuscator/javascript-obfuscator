@@ -10,7 +10,7 @@ import { initializable } from '../../../decorators/Initializable';
 import { BinaryExpressionFunctionTemplate } from '../../../templates/custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/BinaryExpressionFunctionTemplate';
 
 import { AbstractCustomNode } from '../../AbstractCustomNode';
-import { Utils } from '../../../Utils';
+import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class BinaryExpressionFunctionNode extends AbstractCustomNode {
@@ -41,7 +41,7 @@ export class BinaryExpressionFunctionNode extends AbstractCustomNode {
      */
     public getCode (): string {
         return format(BinaryExpressionFunctionTemplate(), {
-            functionName: Utils.getRandomVariableName(1),
+            functionName: RandomGeneratorUtils.getRandomVariableName(1),
             operator: this.operator
         });
     }

@@ -9,7 +9,7 @@ import { TStatement } from '../types/node/TStatement';
 import { NodeType } from '../enums/NodeType';
 
 import { Node } from './Node';
-import { Utils } from '../Utils';
+import { Utils } from '../utils/Utils';
 
 export class NodeUtils {
     /**

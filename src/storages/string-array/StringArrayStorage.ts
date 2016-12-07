@@ -1,5 +1,5 @@
 import { ArrayStorage } from '../ArrayStorage';
-import { Utils } from '../../Utils';
+import { Utils } from '../../utils/Utils';
 
 export class StringArrayStorage extends ArrayStorage <string> {
     constructor () {

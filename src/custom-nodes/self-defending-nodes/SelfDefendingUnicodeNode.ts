@@ -13,7 +13,7 @@ import { SelfDefendingTemplate } from '../../templates/custom-nodes/self-defendi
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
-import { Utils } from '../../Utils';
+import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class SelfDefendingUnicodeNode extends AbstractCustomNode {
@@ -45,7 +45,7 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     public getCode (): string {
         return JavaScriptObfuscator.obfuscate(
             format(SelfDefendingTemplate(), {
-                selfDefendingFunctionName: Utils.getRandomVariableName(),
+                selfDefendingFunctionName: RandomGeneratorUtils.getRandomVariableName(),
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
             }),
             Object.assign({},  NO_CUSTOM_NODES_PRESET, {

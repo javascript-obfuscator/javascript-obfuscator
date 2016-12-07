@@ -13,7 +13,7 @@ import { DEFAULT_PRESET } from '../preset-options/DefaultPreset';
 
 import { CLIUtils } from './CLIUtils';
 import { JavaScriptObfuscator } from '../JavaScriptObfuscator';
-import { Utils } from '../Utils';
+import { Utils } from '../utils/Utils';
 
 export class JavaScriptObfuscatorCLI {
     /**

@@ -17,7 +17,7 @@ import { ObfuscationEvents } from '../../../enums/ObfuscationEvents';
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
-import { Utils } from '../../../Utils';
+import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
@@ -76,7 +76,7 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
         // debugProtectionFunctionIntervalNode append
         this.appendCustomNodeIfExist(CustomNodes.DebugProtectionFunctionIntervalNode, (customNode: ICustomNode) => {
             const programBodyLength: number = blockScopeNode.body.length;
-            const randomIndex: number = Utils.getRandomInteger(0, programBodyLength);
+            const randomIndex: number = RandomGeneratorUtils.getRandomInteger(0, programBodyLength);
 
             NodeAppender.insertNodeAtIndex(blockScopeNode, customNode.getNode(), randomIndex);
         });
@@ -89,7 +89,7 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
             return;
         }
 
-        const debugProtectionFunctionName: string = Utils.getRandomVariableName();
+        const debugProtectionFunctionName: string = RandomGeneratorUtils.getRandomVariableName();
 
         const debugProtectionFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.DebugProtectionFunctionNode);
         const debugProtectionFunctionCallNode: ICustomNode = this.customNodeFactory(CustomNodes.DebugProtectionFunctionCallNode);

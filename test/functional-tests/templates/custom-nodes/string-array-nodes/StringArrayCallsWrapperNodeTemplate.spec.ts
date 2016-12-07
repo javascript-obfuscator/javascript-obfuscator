@@ -6,7 +6,7 @@ import { StringArrayBase64DecodeNodeTemplate } from '../../../../../src/template
 import { StringArrayCallsWrapperTemplate } from '../../../../../src/templates/custom-nodes/string-array-nodes/string-array-calls-wrapper/StringArrayCallsWrapperTemplate';
 import { StringArrayRc4DecodeNodeTemplate } from '../../../../../src/templates/custom-nodes/string-array-nodes/string-array-calls-wrapper/StringArrayRC4DecodeNodeTemplate';
 
-import { Utils } from '../../../../../src/Utils';
+import { CryptUtils } from '../../../../../src/utils/CryptUtils';
 
 const assert: Chai.AssertStatic = require('chai').assert;
 
@@ -26,7 +26,7 @@ function getFunctionFromTemplateBase64Encoding (
     let stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), templateData);
 
     return Function(`
-        var ${stringArrayName} = ['${Utils.btoa('test1')}'];
+        var ${stringArrayName} = ['${CryptUtils.btoa('test1')}'];
     
         ${stringArrayCallsWrapperTemplate}
         
@@ -52,7 +52,7 @@ function getFunctionFromTemplateRc4Encoding (
     let stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), templateData);
 
     return Function(`
-        var ${stringArrayName} = ['${Utils.btoa(Utils.rc4('test1', key))}'];
+        var ${stringArrayName} = ['${CryptUtils.btoa(CryptUtils.rc4('test1', key))}'];
     
         ${stringArrayCallsWrapperTemplate}
         

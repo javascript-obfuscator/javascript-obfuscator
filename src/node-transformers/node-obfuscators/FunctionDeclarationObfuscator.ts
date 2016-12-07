@@ -16,7 +16,7 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { IdentifierReplacer } from './replacers/IdentifierReplacer';
 import { Node } from '../../node/Node';
 import { NodeUtils } from '../../node/NodeUtils';
-import { Utils } from '../../Utils';
+import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 /**
  * replaces:
@@ -52,9 +52,9 @@ export class FunctionDeclarationObfuscator extends AbstractNodeTransformer {
      * @param parentNode
      */
     public transformNode (functionDeclarationNode: ESTree.FunctionDeclaration, parentNode: ESTree.Node): void {
-        this.identifierReplacer.setPrefix(Utils.getRandomGenerator().string({
+        this.identifierReplacer.setPrefix(RandomGeneratorUtils.getRandomGenerator().string({
             length: 5,
-            pool: Utils.randomGeneratorPool
+            pool: RandomGeneratorUtils.randomGeneratorPool
         }));
 
         const blockScopeOfFunctionDeclarationNode: TNodeWithBlockStatement = NodeUtils

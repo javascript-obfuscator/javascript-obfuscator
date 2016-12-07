@@ -20,8 +20,8 @@ import { StringArrayNode } from '../StringArrayNode';
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
+import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 import { StringArrayStorage } from '../../../storages/string-array/StringArrayStorage';
-import { Utils } from '../../../Utils';
 
 @injectable()
 export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
@@ -105,13 +105,13 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
         const stringArrayCallsWrapper: ICustomNode = this.customNodeFactory(CustomNodes.StringArrayCallsWrapper);
         const stringArrayRotateFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.StringArrayRotateFunctionNode);
 
-        const stringArrayName: string = Utils.getRandomVariableName(StringArrayNode.ARRAY_RANDOM_LENGTH);
-        const stringArrayCallsWrapperName: string = Utils.getRandomVariableName(StringArrayNode.ARRAY_RANDOM_LENGTH);
+        const stringArrayName: string = RandomGeneratorUtils.getRandomVariableName(StringArrayNode.ARRAY_RANDOM_LENGTH);
+        const stringArrayCallsWrapperName: string = RandomGeneratorUtils.getRandomVariableName(StringArrayNode.ARRAY_RANDOM_LENGTH);
 
         let stringArrayRotateValue: number;
 
         if (this.options.rotateStringArray) {
-            stringArrayRotateValue = Utils.getRandomInteger(100, 500);
+            stringArrayRotateValue = RandomGeneratorUtils.getRandomInteger(100, 500);
         } else {
             stringArrayRotateValue = 0;
         }

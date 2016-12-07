@@ -4,7 +4,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 import { IOptions } from '../../../interfaces/options/IOptions';
 
 import { AbstractReplacer } from './AbstractReplacer';
-import { Utils } from '../../../Utils';
+import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class IdentifierReplacer extends AbstractReplacer {
@@ -60,7 +60,7 @@ export class IdentifierReplacer extends AbstractReplacer {
         }
 
         if (!this.isReservedName(nodeName)) {
-            this.namesMap.set(`${nodeName}-${this.uniquePrefix}`, Utils.getRandomVariableName());
+            this.namesMap.set(`${nodeName}-${this.uniquePrefix}`, RandomGeneratorUtils.getRandomVariableName());
         }
     }
 

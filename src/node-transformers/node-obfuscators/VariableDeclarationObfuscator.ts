@@ -16,7 +16,7 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { IdentifierReplacer } from './replacers/IdentifierReplacer';
 import { Node } from '../../node/Node';
 import { NodeUtils } from '../../node/NodeUtils';
-import { Utils } from '../../Utils';
+import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 /**
  * replaces:
@@ -53,9 +53,9 @@ export class VariableDeclarationObfuscator extends AbstractNodeTransformer {
      * @param parentNode
      */
     public transformNode (variableDeclarationNode: ESTree.VariableDeclaration, parentNode: ESTree.Node): void {
-        this.identifierReplacer.setPrefix(Utils.getRandomGenerator().string({
+        this.identifierReplacer.setPrefix(RandomGeneratorUtils.getRandomGenerator().string({
             length: 5,
-            pool: Utils.randomGeneratorPool
+            pool: RandomGeneratorUtils.randomGeneratorPool
         }));
 
         const blockScopeOfVariableDeclarationNode: TNodeWithBlockStatement = NodeUtils

@@ -10,7 +10,8 @@ import { initializable } from '../../decorators/Initializable';
 import { DomainLockNodeTemplate } from '../../templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { Utils } from '../../Utils';
+import { CryptUtils } from '../../utils/CryptUtils';
+import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class DomainLockNode extends AbstractCustomNode {
@@ -41,10 +42,10 @@ export class DomainLockNode extends AbstractCustomNode {
      */
     public getCode (): string {
         let domainsString: string = this.options.domainLock.join(';'),
-            [hiddenDomainsString, diff]: string[] = Utils.hideString(domainsString, domainsString.length * 3);
+            [hiddenDomainsString, diff]: string[] = CryptUtils.hideString(domainsString, domainsString.length * 3);
 
         return format(DomainLockNodeTemplate(), {
-            domainLockFunctionName: Utils.getRandomVariableName(),
+            domainLockFunctionName: RandomGeneratorUtils.getRandomVariableName(),
             diff: diff,
             domains: hiddenDomainsString,
             singleNodeCallControllerFunctionName: this.callsControllerFunctionName

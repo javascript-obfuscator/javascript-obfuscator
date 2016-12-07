@@ -11,9 +11,11 @@ import { IStorage } from '../../../interfaces/storages/IStorage';
 import { StringArrayEncoding } from '../../../enums/StringArrayEncoding';
 
 import { AbstractReplacer } from './AbstractReplacer';
-import { CustomNodeGroups } from '../../../enums/container/CustomNodeGroups';
-import { Utils } from '../../../Utils';
+import { CryptUtils } from '../../../utils/CryptUtils';
 import { CustomNodes } from '../../../enums/container/CustomNodes';
+import { CustomNodeGroups } from '../../../enums/container/CustomNodeGroups';
+import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
+import { Utils } from '../../../utils/Utils';
 
 @injectable()
 export class StringLiteralReplacer extends AbstractReplacer {
@@ -25,8 +27,8 @@ export class StringLiteralReplacer extends AbstractReplacer {
     /**
      * @type {string[]}
      */
-    private static readonly rc4Keys: string[] = Utils.getRandomGenerator()
-        .n(() => Utils.getRandomGenerator().string({length: 4}), 50);
+    private static readonly rc4Keys: string[] = RandomGeneratorUtils.getRandomGenerator()
+        .n(() => RandomGeneratorUtils.getRandomGenerator().string({length: 4}), 50);
 
     /**
      * @type {IStorage<ICustomNodeGroup>}
@@ -53,7 +55,7 @@ export class StringLiteralReplacer extends AbstractReplacer {
     public replace (nodeValue: string): string {
         const replaceWithStringArrayFlag: boolean = (
             nodeValue.length >= StringLiteralReplacer.minimumLengthForStringArray
-            && Utils.getRandomFloat(0, 1) <= this.options.stringArrayThreshold
+            && RandomGeneratorUtils.getRandomFloat(0, 1) <= this.options.stringArrayThreshold
         );
 
         if (this.options.stringArray && replaceWithStringArrayFlag) {
@@ -78,13 +80,13 @@ export class StringLiteralReplacer extends AbstractReplacer {
 
         switch (this.options.stringArrayEncoding) {
             case StringArrayEncoding.base64:
-                value = Utils.btoa(value);
+                value = CryptUtils.btoa(value);
 
                 break;
 
             case StringArrayEncoding.rc4:
-                rc4Key = Utils.getRandomGenerator().pickone(StringLiteralReplacer.rc4Keys);
-                value = Utils.btoa(Utils.rc4(value, rc4Key));
+                rc4Key = RandomGeneratorUtils.getRandomGenerator().pickone(StringLiteralReplacer.rc4Keys);
+                value = CryptUtils.btoa(CryptUtils.rc4(value, rc4Key));
 
                 break;
         }

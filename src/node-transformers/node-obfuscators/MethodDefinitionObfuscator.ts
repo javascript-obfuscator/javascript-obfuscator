@@ -11,7 +11,7 @@ import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscatorsR
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
-import { Utils } from '../../Utils';
+import { Utils } from '../../utils/Utils';
 
 /**
  * replaces:

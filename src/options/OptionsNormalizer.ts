@@ -3,7 +3,7 @@ import { IOptions } from '../interfaces/options/IOptions';
 
 import { TOptionsNormalizerRule } from '../types/options/TOptionsNormalizerRule';
 
-import { Utils } from '../Utils';
+import { Utils } from '../utils/Utils';
 
 export class OptionsNormalizer {
     /**

@@ -2,7 +2,7 @@ import * as format from 'string-template';
 
 import { DomainLockNodeTemplate } from '../../../../../src/templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
 
-import { Utils } from '../../../../../src/Utils';
+import { CryptUtils } from '../../../../../src/utils/CryptUtils';
 
 
 const assert: Chai.AssertStatic = require('chai').assert;
@@ -46,7 +46,7 @@ describe('DomainLockNodeTemplate (): string', () => {
         [
             hiddenDomainsString,
             diff
-        ] = Utils.hideString(domainsString, domainsString.length * 3);
+        ] = CryptUtils.hideString(domainsString, domainsString.length * 3);
 
         assert.doesNotThrow(() => getFunctionFromTemplate({
             domainLockFunctionName: 'domainLockFunction',
@@ -62,7 +62,7 @@ describe('DomainLockNodeTemplate (): string', () => {
         [
             hiddenDomainsString,
             diff
-        ] = Utils.hideString(domainsString, domainsString.length * 3);
+        ] = CryptUtils.hideString(domainsString, domainsString.length * 3);
 
         assert.doesNotThrow(() => getFunctionFromTemplate({
             domainLockFunctionName: 'domainLockFunction',
@@ -78,7 +78,7 @@ describe('DomainLockNodeTemplate (): string', () => {
         [
             hiddenDomainsString,
             diff
-        ] = Utils.hideString(domainsString, domainsString.length * 3);
+        ] = CryptUtils.hideString(domainsString, domainsString.length * 3);
 
         assert.throws(() => getFunctionFromTemplate({
             domainLockFunctionName: 'domainLockFunction',

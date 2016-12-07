@@ -1,6 +1,6 @@
 import { TObfuscationEvent } from '../types/event-emitters/TObfuscationEvent';
 
-import { Utils } from '../Utils';
+import { Utils } from '../utils/Utils';
 
 export const ObfuscationEvents: {
     AfterObfuscation: TObfuscationEvent,

@@ -19,7 +19,7 @@ import { ControlFlowStorage } from '../../storages/control-flow/ControlFlowStora
 import { ControlFlowStorageNode } from '../../custom-nodes/control-flow-storage-nodes/ControlFlowStorageNode';
 import { Node } from '../../node/Node';
 import { NodeAppender } from '../../node/NodeAppender';
-import { Utils } from '../../Utils';
+import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
@@ -55,7 +55,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         }
 
         const controlFlowStorage: IStorage <ICustomNode> = new ControlFlowStorage();
-        const controlFlowStorageCustomNodeName: string = Utils.getRandomVariableName(6);
+        const controlFlowStorageCustomNodeName: string = RandomGeneratorUtils.getRandomVariableName(6);
 
         estraverse.replace(functionNode.body, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {

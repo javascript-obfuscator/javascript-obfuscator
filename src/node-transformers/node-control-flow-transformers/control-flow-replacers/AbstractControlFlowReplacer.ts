@@ -8,7 +8,7 @@ import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
-import { Utils } from '../../../Utils';
+import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 
 @injectable()
 export abstract class AbstractControlFlowReplacer implements IControlFlowReplacer {
@@ -30,9 +30,9 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
      * @returns {string}
      */
     protected static getStorageKey (): string {
-        return Utils.getRandomGenerator().string({
+        return RandomGeneratorUtils.getRandomGenerator().string({
             length: 3,
-            pool: Utils.randomGeneratorPool
+            pool: RandomGeneratorUtils.randomGeneratorPool
         });
     }
 

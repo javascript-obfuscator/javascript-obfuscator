@@ -4,7 +4,7 @@ import { IStorage } from '../interfaces/storages/IStorage';
 
 import { initializable } from '../decorators/Initializable';
 
-import { Utils } from '../Utils';
+import { Utils } from '../utils/Utils';
 
 @injectable()
 export abstract class MapStorage <T> implements IStorage <T> {

@@ -17,7 +17,7 @@ import { ObfuscationEvents } from '../../../enums/ObfuscationEvents';
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
-import { Utils } from '../../../Utils';
+import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class DomainLockCustomNodeGroup extends AbstractCustomNodeGroup {
@@ -96,7 +96,7 @@ export class DomainLockCustomNodeGroup extends AbstractCustomNodeGroup {
             return;
         }
 
-        const callsControllerFunctionName: string = Utils.getRandomVariableName();
+        const callsControllerFunctionName: string = RandomGeneratorUtils.getRandomVariableName();
 
         const domainLockNode: ICustomNode = this.customNodeFactory(CustomNodes.DomainLockNode);
         const nodeCallsControllerFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.NodeCallsControllerFunctionNode);

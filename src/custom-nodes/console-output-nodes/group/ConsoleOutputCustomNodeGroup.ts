@@ -17,7 +17,7 @@ import { ObfuscationEvents } from '../../../enums/ObfuscationEvents';
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
-import { Utils } from '../../../Utils';
+import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class ConsoleOutputCustomNodeGroup extends AbstractCustomNodeGroup {
@@ -96,7 +96,7 @@ export class ConsoleOutputCustomNodeGroup extends AbstractCustomNodeGroup {
             return;
         }
 
-        const callsControllerFunctionName: string = Utils.getRandomVariableName();
+        const callsControllerFunctionName: string = RandomGeneratorUtils.getRandomVariableName();
 
         const consoleOutputDisableExpressionNode: ICustomNode = this.customNodeFactory(CustomNodes.ConsoleOutputDisableExpressionNode);
         const nodeCallsControllerFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.NodeCallsControllerFunctionNode);

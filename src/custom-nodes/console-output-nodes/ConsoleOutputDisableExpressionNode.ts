@@ -10,7 +10,7 @@ import { ConsoleOutputDisableExpressionTemplate } from '../../templates/custom-n
 import { initializable } from '../../decorators/Initializable';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { Utils } from '../../Utils';
+import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
@@ -41,7 +41,7 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
      */
     public getCode (): string {
         return format(ConsoleOutputDisableExpressionTemplate(), {
-            consoleLogDisableFunctionName: Utils.getRandomVariableName(),
+            consoleLogDisableFunctionName: RandomGeneratorUtils.getRandomVariableName(),
             singleNodeCallControllerFunctionName: this.callsControllerFunctionName
         });
     }

@@ -66,10 +66,9 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
      * @param astTree
      */
     private generateCode (sourceCode: string, astTree: ESTree.Program): IGeneratorOutput {
-        const escodegenParams: escodegen.GenerateOptions = Object.assign(
-            {},
-            JavaScriptObfuscatorInternal.escodegenParams
-        );
+        const escodegenParams: escodegen.GenerateOptions = {
+            ...JavaScriptObfuscatorInternal.escodegenParams
+        };
 
         if (this.options.sourceMap) {
             escodegenParams.sourceMap = 'sourceMap';

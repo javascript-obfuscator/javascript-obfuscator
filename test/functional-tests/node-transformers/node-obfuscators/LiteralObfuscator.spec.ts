@@ -1,17 +1,19 @@
+import { assert } from 'chai';
+
 import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResult';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../../src/preset-options/NoCustomNodesPreset';
 
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
 
-const assert: Chai.AssertStatic = require('chai').assert;
-
 describe('LiteralObfuscator', () => {
     describe('obfuscation of literal node with string value', () => {
         it('should replace literal node value with unicode escape sequence', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'test';`,
-                Object.assign({}, NO_CUSTOM_NODES_PRESET)
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
             );
 
             assert.match(obfuscationResult.getObfuscatedCode(),  /^var *test *= *'\\x74\\x65\\x73\\x74';$/);
@@ -20,10 +22,11 @@ describe('LiteralObfuscator', () => {
         it('should replace literal node value with unicode escape sequence from unicode array', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'test';`,
-                Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
                     stringArray: true,
                     stringArrayThreshold: 1
-                })
+                }
             );
 
             assert.match(
@@ -36,11 +39,12 @@ describe('LiteralObfuscator', () => {
         it('should replace literal node value with raw value from unicode array if `unicodeEscapeSequence` is disabled', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'test';`,
-                Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
                     stringArray: true,
                     stringArrayThreshold: 1,
                     unicodeEscapeSequence: false
-                })
+                }
             );
 
             assert.match(
@@ -53,10 +57,11 @@ describe('LiteralObfuscator', () => {
         it('shouldn\'t replace short literal node value with unicode array value', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'te';`,
-                Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
                     stringArray: true,
                     stringArrayThreshold: 1
-                })
+                }
             );
 
             assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *'\\x74\\x65';/);
@@ -65,11 +70,12 @@ describe('LiteralObfuscator', () => {
         it('should replace literal node value with unicode array value encoded using base64', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'test';`,
-                Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
                     stringArray: true,
                     stringArrayEncoding: 'base64',
                     stringArrayThreshold: 1
-                })
+                }
             );
 
             assert.match(
@@ -82,11 +88,12 @@ describe('LiteralObfuscator', () => {
         it('should replace literal node value with unicode array value encoded using rc4', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'test';`,
-                Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
                     stringArray: true,
                     stringArrayEncoding: 'rc4',
                     stringArrayThreshold: 1
-                })
+                }
             );
 
             assert.match(
@@ -99,10 +106,11 @@ describe('LiteralObfuscator', () => {
     it('should obfuscate literal node with boolean value', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `var test = true;`,
-            Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+            {
+                ...NO_CUSTOM_NODES_PRESET,
                 stringArray: true,
                 stringArrayThreshold: 1
-            })
+            }
         );
 
         assert.match(obfuscationResult.getObfuscatedCode(),  /^var *test *= *!!\[\];$/);
@@ -111,10 +119,11 @@ describe('LiteralObfuscator', () => {
     it('should obfuscate literal node with number value', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `var test = 0;`,
-            Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+            {
+                ...NO_CUSTOM_NODES_PRESET,
                 stringArray: true,
                 stringArrayThreshold: 1
-            })
+            }
         );
 
         assert.match(obfuscationResult.getObfuscatedCode(),  /^var *test *= *0x0;$/);

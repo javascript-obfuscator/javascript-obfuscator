@@ -1,8 +1,9 @@
 import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
 
-import * as chai from 'chai';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
+
+import { assert } from 'chai';
 
 import { TNodeWithBlockStatement } from '../../../src/types/node/TNodeWithBlockStatement';
 
@@ -16,8 +17,6 @@ import { InversifyContainerFacade } from '../../../src/container/InversifyContai
 import { Node } from '../../../src/node/Node';
 import { NodeMocks } from '../../mocks/NodeMocks';
 import { NodeUtils } from '../../../src/node/NodeUtils';
-
-const assert: any = chai.assert;
 
 /**
  * @param astTree

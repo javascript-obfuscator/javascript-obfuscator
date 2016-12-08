@@ -1,10 +1,10 @@
+import { assert } from 'chai';
+
 import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResult';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../../src/preset-options/NoCustomNodesPreset';
 
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
-
-const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('MethodDefinitionObfuscator', () => {
     let code: string = `
@@ -17,7 +17,9 @@ describe('MethodDefinitionObfuscator', () => {
     it('should replace method definition node `key` property with unicode value', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             code,
-            Object.assign({}, NO_CUSTOM_NODES_PRESET)
+            {
+                ...NO_CUSTOM_NODES_PRESET
+            }
         );
 
         assert.match(obfuscationResult.getObfuscatedCode(),  /\['\\x62\\x61\\x72'\]\(\)\{\}/);
@@ -26,10 +28,11 @@ describe('MethodDefinitionObfuscator', () => {
     it('should replace method definition node `key` property with unicode array call', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             code,
-            Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+            {
+                ...NO_CUSTOM_NODES_PRESET,
                 stringArray: true,
                 stringArrayThreshold: 1
-            })
+            }
         );
 
         assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-z0-9]){4} *= *\['\\x62\\x61\\x72'\];/);
@@ -39,7 +42,9 @@ describe('MethodDefinitionObfuscator', () => {
     it('should not obfuscate method definition node with `constructor` key', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             code,
-            Object.assign({}, NO_CUSTOM_NODES_PRESET)
+            {
+                ...NO_CUSTOM_NODES_PRESET
+            }
         );
 
         assert.match(obfuscationResult.getObfuscatedCode(),  /constructor\(\)\{\}/);

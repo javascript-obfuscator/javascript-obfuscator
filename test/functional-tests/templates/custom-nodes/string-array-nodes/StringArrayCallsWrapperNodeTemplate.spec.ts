@@ -1,5 +1,7 @@
 import * as format from 'string-template';
 
+import { assert } from 'chai';
+
 import { AtobTemplate } from '../../../../../src/templates/custom-nodes/AtobTemplate';
 import { Rc4Template } from '../../../../../src/templates/custom-nodes/Rc4Template';
 import { StringArrayBase64DecodeNodeTemplate } from '../../../../../src/templates/custom-nodes/string-array-nodes/string-array-calls-wrapper/StringArrayBase64DecodeNodeTemplate';
@@ -7,8 +9,6 @@ import { StringArrayCallsWrapperTemplate } from '../../../../../src/templates/cu
 import { StringArrayRc4DecodeNodeTemplate } from '../../../../../src/templates/custom-nodes/string-array-nodes/string-array-calls-wrapper/StringArrayRC4DecodeNodeTemplate';
 
 import { CryptUtils } from '../../../../../src/utils/CryptUtils';
-
-const assert: Chai.AssertStatic = require('chai').assert;
 
 /**
  * @param templateData

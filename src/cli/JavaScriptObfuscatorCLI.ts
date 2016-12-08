@@ -136,7 +136,10 @@ export class JavaScriptObfuscatorCLI {
             (<any>inputOptions)[option] = (<any>this.commands)[option];
         }
 
-        return Object.assign({}, DEFAULT_PRESET, inputOptions);
+        return {
+            ...DEFAULT_PRESET,
+            ...inputOptions
+        };
     }
 
     private configureCommands (): void {

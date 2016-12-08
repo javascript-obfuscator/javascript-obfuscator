@@ -1,6 +1,8 @@
 /*
 import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
 
+ import { assert } from 'chai';
+
 import { ICustomNode } from '../../../src/interfaces/custom-nodes/ICustomNode';
 import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
 import { IStorage } from '../../../src/interfaces/storages/IStorage';
@@ -8,8 +10,6 @@ import { IStorage } from '../../../src/interfaces/storages/IStorage';
 import { CustomNodes } from '../../../src/enums/container/CustomNodes';
 
 import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
-
-const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('ControlFlowStorage', () => {
     describe('toString (): string', () => {

@@ -162,11 +162,10 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
                 return;
             }
 
-            stackTraceData.push(
-                Object.assign({}, calleeData, {
-                    stackTrace: this.analyzeRecursive(calleeData.callee.body)
-                })
-            );
+            stackTraceData.push({
+                ...calleeData,
+                stackTrace: this.analyzeRecursive(calleeData.callee.body)
+            });
         });
     }
 }

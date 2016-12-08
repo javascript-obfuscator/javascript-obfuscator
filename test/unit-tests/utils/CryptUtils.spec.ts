@@ -1,6 +1,6 @@
-import { CryptUtils } from '../../../src/utils/CryptUtils';
+import { assert } from 'chai';
 
-const assert: Chai.AssertStatic = require('chai').assert;
+import { CryptUtils } from '../../../src/utils/CryptUtils';
 
 describe('CryptUtils', () => {
     describe('btoa (string: string): string', () => {

@@ -2,11 +2,11 @@ import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as sinon from 'sinon';
 
+import { assert } from 'chai';
+
 import { StdoutWriteMock } from '../mocks/StdoutWriteMock';
 
 import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscator';
-
-const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('JavaScriptObfuscatorCLI', function (): void {
     let fixturesDirName: string = 'test/fixtures',

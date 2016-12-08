@@ -1,7 +1,8 @@
 import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
 
-import * as chai from 'chai';
 import * as ESTree from 'estree';
+
+import { assert } from 'chai';
 
 import { TStatement } from '../../../src/types/node/TStatement';
 
@@ -15,8 +16,6 @@ import { InversifyContainerFacade } from '../../../src/container/InversifyContai
 import { NodeAppender } from '../../../src/node/NodeAppender';
 import { NodeMocks } from '../../mocks/NodeMocks';
 import { NodeUtils } from '../../../src/node/NodeUtils';
-
-const assert: any = chai.assert;
 
 describe('NodeAppender', () => {
     describe('appendNode (blockScopeNode: TNodeWithBlockStatement[], nodeBodyStatements: TStatement[]): void', () => {

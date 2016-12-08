@@ -1,8 +1,8 @@
+import { assert } from 'chai';
+
 import { IObfuscationResult } from '../../src/interfaces/IObfuscationResult';
 
 import { ObfuscationResult } from '../../src/ObfuscationResult';
-
-const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('ObfuscationResult', () => {
     describe('constructor (obfuscatedCode: string, sourceMap: string)', () => {

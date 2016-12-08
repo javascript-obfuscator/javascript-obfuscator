@@ -1,6 +1,6 @@
-import { RandomGeneratorUtils } from '../../../src/utils/RandomGeneratorUtils';
+import { assert } from 'chai';
 
-const assert: Chai.AssertStatic = require('chai').assert;
+import { RandomGeneratorUtils } from '../../../src/utils/RandomGeneratorUtils';
 
 describe('RandomGeneratorUtils', () => {
     describe('getRandomVariableName (length: number = 6): string', () => {

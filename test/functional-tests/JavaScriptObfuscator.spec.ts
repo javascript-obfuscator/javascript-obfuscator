@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import { IObfuscationResult } from '../../src/interfaces/IObfuscationResult';
 
 import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscator';
@@ -5,15 +7,15 @@ import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscator';
 import { NO_CUSTOM_NODES_PRESET } from '../../src/preset-options/NoCustomNodesPreset';
 import { readFileAsString } from '../helpers/readFileAsString';
 
-const assert: Chai.AssertStatic = require('chai').assert;
-
 describe('JavaScriptObfuscator', () => {
     describe('obfuscate (sourceCode: string, customOptions?: IObfuscatorOptions): IObfuscationResult', () => {
         describe('if `sourceMap` option is `false`', () => {
             it('should returns object with obfuscated code and empty source map', () => {
                 let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     `var test = 1;`,
-                    Object.assign({}, NO_CUSTOM_NODES_PRESET)
+                    {
+                        ...NO_CUSTOM_NODES_PRESET
+                    }
                 );
 
                 assert.isOk(obfuscationResult.getObfuscatedCode());
@@ -25,9 +27,10 @@ describe('JavaScriptObfuscator', () => {
             it('should returns object with obfuscated code and source map', () => {
                 let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     `var test = 1;`,
-                    Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
                         sourceMap: true
-                    })
+                    }
                 );
 
                 assert.isOk(obfuscationResult.getObfuscatedCode());
@@ -37,10 +40,11 @@ describe('JavaScriptObfuscator', () => {
             it('should returns object with obfuscated code with inline source map as Base64 string', () => {
                 let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     `var test = 1;`,
-                    Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
                         sourceMap: true,
                         sourceMapMode: 'inline'
-                    })
+                    }
                 );
 
                 assert.isOk(obfuscationResult.getObfuscatedCode());
@@ -86,7 +90,9 @@ describe('JavaScriptObfuscator', () => {
             assert.match(
                 JavaScriptObfuscator.obfuscate(
                     `var test = 1;`,
-                    Object.assign({}, NO_CUSTOM_NODES_PRESET)
+                    {
+                        ...NO_CUSTOM_NODES_PRESET
+                    }
                 ).getObfuscatedCode(),
                 /^var *test *= *0x\d+;$/
             );
@@ -96,7 +102,9 @@ describe('JavaScriptObfuscator', () => {
             assert.match(
                 JavaScriptObfuscator.obfuscate(
                     `(function () {var test = 1;})()`,
-                    Object.assign({}, NO_CUSTOM_NODES_PRESET)
+                    {
+                        ...NO_CUSTOM_NODES_PRESET
+                    }
                 ).getObfuscatedCode(),
                 /^\(function *\(\) *\{ *var *_0x[\w]+ *= *0x\d+; *\}(\(\)\)|\)\(\));?$/
             );
@@ -107,17 +115,19 @@ describe('JavaScriptObfuscator', () => {
                 pattern2: RegExp = /var *test *= *_0x(\w){4}\('0x0'\);$/,
                 obfuscatedCode1: string = JavaScriptObfuscator.obfuscate(
                     `var test = 'abc';`,
-                    Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1
-                    })
+                    }
                 ).getObfuscatedCode(),
                 obfuscatedCode2: string = JavaScriptObfuscator.obfuscate(
                     `var test = 'абц';`,
-                    Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1
-                    })
+                    }
                 ).getObfuscatedCode();
 
             assert.match(obfuscatedCode1, pattern1);

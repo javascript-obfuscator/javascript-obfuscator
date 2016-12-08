@@ -1,8 +1,8 @@
+import { assert } from 'chai';
+
 import { readFileAsString } from '../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscator';
-
-const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('JavaScriptObfuscator performance', () => {
     const iterationsCount: number = 500;

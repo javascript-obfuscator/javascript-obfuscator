@@ -1,7 +1,7 @@
+import { assert } from 'chai';
+
 import { initializable } from '../../../src/decorators/Initializable';
 import { IInitializable } from '../../../src/interfaces/IInitializable';
-
-const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('@initializable', () => {
     describe('initializable (initializeMethodKey: string): any', () => {

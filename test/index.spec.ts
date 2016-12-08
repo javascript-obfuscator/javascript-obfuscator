@@ -48,3 +48,8 @@ import './functional-tests/templates/custom-nodes/string-array-nodes/StringArray
  * Performance tests
  */
 import './performance-tests/JavaScriptObfuscatorPerformance.spec';
+
+/**
+ * Runtime tests
+ */
+import './runtime-tests/JavaScriptObfuscatorRuntime.spec';

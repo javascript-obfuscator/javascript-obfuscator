@@ -79,9 +79,10 @@ export class StringArrayCallsWrapper extends AbstractCustomNode implements ICust
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
                 stringArrayName: this.stringArrayName
             }),
-            Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+            {
+                ...NO_CUSTOM_NODES_PRESET,
                 seed: this.options.seed
-            })
+            }
         ).getObfuscatedCode();
     }
 

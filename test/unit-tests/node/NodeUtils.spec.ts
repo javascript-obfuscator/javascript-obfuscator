@@ -1,10 +1,9 @@
-import * as chai from 'chai';
 import * as ESTree from 'estree';
+
+import { assert } from 'chai';
 
 import { NodeMocks } from '../../mocks/NodeMocks';
 import { NodeUtils } from '../../../src/node/NodeUtils';
-
-const assert: any = chai.assert;
 
 describe('NodeUtils', () => {
     describe('addXVerbatimPropertyToLiterals (node: ESTree.Node): void', () => {

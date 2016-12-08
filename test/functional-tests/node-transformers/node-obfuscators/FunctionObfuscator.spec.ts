@@ -1,30 +1,32 @@
+import { assert } from 'chai';
+
 import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResult';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../../src/preset-options/NoCustomNodesPreset';
 
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
 
-const assert: Chai.AssertStatic = require('chai').assert;
-
 describe('FunctionObfuscator', () => {
     describe('identifiers obfuscation inside `FunctionDeclaration` and `FunctionExpression` node body', () => {
         const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             `
-                    (function () {
-                        var test = function (test) {
-                            console.log(test);
-                            
-                            if (true) {
-                                var test = 5
-                            }
-                            
-                            variable = 6;
-                            
-                            return test;
+                (function () {
+                    var test = function (test) {
+                        console.log(test);
+                        
+                        if (true) {
+                            var test = 5
                         }
-                    })();
-                `,
-            Object.assign({}, NO_CUSTOM_NODES_PRESET)
+                        
+                        variable = 6;
+                        
+                        return test;
+                    }
+                })();
+            `,
+            {
+                ...NO_CUSTOM_NODES_PRESET
+            }
         );
         const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
 

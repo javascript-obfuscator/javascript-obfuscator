@@ -1,10 +1,10 @@
+import { assert } from 'chai';
+
 import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResult';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../../src/preset-options/NoCustomNodesPreset';
 
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
-
-const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('VariableDeclarationObfuscator', () => {
     it('should obfuscate `variableDeclaration` node', () => {
@@ -15,7 +15,9 @@ describe('VariableDeclarationObfuscator', () => {
                     console.log(test);
                 }
             `,
-            Object.assign({}, NO_CUSTOM_NODES_PRESET)
+            {
+                ...NO_CUSTOM_NODES_PRESET
+            }
         );
 
         assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-z0-9]){4,6} *= *'\\x61\\x62\\x63';/);
@@ -31,7 +33,9 @@ describe('VariableDeclarationObfuscator', () => {
         
                 console.log(test);
             `,
-            Object.assign({}, NO_CUSTOM_NODES_PRESET)
+            {
+                ...NO_CUSTOM_NODES_PRESET
+            }
         );
 
         assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *0xa;/);
@@ -49,7 +53,9 @@ describe('VariableDeclarationObfuscator', () => {
                     console.log(test);
                 })();
             `,
-            Object.assign({}, NO_CUSTOM_NODES_PRESET)
+            {
+                ...NO_CUSTOM_NODES_PRESET
+            }
         );
 
         assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-z0-9]){4,6}\);/);
@@ -66,7 +72,9 @@ describe('VariableDeclarationObfuscator', () => {
                     console.log(test);
                 })();
             `,
-            Object.assign({}, NO_CUSTOM_NODES_PRESET)
+            {
+                ...NO_CUSTOM_NODES_PRESET
+            }
         );
 
         assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(test\);/);
@@ -91,7 +99,9 @@ describe('VariableDeclarationObfuscator', () => {
                         bar();
                     }
                 `,
-                Object.assign({}, NO_CUSTOM_NODES_PRESET)
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
             );
         });
 
@@ -128,7 +138,9 @@ describe('VariableDeclarationObfuscator', () => {
                         }
                     })();
                 `,
-                Object.assign({}, NO_CUSTOM_NODES_PRESET)
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
             );
         });
 
@@ -166,17 +178,19 @@ describe('VariableDeclarationObfuscator', () => {
         it('shouldn\'t replace property node identifier', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `
-                function foo () {
-                    var test = 'abc';
-                    
-                    var object = {
-                        test: 'cde'
-                    };
-                    
-                    console.log(test);
+                    function foo () {
+                        var test = 'abc';
+                        
+                        var object = {
+                            test: 'cde'
+                        };
+                        
+                        console.log(test);
+                    }
+                `,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
                 }
-            `,
-                Object.assign({}, NO_CUSTOM_NODES_PRESET)
             );
 
             assert.match(obfuscationResult.getObfuscatedCode(),  /var _0x([a-z0-9]){4,6} *= *\{'\\x74\\x65\\x73\\x74/);
@@ -185,18 +199,20 @@ describe('VariableDeclarationObfuscator', () => {
         it('shouldn\'t replace computed member expression identifier', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `
-                function foo () {
-                    var test = 'abc';
-                    
-                    var object = {
-                        'test': 'cde'
-                    };
-                    
-                    console.log(test);
-                    console.log(object.test);
+                    function foo () {
+                        var test = 'abc';
+                        
+                        var object = {
+                            'test': 'cde'
+                        };
+                        
+                        console.log(test);
+                        console.log(object.test);
+                    }
+                `,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
                 }
-            `,
-                Object.assign({}, NO_CUSTOM_NODES_PRESET)
             );
 
             assert.match(obfuscationResult.getObfuscatedCode(),  /_0x([a-z0-9]){4,6}\['\\x74\\x65\\x73\\x74'\]/);

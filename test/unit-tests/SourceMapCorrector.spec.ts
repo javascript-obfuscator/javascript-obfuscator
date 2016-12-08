@@ -1,5 +1,7 @@
 import { ServiceIdentifiers } from '../../src/container/ServiceIdentifiers';
 
+import { assert } from 'chai';
+
 import { TSourceMapMode } from '../../src/types/TSourceMapMode';
 
 import { IInversifyContainerFacade } from '../../src/interfaces/container/IInversifyContainerFacade';
@@ -9,8 +11,6 @@ import { ISourceMapCorrector } from '../../src/interfaces/ISourceMapCorrector';
 import { SourceMapMode } from '../../src/enums/SourceMapMode';
 
 import { InversifyContainerFacade } from '../../src/container/InversifyContainerFacade';
-
-const assert: Chai.AssertStatic = require('chai').assert;
 
 /**
  * @param obfuscatedCode

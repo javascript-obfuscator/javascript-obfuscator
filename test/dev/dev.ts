@@ -8,21 +8,23 @@ if (!(<any>global)._babelPolyfill) {
 (function () {
     const JavaScriptObfuscator: any = require("../../index");
 
-    let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(`
-        (function(){
-            function t () {
-                return function () {
-                    var t = 1 * 2;
+    let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+        `
+            (function(){
+                function t () {
+                    return function () {
+                        var t = 1 * 2;
+                    }
                 }
-            }
-            
-            var s = 1 - 3;
-        })();
-    `,
-        Object.assign({}, NO_CUSTOM_NODES_PRESET,  {
+                
+                var s = 1 - 3;
+            })();
+        `,
+        {
+            ...NO_CUSTOM_NODES_PRESET,
             controlFlowFlattening: true,
             disableConsoleOutput: false
-        })
+        }
     ).getObfuscatedCode();
 
     console.log(obfuscatedCode);

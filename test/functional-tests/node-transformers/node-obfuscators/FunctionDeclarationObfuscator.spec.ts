@@ -1,10 +1,10 @@
+import { assert } from 'chai';
+
 import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResult';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../../src/preset-options/NoCustomNodesPreset';
 
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
-
-const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('FunctionDeclarationObfuscator', () => {
     describe('obfuscation of `functionDeclaration` node names', () => {
@@ -23,7 +23,9 @@ describe('FunctionDeclarationObfuscator', () => {
                     foo();
                 }
             `,
-            Object.assign({}, NO_CUSTOM_NODES_PRESET)
+            {
+                ...NO_CUSTOM_NODES_PRESET
+            }
         );
         const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
 

@@ -59,9 +59,10 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
                 format(SingleNodeCallControllerTemplate(), {
                     singleNodeCallControllerFunctionName: this.callsControllerFunctionName
                 }),
-                Object.assign({}, NO_CUSTOM_NODES_PRESET, {
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
                     seed: this.options.seed
-                })
+                }
             ).getObfuscatedCode();
         }
 

@@ -1,11 +1,10 @@
 import * as format from 'string-template';
 
+import { assert } from 'chai';
+
 import { DomainLockNodeTemplate } from '../../../../../src/templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
 
 import { CryptUtils } from '../../../../../src/utils/CryptUtils';
-
-
-const assert: Chai.AssertStatic = require('chai').assert;
 
 /**
  * @param templateData

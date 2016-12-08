@@ -48,9 +48,10 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
                 selfDefendingFunctionName: RandomGeneratorUtils.getRandomVariableName(),
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
             }),
-            Object.assign({},  NO_CUSTOM_NODES_PRESET, {
+            {
+                ...NO_CUSTOM_NODES_PRESET,
                 seed: this.options.seed
-            })
+            }
         ).getObfuscatedCode();
     }
 }

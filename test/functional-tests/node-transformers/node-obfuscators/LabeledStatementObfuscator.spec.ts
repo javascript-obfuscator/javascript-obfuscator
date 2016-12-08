@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResult';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../../src/preset-options/NoCustomNodesPreset';
@@ -6,15 +8,15 @@ import { readFileAsString } from '../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
 
-const assert: Chai.AssertStatic = require('chai').assert;
-
 describe('LabeledStatementObfuscator', () => {
     describe('changeControlFlow (labeledStatementNode: ESTree.LabeledStatement): void', () => {
         const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             readFileAsString(
                 './test/fixtures/node-transformers/node-obfuscators/labeled-statement-obfuscator/labeled-statement-obfuscator.js'
             ),
-            Object.assign({}, NO_CUSTOM_NODES_PRESET)
+            {
+                ...NO_CUSTOM_NODES_PRESET
+            }
         );
         const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
         const labeledStatementRegExp: RegExp = /(_0x([a-z0-9]){4,6}): *\{/;

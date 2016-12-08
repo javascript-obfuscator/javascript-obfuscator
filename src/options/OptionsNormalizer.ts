@@ -50,7 +50,9 @@ export class OptionsNormalizer {
      * @returns {IOptions}
      */
     public static normalizeOptions (options: IOptions): IOptions {
-        let normalizedOptions: IOptions = Object.assign({}, options);
+        let normalizedOptions: IOptions = {
+            ...options
+        };
 
         for (const normalizerRule of OptionsNormalizer.normalizerRules) {
             normalizedOptions = normalizerRule(normalizedOptions);
@@ -71,9 +73,10 @@ export class OptionsNormalizer {
                 normalizedDomains.push(Utils.extractDomainFromUrl(domain));
             }
 
-            Object.assign(options, {
+            options = {
+                ...options,
                 domainLock: normalizedDomains
-            });
+            };
         }
 
         return options;
@@ -85,7 +88,10 @@ export class OptionsNormalizer {
      */
     private static selfDefendingRule (options: IOptions): IOptions {
         if (options.selfDefending) {
-            Object.assign(options, OptionsNormalizer.SELF_DEFENDING_OPTIONS);
+            options = {
+                ...options,
+                ...OptionsNormalizer.SELF_DEFENDING_OPTIONS
+            };
         }
 
         return options;
@@ -96,20 +102,22 @@ export class OptionsNormalizer {
      * @returns {IOptions}
      */
     private static sourceMapBaseUrlRule (options: IOptions): IOptions {
-        const sourceMapBaseUrl: string = options.sourceMapBaseUrl;
+        const { sourceMapBaseUrl }: { sourceMapBaseUrl: string } = options;
 
         if (!options.sourceMapFileName) {
-            Object.assign(options, {
+            options = {
+                ...options,
                 sourceMapBaseUrl: ''
-            });
+            };
 
             return options;
         }
 
         if (sourceMapBaseUrl && !sourceMapBaseUrl.endsWith('/')) {
-            Object.assign(options, {
+            options = {
+                ...options,
                 sourceMapBaseUrl: `${sourceMapBaseUrl}/`
-            });
+            };
         }
 
         return options;
@@ -120,16 +128,17 @@ export class OptionsNormalizer {
      * @returns {IOptions}
      */
     private static sourceMapFileNameRule (options: IOptions): IOptions {
-        let sourceMapFileName: string = options.sourceMapFileName;
+        let { sourceMapFileName }: { sourceMapFileName: string } = options;
 
         if (sourceMapFileName) {
             sourceMapFileName = sourceMapFileName
                 .replace(/^\/+/, '')
                 .split('.')[0];
 
-            Object.assign(options, {
+            options = {
+                ...options,
                 sourceMapFileName: `${sourceMapFileName}.js.map`
-            });
+            };
         }
 
         return options;
@@ -141,7 +150,10 @@ export class OptionsNormalizer {
      */
     private static stringArrayRule (options: IOptions): IOptions {
         if (!options.stringArray) {
-            Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
+            options = {
+                ...options,
+                ...OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS
+            };
         }
 
         return options;
@@ -153,7 +165,10 @@ export class OptionsNormalizer {
      */
     private static stringArrayEncodingRule (options: IOptions): IOptions {
         if (options.stringArrayEncoding === true) {
-            Object.assign(options, OptionsNormalizer.UNICODE_ARRAY_ENCODING_OPTIONS);
+            options = {
+                ...options,
+                ...OptionsNormalizer.UNICODE_ARRAY_ENCODING_OPTIONS
+            };
         }
 
         return options;
@@ -165,7 +180,10 @@ export class OptionsNormalizer {
      */
     private static stringArrayThresholdRule (options: IOptions): IOptions {
         if (options.stringArrayThreshold === 0) {
-            Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
+            options = {
+                ...options,
+                ...OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS
+            };
         }
 
         return options;

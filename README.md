@@ -6,7 +6,7 @@
 
 # JavaScript obfuscator for Node.js
 
-JavaScript obfuscator for Node.js is a free alternative to [js-obfuscator](https://github.com/caiguanhao/js-obfuscator) (which uses [javascriptobfuscator.com](https://javascriptobfuscator.com/Javascript-Obfuscator.aspx))
+JavaScript obfuscator for Node.js is a free obfuscator with wide number of features which provides protection for your source code.
 
 * without any limits and sending data to a server;
 * compatible with ES6;
@@ -118,6 +118,7 @@ Following options available for the JS Obfuscator:
 ```javascript
 {
     compact: true,
+    controlFlowFlattening: false,
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: true,
@@ -144,6 +145,7 @@ Following options available for the JS Obfuscator:
     -o, --output
 
     --compact <boolean>
+    --controlFlowFlattening <boolean>
     --debugProtection <boolean>
     --debugProtectionInterval <boolean>
     --disableConsoleOutput <boolean>
@@ -165,6 +167,48 @@ Following options available for the JS Obfuscator:
 Type: `boolean` Default: `true`
 
 Compact code output on one line.
+
+### `controlFlowFlattening`
+Type: `boolean` Default: `false`
+
+Enables code control flow flattening. Control flow flattening is a structure transformation of the source code that hindering the comprehension of the program.
+
+Example:
+```ts
+// input
+(function(){
+    function foo () {
+        return function () {
+            var sum = 1 + 2;
+        }
+    }
+})();
+
+// output
+(function() {
+    var _0x451dc8 = {
+        '\x44\x64\x4f': function _0x3(_0x4ea314, _0x4fa62e) {
+            return _0x4ea314 + _0x4fa62e;
+        }
+    };
+
+    function _0x5382d8() {
+        var _0x349b22 = {
+            '\x48\x65\x61': function _0x2(_0x14a596, _0x250c4b) {
+                return _0x451dc8['\x44\x64\x4f'](_0x14a596, _0x250c4b);
+            }
+        };
+        return function() {
+            var _0x412353 = {
+                '\x73\x47\x6f': function _0x4(_0x43c6b0, _0x133730) {
+                    return _0x349b22['\x48\x65\x61'](_0x43c6b0, _0x133730);
+                }
+            };
+            var _0x1d8637 = _0x412353['\x73\x47\x6f'](0x1, 0x2);
+        };
+    }
+}());
+```
 
 ### `debugProtection`
 Type: `boolean` Default: `false`
@@ -202,7 +246,7 @@ Type: `string[]` Default: `[]`
 Disables the obfuscation of variables names, function names and function parameters that match the Regular Expression used.
 
 Example:
-```javascript
+```ts
 	{
 		reservedNames: [
 			'^someVariable',

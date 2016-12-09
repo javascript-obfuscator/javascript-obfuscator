@@ -11,13 +11,11 @@ if (!(<any>global)._babelPolyfill) {
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
             (function(){
-                function t () {
+                function foo () {
                     return function () {
-                        var t = 1 * 2;
+                        var sum = 1 + 2;
                     }
                 }
-                
-                var s = 1 - 3;
             })();
         `,
         {

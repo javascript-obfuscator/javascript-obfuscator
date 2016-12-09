@@ -20,7 +20,7 @@
     "javascript-obfuscator": "./bin/javascript-obfuscator.js"
   },
   "dependencies": {
-    "babel-polyfill": "6.16.0",
+    "babel-polyfill": "6.20.0",
     "chance": "1.0.4",
     "class-validator": "0.6.6",
     "commander": "2.9.0",

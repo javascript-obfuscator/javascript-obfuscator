@@ -3,30 +3,30 @@ import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { IControlFlowReplacer } from '../../../interfaces/node-transformers/IControlFlowReplacer';
 
-import { NodeControlFlowTransformersReplacers } from '../../../enums/container/NodeControlFlowTransformersReplacers';
+import { NodeControlFlowReplacers } from '../../../enums/container/NodeControlFlowReplacers';
 
 import { BinaryExpressionControlFlowReplacer } from '../../../node-transformers/node-control-flow-transformers/control-flow-replacers/BinaryExpressionControlFlowReplacer';
 
 export const nodeControlFlowTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
         .to(BinaryExpressionControlFlowReplacer)
-        .whenTargetNamed(NodeControlFlowTransformersReplacers.BinaryExpressionControlFlowReplacer);
+        .whenTargetNamed(NodeControlFlowReplacers.BinaryExpressionControlFlowReplacer);
 
     bind<IControlFlowReplacer>(ServiceIdentifiers['Factory<IControlFlowReplacer>'])
         .toFactory<IControlFlowReplacer>((context: interfaces.Context) => {
-            const cache: Map <NodeControlFlowTransformersReplacers, IControlFlowReplacer> = new Map <NodeControlFlowTransformersReplacers, IControlFlowReplacer> ();
+            const cache: Map <NodeControlFlowReplacers, IControlFlowReplacer> = new Map <NodeControlFlowReplacers, IControlFlowReplacer> ();
 
-            return (replacer: NodeControlFlowTransformersReplacers) => {
-                if (cache.has(replacer)) {
-                    return <IControlFlowReplacer>cache.get(replacer);
+            return (replacerName: NodeControlFlowReplacers) => {
+                if (cache.has(replacerName)) {
+                    return <IControlFlowReplacer>cache.get(replacerName);
                 }
 
                 const controlFlowReplacer: IControlFlowReplacer = context.container.getNamed<IControlFlowReplacer>(
                     ServiceIdentifiers.IControlFlowReplacer,
-                    replacer
+                    replacerName
                 );
 
-                cache.set(replacer, controlFlowReplacer);
+                cache.set(replacerName, controlFlowReplacer);
 
                 return controlFlowReplacer;
             };

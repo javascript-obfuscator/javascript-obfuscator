@@ -4,23 +4,34 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
+import { TCustomNodeFactory } from '../../../types/container/TCustomNodeFactory';
+
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
+import { CustomNodes } from '../../../enums/container/CustomNodes';
+
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
-import { BinaryExpressionFunctionNode } from '../../../custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/BinaryExpressionFunctionNode';
-import { ControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/ControlFlowStorageCallNode';
 
 @injectable()
 export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowReplacer {
     /**
+     * @type {TCustomNodeFactory}
+     */
+    private readonly customNodeFactory: TCustomNodeFactory;
+
+    /**
+     * @param customNodeFactory
      * @param options
      */
     constructor (
+        @inject(ServiceIdentifiers['Factory<ICustomNode>']) customNodeFactory: TCustomNodeFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+
+        this.customNodeFactory = customNodeFactory;
     }
 
     /**
@@ -47,21 +58,18 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
         controlFlowStorageCustomNodeName: string
     ): ICustomNode {
         const key: string = AbstractControlFlowReplacer.getStorageKey();
-        const binaryExpressionFunctionNode = new BinaryExpressionFunctionNode(this.options);
+        const binaryExpressionFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.BinaryExpressionFunctionNode);
+        const controlFlowStorageCallNode: ICustomNode = this.customNodeFactory(CustomNodes.ControlFlowStorageCallNode);
 
-        // TODO: pass through real stackTraceData
         binaryExpressionFunctionNode.initialize(binaryExpressionNode.operator);
-
-        controlFlowStorage.set(key, binaryExpressionFunctionNode);
-
-        const controlFlowStorageCallNode: ICustomNode = new ControlFlowStorageCallNode(this.options);
-
         controlFlowStorageCallNode.initialize(
             controlFlowStorageCustomNodeName,
             key,
             BinaryExpressionControlFlowReplacer.getExpressionValue(binaryExpressionNode.left),
             BinaryExpressionControlFlowReplacer.getExpressionValue(binaryExpressionNode.right)
         );
+
+        controlFlowStorage.set(key, binaryExpressionFunctionNode);
 
         return controlFlowStorageCallNode;
     }

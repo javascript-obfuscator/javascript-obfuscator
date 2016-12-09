@@ -31,17 +31,17 @@ export const nodeObfuscatorsModule: interfaces.ContainerModule = new ContainerMo
         .toFactory<IReplacer>((context: interfaces.Context) => {
             const cache: Map <NodeObfuscatorsReplacers, IReplacer> = new Map <NodeObfuscatorsReplacers, IReplacer> ();
 
-            return (replacer: NodeObfuscatorsReplacers) => {
-                if (cache.has(replacer)) {
-                    return <IReplacer>cache.get(replacer);
+            return (replacerName: NodeObfuscatorsReplacers) => {
+                if (cache.has(replacerName)) {
+                    return <IReplacer>cache.get(replacerName);
                 }
 
                 const obfuscationReplacer: IReplacer = context.container.getNamed<IReplacer>(
                     ServiceIdentifiers.IReplacer,
-                    replacer
+                    replacerName
                 );
 
-                cache.set(replacer, obfuscationReplacer);
+                cache.set(replacerName, obfuscationReplacer);
 
                 return obfuscationReplacer;
             };

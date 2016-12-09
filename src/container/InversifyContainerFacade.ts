@@ -6,6 +6,7 @@ import { nodeControlFlowTransformersModule } from './modules/node-transformers/N
 import { nodeObfuscatorsModule } from './modules/node-transformers/NodeObfuscatorsModule';
 import { nodeTransformersModule } from './modules/node-transformers/NodeTransformersModule';
 import { stackTraceAnalyzerModule } from './modules/stack-trace-analyzer/StackTraceAnalyzerModule';
+import { storagesModule } from './modules/storages/StoragesModule';
 
 import { TInputOptions } from '../types/options/TInputOptions';
 
@@ -23,9 +24,6 @@ import { ObfuscationResult } from '../ObfuscationResult';
 import { Obfuscator } from '../Obfuscator';
 import { Options } from "../options/Options";
 import { SourceMapCorrector } from '../SourceMapCorrector';
-import { IStorage } from '../interfaces/storages/IStorage';
-import { ICustomNodeGroup } from '../interfaces/custom-nodes/ICustomNodeGroup';
-import { CustomNodeGroupStorage } from '../storages/custom-node-group/CustomNodeGroupStorage';
 
 export class InversifyContainerFacade implements IInversifyContainerFacade {
     /**
@@ -80,16 +78,12 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
             .inSingletonScope();
 
         this.container
-            .bind<IStorage<ICustomNodeGroup>>(ServiceIdentifiers['IStorage<ICustomNodeGroup>'])
-            .to(CustomNodeGroupStorage)
-            .inSingletonScope();
-
-        this.container
             .bind<IObfuscationEventEmitter>(ServiceIdentifiers.IObfuscationEventEmitter)
             .to(ObfuscationEventEmitter)
             .inSingletonScope();
 
         // modules
+        this.container.load(storagesModule);
         this.container.load(stackTraceAnalyzerModule);
         this.container.load(customNodesModule);
         this.container.load(nodeTransformersModule);

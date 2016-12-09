@@ -206,40 +206,44 @@ exports.RandomGeneratorUtils = RandomGeneratorUtils;
 "use strict";
 "use strict";
 
+var __assign = undefined && undefined.__assign || Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) {
+            if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+    }
+    return t;
+};
 function initializable() {
     var initializeMethodKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'initialize';
 
     var decoratorName = Object.keys(this)[0];
     return function (target, propertyKey) {
+        var descriptor = {
+            configurable: true,
+            enumerable: true
+        };
         var initializeMethod = target[initializeMethodKey];
         if (!initializeMethod || typeof initializeMethod !== 'function') {
             throw new Error('`' + initializeMethodKey + '` method with initialization logic not found. `@' + decoratorName + '` decorator requires `' + initializeMethodKey + '` method');
         }
-        var methodDescriptor = Object.getOwnPropertyDescriptor(target, initializeMethodKey) || {
-            configurable: true,
-            enumerable: true
-        };
-        var originalMethod = methodDescriptor.value;
-        methodDescriptor.value = function () {
-            originalMethod.apply(this, arguments);
-            if (this[propertyKey]) {}
-        };
-        Object.defineProperty(target, initializeMethodKey, methodDescriptor);
         var metadataPropertyKey = '_' + propertyKey;
-        var propertyDescriptor = Object.getOwnPropertyDescriptor(target, metadataPropertyKey) || {
-            configurable: true,
-            enumerable: true
-        };
-        propertyDescriptor.get = function () {
-            if (this[metadataPropertyKey] === undefined) {
-                throw new Error('Property `' + propertyKey + '` is not initialized! Initialize it first!');
-            }
-            return this[metadataPropertyKey];
-        };
-        propertyDescriptor.set = function (newVal) {
-            this[metadataPropertyKey] = newVal;
-        };
-        Object.defineProperty(target, propertyKey, propertyDescriptor);
+        var propertyDescriptor = Object.getOwnPropertyDescriptor(target, metadataPropertyKey) || descriptor;
+        var methodDescriptor = Object.getOwnPropertyDescriptor(target, initializeMethodKey) || descriptor;
+        var originalMethod = methodDescriptor.value;
+        Object.defineProperty(target, propertyKey, __assign({}, propertyDescriptor, { get: function get() {
+                if (this[metadataPropertyKey] === undefined) {
+                    throw new Error('Property `' + propertyKey + '` is not initialized! Initialize it first!');
+                }
+                return this[metadataPropertyKey];
+            }, set: function set(newVal) {
+                this[metadataPropertyKey] = newVal;
+            } }));
+        Object.defineProperty(target, initializeMethodKey, __assign({}, methodDescriptor, { value: function value() {
+                originalMethod.apply(this, arguments);
+                if (this[propertyKey]) {}
+            } }));
         return propertyDescriptor;
     };
 }

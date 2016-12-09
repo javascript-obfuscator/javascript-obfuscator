@@ -1,15 +1,16 @@
-import { IObfuscatorOptions } from '../interfaces/IObfuscatorOptions';
-import { IOptions } from '../interfaces/IOptions';
+import { TInputOptions } from '../types/options/TInputOptions';
 
-import { TOptionsNormalizerRule } from '../types/TOptionsNormalizerRule';
+import { IOptions } from '../interfaces/options/IOptions';
 
-import { Utils } from '../Utils';
+import { TOptionsNormalizerRule } from '../types/options/TOptionsNormalizerRule';
+
+import { Utils } from '../utils/Utils';
 
 export class OptionsNormalizer {
     /**
-     * @type {IObfuscatorOptions}
+     * @type {TInputOptions}
      */
-    private static DISABLED_UNICODE_ARRAY_OPTIONS: IObfuscatorOptions = {
+    private static readonly DISABLED_UNICODE_ARRAY_OPTIONS: TInputOptions = {
         rotateStringArray: false,
         stringArray: false,
         stringArrayEncoding: false,
@@ -17,24 +18,24 @@ export class OptionsNormalizer {
     };
 
     /**
-     * @type {IObfuscatorOptions}
+     * @type {TInputOptions}
      */
-    private static SELF_DEFENDING_OPTIONS: IObfuscatorOptions = {
+    private static readonly SELF_DEFENDING_OPTIONS: TInputOptions = {
         compact: true,
         selfDefending: true
     };
 
     /**
-     * @type {IObfuscatorOptions}
+     * @type {TInputOptions}
      */
-    private static UNICODE_ARRAY_ENCODING_OPTIONS: IObfuscatorOptions = {
+    private static readonly UNICODE_ARRAY_ENCODING_OPTIONS: TInputOptions = {
         stringArrayEncoding: 'base64'
     };
 
     /**
      * @type {TOptionsNormalizerRule[]}
      */
-    private static normalizerRules: TOptionsNormalizerRule[] = [
+    private static readonly normalizerRules: TOptionsNormalizerRule[] = [
         OptionsNormalizer.domainLockRule,
         OptionsNormalizer.selfDefendingRule,
         OptionsNormalizer.sourceMapBaseUrlRule,
@@ -49,7 +50,9 @@ export class OptionsNormalizer {
      * @returns {IOptions}
      */
     public static normalizeOptions (options: IOptions): IOptions {
-        let normalizedOptions: IOptions = Object.assign({}, options);
+        let normalizedOptions: IOptions = {
+            ...options
+        };
 
         for (const normalizerRule of OptionsNormalizer.normalizerRules) {
             normalizedOptions = normalizerRule(normalizedOptions);
@@ -64,15 +67,16 @@ export class OptionsNormalizer {
      */
     private static domainLockRule (options: IOptions): IOptions {
         if (options.domainLock.length) {
-            let normalizedDomains: string[] = [];
+            const normalizedDomains: string[] = [];
 
             for (const domain of options.domainLock) {
                 normalizedDomains.push(Utils.extractDomainFromUrl(domain));
             }
 
-            Object.assign(options, {
+            options = {
+                ...options,
                 domainLock: normalizedDomains
-            });
+            };
         }
 
         return options;
@@ -84,7 +88,10 @@ export class OptionsNormalizer {
      */
     private static selfDefendingRule (options: IOptions): IOptions {
         if (options.selfDefending) {
-            Object.assign(options, OptionsNormalizer.SELF_DEFENDING_OPTIONS);
+            options = {
+                ...options,
+                ...OptionsNormalizer.SELF_DEFENDING_OPTIONS
+            };
         }
 
         return options;
@@ -95,20 +102,22 @@ export class OptionsNormalizer {
      * @returns {IOptions}
      */
     private static sourceMapBaseUrlRule (options: IOptions): IOptions {
-        let sourceMapBaseUrl: string = options.sourceMapBaseUrl;
+        const { sourceMapBaseUrl }: { sourceMapBaseUrl: string } = options;
 
         if (!options.sourceMapFileName) {
-            Object.assign(options, {
+            options = {
+                ...options,
                 sourceMapBaseUrl: ''
-            });
+            };
 
             return options;
         }
 
         if (sourceMapBaseUrl && !sourceMapBaseUrl.endsWith('/')) {
-            Object.assign(options, {
+            options = {
+                ...options,
                 sourceMapBaseUrl: `${sourceMapBaseUrl}/`
-            });
+            };
         }
 
         return options;
@@ -119,16 +128,17 @@ export class OptionsNormalizer {
      * @returns {IOptions}
      */
     private static sourceMapFileNameRule (options: IOptions): IOptions {
-        let sourceMapFileName: string = options.sourceMapFileName;
+        let { sourceMapFileName }: { sourceMapFileName: string } = options;
 
         if (sourceMapFileName) {
             sourceMapFileName = sourceMapFileName
                 .replace(/^\/+/, '')
                 .split('.')[0];
 
-            Object.assign(options, {
+            options = {
+                ...options,
                 sourceMapFileName: `${sourceMapFileName}.js.map`
-            });
+            };
         }
 
         return options;
@@ -140,7 +150,10 @@ export class OptionsNormalizer {
      */
     private static stringArrayRule (options: IOptions): IOptions {
         if (!options.stringArray) {
-            Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
+            options = {
+                ...options,
+                ...OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS
+            };
         }
 
         return options;
@@ -152,7 +165,10 @@ export class OptionsNormalizer {
      */
     private static stringArrayEncodingRule (options: IOptions): IOptions {
         if (options.stringArrayEncoding === true) {
-            Object.assign(options, OptionsNormalizer.UNICODE_ARRAY_ENCODING_OPTIONS);
+            options = {
+                ...options,
+                ...OptionsNormalizer.UNICODE_ARRAY_ENCODING_OPTIONS
+            };
         }
 
         return options;
@@ -164,7 +180,10 @@ export class OptionsNormalizer {
      */
     private static stringArrayThresholdRule (options: IOptions): IOptions {
         if (options.stringArrayThreshold === 0) {
-            Object.assign(options, OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS);
+            options = {
+                ...options,
+                ...OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS
+            };
         }
 
         return options;

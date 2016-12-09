@@ -1,30 +1,34 @@
+import { injectable } from 'inversify';
+
 import {
-    ArrayUnique,
-    IsBoolean,
-    IsArray,
-    IsIn,
-    IsNumber,
-    IsString,
-    IsUrl,
-    Min,
-    Max,
-    ValidateIf,
-    validateSync,
-    ValidationError,
-    ValidatorOptions
+ArrayUnique,
+IsBoolean,
+IsArray,
+IsIn,
+IsNumber,
+IsString,
+IsUrl,
+Min,
+Max,
+ValidateIf,
+validateSync,
+ValidationError,
+ValidatorOptions
 } from 'class-validator';
 
-import { IObfuscatorOptions } from '../interfaces/IObfuscatorOptions';
-import { IOptions } from '../interfaces/IOptions';
+import { TInputOptions } from '../types/options/TInputOptions';
+
+import { IOptions } from '../interfaces/options/IOptions';
 
 import { TSourceMapMode } from '../types/TSourceMapMode';
-import { TStringArrayEncoding } from '../types/TStringArrayEncoding';
+import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 
 import { DEFAULT_PRESET } from '../preset-options/DefaultPreset';
 
 import { OptionsNormalizer } from './OptionsNormalizer';
 import { ValidationErrorsFormatter } from './ValidationErrorsFormatter';
 
+@injectable()
 export class Options implements IOptions {
     /**
      * @type {ValidatorOptions}
@@ -40,6 +44,12 @@ export class Options implements IOptions {
      */
     @IsBoolean()
     public readonly compact: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
+    public readonly controlFlowFlattening: boolean;
 
     /**
      * @type {boolean}
@@ -153,12 +163,12 @@ export class Options implements IOptions {
     public readonly unicodeEscapeSequence: boolean;
 
     /**
-     * @param obfuscatorOptions
+     * @param inputOptions
      */
-    constructor (obfuscatorOptions: IObfuscatorOptions) {
-        Object.assign(this, DEFAULT_PRESET, obfuscatorOptions);
+    constructor (inputOptions: TInputOptions) {
+        Object.assign(this, DEFAULT_PRESET, inputOptions);
 
-        let errors: ValidationError[] = validateSync(this, Options.validatorOptions);
+        const errors: ValidationError[] = validateSync(this, Options.validatorOptions);
 
         if (errors.length) {
             throw new ReferenceError(`Validation failed. errors:\n${ValidationErrorsFormatter.format(errors)}`);

@@ -1,54 +1,46 @@
-import 'format-unicorn';
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-import { TStatement } from '../../types/TStatement';
+import * as format from 'string-template';
 
-import { IOptions } from '../../interfaces/IOptions';
+import { IOptions } from '../../interfaces/options/IOptions';
 
-import { AppendState } from '../../enums/AppendState';
+import { initializable } from '../../decorators/Initializable';
 
 import { DebugProtectionFunctionCallTemplate } from '../../templates/custom-nodes/debug-protection-nodes/debug-protection-function-call-node/DebufProtectionFunctionCallTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { NodeAppender } from '../../node/NodeAppender';
-import { NodeUtils } from '../../node/NodeUtils';
 
+@injectable()
 export class DebugProtectionFunctionCallNode extends AbstractCustomNode {
-    /**
-     * @type {AppendState}
-     */
-    protected appendState: AppendState = AppendState.BeforeObfuscation;
-
     /**
      * @type {string}
      */
+    @initializable()
     private debugProtectionFunctionName: string;
 
     /**
-     * @param debugProtectionFunctionName
      * @param options
      */
-    constructor (debugProtectionFunctionName: string, options: IOptions) {
+    constructor (
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
         super(options);
+    }
 
+    /**
+     * @param debugProtectionFunctionName
+     */
+    public initialize (debugProtectionFunctionName: string): void {
         this.debugProtectionFunctionName = debugProtectionFunctionName;
     }
 
     /**
-     * @param blockScopeNode
+     * @returns {string}
      */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        NodeAppender.appendNode(blockScopeNode, this.getNode());
-    }
-
-    /**
-     * @returns {TStatement[]}
-     */
-    protected getNodeStructure (): TStatement[] {
-        return NodeUtils.convertCodeToStructure(
-            DebugProtectionFunctionCallTemplate().formatUnicorn({
-                debugProtectionFunctionName: this.debugProtectionFunctionName
-            })
-        );
+    public getCode (): string {
+        return format(DebugProtectionFunctionCallTemplate(), {
+            debugProtectionFunctionName: this.debugProtectionFunctionName
+        });
     }
 }

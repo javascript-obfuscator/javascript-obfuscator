@@ -1,87 +1,84 @@
-import 'format-unicorn';
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-import { TStatement } from '../../types/TStatement';
+import * as format from 'string-template';
 
-import { IOptions } from '../../interfaces/IOptions';
+import { TStatement } from '../../types/node/TStatement';
 
-import { AppendState } from '../../enums/AppendState';
+import { ICustomNodeWithData } from '../../interfaces/custom-nodes/ICustomNodeWithData';
+import { IOptions } from '../../interfaces/options/IOptions';
+import { IStorage } from '../../interfaces/storages/IStorage';
 
-import { StringArray } from '../../StringArray';
+import { initializable } from '../../decorators/Initializable';
 
 import { StringArrayTemplate } from '../../templates/custom-nodes/string-array-nodes/string-array-node/StringArrayTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { NodeAppender } from '../../node/NodeAppender';
-import { NodeUtils } from '../../node/NodeUtils';
+import { StringArrayStorage } from '../../storages/string-array/StringArrayStorage';
 
-export class StringArrayNode extends AbstractCustomNode {
+@injectable()
+export class StringArrayNode extends AbstractCustomNode implements ICustomNodeWithData {
     /**
      * @type {number}
      */
     public static ARRAY_RANDOM_LENGTH: number = 4;
 
     /**
-     * @type {AppendState}
+     * @type {IStorage <string>}
      */
-    protected appendState: AppendState = AppendState.AfterObfuscation;
-
-    /**
-     * @type {StringArray}
-     */
-    private stringArray: StringArray;
+    @initializable()
+    private stringArray: IStorage <string>;
 
     /**
      * @type {string}
      */
+    @initializable()
     private stringArrayName: string;
 
     /**
      * @type {number}
      */
+    @initializable()
     private stringArrayRotateValue: number;
+
+    /**
+     * @param options
+     */
+    constructor (
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
+        super(options);
+    }
 
     /**
      * @param stringArray
      * @param stringArrayName
      * @param stringArrayRotateValue
-     * @param options
      */
-    constructor (
-        stringArray: StringArray,
+    public initialize (
+        stringArray: IStorage <string>,
         stringArrayName: string,
-        stringArrayRotateValue: number = 0,
-        options: IOptions
-    ) {
-        super(options);
-
+        stringArrayRotateValue: number
+    ): void {
         this.stringArray = stringArray;
         this.stringArrayName = stringArrayName;
         this.stringArrayRotateValue = stringArrayRotateValue;
     }
 
     /**
-     * @param blockScopeNode
-     */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        if (!this.stringArray.getLength()) {
-            return;
-        }
-
-        NodeAppender.prependNode(blockScopeNode, this.getNode());
-    }
-
-    /**
      * @returns {string}
      */
-    public getNodeIdentifier (): string {
-        return this.stringArrayName;
+    public getCode (): string {
+        return format(StringArrayTemplate(), {
+            stringArrayName: this.stringArrayName,
+            stringArray: this.stringArray.toString()
+        });
     }
 
     /**
-     * @returns {StringArray}
+     * @returns {IStorage <string>}
      */
-    public getNodeData (): StringArray {
+    public getNodeData (): IStorage <string> {
         return this.stringArray;
     }
 
@@ -89,27 +86,8 @@ export class StringArrayNode extends AbstractCustomNode {
      * @returns {TStatement[]}
      */
     public getNode (): TStatement[] {
-        this.stringArray.rotateArray(this.stringArrayRotateValue);
+        (<StringArrayStorage>this.stringArray).rotateArray(this.stringArrayRotateValue);
 
         return super.getNode();
-    }
-
-    /**
-     * @param data
-     */
-    public updateNodeData (data: string): void {
-        this.stringArray.addToArray(data);
-    }
-
-    /**
-     * @returns {TStatement[]}
-     */
-    protected getNodeStructure (): TStatement[] {
-        return NodeUtils.convertCodeToStructure(
-            StringArrayTemplate().formatUnicorn({
-                stringArrayName: this.stringArrayName,
-                stringArray: this.stringArray.toString()
-            })
-        );
     }
 }

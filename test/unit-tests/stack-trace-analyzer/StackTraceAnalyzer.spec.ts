@@ -1,8 +1,6 @@
-import * as chai from 'chai';
+import { assert } from 'chai';
 
 import { StackTraceAnalyzer } from '../../../src/stack-trace-analyzer/StackTraceAnalyzer';
-
-const assert: any = chai.assert;
 
 describe('StackTraceAnalyzer', () => {
     describe('getLimitIndex (blockScopeBodyLength: number): number', () => {

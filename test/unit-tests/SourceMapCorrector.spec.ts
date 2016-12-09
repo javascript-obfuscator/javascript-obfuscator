@@ -1,35 +1,41 @@
-import { IObfuscationResult } from '../../src/interfaces/IObfuscationResult';
-import { ISourceMapCorrector } from '../../src/interfaces/ISourceMapCorrector';
+import { ServiceIdentifiers } from '../../src/container/ServiceIdentifiers';
+
+import { assert } from 'chai';
 
 import { TSourceMapMode } from '../../src/types/TSourceMapMode';
 
+import { IInversifyContainerFacade } from '../../src/interfaces/container/IInversifyContainerFacade';
+import { IObfuscationResult } from '../../src/interfaces/IObfuscationResult';
+import { ISourceMapCorrector } from '../../src/interfaces/ISourceMapCorrector';
+
 import { SourceMapMode } from '../../src/enums/SourceMapMode';
 
-import { ObfuscationResult } from '../../src/ObfuscationResult';
-import { SourceMapCorrector } from '../../src/SourceMapCorrector';
-
-const assert: Chai.AssertStatic = require('chai').assert;
+import { InversifyContainerFacade } from '../../src/container/InversifyContainerFacade';
 
 /**
  * @param obfuscatedCode
  * @param sourceMap
- * @param sourceMapUrl
+ * @param sourceMapBaseUrl
+ * @param sourceMapFileName
  * @param sourceMapMode
  */
 function getCorrectedObfuscationResult (
     obfuscatedCode: string,
     sourceMap: string,
-    sourceMapUrl: string,
+    sourceMapBaseUrl: string,
+    sourceMapFileName: string,
     sourceMapMode: TSourceMapMode
 ): IObfuscationResult {
-    let obfuscationResult: IObfuscationResult = new ObfuscationResult(obfuscatedCode, sourceMap),
-        sourceMapCorrector: ISourceMapCorrector = new SourceMapCorrector(
-            obfuscationResult,
-            sourceMapUrl,
-            sourceMapMode
-        );
+    const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade({
+        sourceMap: true,
+        sourceMapBaseUrl: sourceMapBaseUrl,
+        sourceMapFileName: sourceMapFileName,
+        sourceMapMode: sourceMapMode
+    });
+    const sourceMapCorrector: ISourceMapCorrector = inversifyContainerFacade
+        .get<ISourceMapCorrector>(ServiceIdentifiers.ISourceMapCorrector);
 
-    return sourceMapCorrector.correct();
+    return sourceMapCorrector.correct(obfuscatedCode, sourceMap);
 }
 
 describe('SourceMapCorrector', () => {
@@ -39,7 +45,13 @@ describe('SourceMapCorrector', () => {
             sourceMap: string = 'test';
 
         it('should return untouched obfuscated code if source map does not exist', () => {
-            expectedObfuscationResult = getCorrectedObfuscationResult(obfuscatedCode, '', '', SourceMapMode.Separate);
+            expectedObfuscationResult = getCorrectedObfuscationResult(
+                obfuscatedCode,
+                '',
+                '',
+                '',
+                SourceMapMode.Separate)
+            ;
 
             assert.equal(expectedObfuscationResult.getObfuscatedCode(), obfuscatedCode);
         });
@@ -49,6 +61,7 @@ describe('SourceMapCorrector', () => {
                 expectedObfuscationResult = getCorrectedObfuscationResult(
                     obfuscatedCode,
                     sourceMap,
+                    '',
                     '',
                     SourceMapMode.Inline
                 );
@@ -63,17 +76,19 @@ describe('SourceMapCorrector', () => {
             expectedObfuscationResult = getCorrectedObfuscationResult(
                 obfuscatedCode,
                 sourceMap,
+                'http://example.com',
                 'output.js.map',
                 SourceMapMode.Separate
             );
 
-            assert.match(expectedObfuscationResult.getObfuscatedCode(), /sourceMappingURL=output\.js\.map/);
+            assert.match(expectedObfuscationResult.getObfuscatedCode(), /sourceMappingURL=http:\/\/example\.com\/output\.js\.map/);
         });
 
         it('should not touch obfuscated code if source map mode is `separate` and `sourceMapUrl` is not set', () => {
             expectedObfuscationResult = getCorrectedObfuscationResult(
                 obfuscatedCode,
                 sourceMap,
+                '',
                 '',
                 SourceMapMode.Separate
             );

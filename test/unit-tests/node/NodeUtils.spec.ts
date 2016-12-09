@@ -1,10 +1,9 @@
-import * as chai from 'chai';
 import * as ESTree from 'estree';
+
+import { assert } from 'chai';
 
 import { NodeMocks } from '../../mocks/NodeMocks';
 import { NodeUtils } from '../../../src/node/NodeUtils';
-
-const assert: any = chai.assert;
 
 describe('NodeUtils', () => {
     describe('addXVerbatimPropertyToLiterals (node: ESTree.Node): void', () => {
@@ -156,6 +155,88 @@ describe('NodeUtils', () => {
 
         it('should throw a `ReferenceError` if node has no `parentNode` property', () => {
             assert.throws(() => NodeUtils.getBlockScopeOfNode(expressionStatementNode2), ReferenceError);
+        });
+    });
+
+
+    describe('getNodeBlockScopeDepth (node: ESTree.Node, depth: number = 0): number', () => {
+        let functionDeclarationBlockStatementNode1: ESTree.BlockStatement,
+            functionDeclarationBlockStatementNode2: ESTree.BlockStatement,
+            ifStatementBlockStatementNode1: ESTree.BlockStatement,
+            ifStatementBlockStatementNode2: ESTree.BlockStatement,
+            ifStatementNode1: ESTree.IfStatement,
+            ifStatementNode2: ESTree.IfStatement,
+            expressionStatementNode1: ESTree.ExpressionStatement,
+            expressionStatementNode2: ESTree.ExpressionStatement,
+            expressionStatementNode3: ESTree.ExpressionStatement,
+            functionDeclarationNode1: ESTree.FunctionDeclaration,
+            functionDeclarationNode2: ESTree.FunctionDeclaration,
+            programNode: ESTree.Program;
+
+        beforeEach(() => {
+            expressionStatementNode1 = NodeMocks.getExpressionStatementNode();
+            expressionStatementNode2 = NodeMocks.getExpressionStatementNode();
+            expressionStatementNode3 = NodeMocks.getExpressionStatementNode();
+
+            ifStatementBlockStatementNode2 = NodeMocks.getBlockStatementNode([
+                expressionStatementNode3
+            ]);
+
+            ifStatementNode2 = NodeMocks.getIfStatementNode(ifStatementBlockStatementNode2);
+
+            functionDeclarationBlockStatementNode2 = NodeMocks.getBlockStatementNode([
+                ifStatementNode2,
+                expressionStatementNode2
+            ]);
+
+            functionDeclarationNode2 = NodeMocks.getFunctionDeclarationNode('test', functionDeclarationBlockStatementNode2);
+
+            ifStatementBlockStatementNode1 = NodeMocks.getBlockStatementNode([
+                functionDeclarationNode2
+            ]);
+
+            ifStatementNode1 = NodeMocks.getIfStatementNode(ifStatementBlockStatementNode1);
+
+            functionDeclarationBlockStatementNode1 = NodeMocks.getBlockStatementNode([
+                expressionStatementNode1,
+                ifStatementNode1
+            ]);
+
+            functionDeclarationNode1 = NodeMocks.getFunctionDeclarationNode('test', functionDeclarationBlockStatementNode1);
+
+            programNode = NodeMocks.getProgramNode([
+                functionDeclarationNode1
+            ]);
+
+            programNode['parentNode'] = programNode;
+            functionDeclarationNode1['parentNode'] = programNode;
+            functionDeclarationBlockStatementNode1['parentNode'] = functionDeclarationNode1;
+            expressionStatementNode1['parentNode'] = functionDeclarationBlockStatementNode1;
+            ifStatementNode1['parentNode'] = functionDeclarationBlockStatementNode1;
+            ifStatementBlockStatementNode1['parentNode'] = ifStatementNode1;
+            functionDeclarationNode2['parentNode'] = ifStatementBlockStatementNode1;
+            functionDeclarationBlockStatementNode2['parentNode'] = functionDeclarationNode2;
+            expressionStatementNode2['parentNode'] = functionDeclarationBlockStatementNode2;
+            ifStatementNode2['parentNode'] = functionDeclarationBlockStatementNode2;
+            ifStatementBlockStatementNode2['parentNode'] = ifStatementNode2;
+        });
+
+        it('should return block-scope depth for given node', () => {
+            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(programNode), 0);
+            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(functionDeclarationNode1), 0);
+            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(functionDeclarationBlockStatementNode1), 1);
+            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(expressionStatementNode1), 1);
+            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(ifStatementNode1), 1);
+            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(ifStatementBlockStatementNode1), 1);
+            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(functionDeclarationNode2), 1);
+            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(functionDeclarationBlockStatementNode2), 2);
+            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(expressionStatementNode2), 2);
+            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(ifStatementNode2), 2);
+            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(ifStatementBlockStatementNode2), 2);
+        });
+
+        it('should throw a `ReferenceError` if node has no `parentNode` property', () => {
+            assert.throws(() => NodeUtils.getNodeBlockScopeDepth(expressionStatementNode3), ReferenceError);
         });
     });
 

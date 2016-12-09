@@ -1767,7 +1767,7 @@
                 d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
             };
 
-//// Types
+//// ServiceIdentifiers
         var TypeModifier;
         (function (TypeModifier) {
             TypeModifier[TypeModifier["Const"] = 0] = "Const";
@@ -6371,7 +6371,7 @@
     /* 42 */
     /***/ function(module, exports, __webpack_require__) {
 
-// to indexed object, toObject with fallback for non-array-like ES3 strings
+// to indexed object, toString with fallback for non-array-like ES3 strings
         var IObject = __webpack_require__(118)
             , defined = __webpack_require__(59);
         module.exports = function(it){
@@ -11471,7 +11471,7 @@
             return CompilerConfig;
         }());
         /**
-         * Types used for the renderer.
+         * ServiceIdentifiers used for the renderer.
          * Can be replaced to specialize the generated output to a specific renderer
          * to help tree shaking.
          */
@@ -14892,7 +14892,7 @@
                     // Transform ICU messages to angular directives
                     var expandedHtmlAst = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_10__ml_parser_icu_ast_expander__["a" /* expandNodes */])(htmlAstWithErrors.rootNodes);
                     errors.push.apply(errors, expandedHtmlAst.errors);
-                    htmlAstWithErrors = new __WEBPACK_IMPORTED_MODULE_9__ml_parser_html_parser__["a" /* ParseTreeResult */](expandedHtmlAst.nodes, errors);
+                    htmlAstWithErrors = new __WEBPACK_IMPORTED_MODULE_9__ml_parser_html_parser__["a" /* ParseTreeResult */](expandedHtmlAst.customNodesStorage, errors);
                 }
                 if (htmlAstWithErrors.rootNodes.length > 0) {
                     var uniqDirectives = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__compile_metadata__["f" /* removeIdentifierDuplicates */])(directives);
@@ -20398,7 +20398,7 @@
          * found in the LICENSE file at https://angular.io/license
          */
         function digestMessage(message) {
-            return sha1(serializeNodes(message.nodes).join('') + ("[" + message.meaning + "]"));
+            return sha1(serializeNodes(message.customNodesStorage).join('') + ("[" + message.meaning + "]"));
         }
         /**
          * Serialize the i18n ast to something xml-like in order to generate an UID.
@@ -30516,7 +30516,7 @@
                 var significantChildren = directChildren.reduce(function (count, node) { return count + (node instanceof __WEBPACK_IMPORTED_MODULE_0__ml_parser_ast__["a" /* Comment */] ? 0 : 1); }, 0);
                 if (significantChildren == 1) {
                     for (var i = this._messages.length - 1; i >= startIndex; i--) {
-                        var ast = this._messages[i].nodes;
+                        var ast = this._messages[i].customNodesStorage;
                         if (!(ast.length == 1 && ast[0] instanceof __WEBPACK_IMPORTED_MODULE_3__i18n_ast__["f" /* Text */])) {
                             this._messages.splice(i, 1);
                             break;
@@ -30876,7 +30876,7 @@
                 Object.keys(messageMap).forEach(function (id) {
                     var message = messageMap[id];
                     var transUnit = new __WEBPACK_IMPORTED_MODULE_5__xml_helper__["b" /* Tag */](_UNIT_TAG, { id: id, datatype: 'html' });
-                    transUnit.children.push(_CR(8), new __WEBPACK_IMPORTED_MODULE_5__xml_helper__["b" /* Tag */](_SOURCE_TAG, {}, visitor.serialize(message.nodes)), _CR(8), new __WEBPACK_IMPORTED_MODULE_5__xml_helper__["b" /* Tag */](_TARGET_TAG));
+                    transUnit.children.push(_CR(8), new __WEBPACK_IMPORTED_MODULE_5__xml_helper__["b" /* Tag */](_SOURCE_TAG, {}, visitor.serialize(message.customNodesStorage)), _CR(8), new __WEBPACK_IMPORTED_MODULE_5__xml_helper__["b" /* Tag */](_TARGET_TAG));
                     if (message.description) {
                         transUnit.children.push(_CR(8), new __WEBPACK_IMPORTED_MODULE_5__xml_helper__["b" /* Tag */]('note', { priority: '1', from: 'description' }, [new __WEBPACK_IMPORTED_MODULE_5__xml_helper__["a" /* Text */](message.description)]));
                     }
@@ -31109,7 +31109,7 @@
                     if (message.meaning) {
                         attrs['meaning'] = message.meaning;
                     }
-                    rootNode.children.push(new __WEBPACK_IMPORTED_MODULE_1__xml_helper__["a" /* Text */]('  '), new __WEBPACK_IMPORTED_MODULE_1__xml_helper__["b" /* Tag */](_MESSAGE_TAG, attrs, visitor.serialize(message.nodes)), new __WEBPACK_IMPORTED_MODULE_1__xml_helper__["a" /* Text */]('\n'));
+                    rootNode.children.push(new __WEBPACK_IMPORTED_MODULE_1__xml_helper__["a" /* Text */]('  '), new __WEBPACK_IMPORTED_MODULE_1__xml_helper__["b" /* Tag */](_MESSAGE_TAG, attrs, visitor.serialize(message.customNodesStorage)), new __WEBPACK_IMPORTED_MODULE_1__xml_helper__["a" /* Text */]('\n'));
                 });
                 return __WEBPACK_IMPORTED_MODULE_1__xml_helper__["c" /* serialize */]([
                     new __WEBPACK_IMPORTED_MODULE_1__xml_helper__["d" /* Declaration */]({ version: '1.0', encoding: 'UTF-8' }),
@@ -34513,7 +34513,7 @@
         function finishView(view, targetStatements) {
             view.afterNodes();
             createViewTopLevelStmts(view, targetStatements);
-            view.nodes.forEach(function (node) {
+            view.customNodesStorage.forEach(function (node) {
                 if (node instanceof __WEBPACK_IMPORTED_MODULE_10__compile_element__["a" /* CompileElement */] && node.hasEmbeddedView) {
                     finishView(node.embeddedView, targetStatements);
                 }
@@ -34567,17 +34567,17 @@
                 return this._visitText(ast, ast.value, parent);
             };
             ViewBuilderVisitor.prototype._visitText = function (ast, value, parent) {
-                var fieldName = "_text_" + this.view.nodes.length;
+                var fieldName = "_text_" + this.view.customNodesStorage.length;
                 this.view.fields.push(new __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["s" /* ClassField */](fieldName, __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["c" /* importType */](this.view.genConfig.renderTypes.renderText)));
                 var renderNode = __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["n" /* THIS_EXPR */].prop(fieldName);
-                var compileNode = new __WEBPACK_IMPORTED_MODULE_10__compile_element__["b" /* CompileNode */](parent, this.view, this.view.nodes.length, renderNode, ast);
+                var compileNode = new __WEBPACK_IMPORTED_MODULE_10__compile_element__["b" /* CompileNode */](parent, this.view, this.view.customNodesStorage.length, renderNode, ast);
                 var createRenderNode = __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["n" /* THIS_EXPR */].prop(fieldName)
                     .set(__WEBPACK_IMPORTED_MODULE_12__constants__["c" /* ViewProperties */].renderer.callMethod('createText', [
                         this._getParentRenderNode(parent), __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["a" /* literal */](value),
-                        this.view.createMethod.resetDebugInfoExpr(this.view.nodes.length, ast)
+                        this.view.createMethod.resetDebugInfoExpr(this.view.customNodesStorage.length, ast)
                     ]))
                     .toStmt();
-                this.view.nodes.push(compileNode);
+                this.view.customNodesStorage.push(compileNode);
                 this.view.createMethod.addStmt(createRenderNode);
                 this._addRootNodeAndProject(compileNode);
                 return renderNode;
@@ -34612,7 +34612,7 @@
             };
             ViewBuilderVisitor.prototype.visitElement = function (ast, parent) {
                 var _this = this;
-                var nodeIndex = this.view.nodes.length;
+                var nodeIndex = this.view.customNodesStorage.length;
                 var createRenderNodeExpr;
                 var debugContextExpr = this.view.createMethod.resetDebugInfoExpr(nodeIndex, ast);
                 if (nodeIndex === 0 && this.view.viewType === __WEBPACK_IMPORTED_MODULE_7__private_import_core__["j" /* ViewType */].HOST) {
@@ -34645,7 +34645,7 @@
                     }
                 }
                 var compileElement = new __WEBPACK_IMPORTED_MODULE_10__compile_element__["a" /* CompileElement */](parent, this.view, nodeIndex, renderNode, ast, component, directives, ast.providers, ast.hasViewContainer, false, ast.references);
-                this.view.nodes.push(compileElement);
+                this.view.customNodesStorage.push(compileElement);
                 var compViewExpr = null;
                 if (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__facade_lang__["a" /* isPresent */])(component)) {
                     var nestedComponentIdentifier = new __WEBPACK_IMPORTED_MODULE_2__compile_metadata__["a" /* CompileIdentifierMetadata */]({ name: __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_13__util__["d" /* getViewFactoryName */])(component, 0) });
@@ -34667,7 +34667,7 @@
                 compileElement.beforeChildren();
                 this._addRootNodeAndProject(compileElement);
                 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_8__template_parser_template_ast__["c" /* templateVisitAll */])(this, ast.children, compileElement);
-                compileElement.afterChildren(this.view.nodes.length - nodeIndex - 1);
+                compileElement.afterChildren(this.view.customNodesStorage.length - nodeIndex - 1);
                 if (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__facade_lang__["a" /* isPresent */])(compViewExpr)) {
                     var codeGenContentNodes;
                     if (this.view.component.type.isHost) {
@@ -34683,7 +34683,7 @@
                 return null;
             };
             ViewBuilderVisitor.prototype.visitEmbeddedTemplate = function (ast, parent) {
-                var nodeIndex = this.view.nodes.length;
+                var nodeIndex = this.view.customNodesStorage.length;
                 var fieldName = "_anchor_" + nodeIndex;
                 this.view.fields.push(new __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["s" /* ClassField */](fieldName, __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["c" /* importType */](this.view.genConfig.renderTypes.renderComment)));
                 this.view.createMethod.addStmt(__WEBPACK_IMPORTED_MODULE_6__output_output_ast__["n" /* THIS_EXPR */].prop(fieldName)
@@ -34696,7 +34696,7 @@
                 var templateVariableBindings = ast.variables.map(function (varAst) { return [varAst.value.length > 0 ? varAst.value : IMPLICIT_TEMPLATE_VAR, varAst.name]; });
                 var directives = ast.directives.map(function (directiveAst) { return directiveAst.directive; });
                 var compileElement = new __WEBPACK_IMPORTED_MODULE_10__compile_element__["a" /* CompileElement */](parent, this.view, nodeIndex, renderNode, ast, null, directives, ast.providers, ast.hasViewContainer, true, ast.references);
-                this.view.nodes.push(compileElement);
+                this.view.customNodesStorage.push(compileElement);
                 var compiledAnimations = this._animationCompiler.compileComponent(this.view.component, [ast]);
                 this.nestedViewCount++;
                 var embeddedView = new __WEBPACK_IMPORTED_MODULE_11__compile_view__["a" /* CompileView */](this.view.component, this.view.genConfig, this.view.pipeMetas, __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["h" /* NULL_EXPR */], compiledAnimations.triggers, this.view.viewIndex + this.nestedViewCount, compileElement, templateVariableBindings);
@@ -34788,7 +34788,7 @@
             if (view.genConfig.genDebugInfo) {
                 nodeDebugInfosVar = __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["e" /* variable */]("nodeDebugInfos_" + view.component.type.name + view.viewIndex); // fix highlighting: `
                 targetStatements.push(nodeDebugInfosVar
-                    .set(__WEBPACK_IMPORTED_MODULE_6__output_output_ast__["g" /* literalArr */](view.nodes.map(createStaticNodeDebugInfo), new __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["q" /* ArrayType */](new __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["I" /* ExternalType */](__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5__identifiers__["d" /* resolveIdentifier */])(__WEBPACK_IMPORTED_MODULE_5__identifiers__["b" /* Identifiers */].StaticNodeDebugInfo)), [__WEBPACK_IMPORTED_MODULE_6__output_output_ast__["d" /* TypeModifier */].Const])))
+                    .set(__WEBPACK_IMPORTED_MODULE_6__output_output_ast__["g" /* literalArr */](view.customNodesStorage.map(createStaticNodeDebugInfo), new __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["q" /* ArrayType */](new __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["I" /* ExternalType */](__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5__identifiers__["d" /* resolveIdentifier */])(__WEBPACK_IMPORTED_MODULE_5__identifiers__["b" /* Identifiers */].StaticNodeDebugInfo)), [__WEBPACK_IMPORTED_MODULE_6__output_output_ast__["d" /* TypeModifier */].Const])))
                     .toDeclStmt(null, [__WEBPACK_IMPORTED_MODULE_6__output_output_ast__["u" /* StmtModifier */].Final]));
             }
             var renderCompTypeVar = __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["e" /* variable */]("renderType_" + view.component.type.name); // fix highlighting: `
@@ -34897,7 +34897,7 @@
             }
             var resultExpr;
             if (view.viewType === __WEBPACK_IMPORTED_MODULE_7__private_import_core__["j" /* ViewType */].HOST) {
-                resultExpr = view.nodes[0].appElement;
+                resultExpr = view.customNodesStorage[0].appElement;
             }
             else {
                 resultExpr = __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["h" /* NULL_EXPR */];
@@ -34906,7 +34906,7 @@
                 __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["n" /* THIS_EXPR */]
                     .callMethod('init', [
                         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_13__util__["e" /* createFlatArray */])(view.rootNodesOrAppElements),
-                        __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["g" /* literalArr */](view.nodes.map(function (node) { return node.renderNode; })), __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["g" /* literalArr */](view.disposables),
+                        __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["g" /* literalArr */](view.customNodesStorage.map(function (node) { return node.renderNode; })), __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["g" /* literalArr */](view.disposables),
                         __WEBPACK_IMPORTED_MODULE_6__output_output_ast__["g" /* literalArr */](view.subscriptions)
                     ])
                     .toStmt(),
@@ -50449,7 +50449,7 @@
                 }
                 var expansionResult = expandNodes(c.expression);
                 errors.push.apply(errors, expansionResult.errors);
-                return new __WEBPACK_IMPORTED_MODULE_1__ast__["e" /* Element */]("template", [new __WEBPACK_IMPORTED_MODULE_1__ast__["f" /* Attribute */]('ngPluralCase', "" + c.value, c.valueSourceSpan)], expansionResult.nodes, c.sourceSpan, c.sourceSpan, c.sourceSpan);
+                return new __WEBPACK_IMPORTED_MODULE_1__ast__["e" /* Element */]("template", [new __WEBPACK_IMPORTED_MODULE_1__ast__["f" /* Attribute */]('ngPluralCase', "" + c.value, c.valueSourceSpan)], expansionResult.customNodesStorage, c.sourceSpan, c.sourceSpan, c.sourceSpan);
             });
             var switchAttr = new __WEBPACK_IMPORTED_MODULE_1__ast__["f" /* Attribute */]('[ngPlural]', ast.switchValue, ast.switchValueSourceSpan);
             return new __WEBPACK_IMPORTED_MODULE_1__ast__["e" /* Element */]('ng-container', [switchAttr], children, ast.sourceSpan, ast.sourceSpan, ast.sourceSpan);
@@ -50458,7 +50458,7 @@
             var children = ast.cases.map(function (c) {
                 var expansionResult = expandNodes(c.expression);
                 errors.push.apply(errors, expansionResult.errors);
-                return new __WEBPACK_IMPORTED_MODULE_1__ast__["e" /* Element */]("template", [new __WEBPACK_IMPORTED_MODULE_1__ast__["f" /* Attribute */]('ngSwitchCase', "" + c.value, c.valueSourceSpan)], expansionResult.nodes, c.sourceSpan, c.sourceSpan, c.sourceSpan);
+                return new __WEBPACK_IMPORTED_MODULE_1__ast__["e" /* Element */]("template", [new __WEBPACK_IMPORTED_MODULE_1__ast__["f" /* Attribute */]('ngSwitchCase', "" + c.value, c.valueSourceSpan)], expansionResult.customNodesStorage, c.sourceSpan, c.sourceSpan, c.sourceSpan);
             });
             var switchAttr = new __WEBPACK_IMPORTED_MODULE_1__ast__["f" /* Attribute */]('[ngSwitch]', ast.switchValue, ast.switchValueSourceSpan);
             return new __WEBPACK_IMPORTED_MODULE_1__ast__["e" /* Element */]('ng-container', [switchAttr], children, ast.sourceSpan, ast.sourceSpan, ast.sourceSpan);
@@ -53334,7 +53334,7 @@
                 animationOutputs.forEach(function (entry) { _this._animationOutputsMap[entry.fullPropertyName] = entry; });
             }
             ViewBinderVisitor.prototype.visitBoundText = function (ast, parent) {
-                var node = this.view.nodes[this._nodeIndex++];
+                var node = this.view.customNodesStorage[this._nodeIndex++];
                 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__property_binder__["a" /* bindRenderText */])(ast, node, this.view);
                 return null;
             };
@@ -53345,7 +53345,7 @@
             ViewBinderVisitor.prototype.visitNgContent = function (ast, parent) { return null; };
             ViewBinderVisitor.prototype.visitElement = function (ast, parent) {
                 var _this = this;
-                var compileElement = this.view.nodes[this._nodeIndex++];
+                var compileElement = this.view.customNodesStorage[this._nodeIndex++];
                 var eventListeners = [];
                 var animationEventListeners = [];
                 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__event_binder__["a" /* collectEventListeners */])(ast.outputs, ast.directives, compileElement).forEach(function (entry) {
@@ -53388,7 +53388,7 @@
                 return null;
             };
             ViewBinderVisitor.prototype.visitEmbeddedTemplate = function (ast, parent) {
-                var compileElement = this.view.nodes[this._nodeIndex++];
+                var compileElement = this.view.customNodesStorage[this._nodeIndex++];
                 var eventListeners = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__event_binder__["a" /* collectEventListeners */])(ast.outputs, ast.directives, compileElement);
                 ast.directives.forEach(function (directiveAst) {
                     var directiveInstance = compileElement.instances.get(directiveAst.directive.type.reference);

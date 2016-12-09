@@ -1,27 +1,15 @@
-import * as ESTree from 'estree';
+import { TStatement } from '../../types/node/TStatement';
 
-import { TStatement } from '../../types/TStatement';
+import { IInitializable } from '../IInitializable';
 
-import { AppendState } from '../../enums/AppendState';
-
-export interface ICustomNode {
+export interface ICustomNode extends IInitializable {
     /**
-     * @param astTree
+     * @returns {string}
      */
-    appendNode (astTree: ESTree.Node): void;
-
-    /**
-     * @returns {AppendState}
-     */
-    getAppendState (): AppendState;
+    getCode (): string;
 
     /**
      * @returns ESTree.Node[]
      */
     getNode (): TStatement[];
-
-    /**
-     * @param appendState
-     */
-    setAppendState (appendState: AppendState): void;
 }

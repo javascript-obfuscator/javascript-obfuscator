@@ -1,4 +1,6 @@
-import 'format-unicorn';
+import * as format from 'string-template';
+
+import { assert } from 'chai';
 
 import { AtobTemplate } from '../../../../../src/templates/custom-nodes/AtobTemplate';
 import { Rc4Template } from '../../../../../src/templates/custom-nodes/Rc4Template';
@@ -6,9 +8,7 @@ import { StringArrayBase64DecodeNodeTemplate } from '../../../../../src/template
 import { StringArrayCallsWrapperTemplate } from '../../../../../src/templates/custom-nodes/string-array-nodes/string-array-calls-wrapper/StringArrayCallsWrapperTemplate';
 import { StringArrayRc4DecodeNodeTemplate } from '../../../../../src/templates/custom-nodes/string-array-nodes/string-array-calls-wrapper/StringArrayRC4DecodeNodeTemplate';
 
-import { Utils } from '../../../../../src/Utils';
-
-const assert: Chai.AssertStatic = require('chai').assert;
+import { CryptUtils } from '../../../../../src/utils/CryptUtils';
 
 /**
  * @param templateData
@@ -23,10 +23,10 @@ function getFunctionFromTemplateBase64Encoding (
     stringArrayCallsWrapperName: string,
     index: string
 ) {
-    let stringArrayCallsWrapperTemplate: string = StringArrayCallsWrapperTemplate().formatUnicorn(templateData);
+    let stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), templateData);
 
     return Function(`
-        var ${stringArrayName} = ['${Utils.btoa('test1')}'];
+        var ${stringArrayName} = ['${CryptUtils.btoa('test1')}'];
     
         ${stringArrayCallsWrapperTemplate}
         
@@ -49,10 +49,10 @@ function getFunctionFromTemplateRc4Encoding (
     index: string,
     key: string
 ) {
-    let stringArrayCallsWrapperTemplate: string = StringArrayCallsWrapperTemplate().formatUnicorn(templateData);
+    let stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), templateData);
 
     return Function(`
-        var ${stringArrayName} = ['${Utils.btoa(Utils.rc4('test1', key))}'];
+        var ${stringArrayName} = ['${CryptUtils.btoa(CryptUtils.rc4('test1', key))}'];
     
         ${stringArrayCallsWrapperTemplate}
         
@@ -63,12 +63,12 @@ function getFunctionFromTemplateRc4Encoding (
 describe('StringArrayCallsWrapperNodeTemplate (): string', () => {
     let stringArrayName: string = 'stringArrayName',
         stringArrayCallsWrapperName: string = 'stringArrayCallsWrapperName',
-        atobDecodeNodeTemplate: string = StringArrayBase64DecodeNodeTemplate().formatUnicorn({
+        atobDecodeNodeTemplate: string = format(StringArrayBase64DecodeNodeTemplate(), {
             atobPolyfill: AtobTemplate(),
             selfDefendingCode: '',
             stringArrayCallsWrapperName
         }),
-        rc4DecodeNodeTemplate: string = StringArrayRc4DecodeNodeTemplate().formatUnicorn({
+        rc4DecodeNodeTemplate: string = format(StringArrayRc4DecodeNodeTemplate(), {
             atobPolyfill: AtobTemplate(),
             rc4Polyfill: Rc4Template(),
             selfDefendingCode: '',

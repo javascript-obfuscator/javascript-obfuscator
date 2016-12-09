@@ -1,8 +1,8 @@
+import { assert } from 'chai';
+
 import { IObfuscationResult } from '../../src/interfaces/IObfuscationResult';
 
 import { ObfuscationResult } from '../../src/ObfuscationResult';
-
-const assert: Chai.AssertStatic = require('chai').assert;
 
 describe('ObfuscationResult', () => {
     describe('constructor (obfuscatedCode: string, sourceMap: string)', () => {
@@ -11,7 +11,8 @@ describe('ObfuscationResult', () => {
             sourceMap: string = 'sourceMap';
 
         beforeEach(() => {
-            obfuscationResult = new ObfuscationResult(obfuscatedCode, sourceMap);
+            obfuscationResult = new ObfuscationResult();
+            obfuscationResult.initialize(obfuscatedCode, sourceMap);
         });
 
         it('should returns obfuscated code if `.toString()` was called on `ObfuscationResult` object', () => {

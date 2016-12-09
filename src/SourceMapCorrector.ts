@@ -1,88 +1,83 @@
-import { IObfuscationResult } from './interfaces/IObfuscationResult';
-import { ISourceMapCorrector } from './interfaces/ISourceMapCorrector';
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 
-import { TSourceMapMode } from './types/TSourceMapMode';
+import { TObfuscationResultFactory } from './types/container/TObfuscationResultFactory';
+
+import { IObfuscationResult } from './interfaces/IObfuscationResult';
+import { IOptions } from './interfaces/options/IOptions';
+import { ISourceMapCorrector } from './interfaces/ISourceMapCorrector';
 
 import { SourceMapMode } from './enums/SourceMapMode';
 
-import { ObfuscationResult } from './ObfuscationResult';
-import { Utils } from './Utils';
+import { CryptUtils } from './utils/CryptUtils';
 
+@injectable()
 export class SourceMapCorrector implements ISourceMapCorrector {
     /**
-     * @type {string}
+     * @type {TObfuscationResultFactory}
      */
-    private obfuscatedCode: string;
+    private readonly obfuscationResultFactory: TObfuscationResultFactory;
 
     /**
-     * @type {string}
+     * @type {IOptions}
      */
-    private sourceMap: string;
+    private readonly options: IOptions;
 
     /**
-     * @type {TSourceMapMode}
-     */
-    private sourceMapMode: TSourceMapMode;
-
-    /**
-     * @type {string}
-     */
-    private sourceMapUrl: string;
-
-    /**
-     * @param obfuscationResult
-     * @param sourceMapUrl
-     * @param sourceMapMode
+     * @param obfuscationResultFactory
+     * @param options
      */
     constructor (
-        obfuscationResult: IObfuscationResult,
-        sourceMapUrl: string,
-        sourceMapMode: TSourceMapMode
+        @inject(ServiceIdentifiers['Factory<IObfuscationResult>']) obfuscationResultFactory: TObfuscationResultFactory,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        this.obfuscatedCode = obfuscationResult.getObfuscatedCode();
-        this.sourceMap = obfuscationResult.getSourceMap();
-
-        this.sourceMapUrl = sourceMapUrl;
-        this.sourceMapMode = sourceMapMode;
+        this.obfuscationResultFactory = obfuscationResultFactory;
+        this.options = options;
     }
 
     /**
      * @returns {ObfuscationResult}
+     * @param obfuscatedCode
+     * @param sourceMap
      */
-    public correct (): IObfuscationResult {
-        return new ObfuscationResult(
-            this.correctObfuscatedCode(),
-            this.sourceMap
+    public correct (obfuscatedCode: string, sourceMap: string): IObfuscationResult {
+        return this.obfuscationResultFactory(
+            this.correctObfuscatedCode(obfuscatedCode, sourceMap),
+            sourceMap
         );
     }
 
     /**
+     * @param obfuscatedCode
+     * @param sourceMap
      * @returns {string}
      */
-    private correctObfuscatedCode (): string {
-        if (!this.sourceMap) {
-            return this.obfuscatedCode;
+    private correctObfuscatedCode (obfuscatedCode: string, sourceMap: string): string {
+        if (!sourceMap) {
+            return obfuscatedCode;
         }
+
+        const sourceMapUrl: string = this.options.sourceMapBaseUrl + this.options.sourceMapFileName;
 
         let sourceMappingUrl: string = '//# sourceMappingURL=';
 
-        switch (this.sourceMapMode) {
+        switch (this.options.sourceMapMode) {
             case SourceMapMode.Inline:
-                sourceMappingUrl += `data:application/json;base64,${Utils.btoa(this.sourceMap)}`;
+                sourceMappingUrl += `data:application/json;base64,${CryptUtils.btoa(sourceMap)}`;
 
                 break;
 
             case SourceMapMode.Separate:
             default:
-                if (!this.sourceMapUrl) {
-                    return this.obfuscatedCode;
+                if (!sourceMapUrl) {
+                    return obfuscatedCode;
                 }
 
-                sourceMappingUrl += this.sourceMapUrl;
+                sourceMappingUrl += sourceMapUrl;
 
                 break;
         }
 
-        return `${this.obfuscatedCode}\n${sourceMappingUrl}`;
+        return `${obfuscatedCode}\n${sourceMappingUrl}`;
     };
 }

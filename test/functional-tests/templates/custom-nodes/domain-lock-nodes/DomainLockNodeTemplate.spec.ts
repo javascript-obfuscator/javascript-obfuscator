@@ -1,11 +1,10 @@
-import 'format-unicorn';
+import * as format from 'string-template';
+
+import { assert } from 'chai';
 
 import { DomainLockNodeTemplate } from '../../../../../src/templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
 
-import { Utils } from '../../../../../src/Utils';
-
-
-const assert: Chai.AssertStatic = require('chai').assert;
+import { CryptUtils } from '../../../../../src/utils/CryptUtils';
 
 /**
  * @param templateData
@@ -14,7 +13,7 @@ const assert: Chai.AssertStatic = require('chai').assert;
  * @returns {Function}
  */
 function getFunctionFromTemplate (templateData: any, callsControllerFunctionName: string,  currentDomain: string) {
-    let domainLockTemplate: string = DomainLockNodeTemplate().formatUnicorn(templateData);
+    let domainLockTemplate: string = format(DomainLockNodeTemplate(), templateData);
 
     return Function(`
         document = {
@@ -46,7 +45,7 @@ describe('DomainLockNodeTemplate (): string', () => {
         [
             hiddenDomainsString,
             diff
-        ] = Utils.hideString(domainsString, domainsString.length * 3);
+        ] = CryptUtils.hideString(domainsString, domainsString.length * 3);
 
         assert.doesNotThrow(() => getFunctionFromTemplate({
             domainLockFunctionName: 'domainLockFunction',
@@ -62,7 +61,7 @@ describe('DomainLockNodeTemplate (): string', () => {
         [
             hiddenDomainsString,
             diff
-        ] = Utils.hideString(domainsString, domainsString.length * 3);
+        ] = CryptUtils.hideString(domainsString, domainsString.length * 3);
 
         assert.doesNotThrow(() => getFunctionFromTemplate({
             domainLockFunctionName: 'domainLockFunction',
@@ -78,7 +77,7 @@ describe('DomainLockNodeTemplate (): string', () => {
         [
             hiddenDomainsString,
             diff
-        ] = Utils.hideString(domainsString, domainsString.length * 3);
+        ] = CryptUtils.hideString(domainsString, domainsString.length * 3);
 
         assert.throws(() => getFunctionFromTemplate({
             domainLockFunctionName: 'domainLockFunction',

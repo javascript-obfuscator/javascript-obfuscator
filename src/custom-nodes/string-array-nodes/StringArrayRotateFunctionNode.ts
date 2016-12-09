@@ -1,11 +1,12 @@
-import 'format-unicorn';
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-import { TStatement } from '../../types/TStatement';
+import * as format from 'string-template';
 
-import { IOptions } from '../../interfaces/IOptions';
+import { IOptions } from '../../interfaces/options/IOptions';
+import { IStorage } from '../../interfaces/storages/IStorage';
 
-import { AppendState } from '../../enums/AppendState';
+import { initializable } from '../../decorators/Initializable';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
 
@@ -14,79 +15,63 @@ import { StringArrayRotateFunctionTemplate } from '../../templates/custom-nodes/
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
-import { NodeAppender } from '../../node/NodeAppender';
-import { NodeUtils } from '../../node/NodeUtils';
-import { StringArray } from '../../StringArray';
-import { Utils } from '../../Utils';
+import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
+import { Utils } from '../../utils/Utils';
 
+@injectable()
 export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     /**
-     * @type {AppendState}
+     * @type {IStorage <string>}
      */
-    protected appendState: AppendState = AppendState.AfterObfuscation;
-
-    /**
-     * @type {StringArray}
-     */
-    private stringArray: StringArray;
+    @initializable()
+    private stringArray: IStorage <string>;
 
     /**
      * @type {string}
      */
+    @initializable()
     private stringArrayName: string;
 
     /**
      * @param {number}
      */
+    @initializable()
     private stringArrayRotateValue: number;
 
     /**
-     * @param stringArrayName
-     * @param stringArray
-     * @param stringArrayRotateValue
      * @param options
      */
     constructor (
-        stringArrayName: string,
-        stringArray: StringArray,
-        stringArrayRotateValue: number,
-        options: IOptions
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+    }
 
-        this.stringArrayName = stringArrayName;
+    /**
+     * @param stringArray
+     * @param stringArrayName
+     * @param stringArrayRotateValue
+     */
+    public initialize (
+        stringArray: IStorage <string>,
+        stringArrayName: string,
+        stringArrayRotateValue: number
+    ): void {
         this.stringArray = stringArray;
+        this.stringArrayName = stringArrayName;
         this.stringArrayRotateValue = stringArrayRotateValue;
     }
 
     /**
-     * @param blockScopeNode
+     * @returns {string}
      */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        if (!this.stringArray.getLength()) {
-            return;
-        }
-
-        NodeAppender.insertNodeAtIndex(blockScopeNode, this.getNode(), 1);
-    }
-
-    /**
-     * @returns {TStatement[]}
-     */
-    public getNode (): TStatement[] {
-        return super.getNode();
-    }
-
-    /**
-     * @returns {TStatement[]}
-     */
-    protected getNodeStructure (): TStatement[] {
+    public getCode (): string {
         let code: string = '',
-            timesName: string = Utils.getRandomVariableName(),
-            whileFunctionName: string = Utils.getRandomVariableName();
+            timesName: string = RandomGeneratorUtils.getRandomVariableName(),
+            whileFunctionName: string = RandomGeneratorUtils.getRandomVariableName();
 
         if (this.options.selfDefending) {
-            code = SelfDefendingTemplate().formatUnicorn({
+            code = format(SelfDefendingTemplate(), {
                 timesName,
                 whileFunctionName
             });
@@ -94,19 +79,18 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
             code = `${whileFunctionName}(++${timesName})`;
         }
 
-        return NodeUtils.convertCodeToStructure(
-            JavaScriptObfuscator.obfuscate(
-                StringArrayRotateFunctionTemplate().formatUnicorn({
-                    code,
-                    timesName,
-                    stringArrayName: this.stringArrayName,
-                    stringArrayRotateValue: Utils.decToHex(this.stringArrayRotateValue),
-                    whileFunctionName
-                }),
-                Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                    seed: this.options.seed
-                })
-            ).getObfuscatedCode()
-        );
+        return JavaScriptObfuscator.obfuscate(
+            format(StringArrayRotateFunctionTemplate(), {
+                code,
+                timesName,
+                stringArrayName: this.stringArrayName,
+                stringArrayRotateValue: Utils.decToHex(this.stringArrayRotateValue),
+                whileFunctionName
+            }),
+            {
+                ...NO_CUSTOM_NODES_PRESET,
+                seed: this.options.seed
+            }
+        ).getObfuscatedCode();
     }
 }

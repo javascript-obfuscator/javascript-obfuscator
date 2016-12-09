@@ -1,94 +1,48 @@
-import 'format-unicorn';
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-import { TStatement } from '../../types/TStatement';
+import * as format from 'string-template';
 
-import { IOptions } from '../../interfaces/IOptions';
-import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
-
-import { AppendState } from '../../enums/AppendState';
+import { IOptions } from '../../interfaces/options/IOptions';
 
 import { ConsoleOutputDisableExpressionTemplate } from '../../templates/custom-nodes/console-output-nodes/console-output-disable-expression-node/ConsoleOutputDisableExpressionTemplate';
 
+import { initializable } from '../../decorators/Initializable';
+
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { NodeAppender } from '../../node/NodeAppender';
-import { NodeUtils } from '../../node/NodeUtils';
-import { Utils } from '../../Utils';
+import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
+@injectable()
 export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
-    /**
-     * @type {AppendState}
-     */
-    protected appendState: AppendState = AppendState.BeforeObfuscation;
-
     /**
      * @type {string}
      */
-    protected callsControllerFunctionName: string;
+    @initializable()
+    private callsControllerFunctionName: string;
 
     /**
-     * @type {number}
-     */
-    protected randomStackTraceIndex: number;
-
-    /**
-     * @type {IStackTraceData[]}
-     */
-    protected stackTraceData: IStackTraceData[];
-
-    /**
-     * @param stackTraceData
-     * @param callsControllerFunctionName
-     * @param randomStackTraceIndex
      * @param options
      */
     constructor (
-        stackTraceData: IStackTraceData[],
-        callsControllerFunctionName: string,
-        randomStackTraceIndex: number,
-        options: IOptions
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+    }
 
-        this.stackTraceData = stackTraceData;
+    /**
+     * @param callsControllerFunctionName
+     */
+    public initialize (callsControllerFunctionName: string): void {
         this.callsControllerFunctionName = callsControllerFunctionName;
-        this.randomStackTraceIndex = randomStackTraceIndex;
     }
 
     /**
-     * @param blockScopeNode
+     * @returns {string}
      */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        NodeAppender.appendNodeToOptimalBlockScope(
-            this.stackTraceData,
-            blockScopeNode,
-            this.getNode(),
-            this.randomStackTraceIndex
-        );
-    }
-
-    /**
-     *  JSCrush version of following code
-     *
-     *  (function () {
-     *      var _console = []["filter"]["constructor"]("return this")().console;
-     *      var _function = function () {};
-     *
-     *      _console.log = _function;
-     *      _console.info = _function;
-     *      _console.warn = _function;
-     *      _console.error = _function;
-     *  _console
-     *  })();
-     *
-     * @returns {TStatement[]}
-     */
-    protected getNodeStructure (): TStatement[] {
-        return NodeUtils.convertCodeToStructure(
-            ConsoleOutputDisableExpressionTemplate().formatUnicorn({
-                consoleLogDisableFunctionName: Utils.getRandomVariableName(),
-                singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-            })
-        );
+    public getCode (): string {
+        return format(ConsoleOutputDisableExpressionTemplate(), {
+            consoleLogDisableFunctionName: RandomGeneratorUtils.getRandomVariableName(),
+            singleNodeCallControllerFunctionName: this.callsControllerFunctionName
+        });
     }
 }

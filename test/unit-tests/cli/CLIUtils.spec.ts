@@ -1,9 +1,9 @@
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 
-import { CLIUtils } from '../../../src/cli/CLIUtils';
+import { assert } from 'chai';
 
-const assert: Chai.AssertStatic = require('chai').assert;
+import { CLIUtils } from '../../../src/cli/CLIUtils';
 
 describe('CLIUtils', () => {
     const fileContent: string = 'test',

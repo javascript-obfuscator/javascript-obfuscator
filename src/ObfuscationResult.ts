@@ -1,21 +1,28 @@
+import { injectable } from 'inversify';
+
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
 
+import { initializable } from './decorators/Initializable';
+
+@injectable()
 export class ObfuscationResult implements IObfuscationResult {
     /**
      * @type {string}
      */
+    @initializable()
     private obfuscatedCode: string;
 
     /**
      * @type {string}
      */
+    @initializable()
     private sourceMap: string;
 
     /**
      * @param obfuscatedCode
      * @param sourceMap
      */
-    constructor (obfuscatedCode: string, sourceMap: string) {
+    public initialize (obfuscatedCode: string, sourceMap: string): void {
         this.obfuscatedCode = obfuscatedCode;
         this.sourceMap = sourceMap;
     }

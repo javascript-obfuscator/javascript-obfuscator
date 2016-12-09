@@ -1,47 +1,33 @@
+import { injectable } from 'inversify';
+
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { ICalleeData } from '../../interfaces/stack-trace-analyzer/ICalleeData';
-import { ICalleeDataExtractor } from '../../interfaces/stack-trace-analyzer/ICalleeDataExtractor';
 
+import { AbstractCalleeDataExtractor } from './AbstractCalleeDataExtractor';
 import { Node } from '../../node/Node';
 import { NodeUtils } from '../../node/NodeUtils';
 
-export class FunctionExpressionCalleeDataExtractor implements ICalleeDataExtractor {
-    /**
-     * @type {ESTree.Node[]}
-     */
-    private blockScopeBody: ESTree.Node[];
-
-    /**
-     * @type {ESTree.Identifier}
-     */
-    private callee: ESTree.Identifier;
-
+@injectable()
+export class FunctionExpressionCalleeDataExtractor extends AbstractCalleeDataExtractor {
     /**
      * @param blockScopeBody
      * @param callee
-     */
-    constructor (blockScopeBody: ESTree.Node[], callee: ESTree.Identifier) {
-        this.blockScopeBody = blockScopeBody;
-        this.callee = callee;
-    }
-
-    /**
      * @returns {ICalleeData|null}
      */
-    public extract (): ICalleeData|null {
+    public extract (blockScopeBody: ESTree.Node[], callee: ESTree.Identifier): ICalleeData|null {
         let calleeBlockStatement: ESTree.BlockStatement|null = null;
 
-        if (Node.isIdentifierNode(this.callee)) {
+        if (Node.isIdentifierNode(callee)) {
             calleeBlockStatement = this.getCalleeBlockStatement(
-                NodeUtils.getBlockScopeOfNode(this.blockScopeBody[0]),
-                this.callee.name
+                NodeUtils.getBlockScopeOfNode(blockScopeBody[0]),
+                callee.name
             );
         }
 
-        if (Node.isFunctionExpressionNode(this.callee)) {
-            calleeBlockStatement = this.callee.body;
+        if (Node.isFunctionExpressionNode(callee)) {
+            calleeBlockStatement = callee.body;
         }
 
         if (!calleeBlockStatement) {
@@ -50,7 +36,7 @@ export class FunctionExpressionCalleeDataExtractor implements ICalleeDataExtract
 
         return {
             callee: calleeBlockStatement,
-            name: this.callee.name || null
+            name: callee.name || null
         };
     }
 

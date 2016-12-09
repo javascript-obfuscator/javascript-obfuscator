@@ -1,29 +1,32 @@
-import { IObfuscationResult } from '../../src/interfaces/IObfuscationResult';
+import { ServiceIdentifiers } from '../../src/container/ServiceIdentifiers';
 
-import { JavaScriptObfuscatorInternal } from '../../src/JavaScriptObfuscatorInternal';
+import { assert } from 'chai';
+
+import { IInversifyContainerFacade } from '../../src/interfaces/container/IInversifyContainerFacade';
+import { IJavaScriptObfuscator } from '../../src/interfaces/IJavaScriptObfsucator';
+import { IObfuscationResult } from '../../src/interfaces/IObfuscationResult';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../src/preset-options/NoCustomNodesPreset';
 
-const assert: Chai.AssertStatic = require('chai').assert;
+import { InversifyContainerFacade } from '../../src/container/InversifyContainerFacade';
 
 describe('JavaScriptObfuscatorInternal', () => {
     describe(`setSourceMapUrl (url: string)`, () => {
-        let javaScriptObfuscator: JavaScriptObfuscatorInternal,
+        let inversifyContainerFacade: IInversifyContainerFacade,
+            javaScriptObfuscator: IJavaScriptObfuscator,
             obfuscationResult: IObfuscationResult,
             sourceMapUrl: string = 'test.js.map';
 
         it('should link obfuscated code with source map', () => {
-            javaScriptObfuscator = new JavaScriptObfuscatorInternal(
-                `var test = 1;`,
-                Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                    sourceMap: true,
-                    sourceMapFileName: sourceMapUrl
-                })
-            );
+            inversifyContainerFacade = new InversifyContainerFacade({
+                ...NO_CUSTOM_NODES_PRESET,
+                sourceMap: true,
+                sourceMapFileName: sourceMapUrl
+            });
+            javaScriptObfuscator = inversifyContainerFacade
+                .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);
 
-            javaScriptObfuscator.obfuscate();
-
-            obfuscationResult = javaScriptObfuscator.getObfuscationResult();
+            obfuscationResult = javaScriptObfuscator.obfuscate('var test = 1;');
 
             assert.match(
                 obfuscationResult.getObfuscatedCode(),
@@ -33,20 +36,18 @@ describe('JavaScriptObfuscatorInternal', () => {
         });
 
         it('should properly add base url to source map import inside obfuscated code if `sourceMapBaseUrl` is set', () => {
-            let sourceMapBaseUrl: string = 'http://localhost:9000';
+            const sourceMapBaseUrl: string = 'http://localhost:9000';
 
-            javaScriptObfuscator = new JavaScriptObfuscatorInternal(
-                `var test = 1;`,
-                Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                    sourceMap: true,
-                    sourceMapBaseUrl: sourceMapBaseUrl,
-                    sourceMapFileName: sourceMapUrl
-                })
-            );
+            inversifyContainerFacade = new InversifyContainerFacade({
+                ...NO_CUSTOM_NODES_PRESET,
+                sourceMap: true,
+                sourceMapBaseUrl: sourceMapBaseUrl,
+                sourceMapFileName: sourceMapUrl
+            });
+            javaScriptObfuscator = inversifyContainerFacade
+                .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);
 
-            javaScriptObfuscator.obfuscate();
-
-            obfuscationResult = javaScriptObfuscator.getObfuscationResult();
+            obfuscationResult = javaScriptObfuscator.obfuscate('var test = 1;');
 
             assert.match(
                 obfuscationResult.getObfuscatedCode(),

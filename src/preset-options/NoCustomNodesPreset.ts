@@ -1,9 +1,10 @@
-import { IObfuscatorOptions } from '../interfaces/IObfuscatorOptions';
+import { TInputOptions } from '../types/options/TInputOptions';
 
 import { SourceMapMode } from '../enums/SourceMapMode';
 
-export const NO_CUSTOM_NODES_PRESET: IObfuscatorOptions = Object.freeze({
+export const NO_CUSTOM_NODES_PRESET: TInputOptions = Object.freeze({
     compact: true,
+    controlFlowFlattening: false,
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: false,

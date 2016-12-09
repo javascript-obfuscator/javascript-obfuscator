@@ -1,4 +1,4 @@
-import { Utils } from '../../../../Utils';
+import { Utils } from '../../../../utils/Utils';
 
 /**
  * SelfDefendingTemplate. Enters code in infinity loop.

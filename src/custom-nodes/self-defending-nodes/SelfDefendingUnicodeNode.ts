@@ -1,87 +1,57 @@
-import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-import { TStatement } from '../../types/TStatement';
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import { IOptions } from '../../interfaces/IOptions';
-import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
+import * as format from 'string-template';
 
-import { AppendState } from '../../enums/AppendState';
+import { IOptions } from '../../interfaces/options/IOptions';
+
+import { initializable } from '../../decorators/Initializable';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
 
 import { SelfDefendingTemplate } from '../../templates/custom-nodes/self-defending-nodes/self-defending-unicode-node/SelfDefendingTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { NodeAppender } from '../../node/NodeAppender';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
-import { NodeUtils } from '../../node/NodeUtils';
-import { Utils } from '../../Utils';
+import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
+@injectable()
 export class SelfDefendingUnicodeNode extends AbstractCustomNode {
-    /**
-     * @type {AppendState}
-     */
-    protected appendState: AppendState = AppendState.AfterObfuscation;
-
     /**
      * @type {string}
      */
+    @initializable()
     protected callsControllerFunctionName: string;
 
     /**
-     * @type {number}
-     */
-    protected randomStackTraceIndex: number;
-
-    /**
-     * @type {IStackTraceData[]}
-     */
-    protected stackTraceData: IStackTraceData[];
-
-    /**
-     * @param stackTraceData
-     * @param callsControllerFunctionName
-     * @param randomStackTraceIndex
      * @param options
      */
     constructor (
-        stackTraceData: IStackTraceData[],
-        callsControllerFunctionName: string,
-        randomStackTraceIndex: number,
-        options: IOptions
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+    }
 
-        this.stackTraceData = stackTraceData;
+    /**
+     * @param callsControllerFunctionName
+     */
+    public initialize (callsControllerFunctionName: string): void {
         this.callsControllerFunctionName = callsControllerFunctionName;
-        this.randomStackTraceIndex = randomStackTraceIndex;
     }
 
     /**
-     * @param blockScopeNode
+     * @returns {string}
      */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        NodeAppender.appendNodeToOptimalBlockScope(
-            this.stackTraceData,
-            blockScopeNode,
-            this.getNode(),
-            this.randomStackTraceIndex
-        );
-    }
-
-    /**
-     * @returns {TStatement[]}
-     */
-    protected getNodeStructure (): TStatement[] {
-        return NodeUtils.convertCodeToStructure(
-            JavaScriptObfuscator.obfuscate(
-                SelfDefendingTemplate().formatUnicorn({
-                    selfDefendingFunctionName: Utils.getRandomVariableName(),
-                    singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-                }),
-                Object.assign({},  NO_CUSTOM_NODES_PRESET, {
-                    seed: this.options.seed
-                })
-            ).getObfuscatedCode()
-        );
+    public getCode (): string {
+        return JavaScriptObfuscator.obfuscate(
+            format(SelfDefendingTemplate(), {
+                selfDefendingFunctionName: RandomGeneratorUtils.getRandomVariableName(),
+                singleNodeCallControllerFunctionName: this.callsControllerFunctionName
+            }),
+            {
+                ...NO_CUSTOM_NODES_PRESET,
+                seed: this.options.seed
+            }
+        ).getObfuscatedCode();
     }
 }

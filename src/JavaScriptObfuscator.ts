@@ -1,24 +1,31 @@
-import { IObfuscationResult } from './interfaces/IObfuscationResult';
-import { IObfuscatorOptions } from './interfaces/IObfuscatorOptions';
+import 'reflect-metadata';
 
+if (!(<any>global)._babelPolyfill) {
+    require('babel-polyfill');
+}
+
+import { TInputOptions } from './types/options/TInputOptions';
+
+import { IInversifyContainerFacade } from './interfaces/container/IInversifyContainerFacade';
+import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
+import { IObfuscationResult } from './interfaces/IObfuscationResult';
+
+import { InversifyContainerFacade } from './container/InversifyContainerFacade';
 import { JavaScriptObfuscatorCLI } from './cli/JavaScriptObfuscatorCLI';
-import { JavaScriptObfuscatorInternal } from './JavaScriptObfuscatorInternal';
+import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 
 export class JavaScriptObfuscator {
     /**
      * @param sourceCode
-     * @param obfuscatorOptions
+     * @param inputOptions
      * @returns {string}
      */
-    public static obfuscate (sourceCode: string, obfuscatorOptions: IObfuscatorOptions = {}): IObfuscationResult {
-        let javaScriptObfuscator: JavaScriptObfuscatorInternal = new JavaScriptObfuscatorInternal(
-            sourceCode,
-            obfuscatorOptions
-        );
+    public static obfuscate (sourceCode: string, inputOptions: TInputOptions = {}): IObfuscationResult {
+        const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade(inputOptions);
+        const javaScriptObfuscator: IJavaScriptObfuscator = inversifyContainerFacade
+            .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);
 
-        javaScriptObfuscator.obfuscate();
-
-        return javaScriptObfuscator.getObfuscationResult();
+        return javaScriptObfuscator.obfuscate(sourceCode);
     }
 
     /**

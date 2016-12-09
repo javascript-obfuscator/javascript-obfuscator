@@ -1,86 +1,54 @@
-import 'format-unicorn';
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-import { TStatement } from '../../types/TStatement';
+import * as format from 'string-template';
 
-import { IOptions } from '../../interfaces/IOptions';
-import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
+import { IOptions } from '../../interfaces/options/IOptions';
 
-import { AppendState } from '../../enums/AppendState';
+import { initializable } from '../../decorators/Initializable';
 
 import { DomainLockNodeTemplate } from '../../templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { NodeAppender } from '../../node/NodeAppender';
-import { NodeUtils } from '../../node/NodeUtils';
-import { Utils } from '../../Utils';
+import { CryptUtils } from '../../utils/CryptUtils';
+import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
+@injectable()
 export class DomainLockNode extends AbstractCustomNode {
-    /**
-     * @type {AppendState}
-     */
-    protected appendState: AppendState = AppendState.BeforeObfuscation;
-
     /**
      * @type {string}
      */
+    @initializable()
     protected callsControllerFunctionName: string;
 
     /**
-     * @type {number}
-     */
-    protected randomStackTraceIndex: number;
-
-    /**
-     * @type {IStackTraceData[]}
-     */
-    protected stackTraceData: IStackTraceData[];
-
-    /**
-     * @param stackTraceData
-     * @param callsControllerFunctionName
-     * @param randomStackTraceIndex
      * @param options
      */
     constructor (
-        stackTraceData: IStackTraceData[],
-        callsControllerFunctionName: string,
-        randomStackTraceIndex: number,
-        options: IOptions
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+    }
 
-        this.stackTraceData = stackTraceData;
+    /**
+     * @param callsControllerFunctionName
+     */
+    public initialize (callsControllerFunctionName: string): void {
         this.callsControllerFunctionName = callsControllerFunctionName;
-        this.randomStackTraceIndex = randomStackTraceIndex;
     }
 
     /**
-     * @param blockScopeNode
+     * @returns {string}
      */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        NodeAppender.appendNodeToOptimalBlockScope(
-            this.stackTraceData,
-            blockScopeNode,
-            this.getNode(),
-            this.randomStackTraceIndex
-        );
-    }
-
-    /**
-     * @returns {TStatement[]}
-     */
-    protected getNodeStructure (): TStatement[] {
+    public getCode (): string {
         let domainsString: string = this.options.domainLock.join(';'),
-            [hiddenDomainsString, diff]: string[] = Utils.hideString(domainsString, domainsString.length * 3);
+            [hiddenDomainsString, diff]: string[] = CryptUtils.hideString(domainsString, domainsString.length * 3);
 
-        return NodeUtils.convertCodeToStructure(
-            DomainLockNodeTemplate().formatUnicorn({
-                domainLockFunctionName: Utils.getRandomVariableName(),
-                diff: diff,
-                domains: hiddenDomainsString,
-                singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-            })
-        );
+        return format(DomainLockNodeTemplate(), {
+            domainLockFunctionName: RandomGeneratorUtils.getRandomVariableName(),
+            diff: diff,
+            domains: hiddenDomainsString,
+            singleNodeCallControllerFunctionName: this.callsControllerFunctionName
+        });
     }
 }

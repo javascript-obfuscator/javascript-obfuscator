@@ -1,12 +1,15 @@
-import 'format-unicorn';
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
-import { TStatement } from '../../types/TStatement';
+import * as format from 'string-template';
 
-import { IOptions } from '../../interfaces/IOptions';
-import { IStackTraceData } from '../../interfaces/stack-trace-analyzer/IStackTraceData';
+import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
 
-import { AppendState } from '../../enums/AppendState';
+import { IOptions } from '../../interfaces/options/IOptions';
+
+import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
+
+import { initializable } from '../../decorators/Initializable';
 
 import { SingleNodeCallControllerTemplate } from '../../templates/custom-nodes/SingleNodeCallControllerTemplate';
 
@@ -14,86 +17,57 @@ import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
-import { NodeAppender } from '../../node/NodeAppender';
-import { NodeUtils } from '../../node/NodeUtils';
 
+@injectable()
 export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     /**
-     * @type {AppendState}
+     * @type {TObfuscationEvent}
      */
-    protected appendState: AppendState = AppendState.BeforeObfuscation;
+    @initializable()
+    private appendEvent: TObfuscationEvent;
 
     /**
      * @type {string}
      */
+    @initializable()
     protected callsControllerFunctionName: string;
 
     /**
-     * @type {number}
-     */
-    protected randomStackTraceIndex: number;
-
-    /**
-     * @type {IStackTraceData[]}
-     */
-    protected stackTraceData: IStackTraceData[];
-
-    /**
-     * @param stackTraceData
-     * @param callsControllerFunctionName
-     * @param randomStackTraceIndex
      * @param options
      */
     constructor (
-        stackTraceData: IStackTraceData[],
-        callsControllerFunctionName: string,
-        randomStackTraceIndex: number,
-        options: IOptions
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+    }
 
-        this.stackTraceData = stackTraceData;
+    /**
+     * @param appendEvent
+     * @param callsControllerFunctionName
+     */
+    public initialize (appendEvent: TObfuscationEvent, callsControllerFunctionName: string): void {
+        this.appendEvent = appendEvent;
         this.callsControllerFunctionName = callsControllerFunctionName;
-        this.randomStackTraceIndex = randomStackTraceIndex;
     }
 
     /**
-     * @param blockScopeNode
+     * @returns {string}
      */
-    public appendNode (blockScopeNode: TNodeWithBlockStatement): void {
-        let targetBlockScope: TNodeWithBlockStatement;
-
-        if (this.stackTraceData.length) {
-            targetBlockScope = NodeAppender
-                .getOptimalBlockScope(this.stackTraceData, this.randomStackTraceIndex, 1);
-        } else {
-            targetBlockScope = blockScopeNode;
+    public getCode (): string {
+        if (this.appendEvent === ObfuscationEvents.AfterObfuscation) {
+            return JavaScriptObfuscator.obfuscate(
+                format(SingleNodeCallControllerTemplate(), {
+                    singleNodeCallControllerFunctionName: this.callsControllerFunctionName
+                }),
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
+                    seed: this.options.seed
+                }
+            ).getObfuscatedCode();
         }
 
-        NodeAppender.prependNode(targetBlockScope, this.getNode());
-    }
-
-    /**
-     * @returns {TStatement[]}
-     */
-    protected getNodeStructure (): TStatement[] {
-        if (this.appendState === AppendState.AfterObfuscation) {
-            return NodeUtils.convertCodeToStructure(
-                JavaScriptObfuscator.obfuscate(
-                    SingleNodeCallControllerTemplate().formatUnicorn({
-                        singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-                    }),
-                    Object.assign({}, NO_CUSTOM_NODES_PRESET, {
-                        seed: this.options.seed
-                    })
-                ).getObfuscatedCode()
-            );
-        }
-
-        return NodeUtils.convertCodeToStructure(
-            SingleNodeCallControllerTemplate().formatUnicorn({
-                singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-            })
-        );
+        return format(SingleNodeCallControllerTemplate(), {
+            singleNodeCallControllerFunctionName: this.callsControllerFunctionName
+        });
     }
 }

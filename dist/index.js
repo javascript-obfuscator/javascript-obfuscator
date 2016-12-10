@@ -111,7 +111,7 @@ exports.ServiceIdentifiers = {
     'Factory<ICustomNodeGroup>': Symbol('Factory<ICustomNodeGroup>'),
     'Factory<INodeTransformer[]>': Symbol('Factory<INodeTransformer[]>'),
     'Factory<IObfuscationResult>': Symbol('Factory<IObfuscationResult>'),
-    'Factory<IReplacer>': Symbol('Factory<IReplacer>'),
+    'Factory<IObfuscatorReplacer>': Symbol('Factory<IObfuscatorReplacer>'),
     'Factory<IStorage<ICustomNode>>': Symbol('Factory<IStorage<ICustomNode>>'),
     ICalleeDataExtractor: Symbol('ICalleeDataExtractor'),
     ICustomNode: Symbol('ICustomNode'),
@@ -123,7 +123,7 @@ exports.ServiceIdentifiers = {
     IObfuscationResult: Symbol('IObfuscationResult'),
     IObfuscator: Symbol('IObfuscator'),
     IOptions: Symbol('IOptions'),
-    IReplacer: Symbol('IReplacer'),
+    IObfuscatorReplacer: Symbol('IObfuscatorReplacer'),
     ISourceMapCorrector: Symbol('ISourceMapCorrector'),
     IStackTraceAnalyzer: Symbol('IStackTraceAnalyzer'),
     'IStorage<ICustomNode>': Symbol('IStorage<ICustomNode>'),
@@ -150,7 +150,7 @@ var RandomGeneratorUtils = function () {
     }
 
     _createClass(RandomGeneratorUtils, null, [{
-        key: 'getRandomFloat',
+        key: "getRandomFloat",
         value: function getRandomFloat(min, max) {
             return RandomGeneratorUtils.randomGenerator.floating({
                 min: min,
@@ -159,16 +159,16 @@ var RandomGeneratorUtils = function () {
             });
         }
     }, {
-        key: 'getRandomGenerator',
+        key: "getRandomGenerator",
         value: function getRandomGenerator() {
             var randomGenerator = RandomGeneratorUtils.randomGenerator;
             if (!randomGenerator) {
-                throw new Error('`randomGenerator` static property is undefined');
+                throw new Error("`randomGenerator` static property is undefined");
             }
             return RandomGeneratorUtils.randomGenerator;
         }
     }, {
-        key: 'getRandomInteger',
+        key: "getRandomInteger",
         value: function getRandomInteger(min, max) {
             return RandomGeneratorUtils.randomGenerator.integer({
                 min: min,
@@ -176,16 +176,23 @@ var RandomGeneratorUtils = function () {
             });
         }
     }, {
-        key: 'getRandomVariableName',
+        key: "getRandomString",
+        value: function getRandomString(length) {
+            var pool = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : RandomGeneratorUtils.randomGeneratorPool;
+
+            return RandomGeneratorUtils.getRandomGenerator().string({ length: length, pool: pool });
+        }
+    }, {
+        key: "getRandomVariableName",
         value: function getRandomVariableName() {
             var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 6;
 
             var rangeMinInteger = 10000,
                 rangeMaxInteger = 99999999;
-            return '_' + Utils_1.Utils.hexadecimalPrefix + Utils_1.Utils.decToHex(RandomGeneratorUtils.getRandomInteger(rangeMinInteger, rangeMaxInteger)).substr(0, length);
+            return "_" + Utils_1.Utils.hexadecimalPrefix + Utils_1.Utils.decToHex(RandomGeneratorUtils.getRandomInteger(rangeMinInteger, rangeMaxInteger)).substr(0, length);
         }
     }, {
-        key: 'setRandomGeneratorSeed',
+        key: "setRandomGeneratorSeed",
         value: function setRandomGeneratorSeed(randomGeneratorSeed) {
             RandomGeneratorUtils.randomGenerator = new chance_1.Chance(randomGeneratorSeed);
         }
@@ -195,7 +202,7 @@ var RandomGeneratorUtils = function () {
 }();
 
 RandomGeneratorUtils.randomGeneratorPool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-RandomGeneratorUtils.randomGeneratorPoolWithNumbers = RandomGeneratorUtils.randomGeneratorPool + '0123456789';
+RandomGeneratorUtils.randomGeneratorPoolWithNumbers = RandomGeneratorUtils.randomGeneratorPool + "0123456789";
 RandomGeneratorUtils.randomGenerator = new chance_1.Chance();
 exports.RandomGeneratorUtils = RandomGeneratorUtils;
 
@@ -1164,7 +1171,7 @@ var AbstractReplacer = function AbstractReplacer(options) {
 
     this.options = options;
 };
-AbstractReplacer = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata('design:paramtypes', [Object])], AbstractReplacer);
+AbstractReplacer = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata("design:paramtypes", [Object])], AbstractReplacer);
 exports.AbstractReplacer = AbstractReplacer;
 
 /***/ },
@@ -2414,17 +2421,17 @@ var IdentifierReplacer_1 = __webpack_require__(80);
 var NumberLiteralReplacer_1 = __webpack_require__(81);
 var StringLiteralReplacer_1 = __webpack_require__(82);
 exports.nodeObfuscatorsModule = new inversify_1.ContainerModule(function (bind) {
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.IReplacer).to(BooleanLiteralReplacer_1.BooleanLiteralReplacer).whenTargetNamed(NodeObfuscatorsReplacers_1.NodeObfuscatorsReplacers.BooleanReplacer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.IReplacer).to(IdentifierReplacer_1.IdentifierReplacer).whenTargetNamed(NodeObfuscatorsReplacers_1.NodeObfuscatorsReplacers.IdentifierReplacer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.IReplacer).to(NumberLiteralReplacer_1.NumberLiteralReplacer).whenTargetNamed(NodeObfuscatorsReplacers_1.NodeObfuscatorsReplacers.NumberLiteralReplacer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.IReplacer).to(StringLiteralReplacer_1.StringLiteralReplacer).whenTargetNamed(NodeObfuscatorsReplacers_1.NodeObfuscatorsReplacers.StringLiteralReplacer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IReplacer>']).toFactory(function (context) {
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatorReplacer).to(BooleanLiteralReplacer_1.BooleanLiteralReplacer).whenTargetNamed(NodeObfuscatorsReplacers_1.NodeObfuscatorsReplacers.BooleanReplacer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatorReplacer).to(IdentifierReplacer_1.IdentifierReplacer).whenTargetNamed(NodeObfuscatorsReplacers_1.NodeObfuscatorsReplacers.IdentifierReplacer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatorReplacer).to(NumberLiteralReplacer_1.NumberLiteralReplacer).whenTargetNamed(NodeObfuscatorsReplacers_1.NodeObfuscatorsReplacers.NumberLiteralReplacer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatorReplacer).to(StringLiteralReplacer_1.StringLiteralReplacer).whenTargetNamed(NodeObfuscatorsReplacers_1.NodeObfuscatorsReplacers.StringLiteralReplacer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IObfuscatorReplacer>']).toFactory(function (context) {
         var cache = new Map();
         return function (replacerName) {
             if (cache.has(replacerName)) {
                 return cache.get(replacerName);
             }
-            var obfuscationReplacer = context.container.getNamed(ServiceIdentifiers_1.ServiceIdentifiers.IReplacer, replacerName);
+            var obfuscationReplacer = context.container.getNamed(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatorReplacer, replacerName);
             cache.set(replacerName, obfuscationReplacer);
             return obfuscationReplacer;
         };
@@ -4346,33 +4353,30 @@ var CatchClauseObfuscator = function (_AbstractNodeTransfor) {
     _createClass(CatchClauseObfuscator, [{
         key: "transformNode",
         value: function transformNode(catchClauseNode) {
-            this.identifierReplacer.setPrefix(RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().string({
-                length: 5,
-                pool: RandomGeneratorUtils_1.RandomGeneratorUtils.randomGeneratorPool
-            }));
-            this.storeCatchClauseParam(catchClauseNode);
-            this.replaceCatchClauseParam(catchClauseNode);
+            var nodeIdentifier = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(7);
+            this.storeCatchClauseParam(catchClauseNode, nodeIdentifier);
+            this.replaceCatchClauseParam(catchClauseNode, nodeIdentifier);
         }
     }, {
         key: "storeCatchClauseParam",
-        value: function storeCatchClauseParam(catchClauseNode) {
+        value: function storeCatchClauseParam(catchClauseNode, nodeIdentifier) {
             var _this2 = this;
 
             NodeUtils_1.NodeUtils.typedTraverse(catchClauseNode.param, NodeType_1.NodeType.Identifier, {
                 enter: function enter(node) {
-                    return _this2.identifierReplacer.storeNames(node.name);
+                    return _this2.identifierReplacer.storeNames(node.name, nodeIdentifier);
                 }
             });
         }
     }, {
         key: "replaceCatchClauseParam",
-        value: function replaceCatchClauseParam(catchClauseNode) {
+        value: function replaceCatchClauseParam(catchClauseNode, nodeIdentifier) {
             var _this3 = this;
 
             estraverse.replace(catchClauseNode, {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
-                        node.name = _this3.identifierReplacer.replace(node.name);
+                        node.name = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
                     }
                 }
             });
@@ -4381,7 +4385,7 @@ var CatchClauseObfuscator = function (_AbstractNodeTransfor) {
 
     return CatchClauseObfuscator;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
-CatchClauseObfuscator = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IReplacer>'])), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata('design:paramtypes', [Function, Object])], CatchClauseObfuscator);
+CatchClauseObfuscator = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IObfuscatorReplacer>'])), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata("design:paramtypes", [Function, Object])], CatchClauseObfuscator);
 exports.CatchClauseObfuscator = CatchClauseObfuscator;
 
 /***/ },
@@ -4441,37 +4445,34 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeTransfor) {
     _createClass(FunctionDeclarationObfuscator, [{
         key: "transformNode",
         value: function transformNode(functionDeclarationNode, parentNode) {
-            this.identifierReplacer.setPrefix(RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().string({
-                length: 5,
-                pool: RandomGeneratorUtils_1.RandomGeneratorUtils.randomGeneratorPool
-            }));
+            var nodeIdentifier = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(7);
             var blockScopeOfFunctionDeclarationNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(functionDeclarationNode);
             if (blockScopeOfFunctionDeclarationNode.type === NodeType_1.NodeType.Program) {
                 return;
             }
-            this.storeFunctionName(functionDeclarationNode);
-            this.replaceFunctionName(blockScopeOfFunctionDeclarationNode);
+            this.storeFunctionName(functionDeclarationNode, nodeIdentifier);
+            this.replaceFunctionName(blockScopeOfFunctionDeclarationNode, nodeIdentifier);
         }
     }, {
         key: "storeFunctionName",
-        value: function storeFunctionName(functionDeclarationNode) {
+        value: function storeFunctionName(functionDeclarationNode, nodeIdentifier) {
             var _this2 = this;
 
             NodeUtils_1.NodeUtils.typedTraverse(functionDeclarationNode.id, NodeType_1.NodeType.Identifier, {
                 enter: function enter(node) {
-                    return _this2.identifierReplacer.storeNames(node.name);
+                    return _this2.identifierReplacer.storeNames(node.name, nodeIdentifier);
                 }
             });
         }
     }, {
         key: "replaceFunctionName",
-        value: function replaceFunctionName(scopeNode) {
+        value: function replaceFunctionName(scopeNode, nodeIdentifier) {
             var _this3 = this;
 
             estraverse.replace(scopeNode, {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
-                        node.name = _this3.identifierReplacer.replace(node.name);
+                        node.name = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
                     }
                 }
             });
@@ -4480,7 +4481,7 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeTransfor) {
 
     return FunctionDeclarationObfuscator;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
-FunctionDeclarationObfuscator = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IReplacer>'])), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata('design:paramtypes', [Function, Object])], FunctionDeclarationObfuscator);
+FunctionDeclarationObfuscator = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IObfuscatorReplacer>'])), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata("design:paramtypes", [Function, Object])], FunctionDeclarationObfuscator);
 exports.FunctionDeclarationObfuscator = FunctionDeclarationObfuscator;
 
 /***/ },
@@ -4540,35 +4541,32 @@ var FunctionObfuscator = function (_AbstractNodeTransfor) {
     _createClass(FunctionObfuscator, [{
         key: "transformNode",
         value: function transformNode(functionNode) {
-            this.identifierReplacer.setPrefix(RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().string({
-                length: 5,
-                pool: RandomGeneratorUtils_1.RandomGeneratorUtils.randomGeneratorPool
-            }));
-            this.storeFunctionParams(functionNode);
-            this.replaceFunctionParams(functionNode);
+            var nodeIdentifier = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(7);
+            this.storeFunctionParams(functionNode, nodeIdentifier);
+            this.replaceFunctionParams(functionNode, nodeIdentifier);
         }
     }, {
         key: "storeFunctionParams",
-        value: function storeFunctionParams(functionNode) {
+        value: function storeFunctionParams(functionNode, nodeIdentifier) {
             var _this2 = this;
 
             functionNode.params.forEach(function (paramsNode) {
                 NodeUtils_1.NodeUtils.typedTraverse(paramsNode, NodeType_1.NodeType.Identifier, {
                     enter: function enter(node) {
-                        return _this2.identifierReplacer.storeNames(node.name);
+                        return _this2.identifierReplacer.storeNames(node.name, nodeIdentifier);
                     }
                 });
             });
         }
     }, {
         key: "replaceFunctionParams",
-        value: function replaceFunctionParams(functionNode) {
+        value: function replaceFunctionParams(functionNode, nodeIdentifier) {
             var _this3 = this;
 
             var traverseVisitor = {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
-                        var newNodeName = _this3.identifierReplacer.replace(node.name);
+                        var newNodeName = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
                         if (node.name !== newNodeName) {
                             node.name = newNodeName;
                             node.obfuscated = true;
@@ -4585,7 +4583,7 @@ var FunctionObfuscator = function (_AbstractNodeTransfor) {
 
     return FunctionObfuscator;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
-FunctionObfuscator = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IReplacer>'])), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata('design:paramtypes', [Function, Object])], FunctionObfuscator);
+FunctionObfuscator = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IObfuscatorReplacer>'])), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata("design:paramtypes", [Function, Object])], FunctionObfuscator);
 exports.FunctionObfuscator = FunctionObfuscator;
 
 /***/ },
@@ -4645,33 +4643,30 @@ var LabeledStatementObfuscator = function (_AbstractNodeTransfor) {
     _createClass(LabeledStatementObfuscator, [{
         key: "transformNode",
         value: function transformNode(labeledStatementNode) {
-            this.identifierReplacer.setPrefix(RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().string({
-                length: 5,
-                pool: RandomGeneratorUtils_1.RandomGeneratorUtils.randomGeneratorPool
-            }));
-            this.storeLabeledStatementName(labeledStatementNode);
-            this.replaceLabeledStatementName(labeledStatementNode);
+            var nodeIdentifier = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(7);
+            this.storeLabeledStatementName(labeledStatementNode, nodeIdentifier);
+            this.replaceLabeledStatementName(labeledStatementNode, nodeIdentifier);
         }
     }, {
         key: "storeLabeledStatementName",
-        value: function storeLabeledStatementName(labeledStatementNode) {
+        value: function storeLabeledStatementName(labeledStatementNode, nodeIdentifier) {
             var _this2 = this;
 
             NodeUtils_1.NodeUtils.typedTraverse(labeledStatementNode.label, NodeType_1.NodeType.Identifier, {
                 enter: function enter(node) {
-                    return _this2.identifierReplacer.storeNames(node.name);
+                    return _this2.identifierReplacer.storeNames(node.name, nodeIdentifier);
                 }
             });
         }
     }, {
         key: "replaceLabeledStatementName",
-        value: function replaceLabeledStatementName(labeledStatementNode) {
+        value: function replaceLabeledStatementName(labeledStatementNode, nodeIdentifier) {
             var _this3 = this;
 
             estraverse.replace(labeledStatementNode, {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isLabelIdentifierNode(node, parentNode)) {
-                        node.name = _this3.identifierReplacer.replace(node.name);
+                        node.name = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
                     }
                 }
             });
@@ -4680,7 +4675,7 @@ var LabeledStatementObfuscator = function (_AbstractNodeTransfor) {
 
     return LabeledStatementObfuscator;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
-LabeledStatementObfuscator = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IReplacer>'])), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata('design:paramtypes', [Function, Object])], LabeledStatementObfuscator);
+LabeledStatementObfuscator = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IObfuscatorReplacer>'])), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata("design:paramtypes", [Function, Object])], LabeledStatementObfuscator);
 exports.LabeledStatementObfuscator = LabeledStatementObfuscator;
 
 /***/ },
@@ -4763,7 +4758,7 @@ var LiteralObfuscator = function (_AbstractNodeTransfor) {
 
     return LiteralObfuscator;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
-LiteralObfuscator = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IReplacer>'])), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata('design:paramtypes', [Function, Object])], LiteralObfuscator);
+LiteralObfuscator = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IObfuscatorReplacer>'])), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata("design:paramtypes", [Function, Object])], LiteralObfuscator);
 exports.LiteralObfuscator = LiteralObfuscator;
 
 /***/ },
@@ -4870,7 +4865,7 @@ var MemberExpressionObfuscator = function (_AbstractNodeTransfor) {
 
     return MemberExpressionObfuscator;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
-MemberExpressionObfuscator = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IReplacer>'])), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata('design:paramtypes', [Function, Object])], MemberExpressionObfuscator);
+MemberExpressionObfuscator = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IObfuscatorReplacer>'])), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata("design:paramtypes", [Function, Object])], MemberExpressionObfuscator);
 exports.MemberExpressionObfuscator = MemberExpressionObfuscator;
 
 /***/ },
@@ -4913,7 +4908,7 @@ var NodeObfuscatorsReplacers_1 = __webpack_require__(13);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(5);
 var Utils_1 = __webpack_require__(4);
-var MethodDefinitionObfuscator_1 = function (_AbstractNodeTransfor) {
+var MethodDefinitionObfuscator = MethodDefinitionObfuscator_1 = function (_AbstractNodeTransfor) {
     _inherits(MethodDefinitionObfuscator, _AbstractNodeTransfor);
 
     function MethodDefinitionObfuscator(replacersFactory, options) {
@@ -4950,10 +4945,10 @@ var MethodDefinitionObfuscator_1 = function (_AbstractNodeTransfor) {
 
     return MethodDefinitionObfuscator;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
-var MethodDefinitionObfuscator = MethodDefinitionObfuscator_1;
 MethodDefinitionObfuscator.ignoredNames = ['constructor'];
-MethodDefinitionObfuscator = MethodDefinitionObfuscator_1 = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IReplacer>'])), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata('design:paramtypes', [Function, Object])], MethodDefinitionObfuscator);
+MethodDefinitionObfuscator = MethodDefinitionObfuscator_1 = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IObfuscatorReplacer>'])), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata("design:paramtypes", [Function, Object])], MethodDefinitionObfuscator);
 exports.MethodDefinitionObfuscator = MethodDefinitionObfuscator;
+var MethodDefinitionObfuscator_1;
 
 /***/ },
 /* 77 */
@@ -5117,40 +5112,37 @@ var VariableDeclarationObfuscator = function (_AbstractNodeTransfor) {
     _createClass(VariableDeclarationObfuscator, [{
         key: "transformNode",
         value: function transformNode(variableDeclarationNode, parentNode) {
-            this.identifierReplacer.setPrefix(RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().string({
-                length: 5,
-                pool: RandomGeneratorUtils_1.RandomGeneratorUtils.randomGeneratorPool
-            }));
             var blockScopeOfVariableDeclarationNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(variableDeclarationNode);
             if (blockScopeOfVariableDeclarationNode.type === NodeType_1.NodeType.Program) {
                 return;
             }
+            var nodeIdentifier = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(7);
             var scopeNode = variableDeclarationNode.kind === 'var' ? blockScopeOfVariableDeclarationNode : parentNode;
-            this.storeVariableNames(variableDeclarationNode);
-            this.replaceVariableNames(scopeNode);
+            this.storeVariableNames(variableDeclarationNode, nodeIdentifier);
+            this.replaceVariableNames(scopeNode, nodeIdentifier);
         }
     }, {
         key: "storeVariableNames",
-        value: function storeVariableNames(variableDeclarationNode) {
+        value: function storeVariableNames(variableDeclarationNode, nodeIdentifier) {
             var _this2 = this;
 
             variableDeclarationNode.declarations.forEach(function (declarationNode) {
                 NodeUtils_1.NodeUtils.typedTraverse(declarationNode.id, NodeType_1.NodeType.Identifier, {
                     enter: function enter(node) {
-                        return _this2.identifierReplacer.storeNames(node.name);
+                        return _this2.identifierReplacer.storeNames(node.name, nodeIdentifier);
                     }
                 });
             });
         }
     }, {
         key: "replaceVariableNames",
-        value: function replaceVariableNames(scopeNode) {
+        value: function replaceVariableNames(scopeNode, nodeIdentifier) {
             var _this3 = this;
 
             estraverse.replace(scopeNode, {
                 enter: function enter(node, parentNode) {
                     if (!node.obfuscated && Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
-                        node.name = _this3.identifierReplacer.replace(node.name);
+                        node.name = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
                     }
                 }
             });
@@ -5159,7 +5151,7 @@ var VariableDeclarationObfuscator = function (_AbstractNodeTransfor) {
 
     return VariableDeclarationObfuscator;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
-VariableDeclarationObfuscator = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IReplacer>'])), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata('design:paramtypes', [Function, Object])], VariableDeclarationObfuscator);
+VariableDeclarationObfuscator = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IObfuscatorReplacer>'])), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata("design:paramtypes", [Function, Object])], VariableDeclarationObfuscator);
 exports.VariableDeclarationObfuscator = VariableDeclarationObfuscator;
 
 /***/ },
@@ -5271,26 +5263,18 @@ var IdentifierReplacer = function (_AbstractReplacer_1$A) {
 
     _createClass(IdentifierReplacer, [{
         key: "replace",
-        value: function replace(nodeValue) {
-            var obfuscatedIdentifierName = this.namesMap.get(nodeValue + "-" + this.uniquePrefix);
+        value: function replace(nodeValue, nodeIdentifier) {
+            var obfuscatedIdentifierName = this.namesMap.get(nodeValue + "-" + nodeIdentifier);
             if (!obfuscatedIdentifierName) {
                 return nodeValue;
             }
             return obfuscatedIdentifierName;
         }
     }, {
-        key: "setPrefix",
-        value: function setPrefix(uniquePrefix) {
-            this.uniquePrefix = uniquePrefix;
-        }
-    }, {
         key: "storeNames",
-        value: function storeNames(nodeName) {
-            if (!this.uniquePrefix) {
-                throw new Error('`uniquePrefix` is `undefined`. Set it before `storeNames`');
-            }
+        value: function storeNames(nodeName, nodeIdentifier) {
             if (!this.isReservedName(nodeName)) {
-                this.namesMap.set(nodeName + "-" + this.uniquePrefix, RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName());
+                this.namesMap.set(nodeName + "-" + nodeIdentifier, RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName());
             }
         }
     }, {
@@ -5304,7 +5288,7 @@ var IdentifierReplacer = function (_AbstractReplacer_1$A) {
 
     return IdentifierReplacer;
 }(AbstractReplacer_1.AbstractReplacer);
-IdentifierReplacer = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata('design:paramtypes', [Object])], IdentifierReplacer);
+IdentifierReplacer = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata("design:paramtypes", [Object])], IdentifierReplacer);
 exports.IdentifierReplacer = IdentifierReplacer;
 
 /***/ },

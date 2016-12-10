@@ -5,13 +5,13 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
-import { IReplacer } from '../../interfaces/node-transformers/IReplacer';
+import { IObfuscatorReplacer } from '../../interfaces/node-transformers/IObfuscatorReplacer';
+import { IObfuscatorReplacerWithStorage } from '../../interfaces/node-transformers/IObfuscatorReplacerWithStorage';
 
 import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscatorsReplacers';
 import { NodeType } from '../../enums/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { IdentifierReplacer } from './replacers/IdentifierReplacer';
 import { Node } from '../../node/Node';
 import { NodeUtils } from '../../node/NodeUtils';
 import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
@@ -35,53 +35,52 @@ import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 @injectable()
 export class LabeledStatementObfuscator extends AbstractNodeTransformer {
     /**
-     * @type {IdentifierReplacer}
+     * @type {IObfuscatorReplacerWithStorage}
      */
-    private readonly identifierReplacer: IdentifierReplacer;
+    private readonly identifierReplacer: IObfuscatorReplacerWithStorage;
 
     /**
      * @param nodeObfuscatorsReplacersFactory
      * @param options
      */
     constructor(
-        @inject(ServiceIdentifiers['Factory<IReplacer>']) nodeObfuscatorsReplacersFactory: (replacer: NodeObfuscatorsReplacers) => IReplacer,
+        @inject(ServiceIdentifiers['Factory<IObfuscatorReplacer>']) nodeObfuscatorsReplacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscatorReplacer,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
-        this.identifierReplacer = <IdentifierReplacer>nodeObfuscatorsReplacersFactory(NodeObfuscatorsReplacers.IdentifierReplacer);
+        this.identifierReplacer = <IObfuscatorReplacerWithStorage>nodeObfuscatorsReplacersFactory(NodeObfuscatorsReplacers.IdentifierReplacer);
     }
 
     /**
      * @param labeledStatementNode
      */
     public transformNode (labeledStatementNode: ESTree.LabeledStatement): void {
-        this.identifierReplacer.setPrefix(RandomGeneratorUtils.getRandomGenerator().string({
-            length: 5,
-            pool: RandomGeneratorUtils.randomGeneratorPool
-        }));
+        const nodeIdentifier: string = RandomGeneratorUtils.getRandomString(7);
 
-        this.storeLabeledStatementName(labeledStatementNode);
-        this.replaceLabeledStatementName(labeledStatementNode);
+        this.storeLabeledStatementName(labeledStatementNode, nodeIdentifier);
+        this.replaceLabeledStatementName(labeledStatementNode, nodeIdentifier);
     }
 
     /**
      * @param labeledStatementNode
+     * @param nodeIdentifier
      */
-    private storeLabeledStatementName (labeledStatementNode: ESTree.LabeledStatement): void {
+    private storeLabeledStatementName (labeledStatementNode: ESTree.LabeledStatement, nodeIdentifier: string): void {
         NodeUtils.typedTraverse(labeledStatementNode.label, NodeType.Identifier, {
-            enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
+            enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name, nodeIdentifier)
         });
     }
 
     /**
      * @param labeledStatementNode
+     * @param nodeIdentifier
      */
-    private replaceLabeledStatementName (labeledStatementNode: ESTree.LabeledStatement): void {
+    private replaceLabeledStatementName (labeledStatementNode: ESTree.LabeledStatement, nodeIdentifier: string): void {
         estraverse.replace(labeledStatementNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isLabelIdentifierNode(node, parentNode)) {
-                    node.name = this.identifierReplacer.replace(node.name);
+                    node.name = this.identifierReplacer.replace(node.name, nodeIdentifier);
                 }
             }
         });

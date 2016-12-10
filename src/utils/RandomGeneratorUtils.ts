@@ -58,6 +58,15 @@ export class RandomGeneratorUtils {
 
     /**
      * @param length
+     * @param pool
+     * @returns {string}
+     */
+    public static getRandomString (length: number, pool: string = RandomGeneratorUtils.randomGeneratorPool): string {
+        return RandomGeneratorUtils.getRandomGenerator().string({ length, pool });
+    }
+
+    /**
+     * @param length
      * @returns {string}
      */
     public static getRandomVariableName (length: number = 6): string {

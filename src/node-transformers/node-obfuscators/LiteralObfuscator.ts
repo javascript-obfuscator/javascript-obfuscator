@@ -5,7 +5,7 @@ import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
-import { IReplacer } from '../../interfaces/node-transformers/IReplacer';
+import { IObfuscatorReplacer } from '../../interfaces/node-transformers/IObfuscatorReplacer';
 
 import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscatorsReplacers';
 
@@ -15,16 +15,16 @@ import { Node } from '../../node/Node';
 @injectable()
 export class LiteralObfuscator extends AbstractNodeTransformer {
     /**
-     * @type {(replacer: NodeObfuscatorsReplacers) => IReplacer}
+     * @type {(replacer: NodeObfuscatorsReplacers) => IObfuscatorReplacer}
      */
-    private readonly replacersFactory: (replacer: NodeObfuscatorsReplacers) => IReplacer;
+    private readonly replacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscatorReplacer;
 
     /**
      * @param replacersFactory
      * @param options
      */
     constructor(
-        @inject(ServiceIdentifiers['Factory<IReplacer>']) replacersFactory: (replacer: NodeObfuscatorsReplacers) => IReplacer,
+        @inject(ServiceIdentifiers['Factory<IObfuscatorReplacer>']) replacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscatorReplacer,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);

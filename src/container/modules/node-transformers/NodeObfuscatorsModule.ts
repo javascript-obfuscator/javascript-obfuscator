@@ -1,7 +1,7 @@
 import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
-import { IReplacer } from '../../../interfaces/node-transformers/IReplacer';
+import { IObfuscatorReplacer } from '../../../interfaces/node-transformers/IObfuscatorReplacer';
 
 import { NodeObfuscatorsReplacers } from '../../../enums/container/NodeObfuscatorsReplacers';
 
@@ -11,33 +11,33 @@ import { NumberLiteralReplacer } from '../../../node-transformers/node-obfuscato
 import { StringLiteralReplacer } from '../../../node-transformers/node-obfuscators/replacers/StringLiteralReplacer';
 
 export const nodeObfuscatorsModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
-    bind<IReplacer>(ServiceIdentifiers.IReplacer)
+    bind<IObfuscatorReplacer>(ServiceIdentifiers.IObfuscatorReplacer)
         .to(BooleanLiteralReplacer)
         .whenTargetNamed(NodeObfuscatorsReplacers.BooleanReplacer);
 
-    bind<IReplacer>(ServiceIdentifiers.IReplacer)
+    bind<IObfuscatorReplacer>(ServiceIdentifiers.IObfuscatorReplacer)
         .to(IdentifierReplacer)
         .whenTargetNamed(NodeObfuscatorsReplacers.IdentifierReplacer);
 
-    bind<IReplacer>(ServiceIdentifiers.IReplacer)
+    bind<IObfuscatorReplacer>(ServiceIdentifiers.IObfuscatorReplacer)
         .to(NumberLiteralReplacer)
         .whenTargetNamed(NodeObfuscatorsReplacers.NumberLiteralReplacer);
 
-    bind<IReplacer>(ServiceIdentifiers.IReplacer)
+    bind<IObfuscatorReplacer>(ServiceIdentifiers.IObfuscatorReplacer)
         .to(StringLiteralReplacer)
         .whenTargetNamed(NodeObfuscatorsReplacers.StringLiteralReplacer);
 
-    bind<IReplacer>(ServiceIdentifiers['Factory<IReplacer>'])
-        .toFactory<IReplacer>((context: interfaces.Context) => {
-            const cache: Map <NodeObfuscatorsReplacers, IReplacer> = new Map <NodeObfuscatorsReplacers, IReplacer> ();
+    bind<IObfuscatorReplacer>(ServiceIdentifiers['Factory<IObfuscatorReplacer>'])
+        .toFactory<IObfuscatorReplacer>((context: interfaces.Context) => {
+            const cache: Map <NodeObfuscatorsReplacers, IObfuscatorReplacer> = new Map <NodeObfuscatorsReplacers, IObfuscatorReplacer> ();
 
             return (replacerName: NodeObfuscatorsReplacers) => {
                 if (cache.has(replacerName)) {
-                    return <IReplacer>cache.get(replacerName);
+                    return <IObfuscatorReplacer>cache.get(replacerName);
                 }
 
-                const obfuscationReplacer: IReplacer = context.container.getNamed<IReplacer>(
-                    ServiceIdentifiers.IReplacer,
+                const obfuscationReplacer: IObfuscatorReplacer = context.container.getNamed<IObfuscatorReplacer>(
+                    ServiceIdentifiers.IObfuscatorReplacer,
                     replacerName
                 );
 

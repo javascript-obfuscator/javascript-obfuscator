@@ -5,13 +5,13 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
-import { IReplacer } from '../../interfaces/node-transformers/IReplacer';
+import { IObfuscatorReplacer } from '../../interfaces/node-transformers/IObfuscatorReplacer';
+import { IObfuscatorReplacerWithStorage } from '../../interfaces/node-transformers/IObfuscatorReplacerWithStorage';
 
 import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscatorsReplacers';
 import { NodeType } from '../../enums/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { IdentifierReplacer } from './replacers/IdentifierReplacer';
 import { Node } from '../../node/Node';
 import { NodeUtils } from '../../node/NodeUtils';
 import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
@@ -27,56 +27,55 @@ import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 @injectable()
 export class FunctionObfuscator extends AbstractNodeTransformer {
     /**
-     * @type {IdentifierReplacer}
+     * @type {IObfuscatorReplacerWithStorage}
      */
-    private readonly identifierReplacer: IdentifierReplacer;
+    private readonly identifierReplacer: IObfuscatorReplacerWithStorage;
 
     /**
      * @param nodeObfuscatorsReplacersFactory
      * @param options
      */
     constructor(
-        @inject(ServiceIdentifiers['Factory<IReplacer>']) nodeObfuscatorsReplacersFactory: (replacer: NodeObfuscatorsReplacers) => IReplacer,
+        @inject(ServiceIdentifiers['Factory<IObfuscatorReplacer>']) nodeObfuscatorsReplacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscatorReplacer,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
-        this.identifierReplacer = <IdentifierReplacer>nodeObfuscatorsReplacersFactory(NodeObfuscatorsReplacers.IdentifierReplacer);
+        this.identifierReplacer = <IObfuscatorReplacerWithStorage>nodeObfuscatorsReplacersFactory(NodeObfuscatorsReplacers.IdentifierReplacer);
     }
 
     /**
      * @param functionNode
      */
     public transformNode (functionNode: ESTree.Function): void {
-        this.identifierReplacer.setPrefix(RandomGeneratorUtils.getRandomGenerator().string({
-            length: 5,
-            pool: RandomGeneratorUtils.randomGeneratorPool
-        }));
+        const nodeIdentifier: string = RandomGeneratorUtils.getRandomString(7);
 
-        this.storeFunctionParams(functionNode);
-        this.replaceFunctionParams(functionNode);
+        this.storeFunctionParams(functionNode, nodeIdentifier);
+        this.replaceFunctionParams(functionNode, nodeIdentifier);
     }
 
     /**
      * @param functionNode
+     * @param nodeIdentifier
      */
-    private storeFunctionParams (functionNode: ESTree.Function): void {
+    private storeFunctionParams (functionNode: ESTree.Function, nodeIdentifier: string): void {
         functionNode.params
             .forEach((paramsNode: ESTree.Node) => {
                 NodeUtils.typedTraverse(paramsNode, NodeType.Identifier, {
-                    enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
+                    enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name, nodeIdentifier)
                 });
             });
     }
 
     /**
      * @param functionNode
+     * @param nodeIdentifier
      */
-    private replaceFunctionParams (functionNode: ESTree.Function): void {
+    private replaceFunctionParams (functionNode: ESTree.Function, nodeIdentifier: string): void {
         let traverseVisitor: estraverse.Visitor = {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isReplaceableIdentifierNode(node, parentNode)) {
-                    const newNodeName: string = this.identifierReplacer.replace(node.name);
+                    const newNodeName: string = this.identifierReplacer.replace(node.name, nodeIdentifier);
 
                     if (node.name !== newNodeName) {
                         node.name = newNodeName;

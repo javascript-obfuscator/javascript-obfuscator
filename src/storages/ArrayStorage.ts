@@ -1,7 +1,10 @@
+import { injectable } from 'inversify';
+
 import { IStorage } from '../interfaces/storages/IStorage';
 
 import { initializable } from '../decorators/Initializable';
 
+@injectable()
 export abstract class ArrayStorage <T> implements IStorage <T> {
     /**
      * @type {T[]}

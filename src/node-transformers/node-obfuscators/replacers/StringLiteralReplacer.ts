@@ -3,7 +3,6 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { ICustomNodeGroup } from '../../../interfaces/custom-nodes/ICustomNodeGroup';
-import { ICustomNodeWithData } from '../../../interfaces/custom-nodes/ICustomNodeWithData';
 import { ICustomNodeWithIdentifier } from '../../../interfaces/custom-nodes/ICustomNodeWithIdentifier';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStorage } from '../../../interfaces/storages/IStorage';
@@ -36,16 +35,24 @@ export class StringLiteralReplacer extends AbstractReplacer {
     private readonly customNodeGroupStorage: IStorage<ICustomNodeGroup>;
 
     /**
+     * @type {IStorage<string>}
+     */
+    private readonly stringArrayStorage: IStorage<string>;
+
+    /**
      * @param customNodeGroupStorage
+     * @param stringArrayStorage
      * @param options
      */
     constructor (
         @inject(ServiceIdentifiers['IStorage<ICustomNodeGroup>']) customNodeGroupStorage: IStorage<ICustomNodeGroup>,
+        @inject(ServiceIdentifiers['IStorage<string>']) stringArrayStorage: IStorage<string>,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
         this.customNodeGroupStorage = customNodeGroupStorage;
+        this.stringArrayStorage = stringArrayStorage;
     }
 
     /**
@@ -73,8 +80,6 @@ export class StringLiteralReplacer extends AbstractReplacer {
         const stringArrayCustomNodeGroupNodes: Map <CustomNodes, ICustomNode> = this.customNodeGroupStorage
             .get(CustomNodeGroups.StringArrayCustomNodeGroup)
             .getCustomNodes();
-        const stringArrayNode: ICustomNodeWithData = <ICustomNodeWithData>stringArrayCustomNodeGroupNodes
-            .get(CustomNodes.StringArrayNode);
 
         let rc4Key: string = '';
 
@@ -95,16 +100,15 @@ export class StringLiteralReplacer extends AbstractReplacer {
             value = Utils.stringToUnicodeEscapeSequence(value);
         }
 
-        const stringArray: IStorage <string> = stringArrayNode.getNodeData();
-        const indexOfExistingValue: number = <number>stringArray.getKeyOf(value);
+        const indexOfExistingValue: number = <number>this.stringArrayStorage.getKeyOf(value);
 
         let indexOfValue: number;
 
         if (indexOfExistingValue >= 0) {
             indexOfValue = indexOfExistingValue;
         } else {
-            indexOfValue = stringArray.getLength();
-            stringArray.set(null, value);
+            indexOfValue = this.stringArrayStorage.getLength();
+            this.stringArrayStorage.set(null, value);
         }
 
         const stringArrayCallsWrapper: ICustomNodeWithIdentifier = <ICustomNodeWithIdentifier>stringArrayCustomNodeGroupNodes

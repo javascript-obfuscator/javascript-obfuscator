@@ -5,7 +5,6 @@ import * as format from 'string-template';
 
 import { TStatement } from '../../types/node/TStatement';
 
-import { ICustomNodeWithData } from '../../interfaces/custom-nodes/ICustomNodeWithData';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IStorage } from '../../interfaces/storages/IStorage';
 
@@ -17,7 +16,7 @@ import { AbstractCustomNode } from '../AbstractCustomNode';
 import { StringArrayStorage } from '../../storages/string-array/StringArrayStorage';
 
 @injectable()
-export class StringArrayNode extends AbstractCustomNode implements ICustomNodeWithData {
+export class StringArrayNode extends AbstractCustomNode {
     /**
      * @type {number}
      */
@@ -73,13 +72,6 @@ export class StringArrayNode extends AbstractCustomNode implements ICustomNodeWi
             stringArrayName: this.stringArrayName,
             stringArray: this.stringArray.toString()
         });
-    }
-
-    /**
-     * @returns {IStorage <string>}
-     */
-    public getNodeData (): IStorage <string> {
-        return this.stringArray;
     }
 
     /**

@@ -21,5 +21,6 @@ export const ServiceIdentifiers: any = {
     ISourceMapCorrector: Symbol('ISourceMapCorrector'),
     IStackTraceAnalyzer: Symbol('IStackTraceAnalyzer'),
     'IStorage<ICustomNode>': Symbol('IStorage<ICustomNode>'),
-    'IStorage<ICustomNodeGroup>': Symbol('IStorage<ICustomNodeGroup>')
+    'IStorage<ICustomNodeGroup>': Symbol('IStorage<ICustomNodeGroup>'),
+    'IStorage<string>': Symbol('IStorage<string>')
 };

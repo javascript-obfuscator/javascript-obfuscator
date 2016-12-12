@@ -2,7 +2,8 @@
 
 var fs = require("fs"),
     nodeExternals = require('webpack-node-externals'),
-    webpack = require('webpack');
+    webpack = require('webpack'),
+    CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 
 function getLicenseText () {
     return "/*\nCopyright (C) 2016 Timofey Kachalov <sanex3339@yandex.ru>\n\n" +
@@ -32,6 +33,7 @@ module.exports = {
         extensions: ['.ts']
     },
     plugins: [
+        new CheckerPlugin(),
         new webpack.BannerPlugin(
             {
                 banner: getLicenseText() + '\n\nrequire("source-map-support").install();\n',

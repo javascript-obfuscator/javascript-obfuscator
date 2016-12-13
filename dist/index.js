@@ -957,7 +957,7 @@ var JavaScriptObfuscator = function () {
     }
 
     _createClass(JavaScriptObfuscator, null, [{
-        key: 'obfuscate',
+        key: "obfuscate",
         value: function obfuscate(sourceCode) {
             var inputOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -966,7 +966,7 @@ var JavaScriptObfuscator = function () {
             return javaScriptObfuscator.obfuscate(sourceCode);
         }
     }, {
-        key: 'runCLI',
+        key: "runCLI",
         value: function runCLI(argv) {
             new JavaScriptObfuscatorCLI_1.JavaScriptObfuscatorCLI(argv).run();
         }
@@ -4164,7 +4164,7 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
 
         var _this = _possibleConstructorReturn(this, (FunctionControlFlowTransformer.__proto__ || Object.getPrototypeOf(FunctionControlFlowTransformer)).call(this, options));
 
-        _this.cachedControlFlowStorages = new Map();
+        _this.cachedControlFlowData = new Map();
         _this.controlFlowStorageFactory = controlFlowStorageFactory;
         _this.controlFlowReplacerFactory = controlFlowReplacerFactory;
         _this.customNodeFactory = customNodeFactory;
@@ -4185,30 +4185,25 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
                 return;
             }
             var controlFlowStorage = this.controlFlowStorageFactory();
-            var controlFlowNodeId = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(8);
             var hostNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(functionNode.body, RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomInteger(1, 5));
             var controlFlowStorageCustomNodeName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6);
-            if (!hostNode.controlFlowId) {
-                hostNode.controlFlowId = controlFlowNodeId;
-                this.cachedControlFlowStorages.set(controlFlowNodeId, {
+            if (!this.cachedControlFlowData.has(hostNode)) {
+                this.cachedControlFlowData.set(hostNode, {
                     controlFlowStorage: controlFlowStorage,
                     controlFlowStorageNodeName: controlFlowStorageCustomNodeName
                 });
             } else {
                 hostNode.body.shift();
-                if (!this.cachedControlFlowStorages.has(hostNode.controlFlowId)) {
-                    throw new Error("No `controlFlowStorage` was found in cached `controlFlowStorage`'s with id " + hostNode.controlFlowId);
-                }
 
-                var _cachedControlFlowSto = this.cachedControlFlowStorages.get(hostNode.controlFlowId),
-                    hostControlFlowStorage = _cachedControlFlowSto.controlFlowStorage,
-                    hostControlFlowStorageNodeName = _cachedControlFlowSto.controlFlowStorageNodeName;
+                var _cachedControlFlowDat = this.cachedControlFlowData.get(hostNode),
+                    hostControlFlowStorage = _cachedControlFlowDat.controlFlowStorage,
+                    hostControlFlowStorageNodeName = _cachedControlFlowDat.controlFlowStorageNodeName;
 
                 hostControlFlowStorage.getStorage().forEach(function (customNode, key) {
                     controlFlowStorage.set(key, customNode);
                 });
                 controlFlowStorageCustomNodeName = hostControlFlowStorageNodeName;
-                this.cachedControlFlowStorages.set(hostNode.controlFlowId, {
+                this.cachedControlFlowData.set(hostNode, {
                     controlFlowStorage: controlFlowStorage,
                     controlFlowStorageNodeName: hostControlFlowStorageNodeName
                 });
@@ -5564,7 +5559,7 @@ var class_validator_1 = __webpack_require__(115);
 var DefaultPreset_1 = __webpack_require__(31);
 var OptionsNormalizer_1 = __webpack_require__(84);
 var ValidationErrorsFormatter_1 = __webpack_require__(85);
-var Options_1 = function Options(inputOptions) {
+var Options = Options_1 = function Options(inputOptions) {
     _classCallCheck(this, Options);
 
     Object.assign(this, DefaultPreset_1.DEFAULT_PRESET, inputOptions);
@@ -5574,42 +5569,41 @@ var Options_1 = function Options(inputOptions) {
     }
     Object.assign(this, OptionsNormalizer_1.OptionsNormalizer.normalizeOptions(this));
 };
-var Options = Options_1;
 Options.validatorOptions = {
     validationError: {
         target: false
     }
 };
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "compact", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "controlFlowFlattening", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "debugProtection", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "debugProtectionInterval", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "disableConsoleOutput", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "compact", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "controlFlowFlattening", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "debugProtection", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "debugProtectionInterval", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "disableConsoleOutput", void 0);
 __decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
-}), __metadata('design:type', Array)], Options.prototype, "domainLock", void 0);
+}), __metadata("design:type", Array)], Options.prototype, "domainLock", void 0);
 __decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
-}), __metadata('design:type', Array)], Options.prototype, "reservedNames", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "rotateStringArray", void 0);
-__decorate([class_validator_1.IsNumber(), __metadata('design:type', Number)], Options.prototype, "seed", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "selfDefending", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "sourceMap", void 0);
+}), __metadata("design:type", Array)], Options.prototype, "reservedNames", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "rotateStringArray", void 0);
+__decorate([class_validator_1.IsNumber(), __metadata("design:type", Number)], Options.prototype, "seed", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "selfDefending", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "sourceMap", void 0);
 __decorate([class_validator_1.IsString(), class_validator_1.ValidateIf(function (options) {
     return Boolean(options.sourceMapBaseUrl);
 }), class_validator_1.IsUrl({
     require_protocol: true,
     require_valid_protocol: true
-}), __metadata('design:type', String)], Options.prototype, "sourceMapBaseUrl", void 0);
-__decorate([class_validator_1.IsString(), __metadata('design:type', String)], Options.prototype, "sourceMapFileName", void 0);
-__decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata('design:type', String)], Options.prototype, "sourceMapMode", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "stringArray", void 0);
-__decorate([class_validator_1.IsIn([true, false, 'base64', 'rc4']), __metadata('design:type', Object)], Options.prototype, "stringArrayEncoding", void 0);
-__decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata('design:type', Number)], Options.prototype, "stringArrayThreshold", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "unicodeEscapeSequence", void 0);
-Options = Options_1 = __decorate([inversify_1.injectable(), __metadata('design:paramtypes', [typeof (_a = typeof TInputOptions_1.TInputOptions !== 'undefined' && TInputOptions_1.TInputOptions) === 'function' && _a || Object])], Options);
+}), __metadata("design:type", String)], Options.prototype, "sourceMapBaseUrl", void 0);
+__decorate([class_validator_1.IsString(), __metadata("design:type", String)], Options.prototype, "sourceMapFileName", void 0);
+__decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata("design:type", String)], Options.prototype, "sourceMapMode", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "stringArray", void 0);
+__decorate([class_validator_1.IsIn([true, false, 'base64', 'rc4']), __metadata("design:type", Object)], Options.prototype, "stringArrayEncoding", void 0);
+__decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata("design:type", Number)], Options.prototype, "stringArrayThreshold", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "unicodeEscapeSequence", void 0);
+Options = Options_1 = __decorate([inversify_1.injectable(), __metadata("design:paramtypes", [Object])], Options);
 exports.Options = Options;
-var _a;
+var Options_1;
 
 /***/ },
 /* 84 */

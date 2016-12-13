@@ -8,7 +8,7 @@ import { TControlFlowReplacerFactory } from '../../types/container/TControlFlowR
 import { TControlFlowStorageFactory } from '../../types/container/TControlFlowStorageFactory';
 import { TCustomNodeFactory } from '../../types/container/TCustomNodeFactory';
 
-import { ICachedControlFlowStorages } from '../../interfaces/node-transformers/ICachedControlFlowStorages';
+import { IControlFlowData } from '../../interfaces/node-transformers/IControlFlowData';
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IStorage } from '../../interfaces/storages/IStorage';
@@ -33,9 +33,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     ]);
 
     /**
-     * @type {Map<string, ICachedControlFlowStorages>}
+     * @type {Map<ESTree.Node, IControlFlowData>}
      */
-    private cachedControlFlowStorages: Map <string, ICachedControlFlowStorages> = new Map <string, ICachedControlFlowStorages> ();
+    private cachedControlFlowData: Map <ESTree.Node, IControlFlowData> = new Map <ESTree.Node, IControlFlowData> ();
 
     /**
      * @type {TControlFlowReplacerFactory}
@@ -87,7 +87,6 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         }
 
         const controlFlowStorage: IStorage <ICustomNode> = this.controlFlowStorageFactory();
-        const controlFlowNodeId: string = RandomGeneratorUtils.getRandomString(8);
         const hostNode: ESTree.Node = NodeUtils.getBlockScopeOfNode(
             functionNode.body,
             RandomGeneratorUtils.getRandomInteger(1, 5)
@@ -95,31 +94,28 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
         let controlFlowStorageCustomNodeName: string = RandomGeneratorUtils.getRandomVariableName(6);
 
-        if (!hostNode.controlFlowId) {
-            hostNode.controlFlowId = controlFlowNodeId;
-            this.cachedControlFlowStorages.set(controlFlowNodeId, {
+        if (!this.cachedControlFlowData.has(hostNode)) {
+            this.cachedControlFlowData.set(hostNode, {
                 controlFlowStorage,
                 controlFlowStorageNodeName: controlFlowStorageCustomNodeName
             });
         } else {
             hostNode.body.shift();
 
-            if (!this.cachedControlFlowStorages.has(hostNode.controlFlowId)) {
-                throw new Error(`No \`controlFlowStorage\` was found in cached \`controlFlowStorage\`'s with id ${hostNode.controlFlowId}`);
-            }
-
             const {
                 controlFlowStorage: hostControlFlowStorage,
                 controlFlowStorageNodeName: hostControlFlowStorageNodeName
-            } = <ICachedControlFlowStorages>this.cachedControlFlowStorages.get(hostNode.controlFlowId);
+            } = <IControlFlowData>this.cachedControlFlowData.get(hostNode);
 
-            hostControlFlowStorage.getStorage().forEach((customNode: ICustomNode, key: string) => {
-                controlFlowStorage.set(key, customNode);
-            });
+            hostControlFlowStorage
+                .getStorage()
+                .forEach((customNode: ICustomNode, key: string) => {
+                    controlFlowStorage.set(key, customNode);
+                });
 
             controlFlowStorageCustomNodeName = hostControlFlowStorageNodeName;
 
-            this.cachedControlFlowStorages.set(hostNode.controlFlowId, {
+            this.cachedControlFlowData.set(hostNode, {
                 controlFlowStorage,
                 controlFlowStorageNodeName: hostControlFlowStorageNodeName
             });

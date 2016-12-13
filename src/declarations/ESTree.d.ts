@@ -4,10 +4,8 @@ import * as ESTree from 'estree';
 
 declare module 'estree' {
     interface BaseNode {
-        controlFlowId?: string;
         obfuscated?: boolean;
         parentNode?: ESTree.Node;
-        skipByControlFlow?: boolean;
     }
 
     interface SimpleLiteral extends ESTree.BaseNode, ESTree.BaseExpression {

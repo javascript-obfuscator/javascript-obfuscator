@@ -7,7 +7,6 @@ import * as ESTree from 'estree';
 import { TControlFlowReplacerFactory } from '../../types/container/TControlFlowReplacerFactory';
 import { TControlFlowStorageFactory } from '../../types/container/TControlFlowStorageFactory';
 import { TCustomNodeFactory } from '../../types/container/TCustomNodeFactory';
-import { TStatement } from '../../types/node/TStatement';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -20,6 +19,7 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
 import { NodeAppender } from '../../node/NodeAppender';
 import { NodeControlFlowReplacers } from '../../enums/container/NodeControlFlowReplacers';
+import { NodeUtils } from '../../node/NodeUtils';
 import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
@@ -92,24 +92,11 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
                     return;
                 }
 
-                const controlFlowStorageCallCustomNode: ICustomNode | undefined = this.controlFlowReplacerFactory(controlFlowReplacerName)
-                    .replace(node, parentNode, controlFlowStorage, controlFlowStorageCustomNodeName);
-
-                if (!controlFlowStorageCallCustomNode) {
-                    return;
-                }
-
-                // controlFlowStorageCallCustomNode will always have only one TStatement node,
-                // so we can get it by index `0`
-                // also we need to return `expression` property of `ExpressionStatement` node because bug:
-                // https://github.com/estools/escodegen/issues/289
-                const statementNode: TStatement = controlFlowStorageCallCustomNode.getNode()[0];
-
-                if (!statementNode || !Node.isExpressionStatementNode(statementNode)) {
-                    throw new Error(`\`controlFlowStorageCallCustomNode.getNode()\` should returns array with \`ExpressionStatement\` node`);
-                }
-
-                return statementNode.expression;
+                return {
+                    ...this.controlFlowReplacerFactory(controlFlowReplacerName)
+                        .replace(node, parentNode, controlFlowStorage, controlFlowStorageCustomNodeName),
+                    parentNode
+                };
             }
         });
 
@@ -121,6 +108,12 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
         controlFlowStorageCustomNode.initialize(controlFlowStorage, controlFlowStorageCustomNodeName);
 
-        NodeAppender.prependNode(functionNode.body, controlFlowStorageCustomNode.getNode());
+        NodeAppender.prependNode(
+            NodeUtils.getBlockScopeOfNode(
+                functionNode.body,
+                RandomGeneratorUtils.getRandomInteger(0, 5)
+            ),
+            controlFlowStorageCustomNode.getNode()
+        );
     }
 }

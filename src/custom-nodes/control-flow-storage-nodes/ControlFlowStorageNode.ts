@@ -48,7 +48,7 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
     /**
      * @returns {string}
      */
-    public getCode (): string {
+    protected getTemplate (): string {
         return format(ControlFlowStorageTemplate(), {
             controlFlowStorage: this.controlFlowStorage.toString(),
             controlFlowStorageName: this.controlFlowStorageName

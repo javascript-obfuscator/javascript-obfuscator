@@ -51,6 +51,22 @@ export class NodeUtils {
     }
 
     /**
+     * @param structure
+     * @returns {string}
+     */
+    public static convertStructureToCode (structure: ESTree.Node[]): string {
+        let code: string = '';
+
+        for (let node of structure) {
+            code += escodegen.generate(node, {
+                sourceMapWithCode: true
+            }).code;
+        }
+
+        return code;
+    }
+
+    /**
      * @param node
      * @param index
      * @returns {ESTree.Node}
@@ -97,7 +113,7 @@ export class NodeUtils {
             return parentNode;
         }
 
-        return NodeUtils.getBlockScopeOfNode(parentNode);
+        return NodeUtils.getBlockScopeOfNode(parentNode, depth);
     }
 
     /**
@@ -180,12 +196,12 @@ export class NodeUtils {
         (<any>estraverse)[traverseType](node, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (node.type === nodeType && visitor.enter) {
-                    visitor.enter(node, parentNode);
+                    return visitor.enter(node, parentNode);
                 }
             },
             leave: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (node.type === nodeType && visitor.leave) {
-                    visitor.leave(node, parentNode);
+                    return visitor.leave(node, parentNode);
                 }
             }
         });

@@ -31,7 +31,9 @@ export abstract class AbstractCustomNode implements ICustomNode {
     /**
      * @returns {string}
      */
-    public abstract getCode (): string;
+    public getCode (): string {
+        return NodeUtils.convertStructureToCode(this.getNode());
+    }
 
     /**
      * @returns {TStatement[]}
@@ -44,6 +46,11 @@ export abstract class AbstractCustomNode implements ICustomNode {
      * @returns {TStatement[]}
      */
     protected getNodeStructure (): TStatement[] {
-        return NodeUtils.convertCodeToStructure(this.getCode());
+        return NodeUtils.convertCodeToStructure(this.getTemplate());
     }
+
+    /**
+     * @returns {string}
+     */
+    protected abstract getTemplate (): string;
 }

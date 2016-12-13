@@ -42,7 +42,7 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     /**
      * @returns {string}
      */
-    public getCode (): string {
+    protected getTemplate (): string {
         return JavaScriptObfuscator.obfuscate(
             format(SelfDefendingTemplate(), {
                 selfDefendingFunctionName: RandomGeneratorUtils.getRandomVariableName(),

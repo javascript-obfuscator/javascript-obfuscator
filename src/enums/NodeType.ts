@@ -25,6 +25,8 @@ export const NodeType: any = Utils.strEnumify({
     Program: 'Program',
     Property: 'Property',
     ReturnStatement: 'ReturnStatement',
+    SwitchCase: 'SwitchCase',
+    SwitchStatement: 'SwitchStatement',
     TryStatement: 'TryStatement',
     UnaryExpression: 'UnaryExpression',
     UpdateExpression: 'UpdateExpression',

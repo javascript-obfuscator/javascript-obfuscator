@@ -93,6 +93,14 @@ export class Node {
 
     /**
      * @param node
+     * @returns {boolean}
+     */
+    public static isIfStatementNode (node: ESTree.Node): node is ESTree.IfStatement {
+        return node.type === NodeType.IfStatement;
+    }
+
+    /**
+     * @param node
      * @param parentNode
      * @returns {boolean}
      */

@@ -9,12 +9,12 @@ export interface IControlFlowReplacer {
      * @param parentNode
      * @param controlFlowStorage
      * @param controlFlowStorageCustomNodeName
-     * @returns ICustomNode | undefined
+     * @returns ESTree.Node
      */
     replace (
         node: ESTree.Node,
         parentNode: ESTree.Node,
         controlFlowStorage: IStorage <ICustomNode>,
         controlFlowStorageCustomNodeName: string
-    ): ICustomNode | undefined;
+    ): ESTree.Node;
 }

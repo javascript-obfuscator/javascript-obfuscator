@@ -38,7 +38,7 @@ export class DebugProtectionFunctionIntervalNode extends AbstractCustomNode {
     /**
      * @returns {string}
      */
-    public getCode (): string {
+    protected getTemplate (): string {
         return format(DebugProtectionFunctionIntervalTemplate(), {
             debugProtectionFunctionName: this.debugProtectionFunctionName
         });

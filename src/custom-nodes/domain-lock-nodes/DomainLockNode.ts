@@ -40,7 +40,7 @@ export class DomainLockNode extends AbstractCustomNode {
     /**
      * @returns {string}
      */
-    public getCode (): string {
+    protected getTemplate (): string {
         let domainsString: string = this.options.domainLock.join(';'),
             [hiddenDomainsString, diff]: string[] = CryptUtils.hideString(domainsString, domainsString.length * 3);
 

@@ -6,6 +6,7 @@ declare module 'estree' {
     interface BaseNode {
         parentNode?: ESTree.Node;
         obfuscated?: boolean;
+        skipByControlFlow?: boolean;
     }
 
     interface SimpleLiteral extends ESTree.BaseNode, ESTree.BaseExpression {

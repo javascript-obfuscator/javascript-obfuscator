@@ -65,21 +65,21 @@ export class StringArrayNode extends AbstractCustomNode {
     }
 
     /**
-     * @returns {string}
-     */
-    public getCode (): string {
-        return format(StringArrayTemplate(), {
-            stringArrayName: this.stringArrayName,
-            stringArray: this.stringArray.toString()
-        });
-    }
-
-    /**
      * @returns {TStatement[]}
      */
     public getNode (): TStatement[] {
         (<StringArrayStorage>this.stringArray).rotateArray(this.stringArrayRotateValue);
 
         return super.getNode();
+    }
+
+    /**
+     * @returns {string}
+     */
+    protected getTemplate (): string {
+        return format(StringArrayTemplate(), {
+            stringArrayName: this.stringArrayName,
+            stringArray: this.stringArray.toString()
+        });
     }
 }

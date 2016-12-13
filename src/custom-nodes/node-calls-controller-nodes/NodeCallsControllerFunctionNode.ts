@@ -53,7 +53,7 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     /**
      * @returns {string}
      */
-    public getCode (): string {
+    protected getTemplate (): string {
         if (this.appendEvent === ObfuscationEvents.AfterObfuscation) {
             return JavaScriptObfuscator.obfuscate(
                 format(SingleNodeCallControllerTemplate(), {

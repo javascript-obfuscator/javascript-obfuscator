@@ -5,6 +5,7 @@ import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
 import { TCustomNodeFactory } from '../../../types/container/TCustomNodeFactory';
+import { TStatement } from '../../../types/node/TStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -13,6 +14,7 @@ import { IStorage } from '../../../interfaces/storages/IStorage';
 import { CustomNodes } from '../../../enums/container/CustomNodes';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
+import { Node } from '../../../node/Node';
 
 @injectable()
 export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowReplacer {
@@ -49,14 +51,14 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
      * @param parentNode
      * @param controlFlowStorage
      * @param controlFlowStorageCustomNodeName
-     * @returns {ICustomNode}
+     * @returns {ESTree.Node}
      */
     public replace (
         binaryExpressionNode: ESTree.BinaryExpression,
         parentNode: ESTree.Node,
         controlFlowStorage: IStorage <ICustomNode>,
         controlFlowStorageCustomNodeName: string
-    ): ICustomNode {
+    ): ESTree.Node {
         const key: string = AbstractControlFlowReplacer.getStorageKey();
         const binaryExpressionFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.BinaryExpressionFunctionNode);
         const controlFlowStorageCallNode: ICustomNode = this.customNodeFactory(CustomNodes.ControlFlowStorageCallNode);
@@ -71,6 +73,12 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
 
         controlFlowStorage.set(key, binaryExpressionFunctionNode);
 
-        return controlFlowStorageCallNode;
+        const statementNode: TStatement = controlFlowStorageCallNode.getNode()[0];
+
+        if (!statementNode || !Node.isExpressionStatementNode(statementNode)) {
+            throw new Error(`\`controlFlowStorageCallCustomNode.getNode()\` should returns array with \`ExpressionStatement\` node`);
+        }
+
+        return statementNode.expression;
     }
 }

@@ -70,25 +70,6 @@ export class StringArrayCallsWrapper extends AbstractCustomNode implements ICust
     /**
      * @returns {string}
      */
-    public getCode (): string {
-        const decodeNodeTemplate: string = this.getDecodeStringArrayTemplate();
-
-        return JavaScriptObfuscator.obfuscate(
-            format(StringArrayCallsWrapperTemplate(), {
-                decodeNodeTemplate,
-                stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
-                stringArrayName: this.stringArrayName
-            }),
-            {
-                ...NO_CUSTOM_NODES_PRESET,
-                seed: this.options.seed
-            }
-        ).getObfuscatedCode();
-    }
-
-    /**
-     * @returns {string}
-     */
     public getNodeIdentifier (): string {
         return this.stringArrayCallsWrapperName;
     };
@@ -129,5 +110,24 @@ export class StringArrayCallsWrapper extends AbstractCustomNode implements ICust
         }
 
         return decodeStringArrayTemplate;
+    }
+
+    /**
+     * @returns {string}
+     */
+    protected getTemplate (): string {
+        const decodeNodeTemplate: string = this.getDecodeStringArrayTemplate();
+
+        return JavaScriptObfuscator.obfuscate(
+            format(StringArrayCallsWrapperTemplate(), {
+                decodeNodeTemplate,
+                stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
+                stringArrayName: this.stringArrayName
+            }),
+            {
+                ...NO_CUSTOM_NODES_PRESET,
+                seed: this.options.seed
+            }
+        ).getObfuscatedCode();
     }
 }

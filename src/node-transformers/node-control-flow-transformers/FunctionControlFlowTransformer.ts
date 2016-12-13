@@ -32,6 +32,11 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     ]);
 
     /**
+     * @type {Map<string, IStorage<ICustomNode>>}
+     */
+    private cachedControlFlowStorages: Map <string, IStorage<ICustomNode>> = new Map <string, IStorage<ICustomNode>> ();
+
+    /**
      * @type {TControlFlowReplacerFactory}
      */
     private readonly controlFlowReplacerFactory: TControlFlowReplacerFactory;
@@ -104,15 +109,38 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
             return;
         }
 
+        const hostNode: ESTree.Node = NodeUtils.getBlockScopeOfNode(
+            functionNode.body,
+            111
+        );
+        const controlFlowNodeId: string = RandomGeneratorUtils.getRandomString(8);
+
+        if (!hostNode.controlFlowId) {
+            hostNode.controlFlowId = controlFlowNodeId;
+            this.cachedControlFlowStorages.set(controlFlowNodeId, controlFlowStorage);
+        } else {
+            hostNode.body.shift();
+
+            if (!this.cachedControlFlowStorages.has(hostNode.controlFlowId)) {
+               throw new Error(`No \`controlFlowStorage\` was found in cached \`controlFlowStorage\`'s with id ${hostNode.controlFlowId}`);
+            }
+
+            const hostControlFlowStorage: IStorage<ICustomNode> = <IStorage<ICustomNode>>this.cachedControlFlowStorages
+                .get(hostNode.controlFlowId);
+
+            hostControlFlowStorage.getStorage().forEach((customNode: ICustomNode, key: string) => {
+                controlFlowStorage.set(key, customNode);
+            });
+
+            this.cachedControlFlowStorages.set(hostNode.controlFlowId, controlFlowStorage);
+        }
+
         const controlFlowStorageCustomNode: ICustomNode = this.customNodeFactory(CustomNodes.ControlFlowStorageNode);
 
         controlFlowStorageCustomNode.initialize(controlFlowStorage, controlFlowStorageCustomNodeName);
 
         NodeAppender.prependNode(
-            NodeUtils.getBlockScopeOfNode(
-                functionNode.body,
-                RandomGeneratorUtils.getRandomInteger(0, 5)
-            ),
+            hostNode,
             controlFlowStorageCustomNode.getNode()
         );
     }

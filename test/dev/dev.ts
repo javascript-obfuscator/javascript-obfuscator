@@ -14,12 +14,25 @@ if (!(<any>global)._babelPolyfill) {
                 function foo () {
                     return function () {
                         var sum = 1 + 2;
+                        
+                         function foo () {
+                            return function () {
+                                var sum = 1 - 2;
+                                
+                                 function foo () {
+                                    return function () {
+                                        var sum = 1 * 2;
+                                    }
+                                 }
+                            }
+                         }
                     }
                 }
             })();
         `,
         {
             ...NO_CUSTOM_NODES_PRESET,
+            compact: false,
             controlFlowFlattening: true,
             disableConsoleOutput: false
         }

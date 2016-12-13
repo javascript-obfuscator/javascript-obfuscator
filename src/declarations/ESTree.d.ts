@@ -4,8 +4,9 @@ import * as ESTree from 'estree';
 
 declare module 'estree' {
     interface BaseNode {
-        parentNode?: ESTree.Node;
+        controlFlowId?: string;
         obfuscated?: boolean;
+        parentNode?: ESTree.Node;
         skipByControlFlow?: boolean;
     }
 

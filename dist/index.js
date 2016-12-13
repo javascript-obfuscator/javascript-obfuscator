@@ -4105,9 +4105,138 @@ exports.ObfuscationEventEmitter = ObfuscationEventEmitter;
 
 /***/ },
 /* 67 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-throw new Error("Module build failed: Error: Cannot find module 'debug' (While processing preset: \"/home/kachalov/PhpstormProjects/javascript-obfuscator/node_modules/babel-preset-es2015/lib/index.js\")\n    at Function.Module._resolveFilename (module.js:438:15)\n    at Function.Module._load (module.js:386:25)\n    at Module.require (module.js:466:17)\n    at require (internal/module.js:20:19)\n    at Object.<anonymous> (/home/kachalov/PhpstormProjects/javascript-obfuscator/node_modules/babel-plugin-transform-es2015-block-scoping/node_modules/babel-traverse/lib/path/index.js:17:15)\n    at Module._compile (module.js:541:32)\n    at Object.Module._extensions..js (module.js:550:10)\n    at Module.load (module.js:456:32)\n    at tryModuleLoad (module.js:415:12)\n    at Function.Module._load (module.js:407:3)\n    at Module.require (module.js:466:17)\n    at require (internal/module.js:20:19)\n    at Object.<anonymous> (/home/kachalov/PhpstormProjects/javascript-obfuscator/node_modules/babel-plugin-transform-es2015-block-scoping/node_modules/babel-traverse/lib/index.js:10:13)\n    at Module._compile (module.js:541:32)\n    at Object.Module._extensions..js (module.js:550:10)\n    at Module.load (module.js:456:32)\n    at tryModuleLoad (module.js:415:12)\n    at Function.Module._load (module.js:407:3)\n    at Module.require (module.js:466:17)\n    at require (internal/module.js:20:19)\n    at Object.<anonymous> (/home/kachalov/PhpstormProjects/javascript-obfuscator/node_modules/babel-plugin-transform-es2015-block-scoping/lib/index.js:77:22)\n    at Module._compile (module.js:541:32)\n    at Object.Module._extensions..js (module.js:550:10)\n    at Module.load (module.js:456:32)\n    at tryModuleLoad (module.js:415:12)\n    at Function.Module._load (module.js:407:3)\n    at Module.require (module.js:466:17)\n    at require (internal/module.js:20:19)\n    at Object.<anonymous> (/home/kachalov/PhpstormProjects/javascript-obfuscator/node_modules/babel-preset-es2015/lib/index.js:73:47)\n    at Module._compile (module.js:541:32)");
+"use strict";
+"use strict";
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var __assign = undefined && undefined.__assign || Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) {
+            if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+    }
+    return t;
+};
+var __decorate = undefined && undefined.__decorate || function (decorators, target, key, desc) {
+    var c = arguments.length,
+        r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
+        d;
+    if ((typeof Reflect === "undefined" ? "undefined" : _typeof(Reflect)) === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);else for (var i = decorators.length - 1; i >= 0; i--) {
+        if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    }return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = undefined && undefined.__metadata || function (k, v) {
+    if ((typeof Reflect === "undefined" ? "undefined" : _typeof(Reflect)) === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = undefined && undefined.__param || function (paramIndex, decorator) {
+    return function (target, key) {
+        decorator(target, key, paramIndex);
+    };
+};
+var inversify_1 = __webpack_require__(0);
+var ServiceIdentifiers_1 = __webpack_require__(1);
+var estraverse = __webpack_require__(6);
+var CustomNodes_1 = __webpack_require__(12);
+var NodeType_1 = __webpack_require__(10);
+var AbstractNodeTransformer_1 = __webpack_require__(11);
+var Node_1 = __webpack_require__(5);
+var NodeAppender_1 = __webpack_require__(16);
+var NodeControlFlowReplacers_1 = __webpack_require__(29);
+var NodeUtils_1 = __webpack_require__(9);
+var RandomGeneratorUtils_1 = __webpack_require__(2);
+var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function (_AbstractNodeTransfor) {
+    _inherits(FunctionControlFlowTransformer, _AbstractNodeTransfor);
+
+    function FunctionControlFlowTransformer(controlFlowStorageFactory, controlFlowReplacerFactory, customNodeFactory, options) {
+        _classCallCheck(this, FunctionControlFlowTransformer);
+
+        var _this = _possibleConstructorReturn(this, (FunctionControlFlowTransformer.__proto__ || Object.getPrototypeOf(FunctionControlFlowTransformer)).call(this, options));
+
+        _this.cachedControlFlowStorages = new Map();
+        _this.controlFlowStorageFactory = controlFlowStorageFactory;
+        _this.controlFlowReplacerFactory = controlFlowReplacerFactory;
+        _this.customNodeFactory = customNodeFactory;
+        return _this;
+    }
+
+    _createClass(FunctionControlFlowTransformer, [{
+        key: "transformNode",
+        value: function transformNode(functionNode) {
+            this.changeFunctionBodyControlFlow(functionNode);
+        }
+    }, {
+        key: "changeFunctionBodyControlFlow",
+        value: function changeFunctionBodyControlFlow(functionNode) {
+            var _this2 = this;
+
+            if (Node_1.Node.isArrowFunctionExpressionNode(functionNode)) {
+                return;
+            }
+            var controlFlowStorage = this.controlFlowStorageFactory();
+            var controlFlowNodeId = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(8);
+            var hostNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(functionNode.body, RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomInteger(1, 5));
+            var controlFlowStorageCustomNodeName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6);
+            if (!hostNode.controlFlowId) {
+                hostNode.controlFlowId = controlFlowNodeId;
+                this.cachedControlFlowStorages.set(controlFlowNodeId, {
+                    controlFlowStorage: controlFlowStorage,
+                    controlFlowStorageNodeName: controlFlowStorageCustomNodeName
+                });
+            } else {
+                hostNode.body.shift();
+                if (!this.cachedControlFlowStorages.has(hostNode.controlFlowId)) {
+                    throw new Error("No `controlFlowStorage` was found in cached `controlFlowStorage`'s with id " + hostNode.controlFlowId);
+                }
+
+                var _cachedControlFlowSto = this.cachedControlFlowStorages.get(hostNode.controlFlowId),
+                    hostControlFlowStorage = _cachedControlFlowSto.controlFlowStorage,
+                    hostControlFlowStorageNodeName = _cachedControlFlowSto.controlFlowStorageNodeName;
+
+                hostControlFlowStorage.getStorage().forEach(function (customNode, key) {
+                    controlFlowStorage.set(key, customNode);
+                });
+                controlFlowStorageCustomNodeName = hostControlFlowStorageNodeName;
+                this.cachedControlFlowStorages.set(hostNode.controlFlowId, {
+                    controlFlowStorage: controlFlowStorage,
+                    controlFlowStorageNodeName: hostControlFlowStorageNodeName
+                });
+            }
+            estraverse.replace(functionNode.body, {
+                enter: function enter(node, parentNode) {
+                    var controlFlowReplacerName = FunctionControlFlowTransformer_1.controlFlowReplacersMap.get(node.type);
+                    if (controlFlowReplacerName === undefined) {
+                        return;
+                    }
+                    return __assign({}, _this2.controlFlowReplacerFactory(controlFlowReplacerName).replace(node, parentNode, controlFlowStorage, controlFlowStorageCustomNodeName), { parentNode: parentNode });
+                }
+            });
+            if (!controlFlowStorage.getLength()) {
+                return;
+            }
+            var controlFlowStorageCustomNode = this.customNodeFactory(CustomNodes_1.CustomNodes.ControlFlowStorageNode);
+            controlFlowStorageCustomNode.initialize(controlFlowStorage, controlFlowStorageCustomNodeName);
+            NodeAppender_1.NodeAppender.prependNode(hostNode, controlFlowStorageCustomNode.getNode());
+        }
+    }]);
+
+    return FunctionControlFlowTransformer;
+}(AbstractNodeTransformer_1.AbstractNodeTransformer);
+FunctionControlFlowTransformer.controlFlowReplacersMap = new Map([[NodeType_1.NodeType.BinaryExpression, NodeControlFlowReplacers_1.NodeControlFlowReplacers.BinaryExpressionControlFlowReplacer]]);
+FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IStorage<ICustomNode>>'])), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IControlFlowReplacer>'])), __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<ICustomNode>'])), __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata("design:paramtypes", [Function, Function, Function, Object])], FunctionControlFlowTransformer);
+exports.FunctionControlFlowTransformer = FunctionControlFlowTransformer;
+var FunctionControlFlowTransformer_1;
 
 /***/ },
 /* 68 */

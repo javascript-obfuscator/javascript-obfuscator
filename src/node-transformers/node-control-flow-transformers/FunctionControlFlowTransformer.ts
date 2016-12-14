@@ -38,6 +38,11 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**
      * @type {number}
      */
+    private static readonly controlFlowReplacersThreshold: number = 0.75;
+
+    /**
+     * @type {number}
+     */
     private static readonly hostNodeSearchMinDepth: number = 2;
 
     /**
@@ -173,6 +178,10 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
         estraverse.replace(functionNode.body, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+                if (Math.random() > FunctionControlFlowTransformer.controlFlowReplacersThreshold) {
+                    return;
+                }
+
                 const controlFlowReplacerName: NodeControlFlowReplacers | undefined = FunctionControlFlowTransformer
                     .controlFlowReplacersMap.get(node.type);
 

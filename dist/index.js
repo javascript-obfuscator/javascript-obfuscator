@@ -4215,6 +4215,9 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
             }
             estraverse.replace(functionNode.body, {
                 enter: function enter(node, parentNode) {
+                    if (Math.random() > FunctionControlFlowTransformer_1.controlFlowReplacersThreshold) {
+                        return;
+                    }
                     var controlFlowReplacerName = FunctionControlFlowTransformer_1.controlFlowReplacersMap.get(node.type);
                     if (controlFlowReplacerName === undefined) {
                         return;
@@ -4282,6 +4285,7 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
     return FunctionControlFlowTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
 FunctionControlFlowTransformer.controlFlowReplacersMap = new Map([[NodeType_1.NodeType.BinaryExpression, NodeControlFlowReplacers_1.NodeControlFlowReplacers.BinaryExpressionControlFlowReplacer]]);
+FunctionControlFlowTransformer.controlFlowReplacersThreshold = 0.75;
 FunctionControlFlowTransformer.hostNodeSearchMinDepth = 2;
 FunctionControlFlowTransformer.hostNodeSearchMaxDepth = 10;
 FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IStorage<ICustomNode>>'])), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<IControlFlowReplacer>'])), __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<ICustomNode>'])), __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata("design:paramtypes", [Function, Function, Function, Object])], FunctionControlFlowTransformer);
@@ -4378,6 +4382,7 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(1);
 var escodegen = __webpack_require__(17);
+var _ = __webpack_require__(34);
 var CustomNodes_1 = __webpack_require__(12);
 var AbstractControlFlowReplacer_1 = __webpack_require__(69);
 var Node_1 = __webpack_require__(4);
@@ -4389,6 +4394,7 @@ var BinaryExpressionControlFlowReplacer = BinaryExpressionControlFlowReplacer_1 
 
         var _this = _possibleConstructorReturn(this, (BinaryExpressionControlFlowReplacer.__proto__ || Object.getPrototypeOf(BinaryExpressionControlFlowReplacer)).call(this, options));
 
+        _this.existingBinaryExpressionKeys = new Map();
         _this.customNodeFactory = customNodeFactory;
         return _this;
     }
@@ -4396,12 +4402,22 @@ var BinaryExpressionControlFlowReplacer = BinaryExpressionControlFlowReplacer_1 
     _createClass(BinaryExpressionControlFlowReplacer, [{
         key: "replace",
         value: function replace(binaryExpressionNode, parentNode, controlFlowStorage, controlFlowStorageCustomNodeName) {
-            var key = AbstractControlFlowReplacer_1.AbstractControlFlowReplacer.getStorageKey();
             var binaryExpressionFunctionNode = this.customNodeFactory(CustomNodes_1.CustomNodes.BinaryExpressionFunctionNode);
+            var binaryExpressionOperatorKeys = this.existingBinaryExpressionKeys.get(controlFlowStorageCustomNodeName) || {};
             var controlFlowStorageCallNode = this.customNodeFactory(CustomNodes_1.CustomNodes.ControlFlowStorageCallNode);
+            var key = AbstractControlFlowReplacer_1.AbstractControlFlowReplacer.getStorageKey();
+            if (!binaryExpressionOperatorKeys[binaryExpressionNode.operator]) {
+                binaryExpressionOperatorKeys[binaryExpressionNode.operator] = [];
+            }
             binaryExpressionFunctionNode.initialize(binaryExpressionNode.operator);
+            if (Math.random() > BinaryExpressionControlFlowReplacer_1.useExistingOperatorKeyThreshold && binaryExpressionOperatorKeys[binaryExpressionNode.operator].length) {
+                key = _.sample(binaryExpressionOperatorKeys[binaryExpressionNode.operator]);
+            } else {
+                binaryExpressionOperatorKeys[binaryExpressionNode.operator].push(key);
+                this.existingBinaryExpressionKeys.set(controlFlowStorageCustomNodeName, binaryExpressionOperatorKeys);
+                controlFlowStorage.set(key, binaryExpressionFunctionNode);
+            }
             controlFlowStorageCallNode.initialize(controlFlowStorageCustomNodeName, key, BinaryExpressionControlFlowReplacer_1.getExpressionValue(binaryExpressionNode.left), BinaryExpressionControlFlowReplacer_1.getExpressionValue(binaryExpressionNode.right));
-            controlFlowStorage.set(key, binaryExpressionFunctionNode);
             var statementNode = controlFlowStorageCallNode.getNode()[0];
             if (!statementNode || !Node_1.Node.isExpressionStatementNode(statementNode)) {
                 throw new Error("`controlFlowStorageCallCustomNode.getNode()` should returns array with `ExpressionStatement` node");
@@ -4419,6 +4435,7 @@ var BinaryExpressionControlFlowReplacer = BinaryExpressionControlFlowReplacer_1 
 
     return BinaryExpressionControlFlowReplacer;
 }(AbstractControlFlowReplacer_1.AbstractControlFlowReplacer);
+BinaryExpressionControlFlowReplacer.useExistingOperatorKeyThreshold = 0.5;
 BinaryExpressionControlFlowReplacer = BinaryExpressionControlFlowReplacer_1 = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<ICustomNode>'])), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata("design:paramtypes", [Function, Object])], BinaryExpressionControlFlowReplacer);
 exports.BinaryExpressionControlFlowReplacer = BinaryExpressionControlFlowReplacer;
 var BinaryExpressionControlFlowReplacer_1;

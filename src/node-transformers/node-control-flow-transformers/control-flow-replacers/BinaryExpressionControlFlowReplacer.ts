@@ -3,6 +3,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
+import * as _ from 'lodash';
 
 import { TCustomNodeFactory } from '../../../types/container/TCustomNodeFactory';
 import { TStatement } from '../../../types/node/TStatement';
@@ -18,6 +19,16 @@ import { Node } from '../../../node/Node';
 
 @injectable()
 export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowReplacer {
+    /**
+     * @type {number}
+     */
+    private static readonly useExistingOperatorKeyThreshold: number = 0.5;
+
+    /**
+     * @type {Map<string, any>}
+     */
+    private readonly existingBinaryExpressionKeys: Map <string, any> = new Map <string, any> ();
+
     /**
      * @type {TCustomNodeFactory}
      */
@@ -59,19 +70,37 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
         controlFlowStorage: IStorage <ICustomNode>,
         controlFlowStorageCustomNodeName: string
     ): ESTree.Node {
-        const key: string = AbstractControlFlowReplacer.getStorageKey();
         const binaryExpressionFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.BinaryExpressionFunctionNode);
+        const binaryExpressionOperatorKeys: {
+            [key: string]: string[]
+        } = this.existingBinaryExpressionKeys.get(controlFlowStorageCustomNodeName) || {};
         const controlFlowStorageCallNode: ICustomNode = this.customNodeFactory(CustomNodes.ControlFlowStorageCallNode);
 
+        let key: string = AbstractControlFlowReplacer.getStorageKey();
+
+        if (!binaryExpressionOperatorKeys[binaryExpressionNode.operator]) {
+            binaryExpressionOperatorKeys[binaryExpressionNode.operator] = [];
+        }
+
         binaryExpressionFunctionNode.initialize(binaryExpressionNode.operator);
+
+        if (
+            Math.random() > BinaryExpressionControlFlowReplacer.useExistingOperatorKeyThreshold &&
+            binaryExpressionOperatorKeys[binaryExpressionNode.operator].length
+        ) {
+            key = _.sample(binaryExpressionOperatorKeys[binaryExpressionNode.operator]);
+        } else {
+            binaryExpressionOperatorKeys[binaryExpressionNode.operator].push(key);
+            this.existingBinaryExpressionKeys.set(controlFlowStorageCustomNodeName, binaryExpressionOperatorKeys);
+            controlFlowStorage.set(key, binaryExpressionFunctionNode);
+        }
+
         controlFlowStorageCallNode.initialize(
             controlFlowStorageCustomNodeName,
             key,
             BinaryExpressionControlFlowReplacer.getExpressionValue(binaryExpressionNode.left),
             BinaryExpressionControlFlowReplacer.getExpressionValue(binaryExpressionNode.right)
         );
-
-        controlFlowStorage.set(key, binaryExpressionFunctionNode);
 
         const statementNode: TStatement = controlFlowStorageCallNode.getNode()[0];
 

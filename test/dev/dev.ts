@@ -14,18 +14,9 @@ if (!(<any>global)._babelPolyfill) {
                 function foo () {
                     return function () {
                         var sum = 1 + 2;
-                        
-                         function foo () {
-                            return function () {
-                                var sum = 1 - 2;
-                                
-                                 function foo () {
-                                    return function () {
-                                        var sum = 1 * 2;
-                                    }
-                                 }
-                            }
-                         }
+                        var sum = 3 + 4;
+                        var sum = 5 + 6;
+                        var sum = 8 - 6;
                     }
                 }
             })();

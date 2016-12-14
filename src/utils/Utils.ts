@@ -1,21 +1,11 @@
+import * as _ from 'underscore';
 import { JSFuck } from '../enums/JSFuck';
-
-const isEqual: any = require('is-equal');
 
 export class Utils {
     /**
      * @type {string}
      */
     public static readonly hexadecimalPrefix: string = '0x';
-
-    /**
-     * @param array
-     * @param searchElement
-     * @returns {boolean}
-     */
-    public static arrayContains (array: any[], searchElement: any): boolean {
-        return array.indexOf(searchElement) >= 0;
-    }
 
     /**
      * @param array
@@ -74,18 +64,18 @@ export class Utils {
      * @param number
      * @returns {boolean}
      */
-    public static isInteger (number: number): boolean {
+    public static isCeilNumber (number: number): boolean {
         return number % 1 === 0;
     }
 
     /**
      * @param map
      * @param value
-     * @returns {any}
+     * @returns {T | null}
      */
-    public static mapGetFirstKeyOf(map: Map <any, any>, value: any): any {
+    public static mapGetFirstKeyOf <T, U> (map: Map <T, U>, value: U): T | null {
         for (let [key, storageValue] of map) {
-            if (isEqual(value, storageValue)) {
+            if (_.isEqual(value, storageValue)) {
                 return key;
             }
         }

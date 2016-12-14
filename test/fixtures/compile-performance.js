@@ -19813,8 +19813,8 @@
                 else {
                     mergedOutputs = outputs;
                 }
-                var mergedHost = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__facade_lang__["a" /* isPresent */])(dm.host) ? __WEBPACK_IMPORTED_MODULE_1__facade_collection__["b" /* StringMapWrapper */].merge(dm.host, host) : host;
-                var mergedQueries = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__facade_lang__["a" /* isPresent */])(dm.queries) ? __WEBPACK_IMPORTED_MODULE_1__facade_collection__["b" /* StringMapWrapper */].merge(dm.queries, queries) : queries;
+                var mergedHost = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__facade_lang__["a" /* isPresent */])(dm.host) ? __WEBPACK_IMPORTED_MODULE_1__facade_collection__["b" /* StringMapWrapper */].mergeWith(dm.host, host) : host;
+                var mergedQueries = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__facade_lang__["a" /* isPresent */])(dm.queries) ? __WEBPACK_IMPORTED_MODULE_1__facade_collection__["b" /* StringMapWrapper */].mergeWith(dm.queries, queries) : queries;
                 if (dm instanceof __WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"]) {
                     return new __WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"]({
                         selector: dm.selector,
@@ -25918,7 +25918,7 @@
         }
         function _createRootRenderer(rootRenderer /** TODO #9100 */, extraTokens) {
             __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__dom_adapter__["a" /* getDOM */])().setGlobalVar(INSPECT_GLOBAL_NAME, inspectNativeElement);
-            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__dom_adapter__["a" /* getDOM */])().setGlobalVar(CORE_TOKENS_GLOBAL_NAME, __WEBPACK_IMPORTED_MODULE_1__facade_collection__["a" /* StringMapWrapper */].merge(CORE_TOKENS, _ngProbeTokensToMap(extraTokens || [])));
+            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__dom_adapter__["a" /* getDOM */])().setGlobalVar(CORE_TOKENS_GLOBAL_NAME, __WEBPACK_IMPORTED_MODULE_1__facade_collection__["a" /* StringMapWrapper */].mergeWith(CORE_TOKENS, _ngProbeTokensToMap(extraTokens || [])));
             return new __WEBPACK_IMPORTED_MODULE_2__private_import_core__["b" /* DebugDomRootRenderer */](rootRenderer);
         }
         function _ngProbeTokensToMap(tokens) {
@@ -38913,14 +38913,14 @@
                         if (!_this._finished) {
                             var responseOptions_1 = new __WEBPACK_IMPORTED_MODULE_2__base_response_options__["a" /* ResponseOptions */]({ body: JSONP_ERR_NO_CALLBACK, type: __WEBPACK_IMPORTED_MODULE_3__enums__["a" /* ResponseType */].Error, url: url });
                             if (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__facade_lang__["a" /* isPresent */])(baseResponseOptions)) {
-                                responseOptions_1 = baseResponseOptions.merge(responseOptions_1);
+                                responseOptions_1 = baseResponseOptions.mergeWith(responseOptions_1);
                             }
                             responseObserver.error(new __WEBPACK_IMPORTED_MODULE_6__static_response__["a" /* Response */](responseOptions_1));
                             return;
                         }
                         var responseOptions = new __WEBPACK_IMPORTED_MODULE_2__base_response_options__["a" /* ResponseOptions */]({ body: _this._responseData, url: url });
                         if (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__facade_lang__["a" /* isPresent */])(_this.baseResponseOptions)) {
-                            responseOptions = _this.baseResponseOptions.merge(responseOptions);
+                            responseOptions = _this.baseResponseOptions.mergeWith(responseOptions);
                         }
                         responseObserver.next(new __WEBPACK_IMPORTED_MODULE_6__static_response__["a" /* Response */](responseOptions));
                         responseObserver.complete();
@@ -38932,7 +38932,7 @@
                         _dom.cleanup(script);
                         var responseOptions = new __WEBPACK_IMPORTED_MODULE_2__base_response_options__["a" /* ResponseOptions */]({ body: error.message, type: __WEBPACK_IMPORTED_MODULE_3__enums__["a" /* ResponseType */].Error });
                         if (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__facade_lang__["a" /* isPresent */])(baseResponseOptions)) {
-                            responseOptions = baseResponseOptions.merge(responseOptions);
+                            responseOptions = baseResponseOptions.mergeWith(responseOptions);
                         }
                         responseObserver.error(new __WEBPACK_IMPORTED_MODULE_6__static_response__["a" /* Response */](responseOptions));
                     };
@@ -39075,7 +39075,7 @@
                         var statusText = _xhr.statusText || 'OK';
                         var responseOptions = new __WEBPACK_IMPORTED_MODULE_3__base_response_options__["a" /* ResponseOptions */]({ body: body, status: status, headers: headers, statusText: statusText, url: url });
                         if (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5__facade_lang__["a" /* isPresent */])(baseResponseOptions)) {
-                            responseOptions = baseResponseOptions.merge(responseOptions);
+                            responseOptions = baseResponseOptions.mergeWith(responseOptions);
                         }
                         var response = new __WEBPACK_IMPORTED_MODULE_9__static_response__["a" /* Response */](responseOptions);
                         response.ok = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_7__http_utils__["d" /* isSuccess */])(status);
@@ -39096,7 +39096,7 @@
                             statusText: _xhr.statusText,
                         });
                         if (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_5__facade_lang__["a" /* isPresent */])(baseResponseOptions)) {
-                            responseOptions = baseResponseOptions.merge(responseOptions);
+                            responseOptions = baseResponseOptions.mergeWith(responseOptions);
                         }
                         responseObserver.error(new __WEBPACK_IMPORTED_MODULE_9__static_response__["a" /* Response */](responseOptions));
                     };
@@ -39355,7 +39355,7 @@
             var newOptions = defaultOpts;
             if (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__src_facade_lang__["a" /* isPresent */])(providedOpts)) {
                 // Hack so Dart can used named parameters
-                return newOptions.merge(new __WEBPACK_IMPORTED_MODULE_2__base_request_options__["a" /* RequestOptions */]({
+                return newOptions.mergeWith(new __WEBPACK_IMPORTED_MODULE_2__base_request_options__["a" /* RequestOptions */]({
                     method: providedOpts.method || method,
                     url: providedOpts.url || url,
                     search: providedOpts.search,
@@ -39366,10 +39366,10 @@
                 }));
             }
             if (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__src_facade_lang__["a" /* isPresent */])(method)) {
-                return newOptions.merge(new __WEBPACK_IMPORTED_MODULE_2__base_request_options__["a" /* RequestOptions */]({ method: method, url: url }));
+                return newOptions.mergeWith(new __WEBPACK_IMPORTED_MODULE_2__base_request_options__["a" /* RequestOptions */]({ method: method, url: url }));
             }
             else {
-                return newOptions.merge(new __WEBPACK_IMPORTED_MODULE_2__base_request_options__["a" /* RequestOptions */]({ url: url }));
+                return newOptions.mergeWith(new __WEBPACK_IMPORTED_MODULE_2__base_request_options__["a" /* RequestOptions */]({ url: url }));
             }
         }
         /**
@@ -39466,13 +39466,13 @@
              * Performs a request with `post` http method.
              */
             Http.prototype.post = function (url, body, options) {
-                return httpRequest(this._backend, new __WEBPACK_IMPORTED_MODULE_5__static_request__["a" /* Request */](mergeOptions(this._defaultOptions.merge(new __WEBPACK_IMPORTED_MODULE_2__base_request_options__["a" /* RequestOptions */]({ body: body })), options, __WEBPACK_IMPORTED_MODULE_3__enums__["b" /* RequestMethod */].Post, url)));
+                return httpRequest(this._backend, new __WEBPACK_IMPORTED_MODULE_5__static_request__["a" /* Request */](mergeOptions(this._defaultOptions.mergeWith(new __WEBPACK_IMPORTED_MODULE_2__base_request_options__["a" /* RequestOptions */]({ body: body })), options, __WEBPACK_IMPORTED_MODULE_3__enums__["b" /* RequestMethod */].Post, url)));
             };
             /**
              * Performs a request with `put` http method.
              */
             Http.prototype.put = function (url, body, options) {
-                return httpRequest(this._backend, new __WEBPACK_IMPORTED_MODULE_5__static_request__["a" /* Request */](mergeOptions(this._defaultOptions.merge(new __WEBPACK_IMPORTED_MODULE_2__base_request_options__["a" /* RequestOptions */]({ body: body })), options, __WEBPACK_IMPORTED_MODULE_3__enums__["b" /* RequestMethod */].Put, url)));
+                return httpRequest(this._backend, new __WEBPACK_IMPORTED_MODULE_5__static_request__["a" /* Request */](mergeOptions(this._defaultOptions.mergeWith(new __WEBPACK_IMPORTED_MODULE_2__base_request_options__["a" /* RequestOptions */]({ body: body })), options, __WEBPACK_IMPORTED_MODULE_3__enums__["b" /* RequestMethod */].Put, url)));
             };
             /**
              * Performs a request with `delete` http method.
@@ -39484,7 +39484,7 @@
              * Performs a request with `patch` http method.
              */
             Http.prototype.patch = function (url, body, options) {
-                return httpRequest(this._backend, new __WEBPACK_IMPORTED_MODULE_5__static_request__["a" /* Request */](mergeOptions(this._defaultOptions.merge(new __WEBPACK_IMPORTED_MODULE_2__base_request_options__["a" /* RequestOptions */]({ body: body })), options, __WEBPACK_IMPORTED_MODULE_3__enums__["b" /* RequestMethod */].Patch, url)));
+                return httpRequest(this._backend, new __WEBPACK_IMPORTED_MODULE_5__static_request__["a" /* Request */](mergeOptions(this._defaultOptions.mergeWith(new __WEBPACK_IMPORTED_MODULE_2__base_request_options__["a" /* RequestOptions */]({ body: body })), options, __WEBPACK_IMPORTED_MODULE_3__enums__["b" /* RequestMethod */].Patch, url)));
             };
             /**
              * Performs a request with `head` http method.
@@ -49300,7 +49300,7 @@
                 var lastIndex = stylesList.length - 1;
                 var lastItem = stylesList[lastIndex];
                 if (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__facade_lang__["l" /* isStringMap */])(lastItem)) {
-                    stylesList[lastIndex] = __WEBPACK_IMPORTED_MODULE_1__facade_collection__["b" /* StringMapWrapper */].merge(lastItem, newItem);
+                    stylesList[lastIndex] = __WEBPACK_IMPORTED_MODULE_1__facade_collection__["b" /* StringMapWrapper */].mergeWith(lastItem, newItem);
                     return;
                 }
             }
@@ -53616,7 +53616,7 @@
                     hasExtraFirstStyles = true;
                 }
             });
-            var keyframeCollectedStyles = __WEBPACK_IMPORTED_MODULE_0__facade_collection__["d" /* StringMapWrapper */].merge({}, flatenedFirstKeyframeStyles);
+            var keyframeCollectedStyles = __WEBPACK_IMPORTED_MODULE_0__facade_collection__["d" /* StringMapWrapper */].mergeWith({}, flatenedFirstKeyframeStyles);
             // phase 2: normalize the final keyframe
             var finalKeyframe = keyframes[limit];
             __WEBPACK_IMPORTED_MODULE_0__facade_collection__["a" /* ListWrapper */].insert(finalKeyframe.styles.styles, 0, finalStateStyles);
@@ -64367,7 +64367,7 @@
         "use strict";
         var Observable_1 = __webpack_require__(0);
         var merge_1 = __webpack_require__(857);
-        Observable_1.Observable.merge = merge_1.merge;
+        Observable_1.Observable.merge = merge_1.mergeWith;
 //# sourceMappingURL=merge.js.map
 
         /***/ },
@@ -64975,7 +64975,7 @@
         "use strict";
         var Observable_1 = __webpack_require__(0);
         var merge_1 = __webpack_require__(404);
-        Observable_1.Observable.prototype.merge = merge_1.merge;
+        Observable_1.Observable.prototype.merge = merge_1.mergeWith;
 //# sourceMappingURL=merge.js.map
 
         /***/ },

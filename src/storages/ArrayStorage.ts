@@ -56,6 +56,13 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
     }
 
     /**
+     * @param storage
+     */
+    public mergeWith (storage: this): void {
+        this.storage = [...this.storage, ...storage.getStorage()];
+    }
+
+    /**
      * @param key
      * @param value
      */

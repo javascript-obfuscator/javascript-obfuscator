@@ -29,6 +29,11 @@ export interface IStorage <T> extends IInitializable {
     initialize (...args: any[]): void;
 
     /**
+     * @param storage
+     */
+    mergeWith (storage: this): void;
+
+    /**
      * @param key
      * @param value
      */

@@ -13,7 +13,6 @@ import { DEFAULT_PRESET } from '../preset-options/DefaultPreset';
 
 import { CLIUtils } from './CLIUtils';
 import { JavaScriptObfuscator } from '../JavaScriptObfuscator';
-import { Utils } from '../utils/Utils';
 
 export class JavaScriptObfuscatorCLI {
     /**
@@ -104,7 +103,7 @@ export class JavaScriptObfuscatorCLI {
     public run (): void {
         this.configureCommands();
 
-        if (!this.arguments.length || Utils.arrayContains(this.arguments, '--help')) {
+        if (!this.arguments.length || this.arguments.includes('--help')) {
             this.commands.outputHelp();
 
             return;
@@ -129,7 +128,7 @@ export class JavaScriptObfuscatorCLI {
                 continue;
             }
 
-            if (!Utils.arrayContains(availableOptions, option)) {
+            if (!availableOptions.includes(option)) {
                 continue;
             }
 

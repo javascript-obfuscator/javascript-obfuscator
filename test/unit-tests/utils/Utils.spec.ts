@@ -5,14 +5,6 @@ import { Utils } from '../../../src/utils/Utils';
 import { JSFuck } from '../../../src/enums/JSFuck';
 
 describe('Utils', () => {
-    describe('arrayContains (array: any[], searchElement: any): boolean', () => {
-        it('should return boolean depends on condition if array is contains given value or not', () => {
-            assert.equal(Utils.arrayContains(['1', '2', '3'], '2'), true);
-            assert.equal(Utils.arrayContains([1, 2, 3], 2), true);
-            assert.equal(Utils.arrayContains([1, 2, 3], 4), false);
-        });
-    });
-
     describe('arrayRotate <T> (array: T[], times: number): T[]', () => {
         let array: number[];
 
@@ -54,11 +46,10 @@ describe('Utils', () => {
         });
     });
 
-    describe('isInteger (number: number): boolean', () => {
-        it('should return true if given number or string is integer', () => {
-            assert.equal(Utils.isInteger(4), true);
-            assert.equal(Utils.isInteger(<any>'4'), true);
-            assert.equal(Utils.isInteger(<any>'a'), false);
+    describe('isCeilNumber (number: number): boolean', () => {
+        it('should return true if given number is a ceil', () => {
+            assert.equal(Utils.isCeilNumber(4), true);
+            assert.equal(Utils.isCeilNumber(4.5), false);
         });
     });
 

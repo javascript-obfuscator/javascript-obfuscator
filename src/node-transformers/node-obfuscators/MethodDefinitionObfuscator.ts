@@ -11,7 +11,6 @@ import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscatorsR
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
-import { Utils } from '../../utils/Utils';
 
 /**
  * replaces:
@@ -61,7 +60,7 @@ export class MethodDefinitionObfuscator extends AbstractNodeTransformer {
             enter: (node: ESTree.Node): any => {
                 if (
                     Node.isIdentifierNode(node) &&
-                    !Utils.arrayContains(MethodDefinitionObfuscator.ignoredNames, node.name) &&
+                    !MethodDefinitionObfuscator.ignoredNames.includes(node.name) &&
                     methodDefinitionNode.computed === false
                 ) {
                     methodDefinitionNode.computed = true;

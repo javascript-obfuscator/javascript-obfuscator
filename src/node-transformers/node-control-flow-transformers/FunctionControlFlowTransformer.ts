@@ -3,6 +3,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
+import * as _ from 'underscore';
 
 import { TControlFlowReplacerFactory } from '../../types/container/TControlFlowReplacerFactory';
 import { TControlFlowStorageFactory } from '../../types/container/TControlFlowStorageFactory';
@@ -10,7 +11,7 @@ import { TCustomNodeFactory } from '../../types/container/TCustomNodeFactory';
 import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
 import { TStatement } from '../../types/node/TStatement';
 
-import { IControlFlowData } from '../../interfaces/node-transformers/IControlFlowData';
+import { IControlFlowNodeMetadata } from '../../interfaces/node-transformers/IControlFlowNodeMetadata';
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IStorage } from '../../interfaces/storages/IStorage';
@@ -35,9 +36,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     ]);
 
     /**
-     * @type {Map<ESTree.Node, IControlFlowData>}
+     * @type {Map<ESTree.Node, IControlFlowNodeMetadata>}
      */
-    private controlFlowData: Map <ESTree.Node, IControlFlowData> = new Map <ESTree.Node, IControlFlowData> ();
+    private controlFlowData: Map <ESTree.Node, IControlFlowNodeMetadata> = new Map <ESTree.Node, IControlFlowNodeMetadata> ();
 
     /**
      * @type {TStatement[][]}
@@ -79,6 +80,27 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @param hostNodeBody
+     * @param controlFlowNodesList
+     */
+    private static removeOldControlFlowNodeFromHostNodeBody (
+        hostNodeBody: TStatement[],
+        controlFlowNodesList: TStatement[][]
+    ): TStatement[] {
+        for (let controlFlowNode of controlFlowNodesList) {
+            const firstIndexOfNode: number = hostNodeBody.indexOf(controlFlowNode[0]);
+
+            if (firstIndexOfNode === -1) {
+                continue;
+            }
+
+            return _.difference(hostNodeBody, controlFlowNode);
+        }
+
+        return hostNodeBody;
+    }
+
+    /**
      * @param functionNode
      */
     public transformNode (functionNode: ESTree.Function): void {
@@ -107,30 +129,15 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
                 controlFlowStorageNodeName
             });
         } else {
-            for (let controlFlowNode of this.controlFlowNodesList) {
-                const firstIndexOfNode: number = (<TStatement[]>hostNode.body).indexOf(controlFlowNode[0]);
-
-                if (firstIndexOfNode === -1) {
-                    continue;
-                }
-
-                const statementLength: number = controlFlowNode.length;
-
-                (<TStatement[]>hostNode.body).splice(firstIndexOfNode, statementLength);
-                break;
-            }
+            hostNode.body = FunctionControlFlowTransformer
+                .removeOldControlFlowNodeFromHostNodeBody(hostNode.body, this.controlFlowNodesList);
 
             const {
                 controlFlowStorage: hostControlFlowStorage,
                 controlFlowStorageNodeName: hostControlFlowStorageNodeName
-            } = <IControlFlowData>this.controlFlowData.get(hostNode);
+            } = <IControlFlowNodeMetadata>this.controlFlowData.get(hostNode);
 
-            hostControlFlowStorage
-                .getStorage()
-                .forEach((customNode: ICustomNode, key: string) => {
-                    controlFlowStorage.set(key, customNode);
-                });
-
+            controlFlowStorage.mergeWith(hostControlFlowStorage);
             controlFlowStorageNodeName = hostControlFlowStorageNodeName;
 
             this.controlFlowData.set(hostNode, {

@@ -9,7 +9,6 @@ import { TStatement } from '../types/node/TStatement';
 import { NodeType } from '../enums/NodeType';
 
 import { Node } from './Node';
-import { Utils } from '../utils/Utils';
 
 export class NodeUtils {
     /**
@@ -100,7 +99,7 @@ export class NodeUtils {
                 throw new ReferenceError('`parentNode` property of `parentNode` of given node is `undefined`');
             }
 
-            if (!Utils.arrayContains(NodeUtils.nodesWithBlockScope, parentNode.parentNode.type)) {
+            if (!NodeUtils.nodesWithBlockScope.includes(parentNode.parentNode.type)) {
                 return NodeUtils.getBlockScopeOfNode(parentNode, depth);
             } else if (depth > 0) {
                 return NodeUtils.getBlockScopeOfNode(parentNode, --depth);
@@ -132,7 +131,7 @@ export class NodeUtils {
             return depth;
         }
 
-        if (Node.isBlockStatementNode(node) && Utils.arrayContains(NodeUtils.nodesWithBlockScope, parentNode.type)) {
+        if (Node.isBlockStatementNode(node) && NodeUtils.nodesWithBlockScope.includes(parentNode.type)) {
             return NodeUtils.getNodeBlockScopeDepth(parentNode, ++depth);
         }
 

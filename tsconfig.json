@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
     "target": "ES6",
+    "lib": [
+      "es2017",
+      "DOM"
+    ],
     "module": "commonjs",
     "sourceMap": true,
     "emitDecoratorMetadata": true,

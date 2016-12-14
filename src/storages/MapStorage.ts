@@ -33,7 +33,7 @@ export abstract class MapStorage <T> implements IStorage <T> {
      * @returns {string | number | null}
      */
     public getKeyOf (value: T): string | number | null {
-        return Utils.mapGetFirstKeyOf(this.storage, value);
+        return Utils.mapGetFirstKeyOf <string | number, T> (this.storage, value);
     }
 
     /**
@@ -55,6 +55,13 @@ export abstract class MapStorage <T> implements IStorage <T> {
      */
     public initialize (...args: any[]): void {
         this.storage = new Map <string | number, T> ();
+    }
+
+    /**
+     * @param storage
+     */
+    public mergeWith (storage: this): void {
+        this.storage = new Map <string | number, T> ([...this.storage, ...storage.getStorage()]);
     }
 
     /**

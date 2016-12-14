@@ -28,11 +28,11 @@
     "esprima": "3.1.2",
     "estraverse": "4.2.0",
     "inversify": "^3.0.0-rc.2",
+    "lodash": "^4.17.2",
     "mkdirp": "0.5.1",
     "reflect-metadata": "^0.1.8",
     "source-map-support": "0.4.6",
-    "string-template": "^1.0.0",
-    "underscore": "^1.8.3"
+    "string-template": "^1.0.0"
   },
   "devDependencies": {
     "@types/chai": "3.4.34",
@@ -43,12 +43,12 @@
     "@types/estraverse": "0.0.6",
     "@types/estree": "0.0.34",
     "@types/joi": "9.0.33",
+    "@types/lodash": "^4.14.43",
     "@types/mkdirp": "0.3.29",
     "@types/mocha": "2.2.33",
     "@types/node": "6.0.52",
     "@types/sinon": "1.16.33",
     "@types/string-template": "1.0.2",
-    "@types/underscore": "^1.7.36",
     "awesome-typescript-loader": "3.0.0-beta.17",
     "babel-cli": "6.18.0",
     "babel-loader": "6.2.9",

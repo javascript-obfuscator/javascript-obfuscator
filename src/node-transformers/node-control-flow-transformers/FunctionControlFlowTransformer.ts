@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 
 import { TControlFlowReplacerFactory } from '../../types/container/TControlFlowReplacerFactory';
 import { TControlFlowStorageFactory } from '../../types/container/TControlFlowStorageFactory';
@@ -34,6 +34,16 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     private static readonly controlFlowReplacersMap: Map <string, NodeControlFlowReplacers> = new Map <string, NodeControlFlowReplacers> ([
         [NodeType.BinaryExpression, NodeControlFlowReplacers.BinaryExpressionControlFlowReplacer]
     ]);
+
+    /**
+     * @type {number}
+     */
+    private static readonly hostNodeSearchMinDepth: number = 2;
+
+    /**
+     * @type {number}
+     */
+    private static readonly hostNodeSearchMaxDepth: number = 10;
 
     /**
      * @type {Map<ESTree.Node, IControlFlowNodeMetadata>}
@@ -80,6 +90,24 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @param functionNode
+     * @returns {TNodeWithBlockStatement}
+     */
+    private static getHostNode (functionNode: ESTree.FunctionDeclaration | ESTree.FunctionExpression): TNodeWithBlockStatement {
+        const currentBlockScopeDepth: number = NodeUtils.getNodeBlockScopeDepth(functionNode);
+
+        if (currentBlockScopeDepth <= 1) {
+            return functionNode.body;
+        }
+
+        const minDepth: number = _.clamp(FunctionControlFlowTransformer.hostNodeSearchMinDepth, 0, currentBlockScopeDepth);
+        const maxDepth: number = Math.min(currentBlockScopeDepth, FunctionControlFlowTransformer.hostNodeSearchMaxDepth);
+        const depth: number = _.clamp(RandomGeneratorUtils.getRandomInteger(minDepth, maxDepth) - 1, 0, Infinity);
+
+        return NodeUtils.getBlockScopeOfNode(functionNode, depth);
+    }
+
+    /**
      * @param hostNodeBody
      * @param controlFlowNodesList
      */
@@ -116,10 +144,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         }
 
         const controlFlowStorage: IStorage <ICustomNode> = this.controlFlowStorageFactory();
-        const hostNode: TNodeWithBlockStatement = NodeUtils.getBlockScopeOfNode(
-            functionNode.body,
-            RandomGeneratorUtils.getRandomInteger(1, 5)
-        );
+        const hostNode: TNodeWithBlockStatement = FunctionControlFlowTransformer.getHostNode(functionNode);
 
         let controlFlowStorageNodeName: string = RandomGeneratorUtils.getRandomVariableName(6);
 
@@ -129,7 +154,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
                 controlFlowStorageNodeName
             });
         } else {
-            hostNode.body = FunctionControlFlowTransformer
+            hostNode.body = <ESTree.Statement[]>FunctionControlFlowTransformer
                 .removeOldControlFlowNodeFromHostNodeBody(hostNode.body, this.controlFlowNodesList);
 
             const {

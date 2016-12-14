@@ -7,6 +7,8 @@ import * as ESTree from 'estree';
 import { TControlFlowReplacerFactory } from '../../types/container/TControlFlowReplacerFactory';
 import { TControlFlowStorageFactory } from '../../types/container/TControlFlowStorageFactory';
 import { TCustomNodeFactory } from '../../types/container/TCustomNodeFactory';
+import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
+import { TStatement } from '../../types/node/TStatement';
 
 import { IControlFlowData } from '../../interfaces/node-transformers/IControlFlowData';
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
@@ -35,7 +37,12 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**
      * @type {Map<ESTree.Node, IControlFlowData>}
      */
-    private cachedControlFlowData: Map <ESTree.Node, IControlFlowData> = new Map <ESTree.Node, IControlFlowData> ();
+    private controlFlowData: Map <ESTree.Node, IControlFlowData> = new Map <ESTree.Node, IControlFlowData> ();
+
+    /**
+     * @type {TStatement[][]}
+     */
+    private readonly controlFlowNodesList: TStatement[][] = [];
 
     /**
      * @type {TControlFlowReplacerFactory}
@@ -87,25 +94,36 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         }
 
         const controlFlowStorage: IStorage <ICustomNode> = this.controlFlowStorageFactory();
-        const hostNode: ESTree.Node = NodeUtils.getBlockScopeOfNode(
+        const hostNode: TNodeWithBlockStatement = NodeUtils.getBlockScopeOfNode(
             functionNode.body,
             RandomGeneratorUtils.getRandomInteger(1, 5)
         );
 
-        let controlFlowStorageCustomNodeName: string = RandomGeneratorUtils.getRandomVariableName(6);
+        let controlFlowStorageNodeName: string = RandomGeneratorUtils.getRandomVariableName(6);
 
-        if (!this.cachedControlFlowData.has(hostNode)) {
-            this.cachedControlFlowData.set(hostNode, {
+        if (!this.controlFlowData.has(hostNode)) {
+            this.controlFlowData.set(hostNode, {
                 controlFlowStorage,
-                controlFlowStorageNodeName: controlFlowStorageCustomNodeName
+                controlFlowStorageNodeName
             });
         } else {
-            hostNode.body.shift();
+            for (let controlFlowNode of this.controlFlowNodesList) {
+                const firstIndexOfNode: number = (<TStatement[]>hostNode.body).indexOf(controlFlowNode[0]);
+
+                if (firstIndexOfNode === -1) {
+                    continue;
+                }
+
+                const statementLength: number = controlFlowNode.length;
+
+                (<TStatement[]>hostNode.body).splice(firstIndexOfNode, statementLength);
+                break;
+            }
 
             const {
                 controlFlowStorage: hostControlFlowStorage,
                 controlFlowStorageNodeName: hostControlFlowStorageNodeName
-            } = <IControlFlowData>this.cachedControlFlowData.get(hostNode);
+            } = <IControlFlowData>this.controlFlowData.get(hostNode);
 
             hostControlFlowStorage
                 .getStorage()
@@ -113,9 +131,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
                     controlFlowStorage.set(key, customNode);
                 });
 
-            controlFlowStorageCustomNodeName = hostControlFlowStorageNodeName;
+            controlFlowStorageNodeName = hostControlFlowStorageNodeName;
 
-            this.cachedControlFlowData.set(hostNode, {
+            this.controlFlowData.set(hostNode, {
                 controlFlowStorage,
                 controlFlowStorageNodeName: hostControlFlowStorageNodeName
             });
@@ -132,7 +150,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
                 return {
                     ...this.controlFlowReplacerFactory(controlFlowReplacerName)
-                        .replace(node, parentNode, controlFlowStorage, controlFlowStorageCustomNodeName),
+                        .replace(node, parentNode, controlFlowStorage, controlFlowStorageNodeName),
                     parentNode
                 };
             }
@@ -144,11 +162,11 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
         const controlFlowStorageCustomNode: ICustomNode = this.customNodeFactory(CustomNodes.ControlFlowStorageNode);
 
-        controlFlowStorageCustomNode.initialize(controlFlowStorage, controlFlowStorageCustomNodeName);
+        controlFlowStorageCustomNode.initialize(controlFlowStorage, controlFlowStorageNodeName);
 
-        NodeAppender.prependNode(
-            hostNode,
-            controlFlowStorageCustomNode.getNode()
-        );
+        const controlFlowStorageNode: TStatement[] = controlFlowStorageCustomNode.getNode();
+
+        this.controlFlowNodesList.push(controlFlowStorageNode);
+        NodeAppender.prependNode(hostNode, controlFlowStorageNode);
     }
 }

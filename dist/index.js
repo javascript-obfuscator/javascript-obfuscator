@@ -957,7 +957,7 @@ var JavaScriptObfuscator = function () {
     }
 
     _createClass(JavaScriptObfuscator, null, [{
-        key: "obfuscate",
+        key: 'obfuscate',
         value: function obfuscate(sourceCode) {
             var inputOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -966,7 +966,7 @@ var JavaScriptObfuscator = function () {
             return javaScriptObfuscator.obfuscate(sourceCode);
         }
     }, {
-        key: "runCLI",
+        key: 'runCLI',
         value: function runCLI(argv) {
             new JavaScriptObfuscatorCLI_1.JavaScriptObfuscatorCLI(argv).run();
         }
@@ -4164,7 +4164,8 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
 
         var _this = _possibleConstructorReturn(this, (FunctionControlFlowTransformer.__proto__ || Object.getPrototypeOf(FunctionControlFlowTransformer)).call(this, options));
 
-        _this.cachedControlFlowData = new Map();
+        _this.controlFlowData = new Map();
+        _this.controlFlowNodesList = [];
         _this.controlFlowStorageFactory = controlFlowStorageFactory;
         _this.controlFlowReplacerFactory = controlFlowReplacerFactory;
         _this.customNodeFactory = customNodeFactory;
@@ -4186,24 +4187,53 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
             }
             var controlFlowStorage = this.controlFlowStorageFactory();
             var hostNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(functionNode.body, RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomInteger(1, 5));
-            var controlFlowStorageCustomNodeName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6);
-            if (!this.cachedControlFlowData.has(hostNode)) {
-                this.cachedControlFlowData.set(hostNode, {
+            var controlFlowStorageNodeName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6);
+            if (!this.controlFlowData.has(hostNode)) {
+                this.controlFlowData.set(hostNode, {
                     controlFlowStorage: controlFlowStorage,
-                    controlFlowStorageNodeName: controlFlowStorageCustomNodeName
+                    controlFlowStorageNodeName: controlFlowStorageNodeName
                 });
             } else {
-                hostNode.body.shift();
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
 
-                var _cachedControlFlowDat = this.cachedControlFlowData.get(hostNode),
-                    hostControlFlowStorage = _cachedControlFlowDat.controlFlowStorage,
-                    hostControlFlowStorageNodeName = _cachedControlFlowDat.controlFlowStorageNodeName;
+                try {
+                    for (var _iterator = this.controlFlowNodesList[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var controlFlowNode = _step.value;
+
+                        var firstIndexOfNode = hostNode.body.indexOf(controlFlowNode[0]);
+                        if (firstIndexOfNode === -1) {
+                            continue;
+                        }
+                        var statementLength = controlFlowNode.length;
+                        hostNode.body.splice(firstIndexOfNode, statementLength);
+                        break;
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+
+                var _controlFlowData$get = this.controlFlowData.get(hostNode),
+                    hostControlFlowStorage = _controlFlowData$get.controlFlowStorage,
+                    hostControlFlowStorageNodeName = _controlFlowData$get.controlFlowStorageNodeName;
 
                 hostControlFlowStorage.getStorage().forEach(function (customNode, key) {
                     controlFlowStorage.set(key, customNode);
                 });
-                controlFlowStorageCustomNodeName = hostControlFlowStorageNodeName;
-                this.cachedControlFlowData.set(hostNode, {
+                controlFlowStorageNodeName = hostControlFlowStorageNodeName;
+                this.controlFlowData.set(hostNode, {
                     controlFlowStorage: controlFlowStorage,
                     controlFlowStorageNodeName: hostControlFlowStorageNodeName
                 });
@@ -4214,15 +4244,17 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
                     if (controlFlowReplacerName === undefined) {
                         return;
                     }
-                    return __assign({}, _this2.controlFlowReplacerFactory(controlFlowReplacerName).replace(node, parentNode, controlFlowStorage, controlFlowStorageCustomNodeName), { parentNode: parentNode });
+                    return __assign({}, _this2.controlFlowReplacerFactory(controlFlowReplacerName).replace(node, parentNode, controlFlowStorage, controlFlowStorageNodeName), { parentNode: parentNode });
                 }
             });
             if (!controlFlowStorage.getLength()) {
                 return;
             }
             var controlFlowStorageCustomNode = this.customNodeFactory(CustomNodes_1.CustomNodes.ControlFlowStorageNode);
-            controlFlowStorageCustomNode.initialize(controlFlowStorage, controlFlowStorageCustomNodeName);
-            NodeAppender_1.NodeAppender.prependNode(hostNode, controlFlowStorageCustomNode.getNode());
+            controlFlowStorageCustomNode.initialize(controlFlowStorage, controlFlowStorageNodeName);
+            var controlFlowStorageNode = controlFlowStorageCustomNode.getNode();
+            this.controlFlowNodesList.push(controlFlowStorageNode);
+            NodeAppender_1.NodeAppender.prependNode(hostNode, controlFlowStorageNode);
         }
     }]);
 
@@ -5559,7 +5591,7 @@ var class_validator_1 = __webpack_require__(115);
 var DefaultPreset_1 = __webpack_require__(31);
 var OptionsNormalizer_1 = __webpack_require__(84);
 var ValidationErrorsFormatter_1 = __webpack_require__(85);
-var Options = Options_1 = function Options(inputOptions) {
+var Options_1 = function Options(inputOptions) {
     _classCallCheck(this, Options);
 
     Object.assign(this, DefaultPreset_1.DEFAULT_PRESET, inputOptions);
@@ -5569,41 +5601,42 @@ var Options = Options_1 = function Options(inputOptions) {
     }
     Object.assign(this, OptionsNormalizer_1.OptionsNormalizer.normalizeOptions(this));
 };
+var Options = Options_1;
 Options.validatorOptions = {
     validationError: {
         target: false
     }
 };
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "compact", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "controlFlowFlattening", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "debugProtection", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "debugProtectionInterval", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "disableConsoleOutput", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "compact", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "controlFlowFlattening", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "debugProtection", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "debugProtectionInterval", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "disableConsoleOutput", void 0);
 __decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
-}), __metadata("design:type", Array)], Options.prototype, "domainLock", void 0);
+}), __metadata('design:type', Array)], Options.prototype, "domainLock", void 0);
 __decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
-}), __metadata("design:type", Array)], Options.prototype, "reservedNames", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "rotateStringArray", void 0);
-__decorate([class_validator_1.IsNumber(), __metadata("design:type", Number)], Options.prototype, "seed", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "selfDefending", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "sourceMap", void 0);
+}), __metadata('design:type', Array)], Options.prototype, "reservedNames", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "rotateStringArray", void 0);
+__decorate([class_validator_1.IsNumber(), __metadata('design:type', Number)], Options.prototype, "seed", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "selfDefending", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "sourceMap", void 0);
 __decorate([class_validator_1.IsString(), class_validator_1.ValidateIf(function (options) {
     return Boolean(options.sourceMapBaseUrl);
 }), class_validator_1.IsUrl({
     require_protocol: true,
     require_valid_protocol: true
-}), __metadata("design:type", String)], Options.prototype, "sourceMapBaseUrl", void 0);
-__decorate([class_validator_1.IsString(), __metadata("design:type", String)], Options.prototype, "sourceMapFileName", void 0);
-__decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata("design:type", String)], Options.prototype, "sourceMapMode", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "stringArray", void 0);
-__decorate([class_validator_1.IsIn([true, false, 'base64', 'rc4']), __metadata("design:type", Object)], Options.prototype, "stringArrayEncoding", void 0);
-__decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata("design:type", Number)], Options.prototype, "stringArrayThreshold", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "unicodeEscapeSequence", void 0);
-Options = Options_1 = __decorate([inversify_1.injectable(), __metadata("design:paramtypes", [Object])], Options);
+}), __metadata('design:type', String)], Options.prototype, "sourceMapBaseUrl", void 0);
+__decorate([class_validator_1.IsString(), __metadata('design:type', String)], Options.prototype, "sourceMapFileName", void 0);
+__decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata('design:type', String)], Options.prototype, "sourceMapMode", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "stringArray", void 0);
+__decorate([class_validator_1.IsIn([true, false, 'base64', 'rc4']), __metadata('design:type', Object)], Options.prototype, "stringArrayEncoding", void 0);
+__decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata('design:type', Number)], Options.prototype, "stringArrayThreshold", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "unicodeEscapeSequence", void 0);
+Options = Options_1 = __decorate([inversify_1.injectable(), __metadata('design:paramtypes', [typeof (_a = typeof TInputOptions_1.TInputOptions !== 'undefined' && TInputOptions_1.TInputOptions) === 'function' && _a || Object])], Options);
 exports.Options = Options;
-var Options_1;
+var _a;
 
 /***/ },
 /* 84 */

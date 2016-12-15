@@ -1,9 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
-import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { ICustomNodeGroup } from '../../../interfaces/custom-nodes/ICustomNodeGroup';
-import { ICustomNodeWithIdentifier } from '../../../interfaces/custom-nodes/ICustomNodeWithIdentifier';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
@@ -11,8 +9,6 @@ import { StringArrayEncoding } from '../../../enums/StringArrayEncoding';
 
 import { AbstractReplacer } from './AbstractReplacer';
 import { CryptUtils } from '../../../utils/CryptUtils';
-import { CustomNodes } from '../../../enums/container/CustomNodes';
-import { CustomNodeGroups } from '../../../enums/container/CustomNodeGroups';
 import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 import { Utils } from '../../../utils/Utils';
 
@@ -77,10 +73,6 @@ export class StringLiteralReplacer extends AbstractReplacer {
      * @returns {string}
      */
     private replaceStringLiteralWithStringArrayCall (value: string): string {
-        const stringArrayCustomNodeGroupNodes: Map <CustomNodes, ICustomNode> = this.customNodeGroupStorage
-            .get(CustomNodeGroups.StringArrayCustomNodeGroup)
-            .getCustomNodes();
-
         let rc4Key: string = '';
 
         switch (this.options.stringArrayEncoding) {
@@ -111,14 +103,14 @@ export class StringLiteralReplacer extends AbstractReplacer {
             this.stringArrayStorage.set(null, value);
         }
 
-        const stringArrayCallsWrapper: ICustomNodeWithIdentifier = <ICustomNodeWithIdentifier>stringArrayCustomNodeGroupNodes
-            .get(CustomNodes.StringArrayCallsWrapper);
+        const reversedStringArrayId: string = Array.from(this.stringArrayStorage.getStorageId()).reverse().join('');
+        const stringArrayStorageCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${reversedStringArrayId}`;
         const hexadecimalIndex: string = `${Utils.hexadecimalPrefix}${Utils.decToHex(indexOfValue)}`;
 
         if (this.options.stringArrayEncoding === StringArrayEncoding.rc4) {
-            return `${stringArrayCallsWrapper.getNodeIdentifier()}('${hexadecimalIndex}', '${Utils.stringToUnicodeEscapeSequence(rc4Key)}')`;
+            return `${stringArrayStorageCallsWrapperName}('${hexadecimalIndex}', '${Utils.stringToUnicodeEscapeSequence(rc4Key)}')`;
         }
 
-        return `${stringArrayCallsWrapper.getNodeIdentifier()}('${hexadecimalIndex}')`;
+        return `${stringArrayStorageCallsWrapperName}('${hexadecimalIndex}')`;
     }
 }

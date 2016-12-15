@@ -4,8 +4,16 @@ import { IStorage } from '../interfaces/storages/IStorage';
 
 import { initializable } from '../decorators/Initializable';
 
+import { RandomGeneratorUtils } from '../utils/RandomGeneratorUtils';
+
 @injectable()
 export abstract class ArrayStorage <T> implements IStorage <T> {
+    /**
+     * @type {string}
+     */
+    @initializable()
+    protected storageId: string;
+
     /**
      * @type {T[]}
      */
@@ -49,17 +57,30 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
     }
 
     /**
+     * @returns {string}
+     */
+    public getStorageId (): string {
+        return this.storageId;
+    }
+
+    /**
      * @param args
      */
     public initialize (...args: any[]): void {
         this.storage = [];
+        this.storageId = RandomGeneratorUtils.getRandomString(6);
     }
 
     /**
      * @param storage
+     * @param mergeId
      */
-    public mergeWith (storage: this): void {
+    public mergeWith (storage: this, mergeId: boolean = false): void {
         this.storage = [...this.storage, ...storage.getStorage()];
+
+        if (mergeId) {
+            this.storageId = storage.getStorageId();
+        }
     }
 
     /**

@@ -11,7 +11,6 @@ import { TCustomNodeFactory } from '../../types/container/TCustomNodeFactory';
 import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
 import { TStatement } from '../../types/node/TStatement';
 
-import { IControlFlowNodeMetadata } from '../../interfaces/node-transformers/IControlFlowNodeMetadata';
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IStorage } from '../../interfaces/storages/IStorage';
@@ -51,9 +50,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     private static readonly hostNodeSearchMaxDepth: number = 10;
 
     /**
-     * @type {Map<ESTree.Node, IControlFlowNodeMetadata>}
+     * @type {Map<ESTree.Node, IStorage<ICustomNode>>}
      */
-    private controlFlowData: Map <ESTree.Node, IControlFlowNodeMetadata> = new Map <ESTree.Node, IControlFlowNodeMetadata> ();
+    private controlFlowData: Map <ESTree.Node, IStorage<ICustomNode>> = new Map <ESTree.Node, IStorage<ICustomNode>> ();
 
     /**
      * @type {TStatement[][]}
@@ -151,34 +150,22 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         const controlFlowStorage: IStorage <ICustomNode> = this.controlFlowStorageFactory();
         const hostNode: TNodeWithBlockStatement = FunctionControlFlowTransformer.getHostNode(functionNode);
 
-        let controlFlowStorageNodeName: string = RandomGeneratorUtils.getRandomVariableName(6);
-
         if (!this.controlFlowData.has(hostNode)) {
-            this.controlFlowData.set(hostNode, {
-                controlFlowStorage,
-                controlFlowStorageNodeName
-            });
+            this.controlFlowData.set(hostNode, controlFlowStorage);
         } else {
             hostNode.body = <ESTree.Statement[]>FunctionControlFlowTransformer
                 .removeOldControlFlowNodeFromHostNodeBody(hostNode.body, this.controlFlowNodesList);
 
-            const {
-                controlFlowStorage: hostControlFlowStorage,
-                controlFlowStorageNodeName: hostControlFlowStorageNodeName
-            } = <IControlFlowNodeMetadata>this.controlFlowData.get(hostNode);
+            const hostControlFlowStorage: IStorage<ICustomNode> = <IStorage<ICustomNode>>this.controlFlowData.get(hostNode);
 
-            controlFlowStorage.mergeWith(hostControlFlowStorage);
-            controlFlowStorageNodeName = hostControlFlowStorageNodeName;
+            controlFlowStorage.mergeWith(hostControlFlowStorage, true);
 
-            this.controlFlowData.set(hostNode, {
-                controlFlowStorage,
-                controlFlowStorageNodeName: hostControlFlowStorageNodeName
-            });
+            this.controlFlowData.set(hostNode, controlFlowStorage);
         }
 
         estraverse.replace(functionNode.body, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (Math.random() > FunctionControlFlowTransformer.controlFlowReplacersThreshold) {
+                if (RandomGeneratorUtils.getRandomFloat(0, 1) > FunctionControlFlowTransformer.controlFlowReplacersThreshold) {
                     return;
                 }
 
@@ -191,7 +178,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
                 return {
                     ...this.controlFlowReplacerFactory(controlFlowReplacerName)
-                        .replace(node, parentNode, controlFlowStorage, controlFlowStorageNodeName),
+                        .replace(node, parentNode, controlFlowStorage),
                     parentNode
                 };
             }
@@ -203,7 +190,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
         const controlFlowStorageCustomNode: ICustomNode = this.customNodeFactory(CustomNodes.ControlFlowStorageNode);
 
-        controlFlowStorageCustomNode.initialize(controlFlowStorage, controlFlowStorageNodeName);
+        controlFlowStorageCustomNode.initialize(controlFlowStorage);
 
         const controlFlowStorageNode: TStatement[] = controlFlowStorageCustomNode.getNode();
 

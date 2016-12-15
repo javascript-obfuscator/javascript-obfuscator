@@ -18,15 +18,10 @@ import { StringArrayStorage } from '../../storages/string-array/StringArrayStora
 @injectable()
 export class StringArrayNode extends AbstractCustomNode {
     /**
-     * @type {number}
-     */
-    public static ARRAY_RANDOM_LENGTH: number = 4;
-
-    /**
      * @type {IStorage <string>}
      */
     @initializable()
-    private stringArray: IStorage <string>;
+    private stringArrayStorage: IStorage <string>;
 
     /**
      * @type {string}
@@ -50,16 +45,16 @@ export class StringArrayNode extends AbstractCustomNode {
     }
 
     /**
-     * @param stringArray
+     * @param stringArrayStorage
      * @param stringArrayName
      * @param stringArrayRotateValue
      */
     public initialize (
-        stringArray: IStorage <string>,
+        stringArrayStorage: IStorage <string>,
         stringArrayName: string,
         stringArrayRotateValue: number
     ): void {
-        this.stringArray = stringArray;
+        this.stringArrayStorage = stringArrayStorage;
         this.stringArrayName = stringArrayName;
         this.stringArrayRotateValue = stringArrayRotateValue;
     }
@@ -68,7 +63,7 @@ export class StringArrayNode extends AbstractCustomNode {
      * @returns {TStatement[]}
      */
     public getNode (): TStatement[] {
-        (<StringArrayStorage>this.stringArray).rotateArray(this.stringArrayRotateValue);
+        (<StringArrayStorage>this.stringArrayStorage).rotateArray(this.stringArrayRotateValue);
 
         return super.getNode();
     }
@@ -79,7 +74,7 @@ export class StringArrayNode extends AbstractCustomNode {
     protected getTemplate (): string {
         return format(StringArrayTemplate(), {
             stringArrayName: this.stringArrayName,
-            stringArray: this.stringArray.toString()
+            stringArray: this.stringArrayStorage.toString()
         });
     }
 }

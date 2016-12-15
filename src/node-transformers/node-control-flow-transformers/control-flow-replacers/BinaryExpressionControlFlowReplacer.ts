@@ -3,7 +3,6 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
-import * as _ from 'lodash';
 
 import { TCustomNodeFactory } from '../../../types/container/TCustomNodeFactory';
 import { TStatement } from '../../../types/node/TStatement';
@@ -16,6 +15,7 @@ import { CustomNodes } from '../../../enums/container/CustomNodes';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
 import { Node } from '../../../node/Node';
+import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowReplacer {
@@ -67,9 +67,9 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
     public replace (
         binaryExpressionNode: ESTree.BinaryExpression,
         parentNode: ESTree.Node,
-        controlFlowStorage: IStorage <ICustomNode>,
-        controlFlowStorageCustomNodeName: string
+        controlFlowStorage: IStorage <ICustomNode>
     ): ESTree.Node {
+        const controlFlowStorageCustomNodeName: string = controlFlowStorage.getStorageId();
         const binaryExpressionFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.BinaryExpressionFunctionNode);
         const binaryExpressionOperatorKeys: {
             [key: string]: string[]
@@ -85,10 +85,11 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
         binaryExpressionFunctionNode.initialize(binaryExpressionNode.operator);
 
         if (
-            Math.random() > BinaryExpressionControlFlowReplacer.useExistingOperatorKeyThreshold &&
+            RandomGeneratorUtils.getRandomFloat(0, 1) > BinaryExpressionControlFlowReplacer.useExistingOperatorKeyThreshold &&
             binaryExpressionOperatorKeys[binaryExpressionNode.operator].length
         ) {
-            key = _.sample(binaryExpressionOperatorKeys[binaryExpressionNode.operator]);
+            key = RandomGeneratorUtils.getRandomGenerator()
+                .pickone(binaryExpressionOperatorKeys[binaryExpressionNode.operator]);
         } else {
             binaryExpressionOperatorKeys[binaryExpressionNode.operator].push(key);
             this.existingBinaryExpressionKeys.set(controlFlowStorageCustomNodeName, binaryExpressionOperatorKeys);

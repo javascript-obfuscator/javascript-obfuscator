@@ -24,14 +24,20 @@ export interface IStorage <T> extends IInitializable {
     getStorage (): any;
 
     /**
+     * @returns string
+     */
+    getStorageId (): string;
+
+    /**
      * @param args
      */
     initialize (...args: any[]): void;
 
     /**
      * @param storage
+     * @param mergeId
      */
-    mergeWith (storage: this): void;
+    mergeWith (storage: this, mergeId: boolean): void;
 
     /**
      * @param key

@@ -16,11 +16,10 @@ import { initializable } from '../../../decorators/Initializable';
 import { CustomNodes } from '../../../enums/container/CustomNodes';
 import { ObfuscationEvents } from '../../../enums/ObfuscationEvents';
 
-import { StringArrayNode } from '../StringArrayNode';
-
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
 import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
+import { Utils } from '../../../utils/Utils';
 
 @injectable()
 export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
@@ -106,8 +105,11 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
         const stringArrayCallsWrapper: ICustomNode = this.customNodeFactory(CustomNodes.StringArrayCallsWrapper);
         const stringArrayRotateFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.StringArrayRotateFunctionNode);
 
-        const stringArrayName: string = RandomGeneratorUtils.getRandomVariableName(StringArrayNode.ARRAY_RANDOM_LENGTH);
-        const stringArrayCallsWrapperName: string = RandomGeneratorUtils.getRandomVariableName(StringArrayNode.ARRAY_RANDOM_LENGTH);
+        const reversedStorageId = Array.from(this.stringArrayStorage.getStorageId()).reverse().join('');
+        const stringArrayName: string = `_${Utils.hexadecimalPrefix}${this.stringArrayStorage.getStorageId()}`;
+        const stringArrayCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${reversedStorageId}`;
+
+        console.log(stringArrayCallsWrapperName);
 
         let stringArrayRotateValue: number;
 

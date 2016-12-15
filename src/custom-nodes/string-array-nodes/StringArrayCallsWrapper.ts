@@ -3,7 +3,6 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as format from 'string-template';
 
-import { ICustomNodeWithIdentifier } from '../../interfaces/custom-nodes/ICustomNodeWithIdentifier';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IStorage } from '../../interfaces/storages/IStorage';
 
@@ -24,24 +23,24 @@ import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 
 @injectable()
-export class StringArrayCallsWrapper extends AbstractCustomNode implements ICustomNodeWithIdentifier {
+export class StringArrayCallsWrapper extends AbstractCustomNode {
     /**
      * @type {IStorage <string>}
      */
     @initializable()
-    private stringArray: IStorage <string>;
-
-    /**
-     * @type {string}
-     */
-    @initializable()
-    private stringArrayCallsWrapperName: string;
+    private stringArrayStorage: IStorage <string>;
 
     /**
      * @type {string}
      */
     @initializable()
     private stringArrayName: string;
+
+    /**
+     * @type {string}
+     */
+    @initializable()
+    private stringArrayCallsWrapperName: string;
 
     /**
      * @param options
@@ -53,26 +52,19 @@ export class StringArrayCallsWrapper extends AbstractCustomNode implements ICust
     }
 
     /**
-     * @param stringArray
+     * @param stringArrayStorage
      * @param stringArrayName
      * @param stringArrayCallsWrapperName
      */
     public initialize (
-        stringArray: IStorage <string>,
+        stringArrayStorage: IStorage <string>,
         stringArrayName: string,
         stringArrayCallsWrapperName: string
     ): void {
-        this.stringArray = stringArray;
+        this.stringArrayStorage = stringArrayStorage;
         this.stringArrayName = stringArrayName;
         this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
     }
-
-    /**
-     * @returns {string}
-     */
-    public getNodeIdentifier (): string {
-        return this.stringArrayCallsWrapperName;
-    };
 
     /**
      * @returns {string}

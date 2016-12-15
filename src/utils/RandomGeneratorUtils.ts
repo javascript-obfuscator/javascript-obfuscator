@@ -67,13 +67,15 @@ export class RandomGeneratorUtils {
 
     /**
      * @param length
+     * @param withPrefix
      * @returns {string}
      */
-    public static getRandomVariableName (length: number = 6): string {
-        const rangeMinInteger: number = 10000,
-            rangeMaxInteger: number = 99999999;
+    public static getRandomVariableName (length: number = 6, withPrefix: boolean = true): string {
+        const prefix: string = withPrefix ? `_${Utils.hexadecimalPrefix}` : '';
+        const rangeMinInteger: number = 10000;
+        const rangeMaxInteger: number = 99999999;
 
-        return `_${Utils.hexadecimalPrefix}${(
+        return `${prefix}${(
             Utils.decToHex(
                 RandomGeneratorUtils.getRandomInteger(rangeMinInteger, rangeMaxInteger)
             )

@@ -9,6 +9,7 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { CustomNodeGroups } from '../../enums/container/CustomNodeGroups';
 
 import { MapStorage } from '../MapStorage';
+import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class CustomNodeGroupStorage extends MapStorage <ICustomNodeGroup> {
@@ -51,6 +52,7 @@ export class CustomNodeGroupStorage extends MapStorage <ICustomNodeGroup> {
 
     public initialize (): void {
         this.storage = new Map <string, ICustomNodeGroup> ();
+        this.storageId = RandomGeneratorUtils.getRandomString(6);
 
         CustomNodeGroupStorage.customNodeGroupsList.forEach((customNodeGroupName: CustomNodeGroups) => {
             const customNodeGroup: ICustomNodeGroup = this.customNodeGroupFactory(

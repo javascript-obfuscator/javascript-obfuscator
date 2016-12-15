@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 
 import { ArrayStorage } from '../ArrayStorage';
+import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 import { Utils } from '../../utils/Utils';
 
 @injectable()
@@ -9,6 +10,15 @@ export class StringArrayStorage extends ArrayStorage <string> {
         super();
 
         this.initialize();
+    }
+
+    /**
+     * @param args
+     */
+    public initialize (...args: any[]): void {
+        super.initialize(args);
+
+        this.storageId = RandomGeneratorUtils.getRandomVariableName(4, false);
     }
 
     /**

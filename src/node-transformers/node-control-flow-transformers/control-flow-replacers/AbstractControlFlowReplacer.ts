@@ -40,13 +40,11 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
      * @param node
      * @param parentNode
      * @param controlFlowStorage
-     * @param controlFlowStorageCustomNodeName
      * @returns {ESTree.Node}
      */
     public abstract replace (
         node: ESTree.Node,
         parentNode: ESTree.Node,
-        controlFlowStorage: IStorage <ICustomNode>,
-        controlFlowStorageCustomNodeName: string
+        controlFlowStorage: IStorage <ICustomNode>
     ): ESTree.Node;
 }

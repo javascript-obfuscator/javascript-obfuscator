@@ -22,12 +22,6 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
     private controlFlowStorage: IStorage <ICustomNode>;
 
     /**
-     * @type {string}
-     */
-    @initializable()
-    private controlFlowStorageName: string;
-
-    /**
      * @param options
      */
     constructor (
@@ -38,11 +32,9 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
 
     /**
      * @param controlFlowStorage
-     * @param controlFlowStorageName
      */
-    public initialize (controlFlowStorage: IStorage <ICustomNode>, controlFlowStorageName: string): void {
+    public initialize (controlFlowStorage: IStorage <ICustomNode>): void {
         this.controlFlowStorage = controlFlowStorage;
-        this.controlFlowStorageName = controlFlowStorageName;
     }
 
     /**
@@ -51,7 +43,7 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
     protected getTemplate (): string {
         return format(ControlFlowStorageTemplate(), {
             controlFlowStorage: this.controlFlowStorage.toString(),
-            controlFlowStorageName: this.controlFlowStorageName
+            controlFlowStorageName: this.controlFlowStorage.getStorageId()
         });
     }
 }

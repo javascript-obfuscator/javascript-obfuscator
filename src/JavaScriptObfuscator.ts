@@ -4,15 +4,18 @@ if (!(<any>global)._babelPolyfill) {
     require('babel-polyfill');
 }
 
+import { ServiceIdentifiers } from './container/ServiceIdentifiers';
+
 import { TInputOptions } from './types/options/TInputOptions';
 
 import { IInversifyContainerFacade } from './interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
+import { IOptions } from './interfaces/options/IOptions';
 
 import { InversifyContainerFacade } from './container/InversifyContainerFacade';
 import { JavaScriptObfuscatorCLI } from './cli/JavaScriptObfuscatorCLI';
-import { ServiceIdentifiers } from './container/ServiceIdentifiers';
+import { RandomGeneratorUtils } from './utils/RandomGeneratorUtils';
 
 export class JavaScriptObfuscator {
     /**
@@ -22,6 +25,12 @@ export class JavaScriptObfuscator {
      */
     public static obfuscate (sourceCode: string, inputOptions: TInputOptions = {}): IObfuscationResult {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade(inputOptions);
+        const options: IOptions = inversifyContainerFacade.get<IOptions>(ServiceIdentifiers.IOptions);
+
+        if (options.seed !== 0) {
+            RandomGeneratorUtils.setRandomGeneratorSeed(options.seed);
+        }
+
         const javaScriptObfuscator: IJavaScriptObfuscator = inversifyContainerFacade
             .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);
 

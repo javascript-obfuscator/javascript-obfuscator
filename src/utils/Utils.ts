@@ -21,8 +21,9 @@ export class Utils {
             return array;
         }
 
-        let newArray: T[] = array,
-            temp: T | undefined;
+        const newArray: T[] = array;
+
+        let temp: T | undefined;
 
         while (times--) {
             temp = newArray.pop()!;
@@ -74,7 +75,7 @@ export class Utils {
      * @returns {T | null}
      */
     public static mapGetFirstKeyOf <T, U> (map: Map <T, U>, value: U): T | null {
-        for (let [key, storageValue] of map) {
+        for (const [key, storageValue] of map) {
             if (_.isEqual(value, storageValue)) {
                 return key;
             }
@@ -110,9 +111,9 @@ export class Utils {
      */
     public static stringToUnicodeEscapeSequence (string: string): string {
         const radix: number = 16;
+        const regexp: RegExp = new RegExp('[\x00-\x7F]');
 
         let prefix: string,
-            regexp: RegExp = new RegExp('[\x00-\x7F]'),
             template: string;
 
         return `${string.replace(/[\s\S]/g, (escape: string): string => {

@@ -56,7 +56,7 @@ export class NodeUtils {
     public static convertStructureToCode (structure: ESTree.Node[]): string {
         let code: string = '';
 
-        for (let node of structure) {
+        for (const node of structure) {
             code += escodegen.generate(node, {
                 sourceMapWithCode: true
             }).code;

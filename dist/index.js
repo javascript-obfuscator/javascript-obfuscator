@@ -437,8 +437,8 @@ var Utils = function () {
             if (times <= 0) {
                 return array;
             }
-            var newArray = array,
-                temp = void 0;
+            var newArray = array;
+            var temp = void 0;
             while (times--) {
                 temp = newArray.pop();
                 newArray.unshift(temp);
@@ -518,8 +518,8 @@ var Utils = function () {
         key: "stringToUnicodeEscapeSequence",
         value: function stringToUnicodeEscapeSequence(string) {
             var radix = 16;
+            var regexp = new RegExp('[\x00-\x7F]');
             var prefix = void 0,
-                regexp = new RegExp('[\x00-\x7F]'),
                 template = void 0;
             return "" + string.replace(/[\s\S]/g, function (escape) {
                 if (regexp.test(escape)) {
@@ -999,7 +999,7 @@ var NodeAppender = function () {
     }
 
     _createClass(NodeAppender, null, [{
-        key: 'appendNode',
+        key: "appendNode",
         value: function appendNode(blockScopeNode, nodeBodyStatements) {
             if (!NodeAppender.validateBodyStatements(nodeBodyStatements)) {
                 nodeBodyStatements = [];
@@ -1008,7 +1008,7 @@ var NodeAppender = function () {
             blockScopeNode.body = [].concat(_toConsumableArray(blockScopeNode.body), _toConsumableArray(nodeBodyStatements));
         }
     }, {
-        key: 'appendNodeToOptimalBlockScope',
+        key: "appendNodeToOptimalBlockScope",
         value: function appendNodeToOptimalBlockScope(blockScopeStackTraceData, blockScopeNode, nodeBodyStatements) {
             var index = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
 
@@ -1021,13 +1021,13 @@ var NodeAppender = function () {
             NodeAppender.prependNode(targetBlockScope, nodeBodyStatements);
         }
     }, {
-        key: 'getOptimalBlockScope',
+        key: "getOptimalBlockScope",
         value: function getOptimalBlockScope(blockScopeTraceData, index) {
             var deep = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : Infinity;
 
             var firstCall = blockScopeTraceData[index];
             if (deep <= 0) {
-                throw new Error('Invalid `deep` argument value. Value should be bigger then 0.');
+                throw new Error("Invalid `deep` argument value. Value should be bigger then 0.");
             }
             if (deep > 1 && firstCall.stackTrace.length) {
                 return NodeAppender.getOptimalBlockScope(firstCall.stackTrace, 0, --deep);
@@ -1036,12 +1036,12 @@ var NodeAppender = function () {
             }
         }
     }, {
-        key: 'getRandomStackTraceIndex',
+        key: "getRandomStackTraceIndex",
         value: function getRandomStackTraceIndex(stackTraceRootLength) {
             return RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomInteger(0, Math.max(0, Math.round(stackTraceRootLength - 1)));
         }
     }, {
-        key: 'insertNodeAtIndex',
+        key: "insertNodeAtIndex",
         value: function insertNodeAtIndex(blockScopeNode, nodeBodyStatements, index) {
             if (!NodeAppender.validateBodyStatements(nodeBodyStatements)) {
                 nodeBodyStatements = [];
@@ -1050,7 +1050,7 @@ var NodeAppender = function () {
             blockScopeNode.body = [].concat(_toConsumableArray(blockScopeNode.body.slice(0, index)), _toConsumableArray(nodeBodyStatements), _toConsumableArray(blockScopeNode.body.slice(index)));
         }
     }, {
-        key: 'prependNode',
+        key: "prependNode",
         value: function prependNode(blockScopeNode, nodeBodyStatements) {
             if (!NodeAppender.validateBodyStatements(nodeBodyStatements)) {
                 nodeBodyStatements = [];
@@ -1059,7 +1059,7 @@ var NodeAppender = function () {
             blockScopeNode.body = [].concat(_toConsumableArray(nodeBodyStatements), _toConsumableArray(blockScopeNode.body));
         }
     }, {
-        key: 'parentizeBodyStatementsBeforeAppend',
+        key: "parentizeBodyStatementsBeforeAppend",
         value: function parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements) {
             var _iteratorNormalCompletion = true;
             var _didIteratorError = false;
@@ -1089,7 +1089,7 @@ var NodeAppender = function () {
             return nodeBodyStatements;
         }
     }, {
-        key: 'validateBodyStatements',
+        key: "validateBodyStatements",
         value: function validateBodyStatements(nodeBodyStatements) {
             return nodeBodyStatements.every(function (statementNode) {
                 return !!statementNode && statementNode.hasOwnProperty('type');

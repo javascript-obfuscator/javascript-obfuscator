@@ -54,7 +54,7 @@ export class FunctionDeclarationObfuscator extends AbstractNodeTransformer {
     public transformNode (functionDeclarationNode: ESTree.FunctionDeclaration, parentNode: ESTree.Node): void {
         const nodeIdentifier: string = RandomGeneratorUtils.getRandomString(7);
         const blockScopeOfFunctionDeclarationNode: TNodeWithBlockStatement = NodeUtils
-            .getBlockScopeOfNode(functionDeclarationNode);
+            .getBlockScopesOfNode(functionDeclarationNode)[0];
 
         if (blockScopeOfFunctionDeclarationNode.type === NodeType.Program) {
             return;

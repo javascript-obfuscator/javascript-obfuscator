@@ -702,9 +702,9 @@ var NodeUtils = function () {
             throw new TypeError('The specified node have no a block-statement');
         }
     }, {
-        key: "getBlockScopeOfNode",
-        value: function getBlockScopeOfNode(node) {
-            var depth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+        key: "getBlockScopesOfNode",
+        value: function getBlockScopesOfNode(node) {
+            var blockScopes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
 
             var parentNode = node.parentNode;
             if (!parentNode) {
@@ -715,16 +715,16 @@ var NodeUtils = function () {
                     throw new ReferenceError('`parentNode` property of `parentNode` of given node is `undefined`');
                 }
                 if (!NodeUtils.nodesWithBlockScope.includes(parentNode.parentNode.type)) {
-                    return NodeUtils.getBlockScopeOfNode(parentNode, depth);
-                } else if (depth > 0) {
-                    return NodeUtils.getBlockScopeOfNode(parentNode, --depth);
+                    return NodeUtils.getBlockScopesOfNode(parentNode, blockScopes);
                 }
-                return parentNode;
+                blockScopes.push(parentNode);
+                return NodeUtils.getBlockScopesOfNode(parentNode, blockScopes);
             }
-            if (Node_1.Node.isProgramNode(parentNode)) {
-                return parentNode;
+            if (!Node_1.Node.isProgramNode(parentNode)) {
+                return NodeUtils.getBlockScopesOfNode(parentNode, blockScopes);
             }
-            return NodeUtils.getBlockScopeOfNode(parentNode, depth);
+            blockScopes.push(parentNode);
+            return blockScopes;
         }
     }, {
         key: "getNodeBlockScopeDepth",
@@ -4235,14 +4235,19 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
     }], [{
         key: "getHostNode",
         value: function getHostNode(functionNode) {
-            var currentBlockScopeDepth = NodeUtils_1.NodeUtils.getNodeBlockScopeDepth(functionNode);
-            if (currentBlockScopeDepth <= 1) {
+            var blockScopesOfNode = NodeUtils_1.NodeUtils.getBlockScopesOfNode(functionNode);
+            if (blockScopesOfNode.length === 1) {
                 return functionNode.body;
+            } else {
+                blockScopesOfNode.pop();
             }
-            var minDepth = _.clamp(FunctionControlFlowTransformer_1.hostNodeSearchMinDepth, 0, currentBlockScopeDepth);
-            var maxDepth = Math.min(currentBlockScopeDepth, FunctionControlFlowTransformer_1.hostNodeSearchMaxDepth);
-            var depth = _.clamp(RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomInteger(minDepth, maxDepth) - 1, 0, Infinity);
-            return NodeUtils_1.NodeUtils.getBlockScopeOfNode(functionNode, depth);
+            if (blockScopesOfNode.length > FunctionControlFlowTransformer_1.hostNodeSearchMinDepth) {
+                blockScopesOfNode.splice(0, FunctionControlFlowTransformer_1.hostNodeSearchMinDepth);
+            }
+            if (blockScopesOfNode.length > FunctionControlFlowTransformer_1.hostNodeSearchMaxDepth) {
+                blockScopesOfNode.length = FunctionControlFlowTransformer_1.hostNodeSearchMaxDepth;
+            }
+            return RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().pickone(blockScopesOfNode);
         }
     }, {
         key: "removeOldControlFlowNodeFromHostNodeBody",
@@ -4589,7 +4594,7 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeTransfor) {
         key: "transformNode",
         value: function transformNode(functionDeclarationNode, parentNode) {
             var nodeIdentifier = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(7);
-            var blockScopeOfFunctionDeclarationNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(functionDeclarationNode);
+            var blockScopeOfFunctionDeclarationNode = NodeUtils_1.NodeUtils.getBlockScopesOfNode(functionDeclarationNode)[0];
             if (blockScopeOfFunctionDeclarationNode.type === NodeType_1.NodeType.Program) {
                 return;
             }
@@ -5254,7 +5259,7 @@ var VariableDeclarationObfuscator = function (_AbstractNodeTransfor) {
     _createClass(VariableDeclarationObfuscator, [{
         key: "transformNode",
         value: function transformNode(variableDeclarationNode, parentNode) {
-            var blockScopeOfVariableDeclarationNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(variableDeclarationNode);
+            var blockScopeOfVariableDeclarationNode = NodeUtils_1.NodeUtils.getBlockScopesOfNode(variableDeclarationNode)[0];
             if (blockScopeOfVariableDeclarationNode.type === NodeType_1.NodeType.Program) {
                 return;
             }
@@ -5627,7 +5632,7 @@ var class_validator_1 = __webpack_require__(116);
 var DefaultPreset_1 = __webpack_require__(30);
 var OptionsNormalizer_1 = __webpack_require__(85);
 var ValidationErrorsFormatter_1 = __webpack_require__(86);
-var Options = Options_1 = function Options(inputOptions) {
+var Options_1 = function Options(inputOptions) {
     _classCallCheck(this, Options);
 
     Object.assign(this, DefaultPreset_1.DEFAULT_PRESET, inputOptions);
@@ -5637,41 +5642,42 @@ var Options = Options_1 = function Options(inputOptions) {
     }
     Object.assign(this, OptionsNormalizer_1.OptionsNormalizer.normalizeOptions(this));
 };
+var Options = Options_1;
 Options.validatorOptions = {
     validationError: {
         target: false
     }
 };
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "compact", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "controlFlowFlattening", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "debugProtection", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "debugProtectionInterval", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "disableConsoleOutput", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "compact", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "controlFlowFlattening", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "debugProtection", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "debugProtectionInterval", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "disableConsoleOutput", void 0);
 __decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
-}), __metadata("design:type", Array)], Options.prototype, "domainLock", void 0);
+}), __metadata('design:type', Array)], Options.prototype, "domainLock", void 0);
 __decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
-}), __metadata("design:type", Array)], Options.prototype, "reservedNames", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "rotateStringArray", void 0);
-__decorate([class_validator_1.IsNumber(), __metadata("design:type", Number)], Options.prototype, "seed", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "selfDefending", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "sourceMap", void 0);
+}), __metadata('design:type', Array)], Options.prototype, "reservedNames", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "rotateStringArray", void 0);
+__decorate([class_validator_1.IsNumber(), __metadata('design:type', Number)], Options.prototype, "seed", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "selfDefending", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "sourceMap", void 0);
 __decorate([class_validator_1.IsString(), class_validator_1.ValidateIf(function (options) {
     return Boolean(options.sourceMapBaseUrl);
 }), class_validator_1.IsUrl({
     require_protocol: true,
     require_valid_protocol: true
-}), __metadata("design:type", String)], Options.prototype, "sourceMapBaseUrl", void 0);
-__decorate([class_validator_1.IsString(), __metadata("design:type", String)], Options.prototype, "sourceMapFileName", void 0);
-__decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata("design:type", String)], Options.prototype, "sourceMapMode", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "stringArray", void 0);
-__decorate([class_validator_1.IsIn([true, false, 'base64', 'rc4']), __metadata("design:type", Object)], Options.prototype, "stringArrayEncoding", void 0);
-__decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata("design:type", Number)], Options.prototype, "stringArrayThreshold", void 0);
-__decorate([class_validator_1.IsBoolean(), __metadata("design:type", Boolean)], Options.prototype, "unicodeEscapeSequence", void 0);
-Options = Options_1 = __decorate([inversify_1.injectable(), __metadata("design:paramtypes", [Object])], Options);
+}), __metadata('design:type', String)], Options.prototype, "sourceMapBaseUrl", void 0);
+__decorate([class_validator_1.IsString(), __metadata('design:type', String)], Options.prototype, "sourceMapFileName", void 0);
+__decorate([class_validator_1.IsIn(['inline', 'separate']), __metadata('design:type', String)], Options.prototype, "sourceMapMode", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "stringArray", void 0);
+__decorate([class_validator_1.IsIn([true, false, 'base64', 'rc4']), __metadata('design:type', Object)], Options.prototype, "stringArrayEncoding", void 0);
+__decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), __metadata('design:type', Number)], Options.prototype, "stringArrayThreshold", void 0);
+__decorate([class_validator_1.IsBoolean(), __metadata('design:type', Boolean)], Options.prototype, "unicodeEscapeSequence", void 0);
+Options = Options_1 = __decorate([inversify_1.injectable(), __metadata('design:paramtypes', [typeof (_a = typeof TInputOptions_1.TInputOptions !== 'undefined' && TInputOptions_1.TInputOptions) === 'function' && _a || Object])], Options);
 exports.Options = Options;
-var Options_1;
+var _a;
 
 /***/ },
 /* 85 */
@@ -5984,7 +5990,7 @@ var StackTraceAnalyzer = StackTraceAnalyzer_1 = function () {
                 var blockScopeBodyNode = blockScopeBody[index];
                 estraverse.traverse(blockScopeBodyNode, {
                     enter: function enter(node) {
-                        if (!Node_1.Node.isCallExpressionNode(node) || blockScopeBodyNode.parentNode !== NodeUtils_1.NodeUtils.getBlockScopeOfNode(node)) {
+                        if (!Node_1.Node.isCallExpressionNode(node) || blockScopeBodyNode.parentNode !== NodeUtils_1.NodeUtils.getBlockScopesOfNode(node)[0]) {
                             return;
                         }
                         _this.analyzeCallExpressionNode(stackTraceData, blockScopeBody, node);
@@ -6084,7 +6090,7 @@ var FunctionDeclarationCalleeDataExtractor = function (_AbstractCalleeDataEx) {
         value: function extract(blockScopeBody, callee) {
             var calleeBlockStatement = null;
             if (Node_1.Node.isIdentifierNode(callee)) {
-                calleeBlockStatement = this.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopeOfNode(blockScopeBody[0]), callee.name);
+                calleeBlockStatement = this.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0], callee.name);
             }
             if (!calleeBlockStatement) {
                 return null;
@@ -6112,7 +6118,7 @@ var FunctionDeclarationCalleeDataExtractor = function (_AbstractCalleeDataEx) {
 
     return FunctionDeclarationCalleeDataExtractor;
 }(AbstractCalleeDataExtractor_1.AbstractCalleeDataExtractor);
-FunctionDeclarationCalleeDataExtractor = __decorate([inversify_1.injectable(), __metadata('design:paramtypes', [])], FunctionDeclarationCalleeDataExtractor);
+FunctionDeclarationCalleeDataExtractor = __decorate([inversify_1.injectable(), __metadata("design:paramtypes", [])], FunctionDeclarationCalleeDataExtractor);
 exports.FunctionDeclarationCalleeDataExtractor = FunctionDeclarationCalleeDataExtractor;
 
 /***/ },
@@ -6162,7 +6168,7 @@ var FunctionExpressionCalleeDataExtractor = function (_AbstractCalleeDataEx) {
         value: function extract(blockScopeBody, callee) {
             var calleeBlockStatement = null;
             if (Node_1.Node.isIdentifierNode(callee)) {
-                calleeBlockStatement = this.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopeOfNode(blockScopeBody[0]), callee.name);
+                calleeBlockStatement = this.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0], callee.name);
             }
             if (Node_1.Node.isFunctionExpressionNode(callee)) {
                 calleeBlockStatement = callee.body;
@@ -6193,7 +6199,7 @@ var FunctionExpressionCalleeDataExtractor = function (_AbstractCalleeDataEx) {
 
     return FunctionExpressionCalleeDataExtractor;
 }(AbstractCalleeDataExtractor_1.AbstractCalleeDataExtractor);
-FunctionExpressionCalleeDataExtractor = __decorate([inversify_1.injectable(), __metadata('design:paramtypes', [])], FunctionExpressionCalleeDataExtractor);
+FunctionExpressionCalleeDataExtractor = __decorate([inversify_1.injectable(), __metadata("design:paramtypes", [])], FunctionExpressionCalleeDataExtractor);
 exports.FunctionExpressionCalleeDataExtractor = FunctionExpressionCalleeDataExtractor;
 
 /***/ },
@@ -6249,7 +6255,7 @@ var ObjectExpressionCalleeDataExtractor = function (_AbstractCalleeDataEx) {
                     return null;
                 }
                 functionExpressionName = objectMembersCallsChain[objectMembersCallsChain.length - 1];
-                calleeBlockStatement = this.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopeOfNode(blockScopeBody[0]), objectMembersCallsChain);
+                calleeBlockStatement = this.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0], objectMembersCallsChain);
             }
             if (!calleeBlockStatement) {
                 return null;
@@ -6344,7 +6350,7 @@ var ObjectExpressionCalleeDataExtractor = function (_AbstractCalleeDataEx) {
 
     return ObjectExpressionCalleeDataExtractor;
 }(AbstractCalleeDataExtractor_1.AbstractCalleeDataExtractor);
-ObjectExpressionCalleeDataExtractor = __decorate([inversify_1.injectable(), __metadata('design:paramtypes', [])], ObjectExpressionCalleeDataExtractor);
+ObjectExpressionCalleeDataExtractor = __decorate([inversify_1.injectable(), __metadata("design:paramtypes", [])], ObjectExpressionCalleeDataExtractor);
 exports.ObjectExpressionCalleeDataExtractor = ObjectExpressionCalleeDataExtractor;
 
 /***/ },

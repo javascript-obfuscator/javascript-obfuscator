@@ -130,7 +130,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
                 enter: (node: ESTree.Node): void => {
                     if (
                         !Node.isCallExpressionNode(node) ||
-                        blockScopeBodyNode.parentNode !== NodeUtils.getBlockScopeOfNode(node)
+                        blockScopeBodyNode.parentNode !== NodeUtils.getBlockScopesOfNode(node)[0]
                     ) {
                         return;
                     }

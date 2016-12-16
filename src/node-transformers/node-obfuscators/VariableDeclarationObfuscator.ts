@@ -54,7 +54,7 @@ export class VariableDeclarationObfuscator extends AbstractNodeTransformer {
      */
     public transformNode (variableDeclarationNode: ESTree.VariableDeclaration, parentNode: ESTree.Node): void {
         const blockScopeOfVariableDeclarationNode: TNodeWithBlockStatement = NodeUtils
-            .getBlockScopeOfNode(variableDeclarationNode);
+            .getBlockScopesOfNode(variableDeclarationNode)[0];
 
         if (blockScopeOfVariableDeclarationNode.type === NodeType.Program) {
             return;

@@ -84,10 +84,10 @@ export class NodeUtils {
 
     /**
      * @param node
-     * @param depth
+     * @param blockScopes
      * @returns {ESTree.Node}
      */
-    public static getBlockScopeOfNode (node: ESTree.Node, depth: number = 0): TNodeWithBlockStatement {
+    public static getBlockScopesOfNode (node: ESTree.Node, blockScopes: TNodeWithBlockStatement[] = []): TNodeWithBlockStatement[] {
         const parentNode: ESTree.Node | undefined = node.parentNode;
 
         if (!parentNode) {
@@ -100,19 +100,21 @@ export class NodeUtils {
             }
 
             if (!NodeUtils.nodesWithBlockScope.includes(parentNode.parentNode.type)) {
-                return NodeUtils.getBlockScopeOfNode(parentNode, depth);
-            } else if (depth > 0) {
-                return NodeUtils.getBlockScopeOfNode(parentNode, --depth);
+                return NodeUtils.getBlockScopesOfNode(parentNode, blockScopes);
             }
 
-            return parentNode;
+            blockScopes.push(parentNode);
+
+            return NodeUtils.getBlockScopesOfNode(parentNode, blockScopes);
         }
 
-        if (Node.isProgramNode(parentNode)) {
-            return parentNode;
+        if (!Node.isProgramNode(parentNode)) {
+            return NodeUtils.getBlockScopesOfNode(parentNode, blockScopes);
         }
 
-        return NodeUtils.getBlockScopeOfNode(parentNode, depth);
+        blockScopes.push(parentNode);
+
+        return blockScopes;
     }
 
     /**

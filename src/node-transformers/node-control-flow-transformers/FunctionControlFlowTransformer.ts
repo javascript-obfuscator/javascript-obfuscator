@@ -98,17 +98,23 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @returns {TNodeWithBlockStatement}
      */
     private static getHostNode (functionNode: ESTree.FunctionDeclaration | ESTree.FunctionExpression): TNodeWithBlockStatement {
-        const currentBlockScopeDepth: number = NodeUtils.getNodeBlockScopeDepth(functionNode);
+        const blockScopesOfNode: TNodeWithBlockStatement[] = NodeUtils.getBlockScopesOfNode(functionNode);
 
-        if (currentBlockScopeDepth <= 1) {
+        if (blockScopesOfNode.length === 1) {
             return functionNode.body;
+        } else {
+            blockScopesOfNode.pop();
         }
 
-        const minDepth: number = _.clamp(FunctionControlFlowTransformer.hostNodeSearchMinDepth, 0, currentBlockScopeDepth);
-        const maxDepth: number = Math.min(currentBlockScopeDepth, FunctionControlFlowTransformer.hostNodeSearchMaxDepth);
-        const depth: number = _.clamp(RandomGeneratorUtils.getRandomInteger(minDepth, maxDepth) - 1, 0, Infinity);
+        if (blockScopesOfNode.length > FunctionControlFlowTransformer.hostNodeSearchMinDepth) {
+            blockScopesOfNode.splice(0, FunctionControlFlowTransformer.hostNodeSearchMinDepth);
+        }
 
-        return NodeUtils.getBlockScopeOfNode(functionNode, depth);
+        if (blockScopesOfNode.length > FunctionControlFlowTransformer.hostNodeSearchMaxDepth) {
+            blockScopesOfNode.length = FunctionControlFlowTransformer.hostNodeSearchMaxDepth;
+        }
+
+        return RandomGeneratorUtils.getRandomGenerator().pickone(blockScopesOfNode);
     }
 
     /**

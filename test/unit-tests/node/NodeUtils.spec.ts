@@ -92,7 +92,7 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('getBlockScopeOfNode (node: ESTree.Node, depth: number = 0): TNodeWithBlockStatement', () => {
+    describe('getBlockScopesOfNode (node: ESTree.Node, blockScopes: TNodeWithBlockStatement[] = []): TNodeWithBlockStatement[]', () => {
         let functionDeclarationBlockStatementNode: ESTree.BlockStatement,
             ifStatementBlockStatementNode1: ESTree.BlockStatement,
             ifStatementBlockStatementNode2: ESTree.BlockStatement,
@@ -145,27 +145,25 @@ describe('NodeUtils', () => {
         });
 
         it('should return block-scope node for given node', () => {
-            assert.deepEqual(NodeUtils.getBlockScopeOfNode(programNode), programNode);
-            assert.deepEqual(NodeUtils.getBlockScopeOfNode(functionDeclarationNode), programNode);
-            assert.deepEqual(NodeUtils.getBlockScopeOfNode(functionDeclarationBlockStatementNode), programNode);
-            assert.deepEqual(NodeUtils.getBlockScopeOfNode(expressionStatementNode1), functionDeclarationBlockStatementNode);
-            assert.deepEqual(NodeUtils.getBlockScopeOfNode(expressionStatementNode1, 1), programNode);
-            assert.deepEqual(NodeUtils.getBlockScopeOfNode(expressionStatementNode1, 10), programNode);
-            assert.deepEqual(NodeUtils.getBlockScopeOfNode(ifStatementNode1), functionDeclarationBlockStatementNode);
-            assert.deepEqual(NodeUtils.getBlockScopeOfNode(ifStatementNode1, 1), programNode);
-            assert.deepEqual(NodeUtils.getBlockScopeOfNode(ifStatementBlockStatementNode1), functionDeclarationBlockStatementNode);
-            assert.deepEqual(NodeUtils.getBlockScopeOfNode(ifStatementBlockStatementNode1, 1), programNode);
-            assert.deepEqual(NodeUtils.getBlockScopeOfNode(ifStatementBlockStatementNode2), functionDeclarationBlockStatementNode);
-            assert.deepEqual(NodeUtils.getBlockScopeOfNode(ifStatementBlockStatementNode2, 1), programNode);
-            assert.deepEqual(NodeUtils.getBlockScopeOfNode(expressionStatementNode3), functionDeclarationBlockStatementNode);
-            assert.deepEqual(NodeUtils.getBlockScopeOfNode(expressionStatementNode3, 1), programNode);
+            assert.deepEqual(NodeUtils.getBlockScopesOfNode(programNode)[0], programNode);
+            assert.deepEqual(NodeUtils.getBlockScopesOfNode(functionDeclarationNode)[0], programNode);
+            assert.deepEqual(NodeUtils.getBlockScopesOfNode(functionDeclarationBlockStatementNode)[0], programNode);
+            assert.deepEqual(NodeUtils.getBlockScopesOfNode(expressionStatementNode1)[0], functionDeclarationBlockStatementNode);
+            assert.deepEqual(NodeUtils.getBlockScopesOfNode(expressionStatementNode1)[1], programNode);
+            assert.deepEqual(NodeUtils.getBlockScopesOfNode(ifStatementNode1)[0], functionDeclarationBlockStatementNode);
+            assert.deepEqual(NodeUtils.getBlockScopesOfNode(ifStatementNode1)[1], programNode);
+            assert.deepEqual(NodeUtils.getBlockScopesOfNode(ifStatementBlockStatementNode1)[0], functionDeclarationBlockStatementNode);
+            assert.deepEqual(NodeUtils.getBlockScopesOfNode(ifStatementBlockStatementNode1)[1], programNode);
+            assert.deepEqual(NodeUtils.getBlockScopesOfNode(ifStatementBlockStatementNode2)[0], functionDeclarationBlockStatementNode);
+            assert.deepEqual(NodeUtils.getBlockScopesOfNode(ifStatementBlockStatementNode2)[1], programNode);
+            assert.deepEqual(NodeUtils.getBlockScopesOfNode(expressionStatementNode3)[0], functionDeclarationBlockStatementNode);
+            assert.deepEqual(NodeUtils.getBlockScopesOfNode(expressionStatementNode3)[1], programNode);
         });
 
         it('should throw a `ReferenceError` if node has no `parentNode` property', () => {
-            assert.throws(() => NodeUtils.getBlockScopeOfNode(expressionStatementNode2), ReferenceError);
+            assert.throws(() => NodeUtils.getBlockScopesOfNode(expressionStatementNode2)[0], ReferenceError);
         });
     });
-
 
     describe('getNodeBlockScopeDepth (node: ESTree.Node, depth: number = 0): number', () => {
         let functionDeclarationBlockStatementNode1: ESTree.BlockStatement,

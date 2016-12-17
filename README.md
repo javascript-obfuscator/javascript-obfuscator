@@ -350,7 +350,7 @@ Type: `number` Default: `0.8` Min: `0` Max: `1`
 
 You can use this setting to adjust the probability (from 0 to 1) that a string literal will be inserted into the `stringArray`.
 
-This setting is useful with large code size because repeatdely calls to the `stringArray` array can slightly slow down your code.
+This setting is useful with large code size because repeatdely calls to the string array can slightly slow down your code.
 
 `stringArrayThreshold: 0` equals to `stringArray: false`.
 

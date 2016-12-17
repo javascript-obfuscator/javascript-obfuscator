@@ -30,7 +30,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**
      * @type {Map <string, NodeControlFlowReplacers>}
      */
-    private static readonly controlFlowReplacersMap: Map <string, NodeControlFlowReplacers> = new Map <string, NodeControlFlowReplacers> ([
+    private static readonly controlFlowReplacersMap: Map <string, NodeControlFlowReplacers> = new Map([
         [NodeType.BinaryExpression, NodeControlFlowReplacers.BinaryExpressionControlFlowReplacer]
     ]);
 
@@ -52,7 +52,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**
      * @type {Map<ESTree.Node, IStorage<ICustomNode>>}
      */
-    private controlFlowData: Map <ESTree.Node, IStorage<ICustomNode>> = new Map <ESTree.Node, IStorage<ICustomNode>> ();
+    private controlFlowData: Map <ESTree.Node, IStorage<ICustomNode>> = new Map();
 
     /**
      * @type {TStatement[][]}

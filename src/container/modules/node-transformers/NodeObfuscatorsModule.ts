@@ -29,7 +29,7 @@ export const nodeObfuscatorsModule: interfaces.ContainerModule = new ContainerMo
 
     bind<IObfuscatorReplacer>(ServiceIdentifiers['Factory<IObfuscatorReplacer>'])
         .toFactory<IObfuscatorReplacer>((context: interfaces.Context) => {
-            const cache: Map <NodeObfuscatorsReplacers, IObfuscatorReplacer> = new Map <NodeObfuscatorsReplacers, IObfuscatorReplacer> ();
+            const cache: Map <NodeObfuscatorsReplacers, IObfuscatorReplacer> = new Map();
 
             return (replacerName: NodeObfuscatorsReplacers) => {
                 if (cache.has(replacerName)) {

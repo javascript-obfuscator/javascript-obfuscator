@@ -62,7 +62,7 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
             storageKeysByBinaryOperator = <Map<ESTree.BinaryOperator, string[]>>binaryOperatorsDataByControlFlowStorageId
                 .get(controlFlowStorageId);
         } else {
-            storageKeysByBinaryOperator = new Map();
+            storageKeysByBinaryOperator = new Map <ESTree.BinaryOperator, string[]> ();
         }
 
         return storageKeysByBinaryOperator;

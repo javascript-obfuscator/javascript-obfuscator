@@ -12,7 +12,7 @@ export class IdentifierReplacer extends AbstractReplacer implements IObfuscatorR
     /**
      * @type {Map<string, string>}
      */
-    private readonly namesMap: Map<string, string> = new Map<string, string>();
+    private readonly namesMap: Map<string, string> = new Map();
 
     /**
      * @param options

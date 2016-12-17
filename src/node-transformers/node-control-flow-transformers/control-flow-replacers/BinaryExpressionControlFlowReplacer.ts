@@ -1,7 +1,6 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
-import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
 import { TCustomNodeFactory } from '../../../types/container/TCustomNodeFactory';
@@ -15,6 +14,7 @@ import { CustomNodes } from '../../../enums/container/CustomNodes';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
 import { Node } from '../../../node/Node';
+import { NodeUtils } from '../../../node/NodeUtils';
 import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 
 @injectable()
@@ -25,9 +25,9 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
     private static readonly useExistingOperatorKeyThreshold: number = 0.5;
 
     /**
-     * @type {Map<string, any>}
+     * @type {Map<string, Map<ESTree.BinaryOperator, string[]>>}
      */
-    private readonly existingBinaryExpressionKeys: Map <string, any> = new Map <string, any> ();
+    private readonly binaryOperatorsDataByControlFlowStorageId: Map <string, Map<ESTree.BinaryOperator, string[]>> = new Map();
 
     /**
      * @type {TCustomNodeFactory}
@@ -48,20 +48,30 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
     }
 
     /**
-     * @param expressionNode
-     * @returns {string}
+     * @param binaryOperatorsDataByControlFlowStorageId
+     * @param controlFlowStorageId
+     * @returns {Map<ESTree.BinaryOperator, string[]>}
      */
-    private static getExpressionValue (expressionNode: ESTree.Expression): string {
-        return escodegen.generate(expressionNode, {
-            sourceMapWithCode: true
-        }).code;
+    private static getStorageKeysByBinaryOperatorForCurrentStorage (
+        binaryOperatorsDataByControlFlowStorageId: Map<string, Map<ESTree.BinaryOperator, string[]>>,
+        controlFlowStorageId: string
+    ): Map<ESTree.BinaryOperator, string[]> {
+        let storageKeysByBinaryOperator: Map<ESTree.BinaryOperator, string[]>;
+
+        if (binaryOperatorsDataByControlFlowStorageId.has(controlFlowStorageId)) {
+            storageKeysByBinaryOperator = <Map<ESTree.BinaryOperator, string[]>>binaryOperatorsDataByControlFlowStorageId
+                .get(controlFlowStorageId);
+        } else {
+            storageKeysByBinaryOperator = new Map();
+        }
+
+        return storageKeysByBinaryOperator;
     }
 
     /**
      * @param binaryExpressionNode
      * @param parentNode
      * @param controlFlowStorage
-     * @param controlFlowStorageCustomNodeName
      * @returns {ESTree.Node}
      */
     public replace (
@@ -69,44 +79,45 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
         parentNode: ESTree.Node,
         controlFlowStorage: IStorage <ICustomNode>
     ): ESTree.Node {
-        const controlFlowStorageCustomNodeName: string = controlFlowStorage.getStorageId();
-        const binaryExpressionFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.BinaryExpressionFunctionNode);
-        const binaryExpressionOperatorKeys: {
-            [key: string]: string[]
-        } = this.existingBinaryExpressionKeys.get(controlFlowStorageCustomNodeName) || {};
-        const controlFlowStorageCallNode: ICustomNode = this.customNodeFactory(CustomNodes.ControlFlowStorageCallNode);
+        const controlFlowStorageId: string = controlFlowStorage.getStorageId();
+        const controlFlowStorageCallCustomNode: ICustomNode = this.customNodeFactory(CustomNodes.ControlFlowStorageCallNode);
+        const storageKeysByBinaryOperator: Map<ESTree.BinaryOperator, string[]> = BinaryExpressionControlFlowReplacer
+            .getStorageKeysByBinaryOperatorForCurrentStorage(
+                this.binaryOperatorsDataByControlFlowStorageId,
+                controlFlowStorageId
+            );
 
-        let key: string = AbstractControlFlowReplacer.getStorageKey();
-
-        if (!binaryExpressionOperatorKeys[binaryExpressionNode.operator]) {
-            binaryExpressionOperatorKeys[binaryExpressionNode.operator] = [];
-        }
-
-        binaryExpressionFunctionNode.initialize(binaryExpressionNode.operator);
+        let storageKeysForCurrentOperator: string[] | undefined = storageKeysByBinaryOperator.get(binaryExpressionNode.operator);
+        let storageKey: string;
 
         if (
             RandomGeneratorUtils.getRandomFloat(0, 1) > BinaryExpressionControlFlowReplacer.useExistingOperatorKeyThreshold &&
-            binaryExpressionOperatorKeys[binaryExpressionNode.operator].length
+            storageKeysForCurrentOperator &&
+            storageKeysForCurrentOperator.length
         ) {
-            key = RandomGeneratorUtils.getRandomGenerator()
-                .pickone(binaryExpressionOperatorKeys[binaryExpressionNode.operator]);
+            storageKey = RandomGeneratorUtils.getRandomGenerator().pickone(storageKeysForCurrentOperator);
         } else {
-            binaryExpressionOperatorKeys[binaryExpressionNode.operator].push(key);
-            this.existingBinaryExpressionKeys.set(controlFlowStorageCustomNodeName, binaryExpressionOperatorKeys);
-            controlFlowStorage.set(key, binaryExpressionFunctionNode);
+            const binaryExpressionFunctionCustomNode: ICustomNode = this.customNodeFactory(CustomNodes.BinaryExpressionFunctionNode);
+
+            binaryExpressionFunctionCustomNode.initialize(binaryExpressionNode.operator);
+
+            storageKey = RandomGeneratorUtils.getRandomString(3);
+            storageKeysByBinaryOperator.set(binaryExpressionNode.operator, [storageKey]);
+            this.binaryOperatorsDataByControlFlowStorageId.set(controlFlowStorageId, storageKeysByBinaryOperator);
+            controlFlowStorage.set(storageKey, binaryExpressionFunctionCustomNode);
         }
 
-        controlFlowStorageCallNode.initialize(
-            controlFlowStorageCustomNodeName,
-            key,
-            BinaryExpressionControlFlowReplacer.getExpressionValue(binaryExpressionNode.left),
-            BinaryExpressionControlFlowReplacer.getExpressionValue(binaryExpressionNode.right)
+        controlFlowStorageCallCustomNode.initialize(
+            controlFlowStorageId,
+            storageKey,
+            NodeUtils.convertStructureToCode([binaryExpressionNode.left]),
+            NodeUtils.convertStructureToCode([binaryExpressionNode.right])
         );
 
-        const statementNode: TStatement = controlFlowStorageCallNode.getNode()[0];
+        const statementNode: TStatement = controlFlowStorageCallCustomNode.getNode()[0];
 
         if (!statementNode || !Node.isExpressionStatementNode(statementNode)) {
-            throw new Error(`\`controlFlowStorageCallCustomNode.getNode()\` should returns array with \`ExpressionStatement\` node`);
+            throw new Error(`\`controlFlowStorageCallNode.getNode()[0]\` should returns array with \`ExpressionStatement\` node`);
         }
 
         return statementNode.expression;

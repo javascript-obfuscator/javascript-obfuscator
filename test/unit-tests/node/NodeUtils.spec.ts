@@ -63,6 +63,29 @@ describe('NodeUtils', () => {
         });
     });
 
+    describe('convertStructureToCode (structure: ESTree.Node[]): string', () => {
+        let structure: ESTree.Node[],
+            expectedCode: string;
+
+        beforeEach(() => {
+            structure = [
+                NodeMocks.getProgramNode([
+                    NodeMocks.getVariableDeclarationNode([
+                        NodeMocks.getVariableDeclaratorNode(
+                            NodeMocks.getIdentifierNode('abc'),
+                            NodeMocks.getLiteralNode('cde')
+                        )
+                    ])
+                ])
+            ];
+            expectedCode = 'var abc = \'cde\';';
+        });
+
+        it('should convert `ESTree.Node[]` structure to source code', () => {
+            assert.deepEqual(NodeUtils.convertStructureToCode(structure), expectedCode);
+        });
+    });
+
     describe('getBlockStatementNodeByIndex (node: ESTree.Node, index: number = 0): ESTree.Node', () => {
         let blockStatementNode: ESTree.BlockStatement,
             expressionStatementNode1: ESTree.ExpressionStatement,

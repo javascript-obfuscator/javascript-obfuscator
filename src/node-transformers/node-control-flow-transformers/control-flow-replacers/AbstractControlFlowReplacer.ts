@@ -8,8 +8,6 @@ import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
-import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
-
 @injectable()
 export abstract class AbstractControlFlowReplacer implements IControlFlowReplacer {
     /**
@@ -24,16 +22,6 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.options = options;
-    }
-
-    /**
-     * @returns {string}
-     */
-    protected static getStorageKey (): string {
-        return RandomGeneratorUtils.getRandomGenerator().string({
-            length: 3,
-            pool: RandomGeneratorUtils.randomGeneratorPool
-        });
     }
 
     /**

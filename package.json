@@ -59,7 +59,7 @@
     "mocha": "3.2.0",
     "sinon": "2.0.0-pre.3",
     "ts-node": "1.7.2",
-    "tslint": "4.1.0",
+    "tslint": "4.1.1",
     "typescript": "2.1.4",
     "webpack": "2.1.0-beta.27",
     "webpack-node-externals": "1.5.4"

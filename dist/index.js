@@ -1854,7 +1854,7 @@ var ObfuscationEvents_1 = __webpack_require__(14);
 var VisitorDirection_1 = __webpack_require__(66);
 var Node_1 = __webpack_require__(4);
 var NodeUtils_1 = __webpack_require__(9);
-var Obfuscator_1 = function () {
+var Obfuscator = Obfuscator_1 = function () {
     function Obfuscator(stackTraceAnalyzer, obfuscationEventEmitter, customNodeGroupStorage, nodeTransformersFactory, options) {
         _classCallCheck(this, Obfuscator);
 
@@ -1901,11 +1901,11 @@ var Obfuscator_1 = function () {
 
     return Obfuscator;
 }();
-var Obfuscator = Obfuscator_1;
 Obfuscator.nodeControlFlowTransformersMap = new Map([[NodeType_1.NodeType.FunctionDeclaration, [NodeTransformers_1.NodeTransformers.FunctionControlFlowTransformer]], [NodeType_1.NodeType.FunctionExpression, [NodeTransformers_1.NodeTransformers.FunctionControlFlowTransformer]]]);
 Obfuscator.nodeObfuscatorsMap = new Map([[NodeType_1.NodeType.ArrowFunctionExpression, [NodeTransformers_1.NodeTransformers.FunctionObfuscator]], [NodeType_1.NodeType.ClassDeclaration, [NodeTransformers_1.NodeTransformers.FunctionDeclarationObfuscator]], [NodeType_1.NodeType.CatchClause, [NodeTransformers_1.NodeTransformers.CatchClauseObfuscator]], [NodeType_1.NodeType.FunctionDeclaration, [NodeTransformers_1.NodeTransformers.FunctionDeclarationObfuscator, NodeTransformers_1.NodeTransformers.FunctionObfuscator]], [NodeType_1.NodeType.FunctionExpression, [NodeTransformers_1.NodeTransformers.FunctionObfuscator]], [NodeType_1.NodeType.MemberExpression, [NodeTransformers_1.NodeTransformers.MemberExpressionObfuscator]], [NodeType_1.NodeType.MethodDefinition, [NodeTransformers_1.NodeTransformers.MethodDefinitionObfuscator]], [NodeType_1.NodeType.ObjectExpression, [NodeTransformers_1.NodeTransformers.ObjectExpressionObfuscator]], [NodeType_1.NodeType.VariableDeclaration, [NodeTransformers_1.NodeTransformers.VariableDeclarationObfuscator]], [NodeType_1.NodeType.LabeledStatement, [NodeTransformers_1.NodeTransformers.LabeledStatementObfuscator]], [NodeType_1.NodeType.Literal, [NodeTransformers_1.NodeTransformers.LiteralObfuscator]]]);
-Obfuscator = Obfuscator_1 = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStackTraceAnalyzer)), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscationEventEmitter)), __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['IStorage<ICustomNodeGroup>'])), __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<INodeTransformer[]>'])), __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata('design:paramtypes', [Object, Object, Object, Function, Object])], Obfuscator);
+Obfuscator = Obfuscator_1 = __decorate([inversify_1.injectable(), __param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStackTraceAnalyzer)), __param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscationEventEmitter)), __param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['IStorage<ICustomNodeGroup>'])), __param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers['Factory<INodeTransformer[]>'])), __param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), __metadata("design:paramtypes", [Object, Object, Object, Function, Object])], Obfuscator);
 exports.Obfuscator = Obfuscator;
+var Obfuscator_1;
 
 /***/ },
 /* 38 */

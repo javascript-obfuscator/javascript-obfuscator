@@ -6,6 +6,8 @@ if (!(<any>global)._babelPolyfill) {
 
 import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 
+import { Chance } from 'chance';
+
 import { TInputOptions } from './types/options/TInputOptions';
 
 import { IInversifyContainerFacade } from './interfaces/container/IInversifyContainerFacade';
@@ -28,7 +30,7 @@ export class JavaScriptObfuscator {
         const options: IOptions = inversifyContainerFacade.get<IOptions>(ServiceIdentifiers.IOptions);
 
         if (options.seed !== 0) {
-            RandomGeneratorUtils.setRandomGeneratorSeed(options.seed);
+            RandomGeneratorUtils.setRandomGenerator(new Chance(options.seed));
         }
 
         const javaScriptObfuscator: IJavaScriptObfuscator = inversifyContainerFacade

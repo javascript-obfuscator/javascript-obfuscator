@@ -1,14 +1,21 @@
 import { assert } from 'chai';
 
+import { Chance } from 'chance';
+
 import { IObfuscationResult } from '../../src/interfaces/IObfuscationResult';
 
 import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscator';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../src/preset-options/NoCustomNodesPreset';
 import { readFileAsString } from '../helpers/readFileAsString';
+import { RandomGeneratorUtils } from '../../src/utils/RandomGeneratorUtils';
 
 describe('JavaScriptObfuscator', () => {
     describe('obfuscate (sourceCode: string, customOptions?: IObfuscatorOptions): IObfuscationResult', () => {
+        beforeEach(() => {
+            RandomGeneratorUtils.setRandomGenerator(new Chance());
+        });
+
         describe('if `sourceMap` option is `false`', () => {
             it('should returns object with obfuscated code and empty source map', () => {
                 let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
@@ -170,6 +177,10 @@ describe('JavaScriptObfuscator', () => {
 
             assert.notEqual(obfuscationResult1.getObfuscatedCode(), obfuscationResult2.getObfuscatedCode());
             assert.notEqual(obfuscationResult3.getObfuscatedCode(), obfuscationResult4.getObfuscatedCode());
+        });
+
+        afterEach(() => {
+            RandomGeneratorUtils.setRandomGenerator(new Chance());
         });
     });
 });

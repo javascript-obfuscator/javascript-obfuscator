@@ -153,7 +153,7 @@ var RandomGeneratorUtils = function () {
     _createClass(RandomGeneratorUtils, null, [{
         key: "getRandomFloat",
         value: function getRandomFloat(min, max) {
-            return RandomGeneratorUtils.randomGenerator.floating({
+            return RandomGeneratorUtils.getRandomGenerator().floating({
                 min: min,
                 max: max,
                 fixed: 7
@@ -171,7 +171,7 @@ var RandomGeneratorUtils = function () {
     }, {
         key: "getRandomInteger",
         value: function getRandomInteger(min, max) {
-            return RandomGeneratorUtils.randomGenerator.integer({
+            return RandomGeneratorUtils.getRandomGenerator().integer({
                 min: min,
                 max: max
             });
@@ -195,9 +195,9 @@ var RandomGeneratorUtils = function () {
             return "" + prefix + Utils_1.Utils.decToHex(RandomGeneratorUtils.getRandomInteger(rangeMinInteger, rangeMaxInteger)).substr(0, length);
         }
     }, {
-        key: "setRandomGeneratorSeed",
-        value: function setRandomGeneratorSeed(randomGeneratorSeed) {
-            RandomGeneratorUtils.randomGenerator = new chance_1.Chance(randomGeneratorSeed);
+        key: "setRandomGenerator",
+        value: function setRandomGenerator(randomGenerator) {
+            RandomGeneratorUtils.randomGenerator = randomGenerator;
         }
     }]);
 
@@ -944,6 +944,7 @@ if (!global._babelPolyfill) {
     __webpack_require__(114);
 }
 var ServiceIdentifiers_1 = __webpack_require__(1);
+var chance_1 = __webpack_require__(115);
 var InversifyContainerFacade_1 = __webpack_require__(41);
 var JavaScriptObfuscatorCLI_1 = __webpack_require__(40);
 var RandomGeneratorUtils_1 = __webpack_require__(2);
@@ -961,7 +962,7 @@ var JavaScriptObfuscator = function () {
             var inversifyContainerFacade = new InversifyContainerFacade_1.InversifyContainerFacade(inputOptions);
             var options = inversifyContainerFacade.get(ServiceIdentifiers_1.ServiceIdentifiers.IOptions);
             if (options.seed !== 0) {
-                RandomGeneratorUtils_1.RandomGeneratorUtils.setRandomGeneratorSeed(options.seed);
+                RandomGeneratorUtils_1.RandomGeneratorUtils.setRandomGenerator(new chance_1.Chance(options.seed));
             }
             var javaScriptObfuscator = inversifyContainerFacade.get(ServiceIdentifiers_1.ServiceIdentifiers.IJavaScriptObfuscator);
             return javaScriptObfuscator.obfuscate(sourceCode);
@@ -1312,12 +1313,12 @@ var CryptUtils = function () {
     }
 
     _createClass(CryptUtils, null, [{
-        key: 'btoa',
+        key: "btoa",
         value: function btoa(string) {
             var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
             var output = '';
             string = encodeURIComponent(string).replace(/%([0-9A-F]{2})/g, function (match, p1) {
-                return String.fromCharCode(parseInt('' + Utils_1.Utils.hexadecimalPrefix + p1));
+                return String.fromCharCode(parseInt("" + Utils_1.Utils.hexadecimalPrefix + p1));
             });
             for (var block, charCode, idx = 0, map = chars; string.charAt(idx | 0) || (map = '=', idx % 1); output += map.charAt(63 & block >> 8 - idx % 1 * 8)) {
                 charCode = string.charCodeAt(idx += 3 / 4);
@@ -1329,7 +1330,7 @@ var CryptUtils = function () {
             return output;
         }
     }, {
-        key: 'hideString',
+        key: "hideString",
         value: function hideString(str, length) {
             var escapeRegExp = function escapeRegExp(s) {
                 return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
@@ -1347,18 +1348,18 @@ var CryptUtils = function () {
                 }
                 return result;
             };
-            var randomString = RandomGeneratorUtils_1.RandomGeneratorUtils.randomGenerator.string({
+            var randomString = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().string({
                 length: length,
                 pool: RandomGeneratorUtils_1.RandomGeneratorUtils.randomGeneratorPool
             });
             var randomStringDiff = randomString.replace(new RegExp('[' + escapeRegExp(str) + ']', 'g'), '');
             var randomStringDiffArray = randomStringDiff.split('');
-            RandomGeneratorUtils_1.RandomGeneratorUtils.randomGenerator.shuffle(randomStringDiffArray);
+            RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().shuffle(randomStringDiffArray);
             randomStringDiff = randomStringDiffArray.join('');
             return [randomMerge(str, randomStringDiff), randomStringDiff];
         }
     }, {
-        key: 'rc4',
+        key: "rc4",
         value: function rc4(string, key) {
             var s = [],
                 j = 0,

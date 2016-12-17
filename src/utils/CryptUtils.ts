@@ -58,7 +58,7 @@ export class CryptUtils {
             return result;
         };
 
-        const randomString: string = RandomGeneratorUtils.randomGenerator.string({
+        const randomString: string = RandomGeneratorUtils.getRandomGenerator().string({
             length: length,
             pool: RandomGeneratorUtils.randomGeneratorPool
         });
@@ -69,7 +69,7 @@ export class CryptUtils {
 
         const randomStringDiffArray: string[] = randomStringDiff.split('');
 
-        RandomGeneratorUtils.randomGenerator.shuffle(randomStringDiffArray);
+        RandomGeneratorUtils.getRandomGenerator().shuffle(randomStringDiffArray);
         randomStringDiff = randomStringDiffArray.join('');
 
         return [randomMerge(str, randomStringDiff), randomStringDiff];

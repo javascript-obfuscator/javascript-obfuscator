@@ -31,7 +31,9 @@ describe('BinaryExpressionControlFlowReplacer', () => {
 
         describe('variant #2 - multiple binary expressions with threshold = 1', () => {
             it('should replace binary expression node by call to control flow storage node', () => {
-                const samplesCount: number = 50;
+                const samplesCount: number = 100;
+                const expectedValue: number = 0.5;
+                const delta: number = 0.08;
 
                 let equalsValue: number = 0;
 
@@ -66,7 +68,7 @@ describe('BinaryExpressionControlFlowReplacer', () => {
                     }
                 }
 
-                assert.closeTo(equalsValue / samplesCount, 0.5, 0.05);
+                assert.closeTo(equalsValue / samplesCount, expectedValue, delta);
             });
         });
     });

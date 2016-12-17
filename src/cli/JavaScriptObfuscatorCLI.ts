@@ -160,6 +160,11 @@ export class JavaScriptObfuscatorCLI {
                 JavaScriptObfuscatorCLI.parseBoolean
             )
             .option(
+                '--controlFlowFlatteningThreshold <number>',
+                'The probability that the control flow flattening transformation will be applied to the node',
+                parseFloat
+            )
+            .option(
                 '--debugProtection <boolean>',
                 'Disable browser Debug panel (can cause DevTools enabled browser freeze)',
                 JavaScriptObfuscatorCLI.parseBoolean

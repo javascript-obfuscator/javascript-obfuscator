@@ -210,6 +210,15 @@ Example:
 }());
 ```
 
+### `controlFlowFlatteningThreshold`
+Type: `number` Default: `0.75` Min: `0` Max: `1`
+
+The probability that the [`controlFlowFlattening`](#controlflowflattening) transformation will be applied to the node.
+
+This setting is especially useful for large code size because large amount of control flow transformations can slow down your code and increase code size.
+
+`controlFlowFlatteningThreshold: 0` equals to `controlFlowFlattening: false`.
+
 ### `debugProtection`
 Type: `boolean` Default: `false`
 

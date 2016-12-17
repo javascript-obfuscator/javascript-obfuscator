@@ -54,6 +54,14 @@ export class Options implements IOptions {
     /**
      * @type {boolean}
      */
+    @IsNumber()
+    @Min(0)
+    @Max(1)
+    public readonly controlFlowFlatteningThreshold: number;
+
+    /**
+     * @type {boolean}
+     */
     @IsBoolean()
     public readonly debugProtection: boolean;
 

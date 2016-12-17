@@ -5,6 +5,7 @@ import { SourceMapMode } from '../enums/SourceMapMode';
 export const NO_CUSTOM_NODES_PRESET: TInputOptions = Object.freeze({
     compact: true,
     controlFlowFlattening: false,
+    controlFlowFlatteningThreshold: 0,
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: false,

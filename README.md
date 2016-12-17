@@ -225,7 +225,7 @@ Type: `boolean` Default: `false`
 
 ##### :warning: Can freeze your browser! Use at own risk.
 
-If checked, an interval is used to force the debug mode on the Console tab, making it harder to use other features of the Developer Tools. Works if [`debugProtection`](#debugProtection) is enabled.
+If checked, an interval is used to force the debug mode on the Console tab, making it harder to use other features of the Developer Tools. Works if [`debugProtection`](#debugprotection) is enabled.
 
 ### `disableConsoleOutput`
 Type: `boolean` Default: `true`
@@ -258,7 +258,7 @@ Example:
 ### `rotateStringArray`
 Type: `boolean` Default: `true`
 
-##### :warning: [`stringArray`](#stringArray) must be enabled
+##### :warning: [`stringArray`](#stringarray) must be enabled
 
 Shift the `stringArray` array by a fixed and random (generated at the code obfuscation) places. This makes it harder to match the order of the removed strings to their original place.
 
@@ -289,7 +289,7 @@ Source maps can be useful to help you debug your obfuscated JavaScript source co
 ### `sourceMapBaseUrl`
 Type: `string` Default: ``
 
-Sets base url to the source map import url when [`sourceMapMode: 'separate'`](#sourceMapMode).
+Sets base url to the source map import url when [`sourceMapMode: 'separate'`](#sourcemapmode).
  
 CLI example:
 ```
@@ -335,7 +335,7 @@ Type: `boolean|string` Default: `false`
 
 This option can slightly slow down your script.
 
-Encode all string literals of the [`stringArray`](#stringArray) using `base64` or `rc4` and inserts a special code that used to decode it back at runtime.
+Encode all string literals of the [`stringArray`](#stringarray) using `base64` or `rc4` and inserts a special code that used to decode it back at runtime.
 
 Available values:
 * `true` (`boolean`): encode `stringArray` values using `base64`
@@ -346,7 +346,7 @@ Available values:
 ### `stringArrayThreshold`
 Type: `number` Default: `0.8` Min: `0` Max: `1`
 
-##### :warning: [`stringArray`](#stringArray) option must be enabled
+##### :warning: [`stringArray`](#stringarray) option must be enabled
 
 You can use this setting to adjust the probability (from 0 to 1) that a string literal will be inserted into the `stringArray`.
 
@@ -359,7 +359,7 @@ Type: `boolean` Default: `true`
 
 Allows to enable/disable string conversion to unicode escape sequence.
 
-Unicode escape sequence increases code size greatly. It is recommended to disable this option when using [`stringArrayEncoding`](#stringArrayEncoding) (especially with `rc4` encoding).
+Unicode escape sequence increases code size greatly. It is recommended to disable this option when using [`stringArrayEncoding`](#stringarrayencoding) (especially with `rc4` encoding).
 
 ## License
 Copyright (C) 2016 [Timofey Kachalov](http://github.com/sanex3339).

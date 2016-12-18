@@ -31,11 +31,11 @@ describe('BinaryExpressionControlFlowReplacer', () => {
 
         describe('variant #2 - multiple binary expressions with threshold = 1', () => {
             it('should replace binary expression node by call to control flow storage node', function () {
-                this.timeout(4000);
+                this.timeout(2000);
 
-                const samplesCount: number = 200;
+                const samplesCount: number = 100;
                 const expectedValue: number = 0.5;
-                const delta: number = 0.06;
+                const delta: number = 0.1;
 
                 let equalsValue: number = 0;
 

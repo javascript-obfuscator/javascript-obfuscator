@@ -2,5 +2,12 @@
   "generatorOpts": {
     "retainFunctionParens": true
   },
-  "presets": ["es2015"]
+  "presets": ["es2015"],
+  "plugins": [
+    ["transform-runtime", {
+      "helpers": true,
+      "polyfill": true,
+      "regenerator": false
+    }]
+  ]
 }

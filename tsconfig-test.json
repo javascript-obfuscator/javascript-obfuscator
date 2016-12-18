@@ -6,6 +6,8 @@
       "es2017",
       "DOM"
     ],
+    "noEmitHelpers": true,
+    "importHelpers": true,
     "module": "commonjs",
     "inlineSourceMap": true,
     "inlineSources": true,

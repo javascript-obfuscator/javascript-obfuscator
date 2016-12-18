@@ -32,7 +32,8 @@
     "mkdirp": "0.5.1",
     "reflect-metadata": "^0.1.8",
     "source-map-support": "0.4.6",
-    "string-template": "^1.0.0"
+    "string-template": "^1.0.0",
+    "tslib": "^1.2.0"
   },
   "devDependencies": {
     "@types/chai": "3.4.34",

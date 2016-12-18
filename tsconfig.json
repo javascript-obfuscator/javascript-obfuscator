@@ -5,6 +5,8 @@
       "es2017",
       "DOM"
     ],
+    "noEmitHelpers": true,
+    "importHelpers": true,
     "module": "commonjs",
     "sourceMap": true,
     "emitDecoratorMetadata": true,

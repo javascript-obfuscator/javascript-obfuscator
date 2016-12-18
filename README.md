@@ -50,25 +50,57 @@ var JavaScriptObfuscator = require('javascript-obfuscator');
 
 var obfuscationResult = JavaScriptObfuscator.obfuscate(
     `
-    (function(){
-        var variable = 'abc';
-        console.log(variable);
-    })();
+        (function(){
+            var variable1 = '5' - 3;
+            var variable2 = '5' + 3;
+            var variable3 = '5' + - '2';
+            console.log(variable1);
+            console.log(variable2);
+            console.log(variable3);
+        })();
     `,
     {
-        rotateStringArray: false
+        compact: false,
+        controlFlowFlattening: true,
+        disableConsoleOutput: false
     }
 );
 
 console.log(obfuscationResult.getObfuscatedCode());
 /*
-var _0xabf1 = [
-    '\x61\x62\x63',
-    '\x6c\x6f\x67'
+var _0x20c3 = [
+    '\x6c\x6f\x67',
+    '\x78\x4c\x77',
+    '\x51\x72\x6b'
 ];
-(function() {
-    var _0xe6fab6 = _0xabf1[0x0];
-    console[_0xabf1[0x1]](_0xe6fab6);
+(function (_0x3cd8ee, _0x363b84) {
+    var _0x52ec75 = function (_0xda70d7) {
+        while (--_0xda70d7) {
+            _0x3cd8ee['\x70\x75\x73\x68'](_0x3cd8ee['\x73\x68\x69\x66\x74']());
+        }
+    };
+    _0x52ec75(++_0x363b84);
+}(_0x20c3, 0x11e));
+var _0xc320 = function (_0x578269, _0x5685a1) {
+    var _0x578269 = parseInt(_0x578269, 0x10);
+    var _0xef46f2 = _0x20c3[_0x578269];
+    return _0xef46f2;
+};
+(function () {
+    var _0x2559cb = {
+        '\x78\x4c\x77': function _0x1(_0x1936fd, _0x5ed38f) {
+            return _0x1936fd + _0x5ed38f;
+        },
+        '\x51\x72\x6b': function _0x3(_0x4414d6, _0x1db310) {
+            return _0x4414d6 + _0x1db310;
+        }
+    };
+    var _0x32d9b = '\x35' - 0x3;
+    var _0x2b7aac = _0x2559cb[_0xc320('0x0')]('\x35', 0x3);
+    var _0x3c7304 = _0x2559cb['\x51\x72\x6b']('\x35', -'\x32');
+    console['\x6c\x6f\x67'](_0x32d9b);
+    console[_0xc320('0x2')](_0x2b7aac);
+    console[_0xc320('0x2')](_0x3c7304);
 }());
 */
 ```

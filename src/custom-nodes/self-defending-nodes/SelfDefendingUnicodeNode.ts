@@ -7,7 +7,7 @@ import { IOptions } from '../../interfaces/options/IOptions';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
+import { NO_CUSTOM_NODES_PRESET } from '../../options/presets/NoCustomNodes';
 
 import { SelfDefendingTemplate } from '../../templates/custom-nodes/self-defending-nodes/self-defending-unicode-node/SelfDefendingTemplate';
 
@@ -42,7 +42,7 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     /**
      * @returns {string}
      */
-    public getCode (): string {
+    protected getTemplate (): string {
         return JavaScriptObfuscator.obfuscate(
             format(SelfDefendingTemplate(), {
                 selfDefendingFunctionName: RandomGeneratorUtils.getRandomVariableName(),

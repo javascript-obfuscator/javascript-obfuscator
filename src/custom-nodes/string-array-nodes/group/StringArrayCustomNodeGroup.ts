@@ -16,12 +16,10 @@ import { initializable } from '../../../decorators/Initializable';
 import { CustomNodes } from '../../../enums/container/CustomNodes';
 import { ObfuscationEvents } from '../../../enums/ObfuscationEvents';
 
-import { StringArrayNode } from '../StringArrayNode';
-
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
 import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
-import { StringArrayStorage } from '../../../storages/string-array/StringArrayStorage';
+import { Utils } from '../../../utils/Utils';
 
 @injectable()
 export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
@@ -50,22 +48,25 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
      * @type {IStorage <string>}
      */
     @initializable()
-    private stringArray: IStorage <string>;
+    private stringArrayStorage: IStorage <string>;
 
     /**
      * @param customNodeFactory
      * @param obfuscationEventEmitter
+     * @param stringArrayStorage
      * @param options
      */
     constructor (
         @inject(ServiceIdentifiers['Factory<ICustomNode>']) customNodeFactory: TCustomNodeFactory,
         @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
+        @inject(ServiceIdentifiers['IStorage<string>']) stringArrayStorage: IStorage<string>,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
         this.customNodeFactory = customNodeFactory;
         this.obfuscationEventEmitter = obfuscationEventEmitter;
+        this.stringArrayStorage = stringArrayStorage;
     }
 
     /**
@@ -73,7 +74,7 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
      * @param stackTraceData
      */
     public appendCustomNodes (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
-        if (!this.stringArray.getLength()) {
+        if (!this.stringArrayStorage.getLength()) {
             return;
         }
 
@@ -95,7 +96,6 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
 
     public initialize (): void {
         this.customNodes = new Map <CustomNodes, ICustomNode> ();
-        this.stringArray = new StringArrayStorage();
 
         if (!this.options.stringArray) {
             return;
@@ -105,8 +105,10 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
         const stringArrayCallsWrapper: ICustomNode = this.customNodeFactory(CustomNodes.StringArrayCallsWrapper);
         const stringArrayRotateFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.StringArrayRotateFunctionNode);
 
-        const stringArrayName: string = RandomGeneratorUtils.getRandomVariableName(StringArrayNode.ARRAY_RANDOM_LENGTH);
-        const stringArrayCallsWrapperName: string = RandomGeneratorUtils.getRandomVariableName(StringArrayNode.ARRAY_RANDOM_LENGTH);
+        const stringArrayStorageId: string = this.stringArrayStorage.getStorageId();
+
+        const stringArrayName: string = `_${Utils.hexadecimalPrefix}${stringArrayStorageId}`;
+        const stringArrayCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${Utils.stringRotate(stringArrayStorageId, 2)}`;
 
         let stringArrayRotateValue: number;
 
@@ -116,9 +118,9 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
             stringArrayRotateValue = 0;
         }
 
-        stringArrayNode.initialize(this.stringArray, stringArrayName, stringArrayRotateValue);
-        stringArrayCallsWrapper.initialize(this.stringArray, stringArrayName, stringArrayCallsWrapperName);
-        stringArrayRotateFunctionNode.initialize(this.stringArray, stringArrayName, stringArrayRotateValue);
+        stringArrayNode.initialize(this.stringArrayStorage, stringArrayName, stringArrayRotateValue);
+        stringArrayCallsWrapper.initialize(this.stringArrayStorage, stringArrayName, stringArrayCallsWrapperName);
+        stringArrayRotateFunctionNode.initialize(this.stringArrayStorage, stringArrayName, stringArrayRotateValue);
 
         this.customNodes.set(CustomNodes.StringArrayNode, stringArrayNode);
         this.customNodes.set(CustomNodes.StringArrayCallsWrapper, stringArrayCallsWrapper);

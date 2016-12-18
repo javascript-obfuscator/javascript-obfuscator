@@ -5,13 +5,12 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
-import { IReplacer } from '../../interfaces/node-transformers/IReplacer';
+import { IObfuscatorReplacer } from '../../interfaces/node-transformers/IObfuscatorReplacer';
 
 import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscatorsReplacers';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
-import { Utils } from '../../utils/Utils';
 
 /**
  * replaces:
@@ -23,9 +22,9 @@ import { Utils } from '../../utils/Utils';
 @injectable()
 export class MethodDefinitionObfuscator extends AbstractNodeTransformer {
     /**
-     * @type {IReplacer}
+     * @type {IObfuscatorReplacer}
      */
-    private readonly stringLiteralReplacer: IReplacer;
+    private readonly stringLiteralReplacer: IObfuscatorReplacer;
 
     /**
      * @type {string[]}
@@ -37,7 +36,7 @@ export class MethodDefinitionObfuscator extends AbstractNodeTransformer {
      * @param options
      */
     constructor(
-        @inject(ServiceIdentifiers['Factory<IReplacer>']) replacersFactory: (replacer: NodeObfuscatorsReplacers) => IReplacer,
+        @inject(ServiceIdentifiers['Factory<IObfuscatorReplacer>']) replacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscatorReplacer,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
@@ -61,7 +60,7 @@ export class MethodDefinitionObfuscator extends AbstractNodeTransformer {
             enter: (node: ESTree.Node): any => {
                 if (
                     Node.isIdentifierNode(node) &&
-                    !Utils.arrayContains(MethodDefinitionObfuscator.ignoredNames, node.name) &&
+                    !MethodDefinitionObfuscator.ignoredNames.includes(node.name) &&
                     methodDefinitionNode.computed === false
                 ) {
                     methodDefinitionNode.computed = true;

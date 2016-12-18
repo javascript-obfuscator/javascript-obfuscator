@@ -14,7 +14,7 @@ export const nodeControlFlowTransformersModule: interfaces.ContainerModule = new
 
     bind<IControlFlowReplacer>(ServiceIdentifiers['Factory<IControlFlowReplacer>'])
         .toFactory<IControlFlowReplacer>((context: interfaces.Context) => {
-            const cache: Map <NodeControlFlowReplacers, IControlFlowReplacer> = new Map <NodeControlFlowReplacers, IControlFlowReplacer> ();
+            const cache: Map <NodeControlFlowReplacers, IControlFlowReplacer> = new Map();
 
             return (replacerName: NodeControlFlowReplacers) => {
                 if (cache.has(replacerName)) {

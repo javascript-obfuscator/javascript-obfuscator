@@ -5,7 +5,6 @@ import * as format from 'string-template';
 
 import { TStatement } from '../../types/node/TStatement';
 
-import { ICustomNodeWithData } from '../../interfaces/custom-nodes/ICustomNodeWithData';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IStorage } from '../../interfaces/storages/IStorage';
 
@@ -17,17 +16,12 @@ import { AbstractCustomNode } from '../AbstractCustomNode';
 import { StringArrayStorage } from '../../storages/string-array/StringArrayStorage';
 
 @injectable()
-export class StringArrayNode extends AbstractCustomNode implements ICustomNodeWithData {
-    /**
-     * @type {number}
-     */
-    public static ARRAY_RANDOM_LENGTH: number = 4;
-
+export class StringArrayNode extends AbstractCustomNode {
     /**
      * @type {IStorage <string>}
      */
     @initializable()
-    private stringArray: IStorage <string>;
+    private stringArrayStorage: IStorage <string>;
 
     /**
      * @type {string}
@@ -51,43 +45,36 @@ export class StringArrayNode extends AbstractCustomNode implements ICustomNodeWi
     }
 
     /**
-     * @param stringArray
+     * @param stringArrayStorage
      * @param stringArrayName
      * @param stringArrayRotateValue
      */
     public initialize (
-        stringArray: IStorage <string>,
+        stringArrayStorage: IStorage <string>,
         stringArrayName: string,
         stringArrayRotateValue: number
     ): void {
-        this.stringArray = stringArray;
+        this.stringArrayStorage = stringArrayStorage;
         this.stringArrayName = stringArrayName;
         this.stringArrayRotateValue = stringArrayRotateValue;
-    }
-
-    /**
-     * @returns {string}
-     */
-    public getCode (): string {
-        return format(StringArrayTemplate(), {
-            stringArrayName: this.stringArrayName,
-            stringArray: this.stringArray.toString()
-        });
-    }
-
-    /**
-     * @returns {IStorage <string>}
-     */
-    public getNodeData (): IStorage <string> {
-        return this.stringArray;
     }
 
     /**
      * @returns {TStatement[]}
      */
     public getNode (): TStatement[] {
-        (<StringArrayStorage>this.stringArray).rotateArray(this.stringArrayRotateValue);
+        (<StringArrayStorage>this.stringArrayStorage).rotateArray(this.stringArrayRotateValue);
 
         return super.getNode();
+    }
+
+    /**
+     * @returns {string}
+     */
+    protected getTemplate (): string {
+        return format(StringArrayTemplate(), {
+            stringArrayName: this.stringArrayName,
+            stringArray: this.stringArrayStorage.toString()
+        });
     }
 }

@@ -78,7 +78,7 @@ var _0xabf1 = [
 Returns `ObfuscationResult` object which contains two public methods:
 
 * `getObfuscatedCode()` - returns `string` with obfuscated code;
-* `getSourceMap()` - if `sourceMap` options is enable - returns `string` with source map or an empty string if `sourceMapMode` option is set as `inline`.
+* `getSourceMap()` - if [`sourceMap`](#sourcemap) option is enabled - returns `string` with source map or an empty string if [`sourceMapMode`](#sourcemapmode) option is set as `inline`.
 
 Calling `toString()` for `ObfuscationResult` object will return `string` with obfuscated code.
 
@@ -171,7 +171,7 @@ Compact code output on one line.
 ### `controlFlowFlattening`
 Type: `boolean` Default: `false`
 
-Enables code control flow flattening. Control flow flattening is a structure transformation of the source code that hindering the comprehension of the program.
+Enables code control flow flattening. Control flow flattening is a structure transformation of the source code that hinders program comprehension.
 
 Example:
 ```ts
@@ -210,6 +210,15 @@ Example:
 }());
 ```
 
+### `controlFlowFlatteningThreshold`
+Type: `number` Default: `0.75` Min: `0` Max: `1`
+
+The probability that the [`controlFlowFlattening`](#controlflowflattening) transformation will be applied to the node.
+
+This setting is especially useful for large code size because large amount of control flow transformations can slow down your code and increase code size.
+
+`controlFlowFlatteningThreshold: 0` equals to `controlFlowFlattening: false`.
+
 ### `debugProtection`
 Type: `boolean` Default: `false`
 
@@ -225,7 +234,7 @@ Type: `boolean` Default: `false`
 
 ##### :warning: Can freeze your browser! Use at own risk.
 
-If checked, an interval is used to force the debug mode on the Console tab, making it harder to use other features of the Developer Tools. Works if `debugProtection` is enabled.
+If checked, an interval is used to force the debug mode on the Console tab, making it harder to use other features of the Developer Tools. Works if [`debugProtection`](#debugprotection) is enabled.
 
 ### `disableConsoleOutput`
 Type: `boolean` Default: `true`
@@ -258,7 +267,7 @@ Example:
 ### `rotateStringArray`
 Type: `boolean` Default: `true`
 
-##### :warning: `stringArray` must be enabled
+##### :warning: [`stringArray`](#stringarray) must be enabled
 
 Shift the `stringArray` array by a fixed and random (generated at the code obfuscation) places. This makes it harder to match the order of the removed strings to their original place.
 
@@ -275,7 +284,7 @@ If seed is `0` - random generator will work without seed.
 Type: `boolean` Default: `false`
 
 ##### :warning: Don't change obfuscated code in any way after obfuscation with this option, because any change like uglifying of code can trigger self defending and code wont work anymore!
-##### :warning: this option forcibly set `compact` value to `true`
+##### :warning: This option forcibly sets `compact` value to `true`
 
 This option makes the output code resilient against formatting and variable renaming. If one tries to use a JavaScript beautifier on the obfuscated code, the code won't work anymore, making it harder to understand and modify it.
 
@@ -284,12 +293,12 @@ Type: `boolean` Default: `false`
 
 Enables source map generation for obfuscated code.
 
-Source maps can be useful to help you debug your obfuscated Java Script source code. If you want or need to debug in production, you can upload the separate source map file to a secret location and then point your browser there. 
+Source maps can be useful to help you debug your obfuscated JavaScript source code. If you want or need to debug in production, you can upload the separate source map file to a secret location and then point your browser there. 
 
 ### `sourceMapBaseUrl`
 Type: `string` Default: ``
 
-Sets base url to the source map import url when `sourceMapMode: 'separate'`.
+Sets base url to the source map import url when [`sourceMapMode: 'separate'`](#sourcemapmode).
  
 CLI example:
 ```
@@ -321,12 +330,12 @@ Type: `string` Default: `separate`
 
 Specifies source map generation mode:
 * `inline` - emit a single file with source maps instead of having a separate file;
-* `separate` - generates corresponding '.map' file with source map. If obfuscator run through CLI - adds link to source map file to the end of file with obfuscated code `//# sourceMappingUrl=file.js.map`.
+* `separate` - generates corresponding '.map' file with source map. In case you run obfuscator through CLI - adds link to source map file to the end of file with obfuscated code `//# sourceMappingUrl=file.js.map`.
 
 ### `stringArray`
 Type: `boolean` Default: `true`
 
-Removes string literals and place them in a special array. For instance the string `"Hello World"` in `var m = "Hello World";` will be replaced with something like `var m = _0x12c456[0x1];`
+Removes string literals and place them in a special array. For instance, the string `"Hello World"` in `var m = "Hello World";` will be replaced with something like `var m = _0x12c456[0x1];`
     
 ### `stringArrayEncoding`
 Type: `boolean|string` Default: `false`
@@ -335,7 +344,7 @@ Type: `boolean|string` Default: `false`
 
 This option can slightly slow down your script.
 
-Encode all string literals of the `stringArray` using `base64` or `rc4` and inserts a special code that used to decode it back at runtime.
+Encode all string literals of the [`stringArray`](#stringarray) using `base64` or `rc4` and inserts a special code that used to decode it back at runtime.
 
 Available values:
 * `true` (`boolean`): encode `stringArray` values using `base64`
@@ -346,11 +355,11 @@ Available values:
 ### `stringArrayThreshold`
 Type: `number` Default: `0.8` Min: `0` Max: `1`
 
-##### :warning: `stringArray` option must be enabled
+##### :warning: [`stringArray`](#stringarray) option must be enabled
 
 You can use this setting to adjust the probability (from 0 to 1) that a string literal will be inserted into the `stringArray`.
 
-This setting is useful with large code size because repeatdely calls to the `stringArray` array can slightly slow down your code.
+This setting is especially useful for large code size because it repeatedly calls to the `string array` and can slow down your code.
 
 `stringArrayThreshold: 0` equals to `stringArray: false`.
 
@@ -359,7 +368,7 @@ Type: `boolean` Default: `true`
 
 Allows to enable/disable string conversion to unicode escape sequence.
 
-Unicode escape sequence greatly increases code size. Recommend to disable this option when using `stringArrayEncoding` (especially with `rc4` encoding).
+Unicode escape sequence increases code size greatly. It is recommended to disable this option when using [`stringArrayEncoding`](#stringarrayencoding) (especially with `rc4` encoding).
 
 ## License
 Copyright (C) 2016 [Timofey Kachalov](http://github.com/sanex3339).

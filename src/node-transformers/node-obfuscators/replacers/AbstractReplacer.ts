@@ -2,10 +2,10 @@ import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { IOptions } from '../../../interfaces/options/IOptions';
-import { IReplacer } from '../../../interfaces/node-transformers/IReplacer';
+import { IObfuscatorReplacer } from '../../../interfaces/node-transformers/IObfuscatorReplacer';
 
 @injectable()
-export abstract class AbstractReplacer implements IReplacer {
+export abstract class AbstractReplacer implements IObfuscatorReplacer {
     /**
      * @type {IOptions}
      */
@@ -22,7 +22,8 @@ export abstract class AbstractReplacer implements IReplacer {
 
     /**
      * @param nodeValue
+     * @param nodeIdentifier
      * @returns {string}
      */
-    public abstract replace (nodeValue: any): string;
+    public abstract replace (nodeValue: any, nodeIdentifier?: string): string;
 }

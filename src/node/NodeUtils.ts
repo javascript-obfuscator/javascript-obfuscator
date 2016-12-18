@@ -9,7 +9,6 @@ import { TStatement } from '../types/node/TStatement';
 import { NodeType } from '../enums/NodeType';
 
 import { Node } from './Node';
-import { Utils } from '../utils/Utils';
 
 export class NodeUtils {
     /**
@@ -51,6 +50,22 @@ export class NodeUtils {
     }
 
     /**
+     * @param structure
+     * @returns {string}
+     */
+    public static convertStructureToCode (structure: ESTree.Node[]): string {
+        let code: string = '';
+
+        for (const node of structure) {
+            code += escodegen.generate(node, {
+                sourceMapWithCode: true
+            }).code;
+        }
+
+        return code;
+    }
+
+    /**
      * @param node
      * @param index
      * @returns {ESTree.Node}
@@ -69,10 +84,10 @@ export class NodeUtils {
 
     /**
      * @param node
-     * @param depth
+     * @param blockScopes
      * @returns {ESTree.Node}
      */
-    public static getBlockScopeOfNode (node: ESTree.Node, depth: number = 0): TNodeWithBlockStatement {
+    public static getBlockScopesOfNode (node: ESTree.Node, blockScopes: TNodeWithBlockStatement[] = []): TNodeWithBlockStatement[] {
         const parentNode: ESTree.Node | undefined = node.parentNode;
 
         if (!parentNode) {
@@ -84,20 +99,22 @@ export class NodeUtils {
                 throw new ReferenceError('`parentNode` property of `parentNode` of given node is `undefined`');
             }
 
-            if (!Utils.arrayContains(NodeUtils.nodesWithBlockScope, parentNode.parentNode.type)) {
-                return NodeUtils.getBlockScopeOfNode(parentNode, depth);
-            } else if (depth > 0) {
-                return NodeUtils.getBlockScopeOfNode(parentNode, --depth);
+            if (!NodeUtils.nodesWithBlockScope.includes(parentNode.parentNode.type)) {
+                return NodeUtils.getBlockScopesOfNode(parentNode, blockScopes);
             }
 
-            return parentNode;
+            blockScopes.push(parentNode);
+
+            return NodeUtils.getBlockScopesOfNode(parentNode, blockScopes);
         }
 
-        if (Node.isProgramNode(parentNode)) {
-            return parentNode;
+        if (!Node.isProgramNode(parentNode)) {
+            return NodeUtils.getBlockScopesOfNode(parentNode, blockScopes);
         }
 
-        return NodeUtils.getBlockScopeOfNode(parentNode);
+        blockScopes.push(parentNode);
+
+        return blockScopes;
     }
 
     /**
@@ -116,7 +133,7 @@ export class NodeUtils {
             return depth;
         }
 
-        if (Node.isBlockStatementNode(node) && Utils.arrayContains(NodeUtils.nodesWithBlockScope, parentNode.type)) {
+        if (Node.isBlockStatementNode(node) && NodeUtils.nodesWithBlockScope.includes(parentNode.type)) {
             return NodeUtils.getNodeBlockScopeDepth(parentNode, ++depth);
         }
 
@@ -180,12 +197,12 @@ export class NodeUtils {
         (<any>estraverse)[traverseType](node, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (node.type === nodeType && visitor.enter) {
-                    visitor.enter(node, parentNode);
+                    return visitor.enter(node, parentNode);
                 }
             },
             leave: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (node.type === nodeType && visitor.leave) {
-                    visitor.leave(node, parentNode);
+                    return visitor.leave(node, parentNode);
                 }
             }
         });

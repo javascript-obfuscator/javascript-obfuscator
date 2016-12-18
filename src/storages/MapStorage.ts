@@ -4,10 +4,17 @@ import { IStorage } from '../interfaces/storages/IStorage';
 
 import { initializable } from '../decorators/Initializable';
 
+import { RandomGeneratorUtils } from '../utils/RandomGeneratorUtils';
 import { Utils } from '../utils/Utils';
 
 @injectable()
 export abstract class MapStorage <T> implements IStorage <T> {
+    /**
+     * @type {string}
+     */
+    @initializable()
+    protected storageId: string;
+
     /**
      * @type {Map <string | number, T>}
      */
@@ -33,7 +40,7 @@ export abstract class MapStorage <T> implements IStorage <T> {
      * @returns {string | number | null}
      */
     public getKeyOf (value: T): string | number | null {
-        return Utils.mapGetFirstKeyOf(this.storage, value);
+        return Utils.mapGetFirstKeyOf <string | number, T> (this.storage, value);
     }
 
     /**
@@ -51,10 +58,30 @@ export abstract class MapStorage <T> implements IStorage <T> {
     }
 
     /**
+     * @returns {string}
+     */
+    public getStorageId (): string {
+        return this.storageId;
+    }
+
+    /**
      * @param args
      */
     public initialize (...args: any[]): void {
         this.storage = new Map <string | number, T> ();
+        this.storageId = RandomGeneratorUtils.getRandomString(6);
+    }
+
+    /**
+     * @param storage
+     * @param mergeId
+     */
+    public mergeWith (storage: this, mergeId: boolean = false): void {
+        this.storage = new Map <string | number, T> ([...this.storage, ...storage.getStorage()]);
+
+        if (mergeId) {
+            this.storageId = storage.getStorageId();
+        }
     }
 
     /**

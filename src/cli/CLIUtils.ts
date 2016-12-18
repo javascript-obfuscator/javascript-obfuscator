@@ -4,8 +4,6 @@ import * as path from 'path';
 
 import { IPackageConfig } from '../interfaces/IPackageConfig';
 
-import { Utils } from '../utils/Utils';
-
 export class CLIUtils {
     /**
      * @type {string[]}
@@ -102,7 +100,7 @@ export class CLIUtils {
             throw new ReferenceError(`Given input path must be a valid file path`);
         }
 
-        if (!Utils.arrayContains(CLIUtils.availableInputExtensions, path.extname(inputPath))) {
+        if (!CLIUtils.availableInputExtensions.includes(path.extname(inputPath))) {
             throw new ReferenceError(`Input file must have .js extension`);
         }
     }

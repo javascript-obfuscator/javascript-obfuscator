@@ -29,7 +29,7 @@ export class Obfuscator implements IObfuscator {
     /**
      * @type {Map<string, NodeTransformers[]>}
      */
-    private static readonly nodeControlFlowTransformersMap: Map <string, NodeTransformers[]> = new Map <string, NodeTransformers[]> ([
+    private static readonly nodeControlFlowTransformersMap: Map <string, NodeTransformers[]> = new Map([
         [NodeType.FunctionDeclaration, [NodeTransformers.FunctionControlFlowTransformer]],
         [NodeType.FunctionExpression, [NodeTransformers.FunctionControlFlowTransformer]]
     ]);
@@ -37,7 +37,7 @@ export class Obfuscator implements IObfuscator {
     /**
      * @type {Map<string, NodeTransformers[]>}
      */
-    private static readonly nodeObfuscatorsMap: Map <string, NodeTransformers[]> = new Map <string, NodeTransformers[]> ([
+    private static readonly nodeObfuscatorsMap: Map <string, NodeTransformers[]> = new Map([
         [NodeType.ArrowFunctionExpression, [NodeTransformers.FunctionObfuscator]],
         [NodeType.ClassDeclaration, [NodeTransformers.FunctionDeclarationObfuscator]],
         [NodeType.CatchClause, [NodeTransformers.CatchClauseObfuscator]],

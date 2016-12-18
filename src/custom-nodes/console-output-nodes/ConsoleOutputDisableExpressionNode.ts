@@ -39,7 +39,7 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
     /**
      * @returns {string}
      */
-    public getCode (): string {
+    protected getTemplate (): string {
         return format(ConsoleOutputDisableExpressionTemplate(), {
             consoleLogDisableFunctionName: RandomGeneratorUtils.getRandomVariableName(),
             singleNodeCallControllerFunctionName: this.callsControllerFunctionName

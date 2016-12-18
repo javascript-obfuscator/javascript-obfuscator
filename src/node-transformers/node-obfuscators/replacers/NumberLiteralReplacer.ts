@@ -22,7 +22,7 @@ export class NumberLiteralReplacer extends AbstractReplacer {
      * @returns {string}
      */
     public replace (nodeValue: number): string {
-        if (!Utils.isInteger(nodeValue)) {
+        if (!Utils.isCeilNumber(nodeValue)) {
             return String(nodeValue);
         }
 

@@ -1,24 +1,25 @@
-import { TInputOptions } from '../types/options/TInputOptions';
+import { TInputOptions } from '../../types/options/TInputOptions';
 
-import { SourceMapMode } from '../enums/SourceMapMode';
+import { SourceMapMode } from '../../enums/SourceMapMode';
 
-export const DEFAULT_PRESET: TInputOptions = Object.freeze({
+export const NO_CUSTOM_NODES_PRESET: TInputOptions = Object.freeze({
     compact: true,
     controlFlowFlattening: false,
+    controlFlowFlatteningThreshold: 0,
     debugProtection: false,
     debugProtectionInterval: false,
-    disableConsoleOutput: true,
+    disableConsoleOutput: false,
     domainLock: [],
     reservedNames: [],
-    rotateStringArray: true,
+    rotateStringArray: false,
     seed: 0,
     selfDefending: false,
     sourceMap: false,
     sourceMapBaseUrl: '',
     sourceMapFileName: '',
     sourceMapMode: SourceMapMode.Separate,
-    stringArray: true,
+    stringArray: false,
     stringArrayEncoding: false,
-    stringArrayThreshold: 0.8,
+    stringArrayThreshold: 0,
     unicodeEscapeSequence: true
 });

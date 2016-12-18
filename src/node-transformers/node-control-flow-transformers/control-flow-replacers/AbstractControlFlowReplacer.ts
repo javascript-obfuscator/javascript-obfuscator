@@ -8,8 +8,6 @@ import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
-import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
-
 @injectable()
 export abstract class AbstractControlFlowReplacer implements IControlFlowReplacer {
     /**
@@ -27,26 +25,14 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
     }
 
     /**
-     * @returns {string}
-     */
-    protected static getStorageKey (): string {
-        return RandomGeneratorUtils.getRandomGenerator().string({
-            length: 3,
-            pool: RandomGeneratorUtils.randomGeneratorPool
-        });
-    }
-
-    /**
      * @param node
      * @param parentNode
      * @param controlFlowStorage
-     * @param controlFlowStorageCustomNodeName
-     * @returns {ICustomNode | undefined}
+     * @returns {ESTree.Node}
      */
     public abstract replace (
         node: ESTree.Node,
         parentNode: ESTree.Node,
-        controlFlowStorage: IStorage <ICustomNode>,
-        controlFlowStorageCustomNodeName: string
-    ): ICustomNode | undefined;
+        controlFlowStorage: IStorage <ICustomNode>
+    ): ESTree.Node;
 }

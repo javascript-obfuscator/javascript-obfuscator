@@ -38,7 +38,7 @@ export class DebugProtectionFunctionNode extends AbstractCustomNode {
     /**
      * @returns {string}
      */
-    public getCode (): string {
+    protected getTemplate (): string {
         return format(DebugProtectionFunctionTemplate(), {
             debugProtectionFunctionName: this.debugProtectionFunctionName
         });

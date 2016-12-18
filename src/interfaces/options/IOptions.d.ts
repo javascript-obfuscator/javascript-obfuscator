@@ -4,6 +4,7 @@ import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 export interface IOptions {
     readonly compact: boolean;
     readonly controlFlowFlattening: boolean;
+    readonly controlFlowFlatteningThreshold: number;
     readonly debugProtection: boolean;
     readonly debugProtectionInterval: boolean;
     readonly disableConsoleOutput: boolean;

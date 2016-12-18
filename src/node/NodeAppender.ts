@@ -155,7 +155,7 @@ export class NodeAppender {
         blockScopeNode: TNodeWithBlockStatement,
         nodeBodyStatements: TStatement[]
     ): TStatement[] {
-        for (let statement of nodeBodyStatements) {
+        for (const statement of nodeBodyStatements) {
             statement.parentNode = blockScopeNode;
         }
 

@@ -32,14 +32,14 @@ export class BinaryExpressionFunctionNode extends AbstractCustomNode {
     /**
      * @param operator
      */
-    initialize (operator: string): void {
+    public initialize (operator: string): void {
         this.operator = operator;
     }
 
     /**
      * @returns {string}
      */
-    public getCode (): string {
+    protected getTemplate (): string {
         return format(BinaryExpressionFunctionTemplate(), {
             functionName: RandomGeneratorUtils.getRandomVariableName(1),
             operator: this.operator

@@ -34,7 +34,7 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
 
             functionExpressionName = objectMembersCallsChain[objectMembersCallsChain.length - 1];
             calleeBlockStatement = this.getCalleeBlockStatement(
-                NodeUtils.getBlockScopeOfNode(blockScopeBody[0]),
+                NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0],
                 objectMembersCallsChain
             );
         }

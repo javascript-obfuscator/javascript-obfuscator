@@ -5,14 +5,12 @@ import * as esprima from 'esprima';
 import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
+import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
 import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
 import { IObfuscator } from './interfaces/IObfuscator';
-import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
 import { IOptions } from './interfaces/options/IOptions';
 import { ISourceMapCorrector } from './interfaces/ISourceMapCorrector';
-
-import { RandomGeneratorUtils } from './utils/RandomGeneratorUtils';
 
 @injectable()
 export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
@@ -102,10 +100,6 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
      * @returns {IObfuscationResult}
      */
     public obfuscate (sourceCode: string): IObfuscationResult {
-        if (this.options.seed !== 0) {
-            RandomGeneratorUtils.setRandomGeneratorSeed(this.options.seed);
-        }
-
         // parse AST tree
         const astTree: ESTree.Program = esprima.parse(sourceCode, JavaScriptObfuscatorInternal.esprimaParams);
 

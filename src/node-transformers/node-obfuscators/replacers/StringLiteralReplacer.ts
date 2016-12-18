@@ -1,10 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
-import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { ICustomNodeGroup } from '../../../interfaces/custom-nodes/ICustomNodeGroup';
-import { ICustomNodeWithData } from '../../../interfaces/custom-nodes/ICustomNodeWithData';
-import { ICustomNodeWithIdentifier } from '../../../interfaces/custom-nodes/ICustomNodeWithIdentifier';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
@@ -12,8 +9,6 @@ import { StringArrayEncoding } from '../../../enums/StringArrayEncoding';
 
 import { AbstractReplacer } from './AbstractReplacer';
 import { CryptUtils } from '../../../utils/CryptUtils';
-import { CustomNodes } from '../../../enums/container/CustomNodes';
-import { CustomNodeGroups } from '../../../enums/container/CustomNodeGroups';
 import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 import { Utils } from '../../../utils/Utils';
 
@@ -36,16 +31,24 @@ export class StringLiteralReplacer extends AbstractReplacer {
     private readonly customNodeGroupStorage: IStorage<ICustomNodeGroup>;
 
     /**
+     * @type {IStorage<string>}
+     */
+    private readonly stringArrayStorage: IStorage<string>;
+
+    /**
      * @param customNodeGroupStorage
+     * @param stringArrayStorage
      * @param options
      */
     constructor (
         @inject(ServiceIdentifiers['IStorage<ICustomNodeGroup>']) customNodeGroupStorage: IStorage<ICustomNodeGroup>,
+        @inject(ServiceIdentifiers['IStorage<string>']) stringArrayStorage: IStorage<string>,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
         this.customNodeGroupStorage = customNodeGroupStorage;
+        this.stringArrayStorage = stringArrayStorage;
     }
 
     /**
@@ -70,12 +73,6 @@ export class StringLiteralReplacer extends AbstractReplacer {
      * @returns {string}
      */
     private replaceStringLiteralWithStringArrayCall (value: string): string {
-        const stringArrayCustomNodeGroupNodes: Map <CustomNodes, ICustomNode> = this.customNodeGroupStorage
-            .get(CustomNodeGroups.StringArrayCustomNodeGroup)
-            .getCustomNodes();
-        const stringArrayNode: ICustomNodeWithData = <ICustomNodeWithData>stringArrayCustomNodeGroupNodes
-            .get(CustomNodes.StringArrayNode);
-
         let rc4Key: string = '';
 
         switch (this.options.stringArrayEncoding) {
@@ -95,26 +92,25 @@ export class StringLiteralReplacer extends AbstractReplacer {
             value = Utils.stringToUnicodeEscapeSequence(value);
         }
 
-        const stringArray: IStorage <string> = stringArrayNode.getNodeData();
-        const indexOfExistingValue: number = <number>stringArray.getKeyOf(value);
+        const indexOfExistingValue: number = <number>this.stringArrayStorage.getKeyOf(value);
 
         let indexOfValue: number;
 
         if (indexOfExistingValue >= 0) {
             indexOfValue = indexOfExistingValue;
         } else {
-            indexOfValue = stringArray.getLength();
-            stringArray.set(null, value);
+            indexOfValue = this.stringArrayStorage.getLength();
+            this.stringArrayStorage.set(null, value);
         }
 
-        const stringArrayCallsWrapper: ICustomNodeWithIdentifier = <ICustomNodeWithIdentifier>stringArrayCustomNodeGroupNodes
-            .get(CustomNodes.StringArrayCallsWrapper);
+        const rotatedStringArrayStorageId: string = Utils.stringRotate(this.stringArrayStorage.getStorageId(), 2);
+        const stringArrayStorageCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${rotatedStringArrayStorageId}`;
         const hexadecimalIndex: string = `${Utils.hexadecimalPrefix}${Utils.decToHex(indexOfValue)}`;
 
         if (this.options.stringArrayEncoding === StringArrayEncoding.rc4) {
-            return `${stringArrayCallsWrapper.getNodeIdentifier()}('${hexadecimalIndex}', '${Utils.stringToUnicodeEscapeSequence(rc4Key)}')`;
+            return `${stringArrayStorageCallsWrapperName}('${hexadecimalIndex}', '${Utils.stringToUnicodeEscapeSequence(rc4Key)}')`;
         }
 
-        return `${stringArrayCallsWrapper.getNodeIdentifier()}('${hexadecimalIndex}')`;
+        return `${stringArrayStorageCallsWrapperName}('${hexadecimalIndex}')`;
     }
 }

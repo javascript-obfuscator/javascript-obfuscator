@@ -1,13 +1,13 @@
 import { assert } from 'chai';
 
-import { TInputOptions } from '../../src/types/options/TInputOptions';
+import { TInputOptions } from '../../../src/types/options/TInputOptions';
 
-import { IOptions } from '../../src/interfaces/options/IOptions';
+import { IOptions } from '../../../src/interfaces/options/IOptions';
 
-import { DEFAULT_PRESET } from '../../src/preset-options/DefaultPreset';
+import { DEFAULT_PRESET } from '../../../src/options/presets/Default';
 
-import { Options } from '../../src/options/Options';
-import { OptionsNormalizer } from '../../src/options/OptionsNormalizer';
+import { Options } from '../../../src/options/Options';
+import { OptionsNormalizer } from '../../../src/options/OptionsNormalizer';
 
 /**
  * @param optionsPreset
@@ -23,6 +23,22 @@ describe('OptionsNormalizer', () => {
     describe('normalizeOptions (options: IObfuscatorOptions): IObfuscatorOptions', () => {
         let optionsPreset: TInputOptions,
             expectedOptionsPreset: TInputOptions;
+
+        it('should normalize options preset: controlFlowFlatteningThresholdRule', () => {
+            optionsPreset = {
+                ...DEFAULT_PRESET,
+                controlFlowFlattening: true,
+                controlFlowFlatteningThreshold: 0
+            };
+
+            expectedOptionsPreset = {
+                ...DEFAULT_PRESET,
+                controlFlowFlattening: false,
+                controlFlowFlatteningThreshold: 0
+            };
+
+            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
+        });
 
         it('should normalize options preset: domainLockRule', () => {
             optionsPreset = {

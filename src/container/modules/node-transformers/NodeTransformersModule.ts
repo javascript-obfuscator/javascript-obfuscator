@@ -63,7 +63,7 @@ export const nodeTransformersModule: interfaces.ContainerModule = new ContainerM
     // node transformers factory
     bind<INodeTransformer[]>(ServiceIdentifiers['Factory<INodeTransformer[]>'])
         .toFactory<INodeTransformer[]>((context: interfaces.Context) => {
-            const cache: Map <NodeTransformers, INodeTransformer> = new Map <NodeTransformers, INodeTransformer> ();
+            const cache: Map <NodeTransformers, INodeTransformer> = new Map();
 
             return (nodeTransformersMap: Map<string, NodeTransformers[]>) => (nodeType: string) => {
                 const nodeTransformers: NodeTransformers[] = nodeTransformersMap.get(nodeType) || [];

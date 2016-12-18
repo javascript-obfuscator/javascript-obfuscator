@@ -12,46 +12,42 @@ export function initializable (
     const decoratorName: string = Object.keys(this)[0];
 
     return (target: IInitializable, propertyKey: string | symbol): any => {
+        const descriptor: PropertyDescriptor = {
+            configurable: true,
+            enumerable: true
+        };
         const initializeMethod: any = (<any>target)[initializeMethodKey];
 
         if (!initializeMethod || typeof initializeMethod !== 'function') {
            throw new Error(`\`${initializeMethodKey}\` method with initialization logic not found. \`@${decoratorName}\` decorator requires \`${initializeMethodKey}\` method`);
         }
 
-        const methodDescriptor: PropertyDescriptor = Object.getOwnPropertyDescriptor(target, initializeMethodKey) || {
-            configurable: true,
-            enumerable: true
-        };
+        const metadataPropertyKey: string = `_${propertyKey}`;
+        const propertyDescriptor: PropertyDescriptor = Object.getOwnPropertyDescriptor(target, metadataPropertyKey) || descriptor;
+        const methodDescriptor: PropertyDescriptor = Object.getOwnPropertyDescriptor(target, initializeMethodKey) || descriptor;
         const originalMethod: Function = methodDescriptor.value;
 
-        methodDescriptor.value = function (): void {
-            originalMethod.apply(this, arguments);
+        Object.defineProperty(target, propertyKey, {
+            ...propertyDescriptor,
+            get: function (): any {
+                if (this[metadataPropertyKey] === undefined) {
+                    throw new Error(`Property \`${propertyKey}\` is not initialized! Initialize it first!`);
+                }
 
-            // call property getter to activate initialization check inside it
-            if (this[propertyKey]) {}
-        };
-
-        Object.defineProperty(target, initializeMethodKey, methodDescriptor);
-
-        const metadataPropertyKey: string = `_${propertyKey}`;
-        const propertyDescriptor: PropertyDescriptor = Object.getOwnPropertyDescriptor(target, metadataPropertyKey) || {
-            configurable: true,
-            enumerable: true
-        };
-
-        propertyDescriptor.get = function(): any {
-            if (this[metadataPropertyKey] === undefined) {
-                throw new Error(`Property \`${propertyKey}\` is not initialized! Initialize it first!`);
+                return this[metadataPropertyKey];
+            },
+            set: function (newVal: any): void {
+                this[metadataPropertyKey] = newVal;
             }
+        });
+        Object.defineProperty(target, initializeMethodKey, {
+            ...methodDescriptor,
+            value: function (): void {
+                originalMethod.apply(this, arguments);
 
-            return this[metadataPropertyKey];
-        };
-
-        propertyDescriptor.set = function (newVal: any): void {
-            this[metadataPropertyKey] = newVal;
-        };
-
-        Object.defineProperty(target, propertyKey, propertyDescriptor);
+                if (this[propertyKey]) {}
+            }
+        });
 
         return propertyDescriptor;
     };

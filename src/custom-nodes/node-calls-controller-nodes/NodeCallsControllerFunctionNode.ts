@@ -13,7 +13,7 @@ import { initializable } from '../../decorators/Initializable';
 
 import { SingleNodeCallControllerTemplate } from '../../templates/custom-nodes/SingleNodeCallControllerTemplate';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
+import { NO_CUSTOM_NODES_PRESET } from '../../options/presets/NoCustomNodes';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
@@ -53,7 +53,7 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     /**
      * @returns {string}
      */
-    public getCode (): string {
+    protected getTemplate (): string {
         if (this.appendEvent === ObfuscationEvents.AfterObfuscation) {
             return JavaScriptObfuscator.obfuscate(
                 format(SingleNodeCallControllerTemplate(), {

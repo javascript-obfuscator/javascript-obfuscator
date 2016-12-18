@@ -7,6 +7,7 @@ import { IStorage } from '../../../interfaces/storages/IStorage';
 
 import { ControlFlowStorage } from '../../../storages/control-flow/ControlFlowStorage';
 import { CustomNodeGroupStorage } from '../../../storages/custom-node-group/CustomNodeGroupStorage';
+import { StringArrayStorage } from '../../../storages/string-array/StringArrayStorage';
 
 export const storagesModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // storages
@@ -16,6 +17,10 @@ export const storagesModule: interfaces.ContainerModule = new ContainerModule((b
 
     bind<IStorage<ICustomNode>>(ServiceIdentifiers['IStorage<ICustomNode>'])
         .to(ControlFlowStorage);
+
+    bind<IStorage<string>>(ServiceIdentifiers['IStorage<string>'])
+        .to(StringArrayStorage)
+        .inSingletonScope();
 
     // controlFlowStorage factory
     bind<IStorage<ICustomNode>>(ServiceIdentifiers['Factory<IStorage<ICustomNode>>'])

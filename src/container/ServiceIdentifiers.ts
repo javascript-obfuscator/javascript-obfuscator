@@ -5,7 +5,7 @@ export const ServiceIdentifiers: any = {
     'Factory<ICustomNodeGroup>': Symbol('Factory<ICustomNodeGroup>'),
     'Factory<INodeTransformer[]>': Symbol('Factory<INodeTransformer[]>'),
     'Factory<IObfuscationResult>': Symbol('Factory<IObfuscationResult>'),
-    'Factory<IReplacer>': Symbol('Factory<IReplacer>'),
+    'Factory<IObfuscatorReplacer>': Symbol('Factory<IObfuscatorReplacer>'),
     'Factory<IStorage<ICustomNode>>': Symbol('Factory<IStorage<ICustomNode>>'),
     ICalleeDataExtractor: Symbol('ICalleeDataExtractor'),
     ICustomNode: Symbol('ICustomNode'),
@@ -17,9 +17,10 @@ export const ServiceIdentifiers: any = {
     IObfuscationResult: Symbol('IObfuscationResult'),
     IObfuscator: Symbol('IObfuscator'),
     IOptions: Symbol('IOptions'),
-    IReplacer: Symbol('IReplacer'),
+    IObfuscatorReplacer: Symbol('IObfuscatorReplacer'),
     ISourceMapCorrector: Symbol('ISourceMapCorrector'),
     IStackTraceAnalyzer: Symbol('IStackTraceAnalyzer'),
     'IStorage<ICustomNode>': Symbol('IStorage<ICustomNode>'),
-    'IStorage<ICustomNodeGroup>': Symbol('IStorage<ICustomNodeGroup>')
+    'IStorage<ICustomNodeGroup>': Symbol('IStorage<ICustomNodeGroup>'),
+    'IStorage<string>': Symbol('IStorage<string>')
 };

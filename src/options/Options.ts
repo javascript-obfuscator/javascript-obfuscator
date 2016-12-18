@@ -23,7 +23,7 @@ import { IOptions } from '../interfaces/options/IOptions';
 import { TSourceMapMode } from '../types/TSourceMapMode';
 import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 
-import { DEFAULT_PRESET } from '../preset-options/DefaultPreset';
+import { DEFAULT_PRESET } from './presets/Default';
 
 import { OptionsNormalizer } from './OptionsNormalizer';
 import { ValidationErrorsFormatter } from './ValidationErrorsFormatter';
@@ -50,6 +50,14 @@ export class Options implements IOptions {
      */
     @IsBoolean()
     public readonly controlFlowFlattening: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    @IsNumber()
+    @Min(0)
+    @Max(1)
+    public readonly controlFlowFlatteningThreshold: number;
 
     /**
      * @type {boolean}

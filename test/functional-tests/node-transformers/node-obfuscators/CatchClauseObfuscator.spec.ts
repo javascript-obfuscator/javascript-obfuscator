@@ -2,7 +2,7 @@ import { assert } from 'chai';
 
 import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResult';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../../../src/preset-options/NoCustomNodesPreset';
+import { NO_CUSTOM_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../helpers/readFileAsString';
 
@@ -28,11 +28,11 @@ describe('CatchClauseObfuscator', () => {
         });
 
         it('catch clause arguments param name and param name in body should be same', () => {
-            const firstMatchArray: RegExpMatchArray|null = obfuscatedCode.match(paramNameRegExp);
-            const secondMatchArray: RegExpMatchArray|null = obfuscatedCode.match(bodyParamNameRegExp);
+            const firstMatchArray: RegExpMatchArray | null = obfuscatedCode.match(paramNameRegExp);
+            const secondMatchArray: RegExpMatchArray | null = obfuscatedCode.match(bodyParamNameRegExp);
 
-            const firstMatch: string|undefined = firstMatchArray ? firstMatchArray[1] : undefined;
-            const secondMatch: string|undefined = secondMatchArray ? secondMatchArray[1] : undefined;
+            const firstMatch: string | undefined = firstMatchArray ? firstMatchArray[1] : undefined;
+            const secondMatch: string | undefined = secondMatchArray ? secondMatchArray[1] : undefined;
 
             assert.isOk(firstMatch);
             assert.isOk(secondMatch);

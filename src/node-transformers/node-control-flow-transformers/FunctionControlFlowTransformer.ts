@@ -3,10 +3,12 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
+import * as _ from 'lodash';
 
 import { TControlFlowReplacerFactory } from '../../types/container/TControlFlowReplacerFactory';
 import { TControlFlowStorageFactory } from '../../types/container/TControlFlowStorageFactory';
 import { TCustomNodeFactory } from '../../types/container/TCustomNodeFactory';
+import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
 import { TStatement } from '../../types/node/TStatement';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
@@ -20,6 +22,7 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
 import { NodeAppender } from '../../node/NodeAppender';
 import { NodeControlFlowReplacers } from '../../enums/container/NodeControlFlowReplacers';
+import { NodeUtils } from '../../node/NodeUtils';
 import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
@@ -27,9 +30,29 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**
      * @type {Map <string, NodeControlFlowReplacers>}
      */
-    private static readonly controlFlowReplacersMap: Map <string, NodeControlFlowReplacers> = new Map <string, NodeControlFlowReplacers> ([
+    private static readonly controlFlowReplacersMap: Map <string, NodeControlFlowReplacers> = new Map([
         [NodeType.BinaryExpression, NodeControlFlowReplacers.BinaryExpressionControlFlowReplacer]
     ]);
+
+    /**
+     * @type {number}
+     */
+    private static readonly hostNodeSearchMinDepth: number = 2;
+
+    /**
+     * @type {number}
+     */
+    private static readonly hostNodeSearchMaxDepth: number = 10;
+
+    /**
+     * @type {Map<ESTree.Node, IStorage<ICustomNode>>}
+     */
+    private controlFlowData: Map <ESTree.Node, IStorage<ICustomNode>> = new Map();
+
+    /**
+     * @type {TStatement[][]}
+     */
+    private readonly controlFlowNodesList: TStatement[][] = [];
 
     /**
      * @type {TControlFlowReplacerFactory}
@@ -67,6 +90,51 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
     /**
      * @param functionNode
+     * @returns {TNodeWithBlockStatement}
+     */
+    private static getHostNode (functionNode: ESTree.FunctionDeclaration | ESTree.FunctionExpression): TNodeWithBlockStatement {
+        const blockScopesOfNode: TNodeWithBlockStatement[] = NodeUtils.getBlockScopesOfNode(functionNode);
+
+        if (blockScopesOfNode.length === 1) {
+            return functionNode.body;
+        } else {
+            blockScopesOfNode.pop();
+        }
+
+        if (blockScopesOfNode.length > FunctionControlFlowTransformer.hostNodeSearchMinDepth) {
+            blockScopesOfNode.splice(0, FunctionControlFlowTransformer.hostNodeSearchMinDepth);
+        }
+
+        if (blockScopesOfNode.length > FunctionControlFlowTransformer.hostNodeSearchMaxDepth) {
+            blockScopesOfNode.length = FunctionControlFlowTransformer.hostNodeSearchMaxDepth;
+        }
+
+        return RandomGeneratorUtils.getRandomGenerator().pickone(blockScopesOfNode);
+    }
+
+    /**
+     * @param hostNodeBody
+     * @param controlFlowNodesList
+     */
+    private static removeOldControlFlowNodeFromHostNodeBody (
+        hostNodeBody: TStatement[],
+        controlFlowNodesList: TStatement[][]
+    ): TStatement[] {
+        for (let controlFlowNode of controlFlowNodesList) {
+            const firstIndexOfNode: number = hostNodeBody.indexOf(controlFlowNode[0]);
+
+            if (firstIndexOfNode === -1) {
+                continue;
+            }
+
+            return _.difference(hostNodeBody, controlFlowNode);
+        }
+
+        return hostNodeBody;
+    }
+
+    /**
+     * @param functionNode
      */
     public transformNode (functionNode: ESTree.Function): void {
         this.changeFunctionBodyControlFlow(functionNode);
@@ -81,10 +149,27 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         }
 
         const controlFlowStorage: IStorage <ICustomNode> = this.controlFlowStorageFactory();
-        const controlFlowStorageCustomNodeName: string = RandomGeneratorUtils.getRandomVariableName(6);
+        const hostNode: TNodeWithBlockStatement = FunctionControlFlowTransformer.getHostNode(functionNode);
+
+        if (!this.controlFlowData.has(hostNode)) {
+            this.controlFlowData.set(hostNode, controlFlowStorage);
+        } else {
+            hostNode.body = <ESTree.Statement[]>FunctionControlFlowTransformer
+                .removeOldControlFlowNodeFromHostNodeBody(hostNode.body, this.controlFlowNodesList);
+
+            const hostControlFlowStorage: IStorage<ICustomNode> = <IStorage<ICustomNode>>this.controlFlowData.get(hostNode);
+
+            controlFlowStorage.mergeWith(hostControlFlowStorage, true);
+
+            this.controlFlowData.set(hostNode, controlFlowStorage);
+        }
 
         estraverse.replace(functionNode.body, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+                if (RandomGeneratorUtils.getRandomFloat(0, 1) > this.options.controlFlowFlatteningThreshold) {
+                    return;
+                }
+
                 const controlFlowReplacerName: NodeControlFlowReplacers | undefined = FunctionControlFlowTransformer
                     .controlFlowReplacersMap.get(node.type);
 
@@ -92,24 +177,11 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
                     return;
                 }
 
-                const controlFlowStorageCallCustomNode: ICustomNode | undefined = this.controlFlowReplacerFactory(controlFlowReplacerName)
-                    .replace(node, parentNode, controlFlowStorage, controlFlowStorageCustomNodeName);
-
-                if (!controlFlowStorageCallCustomNode) {
-                    return;
-                }
-
-                // controlFlowStorageCallCustomNode will always have only one TStatement node,
-                // so we can get it by index `0`
-                // also we need to return `expression` property of `ExpressionStatement` node because bug:
-                // https://github.com/estools/escodegen/issues/289
-                const statementNode: TStatement = controlFlowStorageCallCustomNode.getNode()[0];
-
-                if (!statementNode || !Node.isExpressionStatementNode(statementNode)) {
-                    throw new Error(`\`controlFlowStorageCallCustomNode.getNode()\` should returns array with \`ExpressionStatement\` node`);
-                }
-
-                return statementNode.expression;
+                return {
+                    ...this.controlFlowReplacerFactory(controlFlowReplacerName)
+                        .replace(node, parentNode, controlFlowStorage),
+                    parentNode
+                };
             }
         });
 
@@ -119,8 +191,11 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
         const controlFlowStorageCustomNode: ICustomNode = this.customNodeFactory(CustomNodes.ControlFlowStorageNode);
 
-        controlFlowStorageCustomNode.initialize(controlFlowStorage, controlFlowStorageCustomNodeName);
+        controlFlowStorageCustomNode.initialize(controlFlowStorage);
 
-        NodeAppender.prependNode(functionNode.body, controlFlowStorageCustomNode.getNode());
+        const controlFlowStorageNode: TStatement[] = controlFlowStorageCustomNode.getNode();
+
+        this.controlFlowNodesList.push(controlFlowStorageNode);
+        NodeAppender.prependNode(hostNode, controlFlowStorageNode);
     }
 }

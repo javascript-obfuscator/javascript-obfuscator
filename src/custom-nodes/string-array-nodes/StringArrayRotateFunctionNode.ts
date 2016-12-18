@@ -8,7 +8,7 @@ import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
+import { NO_CUSTOM_NODES_PRESET } from '../../options/presets/NoCustomNodes';
 
 import { SelfDefendingTemplate } from '../../templates/custom-nodes/string-array-nodes/string-array-rotate-function-node/SelfDefendingTemplate';
 import { StringArrayRotateFunctionTemplate } from '../../templates/custom-nodes/string-array-nodes/string-array-rotate-function-node/StringArrayRotateFunctionTemplate';
@@ -24,7 +24,7 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
      * @type {IStorage <string>}
      */
     @initializable()
-    private stringArray: IStorage <string>;
+    private stringArrayStorage: IStorage <string>;
 
     /**
      * @type {string}
@@ -48,16 +48,16 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     }
 
     /**
-     * @param stringArray
+     * @param stringArrayStorage
      * @param stringArrayName
      * @param stringArrayRotateValue
      */
     public initialize (
-        stringArray: IStorage <string>,
+        stringArrayStorage: IStorage <string>,
         stringArrayName: string,
         stringArrayRotateValue: number
     ): void {
-        this.stringArray = stringArray;
+        this.stringArrayStorage = stringArrayStorage;
         this.stringArrayName = stringArrayName;
         this.stringArrayRotateValue = stringArrayRotateValue;
     }
@@ -65,7 +65,7 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     /**
      * @returns {string}
      */
-    public getCode (): string {
+    protected getTemplate (): string {
         let code: string = '',
             timesName: string = RandomGeneratorUtils.getRandomVariableName(),
             whileFunctionName: string = RandomGeneratorUtils.getRandomVariableName();

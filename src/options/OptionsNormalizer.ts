@@ -10,7 +10,15 @@ export class OptionsNormalizer {
     /**
      * @type {TInputOptions}
      */
-    private static readonly DISABLED_UNICODE_ARRAY_OPTIONS: TInputOptions = {
+    private static readonly DISABLED_CONTROL_FLOW_FLATTENING_OPTIONS: TInputOptions = {
+        controlFlowFlattening: false,
+        controlFlowFlatteningThreshold: 0
+    };
+
+    /**
+     * @type {TInputOptions}
+     */
+    private static readonly DISABLED_STRING_ARRAY_OPTIONS: TInputOptions = {
         rotateStringArray: false,
         stringArray: false,
         stringArrayEncoding: false,
@@ -28,7 +36,7 @@ export class OptionsNormalizer {
     /**
      * @type {TInputOptions}
      */
-    private static readonly UNICODE_ARRAY_ENCODING_OPTIONS: TInputOptions = {
+    private static readonly STRING_ARRAY_ENCODING_OPTIONS: TInputOptions = {
         stringArrayEncoding: 'base64'
     };
 
@@ -36,6 +44,7 @@ export class OptionsNormalizer {
      * @type {TOptionsNormalizerRule[]}
      */
     private static readonly normalizerRules: TOptionsNormalizerRule[] = [
+        OptionsNormalizer.controlFlowFlatteningThresholdRule,
         OptionsNormalizer.domainLockRule,
         OptionsNormalizer.selfDefendingRule,
         OptionsNormalizer.sourceMapBaseUrlRule,
@@ -59,6 +68,21 @@ export class OptionsNormalizer {
         }
 
         return normalizedOptions;
+    }
+
+    /**
+     * @param options
+     * @returns {IOptions}
+     */
+    private static controlFlowFlatteningThresholdRule (options: IOptions): IOptions {
+        if (options.controlFlowFlatteningThreshold === 0) {
+            options = {
+                ...options,
+                ...OptionsNormalizer.DISABLED_CONTROL_FLOW_FLATTENING_OPTIONS
+            };
+        }
+
+        return options;
     }
 
     /**
@@ -152,7 +176,7 @@ export class OptionsNormalizer {
         if (!options.stringArray) {
             options = {
                 ...options,
-                ...OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS
+                ...OptionsNormalizer.DISABLED_STRING_ARRAY_OPTIONS
             };
         }
 
@@ -167,7 +191,7 @@ export class OptionsNormalizer {
         if (options.stringArrayEncoding === true) {
             options = {
                 ...options,
-                ...OptionsNormalizer.UNICODE_ARRAY_ENCODING_OPTIONS
+                ...OptionsNormalizer.STRING_ARRAY_ENCODING_OPTIONS
             };
         }
 
@@ -182,7 +206,7 @@ export class OptionsNormalizer {
         if (options.stringArrayThreshold === 0) {
             options = {
                 ...options,
-                ...OptionsNormalizer.DISABLED_UNICODE_ARRAY_OPTIONS
+                ...OptionsNormalizer.DISABLED_STRING_ARRAY_OPTIONS
             };
         }
 

@@ -16,7 +16,7 @@ export class RandomGeneratorUtils {
     /**
      * @type {Chance.Chance | Chance.SeededChance}
      */
-    public static randomGenerator: Chance.Chance | Chance.SeededChance = new Chance();
+    private static randomGenerator: Chance.Chance | Chance.SeededChance = new Chance();
 
     /**
      * @param min
@@ -24,7 +24,7 @@ export class RandomGeneratorUtils {
      * @returns {number}
      */
     public static getRandomFloat (min: number, max: number): number {
-        return RandomGeneratorUtils.randomGenerator.floating({
+        return RandomGeneratorUtils.getRandomGenerator().floating({
             min: min,
             max: max,
             fixed: 7
@@ -50,7 +50,7 @@ export class RandomGeneratorUtils {
      * @returns {number}
      */
     public static getRandomInteger (min: number, max: number): number {
-        return RandomGeneratorUtils.randomGenerator.integer({
+        return RandomGeneratorUtils.getRandomGenerator().integer({
             min: min,
             max: max
         });
@@ -58,13 +58,24 @@ export class RandomGeneratorUtils {
 
     /**
      * @param length
+     * @param pool
      * @returns {string}
      */
-    public static getRandomVariableName (length: number = 6): string {
-        const rangeMinInteger: number = 10000,
-            rangeMaxInteger: number = 99999999;
+    public static getRandomString (length: number, pool: string = RandomGeneratorUtils.randomGeneratorPool): string {
+        return RandomGeneratorUtils.getRandomGenerator().string({ length, pool });
+    }
 
-        return `_${Utils.hexadecimalPrefix}${(
+    /**
+     * @param length
+     * @param withPrefix
+     * @returns {string}
+     */
+    public static getRandomVariableName (length: number = 6, withPrefix: boolean = true): string {
+        const prefix: string = withPrefix ? `_${Utils.hexadecimalPrefix}` : '';
+        const rangeMinInteger: number = 10000;
+        const rangeMaxInteger: number = 99999999;
+
+        return `${prefix}${(
             Utils.decToHex(
                 RandomGeneratorUtils.getRandomInteger(rangeMinInteger, rangeMaxInteger)
             )
@@ -72,9 +83,9 @@ export class RandomGeneratorUtils {
     }
 
     /**
-     * @param randomGeneratorSeed
+     * @param randomGenerator
      */
-    public static setRandomGeneratorSeed (randomGeneratorSeed: number): void {
-        RandomGeneratorUtils.randomGenerator = new Chance(randomGeneratorSeed);
+    public static setRandomGenerator (randomGenerator: Chance.Chance | Chance.SeededChance): void {
+        RandomGeneratorUtils.randomGenerator = randomGenerator;
     }
 }

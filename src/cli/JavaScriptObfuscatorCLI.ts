@@ -9,11 +9,10 @@ import { IObfuscationResult } from '../interfaces/IObfuscationResult';
 import { SourceMapMode } from '../enums/SourceMapMode';
 import { StringArrayEncoding } from '../enums/StringArrayEncoding';
 
-import { DEFAULT_PRESET } from '../preset-options/DefaultPreset';
+import { DEFAULT_PRESET } from '../options/presets/Default';
 
 import { CLIUtils } from './CLIUtils';
 import { JavaScriptObfuscator } from '../JavaScriptObfuscator';
-import { Utils } from '../utils/Utils';
 
 export class JavaScriptObfuscatorCLI {
     /**
@@ -104,7 +103,7 @@ export class JavaScriptObfuscatorCLI {
     public run (): void {
         this.configureCommands();
 
-        if (!this.arguments.length || Utils.arrayContains(this.arguments, '--help')) {
+        if (!this.arguments.length || this.arguments.includes('--help')) {
             this.commands.outputHelp();
 
             return;
@@ -129,7 +128,7 @@ export class JavaScriptObfuscatorCLI {
                 continue;
             }
 
-            if (!Utils.arrayContains(availableOptions, option)) {
+            if (!availableOptions.includes(option)) {
                 continue;
             }
 
@@ -159,6 +158,11 @@ export class JavaScriptObfuscatorCLI {
                 '--controlFlowFlattening <boolean>',
                 'Enables control flow flattening',
                 JavaScriptObfuscatorCLI.parseBoolean
+            )
+            .option(
+                '--controlFlowFlatteningThreshold <number>',
+                'The probability that the control flow flattening transformation will be applied to the node',
+                parseFloat
             )
             .option(
                 '--debugProtection <boolean>',

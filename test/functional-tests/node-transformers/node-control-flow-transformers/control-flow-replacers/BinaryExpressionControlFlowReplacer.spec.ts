@@ -2,7 +2,7 @@ import { assert } from 'chai';
 
 import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationResult';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../../../../src/preset-options/NoCustomNodesPreset';
+import { NO_CUSTOM_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
@@ -30,10 +30,12 @@ describe('BinaryExpressionControlFlowReplacer', () => {
         });
 
         describe('variant #2 - multiple binary expressions with threshold = 1', () => {
-            it('should replace binary expression node by call to control flow storage node', () => {
-                const samplesCount: number = 100;
+            it('should replace binary expression node by call to control flow storage node', function () {
+                this.timeout(4000);
+
+                const samplesCount: number = 200;
                 const expectedValue: number = 0.5;
-                const delta: number = 0.08;
+                const delta: number = 0.06;
 
                 let equalsValue: number = 0;
 

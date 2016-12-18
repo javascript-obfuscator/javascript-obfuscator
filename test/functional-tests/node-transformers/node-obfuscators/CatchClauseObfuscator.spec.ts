@@ -2,7 +2,7 @@ import { assert } from 'chai';
 
 import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResult';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../../../src/preset-options/NoCustomNodesPreset';
+import { NO_CUSTOM_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../helpers/readFileAsString';
 

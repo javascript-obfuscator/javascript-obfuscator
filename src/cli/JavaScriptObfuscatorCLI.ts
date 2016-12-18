@@ -9,7 +9,7 @@ import { IObfuscationResult } from '../interfaces/IObfuscationResult';
 import { SourceMapMode } from '../enums/SourceMapMode';
 import { StringArrayEncoding } from '../enums/StringArrayEncoding';
 
-import { DEFAULT_PRESET } from '../preset-options/DefaultPreset';
+import { DEFAULT_PRESET } from '../options/presets/Default';
 
 import { CLIUtils } from './CLIUtils';
 import { JavaScriptObfuscator } from '../JavaScriptObfuscator';

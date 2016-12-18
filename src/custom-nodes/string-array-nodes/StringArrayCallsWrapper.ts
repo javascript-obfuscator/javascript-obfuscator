@@ -10,7 +10,7 @@ import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../preset-options/NoCustomNodesPreset';
+import { NO_CUSTOM_NODES_PRESET } from '../../options/presets/NoCustomNodes';
 
 import { AtobTemplate } from '../../templates/custom-nodes/AtobTemplate';
 import { Rc4Template } from '../../templates/custom-nodes/Rc4Template';

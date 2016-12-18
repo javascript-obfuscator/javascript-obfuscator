@@ -1932,7 +1932,7 @@ var commander = __webpack_require__(118);
 var path = __webpack_require__(36);
 var SourceMapMode_1 = __webpack_require__(20);
 var StringArrayEncoding_1 = __webpack_require__(23);
-var DefaultPreset_1 = __webpack_require__(31);
+var Default_1 = __webpack_require__(31);
 var CLIUtils_1 = __webpack_require__(41);
 var JavaScriptObfuscator_1 = __webpack_require__(16);
 
@@ -1962,7 +1962,7 @@ var JavaScriptObfuscatorCLI = function () {
         key: "buildOptions",
         value: function buildOptions() {
             var inputOptions = {};
-            var availableOptions = Object.keys(DefaultPreset_1.DEFAULT_PRESET);
+            var availableOptions = Object.keys(Default_1.DEFAULT_PRESET);
             for (var option in this.commands) {
                 if (!this.commands.hasOwnProperty(option)) {
                     continue;
@@ -1972,7 +1972,7 @@ var JavaScriptObfuscatorCLI = function () {
                 }
                 inputOptions[option] = this.commands[option];
             }
-            return tslib_1.__assign({}, DefaultPreset_1.DEFAULT_PRESET, inputOptions);
+            return tslib_1.__assign({}, Default_1.DEFAULT_PRESET, inputOptions);
         }
     }, {
         key: "configureCommands",
@@ -3054,7 +3054,7 @@ var format = __webpack_require__(10);
 var ObfuscationEvents_1 = __webpack_require__(15);
 var Initializable_1 = __webpack_require__(4);
 var SingleNodeCallControllerTemplate_1 = __webpack_require__(99);
-var NoCustomNodesPreset_1 = __webpack_require__(22);
+var NoCustomNodes_1 = __webpack_require__(22);
 var AbstractCustomNode_1 = __webpack_require__(8);
 var JavaScriptObfuscator_1 = __webpack_require__(16);
 var NodeCallsControllerFunctionNode = function (_AbstractCustomNode_) {
@@ -3078,7 +3078,7 @@ var NodeCallsControllerFunctionNode = function (_AbstractCustomNode_) {
             if (this.appendEvent === ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation) {
                 return JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(format(SingleNodeCallControllerTemplate_1.SingleNodeCallControllerTemplate(), {
                     singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-                }), tslib_1.__assign({}, NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
+                }), tslib_1.__assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
             }
             return format(SingleNodeCallControllerTemplate_1.SingleNodeCallControllerTemplate(), {
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
@@ -3113,7 +3113,7 @@ var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var format = __webpack_require__(10);
 var Initializable_1 = __webpack_require__(4);
-var NoCustomNodesPreset_1 = __webpack_require__(22);
+var NoCustomNodes_1 = __webpack_require__(22);
 var SelfDefendingTemplate_1 = __webpack_require__(108);
 var AbstractCustomNode_1 = __webpack_require__(8);
 var JavaScriptObfuscator_1 = __webpack_require__(16);
@@ -3138,7 +3138,7 @@ var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
             return JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(format(SelfDefendingTemplate_1.SelfDefendingTemplate(), {
                 selfDefendingFunctionName: RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(),
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-            }), tslib_1.__assign({}, NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
+            }), tslib_1.__assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
         }
     }]);
 
@@ -3247,7 +3247,7 @@ var ServiceIdentifiers_1 = __webpack_require__(2);
 var format = __webpack_require__(10);
 var StringArrayEncoding_1 = __webpack_require__(23);
 var Initializable_1 = __webpack_require__(4);
-var NoCustomNodesPreset_1 = __webpack_require__(22);
+var NoCustomNodes_1 = __webpack_require__(22);
 var AtobTemplate_1 = __webpack_require__(97);
 var Rc4Template_1 = __webpack_require__(98);
 var SelfDefendingTemplate_1 = __webpack_require__(109);
@@ -3310,7 +3310,7 @@ var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
                 decodeNodeTemplate: decodeNodeTemplate,
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
                 stringArrayName: this.stringArrayName
-            }), tslib_1.__assign({}, NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
+            }), tslib_1.__assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
         }
     }]);
 
@@ -3406,7 +3406,7 @@ var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var format = __webpack_require__(10);
 var Initializable_1 = __webpack_require__(4);
-var NoCustomNodesPreset_1 = __webpack_require__(22);
+var NoCustomNodes_1 = __webpack_require__(22);
 var SelfDefendingTemplate_1 = __webpack_require__(114);
 var StringArrayRotateFunctionTemplate_1 = __webpack_require__(115);
 var AbstractCustomNode_1 = __webpack_require__(8);
@@ -3449,7 +3449,7 @@ var StringArrayRotateFunctionNode = function (_AbstractCustomNode_) {
                 stringArrayName: this.stringArrayName,
                 stringArrayRotateValue: Utils_1.Utils.decToHex(this.stringArrayRotateValue),
                 whileFunctionName: whileFunctionName
-            }), tslib_1.__assign({}, NoCustomNodesPreset_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
+            }), tslib_1.__assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
         }
     }]);
 
@@ -4804,13 +4804,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var class_validator_1 = __webpack_require__(117);
-var DefaultPreset_1 = __webpack_require__(31);
+var Default_1 = __webpack_require__(31);
 var OptionsNormalizer_1 = __webpack_require__(87);
 var ValidationErrorsFormatter_1 = __webpack_require__(88);
 var Options = Options_1 = function Options(inputOptions) {
     _classCallCheck(this, Options);
 
-    Object.assign(this, DefaultPreset_1.DEFAULT_PRESET, inputOptions);
+    Object.assign(this, Default_1.DEFAULT_PRESET, inputOptions);
     var errors = class_validator_1.validateSync(this, Options_1.validatorOptions);
     if (errors.length) {
         throw new ReferenceError("Validation failed. errors:\n" + ValidationErrorsFormatter_1.ValidationErrorsFormatter.format(errors));

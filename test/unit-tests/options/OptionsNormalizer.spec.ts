@@ -4,7 +4,7 @@ import { TInputOptions } from '../../../src/types/options/TInputOptions';
 
 import { IOptions } from '../../../src/interfaces/options/IOptions';
 
-import { DEFAULT_PRESET } from '../../../src/preset-options/DefaultPreset';
+import { DEFAULT_PRESET } from '../../../src/options/presets/Default';
 
 import { Options } from '../../../src/options/Options';
 import { OptionsNormalizer } from '../../../src/options/OptionsNormalizer';

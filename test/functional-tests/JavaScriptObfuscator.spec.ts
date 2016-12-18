@@ -6,7 +6,8 @@ import { IObfuscationResult } from '../../src/interfaces/IObfuscationResult';
 
 import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscator';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../src/preset-options/NoCustomNodesPreset';
+import { NO_CUSTOM_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
+
 import { readFileAsString } from '../helpers/readFileAsString';
 import { RandomGeneratorUtils } from '../../src/utils/RandomGeneratorUtils';
 

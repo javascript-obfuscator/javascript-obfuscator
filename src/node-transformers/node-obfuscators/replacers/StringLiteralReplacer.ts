@@ -103,8 +103,8 @@ export class StringLiteralReplacer extends AbstractReplacer {
             this.stringArrayStorage.set(null, value);
         }
 
-        const reversedStringArrayId: string = Array.from(this.stringArrayStorage.getStorageId()).reverse().join('');
-        const stringArrayStorageCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${reversedStringArrayId}a`;
+        const rotatedStringArrayStorageId: string = Utils.stringRotate(this.stringArrayStorage.getStorageId(), 2);
+        const stringArrayStorageCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${rotatedStringArrayStorageId}`;
         const hexadecimalIndex: string = `${Utils.hexadecimalPrefix}${Utils.decToHex(indexOfValue)}`;
 
         if (this.options.stringArrayEncoding === StringArrayEncoding.rc4) {

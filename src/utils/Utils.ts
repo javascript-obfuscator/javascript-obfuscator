@@ -94,6 +94,15 @@ export class Utils {
 
     /**
      * @param string
+     * @param times
+     * @returns {string}
+     */
+    public static stringRotate (string: string, times: number): string {
+        return Utils.arrayRotate(Array.from(string), times).join('');
+    }
+
+    /**
+     * @param string
      * @returns {string}
      */
     public static stringToJSFuck (string: string): string {

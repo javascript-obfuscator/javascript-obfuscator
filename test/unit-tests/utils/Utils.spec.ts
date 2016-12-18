@@ -81,6 +81,28 @@ describe('Utils', () => {
         });
     });
 
+    describe('stringRotate (string: string, times: number): string', () => {
+        let string: string;
+
+        beforeEach(() => {
+            string = 'abcdefg';
+        });
+
+        it('should rotate string by a given value', () => {
+            assert.deepEqual(Utils.stringRotate(string, 2), 'fgabcde');
+        });
+
+
+        it('should do nothing if value <= 0', () => {
+            assert.deepEqual(Utils.stringRotate(string, 0), 'abcdefg');
+            assert.deepEqual(Utils.stringRotate(string, -1), 'abcdefg');
+        });
+
+        it('should throw exception if string is empty', () => {
+            assert.throws(() => Utils.stringRotate('', 5), ReferenceError);
+        });
+    });
+
     describe('stringToJSFuck (string: string): string', () => {
         let expected: string = `${JSFuck.s} + ${JSFuck.t} + ${JSFuck.r} + ${JSFuck.i} + ${JSFuck.n} + ${JSFuck.g}`;
 

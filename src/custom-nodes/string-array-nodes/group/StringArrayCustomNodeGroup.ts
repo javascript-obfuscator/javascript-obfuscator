@@ -106,10 +106,9 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
         const stringArrayRotateFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.StringArrayRotateFunctionNode);
 
         const stringArrayStorageId: string = this.stringArrayStorage.getStorageId();
-        const reversedStorageId = Array.from(stringArrayStorageId).reverse().join('');
 
         const stringArrayName: string = `_${Utils.hexadecimalPrefix}${stringArrayStorageId}`;
-        const stringArrayCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${reversedStorageId}a`;
+        const stringArrayCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${Utils.stringRotate(stringArrayStorageId, 2)}`;
 
         let stringArrayRotateValue: number;
 

@@ -1,5 +1,3 @@
-require("babel-core/external-helpers");
-
 import 'reflect-metadata';
 
 if (!(<any>global)._babelPolyfill) {

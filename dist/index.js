@@ -88,7 +88,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 141);
+/******/ 	return __webpack_require__(__webpack_require__.s = 144);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -122,7 +122,7 @@ module.exports = require("tslib");
 "use strict";
 "use strict";
 
-var _symbol = __webpack_require__(132);
+var _symbol = __webpack_require__(134);
 
 var _symbol2 = _interopRequireDefault(_symbol);
 
@@ -263,11 +263,11 @@ exports.RandomGeneratorUtils = RandomGeneratorUtils;
 "use strict";
 "use strict";
 
-var _defineProperty = __webpack_require__(130);
+var _defineProperty = __webpack_require__(132);
 
 var _defineProperty2 = _interopRequireDefault(_defineProperty);
 
-var _getOwnPropertyDescriptor = __webpack_require__(131);
+var _getOwnPropertyDescriptor = __webpack_require__(133);
 
 var _getOwnPropertyDescriptor2 = _interopRequireDefault(_getOwnPropertyDescriptor);
 
@@ -1014,7 +1014,10 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-__webpack_require__(140);
+__webpack_require__(142);
+if (!global._babelPolyfill) {
+    __webpack_require__(131);
+}
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var chance_1 = __webpack_require__(47);
 var InversifyContainerFacade_1 = __webpack_require__(57);
@@ -1917,7 +1920,7 @@ var _map = __webpack_require__(12);
 
 var _map2 = _interopRequireDefault(_map);
 
-var _defineProperty2 = __webpack_require__(133);
+var _defineProperty2 = __webpack_require__(135);
 
 var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
@@ -2073,8 +2076,8 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var fs = __webpack_require__(138);
-var mkdirp = __webpack_require__(139);
+var fs = __webpack_require__(140);
+var mkdirp = __webpack_require__(141);
 var path = __webpack_require__(50);
 
 var CLIUtils = function () {
@@ -2174,7 +2177,7 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var commander = __webpack_require__(136);
+var commander = __webpack_require__(138);
 var path = __webpack_require__(50);
 var SourceMapMode_1 = __webpack_require__(28);
 var StringArrayEncoding_1 = __webpack_require__(31);
@@ -4118,7 +4121,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
-var events_1 = __webpack_require__(137);
+var events_1 = __webpack_require__(139);
 inversify_1.decorate(inversify_1.injectable(), events_1.EventEmitter);
 var ObfuscationEventEmitter = function (_events_1$EventEmitte) {
     (0, _inherits3.default)(ObfuscationEventEmitter, _events_1$EventEmitte);
@@ -4799,7 +4802,7 @@ exports.LabeledStatementObfuscator = LabeledStatementObfuscator;
 "use strict";
 "use strict";
 
-var _typeof2 = __webpack_require__(134);
+var _typeof2 = __webpack_require__(136);
 
 var _typeof3 = _interopRequireDefault(_typeof2);
 
@@ -5571,7 +5574,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
-var class_validator_1 = __webpack_require__(135);
+var class_validator_1 = __webpack_require__(137);
 var Default_1 = __webpack_require__(42);
 var OptionsNormalizer_1 = __webpack_require__(101);
 var ValidationErrorsFormatter_1 = __webpack_require__(102);
@@ -6844,73 +6847,81 @@ function StringArrayRotateFunctionTemplate() {
 exports.StringArrayRotateFunctionTemplate = StringArrayRotateFunctionTemplate;
 
 /***/ },
-/* 130 */
-/***/ function(module, exports) {
-
-module.exports = require("babel-runtime/core-js/object/define-property");
-
-/***/ },
+/* 130 */,
 /* 131 */
 /***/ function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/object/get-own-property-descriptor");
+module.exports = require("babel-polyfill");
 
 /***/ },
 /* 132 */
 /***/ function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/symbol");
+module.exports = require("babel-runtime/core-js/object/define-property");
 
 /***/ },
 /* 133 */
 /***/ function(module, exports) {
 
-module.exports = require("babel-runtime/helpers/defineProperty");
+module.exports = require("babel-runtime/core-js/object/get-own-property-descriptor");
 
 /***/ },
 /* 134 */
 /***/ function(module, exports) {
 
-module.exports = require("babel-runtime/helpers/typeof");
+module.exports = require("babel-runtime/core-js/symbol");
 
 /***/ },
 /* 135 */
 /***/ function(module, exports) {
 
-module.exports = require("class-validator");
+module.exports = require("babel-runtime/helpers/defineProperty");
 
 /***/ },
 /* 136 */
 /***/ function(module, exports) {
 
-module.exports = require("commander");
+module.exports = require("babel-runtime/helpers/typeof");
 
 /***/ },
 /* 137 */
 /***/ function(module, exports) {
 
-module.exports = require("events");
+module.exports = require("class-validator");
 
 /***/ },
 /* 138 */
 /***/ function(module, exports) {
 
-module.exports = require("fs");
+module.exports = require("commander");
 
 /***/ },
 /* 139 */
 /***/ function(module, exports) {
 
-module.exports = require("mkdirp");
+module.exports = require("events");
 
 /***/ },
 /* 140 */
 /***/ function(module, exports) {
 
-module.exports = require("reflect-metadata");
+module.exports = require("fs");
 
 /***/ },
 /* 141 */
+/***/ function(module, exports) {
+
+module.exports = require("mkdirp");
+
+/***/ },
+/* 142 */
+/***/ function(module, exports) {
+
+module.exports = require("reflect-metadata");
+
+/***/ },
+/* 143 */,
+/* 144 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

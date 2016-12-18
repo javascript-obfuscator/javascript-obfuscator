@@ -1,4 +1,10 @@
+require("babel-core/external-helpers");
+
 import 'reflect-metadata';
+
+if (!(<any>global)._babelPolyfill) {
+    require('babel-polyfill');
+}
 
 import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 

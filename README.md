@@ -119,6 +119,7 @@ Following options available for the JS Obfuscator:
 {
     compact: true,
     controlFlowFlattening: false,
+    controlFlowFlatteningThreshold: 0.75,
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: true,
@@ -146,6 +147,7 @@ Following options available for the JS Obfuscator:
 
     --compact <boolean>
     --controlFlowFlattening <boolean>
+    --controlFlowFlatteningThreshold <number>
     --debugProtection <boolean>
     --debugProtectionInterval <boolean>
     --disableConsoleOutput <boolean>

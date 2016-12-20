@@ -15,7 +15,6 @@ import './unit-tests/decorators/Initializable.spec';
 import './unit-tests/node/NodeAppender.spec';
 import './unit-tests/node/NodeUtils.spec';
 import './unit-tests/stack-trace-analyzer/StackTraceAnalyzer.spec';
-import './unit-tests/storages/ControlFlowStorage.spec';
 import './unit-tests/utils/CryptUtils.spec';
 import './unit-tests/utils/RandomGeneratorUtils.spec';
 import './unit-tests/utils/Utils.spec';

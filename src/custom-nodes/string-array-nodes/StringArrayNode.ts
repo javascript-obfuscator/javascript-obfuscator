@@ -13,6 +13,7 @@ import { initializable } from '../../decorators/Initializable';
 import { StringArrayTemplate } from '../../templates/custom-nodes/string-array-nodes/string-array-node/StringArrayTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
+import { NodeUtils } from '../../node/NodeUtils';
 import { StringArrayStorage } from '../../storages/string-array/StringArrayStorage';
 
 @injectable()
@@ -66,6 +67,13 @@ export class StringArrayNode extends AbstractCustomNode {
         (<StringArrayStorage>this.stringArrayStorage).rotateArray(this.stringArrayRotateValue);
 
         return super.getNode();
+    }
+
+    /**
+     * @returns {TStatement[]}
+     */
+    protected getNodeStructure (): TStatement[] {
+        return NodeUtils.convertCodeToStructure(this.getTemplate());
     }
 
     /**

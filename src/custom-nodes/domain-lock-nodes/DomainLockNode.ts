@@ -3,6 +3,8 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as format from 'string-template';
 
+import { TStatement } from '../../types/node/TStatement';
+
 import { IOptions } from '../../interfaces/options/IOptions';
 
 import { initializable } from '../../decorators/Initializable';
@@ -11,6 +13,7 @@ import { DomainLockNodeTemplate } from '../../templates/custom-nodes/domain-lock
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { CryptUtils } from '../../utils/CryptUtils';
+import { NodeUtils } from '../../node/NodeUtils';
 import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
@@ -35,6 +38,13 @@ export class DomainLockNode extends AbstractCustomNode {
      */
     public initialize (callsControllerFunctionName: string): void {
         this.callsControllerFunctionName = callsControllerFunctionName;
+    }
+
+    /**
+     * @returns {TStatement[]}
+     */
+    protected getNodeStructure (): TStatement[] {
+        return NodeUtils.convertCodeToStructure(this.getTemplate());
     }
 
     /**

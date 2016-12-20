@@ -1,15 +1,14 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
-import * as format from 'string-template';
+import { TStatement } from '../../../types/node/TStatement';
 
 import { IOptions } from '../../../interfaces/options/IOptions';
 
 import { initializable } from '../../../decorators/Initializable';
 
-import { ControlFlowStorageCallTemplate } from '../../../templates/custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/ControlFlowStorageCallTemplate';
-
 import { AbstractCustomNode } from '../../AbstractCustomNode';
+import { Nodes } from '../../../node/Nodes';
 
 @injectable()
 export class ControlFlowStorageCallNode extends AbstractCustomNode {
@@ -64,15 +63,20 @@ export class ControlFlowStorageCallNode extends AbstractCustomNode {
         this.rightValue = rightValue;
     }
 
-    /**
-     * @returns {string}
-     */
-    protected getTemplate (): string {
-        return format(ControlFlowStorageCallTemplate(), {
-            controlFlowStorageKey: this.controlFlowStorageKey,
-            controlFlowStorageName: this.controlFlowStorageName,
-            leftValue: this.leftValue,
-            rightValue: this.rightValue
-        });
+    protected getNodeStructure (): TStatement[] {
+        return [
+            Nodes.getExpressionStatementNode(
+                Nodes.getCallExpressionNode(
+                    Nodes.getMemberExpressionNode(
+                        Nodes.getIdentifierNode(this.controlFlowStorageName),
+                        Nodes.getIdentifierNode(this.controlFlowStorageKey)
+                    ),
+                    [
+                        <any>this.leftValue,
+                        <any>this.rightValue
+                    ]
+                )
+            )
+        ];
     }
 }

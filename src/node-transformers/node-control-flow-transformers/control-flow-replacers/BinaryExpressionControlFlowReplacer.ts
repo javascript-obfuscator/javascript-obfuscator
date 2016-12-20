@@ -14,7 +14,6 @@ import { CustomNodes } from '../../../enums/container/CustomNodes';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
 import { Node } from '../../../node/Node';
-import { NodeUtils } from '../../../node/NodeUtils';
 import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 
 @injectable()
@@ -110,8 +109,8 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
         controlFlowStorageCallCustomNode.initialize(
             controlFlowStorageId,
             storageKey,
-            NodeUtils.convertStructureToCode([binaryExpressionNode.left]),
-            NodeUtils.convertStructureToCode([binaryExpressionNode.right])
+            binaryExpressionNode.left,
+            binaryExpressionNode.right
         );
 
         const statementNode: TStatement = controlFlowStorageCallCustomNode.getNode()[0];

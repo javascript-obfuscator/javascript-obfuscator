@@ -4,6 +4,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as format from 'string-template';
 
 import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
+import { TStatement } from '../../types/node/TStatement';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 
@@ -17,6 +18,7 @@ import { NO_CUSTOM_NODES_PRESET } from '../../options/presets/NoCustomNodes';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
+import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
@@ -48,6 +50,13 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     public initialize (appendEvent: TObfuscationEvent, callsControllerFunctionName: string): void {
         this.appendEvent = appendEvent;
         this.callsControllerFunctionName = callsControllerFunctionName;
+    }
+
+    /**
+     * @returns {TStatement[]}
+     */
+    protected getNodeStructure (): TStatement[] {
+        return NodeUtils.convertCodeToStructure(this.getTemplate());
     }
 
     /**

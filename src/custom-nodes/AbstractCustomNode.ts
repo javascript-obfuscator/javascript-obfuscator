@@ -10,6 +10,16 @@ import { NodeUtils } from '../node/NodeUtils';
 @injectable()
 export abstract class AbstractCustomNode implements ICustomNode {
     /**
+     * @type {string}
+     */
+    protected cachedCode: string;
+
+    /**
+     * @type {TStatement[]}
+     */
+    protected cachedNode: TStatement[];
+
+    /**
      * @type {IOptions}
      */
     protected readonly options: IOptions;
@@ -32,25 +42,26 @@ export abstract class AbstractCustomNode implements ICustomNode {
      * @returns {string}
      */
     public getCode (): string {
-        return NodeUtils.convertStructureToCode(this.getNode());
+        if (!this.cachedCode) {
+            this.cachedCode = NodeUtils.convertStructureToCode(this.getNode());
+        }
+
+        return this.cachedCode;
     }
 
     /**
      * @returns {TStatement[]}
      */
     public getNode (): TStatement[] {
-        return this.getNodeStructure();
+        if (!this.cachedNode) {
+            this.cachedNode = this.getNodeStructure();
+        }
+
+        return this.cachedNode;
     }
 
     /**
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
-        return NodeUtils.convertCodeToStructure(this.getTemplate());
-    }
-
-    /**
-     * @returns {string}
-     */
-    protected abstract getTemplate (): string;
+    protected abstract getNodeStructure (): TStatement[];
 }

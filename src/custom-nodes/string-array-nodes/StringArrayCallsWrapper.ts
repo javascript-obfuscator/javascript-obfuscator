@@ -3,6 +3,8 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as format from 'string-template';
 
+import { TStatement } from '../../types/node/TStatement';
+
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IStorage } from '../../interfaces/storages/IStorage';
 
@@ -21,6 +23,7 @@ import { StringArrayRc4DecodeNodeTemplate } from '../../templates/custom-nodes/s
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
+import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class StringArrayCallsWrapper extends AbstractCustomNode {
@@ -102,6 +105,13 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
         }
 
         return decodeStringArrayTemplate;
+    }
+
+    /**
+     * @returns {TStatement[]}
+     */
+    protected getNodeStructure (): TStatement[] {
+        return NodeUtils.convertCodeToStructure(this.getTemplate());
     }
 
     /**

@@ -1,11 +1,11 @@
 import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
-import { TStatement } from '../../src/types/node/TStatement';
+import { TStatement } from '../types/node/TStatement';
 
-import { NodeType } from '../../src/enums/NodeType';
+import { NodeType } from '../enums/NodeType';
 
-export class NodeMocks {
+export class Nodes {
     /**
      * @param bodyNodes
      * @returns {ESTree.Program}
@@ -15,6 +15,26 @@ export class NodeMocks {
             type: NodeType.Program,
             body: bodyNodes,
             sourceType: 'script',
+            obfuscated: false
+        };
+    }
+
+    /**
+     * @param operator
+     * @param left
+     * @param right
+     * @returns {ESTree.BinaryExpression}
+     */
+    public static getBinaryExpressionNode (
+        operator: ESTree.BinaryOperator,
+        left: ESTree.Expression,
+        right: ESTree.Expression,
+    ): ESTree.BinaryExpression {
+        return {
+            type: NodeType.BinaryExpression,
+            operator,
+            left,
+            right,
             obfuscated: false
         };
     }
@@ -38,8 +58,8 @@ export class NodeMocks {
     public static getCatchClauseNode (bodyNodes: ESTree.Statement[] = []): ESTree.CatchClause {
         return {
             type: NodeType.CatchClause,
-            param: NodeMocks.getIdentifierNode('err'),
-            body: NodeMocks.getBlockStatementNode(bodyNodes),
+            param: Nodes.getIdentifierNode('err'),
+            body: Nodes.getBlockStatementNode(bodyNodes),
             obfuscated: false
         };
     }
@@ -55,7 +75,7 @@ export class NodeMocks {
     ): ESTree.CallExpression {
         return {
             type: NodeType.CallExpression,
-            callee: callee,
+            callee,
             arguments: args,
             obfuscated: false
         };
@@ -65,63 +85,78 @@ export class NodeMocks {
      * @param expression
      * @returns {ESTree.ExpressionStatement}
      */
-    public static getExpressionStatementNode (
-        expression: ESTree.Expression = NodeMocks.getIdentifierNode()
-    ): ESTree.ExpressionStatement {
+    public static getExpressionStatementNode (expression: ESTree.Expression): ESTree.ExpressionStatement {
         return {
             type: NodeType.ExpressionStatement,
-            expression: expression,
+            expression,
             obfuscated: false
         };
     }
 
     /**
      * @param functionName
-     * @param blockStatementNode
      * @param params
+     * @param body
      * @returns {ESTree.FunctionDeclaration}
      */
     public static getFunctionDeclarationNode (
         functionName: string,
-        blockStatementNode: ESTree.BlockStatement,
-        params: ESTree.Identifier[] = []
+        params: ESTree.Identifier[],
+        body: ESTree.BlockStatement
     ): ESTree.FunctionDeclaration {
         return {
             type: NodeType.FunctionDeclaration,
-            id: NodeMocks.getIdentifierNode(functionName),
-            params: params,
-            body: blockStatementNode,
+            id: Nodes.getIdentifierNode(functionName),
+            params,
+            body,
             generator: false,
             obfuscated: false
         };
     }
 
     /**
-     * @param blockStatementNode
-     * @returns {ESTree.IfStatement}
+     * @param params
+     * @param body
+     * @returns {ESTree.FunctionExpression}
      */
-    public static getIfStatementNode (blockStatementNode: ESTree.BlockStatement): ESTree.IfStatement {
+    public static getFunctionExpressionNode (
+        params: ESTree.Identifier[],
+        body: ESTree.BlockStatement
+    ): ESTree.FunctionExpression {
         return {
-            type: 'IfStatement',
-            test: {
-                type: 'Literal',
-                value: true,
-                raw: 'true',
-                obfuscated: false
-            },
-            consequent: blockStatementNode,
+            type: NodeType.FunctionExpression,
+            params,
+            body,
+            generator: false,
             obfuscated: false
         };
     }
 
     /**
-     * @param identifierName
+     * @param test
+     * @param consequent
+     * @returns {ESTree.IfStatement}
+     */
+    public static getIfStatementNode (
+        test: ESTree.Expression,
+        consequent: ESTree.BlockStatement,
+    ): ESTree.IfStatement {
+        return {
+            type: NodeType.IfStatement,
+            test,
+            consequent,
+            obfuscated: false
+        };
+    }
+
+    /**
+     * @param name
      * @returns {ESTree.Identifier}
      */
-    public static getIdentifierNode (identifierName: string = 'identifier'): ESTree.Identifier {
+    public static getIdentifierNode (name: string): ESTree.Identifier {
         return {
             type: NodeType.Identifier,
-            name: identifierName,
+            name,
             obfuscated: false
         };
     }
@@ -130,10 +165,10 @@ export class NodeMocks {
      * @param value
      * @returns {ESTree.Literal}
      */
-    public static getLiteralNode (value: boolean|number|string = 'value'): ESTree.Literal {
+    public static getLiteralNode (value: boolean|number|string): ESTree.Literal {
         return {
             type: NodeType.Literal,
-            value: value,
+            value,
             raw: `'${value}'`,
             'x-verbatim-property': {
                 content: `'${value}'`,
@@ -146,17 +181,64 @@ export class NodeMocks {
     /**
      * @param object
      * @param property
+     * @param computed
      * @return {ESTree.MemberExpression}
      */
     public static getMemberExpressionNode (
         object: ESTree.Identifier,
-        property: ESTree.Identifier|ESTree.Literal
+        property: ESTree.Identifier|ESTree.Literal,
+        computed: boolean = false
     ): ESTree.MemberExpression {
         return {
             type: NodeType.MemberExpression,
-            computed: false,
-            object: object,
-            property: property,
+            computed,
+            object,
+            property,
+            obfuscated: false
+        };
+    }
+
+    /**
+     * @param properties
+     * @return {ESTree.ObjectExpression}
+     */
+    public static getObjectExpressionNode (properties: ESTree.Property[]): ESTree.ObjectExpression {
+        return {
+            type: NodeType.ObjectExpression,
+            properties,
+            obfuscated: false
+        };
+    }
+
+
+    /**
+     * @return {ESTree.Property}
+     */
+    public static getPropertyNode (
+        key: ESTree.Expression,
+        value: ESTree.Expression | ESTree.Pattern,
+        computed: boolean = false
+    ): ESTree.Property {
+        return {
+            type: NodeType.Property,
+            key,
+            value,
+            kind: 'init',
+            method: false,
+            shorthand: false,
+            computed,
+            obfuscated: false
+        };
+    }
+
+    /**
+     * @param argument
+     * @return {ReturnStatement}
+     */
+    public static getReturnStatementNode (argument: ESTree.Expression): ESTree.ReturnStatement {
+        return {
+            type: NodeType.ReturnStatement,
+            argument,
             obfuscated: false
         };
     }
@@ -172,8 +254,8 @@ export class NodeMocks {
     ): ESTree.VariableDeclaration {
         return {
             type: NodeType.VariableDeclaration,
-            declarations: declarations,
-            kind: kind,
+            declarations,
+            kind,
             obfuscated: false
         };
     }
@@ -186,8 +268,8 @@ export class NodeMocks {
     public static getVariableDeclaratorNode (id: ESTree.Identifier, init: any): ESTree.VariableDeclarator {
         return {
             type: NodeType.VariableDeclarator,
-            id: id,
-            init: init,
+            id,
+            init,
             obfuscated: false
         };
     }

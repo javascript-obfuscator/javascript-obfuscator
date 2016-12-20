@@ -210,7 +210,6 @@ export class Nodes {
         };
     }
 
-
     /**
      * @return {ESTree.Property}
      */

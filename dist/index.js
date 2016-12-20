@@ -4431,10 +4431,6 @@ exports.ObfuscationEventEmitter = ObfuscationEventEmitter;
 "use strict";
 "use strict";
 
-var _getIterator2 = __webpack_require__(22);
-
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
 var _map = __webpack_require__(13);
 
 var _map2 = _interopRequireDefault(_map);
@@ -4465,7 +4461,6 @@ var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var estraverse = __webpack_require__(14);
-var _ = __webpack_require__(50);
 var CustomNodes_1 = __webpack_require__(20);
 var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
@@ -4483,7 +4478,7 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
         var _this = (0, _possibleConstructorReturn3.default)(this, (FunctionControlFlowTransformer.__proto__ || (0, _getPrototypeOf2.default)(FunctionControlFlowTransformer)).call(this, options));
 
         _this.controlFlowData = new _map2.default();
-        _this.controlFlowNodesList = [];
+        _this.hostNodesWithControlFlowNode = [];
         _this.controlFlowStorageFactory = controlFlowStorageFactory;
         _this.controlFlowReplacerFactory = controlFlowReplacerFactory;
         _this.customNodeFactory = customNodeFactory;
@@ -4508,7 +4503,9 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
             if (!this.controlFlowData.has(hostNode)) {
                 this.controlFlowData.set(hostNode, controlFlowStorage);
             } else {
-                hostNode.body = FunctionControlFlowTransformer_1.removeOldControlFlowNodeFromHostNodeBody(hostNode.body, this.controlFlowNodesList);
+                if (this.hostNodesWithControlFlowNode.indexOf(hostNode) !== -1) {
+                    hostNode.body.shift();
+                }
                 var hostControlFlowStorage = this.controlFlowData.get(hostNode);
                 controlFlowStorage.mergeWith(hostControlFlowStorage, true);
                 this.controlFlowData.set(hostNode, controlFlowStorage);
@@ -4531,8 +4528,8 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
             var controlFlowStorageCustomNode = this.customNodeFactory(CustomNodes_1.CustomNodes.ControlFlowStorageNode);
             controlFlowStorageCustomNode.initialize(controlFlowStorage);
             var controlFlowStorageNode = controlFlowStorageCustomNode.getNode();
-            this.controlFlowNodesList.push(controlFlowStorageNode);
             NodeAppender_1.NodeAppender.prependNode(hostNode, controlFlowStorageNode);
+            this.hostNodesWithControlFlowNode.push(hostNode);
         }
     }], [{
         key: "getHostNode",
@@ -4550,40 +4547,6 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
                 blockScopesOfNode.length = FunctionControlFlowTransformer_1.hostNodeSearchMaxDepth;
             }
             return RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().pickone(blockScopesOfNode);
-        }
-    }, {
-        key: "removeOldControlFlowNodeFromHostNodeBody",
-        value: function removeOldControlFlowNodeFromHostNodeBody(hostNodeBody, controlFlowNodesList) {
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
-
-            try {
-                for (var _iterator = (0, _getIterator3.default)(controlFlowNodesList), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var controlFlowNode = _step.value;
-
-                    var firstIndexOfNode = hostNodeBody.indexOf(controlFlowNode[0]);
-                    if (firstIndexOfNode === -1) {
-                        continue;
-                    }
-                    return _.difference(hostNodeBody, controlFlowNode);
-                }
-            } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
-                    }
-                } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
-                    }
-                }
-            }
-
-            return hostNodeBody;
         }
     }]);
     return FunctionControlFlowTransformer;

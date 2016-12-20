@@ -98,7 +98,15 @@ export class Utils {
      * @returns {string}
      */
     public static stringRotate (string: string, times: number): string {
-        return Utils.arrayRotate(Array.from(string), times).join('');
+        if (!string) {
+            throw new ReferenceError(`Cannot rotate empty string.`);
+        }
+
+        for (let i = 0; i < times; i++) {
+            string = string[string.length - 1] + string.substring(0, string.length - 1);
+        }
+
+        return string;
     }
 
     /**
@@ -133,7 +141,7 @@ export class Utils {
                 prefix = '\\u';
                 template = '0'.repeat(4);
             }
-
+            
             return `${prefix}${(template + escape.charCodeAt(0).toString(radix)).slice(-template.length)}`;
         })}`;
     }

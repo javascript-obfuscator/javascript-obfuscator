@@ -26,7 +26,7 @@ export const storagesModule: interfaces.ContainerModule = new ContainerModule((b
     bind<IStorage<ICustomNode>>(ServiceIdentifiers['Factory<IStorage<ICustomNode>>'])
         .toFactory<IStorage<ICustomNode>>((context: interfaces.Context) => {
             return () => {
-                return context.container.get<IStorage<ICustomNode>>(ServiceIdentifiers['IStorage<ICustomNode>']);
+                return new ControlFlowStorage();
             };
         });
 });

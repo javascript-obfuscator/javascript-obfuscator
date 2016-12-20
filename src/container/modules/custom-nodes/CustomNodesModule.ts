@@ -3,6 +3,7 @@ import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { ICustomNodeGroup } from '../../../interfaces/custom-nodes/ICustomNodeGroup';
+import { IOptions } from '../../../interfaces/options/IOptions';
 
 import { CustomNodes } from '../../../enums/container/CustomNodes';
 import { CustomNodeGroups } from '../../../enums/container/CustomNodeGroups';
@@ -105,7 +106,25 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
     // customNode factory
     bind<ICustomNode>(ServiceIdentifiers['Factory<ICustomNode>'])
         .toFactory<ICustomNode>((context: interfaces.Context) => {
+            let cachedOptions: IOptions;
+
             return (customNodeName: CustomNodes) => {
+                if (!cachedOptions) {
+                    cachedOptions = context.container.get<IOptions>(ServiceIdentifiers.IOptions);
+                }
+
+                // we should avoid automatic resolve for custom nodes which will resolve during traverse over AST tree
+                switch (customNodeName) {
+                    case CustomNodes.BinaryExpressionFunctionNode:
+                        return new BinaryExpressionFunctionNode(cachedOptions);
+
+                    case CustomNodes.ControlFlowStorageCallNode:
+                        return new ControlFlowStorageCallNode(cachedOptions);
+
+                    case CustomNodes.ControlFlowStorageNode:
+                        return new ControlFlowStorageNode(cachedOptions);
+                }
+
                 return context.container.getNamed<ICustomNode>(
                     ServiceIdentifiers.ICustomNode,
                     customNodeName

@@ -108,7 +108,7 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
         const stringArrayStorageId: string = this.stringArrayStorage.getStorageId();
 
         const stringArrayName: string = `_${Utils.hexadecimalPrefix}${stringArrayStorageId}`;
-        const stringArrayCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${Utils.stringRotate(stringArrayStorageId, 2)}`;
+        const stringArrayCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${Utils.stringRotate(stringArrayStorageId, 1)}`;
 
         let stringArrayRotateValue: number;
 

@@ -129,9 +129,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         const controlFlowStorage: IStorage <ICustomNode> = this.controlFlowStorageFactory();
         const hostNode: TNodeWithBlockStatement = FunctionControlFlowTransformer.getHostNode(functionNode);
 
-        if (!this.controlFlowData.has(hostNode)) {
-            this.controlFlowData.set(hostNode, controlFlowStorage);
-        } else {
+        if (this.controlFlowData.has(hostNode)) {
             if (this.hostNodesWithControlFlowNode.indexOf(hostNode) !== -1) {
                 hostNode.body.shift();
             }
@@ -139,22 +137,22 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
             const hostControlFlowStorage: IStorage<ICustomNode> = <IStorage<ICustomNode>>this.controlFlowData.get(hostNode);
 
             controlFlowStorage.mergeWith(hostControlFlowStorage, true);
-
-            this.controlFlowData.set(hostNode, controlFlowStorage);
         }
+
+        this.controlFlowData.set(hostNode, controlFlowStorage);
 
         estraverse.replace(functionNode.body, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+                if (!FunctionControlFlowTransformer.controlFlowReplacersMap.has(node.type)) {
+                    return;
+                }
+
                 if (RandomGeneratorUtils.getRandomFloat(0, 1) > this.options.controlFlowFlatteningThreshold) {
                     return;
                 }
 
-                const controlFlowReplacerName: NodeControlFlowReplacers | undefined = FunctionControlFlowTransformer
+                const controlFlowReplacerName: NodeControlFlowReplacers = <NodeControlFlowReplacers>FunctionControlFlowTransformer
                     .controlFlowReplacersMap.get(node.type);
-
-                if (controlFlowReplacerName === undefined) {
-                    return;
-                }
 
                 return {
                     ...this.controlFlowReplacerFactory(controlFlowReplacerName)

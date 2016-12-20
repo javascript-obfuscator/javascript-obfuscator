@@ -102,7 +102,7 @@ export class Utils {
             throw new ReferenceError(`Cannot rotate empty string.`);
         }
 
-        for (let i = 0; i < times; i++) {
+        for (let i: number = 0; i < times; i++) {
             string = string[string.length - 1] + string.substring(0, string.length - 1);
         }
 

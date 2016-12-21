@@ -86,7 +86,8 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
                 controlFlowStorageId
             );
 
-        let storageKeysForCurrentOperator: string[] | undefined = storageKeysByBinaryOperator.get(binaryExpressionNode.operator);
+        const storageKeysForCurrentOperator: string[] | undefined = storageKeysByBinaryOperator.get(binaryExpressionNode.operator);
+
         let storageKey: string;
 
         if (

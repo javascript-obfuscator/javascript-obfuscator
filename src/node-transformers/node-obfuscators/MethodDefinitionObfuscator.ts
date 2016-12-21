@@ -22,14 +22,14 @@ import { Node } from '../../node/Node';
 @injectable()
 export class MethodDefinitionObfuscator extends AbstractNodeTransformer {
     /**
-     * @type {IObfuscatorReplacer}
-     */
-    private readonly stringLiteralReplacer: IObfuscatorReplacer;
-
-    /**
      * @type {string[]}
      */
     private static readonly ignoredNames: string[] = ['constructor'];
+
+    /**
+     * @type {IObfuscatorReplacer}
+     */
+    private readonly stringLiteralReplacer: IObfuscatorReplacer;
 
     /**
      * @param replacersFactory

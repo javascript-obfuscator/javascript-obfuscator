@@ -27,15 +27,15 @@ export class SelfDefendingCustomNodeGroup extends AbstractCustomNodeGroup {
     protected appendEvent: TObfuscationEvent = ObfuscationEvents.AfterObfuscation;
 
     /**
-     * @type {TCustomNodeFactory}
-     */
-    private readonly customNodeFactory: TCustomNodeFactory;
-
-    /**
      * @type {Map<CustomNodes, ICustomNode>}
      */
     @initializable()
     protected customNodes: Map <CustomNodes, ICustomNode>;
+
+    /**
+     * @type {TCustomNodeFactory}
+     */
+    private readonly customNodeFactory: TCustomNodeFactory;
 
     /**
      * @type {IObfuscationEventEmitter}

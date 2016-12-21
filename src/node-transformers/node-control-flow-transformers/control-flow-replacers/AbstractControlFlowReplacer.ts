@@ -13,7 +13,7 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
     /**
      * @type {IOptions}
      */
-    protected readonly options : IOptions;
+    protected readonly options: IOptions;
 
     /**
      * @param options

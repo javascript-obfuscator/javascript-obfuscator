@@ -51,8 +51,8 @@ export class DomainLockNode extends AbstractCustomNode {
      * @returns {string}
      */
     protected getTemplate (): string {
-        let domainsString: string = this.options.domainLock.join(';'),
-            [hiddenDomainsString, diff]: string[] = CryptUtils.hideString(domainsString, domainsString.length * 3);
+        const domainsString: string = this.options.domainLock.join(';');
+        const [hiddenDomainsString, diff]: string[] = CryptUtils.hideString(domainsString, domainsString.length * 3);
 
         return format(DomainLockNodeTemplate(), {
             domainLockFunctionName: RandomGeneratorUtils.getRandomVariableName(),

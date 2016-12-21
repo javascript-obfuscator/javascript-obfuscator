@@ -88,7 +88,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 141);
+/******/ 	return __webpack_require__(__webpack_require__.s = 140);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -2040,6 +2040,14 @@ var JavaScriptObfuscatorInternal = JavaScriptObfuscatorInternal_1 = function () 
     }
 
     (0, _createClass3.default)(JavaScriptObfuscatorInternal, [{
+        key: "obfuscate",
+        value: function obfuscate(sourceCode) {
+            var astTree = esprima.parse(sourceCode, JavaScriptObfuscatorInternal_1.esprimaParams);
+            var obfuscatedAstTree = this.obfuscator.obfuscateAstTree(astTree);
+            var generatorOutput = this.generateCode(sourceCode, obfuscatedAstTree);
+            return this.getObfuscationResult(generatorOutput);
+        }
+    }, {
         key: "generateCode",
         value: function generateCode(sourceCode, astTree) {
             var escodegenParams = tslib_1.__assign({}, JavaScriptObfuscatorInternal_1.escodegenParams);
@@ -2058,14 +2066,6 @@ var JavaScriptObfuscatorInternal = JavaScriptObfuscatorInternal_1 = function () 
         key: "getObfuscationResult",
         value: function getObfuscationResult(generatorOutput) {
             return this.sourceMapCorrector.correct(generatorOutput.code, generatorOutput.map);
-        }
-    }, {
-        key: "obfuscate",
-        value: function obfuscate(sourceCode) {
-            var astTree = esprima.parse(sourceCode, JavaScriptObfuscatorInternal_1.esprimaParams);
-            var obfuscatedAstTree = this.obfuscator.obfuscateAstTree(astTree);
-            var generatorOutput = this.generateCode(sourceCode, obfuscatedAstTree);
-            return this.getObfuscationResult(generatorOutput);
         }
     }]);
     return JavaScriptObfuscatorInternal;
@@ -3620,11 +3620,13 @@ var DomainLockNode = function (_AbstractCustomNode_) {
     }, {
         key: "getTemplate",
         value: function getTemplate() {
-            var domainsString = this.options.domainLock.join(';'),
-                _CryptUtils_1$CryptUt = CryptUtils_1.CryptUtils.hideString(domainsString, domainsString.length * 3),
+            var domainsString = this.options.domainLock.join(';');
+
+            var _CryptUtils_1$CryptUt = CryptUtils_1.CryptUtils.hideString(domainsString, domainsString.length * 3),
                 _CryptUtils_1$CryptUt2 = (0, _slicedToArray3.default)(_CryptUtils_1$CryptUt, 2),
                 hiddenDomainsString = _CryptUtils_1$CryptUt2[0],
                 diff = _CryptUtils_1$CryptUt2[1];
+
             return format(DomainLockNodeTemplate_1.DomainLockNodeTemplate(), {
                 domainLockFunctionName: RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(),
                 diff: diff,
@@ -3808,8 +3810,8 @@ var NodeCallsControllerFunctionNode = function (_AbstractCustomNode_) {
     }]);
     return NodeCallsControllerFunctionNode;
 }(AbstractCustomNode_1.AbstractCustomNode);
-tslib_1.__decorate([Initializable_1.initializable(), tslib_1.__metadata("design:type", String)], NodeCallsControllerFunctionNode.prototype, "appendEvent", void 0);
 tslib_1.__decorate([Initializable_1.initializable(), tslib_1.__metadata("design:type", String)], NodeCallsControllerFunctionNode.prototype, "callsControllerFunctionName", void 0);
+tslib_1.__decorate([Initializable_1.initializable(), tslib_1.__metadata("design:type", String)], NodeCallsControllerFunctionNode.prototype, "appendEvent", void 0);
 NodeCallsControllerFunctionNode = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object])], NodeCallsControllerFunctionNode);
 exports.NodeCallsControllerFunctionNode = NodeCallsControllerFunctionNode;
 
@@ -4042,36 +4044,6 @@ var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
             this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
         }
     }, {
-        key: "getDecodeStringArrayTemplate",
-        value: function getDecodeStringArrayTemplate() {
-            var decodeStringArrayTemplate = '',
-                selfDefendingCode = '';
-            if (this.options.selfDefending) {
-                selfDefendingCode = format(SelfDefendingTemplate_1.SelfDefendingTemplate(), {
-                    stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
-                    stringArrayName: this.stringArrayName
-                });
-            }
-            switch (this.options.stringArrayEncoding) {
-                case StringArrayEncoding_1.StringArrayEncoding.base64:
-                    decodeStringArrayTemplate = format(StringArrayBase64DecodeNodeTemplate_1.StringArrayBase64DecodeNodeTemplate(), {
-                        atobPolyfill: AtobTemplate_1.AtobTemplate(),
-                        selfDefendingCode: selfDefendingCode,
-                        stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
-                    });
-                    break;
-                case StringArrayEncoding_1.StringArrayEncoding.rc4:
-                    decodeStringArrayTemplate = format(StringArrayRC4DecodeNodeTemplate_1.StringArrayRc4DecodeNodeTemplate(), {
-                        atobPolyfill: AtobTemplate_1.AtobTemplate(),
-                        rc4Polyfill: Rc4Template_1.Rc4Template(),
-                        selfDefendingCode: selfDefendingCode,
-                        stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
-                    });
-                    break;
-            }
-            return decodeStringArrayTemplate;
-        }
-    }, {
         key: "getNodeStructure",
         value: function getNodeStructure() {
             return NodeUtils_1.NodeUtils.convertCodeToStructure(this.getTemplate());
@@ -4085,6 +4057,37 @@ var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
                 stringArrayName: this.stringArrayName
             }), tslib_1.__assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
+        }
+    }, {
+        key: "getDecodeStringArrayTemplate",
+        value: function getDecodeStringArrayTemplate() {
+            var decodeStringArrayTemplate = '',
+                selfDefendingCode = '';
+            if (this.options.selfDefending) {
+                selfDefendingCode = format(SelfDefendingTemplate_1.SelfDefendingTemplate(), {
+                    stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
+                    stringArrayName: this.stringArrayName
+                });
+            }
+            switch (this.options.stringArrayEncoding) {
+                case StringArrayEncoding_1.StringArrayEncoding.rc4:
+                    decodeStringArrayTemplate = format(StringArrayRC4DecodeNodeTemplate_1.StringArrayRc4DecodeNodeTemplate(), {
+                        atobPolyfill: AtobTemplate_1.AtobTemplate(),
+                        rc4Polyfill: Rc4Template_1.Rc4Template(),
+                        selfDefendingCode: selfDefendingCode,
+                        stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
+                    });
+                    break;
+                case StringArrayEncoding_1.StringArrayEncoding.base64:
+                default:
+                    decodeStringArrayTemplate = format(StringArrayBase64DecodeNodeTemplate_1.StringArrayBase64DecodeNodeTemplate(), {
+                        atobPolyfill: AtobTemplate_1.AtobTemplate(),
+                        selfDefendingCode: selfDefendingCode,
+                        stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
+                    });
+                    break;
+            }
+            return decodeStringArrayTemplate;
         }
     }]);
     return StringArrayCallsWrapper;
@@ -4244,9 +4247,9 @@ var StringArrayRotateFunctionNode = function (_AbstractCustomNode_) {
     }, {
         key: "getTemplate",
         value: function getTemplate() {
-            var code = '',
-                timesName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(),
-                whileFunctionName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName();
+            var timesName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName();
+            var whileFunctionName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName();
+            var code = '';
             if (this.options.selfDefending) {
                 code = format(SelfDefendingTemplate_1.SelfDefendingTemplate(), {
                     timesName: timesName,
@@ -5760,12 +5763,13 @@ var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplace
         value: function replaceStringLiteralWithStringArrayCall(value) {
             var rc4Key = '';
             switch (this.options.stringArrayEncoding) {
-                case StringArrayEncoding_1.StringArrayEncoding.base64:
-                    value = CryptUtils_1.CryptUtils.btoa(value);
-                    break;
                 case StringArrayEncoding_1.StringArrayEncoding.rc4:
                     rc4Key = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().pickone(StringLiteralReplacer_1.rc4Keys);
                     value = CryptUtils_1.CryptUtils.btoa(CryptUtils_1.CryptUtils.rc4(value, rc4Key));
+                    break;
+                case StringArrayEncoding_1.StringArrayEncoding.base64:
+                default:
+                    value = CryptUtils_1.CryptUtils.btoa(value);
                     break;
             }
             if (this.options.unicodeEscapeSequence) {
@@ -7107,8 +7111,7 @@ module.exports = require("mkdirp");
 module.exports = require("reflect-metadata");
 
 /***/ },
-/* 140 */,
-/* 141 */
+/* 140 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

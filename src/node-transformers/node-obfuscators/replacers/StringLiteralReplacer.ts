@@ -76,14 +76,15 @@ export class StringLiteralReplacer extends AbstractReplacer {
         let rc4Key: string = '';
 
         switch (this.options.stringArrayEncoding) {
-            case StringArrayEncoding.base64:
-                value = CryptUtils.btoa(value);
-
-                break;
-
             case StringArrayEncoding.rc4:
                 rc4Key = RandomGeneratorUtils.getRandomGenerator().pickone(StringLiteralReplacer.rc4Keys);
                 value = CryptUtils.btoa(CryptUtils.rc4(value, rc4Key));
+
+                break;
+
+            case StringArrayEncoding.base64:
+            default:
+                value = CryptUtils.btoa(value);
 
                 break;
         }

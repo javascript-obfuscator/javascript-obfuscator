@@ -23,16 +23,16 @@ import { NodeUtils } from '../../node/NodeUtils';
 @injectable()
 export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     /**
-     * @type {TObfuscationEvent}
-     */
-    @initializable()
-    private appendEvent: TObfuscationEvent;
-
-    /**
      * @type {string}
      */
     @initializable()
     protected callsControllerFunctionName: string;
+
+    /**
+     * @type {TObfuscationEvent}
+     */
+    @initializable()
+    private appendEvent: TObfuscationEvent;
 
     /**
      * @param options

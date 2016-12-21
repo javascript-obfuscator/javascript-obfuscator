@@ -131,7 +131,7 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
             };
         });
 
-    // CustomNodeGroup factory
+    // customNodeGroup factory
     bind<ICustomNodeGroup>(ServiceIdentifiers.Factory__ICustomNodeGroup)
         .toFactory<ICustomNodeGroup>((context: interfaces.Context) => {
             return (customNodeGroupName: CustomNodeGroups) => {

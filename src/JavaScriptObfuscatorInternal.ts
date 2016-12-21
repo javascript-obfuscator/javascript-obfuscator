@@ -61,6 +61,23 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
 
     /**
      * @param sourceCode
+     * @returns {IObfuscationResult}
+     */
+    public obfuscate (sourceCode: string): IObfuscationResult {
+        // parse AST tree
+        const astTree: ESTree.Program = esprima.parse(sourceCode, JavaScriptObfuscatorInternal.esprimaParams);
+
+        // obfuscate AST tree
+        const obfuscatedAstTree: ESTree.Program = this.obfuscator.obfuscateAstTree(astTree);
+
+        // generate code
+        const generatorOutput: IGeneratorOutput = this.generateCode(sourceCode, obfuscatedAstTree);
+
+        return this.getObfuscationResult(generatorOutput);
+    }
+
+    /**
+     * @param sourceCode
      * @param astTree
      */
     private generateCode (sourceCode: string, astTree: ESTree.Program): IGeneratorOutput {
@@ -93,22 +110,5 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
             generatorOutput.code,
             generatorOutput.map
         );
-    }
-
-    /**
-     * @param sourceCode
-     * @returns {IObfuscationResult}
-     */
-    public obfuscate (sourceCode: string): IObfuscationResult {
-        // parse AST tree
-        const astTree: ESTree.Program = esprima.parse(sourceCode, JavaScriptObfuscatorInternal.esprimaParams);
-
-        // obfuscate AST tree
-        const obfuscatedAstTree: ESTree.Program = this.obfuscator.obfuscateAstTree(astTree);
-
-        // generate code
-        const generatorOutput: IGeneratorOutput = this.generateCode(sourceCode, obfuscatedAstTree);
-
-        return this.getObfuscationResult(generatorOutput);
     }
 }

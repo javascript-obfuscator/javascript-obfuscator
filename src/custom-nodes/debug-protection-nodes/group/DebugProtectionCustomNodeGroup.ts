@@ -27,15 +27,15 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
     protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.BeforeObfuscation;
 
     /**
-     * @type {TCustomNodeFactory}
-     */
-    private readonly customNodeFactory: TCustomNodeFactory;
-
-    /**
      * @type {Map<CustomNodes, ICustomNode>}
      */
     @initializable()
     protected customNodes: Map <CustomNodes, ICustomNode>;
+
+    /**
+     * @type {TCustomNodeFactory}
+     */
+    private readonly customNodeFactory: TCustomNodeFactory;
 
     /**
      * @type {IObfuscationEventEmitter}

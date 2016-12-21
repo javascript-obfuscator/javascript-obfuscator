@@ -37,7 +37,7 @@
       true,
       { "order": "fields-first" }
     ],
-    "new-parens": true,
+    "new-parens": false,
     "no-angle-bracket-type-assertion": false,
     "no-any": false,
     "no-arg": true,

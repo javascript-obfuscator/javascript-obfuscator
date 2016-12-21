@@ -53,7 +53,7 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
                             return Nodes.getPropertyNode(
                                 Nodes.getIdentifierNode(key),
                                 <any>value.getNode()[0]
-                            )
+                            );
                         })
                 )
             )

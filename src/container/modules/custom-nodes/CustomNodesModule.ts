@@ -30,56 +30,56 @@ import { StringArrayRotateFunctionNode } from '../../../custom-nodes/string-arra
 
 export const customNodesModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // custom nodes
-    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
-        .to(BinaryExpressionFunctionNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+        .toConstructor(BinaryExpressionFunctionNode)
         .whenTargetNamed(CustomNodes.BinaryExpressionFunctionNode);
 
-    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
-        .to(ControlFlowStorageCallNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+        .toConstructor(ControlFlowStorageCallNode)
         .whenTargetNamed(CustomNodes.ControlFlowStorageCallNode);
 
-    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
-        .to(ControlFlowStorageNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+        .toConstructor(ControlFlowStorageNode)
         .whenTargetNamed(CustomNodes.ControlFlowStorageNode);
 
-    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
-        .to(ConsoleOutputDisableExpressionNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+        .toConstructor(ConsoleOutputDisableExpressionNode)
         .whenTargetNamed(CustomNodes.ConsoleOutputDisableExpressionNode);
 
-    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
-        .to(DebugProtectionFunctionCallNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+        .toConstructor(DebugProtectionFunctionCallNode)
         .whenTargetNamed(CustomNodes.DebugProtectionFunctionCallNode);
 
-    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
-        .to(DebugProtectionFunctionIntervalNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+        .toConstructor(DebugProtectionFunctionIntervalNode)
         .whenTargetNamed(CustomNodes.DebugProtectionFunctionIntervalNode);
 
-    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
-        .to(DebugProtectionFunctionNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+        .toConstructor(DebugProtectionFunctionNode)
         .whenTargetNamed(CustomNodes.DebugProtectionFunctionNode);
 
-    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
-        .to(DomainLockNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+        .toConstructor(DomainLockNode)
         .whenTargetNamed(CustomNodes.DomainLockNode);
 
-    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
-        .to(NodeCallsControllerFunctionNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+        .toConstructor(NodeCallsControllerFunctionNode)
         .whenTargetNamed(CustomNodes.NodeCallsControllerFunctionNode);
 
-    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
-        .to(SelfDefendingUnicodeNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+        .toConstructor(SelfDefendingUnicodeNode)
         .whenTargetNamed(CustomNodes.SelfDefendingUnicodeNode);
 
-    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
-        .to(StringArrayCallsWrapper)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+        .toConstructor(StringArrayCallsWrapper)
         .whenTargetNamed(CustomNodes.StringArrayCallsWrapper);
 
-    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
-        .to(StringArrayNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+        .toConstructor(StringArrayNode)
         .whenTargetNamed(CustomNodes.StringArrayNode);
 
-    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
-        .to(StringArrayRotateFunctionNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+        .toConstructor(StringArrayRotateFunctionNode)
         .whenTargetNamed(CustomNodes.StringArrayRotateFunctionNode);
 
     // node groups
@@ -106,6 +106,8 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
     // customNode factory
     bind<ICustomNode>(ServiceIdentifiers['Factory<ICustomNode>'])
         .toFactory<ICustomNode>((context: interfaces.Context) => {
+            const cache: Map <CustomNodes, interfaces.Newable<ICustomNode>> = new Map();
+
             let cachedOptions: IOptions;
 
             return (customNodeName: CustomNodes) => {
@@ -113,22 +115,19 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
                     cachedOptions = context.container.get<IOptions>(ServiceIdentifiers.IOptions);
                 }
 
-                // we should avoid automatic resolve for custom nodes which will resolve during traverse over AST tree
-                switch (customNodeName) {
-                    case CustomNodes.BinaryExpressionFunctionNode:
-                        return new BinaryExpressionFunctionNode(cachedOptions);
-
-                    case CustomNodes.ControlFlowStorageCallNode:
-                        return new ControlFlowStorageCallNode(cachedOptions);
-
-                    case CustomNodes.ControlFlowStorageNode:
-                        return new ControlFlowStorageNode(cachedOptions);
+                if (cache.has(customNodeName)) {
+                    return new (<interfaces.Newable<ICustomNode>>cache.get(customNodeName));
                 }
 
-                return context.container.getNamed<ICustomNode>(
-                    ServiceIdentifiers.ICustomNode,
-                    customNodeName
-                );
+                const constructor: interfaces.Newable<ICustomNode> = context.container
+                    .getNamed<interfaces.Newable<ICustomNode>>(
+                        ServiceIdentifiers.ICustomNode,
+                        customNodeName
+                    );
+
+                cache.set(customNodeName, constructor);
+
+                return new constructor(cachedOptions);
             };
         });
 

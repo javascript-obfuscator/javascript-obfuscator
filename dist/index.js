@@ -2621,6 +2621,12 @@ exports.InversifyContainerFacade = InversifyContainerFacade;
 "use strict";
 "use strict";
 
+var _map = __webpack_require__(13);
+
+var _map2 = _interopRequireDefault(_map);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var CustomNodes_1 = __webpack_require__(20);
@@ -2644,39 +2650,37 @@ var StringArrayCallsWrapper_1 = __webpack_require__(78);
 var StringArrayNode_1 = __webpack_require__(79);
 var StringArrayRotateFunctionNode_1 = __webpack_require__(80);
 exports.customNodesModule = new inversify_1.ContainerModule(function (bind) {
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).to(BinaryExpressionFunctionNode_1.BinaryExpressionFunctionNode).whenTargetNamed(CustomNodes_1.CustomNodes.BinaryExpressionFunctionNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).to(ControlFlowStorageCallNode_1.ControlFlowStorageCallNode).whenTargetNamed(CustomNodes_1.CustomNodes.ControlFlowStorageCallNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).to(ControlFlowStorageNode_1.ControlFlowStorageNode).whenTargetNamed(CustomNodes_1.CustomNodes.ControlFlowStorageNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).to(ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode).whenTargetNamed(CustomNodes_1.CustomNodes.ConsoleOutputDisableExpressionNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).to(DebugProtectionFunctionCallNode_1.DebugProtectionFunctionCallNode).whenTargetNamed(CustomNodes_1.CustomNodes.DebugProtectionFunctionCallNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).to(DebugProtectionFunctionIntervalNode_1.DebugProtectionFunctionIntervalNode).whenTargetNamed(CustomNodes_1.CustomNodes.DebugProtectionFunctionIntervalNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).to(DebugProtectionFunctionNode_1.DebugProtectionFunctionNode).whenTargetNamed(CustomNodes_1.CustomNodes.DebugProtectionFunctionNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).to(DomainLockNode_1.DomainLockNode).whenTargetNamed(CustomNodes_1.CustomNodes.DomainLockNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).to(NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode).whenTargetNamed(CustomNodes_1.CustomNodes.NodeCallsControllerFunctionNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).to(SelfDefendingUnicodeNode_1.SelfDefendingUnicodeNode).whenTargetNamed(CustomNodes_1.CustomNodes.SelfDefendingUnicodeNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).to(StringArrayCallsWrapper_1.StringArrayCallsWrapper).whenTargetNamed(CustomNodes_1.CustomNodes.StringArrayCallsWrapper);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).to(StringArrayNode_1.StringArrayNode).whenTargetNamed(CustomNodes_1.CustomNodes.StringArrayNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).to(StringArrayRotateFunctionNode_1.StringArrayRotateFunctionNode).whenTargetNamed(CustomNodes_1.CustomNodes.StringArrayRotateFunctionNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).toConstructor(BinaryExpressionFunctionNode_1.BinaryExpressionFunctionNode).whenTargetNamed(CustomNodes_1.CustomNodes.BinaryExpressionFunctionNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).toConstructor(ControlFlowStorageCallNode_1.ControlFlowStorageCallNode).whenTargetNamed(CustomNodes_1.CustomNodes.ControlFlowStorageCallNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).toConstructor(ControlFlowStorageNode_1.ControlFlowStorageNode).whenTargetNamed(CustomNodes_1.CustomNodes.ControlFlowStorageNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).toConstructor(ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode).whenTargetNamed(CustomNodes_1.CustomNodes.ConsoleOutputDisableExpressionNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).toConstructor(DebugProtectionFunctionCallNode_1.DebugProtectionFunctionCallNode).whenTargetNamed(CustomNodes_1.CustomNodes.DebugProtectionFunctionCallNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).toConstructor(DebugProtectionFunctionIntervalNode_1.DebugProtectionFunctionIntervalNode).whenTargetNamed(CustomNodes_1.CustomNodes.DebugProtectionFunctionIntervalNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).toConstructor(DebugProtectionFunctionNode_1.DebugProtectionFunctionNode).whenTargetNamed(CustomNodes_1.CustomNodes.DebugProtectionFunctionNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).toConstructor(DomainLockNode_1.DomainLockNode).whenTargetNamed(CustomNodes_1.CustomNodes.DomainLockNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).toConstructor(NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode).whenTargetNamed(CustomNodes_1.CustomNodes.NodeCallsControllerFunctionNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).toConstructor(SelfDefendingUnicodeNode_1.SelfDefendingUnicodeNode).whenTargetNamed(CustomNodes_1.CustomNodes.SelfDefendingUnicodeNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).toConstructor(StringArrayCallsWrapper_1.StringArrayCallsWrapper).whenTargetNamed(CustomNodes_1.CustomNodes.StringArrayCallsWrapper);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).toConstructor(StringArrayNode_1.StringArrayNode).whenTargetNamed(CustomNodes_1.CustomNodes.StringArrayNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode).toConstructor(StringArrayRotateFunctionNode_1.StringArrayRotateFunctionNode).whenTargetNamed(CustomNodes_1.CustomNodes.StringArrayRotateFunctionNode);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNodeGroup).to(ConsoleOutputCustomNodeGroup_1.ConsoleOutputCustomNodeGroup).whenTargetNamed(CustomNodeGroups_1.CustomNodeGroups.ConsoleOutputCustomNodeGroup);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNodeGroup).to(DebugProtectionCustomNodeGroup_1.DebugProtectionCustomNodeGroup).whenTargetNamed(CustomNodeGroups_1.CustomNodeGroups.DebugProtectionCustomNodeGroup);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNodeGroup).to(DomainLockCustomNodeGroup_1.DomainLockCustomNodeGroup).whenTargetNamed(CustomNodeGroups_1.CustomNodeGroups.DomainLockCustomNodeGroup);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNodeGroup).to(SelfDefendingCustomNodeGroup_1.SelfDefendingCustomNodeGroup).whenTargetNamed(CustomNodeGroups_1.CustomNodeGroups.SelfDefendingCustomNodeGroup);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNodeGroup).to(StringArrayCustomNodeGroup_1.StringArrayCustomNodeGroup).whenTargetNamed(CustomNodeGroups_1.CustomNodeGroups.StringArrayCustomNodeGroup);
     bind(ServiceIdentifiers_1.ServiceIdentifiers['Factory<ICustomNode>']).toFactory(function (context) {
+        var cache = new _map2.default();
         var cachedOptions = void 0;
         return function (customNodeName) {
             if (!cachedOptions) {
                 cachedOptions = context.container.get(ServiceIdentifiers_1.ServiceIdentifiers.IOptions);
             }
-            switch (customNodeName) {
-                case CustomNodes_1.CustomNodes.BinaryExpressionFunctionNode:
-                    return new BinaryExpressionFunctionNode_1.BinaryExpressionFunctionNode(cachedOptions);
-                case CustomNodes_1.CustomNodes.ControlFlowStorageCallNode:
-                    return new ControlFlowStorageCallNode_1.ControlFlowStorageCallNode(cachedOptions);
-                case CustomNodes_1.CustomNodes.ControlFlowStorageNode:
-                    return new ControlFlowStorageNode_1.ControlFlowStorageNode(cachedOptions);
+            if (cache.has(customNodeName)) {
+                return new (cache.get(customNodeName))();
             }
-            return context.container.getNamed(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode, customNodeName);
+            var constructor = context.container.getNamed(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNode, customNodeName);
+            cache.set(customNodeName, constructor);
+            return new constructor(cachedOptions);
         };
     });
     bind(ServiceIdentifiers_1.ServiceIdentifiers['Factory<ICustomNodeGroup>']).toFactory(function (context) {

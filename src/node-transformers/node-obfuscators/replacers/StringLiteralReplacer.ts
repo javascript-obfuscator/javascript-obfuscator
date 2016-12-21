@@ -65,7 +65,7 @@ export class StringLiteralReplacer extends AbstractReplacer {
             return this.replaceStringLiteralWithStringArrayCall(nodeValue);
         }
 
-        return `'${Utils.stringToUnicodeEscapeSequence(nodeValue)}'`;
+        return `'${Utils.stringToUnicodeEscapeSequence(nodeValue, !this.options.unicodeEscapeSequence)}'`;
     }
 
     /**
@@ -88,9 +88,7 @@ export class StringLiteralReplacer extends AbstractReplacer {
                 break;
         }
 
-        if (this.options.unicodeEscapeSequence) {
-            value = Utils.stringToUnicodeEscapeSequence(value);
-        }
+        value = Utils.stringToUnicodeEscapeSequence(value, !this.options.unicodeEscapeSequence);
 
         const indexOfExistingValue: number = <number>this.stringArrayStorage.getKeyOf(value);
 

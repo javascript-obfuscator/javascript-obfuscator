@@ -801,11 +801,17 @@ var Utils = function () {
     }, {
         key: "stringToUnicodeEscapeSequence",
         value: function stringToUnicodeEscapeSequence(string) {
+            var nonLatinAndNonDigitsOnly = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
             var radix = 16;
             var regexp = new RegExp('[\x00-\x7F]');
+            var escapeRegExp = new RegExp('[^a-zA-Z0-9]');
             var prefix = void 0,
                 template = void 0;
             return "" + string.replace(/[\s\S]/g, function (escape) {
+                if (nonLatinAndNonDigitsOnly && !escapeRegExp.test(escape)) {
+                    return escape;
+                }
                 if (regexp.test(escape)) {
                     prefix = '\\x';
                     template = '0'.repeat(2);
@@ -5755,7 +5761,7 @@ var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplace
             if (this.options.stringArray && replaceWithStringArrayFlag) {
                 return this.replaceStringLiteralWithStringArrayCall(nodeValue);
             }
-            return "'" + Utils_1.Utils.stringToUnicodeEscapeSequence(nodeValue) + "'";
+            return "'" + Utils_1.Utils.stringToUnicodeEscapeSequence(nodeValue, !this.options.unicodeEscapeSequence) + "'";
         }
     }, {
         key: "replaceStringLiteralWithStringArrayCall",
@@ -5770,9 +5776,7 @@ var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplace
                     value = CryptUtils_1.CryptUtils.btoa(value);
                     break;
             }
-            if (this.options.unicodeEscapeSequence) {
-                value = Utils_1.Utils.stringToUnicodeEscapeSequence(value);
-            }
+            value = Utils_1.Utils.stringToUnicodeEscapeSequence(value, !this.options.unicodeEscapeSequence);
             var indexOfExistingValue = this.stringArrayStorage.getKeyOf(value);
             var indexOfValue = void 0;
             if (indexOfExistingValue >= 0) {

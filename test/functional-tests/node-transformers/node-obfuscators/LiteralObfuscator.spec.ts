@@ -4,6 +4,8 @@ import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResul
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
 
+import { readFileAsString } from '../../../helpers/readFileAsString';
+
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
 
 describe('LiteralObfuscator', () => {
@@ -52,6 +54,33 @@ describe('LiteralObfuscator', () => {
                 /^var *_0x([a-z0-9]){4} *= *\['test'\];/
             );
             assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-z0-9]){4}\('0x0'\);/);
+        });
+
+        it('should replace literal node value with raw value from unicode array if `unicodeEscapeSequence` and `stringArray` are disabled', () => {
+            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                `var test = 'test';`,
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
+                    unicodeEscapeSequence: false
+                }
+            );
+
+            assert.match(
+                obfuscationResult.getObfuscatedCode(),
+                /^var *test *= *'test';/
+            );
+        });
+
+        it('should\'t throw an error when string contains non-latin and non-digit characters and `unicodeEscapeSequence` is disabled', () => {
+            assert.doesNotThrow(() => JavaScriptObfuscator.obfuscate(
+                readFileAsString('./test/fixtures/node-transformers/node-obfuscators/literal-obfuscator/literal-obfuscator-unicode-sequence.js'),
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    unicodeEscapeSequence: false
+                }
+            ));
         });
 
         it('shouldn\'t replace short literal node value with unicode array value', () => {

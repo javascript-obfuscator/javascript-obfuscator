@@ -111,11 +111,16 @@ describe('Utils', () => {
         });
     });
 
-    describe('stringToUnicodeEscapeSequence (string: string): string', () => {
-        let expected: string = '\\x73\\x74\\x72\\x69\\x6e\\x67';
+    describe('stringToUnicodeEscapeSequence (string: string, nonLatinAndNonDigitsOnly: boolean = false): string', () => {
+        const expected1: string = '\\x73\\x74\\x72\\x69\\x6e\\x67';
+        const expected2: string = 'abc\\x21\\u0434\\u0435';
 
         it('should return a unicode escape sequence based on a given string', () => {
-            assert.equal(Utils.stringToUnicodeEscapeSequence('string'), expected);
+            assert.equal(Utils.stringToUnicodeEscapeSequence('string'), expected1);
+        });
+
+        it('should return a string where only non-digits and non-latin letters are escaped', () => {
+            assert.equal(Utils.stringToUnicodeEscapeSequence('abc!де', true), expected2);
         });
     });
 });

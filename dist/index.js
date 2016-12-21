@@ -88,7 +88,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 140);
+/******/ 	return __webpack_require__(__webpack_require__.s = 141);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -4079,7 +4079,6 @@ var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
                     });
                     break;
                 case StringArrayEncoding_1.StringArrayEncoding.base64:
-                default:
                     decodeStringArrayTemplate = format(StringArrayBase64DecodeNodeTemplate_1.StringArrayBase64DecodeNodeTemplate(), {
                         atobPolyfill: AtobTemplate_1.AtobTemplate(),
                         selfDefendingCode: selfDefendingCode,
@@ -5768,7 +5767,6 @@ var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplace
                     value = CryptUtils_1.CryptUtils.btoa(CryptUtils_1.CryptUtils.rc4(value, rc4Key));
                     break;
                 case StringArrayEncoding_1.StringArrayEncoding.base64:
-                default:
                     value = CryptUtils_1.CryptUtils.btoa(value);
                     break;
             }
@@ -7111,7 +7109,8 @@ module.exports = require("mkdirp");
 module.exports = require("reflect-metadata");
 
 /***/ },
-/* 140 */
+/* 140 */,
+/* 141 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

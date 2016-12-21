@@ -83,7 +83,6 @@ export class StringLiteralReplacer extends AbstractReplacer {
                 break;
 
             case StringArrayEncoding.base64:
-            default:
                 value = CryptUtils.btoa(value);
 
                 break;

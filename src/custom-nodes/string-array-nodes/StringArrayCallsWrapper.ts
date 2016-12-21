@@ -121,7 +121,6 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
                 break;
 
             case StringArrayEncoding.base64:
-            default:
                 decodeStringArrayTemplate = format(StringArrayBase64DecodeNodeTemplate(), {
                     atobPolyfill: AtobTemplate(),
                     selfDefendingCode,

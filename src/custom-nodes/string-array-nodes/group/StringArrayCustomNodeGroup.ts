@@ -57,9 +57,9 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers['Factory<ICustomNode>']) customNodeFactory: TCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
         @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
-        @inject(ServiceIdentifiers['IStorage<string>']) stringArrayStorage: IStorage<string>,
+        @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: IStorage<string>,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);

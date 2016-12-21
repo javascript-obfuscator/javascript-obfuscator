@@ -38,7 +38,7 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers['Factory<ICustomNode>']) customNodeFactory: TCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);

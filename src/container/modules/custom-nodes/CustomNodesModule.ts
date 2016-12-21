@@ -30,55 +30,55 @@ import { StringArrayRotateFunctionNode } from '../../../custom-nodes/string-arra
 
 export const customNodesModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // custom nodes
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(BinaryExpressionFunctionNode)
         .whenTargetNamed(CustomNodes.BinaryExpressionFunctionNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(ControlFlowStorageCallNode)
         .whenTargetNamed(CustomNodes.ControlFlowStorageCallNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(ControlFlowStorageNode)
         .whenTargetNamed(CustomNodes.ControlFlowStorageNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(ConsoleOutputDisableExpressionNode)
         .whenTargetNamed(CustomNodes.ConsoleOutputDisableExpressionNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(DebugProtectionFunctionCallNode)
         .whenTargetNamed(CustomNodes.DebugProtectionFunctionCallNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(DebugProtectionFunctionIntervalNode)
         .whenTargetNamed(CustomNodes.DebugProtectionFunctionIntervalNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(DebugProtectionFunctionNode)
         .whenTargetNamed(CustomNodes.DebugProtectionFunctionNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(DomainLockNode)
         .whenTargetNamed(CustomNodes.DomainLockNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(NodeCallsControllerFunctionNode)
         .whenTargetNamed(CustomNodes.NodeCallsControllerFunctionNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(SelfDefendingUnicodeNode)
         .whenTargetNamed(CustomNodes.SelfDefendingUnicodeNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(StringArrayCallsWrapper)
         .whenTargetNamed(CustomNodes.StringArrayCallsWrapper);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(StringArrayNode)
         .whenTargetNamed(CustomNodes.StringArrayNode);
 
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.ICustomNode)
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(StringArrayRotateFunctionNode)
         .whenTargetNamed(CustomNodes.StringArrayRotateFunctionNode);
 
@@ -104,7 +104,7 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
         .whenTargetNamed(CustomNodeGroups.StringArrayCustomNodeGroup);
 
     // customNode factory
-    bind<ICustomNode>(ServiceIdentifiers['Factory<ICustomNode>'])
+    bind<ICustomNode>(ServiceIdentifiers.Factory__ICustomNode)
         .toFactory<ICustomNode>((context: interfaces.Context) => {
             const cache: Map <CustomNodes, interfaces.Newable<ICustomNode>> = new Map();
 
@@ -121,7 +121,7 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
 
                 const constructor: interfaces.Newable<ICustomNode> = context.container
                     .getNamed<interfaces.Newable<ICustomNode>>(
-                        ServiceIdentifiers.ICustomNode,
+                        ServiceIdentifiers.Newable__ICustomNode,
                         customNodeName
                     );
 
@@ -132,7 +132,7 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
         });
 
     // CustomNodeGroup factory
-    bind<ICustomNodeGroup>(ServiceIdentifiers['Factory<ICustomNodeGroup>'])
+    bind<ICustomNodeGroup>(ServiceIdentifiers.Factory__ICustomNodeGroup)
         .toFactory<ICustomNodeGroup>((context: interfaces.Context) => {
             return (customNodeGroupName: CustomNodeGroups) => {
                 return context.container.getNamed<ICustomNodeGroup>(

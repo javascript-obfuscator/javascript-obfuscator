@@ -1,9 +1,9 @@
 import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
-import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
-import { ICustomNodeGroup } from '../../../interfaces/custom-nodes/ICustomNodeGroup';
-import { IStorage } from '../../../interfaces/storages/IStorage';
+import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
+import { TCustomNodeGroupStorage } from '../../../types/storages/TCustomNodeGroupStorage';
+import { TStringArrayStorage } from '../../../types/storages/TStringArrayStorage';
 
 import { ControlFlowStorage } from '../../../storages/control-flow/ControlFlowStorage';
 import { CustomNodeGroupStorage } from '../../../storages/custom-node-group/CustomNodeGroupStorage';
@@ -11,22 +11,25 @@ import { StringArrayStorage } from '../../../storages/string-array/StringArraySt
 
 export const storagesModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // storages
-    bind<IStorage<ICustomNodeGroup>>(ServiceIdentifiers['IStorage<ICustomNodeGroup>'])
+    bind<TCustomNodeGroupStorage>(ServiceIdentifiers.TCustomNodeGroupStorage)
         .to(CustomNodeGroupStorage)
         .inSingletonScope();
 
-    bind<IStorage<ICustomNode>>(ServiceIdentifiers['IStorage<ICustomNode>'])
-        .to(ControlFlowStorage);
-
-    bind<IStorage<string>>(ServiceIdentifiers['IStorage<string>'])
+    bind<TStringArrayStorage>(ServiceIdentifiers.TStringArrayStorage)
         .to(StringArrayStorage)
         .inSingletonScope();
 
+    bind<interfaces.Newable<TControlFlowStorage>>(ServiceIdentifiers.Newable__TControlFlowStorage)
+        .toConstructor(ControlFlowStorage);
+
     // controlFlowStorage factory
-    bind<IStorage<ICustomNode>>(ServiceIdentifiers['Factory<IStorage<ICustomNode>>'])
-        .toFactory<IStorage<ICustomNode>>((context: interfaces.Context) => {
+    bind<TControlFlowStorage>(ServiceIdentifiers.Factory__TControlFlowStorage)
+        .toFactory<TControlFlowStorage>((context: interfaces.Context) => {
             return () => {
-                return new ControlFlowStorage();
+                const constructor: interfaces.Newable<TControlFlowStorage> = context.container
+                    .get<interfaces.Newable<TControlFlowStorage>>(ServiceIdentifiers.Newable__TControlFlowStorage);
+
+                return new constructor();
             };
         });
 });

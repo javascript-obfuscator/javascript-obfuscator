@@ -7,13 +7,13 @@ import { NodeType } from '../enums/NodeType';
 
 export class Nodes {
     /**
-     * @param bodyNodes
+     * @param body
      * @returns {ESTree.Program}
      */
-    public static getProgramNode (bodyNodes: TStatement[] = []): ESTree.Program {
+    public static getProgramNode (body: TStatement[] = []): ESTree.Program {
         return {
             type: NodeType.Program,
-            body: bodyNodes,
+            body,
             sourceType: 'script',
             obfuscated: false
         };
@@ -40,26 +40,26 @@ export class Nodes {
     }
 
     /**
-     * @param bodyNodes
+     * @param body
      * @returns {ESTree.BlockStatement}
      */
-    public static getBlockStatementNode (bodyNodes: ESTree.Statement[] = []): ESTree.BlockStatement {
+    public static getBlockStatementNode (body: ESTree.Statement[] = []): ESTree.BlockStatement {
         return {
             type: NodeType.BlockStatement,
-            body: bodyNodes,
+            body,
             obfuscated: false
         };
     }
 
     /**
-     * @param bodyNodes
+     * @param body
      * @returns {ESTree.CatchClause}
      */
-    public static getCatchClauseNode (bodyNodes: ESTree.Statement[] = []): ESTree.CatchClause {
+    public static getCatchClauseNode (body: ESTree.Statement[] = []): ESTree.CatchClause {
         return {
             type: NodeType.CatchClause,
             param: Nodes.getIdentifierNode('err'),
-            body: Nodes.getBlockStatementNode(bodyNodes),
+            body: Nodes.getBlockStatementNode(body),
             obfuscated: false
         };
     }
@@ -137,10 +137,7 @@ export class Nodes {
      * @param consequent
      * @returns {ESTree.IfStatement}
      */
-    public static getIfStatementNode (
-        test: ESTree.Expression,
-        consequent: ESTree.BlockStatement,
-    ): ESTree.IfStatement {
+    public static getIfStatementNode (test: ESTree.Expression, consequent: ESTree.BlockStatement,): ESTree.IfStatement {
         return {
             type: NodeType.IfStatement,
             test,

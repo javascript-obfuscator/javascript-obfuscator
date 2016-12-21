@@ -36,7 +36,7 @@ export class FunctionObfuscator extends AbstractNodeTransformer {
      * @param options
      */
     constructor(
-        @inject(ServiceIdentifiers['Factory<IObfuscatorReplacer>']) nodeObfuscatorsReplacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscatorReplacer,
+        @inject(ServiceIdentifiers.Factory__IObfuscatorReplacer) nodeObfuscatorsReplacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscatorReplacer,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);

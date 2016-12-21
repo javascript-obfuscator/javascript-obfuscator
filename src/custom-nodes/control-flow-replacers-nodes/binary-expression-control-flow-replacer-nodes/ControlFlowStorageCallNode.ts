@@ -1,6 +1,8 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
+import { Expression } from 'estree';
+
 import { TStatement } from '../../../types/node/TStatement';
 
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -25,16 +27,16 @@ export class ControlFlowStorageCallNode extends AbstractCustomNode {
     private controlFlowStorageName: string;
 
     /**
-     * @type {string}
+     * @type {Expression}
      */
     @initializable()
-    private leftValue: string;
+    private leftValue: Expression;
 
     /**
-     * @type {string}
+     * @type {ESTree.Expression}
      */
     @initializable()
-    private rightValue: string;
+    private rightValue: Expression;
 
     /**
      * @param options
@@ -54,8 +56,8 @@ export class ControlFlowStorageCallNode extends AbstractCustomNode {
     public initialize (
         controlFlowStorageName: string,
         controlFlowStorageKey: string,
-        leftValue: string,
-        rightValue: string,
+        leftValue: Expression,
+        rightValue: Expression,
     ): void {
         this.controlFlowStorageName = controlFlowStorageName;
         this.controlFlowStorageKey = controlFlowStorageKey;
@@ -72,8 +74,8 @@ export class ControlFlowStorageCallNode extends AbstractCustomNode {
                         Nodes.getIdentifierNode(this.controlFlowStorageKey)
                     ),
                     [
-                        <any>this.leftValue,
-                        <any>this.rightValue
+                        this.leftValue,
+                        this.rightValue
                     ]
                 )
             )

@@ -41,8 +41,8 @@ export class StringLiteralReplacer extends AbstractReplacer {
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers['IStorage<ICustomNodeGroup>']) customNodeGroupStorage: IStorage<ICustomNodeGroup>,
-        @inject(ServiceIdentifiers['IStorage<string>']) stringArrayStorage: IStorage<string>,
+        @inject(ServiceIdentifiers.TCustomNodeGroupStorage) customNodeGroupStorage: IStorage<ICustomNodeGroup>,
+        @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: IStorage<string>,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);

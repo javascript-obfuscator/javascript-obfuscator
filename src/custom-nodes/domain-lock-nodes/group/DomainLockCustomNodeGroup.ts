@@ -48,7 +48,7 @@ export class DomainLockCustomNodeGroup extends AbstractCustomNodeGroup {
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers['Factory<ICustomNode>']) customNodeFactory: TCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
         @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {

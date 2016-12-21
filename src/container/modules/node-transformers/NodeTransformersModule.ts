@@ -61,7 +61,7 @@ export const nodeTransformersModule: interfaces.ContainerModule = new ContainerM
         .whenTargetNamed(NodeTransformers.VariableDeclarationObfuscator);
 
     // node transformers factory
-    bind<INodeTransformer[]>(ServiceIdentifiers['Factory<INodeTransformer[]>'])
+    bind<INodeTransformer[]>(ServiceIdentifiers.Factory__INodeTransformer)
         .toFactory<INodeTransformer[]>((context: interfaces.Context) => {
             const cache: Map <NodeTransformers, INodeTransformer> = new Map();
 

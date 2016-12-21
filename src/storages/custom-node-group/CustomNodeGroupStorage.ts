@@ -39,7 +39,7 @@ export class CustomNodeGroupStorage extends MapStorage <ICustomNodeGroup> {
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers['Factory<ICustomNodeGroup>']) customNodeGroupFactory: TCustomNodeGroupFactory,
+        @inject(ServiceIdentifiers.Factory__ICustomNodeGroup) customNodeGroupFactory: TCustomNodeGroupFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super();

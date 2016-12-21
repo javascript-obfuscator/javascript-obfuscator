@@ -75,9 +75,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers['Factory<IStorage<ICustomNode>>']) controlFlowStorageFactory: TControlFlowStorageFactory,
-        @inject(ServiceIdentifiers['Factory<IControlFlowReplacer>']) controlFlowReplacerFactory: TControlFlowReplacerFactory,
-        @inject(ServiceIdentifiers['Factory<ICustomNode>']) customNodeFactory: TCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__TControlFlowStorage) controlFlowStorageFactory: TControlFlowStorageFactory,
+        @inject(ServiceIdentifiers.Factory__IControlFlowReplacer) controlFlowReplacerFactory: TControlFlowReplacerFactory,
+        @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);

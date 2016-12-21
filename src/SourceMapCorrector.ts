@@ -28,7 +28,7 @@ export class SourceMapCorrector implements ISourceMapCorrector {
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers['Factory<IObfuscationResult>']) obfuscationResultFactory: TObfuscationResultFactory,
+        @inject(ServiceIdentifiers.Factory__IObfuscationResult) obfuscationResultFactory: TObfuscationResultFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.obfuscationResultFactory = obfuscationResultFactory;

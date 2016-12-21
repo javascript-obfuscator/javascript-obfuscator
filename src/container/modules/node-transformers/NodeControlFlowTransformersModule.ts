@@ -12,7 +12,7 @@ export const nodeControlFlowTransformersModule: interfaces.ContainerModule = new
         .to(BinaryExpressionControlFlowReplacer)
         .whenTargetNamed(NodeControlFlowReplacers.BinaryExpressionControlFlowReplacer);
 
-    bind<IControlFlowReplacer>(ServiceIdentifiers['Factory<IControlFlowReplacer>'])
+    bind<IControlFlowReplacer>(ServiceIdentifiers.Factory__IControlFlowReplacer)
         .toFactory<IControlFlowReplacer>((context: interfaces.Context) => {
             const cache: Map <NodeControlFlowReplacers, IControlFlowReplacer> = new Map();
 

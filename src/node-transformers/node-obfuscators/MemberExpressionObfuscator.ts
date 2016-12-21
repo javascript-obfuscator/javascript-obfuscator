@@ -25,7 +25,7 @@ export class MemberExpressionObfuscator extends AbstractNodeTransformer {
      * @param options
      */
     constructor(
-        @inject(ServiceIdentifiers['Factory<IObfuscatorReplacer>']) replacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscatorReplacer,
+        @inject(ServiceIdentifiers.Factory__IObfuscatorReplacer) replacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscatorReplacer,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);

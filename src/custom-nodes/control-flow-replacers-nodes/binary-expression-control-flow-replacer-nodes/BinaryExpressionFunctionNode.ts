@@ -1,6 +1,8 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
+import { BinaryOperator } from 'estree';
+
 import { TStatement } from '../../../types/node/TStatement';
 
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -14,10 +16,10 @@ import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 @injectable()
 export class BinaryExpressionFunctionNode extends AbstractCustomNode {
     /**
-     * @type {string}
+     * @type {BinaryOperator}
      */
     @initializable()
-    private operator: string;
+    private operator: BinaryOperator;
 
     /**
      * @param options
@@ -31,7 +33,7 @@ export class BinaryExpressionFunctionNode extends AbstractCustomNode {
     /**
      * @param operator
      */
-    public initialize (operator: string): void {
+    public initialize (operator: BinaryOperator): void {
         this.operator = operator;
     }
 
@@ -49,7 +51,7 @@ export class BinaryExpressionFunctionNode extends AbstractCustomNode {
                 Nodes.getBlockStatementNode([
                     Nodes.getReturnStatementNode(
                         Nodes.getBinaryExpressionNode(
-                            <any>this.operator,
+                            this.operator,
                             Nodes.getIdentifierNode('x'),
                             Nodes.getIdentifierNode('y')
                         )

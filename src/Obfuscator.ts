@@ -89,8 +89,8 @@ export class Obfuscator implements IObfuscator {
     constructor (
         @inject(ServiceIdentifiers.IStackTraceAnalyzer) stackTraceAnalyzer: IStackTraceAnalyzer,
         @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
-        @inject(ServiceIdentifiers['IStorage<ICustomNodeGroup>']) customNodeGroupStorage: IStorage<ICustomNodeGroup>,
-        @inject(ServiceIdentifiers['Factory<INodeTransformer[]>']) nodeTransformersFactory: TNodeTransformersFactory,
+        @inject(ServiceIdentifiers.TCustomNodeGroupStorage) customNodeGroupStorage: IStorage<ICustomNodeGroup>,
+        @inject(ServiceIdentifiers.Factory__INodeTransformer) nodeTransformersFactory: TNodeTransformersFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.stackTraceAnalyzer = stackTraceAnalyzer;

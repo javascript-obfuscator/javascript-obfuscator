@@ -60,7 +60,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
             .inSingletonScope();
 
         this.container
-            .bind<IObfuscationResult>(ServiceIdentifiers['Factory<IObfuscationResult>'])
+            .bind<IObfuscationResult>(ServiceIdentifiers.Factory__IObfuscationResult)
             .toFactory<IObfuscationResult>((context: interfaces.Context) => {
                 return (obfuscatedCode: string, sourceMap: string) => {
                     const obfuscationResult: IObfuscationResult = context.container

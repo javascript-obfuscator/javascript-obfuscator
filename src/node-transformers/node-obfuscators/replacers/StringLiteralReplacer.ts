@@ -41,8 +41,8 @@ export class StringLiteralReplacer extends AbstractReplacer {
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers['IStorage<ICustomNodeGroup>']) customNodeGroupStorage: IStorage<ICustomNodeGroup>,
-        @inject(ServiceIdentifiers['IStorage<string>']) stringArrayStorage: IStorage<string>,
+        @inject(ServiceIdentifiers.TCustomNodeGroupStorage) customNodeGroupStorage: IStorage<ICustomNodeGroup>,
+        @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: IStorage<string>,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
@@ -65,7 +65,7 @@ export class StringLiteralReplacer extends AbstractReplacer {
             return this.replaceStringLiteralWithStringArrayCall(nodeValue);
         }
 
-        return `'${Utils.stringToUnicodeEscapeSequence(nodeValue)}'`;
+        return `'${Utils.stringToUnicodeEscapeSequence(nodeValue, !this.options.unicodeEscapeSequence)}'`;
     }
 
     /**
@@ -76,21 +76,19 @@ export class StringLiteralReplacer extends AbstractReplacer {
         let rc4Key: string = '';
 
         switch (this.options.stringArrayEncoding) {
-            case StringArrayEncoding.base64:
-                value = CryptUtils.btoa(value);
-
-                break;
-
             case StringArrayEncoding.rc4:
                 rc4Key = RandomGeneratorUtils.getRandomGenerator().pickone(StringLiteralReplacer.rc4Keys);
                 value = CryptUtils.btoa(CryptUtils.rc4(value, rc4Key));
 
                 break;
+
+            case StringArrayEncoding.base64:
+                value = CryptUtils.btoa(value);
+
+                break;
         }
 
-        if (this.options.unicodeEscapeSequence) {
-            value = Utils.stringToUnicodeEscapeSequence(value);
-        }
+        value = Utils.stringToUnicodeEscapeSequence(value, !this.options.unicodeEscapeSequence);
 
         const indexOfExistingValue: number = <number>this.stringArrayStorage.getKeyOf(value);
 
@@ -103,7 +101,7 @@ export class StringLiteralReplacer extends AbstractReplacer {
             this.stringArrayStorage.set(null, value);
         }
 
-        const rotatedStringArrayStorageId: string = Utils.stringRotate(this.stringArrayStorage.getStorageId(), 2);
+        const rotatedStringArrayStorageId: string = Utils.stringRotate(this.stringArrayStorage.getStorageId(), 1);
         const stringArrayStorageCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${rotatedStringArrayStorageId}`;
         const hexadecimalIndex: string = `${Utils.hexadecimalPrefix}${Utils.decToHex(indexOfValue)}`;
 

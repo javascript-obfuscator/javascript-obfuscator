@@ -2,7 +2,7 @@ import * as ESTree from 'estree';
 
 import { assert } from 'chai';
 
-import { NodeMocks } from '../../mocks/NodeMocks';
+import { Nodes } from '../../../src/node/Nodes';
 import { NodeUtils } from '../../../src/node/NodeUtils';
 
 describe('NodeUtils', () => {
@@ -11,10 +11,10 @@ describe('NodeUtils', () => {
             expectedLiteralNode: any;
 
         beforeEach(() => {
-            literalNode = NodeMocks.getLiteralNode();
+            literalNode = Nodes.getLiteralNode('value');
             delete literalNode['x-verbatim-property'];
 
-            expectedLiteralNode = NodeMocks.getLiteralNode();
+            expectedLiteralNode = Nodes.getLiteralNode('value');
 
             NodeUtils.addXVerbatimPropertyToLiterals(literalNode);
         });
@@ -37,17 +37,17 @@ describe('NodeUtils', () => {
                 var abc = 'cde';
             `;
 
-            identifierNode = NodeMocks.getIdentifierNode('abc');
+            identifierNode = Nodes.getIdentifierNode('abc');
 
-            literalNode = NodeMocks.getLiteralNode('cde');
+            literalNode = Nodes.getLiteralNode('cde');
 
-            variableDeclaratorNode = NodeMocks.getVariableDeclaratorNode(identifierNode, literalNode);
+            variableDeclaratorNode = Nodes.getVariableDeclaratorNode(identifierNode, literalNode);
 
-            variableDeclarationNode = NodeMocks.getVariableDeclarationNode([
+            variableDeclarationNode = Nodes.getVariableDeclarationNode([
                 variableDeclaratorNode
             ]);
 
-            programNode = NodeMocks.getProgramNode([
+            programNode = Nodes.getProgramNode([
                 variableDeclarationNode
             ]);
 
@@ -69,11 +69,11 @@ describe('NodeUtils', () => {
 
         beforeEach(() => {
             structure = [
-                NodeMocks.getProgramNode([
-                    NodeMocks.getVariableDeclarationNode([
-                        NodeMocks.getVariableDeclaratorNode(
-                            NodeMocks.getIdentifierNode('abc'),
-                            NodeMocks.getLiteralNode('cde')
+                Nodes.getProgramNode([
+                    Nodes.getVariableDeclarationNode([
+                        Nodes.getVariableDeclaratorNode(
+                            Nodes.getIdentifierNode('abc'),
+                            Nodes.getLiteralNode('cde')
                         )
                     ])
                 ])
@@ -92,10 +92,10 @@ describe('NodeUtils', () => {
             expressionStatementNode2: ESTree.ExpressionStatement;
 
         beforeEach(() => {
-            expressionStatementNode1 = NodeMocks.getExpressionStatementNode();
-            expressionStatementNode2 = NodeMocks.getExpressionStatementNode();
+            expressionStatementNode1 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+            expressionStatementNode2 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
 
-            blockStatementNode = NodeMocks.getBlockStatementNode([
+            blockStatementNode = Nodes.getBlockStatementNode([
                 expressionStatementNode1,
                 expressionStatementNode2
             ]);
@@ -128,31 +128,37 @@ describe('NodeUtils', () => {
             programNode: ESTree.Program;
 
         beforeEach(() => {
-            expressionStatementNode1 = NodeMocks.getExpressionStatementNode();
-            expressionStatementNode2 = NodeMocks.getExpressionStatementNode();
-            expressionStatementNode3 = NodeMocks.getExpressionStatementNode();
+            expressionStatementNode1 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+            expressionStatementNode2 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+            expressionStatementNode3 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
 
-            ifStatementBlockStatementNode2 = NodeMocks.getBlockStatementNode([
+            ifStatementBlockStatementNode2 = Nodes.getBlockStatementNode([
                 expressionStatementNode2,
                 expressionStatementNode3
             ]);
 
-            ifStatementNode2 = NodeMocks.getIfStatementNode(ifStatementBlockStatementNode2);
+            ifStatementNode2 = Nodes.getIfStatementNode(
+                Nodes.getLiteralNode(true),
+                ifStatementBlockStatementNode2
+            );
 
-            ifStatementBlockStatementNode1 = NodeMocks.getBlockStatementNode([
+            ifStatementBlockStatementNode1 = Nodes.getBlockStatementNode([
                 ifStatementNode2
             ]);
 
-            ifStatementNode1 = NodeMocks.getIfStatementNode(ifStatementBlockStatementNode1);
+            ifStatementNode1 = Nodes.getIfStatementNode(
+                Nodes.getLiteralNode(true),
+                ifStatementBlockStatementNode1
+            );
 
-            functionDeclarationBlockStatementNode = NodeMocks.getBlockStatementNode([
+            functionDeclarationBlockStatementNode = Nodes.getBlockStatementNode([
                 expressionStatementNode1,
                 ifStatementNode1
             ]);
 
-            functionDeclarationNode = NodeMocks.getFunctionDeclarationNode('test', functionDeclarationBlockStatementNode);
+            functionDeclarationNode = Nodes.getFunctionDeclarationNode('test', [], functionDeclarationBlockStatementNode);
 
-            programNode = NodeMocks.getProgramNode([
+            programNode = Nodes.getProgramNode([
                 functionDeclarationNode
             ]);
 
@@ -203,37 +209,43 @@ describe('NodeUtils', () => {
             programNode: ESTree.Program;
 
         beforeEach(() => {
-            expressionStatementNode1 = NodeMocks.getExpressionStatementNode();
-            expressionStatementNode2 = NodeMocks.getExpressionStatementNode();
-            expressionStatementNode3 = NodeMocks.getExpressionStatementNode();
+            expressionStatementNode1 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+            expressionStatementNode2 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+            expressionStatementNode3 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
 
-            ifStatementBlockStatementNode2 = NodeMocks.getBlockStatementNode([
+            ifStatementBlockStatementNode2 = Nodes.getBlockStatementNode([
                 expressionStatementNode3
             ]);
 
-            ifStatementNode2 = NodeMocks.getIfStatementNode(ifStatementBlockStatementNode2);
+            ifStatementNode2 = Nodes.getIfStatementNode(
+                Nodes.getLiteralNode(true),
+                ifStatementBlockStatementNode2
+            );
 
-            functionDeclarationBlockStatementNode2 = NodeMocks.getBlockStatementNode([
+            functionDeclarationBlockStatementNode2 = Nodes.getBlockStatementNode([
                 ifStatementNode2,
                 expressionStatementNode2
             ]);
 
-            functionDeclarationNode2 = NodeMocks.getFunctionDeclarationNode('test', functionDeclarationBlockStatementNode2);
+            functionDeclarationNode2 = Nodes.getFunctionDeclarationNode('test', [], functionDeclarationBlockStatementNode2);
 
-            ifStatementBlockStatementNode1 = NodeMocks.getBlockStatementNode([
+            ifStatementBlockStatementNode1 = Nodes.getBlockStatementNode([
                 functionDeclarationNode2
             ]);
 
-            ifStatementNode1 = NodeMocks.getIfStatementNode(ifStatementBlockStatementNode1);
+            ifStatementNode1 = Nodes.getIfStatementNode(
+                Nodes.getLiteralNode(true),
+                ifStatementBlockStatementNode1
+            );
 
-            functionDeclarationBlockStatementNode1 = NodeMocks.getBlockStatementNode([
+            functionDeclarationBlockStatementNode1 = Nodes.getBlockStatementNode([
                 expressionStatementNode1,
                 ifStatementNode1
             ]);
 
-            functionDeclarationNode1 = NodeMocks.getFunctionDeclarationNode('test', functionDeclarationBlockStatementNode1);
+            functionDeclarationNode1 = Nodes.getFunctionDeclarationNode('test', [], functionDeclarationBlockStatementNode1);
 
-            programNode = NodeMocks.getProgramNode([
+            programNode = Nodes.getProgramNode([
                 functionDeclarationNode1
             ]);
 
@@ -277,19 +289,22 @@ describe('NodeUtils', () => {
             programNode: ESTree.Program;
 
         beforeEach(() => {
-            expressionStatementNode1 = NodeMocks.getExpressionStatementNode();
-            expressionStatementNode2 = NodeMocks.getExpressionStatementNode();
+            expressionStatementNode1 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+            expressionStatementNode2 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
 
-            ifStatementBlockStatementNode = NodeMocks.getBlockStatementNode([
+            ifStatementBlockStatementNode = Nodes.getBlockStatementNode([
                 expressionStatementNode1,
                 expressionStatementNode2
             ]);
 
-            ifStatementNode = NodeMocks.getIfStatementNode(ifStatementBlockStatementNode);
+            ifStatementNode = Nodes.getIfStatementNode(
+                Nodes.getLiteralNode(true),
+                ifStatementBlockStatementNode
+            );
         });
 
         it('should parentize given AST-tree with `ProgramNode` as root node', () => {
-            programNode = NodeMocks.getProgramNode([
+            programNode = Nodes.getProgramNode([
                 ifStatementNode
             ]);
 
@@ -303,7 +318,7 @@ describe('NodeUtils', () => {
         });
 
         it('should parentize given AST-tree', () => {
-            programNode = NodeMocks.getProgramNode([
+            programNode = Nodes.getProgramNode([
                 ifStatementNode
             ]);
             programNode['parentNode'] = programNode;

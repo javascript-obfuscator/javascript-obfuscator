@@ -36,7 +36,7 @@ export class FunctionObfuscator extends AbstractNodeTransformer {
      * @param options
      */
     constructor(
-        @inject(ServiceIdentifiers['Factory<IObfuscatorReplacer>']) nodeObfuscatorsReplacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscatorReplacer,
+        @inject(ServiceIdentifiers.Factory__IObfuscatorReplacer) nodeObfuscatorsReplacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscatorReplacer,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
@@ -72,7 +72,7 @@ export class FunctionObfuscator extends AbstractNodeTransformer {
      * @param nodeIdentifier
      */
     private replaceFunctionParams (functionNode: ESTree.Function, nodeIdentifier: string): void {
-        let traverseVisitor: estraverse.Visitor = {
+        const traverseVisitor: estraverse.Visitor = {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isReplaceableIdentifierNode(node, parentNode)) {
                     const newNodeName: string = this.identifierReplacer.replace(node.name, nodeIdentifier);

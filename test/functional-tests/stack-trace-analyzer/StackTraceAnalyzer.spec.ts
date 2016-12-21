@@ -15,7 +15,7 @@ import { readFileAsString } from '../../helpers/readFileAsString';
 
 import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
 import { Node } from '../../../src/node/Node';
-import { NodeMocks } from '../../mocks/NodeMocks';
+import { Nodes } from '../../../src/node/Nodes';
 import { NodeUtils } from '../../../src/node/NodeUtils';
 
 /**
@@ -157,7 +157,7 @@ describe('StackTraceAnalyzer', () => {
             expectedStackTraceData: IStackTraceData[];
 
         it('should returns correct IStackTraceData - variant #1: basic-1', () => {
-            astTree = NodeMocks.getProgramNode(
+            astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/stack-trace-analyzer/basic-1.js')
                 )
@@ -204,7 +204,7 @@ describe('StackTraceAnalyzer', () => {
         });
 
         it('should returns correct IStackTraceData - variant #2: basic-2', () => {
-            astTree = NodeMocks.getProgramNode(
+            astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/stack-trace-analyzer/basic-2.js')
                 )
@@ -240,7 +240,7 @@ describe('StackTraceAnalyzer', () => {
         });
 
         it('should returns correct IStackTraceData - variant #3: deep conditions nesting', () => {
-            astTree = NodeMocks.getProgramNode(
+            astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/stack-trace-analyzer/deep-conditions-nesting.js')
                 )
@@ -276,7 +276,7 @@ describe('StackTraceAnalyzer', () => {
         });
 
         it('should returns correct IStackTraceData - variant #4: call before declaration', () => {
-            astTree = NodeMocks.getProgramNode(
+            astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/stack-trace-analyzer/call-before-declaration.js')
                 )
@@ -296,7 +296,7 @@ describe('StackTraceAnalyzer', () => {
         });
 
         it('should returns correct IStackTraceData - variant #5: call expression of object member #1', () => {
-            astTree = NodeMocks.getProgramNode(
+            astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/stack-trace-analyzer/call-expression-of-object-member-1.js')
                 )
@@ -352,7 +352,7 @@ describe('StackTraceAnalyzer', () => {
         });
 
         it('should returns correct IStackTraceData - variant #5: call expression of object member #2', () => {
-            astTree = NodeMocks.getProgramNode(
+            astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/stack-trace-analyzer/call-expression-of-object-member-2.js')
                 )
@@ -377,7 +377,7 @@ describe('StackTraceAnalyzer', () => {
         });
 
         it('should returns correct IStackTraceData - variant #6: no call expressions', () => {
-            astTree = NodeMocks.getProgramNode(
+            astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/stack-trace-analyzer/no-call-expressions.js')
                 )
@@ -391,7 +391,7 @@ describe('StackTraceAnalyzer', () => {
         });
 
         it('should returns correct IStackTraceData - variant #7: only call expression', () => {
-            astTree = NodeMocks.getProgramNode(
+            astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/stack-trace-analyzer/only-call-expression.js')
                 )
@@ -405,7 +405,7 @@ describe('StackTraceAnalyzer', () => {
         });
 
         it('should returns correct IStackTraceData - variant #8: self-invoking functions', () => {
-            astTree = NodeMocks.getProgramNode(
+            astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/stack-trace-analyzer/self-invoking-functions.js')
                 )
@@ -437,7 +437,7 @@ describe('StackTraceAnalyzer', () => {
         });
 
         it('should returns correct IStackTraceData - variant #9: no recursion', () => {
-            astTree = NodeMocks.getProgramNode(
+            astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/stack-trace-analyzer/no-recursion.js')
                 )

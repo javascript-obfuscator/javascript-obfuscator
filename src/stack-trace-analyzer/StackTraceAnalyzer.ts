@@ -74,7 +74,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     private calleeDataExtractorsFactory: (calleeDataExtractorName: CalleeDataExtractors) => ICalleeDataExtractor;
 
     constructor (
-        @inject(ServiceIdentifiers['Factory<ICalleeDataExtractor>']) calleeDataExtractorsFactory: TCalleeDataExtractorsFactory
+        @inject(ServiceIdentifiers.Factory__ICalleeDataExtractor) calleeDataExtractorsFactory: TCalleeDataExtractorsFactory
     ) {
         this.calleeDataExtractorsFactory = calleeDataExtractorsFactory;
     }

@@ -3,6 +3,8 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as format from 'string-template';
 
+import { TStatement } from '../../types/node/TStatement';
+
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IStorage } from '../../interfaces/storages/IStorage';
 
@@ -21,6 +23,7 @@ import { StringArrayRc4DecodeNodeTemplate } from '../../templates/custom-nodes/s
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
+import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class StringArrayCallsWrapper extends AbstractCustomNode {
@@ -67,41 +70,10 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
     }
 
     /**
-     * @returns {string}
+     * @returns {TStatement[]}
      */
-    private getDecodeStringArrayTemplate (): string {
-        let decodeStringArrayTemplate: string = '',
-            selfDefendingCode: string = '';
-
-        if (this.options.selfDefending) {
-            selfDefendingCode = format(SelfDefendingTemplate(), {
-                stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
-                stringArrayName: this.stringArrayName
-            });
-        }
-
-        switch (this.options.stringArrayEncoding) {
-            case StringArrayEncoding.base64:
-                decodeStringArrayTemplate = format(StringArrayBase64DecodeNodeTemplate(), {
-                    atobPolyfill: AtobTemplate(),
-                    selfDefendingCode,
-                    stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
-                });
-
-                break;
-
-            case StringArrayEncoding.rc4:
-                decodeStringArrayTemplate = format(StringArrayRc4DecodeNodeTemplate(), {
-                    atobPolyfill: AtobTemplate(),
-                    rc4Polyfill: Rc4Template(),
-                    selfDefendingCode,
-                    stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
-                });
-
-                break;
-        }
-
-        return decodeStringArrayTemplate;
+    protected getNodeStructure (): TStatement[] {
+        return NodeUtils.convertCodeToStructure(this.getTemplate());
     }
 
     /**
@@ -121,5 +93,43 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
                 seed: this.options.seed
             }
         ).getObfuscatedCode();
+    }
+
+    /**
+     * @returns {string}
+     */
+    private getDecodeStringArrayTemplate (): string {
+        let decodeStringArrayTemplate: string = '',
+            selfDefendingCode: string = '';
+
+        if (this.options.selfDefending) {
+            selfDefendingCode = format(SelfDefendingTemplate(), {
+                stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
+                stringArrayName: this.stringArrayName
+            });
+        }
+
+        switch (this.options.stringArrayEncoding) {
+            case StringArrayEncoding.rc4:
+                decodeStringArrayTemplate = format(StringArrayRc4DecodeNodeTemplate(), {
+                    atobPolyfill: AtobTemplate(),
+                    rc4Polyfill: Rc4Template(),
+                    selfDefendingCode,
+                    stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
+                });
+
+                break;
+
+            case StringArrayEncoding.base64:
+                decodeStringArrayTemplate = format(StringArrayBase64DecodeNodeTemplate(), {
+                    atobPolyfill: AtobTemplate(),
+                    selfDefendingCode,
+                    stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
+                });
+
+                break;
+        }
+
+        return decodeStringArrayTemplate;
     }
 }

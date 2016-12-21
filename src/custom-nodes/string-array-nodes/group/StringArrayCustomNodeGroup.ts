@@ -29,15 +29,15 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
     protected appendEvent: TObfuscationEvent = ObfuscationEvents.AfterObfuscation;
 
     /**
-     * @type {TCustomNodeFactory}
-     */
-    private readonly customNodeFactory: TCustomNodeFactory;
-
-    /**
      * @type {Map<CustomNodes, ICustomNode>}
      */
     @initializable()
     protected customNodes: Map <CustomNodes, ICustomNode>;
+
+    /**
+     * @type {TCustomNodeFactory}
+     */
+    private readonly customNodeFactory: TCustomNodeFactory;
 
     /**
      * @type {IObfuscationEventEmitter}
@@ -57,9 +57,9 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers['Factory<ICustomNode>']) customNodeFactory: TCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
         @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
-        @inject(ServiceIdentifiers['IStorage<string>']) stringArrayStorage: IStorage<string>,
+        @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: IStorage<string>,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
@@ -108,7 +108,7 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
         const stringArrayStorageId: string = this.stringArrayStorage.getStorageId();
 
         const stringArrayName: string = `_${Utils.hexadecimalPrefix}${stringArrayStorageId}`;
-        const stringArrayCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${Utils.stringRotate(stringArrayStorageId, 2)}`;
+        const stringArrayCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${Utils.stringRotate(stringArrayStorageId, 1)}`;
 
         let stringArrayRotateValue: number;
 

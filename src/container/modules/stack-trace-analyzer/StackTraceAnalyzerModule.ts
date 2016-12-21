@@ -30,7 +30,7 @@ export const stackTraceAnalyzerModule: interfaces.ContainerModule = new Containe
         .whenTargetNamed(CalleeDataExtractors.ObjectExpressionCalleeDataExtractor);
 
     // node transformers factory
-    bind<ICalleeDataExtractor>(ServiceIdentifiers['Factory<ICalleeDataExtractor>'])
+    bind<ICalleeDataExtractor>(ServiceIdentifiers.Factory__ICalleeDataExtractor)
         .toFactory<ICalleeDataExtractor>((context: interfaces.Context) => {
             const cache: Map <CalleeDataExtractors, ICalleeDataExtractor> = new Map();
 

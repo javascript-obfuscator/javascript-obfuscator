@@ -3,6 +3,8 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as format from 'string-template';
 
+import { TStatement } from '../../types/node/TStatement';
+
 import { IOptions } from '../../interfaces/options/IOptions';
 
 import { initializable } from '../../decorators/Initializable';
@@ -10,6 +12,7 @@ import { initializable } from '../../decorators/Initializable';
 import { DebugProtectionFunctionIntervalTemplate } from '../../templates/custom-nodes/debug-protection-nodes/debug-protection-function-interval-node/DebugProtectionFunctionIntervalTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
+import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class DebugProtectionFunctionIntervalNode extends AbstractCustomNode {
@@ -33,6 +36,13 @@ export class DebugProtectionFunctionIntervalNode extends AbstractCustomNode {
      */
     public initialize (debugProtectionFunctionName: string): void {
         this.debugProtectionFunctionName = debugProtectionFunctionName;
+    }
+
+    /**
+     * @returns {TStatement[]}
+     */
+    protected getNodeStructure (): TStatement[] {
+        return NodeUtils.convertCodeToStructure(this.getTemplate());
     }
 
     /**

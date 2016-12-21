@@ -1,7 +1,9 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import * as format from 'string-template';
+import * as ESTree from 'estree';
+
+import { TStatement } from '../../types/node/TStatement';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -9,9 +11,9 @@ import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { ControlFlowStorageTemplate } from '../../templates/custom-nodes/control-flow-storage-nodes/ControlFlowStorageTemplate';
-
 import { AbstractCustomNode } from '../AbstractCustomNode';
+import { Nodes } from '../../node/Nodes';
+import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class ControlFlowStorageNode extends AbstractCustomNode {
@@ -38,12 +40,27 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
     }
 
     /**
-     * @returns {string}
+     * @returns {TStatement[]}
      */
-    protected getTemplate (): string {
-        return format(ControlFlowStorageTemplate(), {
-            controlFlowStorage: this.controlFlowStorage.toString(),
-            controlFlowStorageName: this.controlFlowStorage.getStorageId()
-        });
+    protected getNodeStructure (): TStatement[] {
+        const structure: ESTree.Node = Nodes.getVariableDeclarationNode([
+            Nodes.getVariableDeclaratorNode(
+                Nodes.getIdentifierNode(this.controlFlowStorage.getStorageId()),
+                Nodes.getObjectExpressionNode(
+                    Array
+                        .from(this.controlFlowStorage.getStorage())
+                        .map(([key, value]: [string, ICustomNode]) => {
+                            return Nodes.getPropertyNode(
+                                Nodes.getIdentifierNode(key),
+                                <any>value.getNode()[0]
+                            );
+                        })
+                )
+            )
+        ]);
+
+        NodeUtils.parentize(structure);
+
+        return [structure];
     }
 }

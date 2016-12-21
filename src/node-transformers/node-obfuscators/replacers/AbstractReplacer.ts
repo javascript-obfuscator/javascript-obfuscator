@@ -9,7 +9,7 @@ export abstract class AbstractReplacer implements IObfuscatorReplacer {
     /**
      * @type {IOptions}
      */
-    protected readonly options : IOptions;
+    protected readonly options: IOptions;
 
     /**
      * @param options

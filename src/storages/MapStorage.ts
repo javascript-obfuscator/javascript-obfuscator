@@ -47,7 +47,7 @@ export abstract class MapStorage <T> implements IStorage <T> {
      * @returns {number}
      */
     public getLength (): number {
-        return Array.from(this.storage).length;
+        return this.storage.size;
     }
 
     /**

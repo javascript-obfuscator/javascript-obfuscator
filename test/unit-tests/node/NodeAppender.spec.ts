@@ -14,7 +14,7 @@ import { readFileAsString } from '../../helpers/readFileAsString';
 
 import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
 import { NodeAppender } from '../../../src/node/NodeAppender';
-import { NodeMocks } from '../../mocks/NodeMocks';
+import { Nodes } from '../../../src/node/Nodes';
 import { NodeUtils } from '../../../src/node/NodeUtils';
 
 describe('NodeAppender', () => {
@@ -28,13 +28,13 @@ describe('NodeAppender', () => {
                 var test = 1;
             `);
 
-            astTree = NodeMocks.getProgramNode(
+            astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/node-appender/append-node.js')
                 )
             );
 
-            expectedAstTree = NodeMocks.getProgramNode(
+            expectedAstTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/node-appender/append-node-expected.js')
                 )
@@ -68,13 +68,13 @@ describe('NodeAppender', () => {
         });
 
         it('should append node into first and deepest function call in calls trace - variant #1', () => {
-            astTree = NodeMocks.getProgramNode(
+            astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/node-appender/append-node-to-optimal-block-scope/variant-1.js')
                 )
             );
 
-            expectedAstTree = NodeMocks.getProgramNode(
+            expectedAstTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/node-appender/append-node-to-optimal-block-scope/variant-1-expected.js')
                 )
@@ -87,13 +87,13 @@ describe('NodeAppender', () => {
         });
 
         it('should append node into first and deepest function call in calls trace - variant #2', () => {
-            astTree = NodeMocks.getProgramNode(
+            astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/node-appender/append-node-to-optimal-block-scope/variant-2.js')
                 )
             );
 
-            expectedAstTree = NodeMocks.getProgramNode(
+            expectedAstTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/node-appender/append-node-to-optimal-block-scope/variant-2-expected.js')
                 )
@@ -109,7 +109,7 @@ describe('NodeAppender', () => {
             let astTree: ESTree.Program;
 
             beforeEach(() => {
-                astTree = NodeMocks.getProgramNode(
+                astTree = Nodes.getProgramNode(
                     NodeUtils.convertCodeToStructure(
                         readFileAsString('./test/fixtures/node-appender/append-node-to-optimal-block-scope/by-index.js')
 
@@ -118,7 +118,7 @@ describe('NodeAppender', () => {
             });
 
             it('should append node into deepest function call by specified index in calls trace - variant #1', () => {
-                expectedAstTree = NodeMocks.getProgramNode(
+                expectedAstTree = Nodes.getProgramNode(
                     NodeUtils.convertCodeToStructure(
                         readFileAsString('./test/fixtures/node-appender/append-node-to-optimal-block-scope/by-index-variant-1-expected.js')
 
@@ -132,7 +132,7 @@ describe('NodeAppender', () => {
             });
 
             it('should append node into deepest function call by specified index in calls trace - variant #2', () => {
-                expectedAstTree = NodeMocks.getProgramNode(
+                expectedAstTree = Nodes.getProgramNode(
                     NodeUtils.convertCodeToStructure(
                         readFileAsString('./test/fixtures/node-appender/append-node-to-optimal-block-scope/by-index-variant-2-expected.js')
 
@@ -146,12 +146,12 @@ describe('NodeAppender', () => {
             });
 
             it('should append node into deepest function call by specified index in calls trace - variant #3', () => {
-                astTree = NodeMocks.getProgramNode(
+                astTree = Nodes.getProgramNode(
                     NodeUtils.convertCodeToStructure(
                         readFileAsString('./test/fixtures/node-appender/append-node-to-optimal-block-scope/by-index-variant-3.js')
                     )
                 );
-                expectedAstTree = NodeMocks.getProgramNode(
+                expectedAstTree = Nodes.getProgramNode(
                     NodeUtils.convertCodeToStructure(
                         readFileAsString('./test/fixtures/node-appender/append-node-to-optimal-block-scope/by-index-variant-3-expected.js')
                     )
@@ -193,13 +193,13 @@ describe('NodeAppender', () => {
                 var test = 1;
             `);
 
-            astTree = NodeMocks.getProgramNode(
+            astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/node-appender/insert-node-at-index.js')
                 )
             );
 
-            expectedAstTree = NodeMocks.getProgramNode(
+            expectedAstTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/node-appender/insert-node-at-index-expected.js')
                 )
@@ -226,13 +226,13 @@ describe('NodeAppender', () => {
                 var test = 1;
             `);
 
-            astTree = NodeMocks.getProgramNode(
+            astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/node-appender/prepend-node.js')
                 )
             );
 
-            expectedAstTree = NodeMocks.getProgramNode(
+            expectedAstTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString('./test/fixtures/node-appender/prepend-node-expected.js')
                 )

@@ -2,7 +2,6 @@ import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as escodegen from 'escodegen';
-import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -26,7 +25,7 @@ export class MemberExpressionObfuscator extends AbstractNodeTransformer {
      * @param options
      */
     constructor(
-        @inject(ServiceIdentifiers['Factory<IObfuscatorReplacer>']) replacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscatorReplacer,
+        @inject(ServiceIdentifiers.Factory__IObfuscatorReplacer) replacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscatorReplacer,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
@@ -38,24 +37,18 @@ export class MemberExpressionObfuscator extends AbstractNodeTransformer {
      * @param memberExpressionNode
      */
     public transformNode (memberExpressionNode: ESTree.MemberExpression): void {
-        estraverse.traverse(memberExpressionNode.property, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (Node.isLiteralNode(node)) {
-                    this.obfuscateLiteralProperty(node);
+        if (Node.isLiteralNode(memberExpressionNode.property)) {
+            memberExpressionNode.property = this.obfuscateLiteralProperty(memberExpressionNode.property);
+        }
 
-                    return;
-                }
-
-                if (Node.isIdentifierNode(node)) {
-                    if (memberExpressionNode.computed) {
-                        return;
-                    }
-
-                    memberExpressionNode.computed = true;
-                    this.obfuscateIdentifierProperty(node);
-                }
+        if (Node.isIdentifierNode(memberExpressionNode.property)) {
+            if (memberExpressionNode.computed) {
+                return;
             }
-        });
+
+            memberExpressionNode.computed = true;
+            memberExpressionNode.property = this.obfuscateIdentifierProperty(memberExpressionNode.property);
+        }
     }
 
     /**
@@ -69,22 +62,18 @@ export class MemberExpressionObfuscator extends AbstractNodeTransformer {
      *     object[identifier] = 1;
      *
      * @param node
+     * @returns {ESTree.Literal}
      */
-    private obfuscateIdentifierProperty (node: ESTree.Identifier): void {
-        const nodeValue: string = node.name;
-        const literalNode: ESTree.Literal = {
-            raw: `'${nodeValue}'`,
-            'x-verbatim-property': {
-                content: this.stringLiteralReplacer.replace(nodeValue),
-                precedence: escodegen.Precedence.Primary
-            },
+    private obfuscateIdentifierProperty (node: ESTree.Identifier): ESTree.Literal {
+        return {
             type: NodeType.Literal,
-            value: nodeValue
+            value: node.name,
+            raw: `'${node.name}'`,
+            'x-verbatim-property': {
+                content: this.stringLiteralReplacer.replace(node.name),
+                precedence: escodegen.Precedence.Primary
+            }
         };
-
-        delete node.name;
-
-        Object.assign(node, literalNode);
     }
 
     /**
@@ -95,13 +84,16 @@ export class MemberExpressionObfuscator extends AbstractNodeTransformer {
      *     object[_0x23d45[25]] = 1;
      *
      * @param node
+     * @returns {ESTree.Literal}
      */
-    private obfuscateLiteralProperty (node: ESTree.Literal): void {
+    private obfuscateLiteralProperty (node: ESTree.Literal): ESTree.Literal {
         if (typeof node.value === 'string' && !node['x-verbatim-property']) {
             node['x-verbatim-property'] = {
-                content : this.stringLiteralReplacer.replace(node.value),
+                content: this.stringLiteralReplacer.replace(node.value),
                 precedence: escodegen.Precedence.Primary
             };
         }
+
+        return node;
     }
 }

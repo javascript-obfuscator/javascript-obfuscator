@@ -3,6 +3,8 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as format from 'string-template';
 
+import { TStatement } from '../../types/node/TStatement';
+
 import { IOptions } from '../../interfaces/options/IOptions';
 
 import { initializable } from '../../decorators/Initializable';
@@ -11,6 +13,7 @@ import { DomainLockNodeTemplate } from '../../templates/custom-nodes/domain-lock
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { CryptUtils } from '../../utils/CryptUtils';
+import { NodeUtils } from '../../node/NodeUtils';
 import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
@@ -38,11 +41,18 @@ export class DomainLockNode extends AbstractCustomNode {
     }
 
     /**
+     * @returns {TStatement[]}
+     */
+    protected getNodeStructure (): TStatement[] {
+        return NodeUtils.convertCodeToStructure(this.getTemplate());
+    }
+
+    /**
      * @returns {string}
      */
     protected getTemplate (): string {
-        let domainsString: string = this.options.domainLock.join(';'),
-            [hiddenDomainsString, diff]: string[] = CryptUtils.hideString(domainsString, domainsString.length * 3);
+        const domainsString: string = this.options.domainLock.join(';');
+        const [hiddenDomainsString, diff]: string[] = CryptUtils.hideString(domainsString, domainsString.length * 3);
 
         return format(DomainLockNodeTemplate(), {
             domainLockFunctionName: RandomGeneratorUtils.getRandomVariableName(),

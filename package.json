@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "0.9.0-dev.2",
+  "version": "0.9.0-dev.3",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -44,10 +44,9 @@
     "@types/esprima": "2.1.33",
     "@types/estraverse": "0.0.6",
     "@types/estree": "0.0.34",
-    "@types/joi": "9.0.33",
-    "@types/lodash": "^4.14.43",
+    "@types/lodash": "^4.14.44",
     "@types/mkdirp": "0.3.29",
-    "@types/mocha": "2.2.33",
+    "@types/mocha": "2.2.34",
     "@types/node": "6.0.52",
     "@types/sinon": "1.16.33",
     "@types/string-template": "1.0.2",
@@ -63,6 +62,7 @@
     "sinon": "2.0.0-pre.3",
     "ts-node": "1.7.2",
     "tslint": "4.1.1",
+    "tslint-loader": "^3.3.0",
     "typescript": "2.1.4",
     "webpack": "2.1.0-beta.27",
     "webpack-node-externals": "1.5.4"

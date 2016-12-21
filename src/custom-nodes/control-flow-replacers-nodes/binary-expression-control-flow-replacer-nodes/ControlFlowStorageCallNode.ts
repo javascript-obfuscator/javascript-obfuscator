@@ -1,15 +1,16 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
-import * as format from 'string-template';
+import { Expression } from 'estree';
+
+import { TStatement } from '../../../types/node/TStatement';
 
 import { IOptions } from '../../../interfaces/options/IOptions';
 
 import { initializable } from '../../../decorators/Initializable';
 
-import { ControlFlowStorageCallTemplate } from '../../../templates/custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/ControlFlowStorageCallTemplate';
-
 import { AbstractCustomNode } from '../../AbstractCustomNode';
+import { Nodes } from '../../../node/Nodes';
 
 @injectable()
 export class ControlFlowStorageCallNode extends AbstractCustomNode {
@@ -26,16 +27,16 @@ export class ControlFlowStorageCallNode extends AbstractCustomNode {
     private controlFlowStorageName: string;
 
     /**
-     * @type {string}
+     * @type {Expression}
      */
     @initializable()
-    private leftValue: string;
+    private leftValue: Expression;
 
     /**
-     * @type {string}
+     * @type {ESTree.Expression}
      */
     @initializable()
-    private rightValue: string;
+    private rightValue: Expression;
 
     /**
      * @param options
@@ -55,8 +56,8 @@ export class ControlFlowStorageCallNode extends AbstractCustomNode {
     public initialize (
         controlFlowStorageName: string,
         controlFlowStorageKey: string,
-        leftValue: string,
-        rightValue: string,
+        leftValue: Expression,
+        rightValue: Expression,
     ): void {
         this.controlFlowStorageName = controlFlowStorageName;
         this.controlFlowStorageKey = controlFlowStorageKey;
@@ -64,15 +65,20 @@ export class ControlFlowStorageCallNode extends AbstractCustomNode {
         this.rightValue = rightValue;
     }
 
-    /**
-     * @returns {string}
-     */
-    protected getTemplate (): string {
-        return format(ControlFlowStorageCallTemplate(), {
-            controlFlowStorageKey: this.controlFlowStorageKey,
-            controlFlowStorageName: this.controlFlowStorageName,
-            leftValue: this.leftValue,
-            rightValue: this.rightValue
-        });
+    protected getNodeStructure (): TStatement[] {
+        return [
+            Nodes.getExpressionStatementNode(
+                Nodes.getCallExpressionNode(
+                    Nodes.getMemberExpressionNode(
+                        Nodes.getIdentifierNode(this.controlFlowStorageName),
+                        Nodes.getIdentifierNode(this.controlFlowStorageKey)
+                    ),
+                    [
+                        this.leftValue,
+                        this.rightValue
+                    ]
+                )
+            )
+        ];
     }
 }

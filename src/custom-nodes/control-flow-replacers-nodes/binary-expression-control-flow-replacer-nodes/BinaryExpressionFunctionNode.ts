@@ -1,24 +1,25 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
-import * as format from 'string-template';
+import { BinaryOperator } from 'estree';
+
+import { TStatement } from '../../../types/node/TStatement';
 
 import { IOptions } from '../../../interfaces/options/IOptions';
 
 import { initializable } from '../../../decorators/Initializable';
 
-import { BinaryExpressionFunctionTemplate } from '../../../templates/custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/BinaryExpressionFunctionTemplate';
-
 import { AbstractCustomNode } from '../../AbstractCustomNode';
+import { Nodes } from '../../../node/Nodes';
 import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class BinaryExpressionFunctionNode extends AbstractCustomNode {
     /**
-     * @type {string}
+     * @type {BinaryOperator}
      */
     @initializable()
-    private operator: string;
+    private operator: BinaryOperator;
 
     /**
      * @param options
@@ -32,17 +33,31 @@ export class BinaryExpressionFunctionNode extends AbstractCustomNode {
     /**
      * @param operator
      */
-    public initialize (operator: string): void {
+    public initialize (operator: BinaryOperator): void {
         this.operator = operator;
     }
 
     /**
-     * @returns {string}
+     * @returns {TStatement[]}
      */
-    protected getTemplate (): string {
-        return format(BinaryExpressionFunctionTemplate(), {
-            functionName: RandomGeneratorUtils.getRandomVariableName(1),
-            operator: this.operator
-        });
+    protected getNodeStructure (): TStatement[] {
+        return [
+            Nodes.getFunctionDeclarationNode(
+                RandomGeneratorUtils.getRandomVariableName(1),
+                [
+                    Nodes.getIdentifierNode('x'),
+                    Nodes.getIdentifierNode('y')
+                ],
+                Nodes.getBlockStatementNode([
+                    Nodes.getReturnStatementNode(
+                        Nodes.getBinaryExpressionNode(
+                            this.operator,
+                            Nodes.getIdentifierNode('x'),
+                            Nodes.getIdentifierNode('y')
+                        )
+                    )
+                ])
+            )
+        ];
     }
 }

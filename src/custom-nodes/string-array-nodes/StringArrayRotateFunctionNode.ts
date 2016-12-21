@@ -3,6 +3,8 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as format from 'string-template';
 
+import { TStatement } from '../../types/node/TStatement';
+
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IStorage } from '../../interfaces/storages/IStorage';
 
@@ -15,6 +17,7 @@ import { StringArrayRotateFunctionTemplate } from '../../templates/custom-nodes/
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
+import { NodeUtils } from '../../node/NodeUtils';
 import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 import { Utils } from '../../utils/Utils';
 
@@ -63,12 +66,20 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     }
 
     /**
+     * @returns {TStatement[]}
+     */
+    protected getNodeStructure (): TStatement[] {
+        return NodeUtils.convertCodeToStructure(this.getTemplate());
+    }
+
+    /**
      * @returns {string}
      */
     protected getTemplate (): string {
-        let code: string = '',
-            timesName: string = RandomGeneratorUtils.getRandomVariableName(),
-            whileFunctionName: string = RandomGeneratorUtils.getRandomVariableName();
+        const timesName: string = RandomGeneratorUtils.getRandomVariableName();
+        const whileFunctionName: string = RandomGeneratorUtils.getRandomVariableName();
+
+        let code: string = '';
 
         if (this.options.selfDefending) {
             code = format(SelfDefendingTemplate(), {

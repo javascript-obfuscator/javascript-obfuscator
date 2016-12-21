@@ -14,7 +14,6 @@ import { CustomNodes } from '../../../enums/container/CustomNodes';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
 import { Node } from '../../../node/Node';
-import { NodeUtils } from '../../../node/NodeUtils';
 import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 
 @injectable()
@@ -39,7 +38,7 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers['Factory<ICustomNode>']) customNodeFactory: TCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
@@ -87,7 +86,8 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
                 controlFlowStorageId
             );
 
-        let storageKeysForCurrentOperator: string[] | undefined = storageKeysByBinaryOperator.get(binaryExpressionNode.operator);
+        const storageKeysForCurrentOperator: string[] | undefined = storageKeysByBinaryOperator.get(binaryExpressionNode.operator);
+
         let storageKey: string;
 
         if (
@@ -110,8 +110,8 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
         controlFlowStorageCallCustomNode.initialize(
             controlFlowStorageId,
             storageKey,
-            NodeUtils.convertStructureToCode([binaryExpressionNode.left]),
-            NodeUtils.convertStructureToCode([binaryExpressionNode.right])
+            binaryExpressionNode.left,
+            binaryExpressionNode.right
         );
 
         const statementNode: TStatement = controlFlowStorageCallCustomNode.getNode()[0];

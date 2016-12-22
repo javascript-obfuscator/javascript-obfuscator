@@ -60,16 +60,18 @@ module.exports =
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 /******/
-/******/ 	// define getter function for harmory exports
+/******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -120,7 +122,7 @@ module.exports = require("tslib");
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _symbol = __webpack_require__(130);
 
@@ -178,7 +180,7 @@ module.exports = require("babel-runtime/helpers/possibleConstructorReturn");
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -261,9 +263,9 @@ exports.RandomGeneratorUtils = RandomGeneratorUtils;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _getIterator2 = __webpack_require__(24);
+
+var _getIterator2 = __webpack_require__(21);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -281,7 +283,7 @@ var escodegen = __webpack_require__(25);
 var esprima = __webpack_require__(49);
 var estraverse = __webpack_require__(14);
 var NodeType_1 = __webpack_require__(16);
-var Node_1 = __webpack_require__(11);
+var Node_1 = __webpack_require__(12);
 
 var NodeUtils = function () {
     function NodeUtils() {
@@ -454,7 +456,7 @@ exports.NodeUtils = NodeUtils;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _defineProperty = __webpack_require__(128);
 
@@ -507,10 +509,16 @@ exports.initializable = initializable;
 
 /***/ },
 /* 11 */
+/***/ function(module, exports) {
+
+module.exports = require("babel-runtime/core-js/map");
+
+/***/ },
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -659,17 +667,11 @@ var Node = function () {
 exports.Node = Node;
 
 /***/ },
-/* 12 */
-/***/ function(module, exports) {
-
-module.exports = require("babel-runtime/core-js/map");
-
-/***/ },
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _from = __webpack_require__(43);
 
@@ -679,7 +681,7 @@ var _slicedToArray2 = __webpack_require__(34);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _getIterator2 = __webpack_require__(24);
+var _getIterator2 = __webpack_require__(21);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -804,11 +806,12 @@ var Utils = function () {
             var nonLatinAndNonDigitsOnly = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
             var radix = 16;
-            var regexp = new RegExp('[\x00-\x7F]');
+            var replaceRegExp = new RegExp('[\\s\\S]', 'g');
             var escapeRegExp = new RegExp('[^a-zA-Z0-9]');
+            var regexp = new RegExp('[\\x00-\\x7F]');
             var prefix = void 0,
                 template = void 0;
-            return "" + string.replace(/[\s\S]/g, function (escape) {
+            return "" + string.replace(replaceRegExp, function (escape) {
                 if (nonLatinAndNonDigitsOnly && !escapeRegExp.test(escape)) {
                     return escape;
                 }
@@ -840,7 +843,7 @@ module.exports = require("estraverse");
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -890,7 +893,7 @@ exports.AbstractCustomNode = AbstractCustomNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var Utils_1 = __webpack_require__(13);
 exports.NodeType = Utils_1.Utils.strEnumify({
@@ -933,7 +936,7 @@ exports.NodeType = Utils_1.Utils.strEnumify({
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -960,10 +963,10 @@ module.exports = require("string-template");
 
 /***/ },
 /* 19 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var NodeObfuscatorsReplacers;
 (function (NodeObfuscatorsReplacers) {
@@ -975,10 +978,10 @@ var NodeObfuscatorsReplacers;
 
 /***/ },
 /* 20 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var CustomNodes;
 (function (CustomNodes) {
@@ -1001,8 +1004,14 @@ var CustomNodes;
 /* 21 */
 /***/ function(module, exports) {
 
+module.exports = require("babel-runtime/core-js/get-iterator");
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
 "use strict";
-"use strict";
+
 
 exports.ObfuscationEvents = {
     AfterObfuscation: 'afterObfuscation',
@@ -1010,11 +1019,11 @@ exports.ObfuscationEvents = {
 };
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -1066,13 +1075,13 @@ var JavaScriptObfuscator = function () {
 exports.JavaScriptObfuscator = JavaScriptObfuscator;
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _getIterator2 = __webpack_require__(24);
+
+var _getIterator2 = __webpack_require__(21);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -1201,12 +1210,6 @@ var NodeAppender = function () {
 exports.NodeAppender = NodeAppender;
 
 /***/ },
-/* 24 */
-/***/ function(module, exports) {
-
-module.exports = require("babel-runtime/core-js/get-iterator");
-
-/***/ },
 /* 25 */
 /***/ function(module, exports) {
 
@@ -1217,7 +1220,7 @@ module.exports = require("escodegen");
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -1266,10 +1269,10 @@ exports.AbstractCustomNodeGroup = AbstractCustomNodeGroup;
 
 /***/ },
 /* 27 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 exports.SourceMapMode = {
     Inline: 'inline',
@@ -1281,7 +1284,7 @@ exports.SourceMapMode = {
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -1305,7 +1308,7 @@ exports.AbstractReplacer = AbstractReplacer;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _freeze = __webpack_require__(45);
 
@@ -1338,10 +1341,10 @@ exports.NO_CUSTOM_NODES_PRESET = (0, _freeze2.default)({
 
 /***/ },
 /* 30 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 exports.StringArrayEncoding = {
     base64: 'base64',
@@ -1353,7 +1356,7 @@ exports.StringArrayEncoding = {
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -1577,7 +1580,7 @@ exports.Nodes = Nodes;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -1598,7 +1601,7 @@ exports.AbstractCalleeDataExtractor = AbstractCalleeDataExtractor;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -1712,10 +1715,10 @@ module.exports = require("babel-runtime/helpers/toConsumableArray");
 
 /***/ },
 /* 36 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 exports.JSFuck = {
     False: '![]',
@@ -1776,10 +1779,10 @@ exports.JSFuck = {
 
 /***/ },
 /* 37 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var CalleeDataExtractors;
 (function (CalleeDataExtractors) {
@@ -1790,10 +1793,10 @@ var CalleeDataExtractors;
 
 /***/ },
 /* 38 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var CustomNodeGroups;
 (function (CustomNodeGroups) {
@@ -1806,10 +1809,10 @@ var CustomNodeGroups;
 
 /***/ },
 /* 39 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var NodeControlFlowReplacers;
 (function (NodeControlFlowReplacers) {
@@ -1818,10 +1821,10 @@ var NodeControlFlowReplacers;
 
 /***/ },
 /* 40 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var NodeTransformers;
 (function (NodeTransformers) {
@@ -1842,7 +1845,7 @@ var NodeTransformers;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _freeze = __webpack_require__(45);
 
@@ -1878,13 +1881,13 @@ exports.DEFAULT_PRESET = (0, _freeze2.default)({
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _toConsumableArray2 = __webpack_require__(35);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
-var _map = __webpack_require__(12);
+var _map = __webpack_require__(11);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -2019,7 +2022,7 @@ module.exports = require("path");
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -2092,7 +2095,7 @@ var JavaScriptObfuscatorInternal_1;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -2146,9 +2149,9 @@ exports.ObfuscationResult = ObfuscationResult;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _map = __webpack_require__(12);
+
+var _map = __webpack_require__(11);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -2172,9 +2175,9 @@ var ServiceIdentifiers_1 = __webpack_require__(4);
 var estraverse = __webpack_require__(14);
 var NodeTransformers_1 = __webpack_require__(40);
 var NodeType_1 = __webpack_require__(16);
-var ObfuscationEvents_1 = __webpack_require__(21);
+var ObfuscationEvents_1 = __webpack_require__(22);
 var VisitorDirection_1 = __webpack_require__(82);
-var Node_1 = __webpack_require__(11);
+var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(9);
 var Obfuscator = Obfuscator_1 = function () {
     function Obfuscator(stackTraceAnalyzer, obfuscationEventEmitter, customNodeGroupStorage, nodeTransformersFactory, options) {
@@ -2233,7 +2236,7 @@ var Obfuscator_1;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -2296,7 +2299,7 @@ exports.SourceMapCorrector = SourceMapCorrector;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -2392,7 +2395,7 @@ exports.CLIUtils = CLIUtils;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _keys = __webpack_require__(46);
 
@@ -2415,7 +2418,7 @@ var SourceMapMode_1 = __webpack_require__(27);
 var StringArrayEncoding_1 = __webpack_require__(30);
 var Default_1 = __webpack_require__(41);
 var CLIUtils_1 = __webpack_require__(55);
-var JavaScriptObfuscator_1 = __webpack_require__(22);
+var JavaScriptObfuscator_1 = __webpack_require__(23);
 
 var JavaScriptObfuscatorCLI = function () {
     function JavaScriptObfuscatorCLI(argv) {
@@ -2549,7 +2552,7 @@ exports.JavaScriptObfuscatorCLI = JavaScriptObfuscatorCLI;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -2625,9 +2628,9 @@ exports.InversifyContainerFacade = InversifyContainerFacade;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _map = __webpack_require__(12);
+
+var _map = __webpack_require__(11);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -2701,9 +2704,9 @@ exports.customNodesModule = new inversify_1.ContainerModule(function (bind) {
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _map = __webpack_require__(12);
+
+var _map = __webpack_require__(11);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -2733,9 +2736,9 @@ exports.nodeControlFlowTransformersModule = new inversify_1.ContainerModule(func
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _map = __webpack_require__(12);
+
+var _map = __webpack_require__(11);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -2771,9 +2774,9 @@ exports.nodeObfuscatorsModule = new inversify_1.ContainerModule(function (bind) 
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _map = __webpack_require__(12);
+
+var _map = __webpack_require__(11);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -2830,9 +2833,9 @@ exports.nodeTransformersModule = new inversify_1.ContainerModule(function (bind)
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _map = __webpack_require__(12);
+
+var _map = __webpack_require__(11);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -2868,7 +2871,7 @@ exports.stackTraceAnalyzerModule = new inversify_1.ContainerModule(function (bin
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
@@ -2892,7 +2895,7 @@ exports.storagesModule = new inversify_1.ContainerModule(function (bind) {
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -2963,9 +2966,9 @@ exports.ConsoleOutputDisableExpressionNode = ConsoleOutputDisableExpressionNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _map = __webpack_require__(12);
+
+var _map = __webpack_require__(11);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -2996,9 +2999,9 @@ var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var CustomNodes_1 = __webpack_require__(20);
-var ObfuscationEvents_1 = __webpack_require__(21);
+var ObfuscationEvents_1 = __webpack_require__(22);
 var AbstractCustomNodeGroup_1 = __webpack_require__(26);
-var NodeAppender_1 = __webpack_require__(23);
+var NodeAppender_1 = __webpack_require__(24);
 var RandomGeneratorUtils_1 = __webpack_require__(8);
 var ConsoleOutputCustomNodeGroup = function (_AbstractCustomNodeGr) {
     (0, _inherits3.default)(ConsoleOutputCustomNodeGroup, _AbstractCustomNodeGr);
@@ -3058,7 +3061,7 @@ exports.ConsoleOutputCustomNodeGroup = ConsoleOutputCustomNodeGroup;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -3119,7 +3122,7 @@ exports.BinaryExpressionFunctionNode = BinaryExpressionFunctionNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -3185,7 +3188,7 @@ exports.ControlFlowStorageCallNode = ControlFlowStorageCallNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _slicedToArray2 = __webpack_require__(34);
 
@@ -3262,7 +3265,7 @@ exports.ControlFlowStorageNode = ControlFlowStorageNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -3331,7 +3334,7 @@ exports.DebugProtectionFunctionCallNode = DebugProtectionFunctionCallNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -3400,7 +3403,7 @@ exports.DebugProtectionFunctionIntervalNode = DebugProtectionFunctionIntervalNod
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -3469,9 +3472,9 @@ exports.DebugProtectionFunctionNode = DebugProtectionFunctionNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _map = __webpack_require__(12);
+
+var _map = __webpack_require__(11);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -3502,9 +3505,9 @@ var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var CustomNodes_1 = __webpack_require__(20);
-var ObfuscationEvents_1 = __webpack_require__(21);
+var ObfuscationEvents_1 = __webpack_require__(22);
 var AbstractCustomNodeGroup_1 = __webpack_require__(26);
-var NodeAppender_1 = __webpack_require__(23);
+var NodeAppender_1 = __webpack_require__(24);
 var RandomGeneratorUtils_1 = __webpack_require__(8);
 var DebugProtectionCustomNodeGroup = function (_AbstractCustomNodeGr) {
     (0, _inherits3.default)(DebugProtectionCustomNodeGroup, _AbstractCustomNodeGr);
@@ -3567,7 +3570,7 @@ exports.DebugProtectionCustomNodeGroup = DebugProtectionCustomNodeGroup;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _slicedToArray2 = __webpack_require__(34);
 
@@ -3652,9 +3655,9 @@ exports.DomainLockNode = DomainLockNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _map = __webpack_require__(12);
+
+var _map = __webpack_require__(11);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -3685,9 +3688,9 @@ var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var CustomNodes_1 = __webpack_require__(20);
-var ObfuscationEvents_1 = __webpack_require__(21);
+var ObfuscationEvents_1 = __webpack_require__(22);
 var AbstractCustomNodeGroup_1 = __webpack_require__(26);
-var NodeAppender_1 = __webpack_require__(23);
+var NodeAppender_1 = __webpack_require__(24);
 var RandomGeneratorUtils_1 = __webpack_require__(8);
 var DomainLockCustomNodeGroup = function (_AbstractCustomNodeGr) {
     (0, _inherits3.default)(DomainLockCustomNodeGroup, _AbstractCustomNodeGr);
@@ -3747,7 +3750,7 @@ exports.DomainLockCustomNodeGroup = DomainLockCustomNodeGroup;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -3775,12 +3778,12 @@ var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var format = __webpack_require__(18);
-var ObfuscationEvents_1 = __webpack_require__(21);
+var ObfuscationEvents_1 = __webpack_require__(22);
 var Initializable_1 = __webpack_require__(10);
 var SingleNodeCallControllerTemplate_1 = __webpack_require__(113);
 var NoCustomNodes_1 = __webpack_require__(29);
 var AbstractCustomNode_1 = __webpack_require__(15);
-var JavaScriptObfuscator_1 = __webpack_require__(22);
+var JavaScriptObfuscator_1 = __webpack_require__(23);
 var NodeUtils_1 = __webpack_require__(9);
 var NodeCallsControllerFunctionNode = function (_AbstractCustomNode_) {
     (0, _inherits3.default)(NodeCallsControllerFunctionNode, _AbstractCustomNode_);
@@ -3826,7 +3829,7 @@ exports.NodeCallsControllerFunctionNode = NodeCallsControllerFunctionNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -3858,7 +3861,7 @@ var Initializable_1 = __webpack_require__(10);
 var NoCustomNodes_1 = __webpack_require__(29);
 var SelfDefendingTemplate_1 = __webpack_require__(119);
 var AbstractCustomNode_1 = __webpack_require__(15);
-var JavaScriptObfuscator_1 = __webpack_require__(22);
+var JavaScriptObfuscator_1 = __webpack_require__(23);
 var NodeUtils_1 = __webpack_require__(9);
 var RandomGeneratorUtils_1 = __webpack_require__(8);
 var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
@@ -3899,9 +3902,9 @@ exports.SelfDefendingUnicodeNode = SelfDefendingUnicodeNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _map = __webpack_require__(12);
+
+var _map = __webpack_require__(11);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -3932,9 +3935,9 @@ var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var CustomNodes_1 = __webpack_require__(20);
-var ObfuscationEvents_1 = __webpack_require__(21);
+var ObfuscationEvents_1 = __webpack_require__(22);
 var AbstractCustomNodeGroup_1 = __webpack_require__(26);
-var NodeAppender_1 = __webpack_require__(23);
+var NodeAppender_1 = __webpack_require__(24);
 var RandomGeneratorUtils_1 = __webpack_require__(8);
 var SelfDefendingCustomNodeGroup = function (_AbstractCustomNodeGr) {
     (0, _inherits3.default)(SelfDefendingCustomNodeGroup, _AbstractCustomNodeGr);
@@ -3994,7 +3997,7 @@ exports.SelfDefendingCustomNodeGroup = SelfDefendingCustomNodeGroup;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -4032,7 +4035,7 @@ var StringArrayBase64DecodeNodeTemplate_1 = __webpack_require__(121);
 var StringArrayCallsWrapperTemplate_1 = __webpack_require__(122);
 var StringArrayRC4DecodeNodeTemplate_1 = __webpack_require__(123);
 var AbstractCustomNode_1 = __webpack_require__(15);
-var JavaScriptObfuscator_1 = __webpack_require__(22);
+var JavaScriptObfuscator_1 = __webpack_require__(23);
 var NodeUtils_1 = __webpack_require__(9);
 var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
     (0, _inherits3.default)(StringArrayCallsWrapper, _AbstractCustomNode_);
@@ -4108,7 +4111,7 @@ exports.StringArrayCallsWrapper = StringArrayCallsWrapper;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -4192,7 +4195,7 @@ exports.StringArrayNode = StringArrayNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -4225,7 +4228,7 @@ var NoCustomNodes_1 = __webpack_require__(29);
 var SelfDefendingTemplate_1 = __webpack_require__(125);
 var StringArrayRotateFunctionTemplate_1 = __webpack_require__(126);
 var AbstractCustomNode_1 = __webpack_require__(15);
-var JavaScriptObfuscator_1 = __webpack_require__(22);
+var JavaScriptObfuscator_1 = __webpack_require__(23);
 var NodeUtils_1 = __webpack_require__(9);
 var RandomGeneratorUtils_1 = __webpack_require__(8);
 var Utils_1 = __webpack_require__(13);
@@ -4285,9 +4288,9 @@ exports.StringArrayRotateFunctionNode = StringArrayRotateFunctionNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _map = __webpack_require__(12);
+
+var _map = __webpack_require__(11);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -4318,9 +4321,9 @@ var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var CustomNodes_1 = __webpack_require__(20);
-var ObfuscationEvents_1 = __webpack_require__(21);
+var ObfuscationEvents_1 = __webpack_require__(22);
 var AbstractCustomNodeGroup_1 = __webpack_require__(26);
-var NodeAppender_1 = __webpack_require__(23);
+var NodeAppender_1 = __webpack_require__(24);
 var RandomGeneratorUtils_1 = __webpack_require__(8);
 var Utils_1 = __webpack_require__(13);
 var StringArrayCustomNodeGroup = function (_AbstractCustomNodeGr) {
@@ -4395,7 +4398,7 @@ exports.StringArrayCustomNodeGroup = StringArrayCustomNodeGroup;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var Utils_1 = __webpack_require__(13);
 exports.VisitorDirection = Utils_1.Utils.strEnumify({
@@ -4408,7 +4411,7 @@ exports.VisitorDirection = Utils_1.Utils.strEnumify({
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -4450,9 +4453,9 @@ exports.ObfuscationEventEmitter = ObfuscationEventEmitter;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _map = __webpack_require__(12);
+
+var _map = __webpack_require__(11);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -4485,8 +4488,8 @@ var estraverse = __webpack_require__(14);
 var CustomNodes_1 = __webpack_require__(20);
 var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
-var Node_1 = __webpack_require__(11);
-var NodeAppender_1 = __webpack_require__(23);
+var Node_1 = __webpack_require__(12);
+var NodeAppender_1 = __webpack_require__(24);
 var NodeControlFlowReplacers_1 = __webpack_require__(39);
 var NodeUtils_1 = __webpack_require__(9);
 var RandomGeneratorUtils_1 = __webpack_require__(8);
@@ -4582,7 +4585,7 @@ var FunctionControlFlowTransformer_1;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -4606,9 +4609,9 @@ exports.AbstractControlFlowReplacer = AbstractControlFlowReplacer;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _map = __webpack_require__(12);
+
+var _map = __webpack_require__(11);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -4639,7 +4642,7 @@ var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var CustomNodes_1 = __webpack_require__(20);
 var AbstractControlFlowReplacer_1 = __webpack_require__(85);
-var Node_1 = __webpack_require__(11);
+var Node_1 = __webpack_require__(12);
 var RandomGeneratorUtils_1 = __webpack_require__(8);
 var BinaryExpressionControlFlowReplacer = BinaryExpressionControlFlowReplacer_1 = function (_AbstractControlFlowR) {
     (0, _inherits3.default)(BinaryExpressionControlFlowReplacer, _AbstractControlFlowR);
@@ -4703,7 +4706,7 @@ var BinaryExpressionControlFlowReplacer_1;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -4734,7 +4737,7 @@ var estraverse = __webpack_require__(14);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(19);
 var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
-var Node_1 = __webpack_require__(11);
+var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(9);
 var RandomGeneratorUtils_1 = __webpack_require__(8);
 var CatchClauseObfuscator = function (_AbstractNodeTransfor) {
@@ -4791,7 +4794,15 @@ exports.CatchClauseObfuscator = CatchClauseObfuscator;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
+
+var _getIterator2 = __webpack_require__(21);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _map = __webpack_require__(11);
+
+var _map2 = _interopRequireDefault(_map);
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -4822,7 +4833,7 @@ var estraverse = __webpack_require__(14);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(19);
 var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
-var Node_1 = __webpack_require__(11);
+var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(9);
 var RandomGeneratorUtils_1 = __webpack_require__(8);
 var FunctionDeclarationObfuscator = function (_AbstractNodeTransfor) {
@@ -4833,6 +4844,7 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeTransfor) {
 
         var _this = (0, _possibleConstructorReturn3.default)(this, (FunctionDeclarationObfuscator.__proto__ || (0, _getPrototypeOf2.default)(FunctionDeclarationObfuscator)).call(this, options));
 
+        _this.replaceableIdentifiers = new _map2.default();
         _this.identifierReplacer = nodeObfuscatorsReplacersFactory(NodeObfuscatorsReplacers_1.NodeObfuscatorsReplacers.IdentifierReplacer);
         return _this;
     }
@@ -4864,13 +4876,50 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeTransfor) {
         value: function replaceFunctionName(scopeNode, nodeIdentifier) {
             var _this3 = this;
 
+            var replaceableIdentifiersForCurrentScope = void 0;
+            if (this.replaceableIdentifiers.has(scopeNode)) {
+                replaceableIdentifiersForCurrentScope = this.replaceableIdentifiers.get(scopeNode);
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = (0, _getIterator3.default)(replaceableIdentifiersForCurrentScope), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var replaceableIdentifier = _step.value;
+
+                        replaceableIdentifier.name = this.identifierReplacer.replace(replaceableIdentifier.name, nodeIdentifier);
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+
+                return;
+            }
+            replaceableIdentifiersForCurrentScope = [];
             estraverse.replace(scopeNode, {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
-                        node.name = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
+                        var newNodeName = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
+                        if (node.name !== newNodeName) {
+                            node.name = newNodeName;
+                        } else {
+                            replaceableIdentifiersForCurrentScope.push(node);
+                        }
                     }
                 }
             });
+            this.replaceableIdentifiers.set(scopeNode, replaceableIdentifiersForCurrentScope);
         }
     }]);
     return FunctionDeclarationObfuscator;
@@ -4883,7 +4932,7 @@ exports.FunctionDeclarationObfuscator = FunctionDeclarationObfuscator;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -4914,7 +4963,7 @@ var estraverse = __webpack_require__(14);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(19);
 var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
-var Node_1 = __webpack_require__(11);
+var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(9);
 var RandomGeneratorUtils_1 = __webpack_require__(8);
 var FunctionObfuscator = function (_AbstractNodeTransfor) {
@@ -4981,7 +5030,7 @@ exports.FunctionObfuscator = FunctionObfuscator;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -5012,7 +5061,7 @@ var estraverse = __webpack_require__(14);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(19);
 var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
-var Node_1 = __webpack_require__(11);
+var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(9);
 var RandomGeneratorUtils_1 = __webpack_require__(8);
 var LabeledStatementObfuscator = function (_AbstractNodeTransfor) {
@@ -5069,7 +5118,7 @@ exports.LabeledStatementObfuscator = LabeledStatementObfuscator;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _typeof2 = __webpack_require__(132);
 
@@ -5103,7 +5152,7 @@ var ServiceIdentifiers_1 = __webpack_require__(4);
 var escodegen = __webpack_require__(25);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(19);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
-var Node_1 = __webpack_require__(11);
+var Node_1 = __webpack_require__(12);
 var LiteralObfuscator = function (_AbstractNodeTransfor) {
     (0, _inherits3.default)(LiteralObfuscator, _AbstractNodeTransfor);
 
@@ -5152,7 +5201,7 @@ exports.LiteralObfuscator = LiteralObfuscator;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -5183,7 +5232,7 @@ var escodegen = __webpack_require__(25);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(19);
 var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
-var Node_1 = __webpack_require__(11);
+var Node_1 = __webpack_require__(12);
 var MemberExpressionObfuscator = function (_AbstractNodeTransfor) {
     (0, _inherits3.default)(MemberExpressionObfuscator, _AbstractNodeTransfor);
 
@@ -5245,7 +5294,7 @@ exports.MemberExpressionObfuscator = MemberExpressionObfuscator;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -5275,7 +5324,7 @@ var ServiceIdentifiers_1 = __webpack_require__(4);
 var estraverse = __webpack_require__(14);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(19);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
-var Node_1 = __webpack_require__(11);
+var Node_1 = __webpack_require__(12);
 var MethodDefinitionObfuscator = MethodDefinitionObfuscator_1 = function (_AbstractNodeTransfor) {
     (0, _inherits3.default)(MethodDefinitionObfuscator, _AbstractNodeTransfor);
 
@@ -5322,7 +5371,7 @@ var MethodDefinitionObfuscator_1;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _assign = __webpack_require__(44);
 
@@ -5357,7 +5406,7 @@ var escodegen = __webpack_require__(25);
 var estraverse = __webpack_require__(14);
 var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
-var Node_1 = __webpack_require__(11);
+var Node_1 = __webpack_require__(12);
 var Utils_1 = __webpack_require__(13);
 var ObjectExpressionObfuscator = function (_AbstractNodeTransfor) {
     (0, _inherits3.default)(ObjectExpressionObfuscator, _AbstractNodeTransfor);
@@ -5426,7 +5475,15 @@ exports.ObjectExpressionObfuscator = ObjectExpressionObfuscator;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
+
+var _getIterator2 = __webpack_require__(21);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _map = __webpack_require__(11);
+
+var _map2 = _interopRequireDefault(_map);
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -5457,7 +5514,7 @@ var estraverse = __webpack_require__(14);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(19);
 var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
-var Node_1 = __webpack_require__(11);
+var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(9);
 var RandomGeneratorUtils_1 = __webpack_require__(8);
 var VariableDeclarationObfuscator = function (_AbstractNodeTransfor) {
@@ -5468,6 +5525,7 @@ var VariableDeclarationObfuscator = function (_AbstractNodeTransfor) {
 
         var _this = (0, _possibleConstructorReturn3.default)(this, (VariableDeclarationObfuscator.__proto__ || (0, _getPrototypeOf2.default)(VariableDeclarationObfuscator)).call(this, options));
 
+        _this.replaceableIdentifiers = new _map2.default();
         _this.identifierReplacer = replacersFactory(NodeObfuscatorsReplacers_1.NodeObfuscatorsReplacers.IdentifierReplacer);
         return _this;
     }
@@ -5502,13 +5560,50 @@ var VariableDeclarationObfuscator = function (_AbstractNodeTransfor) {
         value: function replaceVariableNames(scopeNode, nodeIdentifier) {
             var _this3 = this;
 
+            var replaceableIdentifiersForCurrentScope = void 0;
+            if (this.replaceableIdentifiers.has(scopeNode)) {
+                replaceableIdentifiersForCurrentScope = this.replaceableIdentifiers.get(scopeNode);
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = (0, _getIterator3.default)(replaceableIdentifiersForCurrentScope), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var replaceableIdentifier = _step.value;
+
+                        replaceableIdentifier.name = this.identifierReplacer.replace(replaceableIdentifier.name, nodeIdentifier);
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+
+                return;
+            }
+            replaceableIdentifiersForCurrentScope = [];
             estraverse.replace(scopeNode, {
                 enter: function enter(node, parentNode) {
                     if (!node.obfuscated && Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
-                        node.name = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
+                        var newNodeName = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
+                        if (node.name !== newNodeName) {
+                            node.name = newNodeName;
+                        } else {
+                            replaceableIdentifiersForCurrentScope.push(node);
+                        }
                     }
                 }
             });
+            this.replaceableIdentifiers.set(scopeNode, replaceableIdentifiersForCurrentScope);
         }
     }]);
     return VariableDeclarationObfuscator;
@@ -5521,7 +5616,7 @@ exports.VariableDeclarationObfuscator = VariableDeclarationObfuscator;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -5574,9 +5669,9 @@ exports.BooleanLiteralReplacer = BooleanLiteralReplacer;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _map = __webpack_require__(12);
+
+var _map = __webpack_require__(11);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -5622,11 +5717,11 @@ var IdentifierReplacer = function (_AbstractReplacer_1$A) {
     (0, _createClass3.default)(IdentifierReplacer, [{
         key: "replace",
         value: function replace(nodeValue, nodeIdentifier) {
-            var obfuscatedIdentifierName = this.namesMap.get(nodeValue + "-" + nodeIdentifier);
-            if (!obfuscatedIdentifierName) {
+            var mapKey = nodeValue + "-" + nodeIdentifier;
+            if (!this.namesMap.has(mapKey)) {
                 return nodeValue;
             }
-            return obfuscatedIdentifierName;
+            return this.namesMap.get(mapKey);
         }
     }, {
         key: "storeNames",
@@ -5653,7 +5748,7 @@ exports.IdentifierReplacer = IdentifierReplacer;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -5709,7 +5804,11 @@ exports.NumberLiteralReplacer = NumberLiteralReplacer;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
+
+var _map = __webpack_require__(11);
+
+var _map2 = _interopRequireDefault(_map);
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -5749,6 +5848,7 @@ var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplace
 
         var _this = (0, _possibleConstructorReturn3.default)(this, (StringLiteralReplacer.__proto__ || (0, _getPrototypeOf2.default)(StringLiteralReplacer)).call(this, options));
 
+        _this.stringLiteralCache = new _map2.default();
         _this.customNodeGroupStorage = customNodeGroupStorage;
         _this.stringArrayStorage = stringArrayStorage;
         return _this;
@@ -5758,10 +5858,20 @@ var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplace
         key: "replace",
         value: function replace(nodeValue) {
             var replaceWithStringArrayFlag = nodeValue.length >= StringLiteralReplacer_1.minimumLengthForStringArray && RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomFloat(0, 1) <= this.options.stringArrayThreshold;
+            var result = void 0;
             if (this.options.stringArray && replaceWithStringArrayFlag) {
-                return this.replaceStringLiteralWithStringArrayCall(nodeValue);
+                if (this.stringLiteralCache.has(nodeValue) && this.options.stringArrayEncoding !== StringArrayEncoding_1.StringArrayEncoding.rc4) {
+                    return this.stringLiteralCache.get(nodeValue);
+                }
+                result = this.replaceStringLiteralWithStringArrayCall(nodeValue);
+            } else {
+                if (this.stringLiteralCache.has(nodeValue)) {
+                    return this.stringLiteralCache.get(nodeValue);
+                }
+                result = "'" + Utils_1.Utils.stringToUnicodeEscapeSequence(nodeValue, !this.options.unicodeEscapeSequence) + "'";
             }
-            return "'" + Utils_1.Utils.stringToUnicodeEscapeSequence(nodeValue, !this.options.unicodeEscapeSequence) + "'";
+            this.stringLiteralCache.set(nodeValue, result);
+            return result;
         }
     }, {
         key: "replaceStringLiteralWithStringArrayCall",
@@ -5789,7 +5899,7 @@ var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplace
             var stringArrayStorageCallsWrapperName = "_" + Utils_1.Utils.hexadecimalPrefix + rotatedStringArrayStorageId;
             var hexadecimalIndex = "" + Utils_1.Utils.hexadecimalPrefix + Utils_1.Utils.decToHex(indexOfValue);
             if (this.options.stringArrayEncoding === StringArrayEncoding_1.StringArrayEncoding.rc4) {
-                return stringArrayStorageCallsWrapperName + "('" + hexadecimalIndex + "', '" + Utils_1.Utils.stringToUnicodeEscapeSequence(rc4Key) + "')";
+                return stringArrayStorageCallsWrapperName + "('" + hexadecimalIndex + "', '" + Utils_1.Utils.stringToUnicodeEscapeSequence(rc4Key, !this.options.unicodeEscapeSequence) + "')";
             }
             return stringArrayStorageCallsWrapperName + "('" + hexadecimalIndex + "')";
         }
@@ -5809,7 +5919,7 @@ var StringLiteralReplacer_1;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _assign = __webpack_require__(44);
 
@@ -5879,9 +5989,9 @@ var Options_1;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _getIterator2 = __webpack_require__(24);
+
+var _getIterator2 = __webpack_require__(21);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -6064,9 +6174,9 @@ exports.OptionsNormalizer = OptionsNormalizer;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _getIterator2 = __webpack_require__(24);
+
+var _getIterator2 = __webpack_require__(21);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -6140,7 +6250,7 @@ exports.ValidationErrorsFormatter = ValidationErrorsFormatter;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -6157,7 +6267,7 @@ var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var estraverse = __webpack_require__(14);
 var CalleeDataExtractors_1 = __webpack_require__(37);
-var Node_1 = __webpack_require__(11);
+var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(9);
 var StackTraceAnalyzer = StackTraceAnalyzer_1 = function () {
     function StackTraceAnalyzer(calleeDataExtractorsFactory) {
@@ -6244,7 +6354,7 @@ var StackTraceAnalyzer_1;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -6272,7 +6382,7 @@ var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(14);
 var AbstractCalleeDataExtractor_1 = __webpack_require__(32);
-var Node_1 = __webpack_require__(11);
+var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(9);
 var FunctionDeclarationCalleeDataExtractor = function (_AbstractCalleeDataEx) {
     (0, _inherits3.default)(FunctionDeclarationCalleeDataExtractor, _AbstractCalleeDataEx);
@@ -6322,7 +6432,7 @@ exports.FunctionDeclarationCalleeDataExtractor = FunctionDeclarationCalleeDataEx
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -6350,7 +6460,7 @@ var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(14);
 var AbstractCalleeDataExtractor_1 = __webpack_require__(32);
-var Node_1 = __webpack_require__(11);
+var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(9);
 var FunctionExpressionCalleeDataExtractor = function (_AbstractCalleeDataEx) {
     (0, _inherits3.default)(FunctionExpressionCalleeDataExtractor, _AbstractCalleeDataEx);
@@ -6403,9 +6513,9 @@ exports.FunctionExpressionCalleeDataExtractor = FunctionExpressionCalleeDataExtr
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _getIterator2 = __webpack_require__(24);
+
+var _getIterator2 = __webpack_require__(21);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -6434,7 +6544,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(14);
-var Node_1 = __webpack_require__(11);
+var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(9);
 var AbstractCalleeDataExtractor_1 = __webpack_require__(32);
 var ObjectExpressionCalleeDataExtractor = function (_AbstractCalleeDataEx) {
@@ -6558,7 +6668,7 @@ exports.ObjectExpressionCalleeDataExtractor = ObjectExpressionCalleeDataExtracto
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _toConsumableArray2 = __webpack_require__(35);
 
@@ -6646,7 +6756,7 @@ exports.ArrayStorage = ArrayStorage;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -6690,9 +6800,9 @@ exports.ControlFlowStorage = ControlFlowStorage;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var _map = __webpack_require__(12);
+
+var _map = __webpack_require__(11);
 
 var _map2 = _interopRequireDefault(_map);
 
@@ -6766,7 +6876,7 @@ var CustomNodeGroupStorage_1;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -6841,10 +6951,10 @@ exports.StringArrayStorage = StringArrayStorage;
 
 /***/ },
 /* 111 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function AtobTemplate() {
     return "\n        (function () {\n            var getGlobal = Function('return (function () ' + '{}.constructor(\"return this\")()' + ');');\n\n            var object = getGlobal();\n            var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';\n\n            object.atob || (\n                object.atob = function(input) {\n                    var str = String(input).replace(/=+$/, '');\n                    for (\n                        var bc = 0, bs, buffer, idx = 0, output = '';\n                        buffer = str.charAt(idx++);\n                        ~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer,\n                            bc++ % 4) ? output += String.fromCharCode(255 & bs >> (-2 * bc & 6)) : 0\n                    ) {\n                        buffer = chars.indexOf(buffer);\n                    }\n                return output;\n            });\n        })();\n    ";
@@ -6853,10 +6963,10 @@ exports.AtobTemplate = AtobTemplate;
 
 /***/ },
 /* 112 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function Rc4Template() {
     return "\n        var rc4 = function (str, key) {\n            var s = [], j = 0, x, res = '', newStr = '';\n           \n            str = atob(str);\n                \n            for (var k = 0, length = str.length; k < length; k++) {\n                newStr += '%' + ('00' + str.charCodeAt(k).toString(16)).slice(-2);\n            }\n        \n            str = decodeURIComponent(newStr);\n                    \t        \n\t        for (var i = 0; i < 256; i++) {\n                s[i] = i;\n            }\n \n            for (i = 0; i < 256; i++) {\n                j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;\n                x = s[i];\n                s[i] = s[j];\n                s[j] = x;\n            }\n            \n            i = 0;\n            j = 0;\n            \n            for (var y = 0; y < str.length; y++) {\n                i = (i + 1) % 256;\n                j = (j + s[i]) % 256;\n                x = s[i];\n                s[i] = s[j];\n                s[j] = x;\n                res += String.fromCharCode(str.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);\n            }\n                      \n            return res;\n        }\n    ";
@@ -6865,10 +6975,10 @@ exports.Rc4Template = Rc4Template;
 
 /***/ },
 /* 113 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function SingleNodeCallControllerTemplate() {
     return "\n        var {singleNodeCallControllerFunctionName} = (function(){\n            var firstCall = true;\n            \n            return function (context, fn){\t\n                var rfn = firstCall ? function(){\n                    if(fn){\n                        var res = fn.apply(context, arguments);\n                        fn = null;\n                        return res;\n                    }\n                } : function(){}\n                \n                firstCall = false;\n                \n                return rfn;\n            }\n        })();\n    ";
@@ -6877,10 +6987,10 @@ exports.SingleNodeCallControllerTemplate = SingleNodeCallControllerTemplate;
 
 /***/ },
 /* 114 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function ConsoleOutputDisableExpressionTemplate() {
     return "\n        var {consoleLogDisableFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {\n            var getGlobal = Function('return (function() ' + '{}.constructor(\"return this\")( )' + ');');\n            \n            var func = function () {};\n            var that = getGlobal();\n                        \n            that.console.log = func; \n            that.console.error = func;\n            that.console.warn = func;\n            that.console.info = func;\n        });\n        \n        {consoleLogDisableFunctionName}();\n    ";
@@ -6889,10 +6999,10 @@ exports.ConsoleOutputDisableExpressionTemplate = ConsoleOutputDisableExpressionT
 
 /***/ },
 /* 115 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function DebugProtectionFunctionCallTemplate() {
     return "{debugProtectionFunctionName}();";
@@ -6901,10 +7011,10 @@ exports.DebugProtectionFunctionCallTemplate = DebugProtectionFunctionCallTemplat
 
 /***/ },
 /* 116 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function DebugProtectionFunctionIntervalTemplate() {
     return "\n        setInterval(function () {\n            {debugProtectionFunctionName}();\n        }, 4000);\n    ";
@@ -6913,10 +7023,10 @@ exports.DebugProtectionFunctionIntervalTemplate = DebugProtectionFunctionInterva
 
 /***/ },
 /* 117 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function DebugProtectionFunctionTemplate() {
     return "\n        var {debugProtectionFunctionName} = function () {\n            function debuggerProtection (counter) {\n                if (('' + counter / counter)['length'] !== 1 || counter % 20 === 0) {\n                    (function () {}.constructor('debugger')());\n                } else {\n                    (function () {}.constructor('debugger')());\n                }\n                \n                debuggerProtection(++counter);\n            }\n            \n            try {\n                debuggerProtection(0);\n            } catch (y) {}\n        };\n    ";
@@ -6925,10 +7035,10 @@ exports.DebugProtectionFunctionTemplate = DebugProtectionFunctionTemplate;
 
 /***/ },
 /* 118 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function DomainLockNodeTemplate() {
     return "\n        var {domainLockFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {\n            var getGlobal = Function('return (function () ' + '{}.constructor(\"return this\")()' + ');');\n\n            var func = function () { \n                return {\n                    key: 'item',\n                    value: 'attribute',\n                    getAttribute: function () {\n                        getGlobal()['eval']('while(true){}')();\n                    }()\n                };\n            };\n                        \n            var regExp = new RegExp(\"[{diff}]\", \"g\");\n            var domains = \"{domains}\".replace(regExp, \"\").split(\";\");\n            var eval = [][\"forEach\"][\"constructor\"];\n            var windowObject = eval(\"return this\")();\n            var document;\n            var domain;\n                        \n            for (var d in windowObject) {\n                if (d.length == 8 && d.charCodeAt(7) == 116 && d.charCodeAt(5) == 101 && d.charCodeAt(3) == 117 && d.charCodeAt(0) == 100) {\n                    document = d;\n                \n                    break;\n                }\n            }\n\n            for (var d1 in windowObject[document]) {\n                if (d1.length == 6 && d1.charCodeAt(5) == 110 && d1.charCodeAt(0) == 100) {\n                    domain = d1;\n                    \n                    break;\n                }\n            }\n            \n            if ((!document && !domain) || (!windowObject[document] && !windowObject[document][domain])) {\n                return;\n            }\n            \n            var currentDomain = windowObject[document][domain];\n\n            var ok = false;\n                        \n            for (var i = 0; i < domains.length; i++) {\n                var domain = domains[i];\n                var position = currentDomain.length - domain.length;\n                var lastIndex = currentDomain.indexOf(domain, position);\n                var endsWith = lastIndex !== -1 && lastIndex === position;\n                \n                if (endsWith) {\n                    if (currentDomain.length == domain.length || domain.indexOf(\".\") === 0) {\n                        ok = true;\n                    }\n                    \n                    break;\n                }\n            }\n               \n            if (!ok) {\n                data;\n            } else {\n                return;\n            }\n            \n            func();\n        });\n\n        {domainLockFunctionName}();\n    ";
@@ -6940,7 +7050,7 @@ exports.DomainLockNodeTemplate = DomainLockNodeTemplate;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var Utils_1 = __webpack_require__(13);
 function SelfDefendingTemplate() {
@@ -6953,7 +7063,7 @@ exports.SelfDefendingTemplate = SelfDefendingTemplate;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var Utils_1 = __webpack_require__(13);
 function SelfDefendingTemplate() {
@@ -6963,10 +7073,10 @@ exports.SelfDefendingTemplate = SelfDefendingTemplate;
 
 /***/ },
 /* 121 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function StringArrayBase64DecodeNodeTemplate() {
     return "      \n        if (!{stringArrayCallsWrapperName}.atobPolyfillAppended) {\n            {atobPolyfill}\n            \n            {stringArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n        \n        if (!{stringArrayCallsWrapperName}.base64DecodeUnicode) {                \n            {stringArrayCallsWrapperName}.base64DecodeUnicode = function (str) {\n                var string = atob(str);\n                var newStringChars = [];\n                \n                for (var i = 0, length = string.length; i < length; i++) {\n                    newStringChars += '%' + ('00' + string.charCodeAt(i).toString(16)).slice(-2);\n                }\n                \n                return decodeURIComponent(newStringChars);\n            };\n        }\n        \n        if (!{stringArrayCallsWrapperName}.data) {\n            {stringArrayCallsWrapperName}.data = {};\n        }\n                        \n        if (!{stringArrayCallsWrapperName}.data[index]) {\n            {selfDefendingCode}\n            \n            value = {stringArrayCallsWrapperName}.base64DecodeUnicode(value);\n            {stringArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = {stringArrayCallsWrapperName}.data[index];\n        }  \n    ";
@@ -6975,10 +7085,10 @@ exports.StringArrayBase64DecodeNodeTemplate = StringArrayBase64DecodeNodeTemplat
 
 /***/ },
 /* 122 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function StringArrayCallsWrapperTemplate() {
     return "\n        var {stringArrayCallsWrapperName} = function (index, key) {\n            var index = parseInt(index, 0x10);\n            var value = {stringArrayName}[index];\n            \n            {decodeNodeTemplate}\n        \n            return value;\n        };\n    ";
@@ -6987,10 +7097,10 @@ exports.StringArrayCallsWrapperTemplate = StringArrayCallsWrapperTemplate;
 
 /***/ },
 /* 123 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function StringArrayRc4DecodeNodeTemplate() {
     return "\n        if (!{stringArrayCallsWrapperName}.atobPolyfillAppended) {            \n            {atobPolyfill}\n            \n            {stringArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n        \n        if (!{stringArrayCallsWrapperName}.rc4) {            \n            {rc4Polyfill}\n            \n            {stringArrayCallsWrapperName}.rc4 = rc4;\n        }\n                        \n        if (!{stringArrayCallsWrapperName}.data) {\n            {stringArrayCallsWrapperName}.data = {};\n        }\n\n        if ({stringArrayCallsWrapperName}.data[index] === undefined) {\n            if (!{stringArrayCallsWrapperName}.once) {\n                {selfDefendingCode}\n                \n                {stringArrayCallsWrapperName}.once = true;\n            }\n            \n            value = {stringArrayCallsWrapperName}.rc4(value, key);\n            {stringArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = {stringArrayCallsWrapperName}.data[index];\n        }\n    ";
@@ -6999,10 +7109,10 @@ exports.StringArrayRc4DecodeNodeTemplate = StringArrayRc4DecodeNodeTemplate;
 
 /***/ },
 /* 124 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function StringArrayTemplate() {
     return "\n        var {stringArrayName} = [{stringArray}];\n    ";
@@ -7014,7 +7124,7 @@ exports.StringArrayTemplate = StringArrayTemplate;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var Utils_1 = __webpack_require__(13);
 function SelfDefendingTemplate() {
@@ -7024,10 +7134,10 @@ exports.SelfDefendingTemplate = SelfDefendingTemplate;
 
 /***/ },
 /* 126 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function StringArrayRotateFunctionTemplate() {
     return "\n        (function (array, {timesName}) {\n            var {whileFunctionName} = function (times) {\n                while (--times) {\n                    array['push'](array['shift']());\n                }\n            };\n            \n            {code}\n        })({stringArrayName}, 0x{stringArrayRotateValue});\n    ";
@@ -7117,9 +7227,9 @@ module.exports = require("reflect-metadata");
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
 
-var JavaScriptObfuscator_1 = __webpack_require__(22);
+
+var JavaScriptObfuscator_1 = __webpack_require__(23);
 module.exports = JavaScriptObfuscator_1.JavaScriptObfuscator;
 
 /***/ }

@@ -26,6 +26,11 @@ export class StringLiteralReplacer extends AbstractReplacer {
         .n(() => RandomGeneratorUtils.getRandomGenerator().string({length: 4}), 50);
 
     /**
+     * @type {Map<string, string>}
+     */
+    private readonly stringLiteralCache: Map <string, string> = new Map();
+
+    /**
      * @type {IStorage<ICustomNodeGroup>}
      */
     private readonly customNodeGroupStorage: IStorage<ICustomNodeGroup>;
@@ -61,11 +66,29 @@ export class StringLiteralReplacer extends AbstractReplacer {
             && RandomGeneratorUtils.getRandomFloat(0, 1) <= this.options.stringArrayThreshold
         );
 
+        let result: string;
+
         if (this.options.stringArray && replaceWithStringArrayFlag) {
-            return this.replaceStringLiteralWithStringArrayCall(nodeValue);
+            /**
+             * we can't use values from cache with `stringArrayEncoding: rc4`
+             * because rc4 key will be the same for same values
+             */
+            if (this.stringLiteralCache.has(nodeValue) && this.options.stringArrayEncoding !== StringArrayEncoding.rc4) {
+                return <string>this.stringLiteralCache.get(nodeValue);
+            }
+
+            result = this.replaceStringLiteralWithStringArrayCall(nodeValue);
+        } else {
+            if (this.stringLiteralCache.has(nodeValue)) {
+                return <string>this.stringLiteralCache.get(nodeValue);
+            }
+
+            result = `'${Utils.stringToUnicodeEscapeSequence(nodeValue, !this.options.unicodeEscapeSequence)}'`;
         }
 
-        return `'${Utils.stringToUnicodeEscapeSequence(nodeValue, !this.options.unicodeEscapeSequence)}'`;
+        this.stringLiteralCache.set(nodeValue, result);
+
+        return result;
     }
 
     /**
@@ -106,7 +129,7 @@ export class StringLiteralReplacer extends AbstractReplacer {
         const hexadecimalIndex: string = `${Utils.hexadecimalPrefix}${Utils.decToHex(indexOfValue)}`;
 
         if (this.options.stringArrayEncoding === StringArrayEncoding.rc4) {
-            return `${stringArrayStorageCallsWrapperName}('${hexadecimalIndex}', '${Utils.stringToUnicodeEscapeSequence(rc4Key)}')`;
+            return `${stringArrayStorageCallsWrapperName}('${hexadecimalIndex}', '${Utils.stringToUnicodeEscapeSequence(rc4Key, !this.options.unicodeEscapeSequence)}')`;
         }
 
         return `${stringArrayStorageCallsWrapperName}('${hexadecimalIndex}')`;

@@ -129,13 +129,14 @@ export class Utils {
      */
     public static stringToUnicodeEscapeSequence (string: string, nonLatinAndNonDigitsOnly: boolean = false): string {
         const radix: number = 16;
-        const regexp: RegExp = new RegExp('[\x00-\x7F]');
+        const replaceRegExp: RegExp = new RegExp('[\\s\\S]', 'g');
         const escapeRegExp: RegExp = new RegExp('[^a-zA-Z0-9]');
+        const regexp: RegExp = new RegExp('[\\x00-\\x7F]');
 
         let prefix: string,
             template: string;
 
-        return `${string.replace(/[\s\S]/g, (escape: string): string => {
+        return `${string.replace(replaceRegExp, (escape: string): string => {
             if (nonLatinAndNonDigitsOnly && !escapeRegExp.test(escape)) {
                 return escape;
             }

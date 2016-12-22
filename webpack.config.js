@@ -53,5 +53,8 @@ module.exports = {
         filename: '[name].js',
         libraryTarget:  "commonjs2",
         library: "JavaScriptObfuscator"
+    },
+    stats: {
+        maxModules: 0
     }
 };

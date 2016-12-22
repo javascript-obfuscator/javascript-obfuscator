@@ -90,7 +90,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 140);
+/******/ 	return __webpack_require__(__webpack_require__.s = 141);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -5806,6 +5806,10 @@ exports.NumberLiteralReplacer = NumberLiteralReplacer;
 "use strict";
 
 
+var _map = __webpack_require__(11);
+
+var _map2 = _interopRequireDefault(_map);
+
 var _getPrototypeOf = __webpack_require__(5);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -5844,6 +5848,7 @@ var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplace
 
         var _this = (0, _possibleConstructorReturn3.default)(this, (StringLiteralReplacer.__proto__ || (0, _getPrototypeOf2.default)(StringLiteralReplacer)).call(this, options));
 
+        _this.stringLiteralCache = new _map2.default();
         _this.customNodeGroupStorage = customNodeGroupStorage;
         _this.stringArrayStorage = stringArrayStorage;
         return _this;
@@ -5853,10 +5858,20 @@ var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplace
         key: "replace",
         value: function replace(nodeValue) {
             var replaceWithStringArrayFlag = nodeValue.length >= StringLiteralReplacer_1.minimumLengthForStringArray && RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomFloat(0, 1) <= this.options.stringArrayThreshold;
+            var result = void 0;
             if (this.options.stringArray && replaceWithStringArrayFlag) {
-                return this.replaceStringLiteralWithStringArrayCall(nodeValue);
+                if (this.stringLiteralCache.has(nodeValue) && this.options.stringArrayEncoding !== StringArrayEncoding_1.StringArrayEncoding.rc4) {
+                    return this.stringLiteralCache.get(nodeValue);
+                }
+                result = this.replaceStringLiteralWithStringArrayCall(nodeValue);
+            } else {
+                if (this.stringLiteralCache.has(nodeValue)) {
+                    return this.stringLiteralCache.get(nodeValue);
+                }
+                result = "'" + Utils_1.Utils.stringToUnicodeEscapeSequence(nodeValue, !this.options.unicodeEscapeSequence) + "'";
             }
-            return "'" + Utils_1.Utils.stringToUnicodeEscapeSequence(nodeValue, !this.options.unicodeEscapeSequence) + "'";
+            this.stringLiteralCache.set(nodeValue, result);
+            return result;
         }
     }, {
         key: "replaceStringLiteralWithStringArrayCall",
@@ -5884,7 +5899,7 @@ var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplace
             var stringArrayStorageCallsWrapperName = "_" + Utils_1.Utils.hexadecimalPrefix + rotatedStringArrayStorageId;
             var hexadecimalIndex = "" + Utils_1.Utils.hexadecimalPrefix + Utils_1.Utils.decToHex(indexOfValue);
             if (this.options.stringArrayEncoding === StringArrayEncoding_1.StringArrayEncoding.rc4) {
-                return stringArrayStorageCallsWrapperName + "('" + hexadecimalIndex + "', '" + Utils_1.Utils.stringToUnicodeEscapeSequence(rc4Key) + "')";
+                return stringArrayStorageCallsWrapperName + "('" + hexadecimalIndex + "', '" + Utils_1.Utils.stringToUnicodeEscapeSequence(rc4Key, !this.options.unicodeEscapeSequence) + "')";
             }
             return stringArrayStorageCallsWrapperName + "('" + hexadecimalIndex + "')";
         }
@@ -7208,7 +7223,8 @@ module.exports = require("mkdirp");
 module.exports = require("reflect-metadata");
 
 /***/ },
-/* 140 */
+/* 140 */,
+/* 141 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

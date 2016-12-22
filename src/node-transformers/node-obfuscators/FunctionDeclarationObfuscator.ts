@@ -86,9 +86,7 @@ export class FunctionDeclarationObfuscator extends AbstractNodeTransformer {
     private replaceFunctionName (scopeNode: ESTree.Node, nodeIdentifier: string): void {
         let replaceableIdentifiersForCurrentScope: ESTree.Identifier[];
 
-        /**
-         * check for cached identifiers for current scope node. If exist - loop through them.
-         */
+        // check for cached identifiers for current scope node. If exist - loop through them.
         if (this.replaceableIdentifiers.has(scopeNode)) {
             replaceableIdentifiersForCurrentScope = <ESTree.Identifier[]>this.replaceableIdentifiers.get(scopeNode);
 

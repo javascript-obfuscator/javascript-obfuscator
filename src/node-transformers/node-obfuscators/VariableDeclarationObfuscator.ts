@@ -94,10 +94,7 @@ export class VariableDeclarationObfuscator extends AbstractNodeTransformer {
     private replaceVariableNames (scopeNode: ESTree.Node, nodeIdentifier: string): void {
         let replaceableIdentifiersForCurrentScope: ESTree.Identifier[];
 
-        /**
-         * check for cached identifiers for current scope node. If exist - loop through them.
-         * if name of the identifier has been changed - remove identifier, so we won't iterate over him next time.
-         */
+        // check for cached identifiers for current scope node. If exist - loop through them.
         if (this.replaceableIdentifiers.has(scopeNode)) {
             replaceableIdentifiersForCurrentScope = <ESTree.Identifier[]>this.replaceableIdentifiers.get(scopeNode);
 

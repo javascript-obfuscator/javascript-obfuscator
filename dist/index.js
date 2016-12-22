@@ -947,9 +947,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
+var RandomGeneratorUtils_1 = __webpack_require__(8);
 var AbstractNodeTransformer = function AbstractNodeTransformer(options) {
     (0, _classCallCheck3.default)(this, AbstractNodeTransformer);
 
+    this.nodeIdentifier = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomInteger(0, 10000);
     this.options = options;
 };
 AbstractNodeTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object])], AbstractNodeTransformer);
@@ -4739,7 +4741,6 @@ var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
 var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(9);
-var RandomGeneratorUtils_1 = __webpack_require__(8);
 var CatchClauseObfuscator = function (_AbstractNodeTransfor) {
     (0, _inherits3.default)(CatchClauseObfuscator, _AbstractNodeTransfor);
 
@@ -4755,7 +4756,7 @@ var CatchClauseObfuscator = function (_AbstractNodeTransfor) {
     (0, _createClass3.default)(CatchClauseObfuscator, [{
         key: "transformNode",
         value: function transformNode(catchClauseNode) {
-            var nodeIdentifier = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(7);
+            var nodeIdentifier = this.nodeIdentifier++;
             this.storeCatchClauseParam(catchClauseNode, nodeIdentifier);
             this.replaceCatchClauseParam(catchClauseNode, nodeIdentifier);
         }
@@ -4835,7 +4836,6 @@ var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
 var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(9);
-var RandomGeneratorUtils_1 = __webpack_require__(8);
 var FunctionDeclarationObfuscator = function (_AbstractNodeTransfor) {
     (0, _inherits3.default)(FunctionDeclarationObfuscator, _AbstractNodeTransfor);
 
@@ -4852,7 +4852,7 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeTransfor) {
     (0, _createClass3.default)(FunctionDeclarationObfuscator, [{
         key: "transformNode",
         value: function transformNode(functionDeclarationNode, parentNode) {
-            var nodeIdentifier = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(7);
+            var nodeIdentifier = this.nodeIdentifier++;
             var blockScopeOfFunctionDeclarationNode = NodeUtils_1.NodeUtils.getBlockScopesOfNode(functionDeclarationNode)[0];
             if (blockScopeOfFunctionDeclarationNode.type === NodeType_1.NodeType.Program) {
                 return;
@@ -4965,7 +4965,6 @@ var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
 var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(9);
-var RandomGeneratorUtils_1 = __webpack_require__(8);
 var FunctionObfuscator = function (_AbstractNodeTransfor) {
     (0, _inherits3.default)(FunctionObfuscator, _AbstractNodeTransfor);
 
@@ -4981,7 +4980,7 @@ var FunctionObfuscator = function (_AbstractNodeTransfor) {
     (0, _createClass3.default)(FunctionObfuscator, [{
         key: "transformNode",
         value: function transformNode(functionNode) {
-            var nodeIdentifier = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(7);
+            var nodeIdentifier = this.nodeIdentifier++;
             this.storeFunctionParams(functionNode, nodeIdentifier);
             this.replaceFunctionParams(functionNode, nodeIdentifier);
         }
@@ -5063,7 +5062,6 @@ var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
 var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(9);
-var RandomGeneratorUtils_1 = __webpack_require__(8);
 var LabeledStatementObfuscator = function (_AbstractNodeTransfor) {
     (0, _inherits3.default)(LabeledStatementObfuscator, _AbstractNodeTransfor);
 
@@ -5079,7 +5077,7 @@ var LabeledStatementObfuscator = function (_AbstractNodeTransfor) {
     (0, _createClass3.default)(LabeledStatementObfuscator, [{
         key: "transformNode",
         value: function transformNode(labeledStatementNode) {
-            var nodeIdentifier = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(7);
+            var nodeIdentifier = this.nodeIdentifier++;
             this.storeLabeledStatementName(labeledStatementNode, nodeIdentifier);
             this.replaceLabeledStatementName(labeledStatementNode, nodeIdentifier);
         }
@@ -5516,7 +5514,6 @@ var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
 var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(9);
-var RandomGeneratorUtils_1 = __webpack_require__(8);
 var VariableDeclarationObfuscator = function (_AbstractNodeTransfor) {
     (0, _inherits3.default)(VariableDeclarationObfuscator, _AbstractNodeTransfor);
 
@@ -5537,7 +5534,7 @@ var VariableDeclarationObfuscator = function (_AbstractNodeTransfor) {
             if (blockScopeOfVariableDeclarationNode.type === NodeType_1.NodeType.Program) {
                 return;
             }
-            var nodeIdentifier = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(7);
+            var nodeIdentifier = this.nodeIdentifier++;
             var scopeNode = variableDeclarationNode.kind === 'var' ? blockScopeOfVariableDeclarationNode : parentNode;
             this.storeVariableNames(variableDeclarationNode, nodeIdentifier);
             this.replaceVariableNames(scopeNode, nodeIdentifier);
@@ -5717,7 +5714,7 @@ var IdentifierReplacer = function (_AbstractReplacer_1$A) {
     (0, _createClass3.default)(IdentifierReplacer, [{
         key: "replace",
         value: function replace(nodeValue, nodeIdentifier) {
-            var mapKey = nodeValue + "-" + nodeIdentifier;
+            var mapKey = nodeValue + "-" + String(nodeIdentifier);
             if (!this.namesMap.has(mapKey)) {
                 return nodeValue;
             }
@@ -5727,7 +5724,7 @@ var IdentifierReplacer = function (_AbstractReplacer_1$A) {
         key: "storeNames",
         value: function storeNames(nodeName, nodeIdentifier) {
             if (!this.isReservedName(nodeName)) {
-                this.namesMap.set(nodeName + "-" + nodeIdentifier, RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName());
+                this.namesMap.set(nodeName + "-" + String(nodeIdentifier), RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName());
             }
         }
     }, {
@@ -5749,6 +5746,10 @@ exports.IdentifierReplacer = IdentifierReplacer;
 
 "use strict";
 
+
+var _map = __webpack_require__(11);
+
+var _map2 = _interopRequireDefault(_map);
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -5782,16 +5783,27 @@ var NumberLiteralReplacer = function (_AbstractReplacer_1$A) {
 
     function NumberLiteralReplacer(options) {
         (0, _classCallCheck3.default)(this, NumberLiteralReplacer);
-        return (0, _possibleConstructorReturn3.default)(this, (NumberLiteralReplacer.__proto__ || (0, _getPrototypeOf2.default)(NumberLiteralReplacer)).call(this, options));
+
+        var _this = (0, _possibleConstructorReturn3.default)(this, (NumberLiteralReplacer.__proto__ || (0, _getPrototypeOf2.default)(NumberLiteralReplacer)).call(this, options));
+
+        _this.numberLiteralCache = new _map2.default();
+        return _this;
     }
 
     (0, _createClass3.default)(NumberLiteralReplacer, [{
         key: "replace",
         value: function replace(nodeValue) {
-            if (!Utils_1.Utils.isCeilNumber(nodeValue)) {
-                return String(nodeValue);
+            if (this.numberLiteralCache.has(nodeValue)) {
+                return this.numberLiteralCache.get(nodeValue);
             }
-            return "" + Utils_1.Utils.hexadecimalPrefix + Utils_1.Utils.decToHex(nodeValue);
+            var result = void 0;
+            if (!Utils_1.Utils.isCeilNumber(nodeValue)) {
+                result = String(nodeValue);
+            } else {
+                result = "" + Utils_1.Utils.hexadecimalPrefix + Utils_1.Utils.decToHex(nodeValue);
+            }
+            this.numberLiteralCache.set(nodeValue, result);
+            return result;
         }
     }]);
     return NumberLiteralReplacer;

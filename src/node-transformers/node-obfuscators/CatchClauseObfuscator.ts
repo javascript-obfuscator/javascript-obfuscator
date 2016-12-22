@@ -14,7 +14,6 @@ import { NodeType } from '../../enums/NodeType';
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
 import { NodeUtils } from '../../node/NodeUtils';
-import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 /**
  * replaces:
@@ -48,7 +47,7 @@ export class CatchClauseObfuscator extends AbstractNodeTransformer {
      * @param catchClauseNode
      */
     public transformNode (catchClauseNode: ESTree.CatchClause): void {
-        const nodeIdentifier: string = RandomGeneratorUtils.getRandomString(7);
+        const nodeIdentifier: number = this.nodeIdentifier++;
 
         this.storeCatchClauseParam(catchClauseNode, nodeIdentifier);
         this.replaceCatchClauseParam(catchClauseNode, nodeIdentifier);
@@ -58,7 +57,7 @@ export class CatchClauseObfuscator extends AbstractNodeTransformer {
      * @param catchClauseNode
      * @param nodeIdentifier
      */
-    private storeCatchClauseParam (catchClauseNode: ESTree.CatchClause, nodeIdentifier: string): void {
+    private storeCatchClauseParam (catchClauseNode: ESTree.CatchClause, nodeIdentifier: number): void {
         NodeUtils.typedTraverse(catchClauseNode.param, NodeType.Identifier, {
             enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name, nodeIdentifier)
         });
@@ -68,7 +67,7 @@ export class CatchClauseObfuscator extends AbstractNodeTransformer {
      * @param catchClauseNode
      * @param nodeIdentifier
      */
-    private replaceCatchClauseParam (catchClauseNode: ESTree.CatchClause, nodeIdentifier: string): void {
+    private replaceCatchClauseParam (catchClauseNode: ESTree.CatchClause, nodeIdentifier: number): void {
         estraverse.replace(catchClauseNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isReplaceableIdentifierNode(node, parentNode)) {

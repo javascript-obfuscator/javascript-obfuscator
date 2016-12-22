@@ -25,5 +25,5 @@ export abstract class AbstractReplacer implements IObfuscatorReplacer {
      * @param nodeIdentifier
      * @returns {string}
      */
-    public abstract replace (nodeValue: any, nodeIdentifier?: string): string;
+    public abstract replace (nodeValue: any, nodeIdentifier?: number): string;
 }

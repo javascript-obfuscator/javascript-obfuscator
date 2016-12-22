@@ -16,7 +16,6 @@ import { NodeType } from '../../enums/NodeType';
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
 import { NodeUtils } from '../../node/NodeUtils';
-import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 /**
  * replaces:
@@ -65,7 +64,7 @@ export class VariableDeclarationObfuscator extends AbstractNodeTransformer {
             return;
         }
 
-        const nodeIdentifier: string = RandomGeneratorUtils.getRandomString(7);
+        const nodeIdentifier: number = this.nodeIdentifier++;
         const scopeNode: ESTree.Node = variableDeclarationNode.kind === 'var'
             ? blockScopeOfVariableDeclarationNode
             : parentNode;
@@ -78,7 +77,7 @@ export class VariableDeclarationObfuscator extends AbstractNodeTransformer {
      * @param variableDeclarationNode
      * @param nodeIdentifier
      */
-    private storeVariableNames (variableDeclarationNode: ESTree.VariableDeclaration, nodeIdentifier: string): void {
+    private storeVariableNames (variableDeclarationNode: ESTree.VariableDeclaration, nodeIdentifier: number): void {
         variableDeclarationNode.declarations
             .forEach((declarationNode: ESTree.VariableDeclarator) => {
                 NodeUtils.typedTraverse(declarationNode.id, NodeType.Identifier, {
@@ -91,7 +90,7 @@ export class VariableDeclarationObfuscator extends AbstractNodeTransformer {
      * @param scopeNode
      * @param nodeIdentifier
      */
-    private replaceVariableNames (scopeNode: ESTree.Node, nodeIdentifier: string): void {
+    private replaceVariableNames (scopeNode: ESTree.Node, nodeIdentifier: number): void {
         let replaceableIdentifiersForCurrentScope: ESTree.Identifier[];
 
         // check for cached identifiers for current scope node. If exist - loop through them.

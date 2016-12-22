@@ -28,8 +28,8 @@ export class IdentifierReplacer extends AbstractReplacer implements IObfuscatorR
      * @param nodeIdentifier
      * @returns {string}
      */
-    public replace (nodeValue: string, nodeIdentifier: string): string {
-        const mapKey: string = `${nodeValue}-${nodeIdentifier}`;
+    public replace (nodeValue: string, nodeIdentifier: number): string {
+        const mapKey: string = `${nodeValue}-${String(nodeIdentifier)}`;
 
         if (!this.namesMap.has(mapKey)) {
             return nodeValue;
@@ -39,15 +39,15 @@ export class IdentifierReplacer extends AbstractReplacer implements IObfuscatorR
     }
 
     /**
-     * Store all identifiers names as keys in given `namesMap` with random names as value.
+     * Store all `nodeIdentifier`'s as keys in given `namesMap` with random names as value.
      * Reserved names will be ignored.
      *
      * @param nodeName
      * @param nodeIdentifier
      */
-    public storeNames (nodeName: string, nodeIdentifier: string): void {
+    public storeNames (nodeName: string, nodeIdentifier: number): void {
         if (!this.isReservedName(nodeName)) {
-            this.namesMap.set(`${nodeName}-${nodeIdentifier}`, RandomGeneratorUtils.getRandomVariableName());
+            this.namesMap.set(`${nodeName}-${String(nodeIdentifier)}`, RandomGeneratorUtils.getRandomVariableName());
         }
     }
 

@@ -16,7 +16,6 @@ import { NodeType } from '../../enums/NodeType';
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
 import { NodeUtils } from '../../node/NodeUtils';
-import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 /**
  * replaces:
@@ -57,7 +56,7 @@ export class FunctionDeclarationObfuscator extends AbstractNodeTransformer {
      * @param parentNode
      */
     public transformNode (functionDeclarationNode: ESTree.FunctionDeclaration, parentNode: ESTree.Node): void {
-        const nodeIdentifier: string = RandomGeneratorUtils.getRandomString(7);
+        const nodeIdentifier: number = this.nodeIdentifier++;
         const blockScopeOfFunctionDeclarationNode: TNodeWithBlockStatement = NodeUtils
             .getBlockScopesOfNode(functionDeclarationNode)[0];
 
@@ -73,7 +72,7 @@ export class FunctionDeclarationObfuscator extends AbstractNodeTransformer {
      * @param functionDeclarationNode
      * @param nodeIdentifier
      */
-    private storeFunctionName (functionDeclarationNode: ESTree.FunctionDeclaration, nodeIdentifier: string): void {
+    private storeFunctionName (functionDeclarationNode: ESTree.FunctionDeclaration, nodeIdentifier: number): void {
         NodeUtils.typedTraverse(functionDeclarationNode.id, NodeType.Identifier, {
             enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name, nodeIdentifier)
         });
@@ -83,7 +82,7 @@ export class FunctionDeclarationObfuscator extends AbstractNodeTransformer {
      * @param scopeNode
      * @param nodeIdentifier
      */
-    private replaceFunctionName (scopeNode: ESTree.Node, nodeIdentifier: string): void {
+    private replaceFunctionName (scopeNode: ESTree.Node, nodeIdentifier: number): void {
         let replaceableIdentifiersForCurrentScope: ESTree.Identifier[];
 
         // check for cached identifiers for current scope node. If exist - loop through them.

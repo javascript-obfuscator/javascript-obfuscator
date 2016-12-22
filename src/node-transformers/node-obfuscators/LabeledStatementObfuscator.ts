@@ -14,7 +14,6 @@ import { NodeType } from '../../enums/NodeType';
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
 import { NodeUtils } from '../../node/NodeUtils';
-import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 /**
  * replaces:
@@ -56,7 +55,7 @@ export class LabeledStatementObfuscator extends AbstractNodeTransformer {
      * @param labeledStatementNode
      */
     public transformNode (labeledStatementNode: ESTree.LabeledStatement): void {
-        const nodeIdentifier: string = RandomGeneratorUtils.getRandomString(7);
+        const nodeIdentifier: number = this.nodeIdentifier++;
 
         this.storeLabeledStatementName(labeledStatementNode, nodeIdentifier);
         this.replaceLabeledStatementName(labeledStatementNode, nodeIdentifier);
@@ -66,7 +65,7 @@ export class LabeledStatementObfuscator extends AbstractNodeTransformer {
      * @param labeledStatementNode
      * @param nodeIdentifier
      */
-    private storeLabeledStatementName (labeledStatementNode: ESTree.LabeledStatement, nodeIdentifier: string): void {
+    private storeLabeledStatementName (labeledStatementNode: ESTree.LabeledStatement, nodeIdentifier: number): void {
         NodeUtils.typedTraverse(labeledStatementNode.label, NodeType.Identifier, {
             enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name, nodeIdentifier)
         });
@@ -76,7 +75,7 @@ export class LabeledStatementObfuscator extends AbstractNodeTransformer {
      * @param labeledStatementNode
      * @param nodeIdentifier
      */
-    private replaceLabeledStatementName (labeledStatementNode: ESTree.LabeledStatement, nodeIdentifier: string): void {
+    private replaceLabeledStatementName (labeledStatementNode: ESTree.LabeledStatement, nodeIdentifier: number): void {
         estraverse.replace(labeledStatementNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isLabelIdentifierNode(node, parentNode)) {

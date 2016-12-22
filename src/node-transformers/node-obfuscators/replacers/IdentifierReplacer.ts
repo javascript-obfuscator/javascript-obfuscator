@@ -29,13 +29,13 @@ export class IdentifierReplacer extends AbstractReplacer implements IObfuscatorR
      * @returns {string}
      */
     public replace (nodeValue: string, nodeIdentifier: string): string {
-        const obfuscatedIdentifierName: string|undefined = this.namesMap.get(`${nodeValue}-${nodeIdentifier}`);
+        const mapKey: string = `${nodeValue}-${nodeIdentifier}`;
 
-        if (!obfuscatedIdentifierName) {
+        if (!this.namesMap.has(mapKey)) {
             return nodeValue;
         }
 
-        return obfuscatedIdentifierName;
+        return <string>this.namesMap.get(mapKey);
     }
 
     /**

@@ -25,9 +25,6 @@ Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/
 [![Build Status](https://travis-ci.org/javascript-obfuscator/javascript-obfuscator.svg?branch=master)](https://travis-ci.org/javascript-obfuscator/javascript-obfuscator)
 [![Coverage Status](https://coveralls.io/repos/github/javascript-obfuscator/javascript-obfuscator/badge.svg?branch=master)](https://coveralls.io/github/javascript-obfuscator/javascript-obfuscator?branch=master)
 
-[![Dependency Status](https://david-dm.org/javascript-obfuscator/javascript-obfuscator.svg)](https://david-dm.org/javascript-obfuscator/javascript-obfuscator)
-[![devDependency Status](https://david-dm.org/javascript-obfuscator/javascript-obfuscator/dev-status.svg)](https://david-dm.org/javascript-obfuscator/javascript-obfuscator#info=devDependencies)
-
 ## :warning: Important
 #####Obfuscate only the code that belongs to you. 
 

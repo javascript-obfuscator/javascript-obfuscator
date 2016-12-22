@@ -60,16 +60,18 @@ module.exports =
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 /******/
-/******/ 	// define getter function for harmory exports
+/******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -120,7 +122,7 @@ module.exports = require("tslib");
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _symbol = __webpack_require__(130);
 
@@ -178,7 +180,7 @@ module.exports = require("babel-runtime/helpers/possibleConstructorReturn");
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -261,7 +263,7 @@ exports.RandomGeneratorUtils = RandomGeneratorUtils;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getIterator2 = __webpack_require__(24);
 
@@ -454,7 +456,7 @@ exports.NodeUtils = NodeUtils;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _defineProperty = __webpack_require__(128);
 
@@ -510,7 +512,7 @@ exports.initializable = initializable;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -669,7 +671,7 @@ module.exports = require("babel-runtime/core-js/map");
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _from = __webpack_require__(43);
 
@@ -804,11 +806,12 @@ var Utils = function () {
             var nonLatinAndNonDigitsOnly = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
             var radix = 16;
-            var regexp = new RegExp('[\x00-\x7F]');
+            var replaceRegExp = new RegExp('[\\s\\S]', 'g');
             var escapeRegExp = new RegExp('[^a-zA-Z0-9]');
+            var regexp = new RegExp('[\\x00-\\x7F]');
             var prefix = void 0,
                 template = void 0;
-            return "" + string.replace(/[\s\S]/g, function (escape) {
+            return "" + string.replace(replaceRegExp, function (escape) {
                 if (nonLatinAndNonDigitsOnly && !escapeRegExp.test(escape)) {
                     return escape;
                 }
@@ -840,7 +843,7 @@ module.exports = require("estraverse");
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -890,7 +893,7 @@ exports.AbstractCustomNode = AbstractCustomNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var Utils_1 = __webpack_require__(13);
 exports.NodeType = Utils_1.Utils.strEnumify({
@@ -933,7 +936,7 @@ exports.NodeType = Utils_1.Utils.strEnumify({
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -960,10 +963,10 @@ module.exports = require("string-template");
 
 /***/ },
 /* 19 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var NodeObfuscatorsReplacers;
 (function (NodeObfuscatorsReplacers) {
@@ -975,10 +978,10 @@ var NodeObfuscatorsReplacers;
 
 /***/ },
 /* 20 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var CustomNodes;
 (function (CustomNodes) {
@@ -999,10 +1002,10 @@ var CustomNodes;
 
 /***/ },
 /* 21 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 exports.ObfuscationEvents = {
     AfterObfuscation: 'afterObfuscation',
@@ -1014,7 +1017,7 @@ exports.ObfuscationEvents = {
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -1070,7 +1073,7 @@ exports.JavaScriptObfuscator = JavaScriptObfuscator;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getIterator2 = __webpack_require__(24);
 
@@ -1217,7 +1220,7 @@ module.exports = require("escodegen");
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -1266,10 +1269,10 @@ exports.AbstractCustomNodeGroup = AbstractCustomNodeGroup;
 
 /***/ },
 /* 27 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 exports.SourceMapMode = {
     Inline: 'inline',
@@ -1281,7 +1284,7 @@ exports.SourceMapMode = {
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -1305,7 +1308,7 @@ exports.AbstractReplacer = AbstractReplacer;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _freeze = __webpack_require__(45);
 
@@ -1338,10 +1341,10 @@ exports.NO_CUSTOM_NODES_PRESET = (0, _freeze2.default)({
 
 /***/ },
 /* 30 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 exports.StringArrayEncoding = {
     base64: 'base64',
@@ -1353,7 +1356,7 @@ exports.StringArrayEncoding = {
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -1577,7 +1580,7 @@ exports.Nodes = Nodes;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -1598,7 +1601,7 @@ exports.AbstractCalleeDataExtractor = AbstractCalleeDataExtractor;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -1712,10 +1715,10 @@ module.exports = require("babel-runtime/helpers/toConsumableArray");
 
 /***/ },
 /* 36 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 exports.JSFuck = {
     False: '![]',
@@ -1776,10 +1779,10 @@ exports.JSFuck = {
 
 /***/ },
 /* 37 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var CalleeDataExtractors;
 (function (CalleeDataExtractors) {
@@ -1790,10 +1793,10 @@ var CalleeDataExtractors;
 
 /***/ },
 /* 38 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var CustomNodeGroups;
 (function (CustomNodeGroups) {
@@ -1806,10 +1809,10 @@ var CustomNodeGroups;
 
 /***/ },
 /* 39 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var NodeControlFlowReplacers;
 (function (NodeControlFlowReplacers) {
@@ -1818,10 +1821,10 @@ var NodeControlFlowReplacers;
 
 /***/ },
 /* 40 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var NodeTransformers;
 (function (NodeTransformers) {
@@ -1842,7 +1845,7 @@ var NodeTransformers;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _freeze = __webpack_require__(45);
 
@@ -1878,7 +1881,7 @@ exports.DEFAULT_PRESET = (0, _freeze2.default)({
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _toConsumableArray2 = __webpack_require__(35);
 
@@ -2019,7 +2022,7 @@ module.exports = require("path");
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -2092,7 +2095,7 @@ var JavaScriptObfuscatorInternal_1;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -2146,7 +2149,7 @@ exports.ObfuscationResult = ObfuscationResult;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _map = __webpack_require__(12);
 
@@ -2233,7 +2236,7 @@ var Obfuscator_1;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -2296,7 +2299,7 @@ exports.SourceMapCorrector = SourceMapCorrector;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -2392,7 +2395,7 @@ exports.CLIUtils = CLIUtils;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _keys = __webpack_require__(46);
 
@@ -2549,7 +2552,7 @@ exports.JavaScriptObfuscatorCLI = JavaScriptObfuscatorCLI;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -2625,7 +2628,7 @@ exports.InversifyContainerFacade = InversifyContainerFacade;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _map = __webpack_require__(12);
 
@@ -2701,7 +2704,7 @@ exports.customNodesModule = new inversify_1.ContainerModule(function (bind) {
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _map = __webpack_require__(12);
 
@@ -2733,7 +2736,7 @@ exports.nodeControlFlowTransformersModule = new inversify_1.ContainerModule(func
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _map = __webpack_require__(12);
 
@@ -2771,7 +2774,7 @@ exports.nodeObfuscatorsModule = new inversify_1.ContainerModule(function (bind) 
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _map = __webpack_require__(12);
 
@@ -2830,7 +2833,7 @@ exports.nodeTransformersModule = new inversify_1.ContainerModule(function (bind)
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _map = __webpack_require__(12);
 
@@ -2868,7 +2871,7 @@ exports.stackTraceAnalyzerModule = new inversify_1.ContainerModule(function (bin
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
@@ -2892,7 +2895,7 @@ exports.storagesModule = new inversify_1.ContainerModule(function (bind) {
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -2963,7 +2966,7 @@ exports.ConsoleOutputDisableExpressionNode = ConsoleOutputDisableExpressionNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _map = __webpack_require__(12);
 
@@ -3058,7 +3061,7 @@ exports.ConsoleOutputCustomNodeGroup = ConsoleOutputCustomNodeGroup;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -3119,7 +3122,7 @@ exports.BinaryExpressionFunctionNode = BinaryExpressionFunctionNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -3185,7 +3188,7 @@ exports.ControlFlowStorageCallNode = ControlFlowStorageCallNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _slicedToArray2 = __webpack_require__(34);
 
@@ -3262,7 +3265,7 @@ exports.ControlFlowStorageNode = ControlFlowStorageNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -3331,7 +3334,7 @@ exports.DebugProtectionFunctionCallNode = DebugProtectionFunctionCallNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -3400,7 +3403,7 @@ exports.DebugProtectionFunctionIntervalNode = DebugProtectionFunctionIntervalNod
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -3469,7 +3472,7 @@ exports.DebugProtectionFunctionNode = DebugProtectionFunctionNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _map = __webpack_require__(12);
 
@@ -3567,7 +3570,7 @@ exports.DebugProtectionCustomNodeGroup = DebugProtectionCustomNodeGroup;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _slicedToArray2 = __webpack_require__(34);
 
@@ -3652,7 +3655,7 @@ exports.DomainLockNode = DomainLockNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _map = __webpack_require__(12);
 
@@ -3747,7 +3750,7 @@ exports.DomainLockCustomNodeGroup = DomainLockCustomNodeGroup;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -3826,7 +3829,7 @@ exports.NodeCallsControllerFunctionNode = NodeCallsControllerFunctionNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -3899,7 +3902,7 @@ exports.SelfDefendingUnicodeNode = SelfDefendingUnicodeNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _map = __webpack_require__(12);
 
@@ -3994,7 +3997,7 @@ exports.SelfDefendingCustomNodeGroup = SelfDefendingCustomNodeGroup;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -4108,7 +4111,7 @@ exports.StringArrayCallsWrapper = StringArrayCallsWrapper;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -4192,7 +4195,7 @@ exports.StringArrayNode = StringArrayNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -4285,7 +4288,7 @@ exports.StringArrayRotateFunctionNode = StringArrayRotateFunctionNode;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _map = __webpack_require__(12);
 
@@ -4395,7 +4398,7 @@ exports.StringArrayCustomNodeGroup = StringArrayCustomNodeGroup;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var Utils_1 = __webpack_require__(13);
 exports.VisitorDirection = Utils_1.Utils.strEnumify({
@@ -4408,7 +4411,7 @@ exports.VisitorDirection = Utils_1.Utils.strEnumify({
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -4450,7 +4453,7 @@ exports.ObfuscationEventEmitter = ObfuscationEventEmitter;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _map = __webpack_require__(12);
 
@@ -4582,7 +4585,7 @@ var FunctionControlFlowTransformer_1;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -4606,7 +4609,7 @@ exports.AbstractControlFlowReplacer = AbstractControlFlowReplacer;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _map = __webpack_require__(12);
 
@@ -4703,7 +4706,7 @@ var BinaryExpressionControlFlowReplacer_1;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -4791,7 +4794,7 @@ exports.CatchClauseObfuscator = CatchClauseObfuscator;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -4883,7 +4886,7 @@ exports.FunctionDeclarationObfuscator = FunctionDeclarationObfuscator;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -4981,7 +4984,7 @@ exports.FunctionObfuscator = FunctionObfuscator;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -5069,7 +5072,7 @@ exports.LabeledStatementObfuscator = LabeledStatementObfuscator;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _typeof2 = __webpack_require__(132);
 
@@ -5152,7 +5155,7 @@ exports.LiteralObfuscator = LiteralObfuscator;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -5245,7 +5248,7 @@ exports.MemberExpressionObfuscator = MemberExpressionObfuscator;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -5322,7 +5325,7 @@ var MethodDefinitionObfuscator_1;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _assign = __webpack_require__(44);
 
@@ -5426,7 +5429,7 @@ exports.ObjectExpressionObfuscator = ObjectExpressionObfuscator;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -5521,7 +5524,7 @@ exports.VariableDeclarationObfuscator = VariableDeclarationObfuscator;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -5574,7 +5577,7 @@ exports.BooleanLiteralReplacer = BooleanLiteralReplacer;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _map = __webpack_require__(12);
 
@@ -5622,11 +5625,11 @@ var IdentifierReplacer = function (_AbstractReplacer_1$A) {
     (0, _createClass3.default)(IdentifierReplacer, [{
         key: "replace",
         value: function replace(nodeValue, nodeIdentifier) {
-            var obfuscatedIdentifierName = this.namesMap.get(nodeValue + "-" + nodeIdentifier);
-            if (!obfuscatedIdentifierName) {
+            var mapKey = nodeValue + "-" + nodeIdentifier;
+            if (!this.namesMap.has(mapKey)) {
                 return nodeValue;
             }
-            return obfuscatedIdentifierName;
+            return this.namesMap.get(mapKey);
         }
     }, {
         key: "storeNames",
@@ -5653,7 +5656,7 @@ exports.IdentifierReplacer = IdentifierReplacer;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -5709,7 +5712,7 @@ exports.NumberLiteralReplacer = NumberLiteralReplacer;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -5809,7 +5812,7 @@ var StringLiteralReplacer_1;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _assign = __webpack_require__(44);
 
@@ -5879,7 +5882,7 @@ var Options_1;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getIterator2 = __webpack_require__(24);
 
@@ -6064,7 +6067,7 @@ exports.OptionsNormalizer = OptionsNormalizer;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getIterator2 = __webpack_require__(24);
 
@@ -6140,7 +6143,7 @@ exports.ValidationErrorsFormatter = ValidationErrorsFormatter;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -6244,7 +6247,7 @@ var StackTraceAnalyzer_1;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -6322,7 +6325,7 @@ exports.FunctionDeclarationCalleeDataExtractor = FunctionDeclarationCalleeDataEx
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -6403,7 +6406,7 @@ exports.FunctionExpressionCalleeDataExtractor = FunctionExpressionCalleeDataExtr
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getIterator2 = __webpack_require__(24);
 
@@ -6558,7 +6561,7 @@ exports.ObjectExpressionCalleeDataExtractor = ObjectExpressionCalleeDataExtracto
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _toConsumableArray2 = __webpack_require__(35);
 
@@ -6646,7 +6649,7 @@ exports.ArrayStorage = ArrayStorage;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -6690,7 +6693,7 @@ exports.ControlFlowStorage = ControlFlowStorage;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _map = __webpack_require__(12);
 
@@ -6766,7 +6769,7 @@ var CustomNodeGroupStorage_1;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -6841,10 +6844,10 @@ exports.StringArrayStorage = StringArrayStorage;
 
 /***/ },
 /* 111 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function AtobTemplate() {
     return "\n        (function () {\n            var getGlobal = Function('return (function () ' + '{}.constructor(\"return this\")()' + ');');\n\n            var object = getGlobal();\n            var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';\n\n            object.atob || (\n                object.atob = function(input) {\n                    var str = String(input).replace(/=+$/, '');\n                    for (\n                        var bc = 0, bs, buffer, idx = 0, output = '';\n                        buffer = str.charAt(idx++);\n                        ~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer,\n                            bc++ % 4) ? output += String.fromCharCode(255 & bs >> (-2 * bc & 6)) : 0\n                    ) {\n                        buffer = chars.indexOf(buffer);\n                    }\n                return output;\n            });\n        })();\n    ";
@@ -6853,10 +6856,10 @@ exports.AtobTemplate = AtobTemplate;
 
 /***/ },
 /* 112 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function Rc4Template() {
     return "\n        var rc4 = function (str, key) {\n            var s = [], j = 0, x, res = '', newStr = '';\n           \n            str = atob(str);\n                \n            for (var k = 0, length = str.length; k < length; k++) {\n                newStr += '%' + ('00' + str.charCodeAt(k).toString(16)).slice(-2);\n            }\n        \n            str = decodeURIComponent(newStr);\n                    \t        \n\t        for (var i = 0; i < 256; i++) {\n                s[i] = i;\n            }\n \n            for (i = 0; i < 256; i++) {\n                j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;\n                x = s[i];\n                s[i] = s[j];\n                s[j] = x;\n            }\n            \n            i = 0;\n            j = 0;\n            \n            for (var y = 0; y < str.length; y++) {\n                i = (i + 1) % 256;\n                j = (j + s[i]) % 256;\n                x = s[i];\n                s[i] = s[j];\n                s[j] = x;\n                res += String.fromCharCode(str.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);\n            }\n                      \n            return res;\n        }\n    ";
@@ -6865,10 +6868,10 @@ exports.Rc4Template = Rc4Template;
 
 /***/ },
 /* 113 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function SingleNodeCallControllerTemplate() {
     return "\n        var {singleNodeCallControllerFunctionName} = (function(){\n            var firstCall = true;\n            \n            return function (context, fn){\t\n                var rfn = firstCall ? function(){\n                    if(fn){\n                        var res = fn.apply(context, arguments);\n                        fn = null;\n                        return res;\n                    }\n                } : function(){}\n                \n                firstCall = false;\n                \n                return rfn;\n            }\n        })();\n    ";
@@ -6877,10 +6880,10 @@ exports.SingleNodeCallControllerTemplate = SingleNodeCallControllerTemplate;
 
 /***/ },
 /* 114 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function ConsoleOutputDisableExpressionTemplate() {
     return "\n        var {consoleLogDisableFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {\n            var getGlobal = Function('return (function() ' + '{}.constructor(\"return this\")( )' + ');');\n            \n            var func = function () {};\n            var that = getGlobal();\n                        \n            that.console.log = func; \n            that.console.error = func;\n            that.console.warn = func;\n            that.console.info = func;\n        });\n        \n        {consoleLogDisableFunctionName}();\n    ";
@@ -6889,10 +6892,10 @@ exports.ConsoleOutputDisableExpressionTemplate = ConsoleOutputDisableExpressionT
 
 /***/ },
 /* 115 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function DebugProtectionFunctionCallTemplate() {
     return "{debugProtectionFunctionName}();";
@@ -6901,10 +6904,10 @@ exports.DebugProtectionFunctionCallTemplate = DebugProtectionFunctionCallTemplat
 
 /***/ },
 /* 116 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function DebugProtectionFunctionIntervalTemplate() {
     return "\n        setInterval(function () {\n            {debugProtectionFunctionName}();\n        }, 4000);\n    ";
@@ -6913,10 +6916,10 @@ exports.DebugProtectionFunctionIntervalTemplate = DebugProtectionFunctionInterva
 
 /***/ },
 /* 117 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function DebugProtectionFunctionTemplate() {
     return "\n        var {debugProtectionFunctionName} = function () {\n            function debuggerProtection (counter) {\n                if (('' + counter / counter)['length'] !== 1 || counter % 20 === 0) {\n                    (function () {}.constructor('debugger')());\n                } else {\n                    (function () {}.constructor('debugger')());\n                }\n                \n                debuggerProtection(++counter);\n            }\n            \n            try {\n                debuggerProtection(0);\n            } catch (y) {}\n        };\n    ";
@@ -6925,10 +6928,10 @@ exports.DebugProtectionFunctionTemplate = DebugProtectionFunctionTemplate;
 
 /***/ },
 /* 118 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function DomainLockNodeTemplate() {
     return "\n        var {domainLockFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {\n            var getGlobal = Function('return (function () ' + '{}.constructor(\"return this\")()' + ');');\n\n            var func = function () { \n                return {\n                    key: 'item',\n                    value: 'attribute',\n                    getAttribute: function () {\n                        getGlobal()['eval']('while(true){}')();\n                    }()\n                };\n            };\n                        \n            var regExp = new RegExp(\"[{diff}]\", \"g\");\n            var domains = \"{domains}\".replace(regExp, \"\").split(\";\");\n            var eval = [][\"forEach\"][\"constructor\"];\n            var windowObject = eval(\"return this\")();\n            var document;\n            var domain;\n                        \n            for (var d in windowObject) {\n                if (d.length == 8 && d.charCodeAt(7) == 116 && d.charCodeAt(5) == 101 && d.charCodeAt(3) == 117 && d.charCodeAt(0) == 100) {\n                    document = d;\n                \n                    break;\n                }\n            }\n\n            for (var d1 in windowObject[document]) {\n                if (d1.length == 6 && d1.charCodeAt(5) == 110 && d1.charCodeAt(0) == 100) {\n                    domain = d1;\n                    \n                    break;\n                }\n            }\n            \n            if ((!document && !domain) || (!windowObject[document] && !windowObject[document][domain])) {\n                return;\n            }\n            \n            var currentDomain = windowObject[document][domain];\n\n            var ok = false;\n                        \n            for (var i = 0; i < domains.length; i++) {\n                var domain = domains[i];\n                var position = currentDomain.length - domain.length;\n                var lastIndex = currentDomain.indexOf(domain, position);\n                var endsWith = lastIndex !== -1 && lastIndex === position;\n                \n                if (endsWith) {\n                    if (currentDomain.length == domain.length || domain.indexOf(\".\") === 0) {\n                        ok = true;\n                    }\n                    \n                    break;\n                }\n            }\n               \n            if (!ok) {\n                data;\n            } else {\n                return;\n            }\n            \n            func();\n        });\n\n        {domainLockFunctionName}();\n    ";
@@ -6940,7 +6943,7 @@ exports.DomainLockNodeTemplate = DomainLockNodeTemplate;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var Utils_1 = __webpack_require__(13);
 function SelfDefendingTemplate() {
@@ -6953,7 +6956,7 @@ exports.SelfDefendingTemplate = SelfDefendingTemplate;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var Utils_1 = __webpack_require__(13);
 function SelfDefendingTemplate() {
@@ -6963,10 +6966,10 @@ exports.SelfDefendingTemplate = SelfDefendingTemplate;
 
 /***/ },
 /* 121 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function StringArrayBase64DecodeNodeTemplate() {
     return "      \n        if (!{stringArrayCallsWrapperName}.atobPolyfillAppended) {\n            {atobPolyfill}\n            \n            {stringArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n        \n        if (!{stringArrayCallsWrapperName}.base64DecodeUnicode) {                \n            {stringArrayCallsWrapperName}.base64DecodeUnicode = function (str) {\n                var string = atob(str);\n                var newStringChars = [];\n                \n                for (var i = 0, length = string.length; i < length; i++) {\n                    newStringChars += '%' + ('00' + string.charCodeAt(i).toString(16)).slice(-2);\n                }\n                \n                return decodeURIComponent(newStringChars);\n            };\n        }\n        \n        if (!{stringArrayCallsWrapperName}.data) {\n            {stringArrayCallsWrapperName}.data = {};\n        }\n                        \n        if (!{stringArrayCallsWrapperName}.data[index]) {\n            {selfDefendingCode}\n            \n            value = {stringArrayCallsWrapperName}.base64DecodeUnicode(value);\n            {stringArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = {stringArrayCallsWrapperName}.data[index];\n        }  \n    ";
@@ -6975,10 +6978,10 @@ exports.StringArrayBase64DecodeNodeTemplate = StringArrayBase64DecodeNodeTemplat
 
 /***/ },
 /* 122 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function StringArrayCallsWrapperTemplate() {
     return "\n        var {stringArrayCallsWrapperName} = function (index, key) {\n            var index = parseInt(index, 0x10);\n            var value = {stringArrayName}[index];\n            \n            {decodeNodeTemplate}\n        \n            return value;\n        };\n    ";
@@ -6987,10 +6990,10 @@ exports.StringArrayCallsWrapperTemplate = StringArrayCallsWrapperTemplate;
 
 /***/ },
 /* 123 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function StringArrayRc4DecodeNodeTemplate() {
     return "\n        if (!{stringArrayCallsWrapperName}.atobPolyfillAppended) {            \n            {atobPolyfill}\n            \n            {stringArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n        \n        if (!{stringArrayCallsWrapperName}.rc4) {            \n            {rc4Polyfill}\n            \n            {stringArrayCallsWrapperName}.rc4 = rc4;\n        }\n                        \n        if (!{stringArrayCallsWrapperName}.data) {\n            {stringArrayCallsWrapperName}.data = {};\n        }\n\n        if ({stringArrayCallsWrapperName}.data[index] === undefined) {\n            if (!{stringArrayCallsWrapperName}.once) {\n                {selfDefendingCode}\n                \n                {stringArrayCallsWrapperName}.once = true;\n            }\n            \n            value = {stringArrayCallsWrapperName}.rc4(value, key);\n            {stringArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = {stringArrayCallsWrapperName}.data[index];\n        }\n    ";
@@ -6999,10 +7002,10 @@ exports.StringArrayRc4DecodeNodeTemplate = StringArrayRc4DecodeNodeTemplate;
 
 /***/ },
 /* 124 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function StringArrayTemplate() {
     return "\n        var {stringArrayName} = [{stringArray}];\n    ";
@@ -7014,7 +7017,7 @@ exports.StringArrayTemplate = StringArrayTemplate;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var Utils_1 = __webpack_require__(13);
 function SelfDefendingTemplate() {
@@ -7024,10 +7027,10 @@ exports.SelfDefendingTemplate = SelfDefendingTemplate;
 
 /***/ },
 /* 126 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 function StringArrayRotateFunctionTemplate() {
     return "\n        (function (array, {timesName}) {\n            var {whileFunctionName} = function (times) {\n                while (--times) {\n                    array['push'](array['shift']());\n                }\n            };\n            \n            {code}\n        })({stringArrayName}, 0x{stringArrayRotateValue});\n    ";
@@ -7118,7 +7121,7 @@ module.exports = require("reflect-metadata");
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+
 
 var JavaScriptObfuscator_1 = __webpack_require__(22);
 module.exports = JavaScriptObfuscator_1.JavaScriptObfuscator;

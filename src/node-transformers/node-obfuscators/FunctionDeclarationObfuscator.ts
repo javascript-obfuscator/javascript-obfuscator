@@ -35,6 +35,11 @@ export class FunctionDeclarationObfuscator extends AbstractNodeTransformer {
     private readonly identifierReplacer: IObfuscatorReplacerWithStorage;
 
     /**
+     * @type {Map<ESTree.Node, ESTree.Identifier[]>}
+     */
+    private readonly replaceableIdentifiers: Map <ESTree.Node, ESTree.Identifier[]> = new Map();
+
+    /**
      * @param nodeObfuscatorsReplacersFactory
      * @param options
      */
@@ -79,12 +84,37 @@ export class FunctionDeclarationObfuscator extends AbstractNodeTransformer {
      * @param nodeIdentifier
      */
     private replaceFunctionName (scopeNode: ESTree.Node, nodeIdentifier: string): void {
+        let replaceableIdentifiersForCurrentScope: ESTree.Identifier[];
+
+        /**
+         * check for cached identifiers for current scope node. If exist - loop through them.
+         */
+        if (this.replaceableIdentifiers.has(scopeNode)) {
+            replaceableIdentifiersForCurrentScope = <ESTree.Identifier[]>this.replaceableIdentifiers.get(scopeNode);
+
+            for (const replaceableIdentifier of replaceableIdentifiersForCurrentScope) {
+                replaceableIdentifier.name = this.identifierReplacer.replace(replaceableIdentifier.name, nodeIdentifier);
+            }
+
+            return;
+        }
+
+        replaceableIdentifiersForCurrentScope = [];
+
         estraverse.replace(scopeNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isReplaceableIdentifierNode(node, parentNode)) {
-                    node.name = this.identifierReplacer.replace(node.name, nodeIdentifier);
+                    const newNodeName: string = this.identifierReplacer.replace(node.name, nodeIdentifier);
+
+                    if (node.name !== newNodeName) {
+                        node.name = newNodeName;
+                    } else {
+                        replaceableIdentifiersForCurrentScope.push(node);
+                    }
                 }
             }
         });
+
+        this.replaceableIdentifiers.set(scopeNode, replaceableIdentifiersForCurrentScope);
     }
 }

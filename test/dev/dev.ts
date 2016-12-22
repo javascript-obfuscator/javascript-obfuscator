@@ -84,8 +84,7 @@ if (!(<any>global)._babelPolyfill) {
         {
             compact: false,
             controlFlowFlattening: true,
-            disableConsoleOutput: false,
-            unicodeEscapeSequence: false
+            disableConsoleOutput: false
         }
     ).getObfuscatedCode();
 

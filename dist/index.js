@@ -4796,6 +4796,14 @@ exports.CatchClauseObfuscator = CatchClauseObfuscator;
 "use strict";
 
 
+var _getIterator2 = __webpack_require__(24);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _map = __webpack_require__(12);
+
+var _map2 = _interopRequireDefault(_map);
+
 var _getPrototypeOf = __webpack_require__(5);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -4836,6 +4844,7 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeTransfor) {
 
         var _this = (0, _possibleConstructorReturn3.default)(this, (FunctionDeclarationObfuscator.__proto__ || (0, _getPrototypeOf2.default)(FunctionDeclarationObfuscator)).call(this, options));
 
+        _this.replaceableIdentifiers = new _map2.default();
         _this.identifierReplacer = nodeObfuscatorsReplacersFactory(NodeObfuscatorsReplacers_1.NodeObfuscatorsReplacers.IdentifierReplacer);
         return _this;
     }
@@ -4867,13 +4876,50 @@ var FunctionDeclarationObfuscator = function (_AbstractNodeTransfor) {
         value: function replaceFunctionName(scopeNode, nodeIdentifier) {
             var _this3 = this;
 
+            var replaceableIdentifiersForCurrentScope = void 0;
+            if (this.replaceableIdentifiers.has(scopeNode)) {
+                replaceableIdentifiersForCurrentScope = this.replaceableIdentifiers.get(scopeNode);
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = (0, _getIterator3.default)(replaceableIdentifiersForCurrentScope), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var replaceableIdentifier = _step.value;
+
+                        replaceableIdentifier.name = this.identifierReplacer.replace(replaceableIdentifier.name, nodeIdentifier);
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+
+                return;
+            }
+            replaceableIdentifiersForCurrentScope = [];
             estraverse.replace(scopeNode, {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
-                        node.name = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
+                        var newNodeName = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
+                        if (node.name !== newNodeName) {
+                            node.name = newNodeName;
+                        } else {
+                            replaceableIdentifiersForCurrentScope.push(node);
+                        }
                     }
                 }
             });
+            this.replaceableIdentifiers.set(scopeNode, replaceableIdentifiersForCurrentScope);
         }
     }]);
     return FunctionDeclarationObfuscator;
@@ -5431,6 +5477,14 @@ exports.ObjectExpressionObfuscator = ObjectExpressionObfuscator;
 "use strict";
 
 
+var _getIterator2 = __webpack_require__(24);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _map = __webpack_require__(12);
+
+var _map2 = _interopRequireDefault(_map);
+
 var _getPrototypeOf = __webpack_require__(5);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -5471,6 +5525,7 @@ var VariableDeclarationObfuscator = function (_AbstractNodeTransfor) {
 
         var _this = (0, _possibleConstructorReturn3.default)(this, (VariableDeclarationObfuscator.__proto__ || (0, _getPrototypeOf2.default)(VariableDeclarationObfuscator)).call(this, options));
 
+        _this.replaceableIdentifiers = new _map2.default();
         _this.identifierReplacer = replacersFactory(NodeObfuscatorsReplacers_1.NodeObfuscatorsReplacers.IdentifierReplacer);
         return _this;
     }
@@ -5505,13 +5560,50 @@ var VariableDeclarationObfuscator = function (_AbstractNodeTransfor) {
         value: function replaceVariableNames(scopeNode, nodeIdentifier) {
             var _this3 = this;
 
+            var replaceableIdentifiersForCurrentScope = void 0;
+            if (this.replaceableIdentifiers.has(scopeNode)) {
+                replaceableIdentifiersForCurrentScope = this.replaceableIdentifiers.get(scopeNode);
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = (0, _getIterator3.default)(replaceableIdentifiersForCurrentScope), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var replaceableIdentifier = _step.value;
+
+                        replaceableIdentifier.name = this.identifierReplacer.replace(replaceableIdentifier.name, nodeIdentifier);
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+
+                return;
+            }
+            replaceableIdentifiersForCurrentScope = [];
             estraverse.replace(scopeNode, {
                 enter: function enter(node, parentNode) {
                     if (!node.obfuscated && Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
-                        node.name = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
+                        var newNodeName = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
+                        if (node.name !== newNodeName) {
+                            node.name = newNodeName;
+                        } else {
+                            replaceableIdentifiersForCurrentScope.push(node);
+                        }
                     }
                 }
             });
+            this.replaceableIdentifiers.set(scopeNode, replaceableIdentifiersForCurrentScope);
         }
     }]);
     return VariableDeclarationObfuscator;

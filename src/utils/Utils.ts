@@ -8,6 +8,11 @@ export class Utils {
     public static readonly hexadecimalPrefix: string = '0x';
 
     /**
+     * @type {Map<string, string>}
+     */
+    private static readonly stringToUnicodeEscapeSequenceCache: Map <string, string> = new Map();
+
+    /**
      * @param array
      * @param times
      * @returns {T[]}
@@ -128,6 +133,12 @@ export class Utils {
      * @returns {string}
      */
     public static stringToUnicodeEscapeSequence (string: string, nonLatinAndNonDigitsOnly: boolean = false): string {
+        const cacheKey: string = `${string}-${String(nonLatinAndNonDigitsOnly)}`;
+
+        if (Utils.stringToUnicodeEscapeSequenceCache.has(cacheKey)) {
+            return <string>Utils.stringToUnicodeEscapeSequenceCache.get(cacheKey);
+        }
+
         const radix: number = 16;
         const replaceRegExp: RegExp = new RegExp('[\\s\\S]', 'g');
         const escapeRegExp: RegExp = new RegExp('[^a-zA-Z0-9]');
@@ -136,11 +147,11 @@ export class Utils {
         let prefix: string,
             template: string;
 
-        return `${string.replace(replaceRegExp, (escape: string): string => {
+        const result: string = string.replace(replaceRegExp, (escape: string): string => {
             if (nonLatinAndNonDigitsOnly && !escapeRegExp.test(escape)) {
                 return escape;
             }
-            
+
             if (regexp.test(escape)) {
                 prefix = '\\x';
                 template = '0'.repeat(2);
@@ -150,6 +161,10 @@ export class Utils {
             }
             
             return `${prefix}${(template + escape.charCodeAt(0).toString(radix)).slice(-template.length)}`;
-        })}`;
+        });
+
+        Utils.stringToUnicodeEscapeSequenceCache.set(cacheKey, result);
+
+        return result;
     }
 }

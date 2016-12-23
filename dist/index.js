@@ -673,6 +673,10 @@ exports.Node = Node;
 "use strict";
 
 
+var _map = __webpack_require__(11);
+
+var _map2 = _interopRequireDefault(_map);
+
 var _from = __webpack_require__(43);
 
 var _from2 = _interopRequireDefault(_from);
@@ -805,13 +809,17 @@ var Utils = function () {
         value: function stringToUnicodeEscapeSequence(string) {
             var nonLatinAndNonDigitsOnly = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
+            var cacheKey = string + "-" + String(nonLatinAndNonDigitsOnly);
+            if (Utils.stringToUnicodeEscapeSequenceCache.has(cacheKey)) {
+                return Utils.stringToUnicodeEscapeSequenceCache.get(cacheKey);
+            }
             var radix = 16;
             var replaceRegExp = new RegExp('[\\s\\S]', 'g');
             var escapeRegExp = new RegExp('[^a-zA-Z0-9]');
             var regexp = new RegExp('[\\x00-\\x7F]');
             var prefix = void 0,
                 template = void 0;
-            return "" + string.replace(replaceRegExp, function (escape) {
+            var result = string.replace(replaceRegExp, function (escape) {
                 if (nonLatinAndNonDigitsOnly && !escapeRegExp.test(escape)) {
                     return escape;
                 }
@@ -824,12 +832,15 @@ var Utils = function () {
                 }
                 return "" + prefix + (template + escape.charCodeAt(0).toString(radix)).slice(-template.length);
             });
+            Utils.stringToUnicodeEscapeSequenceCache.set(cacheKey, result);
+            return result;
         }
     }]);
     return Utils;
 }();
 
 Utils.hexadecimalPrefix = '0x';
+Utils.stringToUnicodeEscapeSequenceCache = new _map2.default();
 exports.Utils = Utils;
 
 /***/ },
@@ -5371,10 +5382,6 @@ var MethodDefinitionObfuscator_1;
 "use strict";
 
 
-var _assign = __webpack_require__(44);
-
-var _assign2 = _interopRequireDefault(_assign);
-
 var _getPrototypeOf = __webpack_require__(5);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -5406,7 +5413,7 @@ var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
 var Node_1 = __webpack_require__(12);
 var Utils_1 = __webpack_require__(13);
-var ObjectExpressionObfuscator = function (_AbstractNodeTransfor) {
+var ObjectExpressionObfuscator = ObjectExpressionObfuscator_1 = function (_AbstractNodeTransfor) {
     (0, _inherits3.default)(ObjectExpressionObfuscator, _AbstractNodeTransfor);
 
     function ObjectExpressionObfuscator(options) {
@@ -5417,26 +5424,23 @@ var ObjectExpressionObfuscator = function (_AbstractNodeTransfor) {
     (0, _createClass3.default)(ObjectExpressionObfuscator, [{
         key: "transformNode",
         value: function transformNode(objectExpressionNode) {
-            var _this2 = this;
-
             objectExpressionNode.properties.forEach(function (property) {
                 if (property.shorthand) {
                     property.shorthand = false;
                 }
-                estraverse.traverse(property.key, {
+                estraverse.replace(property.key, {
                     enter: function enter(node, parentNode) {
                         if (Node_1.Node.isLiteralNode(node)) {
-                            _this2.obfuscateLiteralPropertyKey(node);
-                            return;
+                            property.key = ObjectExpressionObfuscator_1.obfuscateLiteralPropertyKey(node);
                         }
                         if (Node_1.Node.isIdentifierNode(node)) {
-                            _this2.obfuscateIdentifierPropertyKey(node);
+                            property.key = ObjectExpressionObfuscator_1.obfuscateIdentifierPropertyKey(node);
                         }
                     }
                 });
             });
         }
-    }, {
+    }], [{
         key: "obfuscateLiteralPropertyKey",
         value: function obfuscateLiteralPropertyKey(node) {
             if (typeof node.value === 'string' && !node['x-verbatim-property']) {
@@ -5445,28 +5449,27 @@ var ObjectExpressionObfuscator = function (_AbstractNodeTransfor) {
                     precedence: escodegen.Precedence.Primary
                 };
             }
+            return node;
         }
     }, {
         key: "obfuscateIdentifierPropertyKey",
         value: function obfuscateIdentifierPropertyKey(node) {
-            var nodeValue = node.name;
-            var literalNode = {
-                raw: "'" + nodeValue + "'",
-                'x-verbatim-property': {
-                    content: "'" + Utils_1.Utils.stringToUnicodeEscapeSequence(nodeValue) + "'",
-                    precedence: escodegen.Precedence.Primary
-                },
+            return {
                 type: NodeType_1.NodeType.Literal,
-                value: nodeValue
+                value: node.name,
+                raw: "'" + node.name + "'",
+                'x-verbatim-property': {
+                    content: "'" + Utils_1.Utils.stringToUnicodeEscapeSequence(node.name) + "'",
+                    precedence: escodegen.Precedence.Primary
+                }
             };
-            delete node.name;
-            (0, _assign2.default)(node, literalNode);
         }
     }]);
     return ObjectExpressionObfuscator;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
-ObjectExpressionObfuscator = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object])], ObjectExpressionObfuscator);
+ObjectExpressionObfuscator = ObjectExpressionObfuscator_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object])], ObjectExpressionObfuscator);
 exports.ObjectExpressionObfuscator = ObjectExpressionObfuscator;
+var ObjectExpressionObfuscator_1;
 
 /***/ },
 /* 95 */

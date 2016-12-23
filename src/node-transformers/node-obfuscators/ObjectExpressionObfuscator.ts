@@ -35,6 +35,37 @@ export class ObjectExpressionObfuscator extends AbstractNodeTransformer {
     }
 
     /**
+     * @param node
+     * @returns {ESTree.Literal}
+     */
+    private static obfuscateLiteralPropertyKey (node: ESTree.Literal): ESTree.Literal {
+        if (typeof node.value === 'string' && !node['x-verbatim-property']) {
+            node['x-verbatim-property'] = {
+                content : `'${Utils.stringToUnicodeEscapeSequence(node.value)}'`,
+                precedence: escodegen.Precedence.Primary
+            };
+        }
+
+        return node;
+    }
+
+    /**
+     * @param node
+     * @returns {ESTree.Literal}
+     */
+    private static obfuscateIdentifierPropertyKey (node: ESTree.Identifier): ESTree.Literal {
+        return {
+            type: NodeType.Literal,
+            value: node.name,
+            raw: `'${node.name}'`,
+            'x-verbatim-property': {
+                content : `'${Utils.stringToUnicodeEscapeSequence(node.name)}'`,
+                precedence: escodegen.Precedence.Primary
+            }
+        };
+    }
+
+    /**
      * @param objectExpressionNode
      */
     public transformNode (objectExpressionNode: ESTree.ObjectExpression): void {
@@ -44,51 +75,17 @@ export class ObjectExpressionObfuscator extends AbstractNodeTransformer {
                     property.shorthand = false;
                 }
 
-                estraverse.traverse(property.key, {
+                estraverse.replace(property.key, {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                         if (Node.isLiteralNode(node)) {
-                            this.obfuscateLiteralPropertyKey(node);
-
-                            return;
+                            property.key = ObjectExpressionObfuscator.obfuscateLiteralPropertyKey(node);
                         }
 
                         if (Node.isIdentifierNode(node)) {
-                            this.obfuscateIdentifierPropertyKey(node);
+                            property.key = ObjectExpressionObfuscator.obfuscateIdentifierPropertyKey(node);
                         }
                     }
                 });
             });
-    }
-
-    /**
-     * @param node
-     */
-    private obfuscateLiteralPropertyKey (node: ESTree.Literal): void {
-        if (typeof node.value === 'string' && !node['x-verbatim-property']) {
-            node['x-verbatim-property'] = {
-                content : `'${Utils.stringToUnicodeEscapeSequence(node.value)}'`,
-                precedence: escodegen.Precedence.Primary
-            };
-        }
-    }
-
-    /**
-     * @param node
-     */
-    private obfuscateIdentifierPropertyKey (node: ESTree.Identifier): void {
-        const nodeValue: string = node.name;
-        const literalNode: ESTree.Literal = {
-            raw: `'${nodeValue}'`,
-            'x-verbatim-property': {
-                content : `'${Utils.stringToUnicodeEscapeSequence(nodeValue)}'`,
-                precedence: escodegen.Precedence.Primary
-            },
-            type: NodeType.Literal,
-            value: nodeValue
-        };
-
-        delete node.name;
-
-        Object.assign(node, literalNode);
     }
 }

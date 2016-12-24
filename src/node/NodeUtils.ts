@@ -150,7 +150,7 @@ export class NodeUtils {
     public static parentize <T extends ESTree.Node> (node: T): T {
         let isRootNode: boolean = true;
 
-        estraverse.replace(node, {
+        estraverse.traverse(node, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 let value: ESTree.Node;
 

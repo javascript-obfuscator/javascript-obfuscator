@@ -320,7 +320,7 @@ var NodeUtils = function () {
         key: "parentize",
         value: function parentize(node) {
             var isRootNode = true;
-            estraverse.replace(node, {
+            estraverse.traverse(node, {
                 enter: function enter(node, parentNode) {
                     var value = void 0;
                     if (isRootNode) {
@@ -2060,7 +2060,7 @@ var JavaScriptObfuscatorInternal = JavaScriptObfuscatorInternal_1 = function () 
     (0, _createClass3.default)(JavaScriptObfuscatorInternal, [{
         key: "obfuscate",
         value: function obfuscate(sourceCode) {
-            var astTree = esprima.parse(sourceCode, JavaScriptObfuscatorInternal_1.esprimaParams);
+            var astTree = esprima.parse(sourceCode, { loc: this.options.sourceMap });
             var obfuscatedAstTree = this.obfuscator.obfuscateAstTree(astTree);
             var generatorOutput = this.generateCode(sourceCode, obfuscatedAstTree);
             return this.getObfuscationResult(generatorOutput);
@@ -2091,9 +2091,6 @@ var JavaScriptObfuscatorInternal = JavaScriptObfuscatorInternal_1 = function () 
 JavaScriptObfuscatorInternal.escodegenParams = {
     verbatim: 'x-verbatim-property',
     sourceMapWithCode: true
-};
-JavaScriptObfuscatorInternal.esprimaParams = {
-    loc: true
 };
 JavaScriptObfuscatorInternal = JavaScriptObfuscatorInternal_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscator)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.ISourceMapCorrector)), tslib_1.__param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object, Object, Object])], JavaScriptObfuscatorInternal);
 exports.JavaScriptObfuscatorInternal = JavaScriptObfuscatorInternal;
@@ -6320,8 +6317,11 @@ var StackTraceAnalyzer = StackTraceAnalyzer_1 = function () {
                 var blockScopeBodyNode = blockScopeBody[index];
                 estraverse.traverse(blockScopeBodyNode, {
                     enter: function enter(node) {
-                        if (!Node_1.Node.isCallExpressionNode(node) || blockScopeBodyNode.parentNode !== NodeUtils_1.NodeUtils.getBlockScopesOfNode(node)[0]) {
+                        if (!Node_1.Node.isCallExpressionNode(node)) {
                             return;
+                        }
+                        if (blockScopeBodyNode.parentNode !== NodeUtils_1.NodeUtils.getBlockScopesOfNode(node)[0]) {
+                            return estraverse.VisitorOption.Skip;
                         }
                         _this.analyzeCallExpressionNode(stackTraceData, blockScopeBody, node);
                     }

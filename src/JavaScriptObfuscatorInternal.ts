@@ -23,13 +23,6 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
     };
 
     /**
-     * @type {esprima.Options}
-     */
-    private static readonly esprimaParams: esprima.Options = {
-        loc: true
-    };
-
-    /**
      * @type {IObfuscator}
      */
     private readonly obfuscator: IObfuscator;
@@ -65,7 +58,7 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
      */
     public obfuscate (sourceCode: string): IObfuscationResult {
         // parse AST tree
-        const astTree: ESTree.Program = esprima.parse(sourceCode, JavaScriptObfuscatorInternal.esprimaParams);
+        const astTree: ESTree.Program = esprima.parse(sourceCode, { loc: this.options.sourceMap });
 
         // obfuscate AST tree
         const obfuscatedAstTree: ESTree.Program = this.obfuscator.obfuscateAstTree(astTree);

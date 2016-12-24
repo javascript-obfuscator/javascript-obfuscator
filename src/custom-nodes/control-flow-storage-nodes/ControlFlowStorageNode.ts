@@ -43,7 +43,7 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
      * @returns {TStatement[]}
      */
     protected getNodeStructure (): TStatement[] {
-        const structure: ESTree.Node = Nodes.getVariableDeclarationNode([
+        let structure: ESTree.Node = Nodes.getVariableDeclarationNode([
             Nodes.getVariableDeclaratorNode(
                 Nodes.getIdentifierNode(this.controlFlowStorage.getStorageId()),
                 Nodes.getObjectExpressionNode(
@@ -59,7 +59,7 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
             )
         ]);
 
-        NodeUtils.parentize(structure);
+        structure = NodeUtils.parentize(structure);
 
         return [structure];
     }

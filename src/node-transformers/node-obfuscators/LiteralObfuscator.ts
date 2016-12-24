@@ -35,10 +35,11 @@ export class LiteralObfuscator extends AbstractNodeTransformer {
     /**
      * @param literalNode
      * @param parentNode
+     * @returns {ESTree.Node}
      */
-    public transformNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): void {
+    public transformNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
         if (Node.isPropertyNode(parentNode) && parentNode.key === literalNode) {
-            return;
+            return literalNode;
         }
 
         let content: string;
@@ -63,12 +64,14 @@ export class LiteralObfuscator extends AbstractNodeTransformer {
                 break;
 
             default:
-                return;
+                return literalNode;
         }
 
         literalNode['x-verbatim-property'] = {
             content : content,
             precedence: escodegen.Precedence.Primary
         };
+
+        return literalNode;
     }
 }

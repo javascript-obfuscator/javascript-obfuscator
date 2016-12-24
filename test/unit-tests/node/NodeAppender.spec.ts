@@ -40,8 +40,8 @@ describe('NodeAppender', () => {
                 )
             );
 
-            NodeUtils.parentize(astTree);
-            NodeUtils.parentize(expectedAstTree);
+            astTree = NodeUtils.parentize(astTree);
+            expectedAstTree = NodeUtils.parentize(expectedAstTree);
 
             NodeAppender.appendNode(astTree, node);
         });
@@ -205,8 +205,8 @@ describe('NodeAppender', () => {
                 )
             );
 
-            NodeUtils.parentize(astTree);
-            NodeUtils.parentize(expectedAstTree);
+            astTree = NodeUtils.parentize(astTree);
+            expectedAstTree = NodeUtils.parentize(expectedAstTree);
 
             NodeAppender.insertNodeAtIndex(astTree, node, 2);
         });
@@ -238,8 +238,8 @@ describe('NodeAppender', () => {
                 )
             );
 
-            NodeUtils.parentize(astTree);
-            NodeUtils.parentize(expectedAstTree);
+            astTree = NodeUtils.parentize(astTree);
+            expectedAstTree = NodeUtils.parentize(expectedAstTree);
 
             NodeAppender.prependNode(astTree, node);
         });

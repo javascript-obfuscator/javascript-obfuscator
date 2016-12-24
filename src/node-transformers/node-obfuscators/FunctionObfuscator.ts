@@ -14,7 +14,6 @@ import { NodeType } from '../../enums/NodeType';
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
 import { NodeUtils } from '../../node/NodeUtils';
-import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 /**
  * replaces:
@@ -46,19 +45,22 @@ export class FunctionObfuscator extends AbstractNodeTransformer {
 
     /**
      * @param functionNode
+     * @returns {ESTree.Node}
      */
-    public transformNode (functionNode: ESTree.Function): void {
-        const nodeIdentifier: string = RandomGeneratorUtils.getRandomString(7);
+    public transformNode (functionNode: ESTree.Function): ESTree.Node {
+        const nodeIdentifier: number = this.nodeIdentifier++;
 
         this.storeFunctionParams(functionNode, nodeIdentifier);
         this.replaceFunctionParams(functionNode, nodeIdentifier);
+
+        return functionNode;
     }
 
     /**
      * @param functionNode
      * @param nodeIdentifier
      */
-    private storeFunctionParams (functionNode: ESTree.Function, nodeIdentifier: string): void {
+    private storeFunctionParams (functionNode: ESTree.Function, nodeIdentifier: number): void {
         functionNode.params
             .forEach((paramsNode: ESTree.Node) => {
                 NodeUtils.typedTraverse(paramsNode, NodeType.Identifier, {
@@ -71,7 +73,7 @@ export class FunctionObfuscator extends AbstractNodeTransformer {
      * @param functionNode
      * @param nodeIdentifier
      */
-    private replaceFunctionParams (functionNode: ESTree.Function, nodeIdentifier: string): void {
+    private replaceFunctionParams (functionNode: ESTree.Function, nodeIdentifier: number): void {
         const traverseVisitor: estraverse.Visitor = {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isReplaceableIdentifierNode(node, parentNode)) {

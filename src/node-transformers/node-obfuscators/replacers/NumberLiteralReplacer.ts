@@ -9,6 +9,11 @@ import { Utils } from '../../../utils/Utils';
 @injectable()
 export class NumberLiteralReplacer extends AbstractReplacer {
     /**
+     * @type {Map<string, string>}
+     */
+    private readonly numberLiteralCache: Map <number, string> = new Map();
+
+    /**
      * @param options
      */
     constructor (
@@ -22,10 +27,20 @@ export class NumberLiteralReplacer extends AbstractReplacer {
      * @returns {string}
      */
     public replace (nodeValue: number): string {
-        if (!Utils.isCeilNumber(nodeValue)) {
-            return String(nodeValue);
+        if (this.numberLiteralCache.has(nodeValue)) {
+            return <string>this.numberLiteralCache.get(nodeValue);
         }
 
-        return `${Utils.hexadecimalPrefix}${Utils.decToHex(nodeValue)}`;
+        let result: string;
+
+        if (!Utils.isCeilNumber(nodeValue)) {
+            result = String(nodeValue);
+        } else {
+            result = `${Utils.hexadecimalPrefix}${Utils.decToHex(nodeValue)}`;
+        }
+
+        this.numberLiteralCache.set(nodeValue, result);
+
+        return result;
     }
 }

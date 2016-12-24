@@ -109,7 +109,7 @@ export class Obfuscator implements IObfuscator {
             return astTree;
         }
 
-        NodeUtils.parentize(astTree);
+        astTree = <ESTree.Program>NodeUtils.parentize(astTree);
 
         const stackTraceData: IStackTraceData[] = this.stackTraceAnalyzer.analyze(astTree.body);
 
@@ -129,7 +129,7 @@ export class Obfuscator implements IObfuscator {
 
         // first pass: control flow flattening
         if (this.options.controlFlowFlattening) {
-            this.transformAstTree(
+            astTree = this.transformAstTree(
                 astTree,
                 VisitorDirection.leave,
                 this.nodeTransformersFactory(Obfuscator.nodeControlFlowTransformersMap)
@@ -137,7 +137,7 @@ export class Obfuscator implements IObfuscator {
         }
 
         // second pass: nodes obfuscation
-        this.transformAstTree(
+        astTree = this.transformAstTree(
             astTree,
             VisitorDirection.enter,
             this.nodeTransformersFactory(Obfuscator.nodeObfuscatorsMap)
@@ -157,15 +157,19 @@ export class Obfuscator implements IObfuscator {
         astTree: ESTree.Program,
         direction: TVisitorDirection,
         nodeTransformersConcreteFactory: (nodeType: string) => INodeTransformer[]
-    ): void {
-        estraverse.traverse(astTree, {
-            [direction]: (node: ESTree.Node, parentNode: ESTree.Node): void => {
+    ): ESTree.Program {
+        estraverse.replace(astTree, {
+            [direction]: (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node => {
                 const nodeTransformers: INodeTransformer[] = nodeTransformersConcreteFactory(node.type);
 
                 nodeTransformers.forEach((nodeTransformer: INodeTransformer) => {
-                    nodeTransformer.transformNode(node, parentNode);
+                    node = nodeTransformer.transformNode(node, parentNode);
                 });
+
+                return node;
             }
         });
+
+        return astTree;
     }
 }

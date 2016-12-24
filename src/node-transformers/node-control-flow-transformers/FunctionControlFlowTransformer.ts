@@ -113,9 +113,12 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
     /**
      * @param functionNode
+     * @returns {ESTree.Node}
      */
-    public transformNode (functionNode: ESTree.Function): void {
+    public transformNode (functionNode: ESTree.Function): ESTree.Node {
         this.changeFunctionBodyControlFlow(functionNode);
+
+        return functionNode;
     }
 
     /**

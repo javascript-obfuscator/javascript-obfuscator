@@ -198,7 +198,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var escodegen = __webpack_require__(25);
 var esprima = __webpack_require__(48);
-var estraverse = __webpack_require__(14);
+var estraverse = __webpack_require__(15);
 var NodeType_1 = __webpack_require__(16);
 var Node_1 = __webpack_require__(12);
 
@@ -847,12 +847,6 @@ exports.Utils = Utils;
 
 /***/ },
 /* 14 */
-/***/ function(module, exports) {
-
-module.exports = require("estraverse");
-
-/***/ },
-/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -900,6 +894,12 @@ var AbstractCustomNode = function () {
 }();
 AbstractCustomNode = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object])], AbstractCustomNode);
 exports.AbstractCustomNode = AbstractCustomNode;
+
+/***/ },
+/* 15 */
+/***/ function(module, exports) {
+
+module.exports = require("estraverse");
 
 /***/ },
 /* 16 */
@@ -2178,7 +2178,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
-var estraverse = __webpack_require__(14);
+var estraverse = __webpack_require__(15);
 var NodeTransformers_1 = __webpack_require__(40);
 var NodeType_1 = __webpack_require__(16);
 var ObfuscationEvents_1 = __webpack_require__(22);
@@ -2933,7 +2933,7 @@ var ServiceIdentifiers_1 = __webpack_require__(4);
 var format = __webpack_require__(18);
 var ConsoleOutputDisableExpressionTemplate_1 = __webpack_require__(113);
 var Initializable_1 = __webpack_require__(10);
-var AbstractCustomNode_1 = __webpack_require__(15);
+var AbstractCustomNode_1 = __webpack_require__(14);
 var NodeUtils_1 = __webpack_require__(8);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var ConsoleOutputDisableExpressionNode = function (_AbstractCustomNode_) {
@@ -3097,7 +3097,7 @@ var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
-var AbstractCustomNode_1 = __webpack_require__(15);
+var AbstractCustomNode_1 = __webpack_require__(14);
 var Nodes_1 = __webpack_require__(31);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var BinaryExpressionFunctionNode = function (_AbstractCustomNode_) {
@@ -3158,7 +3158,7 @@ var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
-var AbstractCustomNode_1 = __webpack_require__(15);
+var AbstractCustomNode_1 = __webpack_require__(14);
 var Nodes_1 = __webpack_require__(31);
 var ControlFlowStorageCallNode = function (_AbstractCustomNode_) {
     (0, _inherits3.default)(ControlFlowStorageCallNode, _AbstractCustomNode_);
@@ -3232,7 +3232,7 @@ var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
-var AbstractCustomNode_1 = __webpack_require__(15);
+var AbstractCustomNode_1 = __webpack_require__(14);
 var Nodes_1 = __webpack_require__(31);
 var NodeUtils_1 = __webpack_require__(8);
 var ControlFlowStorageNode = function (_AbstractCustomNode_) {
@@ -3303,7 +3303,7 @@ var ServiceIdentifiers_1 = __webpack_require__(4);
 var format = __webpack_require__(18);
 var Initializable_1 = __webpack_require__(10);
 var DebufProtectionFunctionCallTemplate_1 = __webpack_require__(114);
-var AbstractCustomNode_1 = __webpack_require__(15);
+var AbstractCustomNode_1 = __webpack_require__(14);
 var NodeUtils_1 = __webpack_require__(8);
 var DebugProtectionFunctionCallNode = function (_AbstractCustomNode_) {
     (0, _inherits3.default)(DebugProtectionFunctionCallNode, _AbstractCustomNode_);
@@ -3372,7 +3372,7 @@ var ServiceIdentifiers_1 = __webpack_require__(4);
 var format = __webpack_require__(18);
 var Initializable_1 = __webpack_require__(10);
 var DebugProtectionFunctionIntervalTemplate_1 = __webpack_require__(115);
-var AbstractCustomNode_1 = __webpack_require__(15);
+var AbstractCustomNode_1 = __webpack_require__(14);
 var NodeUtils_1 = __webpack_require__(8);
 var DebugProtectionFunctionIntervalNode = function (_AbstractCustomNode_) {
     (0, _inherits3.default)(DebugProtectionFunctionIntervalNode, _AbstractCustomNode_);
@@ -3441,7 +3441,7 @@ var ServiceIdentifiers_1 = __webpack_require__(4);
 var format = __webpack_require__(18);
 var Initializable_1 = __webpack_require__(10);
 var DebugProtectionFunctionTemplate_1 = __webpack_require__(116);
-var AbstractCustomNode_1 = __webpack_require__(15);
+var AbstractCustomNode_1 = __webpack_require__(14);
 var NodeUtils_1 = __webpack_require__(8);
 var DebugProtectionFunctionNode = function (_AbstractCustomNode_) {
     (0, _inherits3.default)(DebugProtectionFunctionNode, _AbstractCustomNode_);
@@ -3612,7 +3612,7 @@ var ServiceIdentifiers_1 = __webpack_require__(4);
 var format = __webpack_require__(18);
 var Initializable_1 = __webpack_require__(10);
 var DomainLockNodeTemplate_1 = __webpack_require__(117);
-var AbstractCustomNode_1 = __webpack_require__(15);
+var AbstractCustomNode_1 = __webpack_require__(14);
 var CryptUtils_1 = __webpack_require__(33);
 var NodeUtils_1 = __webpack_require__(8);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
@@ -3790,7 +3790,7 @@ var ObfuscationEvents_1 = __webpack_require__(22);
 var Initializable_1 = __webpack_require__(10);
 var SingleNodeCallControllerTemplate_1 = __webpack_require__(112);
 var NoCustomNodes_1 = __webpack_require__(29);
-var AbstractCustomNode_1 = __webpack_require__(15);
+var AbstractCustomNode_1 = __webpack_require__(14);
 var JavaScriptObfuscator_1 = __webpack_require__(23);
 var NodeUtils_1 = __webpack_require__(8);
 var NodeCallsControllerFunctionNode = function (_AbstractCustomNode_) {
@@ -3868,7 +3868,7 @@ var format = __webpack_require__(18);
 var Initializable_1 = __webpack_require__(10);
 var NoCustomNodes_1 = __webpack_require__(29);
 var SelfDefendingTemplate_1 = __webpack_require__(118);
-var AbstractCustomNode_1 = __webpack_require__(15);
+var AbstractCustomNode_1 = __webpack_require__(14);
 var JavaScriptObfuscator_1 = __webpack_require__(23);
 var NodeUtils_1 = __webpack_require__(8);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
@@ -4042,7 +4042,7 @@ var SelfDefendingTemplate_1 = __webpack_require__(119);
 var StringArrayBase64DecodeNodeTemplate_1 = __webpack_require__(120);
 var StringArrayCallsWrapperTemplate_1 = __webpack_require__(121);
 var StringArrayRC4DecodeNodeTemplate_1 = __webpack_require__(122);
-var AbstractCustomNode_1 = __webpack_require__(15);
+var AbstractCustomNode_1 = __webpack_require__(14);
 var JavaScriptObfuscator_1 = __webpack_require__(23);
 var NodeUtils_1 = __webpack_require__(8);
 var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
@@ -4153,7 +4153,7 @@ var ServiceIdentifiers_1 = __webpack_require__(4);
 var format = __webpack_require__(18);
 var Initializable_1 = __webpack_require__(10);
 var StringArrayTemplate_1 = __webpack_require__(123);
-var AbstractCustomNode_1 = __webpack_require__(15);
+var AbstractCustomNode_1 = __webpack_require__(14);
 var NodeUtils_1 = __webpack_require__(8);
 var StringArrayNode = function (_AbstractCustomNode_) {
     (0, _inherits3.default)(StringArrayNode, _AbstractCustomNode_);
@@ -4235,7 +4235,7 @@ var Initializable_1 = __webpack_require__(10);
 var NoCustomNodes_1 = __webpack_require__(29);
 var SelfDefendingTemplate_1 = __webpack_require__(124);
 var StringArrayRotateFunctionTemplate_1 = __webpack_require__(125);
-var AbstractCustomNode_1 = __webpack_require__(15);
+var AbstractCustomNode_1 = __webpack_require__(14);
 var JavaScriptObfuscator_1 = __webpack_require__(23);
 var NodeUtils_1 = __webpack_require__(8);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
@@ -4492,7 +4492,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
-var estraverse = __webpack_require__(14);
+var estraverse = __webpack_require__(15);
 var CustomNodes_1 = __webpack_require__(20);
 var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
@@ -4742,7 +4742,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
-var estraverse = __webpack_require__(14);
+var estraverse = __webpack_require__(15);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(19);
 var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
@@ -4838,7 +4838,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
-var estraverse = __webpack_require__(14);
+var estraverse = __webpack_require__(15);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(19);
 var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
@@ -4968,7 +4968,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
-var estraverse = __webpack_require__(14);
+var estraverse = __webpack_require__(15);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(19);
 var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
@@ -5012,7 +5012,7 @@ var FunctionObfuscator = function (_AbstractNodeTransfor) {
         value: function replaceFunctionParams(functionNode, nodeIdentifier) {
             var _this3 = this;
 
-            var traverseVisitor = {
+            estraverse.replace(functionNode, {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
                         var newNodeName = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
@@ -5022,11 +5022,7 @@ var FunctionObfuscator = function (_AbstractNodeTransfor) {
                         }
                     }
                 }
-            };
-            functionNode.params.forEach(function (paramsNode) {
-                return estraverse.replace(paramsNode, traverseVisitor);
             });
-            estraverse.replace(functionNode.body, traverseVisitor);
         }
     }]);
     return FunctionObfuscator;
@@ -5066,7 +5062,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
-var estraverse = __webpack_require__(14);
+var estraverse = __webpack_require__(15);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(19);
 var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
@@ -5260,8 +5256,7 @@ var MemberExpressionObfuscator = function (_AbstractNodeTransfor) {
         value: function transformNode(memberExpressionNode) {
             if (Node_1.Node.isLiteralNode(memberExpressionNode.property)) {
                 memberExpressionNode.property = this.obfuscateLiteralProperty(memberExpressionNode.property);
-            }
-            if (Node_1.Node.isIdentifierNode(memberExpressionNode.property)) {
+            } else if (Node_1.Node.isIdentifierNode(memberExpressionNode.property)) {
                 if (memberExpressionNode.computed) {
                     return memberExpressionNode;
                 }
@@ -5332,7 +5327,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
-var estraverse = __webpack_require__(14);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(19);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
 var Node_1 = __webpack_require__(12);
@@ -5357,18 +5351,11 @@ var MethodDefinitionObfuscator = MethodDefinitionObfuscator_1 = function (_Abstr
     }, {
         key: "replaceMethodName",
         value: function replaceMethodName(methodDefinitionNode) {
-            var _this2 = this;
-
-            estraverse.replace(methodDefinitionNode.key, {
-                enter: function enter(node) {
-                    if (Node_1.Node.isIdentifierNode(node) && !MethodDefinitionObfuscator_1.ignoredNames.includes(node.name) && methodDefinitionNode.computed === false) {
-                        methodDefinitionNode.computed = true;
-                        node.name = _this2.stringLiteralReplacer.replace(node.name);
-                        return;
-                    }
-                    return estraverse.VisitorOption.Skip;
-                }
-            });
+            if (Node_1.Node.isIdentifierNode(methodDefinitionNode.key) && !MethodDefinitionObfuscator_1.ignoredNames.includes(methodDefinitionNode.key.name) && methodDefinitionNode.computed === false) {
+                methodDefinitionNode.computed = true;
+                methodDefinitionNode.key.name = this.stringLiteralReplacer.replace(methodDefinitionNode.key.name);
+                return;
+            }
         }
     }]);
     return MethodDefinitionObfuscator;
@@ -5411,7 +5398,6 @@ var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var escodegen = __webpack_require__(25);
-var estraverse = __webpack_require__(14);
 var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
 var Node_1 = __webpack_require__(12);
@@ -5431,16 +5417,11 @@ var ObjectExpressionObfuscator = ObjectExpressionObfuscator_1 = function (_Abstr
                 if (property.shorthand) {
                     property.shorthand = false;
                 }
-                estraverse.replace(property.key, {
-                    enter: function enter(node, parentNode) {
-                        if (Node_1.Node.isLiteralNode(node)) {
-                            property.key = ObjectExpressionObfuscator_1.obfuscateLiteralPropertyKey(node);
-                        }
-                        if (Node_1.Node.isIdentifierNode(node)) {
-                            property.key = ObjectExpressionObfuscator_1.obfuscateIdentifierPropertyKey(node);
-                        }
-                    }
-                });
+                if (Node_1.Node.isLiteralNode(property.key)) {
+                    property.key = ObjectExpressionObfuscator_1.obfuscateLiteralPropertyKey(property.key);
+                } else if (Node_1.Node.isIdentifierNode(property.key)) {
+                    property.key = ObjectExpressionObfuscator_1.obfuscateIdentifierPropertyKey(property.key);
+                }
             });
             return objectExpressionNode;
         }
@@ -5515,7 +5496,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
-var estraverse = __webpack_require__(14);
+var estraverse = __webpack_require__(15);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(19);
 var NodeType_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
@@ -6285,7 +6266,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
-var estraverse = __webpack_require__(14);
+var estraverse = __webpack_require__(15);
 var CalleeDataExtractors_1 = __webpack_require__(37);
 var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(8);
@@ -6403,7 +6384,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
-var estraverse = __webpack_require__(14);
+var estraverse = __webpack_require__(15);
 var AbstractCalleeDataExtractor_1 = __webpack_require__(32);
 var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(8);
@@ -6481,7 +6462,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
-var estraverse = __webpack_require__(14);
+var estraverse = __webpack_require__(15);
 var AbstractCalleeDataExtractor_1 = __webpack_require__(32);
 var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(8);
@@ -6566,7 +6547,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
-var estraverse = __webpack_require__(14);
+var estraverse = __webpack_require__(15);
 var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(8);
 var AbstractCalleeDataExtractor_1 = __webpack_require__(32);

@@ -2,7 +2,6 @@ import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as escodegen from 'escodegen';
-import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -76,17 +75,11 @@ export class ObjectExpressionObfuscator extends AbstractNodeTransformer {
                     property.shorthand = false;
                 }
 
-                estraverse.replace(property.key, {
-                    enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                        if (Node.isLiteralNode(node)) {
-                            property.key = ObjectExpressionObfuscator.obfuscateLiteralPropertyKey(node);
-                        }
-
-                        if (Node.isIdentifierNode(node)) {
-                            property.key = ObjectExpressionObfuscator.obfuscateIdentifierPropertyKey(node);
-                        }
-                    }
-                });
+                if (Node.isLiteralNode(property.key)) {
+                    property.key = ObjectExpressionObfuscator.obfuscateLiteralPropertyKey(property.key);
+                } else if (Node.isIdentifierNode(property.key)) {
+                    property.key = ObjectExpressionObfuscator.obfuscateIdentifierPropertyKey(property.key);
+                }
             });
 
         return objectExpressionNode;

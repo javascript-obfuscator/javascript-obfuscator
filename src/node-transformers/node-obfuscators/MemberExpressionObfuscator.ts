@@ -40,9 +40,7 @@ export class MemberExpressionObfuscator extends AbstractNodeTransformer {
     public transformNode (memberExpressionNode: ESTree.MemberExpression): ESTree.Node {
         if (Node.isLiteralNode(memberExpressionNode.property)) {
             memberExpressionNode.property = this.obfuscateLiteralProperty(memberExpressionNode.property);
-        }
-
-        if (Node.isIdentifierNode(memberExpressionNode.property)) {
+        } else if (Node.isIdentifierNode(memberExpressionNode.property)) {
             if (memberExpressionNode.computed) {
                 return memberExpressionNode;
             }

@@ -1,7 +1,6 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -59,21 +58,14 @@ export class MethodDefinitionObfuscator extends AbstractNodeTransformer {
      * @param methodDefinitionNode
      */
     private replaceMethodName (methodDefinitionNode: ESTree.MethodDefinition): void {
-        estraverse.replace(methodDefinitionNode.key, {
-            enter: (node: ESTree.Node): any => {
-                if (
-                    Node.isIdentifierNode(node) &&
-                    !MethodDefinitionObfuscator.ignoredNames.includes(node.name) &&
-                    methodDefinitionNode.computed === false
-                ) {
-                    methodDefinitionNode.computed = true;
-                    node.name = this.stringLiteralReplacer.replace(node.name);
+        if (
+            Node.isIdentifierNode(methodDefinitionNode.key) && !MethodDefinitionObfuscator.ignoredNames.includes(methodDefinitionNode.key.name) &&
+            methodDefinitionNode.computed === false
+        ) {
+            methodDefinitionNode.computed = true;
+            methodDefinitionNode.key.name = this.stringLiteralReplacer.replace(methodDefinitionNode.key.name);
 
-                    return;
-                }
-
-                return estraverse.VisitorOption.Skip;
-            }
-        });
+            return;
+        }
     }
 }

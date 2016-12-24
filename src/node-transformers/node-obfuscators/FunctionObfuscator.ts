@@ -45,12 +45,15 @@ export class FunctionObfuscator extends AbstractNodeTransformer {
 
     /**
      * @param functionNode
+     * @returns {ESTree.Node}
      */
-    public transformNode (functionNode: ESTree.Function): void {
+    public transformNode (functionNode: ESTree.Function): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
 
         this.storeFunctionParams(functionNode, nodeIdentifier);
         this.replaceFunctionParams(functionNode, nodeIdentifier);
+
+        return functionNode;
     }
 
     /**

@@ -24,8 +24,9 @@ export class NodeUtils {
 
     /**
      * @param node
+     * @return {T}
      */
-    public static addXVerbatimPropertyToLiterals (node: ESTree.Node): void {
+    public static addXVerbatimPropertyToLiterals <T extends ESTree.Node> (node: T): T {
         NodeUtils.typedReplace(node, NodeType.Literal, {
             leave: (node: ESTree.Literal) => {
                 node['x-verbatim-property'] = {
@@ -34,6 +35,8 @@ export class NodeUtils {
                 };
             }
         });
+
+        return node;
     }
 
     /**
@@ -41,10 +44,10 @@ export class NodeUtils {
      * @returns {TStatement[]}
      */
     public static convertCodeToStructure (code: string): TStatement[] {
-        const structure: ESTree.Program = esprima.parse(code);
+        let structure: ESTree.Program = esprima.parse(code);
 
-        NodeUtils.addXVerbatimPropertyToLiterals(structure);
-        NodeUtils.parentize(structure);
+        structure = NodeUtils.addXVerbatimPropertyToLiterals(structure);
+        structure = NodeUtils.parentize(structure);
 
         return <TStatement[]>structure.body;
     }
@@ -142,8 +145,9 @@ export class NodeUtils {
 
     /**
      * @param node
+     * @return {T}
      */
-    public static parentize (node: ESTree.Node): void {
+    public static parentize <T extends ESTree.Node> (node: T): T {
         let isRootNode: boolean = true;
 
         estraverse.replace(node, {
@@ -167,6 +171,8 @@ export class NodeUtils {
                 node.obfuscated = false;
             }
         });
+
+        return node;
     }
 
     /**

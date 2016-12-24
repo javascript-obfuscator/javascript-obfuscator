@@ -53,12 +53,15 @@ export class LabeledStatementObfuscator extends AbstractNodeTransformer {
 
     /**
      * @param labeledStatementNode
+     * @returns {ESTree.Node}
      */
-    public transformNode (labeledStatementNode: ESTree.LabeledStatement): void {
+    public transformNode (labeledStatementNode: ESTree.LabeledStatement): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
 
         this.storeLabeledStatementName(labeledStatementNode, nodeIdentifier);
         this.replaceLabeledStatementName(labeledStatementNode, nodeIdentifier);
+
+        return labeledStatementNode;
     }
 
     /**

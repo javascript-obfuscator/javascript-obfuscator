@@ -4,6 +4,7 @@ export interface INodeTransformer {
     /**
      * @param node
      * @param parentNode
+     * @returns {ESTree.Node}
      */
-    transformNode (node: ESTree.Node, parentNode?: ESTree.Node): void;
+    transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node;
 }

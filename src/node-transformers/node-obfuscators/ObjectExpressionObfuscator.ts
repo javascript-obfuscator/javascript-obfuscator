@@ -67,8 +67,9 @@ export class ObjectExpressionObfuscator extends AbstractNodeTransformer {
 
     /**
      * @param objectExpressionNode
+     * @returns {ESTree.Node}
      */
-    public transformNode (objectExpressionNode: ESTree.ObjectExpression): void {
+    public transformNode (objectExpressionNode: ESTree.ObjectExpression): ESTree.Node {
         objectExpressionNode.properties
             .forEach((property: ESTree.Property) => {
                 if (property.shorthand) {
@@ -87,5 +88,7 @@ export class ObjectExpressionObfuscator extends AbstractNodeTransformer {
                     }
                 });
             });
+
+        return objectExpressionNode;
     }
 }

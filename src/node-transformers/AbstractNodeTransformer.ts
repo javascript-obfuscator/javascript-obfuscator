@@ -32,6 +32,7 @@ export abstract class AbstractNodeTransformer implements INodeTransformer {
     /**
      * @param node
      * @param parentNode
+     * @returns {ESTree.Node}
      */
-    public abstract transformNode (node: ESTree.Node, parentNode?: ESTree.Node): void;
+    public abstract transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node;
 }

@@ -45,12 +45,15 @@ export class CatchClauseObfuscator extends AbstractNodeTransformer {
 
     /**
      * @param catchClauseNode
+     * @returns {ESTree.Node}
      */
-    public transformNode (catchClauseNode: ESTree.CatchClause): void {
+    public transformNode (catchClauseNode: ESTree.CatchClause): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
 
         this.storeCatchClauseParam(catchClauseNode, nodeIdentifier);
         this.replaceCatchClauseParam(catchClauseNode, nodeIdentifier);
+
+        return catchClauseNode;
     }
 
     /**

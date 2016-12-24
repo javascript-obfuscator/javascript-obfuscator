@@ -159,7 +159,7 @@ export class Utils {
                 prefix = '\\u';
                 template = '0'.repeat(4);
             }
-            
+
             return `${prefix}${(template + escape.charCodeAt(0).toString(radix)).slice(-template.length)}`;
         });
 

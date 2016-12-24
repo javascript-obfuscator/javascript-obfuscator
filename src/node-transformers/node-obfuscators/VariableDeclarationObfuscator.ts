@@ -55,13 +55,14 @@ export class VariableDeclarationObfuscator extends AbstractNodeTransformer {
     /**
      * @param variableDeclarationNode
      * @param parentNode
+     * @returns {ESTree.Node}
      */
-    public transformNode (variableDeclarationNode: ESTree.VariableDeclaration, parentNode: ESTree.Node): void {
+    public transformNode (variableDeclarationNode: ESTree.VariableDeclaration, parentNode: ESTree.Node): ESTree.Node {
         const blockScopeOfVariableDeclarationNode: TNodeWithBlockStatement = NodeUtils
             .getBlockScopesOfNode(variableDeclarationNode)[0];
 
         if (blockScopeOfVariableDeclarationNode.type === NodeType.Program) {
-            return;
+            return variableDeclarationNode;
         }
 
         const nodeIdentifier: number = this.nodeIdentifier++;
@@ -71,6 +72,8 @@ export class VariableDeclarationObfuscator extends AbstractNodeTransformer {
 
         this.storeVariableNames(variableDeclarationNode, nodeIdentifier);
         this.replaceVariableNames(scopeNode, nodeIdentifier);
+
+        return variableDeclarationNode;
     }
 
     /**

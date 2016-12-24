@@ -51,11 +51,11 @@ describe('NodeUtils', () => {
                 variableDeclarationNode
             ]);
 
-            programNode['parentNode'] = programNode;
-            variableDeclarationNode['parentNode'] = programNode;
-            variableDeclaratorNode['parentNode'] = variableDeclarationNode;
-            identifierNode['parentNode'] = variableDeclaratorNode;
-            literalNode['parentNode'] = variableDeclaratorNode;
+            programNode.parentNode = programNode;
+            variableDeclarationNode.parentNode = programNode;
+            variableDeclaratorNode.parentNode = variableDeclarationNode;
+            identifierNode.parentNode = variableDeclaratorNode;
+            literalNode.parentNode = variableDeclaratorNode;
         });
 
         it('should convert code to `ESTree.Node[]` structure array', () => {
@@ -162,15 +162,15 @@ describe('NodeUtils', () => {
                 functionDeclarationNode
             ]);
 
-            programNode['parentNode'] = programNode;
-            functionDeclarationNode['parentNode'] = programNode;
-            functionDeclarationBlockStatementNode['parentNode'] = functionDeclarationNode;
-            expressionStatementNode1['parentNode'] = functionDeclarationBlockStatementNode;
-            ifStatementNode1['parentNode'] = functionDeclarationBlockStatementNode;
-            ifStatementBlockStatementNode1['parentNode'] = ifStatementNode1;
-            ifStatementNode2['parentNode'] = ifStatementBlockStatementNode1;
-            ifStatementBlockStatementNode2['parentNode'] = ifStatementNode2;
-            expressionStatementNode3['parentNode'] = ifStatementBlockStatementNode2;
+            programNode.parentNode = programNode;
+            functionDeclarationNode.parentNode = programNode;
+            functionDeclarationBlockStatementNode.parentNode = functionDeclarationNode;
+            expressionStatementNode1.parentNode = functionDeclarationBlockStatementNode;
+            ifStatementNode1.parentNode = functionDeclarationBlockStatementNode;
+            ifStatementBlockStatementNode1.parentNode = ifStatementNode1;
+            ifStatementNode2.parentNode = ifStatementBlockStatementNode1;
+            ifStatementBlockStatementNode2.parentNode = ifStatementNode2;
+            expressionStatementNode3.parentNode = ifStatementBlockStatementNode2;
         });
 
         it('should return block-scope node for given node', () => {
@@ -249,17 +249,17 @@ describe('NodeUtils', () => {
                 functionDeclarationNode1
             ]);
 
-            programNode['parentNode'] = programNode;
-            functionDeclarationNode1['parentNode'] = programNode;
-            functionDeclarationBlockStatementNode1['parentNode'] = functionDeclarationNode1;
-            expressionStatementNode1['parentNode'] = functionDeclarationBlockStatementNode1;
-            ifStatementNode1['parentNode'] = functionDeclarationBlockStatementNode1;
-            ifStatementBlockStatementNode1['parentNode'] = ifStatementNode1;
-            functionDeclarationNode2['parentNode'] = ifStatementBlockStatementNode1;
-            functionDeclarationBlockStatementNode2['parentNode'] = functionDeclarationNode2;
-            expressionStatementNode2['parentNode'] = functionDeclarationBlockStatementNode2;
-            ifStatementNode2['parentNode'] = functionDeclarationBlockStatementNode2;
-            ifStatementBlockStatementNode2['parentNode'] = ifStatementNode2;
+            programNode.parentNode = programNode;
+            functionDeclarationNode1.parentNode = programNode;
+            functionDeclarationBlockStatementNode1.parentNode = functionDeclarationNode1;
+            expressionStatementNode1.parentNode = functionDeclarationBlockStatementNode1;
+            ifStatementNode1.parentNode = functionDeclarationBlockStatementNode1;
+            ifStatementBlockStatementNode1.parentNode = ifStatementNode1;
+            functionDeclarationNode2.parentNode = ifStatementBlockStatementNode1;
+            functionDeclarationBlockStatementNode2.parentNode = functionDeclarationNode2;
+            expressionStatementNode2.parentNode = functionDeclarationBlockStatementNode2;
+            ifStatementNode2.parentNode = functionDeclarationBlockStatementNode2;
+            ifStatementBlockStatementNode2.parentNode = ifStatementNode2;
         });
 
         it('should return block-scope depth for given node', () => {
@@ -308,27 +308,27 @@ describe('NodeUtils', () => {
                 ifStatementNode
             ]);
 
-            NodeUtils.parentize(programNode);
+            programNode = NodeUtils.parentize(programNode);
 
-            assert.deepEqual(programNode['parentNode'], programNode);
-            assert.deepEqual(ifStatementNode['parentNode'], programNode);
-            assert.deepEqual(ifStatementBlockStatementNode['parentNode'], ifStatementNode);
-            assert.deepEqual(expressionStatementNode1['parentNode'], ifStatementBlockStatementNode);
-            assert.deepEqual(expressionStatementNode2['parentNode'], ifStatementBlockStatementNode);
+            assert.deepEqual(programNode.parentNode, programNode);
+            assert.deepEqual(ifStatementNode.parentNode, programNode);
+            assert.deepEqual(ifStatementBlockStatementNode.parentNode, ifStatementNode);
+            assert.deepEqual(expressionStatementNode1.parentNode, ifStatementBlockStatementNode);
+            assert.deepEqual(expressionStatementNode2.parentNode, ifStatementBlockStatementNode);
         });
 
         it('should parentize given AST-tree', () => {
             programNode = Nodes.getProgramNode([
                 ifStatementNode
             ]);
-            programNode['parentNode'] = programNode;
+            programNode.parentNode = programNode;
 
-            NodeUtils.parentize(ifStatementNode);
+            ifStatementNode = NodeUtils.parentize(ifStatementNode);
 
-            assert.deepEqual(ifStatementNode['parentNode'], programNode);
-            assert.deepEqual(ifStatementBlockStatementNode['parentNode'], ifStatementNode);
-            assert.deepEqual(expressionStatementNode1['parentNode'], ifStatementBlockStatementNode);
-            assert.deepEqual(expressionStatementNode2['parentNode'], ifStatementBlockStatementNode);
+            assert.deepEqual(ifStatementNode.parentNode, programNode);
+            assert.deepEqual(ifStatementBlockStatementNode.parentNode, ifStatementNode);
+            assert.deepEqual(expressionStatementNode1.parentNode, ifStatementBlockStatementNode);
+            assert.deepEqual(expressionStatementNode2.parentNode, ifStatementBlockStatementNode);
         });
     });
 });

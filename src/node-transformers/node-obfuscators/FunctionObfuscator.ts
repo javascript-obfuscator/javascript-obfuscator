@@ -74,7 +74,7 @@ export class FunctionObfuscator extends AbstractNodeTransformer {
      * @param nodeIdentifier
      */
     private replaceFunctionParams (functionNode: ESTree.Function, nodeIdentifier: number): void {
-        estraverse.replace(functionNode, {
+        const traverseVisitor: estraverse.Visitor = {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isReplaceableIdentifierNode(node, parentNode)) {
                     const newNodeName: string = this.identifierReplacer.replace(node.name, nodeIdentifier);
@@ -85,6 +85,10 @@ export class FunctionObfuscator extends AbstractNodeTransformer {
                     }
                 }
             }
-        });
+        };
+
+        functionNode.params.forEach((paramsNode: ESTree.Node) => estraverse.replace(paramsNode, traverseVisitor));
+
+        estraverse.replace(functionNode.body, traverseVisitor);
     }
 }

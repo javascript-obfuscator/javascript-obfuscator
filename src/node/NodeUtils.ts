@@ -102,13 +102,9 @@ export class NodeUtils {
                 throw new ReferenceError('`parentNode` property of `parentNode` of given node is `undefined`');
             }
 
-            if (!NodeUtils.nodesWithBlockScope.includes(parentNode.parentNode.type)) {
-                return NodeUtils.getBlockScopesOfNode(parentNode, blockScopes);
+            if (NodeUtils.nodesWithBlockScope.includes(parentNode.parentNode.type)) {
+                blockScopes.push(parentNode);
             }
-
-            blockScopes.push(parentNode);
-
-            return NodeUtils.getBlockScopesOfNode(parentNode, blockScopes);
         }
 
         if (!Node.isProgramNode(parentNode)) {

@@ -287,11 +287,9 @@ var NodeUtils = function () {
                 if (!parentNode.parentNode) {
                     throw new ReferenceError('`parentNode` property of `parentNode` of given node is `undefined`');
                 }
-                if (!NodeUtils.nodesWithBlockScope.includes(parentNode.parentNode.type)) {
-                    return NodeUtils.getBlockScopesOfNode(parentNode, blockScopes);
+                if (NodeUtils.nodesWithBlockScope.includes(parentNode.parentNode.type)) {
+                    blockScopes.push(parentNode);
                 }
-                blockScopes.push(parentNode);
-                return NodeUtils.getBlockScopesOfNode(parentNode, blockScopes);
             }
             if (!Node_1.Node.isProgramNode(parentNode)) {
                 return NodeUtils.getBlockScopesOfNode(parentNode, blockScopes);
@@ -5012,7 +5010,7 @@ var FunctionObfuscator = function (_AbstractNodeTransfor) {
         value: function replaceFunctionParams(functionNode, nodeIdentifier) {
             var _this3 = this;
 
-            estraverse.replace(functionNode, {
+            var traverseVisitor = {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
                         var newNodeName = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
@@ -5022,7 +5020,11 @@ var FunctionObfuscator = function (_AbstractNodeTransfor) {
                         }
                     }
                 }
+            };
+            functionNode.params.forEach(function (paramsNode) {
+                return estraverse.replace(paramsNode, traverseVisitor);
             });
+            estraverse.replace(functionNode.body, traverseVisitor);
         }
     }]);
     return FunctionObfuscator;

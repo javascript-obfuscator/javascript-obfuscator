@@ -1051,7 +1051,7 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 __webpack_require__(139);
-if (!global._babelPolyfill) {
+if (!global._babelPolyfill && parseInt(process.version.split('.')[0], 10) < 4) {
     __webpack_require__(126);
 }
 var ServiceIdentifiers_1 = __webpack_require__(4);

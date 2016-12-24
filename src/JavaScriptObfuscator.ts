@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-if (!(<any>global)._babelPolyfill) {
+if (!(<any>global)._babelPolyfill && parseInt(process.version.split('.')[0], 10) < 4) {
     require('babel-polyfill');
 }
 

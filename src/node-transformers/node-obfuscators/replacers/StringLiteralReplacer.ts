@@ -31,6 +31,11 @@ export class StringLiteralReplacer extends AbstractReplacer {
     private readonly stringLiteralCache: Map <string, string> = new Map();
 
     /**
+     * @type {Map<string, string>}
+     */
+    private readonly stringLiteralHexadecimalIndexCache: Map <string, string> = new Map();
+
+    /**
      * @type {IStorage<ICustomNodeGroup>}
      */
     private readonly customNodeGroupStorage: IStorage<ICustomNodeGroup>;
@@ -93,6 +98,33 @@ export class StringLiteralReplacer extends AbstractReplacer {
 
     /**
      * @param value
+     * @return {string}
+     */
+    private getArrayHexadecimalIndex (value: string): string {
+        if (this.stringLiteralHexadecimalIndexCache.has(value)) {
+            return <string>this.stringLiteralHexadecimalIndexCache.get(value);
+        }
+
+        const indexOfExistingValue: number = <number>this.stringArrayStorage.getKeyOf(value);
+
+        let indexOfValue: number;
+
+        if (indexOfExistingValue >= 0) {
+            indexOfValue = indexOfExistingValue;
+        } else {
+            indexOfValue = this.stringArrayStorage.getLength();
+            this.stringArrayStorage.set(null, value);
+        }
+
+        const hexadecimalIndex: string = `${Utils.hexadecimalPrefix}${Utils.decToHex(indexOfValue)}`;
+
+        this.stringLiteralHexadecimalIndexCache.set(value, hexadecimalIndex);
+
+        return hexadecimalIndex;
+    }
+
+    /**
+     * @param value
      * @returns {string}
      */
     private replaceStringLiteralWithStringArrayCall (value: string): string {
@@ -113,20 +145,9 @@ export class StringLiteralReplacer extends AbstractReplacer {
 
         value = Utils.stringToUnicodeEscapeSequence(value, !this.options.unicodeEscapeSequence);
 
-        const indexOfExistingValue: number = <number>this.stringArrayStorage.getKeyOf(value);
-
-        let indexOfValue: number;
-
-        if (indexOfExistingValue >= 0) {
-            indexOfValue = indexOfExistingValue;
-        } else {
-            indexOfValue = this.stringArrayStorage.getLength();
-            this.stringArrayStorage.set(null, value);
-        }
-
+        const hexadecimalIndex: string = this.getArrayHexadecimalIndex(value);
         const rotatedStringArrayStorageId: string = Utils.stringRotate(this.stringArrayStorage.getStorageId(), 1);
         const stringArrayStorageCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${rotatedStringArrayStorageId}`;
-        const hexadecimalIndex: string = `${Utils.hexadecimalPrefix}${Utils.decToHex(indexOfValue)}`;
 
         if (this.options.stringArrayEncoding === StringArrayEncoding.rc4) {
             return `${stringArrayStorageCallsWrapperName}('${hexadecimalIndex}', '${Utils.stringToUnicodeEscapeSequence(rc4Key, !this.options.unicodeEscapeSequence)}')`;

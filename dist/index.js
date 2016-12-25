@@ -5852,6 +5852,7 @@ var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplace
         var _this = (0, _possibleConstructorReturn3.default)(this, (StringLiteralReplacer.__proto__ || (0, _getPrototypeOf2.default)(StringLiteralReplacer)).call(this, options));
 
         _this.stringLiteralCache = new _map2.default();
+        _this.stringLiteralHexadecimalIndexCache = new _map2.default();
         _this.customNodeGroupStorage = customNodeGroupStorage;
         _this.stringArrayStorage = stringArrayStorage;
         return _this;
@@ -5877,6 +5878,24 @@ var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplace
             return result;
         }
     }, {
+        key: "getArrayHexadecimalIndex",
+        value: function getArrayHexadecimalIndex(value) {
+            if (this.stringLiteralHexadecimalIndexCache.has(value)) {
+                return this.stringLiteralHexadecimalIndexCache.get(value);
+            }
+            var indexOfExistingValue = this.stringArrayStorage.getKeyOf(value);
+            var indexOfValue = void 0;
+            if (indexOfExistingValue >= 0) {
+                indexOfValue = indexOfExistingValue;
+            } else {
+                indexOfValue = this.stringArrayStorage.getLength();
+                this.stringArrayStorage.set(null, value);
+            }
+            var hexadecimalIndex = "" + Utils_1.Utils.hexadecimalPrefix + Utils_1.Utils.decToHex(indexOfValue);
+            this.stringLiteralHexadecimalIndexCache.set(value, hexadecimalIndex);
+            return hexadecimalIndex;
+        }
+    }, {
         key: "replaceStringLiteralWithStringArrayCall",
         value: function replaceStringLiteralWithStringArrayCall(value) {
             var rc4Key = '';
@@ -5890,17 +5909,9 @@ var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplace
                     break;
             }
             value = Utils_1.Utils.stringToUnicodeEscapeSequence(value, !this.options.unicodeEscapeSequence);
-            var indexOfExistingValue = this.stringArrayStorage.getKeyOf(value);
-            var indexOfValue = void 0;
-            if (indexOfExistingValue >= 0) {
-                indexOfValue = indexOfExistingValue;
-            } else {
-                indexOfValue = this.stringArrayStorage.getLength();
-                this.stringArrayStorage.set(null, value);
-            }
+            var hexadecimalIndex = this.getArrayHexadecimalIndex(value);
             var rotatedStringArrayStorageId = Utils_1.Utils.stringRotate(this.stringArrayStorage.getStorageId(), 1);
             var stringArrayStorageCallsWrapperName = "_" + Utils_1.Utils.hexadecimalPrefix + rotatedStringArrayStorageId;
-            var hexadecimalIndex = "" + Utils_1.Utils.hexadecimalPrefix + Utils_1.Utils.decToHex(indexOfValue);
             if (this.options.stringArrayEncoding === StringArrayEncoding_1.StringArrayEncoding.rc4) {
                 return stringArrayStorageCallsWrapperName + "('" + hexadecimalIndex + "', '" + Utils_1.Utils.stringToUnicodeEscapeSequence(rc4Key, !this.options.unicodeEscapeSequence) + "')";
             }

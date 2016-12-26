@@ -21,7 +21,7 @@ describe('LiteralObfuscator', () => {
             assert.match(obfuscationResult.getObfuscatedCode(),  /^var *test *= *'\\x74\\x65\\x73\\x74';$/);
         });
 
-        it('should replace literal node value with unicode escape sequence from unicode array', () => {
+        it('should replace literal node value with unicode escape sequence from string array', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'test';`,
                 {
@@ -38,7 +38,7 @@ describe('LiteralObfuscator', () => {
             assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-z0-9]){4}\('0x0'\);/);
         });
 
-        it('should replace literal node value with raw value from unicode array if `unicodeEscapeSequence` is disabled', () => {
+        it('should replace literal node value with raw value from string array if `unicodeEscapeSequence` is disabled', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'test';`,
                 {
@@ -56,7 +56,7 @@ describe('LiteralObfuscator', () => {
             assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-z0-9]){4}\('0x0'\);/);
         });
 
-        it('should replace literal node value with raw value from unicode array if `unicodeEscapeSequence` and `stringArray` are disabled', () => {
+        it('should replace literal node value with raw value from string array if `unicodeEscapeSequence` and `stringArray` are disabled', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'test';`,
                 {
@@ -83,7 +83,7 @@ describe('LiteralObfuscator', () => {
             ));
         });
 
-        it('shouldn\'t replace short literal node value with unicode array value', () => {
+        it('shouldn\'t replace short literal node value with value from string array', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'te';`,
                 {
@@ -96,7 +96,7 @@ describe('LiteralObfuscator', () => {
             assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *'\\x74\\x65';/);
         });
 
-        it('should replace literal node value with unicode array value encoded using base64', () => {
+        it('should replace literal node value with value from string array encoded using base64', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'test';`,
                 {
@@ -114,7 +114,7 @@ describe('LiteralObfuscator', () => {
             assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-z0-9]){4}\('0x0'\);/);
         });
 
-        it('should replace literal node value with unicode array value encoded using rc4', () => {
+        it('should replace literal node value with value from string array encoded using rc4', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'test';`,
                 {
@@ -129,6 +129,28 @@ describe('LiteralObfuscator', () => {
                 obfuscationResult.getObfuscatedCode(),
                 /var *test *= *_0x([a-z0-9]){4}\('0x0', '(\\x[a-f0-9]*){4}'\);/
             );
+        });
+
+        it('should replace literal node value with value from string array with `stringArrayThreshold` chance', () => {
+            const samples: number = 1000;
+            const stringArrayThreshold: number = 0.5;
+            const delta: number = 0.1;
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                `var test = 'test';\n`.repeat(samples),
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: stringArrayThreshold
+                }
+            );
+
+            const regExp1: RegExp = /var *test *= *_0x([a-z0-9]){4}\('0x0'\);/g;
+            const regExp2: RegExp = /var *test *= *'\\x74\\x65\\x73\\x74';/g;
+            const stringArrayMatchesLength = obfuscationResult.getObfuscatedCode().match(regExp1)!.length;
+            const noStringArrayMatchesLength = obfuscationResult.getObfuscatedCode().match(regExp2)!.length;
+
+            assert.closeTo(stringArrayMatchesLength / samples, stringArrayThreshold, delta);
+            assert.closeTo(noStringArrayMatchesLength / samples, stringArrayThreshold, delta);
         });
     });
 

@@ -2,6 +2,7 @@ import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { ICustomNodeGroup } from '../../../interfaces/custom-nodes/ICustomNodeGroup';
+import { IEncodedValue } from '../../../interfaces/node-transformers/IEncodedValue';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
@@ -66,32 +67,26 @@ export class StringLiteralReplacer extends AbstractReplacer {
      * @returns {string}
      */
     public replace (nodeValue: string): string {
-        const replaceWithStringArrayFlag: boolean = (
-            nodeValue.length >= StringLiteralReplacer.minimumLengthForStringArray
-            && RandomGeneratorUtils.getRandomFloat(0, 1) <= this.options.stringArrayThreshold
+        const usingStringArray: boolean = (
+            this.options.stringArray &&
+            nodeValue.length >= StringLiteralReplacer.minimumLengthForStringArray &&
+            RandomGeneratorUtils.getRandomFloat(0, 1) <= this.options.stringArrayThreshold
         );
+        const cacheKey: string = `${nodeValue}-${String(usingStringArray)}`;
+
+        if (this.stringLiteralCache.has(cacheKey) && this.options.stringArrayEncoding !== StringArrayEncoding.rc4) {
+            return <string>this.stringLiteralCache.get(cacheKey);
+        }
 
         let result: string;
 
-        if (this.options.stringArray && replaceWithStringArrayFlag) {
-            /**
-             * we can't use values from cache with `stringArrayEncoding: rc4`
-             * because rc4 key will be the same for same values
-             */
-            if (this.stringLiteralCache.has(nodeValue) && this.options.stringArrayEncoding !== StringArrayEncoding.rc4) {
-                return <string>this.stringLiteralCache.get(nodeValue);
-            }
-
+        if (usingStringArray) {
             result = this.replaceStringLiteralWithStringArrayCall(nodeValue);
         } else {
-            if (this.stringLiteralCache.has(nodeValue)) {
-                return <string>this.stringLiteralCache.get(nodeValue);
-            }
-
             result = `'${Utils.stringToUnicodeEscapeSequence(nodeValue, !this.options.unicodeEscapeSequence)}'`;
         }
 
-        this.stringLiteralCache.set(nodeValue, result);
+        this.stringLiteralCache.set(cacheKey, result);
 
         return result;
     }
@@ -125,32 +120,45 @@ export class StringLiteralReplacer extends AbstractReplacer {
 
     /**
      * @param value
-     * @returns {string}
+     * @returns {IEncodedValue}
      */
-    private replaceStringLiteralWithStringArrayCall (value: string): string {
-        let rc4Key: string = '';
+    private getEncodedValue (value: string): IEncodedValue {
+        let encodedValue: string,
+            key: string | undefined;
 
         switch (this.options.stringArrayEncoding) {
             case StringArrayEncoding.rc4:
-                rc4Key = RandomGeneratorUtils.getRandomGenerator().pickone(StringLiteralReplacer.rc4Keys);
-                value = CryptUtils.btoa(CryptUtils.rc4(value, rc4Key));
+                key = RandomGeneratorUtils.getRandomGenerator().pickone(StringLiteralReplacer.rc4Keys);
+                encodedValue = CryptUtils.btoa(CryptUtils.rc4(value, key));
 
                 break;
 
             case StringArrayEncoding.base64:
-                value = CryptUtils.btoa(value);
+                encodedValue = CryptUtils.btoa(value);
 
                 break;
+
+            default:
+                encodedValue = value;
         }
 
-        value = Utils.stringToUnicodeEscapeSequence(value, !this.options.unicodeEscapeSequence);
+        encodedValue = Utils.stringToUnicodeEscapeSequence(encodedValue, !this.options.unicodeEscapeSequence);
 
-        const hexadecimalIndex: string = this.getArrayHexadecimalIndex(value);
+        return { encodedValue, key };
+    }
+
+    /**
+     * @param value
+     * @returns {string}
+     */
+    private replaceStringLiteralWithStringArrayCall (value: string): string {
+        const { encodedValue, key }: IEncodedValue = this.getEncodedValue(value);
+        const hexadecimalIndex: string = this.getArrayHexadecimalIndex(encodedValue);
         const rotatedStringArrayStorageId: string = Utils.stringRotate(this.stringArrayStorage.getStorageId(), 1);
         const stringArrayStorageCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${rotatedStringArrayStorageId}`;
 
-        if (this.options.stringArrayEncoding === StringArrayEncoding.rc4) {
-            return `${stringArrayStorageCallsWrapperName}('${hexadecimalIndex}', '${Utils.stringToUnicodeEscapeSequence(rc4Key, !this.options.unicodeEscapeSequence)}')`;
+        if (key) {
+            return `${stringArrayStorageCallsWrapperName}('${hexadecimalIndex}', '${Utils.stringToUnicodeEscapeSequence(key, !this.options.unicodeEscapeSequence)}')`;
         }
 
         return `${stringArrayStorageCallsWrapperName}('${hexadecimalIndex}')`;

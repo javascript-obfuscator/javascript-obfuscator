@@ -46,7 +46,7 @@ describe('FunctionControlFlowTransformer', () => {
         });
 
         describe('variant #2 - two `control flow storage` nodes: root and inner', () => {
-            const samplesCount: number = 150;
+            const samplesCount: number = 200;
             const delta: number = 0.1;
             const expectedValue: number = 0.5;
             const regExp1: RegExp = new RegExp(
@@ -112,6 +112,61 @@ describe('FunctionControlFlowTransformer', () => {
 
             it('should add `control flow storage` node with multiple items to the obfuscated code', () => {
                 assert.match(obfuscatedCode, regexp);
+            });
+        });
+
+        describe('variant #4 - no `control flow storage` node to the root block scope', () => {
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                readFileAsString(
+                    './test/fixtures/node-transformers/node-control-flow-transformers/function-control-flow-transformer-root-block-scope-1.js'
+                ),
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
+                    controlFlowFlattening: true,
+                    controlFlowFlatteningThreshold: 1
+                }
+            );
+            const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+
+            it('should\'t add control flow storage node when transformed node in the root block scope', () => {
+                assert.match(obfuscatedCode, /^var *test *= *0x1 *\+ *0x2;$/);
+            });
+        });
+
+        describe('variant #5 - no `control flow storage` node in the root block scope', () => {
+            const samplesCount: number = 20;
+            const expectedValue: number = 0;
+            const regExp: RegExp = new RegExp(
+                `var *[a-zA-Z]{6} *= *\\{` +
+                    `'(\\\\x[a-f0-9]*){3}' *: *function *_0x[0-9] *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
+                        `return *${variableMatch} *\\+ *${variableMatch};` +
+                    `\\}` +
+                `\\};`
+            );
+
+
+            it('should\'t add control flow storage node to the root block scope when transformed nodes not in the root block scope', () => {
+                let totalValue: number = 0;
+
+                for (let i = 0; i < samplesCount; i++) {
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        readFileAsString(
+                            './test/fixtures/node-transformers/node-control-flow-transformers/function-control-flow-transformer-root-block-scope-2.js'
+                        ),
+                        {
+                            ...NO_CUSTOM_NODES_PRESET,
+                            controlFlowFlattening: true,
+                            controlFlowFlatteningThreshold: 1
+                        }
+                    );
+                    const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+
+                    if (regExp.test(obfuscatedCode)) {
+                        totalValue++;
+                    }
+                }
+
+                assert.equal(totalValue, expectedValue);
             });
         });
     });

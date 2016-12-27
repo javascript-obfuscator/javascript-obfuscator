@@ -86,5 +86,33 @@ describe('FunctionControlFlowTransformer', () => {
                 assert.closeTo((totalValue - samplesCount) / samplesCount, expectedValue, delta);
             });
         });
+
+        describe('variant #3 - single `control flow storage` node with multiple items', () => {
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                readFileAsString(
+                    './test/fixtures/node-transformers/node-control-flow-transformers/function-control-flow-transformer-multiple-items-1.js'
+                ),
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
+                    controlFlowFlattening: true,
+                    controlFlowFlatteningThreshold: 1
+                }
+            );
+            const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+            const regexp: RegExp = new RegExp(
+                `var *${variableMatch} *= *\\{` +
+                    `'(\\\\x[a-f0-9]*){3}' *: *function *${variableMatch} *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
+                        `return *${variableMatch} *\\+ *${variableMatch};` +
+                    `\\}, *` +
+                    `'(\\\\x[a-f0-9]*){3}' *: *function *${variableMatch} *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
+                        `return *${variableMatch} *- *${variableMatch};` +
+                    `\\}` +
+                `\\};`
+            );
+
+            it('should add `control flow storage` node with multiple items to the obfuscated code', () => {
+                assert.match(obfuscatedCode, regexp);
+            });
+        });
     });
 });

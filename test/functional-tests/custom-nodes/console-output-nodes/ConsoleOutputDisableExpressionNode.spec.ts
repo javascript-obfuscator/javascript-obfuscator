@@ -15,7 +15,6 @@ describe('ConsoleOutputDisableExpressionNode', () => {
             {
                 ...NO_CUSTOM_NODES_PRESET,
                 disableConsoleOutput: true
-
             }
         );
 

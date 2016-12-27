@@ -23,10 +23,7 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
             functionExpressionName: string|number|null = null;
 
         if (Node.isMemberExpressionNode(callee)) {
-            const objectMembersCallsChain: TObjectMembersCallsChain = this.createObjectMembersCallsChain(
-                [],
-                callee
-            );
+            const objectMembersCallsChain: TObjectMembersCallsChain = this.createObjectMembersCallsChain([], callee);
 
             if (!objectMembersCallsChain.length) {
                 return null;

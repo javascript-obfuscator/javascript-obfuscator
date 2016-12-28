@@ -169,5 +169,26 @@ describe('FunctionControlFlowTransformer', () => {
                 assert.equal(totalValue, expectedValue);
             });
         });
+
+        describe('variant #6 - no single `control flow storage` node when threshold is 0', () => {
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                readFileAsString(
+                    './test/fixtures/node-transformers/node-control-flow-transformers/function-control-flow-transformer-zero-threshold.js'
+                ),
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
+                    controlFlowFlattening: true,
+                    controlFlowFlatteningThreshold: 0
+                }
+            );
+            const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+            const controlFlowStorageMatch: RegExp = new RegExp(rootControlFlowStorageNodeMatch);
+            const regexp: RegExp = /var *_0x([a-z0-9]){4,6} *= *0x1 *\+ *0x2;/;
+
+            it('shouldn\'t add `control flow storage` node to the obfuscated code when threshold is 0', () => {
+                assert.match(obfuscatedCode, regexp);
+                assert.notMatch(obfuscatedCode, controlFlowStorageMatch);
+            });
+        });
     });
 });

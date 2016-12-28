@@ -1,0 +1,92 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
+
+import * as ESTree from 'estree';
+
+import { TCustomNodeFactory } from '../../../types/container/TCustomNodeFactory';
+
+import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../../../interfaces/options/IOptions';
+import { IStorage } from '../../../interfaces/storages/IStorage';
+
+import { CustomNodes } from '../../../enums/container/CustomNodes';
+
+import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
+import { Node } from '../../../node/Node';
+import { NodeUtils } from '../../../node/NodeUtils';
+
+@injectable()
+export class LogicalExpressionControlFlowReplacer extends AbstractControlFlowReplacer {
+    /**
+     * @type {number}
+     */
+    private static readonly usingExistingIdentifierChance: number = 0.5;
+
+    /**
+     * @param customNodeFactory
+     * @param options
+     */
+    constructor (
+        @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
+    ) {
+        super(customNodeFactory, options);
+    }
+
+    /**
+     * @param logicalExpressionNode
+     * @param parentNode
+     * @param controlFlowStorage
+     * @returns {ESTree.Node}
+     */
+    public replace (
+        logicalExpressionNode: ESTree.LogicalExpression,
+        parentNode: ESTree.Node,
+        controlFlowStorage: IStorage <ICustomNode>
+    ): ESTree.Node {
+        if (this.checkForProhibitedExpressions(logicalExpressionNode.left, logicalExpressionNode.right)) {
+            return logicalExpressionNode;
+        }
+
+        const replacerId: string = logicalExpressionNode.operator;
+        const logicalExpressionFunctionCustomNode: ICustomNode = this.customNodeFactory(CustomNodes.LogicalExpressionFunctionNode);
+
+        logicalExpressionFunctionCustomNode.initialize(replacerId);
+
+        const storageKey: string = this.insertCustomNodeToControlFlowStorage(
+            logicalExpressionFunctionCustomNode,
+            controlFlowStorage,
+            replacerId,
+            LogicalExpressionControlFlowReplacer.usingExistingIdentifierChance
+        );
+
+        return this.getControlFlowStorageCallNode(
+            controlFlowStorage.getStorageId(),
+            storageKey,
+            logicalExpressionNode.left,
+            logicalExpressionNode.right
+        );
+    }
+
+    /**
+     * @param leftExpression
+     * @param rightExpression
+     * @returns {boolean}
+     */
+    private checkForProhibitedExpressions (leftExpression: ESTree.Expression, rightExpression: ESTree.Expression): boolean {
+        return [leftExpression, rightExpression].some((expressionNode: ESTree.Node | ESTree.Expression): boolean => {
+            let nodeForCheck: ESTree.Node | ESTree.Expression;
+
+            if (!Node.isUnaryExpressionNode(expressionNode)) {
+                nodeForCheck = expressionNode;
+            } else {
+                nodeForCheck = NodeUtils.getUnaryExpressionArgumentNode(expressionNode);
+            }
+
+            return !Node.isLiteralNode(nodeForCheck) &&
+                !Node.isIdentifierNode(nodeForCheck) &&
+                !Node.isObjectExpressionNode(nodeForCheck) &&
+                !Node.isExpressionStatementNode(nodeForCheck);
+        });
+    }
+}

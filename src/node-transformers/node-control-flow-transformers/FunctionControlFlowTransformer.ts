@@ -8,7 +8,6 @@ import { TControlFlowReplacerFactory } from '../../types/container/TControlFlowR
 import { TControlFlowStorageFactory } from '../../types/container/TControlFlowStorageFactory';
 import { TCustomNodeFactory } from '../../types/container/TCustomNodeFactory';
 import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
-import { TStatement } from '../../types/node/TStatement';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -30,7 +29,8 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @type {Map <string, NodeControlFlowReplacers>}
      */
     private static readonly controlFlowReplacersMap: Map <string, NodeControlFlowReplacers> = new Map([
-        [NodeType.BinaryExpression, NodeControlFlowReplacers.BinaryExpressionControlFlowReplacer]
+        [NodeType.BinaryExpression, NodeControlFlowReplacers.BinaryExpressionControlFlowReplacer],
+        [NodeType.LogicalExpression, NodeControlFlowReplacers.LogicalExpressionControlFlowReplacer]
     ]);
 
     /**
@@ -172,10 +172,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         const controlFlowStorageCustomNode: ICustomNode = this.customNodeFactory(CustomNodes.ControlFlowStorageNode);
 
         controlFlowStorageCustomNode.initialize(controlFlowStorage);
-
-        const controlFlowStorageNode: TStatement[] = controlFlowStorageCustomNode.getNode();
-
-        NodeAppender.prependNode(hostNode, controlFlowStorageNode);
+        NodeAppender.prependNode(hostNode, controlFlowStorageCustomNode.getNode());
         this.hostNodesWithControlFlowNode.push(hostNode);
     }
 }

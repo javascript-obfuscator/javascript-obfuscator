@@ -7,6 +7,7 @@ export enum CustomNodes {
     DebugProtectionFunctionIntervalNode,
     DebugProtectionFunctionNode,
     DomainLockNode,
+    LogicalExpressionFunctionNode,
     NodeCallsControllerFunctionNode,
     SelfDefendingUnicodeNode,
     StringArrayCallsWrapper,

@@ -191,6 +191,15 @@ export class Node {
      * @param node
      * @returns {boolean}
      */
+    public static isUnaryExpressionNode (node: ESTree.Node): node is ESTree.UnaryExpression {
+        return node.type === NodeType.UnaryExpression;
+    }
+
+    /**
+     *
+     * @param node
+     * @returns {boolean}
+     */
     public static isVariableDeclarationNode (node: ESTree.Node): node is ESTree.VariableDeclaration {
         return node.type === NodeType.VariableDeclaration;
     }

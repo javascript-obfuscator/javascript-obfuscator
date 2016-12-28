@@ -140,6 +140,18 @@ export class NodeUtils {
     }
 
     /**
+     * @param unaryExpressionNode
+     * @returns {ESTree.Node}
+     */
+    public static getUnaryExpressionArgumentNode (unaryExpressionNode: ESTree.UnaryExpression): ESTree.Node {
+        if (Node.isUnaryExpressionNode(unaryExpressionNode.argument)) {
+            return NodeUtils.getUnaryExpressionArgumentNode(unaryExpressionNode.argument);
+        }
+
+        return unaryExpressionNode.argument;
+    }
+
+    /**
      * @param node
      * @return {T}
      */

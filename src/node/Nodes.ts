@@ -176,6 +176,26 @@ export class Nodes {
     }
 
     /**
+     * @param operator
+     * @param left
+     * @param right
+     * @returns {ESTree.LogicalExpression}
+     */
+    public static getLogicalExpressionNode (
+        operator: ESTree.LogicalOperator,
+        left: ESTree.Expression,
+        right: ESTree.Expression,
+    ): ESTree.LogicalExpression {
+        return {
+            type: NodeType.LogicalExpression,
+            operator,
+            left,
+            right,
+            obfuscated: false
+        };
+    }
+
+    /**
      * @param object
      * @param property
      * @param computed
@@ -223,6 +243,26 @@ export class Nodes {
             method: false,
             shorthand: false,
             computed,
+            obfuscated: false
+        };
+    }
+
+    /**
+     * @param operator
+     * @param argument
+     * @param prefix
+     * @returns {ESTree.Literal}
+     */
+    public static getUnaryExpressionNode (
+        operator: ESTree.UnaryOperator,
+        argument: ESTree.Expression,
+        prefix: boolean = true
+    ): ESTree.UnaryExpression {
+        return {
+            type: NodeType.UnaryExpression,
+            operator,
+            argument,
+            prefix,
             obfuscated: false
         };
     }

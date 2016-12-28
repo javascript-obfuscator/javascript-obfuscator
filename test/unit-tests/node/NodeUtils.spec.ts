@@ -281,6 +281,34 @@ describe('NodeUtils', () => {
         });
     });
 
+    describe('getUnaryExpressionArgumentNode (unaryExpressionNode: ESTree.UnaryExpression): ESTree.Node', () => {
+        let expressionStatementNode: ESTree.ExpressionStatement,
+            literalNode: ESTree.Literal,
+            unaryExpressionNode1: ESTree.UnaryExpression,
+            unaryExpressionNode2: ESTree.UnaryExpression,
+            programNode: ESTree.Program;
+
+        beforeEach(() => {
+            literalNode = Nodes.getLiteralNode('test');
+            unaryExpressionNode2 = Nodes.getUnaryExpressionNode('!', literalNode)
+            unaryExpressionNode1 = Nodes.getUnaryExpressionNode('!', unaryExpressionNode2)
+            expressionStatementNode = Nodes.getExpressionStatementNode(unaryExpressionNode1);
+            programNode = Nodes.getProgramNode([
+                expressionStatementNode
+            ]);
+
+            programNode.parentNode = programNode;
+            expressionStatementNode.parentNode = programNode;
+            unaryExpressionNode1.parentNode = expressionStatementNode;
+            unaryExpressionNode2.parentNode = unaryExpressionNode1;
+            literalNode.parentNode = unaryExpressionNode2;
+        });
+
+        it('should return unary expression argument node', () => {
+            assert.deepEqual(NodeUtils.getUnaryExpressionArgumentNode(unaryExpressionNode1), literalNode);
+        });
+    });
+
     describe('parentize (node: ESTree.Node): void', () => {
         let ifStatementNode: ESTree.IfStatement,
             ifStatementBlockStatementNode: ESTree.BlockStatement,

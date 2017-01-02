@@ -96,7 +96,7 @@ export class SelfDefendingCustomNodeGroup extends AbstractCustomNodeGroup {
             return;
         }
 
-        const callsControllerFunctionName: string = RandomGeneratorUtils.getRandomVariableName();
+        const callsControllerFunctionName: string = RandomGeneratorUtils.getRandomVariableName(6, true, true);
 
         const selfDefendingUnicodeNode: ICustomNode = this.customNodeFactory(CustomNodes.SelfDefendingUnicodeNode);
         const nodeCallsControllerFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.NodeCallsControllerFunctionNode);

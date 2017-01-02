@@ -47,7 +47,7 @@ export class IdentifierReplacer extends AbstractReplacer implements IObfuscatorR
      */
     public storeNames (nodeName: string, nodeIdentifier: number): void {
         if (!this.isReservedName(nodeName)) {
-            this.namesMap.set(`${nodeName}-${String(nodeIdentifier)}`, RandomGeneratorUtils.getRandomVariableName());
+            this.namesMap.set(`${nodeName}-${String(nodeIdentifier)}`, RandomGeneratorUtils.getRandomVariableName(6, true, true));
         }
     }
 

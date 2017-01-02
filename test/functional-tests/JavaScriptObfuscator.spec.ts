@@ -152,9 +152,12 @@ describe('JavaScriptObfuscator', () => {
             const obfuscationResult1: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code, { seed: seed }
             );
+            RandomGeneratorUtils.randomVariableNameSet.clear();
+
             const obfuscationResult2: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code, { seed: seed }
             );
+            RandomGeneratorUtils.randomVariableNameSet.clear();
 
             assert.equal(obfuscationResult1.getObfuscatedCode(), obfuscationResult2.getObfuscatedCode());
         });

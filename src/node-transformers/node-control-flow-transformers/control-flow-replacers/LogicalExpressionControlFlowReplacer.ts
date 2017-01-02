@@ -11,12 +11,12 @@ import { IStorage } from '../../../interfaces/storages/IStorage';
 
 import { CustomNodes } from '../../../enums/container/CustomNodes';
 
-import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
+import { ExpressionWithOperatorControlFlowReplacer } from './ExpressionWithOperatorControlFlowReplacer';
 import { Node } from '../../../node/Node';
 import { NodeUtils } from '../../../node/NodeUtils';
 
 @injectable()
-export class LogicalExpressionControlFlowReplacer extends AbstractControlFlowReplacer {
+export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperatorControlFlowReplacer {
     /**
      * @type {number}
      */

@@ -1,6 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import * as ESTree from 'estree';
 import { Expression } from 'estree';
 
 import { TStatement } from '../../types/node/TStatement';
@@ -13,7 +14,13 @@ import { AbstractCustomNode } from '../AbstractCustomNode';
 import { Nodes } from '../../node/Nodes';
 
 @injectable()
-export class ControlFlowStorageCallNode extends AbstractCustomNode {
+export class CallExpressionControlFlowStorageCallNode extends AbstractCustomNode {
+    /**
+     * @type {Expression}
+     */
+    @initializable()
+    private callee: Expression;
+
     /**
      * @type {string}
      */
@@ -27,16 +34,10 @@ export class ControlFlowStorageCallNode extends AbstractCustomNode {
     private controlFlowStorageName: string;
 
     /**
-     * @type {Expression}
+     * @type {(ESTree.Expression | ESTree.SpreadElement)[]}
      */
     @initializable()
-    private leftValue: Expression;
-
-    /**
-     * @type {ESTree.Expression}
-     */
-    @initializable()
-    private rightValue: Expression;
+    private expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[];
 
     /**
      * @param options
@@ -50,19 +51,19 @@ export class ControlFlowStorageCallNode extends AbstractCustomNode {
     /**
      * @param controlFlowStorageName
      * @param controlFlowStorageKey
-     * @param leftValue
-     * @param rightValue
+     * @param callee
+     * @param expressionArguments
      */
     public initialize (
         controlFlowStorageName: string,
         controlFlowStorageKey: string,
-        leftValue: Expression,
-        rightValue: Expression,
+        callee: Expression,
+        expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[]
     ): void {
         this.controlFlowStorageName = controlFlowStorageName;
         this.controlFlowStorageKey = controlFlowStorageKey;
-        this.leftValue = leftValue;
-        this.rightValue = rightValue;
+        this.callee = callee;
+        this.expressionArguments = expressionArguments;
     }
 
     protected getNodeStructure (): TStatement[] {
@@ -74,8 +75,8 @@ export class ControlFlowStorageCallNode extends AbstractCustomNode {
                         Nodes.getIdentifierNode(this.controlFlowStorageKey)
                     ),
                     [
-                        this.leftValue,
-                        this.rightValue
+                        this.callee,
+                        ...this.expressionArguments
                     ]
                 )
             )

@@ -43,7 +43,7 @@ export class BinaryExpressionFunctionNode extends AbstractCustomNode {
     protected getNodeStructure (): TStatement[] {
         return [
             Nodes.getFunctionDeclarationNode(
-                RandomGeneratorUtils.getRandomVariableName(1),
+                RandomGeneratorUtils.getRandomVariableName(1, true, false),
                 [
                     Nodes.getIdentifierNode('x'),
                     Nodes.getIdentifierNode('y')

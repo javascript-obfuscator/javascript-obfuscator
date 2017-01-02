@@ -49,41 +49,12 @@ if (!(<any>global)._babelPolyfill) {
                     
                     return abc.item = 15, test1();
                 };
-                
-                var regexptest = /version\\/(\\d+)/i;
-                console.log(regexptest);
-                
-                test2(22);
-                console.log(105.4);
-                console.log(true, false);
-                
-                var sA = 'shorthand1';
-                var sB = 'shorthand2';
-                
-                console.log({sA, sB});
-                
-                try {
-                } catch (error) {
-                    console.log(error);
-                }
-                
-                function foo () {
-                    return function () {
-                        var sum1 = 10 + 20;
-                        var sum2 = 20 + 30;
-                        var sum3 = 30 + 50;
-                        var sub = sum3 - sum2;
-                        
-                        return sum1 + sub;
-                    }
-                }
-                
-                console.log(foo()());
             })();
         `,
         {
             compact: false,
             controlFlowFlattening: true,
+            controlFlowFlatteningThreshold: 1,
             disableConsoleOutput: false
         }
     ).getObfuscatedCode();

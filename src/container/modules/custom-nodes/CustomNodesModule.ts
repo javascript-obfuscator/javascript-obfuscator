@@ -15,13 +15,15 @@ import { SelfDefendingCustomNodeGroup } from '../../../custom-nodes/self-defendi
 import { StringArrayCustomNodeGroup } from '../../../custom-nodes/string-array-nodes/group/StringArrayCustomNodeGroup';
 
 import { BinaryExpressionFunctionNode } from '../../../custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/BinaryExpressionFunctionNode';
-import { ControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-storage-nodes/ControlFlowStorageCallNode';
+import { CallExpressionControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-storage-nodes/CallExpressionControlFlowStorageCallNode';
+import { CallExpressionFunctionNode } from '../../../custom-nodes/control-flow-replacers-nodes/call-expression-control-flow-replacer-nodes/CallExpressionFunctionNode';
 import { ControlFlowStorageNode } from '../../../custom-nodes/control-flow-storage-nodes/ControlFlowStorageNode';
 import { ConsoleOutputDisableExpressionNode } from '../../../custom-nodes/console-output-nodes/ConsoleOutputDisableExpressionNode';
 import { DebugProtectionFunctionCallNode } from '../../../custom-nodes/debug-protection-nodes/DebugProtectionFunctionCallNode';
 import { DebugProtectionFunctionIntervalNode } from '../../../custom-nodes/debug-protection-nodes/DebugProtectionFunctionIntervalNode';
 import { DebugProtectionFunctionNode } from '../../../custom-nodes/debug-protection-nodes/DebugProtectionFunctionNode';
 import { DomainLockNode } from '../../../custom-nodes/domain-lock-nodes/DomainLockNode';
+import { ExpressionWithOperatorControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-storage-nodes/ExpressionWithOperatorControlFlowStorageCallNode';
 import { LogicalExpressionFunctionNode } from '../../../custom-nodes/control-flow-replacers-nodes/logical-expression-control-flow-replacer-nodes/LogicalExpressionFunctionNode';
 import { NodeCallsControllerFunctionNode } from '../../../custom-nodes/node-calls-controller-nodes/NodeCallsControllerFunctionNode';
 import { SelfDefendingUnicodeNode } from '../../../custom-nodes/self-defending-nodes/SelfDefendingUnicodeNode';
@@ -36,8 +38,12 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
         .whenTargetNamed(CustomNodes.BinaryExpressionFunctionNode);
 
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(ControlFlowStorageCallNode)
-        .whenTargetNamed(CustomNodes.ControlFlowStorageCallNode);
+        .toConstructor(CallExpressionControlFlowStorageCallNode)
+        .whenTargetNamed(CustomNodes.CallExpressionControlFlowStorageCallNode);
+
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstructor(CallExpressionFunctionNode)
+        .whenTargetNamed(CustomNodes.CallExpressionFunctionNode);
 
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(ControlFlowStorageNode)
@@ -62,6 +68,10 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(DomainLockNode)
         .whenTargetNamed(CustomNodes.DomainLockNode);
+
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstructor(ExpressionWithOperatorControlFlowStorageCallNode)
+        .whenTargetNamed(CustomNodes.ExpressionWithOperatorControlFlowStorageCallNode);
 
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(LogicalExpressionFunctionNode)

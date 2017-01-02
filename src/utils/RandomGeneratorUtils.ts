@@ -14,6 +14,11 @@ export class RandomGeneratorUtils {
     public static readonly randomGeneratorPoolWithNumbers: string = `${RandomGeneratorUtils.randomGeneratorPool}0123456789`;
 
     /**
+     * @type {Set<string>}
+     */
+    public static randomVariableNameSet: Set <string> = new Set();
+
+    /**
      * @type {Chance.Chance | Chance.SeededChance}
      */
     private static randomGenerator: Chance.Chance | Chance.SeededChance = new Chance();
@@ -68,18 +73,26 @@ export class RandomGeneratorUtils {
     /**
      * @param length
      * @param withPrefix
+     * @param unique
      * @returns {string}
      */
-    public static getRandomVariableName (length: number = 6, withPrefix: boolean = true): string {
+    public static getRandomVariableName (length: number, withPrefix: boolean, unique: boolean): string {
         const prefix: string = withPrefix ? `_${Utils.hexadecimalPrefix}` : '';
         const rangeMinInteger: number = 10000;
         const rangeMaxInteger: number = 99999999;
-
-        return `${prefix}${(
+        const randomVariableName: string = `${prefix}${(
             Utils.decToHex(
                 RandomGeneratorUtils.getRandomInteger(rangeMinInteger, rangeMaxInteger)
             )
         ).substr(0, length)}`;
+
+        if (unique && RandomGeneratorUtils.randomVariableNameSet.has(randomVariableName)) {
+            return RandomGeneratorUtils.getRandomVariableName(length, withPrefix, unique);
+        }
+
+        RandomGeneratorUtils.randomVariableNameSet.add(randomVariableName);
+
+        return randomVariableName;
     }
 
     /**

@@ -52,6 +52,23 @@ export class Nodes {
     }
 
     /**
+     * @param label
+     * @return {ESTree.BreakStatement}
+     */
+    public static getBreakStatement (label?: ESTree.Identifier): ESTree.BreakStatement {
+        const breakStatementNode: ESTree.BreakStatement = {
+            type: NodeType.BreakStatement,
+            obfuscated: false
+        };
+
+        if (label) {
+            breakStatementNode.label = label;
+        }
+
+        return breakStatementNode;
+    }
+
+    /**
      * @param body
      * @returns {ESTree.CatchClause}
      */
@@ -71,7 +88,7 @@ export class Nodes {
      */
     public static getCallExpressionNode (
         callee: ESTree.Expression,
-        args: ESTree.Expression[] | ESTree.SpreadElement[] = []
+        args: (ESTree.Expression | ESTree.SpreadElement)[] = []
     ): ESTree.CallExpression {
         return {
             type: NodeType.CallExpression,
@@ -202,7 +219,7 @@ export class Nodes {
      * @return {ESTree.MemberExpression}
      */
     public static getMemberExpressionNode (
-        object: ESTree.Identifier,
+        object: ESTree.Expression | ESTree.Super,
         property: ESTree.Identifier|ESTree.Literal,
         computed: boolean = false
     ): ESTree.MemberExpression {
@@ -275,6 +292,37 @@ export class Nodes {
         return {
             type: NodeType.ReturnStatement,
             argument,
+            obfuscated: false
+        };
+    }
+
+    /**
+     * @param discriminant
+     * @param cases
+     * @returns {ESTree.SwitchStatement}
+     */
+    public static getSwitchStatementNode (
+        discriminant: ESTree.Expression,
+        cases: ESTree.SwitchCase[]
+    ): ESTree.SwitchStatement {
+        return {
+            type: NodeType.SwitchStatement,
+            discriminant,
+            cases,
+            obfuscated: false
+        };
+    }
+
+    /**
+     * @param test
+     * @param consequent
+     * @returns {ESTree.SwitchCase}
+     */
+    public static getSwitchCaseNode (test: ESTree.Expression, consequent: ESTree.Statement[]): ESTree.SwitchCase {
+        return {
+            type: NodeType.SwitchCase,
+            test,
+            consequent,
             obfuscated: false
         };
     }

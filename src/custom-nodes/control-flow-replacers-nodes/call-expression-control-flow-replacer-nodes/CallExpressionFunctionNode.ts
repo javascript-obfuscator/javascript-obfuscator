@@ -1,7 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
-import { LogicalOperator } from 'estree';
+import * as ESTree from 'estree';
 
 import { TStatement } from '../../../types/node/TStatement';
 
@@ -14,12 +14,12 @@ import { Nodes } from '../../../node/Nodes';
 import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 
 @injectable()
-export class LogicalExpressionFunctionNode extends AbstractCustomNode {
+export class CallExpressionFunctionNode extends AbstractCustomNode {
     /**
-     * @type {LogicalOperator}
+     * @type {(ESTree.Expression | ESTree.SpreadElement)[]}
      */
     @initializable()
-    private operator: LogicalOperator;
+    private expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[];
 
     /**
      * @param options
@@ -31,29 +31,36 @@ export class LogicalExpressionFunctionNode extends AbstractCustomNode {
     }
 
     /**
-     * @param operator
+     * @param expressionArguments
      */
-    public initialize (operator: LogicalOperator): void {
-        this.operator = operator;
+    public initialize (expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[]): void {
+        this.expressionArguments = expressionArguments;
     }
 
     /**
      * @returns {TStatement[]}
      */
     protected getNodeStructure (): TStatement[] {
+        const calleeIdentifier: ESTree.Identifier = Nodes.getIdentifierNode('callee');
+        const params: ESTree.Identifier[] = [];
+        const argumentsLength: number = this.expressionArguments.length;
+
+        for (let i: number = 0; i < argumentsLength; i++) {
+            params.push(Nodes.getIdentifierNode(`param${i + 1}`));
+        }
+
         return [
             Nodes.getFunctionDeclarationNode(
                 RandomGeneratorUtils.getRandomVariableName(1, true, false),
                 [
-                    Nodes.getIdentifierNode('x'),
-                    Nodes.getIdentifierNode('y')
+                    calleeIdentifier,
+                    ...params
                 ],
                 Nodes.getBlockStatementNode([
                     Nodes.getReturnStatementNode(
-                        Nodes.getLogicalExpressionNode(
-                            this.operator,
-                            Nodes.getIdentifierNode('x'),
-                            Nodes.getIdentifierNode('y')
+                        Nodes.getCallExpressionNode(
+                            calleeIdentifier,
+                            params
                         )
                     )
                 ])

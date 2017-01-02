@@ -6,12 +6,17 @@ import { IControlFlowReplacer } from '../../../interfaces/node-transformers/ICon
 import { NodeControlFlowReplacers } from '../../../enums/container/NodeControlFlowReplacers';
 
 import { BinaryExpressionControlFlowReplacer } from '../../../node-transformers/node-control-flow-transformers/control-flow-replacers/BinaryExpressionControlFlowReplacer';
+import { CallExpressionControlFlowReplacer } from '../../../node-transformers/node-control-flow-transformers/control-flow-replacers/CallExpressionControlFlowReplacer';
 import { LogicalExpressionControlFlowReplacer } from '../../../node-transformers/node-control-flow-transformers/control-flow-replacers/LogicalExpressionControlFlowReplacer';
 
 export const nodeControlFlowTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
         .to(BinaryExpressionControlFlowReplacer)
         .whenTargetNamed(NodeControlFlowReplacers.BinaryExpressionControlFlowReplacer);
+
+    bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
+        .to(CallExpressionControlFlowReplacer)
+        .whenTargetNamed(NodeControlFlowReplacers.CallExpressionControlFlowReplacer);
 
     bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
         .to(LogicalExpressionControlFlowReplacer)

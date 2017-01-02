@@ -18,7 +18,7 @@ export class StringArrayStorage extends ArrayStorage <string> {
     public initialize (...args: any[]): void {
         super.initialize(args);
 
-        this.storageId = RandomGeneratorUtils.getRandomVariableName(4, false);
+        this.storageId = RandomGeneratorUtils.getRandomVariableName(4, false, false);
     }
 
     /**

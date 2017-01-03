@@ -4,7 +4,8 @@
 export function StringArrayCallsWrapperTemplate (): string {
     return `
         var {stringArrayCallsWrapperName} = function (index, key) {
-            var index = parseInt(index, 0x10);
+            index = index - 0;
+            
             var value = {stringArrayName}[index];
             
             {decodeNodeTemplate}

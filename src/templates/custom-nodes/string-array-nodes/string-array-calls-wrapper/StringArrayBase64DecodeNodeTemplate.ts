@@ -3,13 +3,9 @@
  */
 export function StringArrayBase64DecodeNodeTemplate (): string {
     return `      
-        if (!{stringArrayCallsWrapperName}.atobPolyfillAppended) {
+        if ({stringArrayCallsWrapperName}.initialized === undefined) {
             {atobPolyfill}
             
-            {stringArrayCallsWrapperName}.atobPolyfillAppended = true;
-        }
-        
-        if (!{stringArrayCallsWrapperName}.base64DecodeUnicode) {                
             {stringArrayCallsWrapperName}.base64DecodeUnicode = function (str) {
                 var string = atob(str);
                 var newStringChars = [];
@@ -20,10 +16,10 @@ export function StringArrayBase64DecodeNodeTemplate (): string {
                 
                 return decodeURIComponent(newStringChars);
             };
-        }
-        
-        if (!{stringArrayCallsWrapperName}.data) {
+            
             {stringArrayCallsWrapperName}.data = {};
+            
+            {stringArrayCallsWrapperName}.initialized = true;
         }
                         
         if (!{stringArrayCallsWrapperName}.data[index]) {

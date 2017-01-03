@@ -3,35 +3,30 @@
  */
 export function StringArrayRc4DecodeNodeTemplate (): string {
     return `
-        if (!{stringArrayCallsWrapperName}.atobPolyfillAppended) {            
+        if ({stringArrayCallsWrapperName}.initialized === undefined) {
             {atobPolyfill}
             
-            {stringArrayCallsWrapperName}.atobPolyfillAppended = true;
+            {rc4Polyfill}
+            {stringArrayCallsWrapperName}.rc4 = rc4;
+            
+            {stringArrayCallsWrapperName}.data = {};
+            
+            {stringArrayCallsWrapperName}.initialized = true;
         }
         
-        if (!{stringArrayCallsWrapperName}.rc4) {            
-            {rc4Polyfill}
-            
-            {stringArrayCallsWrapperName}.rc4 = rc4;
-        }
-                        
-        if (!{stringArrayCallsWrapperName}.data) {
-            {stringArrayCallsWrapperName}.data = {};
-        }
+        index += key;
 
-        var cacheKey = index + key;
-
-        if ({stringArrayCallsWrapperName}.data[cacheKey] === undefined) {
-            if (!{stringArrayCallsWrapperName}.once) {
+        if ({stringArrayCallsWrapperName}.data[index] === undefined) {
+            if ({stringArrayCallsWrapperName}.once === undefined) {
                 {selfDefendingCode}
                 
                 {stringArrayCallsWrapperName}.once = true;
             }
             
             value = {stringArrayCallsWrapperName}.rc4(value, key);
-            {stringArrayCallsWrapperName}.data[cacheKey] = value;
+            {stringArrayCallsWrapperName}.data[index] = value;
         } else {
-            value = {stringArrayCallsWrapperName}.data[cacheKey];
+            value = {stringArrayCallsWrapperName}.data[index];
         }
     `;
 }

@@ -1977,9 +1977,12 @@ var AbstractControlFlowReplacer = AbstractControlFlowReplacer_1 = function () {
             if (RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomFloat(0, 1) > usingExistingIdentifierChance && storageKeysForCurrentId && storageKeysForCurrentId.length) {
                 return RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().pickone(storageKeysForCurrentId);
             }
-            var storageKey = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(3);
+            var storageKey = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(4);
             storageKeysById.set(replacerId, [storageKey]);
             this.replacerDataByControlFlowStorageId.set(controlFlowStorageId, storageKeysById);
+            if (controlFlowStorage.getStorage().has(storageKey)) {
+                console.log(1);
+            }
             controlFlowStorage.set(storageKey, customNode);
             return storageKey;
         }

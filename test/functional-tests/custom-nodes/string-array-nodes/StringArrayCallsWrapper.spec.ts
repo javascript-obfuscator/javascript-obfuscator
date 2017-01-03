@@ -20,7 +20,7 @@ describe('StringArrayCallsWrapper', () => {
 
         assert.match(
             obfuscationResult.getObfuscatedCode(),
-            /var *_0x([a-z0-9]){4,6} *= *parseInt\(_0x([a-z0-9]){4,6}, *0x10\);/
+            /_0x([a-z0-9]){4,6} *= *_0x([a-z0-9]){4,6} *- *0x0\;/
         );
     });
 });

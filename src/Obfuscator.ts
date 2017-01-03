@@ -137,13 +137,11 @@ export class Obfuscator implements IObfuscator {
         }
 
         // second pass: nodes obfuscation
-        console.time();
         astTree = this.transformAstTree(
             astTree,
             VisitorDirection.enter,
             this.nodeTransformersFactory(Obfuscator.nodeObfuscatorsMap)
         );
-        console.timeEnd();
 
         this.obfuscationEventEmitter.emit(ObfuscationEvents.AfterObfuscation, astTree, stackTraceData);
 

@@ -22,7 +22,7 @@ export function StringArrayBase64DecodeNodeTemplate (): string {
             {stringArrayCallsWrapperName}.initialized = true;
         }
                         
-        if (!{stringArrayCallsWrapperName}.data[index]) {
+        if ({stringArrayCallsWrapperName}.data[index] === undefined) {
             {selfDefendingCode}
             
             value = {stringArrayCallsWrapperName}.base64DecodeUnicode(value);

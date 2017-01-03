@@ -2435,9 +2435,7 @@ var Obfuscator = Obfuscator_1 = function () {
             if (this.options.controlFlowFlattening) {
                 astTree = this.transformAstTree(astTree, VisitorDirection_1.VisitorDirection.leave, this.nodeTransformersFactory(Obfuscator_1.nodeControlFlowTransformersMap));
             }
-            console.time();
             astTree = this.transformAstTree(astTree, VisitorDirection_1.VisitorDirection.enter, this.nodeTransformersFactory(Obfuscator_1.nodeObfuscatorsMap));
-            console.timeEnd();
             this.obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation, astTree, stackTraceData);
             return astTree;
         }
@@ -7609,7 +7607,7 @@ exports.SelfDefendingTemplate = SelfDefendingTemplate;
 
 
 function StringArrayBase64DecodeNodeTemplate() {
-    return "      \n        if ({stringArrayCallsWrapperName}.initialized === undefined) {\n            {atobPolyfill}\n            \n            {stringArrayCallsWrapperName}.base64DecodeUnicode = function (str) {\n                var string = atob(str);\n                var newStringChars = [];\n                \n                for (var i = 0, length = string.length; i < length; i++) {\n                    newStringChars += '%' + ('00' + string.charCodeAt(i).toString(16)).slice(-2);\n                }\n                \n                return decodeURIComponent(newStringChars);\n            };\n            \n            {stringArrayCallsWrapperName}.data = {};\n            \n            {stringArrayCallsWrapperName}.initialized = true;\n        }\n                        \n        if (!{stringArrayCallsWrapperName}.data[index]) {\n            {selfDefendingCode}\n            \n            value = {stringArrayCallsWrapperName}.base64DecodeUnicode(value);\n            {stringArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = {stringArrayCallsWrapperName}.data[index];\n        }  \n    ";
+    return "      \n        if ({stringArrayCallsWrapperName}.initialized === undefined) {\n            {atobPolyfill}\n            \n            {stringArrayCallsWrapperName}.base64DecodeUnicode = function (str) {\n                var string = atob(str);\n                var newStringChars = [];\n                \n                for (var i = 0, length = string.length; i < length; i++) {\n                    newStringChars += '%' + ('00' + string.charCodeAt(i).toString(16)).slice(-2);\n                }\n                \n                return decodeURIComponent(newStringChars);\n            };\n            \n            {stringArrayCallsWrapperName}.data = {};\n            \n            {stringArrayCallsWrapperName}.initialized = true;\n        }\n                        \n        if ({stringArrayCallsWrapperName}.data[index] === undefined) {\n            {selfDefendingCode}\n            \n            value = {stringArrayCallsWrapperName}.base64DecodeUnicode(value);\n            {stringArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = {stringArrayCallsWrapperName}.data[index];\n        }  \n    ";
 }
 exports.StringArrayBase64DecodeNodeTemplate = StringArrayBase64DecodeNodeTemplate;
 

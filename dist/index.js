@@ -2435,7 +2435,9 @@ var Obfuscator = Obfuscator_1 = function () {
             if (this.options.controlFlowFlattening) {
                 astTree = this.transformAstTree(astTree, VisitorDirection_1.VisitorDirection.leave, this.nodeTransformersFactory(Obfuscator_1.nodeControlFlowTransformersMap));
             }
+            console.time();
             astTree = this.transformAstTree(astTree, VisitorDirection_1.VisitorDirection.enter, this.nodeTransformersFactory(Obfuscator_1.nodeObfuscatorsMap));
+            console.timeEnd();
             this.obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation, astTree, stackTraceData);
             return astTree;
         }
@@ -5757,7 +5759,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
-var escodegen = __webpack_require__(26);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(20);
 var NodeType_1 = __webpack_require__(15);
 var AbstractNodeTransformer_1 = __webpack_require__(18);
@@ -5777,9 +5778,7 @@ var MemberExpressionObfuscator = function (_AbstractNodeTransfor) {
     (0, _createClass3.default)(MemberExpressionObfuscator, [{
         key: "transformNode",
         value: function transformNode(memberExpressionNode) {
-            if (Node_1.Node.isLiteralNode(memberExpressionNode.property)) {
-                memberExpressionNode.property = this.obfuscateLiteralProperty(memberExpressionNode.property);
-            } else if (Node_1.Node.isIdentifierNode(memberExpressionNode.property)) {
+            if (Node_1.Node.isIdentifierNode(memberExpressionNode.property)) {
                 if (memberExpressionNode.computed) {
                     return memberExpressionNode;
                 }
@@ -5794,23 +5793,8 @@ var MemberExpressionObfuscator = function (_AbstractNodeTransfor) {
             return {
                 type: NodeType_1.NodeType.Literal,
                 value: node.name,
-                raw: "'" + node.name + "'",
-                'x-verbatim-property': {
-                    content: this.stringLiteralReplacer.replace(node.name),
-                    precedence: escodegen.Precedence.Primary
-                }
+                raw: "'" + node.name + "'"
             };
-        }
-    }, {
-        key: "obfuscateLiteralProperty",
-        value: function obfuscateLiteralProperty(node) {
-            if (typeof node.value === 'string' && !node['x-verbatim-property']) {
-                node['x-verbatim-property'] = {
-                    content: this.stringLiteralReplacer.replace(node.value),
-                    precedence: escodegen.Precedence.Primary
-                };
-            }
-            return node;
         }
     }]);
     return MemberExpressionObfuscator;
@@ -5851,6 +5835,7 @@ var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var NodeObfuscatorsReplacers_1 = __webpack_require__(20);
+var NodeType_1 = __webpack_require__(15);
 var AbstractNodeTransformer_1 = __webpack_require__(18);
 var Node_1 = __webpack_require__(12);
 var MethodDefinitionObfuscator = MethodDefinitionObfuscator_1 = function (_AbstractNodeTransfor) {
@@ -5876,8 +5861,11 @@ var MethodDefinitionObfuscator = MethodDefinitionObfuscator_1 = function (_Abstr
         value: function replaceMethodName(methodDefinitionNode) {
             if (Node_1.Node.isIdentifierNode(methodDefinitionNode.key) && !MethodDefinitionObfuscator_1.ignoredNames.includes(methodDefinitionNode.key.name) && methodDefinitionNode.computed === false) {
                 methodDefinitionNode.computed = true;
-                methodDefinitionNode.key.name = this.stringLiteralReplacer.replace(methodDefinitionNode.key.name);
-                return;
+                methodDefinitionNode.key = {
+                    type: NodeType_1.NodeType.Literal,
+                    value: methodDefinitionNode.key.name,
+                    raw: "'" + methodDefinitionNode.key.name + "'"
+                };
             }
         }
     }]);
@@ -6402,15 +6390,9 @@ var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplace
             if (this.stringLiteralHexadecimalIndexCache.has(value)) {
                 return this.stringLiteralHexadecimalIndexCache.get(value);
             }
-            var indexOfExistingValue = this.stringArrayStorage.getKeyOf(value);
-            var indexOfValue = void 0;
-            if (indexOfExistingValue >= 0) {
-                indexOfValue = indexOfExistingValue;
-            } else {
-                indexOfValue = this.stringArrayStorage.getLength();
-                this.stringArrayStorage.set(null, value);
-            }
+            var indexOfValue = this.stringArrayStorage.getLength();
             var hexadecimalIndex = "" + Utils_1.Utils.hexadecimalPrefix + Utils_1.Utils.decToHex(indexOfValue);
+            this.stringArrayStorage.set(null, value);
             this.stringLiteralHexadecimalIndexCache.set(value, hexadecimalIndex);
             return hexadecimalIndex;
         }
@@ -7651,7 +7633,7 @@ exports.StringArrayCallsWrapperTemplate = StringArrayCallsWrapperTemplate;
 
 
 function StringArrayRc4DecodeNodeTemplate() {
-    return "\n        if (!{stringArrayCallsWrapperName}.atobPolyfillAppended) {            \n            {atobPolyfill}\n            \n            {stringArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n        \n        if (!{stringArrayCallsWrapperName}.rc4) {            \n            {rc4Polyfill}\n            \n            {stringArrayCallsWrapperName}.rc4 = rc4;\n        }\n                        \n        if (!{stringArrayCallsWrapperName}.data) {\n            {stringArrayCallsWrapperName}.data = {};\n        }\n\n        if ({stringArrayCallsWrapperName}.data[index] === undefined) {\n            if (!{stringArrayCallsWrapperName}.once) {\n                {selfDefendingCode}\n                \n                {stringArrayCallsWrapperName}.once = true;\n            }\n            \n            value = {stringArrayCallsWrapperName}.rc4(value, key);\n            {stringArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = {stringArrayCallsWrapperName}.data[index];\n        }\n    ";
+    return "\n        if (!{stringArrayCallsWrapperName}.atobPolyfillAppended) {            \n            {atobPolyfill}\n            \n            {stringArrayCallsWrapperName}.atobPolyfillAppended = true;\n        }\n        \n        if (!{stringArrayCallsWrapperName}.rc4) {            \n            {rc4Polyfill}\n            \n            {stringArrayCallsWrapperName}.rc4 = rc4;\n        }\n                        \n        if (!{stringArrayCallsWrapperName}.data) {\n            {stringArrayCallsWrapperName}.data = {};\n        }\n\n        var cacheKey = index + key;\n\n        if ({stringArrayCallsWrapperName}.data[cacheKey] === undefined) {\n            if (!{stringArrayCallsWrapperName}.once) {\n                {selfDefendingCode}\n                \n                {stringArrayCallsWrapperName}.once = true;\n            }\n            \n            value = {stringArrayCallsWrapperName}.rc4(value, key);\n            {stringArrayCallsWrapperName}.data[cacheKey] = value;\n        } else {\n            value = {stringArrayCallsWrapperName}.data[cacheKey];\n        }\n    ";
 }
 exports.StringArrayRc4DecodeNodeTemplate = StringArrayRc4DecodeNodeTemplate;
 

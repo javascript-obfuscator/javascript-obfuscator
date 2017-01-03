@@ -7,6 +7,7 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IObfuscatorReplacer } from '../../interfaces/node-transformers/IObfuscatorReplacer';
 
 import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscatorsReplacers';
+import { NodeType } from '../../enums/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
@@ -16,7 +17,9 @@ import { Node } from '../../node/Node';
  *     foo () { //... };
  *
  * on:
- *     [_0x9a4e('0x0')] { //... };
+ *     ['foo'] { //... };
+ *
+ * Literal node will be obfuscated by LiteralObfuscator
  */
 @injectable()
 export class MethodDefinitionObfuscator extends AbstractNodeTransformer {
@@ -55,17 +58,30 @@ export class MethodDefinitionObfuscator extends AbstractNodeTransformer {
     }
 
     /**
+     * replaces:
+     *     object.identifier = 1;
+     *
+     * on:
+     *     object['identifier'] = 1;
+     *
+     * and skip:
+     *     object[identifier] = 1;
+     * Literal node will be obfuscated by LiteralObfuscator
+     *
      * @param methodDefinitionNode
      */
     private replaceMethodName (methodDefinitionNode: ESTree.MethodDefinition): void {
         if (
-            Node.isIdentifierNode(methodDefinitionNode.key) && !MethodDefinitionObfuscator.ignoredNames.includes(methodDefinitionNode.key.name) &&
+            Node.isIdentifierNode(methodDefinitionNode.key) &&
+            !MethodDefinitionObfuscator.ignoredNames.includes(methodDefinitionNode.key.name) &&
             methodDefinitionNode.computed === false
         ) {
             methodDefinitionNode.computed = true;
-            methodDefinitionNode.key.name = this.stringLiteralReplacer.replace(methodDefinitionNode.key.name);
-
-            return;
+            methodDefinitionNode.key = {
+                type: NodeType.Literal,
+                value: methodDefinitionNode.key.name,
+                raw: `'${methodDefinitionNode.key.name}'`
+            };
         }
     }
 }

@@ -19,7 +19,9 @@ export function StringArrayRc4DecodeNodeTemplate (): string {
             {stringArrayCallsWrapperName}.data = {};
         }
 
-        if ({stringArrayCallsWrapperName}.data[index] === undefined) {
+        var cacheKey = index + key;
+
+        if ({stringArrayCallsWrapperName}.data[cacheKey] === undefined) {
             if (!{stringArrayCallsWrapperName}.once) {
                 {selfDefendingCode}
                 
@@ -27,9 +29,9 @@ export function StringArrayRc4DecodeNodeTemplate (): string {
             }
             
             value = {stringArrayCallsWrapperName}.rc4(value, key);
-            {stringArrayCallsWrapperName}.data[index] = value;
+            {stringArrayCallsWrapperName}.data[cacheKey] = value;
         } else {
-            value = {stringArrayCallsWrapperName}.data[index];
+            value = {stringArrayCallsWrapperName}.data[cacheKey];
         }
     `;
 }

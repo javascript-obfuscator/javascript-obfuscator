@@ -38,6 +38,27 @@ describe('LiteralObfuscator', () => {
             assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-z0-9]){4}\('0x0'\);/);
         });
 
+        it('should create only one item in string array for same literal node values', () => {
+            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                `
+                    var test = 'test';
+                    var test = 'test';
+                    object.test();
+                `,
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }
+            );
+
+            assert.match(
+                obfuscationResult.getObfuscatedCode(),
+                /^var *_0x([a-z0-9]){4} *= *\['\\x74\\x65\\x73\\x74'\];/
+            );
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-z0-9]){4}\('0x0'\);/);
+        });
+
         it('should replace literal node value with raw value from string array if `unicodeEscapeSequence` is disabled', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 `var test = 'test';`,

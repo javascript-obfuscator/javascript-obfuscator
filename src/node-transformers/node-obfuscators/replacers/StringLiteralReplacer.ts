@@ -100,19 +100,10 @@ export class StringLiteralReplacer extends AbstractReplacer {
             return <string>this.stringLiteralHexadecimalIndexCache.get(value);
         }
 
-        const indexOfExistingValue: number = <number>this.stringArrayStorage.getKeyOf(value);
-
-        let indexOfValue: number;
-
-        if (indexOfExistingValue >= 0) {
-            indexOfValue = indexOfExistingValue;
-        } else {
-            indexOfValue = this.stringArrayStorage.getLength();
-            this.stringArrayStorage.set(null, value);
-        }
-
+        const indexOfValue: number = this.stringArrayStorage.getLength();
         const hexadecimalIndex: string = `${Utils.hexadecimalPrefix}${Utils.decToHex(indexOfValue)}`;
 
+        this.stringArrayStorage.set(null, value);
         this.stringLiteralHexadecimalIndexCache.set(value, hexadecimalIndex);
 
         return hexadecimalIndex;

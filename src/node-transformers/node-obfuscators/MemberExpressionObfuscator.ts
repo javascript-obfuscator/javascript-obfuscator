@@ -1,7 +1,6 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -38,9 +37,7 @@ export class MemberExpressionObfuscator extends AbstractNodeTransformer {
      * @returns {ESTree.Node}
      */
     public transformNode (memberExpressionNode: ESTree.MemberExpression): ESTree.Node {
-        if (Node.isLiteralNode(memberExpressionNode.property)) {
-            memberExpressionNode.property = this.obfuscateLiteralProperty(memberExpressionNode.property);
-        } else if (Node.isIdentifierNode(memberExpressionNode.property)) {
+        if (Node.isIdentifierNode(memberExpressionNode.property)) {
             if (memberExpressionNode.computed) {
                 return memberExpressionNode;
             }
@@ -57,10 +54,12 @@ export class MemberExpressionObfuscator extends AbstractNodeTransformer {
      *     object.identifier = 1;
      *
      * on:
-     *     object[_0x23d45[25]] = 1;
+     *     object['identifier'] = 1;
      *
      * and skip:
      *     object[identifier] = 1;
+     *
+     * Literal node will be obfuscated by LiteralObfuscator
      *
      * @param node
      * @returns {ESTree.Literal}
@@ -69,32 +68,7 @@ export class MemberExpressionObfuscator extends AbstractNodeTransformer {
         return {
             type: NodeType.Literal,
             value: node.name,
-            raw: `'${node.name}'`,
-            'x-verbatim-property': {
-                content: this.stringLiteralReplacer.replace(node.name),
-                precedence: escodegen.Precedence.Primary
-            }
+            raw: `'${node.name}'`
         };
-    }
-
-    /**
-     * replaces:
-     *     object['literal'] = 1;
-     *
-     * on:
-     *     object[_0x23d45[25]] = 1;
-     *
-     * @param node
-     * @returns {ESTree.Literal}
-     */
-    private obfuscateLiteralProperty (node: ESTree.Literal): ESTree.Literal {
-        if (typeof node.value === 'string' && !node['x-verbatim-property']) {
-            node['x-verbatim-property'] = {
-                content: this.stringLiteralReplacer.replace(node.value),
-                precedence: escodegen.Precedence.Primary
-            };
-        }
-
-        return node;
     }
 }

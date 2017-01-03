@@ -16,7 +16,7 @@ export class RandomGeneratorUtils {
     /**
      * @type {Set<string>}
      */
-    public static randomVariableNameSet: Set <string> = new Set();
+    public static readonly randomVariableNameSet: Set <string> = new Set();
 
     /**
      * @type {Chance.Chance | Chance.SeededChance}

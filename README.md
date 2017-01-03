@@ -381,7 +381,7 @@ Available values:
 * `true` (`boolean`): encode `stringArray` values using `base64`
 * `false` (`boolean`): don't encode `stringArray` values
 * `'base64'` (`string`): encode `stringArray` values using `base64`
-* `'rc4'` (`string`): encode `stringArray` values using `rc4`. **About 30-35% slower then `base64`, but more harder to get initial values**
+* `'rc4'` (`string`): encode `stringArray` values using `rc4`. **About 30-50% slower then `base64`, but more harder to get initial values.** It is recommended to disable [`unicodeEscapeSequence`](#unicodeescapesecuence) option with `rc4` encoding to prevent very large size of obfuscated code.
     
 ### `stringArrayThreshold`
 Type: `number` Default: `0.8` Min: `0` Max: `1`

@@ -12,15 +12,15 @@ describe('FunctionControlFlowTransformer', () => {
     const variableMatch: string = '_0x([a-z0-9]){4,6}';
     const rootControlFlowStorageNodeMatch: string = `` +
         `var *${variableMatch} *= *\\{` +
-            `'(\\\\x[a-f0-9]*){4}' *: *function *${variableMatch} *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
+            `'(\\\\x[a-f0-9]*){3}' *: *function *${variableMatch} *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
                 `return *${variableMatch} *\\+ *${variableMatch};` +
             `\\}` +
         `\\};` +
     ``;
     const innerControlFlowStorageNodeMatch: string = `` +
         `var *${variableMatch} *= *\\{` +
-            `'(\\\\x[a-f0-9]*){4}' *: *function *${variableMatch} *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
-                `return *${variableMatch}\\['(\\\\x[a-f0-9]*){4}'\\]\\(${variableMatch}, *${variableMatch}\\);` +
+            `'(\\\\x[a-f0-9]*){3}' *: *function *${variableMatch} *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
+                `return *${variableMatch}\\['(\\\\x[a-f0-9]*){3}'\\]\\(${variableMatch}, *${variableMatch}\\);` +
             `\\}` +
         `\\};` +
     ``;
@@ -101,10 +101,10 @@ describe('FunctionControlFlowTransformer', () => {
             const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
             const regexp: RegExp = new RegExp(
                 `var *${variableMatch} *= *\\{` +
-                    `'(\\\\x[a-f0-9]*){4}' *: *function *${variableMatch} *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
+                    `'(\\\\x[a-f0-9]*){3}' *: *function *${variableMatch} *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
                         `return *${variableMatch} *\\+ *${variableMatch};` +
                     `\\}, *` +
-                    `'(\\\\x[a-f0-9]*){4}' *: *function *${variableMatch} *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
+                    `'(\\\\x[a-f0-9]*){3}' *: *function *${variableMatch} *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
                         `return *${variableMatch} *- *${variableMatch};` +
                     `\\}` +
                 `\\};`
@@ -138,7 +138,7 @@ describe('FunctionControlFlowTransformer', () => {
             const expectedValue: number = 0;
             const regExp: RegExp = new RegExp(
                 `var *[a-zA-Z]{6} *= *\\{` +
-                    `'(\\\\x[a-f0-9]*){4}' *: *function *_0x[0-9] *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
+                    `'(\\\\x[a-f0-9]*){3}' *: *function *_0x[0-9] *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
                         `return *${variableMatch} *\\+ *${variableMatch};` +
                     `\\}` +
                 `\\};`

@@ -22,7 +22,7 @@ describe('CallExpressionControlFlowReplacer', () => {
                 }
             );
             const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
-            const controlFlowStorageCallRegExp: RegExp = /var *_0x([a-z0-9]){4,6} *= *_0x([a-z0-9]){4,6}\['(\\x[a-f0-9]*){4}'\]\(_0x([a-z0-9]){4,6}, *0x1, *0x2\);/;
+            const controlFlowStorageCallRegExp: RegExp = /var *_0x([a-z0-9]){4,6} *= *_0x([a-z0-9]){4,6}\['(\\x[a-f0-9]*){3}'\]\(_0x([a-z0-9]){4,6}, *0x1, *0x2\);/;
 
             it('should replace call expression node by call to control flow storage node', () => {
                 assert.match(obfuscatedCode, controlFlowStorageCallRegExp);
@@ -51,8 +51,8 @@ describe('CallExpressionControlFlowReplacer', () => {
                         }
                     );
                     const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
-                    const controlFlowStorageCallRegExp1: RegExp = /var *_0x([a-z0-9]){4,6} *= *(_0x([a-z0-9]){4,6}\['(\\x[a-f0-9]*){4}'\])\(_0x([a-z0-9]){4,6}, *0x1, *0x2\);/;
-                    const controlFlowStorageCallRegExp2: RegExp = /var *_0x([a-z0-9]){4,6} *= *(_0x([a-z0-9]){4,6}\['(\\x[a-f0-9]*){4}'\])\(_0x([a-z0-9]){4,6}, *0x2, *0x3\);/;
+                    const controlFlowStorageCallRegExp1: RegExp = /var *_0x([a-z0-9]){4,6} *= *(_0x([a-z0-9]){4,6}\['(\\x[a-f0-9]*){3}'\])\(_0x([a-z0-9]){4,6}, *0x1, *0x2\);/;
+                    const controlFlowStorageCallRegExp2: RegExp = /var *_0x([a-z0-9]){4,6} *= *(_0x([a-z0-9]){4,6}\['(\\x[a-f0-9]*){3}'\])\(_0x([a-z0-9]){4,6}, *0x2, *0x3\);/;
 
                     const firstMatchArray: RegExpMatchArray | null = obfuscatedCode.match(controlFlowStorageCallRegExp1);
                     const secondMatchArray: RegExpMatchArray | null = obfuscatedCode.match(controlFlowStorageCallRegExp2);

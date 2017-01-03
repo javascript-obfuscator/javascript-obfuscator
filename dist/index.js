@@ -90,7 +90,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 147);
+/******/ 	return __webpack_require__(__webpack_require__.s = 148);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1977,12 +1977,16 @@ var AbstractControlFlowReplacer = AbstractControlFlowReplacer_1 = function () {
             if (RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomFloat(0, 1) > usingExistingIdentifierChance && storageKeysForCurrentId && storageKeysForCurrentId.length) {
                 return RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().pickone(storageKeysForCurrentId);
             }
-            var storageKey = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(4);
+            var generateStorageKey = function generateStorageKey(length) {
+                var storageKey = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(length);
+                if (controlFlowStorage.getStorage().has(storageKey)) {
+                    return generateStorageKey(length);
+                }
+                return storageKey;
+            };
+            var storageKey = generateStorageKey(3);
             storageKeysById.set(replacerId, [storageKey]);
             this.replacerDataByControlFlowStorageId.set(controlFlowStorageId, storageKeysById);
-            if (controlFlowStorage.getStorage().has(storageKey)) {
-                console.log(1);
-            }
             controlFlowStorage.set(storageKey, customNode);
             return storageKey;
         }
@@ -7779,7 +7783,8 @@ module.exports = require("mkdirp");
 module.exports = require("reflect-metadata");
 
 /***/ },
-/* 147 */
+/* 147 */,
+/* 148 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

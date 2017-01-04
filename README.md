@@ -28,7 +28,7 @@ Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/
 ## :warning: Important
 #####Obfuscate only the code that belongs to you. 
 
-It is not recommended to obfuscate vendor scripts and polyfills, since the obfuscated code is 25-30% slower and the files are significantly larger.
+It is not recommended to obfuscate vendor scripts and polyfills, since the obfuscated code is 15-80% slower (depends on options) and the files are significantly larger.
 
 ## Installation
 
@@ -381,7 +381,7 @@ Available values:
 * `true` (`boolean`): encode `stringArray` values using `base64`
 * `false` (`boolean`): don't encode `stringArray` values
 * `'base64'` (`string`): encode `stringArray` values using `base64`
-* `'rc4'` (`string`): encode `stringArray` values using `rc4`. **About 30-50% slower then `base64`, but more harder to get initial values.** It is recommended to disable [`unicodeEscapeSequence`](#unicodeescapesecuence) option with `rc4` encoding to prevent very large size of obfuscated code.
+* `'rc4'` (`string`): encode `stringArray` values using `rc4`. **About 30-50% slower then `base64`, but more harder to get initial values.** It is recommended to disable [`unicodeEscapeSequence`](#unicodeescapesequence) option with `rc4` encoding to prevent very large size of obfuscated code.
     
 ### `stringArrayThreshold`
 Type: `number` Default: `0.8` Min: `0` Max: `1`

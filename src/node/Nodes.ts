@@ -23,6 +23,26 @@ export class Nodes {
      * @param operator
      * @param left
      * @param right
+     * @return {ESTree.AssignmentExpression}
+     */
+    public static getAssignmentExpressionNode (
+        operator: ESTree.AssignmentOperator,
+        left: ESTree.Pattern | ESTree.MemberExpression,
+        right: ESTree.Expression
+    ): ESTree.AssignmentExpression {
+        return {
+            type: NodeType.AssignmentExpression,
+            operator,
+            left,
+            right,
+            obfuscated: false
+        };
+    }
+
+    /**
+     * @param operator
+     * @param left
+     * @param right
      * @returns {ESTree.BinaryExpression}
      */
     public static getBinaryExpressionNode (
@@ -99,6 +119,23 @@ export class Nodes {
     }
 
     /**
+     * @param label
+     * @return {ESTree.ContinueStatement}
+     */
+    public static getContinueStatement (label?: ESTree.Identifier): ESTree.ContinueStatement {
+        const continueStatementNode: ESTree.ContinueStatement = {
+            type: NodeType.ContinueStatement,
+            obfuscated: false
+        };
+
+        if (label) {
+            continueStatementNode.label = label;
+        }
+
+        return continueStatementNode;
+    }
+
+    /**
      * @param expression
      * @returns {ESTree.ExpressionStatement}
      */
@@ -171,6 +208,20 @@ export class Nodes {
         return {
             type: NodeType.Identifier,
             name,
+            obfuscated: false
+        };
+    }
+
+    /**
+     * @param label
+     * @param body
+     * @returns {ESTree.LabeledStatement}
+     */
+    public static getLabeledStatement (label: ESTree.Identifier, body: ESTree.Statement): ESTree.LabeledStatement {
+        return {
+            type: NodeType.LabeledStatement,
+            label,
+            body,
             obfuscated: false
         };
     }
@@ -328,6 +379,21 @@ export class Nodes {
     }
 
     /**
+     * @param operator
+     * @param argumentExpr
+     * @returns {ESTree.UpdateExpression}
+     */
+    public static getUpdateExpressionNode (operator: ESTree.UpdateOperator, argumentExpr: ESTree.Expression): ESTree.UpdateExpression {
+        return {
+            type: NodeType.UpdateExpression,
+            operator,
+            argument: argumentExpr,
+            prefix: false,
+            obfuscated: false
+        };
+    }
+
+    /**
      * @param declarations
      * @param kind
      * @returns {ESTree.VariableDeclaration}
@@ -354,6 +420,20 @@ export class Nodes {
             type: NodeType.VariableDeclarator,
             id,
             init,
+            obfuscated: false
+        };
+    }
+
+    /**
+     * @param test
+     * @param body
+     * @return {ESTree.WhileStatement}
+     */
+    public static getWhileStatementNode (test: ESTree.Expression, body: ESTree.Statement): ESTree.WhileStatement {
+        return {
+            type: NodeType.WhileStatement,
+            test,
+            body,
             obfuscated: false
         };
     }

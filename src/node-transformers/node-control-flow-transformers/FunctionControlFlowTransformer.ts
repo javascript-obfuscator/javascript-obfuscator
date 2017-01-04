@@ -20,8 +20,10 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
 import { NodeAppender } from '../../node/NodeAppender';
 import { NodeControlFlowReplacers } from '../../enums/container/NodeControlFlowReplacers';
+import { Nodes } from '../../node/Nodes';
 import { NodeUtils } from '../../node/NodeUtils';
 import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
+import { Utils } from '../../utils/Utils';
 
 @injectable()
 export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
@@ -89,6 +91,18 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @param node
+     * @return {boolean}
+     */
+    private static functionHasProhibitedStatements (node: ESTree.Node): boolean {
+        const isBreakOrContinueStatement: boolean = Node.isBreakStatementNode(node) || Node.isContinueStatementNode(node);
+        const isVariableDeclarationWithLetOrConstKind: boolean = Node.isVariableDeclarationNode(node) &&
+            (node.kind === 'const' ||  node.kind === 'let');
+
+        return Node.isFunctionDeclarationNode(node) || isBreakOrContinueStatement || isVariableDeclarationWithLetOrConstKind;
+    }
+
+    /**
      * @param functionNode
      * @returns {TNodeWithBlockStatement}
      */
@@ -117,21 +131,50 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @returns {ESTree.Node}
      */
     public transformNode (functionNode: ESTree.Function): ESTree.Node {
-        this.changeFunctionBodyControlFlow(functionNode);
+        if (Node.isArrowFunctionExpressionNode(functionNode)) {
+            return functionNode;
+        }
+
+        const hostNode: TNodeWithBlockStatement = FunctionControlFlowTransformer.getHostNode(functionNode);
+        const controlFlowStorage: IStorage<ICustomNode> = this.getControlFlowStorage(hostNode);
+
+        let functionHasProhibitedStatements: boolean = false;
+
+        this.controlFlowData.set(hostNode, controlFlowStorage);
+
+        estraverse.replace(functionNode.body, {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+                if (!functionHasProhibitedStatements) {
+                    functionHasProhibitedStatements = FunctionControlFlowTransformer.functionHasProhibitedStatements(node);
+                }
+
+                return this.transformFunctionNodes(node, parentNode, controlFlowStorage);
+            }
+        });
+
+        if (!functionHasProhibitedStatements) {
+            this.transformFunctionStatements(functionNode);
+        }
+
+        if (!controlFlowStorage.getLength()) {
+            return functionNode;
+        }
+
+        const controlFlowStorageCustomNode: ICustomNode = this.customNodeFactory(CustomNodes.ControlFlowStorageNode);
+
+        controlFlowStorageCustomNode.initialize(controlFlowStorage);
+        NodeAppender.prependNode(hostNode, controlFlowStorageCustomNode.getNode());
+        this.hostNodesWithControlFlowNode.push(hostNode);
 
         return functionNode;
     }
 
     /**
-     * @param functionNode
+     * @param hostNode
+     * @return {IStorage<ICustomNode>}
      */
-    private changeFunctionBodyControlFlow (functionNode: ESTree.Function): void {
-        if (Node.isArrowFunctionExpressionNode(functionNode)) {
-            return;
-        }
-
+    private getControlFlowStorage (hostNode: TNodeWithBlockStatement): IStorage<ICustomNode> {
         const controlFlowStorage: IStorage <ICustomNode> = this.controlFlowStorageFactory();
-        const hostNode: TNodeWithBlockStatement = FunctionControlFlowTransformer.getHostNode(functionNode);
 
         if (this.controlFlowData.has(hostNode)) {
             if (this.hostNodesWithControlFlowNode.indexOf(hostNode) !== -1) {
@@ -143,37 +186,105 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
             controlFlowStorage.mergeWith(hostControlFlowStorage, true);
         }
 
-        this.controlFlowData.set(hostNode, controlFlowStorage);
+        return controlFlowStorage;
+    }
 
-        estraverse.replace(functionNode.body, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (!FunctionControlFlowTransformer.controlFlowReplacersMap.has(node.type)) {
-                    return;
-                }
+    /**
+     * @param node
+     * @param parentNode
+     * @param controlFlowStorage
+     * @return {ESTree.Node}
+     */
+    private transformFunctionNodes (
+        node: ESTree.Node,
+        parentNode: ESTree.Node,
+        controlFlowStorage: IStorage<ICustomNode>
+    ): ESTree.Node {
+        if (!FunctionControlFlowTransformer.controlFlowReplacersMap.has(node.type)) {
+            return node;
+        }
 
-                if (RandomGeneratorUtils.getRandomFloat(0, 1) > this.options.controlFlowFlatteningThreshold) {
-                    return;
-                }
+        if (RandomGeneratorUtils.getRandomFloat(0, 1) > this.options.controlFlowFlatteningThreshold) {
+            return node;
+        }
 
-                const controlFlowReplacerName: NodeControlFlowReplacers = <NodeControlFlowReplacers>FunctionControlFlowTransformer
-                    .controlFlowReplacersMap.get(node.type);
+        const controlFlowReplacerName: NodeControlFlowReplacers = <NodeControlFlowReplacers>FunctionControlFlowTransformer
+            .controlFlowReplacersMap.get(node.type);
 
-                return {
-                    ...this.controlFlowReplacerFactory(controlFlowReplacerName)
-                        .replace(node, parentNode, controlFlowStorage),
-                    parentNode
-                };
-            }
-        });
+        return {
+            ...this.controlFlowReplacerFactory(controlFlowReplacerName).replace(node, parentNode, controlFlowStorage),
+            parentNode
+        };
+    }
 
-        if (!controlFlowStorage.getLength()) {
+    /**
+     * @param functionNode
+     */
+    private transformFunctionStatements (functionNode: ESTree.FunctionExpression | ESTree.FunctionDeclaration): void {
+        if (RandomGeneratorUtils.getRandomFloat(0, 1) > this.options.controlFlowFlatteningThreshold) {
             return;
         }
 
-        const controlFlowStorageCustomNode: ICustomNode = this.customNodeFactory(CustomNodes.ControlFlowStorageNode);
+        const functionStatements: ESTree.Statement[] = functionNode.body.body;
+        const functionStatementsObject: any = Object.assign({}, functionStatements);
+        const originalKeys: number[] = Object.keys(functionStatementsObject).map((key: string) => parseInt(key, 10));
+        const shuffledKeys: number[] = Utils.arrayShuffle(originalKeys);
+        const originalKeysIndexesInShuffledArray: number[] = originalKeys.map((key: number) => shuffledKeys.indexOf(key));
 
-        controlFlowStorageCustomNode.initialize(controlFlowStorage);
-        NodeAppender.prependNode(hostNode, controlFlowStorageCustomNode.getNode());
-        this.hostNodesWithControlFlowNode.push(hostNode);
+        if (functionStatements.length <= 4) {
+            return;
+        } else if (!functionStatements.length) {
+            functionStatements.push(
+                Nodes.getReturnStatementNode(
+                    Nodes.getLiteralNode(true)
+                )
+            );
+        }
+
+        const controllerIdentifierName: string = RandomGeneratorUtils.getRandomString(3);
+
+        functionNode.body.body = [
+            Nodes.getVariableDeclarationNode([
+                Nodes.getVariableDeclaratorNode(
+                    Nodes.getIdentifierNode(controllerIdentifierName),
+                    Nodes.getCallExpressionNode(
+                        Nodes.getMemberExpressionNode(
+                            Nodes.getLiteralNode(
+                                originalKeysIndexesInShuffledArray.join('|')
+                            ),
+                            Nodes.getIdentifierNode('split')
+                        ),
+                        [
+                            Nodes.getLiteralNode('|')
+                        ]
+                    )
+                )
+            ]),
+            Nodes.getWhileStatementNode(
+                Nodes.getLiteralNode(true),
+                Nodes.getBlockStatementNode([
+                    Nodes.getSwitchStatementNode(
+                        Nodes.getCallExpressionNode(
+                            Nodes.getMemberExpressionNode(
+                                Nodes.getIdentifierNode(controllerIdentifierName),
+                                Nodes.getIdentifierNode('shift')
+                            )
+                        ),
+                        shuffledKeys.map((key: number, index: number) => {
+                            return Nodes.getSwitchCaseNode(
+                                Nodes.getLiteralNode(String(index)),
+                                [
+                                    functionStatementsObject[key],
+                                    Nodes.getContinueStatement()
+                                ]
+                            );
+                        })
+                    ),
+                    Nodes.getBreakStatement()
+                ])
+            )
+        ];
+
+        NodeUtils.parentize(functionNode.body);
     }
 }

@@ -759,6 +759,10 @@ var _getIterator2 = __webpack_require__(21);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
+var _toConsumableArray2 = __webpack_require__(31);
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
 var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
@@ -771,6 +775,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var _ = __webpack_require__(144);
 var JSFuck_1 = __webpack_require__(36);
+var RandomGeneratorUtils_1 = __webpack_require__(10);
 
 var Utils = function () {
     function Utils() {
@@ -793,6 +798,18 @@ var Utils = function () {
                 newArray.unshift(temp);
             }
             return newArray;
+        }
+    }, {
+        key: "arrayShuffle",
+        value: function arrayShuffle(array) {
+            var shuffledArray = [].concat((0, _toConsumableArray3.default)(array));
+            for (var i = shuffledArray.length; i; i--) {
+                var j = Math.floor(RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomFloat(0, 1) * i);
+                var _ref = [shuffledArray[j], shuffledArray[i - 1]];
+                shuffledArray[i - 1] = _ref[0];
+                shuffledArray[j] = _ref[1];
+            }
+            return shuffledArray;
         }
     }, {
         key: "decToHex",
@@ -1283,6 +1300,17 @@ var Nodes = function () {
             };
         }
     }, {
+        key: "getAssignmentExpressionNode",
+        value: function getAssignmentExpressionNode(operator, left, right) {
+            return {
+                type: NodeType_1.NodeType.AssignmentExpression,
+                operator: operator,
+                left: left,
+                right: right,
+                obfuscated: false
+            };
+        }
+    }, {
         key: "getBinaryExpressionNode",
         value: function getBinaryExpressionNode(operator, left, right) {
             return {
@@ -1341,6 +1369,18 @@ var Nodes = function () {
             };
         }
     }, {
+        key: "getContinueStatement",
+        value: function getContinueStatement(label) {
+            var continueStatementNode = {
+                type: NodeType_1.NodeType.ContinueStatement,
+                obfuscated: false
+            };
+            if (label) {
+                continueStatementNode.label = label;
+            }
+            return continueStatementNode;
+        }
+    }, {
         key: "getExpressionStatementNode",
         value: function getExpressionStatementNode(expression) {
             return {
@@ -1388,6 +1428,16 @@ var Nodes = function () {
             return {
                 type: NodeType_1.NodeType.Identifier,
                 name: name,
+                obfuscated: false
+            };
+        }
+    }, {
+        key: "getLabeledStatement",
+        value: function getLabeledStatement(label, body) {
+            return {
+                type: NodeType_1.NodeType.LabeledStatement,
+                label: label,
+                body: body,
                 obfuscated: false
             };
         }
@@ -1497,6 +1547,17 @@ var Nodes = function () {
             };
         }
     }, {
+        key: "getUpdateExpressionNode",
+        value: function getUpdateExpressionNode(operator, argumentExpr) {
+            return {
+                type: NodeType_1.NodeType.UpdateExpression,
+                operator: operator,
+                argument: argumentExpr,
+                prefix: false,
+                obfuscated: false
+            };
+        }
+    }, {
         key: "getVariableDeclarationNode",
         value: function getVariableDeclarationNode() {
             var declarations = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
@@ -1516,6 +1577,16 @@ var Nodes = function () {
                 type: NodeType_1.NodeType.VariableDeclarator,
                 id: id,
                 init: init,
+                obfuscated: false
+            };
+        }
+    }, {
+        key: "getWhileStatementNode",
+        value: function getWhileStatementNode(test, body) {
+            return {
+                type: NodeType_1.NodeType.WhileStatement,
+                test: test,
+                body: body,
                 obfuscated: false
             };
         }
@@ -4892,6 +4963,14 @@ exports.ObfuscationEventEmitter = ObfuscationEventEmitter;
 "use strict";
 
 
+var _keys = __webpack_require__(47);
+
+var _keys2 = _interopRequireDefault(_keys);
+
+var _assign = __webpack_require__(133);
+
+var _assign2 = _interopRequireDefault(_assign);
+
 var _map = __webpack_require__(11);
 
 var _map2 = _interopRequireDefault(_map);
@@ -4928,8 +5007,10 @@ var AbstractNodeTransformer_1 = __webpack_require__(18);
 var Node_1 = __webpack_require__(12);
 var NodeAppender_1 = __webpack_require__(24);
 var NodeControlFlowReplacers_1 = __webpack_require__(39);
+var Nodes_1 = __webpack_require__(25);
 var NodeUtils_1 = __webpack_require__(9);
 var RandomGeneratorUtils_1 = __webpack_require__(10);
+var Utils_1 = __webpack_require__(14);
 var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function (_AbstractNodeTransfor) {
     (0, _inherits3.default)(FunctionControlFlowTransformer, _AbstractNodeTransfor);
 
@@ -4949,19 +5030,39 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
     (0, _createClass3.default)(FunctionControlFlowTransformer, [{
         key: "transformNode",
         value: function transformNode(functionNode) {
-            this.changeFunctionBodyControlFlow(functionNode);
-            return functionNode;
-        }
-    }, {
-        key: "changeFunctionBodyControlFlow",
-        value: function changeFunctionBodyControlFlow(functionNode) {
             var _this2 = this;
 
             if (Node_1.Node.isArrowFunctionExpressionNode(functionNode)) {
-                return;
+                return functionNode;
             }
-            var controlFlowStorage = this.controlFlowStorageFactory();
             var hostNode = FunctionControlFlowTransformer_1.getHostNode(functionNode);
+            var controlFlowStorage = this.getControlFlowStorage(hostNode);
+            var functionHasProhibitedStatements = false;
+            this.controlFlowData.set(hostNode, controlFlowStorage);
+            estraverse.replace(functionNode.body, {
+                enter: function enter(node, parentNode) {
+                    if (!functionHasProhibitedStatements) {
+                        functionHasProhibitedStatements = FunctionControlFlowTransformer_1.functionHasProhibitedStatements(node);
+                    }
+                    return _this2.transformFunctionNodes(node, parentNode, controlFlowStorage);
+                }
+            });
+            if (!functionHasProhibitedStatements) {
+                this.transformFunctionStatements(functionNode);
+            }
+            if (!controlFlowStorage.getLength()) {
+                return functionNode;
+            }
+            var controlFlowStorageCustomNode = this.customNodeFactory(CustomNodes_1.CustomNodes.ControlFlowStorageNode);
+            controlFlowStorageCustomNode.initialize(controlFlowStorage);
+            NodeAppender_1.NodeAppender.prependNode(hostNode, controlFlowStorageCustomNode.getNode());
+            this.hostNodesWithControlFlowNode.push(hostNode);
+            return functionNode;
+        }
+    }, {
+        key: "getControlFlowStorage",
+        value: function getControlFlowStorage(hostNode) {
+            var controlFlowStorage = this.controlFlowStorageFactory();
             if (this.controlFlowData.has(hostNode)) {
                 if (this.hostNodesWithControlFlowNode.indexOf(hostNode) !== -1) {
                     hostNode.body.shift();
@@ -4969,28 +5070,54 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
                 var hostControlFlowStorage = this.controlFlowData.get(hostNode);
                 controlFlowStorage.mergeWith(hostControlFlowStorage, true);
             }
-            this.controlFlowData.set(hostNode, controlFlowStorage);
-            estraverse.replace(functionNode.body, {
-                enter: function enter(node, parentNode) {
-                    if (!FunctionControlFlowTransformer_1.controlFlowReplacersMap.has(node.type)) {
-                        return;
-                    }
-                    if (RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomFloat(0, 1) > _this2.options.controlFlowFlatteningThreshold) {
-                        return;
-                    }
-                    var controlFlowReplacerName = FunctionControlFlowTransformer_1.controlFlowReplacersMap.get(node.type);
-                    return tslib_1.__assign({}, _this2.controlFlowReplacerFactory(controlFlowReplacerName).replace(node, parentNode, controlFlowStorage), { parentNode: parentNode });
-                }
-            });
-            if (!controlFlowStorage.getLength()) {
+            return controlFlowStorage;
+        }
+    }, {
+        key: "transformFunctionNodes",
+        value: function transformFunctionNodes(node, parentNode, controlFlowStorage) {
+            if (!FunctionControlFlowTransformer_1.controlFlowReplacersMap.has(node.type)) {
+                return node;
+            }
+            if (RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomFloat(0, 1) > this.options.controlFlowFlatteningThreshold) {
+                return node;
+            }
+            var controlFlowReplacerName = FunctionControlFlowTransformer_1.controlFlowReplacersMap.get(node.type);
+            return tslib_1.__assign({}, this.controlFlowReplacerFactory(controlFlowReplacerName).replace(node, parentNode, controlFlowStorage), { parentNode: parentNode });
+        }
+    }, {
+        key: "transformFunctionStatements",
+        value: function transformFunctionStatements(functionNode) {
+            if (RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomFloat(0, 1) > this.options.controlFlowFlatteningThreshold) {
                 return;
             }
-            var controlFlowStorageCustomNode = this.customNodeFactory(CustomNodes_1.CustomNodes.ControlFlowStorageNode);
-            controlFlowStorageCustomNode.initialize(controlFlowStorage);
-            NodeAppender_1.NodeAppender.prependNode(hostNode, controlFlowStorageCustomNode.getNode());
-            this.hostNodesWithControlFlowNode.push(hostNode);
+            var functionStatements = functionNode.body.body;
+            var functionStatementsObject = (0, _assign2.default)({}, functionStatements);
+            var originalKeys = (0, _keys2.default)(functionStatementsObject).map(function (key) {
+                return parseInt(key, 10);
+            });
+            var shuffledKeys = Utils_1.Utils.arrayShuffle(originalKeys);
+            var originalKeysIndexesInShuffledArray = originalKeys.map(function (key) {
+                return shuffledKeys.indexOf(key);
+            });
+            if (functionStatements.length <= 4) {
+                return;
+            } else if (!functionStatements.length) {
+                functionStatements.push(Nodes_1.Nodes.getReturnStatementNode(Nodes_1.Nodes.getLiteralNode(true)));
+            }
+            var controllerIdentifierName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(3);
+            functionNode.body.body = [Nodes_1.Nodes.getVariableDeclarationNode([Nodes_1.Nodes.getVariableDeclaratorNode(Nodes_1.Nodes.getIdentifierNode(controllerIdentifierName), Nodes_1.Nodes.getCallExpressionNode(Nodes_1.Nodes.getMemberExpressionNode(Nodes_1.Nodes.getLiteralNode(originalKeysIndexesInShuffledArray.join('|')), Nodes_1.Nodes.getIdentifierNode('split')), [Nodes_1.Nodes.getLiteralNode('|')]))]), Nodes_1.Nodes.getWhileStatementNode(Nodes_1.Nodes.getLiteralNode(true), Nodes_1.Nodes.getBlockStatementNode([Nodes_1.Nodes.getSwitchStatementNode(Nodes_1.Nodes.getCallExpressionNode(Nodes_1.Nodes.getMemberExpressionNode(Nodes_1.Nodes.getIdentifierNode(controllerIdentifierName), Nodes_1.Nodes.getIdentifierNode('shift'))), shuffledKeys.map(function (key, index) {
+                return Nodes_1.Nodes.getSwitchCaseNode(Nodes_1.Nodes.getLiteralNode(String(index)), [functionStatementsObject[key], Nodes_1.Nodes.getContinueStatement()]);
+            })), Nodes_1.Nodes.getBreakStatement()]))];
+            NodeUtils_1.NodeUtils.parentize(functionNode.body);
         }
     }], [{
+        key: "functionHasProhibitedStatements",
+        value: function functionHasProhibitedStatements(node) {
+            var isBreakOrContinueStatement = Node_1.Node.isBreakStatementNode(node) || Node_1.Node.isContinueStatementNode(node);
+            var isVariableDeclarationWithLetOrConstKind = Node_1.Node.isVariableDeclarationNode(node) && (node.kind === 'const' || node.kind === 'let');
+            return Node_1.Node.isFunctionDeclarationNode(node) || isBreakOrContinueStatement || isVariableDeclarationWithLetOrConstKind;
+        }
+    }, {
         key: "getHostNode",
         value: function getHostNode(functionNode) {
             var blockScopesOfNode = NodeUtils_1.NodeUtils.getBlockScopesOfNode(functionNode);

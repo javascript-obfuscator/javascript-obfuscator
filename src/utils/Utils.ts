@@ -1,6 +1,8 @@
 import * as _ from 'lodash';
 import { JSFuck } from '../enums/JSFuck';
 
+import { RandomGeneratorUtils } from './RandomGeneratorUtils';
+
 export class Utils {
     /**
      * @type {string}
@@ -36,6 +38,22 @@ export class Utils {
         }
 
         return newArray;
+    }
+
+    /**
+     * @param array
+     * @return {T[]}
+     */
+    public static arrayShuffle <T> (array: T[]): T[] {
+        const shuffledArray: T[] = [...array];
+
+        for (let i: number = shuffledArray.length; i; i--) {
+            const j: number = Math.floor(RandomGeneratorUtils.getRandomFloat(0, 1) * i);
+
+            [shuffledArray[i - 1], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i - 1]];
+        }
+
+        return shuffledArray;
     }
 
     /**

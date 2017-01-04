@@ -271,7 +271,7 @@ export class Nodes {
      */
     public static getMemberExpressionNode (
         object: ESTree.Expression | ESTree.Super,
-        property: ESTree.Identifier|ESTree.Literal,
+        property: ESTree.Expression,
         computed: boolean = false
     ): ESTree.MemberExpression {
         return {

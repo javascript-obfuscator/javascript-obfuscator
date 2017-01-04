@@ -242,6 +242,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         }
 
         const controllerIdentifierName: string = RandomGeneratorUtils.getRandomString(3);
+        const indexIdentifierName: string = RandomGeneratorUtils.getRandomString(3);
 
         functionNode.body.body = [
             Nodes.getVariableDeclarationNode([
@@ -258,17 +259,23 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
                             Nodes.getLiteralNode('|')
                         ]
                     )
+                ),
+                Nodes.getVariableDeclaratorNode(
+                    Nodes.getIdentifierNode(indexIdentifierName),
+                    Nodes.getLiteralNode(0)
                 )
             ]),
             Nodes.getWhileStatementNode(
                 Nodes.getLiteralNode(true),
                 Nodes.getBlockStatementNode([
                     Nodes.getSwitchStatementNode(
-                        Nodes.getCallExpressionNode(
-                            Nodes.getMemberExpressionNode(
-                                Nodes.getIdentifierNode(controllerIdentifierName),
-                                Nodes.getIdentifierNode('shift')
-                            )
+                        Nodes.getMemberExpressionNode(
+                            Nodes.getIdentifierNode(controllerIdentifierName),
+                            Nodes.getUpdateExpressionNode(
+                                '++',
+                                Nodes.getIdentifierNode(indexIdentifierName)
+                            ),
+                            true
                         ),
                         shuffledKeys.map((key: number, index: number) => {
                             return Nodes.getSwitchCaseNode(

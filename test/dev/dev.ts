@@ -99,7 +99,7 @@ if (!(<any>global)._babelPolyfill) {
             controlFlowFlattening: true,
             controlFlowFlatteningThreshold: 1,
             disableConsoleOutput: false,
-            stringArray: false,
+            stringArray: true,
             unicodeEscapeSequence: false
         }
     ).getObfuscatedCode();

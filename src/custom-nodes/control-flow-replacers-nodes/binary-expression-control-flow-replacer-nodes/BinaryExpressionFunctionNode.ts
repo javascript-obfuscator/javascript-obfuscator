@@ -11,6 +11,7 @@ import { initializable } from '../../../decorators/Initializable';
 
 import { AbstractCustomNode } from '../../AbstractCustomNode';
 import { Nodes } from '../../../node/Nodes';
+import { NodeUtils } from '../../../node/NodeUtils';
 import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 
 @injectable()
@@ -41,23 +42,25 @@ export class BinaryExpressionFunctionNode extends AbstractCustomNode {
      * @returns {TStatement[]}
      */
     protected getNodeStructure (): TStatement[] {
-        return [
-            Nodes.getFunctionDeclarationNode(
-                RandomGeneratorUtils.getRandomVariableName(1, true, false),
-                [
-                    Nodes.getIdentifierNode('x'),
-                    Nodes.getIdentifierNode('y')
-                ],
-                Nodes.getBlockStatementNode([
-                    Nodes.getReturnStatementNode(
-                        Nodes.getBinaryExpressionNode(
-                            this.operator,
-                            Nodes.getIdentifierNode('x'),
-                            Nodes.getIdentifierNode('y')
-                        )
+        const structure: TStatement = Nodes.getFunctionDeclarationNode(
+            RandomGeneratorUtils.getRandomVariableName(1, true, false),
+            [
+                Nodes.getIdentifierNode('x'),
+                Nodes.getIdentifierNode('y')
+            ],
+            Nodes.getBlockStatementNode([
+                Nodes.getReturnStatementNode(
+                    Nodes.getBinaryExpressionNode(
+                        this.operator,
+                        Nodes.getIdentifierNode('x'),
+                        Nodes.getIdentifierNode('y')
                     )
-                ])
-            )
-        ];
+                )
+            ])
+        );
+
+        NodeUtils.parentize(structure);
+
+        return [structure];
     }
 }

@@ -11,6 +11,7 @@ import { initializable } from '../../../decorators/Initializable';
 
 import { AbstractCustomNode } from '../../AbstractCustomNode';
 import { Nodes } from '../../../node/Nodes';
+import { NodeUtils } from '../../../node/NodeUtils';
 import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 
 @injectable()
@@ -49,22 +50,24 @@ export class CallExpressionFunctionNode extends AbstractCustomNode {
             params.push(Nodes.getIdentifierNode(`param${i + 1}`));
         }
 
-        return [
-            Nodes.getFunctionDeclarationNode(
-                RandomGeneratorUtils.getRandomVariableName(1, true, false),
-                [
-                    calleeIdentifier,
-                    ...params
-                ],
-                Nodes.getBlockStatementNode([
-                    Nodes.getReturnStatementNode(
-                        Nodes.getCallExpressionNode(
-                            calleeIdentifier,
-                            params
-                        )
+        const structure: TStatement = Nodes.getFunctionDeclarationNode(
+            RandomGeneratorUtils.getRandomVariableName(1, true, false),
+            [
+                calleeIdentifier,
+                ...params
+            ],
+            Nodes.getBlockStatementNode([
+                Nodes.getReturnStatementNode(
+                    Nodes.getCallExpressionNode(
+                        calleeIdentifier,
+                        params
                     )
-                ])
-            )
-        ];
+                )
+            ])
+        );
+
+        NodeUtils.parentize(structure);
+
+        return [structure];
     }
 }

@@ -10,10 +10,8 @@ import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
+import { CustomNodes } from '../../../enums/container/CustomNodes';
 import { Node } from '../../../node/Node';
-import { Nodes } from '../../../node/Nodes';
-import { NodeUtils } from '../../../node/NodeUtils';
-import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 import { Utils } from '../../../utils/Utils';
 
 @injectable()
@@ -53,80 +51,30 @@ export class BlockStatementControlFlowReplacer extends AbstractControlFlowReplac
         blockStatementNode: ESTree.BlockStatement,
         parentNode: ESTree.Node,
         controlFlowStorage: IStorage <ICustomNode>
-    ): ESTree.BlockStatement {
+    ): ESTree.Node {
         if (BlockStatementControlFlowReplacer.blockStatementHasProhibitedStatements(blockStatementNode)) {
             return blockStatementNode;
         }
 
-        const blockStatementStatements: ESTree.Statement[] = blockStatementNode.body;
-        const blockStatementStatementsAsObject: any = Object.assign({}, blockStatementStatements);
-        const originalKeys: number[] = Object.keys(blockStatementStatementsAsObject).map((key: string) => parseInt(key, 10));
+        const blockStatementBody: ESTree.Statement[] = blockStatementNode.body;
+        const originalKeys: number[] = Object.keys(blockStatementBody).map((key: string) => parseInt(key, 10));
         const shuffledKeys: number[] = Utils.arrayShuffle(originalKeys);
         const originalKeysIndexesInShuffledArray: number[] = originalKeys.map((key: number) => shuffledKeys.indexOf(key));
 
-        if (blockStatementStatements.length <= 4) {
+        if (blockStatementBody.length <= 4) {
             return blockStatementNode;
-        } else if (!blockStatementStatements.length) {
-            blockStatementStatements.push(
-                Nodes.getReturnStatementNode(
-                    Nodes.getLiteralNode(true)
-                )
-            );
         }
 
-        const controllerIdentifierName: string = RandomGeneratorUtils.getRandomString(3);
-        const indexIdentifierName: string = RandomGeneratorUtils.getRandomString(3);
+        const blockStatementControlFlowReplacerCustomNode: ICustomNode = this.customNodeFactory(
+            CustomNodes.BlockStatementControlFlowReplacerNode
+        );
+        
+        blockStatementControlFlowReplacerCustomNode.initialize(
+            blockStatementBody,
+            shuffledKeys,
+            originalKeysIndexesInShuffledArray
+        );
 
-        blockStatementNode.body = [
-            Nodes.getVariableDeclarationNode([
-                Nodes.getVariableDeclaratorNode(
-                    Nodes.getIdentifierNode(controllerIdentifierName),
-                    Nodes.getCallExpressionNode(
-                        Nodes.getMemberExpressionNode(
-                            Nodes.getLiteralNode(
-                                originalKeysIndexesInShuffledArray.join('|')
-                            ),
-                            Nodes.getIdentifierNode('split')
-                        ),
-                        [
-                            Nodes.getLiteralNode('|')
-                        ]
-                    )
-                ),
-                Nodes.getVariableDeclaratorNode(
-                    Nodes.getIdentifierNode(indexIdentifierName),
-                    Nodes.getLiteralNode(0)
-                )
-            ]),
-            Nodes.getWhileStatementNode(
-                Nodes.getLiteralNode(true),
-                Nodes.getBlockStatementNode([
-                    Nodes.getSwitchStatementNode(
-                        Nodes.getMemberExpressionNode(
-                            Nodes.getIdentifierNode(controllerIdentifierName),
-                            Nodes.getUpdateExpressionNode(
-                                '++',
-                                Nodes.getIdentifierNode(indexIdentifierName)
-                            ),
-                            true
-                        ),
-                        shuffledKeys.map((key: number, index: number) => {
-                            return Nodes.getSwitchCaseNode(
-                                Nodes.getLiteralNode(String(index)),
-                                [
-                                    blockStatementStatementsAsObject[key],
-                                    Nodes.getContinueStatement()
-                                ]
-                            );
-                        })
-                    ),
-                    Nodes.getBreakStatement()
-                ])
-            )
-        ];
-
-        NodeUtils.parentize(blockStatementNode);
-
-        return blockStatementNode;
+        return blockStatementControlFlowReplacerCustomNode.getNode()[0];
     }
 }

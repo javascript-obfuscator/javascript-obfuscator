@@ -1,5 +1,6 @@
 export enum CustomNodes {
     BinaryExpressionFunctionNode,
+    BlockStatementControlFlowReplacerNode,
     CallExpressionControlFlowStorageCallNode,
     CallExpressionFunctionNode,
     ControlFlowStorageNode,

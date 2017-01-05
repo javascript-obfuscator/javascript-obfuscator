@@ -12,6 +12,7 @@ import { initializable } from '../../decorators/Initializable';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { Nodes } from '../../node/Nodes';
+import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class CallExpressionControlFlowStorageCallNode extends AbstractCustomNode {
@@ -67,19 +68,21 @@ export class CallExpressionControlFlowStorageCallNode extends AbstractCustomNode
     }
 
     protected getNodeStructure (): TStatement[] {
-        return [
-            Nodes.getExpressionStatementNode(
-                Nodes.getCallExpressionNode(
-                    Nodes.getMemberExpressionNode(
-                        Nodes.getIdentifierNode(this.controlFlowStorageName),
-                        Nodes.getIdentifierNode(this.controlFlowStorageKey)
-                    ),
-                    [
-                        this.callee,
-                        ...this.expressionArguments
-                    ]
-                )
+        const structure: TStatement = Nodes.getExpressionStatementNode(
+            Nodes.getCallExpressionNode(
+                Nodes.getMemberExpressionNode(
+                    Nodes.getIdentifierNode(this.controlFlowStorageName),
+                    Nodes.getIdentifierNode(this.controlFlowStorageKey)
+                ),
+                [
+                    this.callee,
+                    ...this.expressionArguments
+                ]
             )
-        ];
+        );
+
+        NodeUtils.parentize(structure);
+
+        return [structure];
     }
 }

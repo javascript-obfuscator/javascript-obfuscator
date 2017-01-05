@@ -127,6 +127,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
         this.controlFlowData.set(hostNode, controlFlowStorage);
         this.transformFunctionBody(functionNode.body, controlFlowStorage);
+        NodeUtils.parentize(functionNode);
 
         if (!controlFlowStorage.getLength()) {
             return functionNode;

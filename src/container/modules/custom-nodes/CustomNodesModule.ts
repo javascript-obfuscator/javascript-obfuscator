@@ -15,6 +15,7 @@ import { SelfDefendingCustomNodeGroup } from '../../../custom-nodes/self-defendi
 import { StringArrayCustomNodeGroup } from '../../../custom-nodes/string-array-nodes/group/StringArrayCustomNodeGroup';
 
 import { BinaryExpressionFunctionNode } from '../../../custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/BinaryExpressionFunctionNode';
+import { BlockStatementControlFlowReplacerNode } from '../../../custom-nodes/control-flow-replacers-nodes/block-statement-control-flow-replacer-nodes/BlockStatementControlFlowReplacerNode';
 import { CallExpressionControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-storage-nodes/CallExpressionControlFlowStorageCallNode';
 import { CallExpressionFunctionNode } from '../../../custom-nodes/control-flow-replacers-nodes/call-expression-control-flow-replacer-nodes/CallExpressionFunctionNode';
 import { ControlFlowStorageNode } from '../../../custom-nodes/control-flow-storage-nodes/ControlFlowStorageNode';
@@ -36,6 +37,10 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(BinaryExpressionFunctionNode)
         .whenTargetNamed(CustomNodes.BinaryExpressionFunctionNode);
+
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstructor(BlockStatementControlFlowReplacerNode)
+        .whenTargetNamed(CustomNodes.BlockStatementControlFlowReplacerNode);
 
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(CallExpressionControlFlowStorageCallNode)

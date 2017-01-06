@@ -38,12 +38,12 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**
      * @type {number}
      */
-    private static readonly hostNodeSearchMinDepth: number = 2;
+    private static readonly hostNodeSearchMinDepth: number = 0;
 
     /**
      * @type {number}
      */
-    private static readonly hostNodeSearchMaxDepth: number = 10;
+    private static readonly hostNodeSearchMaxDepth: number = 2;
 
     /**
      * @type {Map<ESTree.Node, IStorage<ICustomNode>>}

@@ -57,7 +57,7 @@ export class BlockStatementControlFlowReplacer extends AbstractControlFlowReplac
         }
 
         const blockStatementBody: ESTree.Statement[] = blockStatementNode.body;
-        const originalKeys: number[] = Array.from(Array(blockStatementBody.length).keys());
+        const originalKeys: number[] = [...Array(blockStatementBody.length).keys()];
         const shuffledKeys: number[] = Utils.arrayShuffle(originalKeys);
         const originalKeysIndexesInShuffledArray: number[] = originalKeys.map((key: number) => shuffledKeys.indexOf(key));
 

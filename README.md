@@ -202,6 +202,8 @@ Compact code output on one line.
 ### `controlFlowFlattening`
 Type: `boolean` Default: `false`
 
+##### :warning: This option greatly affects the performance up to 2x slower runtime speed. Use [`controlFlowFlatteningThreshold`](#controlflowflatteningthreshold) to set percentage of nodes that will affected by control flow flattening. 
+
 Enables code control flow flattening. Control flow flattening is a structure transformation of the source code that hinders program comprehension.
 
 Example:
@@ -211,31 +213,57 @@ Example:
     function foo () {
         return function () {
             var sum = 1 + 2;
+            console.log(1);
+            console.log(2);
+            console.log(3);
+            console.log(4);
+            console.log(5);
+            console.log(6);
         }
     }
 })();
 
 // output
-(function() {
-    var _0x451dc8 = {
-        '\x44\x64\x4f': function _0x3(_0x4ea314, _0x4fa62e) {
-            return _0x4ea314 + _0x4fa62e;
+(function () {
+    var _0x4cd5dd = {
+        '\x42\x4e\x62': function _0x14cffe(_0x38a20c, _0x42b1f2) {
+            return _0x38a20c + _0x42b1f2;
         }
     };
-
-    function _0x5382d8() {
-        var _0x349b22 = {
-            '\x48\x65\x61': function _0x2(_0x14a596, _0x250c4b) {
-                return _0x451dc8['\x44\x64\x4f'](_0x14a596, _0x250c4b);
+    function _0xd58698() {
+        var _0x36cac7 = {
+            '\x6a\x52\x79': function _0x2d3ac9(_0x2e037c, _0x457f42) {
+                return _0x4cd5dd['BNb'](_0x2e037c, _0x457f42);
             }
         };
-        return function() {
-            var _0x412353 = {
-                '\x73\x47\x6f': function _0x4(_0x43c6b0, _0x133730) {
-                    return _0x349b22['\x48\x65\x61'](_0x43c6b0, _0x133730);
+        return function () {
+            var _0x42a17d = '5\x7c3\x7c2\x7c6\x7c4\x7c1\x7c0'['split']('\x7c'), _0x1fcdcf = 0x0;
+            while (!![]) {
+                switch (_0x42a17d[_0x1fcdcf++]) {
+                case '0':
+                    console['log'](0x6);
+                    continue;
+                case '1':
+                    console['log'](0x5);
+                    continue;
+                case '2':
+                    console['log'](0x2);
+                    continue;
+                case '3':
+                    console['log'](0x1);
+                    continue;
+                case '4':
+                    console['log'](0x4);
+                    continue;
+                case '5':
+                    var _0x15a932 = _0x36cac7['jRy'](0x1, 0x2);
+                    continue;
+                case '6':
+                    console['log'](0x3);
+                    continue;
                 }
-            };
-            var _0x1d8637 = _0x412353['\x73\x47\x6f'](0x1, 0x2);
+                break;
+            }
         };
     }
 }());
@@ -400,6 +428,69 @@ Type: `boolean` Default: `true`
 Allows to enable/disable string conversion to unicode escape sequence.
 
 Unicode escape sequence increases code size greatly. It is recommended to disable this option when using [`stringArrayEncoding`](#stringarrayencoding) (especially with `rc4` encoding).
+
+## Option Presets
+### High obfuscation, low performance
+
+Performance will 50-100% slower then without obfuscation
+
+```javascript
+{
+    compact: true,
+    controlFlowFlattening: true,
+    controlFlowFlatteningThreshold: 1,
+    debugProtection: true,
+    debugProtectionInterval: true,
+    disableConsoleOutput: true,
+    rotateStringArray: true,
+    selfDefending: true,
+    stringArray: true,
+    stringArrayEncoding: 'rc4',
+    stringArrayThreshold: 1,
+    unicodeEscapeSequence: false
+}
+```
+
+### Medium obfuscation, optimal performance
+
+Performance will 30-35% slower then without obfuscation
+
+```javascript
+{
+    compact: true,
+    controlFlowFlattening: true,
+    controlFlowFlatteningThreshold: 0.75,
+    debugProtection: false,
+    debugProtectionInterval: false,
+    disableConsoleOutput: true,
+    rotateStringArray: true,
+    selfDefending: true,
+    stringArray: true,
+    stringArrayEncoding: 'base64',
+    stringArrayThreshold: 0.75,
+    unicodeEscapeSequence: false
+}
+```
+
+### Low obfuscation, High performance
+
+Performance will slightly slower then without obfuscation
+
+```javascript
+{
+    compact: true,
+    controlFlowFlattening: false,
+    debugProtection: false,
+    debugProtectionInterval: false,
+    disableConsoleOutput: true,
+    rotateStringArray: true,
+    selfDefending: true,
+    stringArray: true,
+    stringArrayEncoding: false,
+    stringArrayThreshold: 0.75,
+    unicodeEscapeSequence: true
+}
+```
 
 ## License
 Copyright (C) 2016 [Timofey Kachalov](http://github.com/sanex3339).

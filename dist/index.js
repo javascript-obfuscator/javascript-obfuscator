@@ -5184,8 +5184,8 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
     return FunctionControlFlowTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
 FunctionControlFlowTransformer.controlFlowReplacersMap = new _map2.default([[NodeType_1.NodeType.BinaryExpression, NodeControlFlowReplacers_1.NodeControlFlowReplacers.BinaryExpressionControlFlowReplacer], [NodeType_1.NodeType.BlockStatement, NodeControlFlowReplacers_1.NodeControlFlowReplacers.BlockStatementControlFlowReplacer], [NodeType_1.NodeType.CallExpression, NodeControlFlowReplacers_1.NodeControlFlowReplacers.CallExpressionControlFlowReplacer], [NodeType_1.NodeType.LogicalExpression, NodeControlFlowReplacers_1.NodeControlFlowReplacers.LogicalExpressionControlFlowReplacer]]);
-FunctionControlFlowTransformer.hostNodeSearchMinDepth = 2;
-FunctionControlFlowTransformer.hostNodeSearchMaxDepth = 10;
+FunctionControlFlowTransformer.hostNodeSearchMinDepth = 0;
+FunctionControlFlowTransformer.hostNodeSearchMaxDepth = 2;
 FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__TControlFlowStorage)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowReplacer)), tslib_1.__param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomNode)), tslib_1.__param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Function, Function, Object])], FunctionControlFlowTransformer);
 exports.FunctionControlFlowTransformer = FunctionControlFlowTransformer;
 var FunctionControlFlowTransformer_1;
@@ -5256,9 +5256,9 @@ var BinaryExpressionControlFlowReplacer_1;
 "use strict";
 
 
-var _from = __webpack_require__(46);
+var _toConsumableArray2 = __webpack_require__(27);
 
-var _from2 = _interopRequireDefault(_from);
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
 var _getPrototypeOf = __webpack_require__(5);
 
@@ -5304,7 +5304,7 @@ var BlockStatementControlFlowReplacer = BlockStatementControlFlowReplacer_1 = fu
                 return blockStatementNode;
             }
             var blockStatementBody = blockStatementNode.body;
-            var originalKeys = (0, _from2.default)(Array(blockStatementBody.length).keys());
+            var originalKeys = [].concat((0, _toConsumableArray3.default)(Array(blockStatementBody.length).keys()));
             var shuffledKeys = Utils_1.Utils.arrayShuffle(originalKeys);
             var originalKeysIndexesInShuffledArray = originalKeys.map(function (key) {
                 return shuffledKeys.indexOf(key);

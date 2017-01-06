@@ -13,7 +13,7 @@ describe('BinaryExpressionControlFlowReplacer', () => {
         describe('variant #1 - single binary expression', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 readFileAsString(
-                    './test/fixtures/node-transformers/node-control-flow-transformers/control-flow-replacers/binary-expression-control-flow-replacer/binary-expression-control-flow-replacer-1.js'
+                    './test/fixtures/node-transformers/node-control-flow-transformers/control-flow-replacers/binary-expression-control-flow-replacer-1.js'
                 ),
                 {
                     ...NO_CUSTOM_NODES_PRESET,
@@ -42,7 +42,7 @@ describe('BinaryExpressionControlFlowReplacer', () => {
                 for (let i = 0; i < samplesCount; i++) {
                     const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                         readFileAsString(
-                            './test/fixtures/node-transformers/node-control-flow-transformers/control-flow-replacers/binary-expression-control-flow-replacer/binary-expression-control-flow-replacer-2.js'
+                            './test/fixtures/node-transformers/node-control-flow-transformers/control-flow-replacers/binary-expression-control-flow-replacer-2.js'
                         ),
                         {
                             ...NO_CUSTOM_NODES_PRESET,

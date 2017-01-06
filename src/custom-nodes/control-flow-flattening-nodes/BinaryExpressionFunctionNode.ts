@@ -1,26 +1,26 @@
 import { injectable, inject } from 'inversify';
-import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import { LogicalOperator } from 'estree';
+import { BinaryOperator } from 'estree';
 
-import { TStatement } from '../../../types/node/TStatement';
+import { TStatement } from '../../types/node/TStatement';
 
-import { IOptions } from '../../../interfaces/options/IOptions';
+import { IOptions } from '../../interfaces/options/IOptions';
 
-import { initializable } from '../../../decorators/Initializable';
+import { initializable } from '../../decorators/Initializable';
 
-import { AbstractCustomNode } from '../../AbstractCustomNode';
-import { Nodes } from '../../../node/Nodes';
-import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
-import { NodeUtils } from '../../../node/NodeUtils';
+import { AbstractCustomNode } from '../AbstractCustomNode';
+import { Nodes } from '../../node/Nodes';
+import { NodeUtils } from '../../node/NodeUtils';
+import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
-export class LogicalExpressionFunctionNode extends AbstractCustomNode {
+export class BinaryExpressionFunctionNode extends AbstractCustomNode {
     /**
-     * @type {LogicalOperator}
+     * @type {BinaryOperator}
      */
     @initializable()
-    private operator: LogicalOperator;
+    private operator: BinaryOperator;
 
     /**
      * @param options
@@ -34,7 +34,7 @@ export class LogicalExpressionFunctionNode extends AbstractCustomNode {
     /**
      * @param operator
      */
-    public initialize (operator: LogicalOperator): void {
+    public initialize (operator: BinaryOperator): void {
         this.operator = operator;
     }
 
@@ -50,7 +50,7 @@ export class LogicalExpressionFunctionNode extends AbstractCustomNode {
             ],
             Nodes.getBlockStatementNode([
                 Nodes.getReturnStatementNode(
-                    Nodes.getLogicalExpressionNode(
+                    Nodes.getBinaryExpressionNode(
                         this.operator,
                         Nodes.getIdentifierNode('x'),
                         Nodes.getIdentifierNode('y')

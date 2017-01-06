@@ -30,6 +30,7 @@ export class Obfuscator implements IObfuscator {
      * @type {Map<string, NodeTransformers[]>}
      */
     private static readonly nodeControlFlowTransformersMap: Map <string, NodeTransformers[]> = new Map([
+        [NodeType.BlockStatement, [NodeTransformers.BlockStatementControlFlowTransformer]],
         [NodeType.FunctionDeclaration, [NodeTransformers.FunctionControlFlowTransformer]],
         [NodeType.FunctionExpression, [NodeTransformers.FunctionControlFlowTransformer]]
     ]);

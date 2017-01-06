@@ -13,7 +13,7 @@ describe('CallExpressionControlFlowReplacer', () => {
         describe('variant #1 - single call expression', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 readFileAsString(
-                    './test/fixtures/node-transformers/node-control-flow-transformers/control-flow-replacers/call-expression-control-flow-replacer/call-expression-control-flow-replacer-1.js'
+                    './test/fixtures/node-transformers/node-control-flow-transformers/control-flow-replacers/call-expression-control-flow-replacer-1.js'
                 ),
                 {
                     ...NO_CUSTOM_NODES_PRESET,
@@ -42,7 +42,7 @@ describe('CallExpressionControlFlowReplacer', () => {
                 for (let i = 0; i < samplesCount; i++) {
                     const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                         readFileAsString(
-                            './test/fixtures/node-transformers/node-control-flow-transformers/control-flow-replacers/call-expression-control-flow-replacer/call-expression-control-flow-replacer-2.js'
+                            './test/fixtures/node-transformers/node-control-flow-transformers/control-flow-replacers/call-expression-control-flow-replacer-2.js'
                         ),
                         {
                             ...NO_CUSTOM_NODES_PRESET,
@@ -77,7 +77,7 @@ describe('CallExpressionControlFlowReplacer', () => {
         describe('variant #3 - callee - member expression', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 readFileAsString(
-                    './test/fixtures/node-transformers/node-control-flow-transformers/control-flow-replacers/call-expression-control-flow-replacer/call-expression-control-flow-replacer-3.js'
+                    './test/fixtures/node-transformers/node-control-flow-transformers/control-flow-replacers/call-expression-control-flow-replacer-3.js'
                 ),
                 {
                     ...NO_CUSTOM_NODES_PRESET,

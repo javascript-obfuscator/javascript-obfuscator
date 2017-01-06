@@ -13,7 +13,7 @@ describe('LogicalExpressionControlFlowReplacer', () => {
         describe('variant #1 - single logical expression', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 readFileAsString(
-                    './test/fixtures/node-transformers/node-control-flow-transformers/control-flow-replacers/logical-expression-control-flow-replacer/logical-expression-control-flow-replacer-1.js'
+                    './test/fixtures/node-transformers/node-control-flow-transformers/control-flow-replacers/logical-expression-control-flow-replacer-1.js'
                 ),
                 {
                     ...NO_CUSTOM_NODES_PRESET,
@@ -42,7 +42,7 @@ describe('LogicalExpressionControlFlowReplacer', () => {
                 for (let i = 0; i < samplesCount; i++) {
                     const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                         readFileAsString(
-                            './test/fixtures/node-transformers/node-control-flow-transformers/control-flow-replacers/logical-expression-control-flow-replacer/logical-expression-control-flow-replacer-2.js'
+                            './test/fixtures/node-transformers/node-control-flow-transformers/control-flow-replacers/logical-expression-control-flow-replacer-2.js'
                         ),
                         {
                             ...NO_CUSTOM_NODES_PRESET,
@@ -77,7 +77,7 @@ describe('LogicalExpressionControlFlowReplacer', () => {
         describe('variant #3 - single logical expression with unary expression', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 readFileAsString(
-                    './test/fixtures/node-transformers/node-control-flow-transformers/control-flow-replacers/logical-expression-control-flow-replacer/logical-expression-control-flow-replacer-3.js'
+                    './test/fixtures/node-transformers/node-control-flow-transformers/control-flow-replacers/logical-expression-control-flow-replacer-3.js'
                 ),
                 {
                     ...NO_CUSTOM_NODES_PRESET,
@@ -96,7 +96,7 @@ describe('LogicalExpressionControlFlowReplacer', () => {
         describe('prohibited nodes variant #1', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 readFileAsString(
-                    './test/fixtures/node-transformers/node-control-flow-transformers/control-flow-replacers/logical-expression-control-flow-replacer/logical-expression-control-flow-replacer-prohibited-nodes-1.js'
+                    './test/fixtures/node-transformers/node-control-flow-transformers/control-flow-replacers/logical-expression-control-flow-replacer-prohibited-nodes-1.js'
                 ),
                 {
                     ...NO_CUSTOM_NODES_PRESET,

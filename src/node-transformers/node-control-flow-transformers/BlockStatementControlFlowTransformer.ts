@@ -1,21 +1,26 @@
 import { injectable, inject } from 'inversify';
-import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { TCustomNodeFactory } from '../../../types/container/TCustomNodeFactory';
+import { TCustomNodeFactory } from '../../types/container/TCustomNodeFactory';
 
-import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
-import { IOptions } from '../../../interfaces/options/IOptions';
-import { IStorage } from '../../../interfaces/storages/IStorage';
+import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../../interfaces/options/IOptions';
 
-import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
-import { CustomNodes } from '../../../enums/container/CustomNodes';
-import { Node } from '../../../node/Node';
-import { Utils } from '../../../utils/Utils';
+import { CustomNodes } from '../../enums/container/CustomNodes';
+
+import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
+import { Node } from '../../node/Node';
+import { Utils } from '../../utils/Utils';
 
 @injectable()
-export class BlockStatementControlFlowReplacer extends AbstractControlFlowReplacer {
+export class BlockStatementControlFlowTransformer extends AbstractNodeTransformer {
+    /**
+     * @type {TCustomNodeFactory}
+     */
+    private readonly customNodeFactory: TCustomNodeFactory;
+
     /**
      * @param customNodeFactory
      * @param options
@@ -24,7 +29,9 @@ export class BlockStatementControlFlowReplacer extends AbstractControlFlowReplac
         @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(customNodeFactory, options);
+        super(options);
+
+        this.customNodeFactory = customNodeFactory;
     }
 
     /**
@@ -43,16 +50,10 @@ export class BlockStatementControlFlowReplacer extends AbstractControlFlowReplac
 
     /**
      * @param blockStatementNode
-     * @param parentNode
-     * @param controlFlowStorage
      * @returns {ESTree.Node}
      */
-    public replace (
-        blockStatementNode: ESTree.BlockStatement,
-        parentNode: ESTree.Node,
-        controlFlowStorage: IStorage <ICustomNode>
-    ): ESTree.Node {
-        if (BlockStatementControlFlowReplacer.blockStatementHasProhibitedStatements(blockStatementNode)) {
+    public transformNode (blockStatementNode: ESTree.BlockStatement): ESTree.Node {
+        if (BlockStatementControlFlowTransformer.blockStatementHasProhibitedStatements(blockStatementNode)) {
             return blockStatementNode;
         }
 
@@ -65,16 +66,16 @@ export class BlockStatementControlFlowReplacer extends AbstractControlFlowReplac
             return blockStatementNode;
         }
 
-        const blockStatementControlFlowReplacerCustomNode: ICustomNode = this.customNodeFactory(
-            CustomNodes.BlockStatementControlFlowReplacerNode
+        const blockStatementControlFlowFlatteningCustomNode: ICustomNode = this.customNodeFactory(
+            CustomNodes.BlockStatementControlFlowFlatteningNode
         );
-        
-        blockStatementControlFlowReplacerCustomNode.initialize(
+
+        blockStatementControlFlowFlatteningCustomNode.initialize(
             blockStatementBody,
             shuffledKeys,
             originalKeysIndexesInShuffledArray
         );
 
-        return blockStatementControlFlowReplacerCustomNode.getNode()[0];
+        return blockStatementControlFlowFlatteningCustomNode.getNode()[0];
     }
 }

@@ -6,7 +6,6 @@ import { IControlFlowReplacer } from '../../../interfaces/node-transformers/ICon
 import { NodeControlFlowReplacers } from '../../../enums/container/NodeControlFlowReplacers';
 
 import { BinaryExpressionControlFlowReplacer } from '../../../node-transformers/node-control-flow-transformers/control-flow-replacers/BinaryExpressionControlFlowReplacer';
-import { BlockStatementControlFlowReplacer } from '../../../node-transformers/node-control-flow-transformers/control-flow-replacers/BlockStatementControlFlowReplacer';
 import { CallExpressionControlFlowReplacer } from '../../../node-transformers/node-control-flow-transformers/control-flow-replacers/CallExpressionControlFlowReplacer';
 import { LogicalExpressionControlFlowReplacer } from '../../../node-transformers/node-control-flow-transformers/control-flow-replacers/LogicalExpressionControlFlowReplacer';
 
@@ -14,10 +13,6 @@ export const nodeControlFlowTransformersModule: interfaces.ContainerModule = new
     bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
         .to(BinaryExpressionControlFlowReplacer)
         .whenTargetNamed(NodeControlFlowReplacers.BinaryExpressionControlFlowReplacer);
-
-    bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
-        .to(BlockStatementControlFlowReplacer)
-        .whenTargetNamed(NodeControlFlowReplacers.BlockStatementControlFlowReplacer);
 
     bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
         .to(CallExpressionControlFlowReplacer)

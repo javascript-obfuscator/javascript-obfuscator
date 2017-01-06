@@ -1,19 +1,19 @@
 import { injectable, inject } from 'inversify';
-import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { TStatement } from '../../types/node/TStatement';
+import { TStatement } from '../../../types/node/TStatement';
 
-import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
-import { IOptions } from '../../interfaces/options/IOptions';
-import { IStorage } from '../../interfaces/storages/IStorage';
+import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../../../interfaces/options/IOptions';
+import { IStorage } from '../../../interfaces/storages/IStorage';
 
-import { initializable } from '../../decorators/Initializable';
+import { initializable } from '../../../decorators/Initializable';
 
-import { AbstractCustomNode } from '../AbstractCustomNode';
-import { Nodes } from '../../node/Nodes';
-import { NodeUtils } from '../../node/NodeUtils';
+import { AbstractCustomNode } from '../../AbstractCustomNode';
+import { Nodes } from '../../../node/Nodes';
+import { NodeUtils } from '../../../node/NodeUtils';
 
 @injectable()
 export class ControlFlowStorageNode extends AbstractCustomNode {

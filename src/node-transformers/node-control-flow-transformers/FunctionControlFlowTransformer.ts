@@ -30,7 +30,6 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      */
     private static readonly controlFlowReplacersMap: Map <string, NodeControlFlowReplacers> = new Map([
         [NodeType.BinaryExpression, NodeControlFlowReplacers.BinaryExpressionControlFlowReplacer],
-        [NodeType.BlockStatement, NodeControlFlowReplacers.BlockStatementControlFlowReplacer],
         [NodeType.CallExpression, NodeControlFlowReplacers.CallExpressionControlFlowReplacer],
         [NodeType.LogicalExpression, NodeControlFlowReplacers.LogicalExpressionControlFlowReplacer]
     ]);
@@ -165,7 +164,6 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**
      * @param functionNodeBody
      * @param controlFlowStorage
-     * @return {ESTree.Node}
      */
     private transformFunctionBody (functionNodeBody: ESTree.BlockStatement, controlFlowStorage: IStorage<ICustomNode>): void {
         estraverse.replace(functionNodeBody, {

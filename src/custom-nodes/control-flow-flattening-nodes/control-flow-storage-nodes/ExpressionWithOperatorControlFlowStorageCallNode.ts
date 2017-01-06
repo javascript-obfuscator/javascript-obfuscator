@@ -1,17 +1,17 @@
 import { injectable, inject } from 'inversify';
-import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { Expression } from 'estree';
 
-import { TStatement } from '../../types/node/TStatement';
+import { TStatement } from '../../../types/node/TStatement';
 
-import { IOptions } from '../../interfaces/options/IOptions';
+import { IOptions } from '../../../interfaces/options/IOptions';
 
-import { initializable } from '../../decorators/Initializable';
+import { initializable } from '../../../decorators/Initializable';
 
-import { AbstractCustomNode } from '../AbstractCustomNode';
-import { Nodes } from '../../node/Nodes';
-import { NodeUtils } from '../../node/NodeUtils';
+import { AbstractCustomNode } from '../../AbstractCustomNode';
+import { Nodes } from '../../../node/Nodes';
+import { NodeUtils } from '../../../node/NodeUtils';
 
 @injectable()
 export class ExpressionWithOperatorControlFlowStorageCallNode extends AbstractCustomNode {

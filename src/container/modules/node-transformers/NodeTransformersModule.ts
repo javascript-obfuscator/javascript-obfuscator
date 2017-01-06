@@ -7,6 +7,7 @@ import { NodeTransformers } from '../../../enums/container/NodeTransformers';
 
 import { FunctionControlFlowTransformer } from '../../../node-transformers/node-control-flow-transformers/FunctionControlFlowTransformer';
 
+import { BlockStatementControlFlowTransformer } from '../../../node-transformers/node-control-flow-transformers/BlockStatementControlFlowTransformer';
 import { CatchClauseObfuscator } from '../../../node-transformers/node-obfuscators/CatchClauseObfuscator';
 import { FunctionDeclarationObfuscator } from '../../../node-transformers/node-obfuscators/FunctionDeclarationObfuscator';
 import { FunctionObfuscator } from '../../../node-transformers/node-obfuscators/FunctionObfuscator';
@@ -19,6 +20,10 @@ import { VariableDeclarationObfuscator } from '../../../node-transformers/node-o
 
 export const nodeTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // node control flow transformers
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(BlockStatementControlFlowTransformer)
+        .whenTargetNamed(NodeTransformers.BlockStatementControlFlowTransformer);
+
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(FunctionControlFlowTransformer)
         .whenTargetNamed(NodeTransformers.FunctionControlFlowTransformer);

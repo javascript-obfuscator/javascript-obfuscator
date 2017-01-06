@@ -30,6 +30,7 @@ import './functional-tests/custom-nodes/domain-lock-nodes/DomainLockNode.spec';
 import './functional-tests/custom-nodes/string-array-nodes/StringArrayCallsWrapper.spec';
 import './functional-tests/custom-nodes/string-array-nodes/StringArrayRotateFunctionNode.spec';
 import './functional-tests/custom-nodes/string-array-nodes/StringArrayNode.spec';
+import './functional-tests/node-transformers/node-control-flow-transformers/BlockStatementControlFlowTransformer.spec';
 import './functional-tests/node-transformers/node-control-flow-transformers/FunctionControlFlowTransformer.spec';
 import './functional-tests/node-transformers/node-control-flow-transformers/control-flow-replacers/BinaryExpressionControlFlowReplacer.spec';
 import './functional-tests/node-transformers/node-control-flow-transformers/control-flow-replacers/CallExpressionControlFlowReplacer.spec';

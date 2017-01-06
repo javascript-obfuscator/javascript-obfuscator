@@ -1,4 +1,5 @@
 export enum NodeTransformers {
+    BlockStatementControlFlowTransformer,
     FunctionControlFlowTransformer,
     CatchClauseObfuscator,
     FunctionDeclarationObfuscator,

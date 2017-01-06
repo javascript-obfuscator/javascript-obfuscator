@@ -12,6 +12,7 @@ import { CustomNodes } from '../../enums/container/CustomNodes';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
+import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 import { Utils } from '../../utils/Utils';
 
 @injectable()
@@ -53,7 +54,10 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
      * @returns {ESTree.Node}
      */
     public transformNode (blockStatementNode: ESTree.BlockStatement): ESTree.Node {
-        if (BlockStatementControlFlowTransformer.blockStatementHasProhibitedStatements(blockStatementNode)) {
+        if (
+            RandomGeneratorUtils.getRandomFloat(0, 1) > this.options.controlFlowFlatteningThreshold ||
+            BlockStatementControlFlowTransformer.blockStatementHasProhibitedStatements(blockStatementNode)
+        ) {
             return blockStatementNode;
         }
 

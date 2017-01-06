@@ -5090,6 +5090,7 @@ var ServiceIdentifiers_1 = __webpack_require__(4);
 var CustomNodes_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(18);
 var Node_1 = __webpack_require__(12);
+var RandomGeneratorUtils_1 = __webpack_require__(9);
 var Utils_1 = __webpack_require__(13);
 var BlockStatementControlFlowTransformer = BlockStatementControlFlowTransformer_1 = function (_AbstractNodeTransfor) {
     (0, _inherits3.default)(BlockStatementControlFlowTransformer, _AbstractNodeTransfor);
@@ -5106,7 +5107,7 @@ var BlockStatementControlFlowTransformer = BlockStatementControlFlowTransformer_
     (0, _createClass3.default)(BlockStatementControlFlowTransformer, [{
         key: "transformNode",
         value: function transformNode(blockStatementNode) {
-            if (BlockStatementControlFlowTransformer_1.blockStatementHasProhibitedStatements(blockStatementNode)) {
+            if (RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomFloat(0, 1) > this.options.controlFlowFlatteningThreshold || BlockStatementControlFlowTransformer_1.blockStatementHasProhibitedStatements(blockStatementNode)) {
                 return blockStatementNode;
             }
             var blockStatementBody = blockStatementNode.body;

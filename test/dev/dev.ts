@@ -11,7 +11,14 @@ if (!(<any>global)._babelPolyfill) {
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
             (function () {
-                var abc = 1 + 1;
+                while (true) {
+                    break;
+                }
+                console.log(1);
+                console.log(2);
+                console.log(3);
+                console.log(4);
+                console.log(5);
             })();
         `,
         {

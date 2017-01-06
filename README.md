@@ -202,7 +202,7 @@ Compact code output on one line.
 ### `controlFlowFlattening`
 Type: `boolean` Default: `false`
 
-##### :warning: This option greatly affects the performance up to 2x slower runtime speed. Use [`controlFlowFlatteningThreshold`](#controlflowflatteningthreshold) to set percentage of nodes that will affected by control flow flattening. 
+##### :warning: This option greatly affects the performance up to 1.5x slower runtime speed. Use [`controlFlowFlatteningThreshold`](#controlflowflatteningthreshold) to set percentage of nodes that will affected by control flow flattening. 
 
 Enables code control flow flattening. Control flow flattening is a structure transformation of the source code that hinders program comprehension.
 

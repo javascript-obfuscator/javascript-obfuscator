@@ -245,7 +245,6 @@ describe('BlockStatementControlFlowTransformer', () => {
             const untouchedStatementMatchesLength = obfuscationResult.getObfuscatedCode().match(regExp2)!.length;
 
             it('should transform block statement with `controlFlowFlatteningThreshold` chance', () => {
-                console.log(obfuscationResult.getObfuscatedCode());
                 assert.closeTo(transformedStatementMatchesLength / samples, controlFlowFlatteningThreshold, delta);
                 assert.closeTo(untouchedStatementMatchesLength / samples, controlFlowFlatteningThreshold, delta);
             });

@@ -146,7 +146,7 @@ describe('JavaScriptObfuscator', () => {
             assert.match(obfuscatedCode2, pattern2);
         });
 
-        it.only('should returns same code every time with same `seed`', function () {
+        it('should returns same code every time with same `seed`', function () {
             this.timeout(15000);
 
             const code: string = readFileAsString('./test/fixtures/sample.js');

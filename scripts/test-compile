@@ -1,4 +1,5 @@
 #!/bin/bash
 
 $(npm bin)/tsc -p tsconfig-test.json &&
-$(npm bin)/babel test-tmp --out-dir test-tmp --source-maps inline --presets es2015
+$(npm bin)/babel test-tmp --out-dir test-tmp --source-maps inline --presets es2015 &&
+rsync -a --prune-empty-dirs --include '*/' --include '*.js' --exclude '*' test/ test-tmp/test/

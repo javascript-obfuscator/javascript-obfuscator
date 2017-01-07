@@ -53,7 +53,7 @@ export class Obfuscator implements IObfuscator {
         [NodeType.VariableDeclaration, [NodeTransformers.VariableDeclarationTransformer]],
         [NodeType.LabeledStatement, [NodeTransformers.LabeledStatementTransformer]],
         [NodeType.TemplateLiteral, [NodeTransformers.TemplateLiteralTransformer]],
-        [NodeType.Literal, [NodeTransformers.LiteralTransformer]]
+        [NodeType.Literal, [NodeTransformers.LiteralTransformer]] // should be latest in the chain of obfuscators
     ]);
 
     /**

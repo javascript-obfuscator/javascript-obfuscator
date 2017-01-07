@@ -7,44 +7,45 @@ BabelPolyfill.append();
 /**
  * Unit tests
  */
-import './unit-tests/ObfuscationResult.spec';
-import './unit-tests/options/OptionsNormalizer.spec';
-import './unit-tests/SourceMapCorrector.spec';
-import './unit-tests/cli/CLIUtils.spec';
-import './unit-tests/decorators/Initializable.spec';
-import './unit-tests/node/NodeAppender.spec';
-import './unit-tests/node/NodeUtils.spec';
-import './unit-tests/stack-trace-analyzer/StackTraceAnalyzer.spec';
-import './unit-tests/utils/CryptUtils.spec';
-import './unit-tests/utils/RandomGeneratorUtils.spec';
-import './unit-tests/utils/Utils.spec';
+import './unit-tests/cli/cli-utils/CLIUtils.spec';
+import './unit-tests/decorators/initializable/Initializable.spec';
+import './unit-tests/node/node-appender/NodeAppender.spec';
+import './unit-tests/node/node-utils/NodeUtils.spec';
+import './unit-tests/obfuscation-result/ObfuscationResult.spec';
+import './unit-tests/options/options-normalizer/OptionsNormalizer.spec';
+import './unit-tests/source-map-corrector/SourceMapCorrector.spec';
+import './unit-tests/stack-trace-analyzer/stack-trace-analyzer/StackTraceAnalyzer.spec';
+import './unit-tests/utils/crypt-utils/CryptUtils.spec';
+import './unit-tests/utils/random-generator-utils/RandomGeneratorUtils.spec';
+import './unit-tests/utils/utils/Utils.spec';
 
 /**
  * Functional tests
  */
-import './functional-tests/JavaScriptObfuscator.spec';
-import './functional-tests/JavaScriptObfuscatorCLI.spec';
-import './functional-tests/JavaScriptObfuscatorInternal.spec';
+import './functional-tests/javascript-obfuscator/JavaScriptObfuscator.spec';
+import './functional-tests/javascript-obfuscator-cli/JavaScriptObfuscatorCLI.spec';
+import './functional-tests/javascript-obfuscator-internal/JavaScriptObfuscatorInternal.spec';
 import './functional-tests/custom-nodes/console-output-nodes/ConsoleOutputDisableExpressionNode.spec';
 import './functional-tests/custom-nodes/domain-lock-nodes/DomainLockNode.spec';
 import './functional-tests/custom-nodes/string-array-nodes/StringArrayCallsWrapper.spec';
 import './functional-tests/custom-nodes/string-array-nodes/StringArrayRotateFunctionNode.spec';
 import './functional-tests/custom-nodes/string-array-nodes/StringArrayNode.spec';
-import './functional-tests/node-transformers/control-flow-transformers/BlockStatementControlFlowTransformer.spec';
-import './functional-tests/node-transformers/control-flow-transformers/FunctionControlFlowTransformer.spec';
-import './functional-tests/node-transformers/control-flow-transformers/control-flow-replacers/BinaryExpressionControlFlowReplacer.spec';
-import './functional-tests/node-transformers/control-flow-transformers/control-flow-replacers/CallExpressionControlFlowReplacer.spec';
-import './functional-tests/node-transformers/control-flow-transformers/control-flow-replacers/LogicalExpressionControlFlowReplacer.spec';
-import './functional-tests/node-transformers/obfuscation-transformers/CatchClauseTransformer.spec';
-import './functional-tests/node-transformers/obfuscation-transformers/FunctionDeclarationTransformer.spec';
-import './functional-tests/node-transformers/obfuscation-transformers/FunctionTransformer.spec';
-import './functional-tests/node-transformers/obfuscation-transformers/LabeledStatementTransformer.spec';
-import './functional-tests/node-transformers/obfuscation-transformers/LiteralTransformer.spec';
-import './functional-tests/node-transformers/obfuscation-transformers/MemberExpressionTransformer.spec';
-import './functional-tests/node-transformers/obfuscation-transformers/MethodDefinitionTransformer.spec';
-import './functional-tests/node-transformers/obfuscation-transformers/ObjectExpressionTransformer.spec';
-import './functional-tests/node-transformers/obfuscation-transformers/VariableDeclarationTransformer.spec';
-import './functional-tests/stack-trace-analyzer/StackTraceAnalyzer.spec';
+import './functional-tests/node-transformers/control-flow-transformers/block-statement-control-flow-transformer/BlockStatementControlFlowTransformer.spec';
+import './functional-tests/node-transformers/control-flow-transformers/function-control-flow-transformer/FunctionControlFlowTransformer.spec';
+import './functional-tests/node-transformers/control-flow-transformers/control-flow-replacers/binary-expression-control-flow-replacer/BinaryExpressionControlFlowReplacer.spec';
+import './functional-tests/node-transformers/control-flow-transformers/control-flow-replacers/call-expression-control-flow-replacer/CallExpressionControlFlowReplacer.spec';
+import './functional-tests/node-transformers/control-flow-transformers/control-flow-replacers/logical-expression-control-flow-replacer/LogicalExpressionControlFlowReplacer.spec';
+import './functional-tests/node-transformers/obfuscation-transformers/catch-clause-transformer/CatchClauseTransformer.spec';
+import './functional-tests/node-transformers/obfuscation-transformers/function-declaration-transformer/FunctionDeclarationTransformer.spec';
+import './functional-tests/node-transformers/obfuscation-transformers/function-transformer/FunctionTransformer.spec';
+import './functional-tests/node-transformers/obfuscation-transformers/labeled-statement-transformer/LabeledStatementTransformer.spec';
+import './functional-tests/node-transformers/obfuscation-transformers/literal-transformer/LiteralTransformer.spec';
+import './functional-tests/node-transformers/obfuscation-transformers/member-expression-transformer/MemberExpressionTransformer.spec';
+import './functional-tests/node-transformers/obfuscation-transformers/method-definition-transformer/MethodDefinitionTransformer.spec';
+import './functional-tests/node-transformers/obfuscation-transformers/object-expression-transformer/ObjectExpressionTransformer.spec';
+import './functional-tests/node-transformers/obfuscation-transformers/template-literal-transformer/TemplateLiteralTransformer.spec';
+import './functional-tests/node-transformers/obfuscation-transformers/variable-declaration-transformer/VariableDeclarationTransformer.spec';
+import './functional-tests/stack-trace-analyzer/stack-trace-analyzer/StackTraceAnalyzer.spec';
 import './functional-tests/templates/custom-nodes/domain-lock-nodes/DomainLockNodeTemplate.spec';
 import './functional-tests/templates/custom-nodes/string-array-nodes/StringArrayCallsWrapperNodeTemplate.spec';
 

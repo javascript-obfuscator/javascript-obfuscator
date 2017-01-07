@@ -4,12 +4,14 @@ import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResul
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
 
+import { readFileAsString } from '../../../helpers/readFileAsString';
+
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
 
 describe('DomainLockNode', () => {
     it('should correctly append `DomainLockNode` custom node into the obfuscated code if `domainLock` option is set', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            `var test = 'test';`,
+            readFileAsString(__dirname + '/fixtures/simple-input.js'),
             {
                 ...NO_CUSTOM_NODES_PRESET,
                 domainLock: ['.example.com']
@@ -21,7 +23,7 @@ describe('DomainLockNode', () => {
 
     it('should\'t append `DomainLockNode` custom node into the obfuscated code if `domainLock` option is not set', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            `var test = 'test';`,
+            readFileAsString(__dirname + '/fixtures/simple-input.js'),
             {
                 ...NO_CUSTOM_NODES_PRESET,
                 domainLock: []

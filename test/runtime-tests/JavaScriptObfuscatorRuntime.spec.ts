@@ -1,14 +1,14 @@
 import { assert } from 'chai';
 
-import { readFileAsString } from '../helpers/readFileAsString';
-
 import { IObfuscationResult } from '../../src/interfaces/IObfuscationResult';
+
+import { readFileAsString } from '../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscator';
 
 describe('JavaScriptObfuscator runtime eval', () => {
     it('should obfuscate code without any runtime errors after obfuscation: variant #1 sha256', () => {
-        const code: string = readFileAsString('./test/fixtures/runtime/sha256.js');
+        const code: string = readFileAsString(__dirname + '/fixtures/sha256.js');
 
         const obfuscationResult1: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             code,

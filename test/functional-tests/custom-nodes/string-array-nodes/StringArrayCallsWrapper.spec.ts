@@ -4,12 +4,14 @@ import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResul
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
 
+import { readFileAsString } from '../../../helpers/readFileAsString';
+
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
 
 describe('StringArrayCallsWrapper', () => {
     it('should correctly append `StringArrayCallsWrapper` custom node into the obfuscated code', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            `var test = 'test';`,
+            readFileAsString(__dirname + '/fixtures/simple-input.js'),
             {
                 ...NO_CUSTOM_NODES_PRESET,
                 stringArray: true,

@@ -82,18 +82,16 @@ if (!(<any>global)._babelPolyfill) {
                 console.log(foo()());
                 
                 if (true) {
-                    console.log(1);
-                    console.log(2);
-                    console.log(3);
-                    console.log(4);
-                    console.log(5);
+                    console.log(\`1\`);
+                    console.log(\`2\`);
+                    console.log(\`3\`);
+                    console.log(\`4\`);
+                    console.log(\`5\`);
                 }
             })();
         `,
         {
             ...NO_CUSTOM_NODES_PRESET,
-            controlFlowFlattening: true,
-            controlFlowFlatteningThreshold: 1,
             compact: false
         }
     ).getObfuscatedCode();

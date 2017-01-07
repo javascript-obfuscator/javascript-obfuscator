@@ -429,7 +429,7 @@ Allows to enable/disable string conversion to unicode escape sequence.
 
 Unicode escape sequence increases code size greatly. It is recommended to disable this option when using [`stringArrayEncoding`](#stringarrayencoding) (especially with `rc4` encoding).
 
-## Option Presets
+## Preset Options
 ### High obfuscation, low performance
 
 Performance will 50-100% slower then without obfuscation

@@ -4,12 +4,14 @@ import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResul
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
 
+import { readFileAsString } from '../../../helpers/readFileAsString';
+
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
 
 describe('StringArrayRotateFunctionNode', () => {
     it('should correctly append `StringArrayRotateFunctionNode` custom node into the obfuscated code if `rotateStringArray` option is set', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            `var test = 'test';`,
+            readFileAsString(__dirname + '/fixtures/simple-input.js'),
             {
                 ...NO_CUSTOM_NODES_PRESET,
                 rotateStringArray: true,
@@ -23,7 +25,7 @@ describe('StringArrayRotateFunctionNode', () => {
 
     it('should\'t append `StringArrayRotateFunctionNode` custom node into the obfuscated code if `rotateStringArray` option is not set', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            `var test = 'test';`,
+            readFileAsString(__dirname + '/fixtures/simple-input.js'),
             {
                 ...NO_CUSTOM_NODES_PRESET,
                 rotateStringArray: false,

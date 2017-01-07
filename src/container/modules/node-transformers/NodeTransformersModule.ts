@@ -5,18 +5,19 @@ import { INodeTransformer } from '../../../interfaces/node-transformers/INodeTra
 
 import { NodeTransformers } from '../../../enums/container/NodeTransformers';
 
-import { FunctionControlFlowTransformer } from '../../../node-transformers/node-control-flow-transformers/FunctionControlFlowTransformer';
+import { FunctionControlFlowTransformer } from '../../../node-transformers/control-flow-transformers/FunctionControlFlowTransformer';
 
-import { BlockStatementControlFlowTransformer } from '../../../node-transformers/node-control-flow-transformers/BlockStatementControlFlowTransformer';
-import { CatchClauseObfuscator } from '../../../node-transformers/node-obfuscators/CatchClauseObfuscator';
-import { FunctionDeclarationObfuscator } from '../../../node-transformers/node-obfuscators/FunctionDeclarationObfuscator';
-import { FunctionObfuscator } from '../../../node-transformers/node-obfuscators/FunctionObfuscator';
-import { LabeledStatementObfuscator } from '../../../node-transformers/node-obfuscators/LabeledStatementObfuscator';
-import { LiteralObfuscator } from '../../../node-transformers/node-obfuscators/LiteralObfuscator';
-import { MemberExpressionObfuscator } from '../../../node-transformers/node-obfuscators/MemberExpressionObfuscator';
-import { MethodDefinitionObfuscator } from '../../../node-transformers/node-obfuscators/MethodDefinitionObfuscator';
-import { ObjectExpressionObfuscator } from '../../../node-transformers/node-obfuscators/ObjectExpressionObfuscator';
-import { VariableDeclarationObfuscator } from '../../../node-transformers/node-obfuscators/VariableDeclarationObfuscator';
+import { BlockStatementControlFlowTransformer } from '../../../node-transformers/control-flow-transformers/BlockStatementControlFlowTransformer';
+import { CatchClauseTransformer } from '../../../node-transformers/obfuscation-transformers/CatchClauseTransformer';
+import { FunctionDeclarationTransformer } from '../../../node-transformers/obfuscation-transformers/FunctionDeclarationTransformer';
+import { FunctionTransformer } from '../../../node-transformers/obfuscation-transformers/FunctionTransformer';
+import { LabeledStatementTransformer } from '../../../node-transformers/obfuscation-transformers/LabeledStatementTransformer';
+import { LiteralTransformer } from '../../../node-transformers/obfuscation-transformers/LiteralTransformer';
+import { MemberExpressionTransformer } from '../../../node-transformers/obfuscation-transformers/MemberExpressionTransformer';
+import { MethodDefinitionTransformer } from '../../../node-transformers/obfuscation-transformers/MethodDefinitionTransformer';
+import { ObjectExpressionTransformer } from '../../../node-transformers/obfuscation-transformers/ObjectExpressionTransformer';
+import { TemplateLiteralTransformer } from '../../../node-transformers/obfuscation-transformers/TemplateLiteralTransformer';
+import { VariableDeclarationTransformer } from '../../../node-transformers/obfuscation-transformers/VariableDeclarationTransformer';
 
 export const nodeTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // node control flow transformers
@@ -30,40 +31,44 @@ export const nodeTransformersModule: interfaces.ContainerModule = new ContainerM
 
     // node obfuscators
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(CatchClauseObfuscator)
-        .whenTargetNamed(NodeTransformers.CatchClauseObfuscator);
+        .to(CatchClauseTransformer)
+        .whenTargetNamed(NodeTransformers.CatchClauseTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(FunctionDeclarationObfuscator)
-        .whenTargetNamed(NodeTransformers.FunctionDeclarationObfuscator);
+        .to(FunctionDeclarationTransformer)
+        .whenTargetNamed(NodeTransformers.FunctionDeclarationTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(FunctionObfuscator)
-        .whenTargetNamed(NodeTransformers.FunctionObfuscator);
+        .to(FunctionTransformer)
+        .whenTargetNamed(NodeTransformers.FunctionTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(LabeledStatementObfuscator)
-        .whenTargetNamed(NodeTransformers.LabeledStatementObfuscator);
+        .to(LabeledStatementTransformer)
+        .whenTargetNamed(NodeTransformers.LabeledStatementTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(LiteralObfuscator)
-        .whenTargetNamed(NodeTransformers.LiteralObfuscator);
+        .to(LiteralTransformer)
+        .whenTargetNamed(NodeTransformers.LiteralTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(MemberExpressionObfuscator)
-        .whenTargetNamed(NodeTransformers.MemberExpressionObfuscator);
+        .to(MemberExpressionTransformer)
+        .whenTargetNamed(NodeTransformers.MemberExpressionTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(MethodDefinitionObfuscator)
-        .whenTargetNamed(NodeTransformers.MethodDefinitionObfuscator);
+        .to(MethodDefinitionTransformer)
+        .whenTargetNamed(NodeTransformers.MethodDefinitionTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(ObjectExpressionObfuscator)
-        .whenTargetNamed(NodeTransformers.ObjectExpressionObfuscator);
+        .to(ObjectExpressionTransformer)
+        .whenTargetNamed(NodeTransformers.ObjectExpressionTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(VariableDeclarationObfuscator)
-        .whenTargetNamed(NodeTransformers.VariableDeclarationObfuscator);
+        .to(TemplateLiteralTransformer)
+        .whenTargetNamed(NodeTransformers.TemplateLiteralTransformer);
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(VariableDeclarationTransformer)
+        .whenTargetNamed(NodeTransformers.VariableDeclarationTransformer);
 
     // node transformers factory
     bind<INodeTransformer[]>(ServiceIdentifiers.Factory__INodeTransformer)

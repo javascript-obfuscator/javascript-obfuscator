@@ -433,7 +433,7 @@ var RandomGeneratorUtils = function () {
         value: function getRandomGenerator() {
             var randomGenerator = RandomGeneratorUtils.randomGenerator;
             if (!randomGenerator) {
-                throw new Error("`randomGenerator` static property is undefined");
+                RandomGeneratorUtils.initializeRandomGenerator(0);
             }
             return RandomGeneratorUtils.randomGenerator;
         }

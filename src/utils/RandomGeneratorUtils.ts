@@ -58,7 +58,7 @@ export class RandomGeneratorUtils {
         const randomGenerator: Chance.Chance = RandomGeneratorUtils.randomGenerator;
 
         if (!randomGenerator) {
-            throw new Error(`\`randomGenerator\` static property is undefined`);
+            RandomGeneratorUtils.initializeRandomGenerator(0);
         }
 
         return RandomGeneratorUtils.randomGenerator;

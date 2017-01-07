@@ -39,20 +39,21 @@ export class Obfuscator implements IObfuscator {
      * @type {Map<string, NodeTransformers[]>}
      */
     private static readonly nodeObfuscatorsMap: Map <string, NodeTransformers[]> = new Map([
-        [NodeType.ArrowFunctionExpression, [NodeTransformers.FunctionObfuscator]],
-        [NodeType.ClassDeclaration, [NodeTransformers.FunctionDeclarationObfuscator]],
-        [NodeType.CatchClause, [NodeTransformers.CatchClauseObfuscator]],
+        [NodeType.ArrowFunctionExpression, [NodeTransformers.FunctionTransformer]],
+        [NodeType.ClassDeclaration, [NodeTransformers.FunctionDeclarationTransformer]],
+        [NodeType.CatchClause, [NodeTransformers.CatchClauseTransformer]],
         [NodeType.FunctionDeclaration, [
-            NodeTransformers.FunctionDeclarationObfuscator,
-            NodeTransformers.FunctionObfuscator
+            NodeTransformers.FunctionDeclarationTransformer,
+            NodeTransformers.FunctionTransformer
         ]],
-        [NodeType.FunctionExpression, [NodeTransformers.FunctionObfuscator]],
-        [NodeType.MemberExpression, [NodeTransformers.MemberExpressionObfuscator]],
-        [NodeType.MethodDefinition, [NodeTransformers.MethodDefinitionObfuscator]],
-        [NodeType.ObjectExpression, [NodeTransformers.ObjectExpressionObfuscator]],
-        [NodeType.VariableDeclaration, [NodeTransformers.VariableDeclarationObfuscator]],
-        [NodeType.LabeledStatement, [NodeTransformers.LabeledStatementObfuscator]],
-        [NodeType.Literal, [NodeTransformers.LiteralObfuscator]]
+        [NodeType.FunctionExpression, [NodeTransformers.FunctionTransformer]],
+        [NodeType.MemberExpression, [NodeTransformers.MemberExpressionTransformer]],
+        [NodeType.MethodDefinition, [NodeTransformers.MethodDefinitionTransformer]],
+        [NodeType.ObjectExpression, [NodeTransformers.ObjectExpressionTransformer]],
+        [NodeType.VariableDeclaration, [NodeTransformers.VariableDeclarationTransformer]],
+        [NodeType.LabeledStatement, [NodeTransformers.LabeledStatementTransformer]],
+        [NodeType.TemplateLiteral, [NodeTransformers.TemplateLiteralTransformer]],
+        [NodeType.Literal, [NodeTransformers.LiteralTransformer]]
     ]);
 
     /**

@@ -146,21 +146,42 @@ describe('JavaScriptObfuscator', () => {
             assert.match(obfuscatedCode2, pattern2);
         });
 
-        it('should returns same code every time with same `seed`', () => {
+        it.only('should returns same code every time with same `seed`', function () {
+            this.timeout(15000);
+
             const code: string = readFileAsString('./test/fixtures/sample.js');
-            const seed: number = 12345;
+            const samples: number = 100;
 
-            const obfuscationResult1: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                code, { seed: seed }
-            );
+            let seed: number = 12345,
+                equalsCount: number = 0;
+
+            //initial clear before testing
             RandomGeneratorUtils.randomVariableNameSet.clear();
 
-            const obfuscationResult2: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                code, { seed: seed }
-            );
+            for (let i: number = 0; i < samples; i++) {
+                if (i % 20 === 0) {
+                    seed++;
+                }
+
+                const obfuscationResult1: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code, { seed: seed }
+                );
+                RandomGeneratorUtils.randomVariableNameSet.clear();
+
+                const obfuscationResult2: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code, { seed: seed }
+                );
+                RandomGeneratorUtils.randomVariableNameSet.clear();
+
+                if (obfuscationResult1.getObfuscatedCode() === obfuscationResult2.getObfuscatedCode()) {
+                    equalsCount++;
+                }
+            }
+
+            //clear after testing
             RandomGeneratorUtils.randomVariableNameSet.clear();
 
-            assert.equal(obfuscationResult1.getObfuscatedCode(), obfuscationResult2.getObfuscatedCode());
+            assert.equal(equalsCount, samples);
         });
 
         it('should returns different code with different `seed` option value', () => {

@@ -1,7 +1,5 @@
 import { assert } from 'chai';
 
-import { Chance } from 'chance';
-
 import { IObfuscationResult } from '../../../src/interfaces/IObfuscationResult';
 
 import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscator';
@@ -15,7 +13,7 @@ import { RandomGeneratorUtils } from '../../../src/utils/RandomGeneratorUtils';
 describe('JavaScriptObfuscator', () => {
     describe('obfuscate (sourceCode: string, customOptions?: IObfuscatorOptions): IObfuscationResult', () => {
         beforeEach(() => {
-            RandomGeneratorUtils.setRandomGenerator(new Chance());
+            RandomGeneratorUtils.initializeRandomGenerator(0);
         });
 
         describe('if `sourceMap` option is `false`', () => {
@@ -155,9 +153,6 @@ describe('JavaScriptObfuscator', () => {
             let seed: number = 12345,
                 equalsCount: number = 0;
 
-            //initial clear before testing
-            RandomGeneratorUtils.randomVariableNameSet.clear();
-
             for (let i: number = 0; i < samples; i++) {
                 if (i % 20 === 0) {
                     seed++;
@@ -166,20 +161,14 @@ describe('JavaScriptObfuscator', () => {
                 const obfuscationResult1: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code, { seed: seed }
                 );
-                RandomGeneratorUtils.randomVariableNameSet.clear();
-
                 const obfuscationResult2: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code, { seed: seed }
                 );
-                RandomGeneratorUtils.randomVariableNameSet.clear();
 
                 if (obfuscationResult1.getObfuscatedCode() === obfuscationResult2.getObfuscatedCode()) {
                     equalsCount++;
                 }
             }
-
-            //clear after testing
-            RandomGeneratorUtils.randomVariableNameSet.clear();
 
             assert.equal(equalsCount, samples);
         });
@@ -206,7 +195,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         afterEach(() => {
-            RandomGeneratorUtils.setRandomGenerator(new Chance());
+            RandomGeneratorUtils.initializeRandomGenerator(0);
         });
     });
 });

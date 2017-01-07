@@ -6,8 +6,6 @@ if (!(<any>global)._babelPolyfill && parseInt(process.version.split('.')[0], 10)
 
 import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 
-import { Chance } from 'chance';
-
 import { TInputOptions } from './types/options/TInputOptions';
 
 import { IInversifyContainerFacade } from './interfaces/container/IInversifyContainerFacade';
@@ -29,14 +27,15 @@ export class JavaScriptObfuscator {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade(inputOptions);
         const options: IOptions = inversifyContainerFacade.get<IOptions>(ServiceIdentifiers.IOptions);
 
-        if (options.seed !== 0) {
-            RandomGeneratorUtils.setRandomGenerator(new Chance(options.seed));
-        }
+        RandomGeneratorUtils.initializeRandomGenerator(options.seed);
 
         const javaScriptObfuscator: IJavaScriptObfuscator = inversifyContainerFacade
             .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);
+        const obfuscationResult: IObfuscationResult = javaScriptObfuscator.obfuscate(sourceCode);
 
-        return javaScriptObfuscator.obfuscate(sourceCode);
+        RandomGeneratorUtils.clearRandomGenerator();
+
+        return obfuscationResult;
     }
 
     /**

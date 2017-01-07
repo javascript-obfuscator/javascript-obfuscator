@@ -406,6 +406,20 @@ var RandomGeneratorUtils = function () {
     }
 
     (0, _createClass3.default)(RandomGeneratorUtils, null, [{
+        key: "initializeRandomGenerator",
+        value: function initializeRandomGenerator(seed) {
+            if (seed !== 0) {
+                RandomGeneratorUtils.randomGenerator = new chance_1.Chance(seed);
+            } else {
+                RandomGeneratorUtils.randomGenerator = new chance_1.Chance();
+            }
+        }
+    }, {
+        key: "clearRandomGenerator",
+        value: function clearRandomGenerator() {
+            RandomGeneratorUtils.randomVariableNameSet.clear();
+        }
+    }, {
         key: "getRandomFloat",
         value: function getRandomFloat(min, max) {
             return RandomGeneratorUtils.getRandomGenerator().floating({
@@ -451,11 +465,6 @@ var RandomGeneratorUtils = function () {
             RandomGeneratorUtils.randomVariableNameSet.add(randomVariableName);
             return randomVariableName;
         }
-    }, {
-        key: "setRandomGenerator",
-        value: function setRandomGenerator(randomGenerator) {
-            RandomGeneratorUtils.randomGenerator = randomGenerator;
-        }
     }]);
     return RandomGeneratorUtils;
 }();
@@ -463,7 +472,6 @@ var RandomGeneratorUtils = function () {
 RandomGeneratorUtils.randomGeneratorPool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 RandomGeneratorUtils.randomGeneratorPoolWithNumbers = RandomGeneratorUtils.randomGeneratorPool + "0123456789";
 RandomGeneratorUtils.randomVariableNameSet = new _set2.default();
-RandomGeneratorUtils.randomGenerator = new chance_1.Chance();
 exports.RandomGeneratorUtils = RandomGeneratorUtils;
 
 /***/ },
@@ -1429,7 +1437,6 @@ if (!global._babelPolyfill && parseInt(process.version.split('.')[0], 10) < 4) {
     __webpack_require__(135);
 }
 var ServiceIdentifiers_1 = __webpack_require__(4);
-var chance_1 = __webpack_require__(49);
 var InversifyContainerFacade_1 = __webpack_require__(58);
 var JavaScriptObfuscatorCLI_1 = __webpack_require__(57);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
@@ -1446,11 +1453,11 @@ var JavaScriptObfuscator = function () {
 
             var inversifyContainerFacade = new InversifyContainerFacade_1.InversifyContainerFacade(inputOptions);
             var options = inversifyContainerFacade.get(ServiceIdentifiers_1.ServiceIdentifiers.IOptions);
-            if (options.seed !== 0) {
-                RandomGeneratorUtils_1.RandomGeneratorUtils.setRandomGenerator(new chance_1.Chance(options.seed));
-            }
+            RandomGeneratorUtils_1.RandomGeneratorUtils.initializeRandomGenerator(options.seed);
             var javaScriptObfuscator = inversifyContainerFacade.get(ServiceIdentifiers_1.ServiceIdentifiers.IJavaScriptObfuscator);
-            return javaScriptObfuscator.obfuscate(sourceCode);
+            var obfuscationResult = javaScriptObfuscator.obfuscate(sourceCode);
+            RandomGeneratorUtils_1.RandomGeneratorUtils.clearRandomGenerator();
+            return obfuscationResult;
         }
     }, {
         key: "runCLI",
@@ -6752,6 +6759,9 @@ var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplace
         _this.stringLiteralHexadecimalIndexCache = new _map2.default();
         _this.customNodeGroupStorage = customNodeGroupStorage;
         _this.stringArrayStorage = stringArrayStorage;
+        _this.rc4Keys = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().n(function () {
+            return RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().string({ length: 4 });
+        }, 50);
         return _this;
     }
 
@@ -6791,7 +6801,7 @@ var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplace
                 key = void 0;
             switch (this.options.stringArrayEncoding) {
                 case StringArrayEncoding_1.StringArrayEncoding.rc4:
-                    key = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().pickone(StringLiteralReplacer_1.rc4Keys);
+                    key = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().pickone(this.rc4Keys);
                     encodedValue = CryptUtils_1.CryptUtils.btoa(CryptUtils_1.CryptUtils.rc4(value, key));
                     break;
                 case StringArrayEncoding_1.StringArrayEncoding.base64:
@@ -6822,9 +6832,6 @@ var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplace
     return StringLiteralReplacer;
 }(AbstractReplacer_1.AbstractReplacer);
 StringLiteralReplacer.minimumLengthForStringArray = 3;
-StringLiteralReplacer.rc4Keys = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().n(function () {
-    return RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().string({ length: 4 });
-}, 50);
 StringLiteralReplacer = StringLiteralReplacer_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.TCustomNodeGroupStorage)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.TStringArrayStorage)), tslib_1.__param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object, Object, Object])], StringLiteralReplacer);
 exports.StringLiteralReplacer = StringLiteralReplacer;
 var StringLiteralReplacer_1;

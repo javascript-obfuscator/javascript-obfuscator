@@ -21,7 +21,22 @@ export class RandomGeneratorUtils {
     /**
      * @type {Chance.Chance | Chance.SeededChance}
      */
-    private static randomGenerator: Chance.Chance | Chance.SeededChance = new Chance();
+    private static randomGenerator: Chance.Chance | Chance.SeededChance;
+
+    /**
+     * @param seed
+     */
+    public static initializeRandomGenerator (seed: number): void {
+        if (seed !== 0) {
+            RandomGeneratorUtils.randomGenerator = new Chance(seed);
+        } else {
+            RandomGeneratorUtils.randomGenerator = new Chance();
+        }
+    }
+
+    public static clearRandomGenerator (): void {
+        RandomGeneratorUtils.randomVariableNameSet.clear();
+    }
 
     /**
      * @param min
@@ -93,12 +108,5 @@ export class RandomGeneratorUtils {
         RandomGeneratorUtils.randomVariableNameSet.add(randomVariableName);
 
         return randomVariableName;
-    }
-
-    /**
-     * @param randomGenerator
-     */
-    public static setRandomGenerator (randomGenerator: Chance.Chance | Chance.SeededChance): void {
-        RandomGeneratorUtils.randomGenerator = randomGenerator;
     }
 }

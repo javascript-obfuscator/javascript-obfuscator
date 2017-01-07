@@ -21,10 +21,14 @@ export class StringLiteralReplacer extends AbstractReplacer {
     private static readonly minimumLengthForStringArray: number = 3;
 
     /**
+     * @type {IStorage<ICustomNodeGroup>}
+     */
+    private readonly customNodeGroupStorage: IStorage<ICustomNodeGroup>;
+
+    /**
      * @type {string[]}
      */
-    private static readonly rc4Keys: string[] = RandomGeneratorUtils.getRandomGenerator()
-        .n(() => RandomGeneratorUtils.getRandomGenerator().string({length: 4}), 50);
+    private readonly rc4Keys: string[];
 
     /**
      * @type {Map<string, string>}
@@ -35,11 +39,6 @@ export class StringLiteralReplacer extends AbstractReplacer {
      * @type {Map<string, string>}
      */
     private readonly stringLiteralHexadecimalIndexCache: Map <string, string> = new Map();
-
-    /**
-     * @type {IStorage<ICustomNodeGroup>}
-     */
-    private readonly customNodeGroupStorage: IStorage<ICustomNodeGroup>;
 
     /**
      * @type {IStorage<string>}
@@ -60,6 +59,9 @@ export class StringLiteralReplacer extends AbstractReplacer {
 
         this.customNodeGroupStorage = customNodeGroupStorage;
         this.stringArrayStorage = stringArrayStorage;
+
+        this.rc4Keys = RandomGeneratorUtils.getRandomGenerator()
+            .n(() => RandomGeneratorUtils.getRandomGenerator().string({length: 4}), 50);
     }
 
     /**
@@ -119,7 +121,7 @@ export class StringLiteralReplacer extends AbstractReplacer {
 
         switch (this.options.stringArrayEncoding) {
             case StringArrayEncoding.rc4:
-                key = RandomGeneratorUtils.getRandomGenerator().pickone(StringLiteralReplacer.rc4Keys);
+                key = RandomGeneratorUtils.getRandomGenerator().pickone(this.rc4Keys);
                 encodedValue = CryptUtils.btoa(CryptUtils.rc4(value, key));
 
                 break;

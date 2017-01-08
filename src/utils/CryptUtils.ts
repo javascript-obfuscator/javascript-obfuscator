@@ -38,7 +38,7 @@ export class CryptUtils {
      * @param length
      * @returns {string[]}
      */
-    public static hideString(str: string, length: number): [string, string] {
+    public static hideString (str: string, length: number): [string, string] {
         const escapeRegExp: (s: string) => string = (s: string) =>
             s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 

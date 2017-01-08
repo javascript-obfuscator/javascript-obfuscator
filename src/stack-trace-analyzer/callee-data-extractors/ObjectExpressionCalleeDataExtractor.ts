@@ -85,12 +85,12 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
     }
 
     /**
-     * @param node
+     * @param targetNode
      * @param objectMembersCallsChain
      * @returns {ESTree.BlockStatement|null}
      */
     private getCalleeBlockStatement (
-        node: ESTree.Node,
+        targetNode: ESTree.Node,
         objectMembersCallsChain: TObjectMembersCallsChain
     ): ESTree.BlockStatement|null {
         const objectName: string|number|undefined = objectMembersCallsChain.shift();
@@ -101,7 +101,7 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
 
         let calleeBlockStatement: ESTree.BlockStatement|null = null;
 
-        estraverse.traverse(node, {
+        estraverse.traverse(targetNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (
                     Node.isVariableDeclaratorNode(node) &&

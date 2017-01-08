@@ -23,20 +23,20 @@ export class NodeUtils {
     ];
 
     /**
-     * @param node
+     * @param astTree
      * @return {T}
      */
-    public static addXVerbatimPropertyToLiterals <T extends ESTree.Node> (node: T): T {
-        NodeUtils.typedReplace(node, NodeType.Literal, {
-            leave: (node: ESTree.Literal) => {
-                node['x-verbatim-property'] = {
-                    content : node.raw,
+    public static addXVerbatimPropertyToLiterals <T extends ESTree.Node> (astTree: T): T {
+        NodeUtils.typedReplace(astTree, NodeType.Literal, {
+            leave: (literalNode: ESTree.Literal) => {
+                literalNode['x-verbatim-property'] = {
+                    content : literalNode.raw,
                     precedence: escodegen.Precedence.Primary
                 };
             }
         });
 
-        return node;
+        return astTree;
     }
 
     /**
@@ -152,13 +152,13 @@ export class NodeUtils {
     }
 
     /**
-     * @param node
+     * @param astTree
      * @return {T}
      */
-    public static parentize <T extends ESTree.Node> (node: T): T {
+    public static parentize <T extends ESTree.Node> (astTree: T): T {
         let isRootNode: boolean = true;
 
-        estraverse.traverse(node, {
+        estraverse.traverse(astTree, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 let value: ESTree.Node;
 
@@ -180,35 +180,35 @@ export class NodeUtils {
             }
         });
 
-        return node;
+        return astTree;
     }
 
     /**
-     * @param node
+     * @param astTree
      * @param nodeType
      * @param visitor
      */
     public static typedReplace (
-        node: ESTree.Node,
+        astTree: ESTree.Node,
         nodeType: string,
         visitor: {enter?: (node: ESTree.Node) => void, leave?: (node: ESTree.Node) => void},
     ): void {
-        NodeUtils.typedTraverse(node, nodeType, visitor, 'replace');
+        NodeUtils.typedTraverse(astTree, nodeType, visitor, 'replace');
     }
 
     /**
-     * @param node
+     * @param astTree
      * @param nodeType
      * @param visitor
      * @param traverseType
      */
     public static typedTraverse (
-        node: ESTree.Node,
+        astTree: ESTree.Node,
         nodeType: string,
         visitor: estraverse.Visitor,
         traverseType: string = 'traverse'
     ): void {
-        (<any>estraverse)[traverseType](node, {
+        (<any>estraverse)[traverseType](astTree, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (node.type === nodeType && visitor.enter) {
                     return visitor.enter(node, parentNode);

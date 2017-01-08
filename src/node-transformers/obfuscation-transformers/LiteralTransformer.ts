@@ -23,7 +23,7 @@ export class LiteralTransformer extends AbstractNodeTransformer {
      * @param replacersFactory
      * @param options
      */
-    constructor(
+    constructor (
         @inject(ServiceIdentifiers.Factory__IObfuscatorReplacer) replacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscationReplacer,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {

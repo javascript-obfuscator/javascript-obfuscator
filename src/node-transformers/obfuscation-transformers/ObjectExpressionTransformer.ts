@@ -27,7 +27,7 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
     /**
      * @param options
      */
-    constructor(
+    constructor (
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);

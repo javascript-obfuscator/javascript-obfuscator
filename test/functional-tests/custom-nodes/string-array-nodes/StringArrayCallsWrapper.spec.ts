@@ -22,7 +22,7 @@ describe('StringArrayCallsWrapper', () => {
 
         assert.match(
             obfuscationResult.getObfuscatedCode(),
-            /_0x([a-z0-9]){4,6} *= *_0x([a-z0-9]){4,6} *- *0x0\;/
+            /_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6} *- *0x0\;/
         );
     });
 });

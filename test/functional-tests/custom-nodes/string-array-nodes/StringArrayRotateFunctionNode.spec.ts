@@ -20,7 +20,7 @@ describe('StringArrayRotateFunctionNode', () => {
             }
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(), /while *\(-- *_0x([a-z0-9]){4,6}\) *\{/);
+        assert.match(obfuscationResult.getObfuscatedCode(), /while *\(-- *_0x([a-f0-9]){4,6}\) *\{/);
     });
 
     it('should\'t append `StringArrayRotateFunctionNode` custom node into the obfuscated code if `rotateStringArray` option is not set', () => {
@@ -34,6 +34,6 @@ describe('StringArrayRotateFunctionNode', () => {
             }
         );
 
-        assert.notMatch(obfuscationResult.getObfuscatedCode(), /while *\(-- *_0x([a-z0-9]){4,6}\) *\{/);
+        assert.notMatch(obfuscationResult.getObfuscatedCode(), /while *\(-- *_0x([a-f0-9]){4,6}\) *\{/);
     });
 });

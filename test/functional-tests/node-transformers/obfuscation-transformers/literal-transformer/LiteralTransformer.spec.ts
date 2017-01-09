@@ -33,9 +33,9 @@ describe('LiteralTransformer', () => {
 
             assert.match(
                 obfuscationResult.getObfuscatedCode(),
-                /^var *_0x([a-z0-9]){4} *= *\['\\x74\\x65\\x73\\x74'\];/
+                /^var *_0x([a-f0-9]){4} *= *\['\\x74\\x65\\x73\\x74'\];/
             );
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-z0-9]){4}\('0x0'\);/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/);
         });
 
         it('should create only one item in string array for same literal node values', () => {
@@ -50,9 +50,9 @@ describe('LiteralTransformer', () => {
 
             assert.match(
                 obfuscationResult.getObfuscatedCode(),
-                /^var *_0x([a-z0-9]){4} *= *\['\\x74\\x65\\x73\\x74'\];/
+                /^var *_0x([a-f0-9]){4} *= *\['\\x74\\x65\\x73\\x74'\];/
             );
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-z0-9]){4}\('0x0'\);/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/);
         });
 
         it('should replace literal node value with raw value from string array if `unicodeEscapeSequence` is disabled', () => {
@@ -68,9 +68,9 @@ describe('LiteralTransformer', () => {
 
             assert.match(
                 obfuscationResult.getObfuscatedCode(),
-                /^var *_0x([a-z0-9]){4} *= *\['test'\];/
+                /^var *_0x([a-f0-9]){4} *= *\['test'\];/
             );
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-z0-9]){4}\('0x0'\);/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/);
         });
 
         it('should replace literal node value with raw value from string array if `unicodeEscapeSequence` and `stringArray` are disabled', () => {
@@ -126,9 +126,9 @@ describe('LiteralTransformer', () => {
 
             assert.match(
                 obfuscationResult.getObfuscatedCode(),
-                /^var *_0x([a-z0-9]){4} *= *\['\\x64\\x47\\x56\\x7a\\x64\\x41\\x3d\\x3d'\];/
+                /^var *_0x([a-f0-9]){4} *= *\['\\x64\\x47\\x56\\x7a\\x64\\x41\\x3d\\x3d'\];/
             );
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-z0-9]){4}\('0x0'\);/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/);
         });
 
         it('should replace literal node value with value from string array encoded using rc4', () => {
@@ -144,7 +144,7 @@ describe('LiteralTransformer', () => {
 
             assert.match(
                 obfuscationResult.getObfuscatedCode(),
-                /var *test *= *_0x([a-z0-9]){4}\('0x0', '(\\x[a-f0-9]*){4}'\);/
+                /var *test *= *_0x([a-f0-9]){4}\('0x0', '(\\x[a-f0-9]*){4}'\);/
             );
         });
 
@@ -161,7 +161,7 @@ describe('LiteralTransformer', () => {
                 }
             );
 
-            const regExp1: RegExp = /var *test *= *_0x([a-z0-9]){4}\('0x0'\);/g;
+            const regExp1: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/g;
             const regExp2: RegExp = /var *test *= *'\\x74\\x65\\x73\\x74';/g;
             const stringArrayMatchesLength = obfuscationResult.getObfuscatedCode().match(regExp1)!.length;
             const noStringArrayMatchesLength = obfuscationResult.getObfuscatedCode().match(regExp2)!.length;

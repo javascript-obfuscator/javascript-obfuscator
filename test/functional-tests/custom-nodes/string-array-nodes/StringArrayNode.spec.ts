@@ -19,7 +19,7 @@ describe('StringArrayNode', () => {
             }
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(), /^var _0x([a-z0-9]){4} *= *\[/);
+        assert.match(obfuscationResult.getObfuscatedCode(), /^var _0x([a-f0-9]){4} *= *\[/);
     });
 
     it('should\'t append `StringArrayNode` custom node into the obfuscated code if `stringArray` option is not set', () => {
@@ -31,6 +31,6 @@ describe('StringArrayNode', () => {
             }
         );
 
-        assert.notMatch(obfuscationResult.getObfuscatedCode(), /^var _0x([a-z0-9]){4} *= *\[/);
+        assert.notMatch(obfuscationResult.getObfuscatedCode(), /^var _0x([a-f0-9]){4} *= *\[/);
     });
 });

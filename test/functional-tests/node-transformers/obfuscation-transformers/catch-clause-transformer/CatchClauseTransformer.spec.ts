@@ -17,8 +17,8 @@ describe('CatchClauseTransformer', () => {
             }
         );
         const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
-        const paramNameRegExp: RegExp = /catch *\((_0x([a-z0-9]){4,6})\) *\{/;
-        const bodyParamNameRegExp: RegExp = /console\['\\x6c\\x6f\\x67'\]\((_0x([a-z0-9]){4,6})\);/;
+        const paramNameRegExp: RegExp = /catch *\((_0x([a-f0-9]){4,6})\) *\{/;
+        const bodyParamNameRegExp: RegExp = /console\['\\x6c\\x6f\\x67'\]\((_0x([a-f0-9]){4,6})\);/;
 
         it('should transform catch clause node', () => {
             assert.match(obfuscatedCode, paramNameRegExp);

@@ -454,13 +454,13 @@ var RandomGeneratorUtils = function () {
         }
     }, {
         key: "getRandomVariableName",
-        value: function getRandomVariableName(length, withPrefix, unique) {
-            var prefix = withPrefix ? "_" + Utils_1.Utils.hexadecimalPrefix : '';
+        value: function getRandomVariableName(length) {
+            var prefix = "_" + Utils_1.Utils.hexadecimalPrefix;
             var rangeMinInteger = 10000;
             var rangeMaxInteger = 99999999;
             var randomVariableName = "" + prefix + Utils_1.Utils.decToHex(RandomGeneratorUtils.getRandomInteger(rangeMinInteger, rangeMaxInteger)).substr(0, length);
-            if (unique && RandomGeneratorUtils.randomVariableNameSet.has(randomVariableName)) {
-                return RandomGeneratorUtils.getRandomVariableName(length, withPrefix, unique);
+            if (RandomGeneratorUtils.randomVariableNameSet.has(randomVariableName)) {
+                return RandomGeneratorUtils.getRandomVariableName(length);
             }
             RandomGeneratorUtils.randomVariableNameSet.add(randomVariableName);
             return randomVariableName;
@@ -470,6 +470,7 @@ var RandomGeneratorUtils = function () {
 }();
 
 RandomGeneratorUtils.randomGeneratorPool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+RandomGeneratorUtils.randomGeneratorPoolHexadecimal = 'abcdef0123456789';
 RandomGeneratorUtils.randomGeneratorPoolWithNumbers = RandomGeneratorUtils.randomGeneratorPool + "0123456789";
 RandomGeneratorUtils.randomVariableNameSet = new _set2.default();
 exports.RandomGeneratorUtils = RandomGeneratorUtils;
@@ -3271,7 +3272,7 @@ var ConsoleOutputDisableExpressionNode = function (_AbstractCustomNode_) {
         key: "getTemplate",
         value: function getTemplate() {
             return format(ConsoleOutputDisableExpressionTemplate_1.ConsoleOutputDisableExpressionTemplate(), {
-                consoleLogDisableFunctionName: RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6, true, true),
+                consoleLogDisableFunctionName: RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6),
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
             });
         }
@@ -3362,7 +3363,7 @@ var ConsoleOutputCustomNodeGroup = function (_AbstractCustomNodeGr) {
             if (!this.options.disableConsoleOutput) {
                 return;
             }
-            var callsControllerFunctionName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6, true, true);
+            var callsControllerFunctionName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6);
             var consoleOutputDisableExpressionNode = this.customNodeFactory(CustomNodes_1.CustomNodes.ConsoleOutputDisableExpressionNode);
             var nodeCallsControllerFunctionNode = this.customNodeFactory(CustomNodes_1.CustomNodes.NodeCallsControllerFunctionNode);
             consoleOutputDisableExpressionNode.initialize(callsControllerFunctionName);
@@ -3430,7 +3431,7 @@ var BinaryExpressionFunctionNode = function (_AbstractCustomNode_) {
     }, {
         key: "getNodeStructure",
         value: function getNodeStructure() {
-            var structure = Nodes_1.Nodes.getFunctionDeclarationNode(RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(1, true, false), [Nodes_1.Nodes.getIdentifierNode('x'), Nodes_1.Nodes.getIdentifierNode('y')], Nodes_1.Nodes.getBlockStatementNode([Nodes_1.Nodes.getReturnStatementNode(Nodes_1.Nodes.getBinaryExpressionNode(this.operator, Nodes_1.Nodes.getIdentifierNode('x'), Nodes_1.Nodes.getIdentifierNode('y')))]));
+            var structure = Nodes_1.Nodes.getFunctionDeclarationNode(RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(3), [Nodes_1.Nodes.getIdentifierNode('x'), Nodes_1.Nodes.getIdentifierNode('y')], Nodes_1.Nodes.getBlockStatementNode([Nodes_1.Nodes.getReturnStatementNode(Nodes_1.Nodes.getBinaryExpressionNode(this.operator, Nodes_1.Nodes.getIdentifierNode('x'), Nodes_1.Nodes.getIdentifierNode('y')))]));
             NodeUtils_1.NodeUtils.parentize(structure);
             return [structure];
         }
@@ -3574,7 +3575,7 @@ var CallExpressionFunctionNode = function (_AbstractCustomNode_) {
             for (var i = 0; i < argumentsLength; i++) {
                 params.push(Nodes_1.Nodes.getIdentifierNode("param" + (i + 1)));
             }
-            var structure = Nodes_1.Nodes.getFunctionDeclarationNode(RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(1, true, false), [calleeIdentifier].concat(params), Nodes_1.Nodes.getBlockStatementNode([Nodes_1.Nodes.getReturnStatementNode(Nodes_1.Nodes.getCallExpressionNode(calleeIdentifier, params))]));
+            var structure = Nodes_1.Nodes.getFunctionDeclarationNode(RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(3), [calleeIdentifier].concat(params), Nodes_1.Nodes.getBlockStatementNode([Nodes_1.Nodes.getReturnStatementNode(Nodes_1.Nodes.getCallExpressionNode(calleeIdentifier, params))]));
             NodeUtils_1.NodeUtils.parentize(structure);
             return [structure];
         }
@@ -3638,7 +3639,7 @@ var LogicalExpressionFunctionNode = function (_AbstractCustomNode_) {
     }, {
         key: "getNodeStructure",
         value: function getNodeStructure() {
-            var structure = Nodes_1.Nodes.getFunctionDeclarationNode(RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(1, true, false), [Nodes_1.Nodes.getIdentifierNode('x'), Nodes_1.Nodes.getIdentifierNode('y')], Nodes_1.Nodes.getBlockStatementNode([Nodes_1.Nodes.getReturnStatementNode(Nodes_1.Nodes.getLogicalExpressionNode(this.operator, Nodes_1.Nodes.getIdentifierNode('x'), Nodes_1.Nodes.getIdentifierNode('y')))]));
+            var structure = Nodes_1.Nodes.getFunctionDeclarationNode(RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(3), [Nodes_1.Nodes.getIdentifierNode('x'), Nodes_1.Nodes.getIdentifierNode('y')], Nodes_1.Nodes.getBlockStatementNode([Nodes_1.Nodes.getReturnStatementNode(Nodes_1.Nodes.getLogicalExpressionNode(this.operator, Nodes_1.Nodes.getIdentifierNode('x'), Nodes_1.Nodes.getIdentifierNode('y')))]));
             NodeUtils_1.NodeUtils.parentize(structure);
             return [structure];
         }
@@ -4153,7 +4154,7 @@ var DebugProtectionCustomNodeGroup = function (_AbstractCustomNodeGr) {
             if (!this.options.debugProtection) {
                 return;
             }
-            var debugProtectionFunctionName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6, true, true);
+            var debugProtectionFunctionName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6);
             var debugProtectionFunctionNode = this.customNodeFactory(CustomNodes_1.CustomNodes.DebugProtectionFunctionNode);
             var debugProtectionFunctionCallNode = this.customNodeFactory(CustomNodes_1.CustomNodes.DebugProtectionFunctionCallNode);
             var debugProtectionFunctionIntervalNode = this.customNodeFactory(CustomNodes_1.CustomNodes.DebugProtectionFunctionIntervalNode);
@@ -4245,7 +4246,7 @@ var DomainLockNode = function (_AbstractCustomNode_) {
                 diff = _CryptUtils_1$CryptUt2[1];
 
             return format(DomainLockNodeTemplate_1.DomainLockNodeTemplate(), {
-                domainLockFunctionName: RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6, true, true),
+                domainLockFunctionName: RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6),
                 diff: diff,
                 domains: hiddenDomainsString,
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
@@ -4338,7 +4339,7 @@ var DomainLockCustomNodeGroup = function (_AbstractCustomNodeGr) {
             if (!this.options.domainLock.length) {
                 return;
             }
-            var callsControllerFunctionName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6, true, true);
+            var callsControllerFunctionName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6);
             var domainLockNode = this.customNodeFactory(CustomNodes_1.CustomNodes.DomainLockNode);
             var nodeCallsControllerFunctionNode = this.customNodeFactory(CustomNodes_1.CustomNodes.NodeCallsControllerFunctionNode);
             domainLockNode.initialize(callsControllerFunctionName);
@@ -4494,7 +4495,7 @@ var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
         key: "getTemplate",
         value: function getTemplate() {
             return JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(format(SelfDefendingTemplate_1.SelfDefendingTemplate(), {
-                selfDefendingFunctionName: RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6, true, true),
+                selfDefendingFunctionName: RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6),
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
             }), tslib_1.__assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
         }
@@ -4585,7 +4586,7 @@ var SelfDefendingCustomNodeGroup = function (_AbstractCustomNodeGr) {
             if (!this.options.selfDefending) {
                 return;
             }
-            var callsControllerFunctionName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6, true, true);
+            var callsControllerFunctionName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6);
             var selfDefendingUnicodeNode = this.customNodeFactory(CustomNodes_1.CustomNodes.SelfDefendingUnicodeNode);
             var nodeCallsControllerFunctionNode = this.customNodeFactory(CustomNodes_1.CustomNodes.NodeCallsControllerFunctionNode);
             selfDefendingUnicodeNode.initialize(callsControllerFunctionName);
@@ -4863,8 +4864,8 @@ var StringArrayRotateFunctionNode = function (_AbstractCustomNode_) {
     }, {
         key: "getTemplate",
         value: function getTemplate() {
-            var timesName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6, true, true);
-            var whileFunctionName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6, true, true);
+            var timesName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6);
+            var whileFunctionName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6);
             var code = '';
             if (this.options.selfDefending) {
                 code = format(SelfDefendingTemplate_1.SelfDefendingTemplate(), {
@@ -6613,7 +6614,7 @@ var IdentifierReplacer = function (_AbstractReplacer_1$A) {
         key: "storeNames",
         value: function storeNames(nodeName, nodeIdentifier) {
             if (!this.isReservedName(nodeName)) {
-                this.namesMap.set(nodeName + "-" + String(nodeIdentifier), RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6, true, true));
+                this.namesMap.set(nodeName + "-" + String(nodeIdentifier), RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6));
             }
         }
     }, {
@@ -7848,7 +7849,7 @@ var StringArrayStorage = function (_ArrayStorage_1$Array) {
             }
 
             (0, _get3.default)(StringArrayStorage.prototype.__proto__ || (0, _getPrototypeOf2.default)(StringArrayStorage.prototype), "initialize", this).call(this, args);
-            this.storageId = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(4, false, false);
+            this.storageId = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(4, RandomGeneratorUtils_1.RandomGeneratorUtils.randomGeneratorPoolHexadecimal);
         }
     }, {
         key: "rotateArray",

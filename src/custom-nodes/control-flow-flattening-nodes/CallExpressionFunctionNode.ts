@@ -51,7 +51,7 @@ export class CallExpressionFunctionNode extends AbstractCustomNode {
         }
 
         const structure: TStatement = Nodes.getFunctionDeclarationNode(
-            RandomGeneratorUtils.getRandomVariableName(1, true, false),
+            RandomGeneratorUtils.getRandomString(3),
             [
                 calleeIdentifier,
                 ...params

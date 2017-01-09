@@ -51,7 +51,7 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
      */
     protected getTemplate (): string {
         return format(ConsoleOutputDisableExpressionTemplate(), {
-            consoleLogDisableFunctionName: RandomGeneratorUtils.getRandomVariableName(6, true, true),
+            consoleLogDisableFunctionName: RandomGeneratorUtils.getRandomVariableName(6),
             singleNodeCallControllerFunctionName: this.callsControllerFunctionName
         });
     }

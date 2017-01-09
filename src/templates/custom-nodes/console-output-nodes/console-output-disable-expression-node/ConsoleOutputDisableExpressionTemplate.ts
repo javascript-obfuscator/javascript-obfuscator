@@ -8,11 +8,14 @@ export function ConsoleOutputDisableExpressionTemplate (): string {
             
             var func = function () {};
             var that = getGlobal();
-                        
-            that.console.log = func; 
-            that.console.error = func;
-            that.console.warn = func;
-            that.console.info = func;
+            
+            that.console = (function (func){ 
+                var c = {}; 
+                
+                c.log = c.warn = c.debug = c.info = c.error = c.exception = c.trace = func; 
+                
+                return c; 
+            })(func);
         });
         
         {consoleLogDisableFunctionName}();

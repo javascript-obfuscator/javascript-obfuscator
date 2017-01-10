@@ -201,6 +201,7 @@ var esprima = __webpack_require__(49);
 var estraverse = __webpack_require__(18);
 var NodeType_1 = __webpack_require__(15);
 var Node_1 = __webpack_require__(12);
+var Nodes_1 = __webpack_require__(22);
 
 var NodeUtils = function () {
     function NodeUtils() {
@@ -333,7 +334,7 @@ var NodeUtils = function () {
                         if (node.type === NodeType_1.NodeType.Program) {
                             value = node;
                         } else {
-                            value = Node_1.Node.getProgramNode([node]);
+                            value = Nodes_1.Nodes.getProgramNode([node]);
                             value.parentNode = value;
                         }
                         isRootNode = false;
@@ -562,16 +563,6 @@ var Node = function () {
     }
 
     (0, _createClass3.default)(Node, null, [{
-        key: "getProgramNode",
-        value: function getProgramNode(bodyNode) {
-            return {
-                'type': NodeType_1.NodeType.Program,
-                'body': bodyNode,
-                'sourceType': 'script',
-                'obfuscated': false
-            };
-        }
-    }, {
         key: "isArrowFunctionExpressionNode",
         value: function isArrowFunctionExpressionNode(node) {
             return node.type === NodeType_1.NodeType.ArrowFunctionExpression;
@@ -5117,14 +5108,14 @@ var BlockStatementControlFlowTransformer = BlockStatementControlFlowTransformer_
                 return blockStatementNode;
             }
             var blockStatementBody = blockStatementNode.body;
+            if (blockStatementBody.length <= 4) {
+                return blockStatementNode;
+            }
             var originalKeys = [].concat((0, _toConsumableArray3.default)(Array(blockStatementBody.length).keys()));
             var shuffledKeys = Utils_1.Utils.arrayShuffle(originalKeys);
             var originalKeysIndexesInShuffledArray = originalKeys.map(function (key) {
                 return shuffledKeys.indexOf(key);
             });
-            if (blockStatementBody.length <= 4) {
-                return blockStatementNode;
-            }
             var blockStatementControlFlowFlatteningCustomNode = this.customNodeFactory(CustomNodes_1.CustomNodes.BlockStatementControlFlowFlatteningNode);
             blockStatementControlFlowFlatteningCustomNode.initialize(blockStatementBody, shuffledKeys, originalKeysIndexesInShuffledArray);
             return blockStatementControlFlowFlatteningCustomNode.getNode()[0];

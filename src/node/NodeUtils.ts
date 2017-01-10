@@ -9,6 +9,7 @@ import { TStatement } from '../types/node/TStatement';
 import { NodeType } from '../enums/NodeType';
 
 import { Node } from './Node';
+import { Nodes } from './Nodes';
 
 export class NodeUtils {
     /**
@@ -166,7 +167,7 @@ export class NodeUtils {
                     if (node.type === NodeType.Program) {
                         value = node;
                     } else {
-                        value = Node.getProgramNode(<TStatement[]>[node]);
+                        value = Nodes.getProgramNode(<TStatement[]>[node]);
                         value.parentNode = value;
                     }
 

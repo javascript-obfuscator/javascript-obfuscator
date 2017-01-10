@@ -1,24 +1,10 @@
 import * as ESTree from 'estree';
 
 import { TNodeWithBlockStatement } from '../types/node/TNodeWithBlockStatement';
-import { TStatement } from '../types/node/TStatement';
 
 import { NodeType } from '../enums/NodeType';
 
 export class Node {
-    /**
-     * @param bodyNode
-     * @returns ESTree.Program
-     */
-    public static getProgramNode (bodyNode: TStatement[]): ESTree.Program {
-        return {
-            'type': NodeType.Program,
-            'body': bodyNode,
-            'sourceType': 'script',
-            'obfuscated': false
-        };
-    }
-
     /**
      * @param node
      * @returns {boolean}
@@ -109,9 +95,7 @@ export class Node {
         const parentNodeIsContinueStatementNode: boolean = Node.isContinueStatementNode(parentNode) && parentNode.label === node;
         const parentNodeIsBreakStatementNode: boolean = Node.isBreakStatementNode(parentNode) && parentNode.label === node;
 
-        return parentNodeIsLabeledStatementNode ||
-            parentNodeIsContinueStatementNode ||
-            parentNodeIsBreakStatementNode;
+        return parentNodeIsLabeledStatementNode || parentNodeIsContinueStatementNode || parentNodeIsBreakStatementNode;
     }
 
     /**
@@ -181,9 +165,7 @@ export class Node {
             parentNode.property === node
         );
 
-        return !parentNodeIsPropertyNode &&
-            !parentNodeIsMemberExpressionNode &&
-            !Node.isLabelIdentifierNode(node, parentNode);
+        return !parentNodeIsPropertyNode && !parentNodeIsMemberExpressionNode && !Node.isLabelIdentifierNode(node, parentNode);
     }
 
     /**

@@ -90,7 +90,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 151);
+/******/ 	return __webpack_require__(__webpack_require__.s = 150);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -182,7 +182,7 @@ module.exports = require("babel-runtime/helpers/possibleConstructorReturn");
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(21);
+var _getIterator2 = __webpack_require__(22);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -201,7 +201,7 @@ var esprima = __webpack_require__(49);
 var estraverse = __webpack_require__(18);
 var NodeType_1 = __webpack_require__(15);
 var Node_1 = __webpack_require__(12);
-var Nodes_1 = __webpack_require__(22);
+var Nodes_1 = __webpack_require__(21);
 
 var NodeUtils = function () {
     function NodeUtils() {
@@ -755,7 +755,7 @@ var _slicedToArray2 = __webpack_require__(35);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _getIterator2 = __webpack_require__(21);
+var _getIterator2 = __webpack_require__(22);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -1057,12 +1057,6 @@ var NodeObfuscatorsReplacers;
 
 /***/ },
 /* 21 */
-/***/ function(module, exports) {
-
-module.exports = require("babel-runtime/core-js/get-iterator");
-
-/***/ },
-/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1396,6 +1390,12 @@ var Nodes = function () {
 exports.Nodes = Nodes;
 
 /***/ },
+/* 22 */
+/***/ function(module, exports) {
+
+module.exports = require("babel-runtime/core-js/get-iterator");
+
+/***/ },
 /* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -1469,7 +1469,7 @@ exports.JavaScriptObfuscator = JavaScriptObfuscator;
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(21);
+var _getIterator2 = __webpack_require__(22);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -3403,7 +3403,7 @@ var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var AbstractCustomNode_1 = __webpack_require__(13);
-var Nodes_1 = __webpack_require__(22);
+var Nodes_1 = __webpack_require__(21);
 var NodeUtils_1 = __webpack_require__(8);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var BinaryExpressionFunctionNode = function (_AbstractCustomNode_) {
@@ -3467,7 +3467,7 @@ var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var AbstractCustomNode_1 = __webpack_require__(13);
-var Nodes_1 = __webpack_require__(22);
+var Nodes_1 = __webpack_require__(21);
 var NodeUtils_1 = __webpack_require__(8);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var BlockStatementControlFlowFlatteningNode = function (_AbstractCustomNode_) {
@@ -3541,7 +3541,7 @@ var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var AbstractCustomNode_1 = __webpack_require__(13);
-var Nodes_1 = __webpack_require__(22);
+var Nodes_1 = __webpack_require__(21);
 var NodeUtils_1 = __webpack_require__(8);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var CallExpressionFunctionNode = function (_AbstractCustomNode_) {
@@ -3611,7 +3611,7 @@ var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var AbstractCustomNode_1 = __webpack_require__(13);
-var Nodes_1 = __webpack_require__(22);
+var Nodes_1 = __webpack_require__(21);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var NodeUtils_1 = __webpack_require__(8);
 var LogicalExpressionFunctionNode = function (_AbstractCustomNode_) {
@@ -3679,7 +3679,7 @@ var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var AbstractCustomNode_1 = __webpack_require__(13);
-var Nodes_1 = __webpack_require__(22);
+var Nodes_1 = __webpack_require__(21);
 var NodeUtils_1 = __webpack_require__(8);
 var CallExpressionControlFlowStorageCallNode = function (_AbstractCustomNode_) {
     (0, _inherits3.default)(CallExpressionControlFlowStorageCallNode, _AbstractCustomNode_);
@@ -3756,7 +3756,7 @@ var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var AbstractCustomNode_1 = __webpack_require__(13);
-var Nodes_1 = __webpack_require__(22);
+var Nodes_1 = __webpack_require__(21);
 var NodeUtils_1 = __webpack_require__(8);
 var ControlFlowStorageNode = function (_AbstractCustomNode_) {
     (0, _inherits3.default)(ControlFlowStorageNode, _AbstractCustomNode_);
@@ -3825,7 +3825,7 @@ var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var AbstractCustomNode_1 = __webpack_require__(13);
-var Nodes_1 = __webpack_require__(22);
+var Nodes_1 = __webpack_require__(21);
 var NodeUtils_1 = __webpack_require__(8);
 var ExpressionWithOperatorControlFlowStorageCallNode = function (_AbstractCustomNode_) {
     (0, _inherits3.default)(ExpressionWithOperatorControlFlowStorageCallNode, _AbstractCustomNode_);
@@ -5582,7 +5582,7 @@ exports.CatchClauseTransformer = CatchClauseTransformer;
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(21);
+var _getIterator2 = __webpack_require__(22);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -6220,7 +6220,7 @@ var ObjectExpressionTransformer_1;
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(21);
+var _getIterator2 = __webpack_require__(22);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -6251,7 +6251,7 @@ var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
 var Node_1 = __webpack_require__(12);
-var Nodes_1 = __webpack_require__(22);
+var Nodes_1 = __webpack_require__(21);
 var TemplateLiteralTransformer = TemplateLiteralTransformer_1 = function (_AbstractNodeTransfor) {
     (0, _inherits3.default)(TemplateLiteralTransformer, _AbstractNodeTransfor);
 
@@ -6355,7 +6355,7 @@ var TemplateLiteralTransformer_1;
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(21);
+var _getIterator2 = __webpack_require__(22);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -6899,7 +6899,7 @@ var Options_1;
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(21);
+var _getIterator2 = __webpack_require__(22);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -7084,7 +7084,7 @@ exports.OptionsNormalizer = OptionsNormalizer;
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(21);
+var _getIterator2 = __webpack_require__(22);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -7426,7 +7426,7 @@ exports.FunctionExpressionCalleeDataExtractor = FunctionExpressionCalleeDataExtr
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(21);
+var _getIterator2 = __webpack_require__(22);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
@@ -8152,8 +8152,7 @@ module.exports = require("mkdirp");
 module.exports = require("reflect-metadata");
 
 /***/ },
-/* 150 */,
-/* 151 */
+/* 150 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

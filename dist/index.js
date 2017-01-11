@@ -90,7 +90,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 150);
+/******/ 	return __webpack_require__(__webpack_require__.s = 151);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -5747,10 +5747,8 @@ var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var estraverse = __webpack_require__(18);
 var NodeObfuscationReplacers_1 = __webpack_require__(20);
-var NodeType_1 = __webpack_require__(15);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
 var Node_1 = __webpack_require__(12);
-var NodeUtils_1 = __webpack_require__(8);
 var FunctionTransformer = function (_AbstractNodeTransfor) {
     (0, _inherits3.default)(FunctionTransformer, _AbstractNodeTransfor);
 
@@ -5777,11 +5775,9 @@ var FunctionTransformer = function (_AbstractNodeTransfor) {
             var _this2 = this;
 
             functionNode.params.forEach(function (paramsNode) {
-                NodeUtils_1.NodeUtils.typedTraverse(paramsNode, NodeType_1.NodeType.Identifier, {
-                    enter: function enter(node) {
-                        return _this2.identifierReplacer.storeNames(node.name, nodeIdentifier);
-                    }
-                });
+                if (Node_1.Node.isIdentifierNode(paramsNode)) {
+                    _this2.identifierReplacer.storeNames(paramsNode.name, nodeIdentifier);
+                }
             });
         }
     }, {
@@ -6426,11 +6422,9 @@ var VariableDeclarationTransformer = function (_AbstractNodeTransfor) {
             var _this2 = this;
 
             variableDeclarationNode.declarations.forEach(function (declarationNode) {
-                NodeUtils_1.NodeUtils.typedTraverse(declarationNode.id, NodeType_1.NodeType.Identifier, {
-                    enter: function enter(node) {
-                        return _this2.identifierReplacer.storeNames(node.name, nodeIdentifier);
-                    }
-                });
+                if (Node_1.Node.isIdentifierNode(declarationNode.id)) {
+                    _this2.identifierReplacer.storeNames(declarationNode.id.name, nodeIdentifier);
+                }
             });
         }
     }, {
@@ -8152,7 +8146,8 @@ module.exports = require("mkdirp");
 module.exports = require("reflect-metadata");
 
 /***/ },
-/* 150 */
+/* 150 */,
+/* 151 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

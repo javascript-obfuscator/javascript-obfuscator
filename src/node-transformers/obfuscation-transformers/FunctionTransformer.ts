@@ -9,11 +9,9 @@ import { IObfuscationReplacer } from '../../interfaces/node-transformers/IObfusc
 import { IObfuscationReplacerWithStorage } from '../../interfaces/node-transformers/IObfuscationReplacerWithStorage';
 
 import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscationReplacers';
-import { NodeType } from '../../enums/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
-import { NodeUtils } from '../../node/NodeUtils';
 
 /**
  * replaces:
@@ -63,9 +61,9 @@ export class FunctionTransformer extends AbstractNodeTransformer {
     private storeFunctionParams (functionNode: ESTree.Function, nodeIdentifier: number): void {
         functionNode.params
             .forEach((paramsNode: ESTree.Node) => {
-                NodeUtils.typedTraverse(paramsNode, NodeType.Identifier, {
-                    enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name, nodeIdentifier)
-                });
+                if (Node.isIdentifierNode(paramsNode)) {
+                    this.identifierReplacer.storeNames(paramsNode.name, nodeIdentifier);
+                }
             });
     }
 

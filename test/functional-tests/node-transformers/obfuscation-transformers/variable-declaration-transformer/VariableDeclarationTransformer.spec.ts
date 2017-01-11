@@ -146,4 +146,22 @@ describe('VariableDeclarationTransformer', () => {
             assert.match(obfuscationResult.getObfuscatedCode(),  /_0x([a-f0-9]){4,6}\['\\x74\\x65\\x73\\x74'\]/);
         });
     });
+
+    describe('object pattern as argument', () => {
+        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+            readFileAsString(__dirname + '/fixtures/object-pattern.js'),
+            {
+                ...NO_CUSTOM_NODES_PRESET
+            }
+        );
+        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+
+        it('shouldn\'t transform object pattern variable declarator', () => {
+            const objectPatternVariableDeclarator: RegExp = /var *\{ *bar *\} *= *\{ *'\\x62\\x61\\x72' *: *'\\x66\\x6f\\x6f' *\};/;
+            const variableUsageMatch: RegExp = /console\['\\x6c\\x6f\\x67'\]\(bar\);/;
+
+            assert.match(obfuscatedCode, objectPatternVariableDeclarator);
+            assert.match(obfuscatedCode, variableUsageMatch);
+        });
+    });
 });

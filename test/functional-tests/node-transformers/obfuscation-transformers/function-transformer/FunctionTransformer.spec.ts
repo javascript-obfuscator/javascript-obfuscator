@@ -34,4 +34,22 @@ describe('FunctionTransformer', () => {
             assert.equal(/variable *= *0x6;/.test(obfuscatedCode), true);
         });
     });
+
+    describe('object pattern as argument', () => {
+        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+            readFileAsString(__dirname + '/fixtures/object-pattern-as-argument.js'),
+            {
+                ...NO_CUSTOM_NODES_PRESET
+            }
+        );
+        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+
+        it('shouldn\'t transform function parameter object pattern identifier', () => {
+            const functionParameterMatch: RegExp = /function *\(\{ *bar *\}\) *\{/;
+            const functionBodyMatch: RegExp = /return *bar;/;
+
+            assert.match(obfuscatedCode, functionParameterMatch);
+            assert.match(obfuscatedCode, functionBodyMatch);
+        });
+    });
 });

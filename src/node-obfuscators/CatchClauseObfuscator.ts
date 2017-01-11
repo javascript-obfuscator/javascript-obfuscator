@@ -4,12 +4,9 @@ import * as ESTree from 'estree';
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../interfaces/IOptions';
 
-import { NodeType } from '../enums/NodeType';
-
 import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
 import { IdentifierReplacer } from './replacers/IdentifierReplacer';
 import { Node } from '../node/Node';
-import { NodeUtils } from '../node/NodeUtils';
 
 /**
  * replaces:
@@ -47,9 +44,9 @@ export class CatchClauseObfuscator extends AbstractNodeObfuscator {
      * @param catchClauseNode
      */
     private storeCatchClauseParam (catchClauseNode: ESTree.CatchClause): void {
-        NodeUtils.typedReplace(catchClauseNode.param, NodeType.Identifier, {
-            enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
-        });
+        if (Node.isIdentifierNode(catchClauseNode.param)) {
+            this.identifierReplacer.storeNames(catchClauseNode.param.name);
+        }
     }
 
     /**
@@ -59,7 +56,12 @@ export class CatchClauseObfuscator extends AbstractNodeObfuscator {
         estraverse.replace(catchClauseNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isReplaceableIdentifierNode(node, parentNode)) {
-                    node.name = this.identifierReplacer.replace(node.name);
+                    const newNodeName: string = this.identifierReplacer.replace(node.name);
+
+                    if (node.name !== newNodeName) {
+                        node.name = newNodeName;
+                        node.obfuscated = true;
+                    }
                 }
             }
         });

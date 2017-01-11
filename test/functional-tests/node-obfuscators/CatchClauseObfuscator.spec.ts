@@ -35,4 +35,28 @@ describe('CatchClauseObfuscator', () => {
             assert.equal(firstMatch, secondMatch);
         });
     });
+
+    describe('object pattern as parameter', () => {
+        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+            `
+                (function () {
+                    try {
+                    
+                    } catch ({ name }) {
+                        return name;
+                    }
+                })();
+            `,
+            NO_CUSTOM_NODES_PRESET
+        );
+        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+
+        it('shouldn\'t transform function parameter object pattern identifier', () => {
+            const functionParameterMatch: RegExp = /\} *catch *\(\{ *name *\}\) *\{/;
+            const functionBodyMatch: RegExp = /return *name;/;
+
+            assert.match(obfuscatedCode, functionParameterMatch);
+            assert.match(obfuscatedCode, functionBodyMatch);
+        });
+    });
 });

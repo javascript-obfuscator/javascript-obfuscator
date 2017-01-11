@@ -49,7 +49,7 @@ describe('FunctionObfuscator', () => {
                     }
                 })();
             `,
-            NO_CUSTOM_NODES_PRESET
+            Object.assign({}, NO_CUSTOM_NODES_PRESET)
         );
         const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
 

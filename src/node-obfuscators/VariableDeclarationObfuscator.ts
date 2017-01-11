@@ -65,9 +65,9 @@ export class VariableDeclarationObfuscator extends AbstractNodeObfuscator {
     private storeVariableNames (variableDeclarationNode: ESTree.VariableDeclaration): void {
         variableDeclarationNode.declarations
             .forEach((declarationNode: ESTree.VariableDeclarator) => {
-                NodeUtils.typedReplace(declarationNode.id, NodeType.Identifier, {
-                    enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
-                });
+                if (Node.isIdentifierNode(declarationNode.id)) {
+                    this.identifierReplacer.storeNames(declarationNode.id.name);
+                }
             });
     }
 

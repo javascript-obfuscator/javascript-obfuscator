@@ -3023,11 +3023,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var estraverse = __webpack_require__(4);
-var NodeType_1 = __webpack_require__(6);
 var AbstractNodeObfuscator_1 = __webpack_require__(8);
 var IdentifierReplacer_1 = __webpack_require__(12);
 var Node_1 = __webpack_require__(2);
-var NodeUtils_1 = __webpack_require__(1);
 
 var FunctionObfuscator = function (_AbstractNodeObfuscat) {
     _inherits(FunctionObfuscator, _AbstractNodeObfuscat);
@@ -3053,11 +3051,9 @@ var FunctionObfuscator = function (_AbstractNodeObfuscat) {
             var _this2 = this;
 
             functionNode.params.forEach(function (paramsNode) {
-                NodeUtils_1.NodeUtils.typedReplace(paramsNode, NodeType_1.NodeType.Identifier, {
-                    enter: function enter(node) {
-                        return _this2.identifierReplacer.storeNames(node.name);
-                    }
-                });
+                if (Node_1.Node.isIdentifierNode(paramsNode)) {
+                    _this2.identifierReplacer.storeNames(paramsNode.name);
+                }
             });
         }
     }, {
@@ -3505,11 +3501,9 @@ var VariableDeclarationObfuscator = function (_AbstractNodeObfuscat) {
             var _this2 = this;
 
             variableDeclarationNode.declarations.forEach(function (declarationNode) {
-                NodeUtils_1.NodeUtils.typedReplace(declarationNode.id, NodeType_1.NodeType.Identifier, {
-                    enter: function enter(node) {
-                        return _this2.identifierReplacer.storeNames(node.name);
-                    }
-                });
+                if (Node_1.Node.isIdentifierNode(declarationNode.id)) {
+                    _this2.identifierReplacer.storeNames(declarationNode.id.name);
+                }
             });
         }
     }, {

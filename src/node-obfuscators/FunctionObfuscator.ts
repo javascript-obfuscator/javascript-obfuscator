@@ -4,12 +4,9 @@ import * as ESTree from 'estree';
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../interfaces/IOptions';
 
-import { NodeType } from '../enums/NodeType';
-
 import { AbstractNodeObfuscator } from './AbstractNodeObfuscator';
 import { IdentifierReplacer } from './replacers/IdentifierReplacer';
 import { Node } from '../node/Node';
-import { NodeUtils } from '../node/NodeUtils';
 
 /**
  * replaces:
@@ -49,9 +46,9 @@ export class FunctionObfuscator extends AbstractNodeObfuscator {
     private storeFunctionParams (functionNode: ESTree.Function): void {
         functionNode.params
             .forEach((paramsNode: ESTree.Node) => {
-                NodeUtils.typedReplace(paramsNode, NodeType.Identifier, {
-                    enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name)
-                });
+                if (Node.isIdentifierNode(paramsNode)) {
+                    this.identifierReplacer.storeNames(paramsNode.name);
+                }
             });
     }
 

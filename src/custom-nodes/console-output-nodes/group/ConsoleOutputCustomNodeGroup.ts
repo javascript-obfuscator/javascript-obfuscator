@@ -96,7 +96,7 @@ export class ConsoleOutputCustomNodeGroup extends AbstractCustomNodeGroup {
             return;
         }
 
-        const callsControllerFunctionName: string = RandomGeneratorUtils.getRandomVariableName(6, true, true);
+        const callsControllerFunctionName: string = RandomGeneratorUtils.getRandomVariableName(6);
 
         const consoleOutputDisableExpressionNode: ICustomNode = this.customNodeFactory(CustomNodes.ConsoleOutputDisableExpressionNode);
         const nodeCallsControllerFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.NodeCallsControllerFunctionNode);

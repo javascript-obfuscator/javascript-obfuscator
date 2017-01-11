@@ -11,6 +11,11 @@ export class RandomGeneratorUtils {
     /**
      * @type {string}
      */
+    public static readonly randomGeneratorPoolHexadecimal: string = 'abcdef0123456789';
+
+    /**
+     * @type {string}
+     */
     public static readonly randomGeneratorPoolWithNumbers: string = `${RandomGeneratorUtils.randomGeneratorPool}0123456789`;
 
     /**
@@ -87,12 +92,10 @@ export class RandomGeneratorUtils {
 
     /**
      * @param length
-     * @param withPrefix
-     * @param unique
      * @returns {string}
      */
-    public static getRandomVariableName (length: number, withPrefix: boolean, unique: boolean): string {
-        const prefix: string = withPrefix ? `_${Utils.hexadecimalPrefix}` : '';
+    public static getRandomVariableName (length: number): string {
+        const prefix: string = `_${Utils.hexadecimalPrefix}`;
         const rangeMinInteger: number = 10000;
         const rangeMaxInteger: number = 99999999;
         const randomVariableName: string = `${prefix}${(
@@ -101,8 +104,8 @@ export class RandomGeneratorUtils {
             )
         ).substr(0, length)}`;
 
-        if (unique && RandomGeneratorUtils.randomVariableNameSet.has(randomVariableName)) {
-            return RandomGeneratorUtils.getRandomVariableName(length, withPrefix, unique);
+        if (RandomGeneratorUtils.randomVariableNameSet.has(randomVariableName)) {
+            return RandomGeneratorUtils.getRandomVariableName(length);
         }
 
         RandomGeneratorUtils.randomVariableNameSet.add(randomVariableName);

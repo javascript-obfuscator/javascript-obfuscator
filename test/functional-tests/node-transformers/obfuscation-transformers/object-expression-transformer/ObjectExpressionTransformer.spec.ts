@@ -41,7 +41,7 @@ describe('ObjectExpressionTransformer', () => {
 
         assert.match(
             obfuscationResult.getObfuscatedCode(),
-            /var *_0x[a-z0-9]{4,6} *= *\{'\\x61': *_0x[a-z0-9]{4,6}\, *'\\x62': *_0x[a-z0-9]{4,6}\};/
+            /var *_0x[a-f0-9]{4,6} *= *\{'\\x61': *_0x[a-f0-9]{4,6}\, *'\\x62': *_0x[a-f0-9]{4,6}\};/
         );
     });
 });

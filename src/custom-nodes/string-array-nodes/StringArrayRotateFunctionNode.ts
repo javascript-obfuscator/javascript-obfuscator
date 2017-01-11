@@ -76,8 +76,8 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
      * @returns {string}
      */
     protected getTemplate (): string {
-        const timesName: string = RandomGeneratorUtils.getRandomVariableName(6, true, true);
-        const whileFunctionName: string = RandomGeneratorUtils.getRandomVariableName(6, true, true);
+        const timesName: string = RandomGeneratorUtils.getRandomVariableName(6);
+        const whileFunctionName: string = RandomGeneratorUtils.getRandomVariableName(6);
 
         let code: string = '';
 

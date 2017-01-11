@@ -18,7 +18,7 @@ describe('DomainLockNode', () => {
             }
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(), /var _0x([a-z0-9]){4,6} *= *new RegExp/);
+        assert.match(obfuscationResult.getObfuscatedCode(), /var _0x([a-f0-9]){4,6} *= *new RegExp/);
     });
 
     it('should\'t append `DomainLockNode` custom node into the obfuscated code if `domainLock` option is not set', () => {
@@ -30,6 +30,6 @@ describe('DomainLockNode', () => {
             }
         );
 
-        assert.notMatch(obfuscationResult.getObfuscatedCode(), /var _0x([a-z0-9]){4,6} *= *new RegExp/);
+        assert.notMatch(obfuscationResult.getObfuscatedCode(), /var _0x([a-f0-9]){4,6} *= *new RegExp/);
     });
 });

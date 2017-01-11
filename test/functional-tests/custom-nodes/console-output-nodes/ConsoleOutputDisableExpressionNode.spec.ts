@@ -9,7 +9,7 @@ import { readFileAsString } from '../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
 
 describe('ConsoleOutputDisableExpressionNode', () => {
-    const regExp = /(_0x([a-z0-9]){4,6}\['(\\x[a-f0-9]*)*'\]\['(\\x[a-f0-9]*)*'\] *= *_0x([a-z0-9]){4,6};){4}/;
+    const regExp = /(_0x([a-f0-9]){4,6}\['(\\x[a-f0-9]*)*'\]\['(\\x[a-f0-9]*)*'\] *= *_0x([a-f0-9]){4,6};){4}/;
 
     it('should correctly append `ConsoleOutputDisableExpressionNode` custom node into the obfuscated code if `disableConsoleOutput` option is set', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(

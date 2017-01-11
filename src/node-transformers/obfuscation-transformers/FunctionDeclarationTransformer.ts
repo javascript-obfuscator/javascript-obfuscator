@@ -42,7 +42,7 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
      * @param nodeObfuscatorsReplacersFactory
      * @param options
      */
-    constructor(
+    constructor (
         @inject(ServiceIdentifiers.Factory__IObfuscatorReplacer) nodeObfuscatorsReplacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscationReplacer,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -76,9 +76,7 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
      * @param nodeIdentifier
      */
     private storeFunctionName (functionDeclarationNode: ESTree.FunctionDeclaration, nodeIdentifier: number): void {
-        NodeUtils.typedTraverse(functionDeclarationNode.id, NodeType.Identifier, {
-            enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name, nodeIdentifier)
-        });
+        this.identifierReplacer.storeNames(functionDeclarationNode.id.name, nodeIdentifier);
     }
 
     /**

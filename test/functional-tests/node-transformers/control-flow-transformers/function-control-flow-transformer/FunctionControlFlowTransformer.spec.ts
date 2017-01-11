@@ -9,7 +9,7 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 
 describe('FunctionControlFlowTransformer', () => {
-    const variableMatch: string = '_0x([a-z0-9]){4,6}';
+    const variableMatch: string = '_0x([a-f0-9]){4,6}';
     const rootControlFlowStorageNodeMatch: string = `` +
         `var *${variableMatch} *= *\\{` +
             `'(\\\\x[a-f0-9]*){3}' *: *function *${variableMatch} *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
@@ -171,7 +171,7 @@ describe('FunctionControlFlowTransformer', () => {
             );
             const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
             const controlFlowStorageMatch: RegExp = new RegExp(rootControlFlowStorageNodeMatch);
-            const regexp: RegExp = /var *_0x([a-z0-9]){4,6} *= *0x1 *\+ *0x2;/;
+            const regexp: RegExp = /var *_0x([a-f0-9]){4,6} *= *0x1 *\+ *0x2;/;
 
             it('shouldn\'t add `control flow storage` node to the obfuscated code when threshold is 0', () => {
                 assert.match(obfuscatedCode, regexp);

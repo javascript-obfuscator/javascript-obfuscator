@@ -41,14 +41,14 @@ export class FunctionExpressionCalleeDataExtractor extends AbstractCalleeDataExt
     }
 
     /**
-     * @param node
+     * @param targetNode
      * @param name
      * @returns {ESTree.BlockStatement|null}
      */
-    private getCalleeBlockStatement (node: ESTree.Node, name: string): ESTree.BlockStatement|null {
+    private getCalleeBlockStatement (targetNode: ESTree.Node, name: string): ESTree.BlockStatement|null {
         let calleeBlockStatement: ESTree.BlockStatement|null = null;
 
-        estraverse.traverse(node, {
+        estraverse.traverse(targetNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (
                     Node.isFunctionExpressionNode(node) &&

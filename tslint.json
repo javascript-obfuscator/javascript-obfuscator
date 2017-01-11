@@ -29,6 +29,7 @@
       true,
       "always-prefix"
     ],
+    "import-spacing": true,
     "jsdoc-format": true,
     "label-position": true,
     "max-line-length": false,
@@ -66,7 +67,7 @@
     "no-parameter-properties": true,
     "no-reference": true,
     "no-require-imports": false,
-    "no-shadowed-variable": false,
+    "no-shadowed-variable": true,
     "no-string-literal": true,
     "no-string-throw": true,
     "no-switch-case-fall-through": false,
@@ -89,6 +90,7 @@
     "quotemark": false,
     "radix": true,
     "semicolon": [true, "always"],
+    "space-before-function-paren": true,
     "switch-default": false,
     "trailing-comma": false,
     "triple-equals": [
@@ -122,6 +124,8 @@
         "variable-declaration": "space"
       }
     ],
+    "typeof-compare": true,
+    "unified-signatures": true,
     "use-isnan": true,
     "variable-name": false,
     "whitespace": [

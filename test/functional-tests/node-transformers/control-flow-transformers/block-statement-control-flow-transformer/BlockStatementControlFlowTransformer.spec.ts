@@ -28,11 +28,11 @@ describe('BlockStatementControlFlowTransformer', () => {
             const statementRegExp4: RegExp = /console\['log'\]\(0x4\);/;
             const statementRegExp5: RegExp = /console\['log'\]\(0x5\);/;
 
-            const switchCaseRegExp: RegExp = /switch *\(_0x([a-z0-9]){4,6}\[_0x([a-z0-9]){4,6}\+\+\]\) *\{/;
+            const switchCaseRegExp: RegExp = /switch *\(_0x([a-f0-9]){4,6}\[_0x([a-f0-9]){4,6}\+\+\]\) *\{/;
             const switchCaseLengthRegExp: RegExp = /case *'[0-5]': *console\['log'\]\(0x[0-6]\);/g;
             const switchCaseLength: number = obfuscatedCode.match(switchCaseLengthRegExp)!.length;
 
-            const switchCaseMapRegExp: RegExp = /var *_0x(?:[a-z0-9]){4,6} *= *'(.*?)'/;
+            const switchCaseMapRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *'(.*?)'/;
             const switchCaseMapMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(switchCaseMapRegExp);
             const switchCaseMapMatch: string = switchCaseMapMatches[1];
             const switchCaseMap: string[] = switchCaseMapMatch.replace(/\\x7c/g, '|').split('|').sort();
@@ -73,11 +73,11 @@ describe('BlockStatementControlFlowTransformer', () => {
             const statementRegExp4: RegExp = /console\['log'\]\(0x4\);/;
             const statementRegExp5: RegExp = /console\['log'\]\(0x5\);/;
 
-            const switchCaseRegExp: RegExp = /switch *\(_0x([a-z0-9]){4,6}\[_0x([a-z0-9]){4,6}\+\+\]\) *\{/;
+            const switchCaseRegExp: RegExp = /switch *\(_0x([a-f0-9]){4,6}\[_0x([a-f0-9]){4,6}\+\+\]\) *\{/;
             const switchCaseLengthRegExp: RegExp = /case *'[0-5]': *console\['log'\]\(0x[0-6]\);/g;
             const switchCaseLength: number = obfuscatedCode.match(switchCaseLengthRegExp)!.length;
 
-            const switchCaseMapRegExp: RegExp = /var *_0x(?:[a-z0-9]){4,6} *= *'(.*?)'/;
+            const switchCaseMapRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *'(.*?)'/;
             const switchCaseMapMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(switchCaseMapRegExp);
             const switchCaseMapMatch: string = switchCaseMapMatches[1];
             const switchCaseMap: string[] = switchCaseMapMatch.replace(/\\x7c/g, '|').split('|').sort();
@@ -129,7 +129,7 @@ describe('BlockStatementControlFlowTransformer', () => {
             );
             const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
 
-            const statementRegExp: RegExp = /^\(function *\( *\) *\{ *const *_0x([a-z0-9]){4,6} *= *0x1; *console\['(\\x[a-f0-9]*){3}'\]\(0x1\);/;
+            const statementRegExp: RegExp = /^\(function *\( *\) *\{ *const *_0x([a-f0-9]){4,6} *= *0x1; *console\['(\\x[a-f0-9]*){3}'\]\(0x1\);/;
 
             it('shouldn\'t transform block statement if block statement contain variable declaration with `const` kind', () => {
                 assert.match(obfuscatedCode, statementRegExp);
@@ -147,7 +147,7 @@ describe('BlockStatementControlFlowTransformer', () => {
             );
             const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
 
-            const statementRegExp: RegExp = /^\(function *\( *\) *\{ *let *_0x([a-z0-9]){4,6} *= *0x1; *console\['(\\x[a-f0-9]*){3}'\]\(0x1\);/;
+            const statementRegExp: RegExp = /^\(function *\( *\) *\{ *let *_0x([a-f0-9]){4,6} *= *0x1; *console\['(\\x[a-f0-9]*){3}'\]\(0x1\);/;
 
             it('shouldn\'t transform block statement if block statement contain variable declaration with `let` kind', () => {
                 assert.match(obfuscatedCode, statementRegExp);
@@ -201,7 +201,7 @@ describe('BlockStatementControlFlowTransformer', () => {
             );
             const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
 
-            const statementRegExp: RegExp = /^\(function *\( *\) *\{ *function *_0x([a-z0-9]){4,6} *\( *\) *\{ *\} *console\['(\\x[a-f0-9]*){3}'\]\(0x1\);/;
+            const statementRegExp: RegExp = /^\(function *\( *\) *\{ *function *_0x([a-f0-9]){4,6} *\( *\) *\{ *\} *console\['(\\x[a-f0-9]*){3}'\]\(0x1\);/;
 
             it('shouldn\'t transform block statement if block statement contain function declaration', () => {
                 assert.match(obfuscatedCode, statementRegExp);
@@ -221,7 +221,7 @@ describe('BlockStatementControlFlowTransformer', () => {
                 }
             );
 
-            const regExp1: RegExp = /switch *\(_0x([a-z0-9]){4,6}\[_0x([a-z0-9]){4,6}\+\+\]\) *\{/g;
+            const regExp1: RegExp = /switch *\(_0x([a-f0-9]){4,6}\[_0x([a-f0-9]){4,6}\+\+\]\) *\{/g;
             const regExp2: RegExp = /\(function *\( *\) *\{ *console\['(\\x[a-f0-9]*){3}'\]\(0x1\);/g;
             const transformedStatementMatchesLength = obfuscationResult.getObfuscatedCode().match(regExp1)!.length;
             const untouchedStatementMatchesLength = obfuscationResult.getObfuscatedCode().match(regExp2)!.length;

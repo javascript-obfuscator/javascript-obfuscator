@@ -298,7 +298,7 @@ If checked, an interval is used to force the debug mode on the Console tab, maki
 ### `disableConsoleOutput`
 Type: `boolean` Default: `true`
 
-Disables the use of `console.log`, `console.info`, `console.error` and `console.warn` by replacing them with empty functions. This makes the use of the debugger harder.
+Disables the use of `console.log`, `console.info`, `console.error`, `console.warn`, `console.debug`, `console.exception` and `console.trace` by replacing them with empty functions. This makes the use of the debugger harder.
 
 ### `domainLock`
 Type: `string[]` Default: `[]`

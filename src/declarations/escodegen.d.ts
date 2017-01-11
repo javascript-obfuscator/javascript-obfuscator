@@ -6,5 +6,5 @@ declare module 'escodegen' {
      * @param options
      * @returns IGeneratorOutput
      */
-    export function generate(ast: any, options?: GenerateOptions): IGeneratorOutput;
+    export function generate (ast: any, options?: GenerateOptions): IGeneratorOutput;
 }

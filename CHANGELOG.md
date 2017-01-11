@@ -1,5 +1,17 @@
 Change Log
 ===
+v0.8.6
+---
+* additional fixes for https://github.com/javascript-obfuscator/javascript-obfuscator/issues/29
+
+v0.8.5
+---
+* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/29
+
+v0.8.4
+---
+* fixed https://github.com/javascript-obfuscator/webpack-obfuscator/issues/13
+
 v0.8.3
 ---
 * `selfDefending` option now disabled by default.

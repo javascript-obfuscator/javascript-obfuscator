@@ -32,9 +32,9 @@ describe('FunctionDeclarationTransformer', () => {
 
         it('should transform function name if `functionDeclaration` parent block scope is not a `ProgramNode`', () => {
             const functionNameIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(/function *_0x[a-z0-9]{4,6} *\(\) *\{/);
+                .match(/function *_0x[a-f0-9]{4,6} *\(\) *\{/);
             const functionCallIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(/_0x[a-z0-9]{4,6} *\( *\);/);
+                .match(/_0x[a-f0-9]{4,6} *\( *\);/);
 
             const functionParamIdentifierName: string = (<RegExpMatchArray>functionNameIdentifierMatch)[1];
             const functionBodyIdentifierName: string = (<RegExpMatchArray>functionCallIdentifierMatch)[1];

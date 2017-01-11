@@ -31,8 +31,8 @@ describe('MemberExpressionTransformer', () => {
                 }
             );
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-z0-9]){4} *= *\['\\x6c\\x6f\\x67'\];/);
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *console\[_0x([a-z0-9]){4}\('0x0'\)\];/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-f0-9]){4} *= *\['\\x6c\\x6f\\x67'\];/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *console\[_0x([a-f0-9]){4}\('0x0'\)\];/);
         });
     });
 
@@ -47,8 +47,8 @@ describe('MemberExpressionTransformer', () => {
                 }
             );
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-z0-9]){4} *= *\['\\x6c\\x6f\\x67'\];/);
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *console\[_0x([a-z0-9]){4}\('0x0'\)\];/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-f0-9]){4} *= *\['\\x6c\\x6f\\x67'\];/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *console\[_0x([a-f0-9]){4}\('0x0'\)\];/);
         });
 
         it('should ignore square brackets call with identifier value', () => {

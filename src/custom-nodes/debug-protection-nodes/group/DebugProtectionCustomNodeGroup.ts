@@ -89,7 +89,7 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
             return;
         }
 
-        const debugProtectionFunctionName: string = RandomGeneratorUtils.getRandomVariableName(6, true, true);
+        const debugProtectionFunctionName: string = RandomGeneratorUtils.getRandomVariableName(6);
 
         const debugProtectionFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.DebugProtectionFunctionNode);
         const debugProtectionFunctionCallNode: ICustomNode = this.customNodeFactory(CustomNodes.DebugProtectionFunctionCallNode);

@@ -9,11 +9,9 @@ import { IObfuscationReplacer } from '../../interfaces/node-transformers/IObfusc
 import { IObfuscationReplacerWithStorage } from '../../interfaces/node-transformers/IObfuscationReplacerWithStorage';
 
 import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscationReplacers';
-import { NodeType } from '../../enums/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
-import { NodeUtils } from '../../node/NodeUtils';
 
 /**
  * replaces:
@@ -61,9 +59,9 @@ export class CatchClauseTransformer extends AbstractNodeTransformer {
      * @param nodeIdentifier
      */
     private storeCatchClauseParam (catchClauseNode: ESTree.CatchClause, nodeIdentifier: number): void {
-        NodeUtils.typedTraverse(catchClauseNode.param, NodeType.Identifier, {
-            enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name, nodeIdentifier)
-        });
+        if (Node.isIdentifierNode(catchClauseNode.param)) {
+            this.identifierReplacer.storeNames(catchClauseNode.param.name, nodeIdentifier);
+        }
     }
 
     /**
@@ -74,7 +72,12 @@ export class CatchClauseTransformer extends AbstractNodeTransformer {
         estraverse.replace(catchClauseNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isReplaceableIdentifierNode(node, parentNode)) {
-                    node.name = this.identifierReplacer.replace(node.name, nodeIdentifier);
+                    const newNodeName: string = this.identifierReplacer.replace(node.name, nodeIdentifier);
+
+                    if (node.name !== newNodeName) {
+                        node.name = newNodeName;
+                        node.obfuscated = true;
+                    }
                 }
             }
         });

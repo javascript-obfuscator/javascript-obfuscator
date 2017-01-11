@@ -147,7 +147,7 @@ describe('VariableDeclarationTransformer', () => {
         });
     });
 
-    describe('object pattern as argument', () => {
+    describe('object pattern as variable declarator', () => {
         const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             readFileAsString(__dirname + '/fixtures/object-pattern.js'),
             {

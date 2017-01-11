@@ -5521,10 +5521,8 @@ var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var estraverse = __webpack_require__(18);
 var NodeObfuscationReplacers_1 = __webpack_require__(20);
-var NodeType_1 = __webpack_require__(15);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
 var Node_1 = __webpack_require__(12);
-var NodeUtils_1 = __webpack_require__(8);
 var CatchClauseTransformer = function (_AbstractNodeTransfor) {
     (0, _inherits3.default)(CatchClauseTransformer, _AbstractNodeTransfor);
 
@@ -5548,23 +5546,23 @@ var CatchClauseTransformer = function (_AbstractNodeTransfor) {
     }, {
         key: "storeCatchClauseParam",
         value: function storeCatchClauseParam(catchClauseNode, nodeIdentifier) {
-            var _this2 = this;
-
-            NodeUtils_1.NodeUtils.typedTraverse(catchClauseNode.param, NodeType_1.NodeType.Identifier, {
-                enter: function enter(node) {
-                    return _this2.identifierReplacer.storeNames(node.name, nodeIdentifier);
-                }
-            });
+            if (Node_1.Node.isIdentifierNode(catchClauseNode.param)) {
+                this.identifierReplacer.storeNames(catchClauseNode.param.name, nodeIdentifier);
+            }
         }
     }, {
         key: "replaceCatchClauseParam",
         value: function replaceCatchClauseParam(catchClauseNode, nodeIdentifier) {
-            var _this3 = this;
+            var _this2 = this;
 
             estraverse.replace(catchClauseNode, {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
-                        node.name = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
+                        var newNodeName = _this2.identifierReplacer.replace(node.name, nodeIdentifier);
+                        if (node.name !== newNodeName) {
+                            node.name = newNodeName;
+                            node.obfuscated = true;
+                        }
                     }
                 }
             });
@@ -5649,18 +5647,12 @@ var FunctionDeclarationTransformer = function (_AbstractNodeTransfor) {
     }, {
         key: "storeFunctionName",
         value: function storeFunctionName(functionDeclarationNode, nodeIdentifier) {
-            var _this2 = this;
-
-            NodeUtils_1.NodeUtils.typedTraverse(functionDeclarationNode.id, NodeType_1.NodeType.Identifier, {
-                enter: function enter(node) {
-                    return _this2.identifierReplacer.storeNames(node.name, nodeIdentifier);
-                }
-            });
+            this.identifierReplacer.storeNames(functionDeclarationNode.id.name, nodeIdentifier);
         }
     }, {
         key: "replaceFunctionName",
         value: function replaceFunctionName(scopeNode, nodeIdentifier) {
-            var _this3 = this;
+            var _this2 = this;
 
             var replaceableIdentifiersForCurrentScope = void 0;
             if (this.replaceableIdentifiers.has(scopeNode)) {
@@ -5696,7 +5688,7 @@ var FunctionDeclarationTransformer = function (_AbstractNodeTransfor) {
             estraverse.replace(scopeNode, {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
-                        var newNodeName = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
+                        var newNodeName = _this2.identifierReplacer.replace(node.name, nodeIdentifier);
                         if (node.name !== newNodeName) {
                             node.name = newNodeName;
                         } else {
@@ -5841,10 +5833,8 @@ var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var estraverse = __webpack_require__(18);
 var NodeObfuscationReplacers_1 = __webpack_require__(20);
-var NodeType_1 = __webpack_require__(15);
 var AbstractNodeTransformer_1 = __webpack_require__(17);
 var Node_1 = __webpack_require__(12);
-var NodeUtils_1 = __webpack_require__(8);
 var LabeledStatementTransformer = function (_AbstractNodeTransfor) {
     (0, _inherits3.default)(LabeledStatementTransformer, _AbstractNodeTransfor);
 
@@ -5868,23 +5858,17 @@ var LabeledStatementTransformer = function (_AbstractNodeTransfor) {
     }, {
         key: "storeLabeledStatementName",
         value: function storeLabeledStatementName(labeledStatementNode, nodeIdentifier) {
-            var _this2 = this;
-
-            NodeUtils_1.NodeUtils.typedTraverse(labeledStatementNode.label, NodeType_1.NodeType.Identifier, {
-                enter: function enter(node) {
-                    return _this2.identifierReplacer.storeNames(node.name, nodeIdentifier);
-                }
-            });
+            this.identifierReplacer.storeNames(labeledStatementNode.label.name, nodeIdentifier);
         }
     }, {
         key: "replaceLabeledStatementName",
         value: function replaceLabeledStatementName(labeledStatementNode, nodeIdentifier) {
-            var _this3 = this;
+            var _this2 = this;
 
             estraverse.replace(labeledStatementNode, {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isLabelIdentifierNode(node, parentNode)) {
-                        node.name = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
+                        node.name = _this2.identifierReplacer.replace(node.name, nodeIdentifier);
                     }
                 }
             });

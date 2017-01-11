@@ -9,11 +9,9 @@ import { IObfuscationReplacer } from '../../interfaces/node-transformers/IObfusc
 import { IObfuscationReplacerWithStorage } from '../../interfaces/node-transformers/IObfuscationReplacerWithStorage';
 
 import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscationReplacers';
-import { NodeType } from '../../enums/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
-import { NodeUtils } from '../../node/NodeUtils';
 
 /**
  * replaces:
@@ -69,9 +67,7 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
      * @param nodeIdentifier
      */
     private storeLabeledStatementName (labeledStatementNode: ESTree.LabeledStatement, nodeIdentifier: number): void {
-        NodeUtils.typedTraverse(labeledStatementNode.label, NodeType.Identifier, {
-            enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name, nodeIdentifier)
-        });
+        this.identifierReplacer.storeNames(labeledStatementNode.label.name, nodeIdentifier);
     }
 
     /**

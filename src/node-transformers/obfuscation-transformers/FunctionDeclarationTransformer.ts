@@ -76,9 +76,7 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
      * @param nodeIdentifier
      */
     private storeFunctionName (functionDeclarationNode: ESTree.FunctionDeclaration, nodeIdentifier: number): void {
-        NodeUtils.typedTraverse(functionDeclarationNode.id, NodeType.Identifier, {
-            enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name, nodeIdentifier)
-        });
+        this.identifierReplacer.storeNames(functionDeclarationNode.id.name, nodeIdentifier);
     }
 
     /**

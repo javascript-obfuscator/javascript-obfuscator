@@ -77,48 +77,91 @@ describe('VariableDeclarationTransformer', () => {
     });
 
     describe(`variable calls before variable declaration when function param has the same name as variables name`, () => {
-        let obfuscationResult: IObfuscationResult,
-            functionParamIdentifierName: string|null,
-            innerFunctionParamIdentifierName: string|null,
-            constructorIdentifierName: string|null,
-            objectIdentifierName: string|null,
-            variableDeclarationIdentifierName: string|null;
+        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+            readFileAsString(__dirname + '/fixtures/variable-call-before-variable-declaration-2.js'),
+            {
+                ...NO_CUSTOM_NODES_PRESET
+            }
+        );
+        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
 
-        beforeEach(() => {
-            obfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/variable-call-before-variable-declaration-2.js'),
-                {
-                    ...NO_CUSTOM_NODES_PRESET
-                }
-            );
+        const functionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+            .match(/function *_0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\,(_0x[a-f0-9]{4,6})\) *\{/);
+        const innerFunctionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+            .match(/function _0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\) *\{/);
+        const constructorIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+            .match(/console\['\\x6c\\x6f\\x67'\]\((_0x[a-f0-9]{4,6})\)/);
+        const objectIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+            .match(/return\{'\\x74':(_0x[a-f0-9]{4,6})\}/);
+        const variableDeclarationIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+            .match(/var *(_0x[a-f0-9]{4,6});/);
+
+        const outerFunctionParamIdentifierName: string|null = (<RegExpMatchArray>functionParamIdentifierMatch)[1];
+        const innerFunctionParamIdentifierName: string|null = (<RegExpMatchArray>innerFunctionParamIdentifierMatch)[1];
+        const constructorIdentifierName: string|null = (<RegExpMatchArray>constructorIdentifierMatch)[1];
+        const objectIdentifierName: string|null = (<RegExpMatchArray>objectIdentifierMatch)[1];
+        const variableDeclarationIdentifierName: string|null = (<RegExpMatchArray>variableDeclarationIdentifierMatch)[1];
+
+        it('should\'t name variables inside inner function with names from outer function params', () => {
+            assert.notEqual(outerFunctionParamIdentifierName, constructorIdentifierName);
+            assert.notEqual(outerFunctionParamIdentifierName, innerFunctionParamIdentifierName);
         });
 
-        it('should correct transform variables inside function body', () => {
-            const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
-            const functionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(/function *_0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\,(_0x[a-f0-9]{4,6})\) *\{/);
-            const innerFunctionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(/function _0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\) *\{/);
-            const constructorIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(/console\['\\x6c\\x6f\\x67'\]\((_0x[a-f0-9]{4,6})\)/);
-            const objectIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(/return\{'\\x74':(_0x[a-f0-9]{4,6})\}/);
-            const variableDeclarationIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(/var *(_0x[a-f0-9]{4,6});/);
+        it('should correct transform variables inside outer function body', () => {
+            assert.equal(outerFunctionParamIdentifierName, objectIdentifierName);
+            assert.equal(outerFunctionParamIdentifierName, variableDeclarationIdentifierName);
+        });
 
-            functionParamIdentifierName = (<RegExpMatchArray>functionParamIdentifierMatch)[1];
-            innerFunctionParamIdentifierName = (<RegExpMatchArray>innerFunctionParamIdentifierMatch)[1];
-            constructorIdentifierName = (<RegExpMatchArray>constructorIdentifierMatch)[1];
-            objectIdentifierName = (<RegExpMatchArray>objectIdentifierMatch)[1];
-            variableDeclarationIdentifierName = (<RegExpMatchArray>variableDeclarationIdentifierMatch)[1];
+        it('should correct transform variables inside inner function body', () => {
+            assert.equal(innerFunctionParamIdentifierName, constructorIdentifierName);
+        });
 
+        it('should keep equal names after transformation for variables with same names', () => {
+            assert.equal(variableDeclarationIdentifierName, objectIdentifierName);
+        });
+    });
+
+    describe(`variable calls before variable declaration when catch clause param has the same name as variables name`, () => {
+        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+            readFileAsString(__dirname + '/fixtures/variable-call-before-variable-declaration-3.js'),
+            {
+                ...NO_CUSTOM_NODES_PRESET
+            }
+        );
+        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+
+        const catchClauseParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+            .match(/catch *\((_0x[a-f0-9]{4,6})\) *\{/);
+        const innerFunctionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+            .match(/function _0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\) *\{/);
+        const constructorIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+            .match(/console\['\\x6c\\x6f\\x67'\]\((_0x[a-f0-9]{4,6})\)/);
+        const objectIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+            .match(/return\{'\\x74':(_0x[a-f0-9]{4,6})\}/);
+        const variableDeclarationIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+            .match(/var *(_0x[a-f0-9]{4,6});/);
+
+        const functionParamIdentifierName: string|null = (<RegExpMatchArray>catchClauseParamIdentifierMatch)[1];
+        const innerFunctionParamIdentifierName: string|null = (<RegExpMatchArray>innerFunctionParamIdentifierMatch)[1];
+        const constructorIdentifierName: string|null = (<RegExpMatchArray>constructorIdentifierMatch)[1];
+        const objectIdentifierName: string|null = (<RegExpMatchArray>objectIdentifierMatch)[1];
+        const variableDeclarationIdentifierName: string|null = (<RegExpMatchArray>variableDeclarationIdentifierMatch)[1];
+
+        it('should\'t name variables inside inner function with names from catch clause param', () => {
             assert.notEqual(functionParamIdentifierName, constructorIdentifierName);
             assert.notEqual(functionParamIdentifierName, innerFunctionParamIdentifierName);
+        });
 
+        it('should correct transform variables inside catch clause body', () => {
             assert.equal(functionParamIdentifierName, objectIdentifierName);
             assert.equal(functionParamIdentifierName, variableDeclarationIdentifierName);
+        });
 
+        it('should correct transform variables inside inner function body', () => {
             assert.equal(innerFunctionParamIdentifierName, constructorIdentifierName);
+        });
+
+        it('should keep equal names after transformation for variables with same names', () => {
             assert.equal(variableDeclarationIdentifierName, objectIdentifierName);
         });
     });

@@ -35,9 +35,9 @@ describe('FunctionTransformer', () => {
         });
     });
 
-    describe('object pattern as argument', () => {
+    describe('object pattern as parameter', () => {
         const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/object-pattern-as-argument.js'),
+            readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter.js'),
             {
                 ...NO_CUSTOM_NODES_PRESET
             }

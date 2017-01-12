@@ -182,12 +182,12 @@ export class JavaScriptObfuscatorCLI {
             .option(
                 '--domainLock <list>',
                 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)',
-                (val: string) => val.split(',')
+                (value: string) => value.split(',')
             )
             .option(
                 '--reservedNames <list>',
                 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)',
-                (val: string) => val.split(',')
+                (value: string) => value.split(',')
             )
             .option(
                 '--rotateStringArray <boolean>', 'Disable rotation of unicode array values during obfuscation',
@@ -286,7 +286,10 @@ export class JavaScriptObfuscatorCLI {
             options.sourceMapFileName || ''
         );
 
-        options.sourceMapFileName = path.basename(outputSourceMapPath);
+        options = {
+            ...options,
+            sourceMapFileName: path.basename(outputSourceMapPath)
+        };
 
         const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(this.data, options);
 

@@ -5,12 +5,12 @@ import { IObfuscationReplacer } from '../../../interfaces/node-transformers/IObf
 
 import { NodeObfuscatorsReplacers } from '../../../enums/container/NodeObfuscationReplacers';
 
-import { BooleanLiteralReplacer } from '../../../node-transformers/obfuscation-transformers/replacers/BooleanLiteralReplacer';
-import { IdentifierReplacer } from '../../../node-transformers/obfuscation-transformers/replacers/IdentifierReplacer';
-import { NumberLiteralReplacer } from '../../../node-transformers/obfuscation-transformers/replacers/NumberLiteralReplacer';
-import { StringLiteralReplacer } from '../../../node-transformers/obfuscation-transformers/replacers/StringLiteralReplacer';
+import { BooleanLiteralReplacer } from '../../../node-transformers/obfuscating-transformers/replacers/BooleanLiteralReplacer';
+import { IdentifierReplacer } from '../../../node-transformers/obfuscating-transformers/replacers/IdentifierReplacer';
+import { NumberLiteralReplacer } from '../../../node-transformers/obfuscating-transformers/replacers/NumberLiteralReplacer';
+import { StringLiteralReplacer } from '../../../node-transformers/obfuscating-transformers/replacers/StringLiteralReplacer';
 
-export const obfuscationTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
+export const obfuscatingTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     bind<IObfuscationReplacer>(ServiceIdentifiers.IObfuscatorReplacer)
         .to(BooleanLiteralReplacer)
         .whenTargetNamed(NodeObfuscatorsReplacers.BooleanReplacer);

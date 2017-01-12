@@ -8,16 +8,16 @@ import { NodeTransformers } from '../../../enums/container/NodeTransformers';
 import { FunctionControlFlowTransformer } from '../../../node-transformers/control-flow-transformers/FunctionControlFlowTransformer';
 
 import { BlockStatementControlFlowTransformer } from '../../../node-transformers/control-flow-transformers/BlockStatementControlFlowTransformer';
-import { CatchClauseTransformer } from '../../../node-transformers/obfuscation-transformers/CatchClauseTransformer';
-import { FunctionDeclarationTransformer } from '../../../node-transformers/obfuscation-transformers/FunctionDeclarationTransformer';
-import { FunctionTransformer } from '../../../node-transformers/obfuscation-transformers/FunctionTransformer';
-import { LabeledStatementTransformer } from '../../../node-transformers/obfuscation-transformers/LabeledStatementTransformer';
-import { LiteralTransformer } from '../../../node-transformers/obfuscation-transformers/LiteralTransformer';
+import { CatchClauseTransformer } from '../../../node-transformers/obfuscating-transformers/CatchClauseTransformer';
+import { FunctionDeclarationTransformer } from '../../../node-transformers/obfuscating-transformers/FunctionDeclarationTransformer';
+import { FunctionTransformer } from '../../../node-transformers/obfuscating-transformers/FunctionTransformer';
+import { LabeledStatementTransformer } from '../../../node-transformers/obfuscating-transformers/LabeledStatementTransformer';
+import { LiteralTransformer } from '../../../node-transformers/obfuscating-transformers/LiteralTransformer';
 import { MemberExpressionTransformer } from '../../../node-transformers/converting-transformers/MemberExpressionTransformer';
 import { MethodDefinitionTransformer } from '../../../node-transformers/converting-transformers/MethodDefinitionTransformer';
-import { ObjectExpressionTransformer } from '../../../node-transformers/obfuscation-transformers/ObjectExpressionTransformer';
+import { ObjectExpressionTransformer } from '../../../node-transformers/obfuscating-transformers/ObjectExpressionTransformer';
 import { TemplateLiteralTransformer } from '../../../node-transformers/converting-transformers/TemplateLiteralTransformer';
-import { VariableDeclarationTransformer } from '../../../node-transformers/obfuscation-transformers/VariableDeclarationTransformer';
+import { VariableDeclarationTransformer } from '../../../node-transformers/obfuscating-transformers/VariableDeclarationTransformer';
 
 export const nodeTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // control flow transformers

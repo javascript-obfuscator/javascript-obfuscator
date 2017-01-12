@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from './ServiceIdentifiers';
 
 import { controlFlowTransformersModule } from './modules/node-transformers/ControlFlowTransformersModule';
 import { customNodesModule } from './modules/custom-nodes/CustomNodesModule';
-import { obfuscationTransformersModule } from './modules/node-transformers/ObfuscationTransformersModule';
+import { obfuscatingTransformersModule } from './modules/node-transformers/ObfuscatingTransformersModule';
 import { nodeTransformersModule } from './modules/node-transformers/NodeTransformersModule';
 import { stackTraceAnalyzerModule } from './modules/stack-trace-analyzer/StackTraceAnalyzerModule';
 import { storagesModule } from './modules/storages/StoragesModule';
@@ -88,7 +88,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         this.container.load(customNodesModule);
         this.container.load(nodeTransformersModule);
         this.container.load(controlFlowTransformersModule);
-        this.container.load(obfuscationTransformersModule);
+        this.container.load(obfuscatingTransformersModule);
     }
 
     /**

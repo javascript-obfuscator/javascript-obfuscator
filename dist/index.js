@@ -90,7 +90,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 151);
+/******/ 	return __webpack_require__(__webpack_require__.s = 150);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -759,7 +759,7 @@ var _getIterator2 = __webpack_require__(21);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _toConsumableArray2 = __webpack_require__(26);
+var _toConsumableArray2 = __webpack_require__(24);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
@@ -1409,6 +1409,12 @@ var NodeObfuscatorsReplacers;
 
 /***/ }),
 /* 24 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/helpers/toConsumableArray");
+
+/***/ }),
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1463,7 +1469,7 @@ var JavaScriptObfuscator = function () {
 exports.JavaScriptObfuscator = JavaScriptObfuscator;
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1473,7 +1479,7 @@ var _getIterator2 = __webpack_require__(21);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _toConsumableArray2 = __webpack_require__(26);
+var _toConsumableArray2 = __webpack_require__(24);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
@@ -1596,12 +1602,6 @@ var NodeAppender = function () {
 }();
 
 exports.NodeAppender = NodeAppender;
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/helpers/toConsumableArray");
 
 /***/ }),
 /* 27 */
@@ -2193,7 +2193,7 @@ exports.DEFAULT_PRESET = (0, _freeze2.default)({
 "use strict";
 
 
-var _toConsumableArray2 = __webpack_require__(26);
+var _toConsumableArray2 = __webpack_require__(24);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
@@ -2446,13 +2446,17 @@ exports.ObfuscationResult = ObfuscationResult;
 "use strict";
 
 
-var _map = __webpack_require__(11);
-
-var _map2 = _interopRequireDefault(_map);
-
 var _defineProperty2 = __webpack_require__(140);
 
 var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
+var _toConsumableArray2 = __webpack_require__(24);
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+var _map = __webpack_require__(11);
+
+var _map2 = _interopRequireDefault(_map);
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -2503,7 +2507,7 @@ var Obfuscator = Obfuscator_1 = function () {
             if (this.options.controlFlowFlattening) {
                 astTree = this.transformAstTree(astTree, VisitorDirection_1.VisitorDirection.leave, this.nodeTransformersFactory(Obfuscator_1.controlFlowTransformersMap));
             }
-            astTree = this.transformAstTree(astTree, VisitorDirection_1.VisitorDirection.enter, this.nodeTransformersFactory(Obfuscator_1.nodeTransformersMap));
+            astTree = this.transformAstTree(astTree, VisitorDirection_1.VisitorDirection.enter, this.nodeTransformersFactory(new _map2.default([].concat((0, _toConsumableArray3.default)(Obfuscator_1.convertingTransformersMap), (0, _toConsumableArray3.default)(Obfuscator_1.obfuscatingTransformersMap)))));
             this.obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation, astTree, stackTraceData);
             return astTree;
         }
@@ -2523,7 +2527,8 @@ var Obfuscator = Obfuscator_1 = function () {
     return Obfuscator;
 }();
 Obfuscator.controlFlowTransformersMap = new _map2.default([[NodeType_1.NodeType.BlockStatement, [NodeTransformers_1.NodeTransformers.BlockStatementControlFlowTransformer]], [NodeType_1.NodeType.FunctionDeclaration, [NodeTransformers_1.NodeTransformers.FunctionControlFlowTransformer]], [NodeType_1.NodeType.FunctionExpression, [NodeTransformers_1.NodeTransformers.FunctionControlFlowTransformer]]]);
-Obfuscator.nodeTransformersMap = new _map2.default([[NodeType_1.NodeType.MemberExpression, [NodeTransformers_1.NodeTransformers.MemberExpressionTransformer]], [NodeType_1.NodeType.MethodDefinition, [NodeTransformers_1.NodeTransformers.MethodDefinitionTransformer]], [NodeType_1.NodeType.TemplateLiteral, [NodeTransformers_1.NodeTransformers.TemplateLiteralTransformer]], [NodeType_1.NodeType.ArrowFunctionExpression, [NodeTransformers_1.NodeTransformers.FunctionTransformer]], [NodeType_1.NodeType.ClassDeclaration, [NodeTransformers_1.NodeTransformers.FunctionDeclarationTransformer]], [NodeType_1.NodeType.CatchClause, [NodeTransformers_1.NodeTransformers.CatchClauseTransformer]], [NodeType_1.NodeType.FunctionDeclaration, [NodeTransformers_1.NodeTransformers.FunctionDeclarationTransformer, NodeTransformers_1.NodeTransformers.FunctionTransformer]], [NodeType_1.NodeType.FunctionExpression, [NodeTransformers_1.NodeTransformers.FunctionTransformer]], [NodeType_1.NodeType.ObjectExpression, [NodeTransformers_1.NodeTransformers.ObjectExpressionTransformer]], [NodeType_1.NodeType.VariableDeclaration, [NodeTransformers_1.NodeTransformers.VariableDeclarationTransformer]], [NodeType_1.NodeType.LabeledStatement, [NodeTransformers_1.NodeTransformers.LabeledStatementTransformer]], [NodeType_1.NodeType.Literal, [NodeTransformers_1.NodeTransformers.LiteralTransformer]]]);
+Obfuscator.convertingTransformersMap = new _map2.default([[NodeType_1.NodeType.MemberExpression, [NodeTransformers_1.NodeTransformers.MemberExpressionTransformer]], [NodeType_1.NodeType.MethodDefinition, [NodeTransformers_1.NodeTransformers.MethodDefinitionTransformer]], [NodeType_1.NodeType.TemplateLiteral, [NodeTransformers_1.NodeTransformers.TemplateLiteralTransformer]]]);
+Obfuscator.obfuscatingTransformersMap = new _map2.default([[NodeType_1.NodeType.ArrowFunctionExpression, [NodeTransformers_1.NodeTransformers.FunctionTransformer]], [NodeType_1.NodeType.ClassDeclaration, [NodeTransformers_1.NodeTransformers.FunctionDeclarationTransformer]], [NodeType_1.NodeType.CatchClause, [NodeTransformers_1.NodeTransformers.CatchClauseTransformer]], [NodeType_1.NodeType.FunctionDeclaration, [NodeTransformers_1.NodeTransformers.FunctionDeclarationTransformer, NodeTransformers_1.NodeTransformers.FunctionTransformer]], [NodeType_1.NodeType.FunctionExpression, [NodeTransformers_1.NodeTransformers.FunctionTransformer]], [NodeType_1.NodeType.ObjectExpression, [NodeTransformers_1.NodeTransformers.ObjectExpressionTransformer]], [NodeType_1.NodeType.VariableDeclaration, [NodeTransformers_1.NodeTransformers.VariableDeclarationTransformer]], [NodeType_1.NodeType.LabeledStatement, [NodeTransformers_1.NodeTransformers.LabeledStatementTransformer]], [NodeType_1.NodeType.Literal, [NodeTransformers_1.NodeTransformers.LiteralTransformer]]]);
 Obfuscator = Obfuscator_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStackTraceAnalyzer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscationEventEmitter)), tslib_1.__param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.TCustomNodeGroupStorage)), tslib_1.__param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__INodeTransformer)), tslib_1.__param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object, Object, Object, Function, Object])], Obfuscator);
 exports.Obfuscator = Obfuscator;
 var Obfuscator_1;
@@ -2715,7 +2720,7 @@ var SourceMapMode_1 = __webpack_require__(29);
 var StringArrayEncoding_1 = __webpack_require__(32);
 var Default_1 = __webpack_require__(43);
 var CLIUtils_1 = __webpack_require__(55);
-var JavaScriptObfuscator_1 = __webpack_require__(24);
+var JavaScriptObfuscator_1 = __webpack_require__(25);
 
 var JavaScriptObfuscatorCLI = function () {
     function JavaScriptObfuscatorCLI(argv) {
@@ -2865,7 +2870,7 @@ var inversify_1 = __webpack_require__(2);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var ControlFlowTransformersModule_1 = __webpack_require__(59);
 var CustomNodesModule_1 = __webpack_require__(58);
-var ObfuscationTransformersModule_1 = __webpack_require__(61);
+var ObfuscatingTransformersModule_1 = __webpack_require__(61);
 var NodeTransformersModule_1 = __webpack_require__(60);
 var StackTraceAnalyzerModule_1 = __webpack_require__(62);
 var StoragesModule_1 = __webpack_require__(63);
@@ -2901,7 +2906,7 @@ var InversifyContainerFacade = function () {
         this.container.load(CustomNodesModule_1.customNodesModule);
         this.container.load(NodeTransformersModule_1.nodeTransformersModule);
         this.container.load(ControlFlowTransformersModule_1.controlFlowTransformersModule);
-        this.container.load(ObfuscationTransformersModule_1.obfuscationTransformersModule);
+        this.container.load(ObfuscatingTransformersModule_1.obfuscatingTransformersModule);
     }
 
     (0, _createClass3.default)(InversifyContainerFacade, [{
@@ -3123,7 +3128,7 @@ var BooleanLiteralReplacer_1 = __webpack_require__(103);
 var IdentifierReplacer_1 = __webpack_require__(104);
 var NumberLiteralReplacer_1 = __webpack_require__(105);
 var StringLiteralReplacer_1 = __webpack_require__(106);
-exports.obfuscationTransformersModule = new inversify_1.ContainerModule(function (bind) {
+exports.obfuscatingTransformersModule = new inversify_1.ContainerModule(function (bind) {
     bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatorReplacer).to(BooleanLiteralReplacer_1.BooleanLiteralReplacer).whenTargetNamed(NodeObfuscationReplacers_1.NodeObfuscatorsReplacers.BooleanReplacer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatorReplacer).to(IdentifierReplacer_1.IdentifierReplacer).whenTargetNamed(NodeObfuscationReplacers_1.NodeObfuscatorsReplacers.IdentifierReplacer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatorReplacer).to(NumberLiteralReplacer_1.NumberLiteralReplacer).whenTargetNamed(NodeObfuscationReplacers_1.NodeObfuscatorsReplacers.NumberLiteralReplacer);
@@ -3314,7 +3319,7 @@ var Initializable_1 = __webpack_require__(10);
 var CustomNodes_1 = __webpack_require__(15);
 var ObfuscationEvents_1 = __webpack_require__(22);
 var AbstractCustomNodeGroup_1 = __webpack_require__(27);
-var NodeAppender_1 = __webpack_require__(25);
+var NodeAppender_1 = __webpack_require__(26);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var ConsoleOutputCustomNodeGroup = function (_AbstractCustomNodeGr) {
     (0, _inherits3.default)(ConsoleOutputCustomNodeGroup, _AbstractCustomNodeGr);
@@ -3648,7 +3653,7 @@ exports.LogicalExpressionFunctionNode = LogicalExpressionFunctionNode;
 "use strict";
 
 
-var _toConsumableArray2 = __webpack_require__(26);
+var _toConsumableArray2 = __webpack_require__(24);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
@@ -4107,7 +4112,7 @@ var Initializable_1 = __webpack_require__(10);
 var CustomNodes_1 = __webpack_require__(15);
 var ObfuscationEvents_1 = __webpack_require__(22);
 var AbstractCustomNodeGroup_1 = __webpack_require__(27);
-var NodeAppender_1 = __webpack_require__(25);
+var NodeAppender_1 = __webpack_require__(26);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var DebugProtectionCustomNodeGroup = function (_AbstractCustomNodeGr) {
     (0, _inherits3.default)(DebugProtectionCustomNodeGroup, _AbstractCustomNodeGr);
@@ -4290,7 +4295,7 @@ var Initializable_1 = __webpack_require__(10);
 var CustomNodes_1 = __webpack_require__(15);
 var ObfuscationEvents_1 = __webpack_require__(22);
 var AbstractCustomNodeGroup_1 = __webpack_require__(27);
-var NodeAppender_1 = __webpack_require__(25);
+var NodeAppender_1 = __webpack_require__(26);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var DomainLockCustomNodeGroup = function (_AbstractCustomNodeGr) {
     (0, _inherits3.default)(DomainLockCustomNodeGroup, _AbstractCustomNodeGr);
@@ -4383,7 +4388,7 @@ var Initializable_1 = __webpack_require__(10);
 var SingleNodeCallControllerTemplate_1 = __webpack_require__(120);
 var NoCustomNodes_1 = __webpack_require__(31);
 var AbstractCustomNode_1 = __webpack_require__(13);
-var JavaScriptObfuscator_1 = __webpack_require__(24);
+var JavaScriptObfuscator_1 = __webpack_require__(25);
 var NodeUtils_1 = __webpack_require__(8);
 var NodeCallsControllerFunctionNode = function (_AbstractCustomNode_) {
     (0, _inherits3.default)(NodeCallsControllerFunctionNode, _AbstractCustomNode_);
@@ -4461,7 +4466,7 @@ var Initializable_1 = __webpack_require__(10);
 var NoCustomNodes_1 = __webpack_require__(31);
 var SelfDefendingTemplate_1 = __webpack_require__(126);
 var AbstractCustomNode_1 = __webpack_require__(13);
-var JavaScriptObfuscator_1 = __webpack_require__(24);
+var JavaScriptObfuscator_1 = __webpack_require__(25);
 var NodeUtils_1 = __webpack_require__(8);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
@@ -4537,7 +4542,7 @@ var Initializable_1 = __webpack_require__(10);
 var CustomNodes_1 = __webpack_require__(15);
 var ObfuscationEvents_1 = __webpack_require__(22);
 var AbstractCustomNodeGroup_1 = __webpack_require__(27);
-var NodeAppender_1 = __webpack_require__(25);
+var NodeAppender_1 = __webpack_require__(26);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var SelfDefendingCustomNodeGroup = function (_AbstractCustomNodeGr) {
     (0, _inherits3.default)(SelfDefendingCustomNodeGroup, _AbstractCustomNodeGr);
@@ -4635,7 +4640,7 @@ var StringArrayBase64DecodeNodeTemplate_1 = __webpack_require__(128);
 var StringArrayCallsWrapperTemplate_1 = __webpack_require__(129);
 var StringArrayRC4DecodeNodeTemplate_1 = __webpack_require__(130);
 var AbstractCustomNode_1 = __webpack_require__(13);
-var JavaScriptObfuscator_1 = __webpack_require__(24);
+var JavaScriptObfuscator_1 = __webpack_require__(25);
 var NodeUtils_1 = __webpack_require__(8);
 var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
     (0, _inherits3.default)(StringArrayCallsWrapper, _AbstractCustomNode_);
@@ -4828,7 +4833,7 @@ var NoCustomNodes_1 = __webpack_require__(31);
 var SelfDefendingTemplate_1 = __webpack_require__(132);
 var StringArrayRotateFunctionTemplate_1 = __webpack_require__(133);
 var AbstractCustomNode_1 = __webpack_require__(13);
-var JavaScriptObfuscator_1 = __webpack_require__(24);
+var JavaScriptObfuscator_1 = __webpack_require__(25);
 var NodeUtils_1 = __webpack_require__(8);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var Utils_1 = __webpack_require__(14);
@@ -4923,7 +4928,7 @@ var Initializable_1 = __webpack_require__(10);
 var CustomNodes_1 = __webpack_require__(15);
 var ObfuscationEvents_1 = __webpack_require__(22);
 var AbstractCustomNodeGroup_1 = __webpack_require__(27);
-var NodeAppender_1 = __webpack_require__(25);
+var NodeAppender_1 = __webpack_require__(26);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var Utils_1 = __webpack_require__(14);
 var StringArrayCustomNodeGroup = function (_AbstractCustomNodeGr) {
@@ -5055,7 +5060,7 @@ exports.ObfuscationEventEmitter = ObfuscationEventEmitter;
 "use strict";
 
 
-var _toConsumableArray2 = __webpack_require__(26);
+var _toConsumableArray2 = __webpack_require__(24);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
@@ -5177,7 +5182,7 @@ var CustomNodes_1 = __webpack_require__(15);
 var NodeType_1 = __webpack_require__(18);
 var AbstractNodeTransformer_1 = __webpack_require__(16);
 var Node_1 = __webpack_require__(12);
-var NodeAppender_1 = __webpack_require__(25);
+var NodeAppender_1 = __webpack_require__(26);
 var NodeControlFlowReplacers_1 = __webpack_require__(39);
 var NodeUtils_1 = __webpack_require__(8);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
@@ -7545,7 +7550,7 @@ exports.ObjectExpressionCalleeDataExtractor = ObjectExpressionCalleeDataExtracto
 "use strict";
 
 
-var _toConsumableArray2 = __webpack_require__(26);
+var _toConsumableArray2 = __webpack_require__(24);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
@@ -8116,14 +8121,13 @@ module.exports = require("mkdirp");
 module.exports = require("reflect-metadata");
 
 /***/ }),
-/* 150 */,
-/* 151 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var JavaScriptObfuscator_1 = __webpack_require__(24);
+var JavaScriptObfuscator_1 = __webpack_require__(25);
 module.exports = JavaScriptObfuscator_1.JavaScriptObfuscator;
 
 /***/ })

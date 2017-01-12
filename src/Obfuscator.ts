@@ -38,13 +38,16 @@ export class Obfuscator implements IObfuscator {
     /**
      * @type {Map<string, NodeTransformers[]>}
      */
-    private static readonly nodeTransformersMap: Map <string, NodeTransformers[]> = new Map([
-        // converting transformers
+    private static readonly convertingTransformersMap: Map <string, NodeTransformers[]> = new Map([
         [NodeType.MemberExpression, [NodeTransformers.MemberExpressionTransformer]],
         [NodeType.MethodDefinition, [NodeTransformers.MethodDefinitionTransformer]],
         [NodeType.TemplateLiteral, [NodeTransformers.TemplateLiteralTransformer]],
+    ]);
 
-        // obfuscation transformers
+    /**
+     * @type {Map<string, NodeTransformers[]>}
+     */
+    private static readonly obfuscatingTransformersMap: Map <string, NodeTransformers[]> = new Map([
         [NodeType.ArrowFunctionExpression, [NodeTransformers.FunctionTransformer]],
         [NodeType.ClassDeclaration, [NodeTransformers.FunctionDeclarationTransformer]],
         [NodeType.CatchClause, [NodeTransformers.CatchClauseTransformer]],
@@ -56,7 +59,7 @@ export class Obfuscator implements IObfuscator {
         [NodeType.ObjectExpression, [NodeTransformers.ObjectExpressionTransformer]],
         [NodeType.VariableDeclaration, [NodeTransformers.VariableDeclarationTransformer]],
         [NodeType.LabeledStatement, [NodeTransformers.LabeledStatementTransformer]],
-        [NodeType.Literal, [NodeTransformers.LiteralTransformer]] // should be latest in the chain of obfuscators
+        [NodeType.Literal, [NodeTransformers.LiteralTransformer]]
     ]);
 
     /**
@@ -145,7 +148,12 @@ export class Obfuscator implements IObfuscator {
         astTree = this.transformAstTree(
             astTree,
             VisitorDirection.enter,
-            this.nodeTransformersFactory(Obfuscator.nodeTransformersMap)
+            this.nodeTransformersFactory(
+                new Map([
+                    ...Obfuscator.convertingTransformersMap,
+                    ...Obfuscator.obfuscatingTransformersMap
+                ])
+            )
         );
 
         this.obfuscationEventEmitter.emit(ObfuscationEvents.AfterObfuscation, astTree, stackTraceData);

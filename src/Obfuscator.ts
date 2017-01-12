@@ -29,7 +29,7 @@ export class Obfuscator implements IObfuscator {
     /**
      * @type {Map<string, NodeTransformers[]>}
      */
-    private static readonly nodeControlFlowTransformersMap: Map <string, NodeTransformers[]> = new Map([
+    private static readonly controlFlowTransformersMap: Map <string, NodeTransformers[]> = new Map([
         [NodeType.BlockStatement, [NodeTransformers.BlockStatementControlFlowTransformer]],
         [NodeType.FunctionDeclaration, [NodeTransformers.FunctionControlFlowTransformer]],
         [NodeType.FunctionExpression, [NodeTransformers.FunctionControlFlowTransformer]]
@@ -38,7 +38,13 @@ export class Obfuscator implements IObfuscator {
     /**
      * @type {Map<string, NodeTransformers[]>}
      */
-    private static readonly nodeObfuscatorsMap: Map <string, NodeTransformers[]> = new Map([
+    private static readonly nodeTransformersMap: Map <string, NodeTransformers[]> = new Map([
+        // converting transformers
+        [NodeType.MemberExpression, [NodeTransformers.MemberExpressionTransformer]],
+        [NodeType.MethodDefinition, [NodeTransformers.MethodDefinitionTransformer]],
+        [NodeType.TemplateLiteral, [NodeTransformers.TemplateLiteralTransformer]],
+
+        // obfuscation transformers
         [NodeType.ArrowFunctionExpression, [NodeTransformers.FunctionTransformer]],
         [NodeType.ClassDeclaration, [NodeTransformers.FunctionDeclarationTransformer]],
         [NodeType.CatchClause, [NodeTransformers.CatchClauseTransformer]],
@@ -47,12 +53,9 @@ export class Obfuscator implements IObfuscator {
             NodeTransformers.FunctionTransformer
         ]],
         [NodeType.FunctionExpression, [NodeTransformers.FunctionTransformer]],
-        [NodeType.MemberExpression, [NodeTransformers.MemberExpressionTransformer]],
-        [NodeType.MethodDefinition, [NodeTransformers.MethodDefinitionTransformer]],
         [NodeType.ObjectExpression, [NodeTransformers.ObjectExpressionTransformer]],
         [NodeType.VariableDeclaration, [NodeTransformers.VariableDeclarationTransformer]],
         [NodeType.LabeledStatement, [NodeTransformers.LabeledStatementTransformer]],
-        [NodeType.TemplateLiteral, [NodeTransformers.TemplateLiteralTransformer]],
         [NodeType.Literal, [NodeTransformers.LiteralTransformer]] // should be latest in the chain of obfuscators
     ]);
 
@@ -134,7 +137,7 @@ export class Obfuscator implements IObfuscator {
             astTree = this.transformAstTree(
                 astTree,
                 VisitorDirection.leave,
-                this.nodeTransformersFactory(Obfuscator.nodeControlFlowTransformersMap)
+                this.nodeTransformersFactory(Obfuscator.controlFlowTransformersMap)
             );
         }
 
@@ -142,7 +145,7 @@ export class Obfuscator implements IObfuscator {
         astTree = this.transformAstTree(
             astTree,
             VisitorDirection.enter,
-            this.nodeTransformersFactory(Obfuscator.nodeObfuscatorsMap)
+            this.nodeTransformersFactory(Obfuscator.nodeTransformersMap)
         );
 
         this.obfuscationEventEmitter.emit(ObfuscationEvents.AfterObfuscation, astTree, stackTraceData);

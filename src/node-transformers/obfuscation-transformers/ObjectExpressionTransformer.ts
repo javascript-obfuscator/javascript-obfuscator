@@ -37,7 +37,7 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
      * @param node
      * @returns {ESTree.Literal}
      */
-    private static obfuscateLiteralPropertyKey (node: ESTree.Literal): ESTree.Literal {
+    private static transformLiteralPropertyKey (node: ESTree.Literal): ESTree.Literal {
         if (typeof node.value === 'string' && !node['x-verbatim-property']) {
             node['x-verbatim-property'] = {
                 content : `'${Utils.stringToUnicodeEscapeSequence(node.value)}'`,
@@ -52,7 +52,7 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
      * @param node
      * @returns {ESTree.Literal}
      */
-    private static obfuscateIdentifierPropertyKey (node: ESTree.Identifier): ESTree.Literal {
+    private static transformIdentifierPropertyKey (node: ESTree.Identifier): ESTree.Literal {
         return {
             type: NodeType.Literal,
             value: node.name,
@@ -76,9 +76,9 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
                 }
 
                 if (Node.isLiteralNode(property.key)) {
-                    property.key = ObjectExpressionTransformer.obfuscateLiteralPropertyKey(property.key);
+                    property.key = ObjectExpressionTransformer.transformLiteralPropertyKey(property.key);
                 } else if (Node.isIdentifierNode(property.key)) {
-                    property.key = ObjectExpressionTransformer.obfuscateIdentifierPropertyKey(property.key);
+                    property.key = ObjectExpressionTransformer.transformIdentifierPropertyKey(property.key);
                 }
             });
 

@@ -44,7 +44,7 @@
     "@types/esprima": "2.1.33",
     "@types/estraverse": "0.0.6",
     "@types/estree": "0.0.34",
-    "@types/lodash": "4.14.48",
+    "@types/lodash": "4.14.50",
     "@types/mkdirp": "0.3.29",
     "@types/mocha": "2.2.37",
     "@types/node": "7.0.0",

@@ -6420,9 +6420,14 @@ var VariableDeclarationTransformer = function (_AbstractNodeTransfor) {
             var _this2 = this;
 
             variableDeclarationNode.declarations.forEach(function (declarationNode) {
-                if (Node_1.Node.isIdentifierNode(declarationNode.id)) {
-                    _this2.identifierReplacer.storeNames(declarationNode.id.name, nodeIdentifier);
+                if (Node_1.Node.isObjectPatternNode(declarationNode.id)) {
+                    return estraverse.VisitorOption.Skip;
                 }
+                NodeUtils_1.NodeUtils.typedTraverse(declarationNode.id, NodeType_1.NodeType.Identifier, {
+                    enter: function enter(node) {
+                        return _this2.identifierReplacer.storeNames(node.name, nodeIdentifier);
+                    }
+                });
             });
         }
     }, {

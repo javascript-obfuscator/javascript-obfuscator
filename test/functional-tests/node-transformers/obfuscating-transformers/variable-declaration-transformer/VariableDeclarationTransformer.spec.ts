@@ -200,11 +200,39 @@ describe('VariableDeclarationTransformer', () => {
         const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
 
         it('shouldn\'t transform object pattern variable declarator', () => {
-            const objectPatternVariableDeclarator: RegExp = /var *\{ *bar *\} *= *\{ *'\\x62\\x61\\x72' *: *'\\x66\\x6f\\x6f' *\};/;
+            const objectPatternVariableDeclaratorMatch: RegExp = /var *\{ *bar *\} *= *\{ *'\\x62\\x61\\x72' *: *'\\x66\\x6f\\x6f' *\};/;
             const variableUsageMatch: RegExp = /console\['\\x6c\\x6f\\x67'\]\(bar\);/;
 
-            assert.match(obfuscatedCode, objectPatternVariableDeclarator);
+            assert.match(obfuscatedCode, objectPatternVariableDeclaratorMatch);
             assert.match(obfuscatedCode, variableUsageMatch);
+        });
+    });
+
+    describe('array pattern as variable declarator', () => {
+        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+            readFileAsString(__dirname + '/fixtures/array-pattern.js'),
+            {
+                ...NO_CUSTOM_NODES_PRESET
+            }
+        );
+        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+
+        const objectPatternVariableDeclaratorMatch: RegExp = /var *\[ *(_0x([a-f0-9]){4,6}), *(_0x([a-f0-9]){4,6}) *\] *= *\[0x1, *0x2\];/;
+        const variableUsageMatch: RegExp = /console\['\\x6c\\x6f\\x67'\]\((_0x([a-f0-9]){4,6}), *(_0x([a-f0-9]){4,6})\);/;
+
+        const objectPatternIdentifierName1: string = obfuscatedCode.match(objectPatternVariableDeclaratorMatch)![1];
+        const objectPatternIdentifierName2: string = obfuscatedCode.match(objectPatternVariableDeclaratorMatch)![2];
+        const identifierName1: string = obfuscatedCode.match(variableUsageMatch)![1];
+        const identifierName2: string = obfuscatedCode.match(variableUsageMatch)![2];
+
+        it('should transform array pattern variable declarator', () => {
+            assert.match(obfuscatedCode, objectPatternVariableDeclaratorMatch);
+            assert.match(obfuscatedCode, variableUsageMatch);
+        });
+
+        it('should keep same identifier names same for identifiers in variable declaration and after variable declaration', () => {
+            assert.equal(objectPatternIdentifierName1, identifierName1);
+            assert.equal(objectPatternIdentifierName2, identifierName2);
         });
     });
 });

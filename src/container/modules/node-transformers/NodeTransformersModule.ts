@@ -8,19 +8,19 @@ import { NodeTransformers } from '../../../enums/container/NodeTransformers';
 import { FunctionControlFlowTransformer } from '../../../node-transformers/control-flow-transformers/FunctionControlFlowTransformer';
 
 import { BlockStatementControlFlowTransformer } from '../../../node-transformers/control-flow-transformers/BlockStatementControlFlowTransformer';
-import { CatchClauseTransformer } from '../../../node-transformers/obfuscation-transformers/CatchClauseTransformer';
-import { FunctionDeclarationTransformer } from '../../../node-transformers/obfuscation-transformers/FunctionDeclarationTransformer';
-import { FunctionTransformer } from '../../../node-transformers/obfuscation-transformers/FunctionTransformer';
-import { LabeledStatementTransformer } from '../../../node-transformers/obfuscation-transformers/LabeledStatementTransformer';
-import { LiteralTransformer } from '../../../node-transformers/obfuscation-transformers/LiteralTransformer';
-import { MemberExpressionTransformer } from '../../../node-transformers/obfuscation-transformers/MemberExpressionTransformer';
-import { MethodDefinitionTransformer } from '../../../node-transformers/obfuscation-transformers/MethodDefinitionTransformer';
-import { ObjectExpressionTransformer } from '../../../node-transformers/obfuscation-transformers/ObjectExpressionTransformer';
-import { TemplateLiteralTransformer } from '../../../node-transformers/obfuscation-transformers/TemplateLiteralTransformer';
-import { VariableDeclarationTransformer } from '../../../node-transformers/obfuscation-transformers/VariableDeclarationTransformer';
+import { CatchClauseTransformer } from '../../../node-transformers/obfuscating-transformers/CatchClauseTransformer';
+import { FunctionDeclarationTransformer } from '../../../node-transformers/obfuscating-transformers/FunctionDeclarationTransformer';
+import { FunctionTransformer } from '../../../node-transformers/obfuscating-transformers/FunctionTransformer';
+import { LabeledStatementTransformer } from '../../../node-transformers/obfuscating-transformers/LabeledStatementTransformer';
+import { LiteralTransformer } from '../../../node-transformers/obfuscating-transformers/LiteralTransformer';
+import { MemberExpressionTransformer } from '../../../node-transformers/converting-transformers/MemberExpressionTransformer';
+import { MethodDefinitionTransformer } from '../../../node-transformers/converting-transformers/MethodDefinitionTransformer';
+import { ObjectExpressionTransformer } from '../../../node-transformers/obfuscating-transformers/ObjectExpressionTransformer';
+import { TemplateLiteralTransformer } from '../../../node-transformers/converting-transformers/TemplateLiteralTransformer';
+import { VariableDeclarationTransformer } from '../../../node-transformers/obfuscating-transformers/VariableDeclarationTransformer';
 
 export const nodeTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
-    // node control flow transformers
+    // control flow transformers
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(BlockStatementControlFlowTransformer)
         .whenTargetNamed(NodeTransformers.BlockStatementControlFlowTransformer);
@@ -29,7 +29,20 @@ export const nodeTransformersModule: interfaces.ContainerModule = new ContainerM
         .to(FunctionControlFlowTransformer)
         .whenTargetNamed(NodeTransformers.FunctionControlFlowTransformer);
 
-    // node obfuscators
+    // converting transformers
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(MemberExpressionTransformer)
+        .whenTargetNamed(NodeTransformers.MemberExpressionTransformer);
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(MethodDefinitionTransformer)
+        .whenTargetNamed(NodeTransformers.MethodDefinitionTransformer);
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(TemplateLiteralTransformer)
+        .whenTargetNamed(NodeTransformers.TemplateLiteralTransformer);
+
+    // obfuscation transformers
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(CatchClauseTransformer)
         .whenTargetNamed(NodeTransformers.CatchClauseTransformer);
@@ -51,20 +64,8 @@ export const nodeTransformersModule: interfaces.ContainerModule = new ContainerM
         .whenTargetNamed(NodeTransformers.LiteralTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(MemberExpressionTransformer)
-        .whenTargetNamed(NodeTransformers.MemberExpressionTransformer);
-
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(MethodDefinitionTransformer)
-        .whenTargetNamed(NodeTransformers.MethodDefinitionTransformer);
-
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(ObjectExpressionTransformer)
         .whenTargetNamed(NodeTransformers.ObjectExpressionTransformer);
-
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(TemplateLiteralTransformer)
-        .whenTargetNamed(NodeTransformers.TemplateLiteralTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(VariableDeclarationTransformer)

@@ -4,9 +4,6 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
-import { IObfuscationReplacer } from '../../interfaces/node-transformers/IObfuscationReplacer';
-
-import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscationReplacers';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
@@ -19,21 +16,12 @@ import { Nodes } from '../../node/Nodes';
 @injectable()
 export class TemplateLiteralTransformer extends AbstractNodeTransformer {
     /**
-     * @type {(replacer: NodeObfuscatorsReplacers) => IObfuscationReplacer}
-     */
-    private readonly replacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscationReplacer;
-
-    /**
-     * @param replacersFactory
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__IObfuscatorReplacer) replacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscationReplacer,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
-
-        this.replacersFactory = replacersFactory;
     }
 
     /**

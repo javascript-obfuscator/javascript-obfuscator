@@ -83,9 +83,13 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     private storeVariableNames (variableDeclarationNode: ESTree.VariableDeclaration, nodeIdentifier: number): void {
         variableDeclarationNode.declarations
             .forEach((declarationNode: ESTree.VariableDeclarator) => {
-                if (Node.isIdentifierNode(declarationNode.id)) {
-                    this.identifierReplacer.storeNames(declarationNode.id.name, nodeIdentifier);
+                if (Node.isObjectPatternNode(declarationNode.id)) {
+                    return estraverse.VisitorOption.Skip;
                 }
+
+                NodeUtils.typedTraverse(declarationNode.id, NodeType.Identifier, {
+                    enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name, nodeIdentifier)
+                });
             });
     }
 

@@ -1,9 +1,9 @@
 'use strict';
 
-var fs = require("fs"),
-    nodeExternals = require('webpack-node-externals'),
-    webpack = require('webpack'),
-    CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
+const fs = require("fs");
+const nodeExternals = require('webpack-node-externals');
+const webpack = require('webpack');
+const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 
 function getLicenseText () {
     return "/*\nCopyright (C) 2016 Timofey Kachalov <sanex3339@yandex.ru>\n\n" +

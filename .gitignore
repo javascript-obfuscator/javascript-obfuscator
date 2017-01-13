@@ -1,7 +1,6 @@
 .awcache
 .idea
 npm-debug.log
-yarn.lock
 *.js.map
 /coverage
 /node_modules

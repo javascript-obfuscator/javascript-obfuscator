@@ -1,10 +1,6 @@
 'use strict';
 import { NO_CUSTOM_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
 
-if (!(<any>global)._babelPolyfill) {
-    require('babel-polyfill');
-}
-
 (function () {
     const JavaScriptObfuscator: any = require("../../index");
 

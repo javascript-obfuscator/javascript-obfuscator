@@ -1,4 +1,4 @@
 #!/bin/bash
 
-npm run tslint &&
-npm test
+yarn run tslint &&
+yarn test

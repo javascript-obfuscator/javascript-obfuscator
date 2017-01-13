@@ -2,10 +2,6 @@
 
 import * as fs from 'fs';
 
-if (!(<any>global)._babelPolyfill) {
-    require('babel-polyfill');
-}
-
 (function () {
     const JavaScriptObfuscator: any = require("../../index");
 

@@ -124,7 +124,7 @@ module.exports = require("tslib");
 "use strict";
 
 
-var _symbol = __webpack_require__(139);
+var _symbol = __webpack_require__(138);
 
 var _symbol2 = _interopRequireDefault(_symbol);
 
@@ -384,7 +384,7 @@ exports.NodeUtils = NodeUtils;
 "use strict";
 
 
-var _set = __webpack_require__(138);
+var _set = __webpack_require__(137);
 
 var _set2 = _interopRequireDefault(_set);
 
@@ -398,7 +398,7 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var chance_1 = __webpack_require__(142);
+var chance_1 = __webpack_require__(141);
 var Utils_1 = __webpack_require__(14);
 
 var RandomGeneratorUtils = function () {
@@ -483,11 +483,11 @@ exports.RandomGeneratorUtils = RandomGeneratorUtils;
 "use strict";
 
 
-var _defineProperty = __webpack_require__(136);
+var _defineProperty = __webpack_require__(135);
 
 var _defineProperty2 = _interopRequireDefault(_defineProperty);
 
-var _getOwnPropertyDescriptor = __webpack_require__(137);
+var _getOwnPropertyDescriptor = __webpack_require__(136);
 
 var _getOwnPropertyDescriptor2 = _interopRequireDefault(_getOwnPropertyDescriptor);
 
@@ -773,7 +773,7 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _ = __webpack_require__(147);
+var _ = __webpack_require__(146);
 var JSFuck_1 = __webpack_require__(36);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 
@@ -1430,10 +1430,7 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-__webpack_require__(149);
-if (!global._babelPolyfill && parseInt(process.version.split('.')[0], 10) < 4) {
-    __webpack_require__(134);
-}
+__webpack_require__(148);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var InversifyContainerFacade_1 = __webpack_require__(57);
 var JavaScriptObfuscatorCLI_1 = __webpack_require__(56);
@@ -2446,7 +2443,7 @@ exports.ObfuscationResult = ObfuscationResult;
 "use strict";
 
 
-var _defineProperty2 = __webpack_require__(140);
+var _defineProperty2 = __webpack_require__(139);
 
 var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
@@ -2613,8 +2610,8 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var fs = __webpack_require__(146);
-var mkdirp = __webpack_require__(148);
+var fs = __webpack_require__(145);
+var mkdirp = __webpack_require__(147);
 var path = __webpack_require__(50);
 
 var CLIUtils = function () {
@@ -2714,7 +2711,7 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var commander = __webpack_require__(144);
+var commander = __webpack_require__(143);
 var path = __webpack_require__(50);
 var SourceMapMode_1 = __webpack_require__(29);
 var StringArrayEncoding_1 = __webpack_require__(32);
@@ -5038,7 +5035,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
-var events_1 = __webpack_require__(145);
+var events_1 = __webpack_require__(144);
 inversify_1.decorate(inversify_1.injectable(), events_1.EventEmitter);
 var ObfuscationEventEmitter = function (_events_1$EventEmitte) {
     (0, _inherits3.default)(ObfuscationEventEmitter, _events_1$EventEmitte);
@@ -6151,7 +6148,7 @@ exports.LabeledStatementTransformer = LabeledStatementTransformer;
 "use strict";
 
 
-var _typeof2 = __webpack_require__(141);
+var _typeof2 = __webpack_require__(140);
 
 var _typeof3 = _interopRequireDefault(_typeof2);
 
@@ -6798,7 +6795,7 @@ var StringLiteralReplacer_1;
 "use strict";
 
 
-var _assign = __webpack_require__(135);
+var _assign = __webpack_require__(134);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -6810,7 +6807,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
-var class_validator_1 = __webpack_require__(143);
+var class_validator_1 = __webpack_require__(142);
 var Default_1 = __webpack_require__(43);
 var OptionsNormalizer_1 = __webpack_require__(108);
 var ValidationErrorsFormatter_1 = __webpack_require__(109);
@@ -8028,99 +8025,94 @@ exports.StringArrayRotateFunctionTemplate = StringArrayRotateFunctionTemplate;
 /* 134 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-polyfill");
+module.exports = require("babel-runtime/core-js/object/assign");
 
 /***/ }),
 /* 135 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/object/assign");
+module.exports = require("babel-runtime/core-js/object/define-property");
 
 /***/ }),
 /* 136 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/object/define-property");
+module.exports = require("babel-runtime/core-js/object/get-own-property-descriptor");
 
 /***/ }),
 /* 137 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/object/get-own-property-descriptor");
+module.exports = require("babel-runtime/core-js/set");
 
 /***/ }),
 /* 138 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/set");
+module.exports = require("babel-runtime/core-js/symbol");
 
 /***/ }),
 /* 139 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/symbol");
+module.exports = require("babel-runtime/helpers/defineProperty");
 
 /***/ }),
 /* 140 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/helpers/defineProperty");
+module.exports = require("babel-runtime/helpers/typeof");
 
 /***/ }),
 /* 141 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/helpers/typeof");
+module.exports = require("chance");
 
 /***/ }),
 /* 142 */
 /***/ (function(module, exports) {
 
-module.exports = require("chance");
+module.exports = require("class-validator");
 
 /***/ }),
 /* 143 */
 /***/ (function(module, exports) {
 
-module.exports = require("class-validator");
+module.exports = require("commander");
 
 /***/ }),
 /* 144 */
 /***/ (function(module, exports) {
 
-module.exports = require("commander");
+module.exports = require("events");
 
 /***/ }),
 /* 145 */
 /***/ (function(module, exports) {
 
-module.exports = require("events");
+module.exports = require("fs");
 
 /***/ }),
 /* 146 */
 /***/ (function(module, exports) {
 
-module.exports = require("fs");
+module.exports = require("lodash");
 
 /***/ }),
 /* 147 */
 /***/ (function(module, exports) {
 
-module.exports = require("lodash");
+module.exports = require("mkdirp");
 
 /***/ }),
 /* 148 */
 /***/ (function(module, exports) {
 
-module.exports = require("mkdirp");
-
-/***/ }),
-/* 149 */
-/***/ (function(module, exports) {
-
 module.exports = require("reflect-metadata");
 
 /***/ }),
+/* 149 */,
 /* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 

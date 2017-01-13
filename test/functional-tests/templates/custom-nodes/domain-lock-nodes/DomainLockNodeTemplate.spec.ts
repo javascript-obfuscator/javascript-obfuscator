@@ -86,8 +86,4 @@ describe('DomainLockNodeTemplate (): string', () => {
             singleNodeCallControllerFunctionName
         }, singleNodeCallControllerFunctionName, currentDomain));
     });
-
-    afterEach(() => {
-        delete (<any>global).promisePolyfillActivationFlag;
-    });
 });

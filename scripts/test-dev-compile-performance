@@ -1,3 +1,3 @@
 #!/bin/bash
 
-$(npm bin)/ts-node test/dev/dev-compile-performance.ts
+$(yarn bin)/ts-node test/dev/dev-compile-performance.ts

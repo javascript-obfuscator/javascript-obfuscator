@@ -1,6 +1,6 @@
 #!/bin/bash
 
-npm run test:compile &&
-$(npm bin)/istanbul cover $(npm bin)/_mocha -- test-tmp/test/index.spec.js --report lcovonly &&
-cat ./coverage/lcov.info | $(npm bin)/coveralls &&
-npm run test:removeTmpDir
+yarn run test:compile &&
+$(yarn bin)/istanbul cover $(yarn bin)/_mocha -- test-tmp/test/index.spec.js --report lcovonly &&
+cat ./coverage/lcov.info | $(yarn bin)/coveralls &&
+yarn run test:removeTmpDir

@@ -82,6 +82,40 @@ describe('FunctionTransformer', () => {
             const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
 
             const variableDeclarationMatch: RegExp = /var *(_0x[a-f0-9]{4,6}) *= *0x1;/;
+            const functionParameterMatch: RegExp = /function *\((_0x[a-f0-9]{4,6}) *= *(_0x[a-f0-9]{4,6})\) *\{/;
+            const functionBodyMatch: RegExp = /return *(_0x[a-f0-9]{4,6});/;
+
+            const variableDeclarationIdentifierName: string = obfuscatedCode.match(variableDeclarationMatch)![1];
+            const functionParameterIdentifierName: string = obfuscatedCode.match(functionParameterMatch)![1];
+            const functionDefaultParameterIdentifierName: string = obfuscatedCode.match(functionParameterMatch)![2];
+
+            const functionBodyIdentifierName: string = obfuscatedCode.match(functionBodyMatch)![1];
+
+            it('should transform function parameter assignment pattern identifier', () => {
+                assert.match(obfuscatedCode, variableDeclarationMatch);
+                assert.match(obfuscatedCode, functionParameterMatch);
+                assert.match(obfuscatedCode, functionBodyMatch);
+            });
+
+            it('should keep same names for identifier in variable declaration and default value identifier of function parameter', () => {
+                assert.equal(variableDeclarationIdentifierName, functionDefaultParameterIdentifierName);
+            });
+
+            it('should keep same names for identifiers in function params and function body', () => {
+                assert.equal(functionParameterIdentifierName, functionBodyIdentifierName);
+            });
+        });
+
+        describe('identifier as right value', () => {
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                readFileAsString(__dirname + '/fixtures/assignment-pattern-as-parameter-3.js'),
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+            const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+
+            const variableDeclarationMatch: RegExp = /var *(_0x[a-f0-9]{4,6}) *= *0x1;/;
             const functionParameterMatch: RegExp = /function *\((_0x[a-f0-9]{4,6}), *(_0x[a-f0-9]{4,6}) *= *(_0x[a-f0-9]{4,6})\) *\{/;
             const functionBodyMatch: RegExp = /return *(_0x[a-f0-9]{4,6}) *\+ *(_0x[a-f0-9]{4,6});/;
 

@@ -61,9 +61,23 @@ export class FunctionTransformer extends AbstractNodeTransformer {
     private storeFunctionParams (functionNode: ESTree.Function, nodeIdentifier: number): void {
         functionNode.params
             .forEach((paramsNode: ESTree.Node) => {
-                if (Node.isIdentifierNode(paramsNode)) {
-                    this.identifierReplacer.storeNames(paramsNode.name, nodeIdentifier);
+                if (Node.isObjectPatternNode(paramsNode)) {
+                    return estraverse.VisitorOption.Skip;
                 }
+
+                estraverse.traverse(paramsNode, {
+                    enter: (node: ESTree.Node): any => {
+                        if (Node.isAssignmentPatternNode(node) && Node.isIdentifierNode(node.left)) {
+                            this.identifierReplacer.storeNames(node.left.name, nodeIdentifier);
+
+                            return estraverse.VisitorOption.Skip;
+                        }
+
+                        if (Node.isIdentifierNode(node)) {
+                            this.identifierReplacer.storeNames(node.name, nodeIdentifier);
+                        }
+                    }
+                });
             });
     }
 

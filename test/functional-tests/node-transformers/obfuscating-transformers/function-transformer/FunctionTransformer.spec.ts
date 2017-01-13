@@ -52,4 +52,90 @@ describe('FunctionTransformer', () => {
             assert.match(obfuscatedCode, functionBodyMatch);
         });
     });
+
+    describe('assignment pattern as parameter', () => {
+        describe('literal as right value', () => {
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                readFileAsString(__dirname + '/fixtures/assignment-pattern-as-parameter-1.js'),
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+            const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+
+            it('should transform function parameter assignment pattern identifier', () => {
+                const functionParameterMatch: RegExp = /function *\(_0x[a-f0-9]{4,6} *= *0x1\) *\{/;
+                const functionBodyMatch: RegExp = /return *_0x[a-f0-9]{4,6};/;
+
+                assert.match(obfuscatedCode, functionParameterMatch);
+                assert.match(obfuscatedCode, functionBodyMatch);
+            });
+        });
+
+        describe('identifier as right value', () => {
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                readFileAsString(__dirname + '/fixtures/assignment-pattern-as-parameter-2.js'),
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+            const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+
+            const variableDeclarationMatch: RegExp = /var *(_0x[a-f0-9]{4,6}) *= *0x1;/;
+            const functionParameterMatch: RegExp = /function *\((_0x[a-f0-9]{4,6}), *(_0x[a-f0-9]{4,6}) *= *(_0x[a-f0-9]{4,6})\) *\{/;
+            const functionBodyMatch: RegExp = /return *(_0x[a-f0-9]{4,6}) *\+ *(_0x[a-f0-9]{4,6});/;
+
+            const variableDeclarationIdentifierName: string = obfuscatedCode.match(variableDeclarationMatch)![1];
+            const functionParameterIdentifierName: string = obfuscatedCode.match(functionParameterMatch)![1];
+            const functionDefaultParameterIdentifierName1: string = obfuscatedCode.match(functionParameterMatch)![2];
+            const functionDefaultParameterIdentifierName2: string = obfuscatedCode.match(functionParameterMatch)![3];
+
+            const functionBodyIdentifierName1: string = obfuscatedCode.match(functionBodyMatch)![1];
+            const functionBodyIdentifierName2: string = obfuscatedCode.match(functionBodyMatch)![2];
+
+            it('should transform function parameter assignment pattern identifier', () => {
+                assert.match(obfuscatedCode, variableDeclarationMatch);
+                assert.match(obfuscatedCode, functionParameterMatch);
+                assert.match(obfuscatedCode, functionBodyMatch);
+            });
+
+            it('shouldn\'t keep same names variable declaration identifier and function parameters identifiers', () => {
+                assert.notEqual(variableDeclarationIdentifierName, functionParameterIdentifierName);
+                assert.notEqual(variableDeclarationIdentifierName, functionDefaultParameterIdentifierName1);
+                assert.notEqual(variableDeclarationIdentifierName, functionDefaultParameterIdentifierName2);
+            });
+
+            it('should keep same names for identifier in first function parameter and default value identifier of second function parameter', () => {
+                assert.equal(functionParameterIdentifierName, functionDefaultParameterIdentifierName2);
+            });
+
+            it('should keep same names for identifiers in function params and function body', () => {
+                assert.equal(functionParameterIdentifierName, functionBodyIdentifierName1);
+                assert.equal(functionDefaultParameterIdentifierName1, functionBodyIdentifierName2);
+            });
+        });
+    });
+
+    describe('array pattern as parameter', () => {
+        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+            readFileAsString(__dirname + '/fixtures/array-pattern-as-parameter.js'),
+            {
+                ...NO_CUSTOM_NODES_PRESET
+            }
+        );
+        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+
+        const functionParameterMatch: RegExp = /function *\(\[(_0x[a-f0-9]{4,6}), *(_0x[a-f0-9]{4,6})\]\) *\{/;
+        const functionBodyMatch: RegExp = /return *(_0x[a-f0-9]{4,6}) *\+ *(_0x[a-f0-9]{4,6});/;
+
+        const arrayPatternIdentifierName1: string = obfuscatedCode.match(functionParameterMatch)![1];
+        const arrayPatternIdentifierName2: string = obfuscatedCode.match(functionParameterMatch)![2];
+        const functionBodyIdentifierName1: string = obfuscatedCode.match(functionBodyMatch)![1];
+        const functionBodyIdentifierName2: string = obfuscatedCode.match(functionBodyMatch)![2];
+
+        it('should keep same names for identifiers in function parameter array pattern and function body', () => {
+            assert.equal(arrayPatternIdentifierName1, functionBodyIdentifierName1);
+            assert.equal(arrayPatternIdentifierName2, functionBodyIdentifierName2);
+        });
+    });
 });

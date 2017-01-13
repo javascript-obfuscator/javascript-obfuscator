@@ -17,6 +17,14 @@ export class Node {
      * @param node
      * @returns {boolean}
      */
+    public static isAssignmentPatternNode (node: ESTree.Node): node is ESTree.AssignmentPattern {
+        return node.type === NodeType.AssignmentPattern;
+    }
+
+    /**
+     * @param node
+     * @returns {boolean}
+     */
     public static isBlockStatementNode (node: ESTree.Node): node is ESTree.BlockStatement {
         return node.type === NodeType.BlockStatement;
     }
@@ -120,6 +128,14 @@ export class Node {
      */
     public static isMemberExpressionNode (node: ESTree.Node): node is ESTree.MemberExpression {
         return node.type === NodeType.MemberExpression;
+    }
+
+    /**
+     * @param node
+     * @returns {boolean}
+     */
+    public static isObjectPatternNode (node: ESTree.Node): node is ESTree.ObjectPattern {
+        return node.type === NodeType.ObjectPattern;
     }
 
     /**

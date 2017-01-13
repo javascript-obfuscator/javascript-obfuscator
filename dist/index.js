@@ -90,7 +90,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 150);
+/******/ 	return __webpack_require__(__webpack_require__.s = 151);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -568,6 +568,11 @@ var Node = function () {
             return node.type === NodeType_1.NodeType.ArrowFunctionExpression;
         }
     }, {
+        key: "isAssignmentPatternNode",
+        value: function isAssignmentPatternNode(node) {
+            return node.type === NodeType_1.NodeType.AssignmentPattern;
+        }
+    }, {
         key: "isBlockStatementNode",
         value: function isBlockStatementNode(node) {
             return node.type === NodeType_1.NodeType.BlockStatement;
@@ -634,6 +639,11 @@ var Node = function () {
         key: "isMemberExpressionNode",
         value: function isMemberExpressionNode(node) {
             return node.type === NodeType_1.NodeType.MemberExpression;
+        }
+    }, {
+        key: "isObjectPatternNode",
+        value: function isObjectPatternNode(node) {
+            return node.type === NodeType_1.NodeType.ObjectPattern;
         }
     }, {
         key: "isObjectExpressionNode",
@@ -1002,6 +1012,7 @@ exports.NodeType = Utils_1.Utils.strEnumify({
     ArrayExpression: 'ArrayExpression',
     ArrowFunctionExpression: 'ArrowFunctionExpression',
     AssignmentExpression: 'AssignmentExpression',
+    AssignmentPattern: 'AssignmentPattern',
     BinaryExpression: 'BinaryExpression',
     BlockStatement: 'BlockStatement',
     BreakStatement: 'BreakStatement',
@@ -1020,6 +1031,7 @@ exports.NodeType = Utils_1.Utils.strEnumify({
     MemberExpression: 'MemberExpression',
     MethodDefinition: 'MethodDefinition',
     ObjectExpression: 'ObjectExpression',
+    ObjectPattern: 'ObjectPattern',
     Program: 'Program',
     Property: 'Property',
     ReturnStatement: 'ReturnStatement',
@@ -6032,9 +6044,20 @@ var FunctionTransformer = function (_AbstractNodeTransfor) {
             var _this2 = this;
 
             functionNode.params.forEach(function (paramsNode) {
-                if (Node_1.Node.isIdentifierNode(paramsNode)) {
-                    _this2.identifierReplacer.storeNames(paramsNode.name, nodeIdentifier);
+                if (Node_1.Node.isObjectPatternNode(paramsNode)) {
+                    return estraverse.VisitorOption.Skip;
                 }
+                estraverse.traverse(paramsNode, {
+                    enter: function enter(node) {
+                        if (Node_1.Node.isAssignmentPatternNode(node) && Node_1.Node.isIdentifierNode(node.left)) {
+                            _this2.identifierReplacer.storeNames(node.left.name, nodeIdentifier);
+                            return estraverse.VisitorOption.Skip;
+                        }
+                        if (Node_1.Node.isIdentifierNode(node)) {
+                            _this2.identifierReplacer.storeNames(node.name, nodeIdentifier);
+                        }
+                    }
+                });
             });
         }
     }, {
@@ -8121,7 +8144,8 @@ module.exports = require("mkdirp");
 module.exports = require("reflect-metadata");
 
 /***/ }),
-/* 150 */
+/* 150 */,
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

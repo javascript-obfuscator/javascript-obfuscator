@@ -411,7 +411,7 @@ Available values:
 * `true` (`boolean`): encode `stringArray` values using `base64`
 * `false` (`boolean`): don't encode `stringArray` values
 * `'base64'` (`string`): encode `stringArray` values using `base64`
-* `'rc4'` (`string`): encode `stringArray` values using `rc4`. **About 30-50% slower then `base64`, but more harder to get initial values.** It is recommended to disable [`unicodeEscapeSequence`](#unicodeescapesequence) option with `rc4` encoding to prevent very large size of obfuscated code.
+* `'rc4'` (`string`): encode `stringArray` values using `rc4`. **About 30-50% slower than `base64`, but more harder to get initial values.** It is recommended to disable [`unicodeEscapeSequence`](#unicodeescapesequence) option with `rc4` encoding to prevent very large size of obfuscated code.
     
 ### `stringArrayThreshold`
 Type: `number` Default: `0.8` Min: `0` Max: `1`
@@ -434,7 +434,7 @@ Unicode escape sequence increases code size greatly. It is recommended to disabl
 ## Preset Options
 ### High obfuscation, low performance
 
-Performance will 50-100% slower then without obfuscation
+Performance will 50-100% slower than without obfuscation
 
 ```javascript
 {
@@ -455,7 +455,7 @@ Performance will 50-100% slower then without obfuscation
 
 ### Medium obfuscation, optimal performance
 
-Performance will 30-35% slower then without obfuscation
+Performance will 30-35% slower than without obfuscation
 
 ```javascript
 {
@@ -476,7 +476,7 @@ Performance will 30-35% slower then without obfuscation
 
 ### Low obfuscation, High performance
 
-Performance will slightly slower then without obfuscation
+Performance will slightly slower than without obfuscation
 
 ```javascript
 {

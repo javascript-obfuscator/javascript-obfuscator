@@ -9,7 +9,7 @@
 JavaScript obfuscator for Node.js is a free obfuscator with wide number of features which provides protection for your source code.
 
 * without any limits and sending data to a server;
-* compatible with ES6;
+* compatible with `es2015`;
 * tested on Angular2 bundle.
 
 Online version: [javascriptobfuscator.herokuapp.com](https://javascriptobfuscator.herokuapp.com)
@@ -24,6 +24,8 @@ Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/
 [![npm version](https://badge.fury.io/js/javascript-obfuscator.svg)](https://badge.fury.io/js/javascript-obfuscator)
 [![Build Status](https://travis-ci.org/javascript-obfuscator/javascript-obfuscator.svg?branch=master)](https://travis-ci.org/javascript-obfuscator/javascript-obfuscator)
 [![Coverage Status](https://coveralls.io/repos/github/javascript-obfuscator/javascript-obfuscator/badge.svg?branch=master)](https://coveralls.io/github/javascript-obfuscator/javascript-obfuscator?branch=master)
+
+*NOTE! the README on the master branch might not match that of the latest stable release!*
 
 ## :warning: Important
 #####Obfuscate only the code that belongs to you. 

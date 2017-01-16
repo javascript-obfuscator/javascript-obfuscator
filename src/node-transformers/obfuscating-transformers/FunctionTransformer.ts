@@ -42,10 +42,28 @@ export class FunctionTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @return {estraverse.Visitor}
+     */
+    public getVisitor (): estraverse.Visitor {
+        return {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
+                if (
+                    Node.isFunctionDeclarationNode(node) ||
+                    Node.isFunctionExpressionNode(node) ||
+                    Node.isArrowFunctionExpressionNode(node)
+                ) {
+                    this.transformNode(node, parentNode);
+                }
+            }
+        };
+    }
+
+    /**
      * @param functionNode
+     * @param parentNode
      * @returns {ESTree.Node}
      */
-    public transformNode (functionNode: ESTree.Function): ESTree.Node {
+    private transformNode (functionNode: ESTree.Function, parentNode: ESTree.Node): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
 
         this.storeFunctionParams(functionNode, nodeIdentifier);

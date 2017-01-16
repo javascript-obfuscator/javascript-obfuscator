@@ -30,6 +30,7 @@
     "estraverse": "4.2.0",
     "inversify": "3.0.0",
     "lodash": "4.17.4",
+    "merge-estraverse-visitors": "^1.0.0",
     "mkdirp": "0.5.1",
     "reflect-metadata": "0.1.9",
     "source-map-support": "0.4.9",

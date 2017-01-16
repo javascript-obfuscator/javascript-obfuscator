@@ -1,6 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -36,6 +37,19 @@ export class MethodDefinitionTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @return {estraverse.Visitor}
+     */
+    public getVisitor (): estraverse.Visitor {
+        return {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
+                if (Node.isMethodDefinitionNode(node)) {
+                    this.transformNode(node, parentNode);
+                }
+            }
+        };
+    }
+
+    /**
      * replaces:
      *     object.identifier = 1;
      *
@@ -50,7 +64,7 @@ export class MethodDefinitionTransformer extends AbstractNodeTransformer {
      * @param parentNode
      * @returns {ESTree.Node}
      */
-    public transformNode (methodDefinitionNode: ESTree.MethodDefinition, parentNode: ESTree.Node): ESTree.Node {
+    private transformNode (methodDefinitionNode: ESTree.MethodDefinition, parentNode: ESTree.Node): ESTree.Node {
         if (
             Node.isIdentifierNode(methodDefinitionNode.key) &&
             !MethodDefinitionTransformer.ignoredNames.includes(methodDefinitionNode.key.name) &&

@@ -52,11 +52,24 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @return {estraverse.Visitor}
+     */
+    public getVisitor (): estraverse.Visitor {
+        return {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
+                if (Node.isFunctionDeclarationNode(node)) {
+                    this.transformNode(node, parentNode);
+                }
+            }
+        };
+    }
+
+    /**
      * @param functionDeclarationNode
      * @param parentNode
      * @returns {ESTree.Node}
      */
-    public transformNode (functionDeclarationNode: ESTree.FunctionDeclaration, parentNode: ESTree.Node): ESTree.Node {
+    private transformNode (functionDeclarationNode: ESTree.FunctionDeclaration, parentNode: ESTree.Node): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
         const blockScopeOfFunctionDeclarationNode: TNodeWithBlockStatement = NodeUtils
             .getBlockScopesOfNode(functionDeclarationNode)[0];

@@ -72,31 +72,24 @@ export const nodeTransformersModule: interfaces.ContainerModule = new ContainerM
         .whenTargetNamed(NodeTransformers.VariableDeclarationTransformer);
 
     // node transformers factory
-    bind<INodeTransformer[]>(ServiceIdentifiers.Factory__INodeTransformer)
-        .toFactory<INodeTransformer[]>((context: interfaces.Context) => {
+    bind<INodeTransformer>(ServiceIdentifiers.Factory__INodeTransformer)
+        .toFactory<INodeTransformer>((context: interfaces.Context) => {
             const cache: Map <NodeTransformers, INodeTransformer> = new Map();
 
-            return (nodeTransformersMap: Map<string, NodeTransformers[]>) => (nodeType: string) => {
-                const nodeTransformers: NodeTransformers[] = nodeTransformersMap.get(nodeType) || [];
-                const instancesArray: INodeTransformer[] = [];
+            return (nodeTransformerName: NodeTransformers) => {
+                if (cache.has(nodeTransformerName)) {
+                    return <INodeTransformer>cache.get(nodeTransformerName);
+                }
 
-                nodeTransformers.forEach((transformer: NodeTransformers) => {
-                    let nodeTransformer: INodeTransformer;
+                const nodeTransformer: INodeTransformer = context.container
+                    .getNamed<INodeTransformer>(
+                        ServiceIdentifiers.INodeTransformer,
+                        nodeTransformerName
+                    );
 
-                    if (cache.has(transformer)) {
-                        nodeTransformer = <INodeTransformer>cache.get(transformer);
-                    } else {
-                        nodeTransformer = context.container.getNamed<INodeTransformer>(
-                            ServiceIdentifiers.INodeTransformer,
-                            transformer
-                        );
-                        cache.set(transformer, nodeTransformer);
-                    }
+                cache.set(nodeTransformerName, nodeTransformer);
 
-                    instancesArray.push(nodeTransformer);
-                });
-
-                return instancesArray;
+                return nodeTransformer;
             };
         });
 });

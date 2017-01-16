@@ -50,10 +50,24 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @return {estraverse.Visitor}
+     */
+    public getVisitor (): estraverse.Visitor {
+        return {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
+                if (Node.isLabeledStatementNode(node)) {
+                    this.transformNode(node, parentNode);
+                }
+            }
+        };
+    }
+
+    /**
      * @param labeledStatementNode
+     * @param parentNode
      * @returns {ESTree.Node}
      */
-    public transformNode (labeledStatementNode: ESTree.LabeledStatement): ESTree.Node {
+    private transformNode (labeledStatementNode: ESTree.LabeledStatement, parentNode: ESTree.Node): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
 
         this.storeLabeledStatementName(labeledStatementNode, nodeIdentifier);

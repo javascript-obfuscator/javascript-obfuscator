@@ -1,6 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -22,6 +23,19 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @return {estraverse.Visitor}
+     */
+    public getVisitor (): estraverse.Visitor {
+        return {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
+                if (Node.isMemberExpressionNode(node)) {
+                    this.transformNode(node, parentNode);
+                }
+            }
+        };
+    }
+
+    /**
      * replaces:
      *     object.identifier = 1;
      *
@@ -34,9 +48,10 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
      * Literal node will be obfuscated by LiteralTransformer
      *
      * @param memberExpressionNode
+     * @param parentNode
      * @returns {ESTree.Node}
      */
-    public transformNode (memberExpressionNode: ESTree.MemberExpression): ESTree.Node {
+    private transformNode (memberExpressionNode: ESTree.MemberExpression, parentNode: ESTree.Node): ESTree.Node {
         if (Node.isIdentifierNode(memberExpressionNode.property)) {
             if (memberExpressionNode.computed) {
                 return memberExpressionNode;

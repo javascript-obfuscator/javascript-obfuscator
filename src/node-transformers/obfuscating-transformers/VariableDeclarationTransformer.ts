@@ -53,11 +53,24 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @return {estraverse.Visitor}
+     */
+    public getVisitor (): estraverse.Visitor {
+        return {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
+                if (Node.isVariableDeclarationNode(node)) {
+                    this.transformNode(node, parentNode);
+                }
+            }
+        };
+    }
+
+    /**
      * @param variableDeclarationNode
      * @param parentNode
      * @returns {ESTree.Node}
      */
-    public transformNode (variableDeclarationNode: ESTree.VariableDeclaration, parentNode: ESTree.Node): ESTree.Node {
+    private transformNode (variableDeclarationNode: ESTree.VariableDeclaration, parentNode: ESTree.Node): ESTree.Node {
         const blockScopeOfVariableDeclarationNode: TNodeWithBlockStatement = NodeUtils
             .getBlockScopesOfNode(variableDeclarationNode)[0];
 

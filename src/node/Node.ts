@@ -49,6 +49,14 @@ export class Node {
      * @param node
      * @returns {boolean}
      */
+    public static isCatchClauseNode (node: ESTree.Node): node is ESTree.CatchClause {
+        return node.type === NodeType.CatchClause;
+    }
+
+    /**
+     * @param node
+     * @returns {boolean}
+     */
     public static isContinueStatementNode (node: ESTree.Node): node is ESTree.ContinueStatement {
         return node.type === NodeType.ContinueStatement;
     }
@@ -134,6 +142,14 @@ export class Node {
      * @param node
      * @returns {boolean}
      */
+    public static isMethodDefinitionNode (node: ESTree.Node): node is ESTree.MethodDefinition {
+        return node.type === NodeType.MethodDefinition;
+    }
+
+    /**
+     * @param node
+     * @returns {boolean}
+     */
     public static isObjectPatternNode (node: ESTree.Node): node is ESTree.ObjectPattern {
         return node.type === NodeType.ObjectPattern;
     }
@@ -182,6 +198,15 @@ export class Node {
         );
 
         return !parentNodeIsPropertyNode && !parentNodeIsMemberExpressionNode && !Node.isLabelIdentifierNode(node, parentNode);
+    }
+
+    /**
+     *
+     * @param node
+     * @returns {boolean}
+     */
+    public static isTemplateLiteralNode (node: ESTree.Node): node is ESTree.TemplateLiteral {
+        return node.type === NodeType.TemplateLiteral;
     }
 
     /**

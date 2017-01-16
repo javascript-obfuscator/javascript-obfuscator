@@ -115,7 +115,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
 
         estraverse.replace(scopeNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (!node.obfuscated && Node.isReplaceableIdentifierNode(node, parentNode)) {
+                if (!node.obfuscatedNode && Node.isReplaceableIdentifierNode(node, parentNode)) {
                     const newNodeName: string = this.identifierReplacer.replace(node.name, nodeIdentifier);
 
                     if (node.name !== newNodeName) {

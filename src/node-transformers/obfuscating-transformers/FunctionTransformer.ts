@@ -93,7 +93,7 @@ export class FunctionTransformer extends AbstractNodeTransformer {
 
                     if (node.name !== newNodeName) {
                         node.name = newNodeName;
-                        node.obfuscated = true;
+                        node.obfuscatedNode = true;
                     }
                 }
             }

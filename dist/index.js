@@ -90,7 +90,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 150);
+/******/ 	return __webpack_require__(__webpack_require__.s = 151);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -342,7 +342,7 @@ var NodeUtils = function () {
                         value = parentNode || node;
                     }
                     node.parentNode = value;
-                    node.obfuscated = false;
+                    node.obfuscatedNode = false;
                 }
             });
             return astTree;
@@ -1086,7 +1086,7 @@ var Nodes = function () {
                 type: NodeType_1.NodeType.Program,
                 body: body,
                 sourceType: 'script',
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1097,7 +1097,7 @@ var Nodes = function () {
                 operator: operator,
                 left: left,
                 right: right,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1108,7 +1108,7 @@ var Nodes = function () {
                 operator: operator,
                 left: left,
                 right: right,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1119,7 +1119,7 @@ var Nodes = function () {
             return {
                 type: NodeType_1.NodeType.BlockStatement,
                 body: body,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1127,7 +1127,7 @@ var Nodes = function () {
         value: function getBreakStatement(label) {
             var breakStatementNode = {
                 type: NodeType_1.NodeType.BreakStatement,
-                obfuscated: false
+                obfuscatedNode: false
             };
             if (label) {
                 breakStatementNode.label = label;
@@ -1143,7 +1143,7 @@ var Nodes = function () {
                 type: NodeType_1.NodeType.CatchClause,
                 param: Nodes.getIdentifierNode('err'),
                 body: Nodes.getBlockStatementNode(body),
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1155,7 +1155,7 @@ var Nodes = function () {
                 type: NodeType_1.NodeType.CallExpression,
                 callee: callee,
                 arguments: args,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1163,7 +1163,7 @@ var Nodes = function () {
         value: function getContinueStatement(label) {
             var continueStatementNode = {
                 type: NodeType_1.NodeType.ContinueStatement,
-                obfuscated: false
+                obfuscatedNode: false
             };
             if (label) {
                 continueStatementNode.label = label;
@@ -1176,7 +1176,7 @@ var Nodes = function () {
             return {
                 type: NodeType_1.NodeType.ExpressionStatement,
                 expression: expression,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1188,7 +1188,7 @@ var Nodes = function () {
                 params: params,
                 body: body,
                 generator: false,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1199,7 +1199,7 @@ var Nodes = function () {
                 params: params,
                 body: body,
                 generator: false,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1209,7 +1209,7 @@ var Nodes = function () {
                 type: NodeType_1.NodeType.IfStatement,
                 test: test,
                 consequent: consequent,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1218,7 +1218,7 @@ var Nodes = function () {
             return {
                 type: NodeType_1.NodeType.Identifier,
                 name: name,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1228,7 +1228,7 @@ var Nodes = function () {
                 type: NodeType_1.NodeType.LabeledStatement,
                 label: label,
                 body: body,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1242,7 +1242,7 @@ var Nodes = function () {
                     content: "'" + value + "'",
                     precedence: escodegen.Precedence.Primary
                 },
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1253,7 +1253,7 @@ var Nodes = function () {
                 operator: operator,
                 left: left,
                 right: right,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1266,7 +1266,7 @@ var Nodes = function () {
                 computed: computed,
                 object: object,
                 property: property,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1275,7 +1275,7 @@ var Nodes = function () {
             return {
                 type: NodeType_1.NodeType.ObjectExpression,
                 properties: properties,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1291,7 +1291,7 @@ var Nodes = function () {
                 method: false,
                 shorthand: false,
                 computed: computed,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1304,7 +1304,7 @@ var Nodes = function () {
                 operator: operator,
                 argument: argument,
                 prefix: prefix,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1313,7 +1313,7 @@ var Nodes = function () {
             return {
                 type: NodeType_1.NodeType.ReturnStatement,
                 argument: argument,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1323,7 +1323,7 @@ var Nodes = function () {
                 type: NodeType_1.NodeType.SwitchStatement,
                 discriminant: discriminant,
                 cases: cases,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1333,7 +1333,7 @@ var Nodes = function () {
                 type: NodeType_1.NodeType.SwitchCase,
                 test: test,
                 consequent: consequent,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1344,7 +1344,7 @@ var Nodes = function () {
                 operator: operator,
                 argument: argumentExpr,
                 prefix: false,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1357,7 +1357,7 @@ var Nodes = function () {
                 type: NodeType_1.NodeType.VariableDeclaration,
                 declarations: declarations,
                 kind: kind,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1367,7 +1367,7 @@ var Nodes = function () {
                 type: NodeType_1.NodeType.VariableDeclarator,
                 id: id,
                 init: init,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }, {
@@ -1377,7 +1377,7 @@ var Nodes = function () {
                 type: NodeType_1.NodeType.WhileStatement,
                 test: test,
                 body: body,
-                obfuscated: false
+                obfuscatedNode: false
             };
         }
     }]);
@@ -5838,7 +5838,7 @@ var CatchClauseTransformer = function (_AbstractNodeTransfor) {
                         var newNodeName = _this2.identifierReplacer.replace(node.name, nodeIdentifier);
                         if (node.name !== newNodeName) {
                             node.name = newNodeName;
-                            node.obfuscated = true;
+                            node.obfuscatedNode = true;
                         }
                     }
                 }
@@ -6071,7 +6071,7 @@ var FunctionTransformer = function (_AbstractNodeTransfor) {
                         var newNodeName = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
                         if (node.name !== newNodeName) {
                             node.name = newNodeName;
-                            node.obfuscated = true;
+                            node.obfuscatedNode = true;
                         }
                     }
                 }
@@ -6468,7 +6468,7 @@ var VariableDeclarationTransformer = function (_AbstractNodeTransfor) {
             replaceableIdentifiersForCurrentScope = [];
             estraverse.replace(scopeNode, {
                 enter: function enter(node, parentNode) {
-                    if (!node.obfuscated && Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
+                    if (!node.obfuscatedNode && Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
                         var newNodeName = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
                         if (node.name !== newNodeName) {
                             node.name = newNodeName;
@@ -8149,7 +8149,8 @@ module.exports = require("mkdirp");
 module.exports = require("reflect-metadata");
 
 /***/ }),
-/* 150 */
+/* 150 */,
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

@@ -105,7 +105,7 @@ export class StringLiteralReplacer extends AbstractReplacer {
         const indexOfValue: number = this.stringArrayStorage.getLength();
         const hexadecimalIndex: string = `${Utils.hexadecimalPrefix}${Utils.decToHex(indexOfValue)}`;
 
-        this.stringArrayStorage.set(null, value);
+        this.stringArrayStorage.set(this.stringArrayStorage.getLength(), value);
         this.stringLiteralHexadecimalIndexCache.set(value, hexadecimalIndex);
 
         return hexadecimalIndex;

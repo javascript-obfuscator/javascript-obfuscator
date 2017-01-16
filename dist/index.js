@@ -6773,7 +6773,7 @@ var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplace
             }
             var indexOfValue = this.stringArrayStorage.getLength();
             var hexadecimalIndex = "" + Utils_1.Utils.hexadecimalPrefix + Utils_1.Utils.decToHex(indexOfValue);
-            this.stringArrayStorage.set(null, value);
+            this.stringArrayStorage.set(this.stringArrayStorage.getLength(), value);
             this.stringLiteralHexadecimalIndexCache.set(value, hexadecimalIndex);
             return hexadecimalIndex;
         }
@@ -7599,6 +7599,8 @@ var RandomGeneratorUtils_1 = __webpack_require__(9);
 var ArrayStorage = function () {
     function ArrayStorage() {
         (0, _classCallCheck3.default)(this, ArrayStorage);
+
+        this.storageLength = 0;
     }
 
     (0, _createClass3.default)(ArrayStorage, [{
@@ -7618,7 +7620,7 @@ var ArrayStorage = function () {
     }, {
         key: "getLength",
         value: function getLength() {
-            return this.storage.length;
+            return this.storageLength;
         }
     }, {
         key: "getStorage",
@@ -7649,14 +7651,19 @@ var ArrayStorage = function () {
     }, {
         key: "set",
         value: function set(key, value) {
-            this.storage.push(value);
+            if (key === this.storageLength) {
+                this.storage.push(value);
+            } else {
+                this.storage.splice(key, 0, value);
+            }
+            this.storageLength++;
         }
     }]);
     return ArrayStorage;
 }();
-tslib_1.__decorate([Initializable_1.initializable(), tslib_1.__metadata("design:type", String)], ArrayStorage.prototype, "storageId", void 0);
 tslib_1.__decorate([Initializable_1.initializable(), tslib_1.__metadata("design:type", Array)], ArrayStorage.prototype, "storage", void 0);
-ArrayStorage = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__metadata("design:paramtypes", [])], ArrayStorage);
+tslib_1.__decorate([Initializable_1.initializable(), tslib_1.__metadata("design:type", String)], ArrayStorage.prototype, "storageId", void 0);
+ArrayStorage = tslib_1.__decorate([inversify_1.injectable()], ArrayStorage);
 exports.ArrayStorage = ArrayStorage;
 
 /***/ }),

@@ -9,16 +9,21 @@ import { RandomGeneratorUtils } from '../utils/RandomGeneratorUtils';
 @injectable()
 export abstract class ArrayStorage <T> implements IStorage <T> {
     /**
+     * @type {T[]}
+     */
+    @initializable()
+    protected storage: T[];
+
+    /**
      * @type {string}
      */
     @initializable()
     protected storageId: string;
 
     /**
-     * @type {T[]}
+     * @type {number}
      */
-    @initializable()
-    protected storage: T[];
+    private storageLength: number = 0;
 
     /**
      * @param key
@@ -46,7 +51,7 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
      * @returns {number}
      */
     public getLength (): number {
-        return this.storage.length;
+        return this.storageLength;
     }
 
     /**
@@ -87,7 +92,13 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
      * @param key
      * @param value
      */
-    public set (key: string | null, value: T): void {
-        this.storage.push(value);
+    public set (key: number, value: T): void {
+        if (key === this.storageLength) {
+            this.storage.push(value);
+        } else {
+            this.storage.splice(key, 0, value);
+        }
+
+        this.storageLength++;
     }
 }

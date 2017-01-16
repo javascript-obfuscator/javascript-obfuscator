@@ -64,7 +64,7 @@
     "tslint": "4.3.1",
     "tslint-loader": "3.3.0",
     "typescript": "2.1.5",
-    "webpack": "2.2.0-rc.5",
+    "webpack": "2.2.0-rc.6",
     "webpack-node-externals": "1.5.4"
   },
   "repository": {

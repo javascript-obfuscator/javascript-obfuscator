@@ -2473,13 +2473,13 @@ exports.ObfuscationResult = ObfuscationResult;
 "use strict";
 
 
+var _getIterator2 = __webpack_require__(21);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
 var _toConsumableArray2 = __webpack_require__(24);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
-
-var _map = __webpack_require__(11);
-
-var _map2 = _interopRequireDefault(_map);
 
 var _classCallCheck2 = __webpack_require__(0);
 
@@ -2497,14 +2497,13 @@ var ServiceIdentifiers_1 = __webpack_require__(4);
 var estraverse = __webpack_require__(17);
 var NodeTransformers_1 = __webpack_require__(40);
 var ObfuscationEvents_1 = __webpack_require__(22);
+var VisitorDirection_1 = __webpack_require__(151);
 var Node_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(8);
 var Obfuscator = Obfuscator_1 = function () {
     function Obfuscator(stackTraceAnalyzer, obfuscationEventEmitter, customNodeGroupStorage, nodeTransformersFactory, options) {
         (0, _classCallCheck3.default)(this, Obfuscator);
 
-        this.cachedEnterVisitors = new _map2.default();
-        this.cachedLeaveVisitors = new _map2.default();
         this.stackTraceAnalyzer = stackTraceAnalyzer;
         this.obfuscationEventEmitter = obfuscationEventEmitter;
         this.customNodeGroupStorage = customNodeGroupStorage;
@@ -2530,9 +2529,7 @@ var Obfuscator = Obfuscator_1 = function () {
             if (this.options.controlFlowFlattening) {
                 astTree = this.transformAstTree(astTree, Obfuscator_1.controlFlowTransformersList);
             }
-            console.time();
             astTree = this.transformAstTree(astTree, [].concat((0, _toConsumableArray3.default)(Obfuscator_1.convertingTransformersList), (0, _toConsumableArray3.default)(Obfuscator_1.obfuscatingTransformersList)));
-            console.timeEnd();
             this.obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation, astTree, stackTraceData);
             return astTree;
         }
@@ -2552,10 +2549,10 @@ var Obfuscator = Obfuscator_1 = function () {
         value: function mergeTransformerVisitors(visitors) {
             var enterVisitor = this.getVisitorForDirection(visitors.filter(function (visitor) {
                 return visitor.enter !== undefined;
-            }), 'enter', this.cachedEnterVisitors);
+            }), VisitorDirection_1.VisitorDirection.enter);
             var leaveVisitor = this.getVisitorForDirection(visitors.filter(function (visitor) {
                 return visitor.leave !== undefined;
-            }), 'leave', this.cachedLeaveVisitors);
+            }), VisitorDirection_1.VisitorDirection.leave);
             return {
                 enter: enterVisitor,
                 leave: leaveVisitor
@@ -2563,31 +2560,43 @@ var Obfuscator = Obfuscator_1 = function () {
         }
     }, {
         key: "getVisitorForDirection",
-        value: function getVisitorForDirection(visitors, direction, cache) {
-            var _this3 = this;
-
+        value: function getVisitorForDirection(visitors, direction) {
             if (!visitors.length) {
                 return null;
             }
             return function (node, parentNode) {
-                if (cache.has(node.type)) {
-                    var cachedVisitorsForNode = cache.get(node.type);
-                    if (!cachedVisitorsForNode.length) {
-                        return;
-                    }
-                    cachedVisitorsForNode.forEach(function (visitor) {
-                        node = visitor[direction].call(_this3, node, parentNode);
-                    });
-                } else {
-                    var visitorsForNode = visitors.filter(function (visitor) {
-                        var result = visitor[direction].call(_this3, node, parentNode);
-                        if (result) {
-                            node = result;
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = (0, _getIterator3.default)(visitors), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var visitor = _step.value;
+
+                        var visitorResult = visitor[direction](node, parentNode);
+                        if (!visitorResult) {
+                            continue;
                         }
-                        return result;
-                    });
-                    cache.set(node.type, visitorsForNode);
+                        if (visitorResult === estraverse.VisitorOption.Break || visitorResult === estraverse.VisitorOption.Remove || visitorResult === estraverse.VisitorOption.Skip) {
+                            return visitorResult;
+                        }
+                        node = visitorResult;
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
                 }
+
                 return node;
             };
         }
@@ -8349,6 +8358,20 @@ module.exports = require("reflect-metadata");
 
 var JavaScriptObfuscator_1 = __webpack_require__(25);
 module.exports = JavaScriptObfuscator_1.JavaScriptObfuscator;
+
+/***/ }),
+/* 150 */,
+/* 151 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var Utils_1 = __webpack_require__(14);
+exports.VisitorDirection = Utils_1.Utils.strEnumify({
+    enter: 'enter',
+    leave: 'leave'
+});
 
 /***/ })
 /******/ ]);

@@ -5,6 +5,7 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TNodeTransformersFactory } from './types/container/TNodeTransformersFactory';
+import { TVisitorDirection } from './types/TVisitorDirection';
 
 import { ICustomNodeGroup } from './interfaces/custom-nodes/ICustomNodeGroup';
 import { IObfuscationEventEmitter } from './interfaces/event-emitters/IObfuscationEventEmitter';
@@ -16,6 +17,7 @@ import { IStorage } from './interfaces/storages/IStorage';
 
 import { NodeTransformers } from './enums/container/NodeTransformers';
 import { ObfuscationEvents } from './enums/ObfuscationEvents';
+import { VisitorDirection } from './enums/VisitorDirection';
 
 import { Node } from './node/Node';
 import { NodeUtils } from './node/NodeUtils';
@@ -51,16 +53,6 @@ export class Obfuscator implements IObfuscator {
         NodeTransformers.ObjectExpressionTransformer,
         NodeTransformers.VariableDeclarationTransformer
     ];
-
-    /**
-     * @type {Map<string, estraverse.Visitor[]>}
-     */
-    private readonly cachedEnterVisitors: Map<string, estraverse.Visitor[]> = new Map();
-
-    /**
-     * @type {Map<string, estraverse.Visitor[]>}
-     */
-    private readonly cachedLeaveVisitors: Map<string, estraverse.Visitor[]> = new Map();
 
     /**
      * @type {IStorage<ICustomNodeGroup>}
@@ -144,7 +136,6 @@ export class Obfuscator implements IObfuscator {
         }
 
         // second pass: nodes obfuscation
-        console.time();
         astTree = this.transformAstTree(
             astTree,
             [
@@ -152,7 +143,6 @@ export class Obfuscator implements IObfuscator {
                 ...Obfuscator.obfuscatingTransformersList
             ]
         );
-        console.timeEnd();
 
         this.obfuscationEventEmitter.emit(ObfuscationEvents.AfterObfuscation, astTree, stackTraceData);
 
@@ -185,13 +175,11 @@ export class Obfuscator implements IObfuscator {
     private mergeTransformerVisitors (visitors: estraverse.Visitor[]): estraverse.Visitor {
         const enterVisitor: any = this.getVisitorForDirection(
             visitors.filter((visitor: estraverse.Visitor) => visitor.enter !== undefined),
-            'enter',
-            this.cachedEnterVisitors
+            VisitorDirection.enter
         );
         const leaveVisitor: any = this.getVisitorForDirection(
             visitors.filter((visitor: estraverse.Visitor) => visitor.leave !== undefined),
-            'leave',
-            this.cachedLeaveVisitors
+            VisitorDirection.leave
         );
 
         return {
@@ -203,37 +191,33 @@ export class Obfuscator implements IObfuscator {
     /**
      * @param visitors
      * @param direction
-     * @param cache
-     * @return {estraverse.Visitor}
+     * @return {estraverse.Visitor | null}
      */
-    private getVisitorForDirection (visitors: estraverse.Visitor[], direction: string, cache: Map<string, estraverse.Visitor[]>): estraverse.Visitor | null {
+    private getVisitorForDirection (
+        visitors: estraverse.Visitor[],
+        direction: TVisitorDirection
+    ): estraverse.Visitor | null {
         if (!visitors.length) {
             return null;
         }
 
         return (node: ESTree.Node, parentNode: ESTree.Node) => {
-            if (cache.has(node.type)) {
-                const cachedVisitorsForNode: estraverse.Visitor[] = <estraverse.Visitor[]>cache.get(node.type);
+            for (const visitor of visitors) {
+                const visitorResult: estraverse.VisitorOption | ESTree.Node | void = visitor[direction]!(node, parentNode);
 
-                if (!cachedVisitorsForNode.length) {
-                    return;
+                if (!visitorResult) {
+                    continue;
                 }
 
-                cachedVisitorsForNode.forEach((visitor: any) => {
-                    node = visitor[direction].call(this, node, parentNode);
-                });
-            } else {
-                const visitorsForNode: estraverse.Visitor[] = visitors.filter((visitor: any) => {
-                    const result: ESTree.Node = visitor[direction].call(this, node, parentNode);
+                if (
+                    visitorResult === estraverse.VisitorOption.Break ||
+                    visitorResult === estraverse.VisitorOption.Remove ||
+                    visitorResult === estraverse.VisitorOption.Skip
+                ) {
+                    return visitorResult;
+                }
 
-                    if (result) {
-                        node = result;
-                    }
-
-                    return result;
-                });
-
-                cache.set(node.type, visitorsForNode);
+                node = <ESTree.Node>visitorResult;
             }
 
             return node;

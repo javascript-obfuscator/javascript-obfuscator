@@ -52,7 +52,7 @@ export class FunctionTransformer extends AbstractNodeTransformer {
                     Node.isFunctionExpressionNode(node) ||
                     Node.isArrowFunctionExpressionNode(node)
                 ) {
-                    this.transformNode(node, parentNode);
+                    return this.transformNode(node, parentNode);
                 }
             }
         };

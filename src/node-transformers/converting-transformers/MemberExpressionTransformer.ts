@@ -29,7 +29,7 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
         return {
             enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
                 if (Node.isMemberExpressionNode(node)) {
-                    this.transformNode(node, parentNode);
+                    return this.transformNode(node, parentNode);
                 }
             }
         };

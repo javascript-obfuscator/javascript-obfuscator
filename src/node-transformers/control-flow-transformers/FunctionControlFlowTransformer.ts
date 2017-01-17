@@ -119,7 +119,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         return {
             leave: (node: ESTree.Node, parentNode: ESTree.Node) => {
                 if (Node.isFunctionDeclarationNode(node) || Node.isFunctionExpressionNode(node)) {
-                    this.transformNode(node, parentNode);
+                    return this.transformNode(node, parentNode);
                 }
             }
         };

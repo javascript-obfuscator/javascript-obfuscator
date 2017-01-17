@@ -27,7 +27,6 @@ export class Obfuscator implements IObfuscator {
      */
     private static readonly controlFlowTransformersList: NodeTransformers[] = [
         NodeTransformers.BlockStatementControlFlowTransformer,
-        NodeTransformers.FunctionControlFlowTransformer,
         NodeTransformers.FunctionControlFlowTransformer
     ];
 
@@ -44,15 +43,13 @@ export class Obfuscator implements IObfuscator {
      * @type {NodeTransformers[]}
      */
     private static readonly obfuscatingTransformersList: NodeTransformers[] = [
-        NodeTransformers.FunctionTransformer,
-        NodeTransformers.FunctionDeclarationTransformer,
         NodeTransformers.CatchClauseTransformer,
         NodeTransformers.FunctionDeclarationTransformer,
         NodeTransformers.FunctionTransformer,
-        NodeTransformers.FunctionTransformer,
+        NodeTransformers.LabeledStatementTransformer,
+        NodeTransformers.LiteralTransformer,
         NodeTransformers.ObjectExpressionTransformer,
-        NodeTransformers.VariableDeclarationTransformer,
-        NodeTransformers.LiteralTransformer
+        NodeTransformers.VariableDeclarationTransformer
     ];
 
     /**
@@ -186,56 +183,60 @@ export class Obfuscator implements IObfuscator {
      * @return {estraverse.Visitor}
      */
     private mergeTransformerVisitors (visitors: estraverse.Visitor[]): estraverse.Visitor {
-        const enterVisitors: any[] = visitors.filter((visitor: estraverse.Visitor) => {
-            return visitor.enter !== undefined;
-        }).map((visitor: estraverse.Visitor) => {
-            return visitor.enter;
-        });
-        const leaveVisitors: any[] = visitors.filter((visitor: estraverse.Visitor) => {
-            return visitor.leave !== undefined;
-        }).map((visitor: estraverse.Visitor) => {
-            return visitor.leave;
-        });
+        const enterVisitor: any = this.getVisitorForDirection(
+            visitors.filter((visitor: estraverse.Visitor) => visitor.enter !== undefined),
+            'enter',
+            this.cachedEnterVisitors
+        );
+        const leaveVisitor: any = this.getVisitorForDirection(
+            visitors.filter((visitor: estraverse.Visitor) => visitor.leave !== undefined),
+            'leave',
+            this.cachedLeaveVisitors
+        );
 
         return {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                let nodeVisitors: estraverse.Visitor[];
-                let saveToCache: boolean = true;
+            enter: enterVisitor,
+            leave: leaveVisitor
+        };
+    }
 
-                if (this.cachedEnterVisitors.has(node.type)) {
-                    nodeVisitors = <estraverse.Visitor[]>this.cachedEnterVisitors.get(node.type);
-                    saveToCache = false;
-                } else {
-                    nodeVisitors = enterVisitors;
+    /**
+     * @param visitors
+     * @param direction
+     * @param cache
+     * @return {estraverse.Visitor}
+     */
+    private getVisitorForDirection (visitors: estraverse.Visitor[], direction: string, cache: Map<string, estraverse.Visitor[]>): estraverse.Visitor | null {
+        if (!visitors.length) {
+            return null;
+        }
+
+        return (node: ESTree.Node, parentNode: ESTree.Node) => {
+            if (cache.has(node.type)) {
+                const cachedVisitorsForNode: estraverse.Visitor[] = <estraverse.Visitor[]>cache.get(node.type);
+
+                if (!cachedVisitorsForNode.length) {
+                    return;
                 }
 
-                nodeVisitors.forEach((visitor: any) => {
-                    visitor.call(this, node, parentNode);
+                cachedVisitorsForNode.forEach((visitor: any) => {
+                    node = visitor[direction].call(this, node, parentNode);
+                });
+            } else {
+                const visitorsForNode: estraverse.Visitor[] = visitors.filter((visitor: any) => {
+                    const result: ESTree.Node = visitor[direction].call(this, node, parentNode);
+
+                    if (result) {
+                        node = result;
+                    }
+
+                    return result;
                 });
 
-                if (saveToCache) {
-                    this.cachedEnterVisitors.set(node.type, nodeVisitors);
-                }
-            },
-            leave: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                let nodeVisitors: estraverse.Visitor[];
-                let saveToCache: boolean = true;
-
-                if (this.cachedLeaveVisitors.has(node.type)) {
-                    nodeVisitors = <estraverse.Visitor[]>this.cachedLeaveVisitors.get(node.type);
-                    saveToCache = false;
-                } else {
-                    nodeVisitors = leaveVisitors;
-                }
-
-                nodeVisitors.forEach((visitor: any) => {
-                    visitor.call(this, node, parentNode);
-                });
-
-                if (saveToCache) {
-                    this.cachedLeaveVisitors.set(node.type, nodeVisitors);
-                }
+                cache.set(node.type, visitorsForNode);
             }
+
+            return node;
         };
     }
 }

@@ -57,7 +57,7 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
         return {
             leave: (node: ESTree.Node, parentNode: ESTree.Node) => {
                 if (Node.isBlockStatementNode(node)) {
-                    this.transformNode(node, parentNode);
+                    return this.transformNode(node, parentNode);
                 }
             }
         };

@@ -56,7 +56,7 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
         return {
             enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
                 if (Node.isLabeledStatementNode(node)) {
-                    this.transformNode(node, parentNode);
+                    return this.transformNode(node, parentNode);
                 }
             }
         };

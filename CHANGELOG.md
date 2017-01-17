@@ -1,5 +1,9 @@
 Change Log
 ===
+v0.9.0-beta.2
+---
+* Transformers refactoring
+
 v0.9.0-beta.1
 ---
 * **New option:** `controlFlowFlattening` allows to enable/disable **Control Flow flattening**. Control flow flattening is a structure transformation of the source code that hinders program comprehension.

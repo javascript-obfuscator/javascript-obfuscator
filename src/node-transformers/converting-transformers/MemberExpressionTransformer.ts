@@ -51,7 +51,7 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
      * @param parentNode
      * @returns {ESTree.Node}
      */
-    private transformNode (memberExpressionNode: ESTree.MemberExpression, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode (memberExpressionNode: ESTree.MemberExpression, parentNode: ESTree.Node): ESTree.Node {
         if (Node.isIdentifierNode(memberExpressionNode.property)) {
             if (memberExpressionNode.computed) {
                 return memberExpressionNode;

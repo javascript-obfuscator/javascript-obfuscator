@@ -59,7 +59,7 @@ export class CatchClauseTransformer extends AbstractNodeTransformer {
      * @param parentNode
      * @returns {ESTree.Node}
      */
-    private transformNode (catchClauseNode: ESTree.CatchClause, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode (catchClauseNode: ESTree.CatchClause, parentNode: ESTree.Node): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
 
         this.storeCatchClauseParam(catchClauseNode, nodeIdentifier);

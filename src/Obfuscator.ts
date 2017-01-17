@@ -6,6 +6,7 @@ import * as ESTree from 'estree';
 
 import { TNodeTransformersFactory } from './types/container/TNodeTransformersFactory';
 import { TVisitorDirection } from './types/TVisitorDirection';
+import { TVisitorFunction } from './types/TVisitorFunction';
 
 import { ICustomNodeGroup } from './interfaces/custom-nodes/ICustomNodeGroup';
 import { IObfuscationEventEmitter } from './interfaces/event-emitters/IObfuscationEventEmitter';
@@ -183,17 +184,20 @@ export class Obfuscator implements IObfuscator {
      * @param direction
      * @return {estraverse.Visitor | null}
      */
-    private mergeVisitorsForDirection (
-        visitors: estraverse.Visitor[],
-        direction: TVisitorDirection
-    ): estraverse.Visitor | null {
+    private mergeVisitorsForDirection (visitors: estraverse.Visitor[], direction: TVisitorDirection): TVisitorFunction | null {
         if (!visitors.length) {
             return null;
         }
 
         return (node: ESTree.Node, parentNode: ESTree.Node) => {
             for (const visitor of visitors) {
-                const visitorResult: estraverse.VisitorOption | ESTree.Node | void = visitor[direction]!(node, parentNode);
+                const visitorFunction: TVisitorFunction | undefined = visitor[direction];
+
+                if (!visitorFunction) {
+                    continue;
+                }
+
+                const visitorResult: estraverse.VisitorOption | ESTree.Node | void = visitorFunction(node, parentNode);
 
                 if (!visitorResult) {
                     continue;

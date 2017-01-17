@@ -51,7 +51,7 @@ export class LiteralTransformer extends AbstractNodeTransformer {
      * @param parentNode
      * @returns {ESTree.Node}
      */
-    private transformNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
         if (Node.isPropertyNode(parentNode) && parentNode.key === literalNode) {
             return literalNode;
         }

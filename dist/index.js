@@ -2568,7 +2568,11 @@ var Obfuscator = Obfuscator_1 = function () {
                     for (var _iterator = (0, _getIterator3.default)(visitors), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                         var visitor = _step.value;
 
-                        var visitorResult = visitor[direction](node, parentNode);
+                        var visitorFunction = visitor[direction];
+                        if (!visitorFunction) {
+                            continue;
+                        }
+                        var visitorResult = visitorFunction(node, parentNode);
                         if (!visitorResult) {
                             continue;
                         }

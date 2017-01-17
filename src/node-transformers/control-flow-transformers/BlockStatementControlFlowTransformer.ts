@@ -68,7 +68,7 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
      * @param parentNode
      * @returns {ESTree.Node}
      */
-    private transformNode (blockStatementNode: ESTree.BlockStatement, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode (blockStatementNode: ESTree.BlockStatement, parentNode: ESTree.Node): ESTree.Node {
         if (
             RandomGeneratorUtils.getRandomFloat(0, 1) > this.options.controlFlowFlatteningThreshold ||
             BlockStatementControlFlowTransformer.blockStatementHasProhibitedStatements(blockStatementNode)

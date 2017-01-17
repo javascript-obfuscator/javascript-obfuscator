@@ -69,7 +69,7 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
      * @param parentNode
      * @returns {ESTree.Node}
      */
-    private transformNode (functionDeclarationNode: ESTree.FunctionDeclaration, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode (functionDeclarationNode: ESTree.FunctionDeclaration, parentNode: ESTree.Node): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
         const blockScopeOfFunctionDeclarationNode: TNodeWithBlockStatement = NodeUtils
             .getBlockScopesOfNode(functionDeclarationNode)[0];

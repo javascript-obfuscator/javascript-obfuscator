@@ -64,7 +64,7 @@ export class MethodDefinitionTransformer extends AbstractNodeTransformer {
      * @param parentNode
      * @returns {ESTree.Node}
      */
-    private transformNode (methodDefinitionNode: ESTree.MethodDefinition, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode (methodDefinitionNode: ESTree.MethodDefinition, parentNode: ESTree.Node): ESTree.Node {
         if (
             Node.isIdentifierNode(methodDefinitionNode.key) &&
             !MethodDefinitionTransformer.ignoredNames.includes(methodDefinitionNode.key.name) &&

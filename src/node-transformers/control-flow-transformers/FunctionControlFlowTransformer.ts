@@ -130,7 +130,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @param parentNode
      * @returns {ESTree.Node}
      */
-    private transformNode (functionNode: ESTree.Function, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode (functionNode: ESTree.Function, parentNode: ESTree.Node): ESTree.Node {
         if (Node.isArrowFunctionExpressionNode(functionNode)) {
             return functionNode;
         }

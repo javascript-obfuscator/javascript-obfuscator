@@ -51,7 +51,7 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
      * @param parentNode
      * @returns {ESTree.Node}
      */
-    private transformNode (templateLiteralNode: ESTree.TemplateLiteral, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode (templateLiteralNode: ESTree.TemplateLiteral, parentNode: ESTree.Node): ESTree.Node {
         const templateLiteralExpressions: ESTree.Expression[] = templateLiteralNode.expressions;
 
         let nodes: (ESTree.Literal | ESTree.Expression)[] = [];

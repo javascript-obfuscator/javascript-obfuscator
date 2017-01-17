@@ -90,7 +90,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 149);
+/******/ 	return __webpack_require__(__webpack_require__.s = 150);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -2541,15 +2541,13 @@ var Obfuscator = Obfuscator_1 = function () {
             var visitors = nodeTransformers.map(function (nodeTransformer) {
                 return _this2.nodeTransformersFactory(nodeTransformer).getVisitor();
             });
-            var enterVisitor = this.mergeVisitorsForDirection(visitors.filter(function (visitor) {
-                return visitor.enter !== undefined;
-            }), VisitorDirection_1.VisitorDirection.enter);
-            var leaveVisitor = this.mergeVisitorsForDirection(visitors.filter(function (visitor) {
-                return visitor.leave !== undefined;
-            }), VisitorDirection_1.VisitorDirection.leave);
             estraverse.replace(astTree, {
-                enter: enterVisitor,
-                leave: leaveVisitor
+                enter: this.mergeVisitorsForDirection(visitors.filter(function (visitor) {
+                    return visitor.enter !== undefined;
+                }), VisitorDirection_1.VisitorDirection.enter),
+                leave: this.mergeVisitorsForDirection(visitors.filter(function (visitor) {
+                    return visitor.leave !== undefined;
+                }), VisitorDirection_1.VisitorDirection.leave)
             });
             return astTree;
         }
@@ -2557,7 +2555,9 @@ var Obfuscator = Obfuscator_1 = function () {
         key: "mergeVisitorsForDirection",
         value: function mergeVisitorsForDirection(visitors, direction) {
             if (!visitors.length) {
-                return null;
+                return function (node, parentNode) {
+                    return node;
+                };
             }
             return function (node, parentNode) {
                 var _iteratorNormalCompletion = true;
@@ -8361,7 +8361,8 @@ module.exports = require("mkdirp");
 module.exports = require("reflect-metadata");
 
 /***/ }),
-/* 149 */
+/* 149 */,
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

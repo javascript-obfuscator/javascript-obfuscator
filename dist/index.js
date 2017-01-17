@@ -2538,29 +2538,24 @@ var Obfuscator = Obfuscator_1 = function () {
         value: function transformAstTree(astTree, nodeTransformers) {
             var _this2 = this;
 
-            var mergedVisitors = this.mergeTransformerVisitors(nodeTransformers.map(function (nodeTransformer) {
+            var visitors = nodeTransformers.map(function (nodeTransformer) {
                 return _this2.nodeTransformersFactory(nodeTransformer).getVisitor();
-            }));
-            estraverse.replace(astTree, mergedVisitors);
+            });
+            var enterVisitor = this.mergeVisitorsForDirection(visitors.filter(function (visitor) {
+                return visitor.enter !== undefined;
+            }), VisitorDirection_1.VisitorDirection.enter);
+            var leaveVisitor = this.mergeVisitorsForDirection(visitors.filter(function (visitor) {
+                return visitor.leave !== undefined;
+            }), VisitorDirection_1.VisitorDirection.leave);
+            estraverse.replace(astTree, {
+                enter: enterVisitor,
+                leave: leaveVisitor
+            });
             return astTree;
         }
     }, {
-        key: "mergeTransformerVisitors",
-        value: function mergeTransformerVisitors(visitors) {
-            var enterVisitor = this.getVisitorForDirection(visitors.filter(function (visitor) {
-                return visitor.enter !== undefined;
-            }), VisitorDirection_1.VisitorDirection.enter);
-            var leaveVisitor = this.getVisitorForDirection(visitors.filter(function (visitor) {
-                return visitor.leave !== undefined;
-            }), VisitorDirection_1.VisitorDirection.leave);
-            return {
-                enter: enterVisitor,
-                leave: leaveVisitor
-            };
-        }
-    }, {
-        key: "getVisitorForDirection",
-        value: function getVisitorForDirection(visitors, direction) {
+        key: "mergeVisitorsForDirection",
+        value: function mergeVisitorsForDirection(visitors, direction) {
             if (!visitors.length) {
                 return null;
             }

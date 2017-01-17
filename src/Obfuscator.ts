@@ -157,35 +157,25 @@ export class Obfuscator implements IObfuscator {
         astTree: ESTree.Program,
         nodeTransformers: NodeTransformers[]
     ): ESTree.Program {
-        const mergedVisitors: estraverse.Visitor = this.mergeTransformerVisitors(
-            nodeTransformers.map((nodeTransformer: NodeTransformers): estraverse.Visitor => {
+        const visitors: estraverse.Visitor[] = nodeTransformers
+            .map((nodeTransformer: NodeTransformers): estraverse.Visitor => {
                 return this.nodeTransformersFactory(nodeTransformer).getVisitor();
-            })
-        );
-
-        estraverse.replace(astTree, mergedVisitors);
-
-        return astTree;
-    }
-
-    /**
-     * @param visitors
-     * @return {estraverse.Visitor}
-     */
-    private mergeTransformerVisitors (visitors: estraverse.Visitor[]): estraverse.Visitor {
-        const enterVisitor: any = this.getVisitorForDirection(
+            });
+        const enterVisitor: any = this.mergeVisitorsForDirection(
             visitors.filter((visitor: estraverse.Visitor) => visitor.enter !== undefined),
             VisitorDirection.enter
         );
-        const leaveVisitor: any = this.getVisitorForDirection(
+        const leaveVisitor: any = this.mergeVisitorsForDirection(
             visitors.filter((visitor: estraverse.Visitor) => visitor.leave !== undefined),
             VisitorDirection.leave
         );
 
-        return {
+        estraverse.replace(astTree, {
             enter: enterVisitor,
             leave: leaveVisitor
-        };
+        });
+
+        return astTree;
     }
 
     /**
@@ -193,7 +183,7 @@ export class Obfuscator implements IObfuscator {
      * @param direction
      * @return {estraverse.Visitor | null}
      */
-    private getVisitorForDirection (
+    private mergeVisitorsForDirection (
         visitors: estraverse.Visitor[],
         direction: TVisitorDirection
     ): estraverse.Visitor | null {

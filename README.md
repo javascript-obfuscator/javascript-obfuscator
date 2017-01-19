@@ -124,7 +124,7 @@ For available options see [options](#options).
 Usage:
 ```sh
 javascript-obfuscator in.js [options]
-javascript-obfuscator in.js -output out.js [options]
+javascript-obfuscator in.js --output out.js [options]
 ```
 
 If the destination path is not specified through `--output` option, obfuscated code will saved into input file directory with name like `INPUT_FILE_NAME-obfuscated.js`

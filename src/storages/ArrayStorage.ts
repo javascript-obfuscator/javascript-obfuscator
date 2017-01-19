@@ -45,6 +45,7 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
      */
     public getKeyOf (value: T): number | null {
         const key: number = this.storage.indexOf(value);
+
         return key >= 0 ? key : null;
     }
 

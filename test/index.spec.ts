@@ -15,6 +15,8 @@ import './unit-tests/obfuscation-result/ObfuscationResult.spec';
 import './unit-tests/options/options-normalizer/OptionsNormalizer.spec';
 import './unit-tests/source-map-corrector/SourceMapCorrector.spec';
 import './unit-tests/stack-trace-analyzer/stack-trace-analyzer/StackTraceAnalyzer.spec';
+import './unit-tests/storages/ArrayStorage.spec';
+import './unit-tests/storages/MapStorage.spec';
 import './unit-tests/utils/crypt-utils/CryptUtils.spec';
 import './unit-tests/utils/random-generator-utils/RandomGeneratorUtils.spec';
 import './unit-tests/utils/utils/Utils.spec';

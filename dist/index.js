@@ -90,7 +90,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 149);
+/******/ 	return __webpack_require__(__webpack_require__.s = 150);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -776,14 +776,6 @@ var _from = __webpack_require__(45);
 
 var _from2 = _interopRequireDefault(_from);
 
-var _slicedToArray2 = __webpack_require__(35);
-
-var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
-
-var _getIterator2 = __webpack_require__(18);
-
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
 var _toConsumableArray2 = __webpack_require__(24);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
@@ -798,7 +790,6 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _ = __webpack_require__(146);
 var JSFuck_1 = __webpack_require__(36);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 
@@ -858,40 +849,6 @@ var Utils = function () {
         key: "isCeilNumber",
         value: function isCeilNumber(number) {
             return number % 1 === 0;
-        }
-    }, {
-        key: "mapGetFirstKeyOf",
-        value: function mapGetFirstKeyOf(map, value) {
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
-
-            try {
-                for (var _iterator = (0, _getIterator3.default)(map), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var _step$value = (0, _slicedToArray3.default)(_step.value, 2),
-                        key = _step$value[0],
-                        storageValue = _step$value[1];
-
-                    if (_.isEqual(value, storageValue)) {
-                        return key;
-                    }
-                }
-            } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
-                    }
-                } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
-                    }
-                }
-            }
-
-            return null;
         }
     }, {
         key: "strEnumify",
@@ -2228,6 +2185,14 @@ var _map = __webpack_require__(12);
 
 var _map2 = _interopRequireDefault(_map);
 
+var _slicedToArray2 = __webpack_require__(35);
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
+var _getIterator2 = __webpack_require__(18);
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
 var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
@@ -2242,7 +2207,6 @@ var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(2);
 var Initializable_1 = __webpack_require__(10);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
-var Utils_1 = __webpack_require__(14);
 var MapStorage = function () {
     function MapStorage() {
         (0, _classCallCheck3.default)(this, MapStorage);
@@ -2260,7 +2224,36 @@ var MapStorage = function () {
     }, {
         key: "getKeyOf",
         value: function getKeyOf(value) {
-            return Utils_1.Utils.mapGetFirstKeyOf(this.storage, value);
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = (0, _getIterator3.default)(this.storage), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var _step$value = (0, _slicedToArray3.default)(_step.value, 2),
+                        key = _step$value[0],
+                        storageValue = _step$value[1];
+
+                    if (value === storageValue) {
+                        return key;
+                    }
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
+            return null;
         }
     }, {
         key: "getLength",
@@ -2303,7 +2296,7 @@ var MapStorage = function () {
 }();
 tslib_1.__decorate([Initializable_1.initializable(), tslib_1.__metadata("design:type", String)], MapStorage.prototype, "storageId", void 0);
 tslib_1.__decorate([Initializable_1.initializable(), tslib_1.__metadata("design:type", _map2.default)], MapStorage.prototype, "storage", void 0);
-MapStorage = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__metadata("design:paramtypes", [])], MapStorage);
+MapStorage = tslib_1.__decorate([inversify_1.injectable()], MapStorage);
 exports.MapStorage = MapStorage;
 
 /***/ }),
@@ -7826,7 +7819,8 @@ var ArrayStorage = function () {
     }, {
         key: "getKeyOf",
         value: function getKeyOf(value) {
-            return this.storage.indexOf(value);
+            var key = this.storage.indexOf(value);
+            return key >= 0 ? key : null;
         }
     }, {
         key: "getLength",
@@ -8343,12 +8337,7 @@ module.exports = require("events");
 module.exports = require("fs");
 
 /***/ }),
-/* 146 */
-/***/ (function(module, exports) {
-
-module.exports = require("lodash");
-
-/***/ }),
+/* 146 */,
 /* 147 */
 /***/ (function(module, exports) {
 
@@ -8361,7 +8350,8 @@ module.exports = require("mkdirp");
 module.exports = require("reflect-metadata");
 
 /***/ }),
-/* 149 */
+/* 149 */,
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

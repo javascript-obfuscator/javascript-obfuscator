@@ -5,7 +5,6 @@ import { IStorage } from '../interfaces/storages/IStorage';
 import { initializable } from '../decorators/Initializable';
 
 import { RandomGeneratorUtils } from '../utils/RandomGeneratorUtils';
-import { Utils } from '../utils/Utils';
 
 @injectable()
 export abstract class MapStorage <T> implements IStorage <T> {
@@ -40,7 +39,13 @@ export abstract class MapStorage <T> implements IStorage <T> {
      * @returns {string | number | null}
      */
     public getKeyOf (value: T): string | number | null {
-        return Utils.mapGetFirstKeyOf <string | number, T> (this.storage, value);
+        for (const [key, storageValue] of this.storage) {
+            if (value === storageValue) {
+                return key;
+            }
+        }
+
+        return null;
     }
 
     /**

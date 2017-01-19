@@ -41,10 +41,11 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
 
     /**
      * @param value
-     * @returns {string | number}
+     * @returns {number | null}
      */
-    public getKeyOf (value: T): string | number {
-        return this.storage.indexOf(value);
+    public getKeyOf (value: T): number | null {
+        const key: number = this.storage.indexOf(value);
+        return key >= 0 ? key : null;
     }
 
     /**

@@ -15,7 +15,7 @@ export class Nodes {
             type: NodeType.Program,
             body,
             sourceType: 'script',
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -35,7 +35,7 @@ export class Nodes {
             operator,
             left,
             right,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -55,7 +55,7 @@ export class Nodes {
             operator,
             left,
             right,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -67,7 +67,7 @@ export class Nodes {
         return {
             type: NodeType.BlockStatement,
             body,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -78,7 +78,7 @@ export class Nodes {
     public static getBreakStatement (label?: ESTree.Identifier): ESTree.BreakStatement {
         const breakStatementNode: ESTree.BreakStatement = {
             type: NodeType.BreakStatement,
-            obfuscated: false
+            obfuscatedNode: false
         };
 
         if (label) {
@@ -97,7 +97,7 @@ export class Nodes {
             type: NodeType.CatchClause,
             param: Nodes.getIdentifierNode('err'),
             body: Nodes.getBlockStatementNode(body),
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -114,7 +114,7 @@ export class Nodes {
             type: NodeType.CallExpression,
             callee,
             arguments: args,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -125,7 +125,7 @@ export class Nodes {
     public static getContinueStatement (label?: ESTree.Identifier): ESTree.ContinueStatement {
         const continueStatementNode: ESTree.ContinueStatement = {
             type: NodeType.ContinueStatement,
-            obfuscated: false
+            obfuscatedNode: false
         };
 
         if (label) {
@@ -143,7 +143,7 @@ export class Nodes {
         return {
             type: NodeType.ExpressionStatement,
             expression,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -164,7 +164,7 @@ export class Nodes {
             params,
             body,
             generator: false,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -182,7 +182,7 @@ export class Nodes {
             params,
             body,
             generator: false,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -196,7 +196,7 @@ export class Nodes {
             type: NodeType.IfStatement,
             test,
             consequent,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -208,7 +208,7 @@ export class Nodes {
         return {
             type: NodeType.Identifier,
             name,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -222,7 +222,7 @@ export class Nodes {
             type: NodeType.LabeledStatement,
             label,
             body,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -239,7 +239,7 @@ export class Nodes {
                 content: `'${value}'`,
                 precedence: escodegen.Precedence.Primary
             },
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -259,7 +259,7 @@ export class Nodes {
             operator,
             left,
             right,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -279,7 +279,7 @@ export class Nodes {
             computed,
             object,
             property,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -291,7 +291,7 @@ export class Nodes {
         return {
             type: NodeType.ObjectExpression,
             properties,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -311,7 +311,7 @@ export class Nodes {
             method: false,
             shorthand: false,
             computed,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -331,7 +331,7 @@ export class Nodes {
             operator,
             argument,
             prefix,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -343,7 +343,7 @@ export class Nodes {
         return {
             type: NodeType.ReturnStatement,
             argument,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -360,7 +360,7 @@ export class Nodes {
             type: NodeType.SwitchStatement,
             discriminant,
             cases,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -374,7 +374,7 @@ export class Nodes {
             type: NodeType.SwitchCase,
             test,
             consequent,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -389,7 +389,7 @@ export class Nodes {
             operator,
             argument: argumentExpr,
             prefix: false,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -406,7 +406,7 @@ export class Nodes {
             type: NodeType.VariableDeclaration,
             declarations,
             kind,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -420,7 +420,7 @@ export class Nodes {
             type: NodeType.VariableDeclarator,
             id,
             init,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 
@@ -434,7 +434,7 @@ export class Nodes {
             type: NodeType.WhileStatement,
             test,
             body,
-            obfuscated: false
+            obfuscatedNode: false
         };
     }
 }

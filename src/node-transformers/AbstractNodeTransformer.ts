@@ -1,6 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
+import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { INodeTransformer } from '../interfaces/node-transformers/INodeTransformer';
@@ -28,6 +29,11 @@ export abstract class AbstractNodeTransformer implements INodeTransformer {
     ) {
         this.options = options;
     }
+
+    /**
+     * @returns {estraverse.Visitor}
+     */
+    public abstract getVisitor (): estraverse.Visitor;
 
     /**
      * @param node

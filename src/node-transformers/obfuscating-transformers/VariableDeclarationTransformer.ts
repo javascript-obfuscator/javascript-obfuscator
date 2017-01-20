@@ -53,6 +53,19 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @return {estraverse.Visitor}
+     */
+    public getVisitor (): estraverse.Visitor {
+        return {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
+                if (Node.isVariableDeclarationNode(node)) {
+                    return this.transformNode(node, parentNode);
+                }
+            }
+        };
+    }
+
+    /**
      * @param variableDeclarationNode
      * @param parentNode
      * @returns {ESTree.Node}
@@ -83,9 +96,13 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     private storeVariableNames (variableDeclarationNode: ESTree.VariableDeclaration, nodeIdentifier: number): void {
         variableDeclarationNode.declarations
             .forEach((declarationNode: ESTree.VariableDeclarator) => {
-                if (Node.isIdentifierNode(declarationNode.id)) {
-                    this.identifierReplacer.storeNames(declarationNode.id.name, nodeIdentifier);
+                if (Node.isObjectPatternNode(declarationNode.id)) {
+                    return estraverse.VisitorOption.Skip;
                 }
+
+                NodeUtils.typedTraverse(declarationNode.id, NodeType.Identifier, {
+                    enter: (node: ESTree.Identifier) => this.identifierReplacer.storeNames(node.name, nodeIdentifier)
+                });
             });
     }
 
@@ -111,7 +128,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
 
         estraverse.replace(scopeNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (!node.obfuscated && Node.isReplaceableIdentifierNode(node, parentNode)) {
+                if (!node.obfuscatedNode && Node.isReplaceableIdentifierNode(node, parentNode)) {
                     const newNodeName: string = this.identifierReplacer.replace(node.name, nodeIdentifier);
 
                     if (node.name !== newNodeName) {

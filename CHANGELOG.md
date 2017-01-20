@@ -1,5 +1,18 @@
 Change Log
 ===
+v0.9.0-beta.2
+---
+* Transformers refactoring
+
+v0.9.0-beta.1
+---
+* **New option:** `controlFlowFlattening` allows to enable/disable **Control Flow flattening**. Control flow flattening is a structure transformation of the source code that hinders program comprehension.
+* **New option:** `controlFlowFlatteningThreshold` allows to set percentage of nodes that will affected by `controlFlowFlattening`.
+* Better `es2015` support: correct obfuscation of `TemplateLiteral`, `ArrayPattern`, `AssignmentPattern` nodes.
+* Obfuscation performance boost.
+* Huge internal refactoring.
+* Various bug fixes.
+
 v0.8.6
 ---
 * additional fixes for https://github.com/javascript-obfuscator/javascript-obfuscator/issues/29

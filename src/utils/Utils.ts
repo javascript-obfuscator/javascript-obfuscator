@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { JSFuck } from '../enums/JSFuck';
 
 import { RandomGeneratorUtils } from './RandomGeneratorUtils';
@@ -90,21 +89,6 @@ export class Utils {
      */
     public static isCeilNumber (number: number): boolean {
         return number % 1 === 0;
-    }
-
-    /**
-     * @param map
-     * @param value
-     * @returns {T | null}
-     */
-    public static mapGetFirstKeyOf <T, U> (map: Map <T, U>, value: U): T | null {
-        for (const [key, storageValue] of map) {
-            if (_.isEqual(value, storageValue)) {
-                return key;
-            }
-        }
-
-        return null;
     }
 
     /**

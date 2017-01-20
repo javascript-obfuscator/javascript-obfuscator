@@ -1,5 +1,6 @@
 #!/bin/bash
 
+yarn run test:removeTmpDir &&
 yarn run test:compile &&
 $(yarn bin)/istanbul cover $(yarn bin)/_mocha -- test-tmp/test/index.spec.js --report lcovonly &&
 cat ./coverage/lcov.info | $(yarn bin)/coveralls &&

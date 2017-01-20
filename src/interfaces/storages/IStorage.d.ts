@@ -43,7 +43,7 @@ export interface IStorage <T> extends IInitializable {
      * @param key
      * @param value
      */
-    set (key: string | number | null, value: T): void;
+    set (key: string | number, value: T): void;
 
     /**
      * @returns string

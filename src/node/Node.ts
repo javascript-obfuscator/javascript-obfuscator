@@ -17,6 +17,14 @@ export class Node {
      * @param node
      * @returns {boolean}
      */
+    public static isAssignmentPatternNode (node: ESTree.Node): node is ESTree.AssignmentPattern {
+        return node.type === NodeType.AssignmentPattern;
+    }
+
+    /**
+     * @param node
+     * @returns {boolean}
+     */
     public static isBlockStatementNode (node: ESTree.Node): node is ESTree.BlockStatement {
         return node.type === NodeType.BlockStatement;
     }
@@ -35,6 +43,14 @@ export class Node {
      */
     public static isCallExpressionNode (node: ESTree.Node): node is ESTree.CallExpression {
         return node.type === NodeType.CallExpression;
+    }
+
+    /**
+     * @param node
+     * @returns {boolean}
+     */
+    public static isCatchClauseNode (node: ESTree.Node): node is ESTree.CatchClause {
+        return node.type === NodeType.CatchClause;
     }
 
     /**
@@ -126,6 +142,22 @@ export class Node {
      * @param node
      * @returns {boolean}
      */
+    public static isMethodDefinitionNode (node: ESTree.Node): node is ESTree.MethodDefinition {
+        return node.type === NodeType.MethodDefinition;
+    }
+
+    /**
+     * @param node
+     * @returns {boolean}
+     */
+    public static isObjectPatternNode (node: ESTree.Node): node is ESTree.ObjectPattern {
+        return node.type === NodeType.ObjectPattern;
+    }
+
+    /**
+     * @param node
+     * @returns {boolean}
+     */
     public static isObjectExpressionNode (node: ESTree.Node): node is ESTree.ObjectExpression {
         return node.type === NodeType.ObjectExpression;
     }
@@ -166,6 +198,15 @@ export class Node {
         );
 
         return !parentNodeIsPropertyNode && !parentNodeIsMemberExpressionNode && !Node.isLabelIdentifierNode(node, parentNode);
+    }
+
+    /**
+     *
+     * @param node
+     * @returns {boolean}
+     */
+    public static isTemplateLiteralNode (node: ESTree.Node): node is ESTree.TemplateLiteral {
+        return node.type === NodeType.TemplateLiteral;
     }
 
     /**

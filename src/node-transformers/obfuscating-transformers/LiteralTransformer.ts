@@ -2,6 +2,7 @@ import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as escodegen from 'escodegen';
+import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -30,6 +31,19 @@ export class LiteralTransformer extends AbstractNodeTransformer {
         super(options);
 
         this.replacersFactory = replacersFactory;
+    }
+
+    /**
+     * @return {estraverse.Visitor}
+     */
+    public getVisitor (): estraverse.Visitor {
+        return {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
+                if (Node.isLiteralNode(node)) {
+                    return this.transformNode(node, parentNode);
+                }
+            }
+        };
     }
 
     /**

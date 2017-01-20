@@ -2,6 +2,7 @@ import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as escodegen from 'escodegen';
+import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -65,10 +66,24 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @return {estraverse.Visitor}
+     */
+    public getVisitor (): estraverse.Visitor {
+        return {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
+                if (Node.isObjectExpressionNode(node)) {
+                    return this.transformNode(node, parentNode);
+                }
+            }
+        };
+    }
+
+    /**
      * @param objectExpressionNode
+     * @param parentNode
      * @returns {ESTree.Node}
      */
-    public transformNode (objectExpressionNode: ESTree.ObjectExpression): ESTree.Node {
+    public transformNode (objectExpressionNode: ESTree.ObjectExpression, parentNode: ESTree.Node): ESTree.Node {
         objectExpressionNode.properties
             .forEach((property: ESTree.Property) => {
                 if (property.shorthand) {

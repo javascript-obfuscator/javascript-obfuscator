@@ -58,8 +58,6 @@ describe('BinaryExpressionControlFlowReplacer', () => {
 
                     assert.match(obfuscatedCode, controlFlowStorageCallRegExp1);
                     assert.match(obfuscatedCode, controlFlowStorageCallRegExp2);
-                    assert.isOk(firstMatch);
-                    assert.isOk(secondMatch);
 
                     if (firstMatch === secondMatch) {
                         equalsValue++;
@@ -67,6 +65,8 @@ describe('BinaryExpressionControlFlowReplacer', () => {
                 }
 
                 assert.closeTo(equalsValue / samplesCount, expectedValue, delta);
+
+                console.log(equalsValue / samplesCount);
             });
         });
     });

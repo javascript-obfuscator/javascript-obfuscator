@@ -1,5 +1,6 @@
 #!/bin/bash
 
+yarn run test:removeTmpDir &&
 yarn run test:compile &&
 $(yarn bin)/mocha test-tmp/test/index.spec.js &&
 yarn run test:removeTmpDir

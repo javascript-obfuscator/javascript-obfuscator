@@ -42,10 +42,28 @@ export class FunctionTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @return {estraverse.Visitor}
+     */
+    public getVisitor (): estraverse.Visitor {
+        return {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
+                if (
+                    Node.isFunctionDeclarationNode(node) ||
+                    Node.isFunctionExpressionNode(node) ||
+                    Node.isArrowFunctionExpressionNode(node)
+                ) {
+                    return this.transformNode(node, parentNode);
+                }
+            }
+        };
+    }
+
+    /**
      * @param functionNode
+     * @param parentNode
      * @returns {ESTree.Node}
      */
-    public transformNode (functionNode: ESTree.Function): ESTree.Node {
+    public transformNode (functionNode: ESTree.Function, parentNode: ESTree.Node): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
 
         this.storeFunctionParams(functionNode, nodeIdentifier);
@@ -61,9 +79,23 @@ export class FunctionTransformer extends AbstractNodeTransformer {
     private storeFunctionParams (functionNode: ESTree.Function, nodeIdentifier: number): void {
         functionNode.params
             .forEach((paramsNode: ESTree.Node) => {
-                if (Node.isIdentifierNode(paramsNode)) {
-                    this.identifierReplacer.storeNames(paramsNode.name, nodeIdentifier);
+                if (Node.isObjectPatternNode(paramsNode)) {
+                    return estraverse.VisitorOption.Skip;
                 }
+
+                estraverse.traverse(paramsNode, {
+                    enter: (node: ESTree.Node): any => {
+                        if (Node.isAssignmentPatternNode(node) && Node.isIdentifierNode(node.left)) {
+                            this.identifierReplacer.storeNames(node.left.name, nodeIdentifier);
+
+                            return estraverse.VisitorOption.Skip;
+                        }
+
+                        if (Node.isIdentifierNode(node)) {
+                            this.identifierReplacer.storeNames(node.name, nodeIdentifier);
+                        }
+                    }
+                });
             });
     }
 
@@ -79,7 +111,7 @@ export class FunctionTransformer extends AbstractNodeTransformer {
 
                     if (node.name !== newNodeName) {
                         node.name = newNodeName;
-                        node.obfuscated = true;
+                        node.obfuscatedNode = true;
                     }
                 }
             }

@@ -1,6 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -30,6 +31,19 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
      */
     private static isLiteralNodeWithStringValue (node: ESTree.Node): boolean {
         return node && Node.isLiteralNode(node) && typeof node.value === 'string';
+    }
+
+    /**
+     * @return {estraverse.Visitor}
+     */
+    public getVisitor (): estraverse.Visitor {
+        return {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
+                if (Node.isTemplateLiteralNode(node)) {
+                    return this.transformNode(node, parentNode);
+                }
+            }
+        };
     }
 
     /**

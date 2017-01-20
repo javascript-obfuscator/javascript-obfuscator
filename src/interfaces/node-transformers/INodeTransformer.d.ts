@@ -1,6 +1,12 @@
+import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 export interface INodeTransformer {
+    /**
+     * @returns {estraverse.Visitor}
+     */
+    getVisitor (): estraverse.Visitor;
+
     /**
      * @param node
      * @param parentNode

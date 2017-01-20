@@ -52,6 +52,19 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @return {estraverse.Visitor}
+     */
+    public getVisitor (): estraverse.Visitor {
+        return {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
+                if (Node.isFunctionDeclarationNode(node)) {
+                    return this.transformNode(node, parentNode);
+                }
+            }
+        };
+    }
+
+    /**
      * @param functionDeclarationNode
      * @param parentNode
      * @returns {ESTree.Node}

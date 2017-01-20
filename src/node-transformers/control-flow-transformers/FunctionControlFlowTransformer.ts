@@ -113,10 +113,24 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @return {estraverse.Visitor}
+     */
+    public getVisitor (): estraverse.Visitor {
+        return {
+            leave: (node: ESTree.Node, parentNode: ESTree.Node) => {
+                if (Node.isFunctionDeclarationNode(node) || Node.isFunctionExpressionNode(node)) {
+                    return this.transformNode(node, parentNode);
+                }
+            }
+        };
+    }
+
+    /**
      * @param functionNode
+     * @param parentNode
      * @returns {ESTree.Node}
      */
-    public transformNode (functionNode: ESTree.Function): ESTree.Node {
+    public transformNode (functionNode: ESTree.Function, parentNode: ESTree.Node): ESTree.Node {
         if (Node.isArrowFunctionExpressionNode(functionNode)) {
             return functionNode;
         }

@@ -177,7 +177,7 @@ export class NodeUtils {
                 }
 
                 node.parentNode = value;
-                node.obfuscated = false;
+                node.obfuscatedNode = false;
             }
         });
 

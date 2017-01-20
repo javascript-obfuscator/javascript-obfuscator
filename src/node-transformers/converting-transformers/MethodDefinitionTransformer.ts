@@ -1,6 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -33,6 +34,19 @@ export class MethodDefinitionTransformer extends AbstractNodeTransformer {
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+    }
+
+    /**
+     * @return {estraverse.Visitor}
+     */
+    public getVisitor (): estraverse.Visitor {
+        return {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
+                if (Node.isMethodDefinitionNode(node)) {
+                    return this.transformNode(node, parentNode);
+                }
+            }
+        };
     }
 
     /**

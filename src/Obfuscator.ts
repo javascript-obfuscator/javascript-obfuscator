@@ -6,18 +6,17 @@ import * as ESTree from 'estree';
 
 import { TNodeTransformersFactory } from './types/container/TNodeTransformersFactory';
 import { TVisitorDirection } from './types/TVisitorDirection';
+import { TVisitorFunction } from './types/TVisitorFunction';
 
 import { ICustomNodeGroup } from './interfaces/custom-nodes/ICustomNodeGroup';
 import { IObfuscationEventEmitter } from './interfaces/event-emitters/IObfuscationEventEmitter';
 import { IObfuscator } from './interfaces/IObfuscator';
 import { IOptions } from './interfaces/options/IOptions';
-import { INodeTransformer } from './interfaces/node-transformers/INodeTransformer';
 import { IStackTraceAnalyzer } from './interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
 import { IStackTraceData } from './interfaces/stack-trace-analyzer/IStackTraceData';
 import { IStorage } from './interfaces/storages/IStorage';
 
 import { NodeTransformers } from './enums/container/NodeTransformers';
-import { NodeType } from './enums/NodeType';
 import { ObfuscationEvents } from './enums/ObfuscationEvents';
 import { VisitorDirection } from './enums/VisitorDirection';
 
@@ -27,40 +26,34 @@ import { NodeUtils } from './node/NodeUtils';
 @injectable()
 export class Obfuscator implements IObfuscator {
     /**
-     * @type {Map<string, NodeTransformers[]>}
+     * @type {NodeTransformers[]}
      */
-    private static readonly controlFlowTransformersMap: Map <string, NodeTransformers[]> = new Map([
-        [NodeType.BlockStatement, [NodeTransformers.BlockStatementControlFlowTransformer]],
-        [NodeType.FunctionDeclaration, [NodeTransformers.FunctionControlFlowTransformer]],
-        [NodeType.FunctionExpression, [NodeTransformers.FunctionControlFlowTransformer]]
-    ]);
+    private static readonly controlFlowTransformersList: NodeTransformers[] = [
+        NodeTransformers.BlockStatementControlFlowTransformer,
+        NodeTransformers.FunctionControlFlowTransformer
+    ];
 
     /**
-     * @type {Map<string, NodeTransformers[]>}
+     * @type {NodeTransformers[]}
      */
-    private static readonly convertingTransformersMap: Map <string, NodeTransformers[]> = new Map([
-        [NodeType.MemberExpression, [NodeTransformers.MemberExpressionTransformer]],
-        [NodeType.MethodDefinition, [NodeTransformers.MethodDefinitionTransformer]],
-        [NodeType.TemplateLiteral, [NodeTransformers.TemplateLiteralTransformer]],
-    ]);
+    private static readonly convertingTransformersList: NodeTransformers[] = [
+        NodeTransformers.MemberExpressionTransformer,
+        NodeTransformers.MethodDefinitionTransformer,
+        NodeTransformers.TemplateLiteralTransformer
+    ];
 
     /**
-     * @type {Map<string, NodeTransformers[]>}
+     * @type {NodeTransformers[]}
      */
-    private static readonly obfuscatingTransformersMap: Map <string, NodeTransformers[]> = new Map([
-        [NodeType.ArrowFunctionExpression, [NodeTransformers.FunctionTransformer]],
-        [NodeType.ClassDeclaration, [NodeTransformers.FunctionDeclarationTransformer]],
-        [NodeType.CatchClause, [NodeTransformers.CatchClauseTransformer]],
-        [NodeType.FunctionDeclaration, [
-            NodeTransformers.FunctionDeclarationTransformer,
-            NodeTransformers.FunctionTransformer
-        ]],
-        [NodeType.FunctionExpression, [NodeTransformers.FunctionTransformer]],
-        [NodeType.ObjectExpression, [NodeTransformers.ObjectExpressionTransformer]],
-        [NodeType.VariableDeclaration, [NodeTransformers.VariableDeclarationTransformer]],
-        [NodeType.LabeledStatement, [NodeTransformers.LabeledStatementTransformer]],
-        [NodeType.Literal, [NodeTransformers.LiteralTransformer]]
-    ]);
+    private static readonly obfuscatingTransformersList: NodeTransformers[] = [
+        NodeTransformers.CatchClauseTransformer,
+        NodeTransformers.FunctionDeclarationTransformer,
+        NodeTransformers.FunctionTransformer,
+        NodeTransformers.LabeledStatementTransformer,
+        NodeTransformers.LiteralTransformer,
+        NodeTransformers.ObjectExpressionTransformer,
+        NodeTransformers.VariableDeclarationTransformer
+    ];
 
     /**
      * @type {IStorage<ICustomNodeGroup>}
@@ -139,21 +132,17 @@ export class Obfuscator implements IObfuscator {
         if (this.options.controlFlowFlattening) {
             astTree = this.transformAstTree(
                 astTree,
-                VisitorDirection.leave,
-                this.nodeTransformersFactory(Obfuscator.controlFlowTransformersMap)
+                Obfuscator.controlFlowTransformersList
             );
         }
 
         // second pass: nodes obfuscation
         astTree = this.transformAstTree(
             astTree,
-            VisitorDirection.enter,
-            this.nodeTransformersFactory(
-                new Map([
-                    ...Obfuscator.convertingTransformersMap,
-                    ...Obfuscator.obfuscatingTransformersMap
-                ])
-            )
+            [
+                ...Obfuscator.convertingTransformersList,
+                ...Obfuscator.obfuscatingTransformersList
+            ]
         );
 
         this.obfuscationEventEmitter.emit(ObfuscationEvents.AfterObfuscation, astTree, stackTraceData);
@@ -163,26 +152,67 @@ export class Obfuscator implements IObfuscator {
 
     /**
      * @param astTree
-     * @param direction
-     * @param nodeTransformersConcreteFactory
+     * @param nodeTransformers
      */
     private transformAstTree (
         astTree: ESTree.Program,
-        direction: TVisitorDirection,
-        nodeTransformersConcreteFactory: (nodeType: string) => INodeTransformer[]
+        nodeTransformers: NodeTransformers[]
     ): ESTree.Program {
+        const visitors: estraverse.Visitor[] = nodeTransformers
+            .map((nodeTransformer: NodeTransformers): estraverse.Visitor => {
+                return this.nodeTransformersFactory(nodeTransformer).getVisitor();
+            });
+
         estraverse.replace(astTree, {
-            [direction]: (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node => {
-                const nodeTransformers: INodeTransformer[] = nodeTransformersConcreteFactory(node.type);
-
-                nodeTransformers.forEach((nodeTransformer: INodeTransformer) => {
-                    node = nodeTransformer.transformNode(node, parentNode);
-                });
-
-                return node;
-            }
+            enter: this.mergeVisitorsForDirection(
+                visitors.filter((visitor: estraverse.Visitor) => visitor.enter !== undefined),
+                VisitorDirection.enter
+            ),
+            leave: this.mergeVisitorsForDirection(
+                visitors.filter((visitor: estraverse.Visitor) => visitor.leave !== undefined),
+                VisitorDirection.leave
+            )
         });
 
         return astTree;
+    }
+
+    /**
+     * @param visitors
+     * @param direction
+     * @return {TVisitorDirection}
+     */
+    private mergeVisitorsForDirection (visitors: estraverse.Visitor[], direction: TVisitorDirection): TVisitorFunction {
+        if (!visitors.length) {
+            return (node: ESTree.Node, parentNode: ESTree.Node) => node;
+        }
+
+        return (node: ESTree.Node, parentNode: ESTree.Node) => {
+            for (const visitor of visitors) {
+                const visitorFunction: TVisitorFunction | undefined = visitor[direction];
+
+                if (!visitorFunction) {
+                    continue;
+                }
+
+                const visitorResult: estraverse.VisitorOption | ESTree.Node | void = visitorFunction(node, parentNode);
+
+                if (!visitorResult) {
+                    continue;
+                }
+
+                if (
+                    visitorResult === estraverse.VisitorOption.Break ||
+                    visitorResult === estraverse.VisitorOption.Remove ||
+                    visitorResult === estraverse.VisitorOption.Skip
+                ) {
+                    return visitorResult;
+                }
+
+                node = <ESTree.Node>visitorResult;
+            }
+
+            return node;
+        };
     }
 }

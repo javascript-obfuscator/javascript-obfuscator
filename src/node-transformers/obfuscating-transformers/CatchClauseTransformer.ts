@@ -42,10 +42,24 @@ export class CatchClauseTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @return {estraverse.Visitor}
+     */
+    public getVisitor (): estraverse.Visitor {
+        return {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
+                if (Node.isCatchClauseNode(node)) {
+                    return this.transformNode(node, parentNode);
+                }
+            }
+        };
+    }
+
+    /**
      * @param catchClauseNode
+     * @param parentNode
      * @returns {ESTree.Node}
      */
-    public transformNode (catchClauseNode: ESTree.CatchClause): ESTree.Node {
+    public transformNode (catchClauseNode: ESTree.CatchClause, parentNode: ESTree.Node): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
 
         this.storeCatchClauseParam(catchClauseNode, nodeIdentifier);
@@ -76,7 +90,7 @@ export class CatchClauseTransformer extends AbstractNodeTransformer {
 
                     if (node.name !== newNodeName) {
                         node.name = newNodeName;
-                        node.obfuscated = true;
+                        node.obfuscatedNode = true;
                     }
                 }
             }

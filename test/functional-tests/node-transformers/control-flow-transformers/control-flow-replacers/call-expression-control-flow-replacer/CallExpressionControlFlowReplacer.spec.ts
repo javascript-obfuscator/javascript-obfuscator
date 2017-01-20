@@ -58,8 +58,6 @@ describe('CallExpressionControlFlowReplacer', () => {
 
                     assert.match(obfuscatedCode, controlFlowStorageCallRegExp1);
                     assert.match(obfuscatedCode, controlFlowStorageCallRegExp2);
-                    assert.isOk(firstMatch);
-                    assert.isOk(secondMatch);
 
                     if (firstMatch === secondMatch) {
                         equalsValue++;

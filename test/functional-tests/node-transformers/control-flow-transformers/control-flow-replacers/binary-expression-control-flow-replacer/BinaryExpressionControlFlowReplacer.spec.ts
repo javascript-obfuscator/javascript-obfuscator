@@ -67,6 +67,8 @@ describe('BinaryExpressionControlFlowReplacer', () => {
                 }
 
                 assert.closeTo(equalsValue / samplesCount, expectedValue, delta);
+
+                console.log(equalsValue / samplesCount);
             });
         });
     });

@@ -4,10 +4,6 @@
   },
   "presets": ["es2015"],
   "plugins": [
-    ["transform-runtime", {
-      "helpers": true,
-      "polyfill": true,
-      "regenerator": false
-    }]
+    "array-includes"
   ]
 }

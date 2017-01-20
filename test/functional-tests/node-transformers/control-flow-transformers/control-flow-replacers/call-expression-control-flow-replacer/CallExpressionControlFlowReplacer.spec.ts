@@ -65,8 +65,6 @@ describe('CallExpressionControlFlowReplacer', () => {
                 }
 
                 assert.closeTo(equalsValue / samplesCount, expectedValue, delta);
-
-                console.log(equalsValue / samplesCount);
             });
         });
 

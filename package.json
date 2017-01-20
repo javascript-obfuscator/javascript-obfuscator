@@ -12,7 +12,7 @@
     "js obfuscator"
   ],
   "engines": {
-    "node": ">=4.7"
+    "node": ">=4.3.0"
   },
   "main": "dist/index.js",
   "bin": {

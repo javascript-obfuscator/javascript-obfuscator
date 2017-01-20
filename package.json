@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "0.9.0-beta.2",
+  "version": "0.9.0-beta.3",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -48,7 +48,7 @@
     "@types/sinon": "1.16.34",
     "@types/string-template": "1.0.2",
     "awesome-typescript-loader": "3.0.0-beta.18",
-    "babel-cli": "6.22.1",
+    "babel-cli": "6.22.2",
     "babel-loader": "6.2.10",
     "babel-plugin-array-includes": "2.0.3",
     "babel-preset-es2015": "6.22.0",

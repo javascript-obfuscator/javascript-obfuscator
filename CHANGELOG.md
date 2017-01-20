@@ -1,5 +1,10 @@
 Change Log
 ===
+v0.9.0-beta.3
+---
+* Dropped `node@0.10` and `node@0.12` support internally (affects only development tasks).
+* Switched from `npm` to `yarn` internally.
+
 v0.9.0-beta.2
 ---
 * Transformers refactoring

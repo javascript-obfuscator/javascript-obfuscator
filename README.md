@@ -34,8 +34,12 @@ It is not recommended to obfuscate vendor scripts and polyfills, since the obfus
 
 ## Installation
 
-Install the package from NPM and add it to your `devDependencies`:
+Install the package with Yarn or NPM and add it to your `devDependencies`:
 
+```sh
+$ yarn add --dev javascript-obfuscator
+```
+or
 ```sh
 $ npm install --save-dev javascript-obfuscator
 ```

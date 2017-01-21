@@ -1,13 +1,13 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TCustomNodeFactory } from '../../types/container/TCustomNodeFactory';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IVisitor } from '../../interfaces/IVisitor';
 
 import { CustomNodes } from '../../enums/container/CustomNodes';
 
@@ -51,9 +51,9 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
     }
 
     /**
-     * @return {estraverse.Visitor}
+     * @return {IVisitor}
      */
-    public getVisitor (): estraverse.Visitor {
+    public getVisitor (): IVisitor {
         return {
             leave: (node: ESTree.Node, parentNode: ESTree.Node) => {
                 if (Node.isBlockStatementNode(node)) {

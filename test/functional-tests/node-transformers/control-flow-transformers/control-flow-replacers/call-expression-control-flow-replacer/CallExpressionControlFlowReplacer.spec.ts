@@ -29,7 +29,7 @@ describe('CallExpressionControlFlowReplacer', () => {
 
         describe('variant #2 - multiple call expressions with threshold = 1', () => {
             it('should replace call expression node by call to control flow storage node', function () {
-                this.timeout(15000);
+                this.timeout(60000);
 
                 const samplesCount: number = 1000;
                 const expectedValue: number = 0.5;

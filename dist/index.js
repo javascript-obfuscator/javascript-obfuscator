@@ -932,18 +932,14 @@ var CustomNodes;
 "use strict";
 
 
-var _classCallCheck2 = __webpack_require__(0);
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var AbstractNodeTransformer = function AbstractNodeTransformer(options) {
-    (0, _classCallCheck3.default)(this, AbstractNodeTransformer);
+    _classCallCheck(this, AbstractNodeTransformer);
 
     this.nodeIdentifier = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomInteger(0, 10000);
     this.options = options;
@@ -2437,23 +2433,11 @@ exports.ObfuscationResult = ObfuscationResult;
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(18);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _getIterator3 = _interopRequireDefault(_getIterator2);
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var _toConsumableArray2 = __webpack_require__(26);
-
-var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
-
-var _classCallCheck2 = __webpack_require__(0);
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(2);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(1);
@@ -2466,7 +2450,7 @@ var Node_1 = __webpack_require__(11);
 var NodeUtils_1 = __webpack_require__(8);
 var Obfuscator = Obfuscator_1 = function () {
     function Obfuscator(stackTraceAnalyzer, obfuscationEventEmitter, customNodeGroupStorage, nodeTransformersFactory, options) {
-        (0, _classCallCheck3.default)(this, Obfuscator);
+        _classCallCheck(this, Obfuscator);
 
         this.stackTraceAnalyzer = stackTraceAnalyzer;
         this.obfuscationEventEmitter = obfuscationEventEmitter;
@@ -2475,7 +2459,7 @@ var Obfuscator = Obfuscator_1 = function () {
         this.options = options;
     }
 
-    (0, _createClass3.default)(Obfuscator, [{
+    _createClass(Obfuscator, [{
         key: "obfuscateAstTree",
         value: function obfuscateAstTree(astTree) {
             var _this = this;
@@ -2493,7 +2477,7 @@ var Obfuscator = Obfuscator_1 = function () {
             if (this.options.controlFlowFlattening) {
                 astTree = this.transformAstTree(astTree, Obfuscator_1.controlFlowTransformersList);
             }
-            astTree = this.transformAstTree(astTree, [].concat((0, _toConsumableArray3.default)(Obfuscator_1.convertingTransformersList), (0, _toConsumableArray3.default)(Obfuscator_1.obfuscatingTransformersList)));
+            astTree = this.transformAstTree(astTree, [].concat(_toConsumableArray(Obfuscator_1.convertingTransformersList), _toConsumableArray(Obfuscator_1.obfuscatingTransformersList)));
             this.obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation, astTree, stackTraceData);
             return astTree;
         }
@@ -2529,7 +2513,7 @@ var Obfuscator = Obfuscator_1 = function () {
                 var _iteratorError = undefined;
 
                 try {
-                    for (var _iterator = (0, _getIterator3.default)(visitors), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    for (var _iterator = visitors[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                         var visitor = _step.value;
 
                         var visitorFunction = visitor[direction];
@@ -2539,9 +2523,6 @@ var Obfuscator = Obfuscator_1 = function () {
                         var visitorResult = visitorFunction(node, parentNode);
                         if (!visitorResult) {
                             continue;
-                        }
-                        if (visitorResult === estraverse.VisitorOption.Break || visitorResult === estraverse.VisitorOption.Remove || visitorResult === estraverse.VisitorOption.Skip) {
-                            return visitorResult;
                         }
                         node = visitorResult;
                     }
@@ -2564,6 +2545,7 @@ var Obfuscator = Obfuscator_1 = function () {
             };
         }
     }]);
+
     return Obfuscator;
 }();
 Obfuscator.controlFlowTransformersList = [NodeTransformers_1.NodeTransformers.BlockStatementControlFlowTransformer, NodeTransformers_1.NodeTransformers.FunctionControlFlowTransformer];
@@ -5086,31 +5068,15 @@ exports.ObfuscationEventEmitter = ObfuscationEventEmitter;
 "use strict";
 
 
-var _toConsumableArray2 = __webpack_require__(26);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var _getPrototypeOf = __webpack_require__(5);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-var _classCallCheck2 = __webpack_require__(0);
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(2);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__(7);
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__(6);
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(1);
@@ -5121,18 +5087,18 @@ var Node_1 = __webpack_require__(11);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var Utils_1 = __webpack_require__(14);
 var BlockStatementControlFlowTransformer = BlockStatementControlFlowTransformer_1 = function (_AbstractNodeTransfor) {
-    (0, _inherits3.default)(BlockStatementControlFlowTransformer, _AbstractNodeTransfor);
+    _inherits(BlockStatementControlFlowTransformer, _AbstractNodeTransfor);
 
     function BlockStatementControlFlowTransformer(customNodeFactory, options) {
-        (0, _classCallCheck3.default)(this, BlockStatementControlFlowTransformer);
+        _classCallCheck(this, BlockStatementControlFlowTransformer);
 
-        var _this = (0, _possibleConstructorReturn3.default)(this, (BlockStatementControlFlowTransformer.__proto__ || (0, _getPrototypeOf2.default)(BlockStatementControlFlowTransformer)).call(this, options));
+        var _this = _possibleConstructorReturn(this, (BlockStatementControlFlowTransformer.__proto__ || Object.getPrototypeOf(BlockStatementControlFlowTransformer)).call(this, options));
 
         _this.customNodeFactory = customNodeFactory;
         return _this;
     }
 
-    (0, _createClass3.default)(BlockStatementControlFlowTransformer, [{
+    _createClass(BlockStatementControlFlowTransformer, [{
         key: "getVisitor",
         value: function getVisitor() {
             var _this2 = this;
@@ -5155,7 +5121,7 @@ var BlockStatementControlFlowTransformer = BlockStatementControlFlowTransformer_
             if (blockStatementBody.length <= 4) {
                 return blockStatementNode;
             }
-            var originalKeys = [].concat((0, _toConsumableArray3.default)(Array(blockStatementBody.length).keys()));
+            var originalKeys = [].concat(_toConsumableArray(Array(blockStatementBody.length).keys()));
             var shuffledKeys = Utils_1.Utils.arrayShuffle(originalKeys);
             var originalKeysIndexesInShuffledArray = originalKeys.map(function (key) {
                 return shuffledKeys.indexOf(key);
@@ -5174,6 +5140,7 @@ var BlockStatementControlFlowTransformer = BlockStatementControlFlowTransformer_
             });
         }
     }]);
+
     return BlockStatementControlFlowTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
 BlockStatementControlFlowTransformer = BlockStatementControlFlowTransformer_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomNode)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], BlockStatementControlFlowTransformer);
@@ -5187,31 +5154,13 @@ var BlockStatementControlFlowTransformer_1;
 "use strict";
 
 
-var _map = __webpack_require__(12);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _map2 = _interopRequireDefault(_map);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _getPrototypeOf = __webpack_require__(5);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-
-var _classCallCheck2 = __webpack_require__(0);
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(2);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__(7);
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__(6);
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(1);
@@ -5226,14 +5175,14 @@ var NodeControlFlowReplacers_1 = __webpack_require__(39);
 var NodeUtils_1 = __webpack_require__(8);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function (_AbstractNodeTransfor) {
-    (0, _inherits3.default)(FunctionControlFlowTransformer, _AbstractNodeTransfor);
+    _inherits(FunctionControlFlowTransformer, _AbstractNodeTransfor);
 
     function FunctionControlFlowTransformer(controlFlowStorageFactory, controlFlowReplacerFactory, customNodeFactory, options) {
-        (0, _classCallCheck3.default)(this, FunctionControlFlowTransformer);
+        _classCallCheck(this, FunctionControlFlowTransformer);
 
-        var _this = (0, _possibleConstructorReturn3.default)(this, (FunctionControlFlowTransformer.__proto__ || (0, _getPrototypeOf2.default)(FunctionControlFlowTransformer)).call(this, options));
+        var _this = _possibleConstructorReturn(this, (FunctionControlFlowTransformer.__proto__ || Object.getPrototypeOf(FunctionControlFlowTransformer)).call(this, options));
 
-        _this.controlFlowData = new _map2.default();
+        _this.controlFlowData = new Map();
         _this.hostNodesWithControlFlowNode = [];
         _this.controlFlowStorageFactory = controlFlowStorageFactory;
         _this.controlFlowReplacerFactory = controlFlowReplacerFactory;
@@ -5241,7 +5190,7 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
         return _this;
     }
 
-    (0, _createClass3.default)(FunctionControlFlowTransformer, [{
+    _createClass(FunctionControlFlowTransformer, [{
         key: "getVisitor",
         value: function getVisitor() {
             var _this2 = this;
@@ -5323,9 +5272,10 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
             return RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().pickone(blockScopesOfNode);
         }
     }]);
+
     return FunctionControlFlowTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
-FunctionControlFlowTransformer.controlFlowReplacersMap = new _map2.default([[NodeType_1.NodeType.BinaryExpression, NodeControlFlowReplacers_1.NodeControlFlowReplacers.BinaryExpressionControlFlowReplacer], [NodeType_1.NodeType.CallExpression, NodeControlFlowReplacers_1.NodeControlFlowReplacers.CallExpressionControlFlowReplacer], [NodeType_1.NodeType.LogicalExpression, NodeControlFlowReplacers_1.NodeControlFlowReplacers.LogicalExpressionControlFlowReplacer]]);
+FunctionControlFlowTransformer.controlFlowReplacersMap = new Map([[NodeType_1.NodeType.BinaryExpression, NodeControlFlowReplacers_1.NodeControlFlowReplacers.BinaryExpressionControlFlowReplacer], [NodeType_1.NodeType.CallExpression, NodeControlFlowReplacers_1.NodeControlFlowReplacers.CallExpressionControlFlowReplacer], [NodeType_1.NodeType.LogicalExpression, NodeControlFlowReplacers_1.NodeControlFlowReplacers.LogicalExpressionControlFlowReplacer]]);
 FunctionControlFlowTransformer.hostNodeSearchMinDepth = 0;
 FunctionControlFlowTransformer.hostNodeSearchMaxDepth = 2;
 FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__TControlFlowStorage)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowReplacer)), tslib_1.__param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomNode)), tslib_1.__param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Function, Function, Object])], FunctionControlFlowTransformer);
@@ -5551,27 +5501,13 @@ var LogicalExpressionControlFlowReplacer_1;
 "use strict";
 
 
-var _getPrototypeOf = __webpack_require__(5);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _classCallCheck2 = __webpack_require__(0);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(2);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__(7);
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__(6);
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(1);
@@ -5580,14 +5516,15 @@ var NodeType_1 = __webpack_require__(20);
 var AbstractNodeTransformer_1 = __webpack_require__(16);
 var Node_1 = __webpack_require__(11);
 var MemberExpressionTransformer = function (_AbstractNodeTransfor) {
-    (0, _inherits3.default)(MemberExpressionTransformer, _AbstractNodeTransfor);
+    _inherits(MemberExpressionTransformer, _AbstractNodeTransfor);
 
     function MemberExpressionTransformer(options) {
-        (0, _classCallCheck3.default)(this, MemberExpressionTransformer);
-        return (0, _possibleConstructorReturn3.default)(this, (MemberExpressionTransformer.__proto__ || (0, _getPrototypeOf2.default)(MemberExpressionTransformer)).call(this, options));
+        _classCallCheck(this, MemberExpressionTransformer);
+
+        return _possibleConstructorReturn(this, (MemberExpressionTransformer.__proto__ || Object.getPrototypeOf(MemberExpressionTransformer)).call(this, options));
     }
 
-    (0, _createClass3.default)(MemberExpressionTransformer, [{
+    _createClass(MemberExpressionTransformer, [{
         key: "getVisitor",
         value: function getVisitor() {
             var _this2 = this;
@@ -5617,6 +5554,7 @@ var MemberExpressionTransformer = function (_AbstractNodeTransfor) {
             return memberExpressionNode;
         }
     }]);
+
     return MemberExpressionTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
 MemberExpressionTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object])], MemberExpressionTransformer);
@@ -5629,27 +5567,13 @@ exports.MemberExpressionTransformer = MemberExpressionTransformer;
 "use strict";
 
 
-var _getPrototypeOf = __webpack_require__(5);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _classCallCheck2 = __webpack_require__(0);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(2);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__(7);
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__(6);
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(1);
@@ -5658,14 +5582,15 @@ var NodeType_1 = __webpack_require__(20);
 var AbstractNodeTransformer_1 = __webpack_require__(16);
 var Node_1 = __webpack_require__(11);
 var MethodDefinitionTransformer = MethodDefinitionTransformer_1 = function (_AbstractNodeTransfor) {
-    (0, _inherits3.default)(MethodDefinitionTransformer, _AbstractNodeTransfor);
+    _inherits(MethodDefinitionTransformer, _AbstractNodeTransfor);
 
     function MethodDefinitionTransformer(options) {
-        (0, _classCallCheck3.default)(this, MethodDefinitionTransformer);
-        return (0, _possibleConstructorReturn3.default)(this, (MethodDefinitionTransformer.__proto__ || (0, _getPrototypeOf2.default)(MethodDefinitionTransformer)).call(this, options));
+        _classCallCheck(this, MethodDefinitionTransformer);
+
+        return _possibleConstructorReturn(this, (MethodDefinitionTransformer.__proto__ || Object.getPrototypeOf(MethodDefinitionTransformer)).call(this, options));
     }
 
-    (0, _createClass3.default)(MethodDefinitionTransformer, [{
+    _createClass(MethodDefinitionTransformer, [{
         key: "getVisitor",
         value: function getVisitor() {
             var _this2 = this;
@@ -5681,7 +5606,7 @@ var MethodDefinitionTransformer = MethodDefinitionTransformer_1 = function (_Abs
     }, {
         key: "transformNode",
         value: function transformNode(methodDefinitionNode, parentNode) {
-            if (Node_1.Node.isIdentifierNode(methodDefinitionNode.key) && !MethodDefinitionTransformer_1.ignoredNames.includes(methodDefinitionNode.key.name) && methodDefinitionNode.computed === false) {
+            if (Node_1.Node.isIdentifierNode(methodDefinitionNode.key) && !(MethodDefinitionTransformer_1.ignoredNames.indexOf(methodDefinitionNode.key.name) !== -1) && methodDefinitionNode.computed === false) {
                 methodDefinitionNode.computed = true;
                 methodDefinitionNode.key = {
                     type: NodeType_1.NodeType.Literal,
@@ -5692,6 +5617,7 @@ var MethodDefinitionTransformer = MethodDefinitionTransformer_1 = function (_Abs
             return methodDefinitionNode;
         }
     }]);
+
     return MethodDefinitionTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
 MethodDefinitionTransformer.ignoredNames = ['constructor'];
@@ -5706,31 +5632,13 @@ var MethodDefinitionTransformer_1;
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(18);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _getIterator3 = _interopRequireDefault(_getIterator2);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _getPrototypeOf = __webpack_require__(5);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-
-var _classCallCheck2 = __webpack_require__(0);
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(2);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__(7);
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__(6);
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(1);
@@ -5739,14 +5647,15 @@ var AbstractNodeTransformer_1 = __webpack_require__(16);
 var Node_1 = __webpack_require__(11);
 var Nodes_1 = __webpack_require__(21);
 var TemplateLiteralTransformer = TemplateLiteralTransformer_1 = function (_AbstractNodeTransfor) {
-    (0, _inherits3.default)(TemplateLiteralTransformer, _AbstractNodeTransfor);
+    _inherits(TemplateLiteralTransformer, _AbstractNodeTransfor);
 
     function TemplateLiteralTransformer(options) {
-        (0, _classCallCheck3.default)(this, TemplateLiteralTransformer);
-        return (0, _possibleConstructorReturn3.default)(this, (TemplateLiteralTransformer.__proto__ || (0, _getPrototypeOf2.default)(TemplateLiteralTransformer)).call(this, options));
+        _classCallCheck(this, TemplateLiteralTransformer);
+
+        return _possibleConstructorReturn(this, (TemplateLiteralTransformer.__proto__ || Object.getPrototypeOf(TemplateLiteralTransformer)).call(this, options));
     }
 
-    (0, _createClass3.default)(TemplateLiteralTransformer, [{
+    _createClass(TemplateLiteralTransformer, [{
         key: "getVisitor",
         value: function getVisitor() {
             var _this2 = this;
@@ -5769,7 +5678,7 @@ var TemplateLiteralTransformer = TemplateLiteralTransformer_1 = function (_Abstr
             var _iteratorError = undefined;
 
             try {
-                for (var _iterator = (0, _getIterator3.default)(templateLiteralNode.quasis), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                for (var _iterator = templateLiteralNode.quasis[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                     var templateElement = _step.value;
 
                     nodes.push(Nodes_1.Nodes.getLiteralNode(templateElement.value.cooked));
@@ -5807,7 +5716,7 @@ var TemplateLiteralTransformer = TemplateLiteralTransformer_1 = function (_Abstr
                 var _iteratorError2 = undefined;
 
                 try {
-                    for (var _iterator2 = (0, _getIterator3.default)(nodes), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    for (var _iterator2 = nodes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                         var node = _step2.value;
 
                         root = Nodes_1.Nodes.getBinaryExpressionNode('+', root, node);
@@ -5837,6 +5746,7 @@ var TemplateLiteralTransformer = TemplateLiteralTransformer_1 = function (_Abstr
             return node && Node_1.Node.isLiteralNode(node) && typeof node.value === 'string';
         }
     }]);
+
     return TemplateLiteralTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
 TemplateLiteralTransformer = TemplateLiteralTransformer_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object])], TemplateLiteralTransformer);
@@ -5850,27 +5760,13 @@ var TemplateLiteralTransformer_1;
 "use strict";
 
 
-var _getPrototypeOf = __webpack_require__(5);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _classCallCheck2 = __webpack_require__(0);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(2);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__(7);
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__(6);
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(1);
@@ -5880,18 +5776,18 @@ var NodeObfuscationReplacers_1 = __webpack_require__(23);
 var AbstractNodeTransformer_1 = __webpack_require__(16);
 var Node_1 = __webpack_require__(11);
 var CatchClauseTransformer = function (_AbstractNodeTransfor) {
-    (0, _inherits3.default)(CatchClauseTransformer, _AbstractNodeTransfor);
+    _inherits(CatchClauseTransformer, _AbstractNodeTransfor);
 
     function CatchClauseTransformer(replacersFactory, options) {
-        (0, _classCallCheck3.default)(this, CatchClauseTransformer);
+        _classCallCheck(this, CatchClauseTransformer);
 
-        var _this = (0, _possibleConstructorReturn3.default)(this, (CatchClauseTransformer.__proto__ || (0, _getPrototypeOf2.default)(CatchClauseTransformer)).call(this, options));
+        var _this = _possibleConstructorReturn(this, (CatchClauseTransformer.__proto__ || Object.getPrototypeOf(CatchClauseTransformer)).call(this, options));
 
         _this.identifierReplacer = replacersFactory(NodeObfuscationReplacers_1.NodeObfuscatorsReplacers.IdentifierReplacer);
         return _this;
     }
 
-    (0, _createClass3.default)(CatchClauseTransformer, [{
+    _createClass(CatchClauseTransformer, [{
         key: "getVisitor",
         value: function getVisitor() {
             var _this2 = this;
@@ -5937,6 +5833,7 @@ var CatchClauseTransformer = function (_AbstractNodeTransfor) {
             });
         }
     }]);
+
     return CatchClauseTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
 CatchClauseTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscatorReplacer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], CatchClauseTransformer);
@@ -5949,35 +5846,13 @@ exports.CatchClauseTransformer = CatchClauseTransformer;
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(18);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _getIterator3 = _interopRequireDefault(_getIterator2);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _map = __webpack_require__(12);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-var _map2 = _interopRequireDefault(_map);
-
-var _getPrototypeOf = __webpack_require__(5);
-
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-
-var _classCallCheck2 = __webpack_require__(0);
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(2);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__(7);
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__(6);
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(1);
@@ -5989,19 +5864,19 @@ var AbstractNodeTransformer_1 = __webpack_require__(16);
 var Node_1 = __webpack_require__(11);
 var NodeUtils_1 = __webpack_require__(8);
 var FunctionDeclarationTransformer = function (_AbstractNodeTransfor) {
-    (0, _inherits3.default)(FunctionDeclarationTransformer, _AbstractNodeTransfor);
+    _inherits(FunctionDeclarationTransformer, _AbstractNodeTransfor);
 
     function FunctionDeclarationTransformer(nodeObfuscatorsReplacersFactory, options) {
-        (0, _classCallCheck3.default)(this, FunctionDeclarationTransformer);
+        _classCallCheck(this, FunctionDeclarationTransformer);
 
-        var _this = (0, _possibleConstructorReturn3.default)(this, (FunctionDeclarationTransformer.__proto__ || (0, _getPrototypeOf2.default)(FunctionDeclarationTransformer)).call(this, options));
+        var _this = _possibleConstructorReturn(this, (FunctionDeclarationTransformer.__proto__ || Object.getPrototypeOf(FunctionDeclarationTransformer)).call(this, options));
 
-        _this.replaceableIdentifiers = new _map2.default();
+        _this.replaceableIdentifiers = new Map();
         _this.identifierReplacer = nodeObfuscatorsReplacersFactory(NodeObfuscationReplacers_1.NodeObfuscatorsReplacers.IdentifierReplacer);
         return _this;
     }
 
-    (0, _createClass3.default)(FunctionDeclarationTransformer, [{
+    _createClass(FunctionDeclarationTransformer, [{
         key: "getVisitor",
         value: function getVisitor() {
             var _this2 = this;
@@ -6044,7 +5919,7 @@ var FunctionDeclarationTransformer = function (_AbstractNodeTransfor) {
                 var _iteratorError = undefined;
 
                 try {
-                    for (var _iterator = (0, _getIterator3.default)(replaceableIdentifiersForCurrentScope), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    for (var _iterator = replaceableIdentifiersForCurrentScope[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                         var replaceableIdentifier = _step.value;
 
                         replaceableIdentifier.name = this.identifierReplacer.replace(replaceableIdentifier.name, nodeIdentifier);
@@ -6082,6 +5957,7 @@ var FunctionDeclarationTransformer = function (_AbstractNodeTransfor) {
             this.replaceableIdentifiers.set(scopeNode, replaceableIdentifiersForCurrentScope);
         }
     }]);
+
     return FunctionDeclarationTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
 FunctionDeclarationTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscatorReplacer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], FunctionDeclarationTransformer);
@@ -6094,27 +5970,13 @@ exports.FunctionDeclarationTransformer = FunctionDeclarationTransformer;
 "use strict";
 
 
-var _getPrototypeOf = __webpack_require__(5);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _classCallCheck2 = __webpack_require__(0);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(2);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__(7);
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__(6);
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(1);
@@ -6124,18 +5986,18 @@ var NodeObfuscationReplacers_1 = __webpack_require__(23);
 var AbstractNodeTransformer_1 = __webpack_require__(16);
 var Node_1 = __webpack_require__(11);
 var FunctionTransformer = function (_AbstractNodeTransfor) {
-    (0, _inherits3.default)(FunctionTransformer, _AbstractNodeTransfor);
+    _inherits(FunctionTransformer, _AbstractNodeTransfor);
 
     function FunctionTransformer(nodeObfuscatorsReplacersFactory, options) {
-        (0, _classCallCheck3.default)(this, FunctionTransformer);
+        _classCallCheck(this, FunctionTransformer);
 
-        var _this = (0, _possibleConstructorReturn3.default)(this, (FunctionTransformer.__proto__ || (0, _getPrototypeOf2.default)(FunctionTransformer)).call(this, options));
+        var _this = _possibleConstructorReturn(this, (FunctionTransformer.__proto__ || Object.getPrototypeOf(FunctionTransformer)).call(this, options));
 
         _this.identifierReplacer = nodeObfuscatorsReplacersFactory(NodeObfuscationReplacers_1.NodeObfuscatorsReplacers.IdentifierReplacer);
         return _this;
     }
 
-    (0, _createClass3.default)(FunctionTransformer, [{
+    _createClass(FunctionTransformer, [{
         key: "getVisitor",
         value: function getVisitor() {
             var _this2 = this;
@@ -6200,6 +6062,7 @@ var FunctionTransformer = function (_AbstractNodeTransfor) {
             estraverse.replace(functionNode.body, traverseVisitor);
         }
     }]);
+
     return FunctionTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
 FunctionTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscatorReplacer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], FunctionTransformer);
@@ -6212,27 +6075,13 @@ exports.FunctionTransformer = FunctionTransformer;
 "use strict";
 
 
-var _getPrototypeOf = __webpack_require__(5);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _classCallCheck2 = __webpack_require__(0);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(2);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__(7);
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__(6);
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(1);
@@ -6242,18 +6091,18 @@ var NodeObfuscationReplacers_1 = __webpack_require__(23);
 var AbstractNodeTransformer_1 = __webpack_require__(16);
 var Node_1 = __webpack_require__(11);
 var LabeledStatementTransformer = function (_AbstractNodeTransfor) {
-    (0, _inherits3.default)(LabeledStatementTransformer, _AbstractNodeTransfor);
+    _inherits(LabeledStatementTransformer, _AbstractNodeTransfor);
 
     function LabeledStatementTransformer(nodeObfuscatorsReplacersFactory, options) {
-        (0, _classCallCheck3.default)(this, LabeledStatementTransformer);
+        _classCallCheck(this, LabeledStatementTransformer);
 
-        var _this = (0, _possibleConstructorReturn3.default)(this, (LabeledStatementTransformer.__proto__ || (0, _getPrototypeOf2.default)(LabeledStatementTransformer)).call(this, options));
+        var _this = _possibleConstructorReturn(this, (LabeledStatementTransformer.__proto__ || Object.getPrototypeOf(LabeledStatementTransformer)).call(this, options));
 
         _this.identifierReplacer = nodeObfuscatorsReplacersFactory(NodeObfuscationReplacers_1.NodeObfuscatorsReplacers.IdentifierReplacer);
         return _this;
     }
 
-    (0, _createClass3.default)(LabeledStatementTransformer, [{
+    _createClass(LabeledStatementTransformer, [{
         key: "getVisitor",
         value: function getVisitor() {
             var _this2 = this;
@@ -6293,6 +6142,7 @@ var LabeledStatementTransformer = function (_AbstractNodeTransfor) {
             });
         }
     }]);
+
     return LabeledStatementTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
 LabeledStatementTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscatorReplacer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], LabeledStatementTransformer);
@@ -6305,31 +6155,15 @@ exports.LabeledStatementTransformer = LabeledStatementTransformer;
 "use strict";
 
 
-var _typeof2 = __webpack_require__(138);
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var _typeof3 = _interopRequireDefault(_typeof2);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _getPrototypeOf = __webpack_require__(5);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-var _classCallCheck2 = __webpack_require__(0);
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(2);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__(7);
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__(6);
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(1);
@@ -6339,18 +6173,18 @@ var NodeObfuscationReplacers_1 = __webpack_require__(23);
 var AbstractNodeTransformer_1 = __webpack_require__(16);
 var Node_1 = __webpack_require__(11);
 var LiteralTransformer = function (_AbstractNodeTransfor) {
-    (0, _inherits3.default)(LiteralTransformer, _AbstractNodeTransfor);
+    _inherits(LiteralTransformer, _AbstractNodeTransfor);
 
     function LiteralTransformer(replacersFactory, options) {
-        (0, _classCallCheck3.default)(this, LiteralTransformer);
+        _classCallCheck(this, LiteralTransformer);
 
-        var _this = (0, _possibleConstructorReturn3.default)(this, (LiteralTransformer.__proto__ || (0, _getPrototypeOf2.default)(LiteralTransformer)).call(this, options));
+        var _this = _possibleConstructorReturn(this, (LiteralTransformer.__proto__ || Object.getPrototypeOf(LiteralTransformer)).call(this, options));
 
         _this.replacersFactory = replacersFactory;
         return _this;
     }
 
-    (0, _createClass3.default)(LiteralTransformer, [{
+    _createClass(LiteralTransformer, [{
         key: "getVisitor",
         value: function getVisitor() {
             var _this2 = this;
@@ -6370,7 +6204,7 @@ var LiteralTransformer = function (_AbstractNodeTransfor) {
                 return literalNode;
             }
             var content = void 0;
-            switch ((0, _typeof3.default)(literalNode.value)) {
+            switch (_typeof(literalNode.value)) {
                 case 'boolean':
                     content = this.replacersFactory(NodeObfuscationReplacers_1.NodeObfuscatorsReplacers.BooleanReplacer).replace(literalNode.value);
                     break;
@@ -6390,6 +6224,7 @@ var LiteralTransformer = function (_AbstractNodeTransfor) {
             return literalNode;
         }
     }]);
+
     return LiteralTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
 LiteralTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscatorReplacer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], LiteralTransformer);
@@ -6402,27 +6237,13 @@ exports.LiteralTransformer = LiteralTransformer;
 "use strict";
 
 
-var _getPrototypeOf = __webpack_require__(5);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _classCallCheck2 = __webpack_require__(0);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(2);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__(7);
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__(6);
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(1);
@@ -6433,14 +6254,15 @@ var AbstractNodeTransformer_1 = __webpack_require__(16);
 var Node_1 = __webpack_require__(11);
 var Utils_1 = __webpack_require__(14);
 var ObjectExpressionTransformer = ObjectExpressionTransformer_1 = function (_AbstractNodeTransfor) {
-    (0, _inherits3.default)(ObjectExpressionTransformer, _AbstractNodeTransfor);
+    _inherits(ObjectExpressionTransformer, _AbstractNodeTransfor);
 
     function ObjectExpressionTransformer(options) {
-        (0, _classCallCheck3.default)(this, ObjectExpressionTransformer);
-        return (0, _possibleConstructorReturn3.default)(this, (ObjectExpressionTransformer.__proto__ || (0, _getPrototypeOf2.default)(ObjectExpressionTransformer)).call(this, options));
+        _classCallCheck(this, ObjectExpressionTransformer);
+
+        return _possibleConstructorReturn(this, (ObjectExpressionTransformer.__proto__ || Object.getPrototypeOf(ObjectExpressionTransformer)).call(this, options));
     }
 
-    (0, _createClass3.default)(ObjectExpressionTransformer, [{
+    _createClass(ObjectExpressionTransformer, [{
         key: "getVisitor",
         value: function getVisitor() {
             var _this2 = this;
@@ -6493,6 +6315,7 @@ var ObjectExpressionTransformer = ObjectExpressionTransformer_1 = function (_Abs
             };
         }
     }]);
+
     return ObjectExpressionTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
 ObjectExpressionTransformer = ObjectExpressionTransformer_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object])], ObjectExpressionTransformer);
@@ -6506,35 +6329,13 @@ var ObjectExpressionTransformer_1;
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(18);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _getIterator3 = _interopRequireDefault(_getIterator2);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _map = __webpack_require__(12);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-var _map2 = _interopRequireDefault(_map);
-
-var _getPrototypeOf = __webpack_require__(5);
-
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-
-var _classCallCheck2 = __webpack_require__(0);
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(2);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__(7);
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__(6);
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var tslib_1 = __webpack_require__(3);
 var inversify_1 = __webpack_require__(1);
@@ -6546,19 +6347,19 @@ var AbstractNodeTransformer_1 = __webpack_require__(16);
 var Node_1 = __webpack_require__(11);
 var NodeUtils_1 = __webpack_require__(8);
 var VariableDeclarationTransformer = function (_AbstractNodeTransfor) {
-    (0, _inherits3.default)(VariableDeclarationTransformer, _AbstractNodeTransfor);
+    _inherits(VariableDeclarationTransformer, _AbstractNodeTransfor);
 
     function VariableDeclarationTransformer(replacersFactory, options) {
-        (0, _classCallCheck3.default)(this, VariableDeclarationTransformer);
+        _classCallCheck(this, VariableDeclarationTransformer);
 
-        var _this = (0, _possibleConstructorReturn3.default)(this, (VariableDeclarationTransformer.__proto__ || (0, _getPrototypeOf2.default)(VariableDeclarationTransformer)).call(this, options));
+        var _this = _possibleConstructorReturn(this, (VariableDeclarationTransformer.__proto__ || Object.getPrototypeOf(VariableDeclarationTransformer)).call(this, options));
 
-        _this.replaceableIdentifiers = new _map2.default();
+        _this.replaceableIdentifiers = new Map();
         _this.identifierReplacer = replacersFactory(NodeObfuscationReplacers_1.NodeObfuscatorsReplacers.IdentifierReplacer);
         return _this;
     }
 
-    (0, _createClass3.default)(VariableDeclarationTransformer, [{
+    _createClass(VariableDeclarationTransformer, [{
         key: "getVisitor",
         value: function getVisitor() {
             var _this2 = this;
@@ -6613,7 +6414,7 @@ var VariableDeclarationTransformer = function (_AbstractNodeTransfor) {
                 var _iteratorError = undefined;
 
                 try {
-                    for (var _iterator = (0, _getIterator3.default)(replaceableIdentifiersForCurrentScope), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    for (var _iterator = replaceableIdentifiersForCurrentScope[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                         var replaceableIdentifier = _step.value;
 
                         replaceableIdentifier.name = this.identifierReplacer.replace(replaceableIdentifier.name, nodeIdentifier);
@@ -6651,6 +6452,7 @@ var VariableDeclarationTransformer = function (_AbstractNodeTransfor) {
             this.replaceableIdentifiers.set(scopeNode, replaceableIdentifiersForCurrentScope);
         }
     }]);
+
     return VariableDeclarationTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
 VariableDeclarationTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscatorReplacer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], VariableDeclarationTransformer);
@@ -8244,12 +8046,7 @@ module.exports = require("babel-runtime/core-js/object/get-own-property-descript
 module.exports = require("babel-runtime/core-js/symbol");
 
 /***/ }),
-/* 138 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/helpers/typeof");
-
-/***/ }),
+/* 138 */,
 /* 139 */
 /***/ (function(module, exports) {
 

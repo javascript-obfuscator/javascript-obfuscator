@@ -1,10 +1,10 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IVisitor } from '../../interfaces/IVisitor';
 
 import { NodeType } from '../../enums/NodeType';
 
@@ -23,9 +23,9 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @return {estraverse.Visitor}
+     * @return {IVisitor}
      */
-    public getVisitor (): estraverse.Visitor {
+    public getVisitor (): IVisitor {
         return {
             enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
                 if (Node.isMemberExpressionNode(node)) {

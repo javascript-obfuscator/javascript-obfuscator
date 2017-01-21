@@ -12,6 +12,7 @@ import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatemen
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IStorage } from '../../interfaces/storages/IStorage';
+import { IVisitor } from '../../interfaces/IVisitor';
 
 import { CustomNodes } from '../../enums/container/CustomNodes';
 import { NodeType } from '../../enums/NodeType';
@@ -113,9 +114,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @return {estraverse.Visitor}
+     * @return {IVisitor}
      */
-    public getVisitor (): estraverse.Visitor {
+    public getVisitor (): IVisitor {
         return {
             leave: (node: ESTree.Node, parentNode: ESTree.Node) => {
                 if (Node.isFunctionDeclarationNode(node) || Node.isFunctionExpressionNode(node)) {

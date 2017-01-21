@@ -145,7 +145,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         it('should returns same code every time with same `seed`', function () {
-            this.timeout(15000);
+            this.timeout(60000);
 
             const code: string = readFileAsString('./test/fixtures/sample.js');
             const samples: number = 100;

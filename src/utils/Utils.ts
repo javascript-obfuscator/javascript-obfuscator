@@ -62,7 +62,7 @@ export class Utils {
     public static decToHex (dec: number): string {
         const radix: number = 16;
 
-        return Number(dec).toString(radix);
+        return dec.toString(radix);
     }
 
     /**
@@ -150,16 +150,16 @@ export class Utils {
             template: string;
 
         const result: string = string.replace(replaceRegExp, (escape: string): string => {
-            if (nonLatinAndNonDigitsOnly && !escapeRegExp.test(escape)) {
+            if (nonLatinAndNonDigitsOnly && !escapeRegExp.exec(escape)) {
                 return escape;
             }
 
-            if (regexp.test(escape)) {
+            if (regexp.exec(escape)) {
                 prefix = '\\x';
-                template = '0'.repeat(2);
+                template = '00';
             } else {
                 prefix = '\\u';
-                template = '0'.repeat(4);
+                template = '0000';
             }
 
             return `${prefix}${(template + escape.charCodeAt(0).toString(radix)).slice(-template.length)}`;

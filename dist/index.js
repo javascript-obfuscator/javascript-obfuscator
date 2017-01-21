@@ -90,7 +90,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 147);
+/******/ 	return __webpack_require__(__webpack_require__.s = 148);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -103,13 +103,13 @@ module.exports = require("babel-runtime/helpers/classCallCheck");
 /* 1 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/helpers/createClass");
+module.exports = require("inversify");
 
 /***/ }),
 /* 2 */
 /***/ (function(module, exports) {
 
-module.exports = require("inversify");
+module.exports = require("babel-runtime/helpers/createClass");
 
 /***/ }),
 /* 3 */
@@ -124,7 +124,7 @@ module.exports = require("tslib");
 "use strict";
 
 
-var _symbol = __webpack_require__(138);
+var _symbol = __webpack_require__(137);
 
 var _symbol2 = _interopRequireDefault(_symbol);
 
@@ -190,14 +190,14 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var escodegen = __webpack_require__(28);
-var esprima = __webpack_require__(49);
+var esprima = __webpack_require__(48);
 var estraverse = __webpack_require__(17);
 var NodeType_1 = __webpack_require__(20);
 var Node_1 = __webpack_require__(11);
@@ -384,7 +384,7 @@ exports.NodeUtils = NodeUtils;
 "use strict";
 
 
-var _set = __webpack_require__(137);
+var _set = __webpack_require__(147);
 
 var _set2 = _interopRequireDefault(_set);
 
@@ -392,13 +392,13 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var chance_1 = __webpack_require__(140);
+var chance_1 = __webpack_require__(139);
 var Utils_1 = __webpack_require__(14);
 
 var RandomGeneratorUtils = function () {
@@ -491,7 +491,7 @@ var _getOwnPropertyDescriptor = __webpack_require__(136);
 
 var _getOwnPropertyDescriptor2 = _interopRequireDefault(_getOwnPropertyDescriptor);
 
-var _keys = __webpack_require__(47);
+var _keys = __webpack_require__(46);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -543,7 +543,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -722,14 +722,14 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var NodeUtils_1 = __webpack_require__(8);
 var AbstractCustomNode = function () {
@@ -768,37 +768,21 @@ exports.AbstractCustomNode = AbstractCustomNode;
 "use strict";
 
 
-var _map = __webpack_require__(12);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _map2 = _interopRequireDefault(_map);
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var _from = __webpack_require__(45);
-
-var _from2 = _interopRequireDefault(_from);
-
-var _toConsumableArray2 = __webpack_require__(24);
-
-var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
-
-var _classCallCheck2 = __webpack_require__(0);
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(1);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var JSFuck_1 = __webpack_require__(36);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 
 var Utils = function () {
     function Utils() {
-        (0, _classCallCheck3.default)(this, Utils);
+        _classCallCheck(this, Utils);
     }
 
-    (0, _createClass3.default)(Utils, null, [{
+    _createClass(Utils, null, [{
         key: "arrayRotate",
         value: function arrayRotate(array, times) {
             if (!array.length) {
@@ -818,7 +802,7 @@ var Utils = function () {
     }, {
         key: "arrayShuffle",
         value: function arrayShuffle(array) {
-            var shuffledArray = [].concat((0, _toConsumableArray3.default)(array));
+            var shuffledArray = [].concat(_toConsumableArray(array));
             for (var i = shuffledArray.length; i; i--) {
                 var j = Math.floor(RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomFloat(0, 1) * i);
                 var _ref = [shuffledArray[j], shuffledArray[i - 1]];
@@ -831,7 +815,7 @@ var Utils = function () {
         key: "decToHex",
         value: function decToHex(dec) {
             var radix = 16;
-            return Number(dec).toString(radix);
+            return dec.toString(radix);
         }
     }, {
         key: "extractDomainFromUrl",
@@ -869,7 +853,7 @@ var Utils = function () {
     }, {
         key: "stringToJSFuck",
         value: function stringToJSFuck(string) {
-            return (0, _from2.default)(string).map(function (character) {
+            return Array.from(string).map(function (character) {
                 return JSFuck_1.JSFuck[character] || character;
             }).join(' + ');
         }
@@ -889,15 +873,15 @@ var Utils = function () {
             var prefix = void 0,
                 template = void 0;
             var result = string.replace(replaceRegExp, function (escape) {
-                if (nonLatinAndNonDigitsOnly && !escapeRegExp.test(escape)) {
+                if (nonLatinAndNonDigitsOnly && !escapeRegExp.exec(escape)) {
                     return escape;
                 }
-                if (regexp.test(escape)) {
+                if (regexp.exec(escape)) {
                     prefix = '\\x';
-                    template = '0'.repeat(2);
+                    template = '00';
                 } else {
                     prefix = "\\u";
-                    template = '0'.repeat(4);
+                    template = '0000';
                 }
                 return "" + prefix + (template + escape.charCodeAt(0).toString(radix)).slice(-template.length);
             });
@@ -905,11 +889,12 @@ var Utils = function () {
             return result;
         }
     }]);
+
     return Utils;
 }();
 
 Utils.hexadecimalPrefix = '0x';
-Utils.stringToUnicodeEscapeSequenceCache = new _map2.default();
+Utils.stringToUnicodeEscapeSequenceCache = new Map();
 exports.Utils = Utils;
 
 /***/ }),
@@ -954,7 +939,7 @@ var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var AbstractNodeTransformer = function AbstractNodeTransformer(options) {
@@ -1041,7 +1026,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -1393,12 +1378,6 @@ var NodeObfuscatorsReplacers;
 
 /***/ }),
 /* 24 */
-/***/ (function(module, exports) {
-
-module.exports = require("babel-runtime/helpers/toConsumableArray");
-
-/***/ }),
-/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1408,10 +1387,10 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-__webpack_require__(146);
+__webpack_require__(145);
 var ServiceIdentifiers_1 = __webpack_require__(4);
-var InversifyContainerFacade_1 = __webpack_require__(57);
-var JavaScriptObfuscatorCLI_1 = __webpack_require__(56);
+var InversifyContainerFacade_1 = __webpack_require__(56);
+var JavaScriptObfuscatorCLI_1 = __webpack_require__(55);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 
 var JavaScriptObfuscator = function () {
@@ -1445,7 +1424,7 @@ var JavaScriptObfuscator = function () {
 exports.JavaScriptObfuscator = JavaScriptObfuscator;
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1455,7 +1434,7 @@ var _getIterator2 = __webpack_require__(18);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _toConsumableArray2 = __webpack_require__(24);
+var _toConsumableArray2 = __webpack_require__(26);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
@@ -1463,7 +1442,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -1580,6 +1559,12 @@ var NodeAppender = function () {
 exports.NodeAppender = NodeAppender;
 
 /***/ }),
+/* 26 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/helpers/toConsumableArray");
+
+/***/ }),
 /* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1590,14 +1575,14 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var AbstractCustomNodeGroup = function () {
     function AbstractCustomNodeGroup(options) {
@@ -1663,7 +1648,7 @@ var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var AbstractReplacer = function AbstractReplacer(options) {
     (0, _classCallCheck3.default)(this, AbstractReplacer);
@@ -1680,7 +1665,7 @@ exports.AbstractReplacer = AbstractReplacer;
 "use strict";
 
 
-var _freeze = __webpack_require__(46);
+var _freeze = __webpack_require__(45);
 
 var _freeze2 = _interopRequireDefault(_freeze);
 
@@ -1735,7 +1720,7 @@ var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var AbstractCalleeDataExtractor = function AbstractCalleeDataExtractor() {
     (0, _classCallCheck3.default)(this, AbstractCalleeDataExtractor);
 };
@@ -1753,7 +1738,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -1999,14 +1984,14 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var AbstractControlFlowReplacer = AbstractControlFlowReplacer_1 = function () {
@@ -2077,7 +2062,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -2092,7 +2077,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var AbstractControlFlowReplacer_1 = __webpack_require__(41);
 var CustomNodes_1 = __webpack_require__(15);
@@ -2133,7 +2118,7 @@ exports.ExpressionWithOperatorControlFlowReplacer = ExpressionWithOperatorContro
 "use strict";
 
 
-var _freeze = __webpack_require__(46);
+var _freeze = __webpack_require__(45);
 
 var _freeze2 = _interopRequireDefault(_freeze);
 
@@ -2169,7 +2154,7 @@ exports.DEFAULT_PRESET = (0, _freeze2.default)({
 "use strict";
 
 
-var _toConsumableArray2 = __webpack_require__(24);
+var _toConsumableArray2 = __webpack_require__(26);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
@@ -2189,14 +2174,14 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var Initializable_1 = __webpack_require__(10);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var MapStorage = function () {
@@ -2295,40 +2280,34 @@ exports.MapStorage = MapStorage;
 /* 45 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/array/from");
+module.exports = require("babel-runtime/core-js/object/freeze");
 
 /***/ }),
 /* 46 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/object/freeze");
+module.exports = require("babel-runtime/core-js/object/keys");
 
 /***/ }),
 /* 47 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/object/keys");
+module.exports = require("babel-runtime/helpers/get");
 
 /***/ }),
 /* 48 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/helpers/get");
+module.exports = require("esprima");
 
 /***/ }),
 /* 49 */
 /***/ (function(module, exports) {
 
-module.exports = require("esprima");
-
-/***/ }),
-/* 50 */
-/***/ (function(module, exports) {
-
 module.exports = require("path");
 
 /***/ }),
-/* 51 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2338,16 +2317,16 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
-var esprima = __webpack_require__(49);
+var esprima = __webpack_require__(48);
 var escodegen = __webpack_require__(28);
 var JavaScriptObfuscatorInternal = JavaScriptObfuscatorInternal_1 = function () {
     function JavaScriptObfuscatorInternal(obfuscator, sourceMapCorrector, options) {
@@ -2398,7 +2377,7 @@ exports.JavaScriptObfuscatorInternal = JavaScriptObfuscatorInternal;
 var JavaScriptObfuscatorInternal_1;
 
 /***/ }),
-/* 52 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2408,14 +2387,14 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var Initializable_1 = __webpack_require__(10);
 var ObfuscationResult = function () {
     function ObfuscationResult() {
@@ -2452,7 +2431,7 @@ ObfuscationResult = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__meta
 exports.ObfuscationResult = ObfuscationResult;
 
 /***/ }),
-/* 53 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2462,7 +2441,7 @@ var _getIterator2 = __webpack_require__(18);
 
 var _getIterator3 = _interopRequireDefault(_getIterator2);
 
-var _toConsumableArray2 = __webpack_require__(24);
+var _toConsumableArray2 = __webpack_require__(26);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
@@ -2470,19 +2449,19 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var estraverse = __webpack_require__(17);
 var NodeTransformers_1 = __webpack_require__(40);
 var ObfuscationEvents_1 = __webpack_require__(22);
-var VisitorDirection_1 = __webpack_require__(86);
+var VisitorDirection_1 = __webpack_require__(85);
 var Node_1 = __webpack_require__(11);
 var NodeUtils_1 = __webpack_require__(8);
 var Obfuscator = Obfuscator_1 = function () {
@@ -2595,7 +2574,7 @@ exports.Obfuscator = Obfuscator;
 var Obfuscator_1;
 
 /***/ }),
-/* 54 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2605,14 +2584,14 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var SourceMapMode_1 = __webpack_require__(29);
 var CryptUtils_1 = __webpack_require__(34);
@@ -2658,32 +2637,26 @@ SourceMapCorrector = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__par
 exports.SourceMapCorrector = SourceMapCorrector;
 
 /***/ }),
-/* 55 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _classCallCheck2 = __webpack_require__(0);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _createClass2 = __webpack_require__(1);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var fs = __webpack_require__(144);
-var mkdirp = __webpack_require__(145);
-var path = __webpack_require__(50);
+var fs = __webpack_require__(143);
+var mkdirp = __webpack_require__(144);
+var path = __webpack_require__(49);
 
 var CLIUtils = function () {
     function CLIUtils() {
-        (0, _classCallCheck3.default)(this, CLIUtils);
+        _classCallCheck(this, CLIUtils);
     }
 
-    (0, _createClass3.default)(CLIUtils, null, [{
+    _createClass(CLIUtils, null, [{
         key: "getOutputCodePath",
         value: function getOutputCodePath(outputPath, inputPath) {
             if (outputPath) {
@@ -2699,7 +2672,7 @@ var CLIUtils = function () {
             var sourceMapFileName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
 
             if (sourceMapFileName) {
-                outputCodePath = outputCodePath.substr(0, outputCodePath.lastIndexOf('/')) + "/" + sourceMapFileName;
+                outputCodePath = outputCodePath.substring(0, outputCodePath.lastIndexOf('/')) + "/" + sourceMapFileName;
             }
             if (!/\.js\.map$/.test(outputCodePath)) {
                 outputCodePath = outputCodePath.split('.')[0] + ".js.map";
@@ -2733,7 +2706,7 @@ var CLIUtils = function () {
             if (!CLIUtils.isFilePath(inputPath)) {
                 throw new ReferenceError("Given input path must be a valid file path");
             }
-            if (!CLIUtils.availableInputExtensions.includes(path.extname(inputPath))) {
+            if (!(CLIUtils.availableInputExtensions.indexOf(path.extname(inputPath)) !== -1)) {
                 throw new ReferenceError("Input file must have .js extension");
             }
         }
@@ -2746,6 +2719,7 @@ var CLIUtils = function () {
             });
         }
     }]);
+
     return CLIUtils;
 }();
 
@@ -2754,13 +2728,13 @@ CLIUtils.encoding = 'utf8';
 exports.CLIUtils = CLIUtils;
 
 /***/ }),
-/* 56 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _keys = __webpack_require__(47);
+var _keys = __webpack_require__(46);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -2768,20 +2742,20 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var commander = __webpack_require__(142);
-var path = __webpack_require__(50);
+var commander = __webpack_require__(141);
+var path = __webpack_require__(49);
 var SourceMapMode_1 = __webpack_require__(29);
 var StringArrayEncoding_1 = __webpack_require__(32);
 var Default_1 = __webpack_require__(43);
-var CLIUtils_1 = __webpack_require__(55);
-var JavaScriptObfuscator_1 = __webpack_require__(25);
+var CLIUtils_1 = __webpack_require__(54);
+var JavaScriptObfuscator_1 = __webpack_require__(24);
 
 var JavaScriptObfuscatorCLI = function () {
     function JavaScriptObfuscatorCLI(argv) {
@@ -2911,7 +2885,7 @@ var JavaScriptObfuscatorCLI = function () {
 exports.JavaScriptObfuscatorCLI = JavaScriptObfuscatorCLI;
 
 /***/ }),
-/* 57 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2921,26 +2895,26 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
-var ControlFlowTransformersModule_1 = __webpack_require__(59);
-var CustomNodesModule_1 = __webpack_require__(58);
-var ObfuscatingTransformersModule_1 = __webpack_require__(61);
-var NodeTransformersModule_1 = __webpack_require__(60);
-var StackTraceAnalyzerModule_1 = __webpack_require__(62);
-var StoragesModule_1 = __webpack_require__(63);
-var JavaScriptObfuscatorInternal_1 = __webpack_require__(51);
-var ObfuscationEventEmitter_1 = __webpack_require__(87);
-var ObfuscationResult_1 = __webpack_require__(52);
-var Obfuscator_1 = __webpack_require__(53);
-var Options_1 = __webpack_require__(107);
-var SourceMapCorrector_1 = __webpack_require__(54);
+var ControlFlowTransformersModule_1 = __webpack_require__(58);
+var CustomNodesModule_1 = __webpack_require__(57);
+var ObfuscatingTransformersModule_1 = __webpack_require__(60);
+var NodeTransformersModule_1 = __webpack_require__(59);
+var StackTraceAnalyzerModule_1 = __webpack_require__(61);
+var StoragesModule_1 = __webpack_require__(62);
+var JavaScriptObfuscatorInternal_1 = __webpack_require__(50);
+var ObfuscationEventEmitter_1 = __webpack_require__(86);
+var ObfuscationResult_1 = __webpack_require__(51);
+var Obfuscator_1 = __webpack_require__(52);
+var Options_1 = __webpack_require__(106);
+var SourceMapCorrector_1 = __webpack_require__(53);
 
 var InversifyContainerFacade = function () {
     function InversifyContainerFacade(options) {
@@ -2987,7 +2961,7 @@ var InversifyContainerFacade = function () {
 exports.InversifyContainerFacade = InversifyContainerFacade;
 
 /***/ }),
-/* 58 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2999,32 +2973,32 @@ var _map2 = _interopRequireDefault(_map);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var CustomNodes_1 = __webpack_require__(15);
 var CustomNodeGroups_1 = __webpack_require__(38);
-var ConsoleOutputCustomNodeGroup_1 = __webpack_require__(65);
-var DebugProtectionCustomNodeGroup_1 = __webpack_require__(76);
-var DomainLockCustomNodeGroup_1 = __webpack_require__(78);
-var SelfDefendingCustomNodeGroup_1 = __webpack_require__(81);
-var StringArrayCustomNodeGroup_1 = __webpack_require__(85);
-var BinaryExpressionFunctionNode_1 = __webpack_require__(66);
-var BlockStatementControlFlowFlatteningNode_1 = __webpack_require__(67);
-var CallExpressionControlFlowStorageCallNode_1 = __webpack_require__(70);
-var CallExpressionFunctionNode_1 = __webpack_require__(68);
-var ControlFlowStorageNode_1 = __webpack_require__(71);
-var ConsoleOutputDisableExpressionNode_1 = __webpack_require__(64);
-var DebugProtectionFunctionCallNode_1 = __webpack_require__(73);
-var DebugProtectionFunctionIntervalNode_1 = __webpack_require__(74);
-var DebugProtectionFunctionNode_1 = __webpack_require__(75);
-var DomainLockNode_1 = __webpack_require__(77);
-var ExpressionWithOperatorControlFlowStorageCallNode_1 = __webpack_require__(72);
-var LogicalExpressionFunctionNode_1 = __webpack_require__(69);
-var NodeCallsControllerFunctionNode_1 = __webpack_require__(79);
-var SelfDefendingUnicodeNode_1 = __webpack_require__(80);
-var StringArrayCallsWrapper_1 = __webpack_require__(82);
-var StringArrayNode_1 = __webpack_require__(83);
-var StringArrayRotateFunctionNode_1 = __webpack_require__(84);
+var ConsoleOutputCustomNodeGroup_1 = __webpack_require__(64);
+var DebugProtectionCustomNodeGroup_1 = __webpack_require__(75);
+var DomainLockCustomNodeGroup_1 = __webpack_require__(77);
+var SelfDefendingCustomNodeGroup_1 = __webpack_require__(80);
+var StringArrayCustomNodeGroup_1 = __webpack_require__(84);
+var BinaryExpressionFunctionNode_1 = __webpack_require__(65);
+var BlockStatementControlFlowFlatteningNode_1 = __webpack_require__(66);
+var CallExpressionControlFlowStorageCallNode_1 = __webpack_require__(69);
+var CallExpressionFunctionNode_1 = __webpack_require__(67);
+var ControlFlowStorageNode_1 = __webpack_require__(70);
+var ConsoleOutputDisableExpressionNode_1 = __webpack_require__(63);
+var DebugProtectionFunctionCallNode_1 = __webpack_require__(72);
+var DebugProtectionFunctionIntervalNode_1 = __webpack_require__(73);
+var DebugProtectionFunctionNode_1 = __webpack_require__(74);
+var DomainLockNode_1 = __webpack_require__(76);
+var ExpressionWithOperatorControlFlowStorageCallNode_1 = __webpack_require__(71);
+var LogicalExpressionFunctionNode_1 = __webpack_require__(68);
+var NodeCallsControllerFunctionNode_1 = __webpack_require__(78);
+var SelfDefendingUnicodeNode_1 = __webpack_require__(79);
+var StringArrayCallsWrapper_1 = __webpack_require__(81);
+var StringArrayNode_1 = __webpack_require__(82);
+var StringArrayRotateFunctionNode_1 = __webpack_require__(83);
 exports.customNodesModule = new inversify_1.ContainerModule(function (bind) {
     bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(BinaryExpressionFunctionNode_1.BinaryExpressionFunctionNode).whenTargetNamed(CustomNodes_1.CustomNodes.BinaryExpressionFunctionNode);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(BlockStatementControlFlowFlatteningNode_1.BlockStatementControlFlowFlatteningNode).whenTargetNamed(CustomNodes_1.CustomNodes.BlockStatementControlFlowFlatteningNode);
@@ -3071,7 +3045,7 @@ exports.customNodesModule = new inversify_1.ContainerModule(function (bind) {
 });
 
 /***/ }),
-/* 59 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3083,12 +3057,12 @@ var _map2 = _interopRequireDefault(_map);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var NodeControlFlowReplacers_1 = __webpack_require__(39);
-var BinaryExpressionControlFlowReplacer_1 = __webpack_require__(90);
-var CallExpressionControlFlowReplacer_1 = __webpack_require__(91);
-var LogicalExpressionControlFlowReplacer_1 = __webpack_require__(92);
+var BinaryExpressionControlFlowReplacer_1 = __webpack_require__(89);
+var CallExpressionControlFlowReplacer_1 = __webpack_require__(90);
+var LogicalExpressionControlFlowReplacer_1 = __webpack_require__(91);
 exports.controlFlowTransformersModule = new inversify_1.ContainerModule(function (bind) {
     bind(ServiceIdentifiers_1.ServiceIdentifiers.IControlFlowReplacer).to(BinaryExpressionControlFlowReplacer_1.BinaryExpressionControlFlowReplacer).whenTargetNamed(NodeControlFlowReplacers_1.NodeControlFlowReplacers.BinaryExpressionControlFlowReplacer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.IControlFlowReplacer).to(CallExpressionControlFlowReplacer_1.CallExpressionControlFlowReplacer).whenTargetNamed(NodeControlFlowReplacers_1.NodeControlFlowReplacers.CallExpressionControlFlowReplacer);
@@ -3107,7 +3081,7 @@ exports.controlFlowTransformersModule = new inversify_1.ContainerModule(function
 });
 
 /***/ }),
-/* 60 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3119,21 +3093,21 @@ var _map2 = _interopRequireDefault(_map);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var NodeTransformers_1 = __webpack_require__(40);
-var FunctionControlFlowTransformer_1 = __webpack_require__(89);
-var BlockStatementControlFlowTransformer_1 = __webpack_require__(88);
-var CatchClauseTransformer_1 = __webpack_require__(96);
-var FunctionDeclarationTransformer_1 = __webpack_require__(97);
-var FunctionTransformer_1 = __webpack_require__(98);
-var LabeledStatementTransformer_1 = __webpack_require__(99);
-var LiteralTransformer_1 = __webpack_require__(100);
-var MemberExpressionTransformer_1 = __webpack_require__(93);
-var MethodDefinitionTransformer_1 = __webpack_require__(94);
-var ObjectExpressionTransformer_1 = __webpack_require__(101);
-var TemplateLiteralTransformer_1 = __webpack_require__(95);
-var VariableDeclarationTransformer_1 = __webpack_require__(102);
+var FunctionControlFlowTransformer_1 = __webpack_require__(88);
+var BlockStatementControlFlowTransformer_1 = __webpack_require__(87);
+var CatchClauseTransformer_1 = __webpack_require__(95);
+var FunctionDeclarationTransformer_1 = __webpack_require__(96);
+var FunctionTransformer_1 = __webpack_require__(97);
+var LabeledStatementTransformer_1 = __webpack_require__(98);
+var LiteralTransformer_1 = __webpack_require__(99);
+var MemberExpressionTransformer_1 = __webpack_require__(92);
+var MethodDefinitionTransformer_1 = __webpack_require__(93);
+var ObjectExpressionTransformer_1 = __webpack_require__(100);
+var TemplateLiteralTransformer_1 = __webpack_require__(94);
+var VariableDeclarationTransformer_1 = __webpack_require__(101);
 exports.nodeTransformersModule = new inversify_1.ContainerModule(function (bind) {
     bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(BlockStatementControlFlowTransformer_1.BlockStatementControlFlowTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.BlockStatementControlFlowTransformer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(FunctionControlFlowTransformer_1.FunctionControlFlowTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.FunctionControlFlowTransformer);
@@ -3161,7 +3135,7 @@ exports.nodeTransformersModule = new inversify_1.ContainerModule(function (bind)
 });
 
 /***/ }),
-/* 61 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3173,13 +3147,13 @@ var _map2 = _interopRequireDefault(_map);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var NodeObfuscationReplacers_1 = __webpack_require__(23);
-var BooleanLiteralReplacer_1 = __webpack_require__(103);
-var IdentifierReplacer_1 = __webpack_require__(104);
-var NumberLiteralReplacer_1 = __webpack_require__(105);
-var StringLiteralReplacer_1 = __webpack_require__(106);
+var BooleanLiteralReplacer_1 = __webpack_require__(102);
+var IdentifierReplacer_1 = __webpack_require__(103);
+var NumberLiteralReplacer_1 = __webpack_require__(104);
+var StringLiteralReplacer_1 = __webpack_require__(105);
 exports.obfuscatingTransformersModule = new inversify_1.ContainerModule(function (bind) {
     bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatorReplacer).to(BooleanLiteralReplacer_1.BooleanLiteralReplacer).whenTargetNamed(NodeObfuscationReplacers_1.NodeObfuscatorsReplacers.BooleanReplacer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatorReplacer).to(IdentifierReplacer_1.IdentifierReplacer).whenTargetNamed(NodeObfuscationReplacers_1.NodeObfuscatorsReplacers.IdentifierReplacer);
@@ -3199,7 +3173,7 @@ exports.obfuscatingTransformersModule = new inversify_1.ContainerModule(function
 });
 
 /***/ }),
-/* 62 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3211,13 +3185,13 @@ var _map2 = _interopRequireDefault(_map);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var CalleeDataExtractors_1 = __webpack_require__(37);
-var FunctionDeclarationCalleeDataExtractor_1 = __webpack_require__(111);
-var FunctionExpressionCalleeDataExtractor_1 = __webpack_require__(112);
-var ObjectExpressionCalleeDataExtractor_1 = __webpack_require__(113);
-var StackTraceAnalyzer_1 = __webpack_require__(110);
+var FunctionDeclarationCalleeDataExtractor_1 = __webpack_require__(110);
+var FunctionExpressionCalleeDataExtractor_1 = __webpack_require__(111);
+var ObjectExpressionCalleeDataExtractor_1 = __webpack_require__(112);
+var StackTraceAnalyzer_1 = __webpack_require__(109);
 exports.stackTraceAnalyzerModule = new inversify_1.ContainerModule(function (bind) {
     bind(ServiceIdentifiers_1.ServiceIdentifiers.IStackTraceAnalyzer).to(StackTraceAnalyzer_1.StackTraceAnalyzer).inSingletonScope();
     bind(ServiceIdentifiers_1.ServiceIdentifiers.ICalleeDataExtractor).to(FunctionDeclarationCalleeDataExtractor_1.FunctionDeclarationCalleeDataExtractor).whenTargetNamed(CalleeDataExtractors_1.CalleeDataExtractors.FunctionDeclarationCalleeDataExtractor);
@@ -3237,17 +3211,17 @@ exports.stackTraceAnalyzerModule = new inversify_1.ContainerModule(function (bin
 });
 
 /***/ }),
-/* 63 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
-var ControlFlowStorage_1 = __webpack_require__(115);
-var CustomNodeGroupStorage_1 = __webpack_require__(116);
-var StringArrayStorage_1 = __webpack_require__(117);
+var ControlFlowStorage_1 = __webpack_require__(114);
+var CustomNodeGroupStorage_1 = __webpack_require__(115);
+var StringArrayStorage_1 = __webpack_require__(116);
 exports.storagesModule = new inversify_1.ContainerModule(function (bind) {
     bind(ServiceIdentifiers_1.ServiceIdentifiers.TCustomNodeGroupStorage).to(CustomNodeGroupStorage_1.CustomNodeGroupStorage).inSingletonScope();
     bind(ServiceIdentifiers_1.ServiceIdentifiers.TStringArrayStorage).to(StringArrayStorage_1.StringArrayStorage).inSingletonScope();
@@ -3261,7 +3235,7 @@ exports.storagesModule = new inversify_1.ContainerModule(function (bind) {
 });
 
 /***/ }),
-/* 64 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3275,7 +3249,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -3290,10 +3264,10 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var format = __webpack_require__(19);
-var ConsoleOutputDisableExpressionTemplate_1 = __webpack_require__(121);
+var ConsoleOutputDisableExpressionTemplate_1 = __webpack_require__(120);
 var Initializable_1 = __webpack_require__(10);
 var AbstractCustomNode_1 = __webpack_require__(13);
 var NodeUtils_1 = __webpack_require__(8);
@@ -3332,7 +3306,7 @@ ConsoleOutputDisableExpressionNode = tslib_1.__decorate([inversify_1.injectable(
 exports.ConsoleOutputDisableExpressionNode = ConsoleOutputDisableExpressionNode;
 
 /***/ }),
-/* 65 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3350,7 +3324,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -3365,13 +3339,13 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var CustomNodes_1 = __webpack_require__(15);
 var ObfuscationEvents_1 = __webpack_require__(22);
 var AbstractCustomNodeGroup_1 = __webpack_require__(27);
-var NodeAppender_1 = __webpack_require__(26);
+var NodeAppender_1 = __webpack_require__(25);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var ConsoleOutputCustomNodeGroup = function (_AbstractCustomNodeGr) {
     (0, _inherits3.default)(ConsoleOutputCustomNodeGroup, _AbstractCustomNodeGr);
@@ -3427,7 +3401,7 @@ ConsoleOutputCustomNodeGroup = tslib_1.__decorate([inversify_1.injectable(), tsl
 exports.ConsoleOutputCustomNodeGroup = ConsoleOutputCustomNodeGroup;
 
 /***/ }),
-/* 66 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3441,7 +3415,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -3456,7 +3430,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var AbstractCustomNode_1 = __webpack_require__(13);
@@ -3491,7 +3465,7 @@ BinaryExpressionFunctionNode = tslib_1.__decorate([inversify_1.injectable(), tsl
 exports.BinaryExpressionFunctionNode = BinaryExpressionFunctionNode;
 
 /***/ }),
-/* 67 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3505,7 +3479,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -3520,7 +3494,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var AbstractCustomNode_1 = __webpack_require__(13);
@@ -3565,7 +3539,7 @@ BlockStatementControlFlowFlatteningNode = tslib_1.__decorate([inversify_1.inject
 exports.BlockStatementControlFlowFlatteningNode = BlockStatementControlFlowFlatteningNode;
 
 /***/ }),
-/* 68 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3579,7 +3553,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -3594,7 +3568,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var AbstractCustomNode_1 = __webpack_require__(13);
@@ -3635,7 +3609,7 @@ CallExpressionFunctionNode = tslib_1.__decorate([inversify_1.injectable(), tslib
 exports.CallExpressionFunctionNode = CallExpressionFunctionNode;
 
 /***/ }),
-/* 69 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3649,7 +3623,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -3664,7 +3638,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var AbstractCustomNode_1 = __webpack_require__(13);
@@ -3699,13 +3673,13 @@ LogicalExpressionFunctionNode = tslib_1.__decorate([inversify_1.injectable(), ts
 exports.LogicalExpressionFunctionNode = LogicalExpressionFunctionNode;
 
 /***/ }),
-/* 70 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _toConsumableArray2 = __webpack_require__(24);
+var _toConsumableArray2 = __webpack_require__(26);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
@@ -3717,7 +3691,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -3732,7 +3706,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var AbstractCustomNode_1 = __webpack_require__(13);
@@ -3772,7 +3746,7 @@ CallExpressionControlFlowStorageCallNode = tslib_1.__decorate([inversify_1.injec
 exports.CallExpressionControlFlowStorageCallNode = CallExpressionControlFlowStorageCallNode;
 
 /***/ }),
-/* 71 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3782,7 +3756,7 @@ var _slicedToArray2 = __webpack_require__(35);
 
 var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
-var _from = __webpack_require__(45);
+var _from = __webpack_require__(133);
 
 var _from2 = _interopRequireDefault(_from);
 
@@ -3794,7 +3768,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -3809,7 +3783,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var AbstractCustomNode_1 = __webpack_require__(13);
@@ -3849,7 +3823,7 @@ ControlFlowStorageNode = tslib_1.__decorate([inversify_1.injectable(), tslib_1._
 exports.ControlFlowStorageNode = ControlFlowStorageNode;
 
 /***/ }),
-/* 72 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3863,7 +3837,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -3878,7 +3852,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var AbstractCustomNode_1 = __webpack_require__(13);
@@ -3918,7 +3892,7 @@ ExpressionWithOperatorControlFlowStorageCallNode = tslib_1.__decorate([inversify
 exports.ExpressionWithOperatorControlFlowStorageCallNode = ExpressionWithOperatorControlFlowStorageCallNode;
 
 /***/ }),
-/* 73 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3932,7 +3906,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -3947,11 +3921,11 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var format = __webpack_require__(19);
 var Initializable_1 = __webpack_require__(10);
-var DebufProtectionFunctionCallTemplate_1 = __webpack_require__(122);
+var DebufProtectionFunctionCallTemplate_1 = __webpack_require__(121);
 var AbstractCustomNode_1 = __webpack_require__(13);
 var NodeUtils_1 = __webpack_require__(8);
 var DebugProtectionFunctionCallNode = function (_AbstractCustomNode_) {
@@ -3987,7 +3961,7 @@ DebugProtectionFunctionCallNode = tslib_1.__decorate([inversify_1.injectable(), 
 exports.DebugProtectionFunctionCallNode = DebugProtectionFunctionCallNode;
 
 /***/ }),
-/* 74 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4001,7 +3975,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -4016,11 +3990,11 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var format = __webpack_require__(19);
 var Initializable_1 = __webpack_require__(10);
-var DebugProtectionFunctionIntervalTemplate_1 = __webpack_require__(123);
+var DebugProtectionFunctionIntervalTemplate_1 = __webpack_require__(122);
 var AbstractCustomNode_1 = __webpack_require__(13);
 var NodeUtils_1 = __webpack_require__(8);
 var DebugProtectionFunctionIntervalNode = function (_AbstractCustomNode_) {
@@ -4056,7 +4030,7 @@ DebugProtectionFunctionIntervalNode = tslib_1.__decorate([inversify_1.injectable
 exports.DebugProtectionFunctionIntervalNode = DebugProtectionFunctionIntervalNode;
 
 /***/ }),
-/* 75 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4070,7 +4044,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -4085,11 +4059,11 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var format = __webpack_require__(19);
 var Initializable_1 = __webpack_require__(10);
-var DebugProtectionFunctionTemplate_1 = __webpack_require__(124);
+var DebugProtectionFunctionTemplate_1 = __webpack_require__(123);
 var AbstractCustomNode_1 = __webpack_require__(13);
 var NodeUtils_1 = __webpack_require__(8);
 var DebugProtectionFunctionNode = function (_AbstractCustomNode_) {
@@ -4125,7 +4099,7 @@ DebugProtectionFunctionNode = tslib_1.__decorate([inversify_1.injectable(), tsli
 exports.DebugProtectionFunctionNode = DebugProtectionFunctionNode;
 
 /***/ }),
-/* 76 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4143,7 +4117,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -4158,13 +4132,13 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var CustomNodes_1 = __webpack_require__(15);
 var ObfuscationEvents_1 = __webpack_require__(22);
 var AbstractCustomNodeGroup_1 = __webpack_require__(27);
-var NodeAppender_1 = __webpack_require__(26);
+var NodeAppender_1 = __webpack_require__(25);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var DebugProtectionCustomNodeGroup = function (_AbstractCustomNodeGr) {
     (0, _inherits3.default)(DebugProtectionCustomNodeGroup, _AbstractCustomNodeGr);
@@ -4223,7 +4197,7 @@ DebugProtectionCustomNodeGroup = tslib_1.__decorate([inversify_1.injectable(), t
 exports.DebugProtectionCustomNodeGroup = DebugProtectionCustomNodeGroup;
 
 /***/ }),
-/* 77 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4241,7 +4215,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -4256,11 +4230,11 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var format = __webpack_require__(19);
 var Initializable_1 = __webpack_require__(10);
-var DomainLockNodeTemplate_1 = __webpack_require__(125);
+var DomainLockNodeTemplate_1 = __webpack_require__(124);
 var AbstractCustomNode_1 = __webpack_require__(13);
 var CryptUtils_1 = __webpack_require__(34);
 var NodeUtils_1 = __webpack_require__(8);
@@ -4308,7 +4282,7 @@ DomainLockNode = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0
 exports.DomainLockNode = DomainLockNode;
 
 /***/ }),
-/* 78 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4326,7 +4300,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -4341,13 +4315,13 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var CustomNodes_1 = __webpack_require__(15);
 var ObfuscationEvents_1 = __webpack_require__(22);
 var AbstractCustomNodeGroup_1 = __webpack_require__(27);
-var NodeAppender_1 = __webpack_require__(26);
+var NodeAppender_1 = __webpack_require__(25);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var DomainLockCustomNodeGroup = function (_AbstractCustomNodeGr) {
     (0, _inherits3.default)(DomainLockCustomNodeGroup, _AbstractCustomNodeGr);
@@ -4403,7 +4377,7 @@ DomainLockCustomNodeGroup = tslib_1.__decorate([inversify_1.injectable(), tslib_
 exports.DomainLockCustomNodeGroup = DomainLockCustomNodeGroup;
 
 /***/ }),
-/* 79 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4417,7 +4391,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -4432,15 +4406,15 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var format = __webpack_require__(19);
 var ObfuscationEvents_1 = __webpack_require__(22);
 var Initializable_1 = __webpack_require__(10);
-var SingleNodeCallControllerTemplate_1 = __webpack_require__(120);
+var SingleNodeCallControllerTemplate_1 = __webpack_require__(119);
 var NoCustomNodes_1 = __webpack_require__(31);
 var AbstractCustomNode_1 = __webpack_require__(13);
-var JavaScriptObfuscator_1 = __webpack_require__(25);
+var JavaScriptObfuscator_1 = __webpack_require__(24);
 var NodeUtils_1 = __webpack_require__(8);
 var NodeCallsControllerFunctionNode = function (_AbstractCustomNode_) {
     (0, _inherits3.default)(NodeCallsControllerFunctionNode, _AbstractCustomNode_);
@@ -4482,7 +4456,7 @@ NodeCallsControllerFunctionNode = tslib_1.__decorate([inversify_1.injectable(), 
 exports.NodeCallsControllerFunctionNode = NodeCallsControllerFunctionNode;
 
 /***/ }),
-/* 80 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4496,7 +4470,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -4511,14 +4485,14 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var format = __webpack_require__(19);
 var Initializable_1 = __webpack_require__(10);
 var NoCustomNodes_1 = __webpack_require__(31);
-var SelfDefendingTemplate_1 = __webpack_require__(126);
+var SelfDefendingTemplate_1 = __webpack_require__(125);
 var AbstractCustomNode_1 = __webpack_require__(13);
-var JavaScriptObfuscator_1 = __webpack_require__(25);
+var JavaScriptObfuscator_1 = __webpack_require__(24);
 var NodeUtils_1 = __webpack_require__(8);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
@@ -4555,7 +4529,7 @@ SelfDefendingUnicodeNode = tslib_1.__decorate([inversify_1.injectable(), tslib_1
 exports.SelfDefendingUnicodeNode = SelfDefendingUnicodeNode;
 
 /***/ }),
-/* 81 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4573,7 +4547,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -4588,13 +4562,13 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var CustomNodes_1 = __webpack_require__(15);
 var ObfuscationEvents_1 = __webpack_require__(22);
 var AbstractCustomNodeGroup_1 = __webpack_require__(27);
-var NodeAppender_1 = __webpack_require__(26);
+var NodeAppender_1 = __webpack_require__(25);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var SelfDefendingCustomNodeGroup = function (_AbstractCustomNodeGr) {
     (0, _inherits3.default)(SelfDefendingCustomNodeGroup, _AbstractCustomNodeGr);
@@ -4650,7 +4624,7 @@ SelfDefendingCustomNodeGroup = tslib_1.__decorate([inversify_1.injectable(), tsl
 exports.SelfDefendingCustomNodeGroup = SelfDefendingCustomNodeGroup;
 
 /***/ }),
-/* 82 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4664,7 +4638,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -4679,20 +4653,20 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var format = __webpack_require__(19);
 var StringArrayEncoding_1 = __webpack_require__(32);
 var Initializable_1 = __webpack_require__(10);
 var NoCustomNodes_1 = __webpack_require__(31);
-var AtobTemplate_1 = __webpack_require__(118);
-var Rc4Template_1 = __webpack_require__(119);
-var SelfDefendingTemplate_1 = __webpack_require__(127);
-var StringArrayBase64DecodeNodeTemplate_1 = __webpack_require__(128);
-var StringArrayCallsWrapperTemplate_1 = __webpack_require__(129);
-var StringArrayRC4DecodeNodeTemplate_1 = __webpack_require__(130);
+var AtobTemplate_1 = __webpack_require__(117);
+var Rc4Template_1 = __webpack_require__(118);
+var SelfDefendingTemplate_1 = __webpack_require__(126);
+var StringArrayBase64DecodeNodeTemplate_1 = __webpack_require__(127);
+var StringArrayCallsWrapperTemplate_1 = __webpack_require__(128);
+var StringArrayRC4DecodeNodeTemplate_1 = __webpack_require__(129);
 var AbstractCustomNode_1 = __webpack_require__(13);
-var JavaScriptObfuscator_1 = __webpack_require__(25);
+var JavaScriptObfuscator_1 = __webpack_require__(24);
 var NodeUtils_1 = __webpack_require__(8);
 var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
     (0, _inherits3.default)(StringArrayCallsWrapper, _AbstractCustomNode_);
@@ -4764,7 +4738,7 @@ StringArrayCallsWrapper = tslib_1.__decorate([inversify_1.injectable(), tslib_1.
 exports.StringArrayCallsWrapper = StringArrayCallsWrapper;
 
 /***/ }),
-/* 83 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4778,7 +4752,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -4786,7 +4760,7 @@ var _possibleConstructorReturn2 = __webpack_require__(7);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _get2 = __webpack_require__(48);
+var _get2 = __webpack_require__(47);
 
 var _get3 = _interopRequireDefault(_get2);
 
@@ -4797,11 +4771,11 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var format = __webpack_require__(19);
 var Initializable_1 = __webpack_require__(10);
-var StringArrayTemplate_1 = __webpack_require__(131);
+var StringArrayTemplate_1 = __webpack_require__(130);
 var AbstractCustomNode_1 = __webpack_require__(13);
 var NodeUtils_1 = __webpack_require__(8);
 var StringArrayNode = function (_AbstractCustomNode_) {
@@ -4848,7 +4822,7 @@ StringArrayNode = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(
 exports.StringArrayNode = StringArrayNode;
 
 /***/ }),
-/* 84 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4862,7 +4836,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -4877,15 +4851,15 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var format = __webpack_require__(19);
 var Initializable_1 = __webpack_require__(10);
 var NoCustomNodes_1 = __webpack_require__(31);
-var SelfDefendingTemplate_1 = __webpack_require__(132);
-var StringArrayRotateFunctionTemplate_1 = __webpack_require__(133);
+var SelfDefendingTemplate_1 = __webpack_require__(131);
+var StringArrayRotateFunctionTemplate_1 = __webpack_require__(132);
 var AbstractCustomNode_1 = __webpack_require__(13);
-var JavaScriptObfuscator_1 = __webpack_require__(25);
+var JavaScriptObfuscator_1 = __webpack_require__(24);
 var NodeUtils_1 = __webpack_require__(8);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var Utils_1 = __webpack_require__(14);
@@ -4941,7 +4915,7 @@ StringArrayRotateFunctionNode = tslib_1.__decorate([inversify_1.injectable(), ts
 exports.StringArrayRotateFunctionNode = StringArrayRotateFunctionNode;
 
 /***/ }),
-/* 85 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4959,7 +4933,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -4974,13 +4948,13 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var Initializable_1 = __webpack_require__(10);
 var CustomNodes_1 = __webpack_require__(15);
 var ObfuscationEvents_1 = __webpack_require__(22);
 var AbstractCustomNodeGroup_1 = __webpack_require__(27);
-var NodeAppender_1 = __webpack_require__(26);
+var NodeAppender_1 = __webpack_require__(25);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var Utils_1 = __webpack_require__(14);
 var StringArrayCustomNodeGroup = function (_AbstractCustomNodeGr) {
@@ -5051,7 +5025,7 @@ StringArrayCustomNodeGroup = tslib_1.__decorate([inversify_1.injectable(), tslib
 exports.StringArrayCustomNodeGroup = StringArrayCustomNodeGroup;
 
 /***/ }),
-/* 86 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5064,7 +5038,7 @@ exports.VisitorDirection = Utils_1.Utils.strEnumify({
 });
 
 /***/ }),
-/* 87 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5089,8 +5063,8 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
-var events_1 = __webpack_require__(143);
+var inversify_1 = __webpack_require__(1);
+var events_1 = __webpack_require__(142);
 inversify_1.decorate(inversify_1.injectable(), events_1.EventEmitter);
 var ObfuscationEventEmitter = function (_events_1$EventEmitte) {
     (0, _inherits3.default)(ObfuscationEventEmitter, _events_1$EventEmitte);
@@ -5106,13 +5080,13 @@ ObfuscationEventEmitter = tslib_1.__decorate([inversify_1.injectable(), tslib_1.
 exports.ObfuscationEventEmitter = ObfuscationEventEmitter;
 
 /***/ }),
-/* 88 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _toConsumableArray2 = __webpack_require__(24);
+var _toConsumableArray2 = __webpack_require__(26);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
@@ -5124,7 +5098,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -5139,7 +5113,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var CustomNodes_1 = __webpack_require__(15);
 var AbstractNodeTransformer_1 = __webpack_require__(16);
@@ -5207,7 +5181,7 @@ exports.BlockStatementControlFlowTransformer = BlockStatementControlFlowTransfor
 var BlockStatementControlFlowTransformer_1;
 
 /***/ }),
-/* 89 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5225,7 +5199,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -5240,14 +5214,14 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var estraverse = __webpack_require__(17);
 var CustomNodes_1 = __webpack_require__(15);
 var NodeType_1 = __webpack_require__(20);
 var AbstractNodeTransformer_1 = __webpack_require__(16);
 var Node_1 = __webpack_require__(11);
-var NodeAppender_1 = __webpack_require__(26);
+var NodeAppender_1 = __webpack_require__(25);
 var NodeControlFlowReplacers_1 = __webpack_require__(39);
 var NodeUtils_1 = __webpack_require__(8);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
@@ -5359,7 +5333,7 @@ exports.FunctionControlFlowTransformer = FunctionControlFlowTransformer;
 var FunctionControlFlowTransformer_1;
 
 /***/ }),
-/* 90 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5373,7 +5347,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -5388,7 +5362,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var CustomNodes_1 = __webpack_require__(15);
 var ExpressionWithOperatorControlFlowReplacer_1 = __webpack_require__(42);
@@ -5418,7 +5392,7 @@ exports.BinaryExpressionControlFlowReplacer = BinaryExpressionControlFlowReplace
 var BinaryExpressionControlFlowReplacer_1;
 
 /***/ }),
-/* 91 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5432,7 +5406,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -5447,7 +5421,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var CustomNodes_1 = __webpack_require__(15);
 var AbstractControlFlowReplacer_1 = __webpack_require__(41);
@@ -5494,7 +5468,7 @@ exports.CallExpressionControlFlowReplacer = CallExpressionControlFlowReplacer;
 var CallExpressionControlFlowReplacer_1;
 
 /***/ }),
-/* 92 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5508,7 +5482,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -5523,7 +5497,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var CustomNodes_1 = __webpack_require__(15);
 var ExpressionWithOperatorControlFlowReplacer_1 = __webpack_require__(42);
@@ -5571,7 +5545,7 @@ exports.LogicalExpressionControlFlowReplacer = LogicalExpressionControlFlowRepla
 var LogicalExpressionControlFlowReplacer_1;
 
 /***/ }),
-/* 93 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5585,7 +5559,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -5600,7 +5574,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var NodeType_1 = __webpack_require__(20);
 var AbstractNodeTransformer_1 = __webpack_require__(16);
@@ -5649,7 +5623,7 @@ MemberExpressionTransformer = tslib_1.__decorate([inversify_1.injectable(), tsli
 exports.MemberExpressionTransformer = MemberExpressionTransformer;
 
 /***/ }),
-/* 94 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5663,7 +5637,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -5678,7 +5652,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var NodeType_1 = __webpack_require__(20);
 var AbstractNodeTransformer_1 = __webpack_require__(16);
@@ -5726,7 +5700,7 @@ exports.MethodDefinitionTransformer = MethodDefinitionTransformer;
 var MethodDefinitionTransformer_1;
 
 /***/ }),
-/* 95 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5744,7 +5718,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -5759,7 +5733,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var AbstractNodeTransformer_1 = __webpack_require__(16);
 var Node_1 = __webpack_require__(11);
@@ -5870,7 +5844,7 @@ exports.TemplateLiteralTransformer = TemplateLiteralTransformer;
 var TemplateLiteralTransformer_1;
 
 /***/ }),
-/* 96 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5884,7 +5858,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -5899,7 +5873,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var estraverse = __webpack_require__(17);
 var NodeObfuscationReplacers_1 = __webpack_require__(23);
@@ -5969,7 +5943,7 @@ CatchClauseTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1._
 exports.CatchClauseTransformer = CatchClauseTransformer;
 
 /***/ }),
-/* 97 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5991,7 +5965,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -6006,7 +5980,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var estraverse = __webpack_require__(17);
 var NodeObfuscationReplacers_1 = __webpack_require__(23);
@@ -6114,7 +6088,7 @@ FunctionDeclarationTransformer = tslib_1.__decorate([inversify_1.injectable(), t
 exports.FunctionDeclarationTransformer = FunctionDeclarationTransformer;
 
 /***/ }),
-/* 98 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6128,7 +6102,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -6143,7 +6117,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var estraverse = __webpack_require__(17);
 var NodeObfuscationReplacers_1 = __webpack_require__(23);
@@ -6232,7 +6206,7 @@ FunctionTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__pa
 exports.FunctionTransformer = FunctionTransformer;
 
 /***/ }),
-/* 99 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6246,7 +6220,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -6261,7 +6235,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var estraverse = __webpack_require__(17);
 var NodeObfuscationReplacers_1 = __webpack_require__(23);
@@ -6325,13 +6299,13 @@ LabeledStatementTransformer = tslib_1.__decorate([inversify_1.injectable(), tsli
 exports.LabeledStatementTransformer = LabeledStatementTransformer;
 
 /***/ }),
-/* 100 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _typeof2 = __webpack_require__(139);
+var _typeof2 = __webpack_require__(138);
 
 var _typeof3 = _interopRequireDefault(_typeof2);
 
@@ -6343,7 +6317,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -6358,7 +6332,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var escodegen = __webpack_require__(28);
 var NodeObfuscationReplacers_1 = __webpack_require__(23);
@@ -6422,7 +6396,7 @@ LiteralTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__par
 exports.LiteralTransformer = LiteralTransformer;
 
 /***/ }),
-/* 101 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6436,7 +6410,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -6451,7 +6425,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var escodegen = __webpack_require__(28);
 var NodeType_1 = __webpack_require__(20);
@@ -6526,7 +6500,7 @@ exports.ObjectExpressionTransformer = ObjectExpressionTransformer;
 var ObjectExpressionTransformer_1;
 
 /***/ }),
-/* 102 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6548,7 +6522,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -6563,7 +6537,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var estraverse = __webpack_require__(17);
 var NodeObfuscationReplacers_1 = __webpack_require__(23);
@@ -6683,7 +6657,7 @@ VariableDeclarationTransformer = tslib_1.__decorate([inversify_1.injectable(), t
 exports.VariableDeclarationTransformer = VariableDeclarationTransformer;
 
 /***/ }),
-/* 103 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6697,7 +6671,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -6712,7 +6686,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var JSFuck_1 = __webpack_require__(36);
 var AbstractReplacer_1 = __webpack_require__(30);
@@ -6736,56 +6710,38 @@ BooleanLiteralReplacer = tslib_1.__decorate([inversify_1.injectable(), tslib_1._
 exports.BooleanLiteralReplacer = BooleanLiteralReplacer;
 
 /***/ }),
-/* 104 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _map = __webpack_require__(12);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _map2 = _interopRequireDefault(_map);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _getPrototypeOf = __webpack_require__(5);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-
-var _classCallCheck2 = __webpack_require__(0);
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(1);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _possibleConstructorReturn2 = __webpack_require__(7);
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = __webpack_require__(6);
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var AbstractReplacer_1 = __webpack_require__(30);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var IdentifierReplacer = function (_AbstractReplacer_1$A) {
-    (0, _inherits3.default)(IdentifierReplacer, _AbstractReplacer_1$A);
+    _inherits(IdentifierReplacer, _AbstractReplacer_1$A);
 
     function IdentifierReplacer(options) {
-        (0, _classCallCheck3.default)(this, IdentifierReplacer);
+        _classCallCheck(this, IdentifierReplacer);
 
-        var _this = (0, _possibleConstructorReturn3.default)(this, (IdentifierReplacer.__proto__ || (0, _getPrototypeOf2.default)(IdentifierReplacer)).call(this, options));
+        var _this = _possibleConstructorReturn(this, (IdentifierReplacer.__proto__ || Object.getPrototypeOf(IdentifierReplacer)).call(this, options));
 
-        _this.namesMap = new _map2.default();
+        _this.namesMap = new Map();
         return _this;
     }
 
-    (0, _createClass3.default)(IdentifierReplacer, [{
+    _createClass(IdentifierReplacer, [{
         key: "replace",
         value: function replace(nodeValue, nodeIdentifier) {
             var mapKey = nodeValue + "-" + String(nodeIdentifier);
@@ -6805,17 +6761,18 @@ var IdentifierReplacer = function (_AbstractReplacer_1$A) {
         key: "isReservedName",
         value: function isReservedName(name) {
             return this.options.reservedNames.some(function (reservedName) {
-                return new RegExp(reservedName, 'g').test(name);
+                return new RegExp(reservedName, 'g').exec(name) !== null;
             });
         }
     }]);
+
     return IdentifierReplacer;
 }(AbstractReplacer_1.AbstractReplacer);
 IdentifierReplacer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object])], IdentifierReplacer);
 exports.IdentifierReplacer = IdentifierReplacer;
 
 /***/ }),
-/* 105 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6833,7 +6790,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -6848,7 +6805,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var AbstractReplacer_1 = __webpack_require__(30);
 var Utils_1 = __webpack_require__(14);
@@ -6886,7 +6843,7 @@ NumberLiteralReplacer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__
 exports.NumberLiteralReplacer = NumberLiteralReplacer;
 
 /***/ }),
-/* 106 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6904,7 +6861,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -6919,7 +6876,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var StringArrayEncoding_1 = __webpack_require__(32);
 var AbstractReplacer_1 = __webpack_require__(30);
@@ -7016,7 +6973,7 @@ exports.StringLiteralReplacer = StringLiteralReplacer;
 var StringLiteralReplacer_1;
 
 /***/ }),
-/* 107 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7033,11 +6990,11 @@ var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
-var class_validator_1 = __webpack_require__(141);
+var inversify_1 = __webpack_require__(1);
+var class_validator_1 = __webpack_require__(140);
 var Default_1 = __webpack_require__(43);
-var OptionsNormalizer_1 = __webpack_require__(108);
-var ValidationErrorsFormatter_1 = __webpack_require__(109);
+var OptionsNormalizer_1 = __webpack_require__(107);
+var ValidationErrorsFormatter_1 = __webpack_require__(108);
 var Options = Options_1 = function Options(inputOptions) {
     (0, _classCallCheck3.default)(this, Options);
 
@@ -7086,7 +7043,7 @@ exports.Options = Options;
 var Options_1;
 
 /***/ }),
-/* 108 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7100,7 +7057,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -7271,7 +7228,7 @@ OptionsNormalizer.normalizerRules = [OptionsNormalizer.controlFlowFlatteningThre
 exports.OptionsNormalizer = OptionsNormalizer;
 
 /***/ }),
-/* 109 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7285,7 +7242,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -7347,7 +7304,7 @@ var ValidationErrorsFormatter = function () {
 exports.ValidationErrorsFormatter = ValidationErrorsFormatter;
 
 /***/ }),
-/* 110 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7357,14 +7314,14 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var estraverse = __webpack_require__(17);
 var CalleeDataExtractors_1 = __webpack_require__(37);
@@ -7454,7 +7411,7 @@ exports.StackTraceAnalyzer = StackTraceAnalyzer;
 var StackTraceAnalyzer_1;
 
 /***/ }),
-/* 111 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7468,7 +7425,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -7483,7 +7440,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var estraverse = __webpack_require__(17);
 var AbstractCalleeDataExtractor_1 = __webpack_require__(33);
 var Node_1 = __webpack_require__(11);
@@ -7532,7 +7489,7 @@ FunctionDeclarationCalleeDataExtractor = tslib_1.__decorate([inversify_1.injecta
 exports.FunctionDeclarationCalleeDataExtractor = FunctionDeclarationCalleeDataExtractor;
 
 /***/ }),
-/* 112 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7546,7 +7503,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -7561,7 +7518,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var estraverse = __webpack_require__(17);
 var AbstractCalleeDataExtractor_1 = __webpack_require__(33);
 var Node_1 = __webpack_require__(11);
@@ -7613,7 +7570,7 @@ FunctionExpressionCalleeDataExtractor = tslib_1.__decorate([inversify_1.injectab
 exports.FunctionExpressionCalleeDataExtractor = FunctionExpressionCalleeDataExtractor;
 
 /***/ }),
-/* 113 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7631,7 +7588,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -7646,7 +7603,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var estraverse = __webpack_require__(17);
 var Node_1 = __webpack_require__(11);
 var NodeUtils_1 = __webpack_require__(8);
@@ -7768,13 +7725,13 @@ ObjectExpressionCalleeDataExtractor = tslib_1.__decorate([inversify_1.injectable
 exports.ObjectExpressionCalleeDataExtractor = ObjectExpressionCalleeDataExtractor;
 
 /***/ }),
-/* 114 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _toConsumableArray2 = __webpack_require__(24);
+var _toConsumableArray2 = __webpack_require__(26);
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
@@ -7782,14 +7739,14 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var Initializable_1 = __webpack_require__(10);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var ArrayStorage = function () {
@@ -7864,7 +7821,7 @@ ArrayStorage = tslib_1.__decorate([inversify_1.injectable()], ArrayStorage);
 exports.ArrayStorage = ArrayStorage;
 
 /***/ }),
-/* 115 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7908,7 +7865,7 @@ var ControlFlowStorage = function (_MapStorage_1$MapStor) {
 exports.ControlFlowStorage = ControlFlowStorage;
 
 /***/ }),
-/* 116 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7926,7 +7883,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -7941,7 +7898,7 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
+var inversify_1 = __webpack_require__(1);
 var ServiceIdentifiers_1 = __webpack_require__(4);
 var CustomNodeGroups_1 = __webpack_require__(38);
 var MapStorage_1 = __webpack_require__(44);
@@ -7984,7 +7941,7 @@ exports.CustomNodeGroupStorage = CustomNodeGroupStorage;
 var CustomNodeGroupStorage_1;
 
 /***/ }),
-/* 117 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7998,7 +7955,7 @@ var _classCallCheck2 = __webpack_require__(0);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(1);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
@@ -8006,7 +7963,7 @@ var _possibleConstructorReturn2 = __webpack_require__(7);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _get2 = __webpack_require__(48);
+var _get2 = __webpack_require__(47);
 
 var _get3 = _interopRequireDefault(_get2);
 
@@ -8017,8 +7974,8 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var tslib_1 = __webpack_require__(3);
-var inversify_1 = __webpack_require__(2);
-var ArrayStorage_1 = __webpack_require__(114);
+var inversify_1 = __webpack_require__(1);
+var ArrayStorage_1 = __webpack_require__(113);
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 var Utils_1 = __webpack_require__(14);
 var StringArrayStorage = function (_ArrayStorage_1$Array) {
@@ -8062,7 +8019,7 @@ StringArrayStorage = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__met
 exports.StringArrayStorage = StringArrayStorage;
 
 /***/ }),
-/* 118 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8074,7 +8031,7 @@ function AtobTemplate() {
 exports.AtobTemplate = AtobTemplate;
 
 /***/ }),
-/* 119 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8086,7 +8043,7 @@ function Rc4Template() {
 exports.Rc4Template = Rc4Template;
 
 /***/ }),
-/* 120 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8098,7 +8055,7 @@ function SingleNodeCallControllerTemplate() {
 exports.SingleNodeCallControllerTemplate = SingleNodeCallControllerTemplate;
 
 /***/ }),
-/* 121 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8110,7 +8067,7 @@ function ConsoleOutputDisableExpressionTemplate() {
 exports.ConsoleOutputDisableExpressionTemplate = ConsoleOutputDisableExpressionTemplate;
 
 /***/ }),
-/* 122 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8122,7 +8079,7 @@ function DebugProtectionFunctionCallTemplate() {
 exports.DebugProtectionFunctionCallTemplate = DebugProtectionFunctionCallTemplate;
 
 /***/ }),
-/* 123 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8134,7 +8091,7 @@ function DebugProtectionFunctionIntervalTemplate() {
 exports.DebugProtectionFunctionIntervalTemplate = DebugProtectionFunctionIntervalTemplate;
 
 /***/ }),
-/* 124 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8146,7 +8103,7 @@ function DebugProtectionFunctionTemplate() {
 exports.DebugProtectionFunctionTemplate = DebugProtectionFunctionTemplate;
 
 /***/ }),
-/* 125 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8158,7 +8115,7 @@ function DomainLockNodeTemplate() {
 exports.DomainLockNodeTemplate = DomainLockNodeTemplate;
 
 /***/ }),
-/* 126 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8171,7 +8128,7 @@ function SelfDefendingTemplate() {
 exports.SelfDefendingTemplate = SelfDefendingTemplate;
 
 /***/ }),
-/* 127 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8184,7 +8141,7 @@ function SelfDefendingTemplate() {
 exports.SelfDefendingTemplate = SelfDefendingTemplate;
 
 /***/ }),
-/* 128 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8196,7 +8153,7 @@ function StringArrayBase64DecodeNodeTemplate() {
 exports.StringArrayBase64DecodeNodeTemplate = StringArrayBase64DecodeNodeTemplate;
 
 /***/ }),
-/* 129 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8208,7 +8165,7 @@ function StringArrayCallsWrapperTemplate() {
 exports.StringArrayCallsWrapperTemplate = StringArrayCallsWrapperTemplate;
 
 /***/ }),
-/* 130 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8220,7 +8177,7 @@ function StringArrayRc4DecodeNodeTemplate() {
 exports.StringArrayRc4DecodeNodeTemplate = StringArrayRc4DecodeNodeTemplate;
 
 /***/ }),
-/* 131 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8232,7 +8189,7 @@ function StringArrayTemplate() {
 exports.StringArrayTemplate = StringArrayTemplate;
 
 /***/ }),
-/* 132 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8245,7 +8202,7 @@ function SelfDefendingTemplate() {
 exports.SelfDefendingTemplate = SelfDefendingTemplate;
 
 /***/ }),
-/* 133 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8255,6 +8212,12 @@ function StringArrayRotateFunctionTemplate() {
     return "\n        (function (array, {timesName}) {\n            var {whileFunctionName} = function (times) {\n                while (--times) {\n                    array['push'](array['shift']());\n                }\n            };\n            \n            {code}\n        })({stringArrayName}, 0x{stringArrayRotateValue});\n    ";
 }
 exports.StringArrayRotateFunctionTemplate = StringArrayRotateFunctionTemplate;
+
+/***/ }),
+/* 133 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/core-js/array/from");
 
 /***/ }),
 /* 134 */
@@ -8278,70 +8241,71 @@ module.exports = require("babel-runtime/core-js/object/get-own-property-descript
 /* 137 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/set");
+module.exports = require("babel-runtime/core-js/symbol");
 
 /***/ }),
 /* 138 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/core-js/symbol");
+module.exports = require("babel-runtime/helpers/typeof");
 
 /***/ }),
 /* 139 */
 /***/ (function(module, exports) {
 
-module.exports = require("babel-runtime/helpers/typeof");
+module.exports = require("chance");
 
 /***/ }),
 /* 140 */
 /***/ (function(module, exports) {
 
-module.exports = require("chance");
+module.exports = require("class-validator");
 
 /***/ }),
 /* 141 */
 /***/ (function(module, exports) {
 
-module.exports = require("class-validator");
+module.exports = require("commander");
 
 /***/ }),
 /* 142 */
 /***/ (function(module, exports) {
 
-module.exports = require("commander");
+module.exports = require("events");
 
 /***/ }),
 /* 143 */
 /***/ (function(module, exports) {
 
-module.exports = require("events");
+module.exports = require("fs");
 
 /***/ }),
 /* 144 */
 /***/ (function(module, exports) {
 
-module.exports = require("fs");
+module.exports = require("mkdirp");
 
 /***/ }),
 /* 145 */
 /***/ (function(module, exports) {
 
-module.exports = require("mkdirp");
-
-/***/ }),
-/* 146 */
-/***/ (function(module, exports) {
-
 module.exports = require("reflect-metadata");
 
 /***/ }),
+/* 146 */,
 /* 147 */
+/***/ (function(module, exports) {
+
+module.exports = require("babel-runtime/core-js/set");
+
+/***/ }),
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var JavaScriptObfuscator_1 = __webpack_require__(25);
+var JavaScriptObfuscator_1 = __webpack_require__(24);
 module.exports = JavaScriptObfuscator_1.JavaScriptObfuscator;
 
 /***/ })

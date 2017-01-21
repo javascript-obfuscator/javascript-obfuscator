@@ -56,17 +56,17 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
 
         let nodes: (ESTree.Literal | ESTree.Expression)[] = [];
 
-        for (const templateElement of templateLiteralNode.quasis) {
+        templateLiteralNode.quasis.forEach((templateElement: ESTree.TemplateElement) => {
             nodes.push(Nodes.getLiteralNode(templateElement.value.cooked));
 
             const expression: ESTree.Expression | undefined = templateLiteralExpressions.shift();
 
             if (!expression) {
-                continue;
+                return;
             }
 
             nodes.push(expression);
-        }
+        });
 
         nodes = nodes.filter((node: ESTree.Literal | ESTree.Expression) => {
             return !(Node.isLiteralNode(node) && node.value === '');
@@ -88,9 +88,9 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
                 <ESTree.Expression>nodes.shift()
             );
 
-            for (const node of nodes) {
+            nodes.forEach((node: ESTree.Literal | ESTree.Expression) => {
                 root = Nodes.getBinaryExpressionNode('+', root, <ESTree.Literal | ESTree.Expression>node);
-            }
+            });
 
             return root;
         }

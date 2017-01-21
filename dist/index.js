@@ -182,19 +182,9 @@ module.exports = require("babel-runtime/helpers/possibleConstructorReturn");
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(18);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _getIterator3 = _interopRequireDefault(_getIterator2);
-
-var _classCallCheck2 = __webpack_require__(0);
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(2);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var escodegen = __webpack_require__(28);
 var esprima = __webpack_require__(48);
@@ -205,10 +195,10 @@ var Nodes_1 = __webpack_require__(21);
 
 var NodeUtils = function () {
     function NodeUtils() {
-        (0, _classCallCheck3.default)(this, NodeUtils);
+        _classCallCheck(this, NodeUtils);
     }
 
-    (0, _createClass3.default)(NodeUtils, null, [{
+    _createClass(NodeUtils, null, [{
         key: "addXVerbatimPropertyToLiterals",
         value: function addXVerbatimPropertyToLiterals(astTree) {
             NodeUtils.typedReplace(astTree, NodeType_1.NodeType.Literal, {
@@ -233,33 +223,11 @@ var NodeUtils = function () {
         key: "convertStructureToCode",
         value: function convertStructureToCode(structure) {
             var code = '';
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
-
-            try {
-                for (var _iterator = (0, _getIterator3.default)(structure), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var node = _step.value;
-
-                    code += escodegen.generate(node, {
-                        sourceMapWithCode: true
-                    }).code;
-                }
-            } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
-                    }
-                } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
-                    }
-                }
-            }
-
+            structure.forEach(function (node) {
+                code += escodegen.generate(node, {
+                    sourceMapWithCode: true
+                }).code;
+            });
             return code;
         }
     }, {
@@ -288,7 +256,7 @@ var NodeUtils = function () {
                 if (!parentNode.parentNode) {
                     throw new ReferenceError('`parentNode` property of `parentNode` of given node is `undefined`');
                 }
-                if (NodeUtils.nodesWithBlockScope.includes(parentNode.parentNode.type)) {
+                if (NodeUtils.nodesWithBlockScope.indexOf(parentNode.parentNode.type) !== -1) {
                     blockScopes.push(parentNode);
                 }
             }
@@ -310,7 +278,7 @@ var NodeUtils = function () {
             if (Node_1.Node.isProgramNode(parentNode)) {
                 return depth;
             }
-            if (Node_1.Node.isBlockStatementNode(node) && NodeUtils.nodesWithBlockScope.includes(parentNode.type)) {
+            if (Node_1.Node.isBlockStatementNode(node) && NodeUtils.nodesWithBlockScope.indexOf(parentNode.type) !== -1) {
                 return NodeUtils.getNodeBlockScopeDepth(parentNode, ++depth);
             }
             return NodeUtils.getNodeBlockScopeDepth(parentNode, depth);
@@ -371,6 +339,7 @@ var NodeUtils = function () {
             });
         }
     }]);
+
     return NodeUtils;
 }();
 
@@ -1426,39 +1395,27 @@ exports.JavaScriptObfuscator = JavaScriptObfuscator;
 "use strict";
 
 
-var _getIterator2 = __webpack_require__(18);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _getIterator3 = _interopRequireDefault(_getIterator2);
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var _toConsumableArray2 = __webpack_require__(26);
-
-var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
-
-var _classCallCheck2 = __webpack_require__(0);
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(2);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var RandomGeneratorUtils_1 = __webpack_require__(9);
 
 var NodeAppender = function () {
     function NodeAppender() {
-        (0, _classCallCheck3.default)(this, NodeAppender);
+        _classCallCheck(this, NodeAppender);
     }
 
-    (0, _createClass3.default)(NodeAppender, null, [{
+    _createClass(NodeAppender, null, [{
         key: "appendNode",
         value: function appendNode(blockScopeNode, nodeBodyStatements) {
             if (!NodeAppender.validateBodyStatements(nodeBodyStatements)) {
                 nodeBodyStatements = [];
             }
             nodeBodyStatements = NodeAppender.parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements);
-            blockScopeNode.body = [].concat((0, _toConsumableArray3.default)(blockScopeNode.body), (0, _toConsumableArray3.default)(nodeBodyStatements));
+            blockScopeNode.body = [].concat(_toConsumableArray(blockScopeNode.body), _toConsumableArray(nodeBodyStatements));
         }
     }, {
         key: "appendNodeToOptimalBlockScope",
@@ -1500,7 +1457,7 @@ var NodeAppender = function () {
                 nodeBodyStatements = [];
             }
             nodeBodyStatements = NodeAppender.parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements);
-            blockScopeNode.body = [].concat((0, _toConsumableArray3.default)(blockScopeNode.body.slice(0, index)), (0, _toConsumableArray3.default)(nodeBodyStatements), (0, _toConsumableArray3.default)(blockScopeNode.body.slice(index)));
+            blockScopeNode.body = [].concat(_toConsumableArray(blockScopeNode.body.slice(0, index)), _toConsumableArray(nodeBodyStatements), _toConsumableArray(blockScopeNode.body.slice(index)));
         }
     }, {
         key: "prependNode",
@@ -1509,36 +1466,14 @@ var NodeAppender = function () {
                 nodeBodyStatements = [];
             }
             nodeBodyStatements = NodeAppender.parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements);
-            blockScopeNode.body = [].concat((0, _toConsumableArray3.default)(nodeBodyStatements), (0, _toConsumableArray3.default)(blockScopeNode.body));
+            blockScopeNode.body = [].concat(_toConsumableArray(nodeBodyStatements), _toConsumableArray(blockScopeNode.body));
         }
     }, {
         key: "parentizeBodyStatementsBeforeAppend",
         value: function parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements) {
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
-
-            try {
-                for (var _iterator = (0, _getIterator3.default)(nodeBodyStatements), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var statement = _step.value;
-
-                    statement.parentNode = blockScopeNode;
-                }
-            } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
-                    }
-                } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
-                    }
-                }
-            }
-
+            nodeBodyStatements.forEach(function (statement) {
+                statement.parentNode = blockScopeNode;
+            });
             return nodeBodyStatements;
         }
     }, {
@@ -1549,6 +1484,7 @@ var NodeAppender = function () {
             });
         }
     }]);
+
     return NodeAppender;
 }();
 
@@ -2508,39 +2444,17 @@ var Obfuscator = Obfuscator_1 = function () {
                 };
             }
             return function (node, parentNode) {
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = visitors[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var visitor = _step.value;
-
-                        var visitorFunction = visitor[direction];
-                        if (!visitorFunction) {
-                            continue;
-                        }
-                        var visitorResult = visitorFunction(node, parentNode);
-                        if (!visitorResult) {
-                            continue;
-                        }
-                        node = visitorResult;
+                visitors.forEach(function (visitor) {
+                    var visitorFunction = visitor[direction];
+                    if (!visitorFunction) {
+                        return;
                     }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
+                    var visitorResult = visitorFunction(node, parentNode);
+                    if (!visitorResult) {
+                        return;
                     }
-                }
-
+                    node = visitorResult;
+                });
                 return node;
             };
         }
@@ -5632,6 +5546,8 @@ var MethodDefinitionTransformer_1;
 "use strict";
 
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -5673,36 +5589,14 @@ var TemplateLiteralTransformer = TemplateLiteralTransformer_1 = function (_Abstr
         value: function transformNode(templateLiteralNode, parentNode) {
             var templateLiteralExpressions = templateLiteralNode.expressions;
             var nodes = [];
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
-
-            try {
-                for (var _iterator = templateLiteralNode.quasis[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var templateElement = _step.value;
-
-                    nodes.push(Nodes_1.Nodes.getLiteralNode(templateElement.value.cooked));
-                    var expression = templateLiteralExpressions.shift();
-                    if (!expression) {
-                        continue;
-                    }
-                    nodes.push(expression);
+            templateLiteralNode.quasis.forEach(function (templateElement) {
+                nodes.push(Nodes_1.Nodes.getLiteralNode(templateElement.value.cooked));
+                var expression = templateLiteralExpressions.shift();
+                if (!expression) {
+                    return;
                 }
-            } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
-                    }
-                } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
-                    }
-                }
-            }
-
+                nodes.push(expression);
+            });
             nodes = nodes.filter(function (node) {
                 return !(Node_1.Node.isLiteralNode(node) && node.value === '');
             });
@@ -5710,33 +5604,17 @@ var TemplateLiteralTransformer = TemplateLiteralTransformer_1 = function (_Abstr
                 nodes.unshift(Nodes_1.Nodes.getLiteralNode(''));
             }
             if (nodes.length > 1) {
-                var root = Nodes_1.Nodes.getBinaryExpressionNode('+', nodes.shift(), nodes.shift());
-                var _iteratorNormalCompletion2 = true;
-                var _didIteratorError2 = false;
-                var _iteratorError2 = undefined;
-
-                try {
-                    for (var _iterator2 = nodes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                        var node = _step2.value;
-
+                var _ret = function () {
+                    var root = Nodes_1.Nodes.getBinaryExpressionNode('+', nodes.shift(), nodes.shift());
+                    nodes.forEach(function (node) {
                         root = Nodes_1.Nodes.getBinaryExpressionNode('+', root, node);
-                    }
-                } catch (err) {
-                    _didIteratorError2 = true;
-                    _iteratorError2 = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                            _iterator2.return();
-                        }
-                    } finally {
-                        if (_didIteratorError2) {
-                            throw _iteratorError2;
-                        }
-                    }
-                }
+                    });
+                    return {
+                        v: root
+                    };
+                }();
 
-                return root;
+                if ((typeof _ret === "undefined" ? "undefined" : _typeof(_ret)) === "object") return _ret.v;
             }
             return nodes[0];
         }
@@ -5914,31 +5792,9 @@ var FunctionDeclarationTransformer = function (_AbstractNodeTransfor) {
             var replaceableIdentifiersForCurrentScope = void 0;
             if (this.replaceableIdentifiers.has(scopeNode)) {
                 replaceableIdentifiersForCurrentScope = this.replaceableIdentifiers.get(scopeNode);
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = replaceableIdentifiersForCurrentScope[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var replaceableIdentifier = _step.value;
-
-                        replaceableIdentifier.name = this.identifierReplacer.replace(replaceableIdentifier.name, nodeIdentifier);
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
-                }
-
+                replaceableIdentifiersForCurrentScope.forEach(function (replaceableIdentifier) {
+                    replaceableIdentifier.name = _this3.identifierReplacer.replace(replaceableIdentifier.name, nodeIdentifier);
+                });
                 return;
             }
             replaceableIdentifiersForCurrentScope = [];
@@ -6409,31 +6265,9 @@ var VariableDeclarationTransformer = function (_AbstractNodeTransfor) {
             var replaceableIdentifiersForCurrentScope = void 0;
             if (this.replaceableIdentifiers.has(scopeNode)) {
                 replaceableIdentifiersForCurrentScope = this.replaceableIdentifiers.get(scopeNode);
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = replaceableIdentifiersForCurrentScope[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var replaceableIdentifier = _step.value;
-
-                        replaceableIdentifier.name = this.identifierReplacer.replace(replaceableIdentifier.name, nodeIdentifier);
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
-                }
-
+                replaceableIdentifiersForCurrentScope.forEach(function (replaceableIdentifier) {
+                    replaceableIdentifier.name = _this4.identifierReplacer.replace(replaceableIdentifier.name, nodeIdentifier);
+                });
                 return;
             }
             replaceableIdentifiersForCurrentScope = [];

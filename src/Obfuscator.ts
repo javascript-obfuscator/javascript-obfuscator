@@ -189,21 +189,21 @@ export class Obfuscator implements IObfuscator {
         }
 
         return (node: ESTree.Node, parentNode: ESTree.Node) => {
-            for (const visitor of visitors) {
+            visitors.forEach((visitor: IVisitor) => {
                 const visitorFunction: TVisitorFunction | undefined = visitor[direction];
 
                 if (!visitorFunction) {
-                    continue;
+                    return;
                 }
 
                 const visitorResult: ESTree.Node | void = visitorFunction(node, parentNode);
 
                 if (!visitorResult) {
-                    continue;
+                    return;
                 }
 
                 node = <ESTree.Node>visitorResult;
-            }
+            });
 
             return node;
         };

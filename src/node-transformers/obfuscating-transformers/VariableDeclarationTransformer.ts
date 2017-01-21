@@ -118,9 +118,9 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
         if (this.replaceableIdentifiers.has(scopeNode)) {
             replaceableIdentifiersForCurrentScope = <ESTree.Identifier[]>this.replaceableIdentifiers.get(scopeNode);
 
-            for (const replaceableIdentifier of replaceableIdentifiersForCurrentScope) {
+            replaceableIdentifiersForCurrentScope.forEach((replaceableIdentifier: ESTree.Identifier) => {
                 replaceableIdentifier.name = this.identifierReplacer.replace(replaceableIdentifier.name, nodeIdentifier);
-            }
+            });
 
             return;
         }

@@ -12,6 +12,7 @@ import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatemen
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IStorage } from '../../interfaces/storages/IStorage';
+import { IVisitor } from '../../interfaces/IVisitor';
 
 import { CustomNodes } from '../../enums/container/CustomNodes';
 import { NodeType } from '../../enums/NodeType';
@@ -113,9 +114,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @return {estraverse.Visitor}
+     * @return {IVisitor}
      */
-    public getVisitor (): estraverse.Visitor {
+    public getVisitor (): IVisitor {
         return {
             leave: (node: ESTree.Node, parentNode: ESTree.Node) => {
                 if (Node.isFunctionDeclarationNode(node) || Node.isFunctionExpressionNode(node)) {
@@ -140,7 +141,6 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
         this.controlFlowData.set(hostNode, controlFlowStorage);
         this.transformFunctionBody(functionNode.body, controlFlowStorage);
-        NodeUtils.parentize(functionNode);
 
         if (!controlFlowStorage.getLength()) {
             return functionNode;
@@ -186,7 +186,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
                     return node;
                 }
 
-                if (RandomGeneratorUtils.getRandomFloat(0, 1) > this.options.controlFlowFlatteningThreshold) {
+                if (RandomGeneratorUtils.getMathRandom() > this.options.controlFlowFlatteningThreshold) {
                     return node;
                 }
 

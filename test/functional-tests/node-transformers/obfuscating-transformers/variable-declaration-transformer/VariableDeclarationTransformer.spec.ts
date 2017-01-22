@@ -67,11 +67,11 @@ describe('VariableDeclarationTransformer', () => {
             );
         });
 
-        it('should transform variable call (`identifier` node) before variable declaration if this call is inside function body', () => {
+        it('should transform variable call (`identifier` node name) before variable declaration if this call is inside function body', () => {
             assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-f0-9]){4,6}\['\\x69\\x74\\x65\\x6d'\]\);/);
         });
 
-        it('should not transform variable call (`identifier` node) before variable declaration', () => {
+        it('should transform variable call (`identifier` node name) before variable declaration', () => {
             assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-f0-9]){4,6}\);/);
         });
     });

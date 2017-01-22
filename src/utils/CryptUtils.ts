@@ -48,7 +48,7 @@ export class CryptUtils {
                 result: string = '';
 
             while (i1 < s1.length || i2 < s2.length) {
-                if (RandomGeneratorUtils.getRandomFloat(0, 1) < 0.5 && i2 < s2.length) {
+                if (RandomGeneratorUtils.getMathRandom() < 0.5 && i2 < s2.length) {
                     result += s2.charAt(++i2);
                 } else {
                     result += s1.charAt(++i1);

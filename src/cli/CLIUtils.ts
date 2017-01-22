@@ -42,7 +42,7 @@ export class CLIUtils {
      */
     public static getOutputSourceMapPath (outputCodePath: string, sourceMapFileName: string = ''): string {
         if (sourceMapFileName) {
-            outputCodePath = `${outputCodePath.substr(
+            outputCodePath = `${outputCodePath.substring(
                 0, outputCodePath.lastIndexOf('/')
             )}/${sourceMapFileName}`;
         }

@@ -60,11 +60,11 @@ export class NodeUtils {
     public static convertStructureToCode (structure: ESTree.Node[]): string {
         let code: string = '';
 
-        for (const node of structure) {
+        structure.forEach((node: ESTree.Node) => {
             code += escodegen.generate(node, {
                 sourceMapWithCode: true
             }).code;
-        }
+        });
 
         return code;
     }

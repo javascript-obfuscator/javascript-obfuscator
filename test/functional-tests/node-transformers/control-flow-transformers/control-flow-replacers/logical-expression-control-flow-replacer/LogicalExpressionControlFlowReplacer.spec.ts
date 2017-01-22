@@ -29,7 +29,7 @@ describe('LogicalExpressionControlFlowReplacer', () => {
 
         describe('variant #2 - multiple logical expressions with threshold = 1', () => {
             it('should replace logical expression node by call to control flow storage node', function () {
-                this.timeout(15000);
+                this.timeout(60000);
 
                 const samplesCount: number = 1000;
                 const expectedValue: number = 0.5;
@@ -65,8 +65,6 @@ describe('LogicalExpressionControlFlowReplacer', () => {
                 }
 
                 assert.closeTo(equalsValue / samplesCount, expectedValue, delta);
-
-                console.log(equalsValue / samplesCount);
             });
         });
 

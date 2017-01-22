@@ -58,7 +58,7 @@ export class IdentifierReplacer extends AbstractReplacer implements IObfuscation
     private isReservedName (name: string): boolean {
         return this.options.reservedNames
             .some((reservedName: string) => {
-                return new RegExp(reservedName, 'g').test(name);
+                return new RegExp(reservedName, 'g').exec(name) !== null;
             });
     }
 }

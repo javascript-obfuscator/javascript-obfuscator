@@ -9,6 +9,7 @@ import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatemen
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IObfuscationReplacer } from '../../interfaces/node-transformers/IObfuscationReplacer';
 import { IObfuscationReplacerWithStorage } from '../../interfaces/node-transformers/IObfuscationReplacerWithStorage';
+import { IVisitor } from '../../interfaces/IVisitor';
 
 import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscationReplacers';
 import { NodeType } from '../../enums/NodeType';
@@ -53,9 +54,9 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @return {estraverse.Visitor}
+     * @return {IVisitor}
      */
-    public getVisitor (): estraverse.Visitor {
+    public getVisitor (): IVisitor {
         return {
             enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
                 if (Node.isVariableDeclarationNode(node)) {
@@ -117,9 +118,9 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
         if (this.replaceableIdentifiers.has(scopeNode)) {
             replaceableIdentifiersForCurrentScope = <ESTree.Identifier[]>this.replaceableIdentifiers.get(scopeNode);
 
-            for (const replaceableIdentifier of replaceableIdentifiersForCurrentScope) {
+            replaceableIdentifiersForCurrentScope.forEach((replaceableIdentifier: ESTree.Identifier) => {
                 replaceableIdentifier.name = this.identifierReplacer.replace(replaceableIdentifier.name, nodeIdentifier);
-            }
+            });
 
             return;
         }

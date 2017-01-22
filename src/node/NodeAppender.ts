@@ -155,9 +155,9 @@ export class NodeAppender {
         blockScopeNode: TNodeWithBlockStatement,
         nodeBodyStatements: TStatement[]
     ): TStatement[] {
-        for (const statement of nodeBodyStatements) {
+        nodeBodyStatements.forEach((statement: TStatement) => {
             statement.parentNode = blockScopeNode;
-        }
+        });
 
         return nodeBodyStatements;
     }

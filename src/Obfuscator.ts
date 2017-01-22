@@ -15,6 +15,7 @@ import { IOptions } from './interfaces/options/IOptions';
 import { IStackTraceAnalyzer } from './interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
 import { IStackTraceData } from './interfaces/stack-trace-analyzer/IStackTraceData';
 import { IStorage } from './interfaces/storages/IStorage';
+import { IVisitor } from './interfaces/IVisitor';
 
 import { NodeTransformers } from './enums/container/NodeTransformers';
 import { ObfuscationEvents } from './enums/ObfuscationEvents';
@@ -158,18 +159,18 @@ export class Obfuscator implements IObfuscator {
         astTree: ESTree.Program,
         nodeTransformers: NodeTransformers[]
     ): ESTree.Program {
-        const visitors: estraverse.Visitor[] = nodeTransformers
-            .map((nodeTransformer: NodeTransformers): estraverse.Visitor => {
+        const visitors: IVisitor[] = nodeTransformers
+            .map((nodeTransformer: NodeTransformers): IVisitor => {
                 return this.nodeTransformersFactory(nodeTransformer).getVisitor();
             });
 
         estraverse.replace(astTree, {
             enter: this.mergeVisitorsForDirection(
-                visitors.filter((visitor: estraverse.Visitor) => visitor.enter !== undefined),
+                visitors.filter((visitor: IVisitor) => visitor.enter !== undefined),
                 VisitorDirection.enter
             ),
             leave: this.mergeVisitorsForDirection(
-                visitors.filter((visitor: estraverse.Visitor) => visitor.leave !== undefined),
+                visitors.filter((visitor: IVisitor) => visitor.leave !== undefined),
                 VisitorDirection.leave
             )
         });
@@ -182,35 +183,27 @@ export class Obfuscator implements IObfuscator {
      * @param direction
      * @return {TVisitorDirection}
      */
-    private mergeVisitorsForDirection (visitors: estraverse.Visitor[], direction: TVisitorDirection): TVisitorFunction {
+    private mergeVisitorsForDirection (visitors: IVisitor[], direction: TVisitorDirection): TVisitorFunction {
         if (!visitors.length) {
             return (node: ESTree.Node, parentNode: ESTree.Node) => node;
         }
 
         return (node: ESTree.Node, parentNode: ESTree.Node) => {
-            for (const visitor of visitors) {
+            visitors.forEach((visitor: IVisitor) => {
                 const visitorFunction: TVisitorFunction | undefined = visitor[direction];
 
                 if (!visitorFunction) {
-                    continue;
+                    return;
                 }
 
-                const visitorResult: estraverse.VisitorOption | ESTree.Node | void = visitorFunction(node, parentNode);
+                const visitorResult: ESTree.Node | void = visitorFunction(node, parentNode);
 
                 if (!visitorResult) {
-                    continue;
-                }
-
-                if (
-                    visitorResult === estraverse.VisitorOption.Break ||
-                    visitorResult === estraverse.VisitorOption.Remove ||
-                    visitorResult === estraverse.VisitorOption.Skip
-                ) {
-                    return visitorResult;
+                    return;
                 }
 
                 node = <ESTree.Node>visitorResult;
-            }
+            });
 
             return node;
         };

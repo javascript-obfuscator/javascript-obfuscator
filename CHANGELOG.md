@@ -2,7 +2,7 @@ Change Log
 ===
 v0.9.0-beta.3
 ---
-* **Breaking options change:** dropped `node@0.10` and `node@0.12` support.
+* **Breaking change:** dropped `node@0.10` and `node@0.12` support.
 * Switched from `npm` to `yarn` internally.
 
 v0.9.0-beta.2

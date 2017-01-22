@@ -141,7 +141,6 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
         this.controlFlowData.set(hostNode, controlFlowStorage);
         this.transformFunctionBody(functionNode.body, controlFlowStorage);
-        NodeUtils.parentize(functionNode);
 
         if (!controlFlowStorage.getLength()) {
             return functionNode;
@@ -187,7 +186,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
                     return node;
                 }
 
-                if (RandomGeneratorUtils.getRandomFloat(0, 1) > this.options.controlFlowFlatteningThreshold) {
+                if (RandomGeneratorUtils.getMathRandom() > this.options.controlFlowFlatteningThreshold) {
                     return node;
                 }
 

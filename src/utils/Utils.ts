@@ -14,6 +14,20 @@ export class Utils {
     private static readonly stringToUnicodeEscapeSequenceCache: Map <string, string> = new Map();
 
     /**
+     * @param length
+     * @return {number[]}
+     */
+    public static arrayRange (length: number): number[] {
+        let range: number[] = [];
+
+        for (let i = 0; i < length; i++) {
+            range.push(i);
+        }
+
+        return range;
+    }
+
+    /**
      * @param array
      * @param times
      * @returns {T[]}
@@ -47,7 +61,7 @@ export class Utils {
         const shuffledArray: T[] = [...array];
 
         for (let i: number = shuffledArray.length; i; i--) {
-            const j: number = Math.floor(RandomGeneratorUtils.getRandomFloat(0, 1) * i);
+            const j: number = Math.floor(RandomGeneratorUtils.getMathRandom() * i);
 
             [shuffledArray[i - 1], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i - 1]];
         }

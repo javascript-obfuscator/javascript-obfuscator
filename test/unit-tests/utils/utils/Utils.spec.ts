@@ -5,6 +5,21 @@ import { Utils } from '../../../../src/utils/Utils';
 import { JSFuck } from '../../../../src/enums/JSFuck';
 
 describe('Utils', () => {
+    describe('arrayRange (length: number): number[]', () => {
+        it('should return array with range of numbers', () => {
+            assert.deepEqual(Utils.arrayRange(5), [0, 1, 2, 3, 4]);
+        });
+
+
+        it('should return empty array if length is 0', () => {
+            assert.deepEqual(Utils.arrayRange(0), []);
+        });
+
+        it('should return empty array if length less then 0', () => {
+            assert.deepEqual(Utils.arrayRange(-5), []);
+        });
+    });
+
     describe('arrayRotate <T> (array: T[], times: number): T[]', () => {
         let array: number[];
 

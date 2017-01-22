@@ -70,7 +70,7 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
      */
     public transformNode (blockStatementNode: ESTree.BlockStatement, parentNode: ESTree.Node): ESTree.Node {
         if (
-            RandomGeneratorUtils.getRandomFloat(0, 1) > this.options.controlFlowFlatteningThreshold ||
+            RandomGeneratorUtils.getMathRandom() > this.options.controlFlowFlatteningThreshold ||
             BlockStatementControlFlowTransformer.blockStatementHasProhibitedStatements(blockStatementNode)
         ) {
             return blockStatementNode;
@@ -82,7 +82,7 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
             return blockStatementNode;
         }
 
-        const originalKeys: number[] = [...Array(blockStatementBody.length).keys()];
+        const originalKeys: number[] = Utils.arrayRange(blockStatementBody.length);
         const shuffledKeys: number[] = Utils.arrayShuffle(originalKeys);
         const originalKeysIndexesInShuffledArray: number[] = originalKeys.map((key: number) => shuffledKeys.indexOf(key));
         const blockStatementControlFlowFlatteningCustomNode: ICustomNode = this.customNodeFactory(

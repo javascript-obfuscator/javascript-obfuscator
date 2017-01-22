@@ -72,7 +72,7 @@ export class StringLiteralReplacer extends AbstractReplacer {
         const usingStringArray: boolean = (
             this.options.stringArray &&
             nodeValue.length >= StringLiteralReplacer.minimumLengthForStringArray &&
-            RandomGeneratorUtils.getRandomFloat(0, 1) <= this.options.stringArrayThreshold
+            RandomGeneratorUtils.getMathRandom() <= this.options.stringArrayThreshold
         );
         const cacheKey: string = `${nodeValue}-${String(usingStringArray)}`;
 

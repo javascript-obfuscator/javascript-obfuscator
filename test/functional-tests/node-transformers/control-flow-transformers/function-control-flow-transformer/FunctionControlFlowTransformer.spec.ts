@@ -178,5 +178,41 @@ describe('FunctionControlFlowTransformer', () => {
                 assert.notMatch(obfuscatedCode, controlFlowStorageMatch);
             });
         });
+
+        describe('arrow function expression', () => {
+            describe('variant #1 - arrow function expression with body', () => {
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    readFileAsString(__dirname + '/fixtures/arrow-function-expression-with-body.js'),
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1
+                    }
+                );
+                const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+                const regexp: RegExp = new RegExp(rootControlFlowStorageNodeMatch);
+
+                it('should add `control flow storage` node to the obfuscated code', () => {
+                    assert.match(obfuscatedCode, regexp);
+                });
+            });
+
+            describe('variant #2 - arrow function expression without body', () => {
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    readFileAsString(__dirname + '/fixtures/arrow-function-expression-without-body.js'),
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1
+                    }
+                );
+                const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+                const regexp: RegExp = new RegExp(`var *${variableMatch} *= *\\(\\) *=> *0x1 *\\+ *0x2;`);
+
+                it('shouldn\'t add `control flow storage` node to the obfuscated code', () => {
+                    assert.match(obfuscatedCode, regexp);
+                });
+            });
+        });
     });
 });

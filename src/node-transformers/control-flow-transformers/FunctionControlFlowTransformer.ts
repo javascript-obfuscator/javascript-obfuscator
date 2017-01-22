@@ -48,7 +48,12 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**
      * @type {Map<ESTree.Node, IStorage<ICustomNode>>}
      */
-    private controlFlowData: Map <ESTree.Node, IStorage<ICustomNode>> = new Map();
+    private readonly controlFlowData: Map <ESTree.Node, IStorage<ICustomNode>> = new Map();
+
+    /**
+     * @type {Set<ESTree.Function>}
+     */
+    private readonly visitedFunctionNodes: Set<ESTree.Function> = new Set();
 
     /**
      * @type {TNodeWithBlockStatement[]}
@@ -90,14 +95,14 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param functionNode
+     * @param functionNodeBody
      * @returns {TNodeWithBlockStatement}
      */
-    private static getHostNode (functionNode: ESTree.FunctionDeclaration | ESTree.FunctionExpression): TNodeWithBlockStatement {
-        const blockScopesOfNode: TNodeWithBlockStatement[] = NodeUtils.getBlockScopesOfNode(functionNode);
+    private static getHostNode (functionNodeBody: ESTree.BlockStatement): TNodeWithBlockStatement {
+        const blockScopesOfNode: TNodeWithBlockStatement[] = NodeUtils.getBlockScopesOfNode(functionNodeBody);
 
         if (blockScopesOfNode.length === 1) {
-            return functionNode.body;
+            return functionNodeBody;
         } else {
             blockScopesOfNode.pop();
         }
@@ -119,7 +124,11 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     public getVisitor (): IVisitor {
         return {
             leave: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (Node.isFunctionDeclarationNode(node) || Node.isFunctionExpressionNode(node)) {
+                if (
+                    Node.isFunctionDeclarationNode(node) ||
+                    Node.isFunctionExpressionNode(node) ||
+                    Node.isArrowFunctionExpressionNode(node)
+                ) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -129,14 +138,16 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**
      * @param functionNode
      * @param parentNode
-     * @returns {ESTree.Node}
+     * @returns {ESTree.Function}
      */
-    public transformNode (functionNode: ESTree.Function, parentNode: ESTree.Node): ESTree.Node {
-        if (Node.isArrowFunctionExpressionNode(functionNode)) {
+    public transformNode (functionNode: ESTree.Function, parentNode: ESTree.Node): ESTree.Function {
+        this.visitedFunctionNodes.add(functionNode);
+
+        if (!Node.isBlockStatementNode(functionNode.body)) {
             return functionNode;
         }
 
-        const hostNode: TNodeWithBlockStatement = FunctionControlFlowTransformer.getHostNode(functionNode);
+        const hostNode: TNodeWithBlockStatement = FunctionControlFlowTransformer.getHostNode(functionNode.body);
         const controlFlowStorage: IStorage<ICustomNode> = this.getControlFlowStorage(hostNode);
 
         this.controlFlowData.set(hostNode, controlFlowStorage);
@@ -176,12 +187,28 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @param node
+     * @return {boolean}
+     */
+    private isVisitedFunctionNode (node: ESTree.Node): boolean {
+        return (
+            Node.isFunctionDeclarationNode(node) ||
+            Node.isFunctionExpressionNode(node) ||
+            Node.isArrowFunctionExpressionNode(node)
+        ) && this.visitedFunctionNodes.has(node);
+    }
+
+    /**
      * @param functionNodeBody
      * @param controlFlowStorage
      */
     private transformFunctionBody (functionNodeBody: ESTree.BlockStatement, controlFlowStorage: IStorage<ICustomNode>): void {
         estraverse.replace(functionNodeBody, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+                if (this.isVisitedFunctionNode(node)) {
+                    return estraverse.VisitorOption.Skip;
+                }
+
                 if (!FunctionControlFlowTransformer.controlFlowReplacersMap.has(node.type)) {
                     return node;
                 }

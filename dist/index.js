@@ -5086,6 +5086,7 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
         var _this = _possibleConstructorReturn(this, (FunctionControlFlowTransformer.__proto__ || Object.getPrototypeOf(FunctionControlFlowTransformer)).call(this, options));
 
         _this.controlFlowData = new Map();
+        _this.visitedFunctionNodes = new Set();
         _this.hostNodesWithControlFlowNode = [];
         _this.controlFlowStorageFactory = controlFlowStorageFactory;
         _this.controlFlowReplacerFactory = controlFlowReplacerFactory;
@@ -5100,7 +5101,7 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
 
             return {
                 leave: function leave(node, parentNode) {
-                    if (Node_1.Node.isFunctionDeclarationNode(node) || Node_1.Node.isFunctionExpressionNode(node)) {
+                    if (Node_1.Node.isFunctionDeclarationNode(node) || Node_1.Node.isFunctionExpressionNode(node) || Node_1.Node.isArrowFunctionExpressionNode(node)) {
                         return _this2.transformNode(node, parentNode);
                     }
                 }
@@ -5109,10 +5110,11 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
     }, {
         key: "transformNode",
         value: function transformNode(functionNode, parentNode) {
-            if (Node_1.Node.isArrowFunctionExpressionNode(functionNode)) {
+            this.visitedFunctionNodes.add(functionNode);
+            if (!Node_1.Node.isBlockStatementNode(functionNode.body)) {
                 return functionNode;
             }
-            var hostNode = FunctionControlFlowTransformer_1.getHostNode(functionNode);
+            var hostNode = FunctionControlFlowTransformer_1.getHostNode(functionNode.body);
             var controlFlowStorage = this.getControlFlowStorage(hostNode);
             this.controlFlowData.set(hostNode, controlFlowStorage);
             this.transformFunctionBody(functionNode.body, controlFlowStorage);
@@ -5139,12 +5141,20 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
             return controlFlowStorage;
         }
     }, {
+        key: "isVisitedFunctionNode",
+        value: function isVisitedFunctionNode(node) {
+            return (Node_1.Node.isFunctionDeclarationNode(node) || Node_1.Node.isFunctionExpressionNode(node) || Node_1.Node.isArrowFunctionExpressionNode(node)) && this.visitedFunctionNodes.has(node);
+        }
+    }, {
         key: "transformFunctionBody",
         value: function transformFunctionBody(functionNodeBody, controlFlowStorage) {
             var _this3 = this;
 
             estraverse.replace(functionNodeBody, {
                 enter: function enter(node, parentNode) {
+                    if (_this3.isVisitedFunctionNode(node)) {
+                        return estraverse.VisitorOption.Skip;
+                    }
                     if (!FunctionControlFlowTransformer_1.controlFlowReplacersMap.has(node.type)) {
                         return node;
                     }
@@ -5158,10 +5168,10 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
         }
     }], [{
         key: "getHostNode",
-        value: function getHostNode(functionNode) {
-            var blockScopesOfNode = NodeUtils_1.NodeUtils.getBlockScopesOfNode(functionNode);
+        value: function getHostNode(functionNodeBody) {
+            var blockScopesOfNode = NodeUtils_1.NodeUtils.getBlockScopesOfNode(functionNodeBody);
             if (blockScopesOfNode.length === 1) {
-                return functionNode.body;
+                return functionNodeBody;
             } else {
                 blockScopesOfNode.pop();
             }

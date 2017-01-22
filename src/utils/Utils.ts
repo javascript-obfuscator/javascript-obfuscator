@@ -18,9 +18,9 @@ export class Utils {
      * @return {number[]}
      */
     public static arrayRange (length: number): number[] {
-        let range: number[] = [];
+        const range: number[] = [];
 
-        for (let i = 0; i < length; i++) {
+        for (let i: number = 0; i < length; i++) {
             range.push(i);
         }
 

@@ -1,5 +1,9 @@
 Change Log
 ===
+v0.9.0-beta.4
+---
+* Increased performance
+
 v0.9.0-beta.3
 ---
 * **Breaking change:** dropped `node@0.10` and `node@0.12` support.

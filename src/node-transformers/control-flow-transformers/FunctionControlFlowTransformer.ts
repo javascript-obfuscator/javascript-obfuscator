@@ -56,9 +56,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     private readonly visitedFunctionNodes: Set<ESTree.Function> = new Set();
 
     /**
-     * @type {TNodeWithBlockStatement[]}
+     * @type {Set<TNodeWithBlockStatement>}
      */
-    private readonly hostNodesWithControlFlowNode: TNodeWithBlockStatement[] = [];
+    private readonly hostNodesWithControlFlowNode: Set<TNodeWithBlockStatement> = new Set();
 
     /**
      * @type {TControlFlowReplacerFactory}
@@ -161,7 +161,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
         controlFlowStorageCustomNode.initialize(controlFlowStorage);
         NodeAppender.prependNode(hostNode, controlFlowStorageCustomNode.getNode());
-        this.hostNodesWithControlFlowNode.push(hostNode);
+        this.hostNodesWithControlFlowNode.add(hostNode);
 
         return functionNode;
     }
@@ -174,7 +174,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         const controlFlowStorage: IStorage <ICustomNode> = this.controlFlowStorageFactory();
 
         if (this.controlFlowData.has(hostNode)) {
-            if (this.hostNodesWithControlFlowNode.indexOf(hostNode) !== -1) {
+            if (this.hostNodesWithControlFlowNode.has(hostNode)) {
                 hostNode.body.shift();
             }
 

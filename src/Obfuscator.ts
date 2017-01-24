@@ -159,20 +159,27 @@ export class Obfuscator implements IObfuscator {
         astTree: ESTree.Program,
         nodeTransformers: NodeTransformers[]
     ): ESTree.Program {
-        const visitors: IVisitor[] = nodeTransformers
-            .map((nodeTransformer: NodeTransformers): IVisitor => {
-                return this.nodeTransformersFactory(nodeTransformer).getVisitor();
-            });
+        const enterVisitors: IVisitor[] = [];
+        const leaveVisitors: IVisitor[] = [];
+        const nodeTransformersLength: number = nodeTransformers.length;
+
+        let visitor: IVisitor;
+
+        for (let i: number = 0; i < nodeTransformersLength; i++) {
+            visitor = this.nodeTransformersFactory(nodeTransformers[i]).getVisitor();
+
+            if (visitor.enter) {
+                enterVisitors.push(visitor);
+            }
+
+            if (visitor.leave) {
+                leaveVisitors.push(visitor);
+            }
+        }
 
         estraverse.replace(astTree, {
-            enter: this.mergeVisitorsForDirection(
-                visitors.filter((visitor: IVisitor) => visitor.enter !== undefined),
-                VisitorDirection.enter
-            ),
-            leave: this.mergeVisitorsForDirection(
-                visitors.filter((visitor: IVisitor) => visitor.leave !== undefined),
-                VisitorDirection.leave
-            )
+            enter: this.mergeVisitorsForDirection(enterVisitors, VisitorDirection.enter),
+            leave: this.mergeVisitorsForDirection(leaveVisitors, VisitorDirection.leave)
         });
 
         return astTree;
@@ -188,22 +195,28 @@ export class Obfuscator implements IObfuscator {
             return (node: ESTree.Node, parentNode: ESTree.Node) => node;
         }
 
+        const visitorsLength: number = visitors.length;
+
+        let visitor: IVisitor;
+
         return (node: ESTree.Node, parentNode: ESTree.Node) => {
-            visitors.forEach((visitor: IVisitor) => {
+            for (let i: number = 0; i < visitorsLength; i++) {
+                visitor = visitors[i];
+
                 const visitorFunction: TVisitorFunction | undefined = visitor[direction];
 
                 if (!visitorFunction) {
-                    return;
+                    continue;
                 }
 
                 const visitorResult: ESTree.Node | void = visitorFunction(node, parentNode);
 
                 if (!visitorResult) {
-                    return;
+                    continue;
                 }
 
-                node = <ESTree.Node>visitorResult;
-            });
+                node = visitorResult;
+            }
 
             return node;
         };

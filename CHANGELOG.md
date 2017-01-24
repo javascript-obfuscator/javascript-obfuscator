@@ -1,5 +1,9 @@
 Change Log
 ===
+v0.9.0-beta.5
+---
+* Increased performance
+
 v0.9.0-beta.4
 ---
 * Increased performance

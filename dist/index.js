@@ -382,7 +382,7 @@ var RandomGeneratorUtils = function () {
     }, {
         key: "getMathRandom",
         value: function getMathRandom() {
-            return RandomGeneratorUtils.getRandomInteger(0, 100000) / 100000;
+            return RandomGeneratorUtils.getRandomInteger(0, 99999) / 100000;
         }
     }, {
         key: "getRandomFloat",

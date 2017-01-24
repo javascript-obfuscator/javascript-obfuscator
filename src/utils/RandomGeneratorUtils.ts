@@ -47,7 +47,7 @@ export class RandomGeneratorUtils {
      * @returns {number}
      */
     public static getMathRandom (): number {
-        return RandomGeneratorUtils.getRandomInteger(0, 100000) / 100000;
+        return RandomGeneratorUtils.getRandomInteger(0, 99999) / 100000;
     }
 
     /**

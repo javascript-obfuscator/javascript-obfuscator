@@ -44,7 +44,7 @@
     "@types/lodash": "4.14.50",
     "@types/mkdirp": "0.3.29",
     "@types/mocha": "2.2.38",
-    "@types/node": "7.0.1",
+    "@types/node": "7.0.3",
     "@types/sinon": "1.16.34",
     "@types/string-template": "1.0.2",
     "awesome-typescript-loader": "3.0.0-beta.18",

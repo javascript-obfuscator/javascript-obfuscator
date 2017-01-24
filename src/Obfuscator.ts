@@ -131,20 +131,14 @@ export class Obfuscator implements IObfuscator {
 
         // first pass: control flow flattening
         if (this.options.controlFlowFlattening) {
-            astTree = this.transformAstTree(
-                astTree,
-                Obfuscator.controlFlowTransformersList
-            );
+            astTree = this.transformAstTree(astTree, Obfuscator.controlFlowTransformersList);
         }
 
         // second pass: nodes obfuscation
-        astTree = this.transformAstTree(
-            astTree,
-            [
-                ...Obfuscator.convertingTransformersList,
-                ...Obfuscator.obfuscatingTransformersList
-            ]
-        );
+        astTree = this.transformAstTree(astTree, [
+            ...Obfuscator.convertingTransformersList,
+            ...Obfuscator.obfuscatingTransformersList
+        ]);
 
         this.obfuscationEventEmitter.emit(ObfuscationEvents.AfterObfuscation, astTree, stackTraceData);
 

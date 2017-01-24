@@ -3,6 +3,7 @@ Change Log
 v0.9.0-beta.5
 ---
 * Increased performance
+* Fixed very rare `Cannot read property 'type' of undefined` error, when `RandomGeneratorUtils.getMathRandom()` returned incorrect value `1`.
 
 v0.9.0-beta.4
 ---

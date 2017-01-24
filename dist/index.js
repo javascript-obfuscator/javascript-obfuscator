@@ -1347,15 +1347,9 @@ var NodeObfuscatorsReplacers;
 "use strict";
 
 
-var _classCallCheck2 = __webpack_require__(3);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(4);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 __webpack_require__(144);
 var ServiceIdentifiers_1 = __webpack_require__(2);
@@ -1365,10 +1359,10 @@ var RandomGeneratorUtils_1 = __webpack_require__(9);
 
 var JavaScriptObfuscator = function () {
     function JavaScriptObfuscator() {
-        (0, _classCallCheck3.default)(this, JavaScriptObfuscator);
+        _classCallCheck(this, JavaScriptObfuscator);
     }
 
-    (0, _createClass3.default)(JavaScriptObfuscator, null, [{
+    _createClass(JavaScriptObfuscator, null, [{
         key: "obfuscate",
         value: function obfuscate(sourceCode) {
             var inputOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -1387,6 +1381,7 @@ var JavaScriptObfuscator = function () {
             new JavaScriptObfuscatorCLI_1.JavaScriptObfuscatorCLI(argv).run();
         }
     }]);
+
     return JavaScriptObfuscator;
 }();
 

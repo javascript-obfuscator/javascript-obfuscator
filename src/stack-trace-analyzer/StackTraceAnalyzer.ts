@@ -4,7 +4,7 @@ import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TCalleeDataExtractorsFactory } from '../types/container/TCalleeDataExtractorsFactory';
+import { TCalleeDataExtractorFactory } from '../types/container/TCalleeDataExtractorFactory';
 
 import { ICalleeData } from '../interfaces/stack-trace-analyzer/ICalleeData';
 import { ICalleeDataExtractor } from '../interfaces/stack-trace-analyzer/ICalleeDataExtractor';
@@ -71,12 +71,12 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     /**
      * @type {(calleeDataExtractorName: CalleeDataExtractors) => ICalleeDataExtractor}
      */
-    private calleeDataExtractorsFactory: (calleeDataExtractorName: CalleeDataExtractors) => ICalleeDataExtractor;
+    private calleeDataExtractorFactory: (calleeDataExtractorName: CalleeDataExtractors) => ICalleeDataExtractor;
 
     constructor (
-        @inject(ServiceIdentifiers.Factory__ICalleeDataExtractor) calleeDataExtractorsFactory: TCalleeDataExtractorsFactory
+        @inject(ServiceIdentifiers.Factory__ICalleeDataExtractor) calleeDataExtractorFactory: TCalleeDataExtractorFactory
     ) {
-        this.calleeDataExtractorsFactory = calleeDataExtractorsFactory;
+        this.calleeDataExtractorFactory = calleeDataExtractorFactory;
     }
 
     /**
@@ -156,7 +156,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
         callExpressionNode: ESTree.CallExpression
     ): void {
         StackTraceAnalyzer.calleeDataExtractorsList.forEach((calleeDataExtractorName: CalleeDataExtractors) => {
-            const calleeData: ICalleeData | null = this.calleeDataExtractorsFactory(calleeDataExtractorName)
+            const calleeData: ICalleeData | null = this.calleeDataExtractorFactory(calleeDataExtractorName)
                 .extract(blockScopeBody, callExpressionNode.callee);
 
             if (!calleeData) {

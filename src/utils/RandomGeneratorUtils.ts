@@ -11,12 +11,17 @@ export class RandomGeneratorUtils {
     /**
      * @type {string}
      */
-    public static readonly randomGeneratorPoolHexadecimal: string = 'abcdef0123456789';
+    public static readonly randomGeneratorPoolNumbers: string = '0123456789';
 
     /**
      * @type {string}
      */
-    public static readonly randomGeneratorPoolWithNumbers: string = `${RandomGeneratorUtils.randomGeneratorPool}0123456789`;
+    public static readonly randomGeneratorPoolHexadecimal: string = `abcdef${RandomGeneratorUtils.randomGeneratorPoolNumbers}`;
+
+    /**
+     * @type {string}
+     */
+    public static readonly randomGeneratorPoolWithNumbers: string = `${RandomGeneratorUtils.randomGeneratorPool}${RandomGeneratorUtils.randomGeneratorPoolNumbers}`;
 
     /**
      * @type {Set<string>}

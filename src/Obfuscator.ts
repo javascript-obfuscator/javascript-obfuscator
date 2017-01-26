@@ -4,7 +4,7 @@ import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TNodeTransformersFactory } from './types/container/TNodeTransformersFactory';
+import { TNodeTransformerFactory } from './types/container/TNodeTransformerFactory';
 import { TVisitorDirection } from './types/TVisitorDirection';
 import { TVisitorFunction } from './types/TVisitorFunction';
 
@@ -62,9 +62,9 @@ export class Obfuscator implements IObfuscator {
     private readonly customNodeGroupStorage: IStorage<ICustomNodeGroup>;
 
     /**
-     * @type {TNodeTransformersFactory}
+     * @type {TNodeTransformerFactory}
      */
-    private readonly nodeTransformersFactory: TNodeTransformersFactory;
+    private readonly nodeTransformerFactory: TNodeTransformerFactory;
 
     /**
      * @type {IObfuscationEventEmitter}
@@ -85,20 +85,20 @@ export class Obfuscator implements IObfuscator {
      * @param stackTraceAnalyzer
      * @param obfuscationEventEmitter
      * @param customNodeGroupStorage
-     * @param nodeTransformersFactory
+     * @param nodeTransformerFactory
      * @param options
      */
     constructor (
         @inject(ServiceIdentifiers.IStackTraceAnalyzer) stackTraceAnalyzer: IStackTraceAnalyzer,
         @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
         @inject(ServiceIdentifiers.TCustomNodeGroupStorage) customNodeGroupStorage: IStorage<ICustomNodeGroup>,
-        @inject(ServiceIdentifiers.Factory__INodeTransformer) nodeTransformersFactory: TNodeTransformersFactory,
+        @inject(ServiceIdentifiers.Factory__INodeTransformer) nodeTransformerFactory: TNodeTransformerFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.stackTraceAnalyzer = stackTraceAnalyzer;
         this.obfuscationEventEmitter = obfuscationEventEmitter;
         this.customNodeGroupStorage = customNodeGroupStorage;
-        this.nodeTransformersFactory = nodeTransformersFactory;
+        this.nodeTransformerFactory = nodeTransformerFactory;
         this.options = options;
     }
 
@@ -160,7 +160,7 @@ export class Obfuscator implements IObfuscator {
         let visitor: IVisitor;
 
         for (let i: number = 0; i < nodeTransformersLength; i++) {
-            visitor = this.nodeTransformersFactory(nodeTransformers[i]).getVisitor();
+            visitor = this.nodeTransformerFactory(nodeTransformers[i]).getVisitor();
 
             if (visitor.enter) {
                 enterVisitors.push(visitor);

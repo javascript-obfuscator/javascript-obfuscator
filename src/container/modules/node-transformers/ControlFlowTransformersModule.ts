@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { IControlFlowReplacer } from '../../../interfaces/node-transformers/IControlFlowReplacer';
 
-import { NodeControlFlowReplacers } from '../../../enums/container/NodeControlFlowReplacers';
+import { ControlFlowReplacers } from '../../../enums/container/ControlFlowReplacers';
 
 import { BinaryExpressionControlFlowReplacer } from '../../../node-transformers/control-flow-transformers/control-flow-replacers/BinaryExpressionControlFlowReplacer';
 import { CallExpressionControlFlowReplacer } from '../../../node-transformers/control-flow-transformers/control-flow-replacers/CallExpressionControlFlowReplacer';
@@ -12,21 +12,21 @@ import { LogicalExpressionControlFlowReplacer } from '../../../node-transformers
 export const controlFlowTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
         .to(BinaryExpressionControlFlowReplacer)
-        .whenTargetNamed(NodeControlFlowReplacers.BinaryExpressionControlFlowReplacer);
+        .whenTargetNamed(ControlFlowReplacers.BinaryExpressionControlFlowReplacer);
 
     bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
         .to(CallExpressionControlFlowReplacer)
-        .whenTargetNamed(NodeControlFlowReplacers.CallExpressionControlFlowReplacer);
+        .whenTargetNamed(ControlFlowReplacers.CallExpressionControlFlowReplacer);
 
     bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
         .to(LogicalExpressionControlFlowReplacer)
-        .whenTargetNamed(NodeControlFlowReplacers.LogicalExpressionControlFlowReplacer);
+        .whenTargetNamed(ControlFlowReplacers.LogicalExpressionControlFlowReplacer);
 
     bind<IControlFlowReplacer>(ServiceIdentifiers.Factory__IControlFlowReplacer)
         .toFactory<IControlFlowReplacer>((context: interfaces.Context) => {
-            const cache: Map <NodeControlFlowReplacers, IControlFlowReplacer> = new Map();
+            const cache: Map <ControlFlowReplacers, IControlFlowReplacer> = new Map();
 
-            return (replacerName: NodeControlFlowReplacers) => {
+            return (replacerName: ControlFlowReplacers) => {
                 if (cache.has(replacerName)) {
                     return <IControlFlowReplacer>cache.get(replacerName);
                 }

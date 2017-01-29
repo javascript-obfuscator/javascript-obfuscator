@@ -20,19 +20,19 @@ import { NodeType } from '../../enums/NodeType';
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
 import { NodeAppender } from '../../node/NodeAppender';
-import { NodeControlFlowReplacers } from '../../enums/container/NodeControlFlowReplacers';
+import { ControlFlowReplacers } from '../../enums/container/ControlFlowReplacers';
 import { NodeUtils } from '../../node/NodeUtils';
 import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**
-     * @type {Map <string, NodeControlFlowReplacers>}
+     * @type {Map <string, ControlFlowReplacers>}
      */
-    private static readonly controlFlowReplacersMap: Map <string, NodeControlFlowReplacers> = new Map([
-        [NodeType.BinaryExpression, NodeControlFlowReplacers.BinaryExpressionControlFlowReplacer],
-        [NodeType.CallExpression, NodeControlFlowReplacers.CallExpressionControlFlowReplacer],
-        [NodeType.LogicalExpression, NodeControlFlowReplacers.LogicalExpressionControlFlowReplacer]
+    private static readonly controlFlowReplacersMap: Map <string, ControlFlowReplacers> = new Map([
+        [NodeType.BinaryExpression, ControlFlowReplacers.BinaryExpressionControlFlowReplacer],
+        [NodeType.CallExpression, ControlFlowReplacers.CallExpressionControlFlowReplacer],
+        [NodeType.LogicalExpression, ControlFlowReplacers.LogicalExpressionControlFlowReplacer]
     ]);
 
     /**
@@ -217,7 +217,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
                     return node;
                 }
 
-                const controlFlowReplacerName: NodeControlFlowReplacers = <NodeControlFlowReplacers>FunctionControlFlowTransformer
+                const controlFlowReplacerName: ControlFlowReplacers = <ControlFlowReplacers>FunctionControlFlowTransformer
                     .controlFlowReplacersMap.get(node.type);
 
                 return {

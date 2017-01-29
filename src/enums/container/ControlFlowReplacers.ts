@@ -1,4 +1,4 @@
-export enum NodeControlFlowReplacers {
+export enum ControlFlowReplacers {
     BinaryExpressionControlFlowReplacer,
     CallExpressionControlFlowReplacer,
     LogicalExpressionControlFlowReplacer

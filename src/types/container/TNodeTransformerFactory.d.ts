@@ -2,4 +2,4 @@ import { INodeTransformer } from '../../interfaces/node-transformers/INodeTransf
 
 import { NodeTransformers } from '../../enums/container/NodeTransformers';
 
-export type TNodeTransformersFactory = (nodeTransformerName: NodeTransformers) => INodeTransformer;
+export type TNodeTransformerFactory = (nodeTransformerName: NodeTransformers) => INodeTransformer;

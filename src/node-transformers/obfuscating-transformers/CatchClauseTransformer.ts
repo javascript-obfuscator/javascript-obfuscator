@@ -4,12 +4,13 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
+import { TObfuscationReplacerFactory } from '../../types/container/TObfuscationReplacerFactory';
+
 import { IOptions } from '../../interfaces/options/IOptions';
-import { IObfuscationReplacer } from '../../interfaces/node-transformers/IObfuscationReplacer';
 import { IObfuscationReplacerWithStorage } from '../../interfaces/node-transformers/IObfuscationReplacerWithStorage';
 import { IVisitor } from '../../interfaces/IVisitor';
 
-import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscationReplacers';
+import { ObfuscationReplacers } from '../../enums/container/ObfuscationReplacers';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
@@ -30,16 +31,16 @@ export class CatchClauseTransformer extends AbstractNodeTransformer {
     private readonly identifierReplacer: IObfuscationReplacerWithStorage;
 
     /**
-     * @param replacersFactory
+     * @param obfuscationReplacerFactory
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__IObfuscatorReplacer) replacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscationReplacer,
+        @inject(ServiceIdentifiers.Factory__IObfuscationReplacer) obfuscationReplacerFactory: TObfuscationReplacerFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
-        this.identifierReplacer = <IObfuscationReplacerWithStorage>replacersFactory(NodeObfuscatorsReplacers.IdentifierReplacer);
+        this.identifierReplacer = <IObfuscationReplacerWithStorage>obfuscationReplacerFactory(ObfuscationReplacers.IdentifierReplacer);
     }
 
     /**

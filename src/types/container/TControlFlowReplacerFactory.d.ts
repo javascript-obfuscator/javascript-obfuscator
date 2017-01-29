@@ -1,5 +1,5 @@
 import { IControlFlowReplacer } from '../../interfaces/node-transformers/IControlFlowReplacer';
 
-import { NodeControlFlowReplacers } from '../../enums/container/NodeControlFlowReplacers';
+import { ControlFlowReplacers } from '../../enums/container/ControlFlowReplacers';
 
-export type TControlFlowReplacerFactory = (replacer: NodeControlFlowReplacers) => IControlFlowReplacer;
+export type TControlFlowReplacerFactory = (replacer: ControlFlowReplacers) => IControlFlowReplacer;

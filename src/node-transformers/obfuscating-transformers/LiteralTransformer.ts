@@ -4,11 +4,12 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
+import { TObfuscationReplacerFactory } from '../../types/container/TObfuscationReplacerFactory';
+
 import { IOptions } from '../../interfaces/options/IOptions';
-import { IObfuscationReplacer } from '../../interfaces/node-transformers/IObfuscationReplacer';
 import { IVisitor } from '../../interfaces/IVisitor';
 
-import { NodeObfuscatorsReplacers } from '../../enums/container/NodeObfuscationReplacers';
+import { ObfuscationReplacers } from '../../enums/container/ObfuscationReplacers';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
@@ -16,21 +17,21 @@ import { Node } from '../../node/Node';
 @injectable()
 export class LiteralTransformer extends AbstractNodeTransformer {
     /**
-     * @type {(replacer: NodeObfuscatorsReplacers) => IObfuscationReplacer}
+     * @type {TObfuscationReplacerFactory}
      */
-    private readonly replacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscationReplacer;
+    private readonly obfuscationReplacerFactory: TObfuscationReplacerFactory;
 
     /**
-     * @param replacersFactory
+     * @param obfuscationReplacerFactory
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__IObfuscatorReplacer) replacersFactory: (replacer: NodeObfuscatorsReplacers) => IObfuscationReplacer,
+        @inject(ServiceIdentifiers.Factory__IObfuscationReplacer) obfuscationReplacerFactory: TObfuscationReplacerFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
-        this.replacersFactory = replacersFactory;
+        this.obfuscationReplacerFactory = obfuscationReplacerFactory;
     }
 
     /**
@@ -60,19 +61,19 @@ export class LiteralTransformer extends AbstractNodeTransformer {
 
         switch (typeof literalNode.value) {
             case 'boolean':
-                content = this.replacersFactory(NodeObfuscatorsReplacers.BooleanReplacer)
+                content = this.obfuscationReplacerFactory(ObfuscationReplacers.BooleanReplacer)
                     .replace(<boolean>literalNode.value);
 
                 break;
 
             case 'number':
-                content = this.replacersFactory(NodeObfuscatorsReplacers.NumberLiteralReplacer)
+                content = this.obfuscationReplacerFactory(ObfuscationReplacers.NumberLiteralReplacer)
                     .replace(<number>literalNode.value);
 
                 break;
 
             case 'string':
-                content = this.replacersFactory(NodeObfuscatorsReplacers.StringLiteralReplacer)
+                content = this.obfuscationReplacerFactory(ObfuscationReplacers.StringLiteralReplacer)
                     .replace(<string>literalNode.value);
 
                 break;

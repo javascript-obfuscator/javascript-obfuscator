@@ -6,9 +6,10 @@
 
 # JavaScript obfuscator for Node.js
 
-JavaScript obfuscator for Node.js is a free obfuscator with wide number of features which provides protection for your source code.
+JavaScript obfuscator for Node.js is a free obfuscator with a wide number of features which provides protection for your source code.
 
-* without any limits and sending data to a server;
+* has no limits or restrictions
+* runs on your local machine - does not send data to a server;
 * compatible with `es2015`;
 * tested on Angular2 bundle.
 
@@ -151,7 +152,7 @@ javascript-obfuscator in.js [options]
 javascript-obfuscator in.js --output out.js [options]
 ```
 
-If the destination path is not specified through `--output` option, obfuscated code will saved into input file directory with name like `INPUT_FILE_NAME-obfuscated.js`
+If the destination path is not specified with the `--output` option, obfuscated code will saved into the input file directory with name like `INPUT_FILE_NAME-obfuscated.js`
 
 Examples:
 ```sh
@@ -166,7 +167,7 @@ See [CLI options](#cli-options).
 
 ## JavaScript Obfuscator Options
 
-Following options available for the JS Obfuscator:
+Following options are available for the JS Obfuscator:
 
 #### options:
 
@@ -295,7 +296,7 @@ Type: `number` Default: `0.75` Min: `0` Max: `1`
 
 The probability that the [`controlFlowFlattening`](#controlflowflattening) transformation will be applied to the node.
 
-This setting is especially useful for large code size because large amount of control flow transformations can slow down your code and increase code size.
+This setting is especially useful for large code size because large amounts of control flow transformations can slow down your code and increase code size.
 
 `controlFlowFlatteningThreshold: 0` equals to `controlFlowFlattening: false`.
 

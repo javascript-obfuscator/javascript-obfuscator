@@ -1,6 +1,7 @@
 Change Log
 ===
 v0.9.0
+---
 * **Breaking change:** dropped `node@0.10` and `node@0.12` support.
 * **New option:** `controlFlowFlattening` allows to enable/disable **Control Flow flattening**. Control flow flattening is a structure transformation of the source code that hinders program comprehension.
 * **New option:** `controlFlowFlatteningThreshold` allows to set percentage of nodes that will affected by `controlFlowFlattening`.

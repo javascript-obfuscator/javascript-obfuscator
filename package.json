@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -73,6 +73,7 @@
     "webpack": "scripts/webpack",
     "build": "scripts/build",
     "watch": "scripts/watch",
+    "removeCacheDir": "scripts/remove-cache-dir",
     "test:compile": "scripts/test-compile",
     "test:dev": "scripts/test-dev",
     "test:devCompilePerformance": "scripts/test-dev-compile-performance",

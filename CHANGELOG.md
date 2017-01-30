@@ -1,5 +1,9 @@
 Change Log
 ===
+v0.9.1
+---
+* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/37
+
 v0.9.0
 ---
 * **Breaking change:** dropped `node@0.10` and `node@0.12` support.

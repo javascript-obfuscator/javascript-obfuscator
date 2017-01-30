@@ -1,5 +1,6 @@
 #!/bin/bash
 
+yarn run removeCacheDir &&
 yarn run webpack &&
 yarn run tslint &&
 yarn test

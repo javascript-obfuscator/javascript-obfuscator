@@ -41,7 +41,7 @@
     "@types/esprima": "2.1.33",
     "@types/estraverse": "0.0.6",
     "@types/estree": "0.0.34",
-    "@types/lodash": "4.14.51",
+    "@types/lodash": "4.14.52",
     "@types/mkdirp": "0.3.29",
     "@types/mocha": "2.2.38",
     "@types/node": "7.0.4",
@@ -61,7 +61,7 @@
     "tslint": "4.4.2",
     "tslint-loader": "3.3.0",
     "typescript": "2.1.5",
-    "webpack": "2.2.0",
+    "webpack": "2.2.1",
     "webpack-node-externals": "1.5.4"
   },
   "repository": {

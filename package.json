@@ -57,7 +57,6 @@
     "istanbul": "1.1.0-alpha.1",
     "mocha": "3.2.0",
     "sinon": "2.0.0-pre.4",
-    "trevor": "2.2.0",
     "ts-node": "2.1.0",
     "tslint": "4.4.2",
     "tslint-loader": "3.4.2",

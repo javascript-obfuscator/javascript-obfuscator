@@ -1,0 +1,12 @@
+{
+  "containers": [
+    {
+      "prettyName": "Node 7.4.0",
+      "image": "node:7.4.0",
+      "beforeScripts": [
+        "npm install"
+      ],
+      "testCommand": "npm run test"
+    }
+  ]
+}

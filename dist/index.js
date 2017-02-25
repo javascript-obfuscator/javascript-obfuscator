@@ -413,7 +413,6 @@ exports.RandomGeneratorUtils = RandomGeneratorUtils;
 "use strict";
 
 
-var tslib_1 = __webpack_require__(1);
 function initializable() {
     var initializeMethodKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'initialize';
 
@@ -425,21 +424,21 @@ function initializable() {
         };
         var initializeMethod = target[initializeMethodKey];
         if (!initializeMethod || typeof initializeMethod !== 'function') {
-            throw new Error("`" + initializeMethodKey + "` method with initialization logic not found. `@" + decoratorName + "` decorator requires `" + initializeMethodKey + "` method");
+            throw new Error('`' + initializeMethodKey + '` method with initialization logic not found. `@' + decoratorName + '` decorator requires `' + initializeMethodKey + '` method');
         }
-        var metadataPropertyKey = "_" + propertyKey;
+        var metadataPropertyKey = '_' + propertyKey;
         var propertyDescriptor = Object.getOwnPropertyDescriptor(target, metadataPropertyKey) || descriptor;
         var methodDescriptor = Object.getOwnPropertyDescriptor(target, initializeMethodKey) || descriptor;
         var originalMethod = methodDescriptor.value;
-        Object.defineProperty(target, propertyKey, tslib_1.__assign({}, propertyDescriptor, { get: function get() {
+        Object.defineProperty(target, propertyKey, Object.assign({}, propertyDescriptor, { get: function get() {
                 if (this[metadataPropertyKey] === undefined) {
-                    throw new Error("Property `" + propertyKey + "` is not initialized! Initialize it first!");
+                    throw new Error('Property `' + propertyKey + '` is not initialized! Initialize it first!');
                 }
                 return this[metadataPropertyKey];
             }, set: function set(newVal) {
                 this[metadataPropertyKey] = newVal;
             } }));
-        Object.defineProperty(target, initializeMethodKey, tslib_1.__assign({}, methodDescriptor, { value: function value() {
+        Object.defineProperty(target, initializeMethodKey, Object.assign({}, methodDescriptor, { value: function value() {
                 originalMethod.apply(this, arguments);
                 if (this[propertyKey]) {}
             } }));
@@ -2100,7 +2099,7 @@ var JavaScriptObfuscatorInternal = JavaScriptObfuscatorInternal_1 = function () 
     }, {
         key: "generateCode",
         value: function generateCode(sourceCode, astTree) {
-            var escodegenParams = tslib_1.__assign({}, JavaScriptObfuscatorInternal_1.escodegenParams);
+            var escodegenParams = Object.assign({}, JavaScriptObfuscatorInternal_1.escodegenParams);
             if (this.options.sourceMap) {
                 escodegenParams.sourceMap = 'sourceMap';
                 escodegenParams.sourceContent = sourceCode;
@@ -2452,7 +2451,6 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var tslib_1 = __webpack_require__(1);
 var commander = __webpack_require__(123);
 var path = __webpack_require__(37);
 var SourceMapMode_1 = __webpack_require__(21);
@@ -2497,7 +2495,7 @@ var JavaScriptObfuscatorCLI = function () {
                 }
                 inputOptions[option] = this.commands[option];
             }
-            return tslib_1.__assign({}, Default_1.DEFAULT_PRESET, inputOptions);
+            return Object.assign({}, Default_1.DEFAULT_PRESET, inputOptions);
         }
     }, {
         key: "configureCommands",
@@ -2540,7 +2538,7 @@ var JavaScriptObfuscatorCLI = function () {
         key: "processDataWithSourceMap",
         value: function processDataWithSourceMap(outputCodePath, options) {
             var outputSourceMapPath = CLIUtils_1.CLIUtils.getOutputSourceMapPath(outputCodePath, options.sourceMapFileName || '');
-            options = tslib_1.__assign({}, options, { sourceMapFileName: path.basename(outputSourceMapPath) });
+            options = Object.assign({}, options, { sourceMapFileName: path.basename(outputSourceMapPath) });
             var obfuscationResult = JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(this.data, options);
             CLIUtils_1.CLIUtils.writeFile(outputCodePath, obfuscationResult.getObfuscatedCode());
             if (options.sourceMapMode === 'separate' && obfuscationResult.getSourceMap()) {
@@ -3893,7 +3891,7 @@ var NodeCallsControllerFunctionNode = function (_AbstractCustomNode_) {
             if (this.appendEvent === ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation) {
                 return JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(format(SingleNodeCallControllerTemplate_1.SingleNodeCallControllerTemplate(), {
                     singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-                }), tslib_1.__assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
+                }), Object.assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
             }
             return format(SingleNodeCallControllerTemplate_1.SingleNodeCallControllerTemplate(), {
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
@@ -3959,7 +3957,7 @@ var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
             return JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(format(SelfDefendingTemplate_1.SelfDefendingTemplate(), {
                 selfDefendingFunctionName: RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6),
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-            }), tslib_1.__assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
+            }), Object.assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
         }
     }]);
 
@@ -4107,7 +4105,7 @@ var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
                 decodeNodeTemplate: decodeNodeTemplate,
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
                 stringArrayName: this.stringArrayName
-            }), tslib_1.__assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
+            }), Object.assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
         }
     }, {
         key: "getDecodeStringArrayTemplate",
@@ -4288,7 +4286,7 @@ var StringArrayRotateFunctionNode = function (_AbstractCustomNode_) {
                 stringArrayName: this.stringArrayName,
                 stringArrayRotateValue: Utils_1.Utils.decToHex(this.stringArrayRotateValue),
                 whileFunctionName: whileFunctionName
-            }), tslib_1.__assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
+            }), Object.assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
         }
     }]);
 
@@ -4633,7 +4631,7 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
                         return node;
                     }
                     var controlFlowReplacerName = FunctionControlFlowTransformer_1.controlFlowReplacersMap.get(node.type);
-                    return tslib_1.__assign({}, _this3.controlFlowReplacerFactory(controlFlowReplacerName).replace(node, parentNode, controlFlowStorage), { parentNode: parentNode });
+                    return Object.assign({}, _this3.controlFlowReplacerFactory(controlFlowReplacerName).replace(node, parentNode, controlFlowStorage), { parentNode: parentNode });
                 }
             });
         }
@@ -4979,8 +4977,6 @@ var MethodDefinitionTransformer_1;
 "use strict";
 
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -5037,17 +5033,11 @@ var TemplateLiteralTransformer = TemplateLiteralTransformer_1 = function (_Abstr
                 nodes.unshift(Nodes_1.Nodes.getLiteralNode(''));
             }
             if (nodes.length > 1) {
-                var _ret = function () {
-                    var root = Nodes_1.Nodes.getBinaryExpressionNode('+', nodes.shift(), nodes.shift());
-                    nodes.forEach(function (node) {
-                        root = Nodes_1.Nodes.getBinaryExpressionNode('+', root, node);
-                    });
-                    return {
-                        v: root
-                    };
-                }();
-
-                if ((typeof _ret === "undefined" ? "undefined" : _typeof(_ret)) === "object") return _ret.v;
+                var root = Nodes_1.Nodes.getBinaryExpressionNode('+', nodes.shift(), nodes.shift());
+                nodes.forEach(function (node) {
+                    root = Nodes_1.Nodes.getBinaryExpressionNode('+', root, node);
+                });
+                return root;
             }
             return nodes[0];
         }
@@ -6080,7 +6070,6 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var tslib_1 = __webpack_require__(1);
 var Utils_1 = __webpack_require__(8);
 
 var OptionsNormalizer = function () {
@@ -6091,7 +6080,7 @@ var OptionsNormalizer = function () {
     _createClass(OptionsNormalizer, null, [{
         key: "normalizeOptions",
         value: function normalizeOptions(options) {
-            var normalizedOptions = tslib_1.__assign({}, options);
+            var normalizedOptions = Object.assign({}, options);
             var _iteratorNormalCompletion = true;
             var _didIteratorError = false;
             var _iteratorError = undefined;
@@ -6123,7 +6112,7 @@ var OptionsNormalizer = function () {
         key: "controlFlowFlatteningThresholdRule",
         value: function controlFlowFlatteningThresholdRule(options) {
             if (options.controlFlowFlatteningThreshold === 0) {
-                options = tslib_1.__assign({}, options, OptionsNormalizer.DISABLED_CONTROL_FLOW_FLATTENING_OPTIONS);
+                options = Object.assign({}, options, OptionsNormalizer.DISABLED_CONTROL_FLOW_FLATTENING_OPTIONS);
             }
             return options;
         }
@@ -6157,7 +6146,7 @@ var OptionsNormalizer = function () {
                     }
                 }
 
-                options = tslib_1.__assign({}, options, { domainLock: normalizedDomains });
+                options = Object.assign({}, options, { domainLock: normalizedDomains });
             }
             return options;
         }
@@ -6165,7 +6154,7 @@ var OptionsNormalizer = function () {
         key: "selfDefendingRule",
         value: function selfDefendingRule(options) {
             if (options.selfDefending) {
-                options = tslib_1.__assign({}, options, OptionsNormalizer.SELF_DEFENDING_OPTIONS);
+                options = Object.assign({}, options, OptionsNormalizer.SELF_DEFENDING_OPTIONS);
             }
             return options;
         }
@@ -6176,11 +6165,11 @@ var OptionsNormalizer = function () {
                 sourceMapBaseUrl = _options.sourceMapBaseUrl;
 
             if (!options.sourceMapFileName) {
-                options = tslib_1.__assign({}, options, { sourceMapBaseUrl: '' });
+                options = Object.assign({}, options, { sourceMapBaseUrl: '' });
                 return options;
             }
             if (sourceMapBaseUrl && !sourceMapBaseUrl.endsWith('/')) {
-                options = tslib_1.__assign({}, options, { sourceMapBaseUrl: sourceMapBaseUrl + "/" });
+                options = Object.assign({}, options, { sourceMapBaseUrl: sourceMapBaseUrl + "/" });
             }
             return options;
         }
@@ -6192,7 +6181,7 @@ var OptionsNormalizer = function () {
 
             if (sourceMapFileName) {
                 sourceMapFileName = sourceMapFileName.replace(/^\/+/, '').split('.')[0];
-                options = tslib_1.__assign({}, options, { sourceMapFileName: sourceMapFileName + ".js.map" });
+                options = Object.assign({}, options, { sourceMapFileName: sourceMapFileName + ".js.map" });
             }
             return options;
         }
@@ -6200,7 +6189,7 @@ var OptionsNormalizer = function () {
         key: "stringArrayRule",
         value: function stringArrayRule(options) {
             if (!options.stringArray) {
-                options = tslib_1.__assign({}, options, OptionsNormalizer.DISABLED_STRING_ARRAY_OPTIONS);
+                options = Object.assign({}, options, OptionsNormalizer.DISABLED_STRING_ARRAY_OPTIONS);
             }
             return options;
         }
@@ -6208,7 +6197,7 @@ var OptionsNormalizer = function () {
         key: "stringArrayEncodingRule",
         value: function stringArrayEncodingRule(options) {
             if (options.stringArrayEncoding === true) {
-                options = tslib_1.__assign({}, options, OptionsNormalizer.STRING_ARRAY_ENCODING_OPTIONS);
+                options = Object.assign({}, options, OptionsNormalizer.STRING_ARRAY_ENCODING_OPTIONS);
             }
             return options;
         }
@@ -6216,7 +6205,7 @@ var OptionsNormalizer = function () {
         key: "stringArrayThresholdRule",
         value: function stringArrayThresholdRule(options) {
             if (options.stringArrayThreshold === 0) {
-                options = tslib_1.__assign({}, options, OptionsNormalizer.DISABLED_STRING_ARRAY_OPTIONS);
+                options = Object.assign({}, options, OptionsNormalizer.DISABLED_STRING_ARRAY_OPTIONS);
             }
             return options;
         }
@@ -6386,7 +6375,7 @@ var StackTraceAnalyzer = StackTraceAnalyzer_1 = function () {
                 if (!calleeData) {
                     return;
                 }
-                stackTraceData.push(tslib_1.__assign({}, calleeData, { stackTrace: _this2.analyzeRecursive(calleeData.callee.body) }));
+                stackTraceData.push(Object.assign({}, calleeData, { stackTrace: _this2.analyzeRecursive(calleeData.callee.body) }));
             });
         }
     }], [{

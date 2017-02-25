@@ -19,7 +19,7 @@
     "javascript-obfuscator": "./bin/javascript-obfuscator.js"
   },
   "dependencies": {
-    "chance": "1.0.4",
+    "chance": "1.0.6",
     "class-validator": "0.6.8",
     "commander": "2.9.0",
     "escodegen": "1.8.1",
@@ -28,10 +28,10 @@
     "inversify": "3.1.0",
     "lodash": "4.17.4",
     "mkdirp": "0.5.1",
-    "reflect-metadata": "0.1.9",
+    "reflect-metadata": "0.1.10",
     "source-map-support": "0.4.11",
     "string-template": "1.0.0",
-    "tslib": "1.5.0"
+    "tslib": "1.6.0"
   },
   "devDependencies": {
     "@types/chai": "3.4.35",
@@ -41,13 +41,13 @@
     "@types/esprima": "2.1.33",
     "@types/estraverse": "0.0.6",
     "@types/estree": "0.0.34",
-    "@types/lodash": "4.14.52",
+    "@types/lodash": "4.14.53",
     "@types/mkdirp": "0.3.29",
     "@types/mocha": "2.2.39",
     "@types/node": "7.0.5",
     "@types/sinon": "1.16.35",
     "@types/string-template": "1.0.2",
-    "awesome-typescript-loader": "3.0.4",
+    "awesome-typescript-loader": "3.0.7",
     "babel-cli": "6.23.0",
     "babel-loader": "6.3.2",
     "babel-plugin-array-includes": "2.0.3",
@@ -60,7 +60,7 @@
     "ts-node": "2.1.0",
     "tslint": "4.4.2",
     "tslint-loader": "3.4.2",
-    "typescript": "2.1.6",
+    "typescript": "2.2.0",
     "webpack": "2.2.1",
     "webpack-node-externals": "1.5.4"
   },
@@ -84,8 +84,7 @@
     "test:removeTmpDir": "scripts/test-remove-tmp-dir",
     "test": "scripts/test",
     "tslint": "scripts/tslint",
-    "travis": "scripts/travis",
-    "trevor": "scripts/trevor"
+    "travis": "scripts/travis"
   },
   "author": {
     "name": "Timofey Kachalov"

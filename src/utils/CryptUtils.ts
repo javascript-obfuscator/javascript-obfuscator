@@ -26,7 +26,7 @@ export class CryptUtils {
                 throw new Error("'btoa' failed: The string to be encoded contains characters outside of the Latin1 range.");
             }
 
-            block = block << 8 | charCode;
+            block = <number>block << 8 | charCode;
         }
 
         return output;

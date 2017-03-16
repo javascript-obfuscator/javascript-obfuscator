@@ -176,6 +176,8 @@ Following options are available for the JS Obfuscator:
     compact: true,
     controlFlowFlattening: false,
     controlFlowFlatteningThreshold: 0.75,
+    deadCodeInjection: false,
+    deadCodeInjectionThreshold: 0.75,
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: true,
@@ -189,7 +191,7 @@ Following options are available for the JS Obfuscator:
     sourceMapMode: 'separate',
     stringArray: true,
     stringArrayEncoding: false,
-    stringArrayThreshold: 0.8,
+    stringArrayThreshold: 0.75,
     unicodeEscapeSequence: true
 }
 ```
@@ -204,6 +206,8 @@ Following options are available for the JS Obfuscator:
     --compact <boolean>
     --controlFlowFlattening <boolean>
     --controlFlowFlatteningThreshold <number>
+    --deadCodeInjection <boolean>
+    --deadCodeInjectionThreshold <number>
     --debugProtection <boolean>
     --debugProtectionInterval <boolean>
     --disableConsoleOutput <boolean>

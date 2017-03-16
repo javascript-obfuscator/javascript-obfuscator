@@ -5,6 +5,8 @@ export interface IOptions {
     readonly compact: boolean;
     readonly controlFlowFlattening: boolean;
     readonly controlFlowFlatteningThreshold: number;
+    readonly deadCodeInjection: boolean;
+    readonly deadCodeInjectionThreshold: number;
     readonly debugProtection: boolean;
     readonly debugProtectionInterval: boolean;
     readonly disableConsoleOutput: boolean;

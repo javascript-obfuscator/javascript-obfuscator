@@ -18,6 +18,14 @@ export class OptionsNormalizer {
     /**
      * @type {TInputOptions}
      */
+    private static readonly DISABLED_DEAD_CODE_INJECTION_OPTIONS: TInputOptions = {
+        deadCodeInjection: false,
+        deadCodeInjectionThreshold: 0
+    };
+
+    /**
+     * @type {TInputOptions}
+     */
     private static readonly DISABLED_STRING_ARRAY_OPTIONS: TInputOptions = {
         rotateStringArray: false,
         stringArray: false,
@@ -45,6 +53,7 @@ export class OptionsNormalizer {
      */
     private static readonly normalizerRules: TOptionsNormalizerRule[] = [
         OptionsNormalizer.controlFlowFlatteningThresholdRule,
+        OptionsNormalizer.deadCodeInjectionThresholdRule,
         OptionsNormalizer.domainLockRule,
         OptionsNormalizer.selfDefendingRule,
         OptionsNormalizer.sourceMapBaseUrlRule,
@@ -79,6 +88,21 @@ export class OptionsNormalizer {
             options = {
                 ...options,
                 ...OptionsNormalizer.DISABLED_CONTROL_FLOW_FLATTENING_OPTIONS
+            };
+        }
+
+        return options;
+    }
+
+    /**
+     * @param options
+     * @returns {IOptions}
+     */
+    private static deadCodeInjectionThresholdRule (options: IOptions): IOptions {
+        if (options.deadCodeInjectionThreshold === 0) {
+            options = {
+                ...options,
+                ...OptionsNormalizer.DISABLED_DEAD_CODE_INJECTION_OPTIONS
             };
         }
 

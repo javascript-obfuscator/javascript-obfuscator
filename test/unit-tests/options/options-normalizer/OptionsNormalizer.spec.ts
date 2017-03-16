@@ -40,6 +40,22 @@ describe('OptionsNormalizer', () => {
             assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
         });
 
+        it('should normalize options preset: deadCodeInjectionThresholdRule', () => {
+            optionsPreset = {
+                ...DEFAULT_PRESET,
+                deadCodeInjection: true,
+                deadCodeInjectionThreshold: 0
+            };
+
+            expectedOptionsPreset = {
+                ...DEFAULT_PRESET,
+                deadCodeInjection: false,
+                deadCodeInjectionThreshold: 0
+            };
+
+            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
+        });
+
         it('should normalize options preset: domainLockRule', () => {
             optionsPreset = {
                 ...DEFAULT_PRESET,

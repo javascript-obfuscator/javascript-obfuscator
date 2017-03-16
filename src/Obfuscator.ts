@@ -31,6 +31,7 @@ export class Obfuscator implements IObfuscator {
      */
     private static readonly controlFlowTransformersList: NodeTransformers[] = [
         NodeTransformers.BlockStatementControlFlowTransformer,
+        NodeTransformers.BlockStatementDeadCodeInjectionTransformer,
         NodeTransformers.FunctionControlFlowTransformer
     ];
 

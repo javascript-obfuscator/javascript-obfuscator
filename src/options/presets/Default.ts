@@ -6,6 +6,8 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     compact: true,
     controlFlowFlattening: false,
     controlFlowFlatteningThreshold: 0.75,
+    deadCodeInjection: false,
+    deadCodeInjectionThreshold: 0.75,
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: true,
@@ -20,6 +22,6 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     sourceMapMode: SourceMapMode.Separate,
     stringArray: true,
     stringArrayEncoding: false,
-    stringArrayThreshold: 0.8,
+    stringArrayThreshold: 0.75,
     unicodeEscapeSequence: true
 });

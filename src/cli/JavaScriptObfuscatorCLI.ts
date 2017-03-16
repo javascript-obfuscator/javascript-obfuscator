@@ -165,6 +165,16 @@ export class JavaScriptObfuscatorCLI {
                 parseFloat
             )
             .option(
+                '--deadCodeInjection <boolean>',
+                'Enables dead code injection',
+                JavaScriptObfuscatorCLI.parseBoolean
+            )
+            .option(
+                '--deadCodeInjectionThreshold <number>',
+                'The probability that the dead code injection transformation will be applied to the node',
+                parseFloat
+            )
+            .option(
                 '--debugProtection <boolean>',
                 'Disable browser Debug panel (can cause DevTools enabled browser freeze)',
                 JavaScriptObfuscatorCLI.parseBoolean

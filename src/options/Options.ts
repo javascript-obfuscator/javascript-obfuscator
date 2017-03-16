@@ -63,6 +63,18 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
+    public readonly deadCodeInjection: boolean;
+
+    /**
+     * @type {number}
+     */
+    @IsNumber()
+    public readonly deadCodeInjectionThreshold: number;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
     public readonly debugProtection: boolean;
 
     /**

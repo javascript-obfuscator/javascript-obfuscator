@@ -1515,6 +1515,8 @@ exports.NO_CUSTOM_NODES_PRESET = Object.freeze({
     compact: true,
     controlFlowFlattening: false,
     controlFlowFlatteningThreshold: 0,
+    deadCodeInjection: false,
+    deadCodeInjectionThreshold: 0,
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: false,
@@ -1780,17 +1782,18 @@ var CustomNodeGroups;
 var NodeTransformers;
 (function (NodeTransformers) {
     NodeTransformers[NodeTransformers["BlockStatementControlFlowTransformer"] = 0] = "BlockStatementControlFlowTransformer";
-    NodeTransformers[NodeTransformers["FunctionControlFlowTransformer"] = 1] = "FunctionControlFlowTransformer";
-    NodeTransformers[NodeTransformers["CatchClauseTransformer"] = 2] = "CatchClauseTransformer";
-    NodeTransformers[NodeTransformers["FunctionDeclarationTransformer"] = 3] = "FunctionDeclarationTransformer";
-    NodeTransformers[NodeTransformers["FunctionTransformer"] = 4] = "FunctionTransformer";
-    NodeTransformers[NodeTransformers["LabeledStatementTransformer"] = 5] = "LabeledStatementTransformer";
-    NodeTransformers[NodeTransformers["LiteralTransformer"] = 6] = "LiteralTransformer";
-    NodeTransformers[NodeTransformers["MemberExpressionTransformer"] = 7] = "MemberExpressionTransformer";
-    NodeTransformers[NodeTransformers["MethodDefinitionTransformer"] = 8] = "MethodDefinitionTransformer";
-    NodeTransformers[NodeTransformers["ObjectExpressionTransformer"] = 9] = "ObjectExpressionTransformer";
-    NodeTransformers[NodeTransformers["TemplateLiteralTransformer"] = 10] = "TemplateLiteralTransformer";
-    NodeTransformers[NodeTransformers["VariableDeclarationTransformer"] = 11] = "VariableDeclarationTransformer";
+    NodeTransformers[NodeTransformers["BlockStatementDeadCodeInjectionTransformer"] = 1] = "BlockStatementDeadCodeInjectionTransformer";
+    NodeTransformers[NodeTransformers["FunctionControlFlowTransformer"] = 2] = "FunctionControlFlowTransformer";
+    NodeTransformers[NodeTransformers["CatchClauseTransformer"] = 3] = "CatchClauseTransformer";
+    NodeTransformers[NodeTransformers["FunctionDeclarationTransformer"] = 4] = "FunctionDeclarationTransformer";
+    NodeTransformers[NodeTransformers["FunctionTransformer"] = 5] = "FunctionTransformer";
+    NodeTransformers[NodeTransformers["LabeledStatementTransformer"] = 6] = "LabeledStatementTransformer";
+    NodeTransformers[NodeTransformers["LiteralTransformer"] = 7] = "LiteralTransformer";
+    NodeTransformers[NodeTransformers["MemberExpressionTransformer"] = 8] = "MemberExpressionTransformer";
+    NodeTransformers[NodeTransformers["MethodDefinitionTransformer"] = 9] = "MethodDefinitionTransformer";
+    NodeTransformers[NodeTransformers["ObjectExpressionTransformer"] = 10] = "ObjectExpressionTransformer";
+    NodeTransformers[NodeTransformers["TemplateLiteralTransformer"] = 11] = "TemplateLiteralTransformer";
+    NodeTransformers[NodeTransformers["VariableDeclarationTransformer"] = 12] = "VariableDeclarationTransformer";
 })(NodeTransformers = exports.NodeTransformers || (exports.NodeTransformers = {}));
 
 /***/ }),
@@ -1921,6 +1924,8 @@ exports.DEFAULT_PRESET = Object.freeze({
     compact: true,
     controlFlowFlattening: false,
     controlFlowFlatteningThreshold: 0.75,
+    deadCodeInjection: false,
+    deadCodeInjectionThreshold: 0.75,
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: true,
@@ -1935,7 +1940,7 @@ exports.DEFAULT_PRESET = Object.freeze({
     sourceMapMode: SourceMapMode_1.SourceMapMode.Separate,
     stringArray: true,
     stringArrayEncoding: false,
-    stringArrayThreshold: 0.8,
+    stringArrayThreshold: 0.75,
     unicodeEscapeSequence: true
 });
 
@@ -2284,7 +2289,7 @@ var Obfuscator = Obfuscator_1 = function () {
 
     return Obfuscator;
 }();
-Obfuscator.controlFlowTransformersList = [NodeTransformers_1.NodeTransformers.BlockStatementControlFlowTransformer, NodeTransformers_1.NodeTransformers.FunctionControlFlowTransformer];
+Obfuscator.controlFlowTransformersList = [NodeTransformers_1.NodeTransformers.BlockStatementControlFlowTransformer, NodeTransformers_1.NodeTransformers.BlockStatementDeadCodeInjectionTransformer, NodeTransformers_1.NodeTransformers.FunctionControlFlowTransformer];
 Obfuscator.convertingTransformersList = [NodeTransformers_1.NodeTransformers.MemberExpressionTransformer, NodeTransformers_1.NodeTransformers.MethodDefinitionTransformer, NodeTransformers_1.NodeTransformers.TemplateLiteralTransformer];
 Obfuscator.obfuscatingTransformersList = [NodeTransformers_1.NodeTransformers.CatchClauseTransformer, NodeTransformers_1.NodeTransformers.FunctionDeclarationTransformer, NodeTransformers_1.NodeTransformers.FunctionTransformer, NodeTransformers_1.NodeTransformers.LabeledStatementTransformer, NodeTransformers_1.NodeTransformers.LiteralTransformer, NodeTransformers_1.NodeTransformers.ObjectExpressionTransformer, NodeTransformers_1.NodeTransformers.VariableDeclarationTransformer];
 Obfuscator = Obfuscator_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStackTraceAnalyzer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscationEventEmitter)), tslib_1.__param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.TCustomNodeGroupStorage)), tslib_1.__param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__INodeTransformer)), tslib_1.__param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object, Object, Object, Function, Object])], Obfuscator);
@@ -2500,7 +2505,7 @@ var JavaScriptObfuscatorCLI = function () {
     }, {
         key: "configureCommands",
         value: function configureCommands() {
-            this.commands = new commander.Command().version(JavaScriptObfuscatorCLI.getBuildVersion(), '-v, --version').usage('<inputPath> [options]').option('-o, --output <path>', 'Output path for obfuscated code').option('--compact <boolean>', 'Disable one line output code compacting', JavaScriptObfuscatorCLI.parseBoolean).option('--controlFlowFlattening <boolean>', 'Enables control flow flattening', JavaScriptObfuscatorCLI.parseBoolean).option('--controlFlowFlatteningThreshold <number>', 'The probability that the control flow flattening transformation will be applied to the node', parseFloat).option('--debugProtection <boolean>', 'Disable browser Debug panel (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtectionInterval <boolean>', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--disableConsoleOutput <boolean>', 'Allow console.log, console.info, console.error and console.warn messages output into browser console', JavaScriptObfuscatorCLI.parseBoolean).option('--domainLock <list>', 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)', function (value) {
+            this.commands = new commander.Command().version(JavaScriptObfuscatorCLI.getBuildVersion(), '-v, --version').usage('<inputPath> [options]').option('-o, --output <path>', 'Output path for obfuscated code').option('--compact <boolean>', 'Disable one line output code compacting', JavaScriptObfuscatorCLI.parseBoolean).option('--controlFlowFlattening <boolean>', 'Enables control flow flattening', JavaScriptObfuscatorCLI.parseBoolean).option('--controlFlowFlatteningThreshold <number>', 'The probability that the control flow flattening transformation will be applied to the node', parseFloat).option('--deadCodeInjection <boolean>', 'Enables dead code injection', JavaScriptObfuscatorCLI.parseBoolean).option('--deadCodeInjectionThreshold <number>', 'The probability that the dead code injection transformation will be applied to the node', parseFloat).option('--debugProtection <boolean>', 'Disable browser Debug panel (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtectionInterval <boolean>', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--disableConsoleOutput <boolean>', 'Allow console.log, console.info, console.error and console.warn messages output into browser console', JavaScriptObfuscatorCLI.parseBoolean).option('--domainLock <list>', 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)', function (value) {
                 return value.split(',');
             }).option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', function (value) {
                 return value.split(',');
@@ -6030,6 +6035,8 @@ Options.validatorOptions = {
 tslib_1.__decorate([class_validator_1.IsBoolean(), tslib_1.__metadata("design:type", Boolean)], Options.prototype, "compact", void 0);
 tslib_1.__decorate([class_validator_1.IsBoolean(), tslib_1.__metadata("design:type", Boolean)], Options.prototype, "controlFlowFlattening", void 0);
 tslib_1.__decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), tslib_1.__metadata("design:type", Number)], Options.prototype, "controlFlowFlatteningThreshold", void 0);
+tslib_1.__decorate([class_validator_1.IsBoolean(), tslib_1.__metadata("design:type", Boolean)], Options.prototype, "deadCodeInjection", void 0);
+tslib_1.__decorate([class_validator_1.IsNumber(), tslib_1.__metadata("design:type", Number)], Options.prototype, "deadCodeInjectionThreshold", void 0);
 tslib_1.__decorate([class_validator_1.IsBoolean(), tslib_1.__metadata("design:type", Boolean)], Options.prototype, "debugProtection", void 0);
 tslib_1.__decorate([class_validator_1.IsBoolean(), tslib_1.__metadata("design:type", Boolean)], Options.prototype, "debugProtectionInterval", void 0);
 tslib_1.__decorate([class_validator_1.IsBoolean(), tslib_1.__metadata("design:type", Boolean)], Options.prototype, "disableConsoleOutput", void 0);
@@ -6113,6 +6120,14 @@ var OptionsNormalizer = function () {
         value: function controlFlowFlatteningThresholdRule(options) {
             if (options.controlFlowFlatteningThreshold === 0) {
                 options = Object.assign({}, options, OptionsNormalizer.DISABLED_CONTROL_FLOW_FLATTENING_OPTIONS);
+            }
+            return options;
+        }
+    }, {
+        key: "deadCodeInjectionThresholdRule",
+        value: function deadCodeInjectionThresholdRule(options) {
+            if (options.deadCodeInjectionThreshold === 0) {
+                options = Object.assign({}, options, OptionsNormalizer.DISABLED_DEAD_CODE_INJECTION_OPTIONS);
             }
             return options;
         }
@@ -6218,6 +6233,10 @@ OptionsNormalizer.DISABLED_CONTROL_FLOW_FLATTENING_OPTIONS = {
     controlFlowFlattening: false,
     controlFlowFlatteningThreshold: 0
 };
+OptionsNormalizer.DISABLED_DEAD_CODE_INJECTION_OPTIONS = {
+    deadCodeInjection: false,
+    deadCodeInjectionThreshold: 0
+};
 OptionsNormalizer.DISABLED_STRING_ARRAY_OPTIONS = {
     rotateStringArray: false,
     stringArray: false,
@@ -6231,7 +6250,7 @@ OptionsNormalizer.SELF_DEFENDING_OPTIONS = {
 OptionsNormalizer.STRING_ARRAY_ENCODING_OPTIONS = {
     stringArrayEncoding: 'base64'
 };
-OptionsNormalizer.normalizerRules = [OptionsNormalizer.controlFlowFlatteningThresholdRule, OptionsNormalizer.domainLockRule, OptionsNormalizer.selfDefendingRule, OptionsNormalizer.sourceMapBaseUrlRule, OptionsNormalizer.sourceMapFileNameRule, OptionsNormalizer.stringArrayRule, OptionsNormalizer.stringArrayEncodingRule, OptionsNormalizer.stringArrayThresholdRule];
+OptionsNormalizer.normalizerRules = [OptionsNormalizer.controlFlowFlatteningThresholdRule, OptionsNormalizer.deadCodeInjectionThresholdRule, OptionsNormalizer.domainLockRule, OptionsNormalizer.selfDefendingRule, OptionsNormalizer.sourceMapBaseUrlRule, OptionsNormalizer.sourceMapFileNameRule, OptionsNormalizer.stringArrayRule, OptionsNormalizer.stringArrayEncodingRule, OptionsNormalizer.stringArrayThresholdRule];
 exports.OptionsNormalizer = OptionsNormalizer;
 
 /***/ }),

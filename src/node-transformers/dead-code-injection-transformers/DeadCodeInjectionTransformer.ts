@@ -12,7 +12,7 @@ import { Node } from '../../node/Node';
 import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
-export class BlockStatementDeadCodeInjectionTransformer extends AbstractNodeTransformer {
+export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     /**
      * @param options
      */

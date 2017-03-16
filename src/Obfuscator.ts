@@ -31,8 +31,14 @@ export class Obfuscator implements IObfuscator {
      */
     private static readonly controlFlowTransformersList: NodeTransformers[] = [
         NodeTransformers.BlockStatementControlFlowTransformer,
-        NodeTransformers.BlockStatementDeadCodeInjectionTransformer,
         NodeTransformers.FunctionControlFlowTransformer
+    ];
+
+    /**
+     * @type {NodeTransformers[]}
+     */
+    private static readonly deadCodeInjectionTransformersList: NodeTransformers[] = [
+        NodeTransformers.DeadCodeInjectionTransformer
     ];
 
     /**
@@ -130,10 +136,11 @@ export class Obfuscator implements IObfuscator {
 
         this.obfuscationEventEmitter.emit(ObfuscationEvents.BeforeObfuscation, astTree, stackTraceData);
 
-        // first pass: control flow flattening
-        if (this.options.controlFlowFlattening) {
-            astTree = this.transformAstTree(astTree, Obfuscator.controlFlowTransformersList);
-        }
+        // first pass transformers: dead code injection and control flow flattening transformers
+        astTree = this.transformAstTree(astTree, [
+            ...this.options.deadCodeInjection ? Obfuscator.deadCodeInjectionTransformersList : [],
+            ...this.options.controlFlowFlattening ? Obfuscator.controlFlowTransformersList : []
+        ]);
 
         // second pass: nodes obfuscation
         astTree = this.transformAstTree(astTree, [
@@ -154,6 +161,10 @@ export class Obfuscator implements IObfuscator {
         astTree: ESTree.Program,
         nodeTransformers: NodeTransformers[]
     ): ESTree.Program {
+        if (!nodeTransformers.length) {
+            return astTree;
+        }
+
         const enterVisitors: IVisitor[] = [];
         const leaveVisitors: IVisitor[] = [];
         const nodeTransformersLength: number = nodeTransformers.length;

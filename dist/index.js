@@ -1782,7 +1782,7 @@ var CustomNodeGroups;
 var NodeTransformers;
 (function (NodeTransformers) {
     NodeTransformers[NodeTransformers["BlockStatementControlFlowTransformer"] = 0] = "BlockStatementControlFlowTransformer";
-    NodeTransformers[NodeTransformers["BlockStatementDeadCodeInjectionTransformer"] = 1] = "BlockStatementDeadCodeInjectionTransformer";
+    NodeTransformers[NodeTransformers["DeadCodeInjectionTransformer"] = 1] = "DeadCodeInjectionTransformer";
     NodeTransformers[NodeTransformers["FunctionControlFlowTransformer"] = 2] = "FunctionControlFlowTransformer";
     NodeTransformers[NodeTransformers["CatchClauseTransformer"] = 3] = "CatchClauseTransformer";
     NodeTransformers[NodeTransformers["FunctionDeclarationTransformer"] = 4] = "FunctionDeclarationTransformer";
@@ -2230,9 +2230,7 @@ var Obfuscator = Obfuscator_1 = function () {
                 _this.obfuscationEventEmitter.once(customNodeGroup.getAppendEvent(), customNodeGroup.appendCustomNodes.bind(customNodeGroup));
             });
             this.obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation, astTree, stackTraceData);
-            if (this.options.controlFlowFlattening) {
-                astTree = this.transformAstTree(astTree, Obfuscator_1.controlFlowTransformersList);
-            }
+            astTree = this.transformAstTree(astTree, [].concat(_toConsumableArray(this.options.deadCodeInjection ? Obfuscator_1.deadCodeInjectionTransformersList : []), _toConsumableArray(this.options.controlFlowFlattening ? Obfuscator_1.controlFlowTransformersList : [])));
             astTree = this.transformAstTree(astTree, [].concat(_toConsumableArray(Obfuscator_1.convertingTransformersList), _toConsumableArray(Obfuscator_1.obfuscatingTransformersList)));
             this.obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation, astTree, stackTraceData);
             return astTree;
@@ -2240,6 +2238,9 @@ var Obfuscator = Obfuscator_1 = function () {
     }, {
         key: "transformAstTree",
         value: function transformAstTree(astTree, nodeTransformers) {
+            if (!nodeTransformers.length) {
+                return astTree;
+            }
             var enterVisitors = [];
             var leaveVisitors = [];
             var nodeTransformersLength = nodeTransformers.length;
@@ -2289,7 +2290,8 @@ var Obfuscator = Obfuscator_1 = function () {
 
     return Obfuscator;
 }();
-Obfuscator.controlFlowTransformersList = [NodeTransformers_1.NodeTransformers.BlockStatementControlFlowTransformer, NodeTransformers_1.NodeTransformers.BlockStatementDeadCodeInjectionTransformer, NodeTransformers_1.NodeTransformers.FunctionControlFlowTransformer];
+Obfuscator.controlFlowTransformersList = [NodeTransformers_1.NodeTransformers.BlockStatementControlFlowTransformer, NodeTransformers_1.NodeTransformers.FunctionControlFlowTransformer];
+Obfuscator.deadCodeInjectionTransformersList = [NodeTransformers_1.NodeTransformers.DeadCodeInjectionTransformer];
 Obfuscator.convertingTransformersList = [NodeTransformers_1.NodeTransformers.MemberExpressionTransformer, NodeTransformers_1.NodeTransformers.MethodDefinitionTransformer, NodeTransformers_1.NodeTransformers.TemplateLiteralTransformer];
 Obfuscator.obfuscatingTransformersList = [NodeTransformers_1.NodeTransformers.CatchClauseTransformer, NodeTransformers_1.NodeTransformers.FunctionDeclarationTransformer, NodeTransformers_1.NodeTransformers.FunctionTransformer, NodeTransformers_1.NodeTransformers.LabeledStatementTransformer, NodeTransformers_1.NodeTransformers.LiteralTransformer, NodeTransformers_1.NodeTransformers.ObjectExpressionTransformer, NodeTransformers_1.NodeTransformers.VariableDeclarationTransformer];
 Obfuscator = Obfuscator_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStackTraceAnalyzer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscationEventEmitter)), tslib_1.__param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.TCustomNodeGroupStorage)), tslib_1.__param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__INodeTransformer)), tslib_1.__param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object, Object, Object, Function, Object])], Obfuscator);
@@ -2783,6 +2785,7 @@ var ServiceIdentifiers_1 = __webpack_require__(2);
 var NodeTransformers_1 = __webpack_require__(31);
 var FunctionControlFlowTransformer_1 = __webpack_require__(76);
 var BlockStatementControlFlowTransformer_1 = __webpack_require__(75);
+var DeadCodeInjectionTransformer_1 = __webpack_require__(131);
 var CatchClauseTransformer_1 = __webpack_require__(83);
 var FunctionDeclarationTransformer_1 = __webpack_require__(84);
 var FunctionTransformer_1 = __webpack_require__(85);
@@ -2795,6 +2798,7 @@ var TemplateLiteralTransformer_1 = __webpack_require__(82);
 var VariableDeclarationTransformer_1 = __webpack_require__(89);
 exports.nodeTransformersModule = new inversify_1.ContainerModule(function (bind) {
     bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(BlockStatementControlFlowTransformer_1.BlockStatementControlFlowTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.BlockStatementControlFlowTransformer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(DeadCodeInjectionTransformer_1.DeadCodeInjectionTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.DeadCodeInjectionTransformer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(FunctionControlFlowTransformer_1.FunctionControlFlowTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.FunctionControlFlowTransformer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(MemberExpressionTransformer_1.MemberExpressionTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.MemberExpressionTransformer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(MethodDefinitionTransformer_1.MethodDefinitionTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.MethodDefinitionTransformer);
@@ -7185,6 +7189,67 @@ module.exports = require("reflect-metadata");
 
 var JavaScriptObfuscator_1 = __webpack_require__(17);
 module.exports = JavaScriptObfuscator_1.JavaScriptObfuscator;
+
+/***/ }),
+/* 129 */,
+/* 130 */,
+/* 131 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var tslib_1 = __webpack_require__(1);
+var inversify_1 = __webpack_require__(0);
+var ServiceIdentifiers_1 = __webpack_require__(2);
+var AbstractNodeTransformer_1 = __webpack_require__(10);
+var Node_1 = __webpack_require__(6);
+var RandomGeneratorUtils_1 = __webpack_require__(4);
+var DeadCodeInjectionTransformer = function (_AbstractNodeTransfor) {
+    _inherits(DeadCodeInjectionTransformer, _AbstractNodeTransfor);
+
+    function DeadCodeInjectionTransformer(options) {
+        _classCallCheck(this, DeadCodeInjectionTransformer);
+
+        return _possibleConstructorReturn(this, (DeadCodeInjectionTransformer.__proto__ || Object.getPrototypeOf(DeadCodeInjectionTransformer)).call(this, options));
+    }
+
+    _createClass(DeadCodeInjectionTransformer, [{
+        key: "getVisitor",
+        value: function getVisitor() {
+            var _this2 = this;
+
+            return {
+                leave: function leave(node, parentNode) {
+                    if (Node_1.Node.isBlockStatementNode(node)) {
+                        return _this2.transformNode(node, parentNode);
+                    }
+                }
+            };
+        }
+    }, {
+        key: "transformNode",
+        value: function transformNode(blockStatementNode, parentNode) {
+            if (!this.options.deadCodeInjection || RandomGeneratorUtils_1.RandomGeneratorUtils.getMathRandom() > this.options.deadCodeInjectionThreshold) {
+                return blockStatementNode;
+            }
+            var blockStatementBody = blockStatementNode.body;
+            return blockStatementBody[0];
+        }
+    }]);
+
+    return DeadCodeInjectionTransformer;
+}(AbstractNodeTransformer_1.AbstractNodeTransformer);
+DeadCodeInjectionTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object])], DeadCodeInjectionTransformer);
+exports.DeadCodeInjectionTransformer = DeadCodeInjectionTransformer;
 
 /***/ })
 /******/ ]);

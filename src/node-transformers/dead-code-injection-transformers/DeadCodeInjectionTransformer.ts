@@ -6,7 +6,6 @@ import * as ESTree from 'estree';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IVisitor } from '../../interfaces/IVisitor';
 
-
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
 import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
@@ -49,8 +48,6 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         }
 
         const blockStatementBody: ESTree.Statement[] = blockStatementNode.body;
-
-
 
         return blockStatementBody[0];
     }

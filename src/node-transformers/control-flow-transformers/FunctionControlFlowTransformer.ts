@@ -32,7 +32,8 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     private static readonly controlFlowReplacersMap: Map <string, ControlFlowReplacers> = new Map([
         [NodeType.BinaryExpression, ControlFlowReplacers.BinaryExpressionControlFlowReplacer],
         [NodeType.CallExpression, ControlFlowReplacers.CallExpressionControlFlowReplacer],
-        [NodeType.LogicalExpression, ControlFlowReplacers.LogicalExpressionControlFlowReplacer]
+        [NodeType.LogicalExpression, ControlFlowReplacers.LogicalExpressionControlFlowReplacer],
+        [NodeType.Literal, ControlFlowReplacers.StringLiteralControlFlowReplacer]
     ]);
 
     /**

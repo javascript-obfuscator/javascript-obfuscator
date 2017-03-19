@@ -18,7 +18,7 @@ import { NO_CUSTOM_NODES_PRESET } from '../../src/options/presets/NoCustomNodes'
                         console.log('qrs');
                         console.log('tuv');
                         console.log('wxy');
-                        console.log('z');
+                        console.log('w');
                     };
                 
                     foo();

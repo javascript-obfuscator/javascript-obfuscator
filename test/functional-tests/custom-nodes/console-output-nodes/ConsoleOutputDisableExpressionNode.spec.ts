@@ -9,7 +9,9 @@ import { readFileAsString } from '../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
 
 describe('ConsoleOutputDisableExpressionNode', () => {
-    const regExp = /(_0x([a-f0-9]){4,6}\['(\\x[a-f0-9]*)*'\]\['(\\x[a-f0-9]*)*'\] *= *_0x([a-f0-9]){4,6};){7}/u;
+    const consoleLogRegExp: RegExp = /_0x([a-f0-9]){4,6}\['console'\]\['log'\] *= *_0x([a-f0-9]){4,6};/u;
+    const consoleErrorRegExp: RegExp = /_0x([a-f0-9]){4,6}\['console'\]\['error'\] *= *_0x([a-f0-9]){4,6};/u;
+    const consoleWarnRegExp: RegExp = /_0x([a-f0-9]){4,6}\['console'\]\['warn'\] *= *_0x([a-f0-9]){4,6};/u;
 
     it('should correctly append `ConsoleOutputDisableExpressionNode` custom node into the obfuscated code if `disableConsoleOutput` option is set', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
@@ -20,7 +22,9 @@ describe('ConsoleOutputDisableExpressionNode', () => {
             }
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(), regExp);
+        assert.match(obfuscationResult.getObfuscatedCode(), consoleLogRegExp);
+        assert.match(obfuscationResult.getObfuscatedCode(), consoleErrorRegExp);
+        assert.match(obfuscationResult.getObfuscatedCode(), consoleWarnRegExp);
     });
 
     it('should\'t append `ConsoleOutputDisableExpressionNode` custom node into the obfuscated code if `disableConsoleOutput` option is not set', () => {
@@ -33,6 +37,8 @@ describe('ConsoleOutputDisableExpressionNode', () => {
             }
         );
 
-        assert.notMatch(obfuscationResult.getObfuscatedCode(), regExp);
+        assert.notMatch(obfuscationResult.getObfuscatedCode(), consoleLogRegExp);
+        assert.notMatch(obfuscationResult.getObfuscatedCode(), consoleErrorRegExp);
+        assert.notMatch(obfuscationResult.getObfuscatedCode(), consoleWarnRegExp);
     });
 });

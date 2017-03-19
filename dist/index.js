@@ -1532,7 +1532,7 @@ exports.NO_CUSTOM_NODES_PRESET = Object.freeze({
     stringArray: false,
     stringArrayEncoding: false,
     stringArrayThreshold: 0,
-    unicodeEscapeSequence: true
+    unicodeEscapeSequence: false
 });
 
 /***/ }),
@@ -1826,7 +1826,7 @@ var AbstractControlFlowReplacer = AbstractControlFlowReplacer_1 = function () {
             var controlFlowStorageId = controlFlowStorage.getStorageId();
             var storageKeysById = AbstractControlFlowReplacer_1.getStorageKeysByIdForCurrentStorage(this.replacerDataByControlFlowStorageId, controlFlowStorageId);
             var storageKeysForCurrentId = storageKeysById.get(replacerId);
-            if (RandomGeneratorUtils_1.RandomGeneratorUtils.getMathRandom() > usingExistingIdentifierChance && storageKeysForCurrentId && storageKeysForCurrentId.length) {
+            if (RandomGeneratorUtils_1.RandomGeneratorUtils.getMathRandom() < usingExistingIdentifierChance && storageKeysForCurrentId && storageKeysForCurrentId.length) {
                 return RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().pickone(storageKeysForCurrentId);
             }
             var generateStorageKey = function generateStorageKey(length) {
@@ -1939,7 +1939,7 @@ exports.DEFAULT_PRESET = Object.freeze({
     stringArray: true,
     stringArrayEncoding: false,
     stringArrayThreshold: 0.8,
-    unicodeEscapeSequence: true
+    unicodeEscapeSequence: false
 });
 
 /***/ }),
@@ -3966,7 +3966,7 @@ var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
             return JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(format(SelfDefendingTemplate_1.SelfDefendingTemplate(), {
                 selfDefendingFunctionName: RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6),
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-            }), Object.assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
+            }), Object.assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed, unicodeEscapeSequence: true })).getObfuscatedCode();
         }
     }]);
 
@@ -5542,11 +5542,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var escodegen = __webpack_require__(20);
 var NodeType_1 = __webpack_require__(13);
 var AbstractNodeTransformer_1 = __webpack_require__(10);
 var Node_1 = __webpack_require__(6);
-var Utils_1 = __webpack_require__(8);
 var ObjectExpressionTransformer = ObjectExpressionTransformer_1 = function (_AbstractNodeTransfor) {
     _inherits(ObjectExpressionTransformer, _AbstractNodeTransfor);
 
@@ -5576,36 +5574,19 @@ var ObjectExpressionTransformer = ObjectExpressionTransformer_1 = function (_Abs
                 if (property.shorthand) {
                     property.shorthand = false;
                 }
-                if (Node_1.Node.isLiteralNode(property.key)) {
-                    property.key = ObjectExpressionTransformer_1.transformLiteralPropertyKey(property.key);
-                } else if (Node_1.Node.isIdentifierNode(property.key)) {
+                if (Node_1.Node.isIdentifierNode(property.key)) {
                     property.key = ObjectExpressionTransformer_1.transformIdentifierPropertyKey(property.key);
                 }
             });
             return objectExpressionNode;
         }
     }], [{
-        key: "transformLiteralPropertyKey",
-        value: function transformLiteralPropertyKey(node) {
-            if (typeof node.value === 'string' && !node['x-verbatim-property']) {
-                node['x-verbatim-property'] = {
-                    content: "'" + Utils_1.Utils.stringToUnicodeEscapeSequence(node.value) + "'",
-                    precedence: escodegen.Precedence.Primary
-                };
-            }
-            return node;
-        }
-    }, {
         key: "transformIdentifierPropertyKey",
         value: function transformIdentifierPropertyKey(node) {
             return {
                 type: NodeType_1.NodeType.Literal,
                 value: node.name,
-                raw: "'" + node.name + "'",
-                'x-verbatim-property': {
-                    content: "'" + Utils_1.Utils.stringToUnicodeEscapeSequence(node.name) + "'",
-                    precedence: escodegen.Precedence.Primary
-                }
+                raw: "'" + node.name + "'"
             };
         }
     }]);

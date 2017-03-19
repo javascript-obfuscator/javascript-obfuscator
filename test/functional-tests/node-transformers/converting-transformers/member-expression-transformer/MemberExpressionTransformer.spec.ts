@@ -18,7 +18,7 @@ describe('MemberExpressionTransformer', () => {
                 }
             );
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *console\['\\x6c\\x6f\\x67'\];/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *console\['log'\];/);
         });
 
         it('should replace member expression dot notation call by square brackets call to unicode array', () => {
@@ -31,7 +31,7 @@ describe('MemberExpressionTransformer', () => {
                 }
             );
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-f0-9]){4} *= *\['\\x6c\\x6f\\x67'\];/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-f0-9]){4} *= *\['log'\];/);
             assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *console\[_0x([a-f0-9]){4}\('0x0'\)\];/);
         });
     });
@@ -47,7 +47,7 @@ describe('MemberExpressionTransformer', () => {
                 }
             );
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-f0-9]){4} *= *\['\\x6c\\x6f\\x67'\];/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-f0-9]){4} *= *\['log'\];/);
             assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *console\[_0x([a-f0-9]){4}\('0x0'\)\];/);
         });
 

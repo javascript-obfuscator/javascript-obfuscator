@@ -30,8 +30,8 @@ import { NO_CUSTOM_NODES_PRESET } from '../../src/options/presets/NoCustomNodes'
             compact: false,
             stringArray: true,
             stringArrayThreshold: 1,
-            controlFlowFlattening: true,
-            controlFlowFlatteningThreshold: 1
+            deadCodeInjection: true,
+            deadCodeInjectionThreshold: 1
         }
     ).getObfuscatedCode();
 

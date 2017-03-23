@@ -22,7 +22,7 @@ describe('FunctionTransformer', () => {
             const functionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
                 .match(/var _0x[a-f0-9]{4,6} *= *function *\((_0x[a-f0-9]{4,6})\) *\{/);
             const functionBodyIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(/console\['\\x6c\\x6f\\x67'\]\((_0x[a-f0-9]{4,6})\)/);
+                .match(/console\['log'\]\((_0x[a-f0-9]{4,6})\)/);
 
             const functionParamIdentifierName: string = (<RegExpMatchArray>functionParamIdentifierMatch)[1];
             const functionBodyIdentifierName: string = (<RegExpMatchArray>functionBodyIdentifierMatch)[1];

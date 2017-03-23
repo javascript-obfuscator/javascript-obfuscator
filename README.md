@@ -192,7 +192,7 @@ Following options are available for the JS Obfuscator:
     stringArray: true,
     stringArrayEncoding: false,
     stringArrayThreshold: 0.75,
-    unicodeEscapeSequence: true
+    unicodeEscapeSequence: false
 }
 ```
 
@@ -449,11 +449,11 @@ This setting is especially useful for large code size because it repeatedly call
 `stringArrayThreshold: 0` equals to `stringArray: false`.
 
 ### `unicodeEscapeSequence`
-Type: `boolean` Default: `true`
+Type: `boolean` Default: `false`
 
 Allows to enable/disable string conversion to unicode escape sequence.
 
-Unicode escape sequence increases code size greatly. It is recommended to disable this option when using [`stringArrayEncoding`](#stringarrayencoding) (especially with `rc4` encoding).
+Unicode escape sequence increases code size greatly and strings easily can be reverted to their original view. Recommended to enable this option only for small source code. 
 
 ## Preset Options
 ### High obfuscation, low performance
@@ -514,7 +514,7 @@ Performance will slightly slower than without obfuscation
     stringArray: true,
     stringArrayEncoding: false,
     stringArrayThreshold: 0.75,
-    unicodeEscapeSequence: true
+    unicodeEscapeSequence: false
 }
 ```
 

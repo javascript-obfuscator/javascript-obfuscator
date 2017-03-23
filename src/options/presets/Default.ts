@@ -23,5 +23,5 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     stringArray: true,
     stringArrayEncoding: false,
     stringArrayThreshold: 0.75,
-    unicodeEscapeSequence: true
+    unicodeEscapeSequence: false
 });

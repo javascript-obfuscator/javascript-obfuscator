@@ -49,7 +49,7 @@ module.exports = {
         new CheckerPlugin()
     ],
     output: {
-        path: './dist',
+        path: __dirname + '/dist',
         filename: '[name].js',
         libraryTarget:  "commonjs2",
         library: "JavaScriptObfuscator"

@@ -8,6 +8,7 @@ import { ControlFlowReplacers } from '../../../enums/container/ControlFlowReplac
 import { BinaryExpressionControlFlowReplacer } from '../../../node-transformers/control-flow-transformers/control-flow-replacers/BinaryExpressionControlFlowReplacer';
 import { CallExpressionControlFlowReplacer } from '../../../node-transformers/control-flow-transformers/control-flow-replacers/CallExpressionControlFlowReplacer';
 import { LogicalExpressionControlFlowReplacer } from '../../../node-transformers/control-flow-transformers/control-flow-replacers/LogicalExpressionControlFlowReplacer';
+import { StringLiteralControlFlowReplacer } from '../../../node-transformers/control-flow-transformers/control-flow-replacers/StringLiteralControlFlowReplacer';
 
 export const controlFlowTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
@@ -21,6 +22,10 @@ export const controlFlowTransformersModule: interfaces.ContainerModule = new Con
     bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
         .to(LogicalExpressionControlFlowReplacer)
         .whenTargetNamed(ControlFlowReplacers.LogicalExpressionControlFlowReplacer);
+
+    bind<IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer)
+        .to(StringLiteralControlFlowReplacer)
+        .whenTargetNamed(ControlFlowReplacers.StringLiteralControlFlowReplacer);
 
     bind<IControlFlowReplacer>(ServiceIdentifiers.Factory__IControlFlowReplacer)
         .toFactory<IControlFlowReplacer>((context: interfaces.Context) => {

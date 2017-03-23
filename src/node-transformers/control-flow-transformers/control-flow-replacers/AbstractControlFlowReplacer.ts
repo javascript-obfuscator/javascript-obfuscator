@@ -88,7 +88,7 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
         const storageKeysForCurrentId: string[] | undefined = storageKeysById.get(replacerId);
 
         if (
-            RandomGeneratorUtils.getMathRandom() > usingExistingIdentifierChance &&
+            RandomGeneratorUtils.getMathRandom() < usingExistingIdentifierChance &&
             storageKeysForCurrentId &&
             storageKeysForCurrentId.length
         ) {

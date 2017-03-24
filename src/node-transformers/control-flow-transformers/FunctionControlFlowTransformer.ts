@@ -221,6 +221,10 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
                 const controlFlowReplacerName: ControlFlowReplacers = <ControlFlowReplacers>FunctionControlFlowTransformer
                     .controlFlowReplacersMap.get(node.type);
 
+                if (controlFlowReplacerName === undefined) {
+                    return node;
+                }
+
                 return {
                     ...this.controlFlowReplacerFactory(controlFlowReplacerName).replace(node, parentNode, controlFlowStorage),
                     parentNode

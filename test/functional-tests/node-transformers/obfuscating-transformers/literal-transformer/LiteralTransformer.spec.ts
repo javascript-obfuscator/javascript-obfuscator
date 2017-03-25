@@ -10,59 +10,13 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 
 describe('LiteralTransformer', () => {
     describe('transformation of literal node with string value', () => {
-        it('should replace literal node value with unicode escape sequence', () => {
-            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/simple-input.js'),
-                {
-                    ...NO_CUSTOM_NODES_PRESET
-                }
-            );
-
-            assert.match(obfuscationResult.getObfuscatedCode(),  /^var *test *= *'\\x74\\x65\\x73\\x74';$/);
-        });
-
-        it('should replace literal node value with unicode escape sequence from string array', () => {
+        it('should replace literal node value with value from string array', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 readFileAsString(__dirname + '/fixtures/simple-input.js'),
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     stringArray: true,
                     stringArrayThreshold: 1
-                }
-            );
-
-            assert.match(
-                obfuscationResult.getObfuscatedCode(),
-                /^var *_0x([a-f0-9]){4} *= *\['\\x74\\x65\\x73\\x74'\];/
-            );
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/);
-        });
-
-        it('should create only one item in string array for same literal node values', () => {
-            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/same-literal-values.js'),
-                {
-                    ...NO_CUSTOM_NODES_PRESET,
-                    stringArray: true,
-                    stringArrayThreshold: 1
-                }
-            );
-
-            assert.match(
-                obfuscationResult.getObfuscatedCode(),
-                /^var *_0x([a-f0-9]){4} *= *\['\\x74\\x65\\x73\\x74'\];/
-            );
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/);
-        });
-
-        it('should replace literal node value with raw value from string array if `unicodeEscapeSequence` is disabled', () => {
-            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/simple-input.js'),
-                {
-                    ...NO_CUSTOM_NODES_PRESET,
-                    stringArray: true,
-                    stringArrayThreshold: 1,
-                    unicodeEscapeSequence: false
                 }
             );
 
@@ -73,12 +27,11 @@ describe('LiteralTransformer', () => {
             assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/);
         });
 
-        it('should replace literal node value with raw value from string array if `unicodeEscapeSequence` and `stringArray` are disabled', () => {
+        it('shouldn\'t replace literal node value with value from string array if `stringArray` option is disabled', () => {
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 readFileAsString(__dirname + '/fixtures/simple-input.js'),
                 {
-                    ...NO_CUSTOM_NODES_PRESET,
-                    unicodeEscapeSequence: false
+                    ...NO_CUSTOM_NODES_PRESET
                 }
             );
 
@@ -94,10 +47,57 @@ describe('LiteralTransformer', () => {
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     stringArray: true,
-                    stringArrayThreshold: 1,
-                    unicodeEscapeSequence: false
+                    stringArrayThreshold: 1
                 }
             ));
+        });
+
+        it('should create only one item in string array for same literal node values', () => {
+            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                readFileAsString(__dirname + '/fixtures/same-literal-values.js'),
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }
+            );
+
+            assert.match(
+                obfuscationResult.getObfuscatedCode(),
+                /^var *_0x([a-f0-9]){4} *= *\['test'\];/
+            );
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/);
+        });
+
+        it('should replace literal node value with unicode escape sequence if `unicodeEscapeSequence` is enabled', () => {
+            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                readFileAsString(__dirname + '/fixtures/simple-input.js'),
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
+                    unicodeEscapeSequence: true
+
+                }
+            );
+
+            assert.match(obfuscationResult.getObfuscatedCode(),  /^var *test *= *'\\x74\\x65\\x73\\x74';$/);
+        });
+
+        it('should replace literal node value with unicode escape sequence from string array if `unicodeEscapeSequence` is enabled', () => {
+            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                readFileAsString(__dirname + '/fixtures/simple-input.js'),
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1,
+                    unicodeEscapeSequence: true
+                }
+            );
+
+            assert.match(
+                obfuscationResult.getObfuscatedCode(),
+                /^var *_0x([a-f0-9]){4} *= *\['\\x74\\x65\\x73\\x74'\];/
+            );
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/);
         });
 
         it('shouldn\'t replace short literal node value with value from string array', () => {
@@ -110,7 +110,7 @@ describe('LiteralTransformer', () => {
                 }
             );
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *'\\x74\\x65';/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *'te';/);
         });
 
         it('should replace literal node value with value from string array encoded using base64', () => {
@@ -126,7 +126,7 @@ describe('LiteralTransformer', () => {
 
             assert.match(
                 obfuscationResult.getObfuscatedCode(),
-                /^var *_0x([a-f0-9]){4} *= *\['\\x64\\x47\\x56\\x7a\\x64\\x41\\x3d\\x3d'\];/
+                /^var *_0x([a-f0-9]){4} *= *\['dGVzdA\\x3d\\x3d'\];/
             );
             assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/);
         });
@@ -144,7 +144,7 @@ describe('LiteralTransformer', () => {
 
             assert.match(
                 obfuscationResult.getObfuscatedCode(),
-                /var *test *= *_0x([a-f0-9]){4}\('0x0', '(\\x[a-f0-9]*){4}'\);/
+                /var *test *= *_0x([a-f0-9]){4}\('0x0', '(?:\w|(?:\\x[a-f0-9]*)){4}'\);/
             );
         });
 
@@ -162,7 +162,7 @@ describe('LiteralTransformer', () => {
             );
 
             const regExp1: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/g;
-            const regExp2: RegExp = /var *test *= *'\\x74\\x65\\x73\\x74';/g;
+            const regExp2: RegExp = /var *test *= *'test';/g;
             const stringArrayMatchesLength = obfuscationResult.getObfuscatedCode().match(regExp1)!.length;
             const noStringArrayMatchesLength = obfuscationResult.getObfuscatedCode().match(regExp2)!.length;
 

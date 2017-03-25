@@ -23,5 +23,5 @@ export const NO_CUSTOM_NODES_PRESET: TInputOptions = Object.freeze({
     stringArray: false,
     stringArrayEncoding: false,
     stringArrayThreshold: 0,
-    unicodeEscapeSequence: true
+    unicodeEscapeSequence: false
 });

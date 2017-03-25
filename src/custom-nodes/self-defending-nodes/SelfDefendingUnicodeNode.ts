@@ -60,7 +60,8 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
             }),
             {
                 ...NO_CUSTOM_NODES_PRESET,
-                seed: this.options.seed
+                seed: this.options.seed,
+                unicodeEscapeSequence: true
             }
         ).getObfuscatedCode();
     }

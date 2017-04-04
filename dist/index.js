@@ -5360,11 +5360,20 @@ var DeadCodeInjectionTransformer = DeadCodeInjectionTransformer_1 = function (_A
         }
     }], [{
         key: "collectBlockStatementNodes",
-        value: function collectBlockStatementNodes(targetNode, collectedBlockStatements) {
-            if (!Node_1.Node.isBlockStatementNode(targetNode) || !DeadCodeInjectionTransformer_1.isValidBlockStatementNode(targetNode)) {
+        value: function collectBlockStatementNodes(node, collectedBlockStatements) {
+            if (!Node_1.Node.isBlockStatementNode(node) || !DeadCodeInjectionTransformer_1.isValidBlockStatementNode(node)) {
                 return;
             }
-            collectedBlockStatements.push(NodeUtils_1.NodeUtils.clone(targetNode));
+            var clonedBlockStatementNode = NodeUtils_1.NodeUtils.clone(node);
+            estraverse.replace(clonedBlockStatementNode, {
+                enter: function enter(node, parentNode) {
+                    if (Node_1.Node.isIdentifierNode(node)) {
+                        node.name = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6);
+                    }
+                    return node;
+                }
+            });
+            collectedBlockStatements.push(clonedBlockStatementNode);
         }
     }, {
         key: "replaceBlockStatementNodes",

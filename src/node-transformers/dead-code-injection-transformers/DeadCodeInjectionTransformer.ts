@@ -30,15 +30,27 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param targetNode
+     * @param node
      * @param collectedBlockStatements
      */
-    private static collectBlockStatementNodes (targetNode: ESTree.Node, collectedBlockStatements: ESTree.BlockStatement[]): void {
-        if (!Node.isBlockStatementNode(targetNode) || !DeadCodeInjectionTransformer.isValidBlockStatementNode(targetNode)) {
+    private static collectBlockStatementNodes (node: ESTree.Node, collectedBlockStatements: ESTree.BlockStatement[]): void {
+        if (!Node.isBlockStatementNode(node) || !DeadCodeInjectionTransformer.isValidBlockStatementNode(node)) {
             return;
         }
 
-        collectedBlockStatements.push(<ESTree.BlockStatement>NodeUtils.clone(targetNode));
+        const clonedBlockStatementNode: ESTree.BlockStatement = <ESTree.BlockStatement>NodeUtils.clone(node);
+
+        estraverse.replace(clonedBlockStatementNode, {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+                if (Node.isIdentifierNode(node)) {
+                    node.name = RandomGeneratorUtils.getRandomVariableName(6);
+                }
+
+                return node;
+            }
+        });
+
+        collectedBlockStatements.push(clonedBlockStatementNode);
     }
 
     /**

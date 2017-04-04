@@ -38,19 +38,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
             return;
         }
 
-        const clonedBlockStatementNode: ESTree.BlockStatement = <ESTree.BlockStatement>NodeUtils.clone(targetNode);
-
-        estraverse.replace(clonedBlockStatementNode, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (Node.isIdentifierNode(node)) {
-                    node.name = RandomGeneratorUtils.getRandomVariableName(6);
-                }
-
-                return node;
-            }
-        });
-
-        collectedBlockStatements.push(clonedBlockStatementNode);
+        collectedBlockStatements.push(<ESTree.BlockStatement>NodeUtils.clone(targetNode));
     }
 
     /**

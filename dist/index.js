@@ -5364,16 +5364,7 @@ var DeadCodeInjectionTransformer = DeadCodeInjectionTransformer_1 = function (_A
             if (!Node_1.Node.isBlockStatementNode(targetNode) || !DeadCodeInjectionTransformer_1.isValidBlockStatementNode(targetNode)) {
                 return;
             }
-            var clonedBlockStatementNode = NodeUtils_1.NodeUtils.clone(targetNode);
-            estraverse.replace(clonedBlockStatementNode, {
-                enter: function enter(node, parentNode) {
-                    if (Node_1.Node.isIdentifierNode(node)) {
-                        node.name = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6);
-                    }
-                    return node;
-                }
-            });
-            collectedBlockStatements.push(clonedBlockStatementNode);
+            collectedBlockStatements.push(NodeUtils_1.NodeUtils.clone(targetNode));
         }
     }, {
         key: "replaceBlockStatementNodes",

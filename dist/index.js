@@ -180,7 +180,7 @@ var NodeUtils = function () {
         }
     }, {
         key: "clone",
-        value: function clone(node) {
+        value: function clone(astTree) {
             var cloneRecursive = function cloneRecursive(node) {
                 var copy = {};
                 Object.keys(node).filter(function (property) {
@@ -201,7 +201,7 @@ var NodeUtils = function () {
                 });
                 return copy;
             };
-            return NodeUtils.parentize(cloneRecursive(node));
+            return NodeUtils.parentize(cloneRecursive(astTree));
         }
     }, {
         key: "convertCodeToStructure",
@@ -5360,11 +5360,11 @@ var DeadCodeInjectionTransformer = DeadCodeInjectionTransformer_1 = function (_A
         }
     }], [{
         key: "collectBlockStatementNodes",
-        value: function collectBlockStatementNodes(node, collectedBlockStatements) {
-            if (!Node_1.Node.isBlockStatementNode(node) || !DeadCodeInjectionTransformer_1.isValidBlockStatementNode(node)) {
+        value: function collectBlockStatementNodes(targetNode, collectedBlockStatements) {
+            if (!Node_1.Node.isBlockStatementNode(targetNode) || !DeadCodeInjectionTransformer_1.isValidBlockStatementNode(targetNode)) {
                 return;
             }
-            var clonedBlockStatementNode = NodeUtils_1.NodeUtils.clone(node);
+            var clonedBlockStatementNode = NodeUtils_1.NodeUtils.clone(targetNode);
             estraverse.replace(clonedBlockStatementNode, {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isIdentifierNode(node)) {

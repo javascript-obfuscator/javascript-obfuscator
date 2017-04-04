@@ -41,11 +41,11 @@ export class NodeUtils {
     }
 
     /**
-     * @param node
+     * @param astTree
      * @return {ESTree.Node}
      */
-    public static clone (node: ESTree.Node): ESTree.Node {
-        const cloneRecursive: (node: ESTree.Node) => ESTree.Node = (node) => {
+    public static clone (astTree: ESTree.Node): ESTree.Node {
+        const cloneRecursive: (node: ESTree.Node) => ESTree.Node = (node: ESTree.Node) => {
             const copy: {[key: string]: any} = {};
 
             Object
@@ -72,7 +72,7 @@ export class NodeUtils {
             return <ESTree.Node>copy;
         };
 
-        return NodeUtils.parentize(cloneRecursive(node));
+        return NodeUtils.parentize(cloneRecursive(astTree));
     };
 
     /**

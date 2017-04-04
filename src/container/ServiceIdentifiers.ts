@@ -3,7 +3,6 @@ export const ServiceIdentifiers: any = {
     Factory__IControlFlowReplacer: Symbol('Factory<IControlFlowReplacer>'),
     Factory__ICustomNode: Symbol('Factory<ICustomNode>'),
     Factory__ICustomNodeGroup: Symbol('Factory<ICustomNodeGroup>'),
-    Factory__IDeadCodeInjectionReplacer: Symbol('Factory<IDeadCodeInjectionReplacer>'),
     Factory__INodeTransformer: Symbol('Factory<INodeTransformer[]>'),
     Factory__IObfuscationResult: Symbol('Factory<IObfuscationResult>'),
     Factory__IObfuscationReplacer: Symbol('Factory<IObfuscationReplacer>'),

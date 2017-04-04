@@ -4,42 +4,134 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TDeadCodeInjectionReplacerFactory } from '../../types/container/TDeadCodeInjectionReplacerFactory';
-
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IVisitor } from '../../interfaces/IVisitor';
 
-import { DeadCodeInjectionReplacers } from '../../enums/container/DeadCodeInjectionReplacers';
-
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
+import { Nodes } from '../../node/Nodes';
+import { NodeUtils } from '../../node/NodeUtils';
 import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     /**
-     * @type {DeadCodeInjectionReplacers[]}
+     * @type {ESTree.BlockStatement[]}
      */
-    private static readonly deadCodeInjectionReplacersList: DeadCodeInjectionReplacers[] = [
-        DeadCodeInjectionReplacers.IfStatementDeadCodeInjectionReplacer
-    ];
+    private collectedBlockStatements: ESTree.BlockStatement[] = [];
 
     /**
-     * @type {TDeadCodeInjectionReplacerFactory}
-     */
-    private deadCodeInjectionReplacerFactory: TDeadCodeInjectionReplacerFactory;
-
-    /**
-     * @param deadCodeInjectionReplacerFactory
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__IDeadCodeInjectionReplacer) deadCodeInjectionReplacerFactory: TDeadCodeInjectionReplacerFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+    }
 
-        this.deadCodeInjectionReplacerFactory = deadCodeInjectionReplacerFactory;
+    /**
+     * @param node
+     * @param collectedBlockStatements
+     */
+    private static collectBlockStatementNodes (node: ESTree.Node, collectedBlockStatements: ESTree.BlockStatement[]): void {
+        if (!Node.isBlockStatementNode(node) || !DeadCodeInjectionTransformer.isValidBlockStatementNode(node)) {
+            return;
+        }
+
+        const clonedBlockStatementNode: ESTree.BlockStatement = <ESTree.BlockStatement>NodeUtils.clone(node);
+
+        estraverse.replace(clonedBlockStatementNode, {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+                if (Node.isIdentifierNode(node)) {
+                    node.name = RandomGeneratorUtils.getRandomVariableName(6);
+                }
+
+                return node;
+            }
+        });
+
+        collectedBlockStatements.push(clonedBlockStatementNode);
+    }
+
+    /**
+     * @param blockStatementNode
+     * @param randomBlockStatementNode
+     * @return {ESTree.BlockStatement}
+     */
+    private static replaceBlockStatementNodes (
+        blockStatementNode: ESTree.BlockStatement,
+        randomBlockStatementNode: ESTree.BlockStatement
+    ): ESTree.BlockStatement {
+        const leftString: string = RandomGeneratorUtils.getRandomString(3);
+
+        let operator: ESTree.BinaryOperator,
+            rightString: string,
+            consequent: ESTree.BlockStatement,
+            alternate: ESTree.BlockStatement;
+
+        if (RandomGeneratorUtils.getMathRandom() > 0.5) {
+            operator = '===';
+
+            if (RandomGeneratorUtils.getMathRandom() > 0.5) {
+                rightString = leftString;
+                consequent = blockStatementNode;
+                alternate = randomBlockStatementNode;
+            } else {
+                rightString = RandomGeneratorUtils.getRandomString(3);
+                consequent = randomBlockStatementNode;
+                alternate = blockStatementNode;
+            }
+        } else {
+            operator = '!==';
+
+            if (RandomGeneratorUtils.getMathRandom() > 0.5) {
+                rightString = leftString;
+                consequent = randomBlockStatementNode;
+                alternate = blockStatementNode;
+            } else {
+                rightString = RandomGeneratorUtils.getRandomString(3);
+                consequent = blockStatementNode;
+                alternate = randomBlockStatementNode;
+            }
+        }
+
+        let newBlockStatementNode: ESTree.BlockStatement = Nodes.getBlockStatementNode([
+            Nodes.getIfStatementNode(
+                Nodes.getBinaryExpressionNode(
+                    operator,
+                    Nodes.getLiteralNode(leftString),
+                    Nodes.getLiteralNode(rightString)
+                ),
+                consequent,
+                alternate
+            )
+        ]);
+
+        newBlockStatementNode = NodeUtils.parentize(newBlockStatementNode);
+
+        return newBlockStatementNode;
+    }
+
+    /**
+     * @param blockStatementNode
+     * @return {boolean}
+     */
+    private static isValidBlockStatementNode (blockStatementNode: ESTree.BlockStatement): boolean {
+        let isValidBlockStatementNode: boolean = true;
+
+        estraverse.traverse(blockStatementNode, {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+                if (
+                    (node !== blockStatementNode && Node.isBlockStatementNode(node)) ||
+                    Node.isBreakStatementNode(node) ||
+                    Node.isContinueStatementNode(node)
+                ) {
+                    isValidBlockStatementNode = false;
+                }
+            }
+        });
+
+        return isValidBlockStatementNode;
     }
 
     /**
@@ -48,7 +140,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     public getVisitor (): IVisitor {
         return {
             leave: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (Node.isBlockStatementNode(node)) {
+                if (Node.isProgramNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -56,39 +148,43 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param blockStatementNode
+     * @param programNode
      * @param parentNode
      * @returns {ESTree.Node}
      */
-    public transformNode (blockStatementNode: ESTree.BlockStatement, parentNode: ESTree.Node): ESTree.Node {
-        if (
-            !this.options.deadCodeInjection ||
-            RandomGeneratorUtils.getMathRandom() > this.options.deadCodeInjectionThreshold
-        ) {
-            return blockStatementNode;
-        }
+    public transformNode (programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
+        this.transformProgramNode(programNode);
 
-        this.transformBlockStatementNode(blockStatementNode);
-
-        return blockStatementNode;
+        return programNode;
     }
 
     /**
-     * @param blockStatementNode
+     * @param programNode
      */
-    private transformBlockStatementNode (blockStatementNode: ESTree.BlockStatement): void {
-        estraverse.replace(blockStatementNode, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                let newNode: ESTree.Node = node;
+    private transformProgramNode (programNode: ESTree.Program): void {
+        estraverse.traverse(programNode, {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node): any =>
+                DeadCodeInjectionTransformer.collectBlockStatementNodes(node, this.collectedBlockStatements)
+        });
 
-                DeadCodeInjectionTransformer.deadCodeInjectionReplacersList.forEach((replacerName: DeadCodeInjectionReplacers) => {
-                    newNode = {
-                        ...this.deadCodeInjectionReplacerFactory(replacerName).replace(node, parentNode),
-                        parentNode
-                    };
-                });
+        estraverse.replace(programNode, {
+            leave: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+                if (!Node.isBlockStatementNode(node) || !this.collectedBlockStatements.length) {
+                    return node;
+                }
 
-                return newNode;
+                if (RandomGeneratorUtils.getMathRandom() > this.options.deadCodeInjectionThreshold) {
+                    return node;
+                }
+
+                const randomIndex: number = RandomGeneratorUtils.getRandomInteger(0, this.collectedBlockStatements.length - 1);
+                const randomBlockStatementNode: ESTree.BlockStatement = this.collectedBlockStatements.splice(randomIndex, 1)[0];
+
+                if (randomBlockStatementNode === node) {
+                    return node;
+                }
+
+                return DeadCodeInjectionTransformer.replaceBlockStatementNodes(node, randomBlockStatementNode);
             }
         });
     }

@@ -189,13 +189,19 @@ export class Nodes {
     /**
      * @param test
      * @param consequent
+     * @param alternate
      * @returns {ESTree.IfStatement}
      */
-    public static getIfStatementNode (test: ESTree.Expression, consequent: ESTree.BlockStatement): ESTree.IfStatement {
+    public static getIfStatementNode (
+        test: ESTree.Expression,
+        consequent: ESTree.BlockStatement,
+        alternate?: ESTree.BlockStatement
+    ): ESTree.IfStatement {
         return {
             type: NodeType.IfStatement,
             test,
             consequent,
+            ...alternate && {alternate},
             obfuscatedNode: false
         };
     }

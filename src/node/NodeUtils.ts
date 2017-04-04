@@ -41,6 +41,41 @@ export class NodeUtils {
     }
 
     /**
+     * @param node
+     * @return {ESTree.Node}
+     */
+    public static clone (node: ESTree.Node): ESTree.Node {
+        const cloneRecursive: (node: ESTree.Node) => ESTree.Node = (node) => {
+            const copy: {[key: string]: any} = {};
+
+            Object
+                .keys(node)
+                .filter((property: string) => property !== 'parentNode')
+                .forEach((property: string): void => {
+                    const value: any = (<{[key: string]: any}>node)[property];
+
+                    let clonedValue: any | null;
+
+                    if (value === null || value instanceof RegExp) {
+                        clonedValue = value;
+                    } else if (Array.isArray(value)) {
+                        clonedValue = value.map(cloneRecursive);
+                    } else if (typeof value === 'object') {
+                        clonedValue = cloneRecursive(value);
+                    } else {
+                        clonedValue = value;
+                    }
+
+                    copy[property] = clonedValue;
+                });
+
+            return <ESTree.Node>copy;
+        };
+
+        return NodeUtils.parentize(cloneRecursive(node));
+    };
+
+    /**
      * @param code
      * @returns {TStatement[]}
      */

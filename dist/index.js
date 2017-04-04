@@ -5341,12 +5341,12 @@ var DeadCodeInjectionTransformer = DeadCodeInjectionTransformer_1 = function (_A
                     return DeadCodeInjectionTransformer_1.collectBlockStatementNodes(node, _this3.collectedBlockStatements);
                 }
             });
+            if (this.collectedBlockStatements.length < 10) {
+                return;
+            }
             estraverse.replace(programNode, {
                 leave: function leave(node, parentNode) {
-                    if (!Node_1.Node.isBlockStatementNode(node) || !_this3.collectedBlockStatements.length) {
-                        return node;
-                    }
-                    if (RandomGeneratorUtils_1.RandomGeneratorUtils.getMathRandom() > _this3.options.deadCodeInjectionThreshold) {
+                    if (!Node_1.Node.isBlockStatementNode(node) || RandomGeneratorUtils_1.RandomGeneratorUtils.getMathRandom() > _this3.options.deadCodeInjectionThreshold) {
                         return node;
                     }
                     var randomIndex = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomInteger(0, _this3.collectedBlockStatements.length - 1);
@@ -5360,11 +5360,11 @@ var DeadCodeInjectionTransformer = DeadCodeInjectionTransformer_1 = function (_A
         }
     }], [{
         key: "collectBlockStatementNodes",
-        value: function collectBlockStatementNodes(node, collectedBlockStatements) {
-            if (!Node_1.Node.isBlockStatementNode(node) || !DeadCodeInjectionTransformer_1.isValidBlockStatementNode(node)) {
+        value: function collectBlockStatementNodes(targetNode, collectedBlockStatements) {
+            if (!Node_1.Node.isBlockStatementNode(targetNode) || !DeadCodeInjectionTransformer_1.isValidBlockStatementNode(targetNode)) {
                 return;
             }
-            var clonedBlockStatementNode = NodeUtils_1.NodeUtils.clone(node);
+            var clonedBlockStatementNode = NodeUtils_1.NodeUtils.clone(targetNode);
             estraverse.replace(clonedBlockStatementNode, {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isIdentifierNode(node)) {
@@ -5374,6 +5374,23 @@ var DeadCodeInjectionTransformer = DeadCodeInjectionTransformer_1 = function (_A
                 }
             });
             collectedBlockStatements.push(clonedBlockStatementNode);
+        }
+    }, {
+        key: "isValidBlockStatementNode",
+        value: function isValidBlockStatementNode(blockStatementNode) {
+            var blockStatementsCount = 0,
+                isValidBlockStatementNode = true;
+            estraverse.traverse(blockStatementNode, {
+                enter: function enter(node, parentNode) {
+                    if (blockStatementNode !== node && Node_1.Node.isBlockStatementNode(node)) {
+                        blockStatementsCount++;
+                    }
+                    if (blockStatementsCount > DeadCodeInjectionTransformer_1.maxNestedBlockStatementsCount || Node_1.Node.isBreakStatementNode(node) || Node_1.Node.isContinueStatementNode(node)) {
+                        isValidBlockStatementNode = false;
+                    }
+                }
+            });
+            return isValidBlockStatementNode;
         }
     }, {
         key: "replaceBlockStatementNodes",
@@ -5410,23 +5427,11 @@ var DeadCodeInjectionTransformer = DeadCodeInjectionTransformer_1 = function (_A
             newBlockStatementNode = NodeUtils_1.NodeUtils.parentize(newBlockStatementNode);
             return newBlockStatementNode;
         }
-    }, {
-        key: "isValidBlockStatementNode",
-        value: function isValidBlockStatementNode(blockStatementNode) {
-            var isValidBlockStatementNode = true;
-            estraverse.traverse(blockStatementNode, {
-                enter: function enter(node, parentNode) {
-                    if (node !== blockStatementNode && Node_1.Node.isBlockStatementNode(node) || Node_1.Node.isBreakStatementNode(node) || Node_1.Node.isContinueStatementNode(node)) {
-                        isValidBlockStatementNode = false;
-                    }
-                }
-            });
-            return isValidBlockStatementNode;
-        }
     }]);
 
     return DeadCodeInjectionTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
+DeadCodeInjectionTransformer.maxNestedBlockStatementsCount = 4;
 DeadCodeInjectionTransformer = DeadCodeInjectionTransformer_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object])], DeadCodeInjectionTransformer);
 exports.DeadCodeInjectionTransformer = DeadCodeInjectionTransformer;
 var DeadCodeInjectionTransformer_1;

@@ -16,6 +16,11 @@ import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 @injectable()
 export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     /**
+     * @type {number}
+     */
+    private static maxNestedBlockStatementsCount: number = 4;
+
+    /**
      * @type {ESTree.BlockStatement[]}
      */
     private collectedBlockStatements: ESTree.BlockStatement[] = [];
@@ -51,6 +56,33 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         });
 
         collectedBlockStatements.push(clonedBlockStatementNode);
+    }
+
+    /**
+     * @param blockStatementNode
+     * @return {boolean}
+     */
+    private static isValidBlockStatementNode (blockStatementNode: ESTree.BlockStatement): boolean {
+        let blockStatementsCount: number = 0,
+            isValidBlockStatementNode: boolean = true;
+
+        estraverse.traverse(blockStatementNode, {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+                if (blockStatementNode !== node && Node.isBlockStatementNode(node)) {
+                    blockStatementsCount++;
+                }
+
+                if (
+                    blockStatementsCount > DeadCodeInjectionTransformer.maxNestedBlockStatementsCount ||
+                    Node.isBreakStatementNode(node) ||
+                    Node.isContinueStatementNode(node)
+                ) {
+                    isValidBlockStatementNode = false;
+                }
+            }
+        });
+
+        return isValidBlockStatementNode;
     }
 
     /**
@@ -113,28 +145,6 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param blockStatementNode
-     * @return {boolean}
-     */
-    private static isValidBlockStatementNode (blockStatementNode: ESTree.BlockStatement): boolean {
-        let isValidBlockStatementNode: boolean = true;
-
-        estraverse.traverse(blockStatementNode, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (
-                    (node !== blockStatementNode && Node.isBlockStatementNode(node)) ||
-                    Node.isBreakStatementNode(node) ||
-                    Node.isContinueStatementNode(node)
-                ) {
-                    isValidBlockStatementNode = false;
-                }
-            }
-        });
-
-        return isValidBlockStatementNode;
-    }
-
-    /**
      * @return {IVisitor}
      */
     public getVisitor (): IVisitor {
@@ -167,13 +177,16 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                 DeadCodeInjectionTransformer.collectBlockStatementNodes(node, this.collectedBlockStatements)
         });
 
+        if (this.collectedBlockStatements.length < 10) {
+            return;
+        }
+
         estraverse.replace(programNode, {
             leave: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (!Node.isBlockStatementNode(node) || !this.collectedBlockStatements.length) {
-                    return node;
-                }
-
-                if (RandomGeneratorUtils.getMathRandom() > this.options.deadCodeInjectionThreshold) {
+                if (
+                    !Node.isBlockStatementNode(node) ||
+                    RandomGeneratorUtils.getMathRandom() > this.options.deadCodeInjectionThreshold
+                ) {
                     return node;
                 }
 

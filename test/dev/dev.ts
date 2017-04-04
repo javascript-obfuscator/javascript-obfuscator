@@ -14,22 +14,8 @@ import { NO_CUSTOM_NODES_PRESET } from '../../src/options/presets/NoCustomNodes'
                         console.log('efg');
                         console.log('hij');
                     };
-                    
-                    var bar = function () {
-                        console.log('klm');
-                        console.log('nop');
-                        console.log('qrs');
-                    };
-                
-                    var baz = function () {
-                        console.log('tuv');
-                        console.log('wxy');
-                        console.log('z');
-                    };
-                
+
                     foo();
-                    bar();
-                    baz();
                 }
             })();
         `,

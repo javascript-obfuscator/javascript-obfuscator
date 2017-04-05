@@ -94,37 +94,22 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         blockStatementNode: ESTree.BlockStatement,
         randomBlockStatementNode: ESTree.BlockStatement
     ): ESTree.BlockStatement {
-        const leftString: string = RandomGeneratorUtils.getRandomString(3);
+        const random1: boolean = RandomGeneratorUtils.getMathRandom() > 0.5;
+        const random2: boolean = RandomGeneratorUtils.getMathRandom() > 0.5;
 
-        let operator: ESTree.BinaryOperator,
-            rightString: string,
-            consequent: ESTree.BlockStatement,
+        const operator: ESTree.BinaryOperator = random1 ? '===' : '!==';
+        const leftString: string = RandomGeneratorUtils.getRandomString(3);
+        const rightString: string = random2 ? leftString : RandomGeneratorUtils.getRandomString(3);
+
+        let consequent: ESTree.BlockStatement,
             alternate: ESTree.BlockStatement;
 
-        if (RandomGeneratorUtils.getMathRandom() > 0.5) {
-            operator = '===';
-
-            if (RandomGeneratorUtils.getMathRandom() > 0.5) {
-                rightString = leftString;
-                consequent = blockStatementNode;
-                alternate = randomBlockStatementNode;
-            } else {
-                rightString = RandomGeneratorUtils.getRandomString(3);
-                consequent = randomBlockStatementNode;
-                alternate = blockStatementNode;
-            }
+        if ((random1 && random2) || (!random1 && !random2)) {
+            consequent = blockStatementNode;
+            alternate = randomBlockStatementNode;
         } else {
-            operator = '!==';
-
-            if (RandomGeneratorUtils.getMathRandom() > 0.5) {
-                rightString = leftString;
-                consequent = randomBlockStatementNode;
-                alternate = blockStatementNode;
-            } else {
-                rightString = RandomGeneratorUtils.getRandomString(3);
-                consequent = blockStatementNode;
-                alternate = randomBlockStatementNode;
-            }
+            consequent = randomBlockStatementNode;
+            alternate = blockStatementNode;
         }
 
         let newBlockStatementNode: ESTree.BlockStatement = Nodes.getBlockStatementNode([
@@ -178,7 +163,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         });
 
         if (this.collectedBlockStatements.length < 10) {
-            return;
+            //return;
         }
 
         estraverse.replace(programNode, {

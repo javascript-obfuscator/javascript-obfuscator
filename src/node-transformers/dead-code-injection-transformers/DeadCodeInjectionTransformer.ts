@@ -163,7 +163,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         });
 
         if (this.collectedBlockStatements.length < 10) {
-            //return;
+            return;
         }
 
         estraverse.replace(programNode, {

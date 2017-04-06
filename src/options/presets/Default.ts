@@ -7,7 +7,7 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     controlFlowFlattening: false,
     controlFlowFlatteningThreshold: 0.75,
     deadCodeInjection: false,
-    deadCodeInjectionThreshold: 0.75,
+    deadCodeInjectionThreshold: 0.4,
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: true,

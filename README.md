@@ -493,21 +493,21 @@ Performance will 30-35% slower than without obfuscation
 
 ```javascript
 {
-    compact: true,
-    controlFlowFlattening: true,
-    controlFlowFlatteningThreshold: 0.75,
-    deadCodeInjection: true,
-    deadCodeInjectionThreshold: 0.4,
-    debugProtection: false,
-    debugProtectionInterval: false,
-    disableConsoleOutput: true,
-    mangle: false,
-    rotateStringArray: true,
-    selfDefending: true,
-    stringArray: true,
-    stringArrayEncoding: 'base64',
-    stringArrayThreshold: 0.75,
-    unicodeEscapeSequence: false
+	compact: true,
+	controlFlowFlattening: true,
+	controlFlowFlatteningThreshold: 0.75,
+	deadCodeInjection: true,
+	deadCodeInjectionThreshold: 0.4,
+	debugProtection: false,
+	debugProtectionInterval: false,
+	disableConsoleOutput: true,
+	mangle: false,
+	rotateStringArray: true,
+	selfDefending: true,
+	stringArray: true,
+	stringArrayEncoding: 'base64',
+	stringArrayThreshold: 0.75,
+	unicodeEscapeSequence: false
 }
 ```
 
@@ -517,19 +517,19 @@ Performance will slightly slower than without obfuscation
 
 ```javascript
 {
-    compact: true,
-    controlFlowFlattening: false,
-    deadCodeInjection: false,
-    debugProtection: false,
-    debugProtectionInterval: false,
-    disableConsoleOutput: true,
-    mangle: true,
-    rotateStringArray: true,
-    selfDefending: true,
-    stringArray: true,
-    stringArrayEncoding: false,
-    stringArrayThreshold: 0.75,
-    unicodeEscapeSequence: false
+	compact: true,
+	controlFlowFlattening: false,
+	deadCodeInjection: false,
+	debugProtection: false,
+	debugProtectionInterval: false,
+	disableConsoleOutput: true,
+	mangle: true,
+	rotateStringArray: true,
+	selfDefending: true,
+	stringArray: true,
+	stringArrayEncoding: false,
+	stringArrayThreshold: 0.75,
+	unicodeEscapeSequence: false
 }
 ```
 

@@ -177,7 +177,7 @@ Following options are available for the JS Obfuscator:
     controlFlowFlattening: false,
     controlFlowFlatteningThreshold: 0.75,
     deadCodeInjection: false,
-    deadCodeInjectionThreshold: 0.75,
+    deadCodeInjectionThreshold: 0.4,
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: true,

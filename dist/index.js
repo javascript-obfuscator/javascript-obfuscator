@@ -441,6 +441,7 @@ exports.RandomGeneratorUtils = RandomGeneratorUtils;
 "use strict";
 
 
+var tslib_1 = __webpack_require__(1);
 function initializable() {
     var initializeMethodKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'initialize';
 
@@ -452,21 +453,21 @@ function initializable() {
         };
         var initializeMethod = target[initializeMethodKey];
         if (!initializeMethod || typeof initializeMethod !== 'function') {
-            throw new Error('`' + initializeMethodKey + '` method with initialization logic not found. `@' + decoratorName + '` decorator requires `' + initializeMethodKey + '` method');
+            throw new Error("`" + initializeMethodKey + "` method with initialization logic not found. `@" + decoratorName + "` decorator requires `" + initializeMethodKey + "` method");
         }
-        var metadataPropertyKey = '_' + propertyKey;
+        var metadataPropertyKey = "_" + propertyKey;
         var propertyDescriptor = Object.getOwnPropertyDescriptor(target, metadataPropertyKey) || descriptor;
         var methodDescriptor = Object.getOwnPropertyDescriptor(target, initializeMethodKey) || descriptor;
         var originalMethod = methodDescriptor.value;
-        Object.defineProperty(target, propertyKey, Object.assign({}, propertyDescriptor, { get: function get() {
+        Object.defineProperty(target, propertyKey, tslib_1.__assign({}, propertyDescriptor, { get: function get() {
                 if (this[metadataPropertyKey] === undefined) {
-                    throw new Error('Property `' + propertyKey + '` is not initialized! Initialize it first!');
+                    throw new Error("Property `" + propertyKey + "` is not initialized! Initialize it first!");
                 }
                 return this[metadataPropertyKey];
             }, set: function set(newVal) {
                 this[metadataPropertyKey] = newVal;
             } }));
-        Object.defineProperty(target, initializeMethodKey, Object.assign({}, methodDescriptor, { value: function value() {
+        Object.defineProperty(target, initializeMethodKey, tslib_1.__assign({}, methodDescriptor, { value: function value() {
                 originalMethod.apply(this, arguments);
                 if (this[propertyKey]) {}
             } }));
@@ -1306,7 +1307,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-__webpack_require__(132);
+__webpack_require__(133);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var InversifyContainerFacade_1 = __webpack_require__(45);
 var JavaScriptObfuscatorCLI_1 = __webpack_require__(44);
@@ -1541,6 +1542,7 @@ exports.NO_CUSTOM_NODES_PRESET = Object.freeze({
     debugProtectionInterval: false,
     disableConsoleOutput: false,
     domainLock: [],
+    mangle: false,
     reservedNames: [],
     rotateStringArray: false,
     seed: 0,
@@ -1957,6 +1959,7 @@ exports.DEFAULT_PRESET = Object.freeze({
     debugProtectionInterval: false,
     disableConsoleOutput: true,
     domainLock: [],
+    mangle: false,
     reservedNames: [],
     rotateStringArray: true,
     seed: 0,
@@ -2121,6 +2124,7 @@ var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var esprima = __webpack_require__(36);
 var escodegen = __webpack_require__(23);
+var esmangle = __webpack_require__(129);
 var JavaScriptObfuscatorInternal = JavaScriptObfuscatorInternal_1 = function () {
     function JavaScriptObfuscatorInternal(obfuscator, sourceMapCorrector, options) {
         _classCallCheck(this, JavaScriptObfuscatorInternal);
@@ -2146,10 +2150,12 @@ var JavaScriptObfuscatorInternal = JavaScriptObfuscatorInternal_1 = function () 
                 escodegenParams.sourceMap = 'sourceMap';
                 escodegenParams.sourceContent = sourceCode;
             }
-            escodegenParams.format = {
-                compact: this.options.compact
-            };
-            var generatorOutput = escodegen.generate(astTree, escodegenParams);
+            if (this.options.mangle) {
+                astTree = esmangle.mangle(astTree);
+            }
+            var generatorOutput = escodegen.generate(astTree, Object.assign({}, escodegenParams, { format: {
+                    compact: this.options.compact
+                } }));
             generatorOutput.map = generatorOutput.map ? generatorOutput.map.toString() : '';
             return generatorOutput;
         }
@@ -2267,7 +2273,8 @@ var Obfuscator = Obfuscator_1 = function () {
                 _this.obfuscationEventEmitter.once(customNodeGroup.getAppendEvent(), customNodeGroup.appendCustomNodes.bind(customNodeGroup));
             });
             this.obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation, astTree, stackTraceData);
-            astTree = this.transformAstTree(astTree, [].concat(_toConsumableArray(this.options.deadCodeInjection ? Obfuscator_1.deadCodeInjectionTransformersList : []), _toConsumableArray(this.options.controlFlowFlattening ? Obfuscator_1.controlFlowTransformersList : [])));
+            astTree = this.transformAstTree(astTree, [].concat(_toConsumableArray(this.options.deadCodeInjection ? Obfuscator_1.deadCodeInjectionTransformersList : [])));
+            astTree = this.transformAstTree(astTree, [].concat(_toConsumableArray(this.options.controlFlowFlattening ? Obfuscator_1.controlFlowTransformersList : [])));
             astTree = this.transformAstTree(astTree, [].concat(_toConsumableArray(Obfuscator_1.convertingTransformersList), _toConsumableArray(Obfuscator_1.obfuscatingTransformersList)));
             this.obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation, astTree, stackTraceData);
             return astTree;
@@ -2404,8 +2411,8 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var fs = __webpack_require__(130);
-var mkdirp = __webpack_require__(131);
+var fs = __webpack_require__(131);
+var mkdirp = __webpack_require__(132);
 var path = __webpack_require__(37);
 
 var CLIUtils = function () {
@@ -2546,7 +2553,7 @@ var JavaScriptObfuscatorCLI = function () {
         value: function configureCommands() {
             this.commands = new commander.Command().version(JavaScriptObfuscatorCLI.getBuildVersion(), '-v, --version').usage('<inputPath> [options]').option('-o, --output <path>', 'Output path for obfuscated code').option('--compact <boolean>', 'Disable one line output code compacting', JavaScriptObfuscatorCLI.parseBoolean).option('--controlFlowFlattening <boolean>', 'Enables control flow flattening', JavaScriptObfuscatorCLI.parseBoolean).option('--controlFlowFlatteningThreshold <number>', 'The probability that the control flow flattening transformation will be applied to the node', parseFloat).option('--deadCodeInjection <boolean>', 'Enables dead code injection', JavaScriptObfuscatorCLI.parseBoolean).option('--deadCodeInjectionThreshold <number>', 'The probability that the dead code injection transformation will be applied to the node', parseFloat).option('--debugProtection <boolean>', 'Disable browser Debug panel (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtectionInterval <boolean>', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--disableConsoleOutput <boolean>', 'Allow console.log, console.info, console.error and console.warn messages output into browser console', JavaScriptObfuscatorCLI.parseBoolean).option('--domainLock <list>', 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)', function (value) {
                 return value.split(',');
-            }).option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', function (value) {
+            }).option('--mangle <boolean>', 'Enables mangling of variable names', JavaScriptObfuscatorCLI.parseBoolean).option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', function (value) {
                 return value.split(',');
             }).option('--rotateStringArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean).option('--seed <number>', 'Sets seed for random generator. This is useful for creating repeatable results.', parseFloat).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMapBaseUrl <string>', 'Sets base url to the source map import url when `--sourceMapMode=separate`').option('--sourceMapFileName <string>', 'Sets file name for output source map when `--sourceMapMode=separate`').option('--sourceMapMode <string> [inline, separate]', 'Specify source map output mode', JavaScriptObfuscatorCLI.parseSourceMapMode).option('--stringArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean).option('--stringArrayEncoding <boolean|string> [true, false, base64, rc4]', 'Encodes all strings in strings array using base64 or rc4 (this option can slow down your code speed', JavaScriptObfuscatorCLI.parseStringArrayEncoding).option('--stringArrayThreshold <number>', 'The probability that the literal string will be inserted into stringArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).option('--unicodeEscapeSequence <boolean>', 'Allows to enable/disable string conversion to unicode escape sequence', JavaScriptObfuscatorCLI.parseBoolean).parse(this.rawArguments);
             this.commands.on('--help', function () {
@@ -4045,7 +4052,7 @@ var NodeCallsControllerFunctionNode = function (_AbstractCustomNode_) {
             if (this.appendEvent === ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation) {
                 return JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(format(SingleNodeCallControllerTemplate_1.SingleNodeCallControllerTemplate(), {
                     singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-                }), Object.assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
+                }), tslib_1.__assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
             }
             return format(SingleNodeCallControllerTemplate_1.SingleNodeCallControllerTemplate(), {
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
@@ -4259,7 +4266,7 @@ var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
                 decodeNodeTemplate: decodeNodeTemplate,
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
                 stringArrayName: this.stringArrayName
-            }), Object.assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
+            }), tslib_1.__assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
         }
     }, {
         key: "getDecodeStringArrayTemplate",
@@ -4440,7 +4447,7 @@ var StringArrayRotateFunctionNode = function (_AbstractCustomNode_) {
                 stringArrayName: this.stringArrayName,
                 stringArrayRotateValue: Utils_1.Utils.decToHex(this.stringArrayRotateValue),
                 whileFunctionName: whileFunctionName
-            }), Object.assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
+            }), tslib_1.__assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
         }
     }]);
 
@@ -4573,7 +4580,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
-var events_1 = __webpack_require__(129);
+var events_1 = __webpack_require__(130);
 inversify_1.decorate(inversify_1.injectable(), events_1.EventEmitter);
 var ObfuscationEventEmitter = function (_events_1$EventEmitte) {
     _inherits(ObfuscationEventEmitter, _events_1$EventEmitte);
@@ -5199,6 +5206,8 @@ var MethodDefinitionTransformer_1;
 "use strict";
 
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -5255,11 +5264,17 @@ var TemplateLiteralTransformer = TemplateLiteralTransformer_1 = function (_Abstr
                 nodes.unshift(Nodes_1.Nodes.getLiteralNode(''));
             }
             if (nodes.length > 1) {
-                var root = Nodes_1.Nodes.getBinaryExpressionNode('+', nodes.shift(), nodes.shift());
-                nodes.forEach(function (node) {
-                    root = Nodes_1.Nodes.getBinaryExpressionNode('+', root, node);
-                });
-                return root;
+                var _ret = function () {
+                    var root = Nodes_1.Nodes.getBinaryExpressionNode('+', nodes.shift(), nodes.shift());
+                    nodes.forEach(function (node) {
+                        root = Nodes_1.Nodes.getBinaryExpressionNode('+', root, node);
+                    });
+                    return {
+                        v: root
+                    };
+                }();
+
+                if ((typeof _ret === "undefined" ? "undefined" : _typeof(_ret)) === "object") return _ret.v;
             }
             return nodes[0];
         }
@@ -5338,14 +5353,20 @@ var DeadCodeInjectionTransformer = DeadCodeInjectionTransformer_1 = function (_A
 
             estraverse.traverse(programNode, {
                 enter: function enter(node, parentNode) {
-                    return DeadCodeInjectionTransformer_1.collectBlockStatementNodes(node, _this3.collectedBlockStatements);
+                    if (!Node_1.Node.isBlockStatementNode(node)) {
+                        return;
+                    }
+                    DeadCodeInjectionTransformer_1.collectBlockStatementNodes(node, _this3.collectedBlockStatements);
                 }
             });
-            if (this.collectedBlockStatements.length < 10) {
+            if (this.collectedBlockStatements.length < DeadCodeInjectionTransformer_1.minCollectedBlockStatementsCount) {
                 return;
             }
             estraverse.replace(programNode, {
                 leave: function leave(node, parentNode) {
+                    if (!_this3.collectedBlockStatements.length) {
+                        return estraverse.VisitorOption.Break;
+                    }
                     if (!Node_1.Node.isBlockStatementNode(node) || RandomGeneratorUtils_1.RandomGeneratorUtils.getMathRandom() > _this3.options.deadCodeInjectionThreshold) {
                         return node;
                     }
@@ -5354,47 +5375,39 @@ var DeadCodeInjectionTransformer = DeadCodeInjectionTransformer_1 = function (_A
                     if (randomBlockStatementNode === node) {
                         return node;
                     }
-                    return DeadCodeInjectionTransformer_1.replaceBlockStatementNodes(node, randomBlockStatementNode);
+                    return DeadCodeInjectionTransformer_1.replaceBlockStatementNode(node, randomBlockStatementNode);
                 }
             });
         }
     }], [{
         key: "collectBlockStatementNodes",
-        value: function collectBlockStatementNodes(targetNode, collectedBlockStatements) {
-            if (!Node_1.Node.isBlockStatementNode(targetNode) || !DeadCodeInjectionTransformer_1.isValidBlockStatementNode(targetNode)) {
-                return;
-            }
-            var clonedBlockStatementNode = NodeUtils_1.NodeUtils.clone(targetNode);
+        value: function collectBlockStatementNodes(blockStatementNode, collectedBlockStatements) {
+            var clonedBlockStatementNode = NodeUtils_1.NodeUtils.clone(blockStatementNode);
+            var nestedBlockStatementsCount = 0,
+                isValidBlockStatementNode = true;
             estraverse.replace(clonedBlockStatementNode, {
                 enter: function enter(node, parentNode) {
-                    if (Node_1.Node.isIdentifierNode(node)) {
+                    if (Node_1.Node.isBlockStatementNode(node)) {
+                        nestedBlockStatementsCount++;
+                    }
+                    if (nestedBlockStatementsCount > DeadCodeInjectionTransformer_1.maxNestedBlockStatementsCount || Node_1.Node.isBreakStatementNode(node) || Node_1.Node.isContinueStatementNode(node)) {
+                        isValidBlockStatementNode = false;
+                        return estraverse.VisitorOption.Break;
+                    }
+                    if (Node_1.Node.isIdentifierNode(node) && !Node_1.Node.isMemberExpressionNode(parentNode)) {
                         node.name = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6);
                     }
                     return node;
                 }
             });
+            if (!isValidBlockStatementNode) {
+                return;
+            }
             collectedBlockStatements.push(clonedBlockStatementNode);
         }
     }, {
-        key: "isValidBlockStatementNode",
-        value: function isValidBlockStatementNode(blockStatementNode) {
-            var blockStatementsCount = 0,
-                isValidBlockStatementNode = true;
-            estraverse.traverse(blockStatementNode, {
-                enter: function enter(node, parentNode) {
-                    if (blockStatementNode !== node && Node_1.Node.isBlockStatementNode(node)) {
-                        blockStatementsCount++;
-                    }
-                    if (blockStatementsCount > DeadCodeInjectionTransformer_1.maxNestedBlockStatementsCount || Node_1.Node.isBreakStatementNode(node) || Node_1.Node.isContinueStatementNode(node)) {
-                        isValidBlockStatementNode = false;
-                    }
-                }
-            });
-            return isValidBlockStatementNode;
-        }
-    }, {
-        key: "replaceBlockStatementNodes",
-        value: function replaceBlockStatementNodes(blockStatementNode, randomBlockStatementNode) {
+        key: "replaceBlockStatementNode",
+        value: function replaceBlockStatementNode(blockStatementNode, randomBlockStatementNode) {
             var random1 = RandomGeneratorUtils_1.RandomGeneratorUtils.getMathRandom() > 0.5;
             var random2 = RandomGeneratorUtils_1.RandomGeneratorUtils.getMathRandom() > 0.5;
             var operator = random1 ? '===' : '!==';
@@ -5418,6 +5431,7 @@ var DeadCodeInjectionTransformer = DeadCodeInjectionTransformer_1 = function (_A
     return DeadCodeInjectionTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
 DeadCodeInjectionTransformer.maxNestedBlockStatementsCount = 4;
+DeadCodeInjectionTransformer.minCollectedBlockStatementsCount = 5;
 DeadCodeInjectionTransformer = DeadCodeInjectionTransformer_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object])], DeadCodeInjectionTransformer);
 exports.DeadCodeInjectionTransformer = DeadCodeInjectionTransformer;
 var DeadCodeInjectionTransformer_1;
@@ -6387,6 +6401,7 @@ tslib_1.__decorate([class_validator_1.IsBoolean(), tslib_1.__metadata("design:ty
 tslib_1.__decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
 }), tslib_1.__metadata("design:type", Array)], Options.prototype, "domainLock", void 0);
+tslib_1.__decorate([class_validator_1.IsBoolean(), tslib_1.__metadata("design:type", Boolean)], Options.prototype, "mangle", void 0);
 tslib_1.__decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
 }), tslib_1.__metadata("design:type", Array)], Options.prototype, "reservedNames", void 0);
@@ -6738,7 +6753,7 @@ var StackTraceAnalyzer = StackTraceAnalyzer_1 = function () {
                 if (!calleeData) {
                     return;
                 }
-                stackTraceData.push(Object.assign({}, calleeData, { stackTrace: _this2.analyzeRecursive(calleeData.callee.body) }));
+                stackTraceData.push(tslib_1.__assign({}, calleeData, { stackTrace: _this2.analyzeRecursive(calleeData.callee.body) }));
             });
         }
     }], [{
@@ -7500,22 +7515,28 @@ module.exports = require("commander");
 /* 129 */
 /***/ (function(module, exports) {
 
-module.exports = require("events");
+module.exports = require("esmangle");
 
 /***/ }),
 /* 130 */
 /***/ (function(module, exports) {
 
-module.exports = require("fs");
+module.exports = require("events");
 
 /***/ }),
 /* 131 */
 /***/ (function(module, exports) {
 
-module.exports = require("mkdirp");
+module.exports = require("fs");
 
 /***/ }),
 /* 132 */
+/***/ (function(module, exports) {
+
+module.exports = require("mkdirp");
+
+/***/ }),
+/* 133 */
 /***/ (function(module, exports) {
 
 module.exports = require("reflect-metadata");

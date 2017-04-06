@@ -100,6 +100,12 @@ export class Options implements IOptions {
     public readonly domainLock: string[];
 
     /**
+     * @type {boolean}
+     */
+    @IsBoolean()
+    public readonly mangle: boolean;
+
+    /**
      * @type {string[]}
      */
     @IsArray()

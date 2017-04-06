@@ -136,13 +136,17 @@ export class Obfuscator implements IObfuscator {
 
         this.obfuscationEventEmitter.emit(ObfuscationEvents.BeforeObfuscation, astTree, stackTraceData);
 
-        // first pass transformers: dead code injection and control flow flattening transformers
+        // first pass transformers: dead code injection transformer
         astTree = this.transformAstTree(astTree, [
-            ...this.options.deadCodeInjection ? Obfuscator.deadCodeInjectionTransformersList : [],
+            ...this.options.deadCodeInjection ? Obfuscator.deadCodeInjectionTransformersList : []
+        ]);
+
+        // second pass transformers: control flow flattening transformers
+        astTree = this.transformAstTree(astTree, [
             ...this.options.controlFlowFlattening ? Obfuscator.controlFlowTransformersList : []
         ]);
 
-        // second pass: nodes obfuscation
+        // third pass: converting and obfuscating transformers
         astTree = this.transformAstTree(astTree, [
             ...Obfuscator.convertingTransformersList,
             ...Obfuscator.obfuscatingTransformersList

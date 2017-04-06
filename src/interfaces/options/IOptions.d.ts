@@ -11,6 +11,7 @@ export interface IOptions {
     readonly debugProtectionInterval: boolean;
     readonly disableConsoleOutput: boolean;
     readonly domainLock: string[];
+    readonly mangle: boolean;
     readonly reservedNames: string[];
     readonly rotateStringArray: boolean;
     readonly seed: number;

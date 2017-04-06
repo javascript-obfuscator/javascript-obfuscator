@@ -1,12 +1,12 @@
 <!--
   Title: JavaScript Obfuscator
-  Description: JavaScript obfuscator for Node.js.
+  Description: A powerful obfuscator for JavaScript and Node.js.
   Author: sanex3339
   -->
 
 # JavaScript obfuscator for Node.js
 
-JavaScript obfuscator for Node.js is a free obfuscator with a wide number of features which provides protection for your source code.
+JavaScript obfuscator is a powerful free obfuscator for JavaScript and Node.js with a wide number of features which provides protection for your source code.
 
 * has no limits or restrictions
 * runs on your local machine - does not send data to a server;
@@ -181,6 +181,7 @@ Following options are available for the JS Obfuscator:
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: true,
+    mangle: false,
     reservedNames: [],
     rotateStringArray: true,
     seed: 0,
@@ -211,6 +212,7 @@ Following options are available for the JS Obfuscator:
     --debugProtection <boolean>
     --debugProtectionInterval <boolean>
     --disableConsoleOutput <boolean>
+    --mangle <boolean>
     --reservedNames <list> (comma separated)
     --rotateStringArray <boolean>
     --seed <number>
@@ -333,6 +335,11 @@ Locks the obfuscated source code so it only runs on specific domains and/or sub-
 
 ##### Multiple domains and sub-domains
 It's possible to lock your code to more than one domain or sub-domain. For instance, to lock it so the code only runs on **www.example.com** add `www.example.com`, to make it work on any sub-domain from example.com, use `.example.com`.
+
+### `mangle`
+Type: `boolean` Default: `false`
+
+Enables mangling of variable names.
 
 ### `reservedNames`
 Type: `string[]` Default: `[]`
@@ -470,6 +477,7 @@ Performance will 50-100% slower than without obfuscation
     debugProtection: true,
     debugProtectionInterval: true,
     disableConsoleOutput: true,
+	mangle: false,
     rotateStringArray: true,
     selfDefending: true,
     stringArray: true,
@@ -493,6 +501,7 @@ Performance will 30-35% slower than without obfuscation
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: true,
+    mangle: false,
     rotateStringArray: true,
     selfDefending: true,
     stringArray: true,
@@ -514,6 +523,7 @@ Performance will slightly slower than without obfuscation
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: true,
+    mangle: true,
     rotateStringArray: true,
     selfDefending: true,
     stringArray: true,

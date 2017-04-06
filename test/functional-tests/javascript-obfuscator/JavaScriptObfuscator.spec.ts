@@ -199,6 +199,17 @@ describe('JavaScriptObfuscator', () => {
             assert.notEqual(obfuscationResult3.getObfuscatedCode(), obfuscationResult4.getObfuscatedCode());
         });
 
+        it('should mangle obfuscated code', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/mangle.js');
+
+            const obfuscationResult1: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code, { mangle: true }
+            );
+            const mangleMatch: RegExp = /var *a *= *0x1/;
+
+            assert.match(obfuscationResult1.getObfuscatedCode(), mangleMatch);
+        });
+
         afterEach(() => {
             RandomGeneratorUtils.initializeRandomGenerator(0);
         });

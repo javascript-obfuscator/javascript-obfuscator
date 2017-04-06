@@ -195,6 +195,10 @@ export class JavaScriptObfuscatorCLI {
                 (value: string) => value.split(',')
             )
             .option(
+                '--mangle <boolean>', 'Enables mangling of variable names',
+                JavaScriptObfuscatorCLI.parseBoolean
+            )
+            .option(
                 '--reservedNames <list>',
                 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)',
                 (value: string) => value.split(',')

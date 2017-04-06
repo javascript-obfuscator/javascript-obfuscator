@@ -44,8 +44,8 @@ export class NodeUtils {
      * @param astTree
      * @return {ESTree.Node}
      */
-    public static clone (astTree: ESTree.Node): ESTree.Node {
-        const cloneRecursive: (node: ESTree.Node) => ESTree.Node = (node: ESTree.Node) => {
+    public static clone <T extends ESTree.Node> (astTree: T): T {
+        const cloneRecursive: (node: T) => T = (node: T) => {
             const copy: {[key: string]: any} = {};
 
             Object
@@ -69,7 +69,7 @@ export class NodeUtils {
                     copy[property] = clonedValue;
                 });
 
-            return <ESTree.Node>copy;
+            return <T>copy;
         };
 
         return NodeUtils.parentize(cloneRecursive(astTree));

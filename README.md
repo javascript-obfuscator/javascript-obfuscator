@@ -469,21 +469,21 @@ Performance will 50-100% slower than without obfuscation
 
 ```javascript
 {
-    compact: true,
-    controlFlowFlattening: true,
-    controlFlowFlatteningThreshold: 1,
-    deadCodeInjection: true,
+	compact: true,
+	controlFlowFlattening: true,
+	controlFlowFlatteningThreshold: 1,
+	deadCodeInjection: true,
 	deadCodeInjectionThreshold: 1,
-    debugProtection: true,
-    debugProtectionInterval: true,
-    disableConsoleOutput: true,
+	debugProtection: true,
+	debugProtectionInterval: true,
+	disableConsoleOutput: true,
 	mangle: false,
-    rotateStringArray: true,
-    selfDefending: true,
-    stringArray: true,
-    stringArrayEncoding: 'rc4',
-    stringArrayThreshold: 1,
-    unicodeEscapeSequence: false
+	rotateStringArray: true,
+	selfDefending: true,
+	stringArray: true,
+	stringArrayEncoding: 'rc4',
+	stringArrayThreshold: 1,
+	unicodeEscapeSequence: false
 }
 ```
 
@@ -497,7 +497,7 @@ Performance will 30-35% slower than without obfuscation
     controlFlowFlattening: true,
     controlFlowFlatteningThreshold: 0.75,
     deadCodeInjection: true,
-    deadCodeInjectionThreshold: 0.75,
+    deadCodeInjectionThreshold: 0.4,
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: true,

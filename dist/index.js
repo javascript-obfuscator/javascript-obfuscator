@@ -702,7 +702,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var JSFuck_1 = __webpack_require__(28);
+var JSFuck_1 = __webpack_require__(29);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 
 var Utils = function () {
@@ -1647,6 +1647,39 @@ var AbstractControlFlowReplacer_1;
 "use strict";
 
 
+var SourceMapMode_1 = __webpack_require__(20);
+exports.DEFAULT_PRESET = Object.freeze({
+    compact: true,
+    controlFlowFlattening: false,
+    controlFlowFlatteningThreshold: 0.75,
+    deadCodeInjection: false,
+    deadCodeInjectionThreshold: 0.4,
+    debugProtection: false,
+    debugProtectionInterval: false,
+    disableConsoleOutput: true,
+    domainLock: [],
+    mangle: false,
+    reservedNames: [],
+    rotateStringArray: true,
+    seed: 0,
+    selfDefending: false,
+    sourceMap: false,
+    sourceMapBaseUrl: '',
+    sourceMapFileName: '',
+    sourceMapMode: SourceMapMode_1.SourceMapMode.Separate,
+    stringArray: true,
+    stringArrayEncoding: false,
+    stringArrayThreshold: 0.75,
+    unicodeEscapeSequence: false
+});
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var tslib_1 = __webpack_require__(1);
@@ -1658,7 +1691,7 @@ AbstractCalleeDataExtractor = tslib_1.__decorate([inversify_1.injectable()], Abs
 exports.AbstractCalleeDataExtractor = AbstractCalleeDataExtractor;
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1758,7 +1791,7 @@ var CryptUtils = function () {
 exports.CryptUtils = CryptUtils;
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1822,7 +1855,7 @@ exports.JSFuck = {
 };
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1836,7 +1869,7 @@ var CalleeDataExtractors;
 })(CalleeDataExtractors = exports.CalleeDataExtractors || (exports.CalleeDataExtractors = {}));
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1851,7 +1884,7 @@ var ControlFlowReplacers;
 })(ControlFlowReplacers = exports.ControlFlowReplacers || (exports.ControlFlowReplacers = {}));
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1867,7 +1900,7 @@ var CustomNodeGroups;
 })(CustomNodeGroups = exports.CustomNodeGroups || (exports.CustomNodeGroups = {}));
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1891,7 +1924,7 @@ var NodeTransformers;
 })(NodeTransformers = exports.NodeTransformers || (exports.NodeTransformers = {}));
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1940,39 +1973,6 @@ var ExpressionWithOperatorControlFlowReplacer = function (_AbstractControlFlowR)
 }(AbstractControlFlowReplacer_1.AbstractControlFlowReplacer);
 ExpressionWithOperatorControlFlowReplacer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomNode)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], ExpressionWithOperatorControlFlowReplacer);
 exports.ExpressionWithOperatorControlFlowReplacer = ExpressionWithOperatorControlFlowReplacer;
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var SourceMapMode_1 = __webpack_require__(20);
-exports.DEFAULT_PRESET = Object.freeze({
-    compact: true,
-    controlFlowFlattening: false,
-    controlFlowFlatteningThreshold: 0.75,
-    deadCodeInjection: false,
-    deadCodeInjectionThreshold: 0.4,
-    debugProtection: false,
-    debugProtectionInterval: false,
-    disableConsoleOutput: true,
-    domainLock: [],
-    mangle: false,
-    reservedNames: [],
-    rotateStringArray: true,
-    seed: 0,
-    selfDefending: false,
-    sourceMap: false,
-    sourceMapBaseUrl: '',
-    sourceMapFileName: '',
-    sourceMapMode: SourceMapMode_1.SourceMapMode.Separate,
-    stringArray: true,
-    stringArrayEncoding: false,
-    stringArrayThreshold: 0.75,
-    unicodeEscapeSequence: false
-});
 
 /***/ }),
 /* 35 */
@@ -2242,7 +2242,7 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(11);
-var NodeTransformers_1 = __webpack_require__(32);
+var NodeTransformers_1 = __webpack_require__(33);
 var ObfuscationEvents_1 = __webpack_require__(15);
 var VisitorDirection_1 = __webpack_require__(76);
 var Node_1 = __webpack_require__(6);
@@ -2357,7 +2357,7 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var SourceMapMode_1 = __webpack_require__(20);
-var CryptUtils_1 = __webpack_require__(27);
+var CryptUtils_1 = __webpack_require__(28);
 var SourceMapCorrector = function () {
     function SourceMapCorrector(obfuscationResultFactory, options) {
         _classCallCheck(this, SourceMapCorrector);
@@ -2506,7 +2506,7 @@ var commander = __webpack_require__(128);
 var path = __webpack_require__(37);
 var SourceMapMode_1 = __webpack_require__(20);
 var StringArrayEncoding_1 = __webpack_require__(24);
-var Default_1 = __webpack_require__(34);
+var Default_1 = __webpack_require__(26);
 var CLIUtils_1 = __webpack_require__(43);
 var JavaScriptObfuscator_1 = __webpack_require__(17);
 
@@ -2719,7 +2719,7 @@ exports.InversifyContainerFacade = InversifyContainerFacade;
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var CustomNodes_1 = __webpack_require__(9);
-var CustomNodeGroups_1 = __webpack_require__(31);
+var CustomNodeGroups_1 = __webpack_require__(32);
 var ConsoleOutputCustomNodeGroup_1 = __webpack_require__(53);
 var DebugProtectionCustomNodeGroup_1 = __webpack_require__(66);
 var DomainLockCustomNodeGroup_1 = __webpack_require__(68);
@@ -2800,7 +2800,7 @@ exports.customNodesModule = new inversify_1.ContainerModule(function (bind) {
 
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var ControlFlowReplacers_1 = __webpack_require__(30);
+var ControlFlowReplacers_1 = __webpack_require__(31);
 var BinaryExpressionControlFlowReplacer_1 = __webpack_require__(80);
 var CallExpressionControlFlowReplacer_1 = __webpack_require__(81);
 var LogicalExpressionControlFlowReplacer_1 = __webpack_require__(82);
@@ -2832,7 +2832,7 @@ exports.controlFlowTransformersModule = new inversify_1.ContainerModule(function
 
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var NodeTransformers_1 = __webpack_require__(32);
+var NodeTransformers_1 = __webpack_require__(33);
 var FunctionControlFlowTransformer_1 = __webpack_require__(79);
 var BlockStatementControlFlowTransformer_1 = __webpack_require__(78);
 var DeadCodeInjectionTransformer_1 = __webpack_require__(87);
@@ -2914,7 +2914,7 @@ exports.obfuscatingTransformersModule = new inversify_1.ContainerModule(function
 
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var CalleeDataExtractors_1 = __webpack_require__(29);
+var CalleeDataExtractors_1 = __webpack_require__(30);
 var FunctionDeclarationCalleeDataExtractor_1 = __webpack_require__(103);
 var FunctionExpressionCalleeDataExtractor_1 = __webpack_require__(104);
 var ObjectExpressionCalleeDataExtractor_1 = __webpack_require__(105);
@@ -3875,7 +3875,7 @@ var format = __webpack_require__(13);
 var Initializable_1 = __webpack_require__(5);
 var DomainLockNodeTemplate_1 = __webpack_require__(117);
 var AbstractCustomNode_1 = __webpack_require__(7);
-var CryptUtils_1 = __webpack_require__(27);
+var CryptUtils_1 = __webpack_require__(28);
 var NodeUtils_1 = __webpack_require__(3);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 var DomainLockNode = function (_AbstractCustomNode_) {
@@ -4704,7 +4704,7 @@ var NodeType_1 = __webpack_require__(14);
 var AbstractNodeTransformer_1 = __webpack_require__(10);
 var Node_1 = __webpack_require__(6);
 var NodeAppender_1 = __webpack_require__(18);
-var ControlFlowReplacers_1 = __webpack_require__(30);
+var ControlFlowReplacers_1 = __webpack_require__(31);
 var NodeUtils_1 = __webpack_require__(3);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function (_AbstractNodeTransfor) {
@@ -4846,7 +4846,7 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var CustomNodes_1 = __webpack_require__(9);
-var ExpressionWithOperatorControlFlowReplacer_1 = __webpack_require__(33);
+var ExpressionWithOperatorControlFlowReplacer_1 = __webpack_require__(34);
 var BinaryExpressionControlFlowReplacer = BinaryExpressionControlFlowReplacer_1 = function (_ExpressionWithOperat) {
     _inherits(BinaryExpressionControlFlowReplacer, _ExpressionWithOperat);
 
@@ -4957,7 +4957,7 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var CustomNodes_1 = __webpack_require__(9);
-var ExpressionWithOperatorControlFlowReplacer_1 = __webpack_require__(33);
+var ExpressionWithOperatorControlFlowReplacer_1 = __webpack_require__(34);
 var Node_1 = __webpack_require__(6);
 var NodeUtils_1 = __webpack_require__(3);
 var LogicalExpressionControlFlowReplacer = LogicalExpressionControlFlowReplacer_1 = function (_ExpressionWithOperat) {
@@ -6108,7 +6108,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var JSFuck_1 = __webpack_require__(28);
+var JSFuck_1 = __webpack_require__(29);
 var AbstractReplacer_1 = __webpack_require__(21);
 var BooleanLiteralReplacer = function (_AbstractReplacer_1$A) {
     _inherits(BooleanLiteralReplacer, _AbstractReplacer_1$A);
@@ -6267,7 +6267,7 @@ var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var StringArrayEncoding_1 = __webpack_require__(24);
 var AbstractReplacer_1 = __webpack_require__(21);
-var CryptUtils_1 = __webpack_require__(27);
+var CryptUtils_1 = __webpack_require__(28);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 var Utils_1 = __webpack_require__(8);
 var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplacer_1$A) {
@@ -6372,7 +6372,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var class_validator_1 = __webpack_require__(127);
-var Default_1 = __webpack_require__(34);
+var Default_1 = __webpack_require__(26);
 var OptionsNormalizer_1 = __webpack_require__(100);
 var ValidationErrorsFormatter_1 = __webpack_require__(101);
 var Options = Options_1 = function Options(inputOptions) {
@@ -6436,6 +6436,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var Default_1 = __webpack_require__(26);
 var Utils_1 = __webpack_require__(8);
 
 var OptionsNormalizer = function () {
@@ -6619,7 +6620,7 @@ OptionsNormalizer.ENABLED_DEAD_CODE_INJECTION_OPTIONS = {
 };
 OptionsNormalizer.ENABLED_STRING_ARRAY_THRESHOLD_OPTIONS = {
     stringArray: true,
-    stringArrayThreshold: 0.75
+    stringArrayThreshold: Default_1.DEFAULT_PRESET.stringArrayThreshold
 };
 OptionsNormalizer.SELF_DEFENDING_OPTIONS = {
     compact: true,
@@ -6713,7 +6714,7 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(11);
-var CalleeDataExtractors_1 = __webpack_require__(29);
+var CalleeDataExtractors_1 = __webpack_require__(30);
 var Node_1 = __webpack_require__(6);
 var NodeUtils_1 = __webpack_require__(3);
 var StackTraceAnalyzer = StackTraceAnalyzer_1 = function () {
@@ -6818,7 +6819,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var estraverse = __webpack_require__(11);
-var AbstractCalleeDataExtractor_1 = __webpack_require__(26);
+var AbstractCalleeDataExtractor_1 = __webpack_require__(27);
 var Node_1 = __webpack_require__(6);
 var NodeUtils_1 = __webpack_require__(3);
 var FunctionDeclarationCalleeDataExtractor = function (_AbstractCalleeDataEx) {
@@ -6884,7 +6885,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var estraverse = __webpack_require__(11);
-var AbstractCalleeDataExtractor_1 = __webpack_require__(26);
+var AbstractCalleeDataExtractor_1 = __webpack_require__(27);
 var Node_1 = __webpack_require__(6);
 var NodeUtils_1 = __webpack_require__(3);
 var FunctionExpressionCalleeDataExtractor = function (_AbstractCalleeDataEx) {
@@ -6955,7 +6956,7 @@ var inversify_1 = __webpack_require__(0);
 var estraverse = __webpack_require__(11);
 var Node_1 = __webpack_require__(6);
 var NodeUtils_1 = __webpack_require__(3);
-var AbstractCalleeDataExtractor_1 = __webpack_require__(26);
+var AbstractCalleeDataExtractor_1 = __webpack_require__(27);
 var ObjectExpressionCalleeDataExtractor = function (_AbstractCalleeDataEx) {
     _inherits(ObjectExpressionCalleeDataExtractor, _AbstractCalleeDataEx);
 
@@ -7213,7 +7214,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var CustomNodeGroups_1 = __webpack_require__(31);
+var CustomNodeGroups_1 = __webpack_require__(32);
 var MapStorage_1 = __webpack_require__(35);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 var CustomNodeGroupStorage = CustomNodeGroupStorage_1 = function (_MapStorage_1$MapStor) {

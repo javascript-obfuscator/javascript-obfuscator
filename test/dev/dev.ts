@@ -20,15 +20,12 @@ import { NO_CUSTOM_NODES_PRESET } from '../../src/options/presets/NoCustomNodes'
                     var bark = function () {
                         console.log('jkl');
                     };
-                    var hawk = function () {
-                        console.log('mno');
-                    };
+                  
 
                     foo();
                     bar();
                     baz();
                     bark();
-                    hawk();
                 }
             })();
         `,

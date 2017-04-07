@@ -4,6 +4,8 @@ import { IOptions } from '../interfaces/options/IOptions';
 
 import { TOptionsNormalizerRule } from '../types/options/TOptionsNormalizerRule';
 
+import { DEFAULT_PRESET } from './presets/Default';
+
 import { Utils } from '../utils/Utils';
 
 export class OptionsNormalizer {
@@ -46,7 +48,7 @@ export class OptionsNormalizer {
      */
     private static readonly ENABLED_STRING_ARRAY_THRESHOLD_OPTIONS: TInputOptions = {
         stringArray: true,
-        stringArrayThreshold: 0.75
+        stringArrayThreshold: DEFAULT_PRESET.stringArrayThreshold
     };
 
     /**

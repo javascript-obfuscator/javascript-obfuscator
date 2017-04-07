@@ -6483,6 +6483,17 @@ var OptionsNormalizer = function () {
             return options;
         }
     }, {
+        key: "deadCodeInjectionRule",
+        value: function deadCodeInjectionRule(options) {
+            if (options.deadCodeInjection) {
+                options = Object.assign({}, options, OptionsNormalizer.ENABLED_DEAD_CODE_INJECTION_OPTIONS);
+                if (!options.stringArrayThreshold) {
+                    options = Object.assign({}, options, OptionsNormalizer.ENABLED_STRING_ARRAY_THRESHOLD_OPTIONS);
+                }
+            }
+            return options;
+        }
+    }, {
         key: "deadCodeInjectionThresholdRule",
         value: function deadCodeInjectionThresholdRule(options) {
             if (options.deadCodeInjectionThreshold === 0) {
@@ -6602,6 +6613,14 @@ OptionsNormalizer.DISABLED_STRING_ARRAY_OPTIONS = {
     stringArrayEncoding: false,
     stringArrayThreshold: 0
 };
+OptionsNormalizer.ENABLED_DEAD_CODE_INJECTION_OPTIONS = {
+    deadCodeInjection: true,
+    stringArray: true
+};
+OptionsNormalizer.ENABLED_STRING_ARRAY_THRESHOLD_OPTIONS = {
+    stringArray: true,
+    stringArrayThreshold: 0.75
+};
 OptionsNormalizer.SELF_DEFENDING_OPTIONS = {
     compact: true,
     selfDefending: true
@@ -6609,7 +6628,7 @@ OptionsNormalizer.SELF_DEFENDING_OPTIONS = {
 OptionsNormalizer.STRING_ARRAY_ENCODING_OPTIONS = {
     stringArrayEncoding: 'base64'
 };
-OptionsNormalizer.normalizerRules = [OptionsNormalizer.controlFlowFlatteningThresholdRule, OptionsNormalizer.deadCodeInjectionThresholdRule, OptionsNormalizer.domainLockRule, OptionsNormalizer.selfDefendingRule, OptionsNormalizer.sourceMapBaseUrlRule, OptionsNormalizer.sourceMapFileNameRule, OptionsNormalizer.stringArrayRule, OptionsNormalizer.stringArrayEncodingRule, OptionsNormalizer.stringArrayThresholdRule];
+OptionsNormalizer.normalizerRules = [OptionsNormalizer.controlFlowFlatteningThresholdRule, OptionsNormalizer.deadCodeInjectionRule, OptionsNormalizer.deadCodeInjectionThresholdRule, OptionsNormalizer.domainLockRule, OptionsNormalizer.selfDefendingRule, OptionsNormalizer.sourceMapBaseUrlRule, OptionsNormalizer.sourceMapFileNameRule, OptionsNormalizer.stringArrayRule, OptionsNormalizer.stringArrayEncodingRule, OptionsNormalizer.stringArrayThresholdRule];
 exports.OptionsNormalizer = OptionsNormalizer;
 
 /***/ }),

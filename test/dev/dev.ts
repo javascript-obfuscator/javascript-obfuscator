@@ -10,31 +10,32 @@ import { NO_CUSTOM_NODES_PRESET } from '../../src/options/presets/NoCustomNodes'
                 if (true) {
                     var foo = function () {
                         console.log('abc');
-                        console.log('cde');
-                        console.log('efg');
-                        console.log('hij');
                     };
                     var bar = function () {
-                        console.log('klm');
-                        console.log('nop');
-                        console.log('qrs');
+                        console.log('def');
                     };
                     var baz = function () {
-                        console.log('tuv');
-                        console.log('wxy');
-                        console.log('z');
+                        console.log('ghi');
+                    };
+                    var bark = function () {
+                        console.log('jkl');
+                    };
+                    var hawk = function () {
+                        console.log('mno');
                     };
 
                     foo();
                     bar();
                     baz();
+                    bark();
+                    hawk();
                 }
             })();
         `,
         {
             ...NO_CUSTOM_NODES_PRESET,
             compact: false,
-            stringArray: true,
+            stringArray: false,
             stringArrayThreshold: 1,
             deadCodeInjection: true,
             deadCodeInjectionThreshold: 1

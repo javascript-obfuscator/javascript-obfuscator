@@ -36,6 +36,22 @@ export class OptionsNormalizer {
     /**
      * @type {TInputOptions}
      */
+    private static readonly ENABLED_DEAD_CODE_INJECTION_OPTIONS: TInputOptions = {
+        deadCodeInjection: true,
+        stringArray: true
+    };
+
+    /**
+     * @type {TInputOptions}
+     */
+    private static readonly ENABLED_STRING_ARRAY_THRESHOLD_OPTIONS: TInputOptions = {
+        stringArray: true,
+        stringArrayThreshold: 0.75
+    };
+
+    /**
+     * @type {TInputOptions}
+     */
     private static readonly SELF_DEFENDING_OPTIONS: TInputOptions = {
         compact: true,
         selfDefending: true
@@ -53,6 +69,7 @@ export class OptionsNormalizer {
      */
     private static readonly normalizerRules: TOptionsNormalizerRule[] = [
         OptionsNormalizer.controlFlowFlatteningThresholdRule,
+        OptionsNormalizer.deadCodeInjectionRule,
         OptionsNormalizer.deadCodeInjectionThresholdRule,
         OptionsNormalizer.domainLockRule,
         OptionsNormalizer.selfDefendingRule,
@@ -89,6 +106,28 @@ export class OptionsNormalizer {
                 ...options,
                 ...OptionsNormalizer.DISABLED_CONTROL_FLOW_FLATTENING_OPTIONS
             };
+        }
+
+        return options;
+    }
+
+    /**
+     * @param options
+     * @returns {IOptions}
+     */
+    private static deadCodeInjectionRule (options: IOptions): IOptions {
+        if (options.deadCodeInjection) {
+            options = {
+                ...options,
+                ...OptionsNormalizer.ENABLED_DEAD_CODE_INJECTION_OPTIONS,
+            };
+
+            if (!options.stringArrayThreshold) {
+                options = {
+                    ...options,
+                    ...OptionsNormalizer.ENABLED_STRING_ARRAY_THRESHOLD_OPTIONS
+                };
+            }
         }
 
         return options;

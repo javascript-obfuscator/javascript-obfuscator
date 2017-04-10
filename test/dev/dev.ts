@@ -12,16 +12,16 @@ import { NO_CUSTOM_NODES_PRESET } from '../../src/options/presets/NoCustomNodes'
                     console.log('abc');
                 };
                 var bar = function () {
-                    alert('def');
+                    console.log('def');
                 };
                 var baz = function () {
-                    alert('ghi');
+                    console.log('ghi');
                 };
                 var bark = function () {
-                    alert('jkl');
+                    console.log('jkl');
                 };
                 var hawk = function () {
-                    alert('mno');
+                    console.log('mno');
                 };
             
                 foo();

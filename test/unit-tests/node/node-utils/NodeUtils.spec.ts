@@ -24,6 +24,63 @@ describe('NodeUtils', () => {
         });
     });
 
+    describe('clone <T extends ESTree.Node> (astTree: T): T', () => {
+        let ifStatementNode1: ESTree.IfStatement,
+            ifStatementNode2: ESTree.IfStatement,
+            ifStatementBlockStatementNode1: ESTree.BlockStatement,
+            ifStatementBlockStatementNode2: ESTree.BlockStatement,
+            expressionStatementNode1: ESTree.ExpressionStatement,
+            expressionStatementNode2: ESTree.ExpressionStatement,
+            expressionStatementNode3: ESTree.ExpressionStatement,
+            expressionStatementNode4: ESTree.ExpressionStatement,
+            programNode1: ESTree.Program,
+            programNode2: ESTree.Program;
+
+        beforeEach(() => {
+            // actual AST tree
+            expressionStatementNode1 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+            expressionStatementNode2 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+
+            ifStatementBlockStatementNode1 = Nodes.getBlockStatementNode([
+                expressionStatementNode1,
+                expressionStatementNode2
+            ]);
+
+            ifStatementNode1 = Nodes.getIfStatementNode(
+                Nodes.getLiteralNode(true),
+                ifStatementBlockStatementNode1
+            );
+
+            programNode1 = Nodes.getProgramNode([
+                ifStatementNode1
+            ]);
+
+            // expected AST tree
+            expressionStatementNode3 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+            expressionStatementNode4 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+
+            ifStatementBlockStatementNode2 = Nodes.getBlockStatementNode([
+                expressionStatementNode3,
+                expressionStatementNode4
+            ]);
+
+            ifStatementNode2 = Nodes.getIfStatementNode(
+                Nodes.getLiteralNode(true),
+                ifStatementBlockStatementNode2
+            );
+
+            programNode2 = Nodes.getProgramNode([
+                ifStatementNode2
+            ]);
+
+            programNode2 = NodeUtils.parentize(programNode2);
+        });
+
+        it('should clone given AST-tree', () => {
+            assert.deepEqual(NodeUtils.clone(programNode1), programNode2);
+        });
+    });
+
     describe('convertCodeToStructure (code: string): ESTree.Node[]', () => {
         let code: string,
             identifierNode: ESTree.Identifier,
@@ -309,7 +366,7 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('parentize (node: ESTree.Node): void', () => {
+    describe('parentize <T extends ESTree.Node> (astTree: T): T', () => {
         let ifStatementNode: ESTree.IfStatement,
             ifStatementBlockStatementNode: ESTree.BlockStatement,
             expressionStatementNode1: ESTree.ExpressionStatement,

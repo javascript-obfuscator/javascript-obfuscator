@@ -131,5 +131,84 @@ describe('DeadCodeInjectionTransformer', () => {
                 assert.equal(loopMatches.length, 2);
             });
         });
+
+        describe('variant #5 - chance of `IfStatement` variant', () => {
+            const samplesCount: number = 1000;
+            const delta: number = 0.1;
+            const expectedValue: number = 0.25;
+
+            const ifMatch: string = `if *\\(!!\\[\\]\\) *\\{`;
+            const functionMatch: string = `var *${variableMatch} *= *function *\\(\\) *\\{`;
+
+            const match1: string = `` +
+                `if *\\(${variableMatch}\\('${hexMatch}'\\) *=== *${variableMatch}\\('${hexMatch}'\\)\\) *\\{` +
+                    `console.*` +
+                `\\} *else *\\{` +
+                    `${variableMatch}.*` +
+                `\\}` +
+            ``;
+            const match2: string = `` +
+                `if *\\(${variableMatch}\\('${hexMatch}'\\) *!== *${variableMatch}\\('${hexMatch}'\\)\\) *\\{` +
+                    `console.*` +
+                `\\} *else *\\{` +
+                    `${variableMatch}.*` +
+                `\\}` +
+            ``;
+            const match3: string = `` +
+                `if *\\(${variableMatch}\\('${hexMatch}'\\) *=== *${variableMatch}\\('${hexMatch}'\\)\\) *\\{` +
+                    `${variableMatch}.*` +
+                `\\} *else *\\{` +
+                    `console.*` +
+                `\\}` +
+            ``;
+            const match4: string = `` +
+                `if *\\(${variableMatch}\\('${hexMatch}'\\) *!== *${variableMatch}\\('${hexMatch}'\\)\\) *\\{` +
+                    `${variableMatch}.*` +
+                `\\} *else *\\{` +
+                    `console.*` +
+                `\\}` +
+            ``;
+
+            const regExp1: RegExp = new RegExp(`${ifMatch}${functionMatch}${match1}`);
+            const regExp2: RegExp = new RegExp(`${ifMatch}${functionMatch}${match2}`);
+            const regExp3: RegExp = new RegExp(`${ifMatch}${functionMatch}${match3}`);
+            const regExp4: RegExp = new RegExp(`${ifMatch}${functionMatch}${match4}`);
+
+            let count1: number = 0;
+            let count2: number = 0;
+            let count3: number = 0;
+            let count4: number = 0;
+
+            for (let i = 0; i < samplesCount; i++) {
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    readFileAsString(__dirname + '/fixtures/if-statement-variants-distribution.js'),
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }
+                );
+                const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+
+                if (regExp1.test(obfuscatedCode)) {
+                    count1++;
+                } else if (regExp2.test(obfuscatedCode)) {
+                    count2++;
+                } else if (regExp3.test(obfuscatedCode)) {
+                    count3++;
+                } else if (regExp4.test(obfuscatedCode)) {
+                    count4++;
+                }
+            }
+
+            it('each of four `IfStatement` variant should have distribution close to `0.25`', () => {
+                assert.closeTo(count1 / samplesCount, expectedValue, delta);
+                assert.closeTo(count2 / samplesCount, expectedValue, delta);
+                assert.closeTo(count3 / samplesCount, expectedValue, delta);
+                assert.closeTo(count4 / samplesCount, expectedValue, delta);
+            });
+        });
     });
 });

@@ -6,35 +6,31 @@ import { NO_CUSTOM_NODES_PRESET } from '../../src/options/presets/NoCustomNodes'
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            (function(){
-    if (true) {
-        var foo = function () {
-            console.log('abc');
-        };
-        var bar = function () {
-            console.log('def');
-        };
-        var baz = function () {
-            console.log('ghi');
-        };
-        var bark = function () {
-            console.log('jkl');
-        };
-
-        for (var i = 0; i < 1; i++) {
-            continue;
-        }
-
-        for (var i = 0; i < 1; i++) {
-            break;
-        }
-
-        foo();
-        bar();
-        baz();
-        bark();
-    }
-})();
+        (function(){
+            if (true) {
+                var foo = function () {
+                    console.log('abc');
+                };
+                var bar = function () {
+                    alert('def');
+                };
+                var baz = function () {
+                    alert('ghi');
+                };
+                var bark = function () {
+                    alert('jkl');
+                };
+                var hawk = function () {
+                    alert('mno');
+                };
+            
+                foo();
+                bar();
+                baz();
+                bark();
+                hawk();
+            }
+        })();
         `,
         {
             ...NO_CUSTOM_NODES_PRESET,

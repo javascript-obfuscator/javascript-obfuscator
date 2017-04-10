@@ -37,17 +37,17 @@ export class Obfuscator implements IObfuscator {
     /**
      * @type {NodeTransformers[]}
      */
-    private static readonly deadCodeInjectionTransformersList: NodeTransformers[] = [
-        NodeTransformers.DeadCodeInjectionTransformer
+    private static readonly convertingTransformersList: NodeTransformers[] = [
+        NodeTransformers.MemberExpressionTransformer,
+        NodeTransformers.MethodDefinitionTransformer,
+        NodeTransformers.TemplateLiteralTransformer
     ];
 
     /**
      * @type {NodeTransformers[]}
      */
-    private static readonly convertingTransformersList: NodeTransformers[] = [
-        NodeTransformers.MemberExpressionTransformer,
-        NodeTransformers.MethodDefinitionTransformer,
-        NodeTransformers.TemplateLiteralTransformer
+    private static readonly deadCodeInjectionTransformersList: NodeTransformers[] = [
+        NodeTransformers.DeadCodeInjectionTransformer
     ];
 
     /**

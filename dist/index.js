@@ -2335,8 +2335,8 @@ var Obfuscator = Obfuscator_1 = function () {
     return Obfuscator;
 }();
 Obfuscator.controlFlowTransformersList = [NodeTransformers_1.NodeTransformers.BlockStatementControlFlowTransformer, NodeTransformers_1.NodeTransformers.FunctionControlFlowTransformer];
-Obfuscator.deadCodeInjectionTransformersList = [NodeTransformers_1.NodeTransformers.DeadCodeInjectionTransformer];
 Obfuscator.convertingTransformersList = [NodeTransformers_1.NodeTransformers.MemberExpressionTransformer, NodeTransformers_1.NodeTransformers.MethodDefinitionTransformer, NodeTransformers_1.NodeTransformers.TemplateLiteralTransformer];
+Obfuscator.deadCodeInjectionTransformersList = [NodeTransformers_1.NodeTransformers.DeadCodeInjectionTransformer];
 Obfuscator.obfuscatingTransformersList = [NodeTransformers_1.NodeTransformers.CatchClauseTransformer, NodeTransformers_1.NodeTransformers.FunctionDeclarationTransformer, NodeTransformers_1.NodeTransformers.FunctionTransformer, NodeTransformers_1.NodeTransformers.LabeledStatementTransformer, NodeTransformers_1.NodeTransformers.LiteralTransformer, NodeTransformers_1.NodeTransformers.ObjectExpressionTransformer, NodeTransformers_1.NodeTransformers.VariableDeclarationTransformer];
 Obfuscator = Obfuscator_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStackTraceAnalyzer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscationEventEmitter)), tslib_1.__param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.TCustomNodeGroupStorage)), tslib_1.__param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__INodeTransformer)), tslib_1.__param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object, Object, Object, Function, Object])], Obfuscator);
 exports.Obfuscator = Obfuscator;

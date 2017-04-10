@@ -13,10 +13,11 @@ describe('JavaScriptObfuscator runtime eval', () => {
         const obfuscationResult1: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             code,
             {
-                selfDefending: true,
+                controlFlowFlattening: true,
+                deadCodeInjection: true,
                 debugProtection: true,
-                stringArrayEncoding: 'rc4',
-                controlFlowFlattening: true
+                selfDefending: true,
+                stringArrayEncoding: 'rc4'
             }
         );
 

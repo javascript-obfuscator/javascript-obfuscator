@@ -306,6 +306,115 @@ This setting is especially useful for large code size because large amounts of c
 
 `controlFlowFlatteningThreshold: 0` equals to `controlFlowFlattening: false`.
 
+### `deadCodeInjection`
+Type: `boolean` Default: `false`
+
+##### :warning: Dramatically increases size of obfuscated code (up to 200%), use only if size of obfuscated code doesn't matter. Use [`deadCodeInjectionThreshold`](#deadcodeinjectionthreshold) to set percentage of nodes that will affected by dead code injection. 
+
+With this option random blocks of dead code will add to the obfuscated code. 
+
+Example:
+```ts
+// input
+(function(){
+    if (true) {
+        var foo = function () {
+            console.log('abc');
+            console.log('cde');
+            console.log('efg');
+            console.log('hij');
+        };
+        
+        var bar = function () {
+            console.log('klm');
+            console.log('nop');
+            console.log('qrs');
+        };
+    
+        var baz = function () {
+            console.log('tuv');
+            console.log('wxy');
+            console.log('z');
+        };
+    
+        foo();
+        bar();
+        baz();
+    }
+})();
+
+// output
+var _0x5024 = [
+    'zaU',
+    'log',
+    'tuv',
+    'wxy',
+    'abc',
+    'cde',
+    'efg',
+    'hij',
+    'QhG',
+    'TeI',
+    'klm',
+    'nop',
+    'qrs',
+    'bZd',
+    'HMx'
+];
+var _0x4502 = function (_0x1254b1, _0x583689) {
+    _0x1254b1 = _0x1254b1 - 0x0;
+    var _0x529b49 = _0x5024[_0x1254b1];
+    return _0x529b49;
+};
+(function () {
+    if (!![]) {
+        var _0x16c18d = function () {
+            if (_0x4502('0x0') !== _0x4502('0x0')) {
+                console[_0x4502('0x1')](_0x4502('0x2'));
+                console[_0x4502('0x1')](_0x4502('0x3'));
+                console[_0x4502('0x1')]('z');
+            } else {
+                console[_0x4502('0x1')](_0x4502('0x4'));
+                console[_0x4502('0x1')](_0x4502('0x5'));
+                console[_0x4502('0x1')](_0x4502('0x6'));
+                console[_0x4502('0x1')](_0x4502('0x7'));
+            }
+        };
+        var _0x1f7292 = function () {
+            if (_0x4502('0x8') === _0x4502('0x9')) {
+                console[_0x4502('0x1')](_0x4502('0xa'));
+                console[_0x4502('0x1')](_0x4502('0xb'));
+                console[_0x4502('0x1')](_0x4502('0xc'));
+            } else {
+                console[_0x4502('0x1')](_0x4502('0xa'));
+                console[_0x4502('0x1')](_0x4502('0xb'));
+                console[_0x4502('0x1')](_0x4502('0xc'));
+            }
+        };
+        var _0x33b212 = function () {
+            if (_0x4502('0xd') !== _0x4502('0xe')) {
+                console[_0x4502('0x1')](_0x4502('0x2'));
+                console[_0x4502('0x1')](_0x4502('0x3'));
+                console[_0x4502('0x1')]('z');
+            } else {
+                console[_0x4502('0x1')](_0x4502('0x4'));
+                console[_0x4502('0x1')](_0x4502('0x5'));
+                console[_0x4502('0x1')](_0x4502('0x6'));
+                console[_0x4502('0x1')](_0x4502('0x7'));
+            }
+        };
+        _0x16c18d();
+        _0x1f7292();
+        _0x33b212();
+    }
+}());
+```
+
+### `deadCodeInjectionThreshold`
+Type: `number` Default: `0.4`
+
+Allows to set percentage of nodes that will affected by `deadCodeInjection`.
+
 ### `debugProtection`
 Type: `boolean` Default: `false`
 

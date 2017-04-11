@@ -2,7 +2,7 @@ Change Log
 ===
 v0.10.0
 ---
-* **New option:** `deadCodeInjection`. With this option random blocks of code will add to the obfuscated code.
+* **New option:** `deadCodeInjection`. With this option random blocks of dead code will add to the obfuscated code.
 * **New option:** `deadCodeInjectionThreshold` allows to set percentage of nodes that will affected by `deadCodeInjection`.
 * **New option:** `mangle` enables mangling of variable names.
 * `escapeUnicodeSequence` option now disabled by default.

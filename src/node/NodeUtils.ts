@@ -73,7 +73,7 @@ export class NodeUtils {
         };
 
         return NodeUtils.parentize(cloneRecursive(astTree));
-    };
+    }
 
     /**
      * @param code

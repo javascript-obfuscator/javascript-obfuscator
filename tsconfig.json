@@ -1,19 +1,19 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
     "lib": [
       "es2017",
       "DOM"
     ],
-    "noEmitHelpers": true,
-    "importHelpers": true,
     "module": "commonjs",
-    "sourceMap": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
+    "noEmitHelpers": true,
+    "noImplicitThis": false,
+    "noUnusedLocals": true,
     "removeComments": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "noUnusedLocals": true
+    "sourceMap": true,
+    "strict": true,
+    "target": "ES6"
   }
 }

@@ -1703,6 +1703,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 var Utils_1 = __webpack_require__(8);
 
@@ -1751,7 +1752,7 @@ var CryptUtils = function () {
                 length: length,
                 pool: RandomGeneratorUtils_1.RandomGeneratorUtils.randomGeneratorPool
             });
-            var randomStringDiff = randomString.replace(new RegExp('[' + escapeRegExp(str) + ']', 'g'), '');
+            var randomStringDiff = randomString.replace(new RegExp("[" + escapeRegExp(str) + "]", 'g'), '');
             var randomStringDiffArray = randomStringDiff.split('');
             RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().shuffle(randomStringDiffArray);
             randomStringDiff = randomStringDiffArray.join('');
@@ -2357,6 +2358,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);

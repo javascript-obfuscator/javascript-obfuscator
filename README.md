@@ -309,7 +309,8 @@ This setting is especially useful for large code size because large amounts of c
 ### `deadCodeInjection`
 Type: `boolean` Default: `false`
 
-##### :warning: Dramatically increases size of obfuscated code (up to 200%), use only if size of obfuscated code doesn't matter. Use [`deadCodeInjectionThreshold`](#deadcodeinjectionthreshold) to set percentage of nodes that will affected by dead code injection. 
+##### :warning: Dramatically increases size of obfuscated code (up to 200%), use only if size of obfuscated code doesn't matter. Use [`deadCodeInjectionThreshold`](#deadcodeinjectionthreshold) to set percentage of nodes that will affected by dead code injection.
+##### :warning: This option forcibly enables `stringArray` option.
 
 With this option random blocks of dead code will add to the obfuscated code. 
 
@@ -411,7 +412,7 @@ var _0x4502 = function (_0x1254b1, _0x583689) {
 ```
 
 ### `deadCodeInjectionThreshold`
-Type: `number` Default: `0.4`
+Type: `number` Default: `0.4` Min: `0` Max: `1`
 
 Allows to set percentage of nodes that will affected by `deadCodeInjection`.
 

@@ -2,14 +2,14 @@ import * as commander from 'commander';
 import * as path from 'path';
 
 import { TInputOptions } from '../types/options/TInputOptions';
-import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 
 import { IObfuscationResult } from '../interfaces/IObfuscationResult';
 
-import { SourceMapMode } from '../enums/SourceMapMode';
-import { StringArrayEncoding } from '../enums/StringArrayEncoding';
-
 import { DEFAULT_PRESET } from '../options/presets/Default';
+
+import { BooleanSanitizer } from './sanitizers/BooleanSanitizer';
+import { SourceMapModeSanitizer } from './sanitizers/SourceMapModeSanitizer';
+import { StringArrayEncodingSanitizer } from './sanitizers/StringArrayEncodingSanitizer';
 
 import { CLIUtils } from './CLIUtils';
 import { JavaScriptObfuscator } from '../JavaScriptObfuscator';
@@ -53,51 +53,6 @@ export class JavaScriptObfuscatorCLI {
      */
     private static getBuildVersion (): string {
         return CLIUtils.getPackageConfig().version;
-    }
-
-    /**
-     * @param value
-     * @returns {boolean}
-     */
-    private static parseBoolean (value: string): boolean {
-        return value === 'true' || value === '1';
-    }
-
-    /**
-     * @param value
-     * @returns {string}
-     */
-    private static parseSourceMapMode (value: string): string {
-        const availableMode: boolean = Object
-            .keys(SourceMapMode)
-            .some((key: string): boolean => {
-                return SourceMapMode[key] === value;
-            });
-
-        if (!availableMode) {
-            throw new ReferenceError('Invalid value of `--sourceMapMode` option');
-        }
-
-        return value;
-    }
-
-    /**
-     * @param value
-     * @returns {TStringArrayEncoding}
-     */
-    private static parseStringArrayEncoding (value: string): TStringArrayEncoding {
-        switch (value) {
-            case 'true':
-            case '1':
-            case StringArrayEncoding.base64:
-                return true;
-
-            case StringArrayEncoding.rc4:
-                return StringArrayEncoding.rc4;
-
-            default:
-                return false;
-        }
     }
 
     public run (): void {
@@ -152,12 +107,12 @@ export class JavaScriptObfuscatorCLI {
             .option(
                 '--compact <boolean>',
                 'Disable one line output code compacting',
-                JavaScriptObfuscatorCLI.parseBoolean
+                BooleanSanitizer
             )
             .option(
                 '--controlFlowFlattening <boolean>',
                 'Enables control flow flattening',
-                JavaScriptObfuscatorCLI.parseBoolean
+                BooleanSanitizer
             )
             .option(
                 '--controlFlowFlatteningThreshold <number>',
@@ -167,7 +122,7 @@ export class JavaScriptObfuscatorCLI {
             .option(
                 '--deadCodeInjection <boolean>',
                 'Enables dead code injection',
-                JavaScriptObfuscatorCLI.parseBoolean
+                BooleanSanitizer
             )
             .option(
                 '--deadCodeInjectionThreshold <number>',
@@ -177,17 +132,17 @@ export class JavaScriptObfuscatorCLI {
             .option(
                 '--debugProtection <boolean>',
                 'Disable browser Debug panel (can cause DevTools enabled browser freeze)',
-                JavaScriptObfuscatorCLI.parseBoolean
+                BooleanSanitizer
             )
             .option(
                 '--debugProtectionInterval <boolean>',
                 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)',
-                JavaScriptObfuscatorCLI.parseBoolean
+                BooleanSanitizer
             )
             .option(
                 '--disableConsoleOutput <boolean>',
                 'Allow console.log, console.info, console.error and console.warn messages output into browser console',
-                JavaScriptObfuscatorCLI.parseBoolean
+                BooleanSanitizer
             )
             .option(
                 '--domainLock <list>',
@@ -196,7 +151,7 @@ export class JavaScriptObfuscatorCLI {
             )
             .option(
                 '--mangle <boolean>', 'Enables mangling of variable names',
-                JavaScriptObfuscatorCLI.parseBoolean
+                BooleanSanitizer
             )
             .option(
                 '--reservedNames <list>',
@@ -205,7 +160,7 @@ export class JavaScriptObfuscatorCLI {
             )
             .option(
                 '--rotateStringArray <boolean>', 'Disable rotation of unicode array values during obfuscation',
-                JavaScriptObfuscatorCLI.parseBoolean
+                BooleanSanitizer
             )
             .option(
                 '--seed <number>',
@@ -215,12 +170,12 @@ export class JavaScriptObfuscatorCLI {
             .option(
                 '--selfDefending <boolean>',
                 'Disables self-defending for obfuscated code',
-                JavaScriptObfuscatorCLI.parseBoolean
+                BooleanSanitizer
             )
             .option(
                 '--sourceMap <boolean>',
                 'Enables source map generation',
-                JavaScriptObfuscatorCLI.parseBoolean
+                BooleanSanitizer
             )
             .option(
                 '--sourceMapBaseUrl <string>',
@@ -233,17 +188,17 @@ export class JavaScriptObfuscatorCLI {
             .option(
                 '--sourceMapMode <string> [inline, separate]',
                 'Specify source map output mode',
-                JavaScriptObfuscatorCLI.parseSourceMapMode
+                SourceMapModeSanitizer
             )
             .option(
                 '--stringArray <boolean>',
                 'Disables gathering of all literal strings into an array and replacing every literal string with an array call',
-                JavaScriptObfuscatorCLI.parseBoolean
+                BooleanSanitizer
             )
             .option(
                 '--stringArrayEncoding <boolean|string> [true, false, base64, rc4]',
                 'Encodes all strings in strings array using base64 or rc4 (this option can slow down your code speed',
-                JavaScriptObfuscatorCLI.parseStringArrayEncoding
+                StringArrayEncodingSanitizer
             )
             .option(
                 '--stringArrayThreshold <number>',
@@ -253,7 +208,7 @@ export class JavaScriptObfuscatorCLI {
             .option(
                 '--unicodeEscapeSequence <boolean>',
                 'Allows to enable/disable string conversion to unicode escape sequence',
-                JavaScriptObfuscatorCLI.parseBoolean
+                BooleanSanitizer
             )
             .parse(this.rawArguments);
 

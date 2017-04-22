@@ -7,6 +7,7 @@ v0.10.0
 * **New option:** `mangle` enables mangling of variable names.
 * `escapeUnicodeSequence` option now disabled by default.
 * `controlFlowFlattening` now affects string literal nodes.
+* increased runtime performance with `rc4` `stringArrayEncoding`.
 
 v0.9.2
 ---

@@ -33,9 +33,9 @@ module.exports =
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -153,6 +153,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var escodegen = __webpack_require__(23);
 var esprima = __webpack_require__(36);
 var estraverse = __webpack_require__(11);
@@ -441,7 +442,6 @@ exports.RandomGeneratorUtils = RandomGeneratorUtils;
 "use strict";
 
 
-var tslib_1 = __webpack_require__(1);
 function initializable() {
     var initializeMethodKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'initialize';
 
@@ -453,21 +453,21 @@ function initializable() {
         };
         var initializeMethod = target[initializeMethodKey];
         if (!initializeMethod || typeof initializeMethod !== 'function') {
-            throw new Error("`" + initializeMethodKey + "` method with initialization logic not found. `@" + decoratorName + "` decorator requires `" + initializeMethodKey + "` method");
+            throw new Error('`' + initializeMethodKey + '` method with initialization logic not found. `@' + decoratorName + '` decorator requires `' + initializeMethodKey + '` method');
         }
-        var metadataPropertyKey = "_" + propertyKey;
+        var metadataPropertyKey = '_' + propertyKey;
         var propertyDescriptor = Object.getOwnPropertyDescriptor(target, metadataPropertyKey) || descriptor;
         var methodDescriptor = Object.getOwnPropertyDescriptor(target, initializeMethodKey) || descriptor;
         var originalMethod = methodDescriptor.value;
-        Object.defineProperty(target, propertyKey, tslib_1.__assign({}, propertyDescriptor, { get: function get() {
+        Object.defineProperty(target, propertyKey, Object.assign({}, propertyDescriptor, { get: function get() {
                 if (this[metadataPropertyKey] === undefined) {
-                    throw new Error("Property `" + propertyKey + "` is not initialized! Initialize it first!");
+                    throw new Error('Property `' + propertyKey + '` is not initialized! Initialize it first!');
                 }
                 return this[metadataPropertyKey];
             }, set: function set(newVal) {
                 this[metadataPropertyKey] = newVal;
             } }));
-        Object.defineProperty(target, initializeMethodKey, tslib_1.__assign({}, methodDescriptor, { value: function value() {
+        Object.defineProperty(target, initializeMethodKey, Object.assign({}, methodDescriptor, { value: function value() {
                 originalMethod.apply(this, arguments);
                 if (this[propertyKey]) {}
             } }));
@@ -1531,6 +1531,7 @@ exports.AbstractReplacer = AbstractReplacer;
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var SourceMapMode_1 = __webpack_require__(20);
 exports.NO_CUSTOM_NODES_PRESET = Object.freeze({
     compact: true,
@@ -1647,6 +1648,7 @@ var AbstractControlFlowReplacer_1;
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var SourceMapMode_1 = __webpack_require__(20);
 exports.DEFAULT_PRESET = Object.freeze({
     compact: true,
@@ -2120,6 +2122,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
@@ -2239,6 +2242,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
@@ -2354,6 +2358,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
@@ -2503,6 +2508,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var commander = __webpack_require__(138);
 var path = __webpack_require__(37);
 var SourceMapMode_1 = __webpack_require__(20);
@@ -4053,7 +4059,7 @@ var NodeCallsControllerFunctionNode = function (_AbstractCustomNode_) {
             if (this.appendEvent === ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation) {
                 return JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(format(SingleNodeCallControllerTemplate_1.SingleNodeCallControllerTemplate(), {
                     singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-                }), tslib_1.__assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
+                }), Object.assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
             }
             return format(SingleNodeCallControllerTemplate_1.SingleNodeCallControllerTemplate(), {
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
@@ -4267,7 +4273,7 @@ var StringArrayCallsWrapper = function (_AbstractCustomNode_) {
                 decodeNodeTemplate: decodeNodeTemplate,
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
                 stringArrayName: this.stringArrayName
-            }), tslib_1.__assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
+            }), Object.assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
         }
     }, {
         key: "getDecodeStringArrayTemplate",
@@ -4448,7 +4454,7 @@ var StringArrayRotateFunctionNode = function (_AbstractCustomNode_) {
                 stringArrayName: this.stringArrayName,
                 stringArrayRotateValue: Utils_1.Utils.decToHex(this.stringArrayRotateValue),
                 whileFunctionName: whileFunctionName
-            }), tslib_1.__assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
+            }), Object.assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
         }
     }]);
 
@@ -5207,8 +5213,6 @@ var MethodDefinitionTransformer_1;
 "use strict";
 
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -5265,17 +5269,11 @@ var TemplateLiteralTransformer = TemplateLiteralTransformer_1 = function (_Abstr
                 nodes.unshift(Nodes_1.Nodes.getLiteralNode(''));
             }
             if (nodes.length > 1) {
-                var _ret = function () {
-                    var root = Nodes_1.Nodes.getBinaryExpressionNode('+', nodes.shift(), nodes.shift());
-                    nodes.forEach(function (node) {
-                        root = Nodes_1.Nodes.getBinaryExpressionNode('+', root, node);
-                    });
-                    return {
-                        v: root
-                    };
-                }();
-
-                if ((typeof _ret === "undefined" ? "undefined" : _typeof(_ret)) === "object") return _ret.v;
+                var root = Nodes_1.Nodes.getBinaryExpressionNode('+', nodes.shift(), nodes.shift());
+                nodes.forEach(function (node) {
+                    root = Nodes_1.Nodes.getBinaryExpressionNode('+', root, node);
+                });
+                return root;
             }
             return nodes[0];
         }
@@ -5307,6 +5305,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
@@ -6370,6 +6369,7 @@ var StringLiteralReplacer_1;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var class_validator_1 = __webpack_require__(137);
@@ -6861,7 +6861,7 @@ var StackTraceAnalyzer = StackTraceAnalyzer_1 = function () {
                 if (!calleeData) {
                     return;
                 }
-                stackTraceData.push(tslib_1.__assign({}, calleeData, { stackTrace: _this2.analyzeRecursive(calleeData.callee.body) }));
+                stackTraceData.push(Object.assign({}, calleeData, { stackTrace: _this2.analyzeRecursive(calleeData.callee.body) }));
             });
         }
     }], [{
@@ -7535,8 +7535,9 @@ exports.SelfDefendingTemplate = SelfDefendingTemplate;
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 function StringArrayBase64DecodeNodeTemplate() {
-    return "      \n        if ({stringArrayCallsWrapperName}.initialized === undefined) {\n            {atobPolyfill}\n            \n            {stringArrayCallsWrapperName}.base64DecodeUnicode = function (str) {\n                var string = atob(str);\n                var newStringChars = [];\n                \n                for (var i = 0, length = string.length; i < length; i++) {\n                    newStringChars += '%' + ('00' + string.charCodeAt(i).toString(16)).slice(-2);\n                }\n                \n                return decodeURIComponent(newStringChars);\n            };\n            \n            {stringArrayCallsWrapperName}.data = {};\n            \n            {stringArrayCallsWrapperName}.initialized = true;\n        }\n                        \n        if ({stringArrayCallsWrapperName}.data[index] === undefined) {\n            {selfDefendingCode}\n            \n            value = {stringArrayCallsWrapperName}.base64DecodeUnicode(value);\n            {stringArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = {stringArrayCallsWrapperName}.data[index];\n        }  \n    ";
+    return "      \n        if ({stringArrayCallsWrapperName}.initialized === undefined) {\n            {atobPolyfill}\n            \n            {stringArrayCallsWrapperName}.base64DecodeUnicode = function (str) {\n                var string = atob(str);\n                var newStringChars = [];\n                \n                for (var i = 0, length = string.length; i < length; i++) {\n                    newStringChars += '%' + ('00' + string.charCodeAt(i).toString(16)).slice(-2);\n                }\n                \n                return decodeURIComponent(newStringChars);\n            };\n            \n            {stringArrayCallsWrapperName}.data = {};\n            \n            {stringArrayCallsWrapperName}.initialized = true;\n        }\n                  \n        var cachedValue = {stringArrayCallsWrapperName}.data[index];\n                        \n        if (cachedValue === undefined) {\n            {selfDefendingCode}\n            \n            value = {stringArrayCallsWrapperName}.base64DecodeUnicode(value);\n            {stringArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = cachedValue;\n        }  \n    ";
 }
 exports.StringArrayBase64DecodeNodeTemplate = StringArrayBase64DecodeNodeTemplate;
 
@@ -7559,8 +7560,9 @@ exports.StringArrayCallsWrapperTemplate = StringArrayCallsWrapperTemplate;
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 function StringArrayRc4DecodeNodeTemplate() {
-    return "\n        if ({stringArrayCallsWrapperName}.initialized === undefined) {\n            {atobPolyfill}\n            \n            {rc4Polyfill}\n            {stringArrayCallsWrapperName}.rc4 = rc4;\n            \n            {stringArrayCallsWrapperName}.data = {};\n            \n            {stringArrayCallsWrapperName}.initialized = true;\n        }\n        \n        index += key;\n\n        if ({stringArrayCallsWrapperName}.data[index] === undefined) {\n            if ({stringArrayCallsWrapperName}.once === undefined) {\n                {selfDefendingCode}\n                \n                {stringArrayCallsWrapperName}.once = true;\n            }\n            \n            value = {stringArrayCallsWrapperName}.rc4(value, key);\n            {stringArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = {stringArrayCallsWrapperName}.data[index];\n        }\n    ";
+    return "\n        if ({stringArrayCallsWrapperName}.initialized === undefined) {\n            {atobPolyfill}\n            \n            {rc4Polyfill}\n            {stringArrayCallsWrapperName}.rc4 = rc4;\n            \n            {stringArrayCallsWrapperName}.data = {};\n            \n            {stringArrayCallsWrapperName}.initialized = true;\n        }\n  \n        var cachedValue = {stringArrayCallsWrapperName}.data[index];\n\n        if (cachedValue === undefined) {\n            if ({stringArrayCallsWrapperName}.once === undefined) {\n                {selfDefendingCode}\n                \n                {stringArrayCallsWrapperName}.once = true;\n            }\n            \n            value = {stringArrayCallsWrapperName}.rc4(value, key);\n            {stringArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = cachedValue;\n        }\n    ";
 }
 exports.StringArrayRc4DecodeNodeTemplate = StringArrayRc4DecodeNodeTemplate;
 

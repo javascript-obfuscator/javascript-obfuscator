@@ -13,10 +13,10 @@ export function StringArrayRc4DecodeNodeTemplate (): string {
             
             {stringArrayCallsWrapperName}.initialized = true;
         }
-        
-        index += key;
+  
+        var cachedValue = {stringArrayCallsWrapperName}.data[index];
 
-        if ({stringArrayCallsWrapperName}.data[index] === undefined) {
+        if (cachedValue === undefined) {
             if ({stringArrayCallsWrapperName}.once === undefined) {
                 {selfDefendingCode}
                 
@@ -26,7 +26,7 @@ export function StringArrayRc4DecodeNodeTemplate (): string {
             value = {stringArrayCallsWrapperName}.rc4(value, key);
             {stringArrayCallsWrapperName}.data[index] = value;
         } else {
-            value = {stringArrayCallsWrapperName}.data[index];
+            value = cachedValue;
         }
     `;
 }

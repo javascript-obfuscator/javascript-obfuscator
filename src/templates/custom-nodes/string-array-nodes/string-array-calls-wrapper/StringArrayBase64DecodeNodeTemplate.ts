@@ -21,14 +21,16 @@ export function StringArrayBase64DecodeNodeTemplate (): string {
             
             {stringArrayCallsWrapperName}.initialized = true;
         }
+                  
+        var cachedValue = {stringArrayCallsWrapperName}.data[index];
                         
-        if ({stringArrayCallsWrapperName}.data[index] === undefined) {
+        if (cachedValue === undefined) {
             {selfDefendingCode}
             
             value = {stringArrayCallsWrapperName}.base64DecodeUnicode(value);
             {stringArrayCallsWrapperName}.data[index] = value;
         } else {
-            value = {stringArrayCallsWrapperName}.data[index];
+            value = cachedValue;
         }  
     `;
 }

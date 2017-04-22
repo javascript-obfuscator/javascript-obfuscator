@@ -1,5 +1,9 @@
 Change Log
 ===
+v0.9.4
+---
+* increased runtime performance with `rc4` `stringArrayEncoding`.
+
 v0.9.3
 ---
 * Switched from `escodegen` to `escodegen-wallaby`, fixed https://github.com/javascript-obfuscator/javascript-obfuscator/pull/50

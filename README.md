@@ -29,7 +29,7 @@ Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/
 *NOTE! the README on the master branch might not match that of the latest stable release!*
 
 ## :warning: Important
-#####Obfuscate only the code that belongs to you. 
+##### Obfuscate only the code that belongs to you. 
 
 It is not recommended to obfuscate vendor scripts and polyfills, since the obfuscated code is 15-80% slower (depends on options) and the files are significantly larger.
 

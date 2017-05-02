@@ -1,5 +1,13 @@
 Change Log
 ===
+v0.9.3
+---
+* Switched from `escodegen` to `escodegen-wallaby`, fixed https://github.com/javascript-obfuscator/javascript-obfuscator/pull/50
+
+v0.9.2
+---
+* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/pull/42
+
 v0.9.1
 ---
 * fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/37

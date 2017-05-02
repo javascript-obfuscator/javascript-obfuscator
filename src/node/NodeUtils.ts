@@ -1,4 +1,4 @@
-import * as escodegen from 'escodegen';
+import * as escodegen from 'escodegen-wallaby';
 import * as esprima from 'esprima';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';

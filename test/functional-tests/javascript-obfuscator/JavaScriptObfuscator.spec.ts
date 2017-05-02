@@ -194,6 +194,18 @@ describe('JavaScriptObfuscator', () => {
             assert.notEqual(obfuscationResult3.getObfuscatedCode(), obfuscationResult4.getObfuscatedCode());
         });
 
+        it('should keep new.target MetaProperty', () => {
+            assert.match(
+                JavaScriptObfuscator.obfuscate(
+                    readFileAsString(__dirname + '/fixtures/new-target.js'),
+                    {
+                        ...NO_CUSTOM_NODES_PRESET
+                    }
+                ).getObfuscatedCode(),
+                /new\.target *=== *Foo/
+            );
+        });
+
         afterEach(() => {
             RandomGeneratorUtils.initializeRandomGenerator(0);
         });

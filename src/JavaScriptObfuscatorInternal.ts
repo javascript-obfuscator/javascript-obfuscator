@@ -2,7 +2,7 @@ import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 
 import * as esprima from 'esprima';
-import * as escodegen from 'escodegen';
+import * as escodegen from 'escodegen-wallaby';
 import * as ESTree from 'estree';
 
 import { IGeneratorOutput } from './interfaces/IGeneratorOutput';

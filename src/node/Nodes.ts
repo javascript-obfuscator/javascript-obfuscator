@@ -1,4 +1,4 @@
-import * as escodegen from 'escodegen';
+import * as escodegen from 'escodegen-wallaby';
 import * as ESTree from 'estree';
 
 import { TStatement } from '../types/node/TStatement';

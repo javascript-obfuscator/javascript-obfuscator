@@ -1,7 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import * as escodegen from 'escodegen';
+import * as escodegen from 'escodegen-wallaby';
 import * as ESTree from 'estree';
 
 import { TObfuscationReplacerFactory } from '../../types/container/TObfuscationReplacerFactory';

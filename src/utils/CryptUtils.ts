@@ -16,7 +16,7 @@ export class CryptUtils {
         });
 
         for (
-            let block: number|undefined, charCode: number, idx: number = 0, map: string = chars;
+            let block: number | undefined, charCode: number, idx: number = 0, map: string = chars;
             string.charAt(idx | 0) || (map = '=', idx % 1);
             output += map.charAt(63 & block >> 8 - idx % 1 * 8)
         ) {
@@ -42,7 +42,7 @@ export class CryptUtils {
         const escapeRegExp: (s: string) => string = (s: string) =>
             s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 
-        const randomMerge: (s1: string, s2: string) => string = function (s1: string, s2: string): string {
+        const randomMerge: (s1: string, s2: string) => string = (s1: string, s2: string): string => {
             let i1: number = -1,
                 i2: number = -1,
                 result: string = '';
@@ -64,7 +64,7 @@ export class CryptUtils {
         });
 
         let randomStringDiff: string = randomString.replace(
-            new RegExp('[' + escapeRegExp(str) + ']', 'g'),
+            new RegExp(`[${escapeRegExp(str)}]`, 'g'),
             '');
 
         const randomStringDiffArray: string[] = randomStringDiff.split('');
@@ -73,7 +73,6 @@ export class CryptUtils {
         randomStringDiff = randomStringDiffArray.join('');
 
         return [randomMerge(str, randomStringDiff), randomStringDiff];
-
     }
 
     /**

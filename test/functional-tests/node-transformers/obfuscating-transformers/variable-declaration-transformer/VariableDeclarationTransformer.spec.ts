@@ -17,8 +17,8 @@ describe('VariableDeclarationTransformer', () => {
             }
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-f0-9]){4,6} *= *'\\x61\\x62\\x63';/);
-        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-f0-9]){4,6}\);/);
+        assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-f0-9]){4,6} *= *'abc';/);
+        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['log'\]\(_0x([a-f0-9]){4,6}\);/);
     });
 
     it('should not transform `variableDeclaration` node if parent block scope node is `Program` node', () => {
@@ -30,7 +30,7 @@ describe('VariableDeclarationTransformer', () => {
         );
 
         assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *0xa;/);
-        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(test\);/);
+        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['log'\]\(test\);/);
     });
 
     it('should transform variable call (`identifier` node) outside of block scope of node in which this variable was declared with `var` kind', () => {
@@ -41,7 +41,7 @@ describe('VariableDeclarationTransformer', () => {
             }
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-f0-9]){4,6}\);/);
+        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['log'\]\(_0x([a-f0-9]){4,6}\);/);
     });
 
     it('should not transform variable call (`identifier` node) outside of block scope of node in which this variable was declared with `let` kind', () => {
@@ -52,7 +52,7 @@ describe('VariableDeclarationTransformer', () => {
             }
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(test\);/);
+        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['log'\]\(test\);/);
     });
 
     describe(`variable calls before variable declaration`, () => {
@@ -68,11 +68,11 @@ describe('VariableDeclarationTransformer', () => {
         });
 
         it('should transform variable call (`identifier` node name) before variable declaration if this call is inside function body', () => {
-            assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-f0-9]){4,6}\['\\x69\\x74\\x65\\x6d'\]\);/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /console\['log'\]\(_0x([a-f0-9]){4,6}\['item'\]\);/);
         });
 
         it('should transform variable call (`identifier` node name) before variable declaration', () => {
-            assert.match(obfuscationResult.getObfuscatedCode(),  /console\['\\x6c\\x6f\\x67'\]\(_0x([a-f0-9]){4,6}\);/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /console\['log'\]\(_0x([a-f0-9]){4,6}\);/);
         });
     });
 
@@ -90,9 +90,9 @@ describe('VariableDeclarationTransformer', () => {
         const innerFunctionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
             .match(/function _0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\) *\{/);
         const constructorIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-            .match(/console\['\\x6c\\x6f\\x67'\]\((_0x[a-f0-9]{4,6})\)/);
+            .match(/console\['log'\]\((_0x[a-f0-9]{4,6})\)/);
         const objectIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-            .match(/return\{'\\x74':(_0x[a-f0-9]{4,6})\}/);
+            .match(/return\{'t':(_0x[a-f0-9]{4,6})\}/);
         const variableDeclarationIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
             .match(/var *(_0x[a-f0-9]{4,6});/);
 
@@ -135,9 +135,9 @@ describe('VariableDeclarationTransformer', () => {
         const innerFunctionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
             .match(/function _0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\) *\{/);
         const constructorIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-            .match(/console\['\\x6c\\x6f\\x67'\]\((_0x[a-f0-9]{4,6})\)/);
+            .match(/console\['log'\]\((_0x[a-f0-9]{4,6})\)/);
         const objectIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-            .match(/return\{'\\x74':(_0x[a-f0-9]{4,6})\}/);
+            .match(/return\{'t':(_0x[a-f0-9]{4,6})\}/);
         const variableDeclarationIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
             .match(/var *(_0x[a-f0-9]{4,6});/);
 
@@ -175,7 +175,7 @@ describe('VariableDeclarationTransformer', () => {
                 }
             );
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var _0x([a-f0-9]){4,6} *= *\{'\\x74\\x65\\x73\\x74/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /var _0x([a-f0-9]){4,6} *= *\{'test/);
         });
 
         it('shouldn\'t replace computed member expression identifier', () => {
@@ -186,7 +186,7 @@ describe('VariableDeclarationTransformer', () => {
                 }
             );
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /_0x([a-f0-9]){4,6}\['\\x74\\x65\\x73\\x74'\]/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /_0x([a-f0-9]){4,6}\['test'\]/);
         });
     });
 
@@ -200,8 +200,8 @@ describe('VariableDeclarationTransformer', () => {
         const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
 
         it('shouldn\'t transform object pattern variable declarator', () => {
-            const objectPatternVariableDeclaratorMatch: RegExp = /var *\{ *bar *\} *= *\{ *'\\x62\\x61\\x72' *: *'\\x66\\x6f\\x6f' *\};/;
-            const variableUsageMatch: RegExp = /console\['\\x6c\\x6f\\x67'\]\(bar\);/;
+            const objectPatternVariableDeclaratorMatch: RegExp = /var *\{ *bar *\} *= *\{ *'bar' *: *'foo' *\};/;
+            const variableUsageMatch: RegExp = /console\['log'\]\(bar\);/;
 
             assert.match(obfuscatedCode, objectPatternVariableDeclaratorMatch);
             assert.match(obfuscatedCode, variableUsageMatch);
@@ -218,7 +218,7 @@ describe('VariableDeclarationTransformer', () => {
         const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
 
         const objectPatternVariableDeclaratorMatch: RegExp = /var *\[ *(_0x([a-f0-9]){4,6}), *(_0x([a-f0-9]){4,6}) *\] *= *\[0x1, *0x2\];/;
-        const variableUsageMatch: RegExp = /console\['\\x6c\\x6f\\x67'\]\((_0x([a-f0-9]){4,6}), *(_0x([a-f0-9]){4,6})\);/;
+        const variableUsageMatch: RegExp = /console\['log'\]\((_0x([a-f0-9]){4,6}), *(_0x([a-f0-9]){4,6})\);/;
 
         const objectPatternIdentifierName1: string = obfuscatedCode.match(objectPatternVariableDeclaratorMatch)![1];
         const objectPatternIdentifierName2: string = obfuscatedCode.match(objectPatternVariableDeclaratorMatch)![2];

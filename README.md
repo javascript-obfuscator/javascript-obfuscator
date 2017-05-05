@@ -1,12 +1,12 @@
 <!--
   Title: JavaScript Obfuscator
-  Description: JavaScript obfuscator for Node.js.
+  Description: A powerful obfuscator for JavaScript and Node.js.
   Author: sanex3339
   -->
 
 # JavaScript obfuscator for Node.js
 
-JavaScript obfuscator for Node.js is a free obfuscator with a wide number of features which provides protection for your source code.
+JavaScript obfuscator is a powerful free obfuscator for JavaScript and Node.js with a wide number of features which provides protection for your source code.
 
 * has no limits or restrictions
 * runs on your local machine - does not send data to a server;
@@ -29,7 +29,7 @@ Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/
 *NOTE! the README on the master branch might not match that of the latest stable release!*
 
 ## :warning: Important
-#####Obfuscate only the code that belongs to you. 
+##### Obfuscate only the code that belongs to you. 
 
 It is not recommended to obfuscate vendor scripts and polyfills, since the obfuscated code is 15-80% slower (depends on options) and the files are significantly larger.
 
@@ -176,9 +176,12 @@ Following options are available for the JS Obfuscator:
     compact: true,
     controlFlowFlattening: false,
     controlFlowFlatteningThreshold: 0.75,
+    deadCodeInjection: false,
+    deadCodeInjectionThreshold: 0.4,
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: true,
+    mangle: false,
     reservedNames: [],
     rotateStringArray: true,
     seed: 0,
@@ -189,8 +192,8 @@ Following options are available for the JS Obfuscator:
     sourceMapMode: 'separate',
     stringArray: true,
     stringArrayEncoding: false,
-    stringArrayThreshold: 0.8,
-    unicodeEscapeSequence: true
+    stringArrayThreshold: 0.75,
+    unicodeEscapeSequence: false
 }
 ```
 
@@ -204,9 +207,12 @@ Following options are available for the JS Obfuscator:
     --compact <boolean>
     --controlFlowFlattening <boolean>
     --controlFlowFlatteningThreshold <number>
+    --deadCodeInjection <boolean>
+    --deadCodeInjectionThreshold <number>
     --debugProtection <boolean>
     --debugProtectionInterval <boolean>
     --disableConsoleOutput <boolean>
+    --mangle <boolean>
     --reservedNames <list> (comma separated)
     --rotateStringArray <boolean>
     --seed <number>
@@ -300,6 +306,116 @@ This setting is especially useful for large code size because large amounts of c
 
 `controlFlowFlatteningThreshold: 0` equals to `controlFlowFlattening: false`.
 
+### `deadCodeInjection`
+Type: `boolean` Default: `false`
+
+##### :warning: Dramatically increases size of obfuscated code (up to 200%), use only if size of obfuscated code doesn't matter. Use [`deadCodeInjectionThreshold`](#deadcodeinjectionthreshold) to set percentage of nodes that will affected by dead code injection.
+##### :warning: This option forcibly enables `stringArray` option.
+
+With this option random blocks of dead code will add to the obfuscated code. 
+
+Example:
+```ts
+// input
+(function(){
+    if (true) {
+        var foo = function () {
+            console.log('abc');
+            console.log('cde');
+            console.log('efg');
+            console.log('hij');
+        };
+        
+        var bar = function () {
+            console.log('klm');
+            console.log('nop');
+            console.log('qrs');
+        };
+    
+        var baz = function () {
+            console.log('tuv');
+            console.log('wxy');
+            console.log('z');
+        };
+    
+        foo();
+        bar();
+        baz();
+    }
+})();
+
+// output
+var _0x5024 = [
+    'zaU',
+    'log',
+    'tuv',
+    'wxy',
+    'abc',
+    'cde',
+    'efg',
+    'hij',
+    'QhG',
+    'TeI',
+    'klm',
+    'nop',
+    'qrs',
+    'bZd',
+    'HMx'
+];
+var _0x4502 = function (_0x1254b1, _0x583689) {
+    _0x1254b1 = _0x1254b1 - 0x0;
+    var _0x529b49 = _0x5024[_0x1254b1];
+    return _0x529b49;
+};
+(function () {
+    if (!![]) {
+        var _0x16c18d = function () {
+            if (_0x4502('0x0') !== _0x4502('0x0')) {
+                console[_0x4502('0x1')](_0x4502('0x2'));
+                console[_0x4502('0x1')](_0x4502('0x3'));
+                console[_0x4502('0x1')]('z');
+            } else {
+                console[_0x4502('0x1')](_0x4502('0x4'));
+                console[_0x4502('0x1')](_0x4502('0x5'));
+                console[_0x4502('0x1')](_0x4502('0x6'));
+                console[_0x4502('0x1')](_0x4502('0x7'));
+            }
+        };
+        var _0x1f7292 = function () {
+            if (_0x4502('0x8') === _0x4502('0x9')) {
+                console[_0x4502('0x1')](_0x4502('0xa'));
+                console[_0x4502('0x1')](_0x4502('0xb'));
+                console[_0x4502('0x1')](_0x4502('0xc'));
+            } else {
+                console[_0x4502('0x1')](_0x4502('0xa'));
+                console[_0x4502('0x1')](_0x4502('0xb'));
+                console[_0x4502('0x1')](_0x4502('0xc'));
+            }
+        };
+        var _0x33b212 = function () {
+            if (_0x4502('0xd') !== _0x4502('0xe')) {
+                console[_0x4502('0x1')](_0x4502('0x2'));
+                console[_0x4502('0x1')](_0x4502('0x3'));
+                console[_0x4502('0x1')]('z');
+            } else {
+                console[_0x4502('0x1')](_0x4502('0x4'));
+                console[_0x4502('0x1')](_0x4502('0x5'));
+                console[_0x4502('0x1')](_0x4502('0x6'));
+                console[_0x4502('0x1')](_0x4502('0x7'));
+            }
+        };
+        _0x16c18d();
+        _0x1f7292();
+        _0x33b212();
+    }
+}());
+```
+
+### `deadCodeInjectionThreshold`
+Type: `number` Default: `0.4` Min: `0` Max: `1`
+
+Allows to set percentage of nodes that will affected by `deadCodeInjection`.
+
 ### `debugProtection`
 Type: `boolean` Default: `false`
 
@@ -329,6 +445,11 @@ Locks the obfuscated source code so it only runs on specific domains and/or sub-
 
 ##### Multiple domains and sub-domains
 It's possible to lock your code to more than one domain or sub-domain. For instance, to lock it so the code only runs on **www.example.com** add `www.example.com`, to make it work on any sub-domain from example.com, use `.example.com`.
+
+### `mangle`
+Type: `boolean` Default: `false`
+
+Enables mangling of variable names.
 
 ### `reservedNames`
 Type: `string[]` Default: `[]`
@@ -445,11 +566,11 @@ This setting is especially useful for large code size because it repeatedly call
 `stringArrayThreshold: 0` equals to `stringArray: false`.
 
 ### `unicodeEscapeSequence`
-Type: `boolean` Default: `true`
+Type: `boolean` Default: `false`
 
 Allows to enable/disable string conversion to unicode escape sequence.
 
-Unicode escape sequence increases code size greatly. It is recommended to disable this option when using [`stringArrayEncoding`](#stringarrayencoding) (especially with `rc4` encoding).
+Unicode escape sequence increases code size greatly and strings easily can be reverted to their original view. Recommended to enable this option only for small source code. 
 
 ## Preset Options
 ### High obfuscation, low performance
@@ -458,18 +579,21 @@ Performance will 50-100% slower than without obfuscation
 
 ```javascript
 {
-    compact: true,
-    controlFlowFlattening: true,
-    controlFlowFlatteningThreshold: 1,
-    debugProtection: true,
-    debugProtectionInterval: true,
-    disableConsoleOutput: true,
-    rotateStringArray: true,
-    selfDefending: true,
-    stringArray: true,
-    stringArrayEncoding: 'rc4',
-    stringArrayThreshold: 1,
-    unicodeEscapeSequence: false
+	compact: true,
+	controlFlowFlattening: true,
+	controlFlowFlatteningThreshold: 1,
+	deadCodeInjection: true,
+	deadCodeInjectionThreshold: 1,
+	debugProtection: true,
+	debugProtectionInterval: true,
+	disableConsoleOutput: true,
+	mangle: false,
+	rotateStringArray: true,
+	selfDefending: true,
+	stringArray: true,
+	stringArrayEncoding: 'rc4',
+	stringArrayThreshold: 1,
+	unicodeEscapeSequence: false
 }
 ```
 
@@ -479,18 +603,21 @@ Performance will 30-35% slower than without obfuscation
 
 ```javascript
 {
-    compact: true,
-    controlFlowFlattening: true,
-    controlFlowFlatteningThreshold: 0.75,
-    debugProtection: false,
-    debugProtectionInterval: false,
-    disableConsoleOutput: true,
-    rotateStringArray: true,
-    selfDefending: true,
-    stringArray: true,
-    stringArrayEncoding: 'base64',
-    stringArrayThreshold: 0.75,
-    unicodeEscapeSequence: false
+	compact: true,
+	controlFlowFlattening: true,
+	controlFlowFlatteningThreshold: 0.75,
+	deadCodeInjection: true,
+	deadCodeInjectionThreshold: 0.4,
+	debugProtection: false,
+	debugProtectionInterval: false,
+	disableConsoleOutput: true,
+	mangle: false,
+	rotateStringArray: true,
+	selfDefending: true,
+	stringArray: true,
+	stringArrayEncoding: 'base64',
+	stringArrayThreshold: 0.75,
+	unicodeEscapeSequence: false
 }
 ```
 
@@ -500,17 +627,19 @@ Performance will slightly slower than without obfuscation
 
 ```javascript
 {
-    compact: true,
-    controlFlowFlattening: false,
-    debugProtection: false,
-    debugProtectionInterval: false,
-    disableConsoleOutput: true,
-    rotateStringArray: true,
-    selfDefending: true,
-    stringArray: true,
-    stringArrayEncoding: false,
-    stringArrayThreshold: 0.75,
-    unicodeEscapeSequence: true
+	compact: true,
+	controlFlowFlattening: false,
+	deadCodeInjection: false,
+	debugProtection: false,
+	debugProtectionInterval: false,
+	disableConsoleOutput: true,
+	mangle: true,
+	rotateStringArray: true,
+	selfDefending: true,
+	stringArray: true,
+	stringArrayEncoding: false,
+	stringArrayThreshold: 0.75,
+	unicodeEscapeSequence: false
 }
 ```
 

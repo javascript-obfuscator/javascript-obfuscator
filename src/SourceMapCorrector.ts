@@ -79,5 +79,5 @@ export class SourceMapCorrector implements ISourceMapCorrector {
         }
 
         return `${obfuscatedCode}\n${sourceMappingUrl}`;
-    };
+    }
 }

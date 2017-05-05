@@ -5,10 +5,13 @@ export interface IOptions {
     readonly compact: boolean;
     readonly controlFlowFlattening: boolean;
     readonly controlFlowFlatteningThreshold: number;
+    readonly deadCodeInjection: boolean;
+    readonly deadCodeInjectionThreshold: number;
     readonly debugProtection: boolean;
     readonly debugProtectionInterval: boolean;
     readonly disableConsoleOutput: boolean;
     readonly domainLock: string[];
+    readonly mangle: boolean;
     readonly reservedNames: string[];
     readonly rotateStringArray: boolean;
     readonly seed: number;

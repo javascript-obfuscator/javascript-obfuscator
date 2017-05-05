@@ -23,7 +23,7 @@ module.exports = {
                 enforce: 'pre',
                 test: /\.ts$/,
                 loader: 'tslint-loader',
-                exclude: /(node_modules)/,
+                exclude: /(node_modules)/
             },
             {
                 test: /\.ts(x?)$/,
@@ -49,7 +49,7 @@ module.exports = {
         new CheckerPlugin()
     ],
     output: {
-        path: './dist',
+        path: __dirname + '/dist',
         filename: '[name].js',
         libraryTarget:  "commonjs2",
         library: "JavaScriptObfuscator"

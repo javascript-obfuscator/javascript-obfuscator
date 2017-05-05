@@ -63,6 +63,18 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
+    public readonly deadCodeInjection: boolean;
+
+    /**
+     * @type {number}
+     */
+    @IsNumber()
+    public readonly deadCodeInjectionThreshold: number;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
     public readonly debugProtection: boolean;
 
     /**
@@ -86,6 +98,12 @@ export class Options implements IOptions {
         each: true
     })
     public readonly domainLock: string[];
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
+    public readonly mangle: boolean;
 
     /**
      * @type {string[]}

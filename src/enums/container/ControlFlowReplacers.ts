@@ -1,5 +1,6 @@
 export enum ControlFlowReplacers {
     BinaryExpressionControlFlowReplacer,
     CallExpressionControlFlowReplacer,
-    LogicalExpressionControlFlowReplacer
+    LogicalExpressionControlFlowReplacer,
+    StringLiteralControlFlowReplacer,
 }

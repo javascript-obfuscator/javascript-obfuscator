@@ -10,6 +10,7 @@ export const ServiceIdentifiers: any = {
     ICalleeDataExtractor: Symbol('ICalleeDataExtractor'),
     ICustomNodeGroup: Symbol('ICustomNodeGroup'),
     IControlFlowReplacer: Symbol('IControlFlowReplacer'),
+    IDeadCodeInjectionReplacer: Symbol('IDeadCodeInjectionReplacer'),
     IJavaScriptObfuscator: Symbol('IJavaScriptObfuscator'),
     INodeTransformer: Symbol('INodeTransformer'),
     IObfuscationEventEmitter: Symbol('IObfuscationEventEmitter'),

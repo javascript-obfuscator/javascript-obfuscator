@@ -46,6 +46,13 @@ export class Obfuscator implements IObfuscator {
     /**
      * @type {NodeTransformers[]}
      */
+    private static readonly deadCodeInjectionTransformersList: NodeTransformers[] = [
+        NodeTransformers.DeadCodeInjectionTransformer
+    ];
+
+    /**
+     * @type {NodeTransformers[]}
+     */
     private static readonly obfuscatingTransformersList: NodeTransformers[] = [
         NodeTransformers.CatchClauseTransformer,
         NodeTransformers.FunctionDeclarationTransformer,
@@ -129,12 +136,17 @@ export class Obfuscator implements IObfuscator {
 
         this.obfuscationEventEmitter.emit(ObfuscationEvents.BeforeObfuscation, astTree, stackTraceData);
 
-        // first pass: control flow flattening
-        if (this.options.controlFlowFlattening) {
-            astTree = this.transformAstTree(astTree, Obfuscator.controlFlowTransformersList);
-        }
+        // first pass transformers: dead code injection transformer
+        astTree = this.transformAstTree(astTree, [
+            ...this.options.deadCodeInjection ? Obfuscator.deadCodeInjectionTransformersList : []
+        ]);
 
-        // second pass: nodes obfuscation
+        // second pass transformers: control flow flattening transformers
+        astTree = this.transformAstTree(astTree, [
+            ...this.options.controlFlowFlattening ? Obfuscator.controlFlowTransformersList : []
+        ]);
+
+        // third pass: converting and obfuscating transformers
         astTree = this.transformAstTree(astTree, [
             ...Obfuscator.convertingTransformersList,
             ...Obfuscator.obfuscatingTransformersList
@@ -153,6 +165,10 @@ export class Obfuscator implements IObfuscator {
         astTree: ESTree.Program,
         nodeTransformers: NodeTransformers[]
     ): ESTree.Program {
+        if (!nodeTransformers.length) {
+            return astTree;
+        }
+
         const enterVisitors: IVisitor[] = [];
         const leaveVisitors: IVisitor[] = [];
         const nodeTransformersLength: number = nodeTransformers.length;

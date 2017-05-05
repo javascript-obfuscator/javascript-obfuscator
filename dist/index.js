@@ -33,9 +33,9 @@ module.exports =
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -90,7 +90,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 128);
+/******/ 	return __webpack_require__(__webpack_require__.s = 38);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -112,6 +112,7 @@ module.exports = require("tslib");
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.ServiceIdentifiers = {
     Factory__ICalleeDataExtractor: Symbol('Factory<ICalleeDataExtractor>'),
     Factory__IControlFlowReplacer: Symbol('Factory<IControlFlowReplacer>'),
@@ -124,6 +125,7 @@ exports.ServiceIdentifiers = {
     ICalleeDataExtractor: Symbol('ICalleeDataExtractor'),
     ICustomNodeGroup: Symbol('ICustomNodeGroup'),
     IControlFlowReplacer: Symbol('IControlFlowReplacer'),
+    IDeadCodeInjectionReplacer: Symbol('IDeadCodeInjectionReplacer'),
     IJavaScriptObfuscator: Symbol('IJavaScriptObfuscator'),
     INodeTransformer: Symbol('INodeTransformer'),
     IObfuscationEventEmitter: Symbol('IObfuscationEventEmitter'),
@@ -146,16 +148,19 @@ exports.ServiceIdentifiers = {
 "use strict";
 
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var escodegen = __webpack_require__(20);
+Object.defineProperty(exports, "__esModule", { value: true });
+var escodegen = __webpack_require__(23);
 var esprima = __webpack_require__(36);
 var estraverse = __webpack_require__(11);
-var NodeType_1 = __webpack_require__(13);
+var NodeType_1 = __webpack_require__(14);
 var Node_1 = __webpack_require__(6);
-var Nodes_1 = __webpack_require__(14);
+var Nodes_1 = __webpack_require__(12);
 
 var NodeUtils = function () {
     function NodeUtils() {
@@ -174,6 +179,31 @@ var NodeUtils = function () {
                 }
             });
             return astTree;
+        }
+    }, {
+        key: "clone",
+        value: function clone(astTree) {
+            var cloneRecursive = function cloneRecursive(node) {
+                var copy = {};
+                Object.keys(node).filter(function (property) {
+                    return property !== 'parentNode';
+                }).forEach(function (property) {
+                    var value = node[property];
+                    var clonedValue = void 0;
+                    if (value === null || value instanceof RegExp) {
+                        clonedValue = value;
+                    } else if (Array.isArray(value)) {
+                        clonedValue = value.map(cloneRecursive);
+                    } else if ((typeof value === "undefined" ? "undefined" : _typeof(value)) === 'object') {
+                        clonedValue = cloneRecursive(value);
+                    } else {
+                        clonedValue = value;
+                    }
+                    copy[property] = clonedValue;
+                });
+                return copy;
+            };
+            return NodeUtils.parentize(cloneRecursive(astTree));
         }
     }, {
         key: "convertCodeToStructure",
@@ -321,7 +351,8 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var chance_1 = __webpack_require__(121);
+Object.defineProperty(exports, "__esModule", { value: true });
+var chance_1 = __webpack_require__(139);
 var Utils_1 = __webpack_require__(8);
 
 var RandomGeneratorUtils = function () {
@@ -413,6 +444,7 @@ exports.RandomGeneratorUtils = RandomGeneratorUtils;
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 function initializable() {
     var initializeMethodKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'initialize';
 
@@ -424,15 +456,15 @@ function initializable() {
         };
         var initializeMethod = target[initializeMethodKey];
         if (!initializeMethod || typeof initializeMethod !== 'function') {
-            throw new Error('`' + initializeMethodKey + '` method with initialization logic not found. `@' + decoratorName + '` decorator requires `' + initializeMethodKey + '` method');
+            throw new Error("`" + initializeMethodKey + "` method with initialization logic not found. `@" + decoratorName + "` decorator requires `" + initializeMethodKey + "` method");
         }
-        var metadataPropertyKey = '_' + propertyKey;
+        var metadataPropertyKey = "_" + propertyKey;
         var propertyDescriptor = Object.getOwnPropertyDescriptor(target, metadataPropertyKey) || descriptor;
         var methodDescriptor = Object.getOwnPropertyDescriptor(target, initializeMethodKey) || descriptor;
         var originalMethod = methodDescriptor.value;
         Object.defineProperty(target, propertyKey, Object.assign({}, propertyDescriptor, { get: function get() {
                 if (this[metadataPropertyKey] === undefined) {
-                    throw new Error('Property `' + propertyKey + '` is not initialized! Initialize it first!');
+                    throw new Error("Property `" + propertyKey + "` is not initialized! Initialize it first!");
                 }
                 return this[metadataPropertyKey];
             }, set: function set(newVal) {
@@ -458,7 +490,8 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var NodeType_1 = __webpack_require__(13);
+Object.defineProperty(exports, "__esModule", { value: true });
+var NodeType_1 = __webpack_require__(14);
 
 var Node = function () {
     function Node() {
@@ -626,6 +659,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
@@ -673,7 +707,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var JSFuck_1 = __webpack_require__(27);
+Object.defineProperty(exports, "__esModule", { value: true });
+var JSFuck_1 = __webpack_require__(29);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 
 var Utils = function () {
@@ -812,6 +847,7 @@ exports.Utils = Utils;
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var CustomNodes;
 (function (CustomNodes) {
     CustomNodes[CustomNodes["BinaryExpressionFunctionNode"] = 0] = "BinaryExpressionFunctionNode";
@@ -831,6 +867,8 @@ var CustomNodes;
     CustomNodes[CustomNodes["StringArrayCallsWrapper"] = 14] = "StringArrayCallsWrapper";
     CustomNodes[CustomNodes["StringArrayNode"] = 15] = "StringArrayNode";
     CustomNodes[CustomNodes["StringArrayRotateFunctionNode"] = 16] = "StringArrayRotateFunctionNode";
+    CustomNodes[CustomNodes["StringLiteralControlFlowStorageCallNode"] = 17] = "StringLiteralControlFlowStorageCallNode";
+    CustomNodes[CustomNodes["StringLiteralNode"] = 18] = "StringLiteralNode";
 })(CustomNodes = exports.CustomNodes || (exports.CustomNodes = {}));
 
 /***/ }),
@@ -842,6 +880,7 @@ var CustomNodes;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
@@ -863,58 +902,6 @@ module.exports = require("estraverse");
 
 /***/ }),
 /* 12 */
-/***/ (function(module, exports) {
-
-module.exports = require("string-template");
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var Utils_1 = __webpack_require__(8);
-exports.NodeType = Utils_1.Utils.strEnumify({
-    ArrayExpression: 'ArrayExpression',
-    ArrowFunctionExpression: 'ArrowFunctionExpression',
-    AssignmentExpression: 'AssignmentExpression',
-    AssignmentPattern: 'AssignmentPattern',
-    BinaryExpression: 'BinaryExpression',
-    BlockStatement: 'BlockStatement',
-    BreakStatement: 'BreakStatement',
-    CallExpression: 'CallExpression',
-    CatchClause: 'CatchClause',
-    ClassDeclaration: 'ClassDeclaration',
-    ContinueStatement: 'ContinueStatement',
-    ExpressionStatement: 'ExpressionStatement',
-    FunctionDeclaration: 'FunctionDeclaration',
-    FunctionExpression: 'FunctionExpression',
-    Identifier: 'Identifier',
-    IfStatement: 'IfStatement',
-    LabeledStatement: 'LabeledStatement',
-    Literal: 'Literal',
-    LogicalExpression: 'LogicalExpression',
-    MemberExpression: 'MemberExpression',
-    MethodDefinition: 'MethodDefinition',
-    ObjectExpression: 'ObjectExpression',
-    ObjectPattern: 'ObjectPattern',
-    Program: 'Program',
-    Property: 'Property',
-    ReturnStatement: 'ReturnStatement',
-    SwitchCase: 'SwitchCase',
-    SwitchStatement: 'SwitchStatement',
-    TemplateLiteral: 'TemplateLiteral',
-    TryStatement: 'TryStatement',
-    UnaryExpression: 'UnaryExpression',
-    UpdateExpression: 'UpdateExpression',
-    VariableDeclaration: 'VariableDeclaration',
-    VariableDeclarator: 'VariableDeclarator',
-    WhileStatement: 'WhileStatement'
-});
-
-/***/ }),
-/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -924,8 +911,9 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var escodegen = __webpack_require__(20);
-var NodeType_1 = __webpack_require__(13);
+Object.defineProperty(exports, "__esModule", { value: true });
+var escodegen = __webpack_require__(23);
+var NodeType_1 = __webpack_require__(14);
 
 var Nodes = function () {
     function Nodes() {
@@ -1059,13 +1047,9 @@ var Nodes = function () {
         }
     }, {
         key: "getIfStatementNode",
-        value: function getIfStatementNode(test, consequent) {
-            return {
-                type: NodeType_1.NodeType.IfStatement,
-                test: test,
-                consequent: consequent,
-                obfuscatedNode: false
-            };
+        value: function getIfStatementNode(test, consequent, alternate) {
+            return Object.assign({ type: NodeType_1.NodeType.IfStatement, test: test,
+                consequent: consequent }, alternate && { alternate: alternate }, { obfuscatedNode: false });
         }
     }, {
         key: "getIdentifierNode",
@@ -1243,12 +1227,66 @@ var Nodes = function () {
 exports.Nodes = Nodes;
 
 /***/ }),
+/* 13 */
+/***/ (function(module, exports) {
+
+module.exports = require("string-template");
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Utils_1 = __webpack_require__(8);
+exports.NodeType = Utils_1.Utils.strEnumify({
+    ArrayExpression: 'ArrayExpression',
+    ArrowFunctionExpression: 'ArrowFunctionExpression',
+    AssignmentExpression: 'AssignmentExpression',
+    AssignmentPattern: 'AssignmentPattern',
+    BinaryExpression: 'BinaryExpression',
+    BlockStatement: 'BlockStatement',
+    BreakStatement: 'BreakStatement',
+    CallExpression: 'CallExpression',
+    CatchClause: 'CatchClause',
+    ClassDeclaration: 'ClassDeclaration',
+    ContinueStatement: 'ContinueStatement',
+    ExpressionStatement: 'ExpressionStatement',
+    FunctionDeclaration: 'FunctionDeclaration',
+    FunctionExpression: 'FunctionExpression',
+    Identifier: 'Identifier',
+    IfStatement: 'IfStatement',
+    LabeledStatement: 'LabeledStatement',
+    Literal: 'Literal',
+    LogicalExpression: 'LogicalExpression',
+    MemberExpression: 'MemberExpression',
+    MethodDefinition: 'MethodDefinition',
+    ObjectExpression: 'ObjectExpression',
+    ObjectPattern: 'ObjectPattern',
+    Program: 'Program',
+    Property: 'Property',
+    ReturnStatement: 'ReturnStatement',
+    SwitchCase: 'SwitchCase',
+    SwitchStatement: 'SwitchStatement',
+    TemplateLiteral: 'TemplateLiteral',
+    TryStatement: 'TryStatement',
+    UnaryExpression: 'UnaryExpression',
+    UpdateExpression: 'UpdateExpression',
+    VariableDeclaration: 'VariableDeclaration',
+    VariableDeclarator: 'VariableDeclarator',
+    WhileStatement: 'WhileStatement'
+});
+
+/***/ }),
 /* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.ObfuscationEvents = {
     AfterObfuscation: 'afterObfuscation',
     BeforeObfuscation: 'beforeObfuscation'
@@ -1261,6 +1299,7 @@ exports.ObfuscationEvents = {
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var ObfuscationReplacers;
 (function (ObfuscationReplacers) {
     ObfuscationReplacers[ObfuscationReplacers["BooleanReplacer"] = 0] = "BooleanReplacer";
@@ -1280,10 +1319,11 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-__webpack_require__(127);
+Object.defineProperty(exports, "__esModule", { value: true });
+__webpack_require__(146);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var InversifyContainerFacade_1 = __webpack_require__(44);
-var JavaScriptObfuscatorCLI_1 = __webpack_require__(43);
+var InversifyContainerFacade_1 = __webpack_require__(48);
+var JavaScriptObfuscatorCLI_1 = __webpack_require__(44);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 
 var JavaScriptObfuscator = function () {
@@ -1329,6 +1369,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 
 var NodeAppender = function () {
@@ -1429,6 +1470,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
@@ -1467,9 +1509,16 @@ exports.AbstractCustomNodeGroup = AbstractCustomNodeGroup;
 
 /***/ }),
 /* 20 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = require("escodegen-wallaby");
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SourceMapMode = {
+    Inline: 'inline',
+    Separate: 'separate'
+};
 
 /***/ }),
 /* 21 */
@@ -1478,20 +1527,9 @@ module.exports = require("escodegen-wallaby");
 "use strict";
 
 
-exports.SourceMapMode = {
-    Inline: 'inline',
-    Separate: 'separate'
-};
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
@@ -1504,21 +1542,25 @@ AbstractReplacer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param
 exports.AbstractReplacer = AbstractReplacer;
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var SourceMapMode_1 = __webpack_require__(21);
+Object.defineProperty(exports, "__esModule", { value: true });
+var SourceMapMode_1 = __webpack_require__(20);
 exports.NO_CUSTOM_NODES_PRESET = Object.freeze({
     compact: true,
     controlFlowFlattening: false,
     controlFlowFlatteningThreshold: 0,
+    deadCodeInjection: false,
+    deadCodeInjectionThreshold: 0,
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: false,
     domainLock: [],
+    mangle: false,
     reservedNames: [],
     rotateStringArray: false,
     seed: 0,
@@ -1530,8 +1572,14 @@ exports.NO_CUSTOM_NODES_PRESET = Object.freeze({
     stringArray: false,
     stringArrayEncoding: false,
     stringArrayThreshold: 0,
-    unicodeEscapeSequence: true
+    unicodeEscapeSequence: false
 });
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports) {
+
+module.exports = require("escodegen-wallaby");
 
 /***/ }),
 /* 24 */
@@ -1540,6 +1588,7 @@ exports.NO_CUSTOM_NODES_PRESET = Object.freeze({
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.StringArrayEncoding = {
     base64: 'base64',
     rc4: 'rc4'
@@ -1552,8 +1601,109 @@ exports.StringArrayEncoding = {
 "use strict";
 
 
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = __webpack_require__(1);
+var inversify_1 = __webpack_require__(0);
+var ServiceIdentifiers_1 = __webpack_require__(2);
+var RandomGeneratorUtils_1 = __webpack_require__(4);
+var AbstractControlFlowReplacer = AbstractControlFlowReplacer_1 = function () {
+    function AbstractControlFlowReplacer(customNodeFactory, options) {
+        _classCallCheck(this, AbstractControlFlowReplacer);
+
+        this.replacerDataByControlFlowStorageId = new Map();
+        this.customNodeFactory = customNodeFactory;
+        this.options = options;
+    }
+
+    _createClass(AbstractControlFlowReplacer, [{
+        key: "insertCustomNodeToControlFlowStorage",
+        value: function insertCustomNodeToControlFlowStorage(customNode, controlFlowStorage, replacerId, usingExistingIdentifierChance) {
+            var controlFlowStorageId = controlFlowStorage.getStorageId();
+            var storageKeysById = AbstractControlFlowReplacer_1.getStorageKeysByIdForCurrentStorage(this.replacerDataByControlFlowStorageId, controlFlowStorageId);
+            var storageKeysForCurrentId = storageKeysById.get(replacerId);
+            if (RandomGeneratorUtils_1.RandomGeneratorUtils.getMathRandom() < usingExistingIdentifierChance && storageKeysForCurrentId && storageKeysForCurrentId.length) {
+                return RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().pickone(storageKeysForCurrentId);
+            }
+            var generateStorageKey = function generateStorageKey(length) {
+                var storageKey = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(length);
+                if (controlFlowStorage.getStorage().has(storageKey)) {
+                    return generateStorageKey(length);
+                }
+                return storageKey;
+            };
+            var storageKey = generateStorageKey(3);
+            storageKeysById.set(replacerId, [storageKey]);
+            this.replacerDataByControlFlowStorageId.set(controlFlowStorageId, storageKeysById);
+            controlFlowStorage.set(storageKey, customNode);
+            return storageKey;
+        }
+    }], [{
+        key: "getStorageKeysByIdForCurrentStorage",
+        value: function getStorageKeysByIdForCurrentStorage(identifierDataByControlFlowStorageId, controlFlowStorageId) {
+            var storageKeysById = void 0;
+            if (identifierDataByControlFlowStorageId.has(controlFlowStorageId)) {
+                storageKeysById = identifierDataByControlFlowStorageId.get(controlFlowStorageId);
+            } else {
+                storageKeysById = new Map();
+            }
+            return storageKeysById;
+        }
+    }]);
+
+    return AbstractControlFlowReplacer;
+}();
+AbstractControlFlowReplacer = AbstractControlFlowReplacer_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomNode)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], AbstractControlFlowReplacer);
+exports.AbstractControlFlowReplacer = AbstractControlFlowReplacer;
+var AbstractControlFlowReplacer_1;
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var SourceMapMode_1 = __webpack_require__(20);
+exports.DEFAULT_PRESET = Object.freeze({
+    compact: true,
+    controlFlowFlattening: false,
+    controlFlowFlatteningThreshold: 0.75,
+    deadCodeInjection: false,
+    deadCodeInjectionThreshold: 0.4,
+    debugProtection: false,
+    debugProtectionInterval: false,
+    disableConsoleOutput: true,
+    domainLock: [],
+    mangle: false,
+    reservedNames: [],
+    rotateStringArray: true,
+    seed: 0,
+    selfDefending: false,
+    sourceMap: false,
+    sourceMapBaseUrl: '',
+    sourceMapFileName: '',
+    sourceMapMode: SourceMapMode_1.SourceMapMode.Separate,
+    stringArray: true,
+    stringArrayEncoding: false,
+    stringArrayThreshold: 0.75,
+    unicodeEscapeSequence: false
+});
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var AbstractCalleeDataExtractor = function AbstractCalleeDataExtractor() {
@@ -1563,7 +1713,7 @@ AbstractCalleeDataExtractor = tslib_1.__decorate([inversify_1.injectable()], Abs
 exports.AbstractCalleeDataExtractor = AbstractCalleeDataExtractor;
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1573,6 +1723,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 var Utils_1 = __webpack_require__(8);
 
@@ -1621,7 +1772,7 @@ var CryptUtils = function () {
                 length: length,
                 pool: RandomGeneratorUtils_1.RandomGeneratorUtils.randomGeneratorPool
             });
-            var randomStringDiff = randomString.replace(new RegExp('[' + escapeRegExp(str) + ']', 'g'), '');
+            var randomStringDiff = randomString.replace(new RegExp("[" + escapeRegExp(str) + "]", 'g'), '');
             var randomStringDiffArray = randomStringDiff.split('');
             RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().shuffle(randomStringDiffArray);
             randomStringDiff = randomStringDiffArray.join('');
@@ -1663,12 +1814,13 @@ var CryptUtils = function () {
 exports.CryptUtils = CryptUtils;
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.JSFuck = {
     False: '![]',
     True: '!![]',
@@ -1705,54 +1857,26 @@ exports.JSFuck = {
     E: '(RegExp+"")[12]',
     F: '(+[]+Function)[10]',
     G: '(false+Function("return Date")()())[30]',
-    H: '\'H\'',
+    H: "'H'",
     I: '(Infinity+"")[0]',
-    J: '\'J\'',
-    K: '\'K\'',
-    L: '\'L\'',
+    J: "'J'",
+    K: "'K'",
+    L: "'L'",
     M: '(true+Function("return Date")()())[30]',
     N: '(NaN+"")[0]',
     O: '(NaN+Function("return{}")())[11]',
-    P: '\'P\'',
-    Q: '\'Q\'',
+    P: "'P'",
+    Q: "'Q'",
     R: '(+[]+RegExp)[10]',
     S: '(+[]+String)[10]',
     T: '(NaN+Function("return Date")()())[30]',
     U: '(NaN+Function("return{}")()["toString"]["call"]())[11]',
-    V: '\'V\'',
-    W: '\'W\'',
-    X: '\'X\'',
-    Y: '\'Y\'',
-    Z: '\'Z\''
+    V: "'V'",
+    W: "'W'",
+    X: "'X'",
+    Y: "'Y'",
+    Z: "'Z'"
 };
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var CalleeDataExtractors;
-(function (CalleeDataExtractors) {
-    CalleeDataExtractors[CalleeDataExtractors["FunctionDeclarationCalleeDataExtractor"] = 0] = "FunctionDeclarationCalleeDataExtractor";
-    CalleeDataExtractors[CalleeDataExtractors["FunctionExpressionCalleeDataExtractor"] = 1] = "FunctionExpressionCalleeDataExtractor";
-    CalleeDataExtractors[CalleeDataExtractors["ObjectExpressionCalleeDataExtractor"] = 2] = "ObjectExpressionCalleeDataExtractor";
-})(CalleeDataExtractors = exports.CalleeDataExtractors || (exports.CalleeDataExtractors = {}));
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var ControlFlowReplacers;
-(function (ControlFlowReplacers) {
-    ControlFlowReplacers[ControlFlowReplacers["BinaryExpressionControlFlowReplacer"] = 0] = "BinaryExpressionControlFlowReplacer";
-    ControlFlowReplacers[ControlFlowReplacers["CallExpressionControlFlowReplacer"] = 1] = "CallExpressionControlFlowReplacer";
-    ControlFlowReplacers[ControlFlowReplacers["LogicalExpressionControlFlowReplacer"] = 2] = "LogicalExpressionControlFlowReplacer";
-})(ControlFlowReplacers = exports.ControlFlowReplacers || (exports.ControlFlowReplacers = {}));
 
 /***/ }),
 /* 30 */
@@ -1761,6 +1885,38 @@ var ControlFlowReplacers;
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
+var CalleeDataExtractors;
+(function (CalleeDataExtractors) {
+    CalleeDataExtractors[CalleeDataExtractors["FunctionDeclarationCalleeDataExtractor"] = 0] = "FunctionDeclarationCalleeDataExtractor";
+    CalleeDataExtractors[CalleeDataExtractors["FunctionExpressionCalleeDataExtractor"] = 1] = "FunctionExpressionCalleeDataExtractor";
+    CalleeDataExtractors[CalleeDataExtractors["ObjectExpressionCalleeDataExtractor"] = 2] = "ObjectExpressionCalleeDataExtractor";
+})(CalleeDataExtractors = exports.CalleeDataExtractors || (exports.CalleeDataExtractors = {}));
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var ControlFlowReplacers;
+(function (ControlFlowReplacers) {
+    ControlFlowReplacers[ControlFlowReplacers["BinaryExpressionControlFlowReplacer"] = 0] = "BinaryExpressionControlFlowReplacer";
+    ControlFlowReplacers[ControlFlowReplacers["CallExpressionControlFlowReplacer"] = 1] = "CallExpressionControlFlowReplacer";
+    ControlFlowReplacers[ControlFlowReplacers["LogicalExpressionControlFlowReplacer"] = 2] = "LogicalExpressionControlFlowReplacer";
+    ControlFlowReplacers[ControlFlowReplacers["StringLiteralControlFlowReplacer"] = 3] = "StringLiteralControlFlowReplacer";
+})(ControlFlowReplacers = exports.ControlFlowReplacers || (exports.ControlFlowReplacers = {}));
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
 var CustomNodeGroups;
 (function (CustomNodeGroups) {
     CustomNodeGroups[CustomNodeGroups["ConsoleOutputCustomNodeGroup"] = 0] = "ConsoleOutputCustomNodeGroup";
@@ -1771,95 +1927,32 @@ var CustomNodeGroups;
 })(CustomNodeGroups = exports.CustomNodeGroups || (exports.CustomNodeGroups = {}));
 
 /***/ }),
-/* 31 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var NodeTransformers;
 (function (NodeTransformers) {
     NodeTransformers[NodeTransformers["BlockStatementControlFlowTransformer"] = 0] = "BlockStatementControlFlowTransformer";
-    NodeTransformers[NodeTransformers["FunctionControlFlowTransformer"] = 1] = "FunctionControlFlowTransformer";
-    NodeTransformers[NodeTransformers["CatchClauseTransformer"] = 2] = "CatchClauseTransformer";
-    NodeTransformers[NodeTransformers["FunctionDeclarationTransformer"] = 3] = "FunctionDeclarationTransformer";
-    NodeTransformers[NodeTransformers["FunctionTransformer"] = 4] = "FunctionTransformer";
-    NodeTransformers[NodeTransformers["LabeledStatementTransformer"] = 5] = "LabeledStatementTransformer";
-    NodeTransformers[NodeTransformers["LiteralTransformer"] = 6] = "LiteralTransformer";
-    NodeTransformers[NodeTransformers["MemberExpressionTransformer"] = 7] = "MemberExpressionTransformer";
-    NodeTransformers[NodeTransformers["MethodDefinitionTransformer"] = 8] = "MethodDefinitionTransformer";
-    NodeTransformers[NodeTransformers["ObjectExpressionTransformer"] = 9] = "ObjectExpressionTransformer";
-    NodeTransformers[NodeTransformers["TemplateLiteralTransformer"] = 10] = "TemplateLiteralTransformer";
-    NodeTransformers[NodeTransformers["VariableDeclarationTransformer"] = 11] = "VariableDeclarationTransformer";
+    NodeTransformers[NodeTransformers["DeadCodeInjectionTransformer"] = 1] = "DeadCodeInjectionTransformer";
+    NodeTransformers[NodeTransformers["FunctionControlFlowTransformer"] = 2] = "FunctionControlFlowTransformer";
+    NodeTransformers[NodeTransformers["CatchClauseTransformer"] = 3] = "CatchClauseTransformer";
+    NodeTransformers[NodeTransformers["FunctionDeclarationTransformer"] = 4] = "FunctionDeclarationTransformer";
+    NodeTransformers[NodeTransformers["FunctionTransformer"] = 5] = "FunctionTransformer";
+    NodeTransformers[NodeTransformers["LabeledStatementTransformer"] = 6] = "LabeledStatementTransformer";
+    NodeTransformers[NodeTransformers["LiteralTransformer"] = 7] = "LiteralTransformer";
+    NodeTransformers[NodeTransformers["MemberExpressionTransformer"] = 8] = "MemberExpressionTransformer";
+    NodeTransformers[NodeTransformers["MethodDefinitionTransformer"] = 9] = "MethodDefinitionTransformer";
+    NodeTransformers[NodeTransformers["ObjectExpressionTransformer"] = 10] = "ObjectExpressionTransformer";
+    NodeTransformers[NodeTransformers["TemplateLiteralTransformer"] = 11] = "TemplateLiteralTransformer";
+    NodeTransformers[NodeTransformers["VariableDeclarationTransformer"] = 12] = "VariableDeclarationTransformer";
 })(NodeTransformers = exports.NodeTransformers || (exports.NodeTransformers = {}));
 
 /***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var tslib_1 = __webpack_require__(1);
-var inversify_1 = __webpack_require__(0);
-var ServiceIdentifiers_1 = __webpack_require__(2);
-var RandomGeneratorUtils_1 = __webpack_require__(4);
-var AbstractControlFlowReplacer = AbstractControlFlowReplacer_1 = function () {
-    function AbstractControlFlowReplacer(customNodeFactory, options) {
-        _classCallCheck(this, AbstractControlFlowReplacer);
-
-        this.replacerDataByControlFlowStorageId = new Map();
-        this.customNodeFactory = customNodeFactory;
-        this.options = options;
-    }
-
-    _createClass(AbstractControlFlowReplacer, [{
-        key: "insertCustomNodeToControlFlowStorage",
-        value: function insertCustomNodeToControlFlowStorage(customNode, controlFlowStorage, replacerId, usingExistingIdentifierChance) {
-            var controlFlowStorageId = controlFlowStorage.getStorageId();
-            var storageKeysById = AbstractControlFlowReplacer_1.getStorageKeysByIdForCurrentStorage(this.replacerDataByControlFlowStorageId, controlFlowStorageId);
-            var storageKeysForCurrentId = storageKeysById.get(replacerId);
-            if (RandomGeneratorUtils_1.RandomGeneratorUtils.getMathRandom() > usingExistingIdentifierChance && storageKeysForCurrentId && storageKeysForCurrentId.length) {
-                return RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomGenerator().pickone(storageKeysForCurrentId);
-            }
-            var generateStorageKey = function generateStorageKey(length) {
-                var storageKey = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(length);
-                if (controlFlowStorage.getStorage().has(storageKey)) {
-                    return generateStorageKey(length);
-                }
-                return storageKey;
-            };
-            var storageKey = generateStorageKey(3);
-            storageKeysById.set(replacerId, [storageKey]);
-            this.replacerDataByControlFlowStorageId.set(controlFlowStorageId, storageKeysById);
-            controlFlowStorage.set(storageKey, customNode);
-            return storageKey;
-        }
-    }], [{
-        key: "getStorageKeysByIdForCurrentStorage",
-        value: function getStorageKeysByIdForCurrentStorage(identifierDataByControlFlowStorageId, controlFlowStorageId) {
-            var storageKeysById = void 0;
-            if (identifierDataByControlFlowStorageId.has(controlFlowStorageId)) {
-                storageKeysById = identifierDataByControlFlowStorageId.get(controlFlowStorageId);
-            } else {
-                storageKeysById = new Map();
-            }
-            return storageKeysById;
-        }
-    }]);
-
-    return AbstractControlFlowReplacer;
-}();
-AbstractControlFlowReplacer = AbstractControlFlowReplacer_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomNode)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], AbstractControlFlowReplacer);
-exports.AbstractControlFlowReplacer = AbstractControlFlowReplacer;
-var AbstractControlFlowReplacer_1;
-
-/***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1873,10 +1966,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var AbstractControlFlowReplacer_1 = __webpack_require__(32);
+var AbstractControlFlowReplacer_1 = __webpack_require__(25);
 var CustomNodes_1 = __webpack_require__(9);
 var Node_1 = __webpack_require__(6);
 var ExpressionWithOperatorControlFlowReplacer = function (_AbstractControlFlowR) {
@@ -1910,36 +2004,6 @@ ExpressionWithOperatorControlFlowReplacer = tslib_1.__decorate([inversify_1.inje
 exports.ExpressionWithOperatorControlFlowReplacer = ExpressionWithOperatorControlFlowReplacer;
 
 /***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var SourceMapMode_1 = __webpack_require__(21);
-exports.DEFAULT_PRESET = Object.freeze({
-    compact: true,
-    controlFlowFlattening: false,
-    controlFlowFlatteningThreshold: 0.75,
-    debugProtection: false,
-    debugProtectionInterval: false,
-    disableConsoleOutput: true,
-    domainLock: [],
-    reservedNames: [],
-    rotateStringArray: true,
-    seed: 0,
-    selfDefending: false,
-    sourceMap: false,
-    sourceMapBaseUrl: '',
-    sourceMapFileName: '',
-    sourceMapMode: SourceMapMode_1.SourceMapMode.Separate,
-    stringArray: true,
-    stringArrayEncoding: false,
-    stringArrayThreshold: 0.8,
-    unicodeEscapeSequence: true
-});
-
-/***/ }),
 /* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1954,6 +2018,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var Initializable_1 = __webpack_require__(5);
@@ -2070,15 +2135,28 @@ module.exports = require("path");
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
+var JavaScriptObfuscator_1 = __webpack_require__(17);
+module.exports = JavaScriptObfuscator_1.JavaScriptObfuscator;
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var esprima = __webpack_require__(36);
-var escodegen = __webpack_require__(20);
+var escodegen = __webpack_require__(23);
+var esmangle = __webpack_require__(142);
 var JavaScriptObfuscatorInternal = JavaScriptObfuscatorInternal_1 = function () {
     function JavaScriptObfuscatorInternal(obfuscator, sourceMapCorrector, options) {
         _classCallCheck(this, JavaScriptObfuscatorInternal);
@@ -2104,10 +2182,12 @@ var JavaScriptObfuscatorInternal = JavaScriptObfuscatorInternal_1 = function () 
                 escodegenParams.sourceMap = 'sourceMap';
                 escodegenParams.sourceContent = sourceCode;
             }
-            escodegenParams.format = {
-                compact: this.options.compact
-            };
-            var generatorOutput = escodegen.generate(astTree, escodegenParams);
+            if (this.options.mangle) {
+                astTree = esmangle.mangle(astTree);
+            }
+            var generatorOutput = escodegen.generate(astTree, Object.assign({}, escodegenParams, { format: {
+                    compact: this.options.compact
+                } }));
             generatorOutput.map = generatorOutput.map ? generatorOutput.map.toString() : '';
             return generatorOutput;
         }
@@ -2129,7 +2209,7 @@ exports.JavaScriptObfuscatorInternal = JavaScriptObfuscatorInternal;
 var JavaScriptObfuscatorInternal_1;
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2139,6 +2219,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var Initializable_1 = __webpack_require__(5);
@@ -2178,7 +2259,7 @@ ObfuscationResult = tslib_1.__decorate([inversify_1.injectable()], ObfuscationRe
 exports.ObfuscationResult = ObfuscationResult;
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2190,13 +2271,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(11);
-var NodeTransformers_1 = __webpack_require__(31);
+var NodeTransformers_1 = __webpack_require__(33);
 var ObfuscationEvents_1 = __webpack_require__(15);
-var VisitorDirection_1 = __webpack_require__(73);
+var VisitorDirection_1 = __webpack_require__(79);
 var Node_1 = __webpack_require__(6);
 var NodeUtils_1 = __webpack_require__(3);
 var Obfuscator = Obfuscator_1 = function () {
@@ -2225,9 +2307,8 @@ var Obfuscator = Obfuscator_1 = function () {
                 _this.obfuscationEventEmitter.once(customNodeGroup.getAppendEvent(), customNodeGroup.appendCustomNodes.bind(customNodeGroup));
             });
             this.obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation, astTree, stackTraceData);
-            if (this.options.controlFlowFlattening) {
-                astTree = this.transformAstTree(astTree, Obfuscator_1.controlFlowTransformersList);
-            }
+            astTree = this.transformAstTree(astTree, [].concat(_toConsumableArray(this.options.deadCodeInjection ? Obfuscator_1.deadCodeInjectionTransformersList : [])));
+            astTree = this.transformAstTree(astTree, [].concat(_toConsumableArray(this.options.controlFlowFlattening ? Obfuscator_1.controlFlowTransformersList : [])));
             astTree = this.transformAstTree(astTree, [].concat(_toConsumableArray(Obfuscator_1.convertingTransformersList), _toConsumableArray(Obfuscator_1.obfuscatingTransformersList)));
             this.obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation, astTree, stackTraceData);
             return astTree;
@@ -2235,6 +2316,9 @@ var Obfuscator = Obfuscator_1 = function () {
     }, {
         key: "transformAstTree",
         value: function transformAstTree(astTree, nodeTransformers) {
+            if (!nodeTransformers.length) {
+                return astTree;
+            }
             var enterVisitors = [];
             var leaveVisitors = [];
             var nodeTransformersLength = nodeTransformers.length;
@@ -2286,13 +2370,14 @@ var Obfuscator = Obfuscator_1 = function () {
 }();
 Obfuscator.controlFlowTransformersList = [NodeTransformers_1.NodeTransformers.BlockStatementControlFlowTransformer, NodeTransformers_1.NodeTransformers.FunctionControlFlowTransformer];
 Obfuscator.convertingTransformersList = [NodeTransformers_1.NodeTransformers.MemberExpressionTransformer, NodeTransformers_1.NodeTransformers.MethodDefinitionTransformer, NodeTransformers_1.NodeTransformers.TemplateLiteralTransformer];
+Obfuscator.deadCodeInjectionTransformersList = [NodeTransformers_1.NodeTransformers.DeadCodeInjectionTransformer];
 Obfuscator.obfuscatingTransformersList = [NodeTransformers_1.NodeTransformers.CatchClauseTransformer, NodeTransformers_1.NodeTransformers.FunctionDeclarationTransformer, NodeTransformers_1.NodeTransformers.FunctionTransformer, NodeTransformers_1.NodeTransformers.LabeledStatementTransformer, NodeTransformers_1.NodeTransformers.LiteralTransformer, NodeTransformers_1.NodeTransformers.ObjectExpressionTransformer, NodeTransformers_1.NodeTransformers.VariableDeclarationTransformer];
 Obfuscator = Obfuscator_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStackTraceAnalyzer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscationEventEmitter)), tslib_1.__param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.TCustomNodeGroupStorage)), tslib_1.__param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__INodeTransformer)), tslib_1.__param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object, Object, Object, Function, Object])], Obfuscator);
 exports.Obfuscator = Obfuscator;
 var Obfuscator_1;
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2302,11 +2387,12 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var SourceMapMode_1 = __webpack_require__(21);
-var CryptUtils_1 = __webpack_require__(26);
+var SourceMapMode_1 = __webpack_require__(20);
+var CryptUtils_1 = __webpack_require__(28);
 var SourceMapCorrector = function () {
     function SourceMapCorrector(obfuscationResultFactory, options) {
         _classCallCheck(this, SourceMapCorrector);
@@ -2350,7 +2436,7 @@ SourceMapCorrector = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__par
 exports.SourceMapCorrector = SourceMapCorrector;
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2360,8 +2446,9 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var fs = __webpack_require__(125);
-var mkdirp = __webpack_require__(126);
+Object.defineProperty(exports, "__esModule", { value: true });
+var fs = __webpack_require__(144);
+var mkdirp = __webpack_require__(145);
 var path = __webpack_require__(37);
 
 var CLIUtils = function () {
@@ -2441,7 +2528,7 @@ CLIUtils.encoding = 'utf8';
 exports.CLIUtils = CLIUtils;
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2451,12 +2538,14 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var commander = __webpack_require__(123);
+Object.defineProperty(exports, "__esModule", { value: true });
+var commander = __webpack_require__(141);
 var path = __webpack_require__(37);
-var SourceMapMode_1 = __webpack_require__(21);
-var StringArrayEncoding_1 = __webpack_require__(24);
-var Default_1 = __webpack_require__(34);
-var CLIUtils_1 = __webpack_require__(42);
+var Default_1 = __webpack_require__(26);
+var BooleanSanitizer_1 = __webpack_require__(45);
+var SourceMapModeSanitizer_1 = __webpack_require__(46);
+var StringArrayEncodingSanitizer_1 = __webpack_require__(47);
+var CLIUtils_1 = __webpack_require__(43);
 var JavaScriptObfuscator_1 = __webpack_require__(17);
 
 var JavaScriptObfuscatorCLI = function () {
@@ -2500,11 +2589,11 @@ var JavaScriptObfuscatorCLI = function () {
     }, {
         key: "configureCommands",
         value: function configureCommands() {
-            this.commands = new commander.Command().version(JavaScriptObfuscatorCLI.getBuildVersion(), '-v, --version').usage('<inputPath> [options]').option('-o, --output <path>', 'Output path for obfuscated code').option('--compact <boolean>', 'Disable one line output code compacting', JavaScriptObfuscatorCLI.parseBoolean).option('--controlFlowFlattening <boolean>', 'Enables control flow flattening', JavaScriptObfuscatorCLI.parseBoolean).option('--controlFlowFlatteningThreshold <number>', 'The probability that the control flow flattening transformation will be applied to the node', parseFloat).option('--debugProtection <boolean>', 'Disable browser Debug panel (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--debugProtectionInterval <boolean>', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)', JavaScriptObfuscatorCLI.parseBoolean).option('--disableConsoleOutput <boolean>', 'Allow console.log, console.info, console.error and console.warn messages output into browser console', JavaScriptObfuscatorCLI.parseBoolean).option('--domainLock <list>', 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)', function (value) {
+            this.commands = new commander.Command().version(JavaScriptObfuscatorCLI.getBuildVersion(), '-v, --version').usage('<inputPath> [options]').option('-o, --output <path>', 'Output path for obfuscated code').option('--compact <boolean>', 'Disable one line output code compacting', BooleanSanitizer_1.BooleanSanitizer).option('--controlFlowFlattening <boolean>', 'Enables control flow flattening', BooleanSanitizer_1.BooleanSanitizer).option('--controlFlowFlatteningThreshold <number>', 'The probability that the control flow flattening transformation will be applied to the node', parseFloat).option('--deadCodeInjection <boolean>', 'Enables dead code injection', BooleanSanitizer_1.BooleanSanitizer).option('--deadCodeInjectionThreshold <number>', 'The probability that the dead code injection transformation will be applied to the node', parseFloat).option('--debugProtection <boolean>', 'Disable browser Debug panel (can cause DevTools enabled browser freeze)', BooleanSanitizer_1.BooleanSanitizer).option('--debugProtectionInterval <boolean>', 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)', BooleanSanitizer_1.BooleanSanitizer).option('--disableConsoleOutput <boolean>', 'Allow console.log, console.info, console.error and console.warn messages output into browser console', BooleanSanitizer_1.BooleanSanitizer).option('--domainLock <list>', 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)', function (value) {
                 return value.split(',');
-            }).option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', function (value) {
+            }).option('--mangle <boolean>', 'Enables mangling of variable names', BooleanSanitizer_1.BooleanSanitizer).option('--reservedNames <list>', 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)', function (value) {
                 return value.split(',');
-            }).option('--rotateStringArray <boolean>', 'Disable rotation of unicode array values during obfuscation', JavaScriptObfuscatorCLI.parseBoolean).option('--seed <number>', 'Sets seed for random generator. This is useful for creating repeatable results.', parseFloat).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMap <boolean>', 'Enables source map generation', JavaScriptObfuscatorCLI.parseBoolean).option('--sourceMapBaseUrl <string>', 'Sets base url to the source map import url when `--sourceMapMode=separate`').option('--sourceMapFileName <string>', 'Sets file name for output source map when `--sourceMapMode=separate`').option('--sourceMapMode <string> [inline, separate]', 'Specify source map output mode', JavaScriptObfuscatorCLI.parseSourceMapMode).option('--stringArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', JavaScriptObfuscatorCLI.parseBoolean).option('--stringArrayEncoding <boolean|string> [true, false, base64, rc4]', 'Encodes all strings in strings array using base64 or rc4 (this option can slow down your code speed', JavaScriptObfuscatorCLI.parseStringArrayEncoding).option('--stringArrayThreshold <number>', 'The probability that the literal string will be inserted into stringArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).option('--unicodeEscapeSequence <boolean>', 'Allows to enable/disable string conversion to unicode escape sequence', JavaScriptObfuscatorCLI.parseBoolean).parse(this.rawArguments);
+            }).option('--rotateStringArray <boolean>', 'Disable rotation of unicode array values during obfuscation', BooleanSanitizer_1.BooleanSanitizer).option('--seed <number>', 'Sets seed for random generator. This is useful for creating repeatable results.', parseFloat).option('--selfDefending <boolean>', 'Disables self-defending for obfuscated code', BooleanSanitizer_1.BooleanSanitizer).option('--sourceMap <boolean>', 'Enables source map generation', BooleanSanitizer_1.BooleanSanitizer).option('--sourceMapBaseUrl <string>', 'Sets base url to the source map import url when `--sourceMapMode=separate`').option('--sourceMapFileName <string>', 'Sets file name for output source map when `--sourceMapMode=separate`').option('--sourceMapMode <string> [inline, separate]', 'Specify source map output mode', SourceMapModeSanitizer_1.SourceMapModeSanitizer).option('--stringArray <boolean>', 'Disables gathering of all literal strings into an array and replacing every literal string with an array call', BooleanSanitizer_1.BooleanSanitizer).option('--stringArrayEncoding <boolean|string> [true, false, base64, rc4]', 'Encodes all strings in strings array using base64 or rc4 (this option can slow down your code speed', StringArrayEncodingSanitizer_1.StringArrayEncodingSanitizer).option('--stringArrayThreshold <number>', 'The probability that the literal string will be inserted into stringArray (Default: 0.8, Min: 0, Max: 1)', parseFloat).option('--unicodeEscapeSequence <boolean>', 'Allows to enable/disable string conversion to unicode escape sequence', BooleanSanitizer_1.BooleanSanitizer).parse(this.rawArguments);
             this.commands.on('--help', function () {
                 console.log('  Examples:\n');
                 console.log('    %> javascript-obfuscator in.js --compact true --selfDefending false');
@@ -2550,36 +2639,6 @@ var JavaScriptObfuscatorCLI = function () {
         value: function getBuildVersion() {
             return CLIUtils_1.CLIUtils.getPackageConfig().version;
         }
-    }, {
-        key: "parseBoolean",
-        value: function parseBoolean(value) {
-            return value === 'true' || value === '1';
-        }
-    }, {
-        key: "parseSourceMapMode",
-        value: function parseSourceMapMode(value) {
-            var availableMode = Object.keys(SourceMapMode_1.SourceMapMode).some(function (key) {
-                return SourceMapMode_1.SourceMapMode[key] === value;
-            });
-            if (!availableMode) {
-                throw new ReferenceError('Invalid value of `--sourceMapMode` option');
-            }
-            return value;
-        }
-    }, {
-        key: "parseStringArrayEncoding",
-        value: function parseStringArrayEncoding(value) {
-            switch (value) {
-                case 'true':
-                case '1':
-                case StringArrayEncoding_1.StringArrayEncoding.base64:
-                    return true;
-                case StringArrayEncoding_1.StringArrayEncoding.rc4:
-                    return StringArrayEncoding_1.StringArrayEncoding.rc4;
-                default:
-                    return false;
-            }
-        }
     }]);
 
     return JavaScriptObfuscatorCLI;
@@ -2588,7 +2647,60 @@ var JavaScriptObfuscatorCLI = function () {
 exports.JavaScriptObfuscatorCLI = JavaScriptObfuscatorCLI;
 
 /***/ }),
-/* 44 */
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BooleanSanitizer = function (value) {
+    return value === 'true' || value === '1';
+};
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var SourceMapMode_1 = __webpack_require__(20);
+exports.SourceMapModeSanitizer = function (value) {
+    var availableMode = Object.keys(SourceMapMode_1.SourceMapMode).some(function (key) {
+        return SourceMapMode_1.SourceMapMode[key] === value;
+    });
+    if (!availableMode) {
+        throw new ReferenceError('Invalid value of `--sourceMapMode` option');
+    }
+    return value;
+};
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var StringArrayEncoding_1 = __webpack_require__(24);
+exports.StringArrayEncodingSanitizer = function (value) {
+    switch (value) {
+        case 'true':
+        case '1':
+        case StringArrayEncoding_1.StringArrayEncoding.base64:
+            return true;
+        case StringArrayEncoding_1.StringArrayEncoding.rc4:
+            return StringArrayEncoding_1.StringArrayEncoding.rc4;
+        default:
+            return false;
+    }
+};
+
+/***/ }),
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2598,20 +2710,21 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var ControlFlowTransformersModule_1 = __webpack_require__(46);
-var CustomNodesModule_1 = __webpack_require__(45);
-var ObfuscatingTransformersModule_1 = __webpack_require__(48);
-var NodeTransformersModule_1 = __webpack_require__(47);
-var StackTraceAnalyzerModule_1 = __webpack_require__(49);
-var StoragesModule_1 = __webpack_require__(50);
-var JavaScriptObfuscatorInternal_1 = __webpack_require__(38);
-var ObfuscationEventEmitter_1 = __webpack_require__(74);
-var ObfuscationResult_1 = __webpack_require__(39);
-var Obfuscator_1 = __webpack_require__(40);
-var Options_1 = __webpack_require__(94);
-var SourceMapCorrector_1 = __webpack_require__(41);
+var ControlFlowTransformersModule_1 = __webpack_require__(50);
+var CustomNodesModule_1 = __webpack_require__(49);
+var ObfuscatingTransformersModule_1 = __webpack_require__(52);
+var NodeTransformersModule_1 = __webpack_require__(51);
+var StackTraceAnalyzerModule_1 = __webpack_require__(53);
+var StoragesModule_1 = __webpack_require__(54);
+var JavaScriptObfuscatorInternal_1 = __webpack_require__(39);
+var ObfuscationEventEmitter_1 = __webpack_require__(80);
+var ObfuscationResult_1 = __webpack_require__(40);
+var Obfuscator_1 = __webpack_require__(41);
+var Options_1 = __webpack_require__(102);
+var SourceMapCorrector_1 = __webpack_require__(42);
 
 var InversifyContainerFacade = function () {
     function InversifyContainerFacade(options) {
@@ -2659,38 +2772,41 @@ var InversifyContainerFacade = function () {
 exports.InversifyContainerFacade = InversifyContainerFacade;
 
 /***/ }),
-/* 45 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var CustomNodes_1 = __webpack_require__(9);
-var CustomNodeGroups_1 = __webpack_require__(30);
-var ConsoleOutputCustomNodeGroup_1 = __webpack_require__(52);
-var DebugProtectionCustomNodeGroup_1 = __webpack_require__(63);
-var DomainLockCustomNodeGroup_1 = __webpack_require__(65);
-var SelfDefendingCustomNodeGroup_1 = __webpack_require__(68);
-var StringArrayCustomNodeGroup_1 = __webpack_require__(72);
-var BinaryExpressionFunctionNode_1 = __webpack_require__(53);
-var BlockStatementControlFlowFlatteningNode_1 = __webpack_require__(54);
-var CallExpressionControlFlowStorageCallNode_1 = __webpack_require__(57);
-var CallExpressionFunctionNode_1 = __webpack_require__(55);
-var ControlFlowStorageNode_1 = __webpack_require__(58);
-var ConsoleOutputDisableExpressionNode_1 = __webpack_require__(51);
-var DebugProtectionFunctionCallNode_1 = __webpack_require__(60);
-var DebugProtectionFunctionIntervalNode_1 = __webpack_require__(61);
-var DebugProtectionFunctionNode_1 = __webpack_require__(62);
-var DomainLockNode_1 = __webpack_require__(64);
-var ExpressionWithOperatorControlFlowStorageCallNode_1 = __webpack_require__(59);
-var LogicalExpressionFunctionNode_1 = __webpack_require__(56);
-var NodeCallsControllerFunctionNode_1 = __webpack_require__(66);
-var SelfDefendingUnicodeNode_1 = __webpack_require__(67);
-var StringArrayCallsWrapper_1 = __webpack_require__(69);
-var StringArrayNode_1 = __webpack_require__(70);
-var StringArrayRotateFunctionNode_1 = __webpack_require__(71);
+var CustomNodeGroups_1 = __webpack_require__(32);
+var ConsoleOutputCustomNodeGroup_1 = __webpack_require__(56);
+var DebugProtectionCustomNodeGroup_1 = __webpack_require__(69);
+var DomainLockCustomNodeGroup_1 = __webpack_require__(71);
+var SelfDefendingCustomNodeGroup_1 = __webpack_require__(74);
+var StringArrayCustomNodeGroup_1 = __webpack_require__(78);
+var BinaryExpressionFunctionNode_1 = __webpack_require__(57);
+var BlockStatementControlFlowFlatteningNode_1 = __webpack_require__(58);
+var CallExpressionControlFlowStorageCallNode_1 = __webpack_require__(62);
+var CallExpressionFunctionNode_1 = __webpack_require__(59);
+var ControlFlowStorageNode_1 = __webpack_require__(63);
+var ConsoleOutputDisableExpressionNode_1 = __webpack_require__(55);
+var DebugProtectionFunctionCallNode_1 = __webpack_require__(66);
+var DebugProtectionFunctionIntervalNode_1 = __webpack_require__(67);
+var DebugProtectionFunctionNode_1 = __webpack_require__(68);
+var DomainLockNode_1 = __webpack_require__(70);
+var ExpressionWithOperatorControlFlowStorageCallNode_1 = __webpack_require__(64);
+var LogicalExpressionFunctionNode_1 = __webpack_require__(60);
+var NodeCallsControllerFunctionNode_1 = __webpack_require__(72);
+var SelfDefendingUnicodeNode_1 = __webpack_require__(73);
+var StringArrayCallsWrapper_1 = __webpack_require__(75);
+var StringArrayNode_1 = __webpack_require__(76);
+var StringArrayRotateFunctionNode_1 = __webpack_require__(77);
+var StringLiteralControlFlowStorageCallNode_1 = __webpack_require__(65);
+var StringLiteralNode_1 = __webpack_require__(61);
 exports.customNodesModule = new inversify_1.ContainerModule(function (bind) {
     bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(BinaryExpressionFunctionNode_1.BinaryExpressionFunctionNode).whenTargetNamed(CustomNodes_1.CustomNodes.BinaryExpressionFunctionNode);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(BlockStatementControlFlowFlatteningNode_1.BlockStatementControlFlowFlatteningNode).whenTargetNamed(CustomNodes_1.CustomNodes.BlockStatementControlFlowFlatteningNode);
@@ -2709,6 +2825,8 @@ exports.customNodesModule = new inversify_1.ContainerModule(function (bind) {
     bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(StringArrayCallsWrapper_1.StringArrayCallsWrapper).whenTargetNamed(CustomNodes_1.CustomNodes.StringArrayCallsWrapper);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(StringArrayNode_1.StringArrayNode).whenTargetNamed(CustomNodes_1.CustomNodes.StringArrayNode);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(StringArrayRotateFunctionNode_1.StringArrayRotateFunctionNode).whenTargetNamed(CustomNodes_1.CustomNodes.StringArrayRotateFunctionNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(StringLiteralControlFlowStorageCallNode_1.StringLiteralControlFlowStorageCallNode).whenTargetNamed(CustomNodes_1.CustomNodes.StringLiteralControlFlowStorageCallNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(StringLiteralNode_1.StringLiteralNode).whenTargetNamed(CustomNodes_1.CustomNodes.StringLiteralNode);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNodeGroup).to(ConsoleOutputCustomNodeGroup_1.ConsoleOutputCustomNodeGroup).whenTargetNamed(CustomNodeGroups_1.CustomNodeGroups.ConsoleOutputCustomNodeGroup);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNodeGroup).to(DebugProtectionCustomNodeGroup_1.DebugProtectionCustomNodeGroup).whenTargetNamed(CustomNodeGroups_1.CustomNodeGroups.DebugProtectionCustomNodeGroup);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNodeGroup).to(DomainLockCustomNodeGroup_1.DomainLockCustomNodeGroup).whenTargetNamed(CustomNodeGroups_1.CustomNodeGroups.DomainLockCustomNodeGroup);
@@ -2737,22 +2855,25 @@ exports.customNodesModule = new inversify_1.ContainerModule(function (bind) {
 });
 
 /***/ }),
-/* 46 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var ControlFlowReplacers_1 = __webpack_require__(29);
-var BinaryExpressionControlFlowReplacer_1 = __webpack_require__(77);
-var CallExpressionControlFlowReplacer_1 = __webpack_require__(78);
-var LogicalExpressionControlFlowReplacer_1 = __webpack_require__(79);
+var ControlFlowReplacers_1 = __webpack_require__(31);
+var BinaryExpressionControlFlowReplacer_1 = __webpack_require__(83);
+var CallExpressionControlFlowReplacer_1 = __webpack_require__(84);
+var LogicalExpressionControlFlowReplacer_1 = __webpack_require__(85);
+var StringLiteralControlFlowReplacer_1 = __webpack_require__(86);
 exports.controlFlowTransformersModule = new inversify_1.ContainerModule(function (bind) {
     bind(ServiceIdentifiers_1.ServiceIdentifiers.IControlFlowReplacer).to(BinaryExpressionControlFlowReplacer_1.BinaryExpressionControlFlowReplacer).whenTargetNamed(ControlFlowReplacers_1.ControlFlowReplacers.BinaryExpressionControlFlowReplacer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.IControlFlowReplacer).to(CallExpressionControlFlowReplacer_1.CallExpressionControlFlowReplacer).whenTargetNamed(ControlFlowReplacers_1.ControlFlowReplacers.CallExpressionControlFlowReplacer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.IControlFlowReplacer).to(LogicalExpressionControlFlowReplacer_1.LogicalExpressionControlFlowReplacer).whenTargetNamed(ControlFlowReplacers_1.ControlFlowReplacers.LogicalExpressionControlFlowReplacer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IControlFlowReplacer).to(StringLiteralControlFlowReplacer_1.StringLiteralControlFlowReplacer).whenTargetNamed(ControlFlowReplacers_1.ControlFlowReplacers.StringLiteralControlFlowReplacer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowReplacer).toFactory(function (context) {
         var cache = new Map();
         return function (replacerName) {
@@ -2767,29 +2888,32 @@ exports.controlFlowTransformersModule = new inversify_1.ContainerModule(function
 });
 
 /***/ }),
-/* 47 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var NodeTransformers_1 = __webpack_require__(31);
-var FunctionControlFlowTransformer_1 = __webpack_require__(76);
-var BlockStatementControlFlowTransformer_1 = __webpack_require__(75);
-var CatchClauseTransformer_1 = __webpack_require__(83);
-var FunctionDeclarationTransformer_1 = __webpack_require__(84);
-var FunctionTransformer_1 = __webpack_require__(85);
-var LabeledStatementTransformer_1 = __webpack_require__(86);
-var LiteralTransformer_1 = __webpack_require__(87);
-var MemberExpressionTransformer_1 = __webpack_require__(80);
-var MethodDefinitionTransformer_1 = __webpack_require__(81);
-var ObjectExpressionTransformer_1 = __webpack_require__(88);
-var TemplateLiteralTransformer_1 = __webpack_require__(82);
-var VariableDeclarationTransformer_1 = __webpack_require__(89);
+var NodeTransformers_1 = __webpack_require__(33);
+var FunctionControlFlowTransformer_1 = __webpack_require__(82);
+var BlockStatementControlFlowTransformer_1 = __webpack_require__(81);
+var DeadCodeInjectionTransformer_1 = __webpack_require__(90);
+var CatchClauseTransformer_1 = __webpack_require__(91);
+var FunctionDeclarationTransformer_1 = __webpack_require__(92);
+var FunctionTransformer_1 = __webpack_require__(93);
+var LabeledStatementTransformer_1 = __webpack_require__(94);
+var LiteralTransformer_1 = __webpack_require__(95);
+var MemberExpressionTransformer_1 = __webpack_require__(87);
+var MethodDefinitionTransformer_1 = __webpack_require__(88);
+var ObjectExpressionTransformer_1 = __webpack_require__(96);
+var TemplateLiteralTransformer_1 = __webpack_require__(89);
+var VariableDeclarationTransformer_1 = __webpack_require__(97);
 exports.nodeTransformersModule = new inversify_1.ContainerModule(function (bind) {
     bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(BlockStatementControlFlowTransformer_1.BlockStatementControlFlowTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.BlockStatementControlFlowTransformer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(DeadCodeInjectionTransformer_1.DeadCodeInjectionTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.DeadCodeInjectionTransformer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(FunctionControlFlowTransformer_1.FunctionControlFlowTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.FunctionControlFlowTransformer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(MemberExpressionTransformer_1.MemberExpressionTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.MemberExpressionTransformer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(MethodDefinitionTransformer_1.MethodDefinitionTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.MethodDefinitionTransformer);
@@ -2815,19 +2939,20 @@ exports.nodeTransformersModule = new inversify_1.ContainerModule(function (bind)
 });
 
 /***/ }),
-/* 48 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var ObfuscationReplacers_1 = __webpack_require__(16);
-var BooleanLiteralReplacer_1 = __webpack_require__(90);
-var IdentifierReplacer_1 = __webpack_require__(91);
-var NumberLiteralReplacer_1 = __webpack_require__(92);
-var StringLiteralReplacer_1 = __webpack_require__(93);
+var BooleanLiteralReplacer_1 = __webpack_require__(98);
+var IdentifierReplacer_1 = __webpack_require__(99);
+var NumberLiteralReplacer_1 = __webpack_require__(100);
+var StringLiteralReplacer_1 = __webpack_require__(101);
 exports.obfuscatingTransformersModule = new inversify_1.ContainerModule(function (bind) {
     bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscationReplacer).to(BooleanLiteralReplacer_1.BooleanLiteralReplacer).whenTargetNamed(ObfuscationReplacers_1.ObfuscationReplacers.BooleanReplacer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscationReplacer).to(IdentifierReplacer_1.IdentifierReplacer).whenTargetNamed(ObfuscationReplacers_1.ObfuscationReplacers.IdentifierReplacer);
@@ -2847,19 +2972,20 @@ exports.obfuscatingTransformersModule = new inversify_1.ContainerModule(function
 });
 
 /***/ }),
-/* 49 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var CalleeDataExtractors_1 = __webpack_require__(28);
-var FunctionDeclarationCalleeDataExtractor_1 = __webpack_require__(98);
-var FunctionExpressionCalleeDataExtractor_1 = __webpack_require__(99);
-var ObjectExpressionCalleeDataExtractor_1 = __webpack_require__(100);
-var StackTraceAnalyzer_1 = __webpack_require__(97);
+var CalleeDataExtractors_1 = __webpack_require__(30);
+var FunctionDeclarationCalleeDataExtractor_1 = __webpack_require__(116);
+var FunctionExpressionCalleeDataExtractor_1 = __webpack_require__(117);
+var ObjectExpressionCalleeDataExtractor_1 = __webpack_require__(118);
+var StackTraceAnalyzer_1 = __webpack_require__(115);
 exports.stackTraceAnalyzerModule = new inversify_1.ContainerModule(function (bind) {
     bind(ServiceIdentifiers_1.ServiceIdentifiers.IStackTraceAnalyzer).to(StackTraceAnalyzer_1.StackTraceAnalyzer).inSingletonScope();
     bind(ServiceIdentifiers_1.ServiceIdentifiers.ICalleeDataExtractor).to(FunctionDeclarationCalleeDataExtractor_1.FunctionDeclarationCalleeDataExtractor).whenTargetNamed(CalleeDataExtractors_1.CalleeDataExtractors.FunctionDeclarationCalleeDataExtractor);
@@ -2879,17 +3005,18 @@ exports.stackTraceAnalyzerModule = new inversify_1.ContainerModule(function (bin
 });
 
 /***/ }),
-/* 50 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var ControlFlowStorage_1 = __webpack_require__(102);
-var CustomNodeGroupStorage_1 = __webpack_require__(103);
-var StringArrayStorage_1 = __webpack_require__(104);
+var ControlFlowStorage_1 = __webpack_require__(120);
+var CustomNodeGroupStorage_1 = __webpack_require__(121);
+var StringArrayStorage_1 = __webpack_require__(122);
 exports.storagesModule = new inversify_1.ContainerModule(function (bind) {
     bind(ServiceIdentifiers_1.ServiceIdentifiers.TCustomNodeGroupStorage).to(CustomNodeGroupStorage_1.CustomNodeGroupStorage).inSingletonScope();
     bind(ServiceIdentifiers_1.ServiceIdentifiers.TStringArrayStorage).to(StringArrayStorage_1.StringArrayStorage).inSingletonScope();
@@ -2903,7 +3030,7 @@ exports.storagesModule = new inversify_1.ContainerModule(function (bind) {
 });
 
 /***/ }),
-/* 51 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2917,11 +3044,12 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var format = __webpack_require__(12);
-var ConsoleOutputDisableExpressionTemplate_1 = __webpack_require__(108);
+var format = __webpack_require__(13);
+var ConsoleOutputDisableExpressionTemplate_1 = __webpack_require__(126);
 var Initializable_1 = __webpack_require__(5);
 var AbstractCustomNode_1 = __webpack_require__(7);
 var NodeUtils_1 = __webpack_require__(3);
@@ -2962,7 +3090,7 @@ ConsoleOutputDisableExpressionNode = tslib_1.__decorate([inversify_1.injectable(
 exports.ConsoleOutputDisableExpressionNode = ConsoleOutputDisableExpressionNode;
 
 /***/ }),
-/* 52 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2976,6 +3104,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
@@ -3040,7 +3169,7 @@ ConsoleOutputCustomNodeGroup = tslib_1.__decorate([inversify_1.injectable(), tsl
 exports.ConsoleOutputCustomNodeGroup = ConsoleOutputCustomNodeGroup;
 
 /***/ }),
-/* 53 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3054,12 +3183,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var Initializable_1 = __webpack_require__(5);
 var AbstractCustomNode_1 = __webpack_require__(7);
-var Nodes_1 = __webpack_require__(14);
+var Nodes_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(3);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 var BinaryExpressionFunctionNode = function (_AbstractCustomNode_) {
@@ -3092,7 +3222,7 @@ BinaryExpressionFunctionNode = tslib_1.__decorate([inversify_1.injectable(), tsl
 exports.BinaryExpressionFunctionNode = BinaryExpressionFunctionNode;
 
 /***/ }),
-/* 54 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3106,12 +3236,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var Initializable_1 = __webpack_require__(5);
 var AbstractCustomNode_1 = __webpack_require__(7);
-var Nodes_1 = __webpack_require__(14);
+var Nodes_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(3);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 var BlockStatementControlFlowFlatteningNode = function (_AbstractCustomNode_) {
@@ -3154,7 +3285,7 @@ BlockStatementControlFlowFlatteningNode = tslib_1.__decorate([inversify_1.inject
 exports.BlockStatementControlFlowFlatteningNode = BlockStatementControlFlowFlatteningNode;
 
 /***/ }),
-/* 55 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3168,12 +3299,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var Initializable_1 = __webpack_require__(5);
 var AbstractCustomNode_1 = __webpack_require__(7);
-var Nodes_1 = __webpack_require__(14);
+var Nodes_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(3);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 var CallExpressionFunctionNode = function (_AbstractCustomNode_) {
@@ -3212,7 +3344,7 @@ CallExpressionFunctionNode = tslib_1.__decorate([inversify_1.injectable(), tslib
 exports.CallExpressionFunctionNode = CallExpressionFunctionNode;
 
 /***/ }),
-/* 56 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3226,12 +3358,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var Initializable_1 = __webpack_require__(5);
 var AbstractCustomNode_1 = __webpack_require__(7);
-var Nodes_1 = __webpack_require__(14);
+var Nodes_1 = __webpack_require__(12);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 var NodeUtils_1 = __webpack_require__(3);
 var LogicalExpressionFunctionNode = function (_AbstractCustomNode_) {
@@ -3264,7 +3397,57 @@ LogicalExpressionFunctionNode = tslib_1.__decorate([inversify_1.injectable(), ts
 exports.LogicalExpressionFunctionNode = LogicalExpressionFunctionNode;
 
 /***/ }),
-/* 57 */
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = __webpack_require__(1);
+var inversify_1 = __webpack_require__(0);
+var ServiceIdentifiers_1 = __webpack_require__(2);
+var Initializable_1 = __webpack_require__(5);
+var AbstractCustomNode_1 = __webpack_require__(7);
+var Nodes_1 = __webpack_require__(12);
+var StringLiteralNode = function (_AbstractCustomNode_) {
+    _inherits(StringLiteralNode, _AbstractCustomNode_);
+
+    function StringLiteralNode(options) {
+        _classCallCheck(this, StringLiteralNode);
+
+        return _possibleConstructorReturn(this, (StringLiteralNode.__proto__ || Object.getPrototypeOf(StringLiteralNode)).call(this, options));
+    }
+
+    _createClass(StringLiteralNode, [{
+        key: "initialize",
+        value: function initialize(literalValue) {
+            this.literalValue = literalValue;
+        }
+    }, {
+        key: "getNodeStructure",
+        value: function getNodeStructure() {
+            var structure = Nodes_1.Nodes.getLiteralNode(this.literalValue);
+            return [structure];
+        }
+    }]);
+
+    return StringLiteralNode;
+}(AbstractCustomNode_1.AbstractCustomNode);
+tslib_1.__decorate([Initializable_1.initializable(), tslib_1.__metadata("design:type", String)], StringLiteralNode.prototype, "literalValue", void 0);
+StringLiteralNode = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object])], StringLiteralNode);
+exports.StringLiteralNode = StringLiteralNode;
+
+/***/ }),
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3280,12 +3463,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var Initializable_1 = __webpack_require__(5);
 var AbstractCustomNode_1 = __webpack_require__(7);
-var Nodes_1 = __webpack_require__(14);
+var Nodes_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(3);
 var CallExpressionControlFlowStorageCallNode = function (_AbstractCustomNode_) {
     _inherits(CallExpressionControlFlowStorageCallNode, _AbstractCustomNode_);
@@ -3323,7 +3507,7 @@ CallExpressionControlFlowStorageCallNode = tslib_1.__decorate([inversify_1.injec
 exports.CallExpressionControlFlowStorageCallNode = CallExpressionControlFlowStorageCallNode;
 
 /***/ }),
-/* 58 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3339,12 +3523,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var Initializable_1 = __webpack_require__(5);
 var AbstractCustomNode_1 = __webpack_require__(7);
-var Nodes_1 = __webpack_require__(14);
+var Nodes_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(3);
 var ControlFlowStorageNode = function (_AbstractCustomNode_) {
     _inherits(ControlFlowStorageNode, _AbstractCustomNode_);
@@ -3382,7 +3567,7 @@ ControlFlowStorageNode = tslib_1.__decorate([inversify_1.injectable(), tslib_1._
 exports.ControlFlowStorageNode = ControlFlowStorageNode;
 
 /***/ }),
-/* 59 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3396,12 +3581,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var Initializable_1 = __webpack_require__(5);
 var AbstractCustomNode_1 = __webpack_require__(7);
-var Nodes_1 = __webpack_require__(14);
+var Nodes_1 = __webpack_require__(12);
 var NodeUtils_1 = __webpack_require__(3);
 var ExpressionWithOperatorControlFlowStorageCallNode = function (_AbstractCustomNode_) {
     _inherits(ExpressionWithOperatorControlFlowStorageCallNode, _AbstractCustomNode_);
@@ -3439,7 +3625,7 @@ ExpressionWithOperatorControlFlowStorageCallNode = tslib_1.__decorate([inversify
 exports.ExpressionWithOperatorControlFlowStorageCallNode = ExpressionWithOperatorControlFlowStorageCallNode;
 
 /***/ }),
-/* 60 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3453,12 +3639,67 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var format = __webpack_require__(12);
 var Initializable_1 = __webpack_require__(5);
-var DebufProtectionFunctionCallTemplate_1 = __webpack_require__(109);
+var AbstractCustomNode_1 = __webpack_require__(7);
+var Nodes_1 = __webpack_require__(12);
+var NodeUtils_1 = __webpack_require__(3);
+var StringLiteralControlFlowStorageCallNode = function (_AbstractCustomNode_) {
+    _inherits(StringLiteralControlFlowStorageCallNode, _AbstractCustomNode_);
+
+    function StringLiteralControlFlowStorageCallNode(options) {
+        _classCallCheck(this, StringLiteralControlFlowStorageCallNode);
+
+        return _possibleConstructorReturn(this, (StringLiteralControlFlowStorageCallNode.__proto__ || Object.getPrototypeOf(StringLiteralControlFlowStorageCallNode)).call(this, options));
+    }
+
+    _createClass(StringLiteralControlFlowStorageCallNode, [{
+        key: "initialize",
+        value: function initialize(controlFlowStorageName, controlFlowStorageKey) {
+            this.controlFlowStorageName = controlFlowStorageName;
+            this.controlFlowStorageKey = controlFlowStorageKey;
+        }
+    }, {
+        key: "getNodeStructure",
+        value: function getNodeStructure() {
+            var structure = Nodes_1.Nodes.getExpressionStatementNode(Nodes_1.Nodes.getMemberExpressionNode(Nodes_1.Nodes.getIdentifierNode(this.controlFlowStorageName), Nodes_1.Nodes.getIdentifierNode(this.controlFlowStorageKey)));
+            NodeUtils_1.NodeUtils.parentize(structure);
+            return [structure];
+        }
+    }]);
+
+    return StringLiteralControlFlowStorageCallNode;
+}(AbstractCustomNode_1.AbstractCustomNode);
+tslib_1.__decorate([Initializable_1.initializable(), tslib_1.__metadata("design:type", String)], StringLiteralControlFlowStorageCallNode.prototype, "controlFlowStorageKey", void 0);
+tslib_1.__decorate([Initializable_1.initializable(), tslib_1.__metadata("design:type", String)], StringLiteralControlFlowStorageCallNode.prototype, "controlFlowStorageName", void 0);
+StringLiteralControlFlowStorageCallNode = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object])], StringLiteralControlFlowStorageCallNode);
+exports.StringLiteralControlFlowStorageCallNode = StringLiteralControlFlowStorageCallNode;
+
+/***/ }),
+/* 66 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = __webpack_require__(1);
+var inversify_1 = __webpack_require__(0);
+var ServiceIdentifiers_1 = __webpack_require__(2);
+var format = __webpack_require__(13);
+var Initializable_1 = __webpack_require__(5);
+var DebufProtectionFunctionCallTemplate_1 = __webpack_require__(127);
 var AbstractCustomNode_1 = __webpack_require__(7);
 var NodeUtils_1 = __webpack_require__(3);
 var DebugProtectionFunctionCallNode = function (_AbstractCustomNode_) {
@@ -3496,7 +3737,7 @@ DebugProtectionFunctionCallNode = tslib_1.__decorate([inversify_1.injectable(), 
 exports.DebugProtectionFunctionCallNode = DebugProtectionFunctionCallNode;
 
 /***/ }),
-/* 61 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3510,12 +3751,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var format = __webpack_require__(12);
+var format = __webpack_require__(13);
 var Initializable_1 = __webpack_require__(5);
-var DebugProtectionFunctionIntervalTemplate_1 = __webpack_require__(110);
+var DebugProtectionFunctionIntervalTemplate_1 = __webpack_require__(128);
 var AbstractCustomNode_1 = __webpack_require__(7);
 var NodeUtils_1 = __webpack_require__(3);
 var DebugProtectionFunctionIntervalNode = function (_AbstractCustomNode_) {
@@ -3553,7 +3795,7 @@ DebugProtectionFunctionIntervalNode = tslib_1.__decorate([inversify_1.injectable
 exports.DebugProtectionFunctionIntervalNode = DebugProtectionFunctionIntervalNode;
 
 /***/ }),
-/* 62 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3567,12 +3809,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var format = __webpack_require__(12);
+var format = __webpack_require__(13);
 var Initializable_1 = __webpack_require__(5);
-var DebugProtectionFunctionTemplate_1 = __webpack_require__(111);
+var DebugProtectionFunctionTemplate_1 = __webpack_require__(129);
 var AbstractCustomNode_1 = __webpack_require__(7);
 var NodeUtils_1 = __webpack_require__(3);
 var DebugProtectionFunctionNode = function (_AbstractCustomNode_) {
@@ -3610,7 +3853,7 @@ DebugProtectionFunctionNode = tslib_1.__decorate([inversify_1.injectable(), tsli
 exports.DebugProtectionFunctionNode = DebugProtectionFunctionNode;
 
 /***/ }),
-/* 63 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3624,6 +3867,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
@@ -3691,7 +3935,7 @@ DebugProtectionCustomNodeGroup = tslib_1.__decorate([inversify_1.injectable(), t
 exports.DebugProtectionCustomNodeGroup = DebugProtectionCustomNodeGroup;
 
 /***/ }),
-/* 64 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3707,14 +3951,15 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var format = __webpack_require__(12);
+var format = __webpack_require__(13);
 var Initializable_1 = __webpack_require__(5);
-var DomainLockNodeTemplate_1 = __webpack_require__(112);
+var DomainLockNodeTemplate_1 = __webpack_require__(130);
 var AbstractCustomNode_1 = __webpack_require__(7);
-var CryptUtils_1 = __webpack_require__(26);
+var CryptUtils_1 = __webpack_require__(28);
 var NodeUtils_1 = __webpack_require__(3);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 var DomainLockNode = function (_AbstractCustomNode_) {
@@ -3762,7 +4007,7 @@ DomainLockNode = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0
 exports.DomainLockNode = DomainLockNode;
 
 /***/ }),
-/* 65 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3776,6 +4021,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
@@ -3840,7 +4086,7 @@ DomainLockCustomNodeGroup = tslib_1.__decorate([inversify_1.injectable(), tslib_
 exports.DomainLockCustomNodeGroup = DomainLockCustomNodeGroup;
 
 /***/ }),
-/* 66 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3854,14 +4100,15 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var format = __webpack_require__(12);
+var format = __webpack_require__(13);
 var ObfuscationEvents_1 = __webpack_require__(15);
 var Initializable_1 = __webpack_require__(5);
-var SingleNodeCallControllerTemplate_1 = __webpack_require__(107);
-var NoCustomNodes_1 = __webpack_require__(23);
+var SingleNodeCallControllerTemplate_1 = __webpack_require__(125);
+var NoCustomNodes_1 = __webpack_require__(22);
 var AbstractCustomNode_1 = __webpack_require__(7);
 var JavaScriptObfuscator_1 = __webpack_require__(17);
 var NodeUtils_1 = __webpack_require__(3);
@@ -3907,7 +4154,7 @@ NodeCallsControllerFunctionNode = tslib_1.__decorate([inversify_1.injectable(), 
 exports.NodeCallsControllerFunctionNode = NodeCallsControllerFunctionNode;
 
 /***/ }),
-/* 67 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3921,13 +4168,14 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var format = __webpack_require__(12);
+var format = __webpack_require__(13);
 var Initializable_1 = __webpack_require__(5);
-var NoCustomNodes_1 = __webpack_require__(23);
-var SelfDefendingTemplate_1 = __webpack_require__(113);
+var NoCustomNodes_1 = __webpack_require__(22);
+var SelfDefendingTemplate_1 = __webpack_require__(131);
 var AbstractCustomNode_1 = __webpack_require__(7);
 var JavaScriptObfuscator_1 = __webpack_require__(17);
 var NodeUtils_1 = __webpack_require__(3);
@@ -3957,7 +4205,7 @@ var SelfDefendingUnicodeNode = function (_AbstractCustomNode_) {
             return JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(format(SelfDefendingTemplate_1.SelfDefendingTemplate(), {
                 selfDefendingFunctionName: RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6),
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-            }), Object.assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
+            }), Object.assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed, unicodeEscapeSequence: true })).getObfuscatedCode();
         }
     }]);
 
@@ -3968,7 +4216,7 @@ SelfDefendingUnicodeNode = tslib_1.__decorate([inversify_1.injectable(), tslib_1
 exports.SelfDefendingUnicodeNode = SelfDefendingUnicodeNode;
 
 /***/ }),
-/* 68 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3982,6 +4230,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
@@ -4046,7 +4295,7 @@ SelfDefendingCustomNodeGroup = tslib_1.__decorate([inversify_1.injectable(), tsl
 exports.SelfDefendingCustomNodeGroup = SelfDefendingCustomNodeGroup;
 
 /***/ }),
-/* 69 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4060,19 +4309,20 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var format = __webpack_require__(12);
+var format = __webpack_require__(13);
 var StringArrayEncoding_1 = __webpack_require__(24);
 var Initializable_1 = __webpack_require__(5);
-var NoCustomNodes_1 = __webpack_require__(23);
-var AtobTemplate_1 = __webpack_require__(105);
-var Rc4Template_1 = __webpack_require__(106);
-var SelfDefendingTemplate_1 = __webpack_require__(114);
-var StringArrayBase64DecodeNodeTemplate_1 = __webpack_require__(115);
-var StringArrayCallsWrapperTemplate_1 = __webpack_require__(116);
-var StringArrayRC4DecodeNodeTemplate_1 = __webpack_require__(117);
+var NoCustomNodes_1 = __webpack_require__(22);
+var AtobTemplate_1 = __webpack_require__(123);
+var Rc4Template_1 = __webpack_require__(124);
+var SelfDefendingTemplate_1 = __webpack_require__(132);
+var StringArrayBase64DecodeNodeTemplate_1 = __webpack_require__(133);
+var StringArrayCallsWrapperTemplate_1 = __webpack_require__(134);
+var StringArrayRC4DecodeNodeTemplate_1 = __webpack_require__(135);
 var AbstractCustomNode_1 = __webpack_require__(7);
 var JavaScriptObfuscator_1 = __webpack_require__(17);
 var NodeUtils_1 = __webpack_require__(3);
@@ -4148,7 +4398,7 @@ StringArrayCallsWrapper = tslib_1.__decorate([inversify_1.injectable(), tslib_1.
 exports.StringArrayCallsWrapper = StringArrayCallsWrapper;
 
 /***/ }),
-/* 70 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4164,12 +4414,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var format = __webpack_require__(12);
+var format = __webpack_require__(13);
 var Initializable_1 = __webpack_require__(5);
-var StringArrayTemplate_1 = __webpack_require__(118);
+var StringArrayTemplate_1 = __webpack_require__(136);
 var AbstractCustomNode_1 = __webpack_require__(7);
 var NodeUtils_1 = __webpack_require__(3);
 var StringArrayNode = function (_AbstractCustomNode_) {
@@ -4218,7 +4469,7 @@ StringArrayNode = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(
 exports.StringArrayNode = StringArrayNode;
 
 /***/ }),
-/* 71 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4232,14 +4483,15 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var format = __webpack_require__(12);
+var format = __webpack_require__(13);
 var Initializable_1 = __webpack_require__(5);
-var NoCustomNodes_1 = __webpack_require__(23);
-var SelfDefendingTemplate_1 = __webpack_require__(119);
-var StringArrayRotateFunctionTemplate_1 = __webpack_require__(120);
+var NoCustomNodes_1 = __webpack_require__(22);
+var SelfDefendingTemplate_1 = __webpack_require__(137);
+var StringArrayRotateFunctionTemplate_1 = __webpack_require__(138);
 var AbstractCustomNode_1 = __webpack_require__(7);
 var JavaScriptObfuscator_1 = __webpack_require__(17);
 var NodeUtils_1 = __webpack_require__(3);
@@ -4299,7 +4551,7 @@ StringArrayRotateFunctionNode = tslib_1.__decorate([inversify_1.injectable(), ts
 exports.StringArrayRotateFunctionNode = StringArrayRotateFunctionNode;
 
 /***/ }),
-/* 72 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4313,6 +4565,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
@@ -4392,12 +4645,13 @@ StringArrayCustomNodeGroup = tslib_1.__decorate([inversify_1.injectable(), tslib
 exports.StringArrayCustomNodeGroup = StringArrayCustomNodeGroup;
 
 /***/ }),
-/* 73 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var Utils_1 = __webpack_require__(8);
 exports.VisitorDirection = Utils_1.Utils.strEnumify({
     enter: 'enter',
@@ -4405,7 +4659,7 @@ exports.VisitorDirection = Utils_1.Utils.strEnumify({
 });
 
 /***/ }),
-/* 74 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4417,9 +4671,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
-var events_1 = __webpack_require__(124);
+var events_1 = __webpack_require__(143);
 inversify_1.decorate(inversify_1.injectable(), events_1.EventEmitter);
 var ObfuscationEventEmitter = function (_events_1$EventEmitte) {
     _inherits(ObfuscationEventEmitter, _events_1$EventEmitte);
@@ -4436,7 +4691,7 @@ ObfuscationEventEmitter = tslib_1.__decorate([inversify_1.injectable()], Obfusca
 exports.ObfuscationEventEmitter = ObfuscationEventEmitter;
 
 /***/ }),
-/* 75 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4450,6 +4705,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
@@ -4520,7 +4776,7 @@ exports.BlockStatementControlFlowTransformer = BlockStatementControlFlowTransfor
 var BlockStatementControlFlowTransformer_1;
 
 /***/ }),
-/* 76 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4534,16 +4790,17 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(11);
 var CustomNodes_1 = __webpack_require__(9);
-var NodeType_1 = __webpack_require__(13);
+var NodeType_1 = __webpack_require__(14);
 var AbstractNodeTransformer_1 = __webpack_require__(10);
 var Node_1 = __webpack_require__(6);
 var NodeAppender_1 = __webpack_require__(18);
-var ControlFlowReplacers_1 = __webpack_require__(29);
+var ControlFlowReplacers_1 = __webpack_require__(31);
 var NodeUtils_1 = __webpack_require__(3);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function (_AbstractNodeTransfor) {
@@ -4631,6 +4888,9 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
                         return node;
                     }
                     var controlFlowReplacerName = FunctionControlFlowTransformer_1.controlFlowReplacersMap.get(node.type);
+                    if (controlFlowReplacerName === undefined) {
+                        return node;
+                    }
                     return Object.assign({}, _this3.controlFlowReplacerFactory(controlFlowReplacerName).replace(node, parentNode, controlFlowStorage), { parentNode: parentNode });
                 }
             });
@@ -4656,7 +4916,7 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
 
     return FunctionControlFlowTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
-FunctionControlFlowTransformer.controlFlowReplacersMap = new Map([[NodeType_1.NodeType.BinaryExpression, ControlFlowReplacers_1.ControlFlowReplacers.BinaryExpressionControlFlowReplacer], [NodeType_1.NodeType.CallExpression, ControlFlowReplacers_1.ControlFlowReplacers.CallExpressionControlFlowReplacer], [NodeType_1.NodeType.LogicalExpression, ControlFlowReplacers_1.ControlFlowReplacers.LogicalExpressionControlFlowReplacer]]);
+FunctionControlFlowTransformer.controlFlowReplacersMap = new Map([[NodeType_1.NodeType.BinaryExpression, ControlFlowReplacers_1.ControlFlowReplacers.BinaryExpressionControlFlowReplacer], [NodeType_1.NodeType.CallExpression, ControlFlowReplacers_1.ControlFlowReplacers.CallExpressionControlFlowReplacer], [NodeType_1.NodeType.LogicalExpression, ControlFlowReplacers_1.ControlFlowReplacers.LogicalExpressionControlFlowReplacer], [NodeType_1.NodeType.Literal, ControlFlowReplacers_1.ControlFlowReplacers.StringLiteralControlFlowReplacer]]);
 FunctionControlFlowTransformer.hostNodeSearchMinDepth = 0;
 FunctionControlFlowTransformer.hostNodeSearchMaxDepth = 2;
 FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__TControlFlowStorage)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowReplacer)), tslib_1.__param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomNode)), tslib_1.__param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Function, Function, Object])], FunctionControlFlowTransformer);
@@ -4664,7 +4924,7 @@ exports.FunctionControlFlowTransformer = FunctionControlFlowTransformer;
 var FunctionControlFlowTransformer_1;
 
 /***/ }),
-/* 77 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4678,11 +4938,12 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var CustomNodes_1 = __webpack_require__(9);
-var ExpressionWithOperatorControlFlowReplacer_1 = __webpack_require__(33);
+var ExpressionWithOperatorControlFlowReplacer_1 = __webpack_require__(34);
 var BinaryExpressionControlFlowReplacer = BinaryExpressionControlFlowReplacer_1 = function (_ExpressionWithOperat) {
     _inherits(BinaryExpressionControlFlowReplacer, _ExpressionWithOperat);
 
@@ -4711,7 +4972,7 @@ exports.BinaryExpressionControlFlowReplacer = BinaryExpressionControlFlowReplace
 var BinaryExpressionControlFlowReplacer_1;
 
 /***/ }),
-/* 78 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4725,11 +4986,12 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var CustomNodes_1 = __webpack_require__(9);
-var AbstractControlFlowReplacer_1 = __webpack_require__(32);
+var AbstractControlFlowReplacer_1 = __webpack_require__(25);
 var Node_1 = __webpack_require__(6);
 var CallExpressionControlFlowReplacer = CallExpressionControlFlowReplacer_1 = function (_AbstractControlFlowR) {
     _inherits(CallExpressionControlFlowReplacer, _AbstractControlFlowR);
@@ -4775,7 +5037,7 @@ exports.CallExpressionControlFlowReplacer = CallExpressionControlFlowReplacer;
 var CallExpressionControlFlowReplacer_1;
 
 /***/ }),
-/* 79 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4789,11 +5051,12 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var CustomNodes_1 = __webpack_require__(9);
-var ExpressionWithOperatorControlFlowReplacer_1 = __webpack_require__(33);
+var ExpressionWithOperatorControlFlowReplacer_1 = __webpack_require__(34);
 var Node_1 = __webpack_require__(6);
 var NodeUtils_1 = __webpack_require__(3);
 var LogicalExpressionControlFlowReplacer = LogicalExpressionControlFlowReplacer_1 = function (_ExpressionWithOperat) {
@@ -4840,7 +5103,7 @@ exports.LogicalExpressionControlFlowReplacer = LogicalExpressionControlFlowRepla
 var LogicalExpressionControlFlowReplacer_1;
 
 /***/ }),
-/* 80 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4854,10 +5117,77 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var NodeType_1 = __webpack_require__(13);
+var CustomNodes_1 = __webpack_require__(9);
+var AbstractControlFlowReplacer_1 = __webpack_require__(25);
+var Node_1 = __webpack_require__(6);
+var StringLiteralControlFlowReplacer = StringLiteralControlFlowReplacer_1 = function (_AbstractControlFlowR) {
+    _inherits(StringLiteralControlFlowReplacer, _AbstractControlFlowR);
+
+    function StringLiteralControlFlowReplacer(customNodeFactory, options) {
+        _classCallCheck(this, StringLiteralControlFlowReplacer);
+
+        return _possibleConstructorReturn(this, (StringLiteralControlFlowReplacer.__proto__ || Object.getPrototypeOf(StringLiteralControlFlowReplacer)).call(this, customNodeFactory, options));
+    }
+
+    _createClass(StringLiteralControlFlowReplacer, [{
+        key: "replace",
+        value: function replace(literalNode, parentNode, controlFlowStorage) {
+            if (Node_1.Node.isPropertyNode(parentNode) && parentNode.key === literalNode) {
+                return literalNode;
+            }
+            if (typeof literalNode.value !== 'string' || literalNode.value.length < 3) {
+                return literalNode;
+            }
+            var replacerId = String(literalNode.value);
+            var literalFunctionCustomNode = this.customNodeFactory(CustomNodes_1.CustomNodes.StringLiteralNode);
+            literalFunctionCustomNode.initialize(literalNode.value);
+            var storageKey = this.insertCustomNodeToControlFlowStorage(literalFunctionCustomNode, controlFlowStorage, replacerId, StringLiteralControlFlowReplacer_1.usingExistingIdentifierChance);
+            return this.getControlFlowStorageCallNode(controlFlowStorage.getStorageId(), storageKey);
+        }
+    }, {
+        key: "getControlFlowStorageCallNode",
+        value: function getControlFlowStorageCallNode(controlFlowStorageId, storageKey) {
+            var controlFlowStorageCallCustomNode = this.customNodeFactory(CustomNodes_1.CustomNodes.StringLiteralControlFlowStorageCallNode);
+            controlFlowStorageCallCustomNode.initialize(controlFlowStorageId, storageKey);
+            var statementNode = controlFlowStorageCallCustomNode.getNode()[0];
+            if (!statementNode || !Node_1.Node.isExpressionStatementNode(statementNode)) {
+                throw new Error("`controlFlowStorageCallCustomNode.getNode()[0]` should returns array with `ExpressionStatement` node");
+            }
+            return statementNode.expression;
+        }
+    }]);
+
+    return StringLiteralControlFlowReplacer;
+}(AbstractControlFlowReplacer_1.AbstractControlFlowReplacer);
+StringLiteralControlFlowReplacer.usingExistingIdentifierChance = 1;
+StringLiteralControlFlowReplacer = StringLiteralControlFlowReplacer_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomNode)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], StringLiteralControlFlowReplacer);
+exports.StringLiteralControlFlowReplacer = StringLiteralControlFlowReplacer;
+var StringLiteralControlFlowReplacer_1;
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = __webpack_require__(1);
+var inversify_1 = __webpack_require__(0);
+var ServiceIdentifiers_1 = __webpack_require__(2);
+var NodeType_1 = __webpack_require__(14);
 var AbstractNodeTransformer_1 = __webpack_require__(10);
 var Node_1 = __webpack_require__(6);
 var MemberExpressionTransformer = function (_AbstractNodeTransfor) {
@@ -4906,7 +5236,7 @@ MemberExpressionTransformer = tslib_1.__decorate([inversify_1.injectable(), tsli
 exports.MemberExpressionTransformer = MemberExpressionTransformer;
 
 /***/ }),
-/* 81 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4920,10 +5250,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var NodeType_1 = __webpack_require__(13);
+var NodeType_1 = __webpack_require__(14);
 var AbstractNodeTransformer_1 = __webpack_require__(10);
 var Node_1 = __webpack_require__(6);
 var MethodDefinitionTransformer = MethodDefinitionTransformer_1 = function (_AbstractNodeTransfor) {
@@ -4971,7 +5302,7 @@ exports.MethodDefinitionTransformer = MethodDefinitionTransformer;
 var MethodDefinitionTransformer_1;
 
 /***/ }),
-/* 82 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4985,12 +5316,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var AbstractNodeTransformer_1 = __webpack_require__(10);
 var Node_1 = __webpack_require__(6);
-var Nodes_1 = __webpack_require__(14);
+var Nodes_1 = __webpack_require__(12);
 var TemplateLiteralTransformer = TemplateLiteralTransformer_1 = function (_AbstractNodeTransfor) {
     _inherits(TemplateLiteralTransformer, _AbstractNodeTransfor);
 
@@ -5055,7 +5387,7 @@ exports.TemplateLiteralTransformer = TemplateLiteralTransformer;
 var TemplateLiteralTransformer_1;
 
 /***/ }),
-/* 83 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5069,6 +5401,153 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = __webpack_require__(1);
+var inversify_1 = __webpack_require__(0);
+var ServiceIdentifiers_1 = __webpack_require__(2);
+var estraverse = __webpack_require__(11);
+var AbstractNodeTransformer_1 = __webpack_require__(10);
+var Node_1 = __webpack_require__(6);
+var Nodes_1 = __webpack_require__(12);
+var NodeUtils_1 = __webpack_require__(3);
+var RandomGeneratorUtils_1 = __webpack_require__(4);
+var DeadCodeInjectionTransformer = DeadCodeInjectionTransformer_1 = function (_AbstractNodeTransfor) {
+    _inherits(DeadCodeInjectionTransformer, _AbstractNodeTransfor);
+
+    function DeadCodeInjectionTransformer(options) {
+        _classCallCheck(this, DeadCodeInjectionTransformer);
+
+        var _this = _possibleConstructorReturn(this, (DeadCodeInjectionTransformer.__proto__ || Object.getPrototypeOf(DeadCodeInjectionTransformer)).call(this, options));
+
+        _this.collectedBlockStatements = [];
+        return _this;
+    }
+
+    _createClass(DeadCodeInjectionTransformer, [{
+        key: "getVisitor",
+        value: function getVisitor() {
+            var _this2 = this;
+
+            return {
+                leave: function leave(node, parentNode) {
+                    if (Node_1.Node.isProgramNode(node)) {
+                        return _this2.transformNode(node, parentNode);
+                    }
+                }
+            };
+        }
+    }, {
+        key: "transformNode",
+        value: function transformNode(programNode, parentNode) {
+            this.transformProgramNode(programNode);
+            return programNode;
+        }
+    }, {
+        key: "transformProgramNode",
+        value: function transformProgramNode(programNode) {
+            var _this3 = this;
+
+            estraverse.traverse(programNode, {
+                enter: function enter(node, parentNode) {
+                    if (!Node_1.Node.isBlockStatementNode(node)) {
+                        return;
+                    }
+                    DeadCodeInjectionTransformer_1.collectBlockStatementNodes(node, _this3.collectedBlockStatements);
+                }
+            });
+            if (this.collectedBlockStatements.length < DeadCodeInjectionTransformer_1.minCollectedBlockStatementsCount) {
+                return;
+            }
+            estraverse.replace(programNode, {
+                leave: function leave(node, parentNode) {
+                    if (!_this3.collectedBlockStatements.length) {
+                        return estraverse.VisitorOption.Break;
+                    }
+                    if (!Node_1.Node.isBlockStatementNode(node) || RandomGeneratorUtils_1.RandomGeneratorUtils.getMathRandom() > _this3.options.deadCodeInjectionThreshold) {
+                        return node;
+                    }
+                    var randomIndex = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomInteger(0, _this3.collectedBlockStatements.length - 1);
+                    var randomBlockStatementNode = _this3.collectedBlockStatements.splice(randomIndex, 1)[0];
+                    if (randomBlockStatementNode === node) {
+                        return node;
+                    }
+                    return DeadCodeInjectionTransformer_1.replaceBlockStatementNode(node, randomBlockStatementNode);
+                }
+            });
+        }
+    }], [{
+        key: "collectBlockStatementNodes",
+        value: function collectBlockStatementNodes(blockStatementNode, collectedBlockStatements) {
+            var clonedBlockStatementNode = NodeUtils_1.NodeUtils.clone(blockStatementNode);
+            var nestedBlockStatementsCount = 0,
+                isValidBlockStatementNode = true;
+            estraverse.replace(clonedBlockStatementNode, {
+                enter: function enter(node, parentNode) {
+                    if (Node_1.Node.isBlockStatementNode(node)) {
+                        nestedBlockStatementsCount++;
+                    }
+                    if (nestedBlockStatementsCount > DeadCodeInjectionTransformer_1.maxNestedBlockStatementsCount || Node_1.Node.isBreakStatementNode(node) || Node_1.Node.isContinueStatementNode(node)) {
+                        isValidBlockStatementNode = false;
+                        return estraverse.VisitorOption.Break;
+                    }
+                    if (Node_1.Node.isIdentifierNode(node) && !Node_1.Node.isMemberExpressionNode(parentNode)) {
+                        node.name = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6);
+                    }
+                    return node;
+                }
+            });
+            if (!isValidBlockStatementNode) {
+                return;
+            }
+            collectedBlockStatements.push(clonedBlockStatementNode);
+        }
+    }, {
+        key: "replaceBlockStatementNode",
+        value: function replaceBlockStatementNode(blockStatementNode, randomBlockStatementNode) {
+            var random1 = RandomGeneratorUtils_1.RandomGeneratorUtils.getMathRandom() > 0.5;
+            var random2 = RandomGeneratorUtils_1.RandomGeneratorUtils.getMathRandom() > 0.5;
+            var operator = random1 ? '===' : '!==';
+            var leftString = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(3);
+            var rightString = random2 ? leftString : RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomString(3);
+            var consequent = void 0,
+                alternate = void 0;
+            if (random1 && random2 || !random1 && !random2) {
+                consequent = blockStatementNode;
+                alternate = randomBlockStatementNode;
+            } else {
+                consequent = randomBlockStatementNode;
+                alternate = blockStatementNode;
+            }
+            var newBlockStatementNode = Nodes_1.Nodes.getBlockStatementNode([Nodes_1.Nodes.getIfStatementNode(Nodes_1.Nodes.getBinaryExpressionNode(operator, Nodes_1.Nodes.getLiteralNode(leftString), Nodes_1.Nodes.getLiteralNode(rightString)), consequent, alternate)]);
+            newBlockStatementNode = NodeUtils_1.NodeUtils.parentize(newBlockStatementNode);
+            return newBlockStatementNode;
+        }
+    }]);
+
+    return DeadCodeInjectionTransformer;
+}(AbstractNodeTransformer_1.AbstractNodeTransformer);
+DeadCodeInjectionTransformer.maxNestedBlockStatementsCount = 4;
+DeadCodeInjectionTransformer.minCollectedBlockStatementsCount = 5;
+DeadCodeInjectionTransformer = DeadCodeInjectionTransformer_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object])], DeadCodeInjectionTransformer);
+exports.DeadCodeInjectionTransformer = DeadCodeInjectionTransformer;
+var DeadCodeInjectionTransformer_1;
+
+/***/ }),
+/* 91 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
@@ -5141,7 +5620,7 @@ CatchClauseTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1._
 exports.CatchClauseTransformer = CatchClauseTransformer;
 
 /***/ }),
-/* 84 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5155,12 +5634,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(11);
 var ObfuscationReplacers_1 = __webpack_require__(16);
-var NodeType_1 = __webpack_require__(13);
+var NodeType_1 = __webpack_require__(14);
 var AbstractNodeTransformer_1 = __webpack_require__(10);
 var Node_1 = __webpack_require__(6);
 var NodeUtils_1 = __webpack_require__(3);
@@ -5249,7 +5729,7 @@ FunctionDeclarationTransformer = tslib_1.__decorate([inversify_1.injectable(), t
 exports.FunctionDeclarationTransformer = FunctionDeclarationTransformer;
 
 /***/ }),
-/* 85 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5263,6 +5743,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
@@ -5354,7 +5835,7 @@ FunctionTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__pa
 exports.FunctionTransformer = FunctionTransformer;
 
 /***/ }),
-/* 86 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5368,6 +5849,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
@@ -5434,7 +5916,7 @@ LabeledStatementTransformer = tslib_1.__decorate([inversify_1.injectable(), tsli
 exports.LabeledStatementTransformer = LabeledStatementTransformer;
 
 /***/ }),
-/* 87 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5453,7 +5935,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var escodegen = __webpack_require__(20);
+var escodegen = __webpack_require__(23);
 var ObfuscationReplacers_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(10);
 var Node_1 = __webpack_require__(6);
@@ -5516,7 +5998,7 @@ LiteralTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__par
 exports.LiteralTransformer = LiteralTransformer;
 
 /***/ }),
-/* 88 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5530,14 +6012,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var escodegen = __webpack_require__(20);
-var NodeType_1 = __webpack_require__(13);
+var NodeType_1 = __webpack_require__(14);
 var AbstractNodeTransformer_1 = __webpack_require__(10);
 var Node_1 = __webpack_require__(6);
-var Utils_1 = __webpack_require__(8);
 var ObjectExpressionTransformer = ObjectExpressionTransformer_1 = function (_AbstractNodeTransfor) {
     _inherits(ObjectExpressionTransformer, _AbstractNodeTransfor);
 
@@ -5567,36 +6048,19 @@ var ObjectExpressionTransformer = ObjectExpressionTransformer_1 = function (_Abs
                 if (property.shorthand) {
                     property.shorthand = false;
                 }
-                if (Node_1.Node.isLiteralNode(property.key)) {
-                    property.key = ObjectExpressionTransformer_1.transformLiteralPropertyKey(property.key);
-                } else if (Node_1.Node.isIdentifierNode(property.key)) {
+                if (Node_1.Node.isIdentifierNode(property.key)) {
                     property.key = ObjectExpressionTransformer_1.transformIdentifierPropertyKey(property.key);
                 }
             });
             return objectExpressionNode;
         }
     }], [{
-        key: "transformLiteralPropertyKey",
-        value: function transformLiteralPropertyKey(node) {
-            if (typeof node.value === 'string' && !node['x-verbatim-property']) {
-                node['x-verbatim-property'] = {
-                    content: "'" + Utils_1.Utils.stringToUnicodeEscapeSequence(node.value) + "'",
-                    precedence: escodegen.Precedence.Primary
-                };
-            }
-            return node;
-        }
-    }, {
         key: "transformIdentifierPropertyKey",
         value: function transformIdentifierPropertyKey(node) {
             return {
                 type: NodeType_1.NodeType.Literal,
                 value: node.name,
-                raw: "'" + node.name + "'",
-                'x-verbatim-property': {
-                    content: "'" + Utils_1.Utils.stringToUnicodeEscapeSequence(node.name) + "'",
-                    precedence: escodegen.Precedence.Primary
-                }
+                raw: "'" + node.name + "'"
             };
         }
     }]);
@@ -5608,7 +6072,7 @@ exports.ObjectExpressionTransformer = ObjectExpressionTransformer;
 var ObjectExpressionTransformer_1;
 
 /***/ }),
-/* 89 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5622,12 +6086,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(11);
 var ObfuscationReplacers_1 = __webpack_require__(16);
-var NodeType_1 = __webpack_require__(13);
+var NodeType_1 = __webpack_require__(14);
 var AbstractNodeTransformer_1 = __webpack_require__(10);
 var Node_1 = __webpack_require__(6);
 var NodeUtils_1 = __webpack_require__(3);
@@ -5728,7 +6193,7 @@ VariableDeclarationTransformer = tslib_1.__decorate([inversify_1.injectable(), t
 exports.VariableDeclarationTransformer = VariableDeclarationTransformer;
 
 /***/ }),
-/* 90 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5742,11 +6207,12 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var JSFuck_1 = __webpack_require__(27);
-var AbstractReplacer_1 = __webpack_require__(22);
+var JSFuck_1 = __webpack_require__(29);
+var AbstractReplacer_1 = __webpack_require__(21);
 var BooleanLiteralReplacer = function (_AbstractReplacer_1$A) {
     _inherits(BooleanLiteralReplacer, _AbstractReplacer_1$A);
 
@@ -5769,7 +6235,7 @@ BooleanLiteralReplacer = tslib_1.__decorate([inversify_1.injectable(), tslib_1._
 exports.BooleanLiteralReplacer = BooleanLiteralReplacer;
 
 /***/ }),
-/* 91 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5783,10 +6249,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var AbstractReplacer_1 = __webpack_require__(22);
+var AbstractReplacer_1 = __webpack_require__(21);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 var IdentifierReplacer = function (_AbstractReplacer_1$A) {
     _inherits(IdentifierReplacer, _AbstractReplacer_1$A);
@@ -5831,7 +6298,7 @@ IdentifierReplacer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__par
 exports.IdentifierReplacer = IdentifierReplacer;
 
 /***/ }),
-/* 92 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5845,10 +6312,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var AbstractReplacer_1 = __webpack_require__(22);
+var AbstractReplacer_1 = __webpack_require__(21);
 var Utils_1 = __webpack_require__(8);
 var NumberLiteralReplacer = function (_AbstractReplacer_1$A) {
     _inherits(NumberLiteralReplacer, _AbstractReplacer_1$A);
@@ -5885,7 +6353,7 @@ NumberLiteralReplacer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__
 exports.NumberLiteralReplacer = NumberLiteralReplacer;
 
 /***/ }),
-/* 93 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5899,12 +6367,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var StringArrayEncoding_1 = __webpack_require__(24);
-var AbstractReplacer_1 = __webpack_require__(22);
-var CryptUtils_1 = __webpack_require__(26);
+var AbstractReplacer_1 = __webpack_require__(21);
+var CryptUtils_1 = __webpack_require__(28);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 var Utils_1 = __webpack_require__(8);
 var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractReplacer_1$A) {
@@ -5998,7 +6467,7 @@ exports.StringLiteralReplacer = StringLiteralReplacer;
 var StringLiteralReplacer_1;
 
 /***/ }),
-/* 94 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6006,12 +6475,13 @@ var StringLiteralReplacer_1;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
-var class_validator_1 = __webpack_require__(122);
-var Default_1 = __webpack_require__(34);
-var OptionsNormalizer_1 = __webpack_require__(95);
-var ValidationErrorsFormatter_1 = __webpack_require__(96);
+var class_validator_1 = __webpack_require__(140);
+var Default_1 = __webpack_require__(26);
+var OptionsNormalizer_1 = __webpack_require__(103);
+var ValidationErrorsFormatter_1 = __webpack_require__(104);
 var Options = Options_1 = function Options(inputOptions) {
     _classCallCheck(this, Options);
 
@@ -6030,12 +6500,15 @@ Options.validatorOptions = {
 tslib_1.__decorate([class_validator_1.IsBoolean(), tslib_1.__metadata("design:type", Boolean)], Options.prototype, "compact", void 0);
 tslib_1.__decorate([class_validator_1.IsBoolean(), tslib_1.__metadata("design:type", Boolean)], Options.prototype, "controlFlowFlattening", void 0);
 tslib_1.__decorate([class_validator_1.IsNumber(), class_validator_1.Min(0), class_validator_1.Max(1), tslib_1.__metadata("design:type", Number)], Options.prototype, "controlFlowFlatteningThreshold", void 0);
+tslib_1.__decorate([class_validator_1.IsBoolean(), tslib_1.__metadata("design:type", Boolean)], Options.prototype, "deadCodeInjection", void 0);
+tslib_1.__decorate([class_validator_1.IsNumber(), tslib_1.__metadata("design:type", Number)], Options.prototype, "deadCodeInjectionThreshold", void 0);
 tslib_1.__decorate([class_validator_1.IsBoolean(), tslib_1.__metadata("design:type", Boolean)], Options.prototype, "debugProtection", void 0);
 tslib_1.__decorate([class_validator_1.IsBoolean(), tslib_1.__metadata("design:type", Boolean)], Options.prototype, "debugProtectionInterval", void 0);
 tslib_1.__decorate([class_validator_1.IsBoolean(), tslib_1.__metadata("design:type", Boolean)], Options.prototype, "disableConsoleOutput", void 0);
 tslib_1.__decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
 }), tslib_1.__metadata("design:type", Array)], Options.prototype, "domainLock", void 0);
+tslib_1.__decorate([class_validator_1.IsBoolean(), tslib_1.__metadata("design:type", Boolean)], Options.prototype, "mangle", void 0);
 tslib_1.__decorate([class_validator_1.IsArray(), class_validator_1.ArrayUnique(), class_validator_1.IsString({
     each: true
 }), tslib_1.__metadata("design:type", Array)], Options.prototype, "reservedNames", void 0);
@@ -6060,7 +6533,7 @@ exports.Options = Options;
 var Options_1;
 
 /***/ }),
-/* 95 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6070,7 +6543,17 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Utils_1 = __webpack_require__(8);
+Object.defineProperty(exports, "__esModule", { value: true });
+var ControlFlowFlatteningThresholdRule_1 = __webpack_require__(105);
+var DeadCodeInjectionRule_1 = __webpack_require__(106);
+var DeadCodeInjectionThresholdRule_1 = __webpack_require__(107);
+var DomainLockRule_1 = __webpack_require__(108);
+var SelfDefendingRule_1 = __webpack_require__(109);
+var SourceMapBaseUrlRule_1 = __webpack_require__(110);
+var SourceMapFileNameRule_1 = __webpack_require__(111);
+var StringArrayRule_1 = __webpack_require__(113);
+var StringArrayEncodingRule_1 = __webpack_require__(112);
+var StringArrayThresholdRule_1 = __webpack_require__(114);
 
 var OptionsNormalizer = function () {
     function OptionsNormalizer() {
@@ -6108,134 +6591,16 @@ var OptionsNormalizer = function () {
 
             return normalizedOptions;
         }
-    }, {
-        key: "controlFlowFlatteningThresholdRule",
-        value: function controlFlowFlatteningThresholdRule(options) {
-            if (options.controlFlowFlatteningThreshold === 0) {
-                options = Object.assign({}, options, OptionsNormalizer.DISABLED_CONTROL_FLOW_FLATTENING_OPTIONS);
-            }
-            return options;
-        }
-    }, {
-        key: "domainLockRule",
-        value: function domainLockRule(options) {
-            if (options.domainLock.length) {
-                var normalizedDomains = [];
-                var _iteratorNormalCompletion2 = true;
-                var _didIteratorError2 = false;
-                var _iteratorError2 = undefined;
-
-                try {
-                    for (var _iterator2 = options.domainLock[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                        var domain = _step2.value;
-
-                        normalizedDomains.push(Utils_1.Utils.extractDomainFromUrl(domain));
-                    }
-                } catch (err) {
-                    _didIteratorError2 = true;
-                    _iteratorError2 = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                            _iterator2.return();
-                        }
-                    } finally {
-                        if (_didIteratorError2) {
-                            throw _iteratorError2;
-                        }
-                    }
-                }
-
-                options = Object.assign({}, options, { domainLock: normalizedDomains });
-            }
-            return options;
-        }
-    }, {
-        key: "selfDefendingRule",
-        value: function selfDefendingRule(options) {
-            if (options.selfDefending) {
-                options = Object.assign({}, options, OptionsNormalizer.SELF_DEFENDING_OPTIONS);
-            }
-            return options;
-        }
-    }, {
-        key: "sourceMapBaseUrlRule",
-        value: function sourceMapBaseUrlRule(options) {
-            var _options = options,
-                sourceMapBaseUrl = _options.sourceMapBaseUrl;
-
-            if (!options.sourceMapFileName) {
-                options = Object.assign({}, options, { sourceMapBaseUrl: '' });
-                return options;
-            }
-            if (sourceMapBaseUrl && !sourceMapBaseUrl.endsWith('/')) {
-                options = Object.assign({}, options, { sourceMapBaseUrl: sourceMapBaseUrl + "/" });
-            }
-            return options;
-        }
-    }, {
-        key: "sourceMapFileNameRule",
-        value: function sourceMapFileNameRule(options) {
-            var _options2 = options,
-                sourceMapFileName = _options2.sourceMapFileName;
-
-            if (sourceMapFileName) {
-                sourceMapFileName = sourceMapFileName.replace(/^\/+/, '').split('.')[0];
-                options = Object.assign({}, options, { sourceMapFileName: sourceMapFileName + ".js.map" });
-            }
-            return options;
-        }
-    }, {
-        key: "stringArrayRule",
-        value: function stringArrayRule(options) {
-            if (!options.stringArray) {
-                options = Object.assign({}, options, OptionsNormalizer.DISABLED_STRING_ARRAY_OPTIONS);
-            }
-            return options;
-        }
-    }, {
-        key: "stringArrayEncodingRule",
-        value: function stringArrayEncodingRule(options) {
-            if (options.stringArrayEncoding === true) {
-                options = Object.assign({}, options, OptionsNormalizer.STRING_ARRAY_ENCODING_OPTIONS);
-            }
-            return options;
-        }
-    }, {
-        key: "stringArrayThresholdRule",
-        value: function stringArrayThresholdRule(options) {
-            if (options.stringArrayThreshold === 0) {
-                options = Object.assign({}, options, OptionsNormalizer.DISABLED_STRING_ARRAY_OPTIONS);
-            }
-            return options;
-        }
     }]);
 
     return OptionsNormalizer;
 }();
 
-OptionsNormalizer.DISABLED_CONTROL_FLOW_FLATTENING_OPTIONS = {
-    controlFlowFlattening: false,
-    controlFlowFlatteningThreshold: 0
-};
-OptionsNormalizer.DISABLED_STRING_ARRAY_OPTIONS = {
-    rotateStringArray: false,
-    stringArray: false,
-    stringArrayEncoding: false,
-    stringArrayThreshold: 0
-};
-OptionsNormalizer.SELF_DEFENDING_OPTIONS = {
-    compact: true,
-    selfDefending: true
-};
-OptionsNormalizer.STRING_ARRAY_ENCODING_OPTIONS = {
-    stringArrayEncoding: 'base64'
-};
-OptionsNormalizer.normalizerRules = [OptionsNormalizer.controlFlowFlatteningThresholdRule, OptionsNormalizer.domainLockRule, OptionsNormalizer.selfDefendingRule, OptionsNormalizer.sourceMapBaseUrlRule, OptionsNormalizer.sourceMapFileNameRule, OptionsNormalizer.stringArrayRule, OptionsNormalizer.stringArrayEncodingRule, OptionsNormalizer.stringArrayThresholdRule];
+OptionsNormalizer.normalizerRules = [ControlFlowFlatteningThresholdRule_1.ControlFlowFlatteningThresholdRule, DeadCodeInjectionRule_1.DeadCodeInjectionRule, DeadCodeInjectionThresholdRule_1.DeadCodeInjectionThresholdRule, DomainLockRule_1.DomainLockRule, SelfDefendingRule_1.SelfDefendingRule, SourceMapBaseUrlRule_1.SourceMapBaseUrlRule, SourceMapFileNameRule_1.SourceMapFileNameRule, StringArrayRule_1.StringArrayRule, StringArrayEncodingRule_1.StringArrayEncodingRule, StringArrayThresholdRule_1.StringArrayThresholdRule];
 exports.OptionsNormalizer = OptionsNormalizer;
 
 /***/ }),
-/* 96 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6244,6 +6609,8 @@ exports.OptionsNormalizer = OptionsNormalizer;
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+Object.defineProperty(exports, "__esModule", { value: true });
 
 var ValidationErrorsFormatter = function () {
     function ValidationErrorsFormatter() {
@@ -6302,7 +6669,234 @@ var ValidationErrorsFormatter = function () {
 exports.ValidationErrorsFormatter = ValidationErrorsFormatter;
 
 /***/ }),
-/* 97 */
+/* 105 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var DISABLED_CONTROL_FLOW_FLATTENING_OPTIONS = {
+    controlFlowFlattening: false,
+    controlFlowFlatteningThreshold: 0
+};
+exports.ControlFlowFlatteningThresholdRule = function (options) {
+    if (options.controlFlowFlatteningThreshold === 0) {
+        options = Object.assign({}, options, DISABLED_CONTROL_FLOW_FLATTENING_OPTIONS);
+    }
+    return options;
+};
+
+/***/ }),
+/* 106 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Default_1 = __webpack_require__(26);
+var ENABLED_DEAD_CODE_INJECTION_OPTIONS = {
+    deadCodeInjection: true,
+    stringArray: true
+};
+var ENABLED_STRING_ARRAY_THRESHOLD_OPTIONS = {
+    stringArray: true,
+    stringArrayThreshold: Default_1.DEFAULT_PRESET.stringArrayThreshold
+};
+exports.DeadCodeInjectionRule = function (options) {
+    if (options.deadCodeInjection) {
+        options = Object.assign({}, options, ENABLED_DEAD_CODE_INJECTION_OPTIONS);
+        if (!options.stringArrayThreshold) {
+            options = Object.assign({}, options, ENABLED_STRING_ARRAY_THRESHOLD_OPTIONS);
+        }
+    }
+    return options;
+};
+
+/***/ }),
+/* 107 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var DISABLED_DEAD_CODE_INJECTION_OPTIONS = {
+    deadCodeInjection: false,
+    deadCodeInjectionThreshold: 0
+};
+exports.DeadCodeInjectionThresholdRule = function (options) {
+    if (options.deadCodeInjectionThreshold === 0) {
+        options = Object.assign({}, options, DISABLED_DEAD_CODE_INJECTION_OPTIONS);
+    }
+    return options;
+};
+
+/***/ }),
+/* 108 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Utils_1 = __webpack_require__(8);
+exports.DomainLockRule = function (options) {
+    if (options.domainLock.length) {
+        var normalizedDomains = [];
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+            for (var _iterator = options.domainLock[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var domain = _step.value;
+
+                normalizedDomains.push(Utils_1.Utils.extractDomainFromUrl(domain));
+            }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+
+        options = Object.assign({}, options, { domainLock: normalizedDomains });
+    }
+    return options;
+};
+
+/***/ }),
+/* 109 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var SELF_DEFENDING_OPTIONS = {
+    compact: true,
+    selfDefending: true
+};
+exports.SelfDefendingRule = function (options) {
+    if (options.selfDefending) {
+        options = Object.assign({}, options, SELF_DEFENDING_OPTIONS);
+    }
+    return options;
+};
+
+/***/ }),
+/* 110 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SourceMapBaseUrlRule = function (options) {
+    var _options = options,
+        sourceMapBaseUrl = _options.sourceMapBaseUrl;
+
+    if (!options.sourceMapFileName) {
+        options = Object.assign({}, options, { sourceMapBaseUrl: '' });
+        return options;
+    }
+    if (sourceMapBaseUrl && !sourceMapBaseUrl.endsWith('/')) {
+        options = Object.assign({}, options, { sourceMapBaseUrl: sourceMapBaseUrl + "/" });
+    }
+    return options;
+};
+
+/***/ }),
+/* 111 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SourceMapFileNameRule = function (options) {
+    var _options = options,
+        sourceMapFileName = _options.sourceMapFileName;
+
+    if (sourceMapFileName) {
+        sourceMapFileName = sourceMapFileName.replace(/^\/+/, '').split('.')[0];
+        options = Object.assign({}, options, { sourceMapFileName: sourceMapFileName + ".js.map" });
+    }
+    return options;
+};
+
+/***/ }),
+/* 112 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var STRING_ARRAY_ENCODING_OPTIONS = {
+    stringArrayEncoding: 'base64'
+};
+exports.StringArrayEncodingRule = function (options) {
+    if (options.stringArrayEncoding === true) {
+        options = Object.assign({}, options, STRING_ARRAY_ENCODING_OPTIONS);
+    }
+    return options;
+};
+
+/***/ }),
+/* 113 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var DISABLED_STRING_ARRAY_OPTIONS = {
+    rotateStringArray: false,
+    stringArray: false,
+    stringArrayEncoding: false,
+    stringArrayThreshold: 0
+};
+exports.StringArrayRule = function (options) {
+    if (!options.stringArray) {
+        options = Object.assign({}, options, DISABLED_STRING_ARRAY_OPTIONS);
+    }
+    return options;
+};
+
+/***/ }),
+/* 114 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var DISABLED_STRING_ARRAY_OPTIONS = {
+    rotateStringArray: false,
+    stringArray: false,
+    stringArrayEncoding: false,
+    stringArrayThreshold: 0
+};
+exports.StringArrayThresholdRule = function (options) {
+    if (options.stringArrayThreshold === 0) {
+        options = Object.assign({}, options, DISABLED_STRING_ARRAY_OPTIONS);
+    }
+    return options;
+};
+
+/***/ }),
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6312,11 +6906,12 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(11);
-var CalleeDataExtractors_1 = __webpack_require__(28);
+var CalleeDataExtractors_1 = __webpack_require__(30);
 var Node_1 = __webpack_require__(6);
 var NodeUtils_1 = __webpack_require__(3);
 var StackTraceAnalyzer = StackTraceAnalyzer_1 = function () {
@@ -6404,7 +6999,7 @@ exports.StackTraceAnalyzer = StackTraceAnalyzer;
 var StackTraceAnalyzer_1;
 
 /***/ }),
-/* 98 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6418,10 +7013,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var estraverse = __webpack_require__(11);
-var AbstractCalleeDataExtractor_1 = __webpack_require__(25);
+var AbstractCalleeDataExtractor_1 = __webpack_require__(27);
 var Node_1 = __webpack_require__(6);
 var NodeUtils_1 = __webpack_require__(3);
 var FunctionDeclarationCalleeDataExtractor = function (_AbstractCalleeDataEx) {
@@ -6470,7 +7066,7 @@ FunctionDeclarationCalleeDataExtractor = tslib_1.__decorate([inversify_1.injecta
 exports.FunctionDeclarationCalleeDataExtractor = FunctionDeclarationCalleeDataExtractor;
 
 /***/ }),
-/* 99 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6484,10 +7080,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var estraverse = __webpack_require__(11);
-var AbstractCalleeDataExtractor_1 = __webpack_require__(25);
+var AbstractCalleeDataExtractor_1 = __webpack_require__(27);
 var Node_1 = __webpack_require__(6);
 var NodeUtils_1 = __webpack_require__(3);
 var FunctionExpressionCalleeDataExtractor = function (_AbstractCalleeDataEx) {
@@ -6539,7 +7136,7 @@ FunctionExpressionCalleeDataExtractor = tslib_1.__decorate([inversify_1.injectab
 exports.FunctionExpressionCalleeDataExtractor = FunctionExpressionCalleeDataExtractor;
 
 /***/ }),
-/* 100 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6553,12 +7150,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var estraverse = __webpack_require__(11);
 var Node_1 = __webpack_require__(6);
 var NodeUtils_1 = __webpack_require__(3);
-var AbstractCalleeDataExtractor_1 = __webpack_require__(25);
+var AbstractCalleeDataExtractor_1 = __webpack_require__(27);
 var ObjectExpressionCalleeDataExtractor = function (_AbstractCalleeDataEx) {
     _inherits(ObjectExpressionCalleeDataExtractor, _AbstractCalleeDataEx);
 
@@ -6678,7 +7276,7 @@ ObjectExpressionCalleeDataExtractor = tslib_1.__decorate([inversify_1.injectable
 exports.ObjectExpressionCalleeDataExtractor = ObjectExpressionCalleeDataExtractor;
 
 /***/ }),
-/* 101 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6690,6 +7288,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var Initializable_1 = __webpack_require__(5);
@@ -6767,7 +7366,7 @@ ArrayStorage = tslib_1.__decorate([inversify_1.injectable()], ArrayStorage);
 exports.ArrayStorage = ArrayStorage;
 
 /***/ }),
-/* 102 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6779,6 +7378,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var MapStorage_1 = __webpack_require__(35);
 
 var ControlFlowStorage = function (_MapStorage_1$MapStor) {
@@ -6799,7 +7399,7 @@ var ControlFlowStorage = function (_MapStorage_1$MapStor) {
 exports.ControlFlowStorage = ControlFlowStorage;
 
 /***/ }),
-/* 103 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6813,10 +7413,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var CustomNodeGroups_1 = __webpack_require__(30);
+var CustomNodeGroups_1 = __webpack_require__(32);
 var MapStorage_1 = __webpack_require__(35);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 var CustomNodeGroupStorage = CustomNodeGroupStorage_1 = function (_MapStorage_1$MapStor) {
@@ -6858,7 +7459,7 @@ exports.CustomNodeGroupStorage = CustomNodeGroupStorage;
 var CustomNodeGroupStorage_1;
 
 /***/ }),
-/* 104 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6874,9 +7475,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
-var ArrayStorage_1 = __webpack_require__(101);
+var ArrayStorage_1 = __webpack_require__(119);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 var Utils_1 = __webpack_require__(8);
 var StringArrayStorage = function (_ArrayStorage_1$Array) {
@@ -6921,241 +7523,69 @@ StringArrayStorage = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__met
 exports.StringArrayStorage = StringArrayStorage;
 
 /***/ }),
-/* 105 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 function AtobTemplate() {
     return "\n        (function () {\n            var getGlobal = Function('return (function () ' + '{}.constructor(\"return this\")()' + ');');\n\n            var object = getGlobal();\n            var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';\n\n            object.atob || (\n                object.atob = function(input) {\n                    var str = String(input).replace(/=+$/, '');\n                    for (\n                        var bc = 0, bs, buffer, idx = 0, output = '';\n                        buffer = str.charAt(idx++);\n                        ~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer,\n                            bc++ % 4) ? output += String.fromCharCode(255 & bs >> (-2 * bc & 6)) : 0\n                    ) {\n                        buffer = chars.indexOf(buffer);\n                    }\n                return output;\n            });\n        })();\n    ";
 }
 exports.AtobTemplate = AtobTemplate;
 
 /***/ }),
-/* 106 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 function Rc4Template() {
     return "\n        var rc4 = function (str, key) {\n            var s = [], j = 0, x, res = '', newStr = '';\n           \n            str = atob(str);\n                \n            for (var k = 0, length = str.length; k < length; k++) {\n                newStr += '%' + ('00' + str.charCodeAt(k).toString(16)).slice(-2);\n            }\n        \n            str = decodeURIComponent(newStr);\n                    \t        \n\t        for (var i = 0; i < 256; i++) {\n                s[i] = i;\n            }\n \n            for (i = 0; i < 256; i++) {\n                j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;\n                x = s[i];\n                s[i] = s[j];\n                s[j] = x;\n            }\n            \n            i = 0;\n            j = 0;\n            \n            for (var y = 0; y < str.length; y++) {\n                i = (i + 1) % 256;\n                j = (j + s[i]) % 256;\n                x = s[i];\n                s[i] = s[j];\n                s[j] = x;\n                res += String.fromCharCode(str.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);\n            }\n                      \n            return res;\n        }\n    ";
 }
 exports.Rc4Template = Rc4Template;
 
 /***/ }),
-/* 107 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 function SingleNodeCallControllerTemplate() {
     return "\n        var {singleNodeCallControllerFunctionName} = (function(){\n            var firstCall = true;\n            \n            return function (context, fn){\t\n                var rfn = firstCall ? function(){\n                    if(fn){\n                        var res = fn.apply(context, arguments);\n                        fn = null;\n                        return res;\n                    }\n                } : function(){}\n                \n                firstCall = false;\n                \n                return rfn;\n            }\n        })();\n    ";
 }
 exports.SingleNodeCallControllerTemplate = SingleNodeCallControllerTemplate;
 
 /***/ }),
-/* 108 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 function ConsoleOutputDisableExpressionTemplate() {
     return "\n        var {consoleLogDisableFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {\n            var getGlobal = Function('return (function() ' + '{}.constructor(\"return this\")( )' + ');');\n            \n            var func = function () {};\n            var that = getGlobal();\n                        \n            if (!that.console) {\n                that.console = (function (func){ \n                    var c = {}; \n                    \n                    c.log = func;\n                    c.warn = func; \n                    c.debug = func;\n                    c.info = func;\n                    c.error = func;\n                    c.exception = func;\n                    c.trace = func;\n                    \n                    return c; \n                })(func);\n            } else {\n                that.console.log = func;\n                that.console.warn = func; \n                that.console.debug = func;\n                that.console.info = func;\n                that.console.error = func;\n                that.console.exception = func;\n                that.console.trace = func;\n            }\n        });\n        \n        {consoleLogDisableFunctionName}();\n    ";
 }
 exports.ConsoleOutputDisableExpressionTemplate = ConsoleOutputDisableExpressionTemplate;
 
 /***/ }),
-/* 109 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
 function DebugProtectionFunctionCallTemplate() {
     return "{debugProtectionFunctionName}();";
 }
 exports.DebugProtectionFunctionCallTemplate = DebugProtectionFunctionCallTemplate;
-
-/***/ }),
-/* 110 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function DebugProtectionFunctionIntervalTemplate() {
-    return "\n        setInterval(function () {\n            {debugProtectionFunctionName}();\n        }, 4000);\n    ";
-}
-exports.DebugProtectionFunctionIntervalTemplate = DebugProtectionFunctionIntervalTemplate;
-
-/***/ }),
-/* 111 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function DebugProtectionFunctionTemplate() {
-    return "\n        var {debugProtectionFunctionName} = function () {\n            function debuggerProtection (counter) {\n                if (('' + counter / counter)['length'] !== 1 || counter % 20 === 0) {\n                    (function () {}.constructor('debugger')());\n                } else {\n                    (function () {}.constructor('debugger')());\n                }\n                \n                debuggerProtection(++counter);\n            }\n            \n            try {\n                debuggerProtection(0);\n            } catch (y) {}\n        };\n    ";
-}
-exports.DebugProtectionFunctionTemplate = DebugProtectionFunctionTemplate;
-
-/***/ }),
-/* 112 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function DomainLockNodeTemplate() {
-    return "\n        var {domainLockFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {\n            var getGlobal = Function('return (function () ' + '{}.constructor(\"return this\")()' + ');');\n\n            var func = function () { \n                return {\n                    key: 'item',\n                    value: 'attribute',\n                    getAttribute: function () {\n                        getGlobal()['eval']('while(true){}')();\n                    }()\n                };\n            };\n                        \n            var regExp = new RegExp(\"[{diff}]\", \"g\");\n            var domains = \"{domains}\".replace(regExp, \"\").split(\";\");\n            var eval = [][\"forEach\"][\"constructor\"];\n            var windowObject = eval(\"return this\")();\n            var document;\n            var domain;\n                        \n            for (var d in windowObject) {\n                if (d.length == 8 && d.charCodeAt(7) == 116 && d.charCodeAt(5) == 101 && d.charCodeAt(3) == 117 && d.charCodeAt(0) == 100) {\n                    document = d;\n                \n                    break;\n                }\n            }\n\n            for (var d1 in windowObject[document]) {\n                if (d1.length == 6 && d1.charCodeAt(5) == 110 && d1.charCodeAt(0) == 100) {\n                    domain = d1;\n                    \n                    break;\n                }\n            }\n            \n            if ((!document && !domain) || (!windowObject[document] && !windowObject[document][domain])) {\n                return;\n            }\n            \n            var currentDomain = windowObject[document][domain];\n\n            var ok = false;\n                        \n            for (var i = 0; i < domains.length; i++) {\n                var domain = domains[i];\n                var position = currentDomain.length - domain.length;\n                var lastIndex = currentDomain.indexOf(domain, position);\n                var endsWith = lastIndex !== -1 && lastIndex === position;\n                \n                if (endsWith) {\n                    if (currentDomain.length == domain.length || domain.indexOf(\".\") === 0) {\n                        ok = true;\n                    }\n                    \n                    break;\n                }\n            }\n               \n            if (!ok) {\n                data;\n            } else {\n                return;\n            }\n            \n            func();\n        });\n\n        {domainLockFunctionName}();\n    ";
-}
-exports.DomainLockNodeTemplate = DomainLockNodeTemplate;
-
-/***/ }),
-/* 113 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var Utils_1 = __webpack_require__(8);
-function SelfDefendingTemplate() {
-    return "\n        var {selfDefendingFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {\n            var func1 = function(){return 'dev';},\n                func2 = function () {\n                    return 'window';\n                };\n                \n            var test1 = function () {\n                var regExp = new RegExp('" + Utils_1.Utils.stringToUnicodeEscapeSequence("\\w+ *\\(\\) *{\\w+ *['|\"].+['|\"];? *}") + "');\n                \n                return !regExp.test(func1.toString());\n            };\n            \n            var test2 = function () {\n                var regExp = new RegExp('" + Utils_1.Utils.stringToUnicodeEscapeSequence("(\\\\[x|u](\\w){2,4})+") + "');\n                \n                return regExp.test(func2.toString());\n            };\n            \n            var recursiveFunc1 = function (string) {\n                var i = ~-1 >> 1 + 255 % 0;\n                                \n                if (string.indexOf('i' === i)) {\n                    recursiveFunc2(string)\n                }\n            };\n            \n            var recursiveFunc2 = function (string) {\n                var i = ~-4 >> 1 + 255 % 0;\n                \n                if (string.indexOf((true+\"\")[3]) !== i) {\n                    recursiveFunc1(string)\n                }\n            };\n            \n            if (!test1()) {\n                if (!test2()) {\n                    recursiveFunc1('ind\u0435xOf');\n                } else {\n                    recursiveFunc1('indexOf');\n                }\n            } else {\n                recursiveFunc1('ind\u0435xOf');\n            }\n        })\n        \n        {selfDefendingFunctionName}();\n    ";
-}
-exports.SelfDefendingTemplate = SelfDefendingTemplate;
-
-/***/ }),
-/* 114 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var Utils_1 = __webpack_require__(8);
-function SelfDefendingTemplate() {
-    return "\n        var StatesClass = function (rc4Bytes) {\n            this.rc4Bytes = rc4Bytes;\n            this.states = [1, 0, 0];\n            this.newState = function(){return 'newState';};\n            this.firstState = '" + Utils_1.Utils.stringToUnicodeEscapeSequence("\\w+ *\\(\\) *{\\w+ *") + "';\n            this.secondState = '" + Utils_1.Utils.stringToUnicodeEscapeSequence("['|\"].+['|\"];? *}") + "';\n        };\n        \n        StatesClass.prototype.checkState = function () {\n            var regExp = new RegExp(this.firstState + this.secondState);\n\n            return this.runState(regExp.test(this.newState.toString()) ? --this.states[1] : --this.states[0]);\n        };\n        \n        StatesClass.prototype.runState = function (stateResult) {\n            if (!Boolean(~stateResult)) {\n                return stateResult;\n            }\n            \n            return this.getState(this.rc4Bytes);\n        };\n\n        StatesClass.prototype.getState = function (rc4Bytes) {\n            for (var i = 0, len = this.states.length; i < len; i++) {\n                this.states.push(Math.round(Math.random()));\n                len = this.states.length;\n            }\n            \n            return rc4Bytes(this.states[0]);\n        };\n\n        new StatesClass({stringArrayCallsWrapperName}).checkState();\n    ";
-}
-exports.SelfDefendingTemplate = SelfDefendingTemplate;
-
-/***/ }),
-/* 115 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function StringArrayBase64DecodeNodeTemplate() {
-    return "      \n        if ({stringArrayCallsWrapperName}.initialized === undefined) {\n            {atobPolyfill}\n            \n            {stringArrayCallsWrapperName}.base64DecodeUnicode = function (str) {\n                var string = atob(str);\n                var newStringChars = [];\n                \n                for (var i = 0, length = string.length; i < length; i++) {\n                    newStringChars += '%' + ('00' + string.charCodeAt(i).toString(16)).slice(-2);\n                }\n                \n                return decodeURIComponent(newStringChars);\n            };\n            \n            {stringArrayCallsWrapperName}.data = {};\n            \n            {stringArrayCallsWrapperName}.initialized = true;\n        }\n                  \n        var cachedValue = {stringArrayCallsWrapperName}.data[index];\n                        \n        if (cachedValue === undefined) {\n            {selfDefendingCode}\n            \n            value = {stringArrayCallsWrapperName}.base64DecodeUnicode(value);\n            {stringArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = cachedValue;\n        }  \n    ";
-}
-exports.StringArrayBase64DecodeNodeTemplate = StringArrayBase64DecodeNodeTemplate;
-
-/***/ }),
-/* 116 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function StringArrayCallsWrapperTemplate() {
-    return "\n        var {stringArrayCallsWrapperName} = function (index, key) {\n            index = index - 0;\n            \n            var value = {stringArrayName}[index];\n            \n            {decodeNodeTemplate}\n        \n            return value;\n        };\n    ";
-}
-exports.StringArrayCallsWrapperTemplate = StringArrayCallsWrapperTemplate;
-
-/***/ }),
-/* 117 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function StringArrayRc4DecodeNodeTemplate() {
-    return "\n        if ({stringArrayCallsWrapperName}.initialized === undefined) {\n            {atobPolyfill}\n            \n            {rc4Polyfill}\n            {stringArrayCallsWrapperName}.rc4 = rc4;\n            \n            {stringArrayCallsWrapperName}.data = {};\n            \n            {stringArrayCallsWrapperName}.initialized = true;\n        }\n  \n        var cachedValue = {stringArrayCallsWrapperName}.data[index];\n\n        if (cachedValue === undefined) {\n            if ({stringArrayCallsWrapperName}.once === undefined) {\n                {selfDefendingCode}\n                \n                {stringArrayCallsWrapperName}.once = true;\n            }\n            \n            value = {stringArrayCallsWrapperName}.rc4(value, key);\n            {stringArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = cachedValue;\n        }\n    ";
-}
-exports.StringArrayRc4DecodeNodeTemplate = StringArrayRc4DecodeNodeTemplate;
-
-/***/ }),
-/* 118 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function StringArrayTemplate() {
-    return "\n        var {stringArrayName} = [{stringArray}];\n    ";
-}
-exports.StringArrayTemplate = StringArrayTemplate;
-
-/***/ }),
-/* 119 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var Utils_1 = __webpack_require__(8);
-function SelfDefendingTemplate() {
-    return "\n        var selfDefendingFunc = function () {            \n            var object = {\n                data: {\n                    key: 'cookie',\n                    value: 'timeout'\n                },\n                setCookie: function (options, name, value, document) {\n                    document = document || {};\n                    \n                    var updatedCookie = name + \"=\" + value;\n\n                    var i = 0;\n                                                            \n                    for (var i = 0, len = options.length; i < len; i++) {                          \n                        var propName = options[i];\n                                     \n                        updatedCookie += \"; \" + propName;\n                        \n                        var propValue = options[propName];\n                        \n                        options.push(propValue);\n                        len = options.length;\n                                                                        \n                        if (propValue !== true) {\n                            updatedCookie += \"=\" + propValue;\n                        }\n                    }\n\n                    document['cookie'] = updatedCookie;\n                },\n                removeCookie: function(){return 'dev';},\n                getCookie: function (document, name) {    \n                    document = document || function (value) { return value };\n                    var matches = document(new RegExp(\n                        \"(?:^|; )\" + name.replace(/([.$?*|{}()[]\\/+^])/g, '\\$1') + \"=([^;]*)\"\n                    ));\n                    \n                    var func = function (param1, param2) {\n                        param1(++param2);\n                    };\n                    \n                    func({whileFunctionName}, {timesName});\n                                        \n                    return matches ? decodeURIComponent(matches[1]) : undefined;\n                }\n            };\n            \n            var test1 = function () {\n                var regExp = new RegExp('" + Utils_1.Utils.stringToUnicodeEscapeSequence("\\w+ *\\(\\) *{\\w+ *['|\"].+['|\"];? *}") + "');\n                \n                return regExp.test(object.removeCookie.toString());\n            };\n            \n            object['updateCookie'] = test1;\n            \n            var cookie = '';\n            var result = object['updateCookie']();\n                                    \n            if (!result) {\n                object['setCookie'](['*'], 'counter', 1);\n            } else if (result) {\n                cookie = object['getCookie'](null, 'counter');     \n            } else {\n                object['removeCookie']();\n            }\n        };\n        \n        selfDefendingFunc();\n    ";
-}
-exports.SelfDefendingTemplate = SelfDefendingTemplate;
-
-/***/ }),
-/* 120 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function StringArrayRotateFunctionTemplate() {
-    return "\n        (function (array, {timesName}) {\n            var {whileFunctionName} = function (times) {\n                while (--times) {\n                    array['push'](array['shift']());\n                }\n            };\n            \n            {code}\n        })({stringArrayName}, 0x{stringArrayRotateValue});\n    ";
-}
-exports.StringArrayRotateFunctionTemplate = StringArrayRotateFunctionTemplate;
-
-/***/ }),
-/* 121 */
-/***/ (function(module, exports) {
-
-module.exports = require("chance");
-
-/***/ }),
-/* 122 */
-/***/ (function(module, exports) {
-
-module.exports = require("class-validator");
-
-/***/ }),
-/* 123 */
-/***/ (function(module, exports) {
-
-module.exports = require("commander");
-
-/***/ }),
-/* 124 */
-/***/ (function(module, exports) {
-
-module.exports = require("events");
-
-/***/ }),
-/* 125 */
-/***/ (function(module, exports) {
-
-module.exports = require("fs");
-
-/***/ }),
-/* 126 */
-/***/ (function(module, exports) {
-
-module.exports = require("mkdirp");
-
-/***/ }),
-/* 127 */
-/***/ (function(module, exports) {
-
-module.exports = require("reflect-metadata");
 
 /***/ }),
 /* 128 */
@@ -7164,8 +7594,192 @@ module.exports = require("reflect-metadata");
 "use strict";
 
 
-var JavaScriptObfuscator_1 = __webpack_require__(17);
-module.exports = JavaScriptObfuscator_1.JavaScriptObfuscator;
+Object.defineProperty(exports, "__esModule", { value: true });
+function DebugProtectionFunctionIntervalTemplate() {
+    return "\n        setInterval(function () {\n            {debugProtectionFunctionName}();\n        }, 4000);\n    ";
+}
+exports.DebugProtectionFunctionIntervalTemplate = DebugProtectionFunctionIntervalTemplate;
+
+/***/ }),
+/* 129 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function DebugProtectionFunctionTemplate() {
+    return "\n        var {debugProtectionFunctionName} = function () {\n            function debuggerProtection (counter) {\n                if (('' + counter / counter)['length'] !== 1 || counter % 20 === 0) {\n                    (function () {}.constructor('debugger')());\n                } else {\n                    (function () {}.constructor('debugger')());\n                }\n                \n                debuggerProtection(++counter);\n            }\n            \n            try {\n                debuggerProtection(0);\n            } catch (y) {}\n        };\n    ";
+}
+exports.DebugProtectionFunctionTemplate = DebugProtectionFunctionTemplate;
+
+/***/ }),
+/* 130 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function DomainLockNodeTemplate() {
+    return "\n        var {domainLockFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {\n            var getGlobal = Function('return (function () ' + '{}.constructor(\"return this\")()' + ');');\n\n            var func = function () { \n                return {\n                    key: 'item',\n                    value: 'attribute',\n                    getAttribute: function () {\n                        getGlobal()['eval']('while(true){}')();\n                    }()\n                };\n            };\n                        \n            var regExp = new RegExp(\"[{diff}]\", \"g\");\n            var domains = \"{domains}\".replace(regExp, \"\").split(\";\");\n            var eval = [][\"forEach\"][\"constructor\"];\n            var windowObject = eval(\"return this\")();\n            var document;\n            var domain;\n                        \n            for (var d in windowObject) {\n                if (d.length == 8 && d.charCodeAt(7) == 116 && d.charCodeAt(5) == 101 && d.charCodeAt(3) == 117 && d.charCodeAt(0) == 100) {\n                    document = d;\n                \n                    break;\n                }\n            }\n\n            for (var d1 in windowObject[document]) {\n                if (d1.length == 6 && d1.charCodeAt(5) == 110 && d1.charCodeAt(0) == 100) {\n                    domain = d1;\n                    \n                    break;\n                }\n            }\n            \n            if ((!document && !domain) || (!windowObject[document] && !windowObject[document][domain])) {\n                return;\n            }\n            \n            var currentDomain = windowObject[document][domain];\n\n            var ok = false;\n                        \n            for (var i = 0; i < domains.length; i++) {\n                var domain = domains[i];\n                var position = currentDomain.length - domain.length;\n                var lastIndex = currentDomain.indexOf(domain, position);\n                var endsWith = lastIndex !== -1 && lastIndex === position;\n                \n                if (endsWith) {\n                    if (currentDomain.length == domain.length || domain.indexOf(\".\") === 0) {\n                        ok = true;\n                    }\n                    \n                    break;\n                }\n            }\n               \n            if (!ok) {\n                data;\n            } else {\n                return;\n            }\n            \n            func();\n        });\n\n        {domainLockFunctionName}();\n    ";
+}
+exports.DomainLockNodeTemplate = DomainLockNodeTemplate;
+
+/***/ }),
+/* 131 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Utils_1 = __webpack_require__(8);
+function SelfDefendingTemplate() {
+    return "\n        var {selfDefendingFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {\n            var func1 = function(){return 'dev';},\n                func2 = function () {\n                    return 'window';\n                };\n                \n            var test1 = function () {\n                var regExp = new RegExp('" + Utils_1.Utils.stringToUnicodeEscapeSequence("\\w+ *\\(\\) *{\\w+ *['|\"].+['|\"];? *}") + "');\n                \n                return !regExp.test(func1.toString());\n            };\n            \n            var test2 = function () {\n                var regExp = new RegExp('" + Utils_1.Utils.stringToUnicodeEscapeSequence("(\\\\[x|u](\\w){2,4})+") + "');\n                \n                return regExp.test(func2.toString());\n            };\n            \n            var recursiveFunc1 = function (string) {\n                var i = ~-1 >> 1 + 255 % 0;\n                                \n                if (string.indexOf('i' === i)) {\n                    recursiveFunc2(string)\n                }\n            };\n            \n            var recursiveFunc2 = function (string) {\n                var i = ~-4 >> 1 + 255 % 0;\n                \n                if (string.indexOf((true+\"\")[3]) !== i) {\n                    recursiveFunc1(string)\n                }\n            };\n            \n            if (!test1()) {\n                if (!test2()) {\n                    recursiveFunc1('ind\u0435xOf');\n                } else {\n                    recursiveFunc1('indexOf');\n                }\n            } else {\n                recursiveFunc1('ind\u0435xOf');\n            }\n        })\n        \n        {selfDefendingFunctionName}();\n    ";
+}
+exports.SelfDefendingTemplate = SelfDefendingTemplate;
+
+/***/ }),
+/* 132 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Utils_1 = __webpack_require__(8);
+function SelfDefendingTemplate() {
+    return "\n        var StatesClass = function (rc4Bytes) {\n            this.rc4Bytes = rc4Bytes;\n            this.states = [1, 0, 0];\n            this.newState = function(){return 'newState';};\n            this.firstState = '" + Utils_1.Utils.stringToUnicodeEscapeSequence("\\w+ *\\(\\) *{\\w+ *") + "';\n            this.secondState = '" + Utils_1.Utils.stringToUnicodeEscapeSequence("['|\"].+['|\"];? *}") + "';\n        };\n        \n        StatesClass.prototype.checkState = function () {\n            var regExp = new RegExp(this.firstState + this.secondState);\n\n            return this.runState(regExp.test(this.newState.toString()) ? --this.states[1] : --this.states[0]);\n        };\n        \n        StatesClass.prototype.runState = function (stateResult) {\n            if (!Boolean(~stateResult)) {\n                return stateResult;\n            }\n            \n            return this.getState(this.rc4Bytes);\n        };\n\n        StatesClass.prototype.getState = function (rc4Bytes) {\n            for (var i = 0, len = this.states.length; i < len; i++) {\n                this.states.push(Math.round(Math.random()));\n                len = this.states.length;\n            }\n            \n            return rc4Bytes(this.states[0]);\n        };\n\n        new StatesClass({stringArrayCallsWrapperName}).checkState();\n    ";
+}
+exports.SelfDefendingTemplate = SelfDefendingTemplate;
+
+/***/ }),
+/* 133 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function StringArrayBase64DecodeNodeTemplate() {
+    return "      \n        if ({stringArrayCallsWrapperName}.initialized === undefined) {\n            {atobPolyfill}\n            \n            {stringArrayCallsWrapperName}.base64DecodeUnicode = function (str) {\n                var string = atob(str);\n                var newStringChars = [];\n                \n                for (var i = 0, length = string.length; i < length; i++) {\n                    newStringChars += '%' + ('00' + string.charCodeAt(i).toString(16)).slice(-2);\n                }\n                \n                return decodeURIComponent(newStringChars);\n            };\n            \n            {stringArrayCallsWrapperName}.data = {};\n            \n            {stringArrayCallsWrapperName}.initialized = true;\n        }\n                  \n        var cachedValue = {stringArrayCallsWrapperName}.data[index];\n                        \n        if (cachedValue === undefined) {\n            {selfDefendingCode}\n            \n            value = {stringArrayCallsWrapperName}.base64DecodeUnicode(value);\n            {stringArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = cachedValue;\n        }  \n    ";
+}
+exports.StringArrayBase64DecodeNodeTemplate = StringArrayBase64DecodeNodeTemplate;
+
+/***/ }),
+/* 134 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function StringArrayCallsWrapperTemplate() {
+    return "\n        var {stringArrayCallsWrapperName} = function (index, key) {\n            index = index - 0;\n            \n            var value = {stringArrayName}[index];\n            \n            {decodeNodeTemplate}\n        \n            return value;\n        };\n    ";
+}
+exports.StringArrayCallsWrapperTemplate = StringArrayCallsWrapperTemplate;
+
+/***/ }),
+/* 135 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function StringArrayRc4DecodeNodeTemplate() {
+    return "\n        if ({stringArrayCallsWrapperName}.initialized === undefined) {\n            {atobPolyfill}\n            \n            {rc4Polyfill}\n            {stringArrayCallsWrapperName}.rc4 = rc4;\n            \n            {stringArrayCallsWrapperName}.data = {};\n            \n            {stringArrayCallsWrapperName}.initialized = true;\n        }\n  \n        var cachedValue = {stringArrayCallsWrapperName}.data[index];\n\n        if (cachedValue === undefined) {\n            if ({stringArrayCallsWrapperName}.once === undefined) {\n                {selfDefendingCode}\n                \n                {stringArrayCallsWrapperName}.once = true;\n            }\n            \n            value = {stringArrayCallsWrapperName}.rc4(value, key);\n            {stringArrayCallsWrapperName}.data[index] = value;\n        } else {\n            value = cachedValue;\n        }\n    ";
+}
+exports.StringArrayRc4DecodeNodeTemplate = StringArrayRc4DecodeNodeTemplate;
+
+/***/ }),
+/* 136 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function StringArrayTemplate() {
+    return "\n        var {stringArrayName} = [{stringArray}];\n    ";
+}
+exports.StringArrayTemplate = StringArrayTemplate;
+
+/***/ }),
+/* 137 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Utils_1 = __webpack_require__(8);
+function SelfDefendingTemplate() {
+    return "\n        var selfDefendingFunc = function () {            \n            var object = {\n                data: {\n                    key: 'cookie',\n                    value: 'timeout'\n                },\n                setCookie: function (options, name, value, document) {\n                    document = document || {};\n                    \n                    var updatedCookie = name + \"=\" + value;\n\n                    var i = 0;\n                                                            \n                    for (var i = 0, len = options.length; i < len; i++) {                          \n                        var propName = options[i];\n                                     \n                        updatedCookie += \"; \" + propName;\n                        \n                        var propValue = options[propName];\n                        \n                        options.push(propValue);\n                        len = options.length;\n                                                                        \n                        if (propValue !== true) {\n                            updatedCookie += \"=\" + propValue;\n                        }\n                    }\n\n                    document['cookie'] = updatedCookie;\n                },\n                removeCookie: function(){return 'dev';},\n                getCookie: function (document, name) {    \n                    document = document || function (value) { return value };\n                    var matches = document(new RegExp(\n                        \"(?:^|; )\" + name.replace(/([.$?*|{}()[]\\/+^])/g, '\\$1') + \"=([^;]*)\"\n                    ));\n                    \n                    var func = function (param1, param2) {\n                        param1(++param2);\n                    };\n                    \n                    func({whileFunctionName}, {timesName});\n                                        \n                    return matches ? decodeURIComponent(matches[1]) : undefined;\n                }\n            };\n            \n            var test1 = function () {\n                var regExp = new RegExp('" + Utils_1.Utils.stringToUnicodeEscapeSequence("\\w+ *\\(\\) *{\\w+ *['|\"].+['|\"];? *}") + "');\n                \n                return regExp.test(object.removeCookie.toString());\n            };\n            \n            object['updateCookie'] = test1;\n            \n            var cookie = '';\n            var result = object['updateCookie']();\n                                    \n            if (!result) {\n                object['setCookie'](['*'], 'counter', 1);\n            } else if (result) {\n                cookie = object['getCookie'](null, 'counter');     \n            } else {\n                object['removeCookie']();\n            }\n        };\n        \n        selfDefendingFunc();\n    ";
+}
+exports.SelfDefendingTemplate = SelfDefendingTemplate;
+
+/***/ }),
+/* 138 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function StringArrayRotateFunctionTemplate() {
+    return "\n        (function (array, {timesName}) {\n            var {whileFunctionName} = function (times) {\n                while (--times) {\n                    array['push'](array['shift']());\n                }\n            };\n            \n            {code}\n        })({stringArrayName}, 0x{stringArrayRotateValue});\n    ";
+}
+exports.StringArrayRotateFunctionTemplate = StringArrayRotateFunctionTemplate;
+
+/***/ }),
+/* 139 */
+/***/ (function(module, exports) {
+
+module.exports = require("chance");
+
+/***/ }),
+/* 140 */
+/***/ (function(module, exports) {
+
+module.exports = require("class-validator");
+
+/***/ }),
+/* 141 */
+/***/ (function(module, exports) {
+
+module.exports = require("commander");
+
+/***/ }),
+/* 142 */
+/***/ (function(module, exports) {
+
+module.exports = require("esmangle");
+
+/***/ }),
+/* 143 */
+/***/ (function(module, exports) {
+
+module.exports = require("events");
+
+/***/ }),
+/* 144 */
+/***/ (function(module, exports) {
+
+module.exports = require("fs");
+
+/***/ }),
+/* 145 */
+/***/ (function(module, exports) {
+
+module.exports = require("mkdirp");
+
+/***/ }),
+/* 146 */
+/***/ (function(module, exports) {
+
+module.exports = require("reflect-metadata");
 
 /***/ })
 /******/ ]);

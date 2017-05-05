@@ -8,6 +8,7 @@ import { NodeTransformers } from '../../../enums/container/NodeTransformers';
 import { FunctionControlFlowTransformer } from '../../../node-transformers/control-flow-transformers/FunctionControlFlowTransformer';
 
 import { BlockStatementControlFlowTransformer } from '../../../node-transformers/control-flow-transformers/BlockStatementControlFlowTransformer';
+import { DeadCodeInjectionTransformer } from '../../../node-transformers/dead-code-injection-transformers/DeadCodeInjectionTransformer';
 import { CatchClauseTransformer } from '../../../node-transformers/obfuscating-transformers/CatchClauseTransformer';
 import { FunctionDeclarationTransformer } from '../../../node-transformers/obfuscating-transformers/FunctionDeclarationTransformer';
 import { FunctionTransformer } from '../../../node-transformers/obfuscating-transformers/FunctionTransformer';
@@ -24,6 +25,10 @@ export const nodeTransformersModule: interfaces.ContainerModule = new ContainerM
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(BlockStatementControlFlowTransformer)
         .whenTargetNamed(NodeTransformers.BlockStatementControlFlowTransformer);
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(DeadCodeInjectionTransformer)
+        .whenTargetNamed(NodeTransformers.DeadCodeInjectionTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(FunctionControlFlowTransformer)

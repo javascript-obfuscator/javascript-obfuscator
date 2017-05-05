@@ -1,4 +1,6 @@
 export interface IInitializable {
+    [key: string]: any;
+
     /**
      * @param args
      */

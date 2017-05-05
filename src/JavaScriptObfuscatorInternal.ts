@@ -3,6 +3,7 @@ import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 
 import * as esprima from 'esprima';
 import * as escodegen from 'escodegen-wallaby';
+import * as esmangle from 'esmangle';
 import * as ESTree from 'estree';
 
 import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
@@ -83,11 +84,16 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
             escodegenParams.sourceContent = sourceCode;
         }
 
-        escodegenParams.format = {
-            compact: this.options.compact
-        };
+        if (this.options.mangle) {
+            astTree = esmangle.mangle(astTree);
+        }
 
-        const generatorOutput: IGeneratorOutput = escodegen.generate(astTree, escodegenParams);
+        const generatorOutput: IGeneratorOutput = escodegen.generate(astTree, {
+            ...escodegenParams,
+            format: {
+                compact: this.options.compact
+            }
+        });
 
         generatorOutput.map = generatorOutput.map ? generatorOutput.map.toString() : '';
 

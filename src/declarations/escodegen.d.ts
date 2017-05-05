@@ -1,3 +1,5 @@
+import * as escodegen from 'escodegen';
+
 import { IGeneratorOutput } from '../interfaces/IGeneratorOutput';
 
 declare module 'escodegen' {
@@ -6,5 +8,5 @@ declare module 'escodegen' {
      * @param options
      * @returns IGeneratorOutput
      */
-    export function generate (ast: any, options?: GenerateOptions): IGeneratorOutput;
+    export function generate (ast: any, options?: escodegen.GenerateOptions): IGeneratorOutput;
 }

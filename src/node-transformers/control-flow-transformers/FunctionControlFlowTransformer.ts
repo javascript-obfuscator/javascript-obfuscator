@@ -32,7 +32,8 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     private static readonly controlFlowReplacersMap: Map <string, ControlFlowReplacers> = new Map([
         [NodeType.BinaryExpression, ControlFlowReplacers.BinaryExpressionControlFlowReplacer],
         [NodeType.CallExpression, ControlFlowReplacers.CallExpressionControlFlowReplacer],
-        [NodeType.LogicalExpression, ControlFlowReplacers.LogicalExpressionControlFlowReplacer]
+        [NodeType.LogicalExpression, ControlFlowReplacers.LogicalExpressionControlFlowReplacer],
+        [NodeType.Literal, ControlFlowReplacers.StringLiteralControlFlowReplacer]
     ]);
 
     /**
@@ -219,6 +220,10 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
                 const controlFlowReplacerName: ControlFlowReplacers = <ControlFlowReplacers>FunctionControlFlowTransformer
                     .controlFlowReplacersMap.get(node.type);
+
+                if (controlFlowReplacerName === undefined) {
+                    return node;
+                }
 
                 return {
                     ...this.controlFlowReplacerFactory(controlFlowReplacerName).replace(node, parentNode, controlFlowStorage),

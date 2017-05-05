@@ -11,12 +11,12 @@ export function initializable (
 ): (target: IInitializable, propertyKey: string | symbol) => any {
     const decoratorName: string = Object.keys(this)[0];
 
-    return (target: IInitializable, propertyKey: string | symbol): any => {
+    return (target: IInitializable, propertyKey: string | symbol): PropertyDescriptor => {
         const descriptor: PropertyDescriptor = {
             configurable: true,
             enumerable: true
         };
-        const initializeMethod: any = (<any>target)[initializeMethodKey];
+        const initializeMethod: Function = target[initializeMethodKey];
 
         if (!initializeMethod || typeof initializeMethod !== 'function') {
            throw new Error(`\`${initializeMethodKey}\` method with initialization logic not found. \`@${decoratorName}\` decorator requires \`${initializeMethodKey}\` method`);

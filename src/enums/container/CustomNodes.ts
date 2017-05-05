@@ -15,5 +15,7 @@ export enum CustomNodes {
     SelfDefendingUnicodeNode,
     StringArrayCallsWrapper,
     StringArrayNode,
-    StringArrayRotateFunctionNode
+    StringArrayRotateFunctionNode,
+    StringLiteralControlFlowStorageCallNode,
+    StringLiteralNode,
 }

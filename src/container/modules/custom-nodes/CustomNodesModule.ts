@@ -31,6 +31,8 @@ import { SelfDefendingUnicodeNode } from '../../../custom-nodes/self-defending-n
 import { StringArrayCallsWrapper } from '../../../custom-nodes/string-array-nodes/StringArrayCallsWrapper';
 import { StringArrayNode } from '../../../custom-nodes/string-array-nodes/StringArrayNode';
 import { StringArrayRotateFunctionNode } from '../../../custom-nodes/string-array-nodes/StringArrayRotateFunctionNode';
+import { StringLiteralControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/StringLiteralControlFlowStorageCallNode';
+import { StringLiteralNode } from '../../../custom-nodes/control-flow-flattening-nodes/StringLiteralNode';
 
 export const customNodesModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // custom nodes
@@ -101,6 +103,14 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(StringArrayRotateFunctionNode)
         .whenTargetNamed(CustomNodes.StringArrayRotateFunctionNode);
+
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstructor(StringLiteralControlFlowStorageCallNode)
+        .whenTargetNamed(CustomNodes.StringLiteralControlFlowStorageCallNode);
+
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstructor(StringLiteralNode)
+        .whenTargetNamed(CustomNodes.StringLiteralNode);
 
     // node groups
     bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)

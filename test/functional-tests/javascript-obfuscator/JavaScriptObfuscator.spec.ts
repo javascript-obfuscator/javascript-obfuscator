@@ -117,9 +117,9 @@ describe('JavaScriptObfuscator', () => {
             );
         });
 
-        it('should obfuscate simple code with literal variable value', () => {
-            let pattern1: RegExp = /^var _0x(\w){4} *= *\['(\\[x|u]\d+)+'\];/,
-                pattern2: RegExp = /var *test *= *_0x(\w){4}\('0x0'\);$/,
+        it('should obfuscate simple code with latin literal variable value', () => {
+            let stringArrayLatinRegExp: RegExp = /^var _0x(\w){4} *= *\['abc'\];/,
+                stringArrayCallRegExp: RegExp = /var *test *= *_0x(\w){4}\('0x0'\);$/,
                 obfuscatedCode1: string = JavaScriptObfuscator.obfuscate(
                     readFileAsString(__dirname + '/fixtures/simple-input-2.js'),
                     {
@@ -127,7 +127,15 @@ describe('JavaScriptObfuscator', () => {
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
-                ).getObfuscatedCode(),
+                ).getObfuscatedCode();
+
+            assert.match(obfuscatedCode1, stringArrayLatinRegExp);
+            assert.match(obfuscatedCode1, stringArrayCallRegExp);
+        });
+
+        it('should obfuscate simple code with cyrillic literal variable value', () => {
+            let stringArrayCyrillicRegExp: RegExp = /^var _0x(\w){4} *= *\['(\\u\d+)+'\];/,
+                stringArrayCallRegExp: RegExp = /var *test *= *_0x(\w){4}\('0x0'\);$/,
                 obfuscatedCode2: string = JavaScriptObfuscator.obfuscate(
                     readFileAsString(__dirname + '/fixtures/simple-input-cyrillic.js'),
                     {
@@ -137,11 +145,8 @@ describe('JavaScriptObfuscator', () => {
                     }
                 ).getObfuscatedCode();
 
-            assert.match(obfuscatedCode1, pattern1);
-            assert.match(obfuscatedCode1, pattern2);
-
-            assert.match(obfuscatedCode2, pattern1);
-            assert.match(obfuscatedCode2, pattern2);
+            assert.match(obfuscatedCode2, stringArrayCyrillicRegExp);
+            assert.match(obfuscatedCode2, stringArrayCallRegExp);
         });
 
         it('should returns same code every time with same `seed`', function () {
@@ -204,6 +209,17 @@ describe('JavaScriptObfuscator', () => {
                 ).getObfuscatedCode(),
                 /new\.target *=== *Foo/
             );
+        });
+
+        it('should mangle obfuscated code', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/mangle.js');
+
+            const obfuscationResult1: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code, { mangle: true }
+            );
+            const mangleMatch: RegExp = /var *a *= *0x1/;
+
+            assert.match(obfuscationResult1.getObfuscatedCode(), mangleMatch);
         });
 
         afterEach(() => {

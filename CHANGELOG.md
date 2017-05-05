@@ -1,7 +1,12 @@
 Change Log
 ===
-v0.9.4
+v0.10.0
 ---
+* **New option:** `deadCodeInjection`. With this option random blocks of dead code will add to the obfuscated code.
+* **New option:** `deadCodeInjectionThreshold` allows to set percentage of nodes that will affected by `deadCodeInjection`.
+* **New option:** `mangle` enables mangling of variable names.
+* `escapeUnicodeSequence` option now disabled by default.
+* `controlFlowFlattening` now affects string literal nodes.
 * increased runtime performance with `rc4` `stringArrayEncoding`.
 
 v0.9.3
@@ -10,11 +15,11 @@ v0.9.3
 
 v0.9.2
 ---
-* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/pull/42
+* Removed coverage dir from npm package
 
 v0.9.1
 ---
-* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/37
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/37
 
 v0.9.0
 ---

@@ -19,7 +19,7 @@ describe('MethodDefinitionTransformer', () => {
             }
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(),  /\['\\x62\\x61\\x72'\]\(\)\{\}/);
+        assert.match(obfuscationResult.getObfuscatedCode(),  /\['bar'\]\(\)\{\}/);
     });
 
     it('should replace method definition node `key` property with unicode array call', () => {
@@ -32,7 +32,7 @@ describe('MethodDefinitionTransformer', () => {
             }
         );
 
-        assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-f0-9]){4} *= *\['\\x62\\x61\\x72'\];/);
+        assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-f0-9]){4} *= *\['bar'\];/);
         assert.match(obfuscationResult.getObfuscatedCode(),  /\[_0x([a-f0-9]){4}\('0x0'\)\]\(\)\{\}/);
     });
 

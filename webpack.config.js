@@ -14,6 +14,7 @@ module.exports = {
     entry: {
         'index': './index.ts'
     },
+    cache: true,
     devtool: 'source-map',
     target: 'node',
     externals: [nodeExternals()],

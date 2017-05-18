@@ -22,7 +22,7 @@ module.exports = {
         rules: [
             {
                 enforce: 'pre',
-                test: /\.ts$/,
+                test: /\.ts(x?)$/,
                 loader: 'tslint-loader',
                 exclude: /(node_modules)/
             },

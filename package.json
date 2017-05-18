@@ -87,7 +87,7 @@
     "travis": "scripts/travis"
   },
   "pre-commit": [
-    "travis"
+    "build"
   ],
   "author": {
     "name": "Timofey Kachalov"

@@ -15,8 +15,7 @@ describe('StringArrayCallsWrapper', () => {
             {
                 ...NO_CUSTOM_NODES_PRESET,
                 stringArray: true,
-                stringArrayThreshold: 1,
-                wrapStringArrayCalls: true
+                stringArrayThreshold: 1
             }
         );
 

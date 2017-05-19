@@ -196,4 +196,17 @@ describe('LiteralTransformer', () => {
 
         assert.match(obfuscationResult.getObfuscatedCode(),  /^var *test *= *0x0;$/);
     });
+
+    it('should keep safe value of RegExp literal', () => {
+        let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+            readFileAsString(__dirname + '/fixtures/regexp-literal.js'),
+            {
+                ...NO_CUSTOM_NODES_PRESET,
+                stringArray: true,
+                stringArrayThreshold: 1
+            }
+        );
+
+        assert.match(obfuscationResult.getObfuscatedCode(),  /^var *regExp *= *\/\(\\d\+\)\/;$/);
+    });
 });

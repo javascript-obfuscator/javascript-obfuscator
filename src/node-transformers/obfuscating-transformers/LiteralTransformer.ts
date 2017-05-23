@@ -1,7 +1,6 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import * as escodegen from 'escodegen-wallaby';
 import * as ESTree from 'estree';
 
 import { TObfuscationReplacerFactory } from '../../types/container/TObfuscationReplacerFactory';
@@ -22,16 +21,16 @@ export class LiteralTransformer extends AbstractNodeTransformer {
     private readonly obfuscationReplacerFactory: TObfuscationReplacerFactory;
 
     /**
-     * @param obfuscationReplacerFactory
+     * @param obfuscatingReplacerFactory
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__IObfuscationReplacer) obfuscationReplacerFactory: TObfuscationReplacerFactory,
+        @inject(ServiceIdentifiers.Factory__IObfuscationReplacer) obfuscatingReplacerFactory: TObfuscationReplacerFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
-        this.obfuscationReplacerFactory = obfuscationReplacerFactory;
+        this.obfuscationReplacerFactory = obfuscatingReplacerFactory;
     }
 
     /**
@@ -40,7 +39,7 @@ export class LiteralTransformer extends AbstractNodeTransformer {
     public getVisitor (): IVisitor {
         return {
             enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (Node.isLiteralNode(node)) {
+                if (Node.isLiteralNode(node) && !node.obfuscatedNode) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -57,36 +56,21 @@ export class LiteralTransformer extends AbstractNodeTransformer {
             return literalNode;
         }
 
-        let content: string;
-
         switch (typeof literalNode.value) {
             case 'boolean':
-                content = this.obfuscationReplacerFactory(ObfuscationReplacers.BooleanReplacer)
+                return this.obfuscationReplacerFactory(ObfuscationReplacers.BooleanReplacer)
                     .replace(<boolean>literalNode.value);
 
-                break;
-
             case 'number':
-                content = this.obfuscationReplacerFactory(ObfuscationReplacers.NumberLiteralReplacer)
+                return this.obfuscationReplacerFactory(ObfuscationReplacers.NumberLiteralReplacer)
                     .replace(<number>literalNode.value);
 
-                break;
-
             case 'string':
-                content = this.obfuscationReplacerFactory(ObfuscationReplacers.StringLiteralReplacer)
+                return this.obfuscationReplacerFactory(ObfuscationReplacers.StringLiteralReplacer)
                     .replace(<string>literalNode.value);
-
-                break;
 
             default:
                 return literalNode;
         }
-
-        literalNode['x-verbatim-property'] = {
-            content : content,
-            precedence: escodegen.Precedence.Primary
-        };
-
-        return literalNode;
     }
 }

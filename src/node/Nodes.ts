@@ -20,6 +20,19 @@ export class Nodes {
     }
 
     /**
+     * @param elements
+     * @return {ESTree.ArrayExpression}
+     */
+    public static getArrayExpressionNode (
+        elements: (ESTree.Expression | ESTree.SpreadElement)[] = []
+    ): ESTree.ArrayExpression {
+        return {
+            type: NodeType.ArrayExpression,
+            elements
+        };
+    }
+
+    /**
      * @param operator
      * @param left
      * @param right
@@ -234,15 +247,18 @@ export class Nodes {
 
     /**
      * @param value
+     * @param raw
      * @returns {ESTree.Literal}
      */
-    public static getLiteralNode (value: boolean|number|string): ESTree.Literal {
+    public static getLiteralNode (value: boolean|number|string, raw?: string): ESTree.Literal {
+        raw = raw !== undefined ? raw : `'${value}'`;
+
         return {
             type: NodeType.Literal,
             value,
-            raw: `'${value}'`,
+            raw,
             'x-verbatim-property': {
-                content: `'${value}'`,
+                content: raw,
                 precedence: escodegen.Precedence.Primary
             },
             obfuscatedNode: false

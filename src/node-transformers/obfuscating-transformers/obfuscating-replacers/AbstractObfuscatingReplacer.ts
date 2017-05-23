@@ -1,11 +1,13 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
+import * as ESTree from 'estree';
+
+import { IObfuscatingReplacer } from '../../../interfaces/node-transformers/IObfuscatingReplacer';
 import { IOptions } from '../../../interfaces/options/IOptions';
-import { IObfuscationReplacer } from '../../../interfaces/node-transformers/IObfuscationReplacer';
 
 @injectable()
-export abstract class AbstractReplacer implements IObfuscationReplacer {
+export abstract class AbstractObfuscatingReplacer implements IObfuscatingReplacer {
     /**
      * @type {IOptions}
      */
@@ -23,7 +25,7 @@ export abstract class AbstractReplacer implements IObfuscationReplacer {
     /**
      * @param nodeValue
      * @param nodeIdentifier
-     * @returns {string}
+     * @returns {ESTree.Node}
      */
-    public abstract replace (nodeValue: any, nodeIdentifier?: number): string;
+    public abstract replace (nodeValue: any, nodeIdentifier?: number): ESTree.Node;
 }

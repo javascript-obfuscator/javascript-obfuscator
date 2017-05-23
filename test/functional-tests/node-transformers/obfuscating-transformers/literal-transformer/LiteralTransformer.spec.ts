@@ -144,7 +144,7 @@ describe('LiteralTransformer', () => {
 
             assert.match(
                 obfuscationResult.getObfuscatedCode(),
-                /var *test *= *_0x([a-f0-9]){4}\('0x0', '(?:\w|(?:\\x[a-f0-9]*)){4}'\);/
+                /var *test *= *_0x([a-f0-9]){4}\('0x0', *'(?:\w|(?:\\x[a-f0-9]*)){4}'\);/
             );
         });
 

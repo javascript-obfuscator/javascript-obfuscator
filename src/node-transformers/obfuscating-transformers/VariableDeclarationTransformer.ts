@@ -8,7 +8,7 @@ import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatemen
 import { TObfuscationReplacerFactory } from '../../types/container/TObfuscationReplacerFactory';
 
 import { IOptions } from '../../interfaces/options/IOptions';
-import { IObfuscationReplacerWithStorage } from '../../interfaces/node-transformers/IObfuscationReplacerWithStorage';
+import { IIdentifierReplacer } from '../../interfaces/node-transformers/IIdentifierReplacer';
 import { IVisitor } from '../../interfaces/IVisitor';
 
 import { ObfuscationReplacers } from '../../enums/container/ObfuscationReplacers';
@@ -31,9 +31,9 @@ import { NodeUtils } from '../../node/NodeUtils';
 @injectable()
 export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     /**
-     * @type {IObfuscationReplacerWithStorage}
+     * @type {IIdentifierReplacer}
      */
-    private readonly identifierReplacer: IObfuscationReplacerWithStorage;
+    private readonly identifierReplacer: IIdentifierReplacer;
 
     /**
      * @type {Map<ESTree.Node, ESTree.Identifier[]>}
@@ -41,16 +41,16 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     private readonly replaceableIdentifiers: Map <ESTree.Node, ESTree.Identifier[]> = new Map();
 
     /**
-     * @param obfuscationReplacerFactory
+     * @param obfuscatingReplacerFactory
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__IObfuscationReplacer) obfuscationReplacerFactory: TObfuscationReplacerFactory,
+        @inject(ServiceIdentifiers.Factory__IObfuscationReplacer) obfuscatingReplacerFactory: TObfuscationReplacerFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
-        this.identifierReplacer = <IObfuscationReplacerWithStorage>obfuscationReplacerFactory(ObfuscationReplacers.IdentifierReplacer);
+        this.identifierReplacer = <IIdentifierReplacer>obfuscatingReplacerFactory(ObfuscationReplacers.IdentifierReplacer);
     }
 
     /**
@@ -121,7 +121,9 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
         const cachedReplaceableIdentifiers: ESTree.Identifier[] = <ESTree.Identifier[]>this.replaceableIdentifiers.get(scopeNode);
 
         cachedReplaceableIdentifiers.forEach((replaceableIdentifier: ESTree.Identifier) => {
-            replaceableIdentifier.name = this.identifierReplacer.replace(replaceableIdentifier.name, nodeIdentifier);
+            const newReplaceableIdentifier: ESTree.Identifier = this.identifierReplacer.replace(replaceableIdentifier.name, nodeIdentifier);
+
+            replaceableIdentifier.name = newReplaceableIdentifier.name;
         });
     }
 
@@ -135,13 +137,15 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
         estraverse.replace(scopeNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (!node.obfuscatedNode && Node.isReplaceableIdentifierNode(node, parentNode)) {
-                    const newNodeName: string = this.identifierReplacer.replace(node.name, nodeIdentifier);
+                    const newIdentifier: ESTree.Identifier = this.identifierReplacer.replace(node.name, nodeIdentifier);
 
-                    if (node.name !== newNodeName) {
-                        node.name = newNodeName;
-                    } else {
+                    if (node.name === newIdentifier.name) {
                         storedReplaceableIdentifiers.push(node);
+
+                        return node;
                     }
+
+                    return newIdentifier;
                 }
             }
         });

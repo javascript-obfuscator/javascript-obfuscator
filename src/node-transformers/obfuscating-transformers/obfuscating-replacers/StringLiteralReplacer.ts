@@ -1,6 +1,8 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
+import * as ESTree from 'estree';
+
 import { ICustomNodeGroup } from '../../../interfaces/custom-nodes/ICustomNodeGroup';
 import { IEncodedValue } from '../../../interfaces/node-transformers/IEncodedValue';
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -8,13 +10,14 @@ import { IStorage } from '../../../interfaces/storages/IStorage';
 
 import { StringArrayEncoding } from '../../../enums/StringArrayEncoding';
 
-import { AbstractReplacer } from './AbstractReplacer';
+import { AbstractObfuscatingReplacer } from './AbstractObfuscatingReplacer';
 import { CryptUtils } from '../../../utils/CryptUtils';
+import { Nodes } from '../../../node/Nodes';
 import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 import { Utils } from '../../../utils/Utils';
 
 @injectable()
-export class StringLiteralReplacer extends AbstractReplacer {
+export class StringLiteralReplacer extends AbstractObfuscatingReplacer {
     /**
      * @type {number}
      */
@@ -26,14 +29,14 @@ export class StringLiteralReplacer extends AbstractReplacer {
     private readonly customNodeGroupStorage: IStorage<ICustomNodeGroup>;
 
     /**
+     * @type {Map<string, ESTree.Node>}
+     */
+    private readonly nodesCache: Map <string, ESTree.Node> = new Map();
+
+    /**
      * @type {string[]}
      */
     private readonly rc4Keys: string[];
-
-    /**
-     * @type {Map<string, string>}
-     */
-    private readonly stringLiteralCache: Map <string, string> = new Map();
 
     /**
      * @type {Map<string, string>}
@@ -66,31 +69,41 @@ export class StringLiteralReplacer extends AbstractReplacer {
 
     /**
      * @param nodeValue
-     * @returns {string}
+     * @returns {ESTree.Node}
      */
-    public replace (nodeValue: string): string {
-        const usingStringArray: boolean = (
+    public replace (nodeValue: string): ESTree.Node {
+        const usingStringArray: boolean = this.canUseStringArray(nodeValue);
+        const cacheKey: string = `${nodeValue}-${String(usingStringArray)}`;
+
+        if (this.nodesCache.has(cacheKey) && this.options.stringArrayEncoding !== StringArrayEncoding.rc4) {
+            return <ESTree.Node>this.nodesCache.get(cacheKey);
+        }
+
+        let resultNode: ESTree.Node;
+
+        if (usingStringArray) {
+            resultNode = this.replaceWithStringArrayCallNode(nodeValue);
+        } else {
+            resultNode = Nodes.getLiteralNode(
+                `${Utils.stringToUnicodeEscapeSequence(nodeValue, !this.options.unicodeEscapeSequence)}`
+            );
+        }
+
+        this.nodesCache.set(cacheKey, resultNode);
+
+        return resultNode;
+    }
+
+    /**
+     * @param nodeValue
+     * @return {boolean}
+     */
+    private canUseStringArray (nodeValue: string): boolean {
+        return (
             this.options.stringArray &&
             nodeValue.length >= StringLiteralReplacer.minimumLengthForStringArray &&
             RandomGeneratorUtils.getMathRandom() <= this.options.stringArrayThreshold
         );
-        const cacheKey: string = `${nodeValue}-${String(usingStringArray)}`;
-
-        if (this.stringLiteralCache.has(cacheKey) && this.options.stringArrayEncoding !== StringArrayEncoding.rc4) {
-            return <string>this.stringLiteralCache.get(cacheKey);
-        }
-
-        let result: string;
-
-        if (usingStringArray) {
-            result = this.replaceStringLiteralWithStringArrayCall(nodeValue);
-        } else {
-            result = `'${Utils.stringToUnicodeEscapeSequence(nodeValue, !this.options.unicodeEscapeSequence)}'`;
-        }
-
-        this.stringLiteralCache.set(cacheKey, result);
-
-        return result;
     }
 
     /**
@@ -142,18 +155,36 @@ export class StringLiteralReplacer extends AbstractReplacer {
 
     /**
      * @param value
-     * @returns {string}
+     * @returns {ESTree.Node}
      */
-    private replaceStringLiteralWithStringArrayCall (value: string): string {
+    private replaceWithStringArrayCallNode (value: string): ESTree.Node {
         const { encodedValue, key }: IEncodedValue = this.getEncodedValue(value);
         const hexadecimalIndex: string = this.getArrayHexadecimalIndex(encodedValue);
         const rotatedStringArrayStorageId: string = Utils.stringRotate(this.stringArrayStorage.getStorageId(), 1);
         const stringArrayStorageCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${rotatedStringArrayStorageId}`;
 
+        const hexadecimalLiteralNode: ESTree.Literal = Nodes.getLiteralNode(hexadecimalIndex);
+
+        hexadecimalLiteralNode.obfuscatedNode = true;
+
+        const callExpressionArgs: (ESTree.Expression | ESTree.SpreadElement)[] = [
+            hexadecimalLiteralNode
+        ];
+
         if (key) {
-            return `${stringArrayStorageCallsWrapperName}('${hexadecimalIndex}', '${Utils.stringToUnicodeEscapeSequence(key, !this.options.unicodeEscapeSequence)}')`;
+            const rc4KeyLiteralNode: ESTree.Literal = Nodes.getLiteralNode(
+                Utils.stringToUnicodeEscapeSequence(key, !this.options.unicodeEscapeSequence)
+            );
+
+            rc4KeyLiteralNode.obfuscatedNode = true;
+            callExpressionArgs.push(rc4KeyLiteralNode);
         }
 
-        return `${stringArrayStorageCallsWrapperName}('${hexadecimalIndex}')`;
+        return  Nodes.getCallExpressionNode(
+            Nodes.getIdentifierNode(
+                stringArrayStorageCallsWrapperName
+            ),
+            callExpressionArgs
+        );
     }
 }

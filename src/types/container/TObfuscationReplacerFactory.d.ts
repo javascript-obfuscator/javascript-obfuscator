@@ -1,5 +1,5 @@
-import { IObfuscationReplacer } from '../../interfaces/node-transformers/IObfuscationReplacer';
+import { IObfuscatingReplacer } from '../../interfaces/node-transformers/IObfuscatingReplacer';
 
 import { ObfuscationReplacers } from '../../enums/container/ObfuscationReplacers';
 
-export type TObfuscationReplacerFactory = (replacer: ObfuscationReplacers) => IObfuscationReplacer;
+export type TObfuscationReplacerFactory = (replacer: ObfuscationReplacers) => IObfuscatingReplacer;

@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { IObfuscatingReplacer } from '../../../interfaces/node-transformers/IObfuscatingReplacer';
+import { IObfuscatingReplacer } from '../../../interfaces/node-transformers/obfuscating-transformers/IObfuscatingReplacer';
 import { IOptions } from '../../../interfaces/options/IOptions';
 
 @injectable()

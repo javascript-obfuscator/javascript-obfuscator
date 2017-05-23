@@ -1,4 +1,4 @@
-export enum ObfuscationReplacers {
+export enum ObfuscatingReplacers {
     BooleanReplacer,
     IdentifierReplacer,
     NumberLiteralReplacer,

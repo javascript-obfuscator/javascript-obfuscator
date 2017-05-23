@@ -120,7 +120,7 @@ exports.ServiceIdentifiers = {
     Factory__ICustomNodeGroup: Symbol('Factory<ICustomNodeGroup>'),
     Factory__INodeTransformer: Symbol('Factory<INodeTransformer[]>'),
     Factory__IObfuscationResult: Symbol('Factory<IObfuscationResult>'),
-    Factory__IObfuscationReplacer: Symbol('Factory<IObfuscationReplacer>'),
+    Factory__IObfuscatingReplacer: Symbol('Factory<IObfuscatingReplacer>'),
     Factory__TControlFlowStorage: Symbol('Factory<TControlFlowStorage>'),
     ICalleeDataExtractor: Symbol('ICalleeDataExtractor'),
     ICustomNodeGroup: Symbol('ICustomNodeGroup'),
@@ -132,7 +132,7 @@ exports.ServiceIdentifiers = {
     IObfuscationResult: Symbol('IObfuscationResult'),
     IObfuscator: Symbol('IObfuscator'),
     IOptions: Symbol('IOptions'),
-    IObfuscationReplacer: Symbol('IObfuscationReplacer'),
+    IObfuscatingReplacer: Symbol('IObfuscatingReplacer'),
     ISourceMapCorrector: Symbol('ISourceMapCorrector'),
     IStackTraceAnalyzer: Symbol('IStackTraceAnalyzer'),
     Newable__ICustomNode: Symbol('Newable<ICustomNode>'),
@@ -1311,13 +1311,13 @@ exports.ObfuscationEvents = {
 
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var ObfuscationReplacers;
-(function (ObfuscationReplacers) {
-    ObfuscationReplacers[ObfuscationReplacers["BooleanReplacer"] = 0] = "BooleanReplacer";
-    ObfuscationReplacers[ObfuscationReplacers["IdentifierReplacer"] = 1] = "IdentifierReplacer";
-    ObfuscationReplacers[ObfuscationReplacers["NumberLiteralReplacer"] = 2] = "NumberLiteralReplacer";
-    ObfuscationReplacers[ObfuscationReplacers["StringLiteralReplacer"] = 3] = "StringLiteralReplacer";
-})(ObfuscationReplacers = exports.ObfuscationReplacers || (exports.ObfuscationReplacers = {}));
+var ObfuscatingReplacers;
+(function (ObfuscatingReplacers) {
+    ObfuscatingReplacers[ObfuscatingReplacers["BooleanReplacer"] = 0] = "BooleanReplacer";
+    ObfuscatingReplacers[ObfuscatingReplacers["IdentifierReplacer"] = 1] = "IdentifierReplacer";
+    ObfuscatingReplacers[ObfuscatingReplacers["NumberLiteralReplacer"] = 2] = "NumberLiteralReplacer";
+    ObfuscatingReplacers[ObfuscatingReplacers["StringLiteralReplacer"] = 3] = "StringLiteralReplacer";
+})(ObfuscatingReplacers = exports.ObfuscatingReplacers || (exports.ObfuscatingReplacers = {}));
 
 /***/ }),
 /* 17 */
@@ -2894,23 +2894,23 @@ exports.nodeTransformersModule = new inversify_1.ContainerModule(function (bind)
 Object.defineProperty(exports, "__esModule", { value: true });
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var ObfuscationReplacers_1 = __webpack_require__(16);
+var ObfuscatingReplacers_1 = __webpack_require__(16);
 var BooleanLiteralReplacer_1 = __webpack_require__(98);
 var IdentifierReplacer_1 = __webpack_require__(99);
 var NumberLiteralReplacer_1 = __webpack_require__(100);
 var StringLiteralReplacer_1 = __webpack_require__(101);
 exports.obfuscatingTransformersModule = new inversify_1.ContainerModule(function (bind) {
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscationReplacer).to(BooleanLiteralReplacer_1.BooleanLiteralReplacer).whenTargetNamed(ObfuscationReplacers_1.ObfuscationReplacers.BooleanReplacer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscationReplacer).to(IdentifierReplacer_1.IdentifierReplacer).whenTargetNamed(ObfuscationReplacers_1.ObfuscationReplacers.IdentifierReplacer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscationReplacer).to(NumberLiteralReplacer_1.NumberLiteralReplacer).whenTargetNamed(ObfuscationReplacers_1.ObfuscationReplacers.NumberLiteralReplacer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscationReplacer).to(StringLiteralReplacer_1.StringLiteralReplacer).whenTargetNamed(ObfuscationReplacers_1.ObfuscationReplacers.StringLiteralReplacer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscationReplacer).toFactory(function (context) {
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatingReplacer).to(BooleanLiteralReplacer_1.BooleanLiteralReplacer).whenTargetNamed(ObfuscatingReplacers_1.ObfuscatingReplacers.BooleanReplacer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatingReplacer).to(IdentifierReplacer_1.IdentifierReplacer).whenTargetNamed(ObfuscatingReplacers_1.ObfuscatingReplacers.IdentifierReplacer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatingReplacer).to(NumberLiteralReplacer_1.NumberLiteralReplacer).whenTargetNamed(ObfuscatingReplacers_1.ObfuscatingReplacers.NumberLiteralReplacer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatingReplacer).to(StringLiteralReplacer_1.StringLiteralReplacer).whenTargetNamed(ObfuscatingReplacers_1.ObfuscatingReplacers.StringLiteralReplacer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscatingReplacer).toFactory(function (context) {
         var cache = new Map();
         return function (replacerName) {
             if (cache.has(replacerName)) {
                 return cache.get(replacerName);
             }
-            var obfuscationReplacer = context.container.getNamed(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscationReplacer, replacerName);
+            var obfuscationReplacer = context.container.getNamed(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatingReplacer, replacerName);
             cache.set(replacerName, obfuscationReplacer);
             return obfuscationReplacer;
         };
@@ -5563,7 +5563,7 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(12);
-var ObfuscationReplacers_1 = __webpack_require__(16);
+var ObfuscatingReplacers_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(6);
 var CatchClauseTransformer = function (_AbstractNodeTransfor) {
@@ -5574,7 +5574,7 @@ var CatchClauseTransformer = function (_AbstractNodeTransfor) {
 
         var _this = _possibleConstructorReturn(this, (CatchClauseTransformer.__proto__ || Object.getPrototypeOf(CatchClauseTransformer)).call(this, options));
 
-        _this.identifierReplacer = obfuscatingReplacerFactory(ObfuscationReplacers_1.ObfuscationReplacers.IdentifierReplacer);
+        _this.identifierReplacer = obfuscatingReplacerFactory(ObfuscatingReplacers_1.ObfuscatingReplacers.IdentifierReplacer);
         return _this;
     }
 
@@ -5628,7 +5628,7 @@ var CatchClauseTransformer = function (_AbstractNodeTransfor) {
 
     return CatchClauseTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
-CatchClauseTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscationReplacer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], CatchClauseTransformer);
+CatchClauseTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscatingReplacer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], CatchClauseTransformer);
 exports.CatchClauseTransformer = CatchClauseTransformer;
 
 /***/ }),
@@ -5651,7 +5651,7 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(12);
-var ObfuscationReplacers_1 = __webpack_require__(16);
+var ObfuscatingReplacers_1 = __webpack_require__(16);
 var NodeType_1 = __webpack_require__(14);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(6);
@@ -5665,7 +5665,7 @@ var FunctionDeclarationTransformer = function (_AbstractNodeTransfor) {
         var _this = _possibleConstructorReturn(this, (FunctionDeclarationTransformer.__proto__ || Object.getPrototypeOf(FunctionDeclarationTransformer)).call(this, options));
 
         _this.replaceableIdentifiers = new Map();
-        _this.identifierReplacer = obfuscatingReplacerFactory(ObfuscationReplacers_1.ObfuscationReplacers.IdentifierReplacer);
+        _this.identifierReplacer = obfuscatingReplacerFactory(ObfuscatingReplacers_1.ObfuscatingReplacers.IdentifierReplacer);
         return _this;
     }
 
@@ -5739,7 +5739,7 @@ var FunctionDeclarationTransformer = function (_AbstractNodeTransfor) {
 
     return FunctionDeclarationTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
-FunctionDeclarationTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscationReplacer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], FunctionDeclarationTransformer);
+FunctionDeclarationTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscatingReplacer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], FunctionDeclarationTransformer);
 exports.FunctionDeclarationTransformer = FunctionDeclarationTransformer;
 
 /***/ }),
@@ -5762,7 +5762,7 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(12);
-var ObfuscationReplacers_1 = __webpack_require__(16);
+var ObfuscatingReplacers_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(6);
 var FunctionTransformer = function (_AbstractNodeTransfor) {
@@ -5773,7 +5773,7 @@ var FunctionTransformer = function (_AbstractNodeTransfor) {
 
         var _this = _possibleConstructorReturn(this, (FunctionTransformer.__proto__ || Object.getPrototypeOf(FunctionTransformer)).call(this, options));
 
-        _this.identifierReplacer = obfuscatingReplacerFactory(ObfuscationReplacers_1.ObfuscationReplacers.IdentifierReplacer);
+        _this.identifierReplacer = obfuscatingReplacerFactory(ObfuscatingReplacers_1.ObfuscatingReplacers.IdentifierReplacer);
         return _this;
     }
 
@@ -5846,7 +5846,7 @@ var FunctionTransformer = function (_AbstractNodeTransfor) {
 
     return FunctionTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
-FunctionTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscationReplacer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], FunctionTransformer);
+FunctionTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscatingReplacer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], FunctionTransformer);
 exports.FunctionTransformer = FunctionTransformer;
 
 /***/ }),
@@ -5869,7 +5869,7 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(12);
-var ObfuscationReplacers_1 = __webpack_require__(16);
+var ObfuscatingReplacers_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(6);
 var LabeledStatementTransformer = function (_AbstractNodeTransfor) {
@@ -5880,7 +5880,7 @@ var LabeledStatementTransformer = function (_AbstractNodeTransfor) {
 
         var _this = _possibleConstructorReturn(this, (LabeledStatementTransformer.__proto__ || Object.getPrototypeOf(LabeledStatementTransformer)).call(this, options));
 
-        _this.identifierReplacer = obfuscatingReplacerFactory(ObfuscationReplacers_1.ObfuscationReplacers.IdentifierReplacer);
+        _this.identifierReplacer = obfuscatingReplacerFactory(ObfuscatingReplacers_1.ObfuscatingReplacers.IdentifierReplacer);
         return _this;
     }
 
@@ -5928,7 +5928,7 @@ var LabeledStatementTransformer = function (_AbstractNodeTransfor) {
 
     return LabeledStatementTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
-LabeledStatementTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscationReplacer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], LabeledStatementTransformer);
+LabeledStatementTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscatingReplacer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], LabeledStatementTransformer);
 exports.LabeledStatementTransformer = LabeledStatementTransformer;
 
 /***/ }),
@@ -5952,7 +5952,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var ObfuscationReplacers_1 = __webpack_require__(16);
+var ObfuscatingReplacers_1 = __webpack_require__(16);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(6);
 var LiteralTransformer = function (_AbstractNodeTransfor) {
@@ -5963,7 +5963,7 @@ var LiteralTransformer = function (_AbstractNodeTransfor) {
 
         var _this = _possibleConstructorReturn(this, (LiteralTransformer.__proto__ || Object.getPrototypeOf(LiteralTransformer)).call(this, options));
 
-        _this.obfuscationReplacerFactory = obfuscatingReplacerFactory;
+        _this.obfuscatingReplacerFactory = obfuscatingReplacerFactory;
         return _this;
     }
 
@@ -5988,11 +5988,11 @@ var LiteralTransformer = function (_AbstractNodeTransfor) {
             }
             switch (_typeof(literalNode.value)) {
                 case 'boolean':
-                    return this.obfuscationReplacerFactory(ObfuscationReplacers_1.ObfuscationReplacers.BooleanReplacer).replace(literalNode.value);
+                    return this.obfuscatingReplacerFactory(ObfuscatingReplacers_1.ObfuscatingReplacers.BooleanReplacer).replace(literalNode.value);
                 case 'number':
-                    return this.obfuscationReplacerFactory(ObfuscationReplacers_1.ObfuscationReplacers.NumberLiteralReplacer).replace(literalNode.value);
+                    return this.obfuscatingReplacerFactory(ObfuscatingReplacers_1.ObfuscatingReplacers.NumberLiteralReplacer).replace(literalNode.value);
                 case 'string':
-                    return this.obfuscationReplacerFactory(ObfuscationReplacers_1.ObfuscationReplacers.StringLiteralReplacer).replace(literalNode.value);
+                    return this.obfuscatingReplacerFactory(ObfuscatingReplacers_1.ObfuscatingReplacers.StringLiteralReplacer).replace(literalNode.value);
                 default:
                     return literalNode;
             }
@@ -6001,7 +6001,7 @@ var LiteralTransformer = function (_AbstractNodeTransfor) {
 
     return LiteralTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
-LiteralTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscationReplacer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], LiteralTransformer);
+LiteralTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscatingReplacer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], LiteralTransformer);
 exports.LiteralTransformer = LiteralTransformer;
 
 /***/ }),
@@ -6098,7 +6098,7 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(12);
-var ObfuscationReplacers_1 = __webpack_require__(16);
+var ObfuscatingReplacers_1 = __webpack_require__(16);
 var NodeType_1 = __webpack_require__(14);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(6);
@@ -6112,7 +6112,7 @@ var VariableDeclarationTransformer = function (_AbstractNodeTransfor) {
         var _this = _possibleConstructorReturn(this, (VariableDeclarationTransformer.__proto__ || Object.getPrototypeOf(VariableDeclarationTransformer)).call(this, options));
 
         _this.replaceableIdentifiers = new Map();
-        _this.identifierReplacer = obfuscatingReplacerFactory(ObfuscationReplacers_1.ObfuscationReplacers.IdentifierReplacer);
+        _this.identifierReplacer = obfuscatingReplacerFactory(ObfuscatingReplacers_1.ObfuscatingReplacers.IdentifierReplacer);
         return _this;
     }
 
@@ -6198,7 +6198,7 @@ var VariableDeclarationTransformer = function (_AbstractNodeTransfor) {
 
     return VariableDeclarationTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
-VariableDeclarationTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscationReplacer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], VariableDeclarationTransformer);
+VariableDeclarationTransformer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscatingReplacer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], VariableDeclarationTransformer);
 exports.VariableDeclarationTransformer = VariableDeclarationTransformer;
 
 /***/ }),
@@ -6478,18 +6478,27 @@ var StringLiteralReplacer = StringLiteralReplacer_1 = function (_AbstractObfusca
                 encodedValue = _getEncodedValue.encodedValue,
                 key = _getEncodedValue.key;
 
-            var hexadecimalIndex = this.getArrayHexadecimalIndex(encodedValue);
             var rotatedStringArrayStorageId = Utils_1.Utils.stringRotate(this.stringArrayStorage.getStorageId(), 1);
             var stringArrayStorageCallsWrapperName = "_" + Utils_1.Utils.hexadecimalPrefix + rotatedStringArrayStorageId;
-            var hexadecimalLiteralNode = Nodes_1.Nodes.getLiteralNode(hexadecimalIndex);
-            hexadecimalLiteralNode.obfuscatedNode = true;
-            var callExpressionArgs = [hexadecimalLiteralNode];
+            var callExpressionArgs = [StringLiteralReplacer_1.getHexadecimalLiteralNode(this.getArrayHexadecimalIndex(encodedValue))];
             if (key) {
-                var rc4KeyLiteralNode = Nodes_1.Nodes.getLiteralNode(Utils_1.Utils.stringToUnicodeEscapeSequence(key, !this.options.unicodeEscapeSequence));
-                rc4KeyLiteralNode.obfuscatedNode = true;
-                callExpressionArgs.push(rc4KeyLiteralNode);
+                callExpressionArgs.push(StringLiteralReplacer_1.getRc4KeyLiteralNode(Utils_1.Utils.stringToUnicodeEscapeSequence(key, !this.options.unicodeEscapeSequence)));
             }
             return Nodes_1.Nodes.getCallExpressionNode(Nodes_1.Nodes.getIdentifierNode(stringArrayStorageCallsWrapperName), callExpressionArgs);
+        }
+    }], [{
+        key: "getHexadecimalLiteralNode",
+        value: function getHexadecimalLiteralNode(hexadecimalIndex) {
+            var hexadecimalLiteralNode = Nodes_1.Nodes.getLiteralNode(hexadecimalIndex);
+            hexadecimalLiteralNode.obfuscatedNode = true;
+            return hexadecimalLiteralNode;
+        }
+    }, {
+        key: "getRc4KeyLiteralNode",
+        value: function getRc4KeyLiteralNode(literalValue) {
+            var rc4KeyLiteralNode = Nodes_1.Nodes.getLiteralNode(literalValue);
+            rc4KeyLiteralNode.obfuscatedNode = true;
+            return rc4KeyLiteralNode;
         }
     }]);
 

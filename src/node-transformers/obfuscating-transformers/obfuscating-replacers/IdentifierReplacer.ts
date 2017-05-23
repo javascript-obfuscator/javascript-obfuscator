@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { IIdentifierReplacer } from '../../../interfaces/node-transformers/IIdentifierReplacer';
+import { IIdentifierReplacer } from '../../../interfaces/node-transformers/obfuscating-transformers/IIdentifierReplacer';
 import { IOptions } from '../../../interfaces/options/IOptions';
 
 import { AbstractObfuscatingReplacer } from './AbstractObfuscatingReplacer';

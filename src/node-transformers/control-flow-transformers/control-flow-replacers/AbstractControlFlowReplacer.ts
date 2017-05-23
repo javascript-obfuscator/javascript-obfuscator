@@ -5,7 +5,7 @@ import * as ESTree from 'estree';
 
 import { TCustomNodeFactory } from '../../../types/container/TCustomNodeFactory';
 
-import { IControlFlowReplacer } from '../../../interfaces/node-transformers/IControlFlowReplacer';
+import { IControlFlowReplacer } from '../../../interfaces/node-transformers/control-flow-transformers/IControlFlowReplacer';
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStorage } from '../../../interfaces/storages/IStorage';

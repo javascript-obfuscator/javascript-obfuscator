@@ -7,7 +7,7 @@ import * as ESTree from 'estree';
 import { TObfuscationReplacerFactory } from '../../types/container/TObfuscationReplacerFactory';
 
 import { IOptions } from '../../interfaces/options/IOptions';
-import { IObfuscationReplacerWithStorage } from '../../interfaces/node-transformers/IObfuscationReplacerWithStorage';
+import { IIdentifierReplacer } from '../../interfaces/node-transformers/IIdentifierReplacer';
 import { IVisitor } from '../../interfaces/IVisitor';
 
 import { ObfuscationReplacers } from '../../enums/container/ObfuscationReplacers';
@@ -26,21 +26,21 @@ import { Node } from '../../node/Node';
 @injectable()
 export class CatchClauseTransformer extends AbstractNodeTransformer {
     /**
-     * @type {IObfuscationReplacerWithStorage}
+     * @type {IIdentifierReplacer}
      */
-    private readonly identifierReplacer: IObfuscationReplacerWithStorage;
+    private readonly identifierReplacer: IIdentifierReplacer;
 
     /**
-     * @param obfuscationReplacerFactory
+     * @param obfuscatingReplacerFactory
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__IObfuscationReplacer) obfuscationReplacerFactory: TObfuscationReplacerFactory,
+        @inject(ServiceIdentifiers.Factory__IObfuscationReplacer) obfuscatingReplacerFactory: TObfuscationReplacerFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
-        this.identifierReplacer = <IObfuscationReplacerWithStorage>obfuscationReplacerFactory(ObfuscationReplacers.IdentifierReplacer);
+        this.identifierReplacer = <IIdentifierReplacer>obfuscatingReplacerFactory(ObfuscationReplacers.IdentifierReplacer);
     }
 
     /**
@@ -88,12 +88,15 @@ export class CatchClauseTransformer extends AbstractNodeTransformer {
         estraverse.replace(catchClauseNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isReplaceableIdentifierNode(node, parentNode)) {
-                    const newNodeName: string = this.identifierReplacer.replace(node.name, nodeIdentifier);
+                    const newIdentifier: ESTree.Identifier = this.identifierReplacer.replace(node.name, nodeIdentifier);
 
-                    if (node.name !== newNodeName) {
-                        node.name = newNodeName;
-                        node.obfuscatedNode = true;
+                    if (node.name === newIdentifier.name) {
+                        return node;
                     }
+
+                    newIdentifier.obfuscatedNode = true;
+
+                    return newIdentifier;
                 }
             }
         });

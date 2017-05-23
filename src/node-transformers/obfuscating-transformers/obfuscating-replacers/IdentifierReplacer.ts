@@ -1,14 +1,17 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
-import { IObfuscationReplacerWithStorage } from '../../../interfaces/node-transformers/IObfuscationReplacerWithStorage';
+import * as ESTree from 'estree';
+
+import { IIdentifierReplacer } from '../../../interfaces/node-transformers/IIdentifierReplacer';
 import { IOptions } from '../../../interfaces/options/IOptions';
 
-import { AbstractReplacer } from './AbstractReplacer';
+import { AbstractObfuscatingReplacer } from './AbstractObfuscatingReplacer';
+import { Nodes } from '../../../node/Nodes';
 import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 
 @injectable()
-export class IdentifierReplacer extends AbstractReplacer implements IObfuscationReplacerWithStorage {
+export class IdentifierReplacer extends AbstractObfuscatingReplacer implements IIdentifierReplacer {
     /**
      * @type {Map<string, string>}
      */
@@ -26,16 +29,16 @@ export class IdentifierReplacer extends AbstractReplacer implements IObfuscation
     /**
      * @param nodeValue
      * @param nodeIdentifier
-     * @returns {string}
+     * @returns {ESTree.Identifier}
      */
-    public replace (nodeValue: string, nodeIdentifier: number): string {
+    public replace (nodeValue: string, nodeIdentifier: number): ESTree.Identifier {
         const mapKey: string = `${nodeValue}-${String(nodeIdentifier)}`;
 
-        if (!this.namesMap.has(mapKey)) {
-            return nodeValue;
+        if (this.namesMap.has(mapKey)) {
+            nodeValue = <string>this.namesMap.get(mapKey);
         }
 
-        return <string>this.namesMap.get(mapKey);
+        return Nodes.getIdentifierNode(nodeValue);
     }
 
     /**

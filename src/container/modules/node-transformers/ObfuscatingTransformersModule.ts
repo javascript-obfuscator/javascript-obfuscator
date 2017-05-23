@@ -1,9 +1,9 @@
 import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
-import { IObfuscatingReplacer } from '../../../interfaces/node-transformers/IObfuscatingReplacer';
+import { IObfuscatingReplacer } from '../../../interfaces/node-transformers/obfuscating-transformers/IObfuscatingReplacer';
 
-import { ObfuscationReplacers } from '../../../enums/container/ObfuscationReplacers';
+import { ObfuscatingReplacers } from '../../../enums/container/ObfuscatingReplacers';
 
 import { BooleanLiteralReplacer } from '../../../node-transformers/obfuscating-transformers/obfuscating-replacers/BooleanLiteralReplacer';
 import { IdentifierReplacer } from '../../../node-transformers/obfuscating-transformers/obfuscating-replacers/IdentifierReplacer';
@@ -11,33 +11,33 @@ import { NumberLiteralReplacer } from '../../../node-transformers/obfuscating-tr
 import { StringLiteralReplacer } from '../../../node-transformers/obfuscating-transformers/obfuscating-replacers/StringLiteralReplacer';
 
 export const obfuscatingTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
-    bind<IObfuscatingReplacer>(ServiceIdentifiers.IObfuscationReplacer)
+    bind<IObfuscatingReplacer>(ServiceIdentifiers.IObfuscatingReplacer)
         .to(BooleanLiteralReplacer)
-        .whenTargetNamed(ObfuscationReplacers.BooleanReplacer);
+        .whenTargetNamed(ObfuscatingReplacers.BooleanReplacer);
 
-    bind<IObfuscatingReplacer>(ServiceIdentifiers.IObfuscationReplacer)
+    bind<IObfuscatingReplacer>(ServiceIdentifiers.IObfuscatingReplacer)
         .to(IdentifierReplacer)
-        .whenTargetNamed(ObfuscationReplacers.IdentifierReplacer);
+        .whenTargetNamed(ObfuscatingReplacers.IdentifierReplacer);
 
-    bind<IObfuscatingReplacer>(ServiceIdentifiers.IObfuscationReplacer)
+    bind<IObfuscatingReplacer>(ServiceIdentifiers.IObfuscatingReplacer)
         .to(NumberLiteralReplacer)
-        .whenTargetNamed(ObfuscationReplacers.NumberLiteralReplacer);
+        .whenTargetNamed(ObfuscatingReplacers.NumberLiteralReplacer);
 
-    bind<IObfuscatingReplacer>(ServiceIdentifiers.IObfuscationReplacer)
+    bind<IObfuscatingReplacer>(ServiceIdentifiers.IObfuscatingReplacer)
         .to(StringLiteralReplacer)
-        .whenTargetNamed(ObfuscationReplacers.StringLiteralReplacer);
+        .whenTargetNamed(ObfuscatingReplacers.StringLiteralReplacer);
 
-    bind<IObfuscatingReplacer>(ServiceIdentifiers.Factory__IObfuscationReplacer)
+    bind<IObfuscatingReplacer>(ServiceIdentifiers.Factory__IObfuscatingReplacer)
         .toFactory<IObfuscatingReplacer>((context: interfaces.Context) => {
-            const cache: Map <ObfuscationReplacers, IObfuscatingReplacer> = new Map();
+            const cache: Map <ObfuscatingReplacers, IObfuscatingReplacer> = new Map();
 
-            return (replacerName: ObfuscationReplacers) => {
+            return (replacerName: ObfuscatingReplacers) => {
                 if (cache.has(replacerName)) {
                     return <IObfuscatingReplacer>cache.get(replacerName);
                 }
 
                 const obfuscationReplacer: IObfuscatingReplacer = context.container.getNamed<IObfuscatingReplacer>(
-                    ServiceIdentifiers.IObfuscationReplacer,
+                    ServiceIdentifiers.IObfuscatingReplacer,
                     replacerName
                 );
 

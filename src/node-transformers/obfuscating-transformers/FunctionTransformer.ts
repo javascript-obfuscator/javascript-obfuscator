@@ -4,13 +4,13 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TObfuscationReplacerFactory } from '../../types/container/TObfuscationReplacerFactory';
+import { TObfuscatingReplacerFactory } from '../../types/container/TObfuscatingReplacerFactory';
 
 import { IOptions } from '../../interfaces/options/IOptions';
-import { IIdentifierReplacer } from '../../interfaces/node-transformers/IIdentifierReplacer';
+import { IIdentifierReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/IIdentifierReplacer';
 import { IVisitor } from '../../interfaces/IVisitor';
 
-import { ObfuscationReplacers } from '../../enums/container/ObfuscationReplacers';
+import { ObfuscatingReplacers } from '../../enums/container/ObfuscatingReplacers';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
@@ -35,12 +35,12 @@ export class FunctionTransformer extends AbstractNodeTransformer {
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__IObfuscationReplacer) obfuscatingReplacerFactory: TObfuscationReplacerFactory,
+        @inject(ServiceIdentifiers.Factory__IObfuscatingReplacer) obfuscatingReplacerFactory: TObfuscatingReplacerFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
-        this.identifierReplacer = <IIdentifierReplacer>obfuscatingReplacerFactory(ObfuscationReplacers.IdentifierReplacer);
+        this.identifierReplacer = <IIdentifierReplacer>obfuscatingReplacerFactory(ObfuscatingReplacers.IdentifierReplacer);
     }
 
     /**

@@ -4,7 +4,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 
 import { ICustomNodeGroup } from '../../../interfaces/custom-nodes/ICustomNodeGroup';
-import { IEncodedValue } from '../../../interfaces/node-transformers/IEncodedValue';
+import { IEncodedValue } from '../../../interfaces/node-transformers/obfuscating-transformers/IEncodedValue';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
@@ -65,6 +65,30 @@ export class StringLiteralReplacer extends AbstractObfuscatingReplacer {
 
         this.rc4Keys = RandomGeneratorUtils.getRandomGenerator()
             .n(() => RandomGeneratorUtils.getRandomGenerator().string({length: 4}), 50);
+    }
+
+    /**
+     * @param hexadecimalIndex
+     * @return {ESTree.Literal}
+     */
+    private static getHexadecimalLiteralNode (hexadecimalIndex: string): ESTree.Literal {
+        const hexadecimalLiteralNode: ESTree.Literal = Nodes.getLiteralNode(hexadecimalIndex);
+
+        hexadecimalLiteralNode.obfuscatedNode = true;
+
+        return hexadecimalLiteralNode;
+    }
+
+    /**
+     * @param literalValue
+     * @return {ESTree.Literal}
+     */
+    private static getRc4KeyLiteralNode (literalValue: string): ESTree.Literal {
+        const rc4KeyLiteralNode: ESTree.Literal = Nodes.getLiteralNode(literalValue);
+
+        rc4KeyLiteralNode.obfuscatedNode = true;
+
+        return rc4KeyLiteralNode;
     }
 
     /**
@@ -159,31 +183,22 @@ export class StringLiteralReplacer extends AbstractObfuscatingReplacer {
      */
     private replaceWithStringArrayCallNode (value: string): ESTree.Node {
         const { encodedValue, key }: IEncodedValue = this.getEncodedValue(value);
-        const hexadecimalIndex: string = this.getArrayHexadecimalIndex(encodedValue);
         const rotatedStringArrayStorageId: string = Utils.stringRotate(this.stringArrayStorage.getStorageId(), 1);
         const stringArrayStorageCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${rotatedStringArrayStorageId}`;
-
-        const hexadecimalLiteralNode: ESTree.Literal = Nodes.getLiteralNode(hexadecimalIndex);
-
-        hexadecimalLiteralNode.obfuscatedNode = true;
-
         const callExpressionArgs: (ESTree.Expression | ESTree.SpreadElement)[] = [
-            hexadecimalLiteralNode
+            StringLiteralReplacer.getHexadecimalLiteralNode(
+                this.getArrayHexadecimalIndex(encodedValue)
+            )
         ];
 
         if (key) {
-            const rc4KeyLiteralNode: ESTree.Literal = Nodes.getLiteralNode(
+            callExpressionArgs.push(StringLiteralReplacer.getRc4KeyLiteralNode(
                 Utils.stringToUnicodeEscapeSequence(key, !this.options.unicodeEscapeSequence)
-            );
-
-            rc4KeyLiteralNode.obfuscatedNode = true;
-            callExpressionArgs.push(rc4KeyLiteralNode);
+            ));
         }
 
-        return  Nodes.getCallExpressionNode(
-            Nodes.getIdentifierNode(
-                stringArrayStorageCallsWrapperName
-            ),
+        return Nodes.getCallExpressionNode(
+            Nodes.getIdentifierNode(stringArrayStorageCallsWrapperName),
             callExpressionArgs
         );
     }

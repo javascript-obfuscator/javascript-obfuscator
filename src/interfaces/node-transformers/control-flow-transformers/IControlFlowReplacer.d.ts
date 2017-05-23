@@ -1,7 +1,7 @@
 import * as ESTree from 'estree';
 
-import { ICustomNode } from '../custom-nodes/ICustomNode';
-import { IStorage } from '../storages/IStorage';
+import { ICustomNode } from '../../custom-nodes/ICustomNode';
+import { IStorage } from '../../storages/IStorage';
 
 export interface IControlFlowReplacer {
     /**

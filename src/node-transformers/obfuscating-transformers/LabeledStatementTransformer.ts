@@ -94,7 +94,9 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
         estraverse.replace(labeledStatementNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isLabelIdentifierNode(node, parentNode)) {
-                    return this.identifierReplacer.replace(node.name, nodeIdentifier);
+                    const newIdentifier: ESTree.Identifier = this.identifierReplacer.replace(node.name, nodeIdentifier);
+
+                    node.name = newIdentifier.name;
                 }
             }
         });

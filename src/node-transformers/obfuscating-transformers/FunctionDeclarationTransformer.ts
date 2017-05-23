@@ -124,14 +124,13 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isReplaceableIdentifierNode(node, parentNode)) {
                     const newIdentifier: ESTree.Identifier = this.identifierReplacer.replace(node.name, nodeIdentifier);
+                    const newIdentifierName: string = newIdentifier.name;
 
-                    if (node.name === newIdentifier.name) {
+                    if (node.name !== newIdentifierName) {
+                        node.name = newIdentifierName;
+                    } else {
                         storedReplaceableIdentifiers.push(node);
-
-                        return node;
                     }
-
-                    return newIdentifier;
                 }
             }
         });

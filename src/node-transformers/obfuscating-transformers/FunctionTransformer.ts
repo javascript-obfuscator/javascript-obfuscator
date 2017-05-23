@@ -110,21 +110,17 @@ export class FunctionTransformer extends AbstractNodeTransformer {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isReplaceableIdentifierNode(node, parentNode)) {
                     const newIdentifier: ESTree.Identifier = this.identifierReplacer.replace(node.name, nodeIdentifier);
+                    const newIdentifierName: string = newIdentifier.name;
 
-                    if (node.name === newIdentifier.name) {
-                        return node;
+                    if (node.name !== newIdentifierName) {
+                        node.name = newIdentifierName;
+                        node.obfuscatedNode = true;
                     }
-
-                    newIdentifier.obfuscatedNode = true;
-
-                    return newIdentifier;
                 }
             }
         };
 
-        functionNode.params = functionNode.params.map((paramsNode: ESTree.Node) =>
-            <ESTree.Pattern>estraverse.replace(paramsNode, replaceVisitor)
-        );
+        functionNode.params.forEach((paramsNode: ESTree.Node) => estraverse.replace(paramsNode, replaceVisitor));
 
         estraverse.replace(functionNode.body, replaceVisitor);
     }

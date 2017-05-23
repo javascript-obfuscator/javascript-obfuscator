@@ -5615,11 +5615,11 @@ var CatchClauseTransformer = function (_AbstractNodeTransfor) {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
                         var newIdentifier = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
-                        if (node.name === newIdentifier.name) {
-                            return node;
+                        var newIdentifierName = newIdentifier.name;
+                        if (node.name !== newIdentifierName) {
+                            node.name = newIdentifierName;
+                            node.obfuscatedNode = true;
                         }
-                        newIdentifier.obfuscatedNode = true;
-                        return newIdentifier;
                     }
                 }
             });
@@ -5724,11 +5724,12 @@ var FunctionDeclarationTransformer = function (_AbstractNodeTransfor) {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
                         var newIdentifier = _this4.identifierReplacer.replace(node.name, nodeIdentifier);
-                        if (node.name === newIdentifier.name) {
+                        var newIdentifierName = newIdentifier.name;
+                        if (node.name !== newIdentifierName) {
+                            node.name = newIdentifierName;
+                        } else {
                             storedReplaceableIdentifiers.push(node);
-                            return node;
                         }
-                        return newIdentifier;
                     }
                 }
             });
@@ -5828,15 +5829,15 @@ var FunctionTransformer = function (_AbstractNodeTransfor) {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
                         var newIdentifier = _this4.identifierReplacer.replace(node.name, nodeIdentifier);
-                        if (node.name === newIdentifier.name) {
-                            return node;
+                        var newIdentifierName = newIdentifier.name;
+                        if (node.name !== newIdentifierName) {
+                            node.name = newIdentifierName;
+                            node.obfuscatedNode = true;
                         }
-                        newIdentifier.obfuscatedNode = true;
-                        return newIdentifier;
                     }
                 }
             };
-            functionNode.params = functionNode.params.map(function (paramsNode) {
+            functionNode.params.forEach(function (paramsNode) {
                 return estraverse.replace(paramsNode, replaceVisitor);
             });
             estraverse.replace(functionNode.body, replaceVisitor);
@@ -5917,7 +5918,8 @@ var LabeledStatementTransformer = function (_AbstractNodeTransfor) {
             estraverse.replace(labeledStatementNode, {
                 enter: function enter(node, parentNode) {
                     if (Node_1.Node.isLabelIdentifierNode(node, parentNode)) {
-                        return _this3.identifierReplacer.replace(node.name, nodeIdentifier);
+                        var newIdentifier = _this3.identifierReplacer.replace(node.name, nodeIdentifier);
+                        node.name = newIdentifier.name;
                     }
                 }
             });
@@ -6181,11 +6183,12 @@ var VariableDeclarationTransformer = function (_AbstractNodeTransfor) {
                 enter: function enter(node, parentNode) {
                     if (!node.obfuscatedNode && Node_1.Node.isReplaceableIdentifierNode(node, parentNode)) {
                         var newIdentifier = _this5.identifierReplacer.replace(node.name, nodeIdentifier);
-                        if (node.name === newIdentifier.name) {
+                        var newIdentifierName = newIdentifier.name;
+                        if (node.name !== newIdentifierName) {
+                            node.name = newIdentifierName;
+                        } else {
                             storedReplaceableIdentifiers.push(node);
-                            return node;
                         }
-                        return newIdentifier;
                     }
                 }
             });

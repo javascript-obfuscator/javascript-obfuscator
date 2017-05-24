@@ -1,4 +1,4 @@
-import { TObfuscationEvent } from '../types/event-emitters/TObfuscationEvent';
+import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
 
 export const ObfuscationEvents: {
     AfterObfuscation: TObfuscationEvent,

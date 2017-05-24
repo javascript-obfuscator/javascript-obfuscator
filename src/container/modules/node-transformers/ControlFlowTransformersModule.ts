@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { IControlFlowReplacer } from '../../../interfaces/node-transformers/control-flow-transformers/IControlFlowReplacer';
 
-import { ControlFlowReplacers } from '../../../enums/container/ControlFlowReplacers';
+import { ControlFlowReplacers } from '../../../enums/container/node-transformers/ControlFlowReplacers';
 
 import { BinaryExpressionControlFlowReplacer } from '../../../node-transformers/control-flow-transformers/control-flow-replacers/BinaryExpressionControlFlowReplacer';
 import { CallExpressionControlFlowReplacer } from '../../../node-transformers/control-flow-transformers/control-flow-replacers/CallExpressionControlFlowReplacer';

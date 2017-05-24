@@ -1,15 +1,15 @@
 import { injectable, inject } from 'inversify';
-import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
+import { ServiceIdentifiers } from '../../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { IOptions } from '../../../interfaces/options/IOptions';
+import { IOptions } from '../../../../interfaces/options/IOptions';
 
-import { AbstractObfuscatingReplacer } from './AbstractObfuscatingReplacer';
-import { Nodes } from '../../../node/Nodes';
+import { AbstractObfuscatingReplacer } from '../AbstractObfuscatingReplacer';
+import { Nodes } from '../../../../node/Nodes';
 
 @injectable()
-export class BooleanLiteralReplacer extends AbstractObfuscatingReplacer {
+export class BooleanLiteralObfuscatingReplacer extends AbstractObfuscatingReplacer {
     /**
      * @param options
      */
@@ -25,7 +25,7 @@ export class BooleanLiteralReplacer extends AbstractObfuscatingReplacer {
     private static getTrueUnaryExpressionNode (): ESTree.UnaryExpression {
         return Nodes.getUnaryExpressionNode(
             '!',
-            BooleanLiteralReplacer.getFalseUnaryExpressionNode()
+            BooleanLiteralObfuscatingReplacer.getFalseUnaryExpressionNode()
         );
     }
 
@@ -45,7 +45,7 @@ export class BooleanLiteralReplacer extends AbstractObfuscatingReplacer {
      */
     public replace (nodeValue: boolean): ESTree.Node {
         return nodeValue
-            ? BooleanLiteralReplacer.getTrueUnaryExpressionNode()
-            : BooleanLiteralReplacer.getFalseUnaryExpressionNode();
+            ? BooleanLiteralObfuscatingReplacer.getTrueUnaryExpressionNode()
+            : BooleanLiteralObfuscatingReplacer.getFalseUnaryExpressionNode();
     }
 }

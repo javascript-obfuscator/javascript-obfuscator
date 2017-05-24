@@ -4,7 +4,7 @@ import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TNodeTransformerFactory } from './types/container/TNodeTransformerFactory';
+import { TNodeTransformerFactory } from './types/container/node-transformers/TNodeTransformerFactory';
 import { TVisitorDirection } from './types/TVisitorDirection';
 import { TVisitorFunction } from './types/TVisitorFunction';
 
@@ -17,8 +17,8 @@ import { IStackTraceData } from './interfaces/stack-trace-analyzer/IStackTraceDa
 import { IStorage } from './interfaces/storages/IStorage';
 import { IVisitor } from './interfaces/IVisitor';
 
-import { NodeTransformers } from './enums/container/NodeTransformers';
-import { ObfuscationEvents } from './enums/ObfuscationEvents';
+import { NodeTransformers } from './enums/container/node-transformers/NodeTransformers';
+import { ObfuscationEvents } from './enums/event-emitters/ObfuscationEvents';
 import { VisitorDirection } from './enums/VisitorDirection';
 
 import { Node } from './node/Node';

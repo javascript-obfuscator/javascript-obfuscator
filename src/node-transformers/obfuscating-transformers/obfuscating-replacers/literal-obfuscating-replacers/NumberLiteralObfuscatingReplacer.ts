@@ -1,16 +1,16 @@
 import { injectable, inject } from 'inversify';
-import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
+import { ServiceIdentifiers } from '../../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { IOptions } from '../../../interfaces/options/IOptions';
+import { IOptions } from '../../../../interfaces/options/IOptions';
 
-import { AbstractObfuscatingReplacer } from './AbstractObfuscatingReplacer';
-import { Nodes } from '../../../node/Nodes';
-import { Utils } from '../../../utils/Utils';
+import { AbstractObfuscatingReplacer } from '../AbstractObfuscatingReplacer';
+import { Nodes } from '../../../../node/Nodes';
+import { Utils } from '../../../../utils/Utils';
 
 @injectable()
-export class NumberLiteralReplacer extends AbstractObfuscatingReplacer {
+export class NumberLiteralObfuscatingReplacer extends AbstractObfuscatingReplacer {
     /**
      * @type {Map<string, string>}
      */

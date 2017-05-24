@@ -4,14 +4,14 @@ import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TCalleeDataExtractorFactory } from '../types/container/TCalleeDataExtractorFactory';
+import { TCalleeDataExtractorFactory } from '../types/container/stack-trace-analyzer/TCalleeDataExtractorFactory';
 
 import { ICalleeData } from '../interfaces/stack-trace-analyzer/ICalleeData';
 import { ICalleeDataExtractor } from '../interfaces/stack-trace-analyzer/ICalleeDataExtractor';
 import { IStackTraceAnalyzer } from '../interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
 import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
-import { CalleeDataExtractors } from '../enums/container/CalleeDataExtractors';
+import { CalleeDataExtractors } from '../enums/container/stack-trace-analyzer/CalleeDataExtractors';
 
 import { Node } from '../node/Node';
 import { NodeUtils } from '../node/NodeUtils';

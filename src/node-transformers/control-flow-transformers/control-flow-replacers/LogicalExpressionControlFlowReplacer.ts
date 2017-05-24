@@ -3,13 +3,13 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { TCustomNodeFactory } from '../../../types/container/TCustomNodeFactory';
+import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
-import { CustomNodes } from '../../../enums/container/CustomNodes';
+import { CustomNodes } from '../../../enums/container/custom-nodes/CustomNodes';
 
 import { ExpressionWithOperatorControlFlowReplacer } from './ExpressionWithOperatorControlFlowReplacer';
 import { Node } from '../../../node/Node';

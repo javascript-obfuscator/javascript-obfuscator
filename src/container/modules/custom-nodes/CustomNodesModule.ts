@@ -5,8 +5,8 @@ import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { ICustomNodeGroup } from '../../../interfaces/custom-nodes/ICustomNodeGroup';
 import { IOptions } from '../../../interfaces/options/IOptions';
 
-import { CustomNodes } from '../../../enums/container/CustomNodes';
-import { CustomNodeGroups } from '../../../enums/container/CustomNodeGroups';
+import { CustomNodes } from '../../../enums/container/custom-nodes/CustomNodes';
+import { CustomNodeGroups } from '../../../enums/container/custom-nodes/CustomNodeGroups';
 
 import { ConsoleOutputCustomNodeGroup } from '../../../custom-nodes/console-output-nodes/group/ConsoleOutputCustomNodeGroup';
 import { DebugProtectionCustomNodeGroup } from '../../../custom-nodes/debug-protection-nodes/group/DebugProtectionCustomNodeGroup';

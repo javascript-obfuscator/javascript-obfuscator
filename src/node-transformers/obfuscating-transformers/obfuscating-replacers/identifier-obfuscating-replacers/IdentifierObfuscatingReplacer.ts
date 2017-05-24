@@ -1,17 +1,17 @@
 import { injectable, inject } from 'inversify';
-import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
+import { ServiceIdentifiers } from '../../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { IIdentifierReplacer } from '../../../interfaces/node-transformers/obfuscating-transformers/IIdentifierReplacer';
-import { IOptions } from '../../../interfaces/options/IOptions';
+import { IIdentifierObfuscatingReplacer } from '../../../../interfaces/node-transformers/obfuscating-transformers/IIdentifierObfuscatingReplacer';
+import { IOptions } from '../../../../interfaces/options/IOptions';
 
-import { AbstractObfuscatingReplacer } from './AbstractObfuscatingReplacer';
-import { Nodes } from '../../../node/Nodes';
-import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
+import { AbstractObfuscatingReplacer } from '../AbstractObfuscatingReplacer';
+import { Nodes } from '../../../../node/Nodes';
+import { RandomGeneratorUtils } from '../../../../utils/RandomGeneratorUtils';
 
 @injectable()
-export class IdentifierReplacer extends AbstractObfuscatingReplacer implements IIdentifierReplacer {
+export class IdentifierObfuscatingReplacer extends AbstractObfuscatingReplacer implements IIdentifierObfuscatingReplacer {
     /**
      * @type {Map<string, string>}
      */

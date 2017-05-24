@@ -1,12 +1,12 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import { TCustomNodeGroupFactory } from '../../types/container/TCustomNodeGroupFactory';
+import { TCustomNodeGroupFactory } from '../../types/container/custom-nodes/TCustomNodeGroupFactory';
 
 import { ICustomNodeGroup } from '../../interfaces/custom-nodes/ICustomNodeGroup';
 import { IOptions } from '../../interfaces/options/IOptions';
 
-import { CustomNodeGroups } from '../../enums/container/CustomNodeGroups';
+import { CustomNodeGroups } from '../../enums/container/custom-nodes/CustomNodeGroups';
 
 import { MapStorage } from '../MapStorage';
 import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';

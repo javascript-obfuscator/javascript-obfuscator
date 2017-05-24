@@ -8,7 +8,7 @@ import { TStatement } from '../../types/node/TStatement';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 
-import { ObfuscationEvents } from '../../enums/ObfuscationEvents';
+import { ObfuscationEvents } from '../../enums/event-emitters/ObfuscationEvents';
 
 import { initializable } from '../../decorators/Initializable';
 

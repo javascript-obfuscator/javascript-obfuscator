@@ -3,12 +3,12 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { TObfuscatingReplacerFactory } from '../../types/container/TObfuscatingReplacerFactory';
+import { TLiteralObfuscatingReplacerFactory } from '../../types/container/node-transformers/TLiteralObfuscatingReplacerFactory';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IVisitor } from '../../interfaces/IVisitor';
 
-import { ObfuscatingReplacers } from '../../enums/container/ObfuscatingReplacers';
+import { LiteralObfuscatingReplacers } from '../../enums/container/node-transformers/LiteralObfuscatingReplacers';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
@@ -16,21 +16,22 @@ import { Node } from '../../node/Node';
 @injectable()
 export class LiteralTransformer extends AbstractNodeTransformer {
     /**
-     * @type {TObfuscatingReplacerFactory}
+     * @type {TLiteralObfuscatingReplacerFactory}
      */
-    private readonly obfuscatingReplacerFactory: TObfuscatingReplacerFactory;
+    private readonly literalObfuscatingReplacerFactory: TLiteralObfuscatingReplacerFactory;
 
     /**
-     * @param obfuscatingReplacerFactory
+     * @param literalObfuscatingReplacerFactory
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__IObfuscatingReplacer) obfuscatingReplacerFactory: TObfuscatingReplacerFactory,
+        @inject(ServiceIdentifiers.Factory__IObfuscatingReplacer)
+            literalObfuscatingReplacerFactory: TLiteralObfuscatingReplacerFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
-        this.obfuscatingReplacerFactory = obfuscatingReplacerFactory;
+        this.literalObfuscatingReplacerFactory = literalObfuscatingReplacerFactory;
     }
 
     /**
@@ -58,15 +59,15 @@ export class LiteralTransformer extends AbstractNodeTransformer {
 
         switch (typeof literalNode.value) {
             case 'boolean':
-                return this.obfuscatingReplacerFactory(ObfuscatingReplacers.BooleanReplacer)
+                return this.literalObfuscatingReplacerFactory(LiteralObfuscatingReplacers.BooleanLiteralObfuscatingReplacer)
                     .replace(<boolean>literalNode.value);
 
             case 'number':
-                return this.obfuscatingReplacerFactory(ObfuscatingReplacers.NumberLiteralReplacer)
+                return this.literalObfuscatingReplacerFactory(LiteralObfuscatingReplacers.NumberLiteralObfuscatingReplacer)
                     .replace(<number>literalNode.value);
 
             case 'string':
-                return this.obfuscatingReplacerFactory(ObfuscatingReplacers.StringLiteralReplacer)
+                return this.literalObfuscatingReplacerFactory(LiteralObfuscatingReplacers.StringLiteralObfuscatingReplacer)
                     .replace(<string>literalNode.value);
 
             default:

@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { INodeTransformer } from '../../../interfaces/node-transformers/INodeTransformer';
 
-import { NodeTransformers } from '../../../enums/container/NodeTransformers';
+import { NodeTransformers } from '../../../enums/container/node-transformers/NodeTransformers';
 
 import { FunctionControlFlowTransformer } from '../../../node-transformers/control-flow-transformers/FunctionControlFlowTransformer';
 

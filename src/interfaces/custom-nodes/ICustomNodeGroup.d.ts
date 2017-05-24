@@ -5,7 +5,7 @@ import { ICustomNode } from './ICustomNode';
 import { IInitializable } from '../IInitializable';
 import { IStackTraceData } from '../stack-trace-analyzer/IStackTraceData';
 
-import { CustomNodes } from '../../enums/container/CustomNodes';
+import { CustomNodes } from '../../enums/container/custom-nodes/CustomNodes';
 
 export interface ICustomNodeGroup extends IInitializable {
     /**

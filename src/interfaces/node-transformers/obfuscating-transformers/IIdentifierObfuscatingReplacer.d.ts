@@ -2,7 +2,7 @@ import * as ESTree from 'estree';
 
 import { IObfuscatingReplacer } from './IObfuscatingReplacer';
 
-export interface IIdentifierReplacer extends IObfuscatingReplacer <ESTree.Identifier> {
+export interface IIdentifierObfuscatingReplacer extends IObfuscatingReplacer <ESTree.Identifier> {
     /**
      * @param nodeValue
      * @param nodeIdentifier

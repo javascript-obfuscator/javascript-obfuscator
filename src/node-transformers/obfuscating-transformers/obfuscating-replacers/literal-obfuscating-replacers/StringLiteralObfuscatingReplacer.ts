@@ -1,23 +1,23 @@
 import { injectable, inject } from 'inversify';
-import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
+import { ServiceIdentifiers } from '../../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { ICustomNodeGroup } from '../../../interfaces/custom-nodes/ICustomNodeGroup';
-import { IEncodedValue } from '../../../interfaces/node-transformers/obfuscating-transformers/IEncodedValue';
-import { IOptions } from '../../../interfaces/options/IOptions';
-import { IStorage } from '../../../interfaces/storages/IStorage';
+import { ICustomNodeGroup } from '../../../../interfaces/custom-nodes/ICustomNodeGroup';
+import { IEncodedValue } from '../../../../interfaces/node-transformers/obfuscating-transformers/IEncodedValue';
+import { IOptions } from '../../../../interfaces/options/IOptions';
+import { IStorage } from '../../../../interfaces/storages/IStorage';
 
-import { StringArrayEncoding } from '../../../enums/StringArrayEncoding';
+import { StringArrayEncoding } from '../../../../enums/StringArrayEncoding';
 
-import { AbstractObfuscatingReplacer } from './AbstractObfuscatingReplacer';
-import { CryptUtils } from '../../../utils/CryptUtils';
-import { Nodes } from '../../../node/Nodes';
-import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
-import { Utils } from '../../../utils/Utils';
+import { AbstractObfuscatingReplacer } from '../AbstractObfuscatingReplacer';
+import { CryptUtils } from '../../../../utils/CryptUtils';
+import { Nodes } from '../../../../node/Nodes';
+import { RandomGeneratorUtils } from '../../../../utils/RandomGeneratorUtils';
+import { Utils } from '../../../../utils/Utils';
 
 @injectable()
-export class StringLiteralReplacer extends AbstractObfuscatingReplacer {
+export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplacer {
     /**
      * @type {number}
      */
@@ -125,7 +125,7 @@ export class StringLiteralReplacer extends AbstractObfuscatingReplacer {
     private canUseStringArray (nodeValue: string): boolean {
         return (
             this.options.stringArray &&
-            nodeValue.length >= StringLiteralReplacer.minimumLengthForStringArray &&
+            nodeValue.length >= StringLiteralObfuscatingReplacer.minimumLengthForStringArray &&
             RandomGeneratorUtils.getMathRandom() <= this.options.stringArrayThreshold
         );
     }
@@ -186,13 +186,13 @@ export class StringLiteralReplacer extends AbstractObfuscatingReplacer {
         const rotatedStringArrayStorageId: string = Utils.stringRotate(this.stringArrayStorage.getStorageId(), 1);
         const stringArrayStorageCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${rotatedStringArrayStorageId}`;
         const callExpressionArgs: (ESTree.Expression | ESTree.SpreadElement)[] = [
-            StringLiteralReplacer.getHexadecimalLiteralNode(
+            StringLiteralObfuscatingReplacer.getHexadecimalLiteralNode(
                 this.getArrayHexadecimalIndex(encodedValue)
             )
         ];
 
         if (key) {
-            callExpressionArgs.push(StringLiteralReplacer.getRc4KeyLiteralNode(
+            callExpressionArgs.push(StringLiteralObfuscatingReplacer.getRc4KeyLiteralNode(
                 Utils.stringToUnicodeEscapeSequence(key, !this.options.unicodeEscapeSequence)
             ));
         }

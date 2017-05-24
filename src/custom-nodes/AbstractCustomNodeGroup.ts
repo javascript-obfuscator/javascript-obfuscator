@@ -9,7 +9,7 @@ import { ICustomNodeGroup } from '../interfaces/custom-nodes/ICustomNodeGroup';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
-import { CustomNodes } from '../enums/container/CustomNodes';
+import { CustomNodes } from '../enums/container/custom-nodes/CustomNodes';
 
 @injectable()
 export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {

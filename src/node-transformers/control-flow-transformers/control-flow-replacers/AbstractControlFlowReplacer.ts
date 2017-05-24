@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { TCustomNodeFactory } from '../../../types/container/TCustomNodeFactory';
+import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
 
 import { IControlFlowReplacer } from '../../../interfaces/node-transformers/control-flow-transformers/IControlFlowReplacer';
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';

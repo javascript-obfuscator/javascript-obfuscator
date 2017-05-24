@@ -4,13 +4,13 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TObfuscatingReplacerFactory } from '../../types/container/TObfuscatingReplacerFactory';
+import { TIdentifierObfuscatingReplacerFactory } from '../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory';
 
+import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
-import { IIdentifierReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/IIdentifierReplacer';
 import { IVisitor } from '../../interfaces/IVisitor';
 
-import { ObfuscatingReplacers } from '../../enums/container/ObfuscatingReplacers';
+import { IdentifierObfuscatingReplacers } from '../../enums/container/node-transformers/IdentifierObfuscatingReplacers';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
@@ -34,21 +34,24 @@ import { Node } from '../../node/Node';
 @injectable()
 export class LabeledStatementTransformer extends AbstractNodeTransformer {
     /**
-     * @type {IIdentifierReplacer}
+     * @type {IIdentifierObfuscatingReplacer}
      */
-    private readonly identifierReplacer: IIdentifierReplacer;
+    private readonly identifierObfuscatingReplacer: IIdentifierObfuscatingReplacer;
 
     /**
-     * @param obfuscatingReplacerFactory
+     * @param identifierObfuscatingReplacerFactory
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__IObfuscatingReplacer) obfuscatingReplacerFactory: TObfuscatingReplacerFactory,
+        @inject(ServiceIdentifiers.Factory__IIdentifierObfuscatingReplacer)
+            identifierObfuscatingReplacerFactory: TIdentifierObfuscatingReplacerFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
-        this.identifierReplacer = <IIdentifierReplacer>obfuscatingReplacerFactory(ObfuscatingReplacers.IdentifierReplacer);
+        this.identifierObfuscatingReplacer = identifierObfuscatingReplacerFactory(
+            IdentifierObfuscatingReplacers.IdentifierObfuscatingReplacer
+        );
     }
 
     /**
@@ -83,7 +86,7 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
      * @param nodeIdentifier
      */
     private storeLabeledStatementName (labeledStatementNode: ESTree.LabeledStatement, nodeIdentifier: number): void {
-        this.identifierReplacer.storeNames(labeledStatementNode.label.name, nodeIdentifier);
+        this.identifierObfuscatingReplacer.storeNames(labeledStatementNode.label.name, nodeIdentifier);
     }
 
     /**
@@ -94,7 +97,7 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
         estraverse.replace(labeledStatementNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isLabelIdentifierNode(node, parentNode)) {
-                    const newIdentifier: ESTree.Identifier = this.identifierReplacer.replace(node.name, nodeIdentifier);
+                    const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer.replace(node.name, nodeIdentifier);
 
                     node.name = newIdentifier.name;
                 }

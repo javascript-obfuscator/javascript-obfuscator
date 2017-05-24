@@ -1,7 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
-import { TCustomNodeFactory } from '../../../types/container/TCustomNodeFactory';
+import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
 import { TNodeWithBlockStatement } from '../../../types/node/TNodeWithBlockStatement';
 import { TObfuscationEvent } from '../../../types/event-emitters/TObfuscationEvent';
 
@@ -13,8 +13,8 @@ import { IStorage } from '../../../interfaces/storages/IStorage';
 
 import { initializable } from '../../../decorators/Initializable';
 
-import { CustomNodes } from '../../../enums/container/CustomNodes';
-import { ObfuscationEvents } from '../../../enums/ObfuscationEvents';
+import { CustomNodes } from '../../../enums/container/custom-nodes/CustomNodes';
+import { ObfuscationEvents } from '../../../enums/event-emitters/ObfuscationEvents';
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';

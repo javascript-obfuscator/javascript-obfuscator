@@ -4,14 +4,14 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
+import { TIdentifierObfuscatingReplacerFactory } from "../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory";
 import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
-import { TObfuscatingReplacerFactory } from '../../types/container/TObfuscatingReplacerFactory';
 
+import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
-import { IIdentifierReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/IIdentifierReplacer';
 import { IVisitor } from '../../interfaces/IVisitor';
 
-import { ObfuscatingReplacers } from '../../enums/container/ObfuscatingReplacers';
+import { IdentifierObfuscatingReplacers } from "../../enums/container/node-transformers/IdentifierObfuscatingReplacers";
 import { NodeType } from '../../enums/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
@@ -30,9 +30,9 @@ import { NodeUtils } from '../../node/NodeUtils';
 @injectable()
 export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
     /**
-     * @type {IIdentifierReplacer}
+     * @type {IIdentifierObfuscatingReplacer}
      */
-    private readonly identifierReplacer: IIdentifierReplacer;
+    private readonly identifierObfuscatingReplacer: IIdentifierObfuscatingReplacer;
 
     /**
      * @type {Map<ESTree.Node, ESTree.Identifier[]>}
@@ -40,16 +40,19 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
     private readonly replaceableIdentifiers: Map <ESTree.Node, ESTree.Identifier[]> = new Map();
 
     /**
-     * @param obfuscatingReplacerFactory
+     * @param identifierObfuscatingReplacerFactory
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__IObfuscatingReplacer) obfuscatingReplacerFactory: TObfuscatingReplacerFactory,
+        @inject(ServiceIdentifiers.Factory__IIdentifierObfuscatingReplacer)
+            identifierObfuscatingReplacerFactory: TIdentifierObfuscatingReplacerFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
-        this.identifierReplacer = <IIdentifierReplacer>obfuscatingReplacerFactory(ObfuscatingReplacers.IdentifierReplacer);
+        this.identifierObfuscatingReplacer = identifierObfuscatingReplacerFactory(
+            IdentifierObfuscatingReplacers.IdentifierObfuscatingReplacer
+        );
     }
 
     /**
@@ -96,7 +99,7 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
      * @param nodeIdentifier
      */
     private storeFunctionName (functionDeclarationNode: ESTree.FunctionDeclaration, nodeIdentifier: number): void {
-        this.identifierReplacer.storeNames(functionDeclarationNode.id.name, nodeIdentifier);
+        this.identifierObfuscatingReplacer.storeNames(functionDeclarationNode.id.name, nodeIdentifier);
     }
 
     /**
@@ -107,7 +110,7 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
         const cachedReplaceableIdentifiers: ESTree.Identifier[] = <ESTree.Identifier[]>this.replaceableIdentifiers.get(scopeNode);
 
         cachedReplaceableIdentifiers.forEach((replaceableIdentifier: ESTree.Identifier) => {
-            const newReplaceableIdentifier: ESTree.Identifier = this.identifierReplacer.replace(replaceableIdentifier.name, nodeIdentifier);
+            const newReplaceableIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer.replace(replaceableIdentifier.name, nodeIdentifier);
 
             replaceableIdentifier.name = newReplaceableIdentifier.name;
         });
@@ -123,7 +126,7 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
         estraverse.replace(scopeNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (Node.isReplaceableIdentifierNode(node, parentNode)) {
-                    const newIdentifier: ESTree.Identifier = this.identifierReplacer.replace(node.name, nodeIdentifier);
+                    const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer.replace(node.name, nodeIdentifier);
                     const newIdentifierName: string = newIdentifier.name;
 
                     if (node.name !== newIdentifierName) {

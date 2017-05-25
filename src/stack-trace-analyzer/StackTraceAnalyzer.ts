@@ -7,7 +7,6 @@ import * as ESTree from 'estree';
 import { TCalleeDataExtractorFactory } from '../types/container/stack-trace-analyzer/TCalleeDataExtractorFactory';
 
 import { ICalleeData } from '../interfaces/stack-trace-analyzer/ICalleeData';
-import { ICalleeDataExtractor } from '../interfaces/stack-trace-analyzer/ICalleeDataExtractor';
 import { IStackTraceAnalyzer } from '../interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
 import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
@@ -69,9 +68,9 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     private static readonly limitThreshold: number = 0.002;
 
     /**
-     * @type {(calleeDataExtractorName: CalleeDataExtractors) => ICalleeDataExtractor}
+     * @type {TCalleeDataExtractorFactory}
      */
-    private calleeDataExtractorFactory: (calleeDataExtractorName: CalleeDataExtractors) => ICalleeDataExtractor;
+    private calleeDataExtractorFactory: TCalleeDataExtractorFactory;
 
     constructor (
         @inject(ServiceIdentifiers.Factory__ICalleeDataExtractor) calleeDataExtractorFactory: TCalleeDataExtractorFactory

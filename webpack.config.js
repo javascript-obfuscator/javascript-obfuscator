@@ -5,10 +5,32 @@ const nodeExternals = require('webpack-node-externals');
 const webpack = require('webpack');
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 
-function getLicenseText () {
+/**
+ * @return {string}
+ */
+const getLicenseText = () => {
     return "/*\nCopyright (C) 2017 Timofey Kachalov <sanex3339@yandex.ru>\n\n" +
         fs.readFileSync('./LICENSE.BSD', 'utf8') + "\n*/";
-}
+};
+
+/**
+ * @return {string}
+ */
+const getSourceMapSupportImport = () => {
+    return `require("source-map-support").install();`;
+};
+
+/**
+ * @return {string}
+ */
+const getBannerText = () => {
+    const lineSeparator = '\n\n';
+
+    return getLicenseText() +
+        lineSeparator +
+        getSourceMapSupportImport() +
+        lineSeparator;
+};
 
 module.exports = {
     entry: {
@@ -42,7 +64,7 @@ module.exports = {
     plugins: [
         new webpack.BannerPlugin(
             {
-                banner: getLicenseText() + '\n\nrequire("source-map-support").install();\n',
+                banner: getBannerText(),
                 raw: true,
                 entryOnly: false
             }

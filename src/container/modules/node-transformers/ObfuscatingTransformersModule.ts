@@ -1,3 +1,4 @@
+import { InversifyContainerFacade } from '../../InversifyContainerFacade';
 import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
@@ -33,43 +34,15 @@ export const obfuscatingTransformersModule: interfaces.ContainerModule = new Con
 
     // literal obfuscating replacer factory
     bind<IObfuscatingReplacer>(ServiceIdentifiers.Factory__IObfuscatingReplacer)
-        .toFactory<IObfuscatingReplacer>((context: interfaces.Context) => {
-            const cache: Map <LiteralObfuscatingReplacers, IObfuscatingReplacer> = new Map();
-
-            return (replacerName: LiteralObfuscatingReplacers) => {
-                if (cache.has(replacerName)) {
-                    return <IObfuscatingReplacer>cache.get(replacerName);
-                }
-
-                const replacer: IObfuscatingReplacer = context.container.getNamed<IObfuscatingReplacer>(
-                    ServiceIdentifiers.IObfuscatingReplacer,
-                    replacerName
-                );
-
-                cache.set(replacerName, replacer);
-
-                return replacer;
-            };
-        });
+        .toFactory<IObfuscatingReplacer>(InversifyContainerFacade
+            .getCacheFactory<LiteralObfuscatingReplacers, IObfuscatingReplacer>(
+                ServiceIdentifiers.IObfuscatingReplacer
+            ));
 
     // identifier obfuscating replacer factory
     bind<IIdentifierObfuscatingReplacer>(ServiceIdentifiers.Factory__IIdentifierObfuscatingReplacer)
-        .toFactory<IIdentifierObfuscatingReplacer>((context: interfaces.Context) => {
-            const cache: Map <IdentifierObfuscatingReplacers, IIdentifierObfuscatingReplacer> = new Map();
-
-            return (replacerName: IdentifierObfuscatingReplacers) => {
-                if (cache.has(replacerName)) {
-                    return <IIdentifierObfuscatingReplacer>cache.get(replacerName);
-                }
-
-                const replacer: IIdentifierObfuscatingReplacer = context.container.getNamed<IIdentifierObfuscatingReplacer>(
-                    ServiceIdentifiers.IIdentifierObfuscatingReplacer,
-                    replacerName
-                );
-
-                cache.set(replacerName, replacer);
-
-                return replacer;
-            };
-        });
+        .toFactory<IIdentifierObfuscatingReplacer>(InversifyContainerFacade
+            .getCacheFactory<IdentifierObfuscatingReplacers, IIdentifierObfuscatingReplacer>(
+                ServiceIdentifiers.IIdentifierObfuscatingReplacer
+            ));
 });

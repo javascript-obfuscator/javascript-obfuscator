@@ -1,3 +1,4 @@
+import { InversifyContainerFacade } from '../../InversifyContainerFacade';
 import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
@@ -78,23 +79,6 @@ export const nodeTransformersModule: interfaces.ContainerModule = new ContainerM
 
     // node transformers factory
     bind<INodeTransformer>(ServiceIdentifiers.Factory__INodeTransformer)
-        .toFactory<INodeTransformer>((context: interfaces.Context) => {
-            const cache: Map <NodeTransformers, INodeTransformer> = new Map();
-
-            return (nodeTransformerName: NodeTransformers) => {
-                if (cache.has(nodeTransformerName)) {
-                    return <INodeTransformer>cache.get(nodeTransformerName);
-                }
-
-                const nodeTransformer: INodeTransformer = context.container
-                    .getNamed<INodeTransformer>(
-                        ServiceIdentifiers.INodeTransformer,
-                        nodeTransformerName
-                    );
-
-                cache.set(nodeTransformerName, nodeTransformer);
-
-                return nodeTransformer;
-            };
-        });
+        .toFactory<INodeTransformer>(InversifyContainerFacade
+            .getCacheFactory<NodeTransformers, INodeTransformer>(ServiceIdentifiers.INodeTransformer));
 });

@@ -93,6 +93,44 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
 
     /**
      * @param serviceIdentifier
+     * @return {(context:interfaces.Context)=>(bindingName:T)=>U}
+     */
+    public static getFactory <T extends number, U> (
+        serviceIdentifier: interfaces.ServiceIdentifier<U>
+    ): (context: interfaces.Context) => (bindingName: T) => U {
+        return (context: interfaces.Context): (bindingName: T) => U => {
+            return (bindingName: T) => {
+                return context.container.getNamed<U>(serviceIdentifier, bindingName);
+            };
+        };
+    }
+
+    /**
+     * @param serviceIdentifier
+     * @return {(context:interfaces.Context)=>(bindingName:T)=>U}
+     */
+    public static getCacheFactory <T extends number, U> (
+        serviceIdentifier: interfaces.ServiceIdentifier<U>
+    ): (context: interfaces.Context) => (bindingName: T) => U {
+        return (context: interfaces.Context): (bindingName: T) => U => {
+            const cache: Map <T, U> = new Map();
+
+            return (bindingName: T) => {
+                if (cache.has(bindingName)) {
+                    return <U>cache.get(bindingName);
+                }
+
+                const object: U = context.container.getNamed<U>(serviceIdentifier, bindingName);
+
+                cache.set(bindingName, object);
+
+                return object;
+            };
+        };
+    }
+
+    /**
+     * @param serviceIdentifier
      * @returns {T}
      */
     public get <T> (serviceIdentifier: interfaces.ServiceIdentifier<T>): T {

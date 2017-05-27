@@ -1,3 +1,4 @@
+import { InversifyContainerFacade } from '../../InversifyContainerFacade';
 import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
@@ -28,22 +29,6 @@ export const controlFlowTransformersModule: interfaces.ContainerModule = new Con
         .whenTargetNamed(ControlFlowReplacers.StringLiteralControlFlowReplacer);
 
     bind<IControlFlowReplacer>(ServiceIdentifiers.Factory__IControlFlowReplacer)
-        .toFactory<IControlFlowReplacer>((context: interfaces.Context) => {
-            const cache: Map <ControlFlowReplacers, IControlFlowReplacer> = new Map();
-
-            return (replacerName: ControlFlowReplacers) => {
-                if (cache.has(replacerName)) {
-                    return <IControlFlowReplacer>cache.get(replacerName);
-                }
-
-                const controlFlowReplacer: IControlFlowReplacer = context.container.getNamed<IControlFlowReplacer>(
-                    ServiceIdentifiers.IControlFlowReplacer,
-                    replacerName
-                );
-
-                cache.set(replacerName, controlFlowReplacer);
-
-                return controlFlowReplacer;
-            };
-        });
+        .toFactory<IControlFlowReplacer>(InversifyContainerFacade
+            .getCacheFactory<ControlFlowReplacers, IControlFlowReplacer>(ServiceIdentifiers.IControlFlowReplacer));
 });

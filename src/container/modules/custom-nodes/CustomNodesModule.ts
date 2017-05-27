@@ -1,3 +1,4 @@
+import { InversifyContainerFacade } from '../../InversifyContainerFacade';
 import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
@@ -163,12 +164,6 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
 
     // customNodeGroup factory
     bind<ICustomNodeGroup>(ServiceIdentifiers.Factory__ICustomNodeGroup)
-        .toFactory<ICustomNodeGroup>((context: interfaces.Context) => {
-            return (customNodeGroupName: CustomNodeGroups) => {
-                return context.container.getNamed<ICustomNodeGroup>(
-                    ServiceIdentifiers.ICustomNodeGroup,
-                    customNodeGroupName
-                );
-            };
-        });
+        .toFactory<ICustomNodeGroup>(InversifyContainerFacade
+            .getFactory<CustomNodeGroups, ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup));
 });

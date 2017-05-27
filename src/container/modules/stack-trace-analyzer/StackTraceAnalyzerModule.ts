@@ -1,3 +1,4 @@
+import { InversifyContainerFacade } from '../../InversifyContainerFacade';
 import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
@@ -31,22 +32,8 @@ export const stackTraceAnalyzerModule: interfaces.ContainerModule = new Containe
 
     // node transformers factory
     bind<ICalleeDataExtractor>(ServiceIdentifiers.Factory__ICalleeDataExtractor)
-        .toFactory<ICalleeDataExtractor>((context: interfaces.Context) => {
-            const cache: Map <CalleeDataExtractors, ICalleeDataExtractor> = new Map();
-
-            return (calleeDataExtractorName: CalleeDataExtractors) => {
-                if (cache.has(calleeDataExtractorName)) {
-                    return <ICalleeDataExtractor>cache.get(calleeDataExtractorName);
-                }
-
-                const calleeDataExtractor: ICalleeDataExtractor = context.container.getNamed<ICalleeDataExtractor>(
-                    ServiceIdentifiers.ICalleeDataExtractor,
-                    calleeDataExtractorName
-                );
-
-                cache.set(calleeDataExtractorName, calleeDataExtractor);
-
-                return calleeDataExtractor;
-            };
-        });
+        .toFactory<ICalleeDataExtractor>(InversifyContainerFacade
+            .getCacheFactory<CalleeDataExtractors, ICalleeDataExtractor>(
+                ServiceIdentifiers.ICalleeDataExtractor
+            ));
 });

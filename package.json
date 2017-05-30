@@ -26,7 +26,7 @@
     "esmangle": "^1.0.1",
     "esprima": "3.1.3",
     "estraverse": "4.2.0",
-    "inversify": "4.1.0",
+    "inversify": "4.1.1",
     "mkdirp": "0.5.1",
     "opencollective": "^1.0.3",
     "reflect-metadata": "0.1.10",
@@ -86,10 +86,12 @@
     "test": "scripts/test",
     "tslint": "scripts/tslint",
     "travis": "scripts/travis",
+    "git:addFiles": "scripts/git-add-files",
     "postinstall": "opencollective postinstall"
   },
   "pre-commit": [
-    "build"
+    "build",
+    "git:addFiles"
   ],
   "author": {
     "name": "Timofey Kachalov"

@@ -12,8 +12,8 @@ import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStack
 
 import { initializable } from '../../../decorators/Initializable';
 
-import { CustomNodes } from '../../../enums/container/custom-nodes/CustomNodes';
-import { ObfuscationEvents } from '../../../enums/event-emitters/ObfuscationEvents';
+import { CustomNode } from '../../../enums/container/custom-nodes/CustomNode';
+import { ObfuscationEvent } from '../../../enums/event-emitters/ObfuscationEvent';
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
@@ -24,13 +24,13 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
     /**
      * @type {TObfuscationEvent}
      */
-    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.BeforeObfuscation;
+    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvent.BeforeObfuscation;
 
     /**
-     * @type {Map<CustomNodes, ICustomNode>}
+     * @type {Map<CustomNode, ICustomNode>}
      */
     @initializable()
-    protected customNodes: Map <CustomNodes, ICustomNode>;
+    protected customNodes: Map <CustomNode, ICustomNode>;
 
     /**
      * @type {TCustomNodeFactory}
@@ -64,17 +64,17 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
      */
     public appendCustomNodes (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
         // debugProtectionFunctionNode append
-        this.appendCustomNodeIfExist(CustomNodes.DebugProtectionFunctionNode, (customNode: ICustomNode) => {
+        this.appendCustomNodeIfExist(CustomNode.DebugProtectionFunctionNode, (customNode: ICustomNode) => {
             NodeAppender.appendNode(blockScopeNode, customNode.getNode());
         });
 
         // debugProtectionFunctionCallNode append
-        this.appendCustomNodeIfExist(CustomNodes.DebugProtectionFunctionCallNode, (customNode: ICustomNode) => {
+        this.appendCustomNodeIfExist(CustomNode.DebugProtectionFunctionCallNode, (customNode: ICustomNode) => {
             NodeAppender.appendNode(blockScopeNode, customNode.getNode());
         });
 
         // debugProtectionFunctionIntervalNode append
-        this.appendCustomNodeIfExist(CustomNodes.DebugProtectionFunctionIntervalNode, (customNode: ICustomNode) => {
+        this.appendCustomNodeIfExist(CustomNode.DebugProtectionFunctionIntervalNode, (customNode: ICustomNode) => {
             const programBodyLength: number = blockScopeNode.body.length;
             const randomIndex: number = RandomGeneratorUtils.getRandomInteger(0, programBodyLength);
 
@@ -83,7 +83,7 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
     }
 
     public initialize (): void {
-        this.customNodes = new Map <CustomNodes, ICustomNode> ();
+        this.customNodes = new Map <CustomNode, ICustomNode> ();
 
         if (!this.options.debugProtection) {
             return;
@@ -91,19 +91,19 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
 
         const debugProtectionFunctionName: string = RandomGeneratorUtils.getRandomVariableName(6);
 
-        const debugProtectionFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.DebugProtectionFunctionNode);
-        const debugProtectionFunctionCallNode: ICustomNode = this.customNodeFactory(CustomNodes.DebugProtectionFunctionCallNode);
-        const debugProtectionFunctionIntervalNode: ICustomNode = this.customNodeFactory(CustomNodes.DebugProtectionFunctionIntervalNode);
+        const debugProtectionFunctionNode: ICustomNode = this.customNodeFactory(CustomNode.DebugProtectionFunctionNode);
+        const debugProtectionFunctionCallNode: ICustomNode = this.customNodeFactory(CustomNode.DebugProtectionFunctionCallNode);
+        const debugProtectionFunctionIntervalNode: ICustomNode = this.customNodeFactory(CustomNode.DebugProtectionFunctionIntervalNode);
 
         debugProtectionFunctionNode.initialize(debugProtectionFunctionName);
         debugProtectionFunctionCallNode.initialize(debugProtectionFunctionName);
         debugProtectionFunctionIntervalNode.initialize(debugProtectionFunctionName);
 
-        this.customNodes.set(CustomNodes.DebugProtectionFunctionNode, debugProtectionFunctionNode);
-        this.customNodes.set(CustomNodes.DebugProtectionFunctionCallNode, debugProtectionFunctionCallNode);
+        this.customNodes.set(CustomNode.DebugProtectionFunctionNode, debugProtectionFunctionNode);
+        this.customNodes.set(CustomNode.DebugProtectionFunctionCallNode, debugProtectionFunctionCallNode);
 
         if (this.options.debugProtectionInterval) {
-            this.customNodes.set(CustomNodes.DebugProtectionFunctionIntervalNode, debugProtectionFunctionIntervalNode);
+            this.customNodes.set(CustomNode.DebugProtectionFunctionIntervalNode, debugProtectionFunctionIntervalNode);
         }
     }
 }

@@ -11,7 +11,7 @@ import { Nodes } from '../../../../node/Nodes';
 import { RandomGeneratorUtils } from '../../../../utils/RandomGeneratorUtils';
 
 @injectable()
-export class IdentifierObfuscatingReplacer extends AbstractObfuscatingReplacer implements IIdentifierObfuscatingReplacer {
+export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplacer implements IIdentifierObfuscatingReplacer {
     /**
      * @type {Map<string, string>}
      */

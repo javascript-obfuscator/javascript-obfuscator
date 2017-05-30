@@ -1,5 +1,5 @@
 import { IIdentifierObfuscatingReplacer } from '../../../interfaces/node-transformers/obfuscating-transformers/IIdentifierObfuscatingReplacer';
 
-import { IdentifierObfuscatingReplacers } from '../../../enums/container/node-transformers/IdentifierObfuscatingReplacers';
+import { IdentifierObfuscatingReplacer } from '../../../enums/container/node-transformers/IdentifierObfuscatingReplacer';
 
-export type TIdentifierObfuscatingReplacerFactory = (replacer: IdentifierObfuscatingReplacers) => IIdentifierObfuscatingReplacer;
+export type TIdentifierObfuscatingReplacerFactory = (replacer: IdentifierObfuscatingReplacer) => IIdentifierObfuscatingReplacer;

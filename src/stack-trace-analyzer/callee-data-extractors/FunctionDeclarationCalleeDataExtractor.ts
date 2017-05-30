@@ -17,14 +17,14 @@ export class FunctionDeclarationCalleeDataExtractor extends AbstractCalleeDataEx
      * @returns {ICalleeData|null}
      */
     public extract (blockScopeBody: ESTree.Node[], callee: ESTree.Identifier): ICalleeData|null {
-        let calleeBlockStatement: ESTree.BlockStatement|null = null;
-
-        if (Node.isIdentifierNode(callee)) {
-            calleeBlockStatement = this.getCalleeBlockStatement(
-                NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0],
-                callee.name
-            );
+        if (!Node.isIdentifierNode(callee)) {
+            return null;
         }
+
+        const calleeBlockStatement: ESTree.BlockStatement|null = this.getCalleeBlockStatement(
+            NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0],
+            callee.name
+        );
 
         if (!calleeBlockStatement) {
             return null;

@@ -12,8 +12,8 @@ import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStack
 
 import { initializable } from '../../../decorators/Initializable';
 
-import { CustomNodes } from '../../../enums/container/custom-nodes/CustomNodes';
-import { ObfuscationEvents } from '../../../enums/event-emitters/ObfuscationEvents';
+import { CustomNode } from '../../../enums/container/custom-nodes/CustomNode';
+import { ObfuscationEvent } from '../../../enums/event-emitters/ObfuscationEvent';
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
@@ -24,13 +24,13 @@ export class DomainLockCustomNodeGroup extends AbstractCustomNodeGroup {
     /**
      * @type {TObfuscationEvent}
      */
-    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvents.BeforeObfuscation;
+    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvent.BeforeObfuscation;
 
     /**
-     * @type {Map<CustomNodes, ICustomNode>}
+     * @type {Map<CustomNode, ICustomNode>}
      */
     @initializable()
-    protected customNodes: Map <CustomNodes, ICustomNode>;
+    protected customNodes: Map <CustomNode, ICustomNode>;
 
     /**
      * @type {TCustomNodeFactory}
@@ -66,7 +66,7 @@ export class DomainLockCustomNodeGroup extends AbstractCustomNodeGroup {
         const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(stackTraceData.length);
 
         // domainLockNode append
-        this.appendCustomNodeIfExist(CustomNodes.DomainLockNode, (customNode: ICustomNode) => {
+        this.appendCustomNodeIfExist(CustomNode.DomainLockNode, (customNode: ICustomNode) => {
             NodeAppender.appendNodeToOptimalBlockScope(
                 stackTraceData,
                 blockScopeNode,
@@ -76,7 +76,7 @@ export class DomainLockCustomNodeGroup extends AbstractCustomNodeGroup {
         });
 
         // nodeCallsControllerFunctionNode append
-        this.appendCustomNodeIfExist(CustomNodes.NodeCallsControllerFunctionNode, (customNode: ICustomNode) => {
+        this.appendCustomNodeIfExist(CustomNode.NodeCallsControllerFunctionNode, (customNode: ICustomNode) => {
             let targetBlockScope: TNodeWithBlockStatement;
 
             if (stackTraceData.length) {
@@ -90,7 +90,7 @@ export class DomainLockCustomNodeGroup extends AbstractCustomNodeGroup {
     }
 
     public initialize (): void {
-        this.customNodes = new Map <CustomNodes, ICustomNode> ();
+        this.customNodes = new Map <CustomNode, ICustomNode> ();
 
         if (!this.options.domainLock.length) {
             return;
@@ -98,13 +98,13 @@ export class DomainLockCustomNodeGroup extends AbstractCustomNodeGroup {
 
         const callsControllerFunctionName: string = RandomGeneratorUtils.getRandomVariableName(6);
 
-        const domainLockNode: ICustomNode = this.customNodeFactory(CustomNodes.DomainLockNode);
-        const nodeCallsControllerFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.NodeCallsControllerFunctionNode);
+        const domainLockNode: ICustomNode = this.customNodeFactory(CustomNode.DomainLockNode);
+        const nodeCallsControllerFunctionNode: ICustomNode = this.customNodeFactory(CustomNode.NodeCallsControllerFunctionNode);
 
         domainLockNode.initialize(callsControllerFunctionName);
         nodeCallsControllerFunctionNode.initialize(this.appendEvent, callsControllerFunctionName);
 
-        this.customNodes.set(CustomNodes.DomainLockNode, domainLockNode);
-        this.customNodes.set(CustomNodes.NodeCallsControllerFunctionNode, nodeCallsControllerFunctionNode);
+        this.customNodes.set(CustomNode.DomainLockNode, domainLockNode);
+        this.customNodes.set(CustomNode.NodeCallsControllerFunctionNode, nodeCallsControllerFunctionNode);
     }
 }

@@ -9,7 +9,7 @@ import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IVisitor } from '../../interfaces/IVisitor';
 
-import { CustomNodes } from '../../enums/container/custom-nodes/CustomNodes';
+import { CustomNode } from '../../enums/container/custom-nodes/CustomNode';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
@@ -86,7 +86,7 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
         const shuffledKeys: number[] = Utils.arrayShuffle(originalKeys);
         const originalKeysIndexesInShuffledArray: number[] = originalKeys.map((key: number) => shuffledKeys.indexOf(key));
         const blockStatementControlFlowFlatteningCustomNode: ICustomNode = this.customNodeFactory(
-            CustomNodes.BlockStatementControlFlowFlatteningNode
+            CustomNode.BlockStatementControlFlowFlatteningNode
         );
 
         blockStatementControlFlowFlatteningCustomNode.initialize(

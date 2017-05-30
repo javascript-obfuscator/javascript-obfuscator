@@ -13,8 +13,8 @@ import { IStorage } from '../../../interfaces/storages/IStorage';
 
 import { initializable } from '../../../decorators/Initializable';
 
-import { CustomNodes } from '../../../enums/container/custom-nodes/CustomNodes';
-import { ObfuscationEvents } from '../../../enums/event-emitters/ObfuscationEvents';
+import { CustomNode } from '../../../enums/container/custom-nodes/CustomNode';
+import { ObfuscationEvent } from '../../../enums/event-emitters/ObfuscationEvent';
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
@@ -26,13 +26,13 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
     /**
      * @type {TObfuscationEvent}
      */
-    protected appendEvent: TObfuscationEvent = ObfuscationEvents.AfterObfuscation;
+    protected appendEvent: TObfuscationEvent = ObfuscationEvent.AfterObfuscation;
 
     /**
-     * @type {Map<CustomNodes, ICustomNode>}
+     * @type {Map<CustomNode, ICustomNode>}
      */
     @initializable()
-    protected customNodes: Map <CustomNodes, ICustomNode>;
+    protected customNodes: Map <CustomNode, ICustomNode>;
 
     /**
      * @type {TCustomNodeFactory}
@@ -79,31 +79,31 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
         }
 
         // stringArrayNode append
-        this.appendCustomNodeIfExist(CustomNodes.StringArrayNode, (customNode: ICustomNode) => {
+        this.appendCustomNodeIfExist(CustomNode.StringArrayNode, (customNode: ICustomNode) => {
             NodeAppender.prependNode(blockScopeNode, customNode.getNode());
         });
 
         // stringArrayCallsWrapper append
-        this.appendCustomNodeIfExist(CustomNodes.StringArrayCallsWrapper, (customNode: ICustomNode) => {
+        this.appendCustomNodeIfExist(CustomNode.StringArrayCallsWrapper, (customNode: ICustomNode) => {
             NodeAppender.insertNodeAtIndex(blockScopeNode, customNode.getNode(), 1);
         });
 
         // stringArrayRotateFunctionNode append
-        this.appendCustomNodeIfExist(CustomNodes.StringArrayRotateFunctionNode, (customNode: ICustomNode) => {
+        this.appendCustomNodeIfExist(CustomNode.StringArrayRotateFunctionNode, (customNode: ICustomNode) => {
             NodeAppender.insertNodeAtIndex(blockScopeNode, customNode.getNode(), 1);
         });
     }
 
     public initialize (): void {
-        this.customNodes = new Map <CustomNodes, ICustomNode> ();
+        this.customNodes = new Map <CustomNode, ICustomNode> ();
 
         if (!this.options.stringArray) {
             return;
         }
 
-        const stringArrayNode: ICustomNode = this.customNodeFactory(CustomNodes.StringArrayNode);
-        const stringArrayCallsWrapper: ICustomNode = this.customNodeFactory(CustomNodes.StringArrayCallsWrapper);
-        const stringArrayRotateFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.StringArrayRotateFunctionNode);
+        const stringArrayNode: ICustomNode = this.customNodeFactory(CustomNode.StringArrayNode);
+        const stringArrayCallsWrapper: ICustomNode = this.customNodeFactory(CustomNode.StringArrayCallsWrapper);
+        const stringArrayRotateFunctionNode: ICustomNode = this.customNodeFactory(CustomNode.StringArrayRotateFunctionNode);
 
         const stringArrayStorageId: string = this.stringArrayStorage.getStorageId();
 
@@ -122,11 +122,11 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
         stringArrayCallsWrapper.initialize(this.stringArrayStorage, stringArrayName, stringArrayCallsWrapperName);
         stringArrayRotateFunctionNode.initialize(this.stringArrayStorage, stringArrayName, stringArrayRotateValue);
 
-        this.customNodes.set(CustomNodes.StringArrayNode, stringArrayNode);
-        this.customNodes.set(CustomNodes.StringArrayCallsWrapper, stringArrayCallsWrapper);
+        this.customNodes.set(CustomNode.StringArrayNode, stringArrayNode);
+        this.customNodes.set(CustomNode.StringArrayCallsWrapper, stringArrayCallsWrapper);
 
         if (this.options.rotateStringArray) {
-            this.customNodes.set(CustomNodes.StringArrayRotateFunctionNode, stringArrayRotateFunctionNode);
+            this.customNodes.set(CustomNode.StringArrayRotateFunctionNode, stringArrayRotateFunctionNode);
         }
     }
 }

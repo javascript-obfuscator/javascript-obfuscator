@@ -5,7 +5,7 @@ import { ICustomNode } from './ICustomNode';
 import { IInitializable } from '../IInitializable';
 import { IStackTraceData } from '../stack-trace-analyzer/IStackTraceData';
 
-import { CustomNodes } from '../../enums/container/custom-nodes/CustomNodes';
+import { CustomNode } from '../../enums/container/custom-nodes/CustomNode';
 
 export interface ICustomNodeGroup extends IInitializable {
     /**
@@ -20,9 +20,9 @@ export interface ICustomNodeGroup extends IInitializable {
     getAppendEvent (): TObfuscationEvent;
 
     /**
-     * @type {Map <CustomNodes, ICustomNode>}
+     * @type {Map <CustomNode, ICustomNode>}
      */
-    getCustomNodes (): Map <CustomNodes, ICustomNode>;
+    getCustomNodes (): Map <CustomNode, ICustomNode>;
 
 
     initialize (): void;

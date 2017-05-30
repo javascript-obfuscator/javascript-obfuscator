@@ -10,13 +10,13 @@ import { ICalleeData } from '../interfaces/stack-trace-analyzer/ICalleeData';
 import { IStackTraceAnalyzer } from '../interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
 import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
-import { CalleeDataExtractors } from '../enums/container/stack-trace-analyzer/CalleeDataExtractors';
+import { CalleeDataExtractor } from '../enums/container/stack-trace-analyzer/CalleeDataExtractor';
 
 import { Node } from '../node/Node';
 import { NodeUtils } from '../node/NodeUtils';
 
 /**
- * This class generates a data with code stack trace functions calls
+ * This class generates a data with a stack trace of functions calls
  *
  * For example:
  *
@@ -49,12 +49,12 @@ import { NodeUtils } from '../node/NodeUtils';
 @injectable()
 export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     /**
-     * @type {CalleeDataExtractors[]}
+     * @type {CalleeDataExtractor[]}
      */
-    private static readonly calleeDataExtractorsList: CalleeDataExtractors[] = [
-        CalleeDataExtractors.FunctionDeclarationCalleeDataExtractor,
-        CalleeDataExtractors.FunctionExpressionCalleeDataExtractor,
-        CalleeDataExtractors.ObjectExpressionCalleeDataExtractor
+    private static readonly calleeDataExtractorsList: CalleeDataExtractor[] = [
+        CalleeDataExtractor.FunctionDeclarationCalleeDataExtractor,
+        CalleeDataExtractor.FunctionExpressionCalleeDataExtractor,
+        CalleeDataExtractor.ObjectExpressionCalleeDataExtractor
     ];
 
     /**
@@ -154,7 +154,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
         blockScopeBody: ESTree.Node[],
         callExpressionNode: ESTree.CallExpression
     ): void {
-        StackTraceAnalyzer.calleeDataExtractorsList.forEach((calleeDataExtractorName: CalleeDataExtractors) => {
+        StackTraceAnalyzer.calleeDataExtractorsList.forEach((calleeDataExtractorName: CalleeDataExtractor) => {
             const calleeData: ICalleeData | null = this.calleeDataExtractorFactory(calleeDataExtractorName)
                 .extract(blockScopeBody, callExpressionNode.callee);
 

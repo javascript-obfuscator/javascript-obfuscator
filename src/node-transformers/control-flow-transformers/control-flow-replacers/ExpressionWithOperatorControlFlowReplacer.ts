@@ -10,7 +10,7 @@ import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
-import { CustomNodes } from '../../../enums/container/custom-nodes/CustomNodes';
+import { CustomNode } from '../../../enums/container/custom-nodes/CustomNode';
 import { Node } from '../../../node/Node';
 
 @injectable()
@@ -55,7 +55,7 @@ export abstract class ExpressionWithOperatorControlFlowReplacer extends Abstract
         rightExpression: ESTree.Expression
     ): ESTree.Node {
         const controlFlowStorageCallCustomNode: ICustomNode = this.customNodeFactory(
-            CustomNodes.ExpressionWithOperatorControlFlowStorageCallNode
+            CustomNode.ExpressionWithOperatorControlFlowStorageCallNode
         );
 
         controlFlowStorageCallCustomNode.initialize(controlFlowStorageId, storageKey, leftExpression, rightExpression);

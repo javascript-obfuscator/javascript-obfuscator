@@ -1188,28 +1188,28 @@ exports.Utils = Utils;
 
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var CustomNodes;
-(function (CustomNodes) {
-    CustomNodes[CustomNodes["BinaryExpressionFunctionNode"] = 0] = "BinaryExpressionFunctionNode";
-    CustomNodes[CustomNodes["BlockStatementControlFlowFlatteningNode"] = 1] = "BlockStatementControlFlowFlatteningNode";
-    CustomNodes[CustomNodes["CallExpressionControlFlowStorageCallNode"] = 2] = "CallExpressionControlFlowStorageCallNode";
-    CustomNodes[CustomNodes["CallExpressionFunctionNode"] = 3] = "CallExpressionFunctionNode";
-    CustomNodes[CustomNodes["ControlFlowStorageNode"] = 4] = "ControlFlowStorageNode";
-    CustomNodes[CustomNodes["ConsoleOutputDisableExpressionNode"] = 5] = "ConsoleOutputDisableExpressionNode";
-    CustomNodes[CustomNodes["DebugProtectionFunctionCallNode"] = 6] = "DebugProtectionFunctionCallNode";
-    CustomNodes[CustomNodes["DebugProtectionFunctionIntervalNode"] = 7] = "DebugProtectionFunctionIntervalNode";
-    CustomNodes[CustomNodes["DebugProtectionFunctionNode"] = 8] = "DebugProtectionFunctionNode";
-    CustomNodes[CustomNodes["DomainLockNode"] = 9] = "DomainLockNode";
-    CustomNodes[CustomNodes["ExpressionWithOperatorControlFlowStorageCallNode"] = 10] = "ExpressionWithOperatorControlFlowStorageCallNode";
-    CustomNodes[CustomNodes["LogicalExpressionFunctionNode"] = 11] = "LogicalExpressionFunctionNode";
-    CustomNodes[CustomNodes["NodeCallsControllerFunctionNode"] = 12] = "NodeCallsControllerFunctionNode";
-    CustomNodes[CustomNodes["SelfDefendingUnicodeNode"] = 13] = "SelfDefendingUnicodeNode";
-    CustomNodes[CustomNodes["StringArrayCallsWrapper"] = 14] = "StringArrayCallsWrapper";
-    CustomNodes[CustomNodes["StringArrayNode"] = 15] = "StringArrayNode";
-    CustomNodes[CustomNodes["StringArrayRotateFunctionNode"] = 16] = "StringArrayRotateFunctionNode";
-    CustomNodes[CustomNodes["StringLiteralControlFlowStorageCallNode"] = 17] = "StringLiteralControlFlowStorageCallNode";
-    CustomNodes[CustomNodes["StringLiteralNode"] = 18] = "StringLiteralNode";
-})(CustomNodes = exports.CustomNodes || (exports.CustomNodes = {}));
+var CustomNode;
+(function (CustomNode) {
+    CustomNode[CustomNode["BinaryExpressionFunctionNode"] = 0] = "BinaryExpressionFunctionNode";
+    CustomNode[CustomNode["BlockStatementControlFlowFlatteningNode"] = 1] = "BlockStatementControlFlowFlatteningNode";
+    CustomNode[CustomNode["CallExpressionControlFlowStorageCallNode"] = 2] = "CallExpressionControlFlowStorageCallNode";
+    CustomNode[CustomNode["CallExpressionFunctionNode"] = 3] = "CallExpressionFunctionNode";
+    CustomNode[CustomNode["ControlFlowStorageNode"] = 4] = "ControlFlowStorageNode";
+    CustomNode[CustomNode["ConsoleOutputDisableExpressionNode"] = 5] = "ConsoleOutputDisableExpressionNode";
+    CustomNode[CustomNode["DebugProtectionFunctionCallNode"] = 6] = "DebugProtectionFunctionCallNode";
+    CustomNode[CustomNode["DebugProtectionFunctionIntervalNode"] = 7] = "DebugProtectionFunctionIntervalNode";
+    CustomNode[CustomNode["DebugProtectionFunctionNode"] = 8] = "DebugProtectionFunctionNode";
+    CustomNode[CustomNode["DomainLockNode"] = 9] = "DomainLockNode";
+    CustomNode[CustomNode["ExpressionWithOperatorControlFlowStorageCallNode"] = 10] = "ExpressionWithOperatorControlFlowStorageCallNode";
+    CustomNode[CustomNode["LogicalExpressionFunctionNode"] = 11] = "LogicalExpressionFunctionNode";
+    CustomNode[CustomNode["NodeCallsControllerFunctionNode"] = 12] = "NodeCallsControllerFunctionNode";
+    CustomNode[CustomNode["SelfDefendingUnicodeNode"] = 13] = "SelfDefendingUnicodeNode";
+    CustomNode[CustomNode["StringArrayCallsWrapper"] = 14] = "StringArrayCallsWrapper";
+    CustomNode[CustomNode["StringArrayNode"] = 15] = "StringArrayNode";
+    CustomNode[CustomNode["StringArrayRotateFunctionNode"] = 16] = "StringArrayRotateFunctionNode";
+    CustomNode[CustomNode["StringLiteralControlFlowStorageCallNode"] = 17] = "StringLiteralControlFlowStorageCallNode";
+    CustomNode[CustomNode["StringLiteralNode"] = 18] = "StringLiteralNode";
+})(CustomNode = exports.CustomNode || (exports.CustomNode = {}));
 
 /***/ }),
 /* 11 */
@@ -1301,7 +1301,7 @@ exports.NodeType = Utils_1.Utils.strEnumify({
 
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ObfuscationEvents = {
+exports.ObfuscationEvent = {
     AfterObfuscation: 'afterObfuscation',
     BeforeObfuscation: 'beforeObfuscation'
 };
@@ -1458,10 +1458,10 @@ exports.InversifyContainerFacade = InversifyContainerFacade;
 
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var IdentifierObfuscatingReplacers;
-(function (IdentifierObfuscatingReplacers) {
-    IdentifierObfuscatingReplacers[IdentifierObfuscatingReplacers["IdentifierObfuscatingReplacer"] = 0] = "IdentifierObfuscatingReplacer";
-})(IdentifierObfuscatingReplacers = exports.IdentifierObfuscatingReplacers || (exports.IdentifierObfuscatingReplacers = {}));
+var IdentifierObfuscatingReplacer;
+(function (IdentifierObfuscatingReplacer) {
+    IdentifierObfuscatingReplacer[IdentifierObfuscatingReplacer["BaseIdentifierObfuscatingReplacer"] = 0] = "BaseIdentifierObfuscatingReplacer";
+})(IdentifierObfuscatingReplacer = exports.IdentifierObfuscatingReplacer || (exports.IdentifierObfuscatingReplacer = {}));
 
 /***/ }),
 /* 19 */
@@ -1928,14 +1928,14 @@ module.exports = require("escodegen-wallaby");
 
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var CustomNodeGroups;
-(function (CustomNodeGroups) {
-    CustomNodeGroups[CustomNodeGroups["ConsoleOutputCustomNodeGroup"] = 0] = "ConsoleOutputCustomNodeGroup";
-    CustomNodeGroups[CustomNodeGroups["DebugProtectionCustomNodeGroup"] = 1] = "DebugProtectionCustomNodeGroup";
-    CustomNodeGroups[CustomNodeGroups["DomainLockCustomNodeGroup"] = 2] = "DomainLockCustomNodeGroup";
-    CustomNodeGroups[CustomNodeGroups["SelfDefendingCustomNodeGroup"] = 3] = "SelfDefendingCustomNodeGroup";
-    CustomNodeGroups[CustomNodeGroups["StringArrayCustomNodeGroup"] = 4] = "StringArrayCustomNodeGroup";
-})(CustomNodeGroups = exports.CustomNodeGroups || (exports.CustomNodeGroups = {}));
+var CustomNodeGroup;
+(function (CustomNodeGroup) {
+    CustomNodeGroup[CustomNodeGroup["ConsoleOutputCustomNodeGroup"] = 0] = "ConsoleOutputCustomNodeGroup";
+    CustomNodeGroup[CustomNodeGroup["DebugProtectionCustomNodeGroup"] = 1] = "DebugProtectionCustomNodeGroup";
+    CustomNodeGroup[CustomNodeGroup["DomainLockCustomNodeGroup"] = 2] = "DomainLockCustomNodeGroup";
+    CustomNodeGroup[CustomNodeGroup["SelfDefendingCustomNodeGroup"] = 3] = "SelfDefendingCustomNodeGroup";
+    CustomNodeGroup[CustomNodeGroup["StringArrayCustomNodeGroup"] = 4] = "StringArrayCustomNodeGroup";
+})(CustomNodeGroup = exports.CustomNodeGroup || (exports.CustomNodeGroup = {}));
 
 /***/ }),
 /* 31 */
@@ -1945,13 +1945,13 @@ var CustomNodeGroups;
 
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var ControlFlowReplacers;
-(function (ControlFlowReplacers) {
-    ControlFlowReplacers[ControlFlowReplacers["BinaryExpressionControlFlowReplacer"] = 0] = "BinaryExpressionControlFlowReplacer";
-    ControlFlowReplacers[ControlFlowReplacers["CallExpressionControlFlowReplacer"] = 1] = "CallExpressionControlFlowReplacer";
-    ControlFlowReplacers[ControlFlowReplacers["LogicalExpressionControlFlowReplacer"] = 2] = "LogicalExpressionControlFlowReplacer";
-    ControlFlowReplacers[ControlFlowReplacers["StringLiteralControlFlowReplacer"] = 3] = "StringLiteralControlFlowReplacer";
-})(ControlFlowReplacers = exports.ControlFlowReplacers || (exports.ControlFlowReplacers = {}));
+var ControlFlowReplacer;
+(function (ControlFlowReplacer) {
+    ControlFlowReplacer[ControlFlowReplacer["BinaryExpressionControlFlowReplacer"] = 0] = "BinaryExpressionControlFlowReplacer";
+    ControlFlowReplacer[ControlFlowReplacer["CallExpressionControlFlowReplacer"] = 1] = "CallExpressionControlFlowReplacer";
+    ControlFlowReplacer[ControlFlowReplacer["LogicalExpressionControlFlowReplacer"] = 2] = "LogicalExpressionControlFlowReplacer";
+    ControlFlowReplacer[ControlFlowReplacer["StringLiteralControlFlowReplacer"] = 3] = "StringLiteralControlFlowReplacer";
+})(ControlFlowReplacer = exports.ControlFlowReplacer || (exports.ControlFlowReplacer = {}));
 
 /***/ }),
 /* 32 */
@@ -1961,12 +1961,12 @@ var ControlFlowReplacers;
 
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var LiteralObfuscatingReplacers;
-(function (LiteralObfuscatingReplacers) {
-    LiteralObfuscatingReplacers[LiteralObfuscatingReplacers["BooleanLiteralObfuscatingReplacer"] = 0] = "BooleanLiteralObfuscatingReplacer";
-    LiteralObfuscatingReplacers[LiteralObfuscatingReplacers["NumberLiteralObfuscatingReplacer"] = 1] = "NumberLiteralObfuscatingReplacer";
-    LiteralObfuscatingReplacers[LiteralObfuscatingReplacers["StringLiteralObfuscatingReplacer"] = 2] = "StringLiteralObfuscatingReplacer";
-})(LiteralObfuscatingReplacers = exports.LiteralObfuscatingReplacers || (exports.LiteralObfuscatingReplacers = {}));
+var LiteralObfuscatingReplacer;
+(function (LiteralObfuscatingReplacer) {
+    LiteralObfuscatingReplacer[LiteralObfuscatingReplacer["BooleanLiteralObfuscatingReplacer"] = 0] = "BooleanLiteralObfuscatingReplacer";
+    LiteralObfuscatingReplacer[LiteralObfuscatingReplacer["NumberLiteralObfuscatingReplacer"] = 1] = "NumberLiteralObfuscatingReplacer";
+    LiteralObfuscatingReplacer[LiteralObfuscatingReplacer["StringLiteralObfuscatingReplacer"] = 2] = "StringLiteralObfuscatingReplacer";
+})(LiteralObfuscatingReplacer = exports.LiteralObfuscatingReplacer || (exports.LiteralObfuscatingReplacer = {}));
 
 /***/ }),
 /* 33 */
@@ -1976,22 +1976,22 @@ var LiteralObfuscatingReplacers;
 
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var NodeTransformers;
-(function (NodeTransformers) {
-    NodeTransformers[NodeTransformers["BlockStatementControlFlowTransformer"] = 0] = "BlockStatementControlFlowTransformer";
-    NodeTransformers[NodeTransformers["DeadCodeInjectionTransformer"] = 1] = "DeadCodeInjectionTransformer";
-    NodeTransformers[NodeTransformers["FunctionControlFlowTransformer"] = 2] = "FunctionControlFlowTransformer";
-    NodeTransformers[NodeTransformers["CatchClauseTransformer"] = 3] = "CatchClauseTransformer";
-    NodeTransformers[NodeTransformers["FunctionDeclarationTransformer"] = 4] = "FunctionDeclarationTransformer";
-    NodeTransformers[NodeTransformers["FunctionTransformer"] = 5] = "FunctionTransformer";
-    NodeTransformers[NodeTransformers["LabeledStatementTransformer"] = 6] = "LabeledStatementTransformer";
-    NodeTransformers[NodeTransformers["LiteralTransformer"] = 7] = "LiteralTransformer";
-    NodeTransformers[NodeTransformers["MemberExpressionTransformer"] = 8] = "MemberExpressionTransformer";
-    NodeTransformers[NodeTransformers["MethodDefinitionTransformer"] = 9] = "MethodDefinitionTransformer";
-    NodeTransformers[NodeTransformers["ObjectExpressionTransformer"] = 10] = "ObjectExpressionTransformer";
-    NodeTransformers[NodeTransformers["TemplateLiteralTransformer"] = 11] = "TemplateLiteralTransformer";
-    NodeTransformers[NodeTransformers["VariableDeclarationTransformer"] = 12] = "VariableDeclarationTransformer";
-})(NodeTransformers = exports.NodeTransformers || (exports.NodeTransformers = {}));
+var NodeTransformer;
+(function (NodeTransformer) {
+    NodeTransformer[NodeTransformer["BlockStatementControlFlowTransformer"] = 0] = "BlockStatementControlFlowTransformer";
+    NodeTransformer[NodeTransformer["DeadCodeInjectionTransformer"] = 1] = "DeadCodeInjectionTransformer";
+    NodeTransformer[NodeTransformer["FunctionControlFlowTransformer"] = 2] = "FunctionControlFlowTransformer";
+    NodeTransformer[NodeTransformer["CatchClauseTransformer"] = 3] = "CatchClauseTransformer";
+    NodeTransformer[NodeTransformer["FunctionDeclarationTransformer"] = 4] = "FunctionDeclarationTransformer";
+    NodeTransformer[NodeTransformer["FunctionTransformer"] = 5] = "FunctionTransformer";
+    NodeTransformer[NodeTransformer["LabeledStatementTransformer"] = 6] = "LabeledStatementTransformer";
+    NodeTransformer[NodeTransformer["LiteralTransformer"] = 7] = "LiteralTransformer";
+    NodeTransformer[NodeTransformer["MemberExpressionTransformer"] = 8] = "MemberExpressionTransformer";
+    NodeTransformer[NodeTransformer["MethodDefinitionTransformer"] = 9] = "MethodDefinitionTransformer";
+    NodeTransformer[NodeTransformer["ObjectExpressionTransformer"] = 10] = "ObjectExpressionTransformer";
+    NodeTransformer[NodeTransformer["TemplateLiteralTransformer"] = 11] = "TemplateLiteralTransformer";
+    NodeTransformer[NodeTransformer["VariableDeclarationTransformer"] = 12] = "VariableDeclarationTransformer";
+})(NodeTransformer = exports.NodeTransformer || (exports.NodeTransformer = {}));
 
 /***/ }),
 /* 34 */
@@ -2001,12 +2001,12 @@ var NodeTransformers;
 
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var CalleeDataExtractors;
-(function (CalleeDataExtractors) {
-    CalleeDataExtractors[CalleeDataExtractors["FunctionDeclarationCalleeDataExtractor"] = 0] = "FunctionDeclarationCalleeDataExtractor";
-    CalleeDataExtractors[CalleeDataExtractors["FunctionExpressionCalleeDataExtractor"] = 1] = "FunctionExpressionCalleeDataExtractor";
-    CalleeDataExtractors[CalleeDataExtractors["ObjectExpressionCalleeDataExtractor"] = 2] = "ObjectExpressionCalleeDataExtractor";
-})(CalleeDataExtractors = exports.CalleeDataExtractors || (exports.CalleeDataExtractors = {}));
+var CalleeDataExtractor;
+(function (CalleeDataExtractor) {
+    CalleeDataExtractor[CalleeDataExtractor["FunctionDeclarationCalleeDataExtractor"] = 0] = "FunctionDeclarationCalleeDataExtractor";
+    CalleeDataExtractor[CalleeDataExtractor["FunctionExpressionCalleeDataExtractor"] = 1] = "FunctionExpressionCalleeDataExtractor";
+    CalleeDataExtractor[CalleeDataExtractor["ObjectExpressionCalleeDataExtractor"] = 2] = "ObjectExpressionCalleeDataExtractor";
+})(CalleeDataExtractor = exports.CalleeDataExtractor || (exports.CalleeDataExtractor = {}));
 
 /***/ }),
 /* 35 */
@@ -2028,7 +2028,7 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var AbstractControlFlowReplacer_1 = __webpack_require__(25);
-var CustomNodes_1 = __webpack_require__(10);
+var CustomNode_1 = __webpack_require__(10);
 var Node_1 = __webpack_require__(6);
 var ExpressionWithOperatorControlFlowReplacer = function (_AbstractControlFlowR) {
     _inherits(ExpressionWithOperatorControlFlowReplacer, _AbstractControlFlowR);
@@ -2045,7 +2045,7 @@ var ExpressionWithOperatorControlFlowReplacer = function (_AbstractControlFlowR)
     _createClass(ExpressionWithOperatorControlFlowReplacer, [{
         key: "getControlFlowStorageCallNode",
         value: function getControlFlowStorageCallNode(controlFlowStorageId, storageKey, leftExpression, rightExpression) {
-            var controlFlowStorageCallCustomNode = this.customNodeFactory(CustomNodes_1.CustomNodes.ExpressionWithOperatorControlFlowStorageCallNode);
+            var controlFlowStorageCallCustomNode = this.customNodeFactory(CustomNode_1.CustomNode.ExpressionWithOperatorControlFlowStorageCallNode);
             controlFlowStorageCallCustomNode.initialize(controlFlowStorageId, storageKey, leftExpression, rightExpression);
             var statementNode = controlFlowStorageCallCustomNode.getNode()[0];
             if (!statementNode || !Node_1.Node.isExpressionStatementNode(statementNode)) {
@@ -2333,8 +2333,8 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(12);
-var NodeTransformers_1 = __webpack_require__(33);
-var ObfuscationEvents_1 = __webpack_require__(15);
+var NodeTransformer_1 = __webpack_require__(33);
+var ObfuscationEvent_1 = __webpack_require__(15);
 var VisitorDirection_1 = __webpack_require__(80);
 var Node_1 = __webpack_require__(6);
 var NodeUtils_1 = __webpack_require__(3);
@@ -2363,11 +2363,11 @@ var Obfuscator = Obfuscator_1 = function () {
                 customNodeGroup.initialize();
                 _this.obfuscationEventEmitter.once(customNodeGroup.getAppendEvent(), customNodeGroup.appendCustomNodes.bind(customNodeGroup));
             });
-            this.obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation, astTree, stackTraceData);
+            this.obfuscationEventEmitter.emit(ObfuscationEvent_1.ObfuscationEvent.BeforeObfuscation, astTree, stackTraceData);
             astTree = this.transformAstTree(astTree, [].concat(_toConsumableArray(this.options.deadCodeInjection ? Obfuscator_1.deadCodeInjectionTransformersList : [])));
             astTree = this.transformAstTree(astTree, [].concat(_toConsumableArray(this.options.controlFlowFlattening ? Obfuscator_1.controlFlowTransformersList : [])));
             astTree = this.transformAstTree(astTree, [].concat(_toConsumableArray(Obfuscator_1.convertingTransformersList), _toConsumableArray(Obfuscator_1.obfuscatingTransformersList)));
-            this.obfuscationEventEmitter.emit(ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation, astTree, stackTraceData);
+            this.obfuscationEventEmitter.emit(ObfuscationEvent_1.ObfuscationEvent.AfterObfuscation, astTree, stackTraceData);
             return astTree;
         }
     }, {
@@ -2425,10 +2425,10 @@ var Obfuscator = Obfuscator_1 = function () {
 
     return Obfuscator;
 }();
-Obfuscator.controlFlowTransformersList = [NodeTransformers_1.NodeTransformers.BlockStatementControlFlowTransformer, NodeTransformers_1.NodeTransformers.FunctionControlFlowTransformer];
-Obfuscator.convertingTransformersList = [NodeTransformers_1.NodeTransformers.MemberExpressionTransformer, NodeTransformers_1.NodeTransformers.MethodDefinitionTransformer, NodeTransformers_1.NodeTransformers.TemplateLiteralTransformer];
-Obfuscator.deadCodeInjectionTransformersList = [NodeTransformers_1.NodeTransformers.DeadCodeInjectionTransformer];
-Obfuscator.obfuscatingTransformersList = [NodeTransformers_1.NodeTransformers.CatchClauseTransformer, NodeTransformers_1.NodeTransformers.FunctionDeclarationTransformer, NodeTransformers_1.NodeTransformers.FunctionTransformer, NodeTransformers_1.NodeTransformers.LabeledStatementTransformer, NodeTransformers_1.NodeTransformers.LiteralTransformer, NodeTransformers_1.NodeTransformers.ObjectExpressionTransformer, NodeTransformers_1.NodeTransformers.VariableDeclarationTransformer];
+Obfuscator.controlFlowTransformersList = [NodeTransformer_1.NodeTransformer.BlockStatementControlFlowTransformer, NodeTransformer_1.NodeTransformer.FunctionControlFlowTransformer];
+Obfuscator.convertingTransformersList = [NodeTransformer_1.NodeTransformer.MemberExpressionTransformer, NodeTransformer_1.NodeTransformer.MethodDefinitionTransformer, NodeTransformer_1.NodeTransformer.TemplateLiteralTransformer];
+Obfuscator.deadCodeInjectionTransformersList = [NodeTransformer_1.NodeTransformer.DeadCodeInjectionTransformer];
+Obfuscator.obfuscatingTransformersList = [NodeTransformer_1.NodeTransformer.CatchClauseTransformer, NodeTransformer_1.NodeTransformer.FunctionDeclarationTransformer, NodeTransformer_1.NodeTransformer.FunctionTransformer, NodeTransformer_1.NodeTransformer.LabeledStatementTransformer, NodeTransformer_1.NodeTransformer.LiteralTransformer, NodeTransformer_1.NodeTransformer.ObjectExpressionTransformer, NodeTransformer_1.NodeTransformer.VariableDeclarationTransformer];
 Obfuscator = Obfuscator_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IStackTraceAnalyzer)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscationEventEmitter)), tslib_1.__param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.TCustomNodeGroupStorage)), tslib_1.__param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__INodeTransformer)), tslib_1.__param(4, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object, Object, Object, Function, Object])], Obfuscator);
 exports.Obfuscator = Obfuscator;
 var Obfuscator_1;
@@ -2767,8 +2767,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var InversifyContainerFacade_1 = __webpack_require__(17);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var CustomNodes_1 = __webpack_require__(10);
-var CustomNodeGroups_1 = __webpack_require__(30);
+var CustomNode_1 = __webpack_require__(10);
+var CustomNodeGroup_1 = __webpack_require__(30);
 var ConsoleOutputCustomNodeGroup_1 = __webpack_require__(56);
 var DebugProtectionCustomNodeGroup_1 = __webpack_require__(69);
 var DomainLockCustomNodeGroup_1 = __webpack_require__(71);
@@ -2794,30 +2794,30 @@ var StringArrayRotateFunctionNode_1 = __webpack_require__(77);
 var StringLiteralControlFlowStorageCallNode_1 = __webpack_require__(65);
 var StringLiteralNode_1 = __webpack_require__(61);
 exports.customNodesModule = new inversify_1.ContainerModule(function (bind) {
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(BinaryExpressionFunctionNode_1.BinaryExpressionFunctionNode).whenTargetNamed(CustomNodes_1.CustomNodes.BinaryExpressionFunctionNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(BlockStatementControlFlowFlatteningNode_1.BlockStatementControlFlowFlatteningNode).whenTargetNamed(CustomNodes_1.CustomNodes.BlockStatementControlFlowFlatteningNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(CallExpressionControlFlowStorageCallNode_1.CallExpressionControlFlowStorageCallNode).whenTargetNamed(CustomNodes_1.CustomNodes.CallExpressionControlFlowStorageCallNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(CallExpressionFunctionNode_1.CallExpressionFunctionNode).whenTargetNamed(CustomNodes_1.CustomNodes.CallExpressionFunctionNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(ControlFlowStorageNode_1.ControlFlowStorageNode).whenTargetNamed(CustomNodes_1.CustomNodes.ControlFlowStorageNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode).whenTargetNamed(CustomNodes_1.CustomNodes.ConsoleOutputDisableExpressionNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(DebugProtectionFunctionCallNode_1.DebugProtectionFunctionCallNode).whenTargetNamed(CustomNodes_1.CustomNodes.DebugProtectionFunctionCallNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(DebugProtectionFunctionIntervalNode_1.DebugProtectionFunctionIntervalNode).whenTargetNamed(CustomNodes_1.CustomNodes.DebugProtectionFunctionIntervalNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(DebugProtectionFunctionNode_1.DebugProtectionFunctionNode).whenTargetNamed(CustomNodes_1.CustomNodes.DebugProtectionFunctionNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(DomainLockNode_1.DomainLockNode).whenTargetNamed(CustomNodes_1.CustomNodes.DomainLockNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(ExpressionWithOperatorControlFlowStorageCallNode_1.ExpressionWithOperatorControlFlowStorageCallNode).whenTargetNamed(CustomNodes_1.CustomNodes.ExpressionWithOperatorControlFlowStorageCallNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(LogicalExpressionFunctionNode_1.LogicalExpressionFunctionNode).whenTargetNamed(CustomNodes_1.CustomNodes.LogicalExpressionFunctionNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode).whenTargetNamed(CustomNodes_1.CustomNodes.NodeCallsControllerFunctionNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(SelfDefendingUnicodeNode_1.SelfDefendingUnicodeNode).whenTargetNamed(CustomNodes_1.CustomNodes.SelfDefendingUnicodeNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(StringArrayCallsWrapper_1.StringArrayCallsWrapper).whenTargetNamed(CustomNodes_1.CustomNodes.StringArrayCallsWrapper);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(StringArrayNode_1.StringArrayNode).whenTargetNamed(CustomNodes_1.CustomNodes.StringArrayNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(StringArrayRotateFunctionNode_1.StringArrayRotateFunctionNode).whenTargetNamed(CustomNodes_1.CustomNodes.StringArrayRotateFunctionNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(StringLiteralControlFlowStorageCallNode_1.StringLiteralControlFlowStorageCallNode).whenTargetNamed(CustomNodes_1.CustomNodes.StringLiteralControlFlowStorageCallNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(StringLiteralNode_1.StringLiteralNode).whenTargetNamed(CustomNodes_1.CustomNodes.StringLiteralNode);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNodeGroup).to(ConsoleOutputCustomNodeGroup_1.ConsoleOutputCustomNodeGroup).whenTargetNamed(CustomNodeGroups_1.CustomNodeGroups.ConsoleOutputCustomNodeGroup);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNodeGroup).to(DebugProtectionCustomNodeGroup_1.DebugProtectionCustomNodeGroup).whenTargetNamed(CustomNodeGroups_1.CustomNodeGroups.DebugProtectionCustomNodeGroup);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNodeGroup).to(DomainLockCustomNodeGroup_1.DomainLockCustomNodeGroup).whenTargetNamed(CustomNodeGroups_1.CustomNodeGroups.DomainLockCustomNodeGroup);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNodeGroup).to(SelfDefendingCustomNodeGroup_1.SelfDefendingCustomNodeGroup).whenTargetNamed(CustomNodeGroups_1.CustomNodeGroups.SelfDefendingCustomNodeGroup);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNodeGroup).to(StringArrayCustomNodeGroup_1.StringArrayCustomNodeGroup).whenTargetNamed(CustomNodeGroups_1.CustomNodeGroups.StringArrayCustomNodeGroup);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(BinaryExpressionFunctionNode_1.BinaryExpressionFunctionNode).whenTargetNamed(CustomNode_1.CustomNode.BinaryExpressionFunctionNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(BlockStatementControlFlowFlatteningNode_1.BlockStatementControlFlowFlatteningNode).whenTargetNamed(CustomNode_1.CustomNode.BlockStatementControlFlowFlatteningNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(CallExpressionControlFlowStorageCallNode_1.CallExpressionControlFlowStorageCallNode).whenTargetNamed(CustomNode_1.CustomNode.CallExpressionControlFlowStorageCallNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(CallExpressionFunctionNode_1.CallExpressionFunctionNode).whenTargetNamed(CustomNode_1.CustomNode.CallExpressionFunctionNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(ControlFlowStorageNode_1.ControlFlowStorageNode).whenTargetNamed(CustomNode_1.CustomNode.ControlFlowStorageNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(ConsoleOutputDisableExpressionNode_1.ConsoleOutputDisableExpressionNode).whenTargetNamed(CustomNode_1.CustomNode.ConsoleOutputDisableExpressionNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(DebugProtectionFunctionCallNode_1.DebugProtectionFunctionCallNode).whenTargetNamed(CustomNode_1.CustomNode.DebugProtectionFunctionCallNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(DebugProtectionFunctionIntervalNode_1.DebugProtectionFunctionIntervalNode).whenTargetNamed(CustomNode_1.CustomNode.DebugProtectionFunctionIntervalNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(DebugProtectionFunctionNode_1.DebugProtectionFunctionNode).whenTargetNamed(CustomNode_1.CustomNode.DebugProtectionFunctionNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(DomainLockNode_1.DomainLockNode).whenTargetNamed(CustomNode_1.CustomNode.DomainLockNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(ExpressionWithOperatorControlFlowStorageCallNode_1.ExpressionWithOperatorControlFlowStorageCallNode).whenTargetNamed(CustomNode_1.CustomNode.ExpressionWithOperatorControlFlowStorageCallNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(LogicalExpressionFunctionNode_1.LogicalExpressionFunctionNode).whenTargetNamed(CustomNode_1.CustomNode.LogicalExpressionFunctionNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(NodeCallsControllerFunctionNode_1.NodeCallsControllerFunctionNode).whenTargetNamed(CustomNode_1.CustomNode.NodeCallsControllerFunctionNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(SelfDefendingUnicodeNode_1.SelfDefendingUnicodeNode).whenTargetNamed(CustomNode_1.CustomNode.SelfDefendingUnicodeNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(StringArrayCallsWrapper_1.StringArrayCallsWrapper).whenTargetNamed(CustomNode_1.CustomNode.StringArrayCallsWrapper);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(StringArrayNode_1.StringArrayNode).whenTargetNamed(CustomNode_1.CustomNode.StringArrayNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(StringArrayRotateFunctionNode_1.StringArrayRotateFunctionNode).whenTargetNamed(CustomNode_1.CustomNode.StringArrayRotateFunctionNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(StringLiteralControlFlowStorageCallNode_1.StringLiteralControlFlowStorageCallNode).whenTargetNamed(CustomNode_1.CustomNode.StringLiteralControlFlowStorageCallNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.Newable__ICustomNode).toConstructor(StringLiteralNode_1.StringLiteralNode).whenTargetNamed(CustomNode_1.CustomNode.StringLiteralNode);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNodeGroup).to(ConsoleOutputCustomNodeGroup_1.ConsoleOutputCustomNodeGroup).whenTargetNamed(CustomNodeGroup_1.CustomNodeGroup.ConsoleOutputCustomNodeGroup);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNodeGroup).to(DebugProtectionCustomNodeGroup_1.DebugProtectionCustomNodeGroup).whenTargetNamed(CustomNodeGroup_1.CustomNodeGroup.DebugProtectionCustomNodeGroup);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNodeGroup).to(DomainLockCustomNodeGroup_1.DomainLockCustomNodeGroup).whenTargetNamed(CustomNodeGroup_1.CustomNodeGroup.DomainLockCustomNodeGroup);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNodeGroup).to(SelfDefendingCustomNodeGroup_1.SelfDefendingCustomNodeGroup).whenTargetNamed(CustomNodeGroup_1.CustomNodeGroup.SelfDefendingCustomNodeGroup);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICustomNodeGroup).to(StringArrayCustomNodeGroup_1.StringArrayCustomNodeGroup).whenTargetNamed(CustomNodeGroup_1.CustomNodeGroup.StringArrayCustomNodeGroup);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomNode).toFactory(function (context) {
         var cache = new Map();
         var cachedOptions = void 0;
@@ -2847,16 +2847,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var InversifyContainerFacade_1 = __webpack_require__(17);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var ControlFlowReplacers_1 = __webpack_require__(31);
+var ControlFlowReplacer_1 = __webpack_require__(31);
 var BinaryExpressionControlFlowReplacer_1 = __webpack_require__(84);
 var CallExpressionControlFlowReplacer_1 = __webpack_require__(85);
 var LogicalExpressionControlFlowReplacer_1 = __webpack_require__(86);
 var StringLiteralControlFlowReplacer_1 = __webpack_require__(87);
 exports.controlFlowTransformersModule = new inversify_1.ContainerModule(function (bind) {
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.IControlFlowReplacer).to(BinaryExpressionControlFlowReplacer_1.BinaryExpressionControlFlowReplacer).whenTargetNamed(ControlFlowReplacers_1.ControlFlowReplacers.BinaryExpressionControlFlowReplacer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.IControlFlowReplacer).to(CallExpressionControlFlowReplacer_1.CallExpressionControlFlowReplacer).whenTargetNamed(ControlFlowReplacers_1.ControlFlowReplacers.CallExpressionControlFlowReplacer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.IControlFlowReplacer).to(LogicalExpressionControlFlowReplacer_1.LogicalExpressionControlFlowReplacer).whenTargetNamed(ControlFlowReplacers_1.ControlFlowReplacers.LogicalExpressionControlFlowReplacer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.IControlFlowReplacer).to(StringLiteralControlFlowReplacer_1.StringLiteralControlFlowReplacer).whenTargetNamed(ControlFlowReplacers_1.ControlFlowReplacers.StringLiteralControlFlowReplacer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IControlFlowReplacer).to(BinaryExpressionControlFlowReplacer_1.BinaryExpressionControlFlowReplacer).whenTargetNamed(ControlFlowReplacer_1.ControlFlowReplacer.BinaryExpressionControlFlowReplacer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IControlFlowReplacer).to(CallExpressionControlFlowReplacer_1.CallExpressionControlFlowReplacer).whenTargetNamed(ControlFlowReplacer_1.ControlFlowReplacer.CallExpressionControlFlowReplacer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IControlFlowReplacer).to(LogicalExpressionControlFlowReplacer_1.LogicalExpressionControlFlowReplacer).whenTargetNamed(ControlFlowReplacer_1.ControlFlowReplacer.LogicalExpressionControlFlowReplacer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IControlFlowReplacer).to(StringLiteralControlFlowReplacer_1.StringLiteralControlFlowReplacer).whenTargetNamed(ControlFlowReplacer_1.ControlFlowReplacer.StringLiteralControlFlowReplacer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowReplacer).toFactory(InversifyContainerFacade_1.InversifyContainerFacade.getCacheFactory(ServiceIdentifiers_1.ServiceIdentifiers.IControlFlowReplacer));
 });
 
@@ -2871,7 +2871,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var InversifyContainerFacade_1 = __webpack_require__(17);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var NodeTransformers_1 = __webpack_require__(33);
+var NodeTransformer_1 = __webpack_require__(33);
 var FunctionControlFlowTransformer_1 = __webpack_require__(83);
 var BlockStatementControlFlowTransformer_1 = __webpack_require__(82);
 var DeadCodeInjectionTransformer_1 = __webpack_require__(91);
@@ -2886,19 +2886,19 @@ var ObjectExpressionTransformer_1 = __webpack_require__(97);
 var TemplateLiteralTransformer_1 = __webpack_require__(90);
 var VariableDeclarationTransformer_1 = __webpack_require__(98);
 exports.nodeTransformersModule = new inversify_1.ContainerModule(function (bind) {
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(BlockStatementControlFlowTransformer_1.BlockStatementControlFlowTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.BlockStatementControlFlowTransformer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(DeadCodeInjectionTransformer_1.DeadCodeInjectionTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.DeadCodeInjectionTransformer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(FunctionControlFlowTransformer_1.FunctionControlFlowTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.FunctionControlFlowTransformer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(MemberExpressionTransformer_1.MemberExpressionTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.MemberExpressionTransformer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(MethodDefinitionTransformer_1.MethodDefinitionTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.MethodDefinitionTransformer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(TemplateLiteralTransformer_1.TemplateLiteralTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.TemplateLiteralTransformer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(CatchClauseTransformer_1.CatchClauseTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.CatchClauseTransformer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(FunctionDeclarationTransformer_1.FunctionDeclarationTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.FunctionDeclarationTransformer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(FunctionTransformer_1.FunctionTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.FunctionTransformer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(LabeledStatementTransformer_1.LabeledStatementTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.LabeledStatementTransformer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(LiteralTransformer_1.LiteralTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.LiteralTransformer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(ObjectExpressionTransformer_1.ObjectExpressionTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.ObjectExpressionTransformer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(VariableDeclarationTransformer_1.VariableDeclarationTransformer).whenTargetNamed(NodeTransformers_1.NodeTransformers.VariableDeclarationTransformer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(BlockStatementControlFlowTransformer_1.BlockStatementControlFlowTransformer).whenTargetNamed(NodeTransformer_1.NodeTransformer.BlockStatementControlFlowTransformer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(DeadCodeInjectionTransformer_1.DeadCodeInjectionTransformer).whenTargetNamed(NodeTransformer_1.NodeTransformer.DeadCodeInjectionTransformer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(FunctionControlFlowTransformer_1.FunctionControlFlowTransformer).whenTargetNamed(NodeTransformer_1.NodeTransformer.FunctionControlFlowTransformer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(MemberExpressionTransformer_1.MemberExpressionTransformer).whenTargetNamed(NodeTransformer_1.NodeTransformer.MemberExpressionTransformer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(MethodDefinitionTransformer_1.MethodDefinitionTransformer).whenTargetNamed(NodeTransformer_1.NodeTransformer.MethodDefinitionTransformer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(TemplateLiteralTransformer_1.TemplateLiteralTransformer).whenTargetNamed(NodeTransformer_1.NodeTransformer.TemplateLiteralTransformer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(CatchClauseTransformer_1.CatchClauseTransformer).whenTargetNamed(NodeTransformer_1.NodeTransformer.CatchClauseTransformer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(FunctionDeclarationTransformer_1.FunctionDeclarationTransformer).whenTargetNamed(NodeTransformer_1.NodeTransformer.FunctionDeclarationTransformer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(FunctionTransformer_1.FunctionTransformer).whenTargetNamed(NodeTransformer_1.NodeTransformer.FunctionTransformer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(LabeledStatementTransformer_1.LabeledStatementTransformer).whenTargetNamed(NodeTransformer_1.NodeTransformer.LabeledStatementTransformer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(LiteralTransformer_1.LiteralTransformer).whenTargetNamed(NodeTransformer_1.NodeTransformer.LiteralTransformer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(ObjectExpressionTransformer_1.ObjectExpressionTransformer).whenTargetNamed(NodeTransformer_1.NodeTransformer.ObjectExpressionTransformer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer).to(VariableDeclarationTransformer_1.VariableDeclarationTransformer).whenTargetNamed(NodeTransformer_1.NodeTransformer.VariableDeclarationTransformer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.Factory__INodeTransformer).toFactory(InversifyContainerFacade_1.InversifyContainerFacade.getCacheFactory(ServiceIdentifiers_1.ServiceIdentifiers.INodeTransformer));
 });
 
@@ -2913,17 +2913,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var InversifyContainerFacade_1 = __webpack_require__(17);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var IdentifierObfuscatingReplacers_1 = __webpack_require__(18);
-var LiteralObfuscatingReplacers_1 = __webpack_require__(32);
+var IdentifierObfuscatingReplacer_1 = __webpack_require__(18);
+var LiteralObfuscatingReplacer_1 = __webpack_require__(32);
+var BaseIdentifierObfuscatingReplacer_1 = __webpack_require__(99);
 var BooleanLiteralObfuscatingReplacer_1 = __webpack_require__(100);
-var IdentifierObfuscatingReplacer_1 = __webpack_require__(99);
 var NumberLiteralObfuscatingReplacer_1 = __webpack_require__(101);
 var StringLiteralObfuscatingReplacer_1 = __webpack_require__(102);
 exports.obfuscatingTransformersModule = new inversify_1.ContainerModule(function (bind) {
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatingReplacer).to(BooleanLiteralObfuscatingReplacer_1.BooleanLiteralObfuscatingReplacer).whenTargetNamed(LiteralObfuscatingReplacers_1.LiteralObfuscatingReplacers.BooleanLiteralObfuscatingReplacer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatingReplacer).to(NumberLiteralObfuscatingReplacer_1.NumberLiteralObfuscatingReplacer).whenTargetNamed(LiteralObfuscatingReplacers_1.LiteralObfuscatingReplacers.NumberLiteralObfuscatingReplacer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatingReplacer).to(StringLiteralObfuscatingReplacer_1.StringLiteralObfuscatingReplacer).whenTargetNamed(LiteralObfuscatingReplacers_1.LiteralObfuscatingReplacers.StringLiteralObfuscatingReplacer);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.IIdentifierObfuscatingReplacer).to(IdentifierObfuscatingReplacer_1.IdentifierObfuscatingReplacer).whenTargetNamed(IdentifierObfuscatingReplacers_1.IdentifierObfuscatingReplacers.IdentifierObfuscatingReplacer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatingReplacer).to(BooleanLiteralObfuscatingReplacer_1.BooleanLiteralObfuscatingReplacer).whenTargetNamed(LiteralObfuscatingReplacer_1.LiteralObfuscatingReplacer.BooleanLiteralObfuscatingReplacer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatingReplacer).to(NumberLiteralObfuscatingReplacer_1.NumberLiteralObfuscatingReplacer).whenTargetNamed(LiteralObfuscatingReplacer_1.LiteralObfuscatingReplacer.NumberLiteralObfuscatingReplacer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatingReplacer).to(StringLiteralObfuscatingReplacer_1.StringLiteralObfuscatingReplacer).whenTargetNamed(LiteralObfuscatingReplacer_1.LiteralObfuscatingReplacer.StringLiteralObfuscatingReplacer);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.IIdentifierObfuscatingReplacer).to(BaseIdentifierObfuscatingReplacer_1.BaseIdentifierObfuscatingReplacer).whenTargetNamed(IdentifierObfuscatingReplacer_1.IdentifierObfuscatingReplacer.BaseIdentifierObfuscatingReplacer);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IObfuscatingReplacer).toFactory(InversifyContainerFacade_1.InversifyContainerFacade.getCacheFactory(ServiceIdentifiers_1.ServiceIdentifiers.IObfuscatingReplacer));
     bind(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IIdentifierObfuscatingReplacer).toFactory(InversifyContainerFacade_1.InversifyContainerFacade.getCacheFactory(ServiceIdentifiers_1.ServiceIdentifiers.IIdentifierObfuscatingReplacer));
 });
@@ -2939,16 +2939,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var InversifyContainerFacade_1 = __webpack_require__(17);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var CalleeDataExtractors_1 = __webpack_require__(34);
+var CalleeDataExtractor_1 = __webpack_require__(34);
 var FunctionDeclarationCalleeDataExtractor_1 = __webpack_require__(117);
 var FunctionExpressionCalleeDataExtractor_1 = __webpack_require__(118);
 var ObjectExpressionCalleeDataExtractor_1 = __webpack_require__(119);
 var StackTraceAnalyzer_1 = __webpack_require__(116);
 exports.stackTraceAnalyzerModule = new inversify_1.ContainerModule(function (bind) {
     bind(ServiceIdentifiers_1.ServiceIdentifiers.IStackTraceAnalyzer).to(StackTraceAnalyzer_1.StackTraceAnalyzer).inSingletonScope();
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICalleeDataExtractor).to(FunctionDeclarationCalleeDataExtractor_1.FunctionDeclarationCalleeDataExtractor).whenTargetNamed(CalleeDataExtractors_1.CalleeDataExtractors.FunctionDeclarationCalleeDataExtractor);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICalleeDataExtractor).to(FunctionExpressionCalleeDataExtractor_1.FunctionExpressionCalleeDataExtractor).whenTargetNamed(CalleeDataExtractors_1.CalleeDataExtractors.FunctionExpressionCalleeDataExtractor);
-    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICalleeDataExtractor).to(ObjectExpressionCalleeDataExtractor_1.ObjectExpressionCalleeDataExtractor).whenTargetNamed(CalleeDataExtractors_1.CalleeDataExtractors.ObjectExpressionCalleeDataExtractor);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICalleeDataExtractor).to(FunctionDeclarationCalleeDataExtractor_1.FunctionDeclarationCalleeDataExtractor).whenTargetNamed(CalleeDataExtractor_1.CalleeDataExtractor.FunctionDeclarationCalleeDataExtractor);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICalleeDataExtractor).to(FunctionExpressionCalleeDataExtractor_1.FunctionExpressionCalleeDataExtractor).whenTargetNamed(CalleeDataExtractor_1.CalleeDataExtractor.FunctionExpressionCalleeDataExtractor);
+    bind(ServiceIdentifiers_1.ServiceIdentifiers.ICalleeDataExtractor).to(ObjectExpressionCalleeDataExtractor_1.ObjectExpressionCalleeDataExtractor).whenTargetNamed(CalleeDataExtractor_1.CalleeDataExtractor.ObjectExpressionCalleeDataExtractor);
     bind(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICalleeDataExtractor).toFactory(InversifyContainerFacade_1.InversifyContainerFacade.getCacheFactory(ServiceIdentifiers_1.ServiceIdentifiers.ICalleeDataExtractor));
 });
 
@@ -3057,8 +3057,8 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var Initializable_1 = __webpack_require__(5);
-var CustomNodes_1 = __webpack_require__(10);
-var ObfuscationEvents_1 = __webpack_require__(15);
+var CustomNode_1 = __webpack_require__(10);
+var ObfuscationEvent_1 = __webpack_require__(15);
 var AbstractCustomNodeGroup_1 = __webpack_require__(20);
 var NodeAppender_1 = __webpack_require__(19);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
@@ -3070,7 +3070,7 @@ var ConsoleOutputCustomNodeGroup = function (_AbstractCustomNodeGr) {
 
         var _this = _possibleConstructorReturn(this, (ConsoleOutputCustomNodeGroup.__proto__ || Object.getPrototypeOf(ConsoleOutputCustomNodeGroup)).call(this, options));
 
-        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation;
+        _this.appendEvent = ObfuscationEvent_1.ObfuscationEvent.BeforeObfuscation;
         _this.customNodeFactory = customNodeFactory;
         _this.obfuscationEventEmitter = obfuscationEventEmitter;
         return _this;
@@ -3080,10 +3080,10 @@ var ConsoleOutputCustomNodeGroup = function (_AbstractCustomNodeGr) {
         key: "appendCustomNodes",
         value: function appendCustomNodes(blockScopeNode, stackTraceData) {
             var randomStackTraceIndex = NodeAppender_1.NodeAppender.getRandomStackTraceIndex(stackTraceData.length);
-            this.appendCustomNodeIfExist(CustomNodes_1.CustomNodes.ConsoleOutputDisableExpressionNode, function (customNode) {
+            this.appendCustomNodeIfExist(CustomNode_1.CustomNode.ConsoleOutputDisableExpressionNode, function (customNode) {
                 NodeAppender_1.NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, blockScopeNode, customNode.getNode(), randomStackTraceIndex);
             });
-            this.appendCustomNodeIfExist(CustomNodes_1.CustomNodes.NodeCallsControllerFunctionNode, function (customNode) {
+            this.appendCustomNodeIfExist(CustomNode_1.CustomNode.NodeCallsControllerFunctionNode, function (customNode) {
                 var targetBlockScope = void 0;
                 if (stackTraceData.length) {
                     targetBlockScope = NodeAppender_1.NodeAppender.getOptimalBlockScope(stackTraceData, randomStackTraceIndex, 1);
@@ -3101,12 +3101,12 @@ var ConsoleOutputCustomNodeGroup = function (_AbstractCustomNodeGr) {
                 return;
             }
             var callsControllerFunctionName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6);
-            var consoleOutputDisableExpressionNode = this.customNodeFactory(CustomNodes_1.CustomNodes.ConsoleOutputDisableExpressionNode);
-            var nodeCallsControllerFunctionNode = this.customNodeFactory(CustomNodes_1.CustomNodes.NodeCallsControllerFunctionNode);
+            var consoleOutputDisableExpressionNode = this.customNodeFactory(CustomNode_1.CustomNode.ConsoleOutputDisableExpressionNode);
+            var nodeCallsControllerFunctionNode = this.customNodeFactory(CustomNode_1.CustomNode.NodeCallsControllerFunctionNode);
             consoleOutputDisableExpressionNode.initialize(callsControllerFunctionName);
             nodeCallsControllerFunctionNode.initialize(this.appendEvent, callsControllerFunctionName);
-            this.customNodes.set(CustomNodes_1.CustomNodes.ConsoleOutputDisableExpressionNode, consoleOutputDisableExpressionNode);
-            this.customNodes.set(CustomNodes_1.CustomNodes.NodeCallsControllerFunctionNode, nodeCallsControllerFunctionNode);
+            this.customNodes.set(CustomNode_1.CustomNode.ConsoleOutputDisableExpressionNode, consoleOutputDisableExpressionNode);
+            this.customNodes.set(CustomNode_1.CustomNode.NodeCallsControllerFunctionNode, nodeCallsControllerFunctionNode);
         }
     }]);
 
@@ -3820,8 +3820,8 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var Initializable_1 = __webpack_require__(5);
-var CustomNodes_1 = __webpack_require__(10);
-var ObfuscationEvents_1 = __webpack_require__(15);
+var CustomNode_1 = __webpack_require__(10);
+var ObfuscationEvent_1 = __webpack_require__(15);
 var AbstractCustomNodeGroup_1 = __webpack_require__(20);
 var NodeAppender_1 = __webpack_require__(19);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
@@ -3833,7 +3833,7 @@ var DebugProtectionCustomNodeGroup = function (_AbstractCustomNodeGr) {
 
         var _this = _possibleConstructorReturn(this, (DebugProtectionCustomNodeGroup.__proto__ || Object.getPrototypeOf(DebugProtectionCustomNodeGroup)).call(this, options));
 
-        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation;
+        _this.appendEvent = ObfuscationEvent_1.ObfuscationEvent.BeforeObfuscation;
         _this.customNodeFactory = customNodeFactory;
         _this.obfuscationEventEmitter = obfuscationEventEmitter;
         return _this;
@@ -3842,13 +3842,13 @@ var DebugProtectionCustomNodeGroup = function (_AbstractCustomNodeGr) {
     _createClass(DebugProtectionCustomNodeGroup, [{
         key: "appendCustomNodes",
         value: function appendCustomNodes(blockScopeNode, stackTraceData) {
-            this.appendCustomNodeIfExist(CustomNodes_1.CustomNodes.DebugProtectionFunctionNode, function (customNode) {
+            this.appendCustomNodeIfExist(CustomNode_1.CustomNode.DebugProtectionFunctionNode, function (customNode) {
                 NodeAppender_1.NodeAppender.appendNode(blockScopeNode, customNode.getNode());
             });
-            this.appendCustomNodeIfExist(CustomNodes_1.CustomNodes.DebugProtectionFunctionCallNode, function (customNode) {
+            this.appendCustomNodeIfExist(CustomNode_1.CustomNode.DebugProtectionFunctionCallNode, function (customNode) {
                 NodeAppender_1.NodeAppender.appendNode(blockScopeNode, customNode.getNode());
             });
-            this.appendCustomNodeIfExist(CustomNodes_1.CustomNodes.DebugProtectionFunctionIntervalNode, function (customNode) {
+            this.appendCustomNodeIfExist(CustomNode_1.CustomNode.DebugProtectionFunctionIntervalNode, function (customNode) {
                 var programBodyLength = blockScopeNode.body.length;
                 var randomIndex = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomInteger(0, programBodyLength);
                 NodeAppender_1.NodeAppender.insertNodeAtIndex(blockScopeNode, customNode.getNode(), randomIndex);
@@ -3862,16 +3862,16 @@ var DebugProtectionCustomNodeGroup = function (_AbstractCustomNodeGr) {
                 return;
             }
             var debugProtectionFunctionName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6);
-            var debugProtectionFunctionNode = this.customNodeFactory(CustomNodes_1.CustomNodes.DebugProtectionFunctionNode);
-            var debugProtectionFunctionCallNode = this.customNodeFactory(CustomNodes_1.CustomNodes.DebugProtectionFunctionCallNode);
-            var debugProtectionFunctionIntervalNode = this.customNodeFactory(CustomNodes_1.CustomNodes.DebugProtectionFunctionIntervalNode);
+            var debugProtectionFunctionNode = this.customNodeFactory(CustomNode_1.CustomNode.DebugProtectionFunctionNode);
+            var debugProtectionFunctionCallNode = this.customNodeFactory(CustomNode_1.CustomNode.DebugProtectionFunctionCallNode);
+            var debugProtectionFunctionIntervalNode = this.customNodeFactory(CustomNode_1.CustomNode.DebugProtectionFunctionIntervalNode);
             debugProtectionFunctionNode.initialize(debugProtectionFunctionName);
             debugProtectionFunctionCallNode.initialize(debugProtectionFunctionName);
             debugProtectionFunctionIntervalNode.initialize(debugProtectionFunctionName);
-            this.customNodes.set(CustomNodes_1.CustomNodes.DebugProtectionFunctionNode, debugProtectionFunctionNode);
-            this.customNodes.set(CustomNodes_1.CustomNodes.DebugProtectionFunctionCallNode, debugProtectionFunctionCallNode);
+            this.customNodes.set(CustomNode_1.CustomNode.DebugProtectionFunctionNode, debugProtectionFunctionNode);
+            this.customNodes.set(CustomNode_1.CustomNode.DebugProtectionFunctionCallNode, debugProtectionFunctionCallNode);
             if (this.options.debugProtectionInterval) {
-                this.customNodes.set(CustomNodes_1.CustomNodes.DebugProtectionFunctionIntervalNode, debugProtectionFunctionIntervalNode);
+                this.customNodes.set(CustomNode_1.CustomNode.DebugProtectionFunctionIntervalNode, debugProtectionFunctionIntervalNode);
             }
         }
     }]);
@@ -3974,8 +3974,8 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var Initializable_1 = __webpack_require__(5);
-var CustomNodes_1 = __webpack_require__(10);
-var ObfuscationEvents_1 = __webpack_require__(15);
+var CustomNode_1 = __webpack_require__(10);
+var ObfuscationEvent_1 = __webpack_require__(15);
 var AbstractCustomNodeGroup_1 = __webpack_require__(20);
 var NodeAppender_1 = __webpack_require__(19);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
@@ -3987,7 +3987,7 @@ var DomainLockCustomNodeGroup = function (_AbstractCustomNodeGr) {
 
         var _this = _possibleConstructorReturn(this, (DomainLockCustomNodeGroup.__proto__ || Object.getPrototypeOf(DomainLockCustomNodeGroup)).call(this, options));
 
-        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.BeforeObfuscation;
+        _this.appendEvent = ObfuscationEvent_1.ObfuscationEvent.BeforeObfuscation;
         _this.customNodeFactory = customNodeFactory;
         _this.obfuscationEventEmitter = obfuscationEventEmitter;
         return _this;
@@ -3997,10 +3997,10 @@ var DomainLockCustomNodeGroup = function (_AbstractCustomNodeGr) {
         key: "appendCustomNodes",
         value: function appendCustomNodes(blockScopeNode, stackTraceData) {
             var randomStackTraceIndex = NodeAppender_1.NodeAppender.getRandomStackTraceIndex(stackTraceData.length);
-            this.appendCustomNodeIfExist(CustomNodes_1.CustomNodes.DomainLockNode, function (customNode) {
+            this.appendCustomNodeIfExist(CustomNode_1.CustomNode.DomainLockNode, function (customNode) {
                 NodeAppender_1.NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, blockScopeNode, customNode.getNode(), randomStackTraceIndex);
             });
-            this.appendCustomNodeIfExist(CustomNodes_1.CustomNodes.NodeCallsControllerFunctionNode, function (customNode) {
+            this.appendCustomNodeIfExist(CustomNode_1.CustomNode.NodeCallsControllerFunctionNode, function (customNode) {
                 var targetBlockScope = void 0;
                 if (stackTraceData.length) {
                     targetBlockScope = NodeAppender_1.NodeAppender.getOptimalBlockScope(stackTraceData, randomStackTraceIndex, 1);
@@ -4018,12 +4018,12 @@ var DomainLockCustomNodeGroup = function (_AbstractCustomNodeGr) {
                 return;
             }
             var callsControllerFunctionName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6);
-            var domainLockNode = this.customNodeFactory(CustomNodes_1.CustomNodes.DomainLockNode);
-            var nodeCallsControllerFunctionNode = this.customNodeFactory(CustomNodes_1.CustomNodes.NodeCallsControllerFunctionNode);
+            var domainLockNode = this.customNodeFactory(CustomNode_1.CustomNode.DomainLockNode);
+            var nodeCallsControllerFunctionNode = this.customNodeFactory(CustomNode_1.CustomNode.NodeCallsControllerFunctionNode);
             domainLockNode.initialize(callsControllerFunctionName);
             nodeCallsControllerFunctionNode.initialize(this.appendEvent, callsControllerFunctionName);
-            this.customNodes.set(CustomNodes_1.CustomNodes.DomainLockNode, domainLockNode);
-            this.customNodes.set(CustomNodes_1.CustomNodes.NodeCallsControllerFunctionNode, nodeCallsControllerFunctionNode);
+            this.customNodes.set(CustomNode_1.CustomNode.DomainLockNode, domainLockNode);
+            this.customNodes.set(CustomNode_1.CustomNode.NodeCallsControllerFunctionNode, nodeCallsControllerFunctionNode);
         }
     }]);
 
@@ -4053,7 +4053,7 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var format = __webpack_require__(13);
-var ObfuscationEvents_1 = __webpack_require__(15);
+var ObfuscationEvent_1 = __webpack_require__(15);
 var Initializable_1 = __webpack_require__(5);
 var SingleNodeCallControllerTemplate_1 = __webpack_require__(126);
 var NoCustomNodes_1 = __webpack_require__(23);
@@ -4083,7 +4083,7 @@ var NodeCallsControllerFunctionNode = function (_AbstractCustomNode_) {
     }, {
         key: "getTemplate",
         value: function getTemplate() {
-            if (this.appendEvent === ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation) {
+            if (this.appendEvent === ObfuscationEvent_1.ObfuscationEvent.AfterObfuscation) {
                 return JavaScriptObfuscator_1.JavaScriptObfuscator.obfuscate(format(SingleNodeCallControllerTemplate_1.SingleNodeCallControllerTemplate(), {
                     singleNodeCallControllerFunctionName: this.callsControllerFunctionName
                 }), Object.assign({}, NoCustomNodes_1.NO_CUSTOM_NODES_PRESET, { seed: this.options.seed })).getObfuscatedCode();
@@ -4183,8 +4183,8 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var Initializable_1 = __webpack_require__(5);
-var CustomNodes_1 = __webpack_require__(10);
-var ObfuscationEvents_1 = __webpack_require__(15);
+var CustomNode_1 = __webpack_require__(10);
+var ObfuscationEvent_1 = __webpack_require__(15);
 var AbstractCustomNodeGroup_1 = __webpack_require__(20);
 var NodeAppender_1 = __webpack_require__(19);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
@@ -4196,7 +4196,7 @@ var SelfDefendingCustomNodeGroup = function (_AbstractCustomNodeGr) {
 
         var _this = _possibleConstructorReturn(this, (SelfDefendingCustomNodeGroup.__proto__ || Object.getPrototypeOf(SelfDefendingCustomNodeGroup)).call(this, options));
 
-        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation;
+        _this.appendEvent = ObfuscationEvent_1.ObfuscationEvent.AfterObfuscation;
         _this.customNodeFactory = customNodeFactory;
         _this.obfuscationEventEmitter = obfuscationEventEmitter;
         return _this;
@@ -4206,10 +4206,10 @@ var SelfDefendingCustomNodeGroup = function (_AbstractCustomNodeGr) {
         key: "appendCustomNodes",
         value: function appendCustomNodes(blockScopeNode, stackTraceData) {
             var randomStackTraceIndex = NodeAppender_1.NodeAppender.getRandomStackTraceIndex(stackTraceData.length);
-            this.appendCustomNodeIfExist(CustomNodes_1.CustomNodes.SelfDefendingUnicodeNode, function (customNode) {
+            this.appendCustomNodeIfExist(CustomNode_1.CustomNode.SelfDefendingUnicodeNode, function (customNode) {
                 NodeAppender_1.NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, blockScopeNode, customNode.getNode(), randomStackTraceIndex);
             });
-            this.appendCustomNodeIfExist(CustomNodes_1.CustomNodes.NodeCallsControllerFunctionNode, function (customNode) {
+            this.appendCustomNodeIfExist(CustomNode_1.CustomNode.NodeCallsControllerFunctionNode, function (customNode) {
                 var targetBlockScope = void 0;
                 if (stackTraceData.length) {
                     targetBlockScope = NodeAppender_1.NodeAppender.getOptimalBlockScope(stackTraceData, randomStackTraceIndex, 1);
@@ -4227,12 +4227,12 @@ var SelfDefendingCustomNodeGroup = function (_AbstractCustomNodeGr) {
                 return;
             }
             var callsControllerFunctionName = RandomGeneratorUtils_1.RandomGeneratorUtils.getRandomVariableName(6);
-            var selfDefendingUnicodeNode = this.customNodeFactory(CustomNodes_1.CustomNodes.SelfDefendingUnicodeNode);
-            var nodeCallsControllerFunctionNode = this.customNodeFactory(CustomNodes_1.CustomNodes.NodeCallsControllerFunctionNode);
+            var selfDefendingUnicodeNode = this.customNodeFactory(CustomNode_1.CustomNode.SelfDefendingUnicodeNode);
+            var nodeCallsControllerFunctionNode = this.customNodeFactory(CustomNode_1.CustomNode.NodeCallsControllerFunctionNode);
             selfDefendingUnicodeNode.initialize(callsControllerFunctionName);
             nodeCallsControllerFunctionNode.initialize(this.appendEvent, callsControllerFunctionName);
-            this.customNodes.set(CustomNodes_1.CustomNodes.SelfDefendingUnicodeNode, selfDefendingUnicodeNode);
-            this.customNodes.set(CustomNodes_1.CustomNodes.NodeCallsControllerFunctionNode, nodeCallsControllerFunctionNode);
+            this.customNodes.set(CustomNode_1.CustomNode.SelfDefendingUnicodeNode, selfDefendingUnicodeNode);
+            this.customNodes.set(CustomNode_1.CustomNode.NodeCallsControllerFunctionNode, nodeCallsControllerFunctionNode);
         }
     }]);
 
@@ -4518,8 +4518,8 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var Initializable_1 = __webpack_require__(5);
-var CustomNodes_1 = __webpack_require__(10);
-var ObfuscationEvents_1 = __webpack_require__(15);
+var CustomNode_1 = __webpack_require__(10);
+var ObfuscationEvent_1 = __webpack_require__(15);
 var AbstractCustomNodeGroup_1 = __webpack_require__(20);
 var NodeAppender_1 = __webpack_require__(19);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
@@ -4532,7 +4532,7 @@ var StringArrayCustomNodeGroup = function (_AbstractCustomNodeGr) {
 
         var _this = _possibleConstructorReturn(this, (StringArrayCustomNodeGroup.__proto__ || Object.getPrototypeOf(StringArrayCustomNodeGroup)).call(this, options));
 
-        _this.appendEvent = ObfuscationEvents_1.ObfuscationEvents.AfterObfuscation;
+        _this.appendEvent = ObfuscationEvent_1.ObfuscationEvent.AfterObfuscation;
         _this.customNodeFactory = customNodeFactory;
         _this.obfuscationEventEmitter = obfuscationEventEmitter;
         _this.stringArrayStorage = stringArrayStorage;
@@ -4545,13 +4545,13 @@ var StringArrayCustomNodeGroup = function (_AbstractCustomNodeGr) {
             if (!this.stringArrayStorage.getLength()) {
                 return;
             }
-            this.appendCustomNodeIfExist(CustomNodes_1.CustomNodes.StringArrayNode, function (customNode) {
+            this.appendCustomNodeIfExist(CustomNode_1.CustomNode.StringArrayNode, function (customNode) {
                 NodeAppender_1.NodeAppender.prependNode(blockScopeNode, customNode.getNode());
             });
-            this.appendCustomNodeIfExist(CustomNodes_1.CustomNodes.StringArrayCallsWrapper, function (customNode) {
+            this.appendCustomNodeIfExist(CustomNode_1.CustomNode.StringArrayCallsWrapper, function (customNode) {
                 NodeAppender_1.NodeAppender.insertNodeAtIndex(blockScopeNode, customNode.getNode(), 1);
             });
-            this.appendCustomNodeIfExist(CustomNodes_1.CustomNodes.StringArrayRotateFunctionNode, function (customNode) {
+            this.appendCustomNodeIfExist(CustomNode_1.CustomNode.StringArrayRotateFunctionNode, function (customNode) {
                 NodeAppender_1.NodeAppender.insertNodeAtIndex(blockScopeNode, customNode.getNode(), 1);
             });
         }
@@ -4562,9 +4562,9 @@ var StringArrayCustomNodeGroup = function (_AbstractCustomNodeGr) {
             if (!this.options.stringArray) {
                 return;
             }
-            var stringArrayNode = this.customNodeFactory(CustomNodes_1.CustomNodes.StringArrayNode);
-            var stringArrayCallsWrapper = this.customNodeFactory(CustomNodes_1.CustomNodes.StringArrayCallsWrapper);
-            var stringArrayRotateFunctionNode = this.customNodeFactory(CustomNodes_1.CustomNodes.StringArrayRotateFunctionNode);
+            var stringArrayNode = this.customNodeFactory(CustomNode_1.CustomNode.StringArrayNode);
+            var stringArrayCallsWrapper = this.customNodeFactory(CustomNode_1.CustomNode.StringArrayCallsWrapper);
+            var stringArrayRotateFunctionNode = this.customNodeFactory(CustomNode_1.CustomNode.StringArrayRotateFunctionNode);
             var stringArrayStorageId = this.stringArrayStorage.getStorageId();
             var stringArrayName = "_" + Utils_1.Utils.hexadecimalPrefix + stringArrayStorageId;
             var stringArrayCallsWrapperName = "_" + Utils_1.Utils.hexadecimalPrefix + Utils_1.Utils.stringRotate(stringArrayStorageId, 1);
@@ -4577,10 +4577,10 @@ var StringArrayCustomNodeGroup = function (_AbstractCustomNodeGr) {
             stringArrayNode.initialize(this.stringArrayStorage, stringArrayName, stringArrayRotateValue);
             stringArrayCallsWrapper.initialize(this.stringArrayStorage, stringArrayName, stringArrayCallsWrapperName);
             stringArrayRotateFunctionNode.initialize(this.stringArrayStorage, stringArrayName, stringArrayRotateValue);
-            this.customNodes.set(CustomNodes_1.CustomNodes.StringArrayNode, stringArrayNode);
-            this.customNodes.set(CustomNodes_1.CustomNodes.StringArrayCallsWrapper, stringArrayCallsWrapper);
+            this.customNodes.set(CustomNode_1.CustomNode.StringArrayNode, stringArrayNode);
+            this.customNodes.set(CustomNode_1.CustomNode.StringArrayCallsWrapper, stringArrayCallsWrapper);
             if (this.options.rotateStringArray) {
-                this.customNodes.set(CustomNodes_1.CustomNodes.StringArrayRotateFunctionNode, stringArrayRotateFunctionNode);
+                this.customNodes.set(CustomNode_1.CustomNode.StringArrayRotateFunctionNode, stringArrayRotateFunctionNode);
             }
         }
     }]);
@@ -4722,7 +4722,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var CustomNodes_1 = __webpack_require__(10);
+var CustomNode_1 = __webpack_require__(10);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(6);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
@@ -4767,7 +4767,7 @@ var BlockStatementControlFlowTransformer = BlockStatementControlFlowTransformer_
             var originalKeysIndexesInShuffledArray = originalKeys.map(function (key) {
                 return shuffledKeys.indexOf(key);
             });
-            var blockStatementControlFlowFlatteningCustomNode = this.customNodeFactory(CustomNodes_1.CustomNodes.BlockStatementControlFlowFlatteningNode);
+            var blockStatementControlFlowFlatteningCustomNode = this.customNodeFactory(CustomNode_1.CustomNode.BlockStatementControlFlowFlatteningNode);
             blockStatementControlFlowFlatteningCustomNode.initialize(blockStatementBody, shuffledKeys, originalKeysIndexesInShuffledArray);
             return blockStatementControlFlowFlatteningCustomNode.getNode()[0];
         }
@@ -4808,12 +4808,12 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(12);
-var CustomNodes_1 = __webpack_require__(10);
+var CustomNode_1 = __webpack_require__(10);
 var NodeType_1 = __webpack_require__(14);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(6);
 var NodeAppender_1 = __webpack_require__(19);
-var ControlFlowReplacers_1 = __webpack_require__(31);
+var ControlFlowReplacer_1 = __webpack_require__(31);
 var NodeUtils_1 = __webpack_require__(3);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function (_AbstractNodeTransfor) {
@@ -4860,7 +4860,7 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
             if (!controlFlowStorage.getLength()) {
                 return functionNode;
             }
-            var controlFlowStorageCustomNode = this.customNodeFactory(CustomNodes_1.CustomNodes.ControlFlowStorageNode);
+            var controlFlowStorageCustomNode = this.customNodeFactory(CustomNode_1.CustomNode.ControlFlowStorageNode);
             controlFlowStorageCustomNode.initialize(controlFlowStorage);
             NodeAppender_1.NodeAppender.prependNode(hostNode, controlFlowStorageCustomNode.getNode());
             this.hostNodesWithControlFlowNode.add(hostNode);
@@ -4929,7 +4929,7 @@ var FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = function
 
     return FunctionControlFlowTransformer;
 }(AbstractNodeTransformer_1.AbstractNodeTransformer);
-FunctionControlFlowTransformer.controlFlowReplacersMap = new Map([[NodeType_1.NodeType.BinaryExpression, ControlFlowReplacers_1.ControlFlowReplacers.BinaryExpressionControlFlowReplacer], [NodeType_1.NodeType.CallExpression, ControlFlowReplacers_1.ControlFlowReplacers.CallExpressionControlFlowReplacer], [NodeType_1.NodeType.LogicalExpression, ControlFlowReplacers_1.ControlFlowReplacers.LogicalExpressionControlFlowReplacer], [NodeType_1.NodeType.Literal, ControlFlowReplacers_1.ControlFlowReplacers.StringLiteralControlFlowReplacer]]);
+FunctionControlFlowTransformer.controlFlowReplacersMap = new Map([[NodeType_1.NodeType.BinaryExpression, ControlFlowReplacer_1.ControlFlowReplacer.BinaryExpressionControlFlowReplacer], [NodeType_1.NodeType.CallExpression, ControlFlowReplacer_1.ControlFlowReplacer.CallExpressionControlFlowReplacer], [NodeType_1.NodeType.LogicalExpression, ControlFlowReplacer_1.ControlFlowReplacer.LogicalExpressionControlFlowReplacer], [NodeType_1.NodeType.Literal, ControlFlowReplacer_1.ControlFlowReplacer.StringLiteralControlFlowReplacer]]);
 FunctionControlFlowTransformer.hostNodeSearchMinDepth = 0;
 FunctionControlFlowTransformer.hostNodeSearchMaxDepth = 2;
 FunctionControlFlowTransformer = FunctionControlFlowTransformer_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__TControlFlowStorage)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__IControlFlowReplacer)), tslib_1.__param(2, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomNode)), tslib_1.__param(3, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Function, Function, Object])], FunctionControlFlowTransformer);
@@ -4955,7 +4955,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var CustomNodes_1 = __webpack_require__(10);
+var CustomNode_1 = __webpack_require__(10);
 var ExpressionWithOperatorControlFlowReplacer_1 = __webpack_require__(35);
 var BinaryExpressionControlFlowReplacer = BinaryExpressionControlFlowReplacer_1 = function (_ExpressionWithOperat) {
     _inherits(BinaryExpressionControlFlowReplacer, _ExpressionWithOperat);
@@ -4970,7 +4970,7 @@ var BinaryExpressionControlFlowReplacer = BinaryExpressionControlFlowReplacer_1 
         key: "replace",
         value: function replace(binaryExpressionNode, parentNode, controlFlowStorage) {
             var replacerId = binaryExpressionNode.operator;
-            var binaryExpressionFunctionCustomNode = this.customNodeFactory(CustomNodes_1.CustomNodes.BinaryExpressionFunctionNode);
+            var binaryExpressionFunctionCustomNode = this.customNodeFactory(CustomNode_1.CustomNode.BinaryExpressionFunctionNode);
             binaryExpressionFunctionCustomNode.initialize(replacerId);
             var storageKey = this.insertCustomNodeToControlFlowStorage(binaryExpressionFunctionCustomNode, controlFlowStorage, replacerId, BinaryExpressionControlFlowReplacer_1.usingExistingIdentifierChance);
             return this.getControlFlowStorageCallNode(controlFlowStorage.getStorageId(), storageKey, binaryExpressionNode.left, binaryExpressionNode.right);
@@ -5003,7 +5003,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var CustomNodes_1 = __webpack_require__(10);
+var CustomNode_1 = __webpack_require__(10);
 var AbstractControlFlowReplacer_1 = __webpack_require__(25);
 var Node_1 = __webpack_require__(6);
 var CallExpressionControlFlowReplacer = CallExpressionControlFlowReplacer_1 = function (_AbstractControlFlowR) {
@@ -5023,7 +5023,7 @@ var CallExpressionControlFlowReplacer = CallExpressionControlFlowReplacer_1 = fu
                 return callExpressionNode;
             }
             var replacerId = String(callExpressionNode.arguments.length);
-            var callExpressionFunctionCustomNode = this.customNodeFactory(CustomNodes_1.CustomNodes.CallExpressionFunctionNode);
+            var callExpressionFunctionCustomNode = this.customNodeFactory(CustomNode_1.CustomNode.CallExpressionFunctionNode);
             var expressionArguments = callExpressionNode.arguments;
             callExpressionFunctionCustomNode.initialize(expressionArguments);
             var storageKey = this.insertCustomNodeToControlFlowStorage(callExpressionFunctionCustomNode, controlFlowStorage, replacerId, CallExpressionControlFlowReplacer_1.usingExistingIdentifierChance);
@@ -5032,7 +5032,7 @@ var CallExpressionControlFlowReplacer = CallExpressionControlFlowReplacer_1 = fu
     }, {
         key: "getControlFlowStorageCallNode",
         value: function getControlFlowStorageCallNode(controlFlowStorageId, storageKey, callee, expressionArguments) {
-            var controlFlowStorageCallCustomNode = this.customNodeFactory(CustomNodes_1.CustomNodes.CallExpressionControlFlowStorageCallNode);
+            var controlFlowStorageCallCustomNode = this.customNodeFactory(CustomNode_1.CustomNode.CallExpressionControlFlowStorageCallNode);
             controlFlowStorageCallCustomNode.initialize(controlFlowStorageId, storageKey, callee, expressionArguments);
             var statementNode = controlFlowStorageCallCustomNode.getNode()[0];
             if (!statementNode || !Node_1.Node.isExpressionStatementNode(statementNode)) {
@@ -5068,7 +5068,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var CustomNodes_1 = __webpack_require__(10);
+var CustomNode_1 = __webpack_require__(10);
 var ExpressionWithOperatorControlFlowReplacer_1 = __webpack_require__(35);
 var Node_1 = __webpack_require__(6);
 var NodeUtils_1 = __webpack_require__(3);
@@ -5088,7 +5088,7 @@ var LogicalExpressionControlFlowReplacer = LogicalExpressionControlFlowReplacer_
                 return logicalExpressionNode;
             }
             var replacerId = logicalExpressionNode.operator;
-            var logicalExpressionFunctionCustomNode = this.customNodeFactory(CustomNodes_1.CustomNodes.LogicalExpressionFunctionNode);
+            var logicalExpressionFunctionCustomNode = this.customNodeFactory(CustomNode_1.CustomNode.LogicalExpressionFunctionNode);
             logicalExpressionFunctionCustomNode.initialize(replacerId);
             var storageKey = this.insertCustomNodeToControlFlowStorage(logicalExpressionFunctionCustomNode, controlFlowStorage, replacerId, LogicalExpressionControlFlowReplacer_1.usingExistingIdentifierChance);
             return this.getControlFlowStorageCallNode(controlFlowStorage.getStorageId(), storageKey, logicalExpressionNode.left, logicalExpressionNode.right);
@@ -5134,7 +5134,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var CustomNodes_1 = __webpack_require__(10);
+var CustomNode_1 = __webpack_require__(10);
 var AbstractControlFlowReplacer_1 = __webpack_require__(25);
 var Node_1 = __webpack_require__(6);
 var StringLiteralControlFlowReplacer = StringLiteralControlFlowReplacer_1 = function (_AbstractControlFlowR) {
@@ -5156,7 +5156,7 @@ var StringLiteralControlFlowReplacer = StringLiteralControlFlowReplacer_1 = func
                 return literalNode;
             }
             var replacerId = String(literalNode.value);
-            var literalFunctionCustomNode = this.customNodeFactory(CustomNodes_1.CustomNodes.StringLiteralNode);
+            var literalFunctionCustomNode = this.customNodeFactory(CustomNode_1.CustomNode.StringLiteralNode);
             literalFunctionCustomNode.initialize(literalNode.value);
             var storageKey = this.insertCustomNodeToControlFlowStorage(literalFunctionCustomNode, controlFlowStorage, replacerId, StringLiteralControlFlowReplacer_1.usingExistingIdentifierChance);
             return this.getControlFlowStorageCallNode(controlFlowStorage.getStorageId(), storageKey);
@@ -5164,7 +5164,7 @@ var StringLiteralControlFlowReplacer = StringLiteralControlFlowReplacer_1 = func
     }, {
         key: "getControlFlowStorageCallNode",
         value: function getControlFlowStorageCallNode(controlFlowStorageId, storageKey) {
-            var controlFlowStorageCallCustomNode = this.customNodeFactory(CustomNodes_1.CustomNodes.StringLiteralControlFlowStorageCallNode);
+            var controlFlowStorageCallCustomNode = this.customNodeFactory(CustomNode_1.CustomNode.StringLiteralControlFlowStorageCallNode);
             controlFlowStorageCallCustomNode.initialize(controlFlowStorageId, storageKey);
             var statementNode = controlFlowStorageCallCustomNode.getNode()[0];
             if (!statementNode || !Node_1.Node.isExpressionStatementNode(statementNode)) {
@@ -5565,7 +5565,7 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(12);
-var IdentifierObfuscatingReplacers_1 = __webpack_require__(18);
+var IdentifierObfuscatingReplacer_1 = __webpack_require__(18);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(6);
 var CatchClauseTransformer = function (_AbstractNodeTransfor) {
@@ -5576,7 +5576,7 @@ var CatchClauseTransformer = function (_AbstractNodeTransfor) {
 
         var _this = _possibleConstructorReturn(this, (CatchClauseTransformer.__proto__ || Object.getPrototypeOf(CatchClauseTransformer)).call(this, options));
 
-        _this.identifierObfuscatingReplacer = identifierObfuscatingReplacerFactory(IdentifierObfuscatingReplacers_1.IdentifierObfuscatingReplacers.IdentifierObfuscatingReplacer);
+        _this.identifierObfuscatingReplacer = identifierObfuscatingReplacerFactory(IdentifierObfuscatingReplacer_1.IdentifierObfuscatingReplacer.BaseIdentifierObfuscatingReplacer);
         return _this;
     }
 
@@ -5653,7 +5653,7 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(12);
-var IdentifierObfuscatingReplacers_1 = __webpack_require__(18);
+var IdentifierObfuscatingReplacer_1 = __webpack_require__(18);
 var NodeType_1 = __webpack_require__(14);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(6);
@@ -5667,7 +5667,7 @@ var FunctionDeclarationTransformer = function (_AbstractNodeTransfor) {
         var _this = _possibleConstructorReturn(this, (FunctionDeclarationTransformer.__proto__ || Object.getPrototypeOf(FunctionDeclarationTransformer)).call(this, options));
 
         _this.replaceableIdentifiers = new Map();
-        _this.identifierObfuscatingReplacer = identifierObfuscatingReplacerFactory(IdentifierObfuscatingReplacers_1.IdentifierObfuscatingReplacers.IdentifierObfuscatingReplacer);
+        _this.identifierObfuscatingReplacer = identifierObfuscatingReplacerFactory(IdentifierObfuscatingReplacer_1.IdentifierObfuscatingReplacer.BaseIdentifierObfuscatingReplacer);
         return _this;
     }
 
@@ -5764,7 +5764,7 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(12);
-var IdentifierObfuscatingReplacers_1 = __webpack_require__(18);
+var IdentifierObfuscatingReplacer_1 = __webpack_require__(18);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(6);
 var FunctionTransformer = function (_AbstractNodeTransfor) {
@@ -5775,7 +5775,7 @@ var FunctionTransformer = function (_AbstractNodeTransfor) {
 
         var _this = _possibleConstructorReturn(this, (FunctionTransformer.__proto__ || Object.getPrototypeOf(FunctionTransformer)).call(this, options));
 
-        _this.identifierObfuscatingReplacer = identifierObfuscatingReplacerFactory(IdentifierObfuscatingReplacers_1.IdentifierObfuscatingReplacers.IdentifierObfuscatingReplacer);
+        _this.identifierObfuscatingReplacer = identifierObfuscatingReplacerFactory(IdentifierObfuscatingReplacer_1.IdentifierObfuscatingReplacer.BaseIdentifierObfuscatingReplacer);
         return _this;
     }
 
@@ -5871,7 +5871,7 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(12);
-var IdentifierObfuscatingReplacers_1 = __webpack_require__(18);
+var IdentifierObfuscatingReplacer_1 = __webpack_require__(18);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(6);
 var LabeledStatementTransformer = function (_AbstractNodeTransfor) {
@@ -5882,7 +5882,7 @@ var LabeledStatementTransformer = function (_AbstractNodeTransfor) {
 
         var _this = _possibleConstructorReturn(this, (LabeledStatementTransformer.__proto__ || Object.getPrototypeOf(LabeledStatementTransformer)).call(this, options));
 
-        _this.identifierObfuscatingReplacer = identifierObfuscatingReplacerFactory(IdentifierObfuscatingReplacers_1.IdentifierObfuscatingReplacers.IdentifierObfuscatingReplacer);
+        _this.identifierObfuscatingReplacer = identifierObfuscatingReplacerFactory(IdentifierObfuscatingReplacer_1.IdentifierObfuscatingReplacer.BaseIdentifierObfuscatingReplacer);
         return _this;
     }
 
@@ -5954,7 +5954,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var LiteralObfuscatingReplacers_1 = __webpack_require__(32);
+var LiteralObfuscatingReplacer_1 = __webpack_require__(32);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(6);
 var LiteralTransformer = function (_AbstractNodeTransfor) {
@@ -5990,11 +5990,11 @@ var LiteralTransformer = function (_AbstractNodeTransfor) {
             }
             switch (_typeof(literalNode.value)) {
                 case 'boolean':
-                    return this.literalObfuscatingReplacerFactory(LiteralObfuscatingReplacers_1.LiteralObfuscatingReplacers.BooleanLiteralObfuscatingReplacer).replace(literalNode.value);
+                    return this.literalObfuscatingReplacerFactory(LiteralObfuscatingReplacer_1.LiteralObfuscatingReplacer.BooleanLiteralObfuscatingReplacer).replace(literalNode.value);
                 case 'number':
-                    return this.literalObfuscatingReplacerFactory(LiteralObfuscatingReplacers_1.LiteralObfuscatingReplacers.NumberLiteralObfuscatingReplacer).replace(literalNode.value);
+                    return this.literalObfuscatingReplacerFactory(LiteralObfuscatingReplacer_1.LiteralObfuscatingReplacer.NumberLiteralObfuscatingReplacer).replace(literalNode.value);
                 case 'string':
-                    return this.literalObfuscatingReplacerFactory(LiteralObfuscatingReplacers_1.LiteralObfuscatingReplacers.StringLiteralObfuscatingReplacer).replace(literalNode.value);
+                    return this.literalObfuscatingReplacerFactory(LiteralObfuscatingReplacer_1.LiteralObfuscatingReplacer.StringLiteralObfuscatingReplacer).replace(literalNode.value);
                 default:
                     return literalNode;
             }
@@ -6100,7 +6100,7 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(12);
-var IdentifierObfuscatingReplacers_1 = __webpack_require__(18);
+var IdentifierObfuscatingReplacer_1 = __webpack_require__(18);
 var NodeType_1 = __webpack_require__(14);
 var AbstractNodeTransformer_1 = __webpack_require__(11);
 var Node_1 = __webpack_require__(6);
@@ -6114,7 +6114,7 @@ var VariableDeclarationTransformer = function (_AbstractNodeTransfor) {
         var _this = _possibleConstructorReturn(this, (VariableDeclarationTransformer.__proto__ || Object.getPrototypeOf(VariableDeclarationTransformer)).call(this, options));
 
         _this.replaceableIdentifiers = new Map();
-        _this.identifierObfuscatingReplacer = identifierObfuscatingReplacerFactory(IdentifierObfuscatingReplacers_1.IdentifierObfuscatingReplacers.IdentifierObfuscatingReplacer);
+        _this.identifierObfuscatingReplacer = identifierObfuscatingReplacerFactory(IdentifierObfuscatingReplacer_1.IdentifierObfuscatingReplacer.BaseIdentifierObfuscatingReplacer);
         return _this;
     }
 
@@ -6225,19 +6225,19 @@ var ServiceIdentifiers_1 = __webpack_require__(2);
 var AbstractObfuscatingReplacer_1 = __webpack_require__(22);
 var Nodes_1 = __webpack_require__(8);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
-var IdentifierObfuscatingReplacer = function (_AbstractObfuscatingR) {
-    _inherits(IdentifierObfuscatingReplacer, _AbstractObfuscatingR);
+var BaseIdentifierObfuscatingReplacer = function (_AbstractObfuscatingR) {
+    _inherits(BaseIdentifierObfuscatingReplacer, _AbstractObfuscatingR);
 
-    function IdentifierObfuscatingReplacer(options) {
-        _classCallCheck(this, IdentifierObfuscatingReplacer);
+    function BaseIdentifierObfuscatingReplacer(options) {
+        _classCallCheck(this, BaseIdentifierObfuscatingReplacer);
 
-        var _this = _possibleConstructorReturn(this, (IdentifierObfuscatingReplacer.__proto__ || Object.getPrototypeOf(IdentifierObfuscatingReplacer)).call(this, options));
+        var _this = _possibleConstructorReturn(this, (BaseIdentifierObfuscatingReplacer.__proto__ || Object.getPrototypeOf(BaseIdentifierObfuscatingReplacer)).call(this, options));
 
         _this.namesMap = new Map();
         return _this;
     }
 
-    _createClass(IdentifierObfuscatingReplacer, [{
+    _createClass(BaseIdentifierObfuscatingReplacer, [{
         key: "replace",
         value: function replace(nodeValue, nodeIdentifier) {
             var mapKey = nodeValue + "-" + String(nodeIdentifier);
@@ -6262,10 +6262,10 @@ var IdentifierObfuscatingReplacer = function (_AbstractObfuscatingR) {
         }
     }]);
 
-    return IdentifierObfuscatingReplacer;
+    return BaseIdentifierObfuscatingReplacer;
 }(AbstractObfuscatingReplacer_1.AbstractObfuscatingReplacer);
-IdentifierObfuscatingReplacer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object])], IdentifierObfuscatingReplacer);
-exports.IdentifierObfuscatingReplacer = IdentifierObfuscatingReplacer;
+BaseIdentifierObfuscatingReplacer = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Object])], BaseIdentifierObfuscatingReplacer);
+exports.BaseIdentifierObfuscatingReplacer = BaseIdentifierObfuscatingReplacer;
 
 /***/ }),
 /* 100 */
@@ -6956,7 +6956,7 @@ var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
 var estraverse = __webpack_require__(12);
-var CalleeDataExtractors_1 = __webpack_require__(34);
+var CalleeDataExtractor_1 = __webpack_require__(34);
 var Node_1 = __webpack_require__(6);
 var NodeUtils_1 = __webpack_require__(3);
 var StackTraceAnalyzer = StackTraceAnalyzer_1 = function () {
@@ -7036,7 +7036,7 @@ var StackTraceAnalyzer = StackTraceAnalyzer_1 = function () {
 
     return StackTraceAnalyzer;
 }();
-StackTraceAnalyzer.calleeDataExtractorsList = [CalleeDataExtractors_1.CalleeDataExtractors.FunctionDeclarationCalleeDataExtractor, CalleeDataExtractors_1.CalleeDataExtractors.FunctionExpressionCalleeDataExtractor, CalleeDataExtractors_1.CalleeDataExtractors.ObjectExpressionCalleeDataExtractor];
+StackTraceAnalyzer.calleeDataExtractorsList = [CalleeDataExtractor_1.CalleeDataExtractor.FunctionDeclarationCalleeDataExtractor, CalleeDataExtractor_1.CalleeDataExtractor.FunctionExpressionCalleeDataExtractor, CalleeDataExtractor_1.CalleeDataExtractor.ObjectExpressionCalleeDataExtractor];
 StackTraceAnalyzer.limitThresholdActivationLength = 25;
 StackTraceAnalyzer.limitThreshold = 0.002;
 StackTraceAnalyzer = StackTraceAnalyzer_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICalleeDataExtractor)), tslib_1.__metadata("design:paramtypes", [Function])], StackTraceAnalyzer);
@@ -7077,10 +7077,10 @@ var FunctionDeclarationCalleeDataExtractor = function (_AbstractCalleeDataEx) {
     _createClass(FunctionDeclarationCalleeDataExtractor, [{
         key: "extract",
         value: function extract(blockScopeBody, callee) {
-            var calleeBlockStatement = null;
-            if (Node_1.Node.isIdentifierNode(callee)) {
-                calleeBlockStatement = this.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0], callee.name);
+            if (!Node_1.Node.isIdentifierNode(callee)) {
+                return null;
             }
+            var calleeBlockStatement = this.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0], callee.name);
             if (!calleeBlockStatement) {
                 return null;
             }
@@ -7214,16 +7214,15 @@ var ObjectExpressionCalleeDataExtractor = function (_AbstractCalleeDataEx) {
     _createClass(ObjectExpressionCalleeDataExtractor, [{
         key: "extract",
         value: function extract(blockScopeBody, callee) {
-            var calleeBlockStatement = null,
-                functionExpressionName = null;
-            if (Node_1.Node.isMemberExpressionNode(callee)) {
-                var objectMembersCallsChain = this.createObjectMembersCallsChain([], callee);
-                if (!objectMembersCallsChain.length) {
-                    return null;
-                }
-                functionExpressionName = objectMembersCallsChain[objectMembersCallsChain.length - 1];
-                calleeBlockStatement = this.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0], objectMembersCallsChain);
+            if (!Node_1.Node.isMemberExpressionNode(callee)) {
+                return null;
             }
+            var objectMembersCallsChain = this.createObjectMembersCallsChain([], callee);
+            if (!objectMembersCallsChain.length) {
+                return null;
+            }
+            var functionExpressionName = objectMembersCallsChain[objectMembersCallsChain.length - 1];
+            var calleeBlockStatement = this.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0], objectMembersCallsChain);
             if (!calleeBlockStatement) {
                 return null;
             }
@@ -7462,7 +7461,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(1);
 var inversify_1 = __webpack_require__(0);
 var ServiceIdentifiers_1 = __webpack_require__(2);
-var CustomNodeGroups_1 = __webpack_require__(30);
+var CustomNodeGroup_1 = __webpack_require__(30);
 var MapStorage_1 = __webpack_require__(36);
 var RandomGeneratorUtils_1 = __webpack_require__(4);
 var CustomNodeGroupStorage = CustomNodeGroupStorage_1 = function (_MapStorage_1$MapStor) {
@@ -7498,7 +7497,7 @@ var CustomNodeGroupStorage = CustomNodeGroupStorage_1 = function (_MapStorage_1$
 
     return CustomNodeGroupStorage;
 }(MapStorage_1.MapStorage);
-CustomNodeGroupStorage.customNodeGroupsList = [CustomNodeGroups_1.CustomNodeGroups.ConsoleOutputCustomNodeGroup, CustomNodeGroups_1.CustomNodeGroups.DebugProtectionCustomNodeGroup, CustomNodeGroups_1.CustomNodeGroups.DomainLockCustomNodeGroup, CustomNodeGroups_1.CustomNodeGroups.SelfDefendingCustomNodeGroup, CustomNodeGroups_1.CustomNodeGroups.StringArrayCustomNodeGroup];
+CustomNodeGroupStorage.customNodeGroupsList = [CustomNodeGroup_1.CustomNodeGroup.ConsoleOutputCustomNodeGroup, CustomNodeGroup_1.CustomNodeGroup.DebugProtectionCustomNodeGroup, CustomNodeGroup_1.CustomNodeGroup.DomainLockCustomNodeGroup, CustomNodeGroup_1.CustomNodeGroup.SelfDefendingCustomNodeGroup, CustomNodeGroup_1.CustomNodeGroup.StringArrayCustomNodeGroup];
 CustomNodeGroupStorage = CustomNodeGroupStorage_1 = tslib_1.__decorate([inversify_1.injectable(), tslib_1.__param(0, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.Factory__ICustomNodeGroup)), tslib_1.__param(1, inversify_1.inject(ServiceIdentifiers_1.ServiceIdentifiers.IOptions)), tslib_1.__metadata("design:paramtypes", [Function, Object])], CustomNodeGroupStorage);
 exports.CustomNodeGroupStorage = CustomNodeGroupStorage;
 var CustomNodeGroupStorage_1;

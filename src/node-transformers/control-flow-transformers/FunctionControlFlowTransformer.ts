@@ -14,26 +14,26 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IStorage } from '../../interfaces/storages/IStorage';
 import { IVisitor } from '../../interfaces/IVisitor';
 
-import { CustomNodes } from '../../enums/container/custom-nodes/CustomNodes';
+import { CustomNode } from '../../enums/container/custom-nodes/CustomNode';
 import { NodeType } from '../../enums/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
 import { NodeAppender } from '../../node/NodeAppender';
-import { ControlFlowReplacers } from '../../enums/container/node-transformers/ControlFlowReplacers';
+import { ControlFlowReplacer } from '../../enums/container/node-transformers/ControlFlowReplacer';
 import { NodeUtils } from '../../node/NodeUtils';
 import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     /**
-     * @type {Map <string, ControlFlowReplacers>}
+     * @type {Map <string, ControlFlowReplacer>}
      */
-    private static readonly controlFlowReplacersMap: Map <string, ControlFlowReplacers> = new Map([
-        [NodeType.BinaryExpression, ControlFlowReplacers.BinaryExpressionControlFlowReplacer],
-        [NodeType.CallExpression, ControlFlowReplacers.CallExpressionControlFlowReplacer],
-        [NodeType.LogicalExpression, ControlFlowReplacers.LogicalExpressionControlFlowReplacer],
-        [NodeType.Literal, ControlFlowReplacers.StringLiteralControlFlowReplacer]
+    private static readonly controlFlowReplacersMap: Map <string, ControlFlowReplacer> = new Map([
+        [NodeType.BinaryExpression, ControlFlowReplacer.BinaryExpressionControlFlowReplacer],
+        [NodeType.CallExpression, ControlFlowReplacer.CallExpressionControlFlowReplacer],
+        [NodeType.LogicalExpression, ControlFlowReplacer.LogicalExpressionControlFlowReplacer],
+        [NodeType.Literal, ControlFlowReplacer.StringLiteralControlFlowReplacer]
     ]);
 
     /**
@@ -158,7 +158,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
             return functionNode;
         }
 
-        const controlFlowStorageCustomNode: ICustomNode = this.customNodeFactory(CustomNodes.ControlFlowStorageNode);
+        const controlFlowStorageCustomNode: ICustomNode = this.customNodeFactory(CustomNode.ControlFlowStorageNode);
 
         controlFlowStorageCustomNode.initialize(controlFlowStorage);
         NodeAppender.prependNode(hostNode, controlFlowStorageCustomNode.getNode());
@@ -218,7 +218,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
                     return node;
                 }
 
-                const controlFlowReplacerName: ControlFlowReplacers = <ControlFlowReplacers>FunctionControlFlowTransformer
+                const controlFlowReplacerName: ControlFlowReplacer = <ControlFlowReplacer>FunctionControlFlowTransformer
                     .controlFlowReplacersMap.get(node.type);
 
                 if (controlFlowReplacerName === undefined) {

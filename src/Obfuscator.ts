@@ -17,8 +17,8 @@ import { IStackTraceData } from './interfaces/stack-trace-analyzer/IStackTraceDa
 import { IStorage } from './interfaces/storages/IStorage';
 import { IVisitor } from './interfaces/IVisitor';
 
-import { NodeTransformers } from './enums/container/node-transformers/NodeTransformers';
-import { ObfuscationEvents } from './enums/event-emitters/ObfuscationEvents';
+import { NodeTransformer } from './enums/container/node-transformers/NodeTransformer';
+import { ObfuscationEvent } from './enums/event-emitters/ObfuscationEvent';
 import { VisitorDirection } from './enums/VisitorDirection';
 
 import { Node } from './node/Node';
@@ -27,40 +27,40 @@ import { NodeUtils } from './node/NodeUtils';
 @injectable()
 export class Obfuscator implements IObfuscator {
     /**
-     * @type {NodeTransformers[]}
+     * @type {NodeTransformer[]}
      */
-    private static readonly controlFlowTransformersList: NodeTransformers[] = [
-        NodeTransformers.BlockStatementControlFlowTransformer,
-        NodeTransformers.FunctionControlFlowTransformer
+    private static readonly controlFlowTransformersList: NodeTransformer[] = [
+        NodeTransformer.BlockStatementControlFlowTransformer,
+        NodeTransformer.FunctionControlFlowTransformer
     ];
 
     /**
-     * @type {NodeTransformers[]}
+     * @type {NodeTransformer[]}
      */
-    private static readonly convertingTransformersList: NodeTransformers[] = [
-        NodeTransformers.MemberExpressionTransformer,
-        NodeTransformers.MethodDefinitionTransformer,
-        NodeTransformers.TemplateLiteralTransformer
+    private static readonly convertingTransformersList: NodeTransformer[] = [
+        NodeTransformer.MemberExpressionTransformer,
+        NodeTransformer.MethodDefinitionTransformer,
+        NodeTransformer.TemplateLiteralTransformer
     ];
 
     /**
-     * @type {NodeTransformers[]}
+     * @type {NodeTransformer[]}
      */
-    private static readonly deadCodeInjectionTransformersList: NodeTransformers[] = [
-        NodeTransformers.DeadCodeInjectionTransformer
+    private static readonly deadCodeInjectionTransformersList: NodeTransformer[] = [
+        NodeTransformer.DeadCodeInjectionTransformer
     ];
 
     /**
-     * @type {NodeTransformers[]}
+     * @type {NodeTransformer[]}
      */
-    private static readonly obfuscatingTransformersList: NodeTransformers[] = [
-        NodeTransformers.CatchClauseTransformer,
-        NodeTransformers.FunctionDeclarationTransformer,
-        NodeTransformers.FunctionTransformer,
-        NodeTransformers.LabeledStatementTransformer,
-        NodeTransformers.LiteralTransformer,
-        NodeTransformers.ObjectExpressionTransformer,
-        NodeTransformers.VariableDeclarationTransformer
+    private static readonly obfuscatingTransformersList: NodeTransformer[] = [
+        NodeTransformer.CatchClauseTransformer,
+        NodeTransformer.FunctionDeclarationTransformer,
+        NodeTransformer.FunctionTransformer,
+        NodeTransformer.LabeledStatementTransformer,
+        NodeTransformer.LiteralTransformer,
+        NodeTransformer.ObjectExpressionTransformer,
+        NodeTransformer.VariableDeclarationTransformer
     ];
 
     /**
@@ -134,7 +134,7 @@ export class Obfuscator implements IObfuscator {
                 );
             });
 
-        this.obfuscationEventEmitter.emit(ObfuscationEvents.BeforeObfuscation, astTree, stackTraceData);
+        this.obfuscationEventEmitter.emit(ObfuscationEvent.BeforeObfuscation, astTree, stackTraceData);
 
         // first pass transformers: dead code injection transformer
         astTree = this.transformAstTree(astTree, [
@@ -152,7 +152,7 @@ export class Obfuscator implements IObfuscator {
             ...Obfuscator.obfuscatingTransformersList
         ]);
 
-        this.obfuscationEventEmitter.emit(ObfuscationEvents.AfterObfuscation, astTree, stackTraceData);
+        this.obfuscationEventEmitter.emit(ObfuscationEvent.AfterObfuscation, astTree, stackTraceData);
 
         return astTree;
     }
@@ -163,7 +163,7 @@ export class Obfuscator implements IObfuscator {
      */
     private transformAstTree (
         astTree: ESTree.Program,
-        nodeTransformers: NodeTransformers[]
+        nodeTransformers: NodeTransformer[]
     ): ESTree.Program {
         if (!nodeTransformers.length) {
             return astTree;

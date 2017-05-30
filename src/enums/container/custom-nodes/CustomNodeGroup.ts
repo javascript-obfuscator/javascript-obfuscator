@@ -1,4 +1,4 @@
-export enum CustomNodeGroups {
+export enum CustomNodeGroup {
     ConsoleOutputCustomNodeGroup,
     DebugProtectionCustomNodeGroup,
     DomainLockCustomNodeGroup,

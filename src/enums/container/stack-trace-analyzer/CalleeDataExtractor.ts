@@ -1,4 +1,4 @@
-export enum CalleeDataExtractors {
+export enum CalleeDataExtractor {
     FunctionDeclarationCalleeDataExtractor,
     FunctionExpressionCalleeDataExtractor,
     ObjectExpressionCalleeDataExtractor,

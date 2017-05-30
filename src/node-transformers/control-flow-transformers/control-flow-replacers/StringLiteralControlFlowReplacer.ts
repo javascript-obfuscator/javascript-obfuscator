@@ -10,7 +10,7 @@ import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
-import { CustomNodes } from '../../../enums/container/custom-nodes/CustomNodes';
+import { CustomNode } from '../../../enums/container/custom-nodes/CustomNode';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
 import { Node } from '../../../node/Node';
@@ -53,7 +53,7 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
         }
 
         const replacerId: string = String(literalNode.value);
-        const literalFunctionCustomNode: ICustomNode = this.customNodeFactory(CustomNodes.StringLiteralNode);
+        const literalFunctionCustomNode: ICustomNode = this.customNodeFactory(CustomNode.StringLiteralNode);
 
         literalFunctionCustomNode.initialize(literalNode.value);
 
@@ -77,7 +77,7 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
         storageKey: string
     ): ESTree.Node {
         const controlFlowStorageCallCustomNode: ICustomNode = this.customNodeFactory(
-            CustomNodes.StringLiteralControlFlowStorageCallNode
+            CustomNode.StringLiteralControlFlowStorageCallNode
         );
 
         controlFlowStorageCallCustomNode.initialize(controlFlowStorageId, storageKey);

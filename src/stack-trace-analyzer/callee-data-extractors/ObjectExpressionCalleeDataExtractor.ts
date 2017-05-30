@@ -19,22 +19,21 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
      * @returns {ICalleeData|null}
      */
     public extract (blockScopeBody: ESTree.Node[], callee: ESTree.MemberExpression): ICalleeData|null {
-        let calleeBlockStatement: ESTree.BlockStatement|null = null,
-            functionExpressionName: string|number|null = null;
-
-        if (Node.isMemberExpressionNode(callee)) {
-            const objectMembersCallsChain: TObjectMembersCallsChain = this.createObjectMembersCallsChain([], callee);
-
-            if (!objectMembersCallsChain.length) {
-                return null;
-            }
-
-            functionExpressionName = objectMembersCallsChain[objectMembersCallsChain.length - 1];
-            calleeBlockStatement = this.getCalleeBlockStatement(
-                NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0],
-                objectMembersCallsChain
-            );
+        if (!Node.isMemberExpressionNode(callee)) {
+            return null;
         }
+
+        const objectMembersCallsChain: TObjectMembersCallsChain = this.createObjectMembersCallsChain([], callee);
+
+        if (!objectMembersCallsChain.length) {
+            return null;
+        }
+
+        const functionExpressionName: string|number|null = objectMembersCallsChain[objectMembersCallsChain.length - 1];
+        const calleeBlockStatement: ESTree.BlockStatement|null = this.getCalleeBlockStatement(
+            NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0],
+            objectMembersCallsChain
+        );
 
         if (!calleeBlockStatement) {
             return null;

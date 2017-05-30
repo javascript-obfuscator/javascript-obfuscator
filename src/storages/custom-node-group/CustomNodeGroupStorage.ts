@@ -6,7 +6,7 @@ import { TCustomNodeGroupFactory } from '../../types/container/custom-nodes/TCus
 import { ICustomNodeGroup } from '../../interfaces/custom-nodes/ICustomNodeGroup';
 import { IOptions } from '../../interfaces/options/IOptions';
 
-import { CustomNodeGroups } from '../../enums/container/custom-nodes/CustomNodeGroups';
+import { CustomNodeGroup } from '../../enums/container/custom-nodes/CustomNodeGroup';
 
 import { MapStorage } from '../MapStorage';
 import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
@@ -14,14 +14,14 @@ import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 @injectable()
 export class CustomNodeGroupStorage extends MapStorage <ICustomNodeGroup> {
     /**
-     * @type {CustomNodeGroups[]}
+     * @type {CustomNodeGroup[]}
      */
-    private static readonly customNodeGroupsList: CustomNodeGroups[] = [
-        CustomNodeGroups.ConsoleOutputCustomNodeGroup,
-        CustomNodeGroups.DebugProtectionCustomNodeGroup,
-        CustomNodeGroups.DomainLockCustomNodeGroup,
-        CustomNodeGroups.SelfDefendingCustomNodeGroup,
-        CustomNodeGroups.StringArrayCustomNodeGroup
+    private static readonly customNodeGroupsList: CustomNodeGroup[] = [
+        CustomNodeGroup.ConsoleOutputCustomNodeGroup,
+        CustomNodeGroup.DebugProtectionCustomNodeGroup,
+        CustomNodeGroup.DomainLockCustomNodeGroup,
+        CustomNodeGroup.SelfDefendingCustomNodeGroup,
+        CustomNodeGroup.StringArrayCustomNodeGroup
     ];
 
     /**
@@ -54,7 +54,7 @@ export class CustomNodeGroupStorage extends MapStorage <ICustomNodeGroup> {
         this.storage = new Map <string, ICustomNodeGroup> ();
         this.storageId = RandomGeneratorUtils.getRandomString(6);
 
-        CustomNodeGroupStorage.customNodeGroupsList.forEach((customNodeGroupName: CustomNodeGroups) => {
+        CustomNodeGroupStorage.customNodeGroupsList.forEach((customNodeGroupName: CustomNodeGroup) => {
             const customNodeGroup: ICustomNodeGroup = this.customNodeGroupFactory(
                 customNodeGroupName
             );

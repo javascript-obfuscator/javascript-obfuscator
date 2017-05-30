@@ -1,6 +1,6 @@
 import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
 
-export const ObfuscationEvents: {
+export const ObfuscationEvent: {
     AfterObfuscation: TObfuscationEvent,
     BeforeObfuscation: TObfuscationEvent
 } = {

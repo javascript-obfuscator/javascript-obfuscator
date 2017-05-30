@@ -10,7 +10,7 @@ import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
-import { CustomNodes } from '../../../enums/container/custom-nodes/CustomNodes';
+import { CustomNode } from '../../../enums/container/custom-nodes/CustomNode';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
 import { Node } from '../../../node/Node';
@@ -51,7 +51,7 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
         }
 
         const replacerId: string = String(callExpressionNode.arguments.length);
-        const callExpressionFunctionCustomNode: ICustomNode = this.customNodeFactory(CustomNodes.CallExpressionFunctionNode);
+        const callExpressionFunctionCustomNode: ICustomNode = this.customNodeFactory(CustomNode.CallExpressionFunctionNode);
         const expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[] = callExpressionNode.arguments;
 
         callExpressionFunctionCustomNode.initialize(expressionArguments);
@@ -86,7 +86,7 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
         expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[]
     ): ESTree.Node {
         const controlFlowStorageCallCustomNode: ICustomNode = this.customNodeFactory(
-            CustomNodes.CallExpressionControlFlowStorageCallNode
+            CustomNode.CallExpressionControlFlowStorageCallNode
         );
 
         controlFlowStorageCallCustomNode.initialize(controlFlowStorageId, storageKey, callee, expressionArguments);

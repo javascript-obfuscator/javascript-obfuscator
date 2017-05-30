@@ -11,7 +11,7 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/IIdentifierObfuscatingReplacer';
 import { IVisitor } from '../../interfaces/IVisitor';
 
-import { IdentifierObfuscatingReplacers } from "../../enums/container/node-transformers/IdentifierObfuscatingReplacers";
+import { IdentifierObfuscatingReplacer } from "../../enums/container/node-transformers/IdentifierObfuscatingReplacer";
 import { NodeType } from '../../enums/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
@@ -52,7 +52,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
         super(options);
 
         this.identifierObfuscatingReplacer = identifierObfuscatingReplacerFactory(
-            IdentifierObfuscatingReplacers.IdentifierObfuscatingReplacer
+            IdentifierObfuscatingReplacer.BaseIdentifierObfuscatingReplacer
         );
     }
 

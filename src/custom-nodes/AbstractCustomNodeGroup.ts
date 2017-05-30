@@ -9,7 +9,7 @@ import { ICustomNodeGroup } from '../interfaces/custom-nodes/ICustomNodeGroup';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
-import { CustomNodes } from '../enums/container/custom-nodes/CustomNodes';
+import { CustomNode } from '../enums/container/custom-nodes/CustomNode';
 
 @injectable()
 export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
@@ -19,9 +19,9 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     protected abstract readonly appendEvent: TObfuscationEvent;
 
     /**
-     * @type {Map<CustomNodes, ICustomNode>}
+     * @type {Map<CustomNode, ICustomNode>}
      */
-    protected abstract customNodes: Map <CustomNodes, ICustomNode>;
+    protected abstract customNodes: Map <CustomNode, ICustomNode>;
 
     /**
      * @type {IStackTraceData[]}
@@ -56,9 +56,9 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     }
 
     /**
-     * @returns {Map<CustomNodes, ICustomNode>}
+     * @returns {Map<CustomNode, ICustomNode>}
      */
-    public getCustomNodes (): Map <CustomNodes, ICustomNode> {
+    public getCustomNodes (): Map <CustomNode, ICustomNode> {
         return this.customNodes;
     }
 
@@ -68,7 +68,7 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
      * @param customNodeName
      * @param callback
      */
-    protected appendCustomNodeIfExist (customNodeName: CustomNodes, callback: (customNode: ICustomNode) => void): void {
+    protected appendCustomNodeIfExist (customNodeName: CustomNode, callback: (customNode: ICustomNode) => void): void {
         const customNode: ICustomNode | undefined = this.customNodes.get(customNodeName);
 
         if (!customNode) {

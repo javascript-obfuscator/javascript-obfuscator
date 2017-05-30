@@ -12,8 +12,8 @@ import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStack
 
 import { initializable } from '../../../decorators/Initializable';
 
-import { CustomNodes } from '../../../enums/container/custom-nodes/CustomNodes';
-import { ObfuscationEvents } from '../../../enums/event-emitters/ObfuscationEvents';
+import { CustomNode } from '../../../enums/container/custom-nodes/CustomNode';
+import { ObfuscationEvent } from '../../../enums/event-emitters/ObfuscationEvent';
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
@@ -24,13 +24,13 @@ export class SelfDefendingCustomNodeGroup extends AbstractCustomNodeGroup {
     /**
      * @type {TObfuscationEvent}
      */
-    protected appendEvent: TObfuscationEvent = ObfuscationEvents.AfterObfuscation;
+    protected appendEvent: TObfuscationEvent = ObfuscationEvent.AfterObfuscation;
 
     /**
-     * @type {Map<CustomNodes, ICustomNode>}
+     * @type {Map<CustomNode, ICustomNode>}
      */
     @initializable()
-    protected customNodes: Map <CustomNodes, ICustomNode>;
+    protected customNodes: Map <CustomNode, ICustomNode>;
 
     /**
      * @type {TCustomNodeFactory}
@@ -66,7 +66,7 @@ export class SelfDefendingCustomNodeGroup extends AbstractCustomNodeGroup {
         const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(stackTraceData.length);
 
         // selfDefendingUnicodeNode append
-        this.appendCustomNodeIfExist(CustomNodes.SelfDefendingUnicodeNode, (customNode: ICustomNode) => {
+        this.appendCustomNodeIfExist(CustomNode.SelfDefendingUnicodeNode, (customNode: ICustomNode) => {
             NodeAppender.appendNodeToOptimalBlockScope(
                 stackTraceData,
                 blockScopeNode,
@@ -76,7 +76,7 @@ export class SelfDefendingCustomNodeGroup extends AbstractCustomNodeGroup {
         });
 
         // nodeCallsControllerFunctionNode append
-        this.appendCustomNodeIfExist(CustomNodes.NodeCallsControllerFunctionNode, (customNode: ICustomNode) => {
+        this.appendCustomNodeIfExist(CustomNode.NodeCallsControllerFunctionNode, (customNode: ICustomNode) => {
             let targetBlockScope: TNodeWithBlockStatement;
 
             if (stackTraceData.length) {
@@ -90,7 +90,7 @@ export class SelfDefendingCustomNodeGroup extends AbstractCustomNodeGroup {
     }
 
     public initialize (): void {
-        this.customNodes = new Map <CustomNodes, ICustomNode> ();
+        this.customNodes = new Map <CustomNode, ICustomNode> ();
 
         if (!this.options.selfDefending) {
             return;
@@ -98,13 +98,13 @@ export class SelfDefendingCustomNodeGroup extends AbstractCustomNodeGroup {
 
         const callsControllerFunctionName: string = RandomGeneratorUtils.getRandomVariableName(6);
 
-        const selfDefendingUnicodeNode: ICustomNode = this.customNodeFactory(CustomNodes.SelfDefendingUnicodeNode);
-        const nodeCallsControllerFunctionNode: ICustomNode = this.customNodeFactory(CustomNodes.NodeCallsControllerFunctionNode);
+        const selfDefendingUnicodeNode: ICustomNode = this.customNodeFactory(CustomNode.SelfDefendingUnicodeNode);
+        const nodeCallsControllerFunctionNode: ICustomNode = this.customNodeFactory(CustomNode.NodeCallsControllerFunctionNode);
 
         selfDefendingUnicodeNode.initialize(callsControllerFunctionName);
         nodeCallsControllerFunctionNode.initialize(this.appendEvent, callsControllerFunctionName);
 
-        this.customNodes.set(CustomNodes.SelfDefendingUnicodeNode, selfDefendingUnicodeNode);
-        this.customNodes.set(CustomNodes.NodeCallsControllerFunctionNode, nodeCallsControllerFunctionNode);
+        this.customNodes.set(CustomNode.SelfDefendingUnicodeNode, selfDefendingUnicodeNode);
+        this.customNodes.set(CustomNode.NodeCallsControllerFunctionNode, nodeCallsControllerFunctionNode);
     }
 }

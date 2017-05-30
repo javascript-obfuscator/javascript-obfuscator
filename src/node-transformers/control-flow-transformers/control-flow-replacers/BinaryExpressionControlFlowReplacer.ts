@@ -9,7 +9,7 @@ import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
-import { CustomNodes } from '../../../enums/container/custom-nodes/CustomNodes';
+import { CustomNode } from '../../../enums/container/custom-nodes/CustomNode';
 
 import { ExpressionWithOperatorControlFlowReplacer } from './ExpressionWithOperatorControlFlowReplacer';
 
@@ -43,7 +43,7 @@ export class BinaryExpressionControlFlowReplacer extends ExpressionWithOperatorC
         controlFlowStorage: IStorage <ICustomNode>
     ): ESTree.Node {
         const replacerId: string = binaryExpressionNode.operator;
-        const binaryExpressionFunctionCustomNode: ICustomNode = this.customNodeFactory(CustomNodes.BinaryExpressionFunctionNode);
+        const binaryExpressionFunctionCustomNode: ICustomNode = this.customNodeFactory(CustomNode.BinaryExpressionFunctionNode);
 
         binaryExpressionFunctionCustomNode.initialize(replacerId);
 

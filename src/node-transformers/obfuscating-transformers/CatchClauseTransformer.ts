@@ -10,7 +10,7 @@ import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transforme
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IVisitor } from '../../interfaces/IVisitor';
 
-import { IdentifierObfuscatingReplacers } from '../../enums/container/node-transformers/IdentifierObfuscatingReplacers';
+import { IdentifierObfuscatingReplacer } from '../../enums/container/node-transformers/IdentifierObfuscatingReplacer';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
@@ -42,7 +42,7 @@ export class CatchClauseTransformer extends AbstractNodeTransformer {
         super(options);
 
         this.identifierObfuscatingReplacer = identifierObfuscatingReplacerFactory(
-            IdentifierObfuscatingReplacers.IdentifierObfuscatingReplacer
+            IdentifierObfuscatingReplacer.BaseIdentifierObfuscatingReplacer
         );
     }
 

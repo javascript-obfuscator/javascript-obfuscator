@@ -9,7 +9,7 @@ import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
-import { CustomNodes } from '../../../enums/container/custom-nodes/CustomNodes';
+import { CustomNode } from '../../../enums/container/custom-nodes/CustomNode';
 
 import { ExpressionWithOperatorControlFlowReplacer } from './ExpressionWithOperatorControlFlowReplacer';
 import { Node } from '../../../node/Node';
@@ -49,7 +49,7 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
         }
 
         const replacerId: string = logicalExpressionNode.operator;
-        const logicalExpressionFunctionCustomNode: ICustomNode = this.customNodeFactory(CustomNodes.LogicalExpressionFunctionNode);
+        const logicalExpressionFunctionCustomNode: ICustomNode = this.customNodeFactory(CustomNode.LogicalExpressionFunctionNode);
 
         logicalExpressionFunctionCustomNode.initialize(replacerId);
 

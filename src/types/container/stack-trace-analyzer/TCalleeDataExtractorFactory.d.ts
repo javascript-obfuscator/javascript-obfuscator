@@ -1,5 +1,5 @@
 import { ICalleeDataExtractor } from '../../../interfaces/stack-trace-analyzer/ICalleeDataExtractor';
 
-import { CalleeDataExtractors } from '../../../enums/container/stack-trace-analyzer/CalleeDataExtractors';
+import { CalleeDataExtractor } from '../../../enums/container/stack-trace-analyzer/CalleeDataExtractor';
 
-export type TCalleeDataExtractorFactory = (calleeDataExtractorName: CalleeDataExtractors) => ICalleeDataExtractor;
+export type TCalleeDataExtractorFactory = (calleeDataExtractorName: CalleeDataExtractor) => ICalleeDataExtractor;

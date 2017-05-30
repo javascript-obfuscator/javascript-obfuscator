@@ -1,4 +1,4 @@
-export enum CustomNodes {
+export enum CustomNode {
     BinaryExpressionFunctionNode,
     BlockStatementControlFlowFlatteningNode,
     CallExpressionControlFlowStorageCallNode,

@@ -8,7 +8,7 @@ import { TLiteralObfuscatingReplacerFactory } from '../../types/container/node-t
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IVisitor } from '../../interfaces/IVisitor';
 
-import { LiteralObfuscatingReplacers } from '../../enums/container/node-transformers/LiteralObfuscatingReplacers';
+import { LiteralObfuscatingReplacer } from '../../enums/container/node-transformers/LiteralObfuscatingReplacer';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
@@ -59,15 +59,15 @@ export class LiteralTransformer extends AbstractNodeTransformer {
 
         switch (typeof literalNode.value) {
             case 'boolean':
-                return this.literalObfuscatingReplacerFactory(LiteralObfuscatingReplacers.BooleanLiteralObfuscatingReplacer)
+                return this.literalObfuscatingReplacerFactory(LiteralObfuscatingReplacer.BooleanLiteralObfuscatingReplacer)
                     .replace(<boolean>literalNode.value);
 
             case 'number':
-                return this.literalObfuscatingReplacerFactory(LiteralObfuscatingReplacers.NumberLiteralObfuscatingReplacer)
+                return this.literalObfuscatingReplacerFactory(LiteralObfuscatingReplacer.NumberLiteralObfuscatingReplacer)
                     .replace(<number>literalNode.value);
 
             case 'string':
-                return this.literalObfuscatingReplacerFactory(LiteralObfuscatingReplacers.StringLiteralObfuscatingReplacer)
+                return this.literalObfuscatingReplacerFactory(LiteralObfuscatingReplacer.StringLiteralObfuscatingReplacer)
                     .replace(<string>literalNode.value);
 
             default:

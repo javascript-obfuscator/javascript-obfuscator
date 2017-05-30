@@ -4,7 +4,7 @@ import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { INodeTransformer } from '../../../interfaces/node-transformers/INodeTransformer';
 
-import { NodeTransformers } from '../../../enums/container/node-transformers/NodeTransformers';
+import { NodeTransformer } from '../../../enums/container/node-transformers/NodeTransformer';
 
 import { FunctionControlFlowTransformer } from '../../../node-transformers/control-flow-transformers/FunctionControlFlowTransformer';
 
@@ -25,60 +25,60 @@ export const nodeTransformersModule: interfaces.ContainerModule = new ContainerM
     // control flow transformers
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(BlockStatementControlFlowTransformer)
-        .whenTargetNamed(NodeTransformers.BlockStatementControlFlowTransformer);
+        .whenTargetNamed(NodeTransformer.BlockStatementControlFlowTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(DeadCodeInjectionTransformer)
-        .whenTargetNamed(NodeTransformers.DeadCodeInjectionTransformer);
+        .whenTargetNamed(NodeTransformer.DeadCodeInjectionTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(FunctionControlFlowTransformer)
-        .whenTargetNamed(NodeTransformers.FunctionControlFlowTransformer);
+        .whenTargetNamed(NodeTransformer.FunctionControlFlowTransformer);
 
     // converting transformers
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(MemberExpressionTransformer)
-        .whenTargetNamed(NodeTransformers.MemberExpressionTransformer);
+        .whenTargetNamed(NodeTransformer.MemberExpressionTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(MethodDefinitionTransformer)
-        .whenTargetNamed(NodeTransformers.MethodDefinitionTransformer);
+        .whenTargetNamed(NodeTransformer.MethodDefinitionTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(TemplateLiteralTransformer)
-        .whenTargetNamed(NodeTransformers.TemplateLiteralTransformer);
+        .whenTargetNamed(NodeTransformer.TemplateLiteralTransformer);
 
     // obfuscation transformers
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(CatchClauseTransformer)
-        .whenTargetNamed(NodeTransformers.CatchClauseTransformer);
+        .whenTargetNamed(NodeTransformer.CatchClauseTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(FunctionDeclarationTransformer)
-        .whenTargetNamed(NodeTransformers.FunctionDeclarationTransformer);
+        .whenTargetNamed(NodeTransformer.FunctionDeclarationTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(FunctionTransformer)
-        .whenTargetNamed(NodeTransformers.FunctionTransformer);
+        .whenTargetNamed(NodeTransformer.FunctionTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(LabeledStatementTransformer)
-        .whenTargetNamed(NodeTransformers.LabeledStatementTransformer);
+        .whenTargetNamed(NodeTransformer.LabeledStatementTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(LiteralTransformer)
-        .whenTargetNamed(NodeTransformers.LiteralTransformer);
+        .whenTargetNamed(NodeTransformer.LiteralTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(ObjectExpressionTransformer)
-        .whenTargetNamed(NodeTransformers.ObjectExpressionTransformer);
+        .whenTargetNamed(NodeTransformer.ObjectExpressionTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(VariableDeclarationTransformer)
-        .whenTargetNamed(NodeTransformers.VariableDeclarationTransformer);
+        .whenTargetNamed(NodeTransformer.VariableDeclarationTransformer);
 
     // node transformers factory
     bind<INodeTransformer>(ServiceIdentifiers.Factory__INodeTransformer)
         .toFactory<INodeTransformer>(InversifyContainerFacade
-            .getCacheFactory<NodeTransformers, INodeTransformer>(ServiceIdentifiers.INodeTransformer));
+            .getCacheFactory<NodeTransformer, INodeTransformer>(ServiceIdentifiers.INodeTransformer));
 });

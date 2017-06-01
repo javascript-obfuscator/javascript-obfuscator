@@ -10,91 +10,136 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 
 describe('FunctionTransformer', () => {
     describe('identifiers transformation inside `FunctionDeclaration` and `FunctionExpression` node body', () => {
-        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/input.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
-        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+        const functionParamIdentifierRegExp: RegExp = /var _0x[a-f0-9]{4,6} *= *function *\((_0x[a-f0-9]{4,6})\) *\{/;
+        const functionBodyIdentifierRegExp: RegExp = /console\['log'\]\((_0x[a-f0-9]{4,6})\)/;
+        const variableRegExp: RegExp = /variable *= *0x6;/;
 
-        it('should correct transform both function parameter identifier and function body identifier with same name', () => {
+        let obfuscatedCode: string,
+            functionParamIdentifierName: string,
+            functionBodyIdentifierName: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/input.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+
             const functionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(/var _0x[a-f0-9]{4,6} *= *function *\((_0x[a-f0-9]{4,6})\) *\{/);
+                .match(functionParamIdentifierRegExp);
             const functionBodyIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(/console\['log'\]\((_0x[a-f0-9]{4,6})\)/);
+                .match(functionBodyIdentifierRegExp);
 
-            const functionParamIdentifierName: string = (<RegExpMatchArray>functionParamIdentifierMatch)[1];
-            const functionBodyIdentifierName: string = (<RegExpMatchArray>functionBodyIdentifierMatch)[1];
+            functionParamIdentifierName = (<RegExpMatchArray>functionParamIdentifierMatch)[1];
+            functionBodyIdentifierName = (<RegExpMatchArray>functionBodyIdentifierMatch)[1];
+        });
 
+        it('should correctly transform both function parameter identifier and function body identifier with same name', () => {
             assert.equal(functionParamIdentifierName, functionBodyIdentifierName);
         });
 
         it('shouldn\'t transform other variables in function body', () => {
-            assert.equal(/variable *= *0x6;/.test(obfuscatedCode), true);
+            assert.match(obfuscatedCode, variableRegExp);
         });
     });
 
     describe('object pattern as parameter', () => {
-        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
-        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+        const functionParameterRegExp: RegExp = /function *\(\{ *bar *\}\) *\{/;
+        const functionBodyRegExp: RegExp = /return *bar;/;
 
-        it('shouldn\'t transform function parameter object pattern identifier', () => {
-            const functionParameterMatch: RegExp = /function *\(\{ *bar *\}\) *\{/;
-            const functionBodyMatch: RegExp = /return *bar;/;
+        let obfuscatedCode: string;
 
-            assert.match(obfuscatedCode, functionParameterMatch);
-            assert.match(obfuscatedCode, functionBodyMatch);
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('match #1: shouldn\'t transform function parameter object pattern identifier', () => {
+            assert.match(obfuscatedCode, functionParameterRegExp);
+        });
+
+        it('match #2: shouldn\'t transform function parameter object pattern identifier', () => {
+            assert.match(obfuscatedCode, functionBodyRegExp);
         });
     });
 
     describe('assignment pattern as parameter', () => {
-        describe('literal as right value', () => {
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/assignment-pattern-as-parameter-1.js'),
-                {
-                    ...NO_CUSTOM_NODES_PRESET
-                }
-            );
-            const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+        describe('variant #1: literal as right value', () => {
+            const functionParameterRegExp: RegExp = /function *\(_0x[a-f0-9]{4,6} *= *0x1\) *\{/;
+            const functionBodyRegExp: RegExp = /return *_0x[a-f0-9]{4,6};/;
 
-            it('should transform function parameter assignment pattern identifier', () => {
-                const functionParameterMatch: RegExp = /function *\(_0x[a-f0-9]{4,6} *= *0x1\) *\{/;
-                const functionBodyMatch: RegExp = /return *_0x[a-f0-9]{4,6};/;
+            let obfuscatedCode: string;
 
-                assert.match(obfuscatedCode, functionParameterMatch);
-                assert.match(obfuscatedCode, functionBodyMatch);
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/assignment-pattern-as-parameter-1.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('match #1: should transform function parameter assignment pattern identifier', () => {
+                assert.match(obfuscatedCode, functionParameterRegExp);
+            });
+
+            it('match #2: should transform function parameter assignment pattern identifier', () => {
+                assert.match(obfuscatedCode, functionBodyRegExp);
             });
         });
 
-        describe('identifier as right value', () => {
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/assignment-pattern-as-parameter-2.js'),
-                {
-                    ...NO_CUSTOM_NODES_PRESET
-                }
-            );
-            const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+        describe('variant #2: identifier as right value', () => {
+            const variableDeclarationRegExp: RegExp = /var *(_0x[a-f0-9]{4,6}) *= *0x1;/;
+            const functionParameterRegExp: RegExp = /function *\((_0x[a-f0-9]{4,6}) *= *(_0x[a-f0-9]{4,6})\) *\{/;
+            const functionBodyRegExp: RegExp = /return *(_0x[a-f0-9]{4,6});/;
 
-            const variableDeclarationMatch: RegExp = /var *(_0x[a-f0-9]{4,6}) *= *0x1;/;
-            const functionParameterMatch: RegExp = /function *\((_0x[a-f0-9]{4,6}) *= *(_0x[a-f0-9]{4,6})\) *\{/;
-            const functionBodyMatch: RegExp = /return *(_0x[a-f0-9]{4,6});/;
+            let obfuscatedCode: string,
+                variableDeclarationIdentifierName: string,
+                functionParameterIdentifierName: string,
+                functionDefaultParameterIdentifierName: string,
+                functionBodyIdentifierName: string;
 
-            const variableDeclarationIdentifierName: string = obfuscatedCode.match(variableDeclarationMatch)![1];
-            const functionParameterIdentifierName: string = obfuscatedCode.match(functionParameterMatch)![1];
-            const functionDefaultParameterIdentifierName: string = obfuscatedCode.match(functionParameterMatch)![2];
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/assignment-pattern-as-parameter-2.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET
+                    }
+                );
 
-            const functionBodyIdentifierName: string = obfuscatedCode.match(functionBodyMatch)![1];
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
 
-            it('should transform function parameter assignment pattern identifier', () => {
-                assert.match(obfuscatedCode, variableDeclarationMatch);
-                assert.match(obfuscatedCode, functionParameterMatch);
-                assert.match(obfuscatedCode, functionBodyMatch);
+                variableDeclarationIdentifierName = obfuscatedCode.match(variableDeclarationRegExp)![1];
+                functionParameterIdentifierName = obfuscatedCode.match(functionParameterRegExp)![1];
+                functionDefaultParameterIdentifierName = obfuscatedCode.match(functionParameterRegExp)![2];
+                functionBodyIdentifierName = obfuscatedCode.match(functionBodyRegExp)![1];
+            });
+
+            it('match #1: should transform function parameter assignment pattern identifier', () => {
+                assert.match(obfuscatedCode, variableDeclarationRegExp);
+            });
+
+            it('match #2: should transform function parameter assignment pattern identifier', () => {
+                assert.match(obfuscatedCode, functionParameterRegExp);
+            });
+
+            it('match #3: should transform function parameter assignment pattern identifier', () => {
+                assert.match(obfuscatedCode, functionBodyRegExp);
             });
 
             it('should keep same names for identifier in variable declaration and default value identifier of function parameter', () => {
@@ -106,36 +151,60 @@ describe('FunctionTransformer', () => {
             });
         });
 
-        describe('identifier as right value', () => {
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/assignment-pattern-as-parameter-3.js'),
-                {
-                    ...NO_CUSTOM_NODES_PRESET
-                }
-            );
-            const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+        describe('variant #3: identifier as right value', () => {
+            const variableDeclarationRegExp: RegExp = /var *(_0x[a-f0-9]{4,6}) *= *0x1;/;
+            const functionParameterRegExp: RegExp = /function *\((_0x[a-f0-9]{4,6}), *(_0x[a-f0-9]{4,6}) *= *(_0x[a-f0-9]{4,6})\) *\{/;
+            const functionBodyRegExp: RegExp = /return *(_0x[a-f0-9]{4,6}) *\+ *(_0x[a-f0-9]{4,6});/;
 
-            const variableDeclarationMatch: RegExp = /var *(_0x[a-f0-9]{4,6}) *= *0x1;/;
-            const functionParameterMatch: RegExp = /function *\((_0x[a-f0-9]{4,6}), *(_0x[a-f0-9]{4,6}) *= *(_0x[a-f0-9]{4,6})\) *\{/;
-            const functionBodyMatch: RegExp = /return *(_0x[a-f0-9]{4,6}) *\+ *(_0x[a-f0-9]{4,6});/;
+            let obfuscatedCode: string,
+                variableDeclarationIdentifierName: string,
+                functionParameterIdentifierName: string,
+                functionDefaultParameterIdentifierName1: string,
+                functionDefaultParameterIdentifierName2: string,
+                functionBodyIdentifierName1: string,
+                functionBodyIdentifierName2: string;
 
-            const variableDeclarationIdentifierName: string = obfuscatedCode.match(variableDeclarationMatch)![1];
-            const functionParameterIdentifierName: string = obfuscatedCode.match(functionParameterMatch)![1];
-            const functionDefaultParameterIdentifierName1: string = obfuscatedCode.match(functionParameterMatch)![2];
-            const functionDefaultParameterIdentifierName2: string = obfuscatedCode.match(functionParameterMatch)![3];
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/assignment-pattern-as-parameter-3.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET
+                    }
+                );
 
-            const functionBodyIdentifierName1: string = obfuscatedCode.match(functionBodyMatch)![1];
-            const functionBodyIdentifierName2: string = obfuscatedCode.match(functionBodyMatch)![2];
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
 
-            it('should transform function parameter assignment pattern identifier', () => {
-                assert.match(obfuscatedCode, variableDeclarationMatch);
-                assert.match(obfuscatedCode, functionParameterMatch);
-                assert.match(obfuscatedCode, functionBodyMatch);
+                variableDeclarationIdentifierName = obfuscatedCode.match(variableDeclarationRegExp)![1];
+                functionParameterIdentifierName = obfuscatedCode.match(functionParameterRegExp)![1];
+                functionDefaultParameterIdentifierName1 = obfuscatedCode.match(functionParameterRegExp)![2];
+                functionDefaultParameterIdentifierName2 = obfuscatedCode.match(functionParameterRegExp)![3];
+
+                functionBodyIdentifierName1 = obfuscatedCode.match(functionBodyRegExp)![1];
+                functionBodyIdentifierName2 = obfuscatedCode.match(functionBodyRegExp)![2];
             });
 
-            it('shouldn\'t keep same names variable declaration identifier and function parameters identifiers', () => {
+            it('match #1: should transform function parameter assignment pattern identifier', () => {
+                assert.match(obfuscatedCode, variableDeclarationRegExp);
+            });
+
+            it('match #2: should transform function parameter assignment pattern identifier', () => {
+                assert.match(obfuscatedCode, functionParameterRegExp);
+            });
+
+            it('match #3: should transform function parameter assignment pattern identifier', () => {
+                assert.match(obfuscatedCode, functionBodyRegExp);
+            });
+
+            it('equal #1: shouldn\'t keep same names variable declaration identifier and function parameters identifiers', () => {
                 assert.notEqual(variableDeclarationIdentifierName, functionParameterIdentifierName);
+            });
+
+            it('equal #2: shouldn\'t keep same names variable declaration identifier and function parameters identifiers', () => {
                 assert.notEqual(variableDeclarationIdentifierName, functionDefaultParameterIdentifierName1);
+            });
+
+            it('equal #3: shouldn\'t keep same names variable declaration identifier and function parameters identifiers', () => {
                 assert.notEqual(variableDeclarationIdentifierName, functionDefaultParameterIdentifierName2);
             });
 
@@ -143,32 +212,46 @@ describe('FunctionTransformer', () => {
                 assert.equal(functionParameterIdentifierName, functionDefaultParameterIdentifierName2);
             });
 
-            it('should keep same names for identifiers in function params and function body', () => {
+            it('equal #1: should keep same names for identifiers in function params and function body', () => {
                 assert.equal(functionParameterIdentifierName, functionBodyIdentifierName1);
+            });
+
+            it('equal #2: should keep same names for identifiers in function params and function body', () => {
                 assert.equal(functionDefaultParameterIdentifierName1, functionBodyIdentifierName2);
             });
         });
     });
 
     describe('array pattern as parameter', () => {
-        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/array-pattern-as-parameter.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
-        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+        const functionParameterRegExp: RegExp = /function *\(\[(_0x[a-f0-9]{4,6}), *(_0x[a-f0-9]{4,6})\]\) *\{/;
+        const functionBodyRegExp: RegExp = /return *(_0x[a-f0-9]{4,6}) *\+ *(_0x[a-f0-9]{4,6});/;
 
-        const functionParameterMatch: RegExp = /function *\(\[(_0x[a-f0-9]{4,6}), *(_0x[a-f0-9]{4,6})\]\) *\{/;
-        const functionBodyMatch: RegExp = /return *(_0x[a-f0-9]{4,6}) *\+ *(_0x[a-f0-9]{4,6});/;
+        let arrayPatternIdentifierName1: string,
+            arrayPatternIdentifierName2: string,
+            functionBodyIdentifierName1: string,
+            functionBodyIdentifierName2: string;
 
-        const arrayPatternIdentifierName1: string = obfuscatedCode.match(functionParameterMatch)![1];
-        const arrayPatternIdentifierName2: string = obfuscatedCode.match(functionParameterMatch)![2];
-        const functionBodyIdentifierName1: string = obfuscatedCode.match(functionBodyMatch)![1];
-        const functionBodyIdentifierName2: string = obfuscatedCode.match(functionBodyMatch)![2];
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/array-pattern-as-parameter.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+            const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
 
-        it('should keep same names for identifiers in function parameter array pattern and function body', () => {
+            arrayPatternIdentifierName1 = obfuscatedCode.match(functionParameterRegExp)![1];
+            arrayPatternIdentifierName2 = obfuscatedCode.match(functionParameterRegExp)![2];
+            functionBodyIdentifierName1 = obfuscatedCode.match(functionBodyRegExp)![1];
+            functionBodyIdentifierName2 = obfuscatedCode.match(functionBodyRegExp)![2];
+        });
+
+        it('equal #1: should keep same names for identifiers in function parameter array pattern and function body', () => {
             assert.equal(arrayPatternIdentifierName1, functionBodyIdentifierName1);
+        });
+
+        it('equal #2: should keep same names for identifiers in function parameter array pattern and function body', () => {
             assert.equal(arrayPatternIdentifierName2, functionBodyIdentifierName2);
         });
     });

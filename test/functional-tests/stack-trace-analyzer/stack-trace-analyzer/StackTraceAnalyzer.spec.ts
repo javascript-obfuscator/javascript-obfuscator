@@ -152,308 +152,337 @@ describe('StackTraceAnalyzer', () => {
         const stackTraceAnalyzer: IStackTraceAnalyzer = inversifyContainerFacade
             .get<IStackTraceAnalyzer>(ServiceIdentifiers.IStackTraceAnalyzer);
 
-        let astTree: TNodeWithBlockStatement,
-            stackTraceData: IStackTraceData[],
-            expectedStackTraceData: IStackTraceData[];
+        let expectedStackTraceData: IStackTraceData[],
+            stackTraceData: IStackTraceData[];
 
-        it('should returns correct IStackTraceData - variant #1: basic-1', () => {
-            astTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/basic-1.js')
-                )
-            );
+        describe('variant #1: basic-1', () => {
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/basic-1.js');
+                const astTree: TNodeWithBlockStatement = Nodes.getProgramNode(
+                    NodeUtils.convertCodeToStructure(code)
+                );
 
-            expectedStackTraceData = [
-                {
-                    name: 'baz',
-                    callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'baz')).body,
-                    stackTrace: []
-                },
-                {
-                    name: 'foo',
-                    callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'foo')).body,
-                    stackTrace: []
-                },
-                {
-                    name: 'bar',
-                    callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'bar')).body,
-                    stackTrace: [
-                        {
-                            name: 'inner2',
-                            callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner2')).body,
-                            stackTrace: [
-                                {
-                                    name: 'inner3',
-                                    callee: (<ESTree.FunctionExpression>getFunctionExpressionByName(astTree, 'inner3')).body,
-                                    stackTrace: []
-                                },
-                            ]
-                        },
-                        {
-                            name: 'inner1',
-                            callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1')).body,
-                            stackTrace: []
-                        },
-                    ]
-                }
-            ];
+                expectedStackTraceData = [
+                    {
+                        name: 'baz',
+                        callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'baz')).body,
+                        stackTrace: []
+                    },
+                    {
+                        name: 'foo',
+                        callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'foo')).body,
+                        stackTrace: []
+                    },
+                    {
+                        name: 'bar',
+                        callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'bar')).body,
+                        stackTrace: [
+                            {
+                                name: 'inner2',
+                                callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner2')).body,
+                                stackTrace: [
+                                    {
+                                        name: 'inner3',
+                                        callee: (<ESTree.FunctionExpression>getFunctionExpressionByName(astTree, 'inner3')).body,
+                                        stackTrace: []
+                                    },
+                                ]
+                            },
+                            {
+                                name: 'inner1',
+                                callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1')).body,
+                                stackTrace: []
+                            },
+                        ]
+                    }
+                ];
 
-            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+            });
 
-            assert.deepEqual(stackTraceData, expectedStackTraceData);
+            it('should return correct stack trace data', () => {
+                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            });
         });
 
-        it('should returns correct IStackTraceData - variant #2: basic-2', () => {
-            astTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/basic-2.js')
-                )
-            );
+        describe('variant #2: basic-2', () => {
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/basic-2.js');
+                const astTree: TNodeWithBlockStatement = Nodes.getProgramNode(
+                    NodeUtils.convertCodeToStructure(code)
+                );
 
-            expectedStackTraceData = [
-                {
-                    name: 'bar',
-                    callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'bar')).body,
-                    stackTrace: []
-                },
-                {
-                    name: 'baz',
-                    callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'baz')).body,
-                    stackTrace: [
-                        {
-                            name: 'inner1',
-                            callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1')).body,
-                            stackTrace: []
-                        },
-                    ]
-                },
-                {
-                    name: 'foo',
-                    callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'foo')).body,
-                    stackTrace: []
-                }
-            ];
+                expectedStackTraceData = [
+                    {
+                        name: 'bar',
+                        callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'bar')).body,
+                        stackTrace: []
+                    },
+                    {
+                        name: 'baz',
+                        callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'baz')).body,
+                        stackTrace: [
+                            {
+                                name: 'inner1',
+                                callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1')).body,
+                                stackTrace: []
+                            },
+                        ]
+                    },
+                    {
+                        name: 'foo',
+                        callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'foo')).body,
+                        stackTrace: []
+                    }
+                ];
 
-            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+            });
 
-            assert.deepEqual(stackTraceData, expectedStackTraceData);
+            it('should return correct stack trace data', () => {
+                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            });
         });
 
-        it('should returns correct IStackTraceData - variant #3: deep conditions nesting', () => {
-            astTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/deep-conditions-nesting.js')
-                )
-            );
+        describe('variant #3: deep conditions nesting', () => {
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/deep-conditions-nesting.js');
+                const astTree: TNodeWithBlockStatement = Nodes.getProgramNode(
+                    NodeUtils.convertCodeToStructure(code)
+                );
 
-            expectedStackTraceData = [
-                {
-                    name: 'bar',
-                    callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'bar')).body,
-                    stackTrace: []
-                },
-                {
-                    name: 'baz',
-                    callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'baz')).body,
-                    stackTrace: [
-                        {
-                            name: 'inner1',
-                            callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1')).body,
-                            stackTrace: []
-                        },
-                    ]
-                },
-                {
-                    name: 'foo',
-                    callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'foo')).body,
-                    stackTrace: []
-                }
-            ];
+                expectedStackTraceData = [
+                    {
+                        name: 'bar',
+                        callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'bar')).body,
+                        stackTrace: []
+                    },
+                    {
+                        name: 'baz',
+                        callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'baz')).body,
+                        stackTrace: [
+                            {
+                                name: 'inner1',
+                                callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1')).body,
+                                stackTrace: []
+                            },
+                        ]
+                    },
+                    {
+                        name: 'foo',
+                        callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'foo')).body,
+                        stackTrace: []
+                    }
+                ];
 
-            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+            });
 
-            assert.deepEqual(stackTraceData, expectedStackTraceData);
+            it('should return correct stack trace data', () => {
+                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            });
         });
 
-        it('should returns correct IStackTraceData - variant #4: call before declaration', () => {
-            astTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/call-before-declaration.js')
-                )
-            );
+        describe('variant #4: call before declaration', () => {
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/call-before-declaration.js');
+                const astTree: TNodeWithBlockStatement = Nodes.getProgramNode(
+                    NodeUtils.convertCodeToStructure(code)
+                );
 
-            expectedStackTraceData = [
-                {
-                    name: 'bar',
-                    callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'bar')).body,
-                    stackTrace: []
-                }
-            ];
+                expectedStackTraceData = [
+                    {
+                        name: 'bar',
+                        callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'bar')).body,
+                        stackTrace: []
+                    }
+                ];
 
-            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+            });
 
-            assert.deepEqual(stackTraceData, expectedStackTraceData);
+            it('should return correct stack trace data', () => {
+                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            });
         });
 
-        it('should returns correct IStackTraceData - variant #5: call expression of object member #1', () => {
-            astTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/call-expression-of-object-member-1.js')
-                )
-            );
+        describe('variant #5: call expression of object member #1', () => {
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/call-expression-of-object-member-1.js');
+                const astTree: TNodeWithBlockStatement = Nodes.getProgramNode(
+                    NodeUtils.convertCodeToStructure(code)
+                );
 
-            expectedStackTraceData = [
-                {
-                    name: 'baz',
-                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'baz')).body,
-                    stackTrace: []
-                },
-                {
-                    name: 'baz',
-                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'baz')).body,
-                    stackTrace: []
-                },
-                {
-                    name: 'func',
-                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'func')).body,
-                    stackTrace: []
-                },
-                {
-                    name: 'bar',
-                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'bar')).body,
-                    stackTrace: [
-                        {
-                            name: 'inner1',
-                            callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1')).body,
-                            stackTrace: [
+                expectedStackTraceData = [
+                    {
+                        name: 'baz',
+                        callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'baz')).body,
+                        stackTrace: []
+                    },
+                    {
+                        name: 'baz',
+                        callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'baz')).body,
+                        stackTrace: []
+                    },
+                    {
+                        name: 'func',
+                        callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'func')).body,
+                        stackTrace: []
+                    },
+                    {
+                        name: 'bar',
+                        callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'bar')).body,
+                        stackTrace: [
+                            {
+                                name: 'inner1',
+                                callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1')).body,
+                                stackTrace: [
 
-                            ]
-                        },
-                    ]
-                },
-                {
-                    name: 'bar',
-                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object', 'bar')).body,
-                    stackTrace: [
-                        {
-                            name: 'inner',
-                            callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner')).body,
-                            stackTrace: [
-
-                            ]
-                        },
-                    ]
-                }
-            ];
-
-            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
-
-            assert.deepEqual(stackTraceData, expectedStackTraceData);
-        });
-
-        it('should returns correct IStackTraceData - variant #5: call expression of object member #2', () => {
-            astTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/call-expression-of-object-member-2.js')
-                )
-            );
-
-            expectedStackTraceData = [
-                {
-                    name: 'baz',
-                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object', 'baz')).body,
-                    stackTrace: []
-                },
-                {
-                    name: 1,
-                    callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 1)).body,
-                    stackTrace: []
-                },
-            ];
-
-            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
-
-            assert.deepEqual(stackTraceData, expectedStackTraceData);
-        });
-
-        it('should returns correct IStackTraceData - variant #6: no call expressions', () => {
-            astTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/no-call-expressions.js')
-                )
-            );
-
-            expectedStackTraceData = [];
-
-            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
-
-            assert.deepEqual(stackTraceData, expectedStackTraceData);
-        });
-
-        it('should returns correct IStackTraceData - variant #7: only call expression', () => {
-            astTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/only-call-expression.js')
-                )
-            );
-
-            expectedStackTraceData = [];
-
-            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
-
-            assert.deepEqual(stackTraceData, expectedStackTraceData);
-        });
-
-        it('should returns correct IStackTraceData - variant #8: self-invoking functions', () => {
-            astTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/self-invoking-functions.js')
-                )
-            );
-
-            expectedStackTraceData = [
-                {
-                    name: null,
-                    callee: (<ESTree.FunctionExpression>getFunctionExpressionById(astTree, 'foo')).body,
-                    stackTrace: [{
-                        name: null,
-                        callee: (<ESTree.FunctionExpression>getFunctionExpressionById(astTree, 'bar')).body,
-                        stackTrace: [{
-                            name: null,
-                            callee: (<ESTree.FunctionExpression>getFunctionExpressionById(astTree, 'baz')).body,
-                            stackTrace: [{
+                                ]
+                            },
+                        ]
+                    },
+                    {
+                        name: 'bar',
+                        callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object', 'bar')).body,
+                        stackTrace: [
+                            {
                                 name: 'inner',
                                 callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner')).body,
-                                stackTrace: []
-                            }]
-                        }]
-                    }]
-                }
-            ];
+                                stackTrace: [
 
-            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                                ]
+                            },
+                        ]
+                    }
+                ];
 
-            assert.deepEqual(stackTraceData, expectedStackTraceData);
+                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+            });
+
+            it('should return correct stack trace data', () => {
+                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            });
         });
 
-        it('should returns correct IStackTraceData - variant #9: no recursion', () => {
-            astTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/no-recursion.js')
-                )
-            );
+        describe('variant #5: call expression of object member #2', () => {
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/call-expression-of-object-member-2.js');
+                const astTree: TNodeWithBlockStatement = Nodes.getProgramNode(
+                    NodeUtils.convertCodeToStructure(code)
+                );
 
-            expectedStackTraceData = [
-                {
-                    name: 'bar',
-                    callee: (<ESTree.FunctionExpression>getFunctionExpressionByName(astTree, 'bar')).body,
-                    stackTrace: []
-                }
-            ];
+                expectedStackTraceData = [
+                    {
+                        name: 'baz',
+                        callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object', 'baz')).body,
+                        stackTrace: []
+                    },
+                    {
+                        name: 1,
+                        callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 1)).body,
+                        stackTrace: []
+                    },
+                ];
 
-            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+            });
 
-            assert.deepEqual(stackTraceData, expectedStackTraceData);
+            it('should return correct stack trace data', () => {
+                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            });
+        });
+
+        describe('variant #6: no call expressions', () => {
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/no-call-expressions.js');
+                const astTree: TNodeWithBlockStatement = Nodes.getProgramNode(
+                    NodeUtils.convertCodeToStructure(code)
+                );
+
+                expectedStackTraceData = [];
+
+                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+            });
+
+            it('should return correct stack trace data', () => {
+                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            });
+        });
+
+        describe('variant #7: only call expression', () => {
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/only-call-expression.js');
+                const astTree: TNodeWithBlockStatement = Nodes.getProgramNode(
+                    NodeUtils.convertCodeToStructure(code)
+                );
+
+                expectedStackTraceData = [];
+
+                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+            });
+
+            it('should return correct stack trace data', () => {
+                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            });
+        });
+
+        describe('variant #8: self-invoking functions', () => {
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/self-invoking-functions.js');
+                const astTree: TNodeWithBlockStatement = Nodes.getProgramNode(
+                    NodeUtils.convertCodeToStructure(code)
+                );
+
+                expectedStackTraceData = [
+                    {
+                        name: null,
+                        callee: (<ESTree.FunctionExpression>getFunctionExpressionById(astTree, 'foo')).body,
+                        stackTrace: [{
+                            name: null,
+                            callee: (<ESTree.FunctionExpression>getFunctionExpressionById(astTree, 'bar')).body,
+                            stackTrace: [{
+                                name: null,
+                                callee: (<ESTree.FunctionExpression>getFunctionExpressionById(astTree, 'baz')).body,
+                                stackTrace: [{
+                                    name: 'inner',
+                                    callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner')).body,
+                                    stackTrace: []
+                                }]
+                            }]
+                        }]
+                    }
+                ];
+
+                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+            });
+
+            it('should return correct stack trace data', () => {
+                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            });
+        });
+
+        describe('variant #9: no recursion', () => {
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/no-recursion.js');
+                const astTree: TNodeWithBlockStatement = Nodes.getProgramNode(
+                    NodeUtils.convertCodeToStructure(code)
+                );
+
+                expectedStackTraceData = [
+                    {
+                        name: 'bar',
+                        callee: (<ESTree.FunctionExpression>getFunctionExpressionByName(astTree, 'bar')).body,
+                        stackTrace: []
+                    }
+                ];
+
+                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+            });
+
+            it('should return correct stack trace data', () => {
+                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            });
         });
     });
 });

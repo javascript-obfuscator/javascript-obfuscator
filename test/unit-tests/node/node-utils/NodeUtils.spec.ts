@@ -2,6 +2,8 @@ import * as ESTree from 'estree';
 
 import { assert } from 'chai';
 
+import { TStatement } from '../../../../src/types/node/TStatement';
+
 import { Nodes } from '../../../../src/node/Nodes';
 import { NodeUtils } from '../../../../src/node/NodeUtils';
 
@@ -10,7 +12,7 @@ describe('NodeUtils', () => {
         let literalNode: any,
             expectedLiteralNode: any;
 
-        beforeEach(() => {
+        before(() => {
             literalNode = Nodes.getLiteralNode('value');
             delete literalNode['x-verbatim-property'];
 
@@ -25,86 +27,71 @@ describe('NodeUtils', () => {
     });
 
     describe('clone <T extends ESTree.Node> (astTree: T): T', () => {
-        let ifStatementNode1: ESTree.IfStatement,
-            ifStatementNode2: ESTree.IfStatement,
-            ifStatementBlockStatementNode1: ESTree.BlockStatement,
-            ifStatementBlockStatementNode2: ESTree.BlockStatement,
-            expressionStatementNode1: ESTree.ExpressionStatement,
-            expressionStatementNode2: ESTree.ExpressionStatement,
-            expressionStatementNode3: ESTree.ExpressionStatement,
-            expressionStatementNode4: ESTree.ExpressionStatement,
-            programNode1: ESTree.Program,
-            programNode2: ESTree.Program;
+        let programNode: ESTree.Program,
+            expectedProgramNode: ESTree.Program;
 
-        beforeEach(() => {
+        before(() => {
             // actual AST tree
-            expressionStatementNode1 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
-            expressionStatementNode2 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+            const expressionStatementNode1: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+            const expressionStatementNode2: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
 
-            ifStatementBlockStatementNode1 = Nodes.getBlockStatementNode([
+            const ifStatementBlockStatementNode1: ESTree.BlockStatement = Nodes.getBlockStatementNode([
                 expressionStatementNode1,
                 expressionStatementNode2
             ]);
 
-            ifStatementNode1 = Nodes.getIfStatementNode(
+            const ifStatementNode1: ESTree.IfStatement = Nodes.getIfStatementNode(
                 Nodes.getLiteralNode(true),
                 ifStatementBlockStatementNode1
             );
 
-            programNode1 = Nodes.getProgramNode([
-                ifStatementNode1
-            ]);
-
             // expected AST tree
-            expressionStatementNode3 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
-            expressionStatementNode4 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+            const expressionStatementNode3: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+            const expressionStatementNode4: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
 
-            ifStatementBlockStatementNode2 = Nodes.getBlockStatementNode([
+            const ifStatementBlockStatementNode2: ESTree.BlockStatement = Nodes.getBlockStatementNode([
                 expressionStatementNode3,
                 expressionStatementNode4
             ]);
 
-            ifStatementNode2 = Nodes.getIfStatementNode(
+            const ifStatementNode2: ESTree.IfStatement = Nodes.getIfStatementNode(
                 Nodes.getLiteralNode(true),
                 ifStatementBlockStatementNode2
             );
 
-            programNode2 = Nodes.getProgramNode([
-                ifStatementNode2
-            ]);
-
-            programNode2 = NodeUtils.parentize(programNode2);
+            programNode = NodeUtils.clone(
+                Nodes.getProgramNode([
+                    ifStatementNode1
+                ])
+            );
+            expectedProgramNode = NodeUtils.parentize(
+                Nodes.getProgramNode([
+                    ifStatementNode2
+                ])
+            );
         });
 
         it('should clone given AST-tree', () => {
-            assert.deepEqual(NodeUtils.clone(programNode1), programNode2);
+            assert.deepEqual(programNode, expectedProgramNode);
         });
     });
 
     describe('convertCodeToStructure (code: string): ESTree.Node[]', () => {
-        let code: string,
-            identifierNode: ESTree.Identifier,
-            literalNode: ESTree.Literal,
-            programNode: ESTree.Program,
-            variableDeclarationNode: ESTree.VariableDeclaration,
-            variableDeclaratorNode: ESTree.VariableDeclarator;
+        let structure: TStatement[],
+            expectedStructure: TStatement[];
 
-        beforeEach(() => {
-            code = `
+        before(() => {
+            const code: string = `
                 var abc = 'cde';
             `;
 
-            identifierNode = Nodes.getIdentifierNode('abc');
-
-            literalNode = Nodes.getLiteralNode('cde');
-
-            variableDeclaratorNode = Nodes.getVariableDeclaratorNode(identifierNode, literalNode);
-
-            variableDeclarationNode = Nodes.getVariableDeclarationNode([
+            const identifierNode: ESTree.Identifier = Nodes.getIdentifierNode('abc');
+            const literalNode: ESTree.Literal = Nodes.getLiteralNode('cde');
+            const variableDeclaratorNode: ESTree.VariableDeclarator = Nodes.getVariableDeclaratorNode(identifierNode, literalNode);
+            const variableDeclarationNode: ESTree.VariableDeclaration = Nodes.getVariableDeclarationNode([
                 variableDeclaratorNode
             ]);
-
-            programNode = Nodes.getProgramNode([
+            const programNode: ESTree.Program = Nodes.getProgramNode([
                 variableDeclarationNode
             ]);
 
@@ -113,10 +100,13 @@ describe('NodeUtils', () => {
             variableDeclaratorNode.parentNode = variableDeclarationNode;
             identifierNode.parentNode = variableDeclaratorNode;
             literalNode.parentNode = variableDeclaratorNode;
+
+            structure = NodeUtils.convertCodeToStructure(code);
+            expectedStructure = [variableDeclarationNode];
         });
 
         it('should convert code to `ESTree.Node[]` structure array', () => {
-            assert.deepEqual(NodeUtils.convertCodeToStructure(code), [variableDeclarationNode]);
+            assert.deepEqual(structure, expectedStructure);
         });
     });
 
@@ -124,7 +114,7 @@ describe('NodeUtils', () => {
         let structure: ESTree.Node[],
             expectedCode: string;
 
-        beforeEach(() => {
+        before(() => {
             structure = [
                 Nodes.getProgramNode([
                     Nodes.getVariableDeclarationNode([
@@ -160,6 +150,9 @@ describe('NodeUtils', () => {
 
         it('should return block-statement child node of given node if that node has block-statement', () => {
             assert.deepEqual(NodeUtils.getBlockStatementNodeByIndex(blockStatementNode), expressionStatementNode1);
+        });
+
+        it('should return block-statement child node of given node with index `1` if that node has block-statement', () => {
             assert.deepEqual(NodeUtils.getBlockStatementNodeByIndex(blockStatementNode, 1), expressionStatementNode2);
         });
 
@@ -184,7 +177,7 @@ describe('NodeUtils', () => {
             functionDeclarationNode: ESTree.FunctionDeclaration,
             programNode: ESTree.Program;
 
-        beforeEach(() => {
+        before(() => {
             expressionStatementNode1 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
             expressionStatementNode2 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
             expressionStatementNode3 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
@@ -230,19 +223,55 @@ describe('NodeUtils', () => {
             expressionStatementNode3.parentNode = ifStatementBlockStatementNode2;
         });
 
-        it('should return block-scope node for given node', () => {
+        it('should return block-scope node for `program` node child', () => {
             assert.deepEqual(NodeUtils.getBlockScopesOfNode(programNode)[0], programNode);
+        });
+
+        it('should return block-scope node for `functionDeclaration` node child node #1', () => {
             assert.deepEqual(NodeUtils.getBlockScopesOfNode(functionDeclarationNode)[0], programNode);
+        });
+
+        it('should return block-scope node for `functionDeclaration blockStatement` node child node #1', () => {
             assert.deepEqual(NodeUtils.getBlockScopesOfNode(functionDeclarationBlockStatementNode)[0], programNode);
+        });
+
+        it('should return block-scope node for `expressionStatement` node #1 child node #1', () => {
             assert.deepEqual(NodeUtils.getBlockScopesOfNode(expressionStatementNode1)[0], functionDeclarationBlockStatementNode);
+        });
+
+        it('should return block-scope node for `expressionStatement` node #1 child node #2', () => {
             assert.deepEqual(NodeUtils.getBlockScopesOfNode(expressionStatementNode1)[1], programNode);
+        });
+
+        it('should return block-scope node for `ifStatement` node child node #1', () => {
             assert.deepEqual(NodeUtils.getBlockScopesOfNode(ifStatementNode1)[0], functionDeclarationBlockStatementNode);
+        });
+
+        it('should return block-scope node for `ifStatement` node child node #2', () => {
             assert.deepEqual(NodeUtils.getBlockScopesOfNode(ifStatementNode1)[1], programNode);
+        });
+
+        it('should return block-scope node for `ifStatement blockStatement` node #1 child node #1', () => {
             assert.deepEqual(NodeUtils.getBlockScopesOfNode(ifStatementBlockStatementNode1)[0], functionDeclarationBlockStatementNode);
+        });
+
+        it('should return block-scope node for `ifStatement blockStatement` node #1 child node #2', () => {
             assert.deepEqual(NodeUtils.getBlockScopesOfNode(ifStatementBlockStatementNode1)[1], programNode);
+        });
+
+        it('should return block-scope node for `ifStatement blockStatement` node #2 child node #1', () => {
             assert.deepEqual(NodeUtils.getBlockScopesOfNode(ifStatementBlockStatementNode2)[0], functionDeclarationBlockStatementNode);
+        });
+
+        it('should return block-scope node for `ifStatement blockStatement` node #1 child node #2', () => {
             assert.deepEqual(NodeUtils.getBlockScopesOfNode(ifStatementBlockStatementNode2)[1], programNode);
+        });
+
+        it('should return block-scope node for `expressionStatement` node #3 child node #1', () => {
             assert.deepEqual(NodeUtils.getBlockScopesOfNode(expressionStatementNode3)[0], functionDeclarationBlockStatementNode);
+        });
+
+        it('should return block-scope node for `expressionStatement` node #3 child node #2', () => {
             assert.deepEqual(NodeUtils.getBlockScopesOfNode(expressionStatementNode3)[1], programNode);
         });
 
@@ -265,7 +294,7 @@ describe('NodeUtils', () => {
             functionDeclarationNode2: ESTree.FunctionDeclaration,
             programNode: ESTree.Program;
 
-        beforeEach(() => {
+        before(() => {
             expressionStatementNode1 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
             expressionStatementNode2 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
             expressionStatementNode3 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
@@ -319,17 +348,47 @@ describe('NodeUtils', () => {
             ifStatementBlockStatementNode2.parentNode = ifStatementNode2;
         });
 
-        it('should return block-scope depth for given node', () => {
+        it('should return block-scope depth for `program` node', () => {
             assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(programNode), 0);
+        });
+
+        it('should return block-scope depth for `functionDeclaration` node #1', () => {
             assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(functionDeclarationNode1), 0);
+        });
+
+        it('should return block-scope depth for `functionDeclaration blockStatement` node #1', () => {
             assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(functionDeclarationBlockStatementNode1), 1);
+        });
+
+        it('should return block-scope depth for `expressionStatement` node #1', () => {
             assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(expressionStatementNode1), 1);
+        });
+
+        it('should return block-scope depth for `ifStatement` node #1', () => {
             assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(ifStatementNode1), 1);
+        });
+
+        it('should return block-scope depth for `ifStatement blockStatement` node #1', () => {
             assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(ifStatementBlockStatementNode1), 1);
+        });
+
+        it('should return block-scope depth for `functionDeclaration` node #2', () => {
             assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(functionDeclarationNode2), 1);
+        });
+
+        it('should return block-scope depth for `functionDeclaration blockStatement` node #2', () => {
             assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(functionDeclarationBlockStatementNode2), 2);
+        });
+
+        it('should return block-scope depth for `expressionStatement` node #2', () => {
             assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(expressionStatementNode2), 2);
+        });
+
+        it('should return block-scope depth for `ifStatement` node #2', () => {
             assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(ifStatementNode2), 2);
+        });
+
+        it('should return block-scope depth for `ifStatement blockStatement` node #2', () => {
             assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(ifStatementBlockStatementNode2), 2);
         });
 
@@ -339,18 +398,15 @@ describe('NodeUtils', () => {
     });
 
     describe('getUnaryExpressionArgumentNode (unaryExpressionNode: ESTree.UnaryExpression): ESTree.Node', () => {
-        let expressionStatementNode: ESTree.ExpressionStatement,
-            literalNode: ESTree.Literal,
-            unaryExpressionNode1: ESTree.UnaryExpression,
-            unaryExpressionNode2: ESTree.UnaryExpression,
-            programNode: ESTree.Program;
+        let expectedNode: ESTree.Literal,
+            unaryExpressionArgumentNode: ESTree.Node;
 
-        beforeEach(() => {
-            literalNode = Nodes.getLiteralNode('test');
-            unaryExpressionNode2 = Nodes.getUnaryExpressionNode('!', literalNode)
-            unaryExpressionNode1 = Nodes.getUnaryExpressionNode('!', unaryExpressionNode2)
-            expressionStatementNode = Nodes.getExpressionStatementNode(unaryExpressionNode1);
-            programNode = Nodes.getProgramNode([
+        before(() => {
+            const literalNode: ESTree.Literal = Nodes.getLiteralNode('test');
+            const unaryExpressionNode2: ESTree.UnaryExpression = Nodes.getUnaryExpressionNode('!', literalNode);
+            const unaryExpressionNode1: ESTree.UnaryExpression = Nodes.getUnaryExpressionNode('!', unaryExpressionNode2);
+            const expressionStatementNode: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(unaryExpressionNode1);
+            const programNode: ESTree.Program = Nodes.getProgramNode([
                 expressionStatementNode
             ]);
 
@@ -359,10 +415,13 @@ describe('NodeUtils', () => {
             unaryExpressionNode1.parentNode = expressionStatementNode;
             unaryExpressionNode2.parentNode = unaryExpressionNode1;
             literalNode.parentNode = unaryExpressionNode2;
+
+            unaryExpressionArgumentNode = NodeUtils.getUnaryExpressionArgumentNode(unaryExpressionNode1);
+            expectedNode = literalNode;
         });
 
         it('should return unary expression argument node', () => {
-            assert.deepEqual(NodeUtils.getUnaryExpressionArgumentNode(unaryExpressionNode1), literalNode);
+            assert.deepEqual(unaryExpressionArgumentNode, expectedNode);
         });
     });
 
@@ -388,32 +447,61 @@ describe('NodeUtils', () => {
             );
         });
 
-        it('should parentize given AST-tree with `ProgramNode` as root node', () => {
-            programNode = Nodes.getProgramNode([
-                ifStatementNode
-            ]);
+        describe('parentize AST-tree with `ProgramNode` as root node', () => {
+            beforeEach(() => {
+                programNode = Nodes.getProgramNode([
+                    ifStatementNode
+                ]);
 
-            programNode = NodeUtils.parentize(programNode);
+                programNode = NodeUtils.parentize(programNode);
+            });
 
-            assert.deepEqual(programNode.parentNode, programNode);
-            assert.deepEqual(ifStatementNode.parentNode, programNode);
-            assert.deepEqual(ifStatementBlockStatementNode.parentNode, ifStatementNode);
-            assert.deepEqual(expressionStatementNode1.parentNode, ifStatementBlockStatementNode);
-            assert.deepEqual(expressionStatementNode2.parentNode, ifStatementBlockStatementNode);
+            it('should parentize `program` node with `ProgramNode` as root node', () => {
+                assert.deepEqual(programNode.parentNode, programNode);
+            });
+
+            it('should parentize `ifStatement` node with `ProgramNode` as root node', () => {
+                assert.deepEqual(ifStatementNode.parentNode, programNode);
+            });
+
+            it('should parentize `ifStatement blockStatement` node with `ProgramNode` as root node', () => {
+                assert.deepEqual(ifStatementBlockStatementNode.parentNode, ifStatementNode);
+            });
+
+            it('should parentize `expressionStatement` node #1 with `ProgramNode` as root node', () => {
+                assert.deepEqual(expressionStatementNode1.parentNode, ifStatementBlockStatementNode);
+            });
+
+            it('should parentize `expressionStatement` node #2 with `ProgramNode` as root node', () => {
+                assert.deepEqual(expressionStatementNode2.parentNode, ifStatementBlockStatementNode);
+            });
         });
 
-        it('should parentize given AST-tree', () => {
-            programNode = Nodes.getProgramNode([
-                ifStatementNode
-            ]);
-            programNode.parentNode = programNode;
+        describe('parentize AST-tree', () => {
+            beforeEach(() => {
+                programNode = Nodes.getProgramNode([
+                    ifStatementNode
+                ]);
+                programNode.parentNode = programNode;
 
-            ifStatementNode = NodeUtils.parentize(ifStatementNode);
+                ifStatementNode = NodeUtils.parentize(ifStatementNode);
+            });
 
-            assert.deepEqual(ifStatementNode.parentNode, programNode);
-            assert.deepEqual(ifStatementBlockStatementNode.parentNode, ifStatementNode);
-            assert.deepEqual(expressionStatementNode1.parentNode, ifStatementBlockStatementNode);
-            assert.deepEqual(expressionStatementNode2.parentNode, ifStatementBlockStatementNode);
+            it('should parentize `ifStatement` node', () => {
+                assert.deepEqual(ifStatementNode.parentNode, programNode);
+            });
+
+            it('should parentize `ifStatement blockStatement` node', () => {
+                assert.deepEqual(ifStatementBlockStatementNode.parentNode, ifStatementNode);
+            });
+
+            it('should parentize `expressionStatement` node #1', () => {
+                assert.deepEqual(expressionStatementNode1.parentNode, ifStatementBlockStatementNode);
+            });
+
+            it('should parentize `expressionStatement` node #2', () => {
+                assert.deepEqual(expressionStatementNode2.parentNode, ifStatementBlockStatementNode);
+            });
         });
     });
 });

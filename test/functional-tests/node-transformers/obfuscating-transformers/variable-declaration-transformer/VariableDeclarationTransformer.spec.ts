@@ -9,106 +9,185 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 
 describe('VariableDeclarationTransformer', () => {
-    it('should transform `variableDeclaration` node', () => {
-        let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/simple-declaration.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
+    describe('variant #1: default behaviour', () => {
+        const variableDeclarationRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *'abc';/;
+        const variableCallRegExp: RegExp = /console\['log'\]\(_0x([a-f0-9]){4,6}\);/;
 
-        assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-f0-9]){4,6} *= *'abc';/);
-        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['log'\]\(_0x([a-f0-9]){4,6}\);/);
-    });
+        let obfuscatedCode: string;
 
-    it('should not transform `variableDeclaration` node if parent block scope node is `Program` node', () => {
-        let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
-
-        assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *0xa;/);
-        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['log'\]\(test\);/);
-    });
-
-    it('should transform variable call (`identifier` node) outside of block scope of node in which this variable was declared with `var` kind', () => {
-        let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/var-kind.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
-
-        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['log'\]\(_0x([a-f0-9]){4,6}\);/);
-    });
-
-    it('should not transform variable call (`identifier` node) outside of block scope of node in which this variable was declared with `let` kind', () => {
-        let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/let-kind.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
-
-        assert.match(obfuscationResult.getObfuscatedCode(),  /console\['log'\]\(test\);/);
-    });
-
-    describe(`variable calls before variable declaration`, () => {
-        let obfuscationResult: IObfuscationResult;
-
-        beforeEach(() => {
-            obfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/variable-call-before-variable-declaration-1.js'),
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-declaration.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET
                 }
             );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
         });
 
-        it('should transform variable call (`identifier` node name) before variable declaration if this call is inside function body', () => {
-            assert.match(obfuscationResult.getObfuscatedCode(),  /console\['log'\]\(_0x([a-f0-9]){4,6}\['item'\]\);/);
+        it('match #1: should transform `variableDeclaration` node', () => {
+            assert.match(obfuscatedCode, variableDeclarationRegExp);
         });
 
-        it('should transform variable call (`identifier` node name) before variable declaration', () => {
-            assert.match(obfuscationResult.getObfuscatedCode(),  /console\['log'\]\(_0x([a-f0-9]){4,6}\);/);
+        it('match #2: should transform `variableDeclaration` node', () => {
+            assert.match(obfuscatedCode, variableCallRegExp);
         });
     });
 
-    describe(`variable calls before variable declaration when function param has the same name as variables name`, () => {
-        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/variable-call-before-variable-declaration-2.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
-        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+    describe('variant #2: parent block scope node is `Program` node', () => {
+        const variableDeclarationRegExp: RegExp = /var *test *= *0xa;/;
+        const variableCallRegExp: RegExp = /console\['log'\]\(test\);/;
 
-        const functionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-            .match(/function *_0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\,(_0x[a-f0-9]{4,6})\) *\{/);
-        const innerFunctionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-            .match(/function _0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\) *\{/);
-        const constructorIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-            .match(/console\['log'\]\((_0x[a-f0-9]{4,6})\)/);
-        const objectIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-            .match(/return\{'t':(_0x[a-f0-9]{4,6})\}/);
-        const variableDeclarationIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-            .match(/var *(_0x[a-f0-9]{4,6});/);
+        let obfuscatedCode: string;
 
-        const outerFunctionParamIdentifierName: string|null = (<RegExpMatchArray>functionParamIdentifierMatch)[1];
-        const innerFunctionParamIdentifierName: string|null = (<RegExpMatchArray>innerFunctionParamIdentifierMatch)[1];
-        const constructorIdentifierName: string|null = (<RegExpMatchArray>constructorIdentifierMatch)[1];
-        const objectIdentifierName: string|null = (<RegExpMatchArray>objectIdentifierMatch)[1];
-        const variableDeclarationIdentifierName: string|null = (<RegExpMatchArray>variableDeclarationIdentifierMatch)[1];
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
 
-        it('should\'t name variables inside inner function with names from outer function params', () => {
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('match #1: shouldn\'t transform `variableDeclaration` node', () => {
+            assert.match(obfuscatedCode, variableDeclarationRegExp);
+        });
+
+        it('match #2: shouldn\'t transform `variableDeclaration` node', () => {
+            assert.match(obfuscatedCode, variableCallRegExp);
+        });
+    });
+
+    describe('variant #3: scope of `var` kind', () => {
+        const regExp: RegExp = /console\['log'\]\(_0x([a-f0-9]){4,6}\);/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/var-kind.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('should transform variable call (`identifier` node) outside of block scope of node in which this variable was declared with `var` kind', () => {
+            assert.match(obfuscatedCode, regExp);
+        });
+    });
+
+    describe('variant #4: scope of `let` kind', () => {
+        const regExp: RegExp = /console\['log'\]\(test\);/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/let-kind.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('shouldn\'t transform variable call (`identifier` node) outside of block scope of node in which this variable was declared with `let` kind', () => {
+            assert.match(obfuscatedCode, regExp);
+        });
+    });
+
+    describe(`variant #5: variable calls before variable declaration`, () => {
+        const functionBodyVariableCallRegExp: RegExp = /console\['log'\]\(_0x([a-f0-9]){4,6}\['item'\]\);/;
+        const variableCallBeforeDeclarationRegExp: RegExp = /console\['log'\]\(_0x([a-f0-9]){4,6}\);/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/variable-call-before-variable-declaration-1.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('should transform variable call (`identifier` node name) before variable declaration if this call is inside function body', () => {
+            assert.match(obfuscatedCode, functionBodyVariableCallRegExp);
+        });
+
+        it('should transform variable call (`identifier` node name) before variable declaration', () => {
+            assert.match(obfuscatedCode, variableCallBeforeDeclarationRegExp);
+        });
+    });
+
+    describe(`variant #6: variable calls before variable declaration when function param has the same name as variables name`, () => {
+        const functionParamIdentifierRegExp: RegExp = /function *_0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\,(_0x[a-f0-9]{4,6})\) *\{/;
+        const innerFunctionParamIdentifierRegExp: RegExp = /function _0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\) *\{/;
+        const constructorIdentifierRegExp: RegExp = /console\['log'\]\((_0x[a-f0-9]{4,6})\)/;
+        const objectIdentifierRegExp: RegExp = /return\{'t':(_0x[a-f0-9]{4,6})\}/;
+        const variableDeclarationIdentifierRegExp: RegExp = /var *(_0x[a-f0-9]{4,6});/;
+
+        let outerFunctionParamIdentifierName: string|null,
+            innerFunctionParamIdentifierName: string|null,
+            constructorIdentifierName: string|null,
+            objectIdentifierName: string|null,
+            variableDeclarationIdentifierName: string|null;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/variable-call-before-variable-declaration-2.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+            const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+
+            const functionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(functionParamIdentifierRegExp);
+            const innerFunctionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(innerFunctionParamIdentifierRegExp);
+            const constructorIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(constructorIdentifierRegExp);
+            const objectIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(objectIdentifierRegExp);
+            const variableDeclarationIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(variableDeclarationIdentifierRegExp);
+
+            outerFunctionParamIdentifierName = (<RegExpMatchArray>functionParamIdentifierMatch)[1];
+            innerFunctionParamIdentifierName = (<RegExpMatchArray>innerFunctionParamIdentifierMatch)[1];
+            constructorIdentifierName = (<RegExpMatchArray>constructorIdentifierMatch)[1];
+            objectIdentifierName = (<RegExpMatchArray>objectIdentifierMatch)[1];
+            variableDeclarationIdentifierName = (<RegExpMatchArray>variableDeclarationIdentifierMatch)[1];
+        });
+
+        it('match #1: should\'t name variables inside inner function with names from outer function params', () => {
             assert.notEqual(outerFunctionParamIdentifierName, constructorIdentifierName);
+        });
+
+        it('match #2: should\'t name variables inside inner function with names from outer function params', () => {
             assert.notEqual(outerFunctionParamIdentifierName, innerFunctionParamIdentifierName);
         });
 
-        it('should correct transform variables inside outer function body', () => {
+        it('match #1: should correct transform variables inside outer function body', () => {
             assert.equal(outerFunctionParamIdentifierName, objectIdentifierName);
+        });
+
+        it('match #2: should correct transform variables inside outer function body', () => {
             assert.equal(outerFunctionParamIdentifierName, variableDeclarationIdentifierName);
         });
 
@@ -121,40 +200,61 @@ describe('VariableDeclarationTransformer', () => {
         });
     });
 
-    describe(`variable calls before variable declaration when catch clause param has the same name as variables name`, () => {
-        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/variable-call-before-variable-declaration-3.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
-        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+    describe(`variant #7: variable calls before variable declaration when catch clause param has the same name as variables name`, () => {
+        const catchClauseParamIdentifierRegExp: RegExp = /catch *\((_0x[a-f0-9]{4,6})\) *\{/;
+        const innerFunctionParamIdentifierRegExp: RegExp = /function _0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\) *\{/;
+        const constructorIdentifierRegExp: RegExp = /console\['log'\]\((_0x[a-f0-9]{4,6})\)/;
+        const objectIdentifierRegExp: RegExp = /return\{'t':(_0x[a-f0-9]{4,6})\}/;
+        const variableDeclarationIdentifierRegExp: RegExp = /var *(_0x[a-f0-9]{4,6});/;
 
-        const catchClauseParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-            .match(/catch *\((_0x[a-f0-9]{4,6})\) *\{/);
-        const innerFunctionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-            .match(/function _0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\) *\{/);
-        const constructorIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-            .match(/console\['log'\]\((_0x[a-f0-9]{4,6})\)/);
-        const objectIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-            .match(/return\{'t':(_0x[a-f0-9]{4,6})\}/);
-        const variableDeclarationIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-            .match(/var *(_0x[a-f0-9]{4,6});/);
+        let catchClauseParamIdentifierName: string|null,
+            innerFunctionParamIdentifierName: string|null,
+            constructorIdentifierName: string|null,
+            objectIdentifierName: string|null,
+            variableDeclarationIdentifierName: string|null;
 
-        const functionParamIdentifierName: string|null = (<RegExpMatchArray>catchClauseParamIdentifierMatch)[1];
-        const innerFunctionParamIdentifierName: string|null = (<RegExpMatchArray>innerFunctionParamIdentifierMatch)[1];
-        const constructorIdentifierName: string|null = (<RegExpMatchArray>constructorIdentifierMatch)[1];
-        const objectIdentifierName: string|null = (<RegExpMatchArray>objectIdentifierMatch)[1];
-        const variableDeclarationIdentifierName: string|null = (<RegExpMatchArray>variableDeclarationIdentifierMatch)[1];
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/variable-call-before-variable-declaration-3.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+            const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
 
-        it('should\'t name variables inside inner function with names from catch clause param', () => {
-            assert.notEqual(functionParamIdentifierName, constructorIdentifierName);
-            assert.notEqual(functionParamIdentifierName, innerFunctionParamIdentifierName);
+            const catchClauseParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(catchClauseParamIdentifierRegExp);
+            const innerFunctionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(innerFunctionParamIdentifierRegExp);
+            const constructorIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(constructorIdentifierRegExp);
+            const objectIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(objectIdentifierRegExp);
+            const variableDeclarationIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                .match(variableDeclarationIdentifierRegExp);
+
+            catchClauseParamIdentifierName = (<RegExpMatchArray>catchClauseParamIdentifierMatch)[1];
+            innerFunctionParamIdentifierName = (<RegExpMatchArray>innerFunctionParamIdentifierMatch)[1];
+            constructorIdentifierName = (<RegExpMatchArray>constructorIdentifierMatch)[1];
+            objectIdentifierName = (<RegExpMatchArray>objectIdentifierMatch)[1];
+            variableDeclarationIdentifierName = (<RegExpMatchArray>variableDeclarationIdentifierMatch)[1];
         });
 
-        it('should correct transform variables inside catch clause body', () => {
-            assert.equal(functionParamIdentifierName, objectIdentifierName);
-            assert.equal(functionParamIdentifierName, variableDeclarationIdentifierName);
+        it('match #1: should\'t name variables inside inner function with names from catch clause param', () => {
+            assert.notEqual(catchClauseParamIdentifierName, constructorIdentifierName);
+        });
+
+        it('match #2: should\'t name variables inside inner function with names from catch clause param', () => {
+            assert.notEqual(catchClauseParamIdentifierName, innerFunctionParamIdentifierName);
+        });
+
+        it('equal #1: should correct transform variables inside catch clause body', () => {
+            assert.equal(catchClauseParamIdentifierName, objectIdentifierName);
+        });
+
+        it('equal #2: should correct transform variables inside catch clause body', () => {
+            assert.equal(catchClauseParamIdentifierName, variableDeclarationIdentifierName);
         });
 
         it('should correct transform variables inside inner function body', () => {
@@ -166,72 +266,119 @@ describe('VariableDeclarationTransformer', () => {
         });
     });
 
-    describe('wrong replacement', () => {
-        it('shouldn\'t replace property node identifier', () => {
-            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/property-identifier.js'),
+    describe('variant #8: wrong replacement', () => {
+        describe('variant #1: property node identifier', () => {
+            const regExp: RegExp = /var _0x([a-f0-9]){4,6} *= *\{'test/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/property-identifier.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('shouldn\'t replace property node identifier', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
+        describe('variant #2: computed member expression identifier', () => {
+            const regExp: RegExp = /_0x([a-f0-9]){4,6}\['test'\]/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/member-expression-identifier.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('shouldn\'t replace computed member expression identifier', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+    });
+
+    describe('variant #9: object pattern as variable declarator', () => {
+        const objectPatternVariableDeclaratorRegExp: RegExp = /var *\{ *bar *\} *= *\{ *'bar' *: *'foo' *\};/;
+        const variableUsageRegExp: RegExp = /console\['log'\]\(bar\);/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/object-pattern.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET
                 }
             );
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var _0x([a-f0-9]){4,6} *= *\{'test/);
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
         });
 
-        it('shouldn\'t replace computed member expression identifier', () => {
-            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/member-expression-identifier.js'),
+        it('match #1: shouldn\'t transform object pattern variable declarator', () => {
+            assert.match(obfuscatedCode, objectPatternVariableDeclaratorRegExp);
+        });
+
+        it('match #2: shouldn\'t transform object pattern variable declarator', () => {
+            assert.match(obfuscatedCode, variableUsageRegExp);
+        });
+    });
+
+    describe('variant #10: array pattern as variable declarator', () => {
+        const objectPatternVariableDeclaratorRegExp: RegExp = /var *\[ *(_0x([a-f0-9]){4,6}), *(_0x([a-f0-9]){4,6}) *\] *= *\[0x1, *0x2\];/;
+        const variableUsageRegExp: RegExp = /console\['log'\]\((_0x([a-f0-9]){4,6}), *(_0x([a-f0-9]){4,6})\);/;
+
+        let obfuscatedCode: string,
+            objectPatternIdentifierName1: string,
+            objectPatternIdentifierName2: string,
+            identifierName1: string,
+            identifierName2: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/array-pattern.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET
                 }
             );
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /_0x([a-f0-9]){4,6}\['test'\]/);
-        });
-    });
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
 
-    describe('object pattern as variable declarator', () => {
-        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/object-pattern.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
-        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
-
-        it('shouldn\'t transform object pattern variable declarator', () => {
-            const objectPatternVariableDeclaratorMatch: RegExp = /var *\{ *bar *\} *= *\{ *'bar' *: *'foo' *\};/;
-            const variableUsageMatch: RegExp = /console\['log'\]\(bar\);/;
-
-            assert.match(obfuscatedCode, objectPatternVariableDeclaratorMatch);
-            assert.match(obfuscatedCode, variableUsageMatch);
-        });
-    });
-
-    describe('array pattern as variable declarator', () => {
-        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/array-pattern.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
-        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
-
-        const objectPatternVariableDeclaratorMatch: RegExp = /var *\[ *(_0x([a-f0-9]){4,6}), *(_0x([a-f0-9]){4,6}) *\] *= *\[0x1, *0x2\];/;
-        const variableUsageMatch: RegExp = /console\['log'\]\((_0x([a-f0-9]){4,6}), *(_0x([a-f0-9]){4,6})\);/;
-
-        const objectPatternIdentifierName1: string = obfuscatedCode.match(objectPatternVariableDeclaratorMatch)![1];
-        const objectPatternIdentifierName2: string = obfuscatedCode.match(objectPatternVariableDeclaratorMatch)![2];
-        const identifierName1: string = obfuscatedCode.match(variableUsageMatch)![1];
-        const identifierName2: string = obfuscatedCode.match(variableUsageMatch)![2];
-
-        it('should transform array pattern variable declarator', () => {
-            assert.match(obfuscatedCode, objectPatternVariableDeclaratorMatch);
-            assert.match(obfuscatedCode, variableUsageMatch);
+            objectPatternIdentifierName1 = obfuscatedCode.match(objectPatternVariableDeclaratorRegExp)![1];
+            objectPatternIdentifierName2 = obfuscatedCode.match(objectPatternVariableDeclaratorRegExp)![2];
+            identifierName1 = obfuscatedCode.match(variableUsageRegExp)![1];
+            identifierName2 = obfuscatedCode.match(variableUsageRegExp)![2];
         });
 
-        it('should keep same identifier names same for identifiers in variable declaration and after variable declaration', () => {
+        it('match #1: should transform array pattern variable declarator', () => {
+            assert.match(obfuscatedCode, objectPatternVariableDeclaratorRegExp);
+        });
+
+        it('match #2: should transform array pattern variable declarator', () => {
+            assert.match(obfuscatedCode, variableUsageRegExp);
+        });
+
+        it('equal #1: should keep same identifier names same for identifiers in variable declaration and after variable declaration', () => {
             assert.equal(objectPatternIdentifierName1, identifierName1);
+        });
+
+        it('equal #2: should keep same identifier names same for identifiers in variable declaration and after variable declaration', () => {
             assert.equal(objectPatternIdentifierName2, identifierName2);
         });
     });

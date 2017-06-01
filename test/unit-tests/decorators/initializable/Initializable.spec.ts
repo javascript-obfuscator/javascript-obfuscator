@@ -5,8 +5,8 @@ import { IInitializable } from '../../../../src/interfaces/IInitializable';
 
 describe('@initializable', () => {
     describe('initializable (initializeMethodKey: string): any', () => {
-        it('shouldn\'t throws an errors if property was initialized', () => {
-            assert.doesNotThrow(() => {
+        describe('variant #1: property was initialized', () => {
+            const testFunc: () => void = () => {
                 class Foo implements IInitializable {
                     @initializable()
                     public property: string;
@@ -21,11 +21,15 @@ describe('@initializable', () => {
                 foo.initialize('baz');
 
                 foo.property;
-            }, Error);
+            };
+
+            it('shouldn\'t throws an errors if property was initialized', () => {
+                assert.doesNotThrow(testFunc, Error);
+            });
         });
 
-        it('shouldn\'t throws an errors if custom initialization method name is passed', () => {
-            assert.doesNotThrow(() => {
+        describe('variant #2: custom initialization method name is passed', () => {
+            const testFunc: () => void = () => {
                 class Foo implements IInitializable {
                     @initializable()
                     public property: string;
@@ -43,11 +47,15 @@ describe('@initializable', () => {
                 foo.bar('baz');
 
                 foo.property;
-            }, Error);
+            };
+
+            it('shouldn\'t throws an errors if custom initialization method name is passed', () => {
+                assert.doesNotThrow(testFunc, Error);
+            });
         });
 
-        it('should throws an error if property didn\'t initialized', () => {
-            assert.throws(() => {
+        describe('variant #3: property didn\'t initialized', () => {
+            const testFunc: () => void = () => {
                 class Foo implements IInitializable {
                     @initializable()
                     public property: string;
@@ -61,11 +69,15 @@ describe('@initializable', () => {
                 foo.initialize('baz');
 
                 foo.property;
-            }, /Property `property` is not initialized/);
+            };
+
+            it('should throws an error if property didn\'t initialized', () => {
+                assert.throws(testFunc, /Property `property` is not initialized/);
+            });
         });
 
-        it('should throws an error if `initialize` method with custom name wasn\'t found', () => {
-            assert.throws(() => {
+        describe('variant #4: `initialize` method with custom name', () => {
+            const testFunc: () => void = () => {
                 class Foo {
                     @initializable('bar')
                     public property: string;
@@ -80,7 +92,11 @@ describe('@initializable', () => {
                 foo.initialize('baz');
 
                 foo.property;
-            }, /method with initialization logic not found/);
+            };
+
+            it('should throws an error if `initialize` method with custom name wasn\'t found', () => {
+                assert.throws(testFunc, /method with initialization logic not found/);
+            });
         });
     });
 });

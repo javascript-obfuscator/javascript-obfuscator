@@ -13,7 +13,7 @@ import { CryptUtils } from '../../../../../src/utils/CryptUtils';
  * @returns {Function}
  */
 function getFunctionFromTemplate (templateData: any, callsControllerFunctionName: string,  currentDomain: string) {
-    let domainLockTemplate: string = format(DomainLockNodeTemplate(), templateData);
+    const domainLockTemplate: string = format(DomainLockNodeTemplate(), templateData);
 
     return Function(`
         document = {
@@ -33,57 +33,80 @@ function getFunctionFromTemplate (templateData: any, callsControllerFunctionName
 }
 
 describe('DomainLockNodeTemplate (): string', () => {
-    let domainsString: string,
-        currentDomain: string,
-        hiddenDomainsString: string,
-        diff: string,
-        singleNodeCallControllerFunctionName: string = 'callsController';
+    const singleNodeCallControllerFunctionName: string = 'callsController';
 
-    it('should correctly runs code inside template if current domain matches with `domainsString`', () => {
-        domainsString = ['www.example.com'].join(';');
-        currentDomain = 'www.example.com';
-        [
-            hiddenDomainsString,
-            diff
-        ] = CryptUtils.hideString(domainsString, domainsString.length * 3);
+    describe('variant #1: current domain matches with `domainsString`', () => {
+        const domainsString: string = ['www.example.com'].join(';');
+        const currentDomain: string = 'www.example.com';
 
-        assert.doesNotThrow(() => getFunctionFromTemplate({
-            domainLockFunctionName: 'domainLockFunction',
-            diff: diff,
-            domains: hiddenDomainsString,
-            singleNodeCallControllerFunctionName
-        }, singleNodeCallControllerFunctionName, currentDomain));
+        let testFunc: () => void;
+
+        before(() => {
+            const [
+                hiddenDomainsString,
+                diff
+            ] = CryptUtils.hideString(domainsString, domainsString.length * 3);
+
+            testFunc = () => getFunctionFromTemplate({
+                domainLockFunctionName: 'domainLockFunction',
+                diff: diff,
+                domains: hiddenDomainsString,
+                singleNodeCallControllerFunctionName
+            }, singleNodeCallControllerFunctionName, currentDomain);
+        });
+
+        it('should correctly runs code inside template', () => {
+            assert.doesNotThrow(testFunc);
+        });
     });
 
-    it('should correctly runs code inside template if current domain matches with base domain of `domainsString` item', () => {
-        domainsString = ['www.test.com', '.example.com'].join(';');
-        currentDomain = 'subdomain.example.com';
-        [
-            hiddenDomainsString,
-            diff
-        ] = CryptUtils.hideString(domainsString, domainsString.length * 3);
+    describe('variant #2: urrent domain matches with base domain of `domainsString` item', () => {
+        const domainsString: string = ['www.test.com', '.example.com'].join(';');
+        const currentDomain: string = 'subdomain.example.com';
 
-        assert.doesNotThrow(() => getFunctionFromTemplate({
-            domainLockFunctionName: 'domainLockFunction',
-            diff: diff,
-            domains: hiddenDomainsString,
-            singleNodeCallControllerFunctionName
-        }, singleNodeCallControllerFunctionName, currentDomain));
+        let testFunc: () => void;
+
+        before(() => {
+            const [
+                hiddenDomainsString,
+                diff
+            ] = CryptUtils.hideString(domainsString, domainsString.length * 3);
+
+            testFunc = () => getFunctionFromTemplate({
+                domainLockFunctionName: 'domainLockFunction',
+                diff: diff,
+                domains: hiddenDomainsString,
+                singleNodeCallControllerFunctionName
+            }, singleNodeCallControllerFunctionName, currentDomain);
+        });
+
+        it('should correctly runs code inside template', () => {
+            assert.doesNotThrow(testFunc);
+        });
     });
 
-    it('should throw an error if current domain doesn\'t match with `domainsString`', () => {
-        domainsString = ['www.example.com'].join(';');
-        currentDomain = 'www.test.com';
-        [
-            hiddenDomainsString,
-            diff
-        ] = CryptUtils.hideString(domainsString, domainsString.length * 3);
+    describe('variant #3: current domain doesn\'t match with `domainsString`', () => {
+        const domainsString: string = ['www.example.com'].join(';');
+        const currentDomain: string = 'www.test.com';
 
-        assert.throws(() => getFunctionFromTemplate({
-            domainLockFunctionName: 'domainLockFunction',
-            diff: diff,
-            domains: hiddenDomainsString,
-            singleNodeCallControllerFunctionName
-        }, singleNodeCallControllerFunctionName, currentDomain));
+        let testFunc: () => void;
+
+        before(() => {
+            const [
+                hiddenDomainsString,
+                diff
+            ] = CryptUtils.hideString(domainsString, domainsString.length * 3);
+
+            testFunc = () => getFunctionFromTemplate({
+                domainLockFunctionName: 'domainLockFunction',
+                diff: diff,
+                domains: hiddenDomainsString,
+                singleNodeCallControllerFunctionName
+            }, singleNodeCallControllerFunctionName, currentDomain);
+        });
+
+        it('should throw an error', () => {
+            assert.throws(testFunc);
+        });
     });
 });

@@ -17,28 +17,34 @@ import { NodeAppender } from '../../../../src/node/NodeAppender';
 import { Nodes } from '../../../../src/node/Nodes';
 import { NodeUtils } from '../../../../src/node/NodeUtils';
 
+/**
+ * @param fixturePath
+ * @return {TStatement[]}
+ */
+const convertCodeToStructure: (fixturePath: string) => TStatement[] = (fixturePath) => {
+    return NodeUtils.convertCodeToStructure(
+        readFileAsString(`${__dirname}${fixturePath}`)
+    );
+};
+
+/**
+ * @param fixturePath
+ * @return {ESTree.Program}
+ */
+const convertCodeToAst: (fixturePath: string) => ESTree.Program = (fixturePath) => {
+    return Nodes.getProgramNode(convertCodeToStructure(fixturePath));
+};
+
 describe('NodeAppender', () => {
     describe('appendNode (blockScopeNode: TNodeWithBlockStatement[], nodeBodyStatements: TStatement[]): void', () => {
         let astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
             node: TStatement[];
 
-        beforeEach(() => {
-            node = NodeUtils.convertCodeToStructure(
-                readFileAsString(__dirname + '/fixtures/simple-input.js')
-            );
-
-            astTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/append-node.js')
-                )
-            );
-
-            expectedAstTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/append-node-expected.js')
-                )
-            );
+        before(() => {
+            node = convertCodeToStructure('/fixtures/simple-input.js');
+            astTree = convertCodeToAst('/fixtures/append-node.js');
+            expectedAstTree = convertCodeToAst('/fixtures/append-node-expected.js');
 
             astTree = NodeUtils.parentize(astTree);
             expectedAstTree = NodeUtils.parentize(expectedAstTree);
@@ -62,116 +68,97 @@ describe('NodeAppender', () => {
             stackTraceData: IStackTraceData[];
 
         beforeEach(() => {
-            node = NodeUtils.convertCodeToStructure(
-                readFileAsString(__dirname + '/fixtures/simple-input.js')
-            );
+            node = convertCodeToStructure('/fixtures/simple-input.js');
         });
 
-        it('should append node into first and deepest function call in calls trace - variant #1', () => {
-            astTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/append-node-to-optimal-block-scope/variant-1.js')
-                )
-            );
+        describe('variant #1: nested function calls', () => {
+            beforeEach(() => {
+                astTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/variant-1.js');
+                expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/variant-1-expected.js');
 
-            expectedAstTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/append-node-to-optimal-block-scope/variant-1-expected.js')
-                )
-            );
+                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node);
+            });
 
-            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
-            NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node);
-
-            assert.deepEqual(astTree, expectedAstTree);
+            it('should append node into first and deepest function call in nested function calls', () => {
+                assert.deepEqual(astTree, expectedAstTree);
+            });
         });
 
-        it('should append node into first and deepest function call in calls trace - variant #2', () => {
-            astTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/append-node-to-optimal-block-scope/variant-2.js')
-                )
-            );
+        describe('variant #2: nested function calls', () => {
+            beforeEach(() => {
+                astTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/variant-2.js');
+                expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/variant-2-expected.js');
 
-            expectedAstTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/append-node-to-optimal-block-scope/variant-2-expected.js')
-                )
-            );
+                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node);
 
-            stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
-            NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node);
+            });
 
-            assert.deepEqual(astTree, expectedAstTree);
+            it('should append node into first and deepest function call in nested function calls', () => {
+                assert.deepEqual(astTree, expectedAstTree);
+            });
         });
 
         describe('append by specific index', () => {
             let astTree: ESTree.Program;
 
             beforeEach(() => {
-                astTree = Nodes.getProgramNode(
-                    NodeUtils.convertCodeToStructure(
-                        readFileAsString(__dirname + '/fixtures/append-node-to-optimal-block-scope/by-index.js')
-
-                    )
-                );
+                astTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index.js');
             });
 
-            it('should append node into deepest function call by specified index in calls trace - variant #1', () => {
-                expectedAstTree = Nodes.getProgramNode(
-                    NodeUtils.convertCodeToStructure(
-                        readFileAsString(__dirname + '/fixtures/append-node-to-optimal-block-scope/by-index-variant-1-expected.js')
+            describe('variant #1: append by specific index in nested function calls', () => {
+                beforeEach(() => {
+                    expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index-variant-1-expected.js');
 
-                    )
-                );
+                    stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                    NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node, 2);
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
-                NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node, 2);
+                });
 
-                assert.deepEqual(astTree, expectedAstTree);
+                it('should append node into deepest function call by specified index in nested function calls', () => {
+                    assert.deepEqual(astTree, expectedAstTree);
+                });
             });
 
-            it('should append node into deepest function call by specified index in calls trace - variant #2', () => {
-                expectedAstTree = Nodes.getProgramNode(
-                    NodeUtils.convertCodeToStructure(
-                        readFileAsString(__dirname + '/fixtures/append-node-to-optimal-block-scope/by-index-variant-2-expected.js')
+            describe('variant #2: append by specific index in nested function calls', () => {
+                beforeEach(() => {
+                    expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index-variant-2-expected.js');
 
-                    )
-                );
+                    stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                    NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node, 1);
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
-                NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node, 1);
+                });
 
-                assert.deepEqual(astTree, expectedAstTree);
+                it('should append node into deepest function call by specified index in nested function calls', () => {
+                    assert.deepEqual(astTree, expectedAstTree);
+                });
             });
 
-            it('should append node into deepest function call by specified index in calls trace - variant #3', () => {
-                astTree = Nodes.getProgramNode(
-                    NodeUtils.convertCodeToStructure(
-                        readFileAsString(__dirname + '/fixtures/append-node-to-optimal-block-scope/by-index-variant-3.js')
-                    )
-                );
-                expectedAstTree = Nodes.getProgramNode(
-                    NodeUtils.convertCodeToStructure(
-                        readFileAsString(__dirname + '/fixtures/append-node-to-optimal-block-scope/by-index-variant-3-expected.js')
-                    )
-                );
+            describe('variant #3: append by specific index in nested function calls', () => {
+                beforeEach(() => {
+                    astTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index-variant-3.js');
+                    expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index-variant-3-expected.js');
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
-                NodeAppender.appendNodeToOptimalBlockScope(
-                    stackTraceData,
-                    astTree,
-                    node,
-                    NodeAppender.getRandomStackTraceIndex(stackTraceData.length)
-                );
+                    stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                    NodeAppender.appendNodeToOptimalBlockScope(
+                        stackTraceData,
+                        astTree,
+                        node,
+                        NodeAppender.getRandomStackTraceIndex(stackTraceData.length)
+                    );
 
-                assert.deepEqual(astTree, expectedAstTree);
+                });
+
+                it('should append node into deepest function call by specified index in nested function calls', () => {
+                    assert.deepEqual(astTree, expectedAstTree);
+                });
             });
         });
     });
 
     describe('getRandomStackTraceIndex (stackTraceRootLength: number): number', () => {
-        it('should returns random index between 0 and stack trace data root length', () => {
+        it('should return random index between 0 and stack trace data root length', () => {
             let index: number;
 
             for (let i: number = 0; i < 100; i++) {
@@ -188,22 +175,10 @@ describe('NodeAppender', () => {
             expectedAstTree: ESTree.Program,
             node: TStatement[];
 
-        beforeEach(() => {
-            node = NodeUtils.convertCodeToStructure(
-                readFileAsString(__dirname + '/fixtures/simple-input.js')
-            );
-
-            astTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/insert-node-at-index.js')
-                )
-            );
-
-            expectedAstTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/insert-node-at-index-expected.js')
-                )
-            );
+        before(() => {
+            node = convertCodeToStructure('/fixtures/simple-input.js');
+            astTree = convertCodeToAst('/fixtures/insert-node-at-index.js');
+            expectedAstTree = convertCodeToAst('/fixtures/insert-node-at-index-expected.js');
 
             astTree = NodeUtils.parentize(astTree);
             expectedAstTree = NodeUtils.parentize(expectedAstTree);
@@ -221,22 +196,10 @@ describe('NodeAppender', () => {
             expectedAstTree: ESTree.Program,
             node: TStatement[];
 
-        beforeEach(() => {
-            node = NodeUtils.convertCodeToStructure(
-                readFileAsString(__dirname + '/fixtures/simple-input.js')
-            );
-
-            astTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/prepend-node.js')
-                )
-            );
-
-            expectedAstTree = Nodes.getProgramNode(
-                NodeUtils.convertCodeToStructure(
-                    readFileAsString(__dirname + '/fixtures/prepend-node-expected.js')
-                )
-            );
+        before(() => {
+            node = convertCodeToStructure('/fixtures/simple-input.js');
+            astTree = convertCodeToAst('/fixtures/prepend-node.js');
+            expectedAstTree = convertCodeToAst('/fixtures/prepend-node-expected.js');
 
             astTree = NodeUtils.parentize(astTree);
             expectedAstTree = NodeUtils.parentize(expectedAstTree);

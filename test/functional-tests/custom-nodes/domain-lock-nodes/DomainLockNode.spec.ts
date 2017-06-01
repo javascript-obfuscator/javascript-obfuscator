@@ -9,27 +9,47 @@ import { readFileAsString } from '../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
 
 describe('DomainLockNode', () => {
-    it('should correctly append `DomainLockNode` custom node into the obfuscated code if `domainLock` option is set', () => {
-        let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/simple-input.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET,
-                domainLock: ['.example.com']
-            }
-        );
+    const regExp: RegExp = /var _0x([a-f0-9]){4,6} *= *new RegExp/;
 
-        assert.match(obfuscationResult.getObfuscatedCode(), /var _0x([a-f0-9]){4,6} *= *new RegExp/);
+    describe('`domainLock` option is set', () => {
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
+                    domainLock: ['.example.com']
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('should correctly append custom node into the obfuscated code', () => {
+            assert.match(obfuscatedCode, regExp);
+        });
     });
 
-    it('should\'t append `DomainLockNode` custom node into the obfuscated code if `domainLock` option is not set', () => {
-        let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/simple-input.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET,
-                domainLock: []
-            }
-        );
+    describe('`domainLock` option isn\'t set', () => {
+        let obfuscatedCode: string;
 
-        assert.notMatch(obfuscationResult.getObfuscatedCode(), /var _0x([a-f0-9]){4,6} *= *new RegExp/);
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
+                    domainLock: []
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('shouldn\'t append custom node into the obfuscated code', () => {
+            assert.notMatch(obfuscatedCode, regExp);
+        });
     });
 });

@@ -10,12 +10,12 @@ describe('ObfuscationResult', () => {
             obfuscationResult: IObfuscationResult,
             sourceMap: string = 'sourceMap';
 
-        beforeEach(() => {
+        before(() => {
             obfuscationResult = new ObfuscationResult();
             obfuscationResult.initialize(obfuscatedCode, sourceMap);
         });
 
-        it('should returns obfuscated code if `.toString()` was called on `ObfuscationResult` object', () => {
+        it('should return obfuscated code if `.toString()` was called on `ObfuscationResult` object', () => {
             assert.equal(obfuscationResult.toString(), obfuscatedCode);
         });
     });

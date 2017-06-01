@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as path from 'path';
 
-import { IPackageConfig } from '../interfaces/IPackageConfig';
+import { IPackageConfig } from '../../interfaces/IPackageConfig';
 
 export class CLIUtils {
     /**

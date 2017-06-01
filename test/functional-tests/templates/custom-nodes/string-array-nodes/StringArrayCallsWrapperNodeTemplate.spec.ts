@@ -23,7 +23,7 @@ function getFunctionFromTemplateBase64Encoding (
     stringArrayCallsWrapperName: string,
     index: string
 ) {
-    let stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), templateData);
+    const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), templateData);
 
     return Function(`
         var ${stringArrayName} = ['${CryptUtils.btoa('test1')}'];
@@ -49,7 +49,7 @@ function getFunctionFromTemplateRc4Encoding (
     index: string,
     key: string
 ) {
-    let stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), templateData);
+    const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), templateData);
 
     return Function(`
         var ${stringArrayName} = ['${CryptUtils.btoa(CryptUtils.rc4('test1', key))}'];
@@ -61,33 +61,56 @@ function getFunctionFromTemplateRc4Encoding (
 }
 
 describe('StringArrayCallsWrapperNodeTemplate (): string', () => {
-    let stringArrayName: string = 'stringArrayName',
-        stringArrayCallsWrapperName: string = 'stringArrayCallsWrapperName',
-        atobDecodeNodeTemplate: string = format(StringArrayBase64DecodeNodeTemplate(), {
+    const stringArrayName: string = 'stringArrayName';
+    const stringArrayCallsWrapperName: string = 'stringArrayCallsWrapperName';
+
+    describe('variant #1: `base64` encoding', () => {
+        const atobDecodeNodeTemplate: string = format(StringArrayBase64DecodeNodeTemplate(), {
             atobPolyfill: AtobTemplate(),
             selfDefendingCode: '',
             stringArrayCallsWrapperName
-        }),
-        rc4DecodeNodeTemplate: string = format(StringArrayRc4DecodeNodeTemplate(), {
+        });
+        const index: string = '0x0';
+        const expectedDecodedValue: string = 'test1';
+
+        let decodedValue: string;
+
+        before(() => {
+            decodedValue = getFunctionFromTemplateBase64Encoding({
+                decodeNodeTemplate: atobDecodeNodeTemplate,
+                stringArrayCallsWrapperName,
+                stringArrayName
+            }, stringArrayName, stringArrayCallsWrapperName, index);
+        });
+
+        it('should correctly return decoded value', () => {
+            assert.deepEqual(decodedValue, expectedDecodedValue);
+        });
+    });
+
+    describe('variant #2: `rc4` encoding', () => {
+        const rc4DecodeNodeTemplate: string = format(StringArrayRc4DecodeNodeTemplate(), {
             atobPolyfill: AtobTemplate(),
             rc4Polyfill: Rc4Template(),
             selfDefendingCode: '',
             stringArrayCallsWrapperName
         });
+        const index: string = '0x0';
+        const key: string = 'key';
+        const expectedDecodedValue: string = 'test1';
 
-    it('should correctly returns decoded value with base64 encoding', () => {
-        assert.deepEqual(getFunctionFromTemplateBase64Encoding({
-            decodeNodeTemplate: atobDecodeNodeTemplate,
-            stringArrayCallsWrapperName,
-            stringArrayName
-        }, stringArrayName, stringArrayCallsWrapperName, '0x0'), 'test1');
-    });
+        let decodedValue: string;
 
-    it('should correctly returns decoded value with rc4 encoding', () => {
-        assert.deepEqual(getFunctionFromTemplateRc4Encoding({
-            decodeNodeTemplate: rc4DecodeNodeTemplate,
-            stringArrayCallsWrapperName,
-            stringArrayName
-        }, stringArrayName, stringArrayCallsWrapperName, '0x0', 'key'), 'test1');
+        before(() => {
+            decodedValue = getFunctionFromTemplateRc4Encoding({
+                decodeNodeTemplate: rc4DecodeNodeTemplate,
+                stringArrayCallsWrapperName,
+                stringArrayName
+            }, stringArrayName, stringArrayCallsWrapperName, index, key);
+        });
+
+        it('should correctly return decoded value', () => {
+            assert.deepEqual(decodedValue, expectedDecodedValue);
+        });
     });
 });

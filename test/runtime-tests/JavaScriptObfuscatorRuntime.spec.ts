@@ -6,11 +6,14 @@ import { readFileAsString } from '../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscator';
 
-describe('JavaScriptObfuscator runtime eval', () => {
-    it('should obfuscate code without any runtime errors after obfuscation: variant #1 sha256', () => {
-        const code: string = readFileAsString(__dirname + '/fixtures/sha256.js');
+describe('JavaScriptObfuscator runtime eval', function () {
+    this.timeout(100000);
 
-        const obfuscationResult1: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+    let obfuscatedCode: string;
+
+    before(() => {
+        const code: string = readFileAsString(__dirname + '/fixtures/sha256.js');
+        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
             code,
             {
                 controlFlowFlattening: true,
@@ -21,8 +24,12 @@ describe('JavaScriptObfuscator runtime eval', () => {
             }
         );
 
+        obfuscatedCode = obfuscationResult.getObfuscatedCode();
+    });
+
+    it('should obfuscate code without any runtime errors after obfuscation: variant #1 sha256', () => {
         assert.equal(
-            eval(`${obfuscationResult1.getObfuscatedCode()} sha256('test');`),
+            eval(`${obfuscatedCode} sha256('test');`),
             '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08'
         );
     });

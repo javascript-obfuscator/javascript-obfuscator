@@ -4,13 +4,13 @@ import { readFileAsString } from '../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscator';
 
-describe('JavaScriptObfuscator performance', () => {
+describe('JavaScriptObfuscator performance', function () {
     const iterationsCount: number = 500;
 
-    describe('performance: multiple calls', () => {
-        it('shows performance time with multiple obfuscator calls', function (): void {
-            this.timeout(100000);
+    this.timeout(100000);
 
+    describe('performance: multiple calls', () => {
+        it('shows performance time with multiple obfuscator calls', () => {
             for (let i: number = 0; i < iterationsCount; i++) {
                 JavaScriptObfuscator.obfuscate(readFileAsString('./test/fixtures/sample.js'));
             }
@@ -20,9 +20,7 @@ describe('JavaScriptObfuscator performance', () => {
     });
 
     describe('performance: large source code', () => {
-        it('shows performance time with large code size', function (): void {
-            this.timeout(100000);
-
+        it('shows performance time with large code size', () => {
             JavaScriptObfuscator.obfuscate(readFileAsString('./test/fixtures/sample.js').repeat(iterationsCount));
 
             assert.isOk(true);

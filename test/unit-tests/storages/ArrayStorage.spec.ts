@@ -10,117 +10,195 @@ class ConcreteStorage extends ArrayStorage <string> {
     }
 }
 
-describe('ArrayStorage', () => {
-    describe('initialize (...args: any[]): void', () => {
-        it('should throws an error when storage isn\'t initialized', () => {
-            const storage: IStorage <string> = new ConcreteStorage();
+/**
+ * @type {IStorage<any>}
+ */
+const getStorageInstance = (): IStorage <any> => {
+    const storage: IStorage<any> = new ConcreteStorage();
 
-            assert.throws(() => storage.set(0, 'foo'), Error);
+    storage.initialize();
+
+    return storage;
+};
+
+describe('ArrayStorage', () => {
+    const storageKey: number = 0;
+    const storageValue: string = 'foo';
+
+    let storage: IStorage <any>;
+
+    describe('initialize (...args: any[]): void', () => {
+        const expectedError: ErrorConstructor = Error;
+
+        let testFunc: () => void;
+
+        before(() => {
+            storage = new ConcreteStorage();
+            testFunc = () => storage.set(storageKey, storageValue);
+        });
+
+        it('should throws an error when storage isn\'t initialized', () => {
+            assert.throws(testFunc, expectedError);
         });
     });
 
     describe('getStorage (): T[]', () => {
-        it('should returns storage', () => {
-            const storage: IStorage <string> = new ConcreteStorage();
+        const expectedInstanceOf: ArrayConstructor = Array;
 
-            storage.initialize();
+        let arrayStorage: string[];
 
-            assert.instanceOf(storage.getStorage(), Array);
+        before(() => {
+            storage = getStorageInstance();
+
+            arrayStorage = storage.getStorage();
+        });
+
+        it('should return storage', () => {
+            assert.instanceOf(arrayStorage, expectedInstanceOf);
         });
     });
 
     describe('get (key: number): T', () => {
-        it('should returns value from storage by key', () => {
-            const storage: IStorage <string> = new ConcreteStorage();
+        describe('variant #1: value exist', () => {
+            const expectedValue: string = storageValue;
 
-            storage.initialize();
-            storage.set(0, 'foo');
+            let value: string;
 
-            assert.equal(storage.get(0), 'foo');
+            before(() => {
+                storage = getStorageInstance();
+                storage.set(storageKey, storageValue);
+
+                value = storage.get(storageKey);
+            });
+
+            it('should return value from storage by key', () => {
+                assert.equal(value, expectedValue);
+            });
         });
 
-        it('should throw an error if value isn\'t exist', () => {
-            const storage: IStorage <string> = new ConcreteStorage();
+        describe('variant #2: value isn\'t exist', () => {
+            const expectedError: ErrorConstructor = Error;
 
-            storage.initialize();
+            let testFunc: () => void;
 
-            assert.throws(() => storage.get(0), Error);
+            before(() => {
+                storage = getStorageInstance();
+
+                testFunc = () => storage.get(storageKey);
+            });
+
+            it('should throw an error', () => {
+                assert.throws(testFunc, expectedError);
+            });
         });
     });
 
     describe('getLength (): number', () => {
-        it('should returns length of storage', () => {
-            const storage: IStorage <string> = new ConcreteStorage();
+        const expectedStorageLength: number = 1;
 
-            storage.initialize();
-            storage.set(0, 'foo');
+        let storageLength: number;
 
-            assert.equal(storage.getLength(), 1);
+        before(() => {
+            storage = getStorageInstance();
+            storage.set(storageKey, storageValue);
+
+            storageLength = storage.getLength();
+        });
+
+        it('should return length of storage', () => {
+            assert.equal(storageLength, expectedStorageLength);
         });
     });
 
     describe('getKeyOf (value: T): number | null', () => {
-        it('should returns key of string value', () => {
-            const storage: IStorage <string> = new ConcreteStorage();
+        let key: string | number | null;
 
-            storage.initialize();
-            storage.set(0, 'foo');
+        describe('variant #1', () => {
+            before(() => {
+                storage = getStorageInstance();
+                storage.set(storageKey, storageValue);
 
-            assert.equal(storage.getKeyOf('foo'), 0);
+                key = storage.getKeyOf(storageValue);
+            });
+
+            it('should return key of string value', () => {
+                assert.equal(key, storageKey);
+            });
         });
 
-        it('should returns key of object if objects in `set` and `get` are two linked objects', () => {
-            const storage: IStorage <Object> = new ConcreteStorage();
+        describe('variant #2', () => {
             const object: Object = {
                 foo: 'bar'
             };
 
-            storage.initialize();
-            storage.set(0, object);
+            before(() => {
+                storage = getStorageInstance();
+                storage.set(storageKey, object);
 
-            assert.equal(storage.getKeyOf(object), 0);
-        });
-
-        it('should return `null` if objects in `set` and `get` are two equal objects', () => {
-            const storage: IStorage <Object> = new ConcreteStorage();
-
-            storage.initialize();
-            storage.set(0, {
-                foo: 'bar'
+                key = storage.getKeyOf(object);
             });
 
-            assert.equal(storage.getKeyOf({
+            it('should return key of object if objects in `set` and `get` are two same objects', () => {
+                assert.equal(key, storageKey);
+            });
+        });
+
+        describe('variant #3', () => {
+            const expectedKey: null = null;
+            const object: Object = {
                 foo: 'bar'
-            }), null);
+            };
+
+            before(() => {
+                storage = getStorageInstance();
+                storage.set(storageKey, object);
+
+                key = storage.getKeyOf({...object});
+            });
+
+            it('should return `null` if objects in `set` and `get` are two different objects', () => {
+                assert.equal(key, expectedKey);
+            });
         });
     });
 
     describe('set (key: number, value: T): void', () => {
+        let value: string;
+
+        before(() => {
+            storage = getStorageInstance();
+            storage.set(storageKey, storageValue);
+
+            value = storage.get(storageKey);
+        });
+
         it('should set value to the storage', () => {
-            const storage: IStorage <string> = new ConcreteStorage();
-
-            storage.initialize();
-            storage.set(0, 'foo');
-
-            assert.equal(storage.get(0), 'foo');
-            assert.equal(storage.getLength(), 1);
+            assert.equal(value, storageValue);
         });
     });
 
     describe('mergeWith (storage: this, mergeId: boolean = false): void', () => {
+        const secondStorageKey: number = 1;
+        const secondStorageValue: string = 'bar';
+
+        const expectedArray: string[] = [storageValue, secondStorageValue];
+
+        let array: string[];
+
+        before(() => {
+            storage = getStorageInstance();
+            storage.set(storageKey, storageValue);
+
+            const secondStorage: IStorage <string> = getStorageInstance();
+            secondStorage.set(secondStorageKey, secondStorageValue);
+
+            storage.mergeWith(secondStorage, false);
+
+            array = storage.getStorage();
+        });
+
         it('should merge two storages', () => {
-            const storage1: IStorage <string> = new ConcreteStorage();
-            const storage2: IStorage <string> = new ConcreteStorage();
-
-            storage1.initialize();
-            storage1.set(0, 'foo');
-
-            storage2.initialize();
-            storage2.set(1, 'bar');
-
-            storage1.mergeWith(storage2, false);
-
-            assert.deepEqual(storage1.getStorage(), ['foo', 'bar']);
+            assert.deepEqual(array, expectedArray);
         });
     });
 });

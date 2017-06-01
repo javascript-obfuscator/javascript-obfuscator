@@ -24,204 +24,286 @@ describe('OptionsNormalizer', () => {
         let optionsPreset: TInputOptions,
             expectedOptionsPreset: TInputOptions;
 
-        it('should normalize options preset: controlFlowFlatteningThresholdRule', () => {
-            optionsPreset = {
-                ...DEFAULT_PRESET,
-                controlFlowFlattening: true,
-                controlFlowFlatteningThreshold: 0
-            };
+        describe('controlFlowFlatteningThresholdRule', () => {
+            before(() => {
+                optionsPreset = getNormalizedOptions({
+                    ...DEFAULT_PRESET,
+                    controlFlowFlattening: true,
+                    controlFlowFlatteningThreshold: 0
+                });
 
-            expectedOptionsPreset = {
-                ...DEFAULT_PRESET,
-                controlFlowFlattening: false,
-                controlFlowFlatteningThreshold: 0
-            };
+                expectedOptionsPreset = {
+                    ...DEFAULT_PRESET,
+                    controlFlowFlattening: false,
+                    controlFlowFlatteningThreshold: 0
+                };
+            });
 
-            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
+            it('should normalize options preset', () => {
+                assert.deepEqual(optionsPreset, expectedOptionsPreset);
+            });
         });
 
-        it('should normalize options preset: deadCodeInjectionRule', () => {
-            optionsPreset = {
-                ...DEFAULT_PRESET,
-                deadCodeInjection: true,
-                deadCodeInjectionThreshold: 0.4,
-                stringArray: false,
-                stringArrayThreshold: 0
-            };
+        describe('deadCodeInjectionRule', () => {
+            before(() => {
+                optionsPreset = getNormalizedOptions({
+                    ...DEFAULT_PRESET,
+                    deadCodeInjection: true,
+                    deadCodeInjectionThreshold: 0.4,
+                    stringArray: false,
+                    stringArrayThreshold: 0
+                });
 
-            expectedOptionsPreset = {
-                ...DEFAULT_PRESET,
-                deadCodeInjection: true,
-                deadCodeInjectionThreshold: 0.4,
-                stringArray: true,
-                stringArrayThreshold: 0.75
-            };
+                expectedOptionsPreset = {
+                    ...DEFAULT_PRESET,
+                    deadCodeInjection: true,
+                    deadCodeInjectionThreshold: 0.4,
+                    stringArray: true,
+                    stringArrayThreshold: 0.75
+                };
+            });
 
-            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
+            it('should normalize options preset', () => {
+                assert.deepEqual(optionsPreset, expectedOptionsPreset);
+            });
         });
 
-        it('should normalize options preset: deadCodeInjectionRule. `stringArrayThreshold` option is not empty', () => {
-            optionsPreset = {
-                ...DEFAULT_PRESET,
-                deadCodeInjection: true,
-                deadCodeInjectionThreshold: 0.4,
-                stringArray: false,
-                stringArrayThreshold: 0.5
-            };
+        describe('deadCodeInjectionRule', () => {
+            describe('`stringArrayThreshold` option is empty', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...DEFAULT_PRESET,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 0.4,
+                        stringArray: false,
+                        stringArrayThreshold: 0
+                    });
 
-            expectedOptionsPreset = {
-                ...DEFAULT_PRESET,
-                deadCodeInjection: true,
-                deadCodeInjectionThreshold: 0.4,
-                stringArray: true,
-                stringArrayThreshold: 0.5
-            };
+                    expectedOptionsPreset = {
+                        ...DEFAULT_PRESET,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 0.4,
+                        stringArray: true,
+                        stringArrayThreshold: 0.75
+                    };
+                });
 
-            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+
+            describe('`stringArrayThreshold` option is not empty', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...DEFAULT_PRESET,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 0.4,
+                        stringArray: false,
+                        stringArrayThreshold: 0.5
+                    });
+
+                    expectedOptionsPreset = {
+                        ...DEFAULT_PRESET,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 0.4,
+                        stringArray: true,
+                        stringArrayThreshold: 0.5
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
         });
 
-        it('should normalize options preset: deadCodeInjectionThresholdRule', () => {
-            optionsPreset = {
-                ...DEFAULT_PRESET,
-                deadCodeInjection: true,
-                deadCodeInjectionThreshold: 0
-            };
+        describe('deadCodeInjectionThresholdRule', () => {
+            before(() => {
+                optionsPreset = getNormalizedOptions({
+                    ...DEFAULT_PRESET,
+                    deadCodeInjection: true,
+                    deadCodeInjectionThreshold: 0
+                });
 
-            expectedOptionsPreset = {
-                ...DEFAULT_PRESET,
-                deadCodeInjection: false,
-                deadCodeInjectionThreshold: 0
-            };
+                expectedOptionsPreset = {
+                    ...DEFAULT_PRESET,
+                    deadCodeInjection: false,
+                    deadCodeInjectionThreshold: 0
+                };
+            });
 
-            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
+            it('should normalize options preset', () => {
+                assert.deepEqual(optionsPreset, expectedOptionsPreset);
+            });
         });
 
-        it('should normalize options preset: domainLockRule', () => {
-            optionsPreset = {
-                ...DEFAULT_PRESET,
-                domainLock: ['//localhost:9000', 'https://google.ru/abc?cde=fgh']
-            };
+        describe('domainLockRule', () => {
+            before(() => {
+                optionsPreset = getNormalizedOptions({
+                    ...DEFAULT_PRESET,
+                    domainLock: [
+                        '//localhost:9000',
+                        'https://google.ru/abc?cde=fgh'
+                    ]
+                });
 
-            expectedOptionsPreset = {
-                ...DEFAULT_PRESET,
-                domainLock: ['localhost', 'google.ru']
-            };
+                expectedOptionsPreset = {
+                    ...DEFAULT_PRESET,
+                    domainLock: [
+                        'localhost',
+                        'google.ru'
+                    ]
+                };
+            });
 
-            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
+            it('should normalize options preset', () => {
+                assert.deepEqual(optionsPreset, expectedOptionsPreset);
+            });
         });
 
-        it('should normalize options preset: selfDefendingRule', () => {
-            optionsPreset = {
-                ...DEFAULT_PRESET,
-                selfDefending: true,
-                compact: false
-            };
+        describe('selfDefendingRule', () => {
+            before(() => {
+                optionsPreset = getNormalizedOptions({
+                    ...DEFAULT_PRESET,
+                    selfDefending: true,
+                    compact: false
+                });
 
-            expectedOptionsPreset = {
-                ...DEFAULT_PRESET,
-                selfDefending: true,
-                compact: true
-            };
+                expectedOptionsPreset = {
+                    ...DEFAULT_PRESET,
+                    selfDefending: true,
+                    compact: true
+                };
+            });
 
-            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
+            it('should normalize options preset', () => {
+                assert.deepEqual(optionsPreset, expectedOptionsPreset);
+            });
         });
 
-        it('should normalize options preset: sourceMapBaseUrlRule #1', () => {
-            optionsPreset = {
-                ...DEFAULT_PRESET,
-                sourceMapBaseUrl: 'http://localhost:9000',
-            };
+        describe('sourceMapBaseUrlRule', () => {
+            describe('variant #1: only source map base url', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...DEFAULT_PRESET,
+                        sourceMapBaseUrl: 'http://localhost:9000',
+                    });
 
-            expectedOptionsPreset = {
-                ...DEFAULT_PRESET,
-                sourceMapBaseUrl: ''
-            };
+                    expectedOptionsPreset = {
+                        ...DEFAULT_PRESET,
+                        sourceMapBaseUrl: ''
+                    };
+                });
 
-            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+
+            describe('variant #2: source map base url with source map file name', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...DEFAULT_PRESET,
+                        sourceMapBaseUrl: 'http://localhost:9000',
+                        sourceMapFileName: '/outputSourceMapName.map'
+                    });
+
+                    expectedOptionsPreset = {
+                        ...DEFAULT_PRESET,
+                        sourceMapBaseUrl: 'http://localhost:9000/',
+                        sourceMapFileName: 'outputSourceMapName.js.map'
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
         });
 
-        it('should normalize options preset: sourceMapBaseUrlRule #2', () => {
-            optionsPreset = {
-                ...DEFAULT_PRESET,
-                sourceMapBaseUrl: 'http://localhost:9000',
-                sourceMapFileName: '/outputSourceMapName.map'
-            };
+        describe('sourceMapFileNameRule', () => {
+            before(() => {
+                optionsPreset = getNormalizedOptions({
+                    ...DEFAULT_PRESET,
+                    sourceMapBaseUrl: 'http://localhost:9000',
+                    sourceMapFileName: '//outputSourceMapName'
+                });
 
-            expectedOptionsPreset = {
-                ...DEFAULT_PRESET,
-                sourceMapBaseUrl: 'http://localhost:9000/',
-                sourceMapFileName: 'outputSourceMapName.js.map'
-            };
+                expectedOptionsPreset = {
+                    ...DEFAULT_PRESET,
+                    sourceMapBaseUrl: 'http://localhost:9000/',
+                    sourceMapFileName: 'outputSourceMapName.js.map'
+                };
+            });
 
-            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
+            it('should normalize options preset', () => {
+                assert.deepEqual(optionsPreset, expectedOptionsPreset);
+            });
         });
 
-        it('should normalize options preset: sourceMapFileNameRule', () => {
-            optionsPreset = {
-                ...DEFAULT_PRESET,
-                sourceMapBaseUrl: 'http://localhost:9000',
-                sourceMapFileName: '//outputSourceMapName'
-            };
+        describe('stringArrayRule', () => {
+            before(() => {
+                optionsPreset = getNormalizedOptions({
+                    ...DEFAULT_PRESET,
+                    stringArray: false,
+                    stringArrayEncoding: 'rc4',
+                    stringArrayThreshold: 0.5,
+                    rotateStringArray: true
+                });
 
-            expectedOptionsPreset = {
-                ...DEFAULT_PRESET,
-                sourceMapBaseUrl: 'http://localhost:9000/',
-                sourceMapFileName: 'outputSourceMapName.js.map'
-            };
+                expectedOptionsPreset = {
+                    ...DEFAULT_PRESET,
+                    stringArray: false,
+                    stringArrayEncoding: false,
+                    stringArrayThreshold: 0,
+                    rotateStringArray: false
+                };
+            });
 
-            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
+            it('should normalize options preset', () => {
+                assert.deepEqual(optionsPreset, expectedOptionsPreset);
+            });
         });
 
-        it('should normalize options preset: stringArrayRule', () => {
-            optionsPreset = {
-                ...DEFAULT_PRESET,
-                stringArray: false,
-                stringArrayEncoding: 'rc4',
-                stringArrayThreshold: 0.5,
-                rotateStringArray: true
-            };
+        describe('stringArrayEncodingRule', () => {
+            before(() => {
+                optionsPreset = getNormalizedOptions({
+                    ...DEFAULT_PRESET,
+                    stringArrayEncoding: true
+                });
 
-            expectedOptionsPreset = {
-                ...DEFAULT_PRESET,
-                stringArray: false,
-                stringArrayEncoding: false,
-                stringArrayThreshold: 0,
-                rotateStringArray: false
-            };
+                expectedOptionsPreset = {
+                    ...DEFAULT_PRESET,
+                    stringArrayEncoding: 'base64'
+                };
+            });
 
-            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
+            it('should normalize options preset', () => {
+                assert.deepEqual(optionsPreset, expectedOptionsPreset);
+            });
         });
 
-        it('should normalize options preset: stringArrayEncodingRule', () => {
-            optionsPreset = {
-                ...DEFAULT_PRESET,
-                stringArrayEncoding: true
-            };
+        describe('stringArrayThresholdRule', () => {
+            before(() => {
+                optionsPreset = getNormalizedOptions({
+                    ...DEFAULT_PRESET,
+                    rotateStringArray: true,
+                    stringArray: true,
+                    stringArrayThreshold: 0
+                });
 
-            expectedOptionsPreset = {
-                ...DEFAULT_PRESET,
-                stringArrayEncoding: 'base64'
-            };
+                expectedOptionsPreset = {
+                    ...DEFAULT_PRESET,
+                    rotateStringArray: false,
+                    stringArray: false,
+                    stringArrayThreshold: 0
+                };
+            });
 
-            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
-        });
-
-        it('should normalize options preset: stringArrayThresholdRule', () => {
-            optionsPreset = {
-                ...DEFAULT_PRESET,
-                rotateStringArray: true,
-                stringArray: true,
-                stringArrayThreshold: 0
-            };
-
-            expectedOptionsPreset = {
-                ...DEFAULT_PRESET,
-                rotateStringArray: false,
-                stringArray: false,
-                stringArrayThreshold: 0
-            };
-
-            assert.deepEqual(getNormalizedOptions(optionsPreset), expectedOptionsPreset);
+            it('should normalize options preset', () => {
+                assert.deepEqual(optionsPreset, expectedOptionsPreset);
+            });
         });
     });
 });

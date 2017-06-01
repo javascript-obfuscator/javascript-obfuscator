@@ -9,19 +9,50 @@ import { readFileAsString } from '../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
 
 describe('StringArrayCallsWrapper', () => {
-    it('should correctly append `StringArrayCallsWrapper` custom node into the obfuscated code', () => {
-        let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/simple-input.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET,
-                stringArray: true,
-                stringArrayThreshold: 1
-            }
-        );
+    const regExp: RegExp = /_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6} *- *0x0\;/;
 
-        assert.match(
-            obfuscationResult.getObfuscatedCode(),
-            /_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6} *- *0x0\;/
-        );
+    describe('`stringArray` option is set', () => {
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+
+            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('should correctly append custom node into the obfuscated code', () => {
+            assert.match(obfuscatedCode, regExp);
+        });
+    });
+
+    describe('`stringArray` option isn\'t set', () => {
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+
+            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
+                    stringArray: false
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('shouldn\'t append custom node into the obfuscated code', () => {
+            assert.notMatch(obfuscatedCode, regExp);
+        });
     });
 });

@@ -9,41 +9,75 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 
 describe('MethodDefinitionTransformer', () => {
-    let code: string = readFileAsString(__dirname + '/fixtures/input.js');
+    const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
-    it('should replace method definition node `key` property with unicode value', () => {
-        let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            code,
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
+    describe('variant #1: default behaviour', () => {
+        const regExp: RegExp = /\['bar'\]\(\)\{\}/;
 
-        assert.match(obfuscationResult.getObfuscatedCode(),  /\['bar'\]\(\)\{\}/);
+        let obfuscatedCode: string;
+
+        before(() => {
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('should replace method definition node `key` property with square brackets literal', () => {
+            assert.match(obfuscatedCode, regExp);
+        });
     });
 
-    it('should replace method definition node `key` property with unicode array call', () => {
-        let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            code,
-            {
-                ...NO_CUSTOM_NODES_PRESET,
-                stringArray: true,
-                stringArrayThreshold: 1
-            }
-        );
+    describe('variant #2: `stringArray` option is enabled', () => {
+        const stringArrayRegExp: RegExp = /var *_0x([a-f0-9]){4} *= *\['bar'\];/;
+        const stringArrayCallRegExp: RegExp = /\[_0x([a-f0-9]){4}\('0x0'\)\]\(\)\{\}/;
 
-        assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-f0-9]){4} *= *\['bar'\];/);
-        assert.match(obfuscationResult.getObfuscatedCode(),  /\[_0x([a-f0-9]){4}\('0x0'\)\]\(\)\{\}/);
+        let obfuscatedCode: string;
+
+        before(() => {
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
+                    stringArray: true,
+                    stringArrayThreshold: 1
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('should add method definition node `key` property to string array', () => {
+            assert.match(obfuscatedCode,  stringArrayRegExp);
+        });
+
+        it('should replace method definition node `key` property with call to string array', () => {
+            assert.match(obfuscatedCode,  stringArrayCallRegExp);
+        });
     });
 
-    it('should not transform method definition node with `constructor` key', () => {
-        let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            code,
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
+    describe('variant #3: `constructor` key', () => {
+        const regExp: RegExp = /constructor\(\)\{\}/;
 
-        assert.match(obfuscationResult.getObfuscatedCode(),  /constructor\(\)\{\}/);
+        let obfuscatedCode: string;
+
+        before(() => {
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('shouldn\'t transform method definition node with `constructor` key', () => {
+            assert.match(obfuscatedCode, regExp);
+        });
     });
 });

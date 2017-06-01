@@ -9,49 +9,67 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 
 describe('CatchClauseTransformer', () => {
+    let obfuscatedCode: string;
+
     describe('changeControlFlow (catchClauseNode: ESTree.CatchClause): void', () => {
-        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/input.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
-        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
         const paramNameRegExp: RegExp = /catch *\((_0x([a-f0-9]){4,6})\) *\{/;
         const bodyParamNameRegExp: RegExp = /console\['log'\]\((_0x([a-f0-9]){4,6})\);/;
 
-        it('should transform catch clause node', () => {
+        let firstMatch: string | undefined,
+            secondMatch: string | undefined;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/input.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+
+            const firstMatchArray: RegExpMatchArray | null = obfuscatedCode.match(paramNameRegExp);
+            const secondMatchArray: RegExpMatchArray | null = obfuscatedCode.match(bodyParamNameRegExp);
+
+            firstMatch = firstMatchArray ? firstMatchArray[1] : undefined;
+            secondMatch = secondMatchArray ? secondMatchArray[1] : undefined;
+        });
+
+        it('match #1: should transform catch clause node', () => {
             assert.match(obfuscatedCode, paramNameRegExp);
+        });
+
+        it('match #2: should transform catch clause node', () => {
             assert.match(obfuscatedCode, bodyParamNameRegExp);
         });
 
         it('catch clause arguments param name and param name in body should be same', () => {
-            const firstMatchArray: RegExpMatchArray | null = obfuscatedCode.match(paramNameRegExp);
-            const secondMatchArray: RegExpMatchArray | null = obfuscatedCode.match(bodyParamNameRegExp);
-
-            const firstMatch: string | undefined = firstMatchArray ? firstMatchArray[1] : undefined;
-            const secondMatch: string | undefined = secondMatchArray ? secondMatchArray[1] : undefined;
-
-            assert.isOk(firstMatch);
-            assert.isOk(secondMatch);
             assert.equal(firstMatch, secondMatch);
         });
     });
 
     describe('object pattern as parameter', () => {
-        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
-        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+        const functionParameterMatch: RegExp = /\} *catch *\(\{ *name *\}\) *\{/;
+        const functionBodyMatch: RegExp = /return *name;/;
 
-        it('shouldn\'t transform function parameter object pattern identifier', () => {
-            const functionParameterMatch: RegExp = /\} *catch *\(\{ *name *\}\) *\{/;
-            const functionBodyMatch: RegExp = /return *name;/;
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
 
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('match #1: shouldn\'t transform function parameter object pattern identifier', () => {
             assert.match(obfuscatedCode, functionParameterMatch);
+        });
+
+        it('match #2: shouldn\'t transform function parameter object pattern identifier', () => {
             assert.match(obfuscatedCode, functionBodyMatch);
         });
     });

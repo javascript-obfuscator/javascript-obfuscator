@@ -11,7 +11,7 @@ import { BooleanSanitizer } from './sanitizers/BooleanSanitizer';
 import { SourceMapModeSanitizer } from './sanitizers/SourceMapModeSanitizer';
 import { StringArrayEncodingSanitizer } from './sanitizers/StringArrayEncodingSanitizer';
 
-import { CLIUtils } from './CLIUtils';
+import { CLIUtils } from './utils/CLIUtils';
 import { JavaScriptObfuscator } from '../JavaScriptObfuscator';
 
 export class JavaScriptObfuscatorCLI {
@@ -21,14 +21,14 @@ export class JavaScriptObfuscatorCLI {
     private readonly arguments: string[];
 
     /**
-     * @type {commander.ICommand}
+     * @type {string[]}
      */
-    private commands: commander.ICommand;
+    private readonly rawArguments: string[];
 
     /**
-     * @type {string}
+     * @type {commander.CommanderStatic}
      */
-    private data: string = '';
+    private commands: commander.CommanderStatic;
 
     /**
      * @type {string}
@@ -36,9 +36,9 @@ export class JavaScriptObfuscatorCLI {
     private inputPath: string;
 
     /**
-     * @type {string[]}
+     * @type {string}
      */
-    private rawArguments: string[];
+    private sourceCode: string = '';
 
     /**
      * @param argv
@@ -46,17 +46,13 @@ export class JavaScriptObfuscatorCLI {
     constructor (argv: string[]) {
         this.rawArguments = argv;
         this.arguments = this.rawArguments.slice(2);
-    }
 
-    /**
-     * @returns {string}
-     */
-    private static getBuildVersion (): string {
-        return CLIUtils.getPackageConfig().version;
+        this.commands = <commander.CommanderStatic>(new commander.Command());
     }
 
     public run (): void {
         this.configureCommands();
+        this.configureHelp();
 
         if (!this.arguments.length || this.arguments.includes('--help')) {
             this.commands.outputHelp();
@@ -97,8 +93,8 @@ export class JavaScriptObfuscatorCLI {
     }
 
     private configureCommands (): void {
-        this.commands = new commander.Command()
-            .version(JavaScriptObfuscatorCLI.getBuildVersion(), '-v, --version')
+        this.commands
+            .version(CLIUtils.getPackageConfig().version, '-v, --version')
             .usage('<inputPath> [options]')
             .option(
                 '-o, --output <path>',
@@ -211,7 +207,9 @@ export class JavaScriptObfuscatorCLI {
                 BooleanSanitizer
             )
             .parse(this.rawArguments);
+    }
 
+    private configureHelp (): void {
         this.commands.on('--help', () => {
             console.log('  Examples:\n');
             console.log('    %> javascript-obfuscator in.js --compact true --selfDefending false');
@@ -221,7 +219,7 @@ export class JavaScriptObfuscatorCLI {
     }
 
     private getData (): void {
-        this.data = CLIUtils.readFile(this.inputPath);
+        this.sourceCode = CLIUtils.readFile(this.inputPath);
     }
 
     private processData (): void {
@@ -240,7 +238,7 @@ export class JavaScriptObfuscatorCLI {
      * @param options
      */
     private processDataWithoutSourceMap (outputCodePath: string, options: TInputOptions): void {
-        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(this.data, options).getObfuscatedCode();
+        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(this.sourceCode, options).getObfuscatedCode();
 
         CLIUtils.writeFile(outputCodePath, obfuscatedCode);
     }
@@ -260,7 +258,7 @@ export class JavaScriptObfuscatorCLI {
             sourceMapFileName: path.basename(outputSourceMapPath)
         };
 
-        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(this.data, options);
+        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(this.sourceCode, options);
 
         CLIUtils.writeFile(outputCodePath, obfuscationResult.getObfuscatedCode());
 

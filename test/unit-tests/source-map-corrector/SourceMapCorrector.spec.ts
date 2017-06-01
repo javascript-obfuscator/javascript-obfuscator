@@ -40,60 +40,82 @@ function getCorrectedObfuscationResult (
 
 describe('SourceMapCorrector', () => {
     describe('correct (): IObfuscationResult', () => {
-        let expectedObfuscationResult: IObfuscationResult,
-            obfuscatedCode: string = 'var test = 1;',
-            sourceMap: string = 'test';
+        const expectedObfuscatedCode: string = 'var test = 1;';
+        const sourceMap: string = 'test';
 
-        it('should return untouched obfuscated code if source map does not exist', () => {
-            expectedObfuscationResult = getCorrectedObfuscationResult(
-                obfuscatedCode,
-                '',
-                '',
-                '',
-                SourceMapMode.Separate)
-            ;
+        let obfuscationResult: IObfuscationResult,
+            obfuscatedCode: string;
 
-            assert.equal(expectedObfuscationResult.getObfuscatedCode(), obfuscatedCode);
+        describe('source map doest\'t exist', () => {
+            before(() => {
+                obfuscationResult = getCorrectedObfuscationResult(
+                    expectedObfuscatedCode,
+                    '',
+                    '',
+                    '',
+                    SourceMapMode.Separate
+                );
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('should return untouched obfuscated code', () => {
+                assert.equal(obfuscatedCode, expectedObfuscatedCode);
+            });
         });
 
-        describe('if source map is set and source map mode is `inline`', () => {
-            before (() => {
-                expectedObfuscationResult = getCorrectedObfuscationResult(
-                    obfuscatedCode,
+        describe('source map is set, source map mode is `inline`', () => {
+            const regExp: RegExp = /data:application\/json;base64/;
+
+            before(() => {
+                obfuscationResult = getCorrectedObfuscationResult(
+                    expectedObfuscatedCode,
                     sourceMap,
                     '',
                     '',
                     SourceMapMode.Inline
                 );
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
 
             it('should add source map to obfuscated code as base64 encoded string', () => {
-                assert.match(expectedObfuscationResult.getObfuscatedCode(), /data:application\/json;base64/);
+                assert.match(obfuscatedCode, regExp);
             });
         });
 
-        it('should add source map import to obfuscated code if source map mode is `separate`', () => {
-            expectedObfuscationResult = getCorrectedObfuscationResult(
-                obfuscatedCode,
-                sourceMap,
-                'http://example.com',
-                'output.js.map',
-                SourceMapMode.Separate
-            );
+        describe('source map mode is `separate`', () => {
+            const regExp: RegExp = /sourceMappingURL=http:\/\/example\.com\/output\.js\.map/;
 
-            assert.match(expectedObfuscationResult.getObfuscatedCode(), /sourceMappingURL=http:\/\/example\.com\/output\.js\.map/);
+            before(() => {
+                obfuscationResult = getCorrectedObfuscationResult(
+                    expectedObfuscatedCode,
+                    sourceMap,
+                    'http://example.com',
+                    'output.js.map',
+                    SourceMapMode.Separate
+                );
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('should add source map import to obfuscated code', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
         });
 
-        it('should not touch obfuscated code if source map mode is `separate` and `sourceMapUrl` is not set', () => {
-            expectedObfuscationResult = getCorrectedObfuscationResult(
-                obfuscatedCode,
-                sourceMap,
-                '',
-                '',
-                SourceMapMode.Separate
-            );
+        describe('source map mode is `separate`, `sourceMapUrl` is not set', () => {
+            before(() => {
+                obfuscationResult = getCorrectedObfuscationResult(
+                    expectedObfuscatedCode,
+                    sourceMap,
+                    '',
+                    '',
+                    SourceMapMode.Separate
+                );
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
 
-            assert.equal(expectedObfuscationResult.getObfuscatedCode(), obfuscatedCode);
+            it('should not touch obfuscated code', () => {
+                assert.equal(obfuscatedCode, expectedObfuscatedCode);
+            });
         });
     });
 });

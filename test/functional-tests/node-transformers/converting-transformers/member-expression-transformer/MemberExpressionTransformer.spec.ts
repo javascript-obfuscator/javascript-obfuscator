@@ -10,56 +10,108 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 
 describe('MemberExpressionTransformer', () => {
     describe('transformation of member expression node with dot notation', () => {
-        it('should replace member expression dot notation call by square brackets call with unicode literal value', () => {
-            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/dot-notation-call.js'),
-                {
-                    ...NO_CUSTOM_NODES_PRESET
-                }
-            );
+        describe('`stringArray` option is disabled', () => {
+            const regExp: RegExp = /var *test *= *console\['log'\];/;
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *console\['log'\];/);
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/dot-notation-call.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('should replace member expression dot notation call with literal value', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
         });
 
-        it('should replace member expression dot notation call by square brackets call to unicode array', () => {
-            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/dot-notation-call.js'),
-                {
-                    ...NO_CUSTOM_NODES_PRESET,
-                    stringArray: true,
-                    stringArrayThreshold: 1
-                }
-            );
+        describe('`stringArray` option is enabled', () => {
+            const stringArrayRegExp: RegExp = /var *_0x([a-f0-9]){4} *= *\['log'\];/;
+            const stringArrayCallRegExp: RegExp = /var *test *= *console\[_0x([a-f0-9]){4}\('0x0'\)\];/;
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-f0-9]){4} *= *\['log'\];/);
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *console\[_0x([a-f0-9]){4}\('0x0'\)\];/);
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/dot-notation-call.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('should add member expression identifier to string array', () => {
+                assert.match(obfuscatedCode, stringArrayRegExp);
+            });
+
+            it('should replace member expression dot notation call with call to string array', () => {
+                assert.match(obfuscatedCode, stringArrayCallRegExp);
+            });
         });
     });
 
-    describe('transformation of member expression node without dot notation', () => {
-        it('should replace member expression square brackets call by square brackets call to unicode array', () => {
-            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/square-brackets-call.js'),
-                {
-                    ...NO_CUSTOM_NODES_PRESET,
-                    stringArray: true,
-                    stringArrayThreshold: 1
-                }
-            );
+    describe('transformation of member expression node with square brackets', () => {
+        describe('variant #1: square brackets literal ', () => {
+            const stringArrayRegExp: RegExp = /var *_0x([a-f0-9]){4} *= *\['log'\];/;
+            const stringArrayCallRegExp: RegExp = /var *test *= *console\[_0x([a-f0-9]){4}\('0x0'\)\];/;
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *_0x([a-f0-9]){4} *= *\['log'\];/);
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *console\[_0x([a-f0-9]){4}\('0x0'\)\];/);
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/square-brackets-call.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('should add member expression square brackets literal to string array', () => {
+                assert.match(obfuscatedCode, stringArrayRegExp);
+            });
+
+            it('should replace member expression square brackets identifier with call to string array', () => {
+                assert.match(obfuscatedCode, stringArrayCallRegExp);
+            });
         });
 
-        it('should ignore square brackets call with identifier value', () => {
-            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/square-brackets-with-identifier-call.js'),
-                {
-                    ...NO_CUSTOM_NODES_PRESET
-                }
-            );
+        describe('variant #2: square brackets identifier', () => {
+            const regExp: RegExp = /var *test *= *console\[identifier\];/;
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *console\[identifier\];/);
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/square-brackets-with-identifier-call.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('should ignore square brackets call with identifier value', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
         });
     });
 });

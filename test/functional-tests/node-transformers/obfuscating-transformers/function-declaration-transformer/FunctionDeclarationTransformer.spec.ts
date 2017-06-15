@@ -4,10 +4,10 @@ import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationRe
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
+import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
-import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
 
 describe('FunctionDeclarationTransformer', () => {
     describe('transformation of `functionDeclaration` node names', () => {

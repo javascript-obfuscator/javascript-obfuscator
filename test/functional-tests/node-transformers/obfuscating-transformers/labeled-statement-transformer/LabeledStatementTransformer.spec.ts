@@ -4,6 +4,7 @@ import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationRe
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
+import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
@@ -30,13 +31,9 @@ describe('LabeledStatementTransformer', () => {
 
             obfuscatedCode = obfuscationResult.getObfuscatedCode();
 
-            const firstMatchArray: RegExpMatchArray|null = obfuscatedCode.match(labeledStatementRegExp);
-            const secondMatchArray: RegExpMatchArray|null = obfuscatedCode.match(continueStatementRegExp);
-            const thirdMatchArray: RegExpMatchArray|null = obfuscatedCode.match(breakStatementRegExp);
-
-            firstMatch = firstMatchArray ? firstMatchArray[1] : undefined;
-            secondMatch = secondMatchArray ? secondMatchArray[1] : undefined;
-            thirdMatch = thirdMatchArray ? thirdMatchArray[1] : undefined;
+            firstMatch = getRegExpMatch(obfuscatedCode, labeledStatementRegExp);
+            secondMatch = getRegExpMatch(obfuscatedCode, continueStatementRegExp);
+            thirdMatch = getRegExpMatch(obfuscatedCode, breakStatementRegExp);
         });
 
         it('should transform `labeledStatement` identifier', () => {

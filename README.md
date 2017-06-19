@@ -10,7 +10,7 @@ JavaScript obfuscator is a powerful free obfuscator for JavaScript and Node.js w
 
 * has no limits or restrictions
 * runs on your local machine - does not send data to a server;
-* compatible with `es2015`;
+* compatible with `es2015`, `es2016` and partially `es2017`;
 * tested on Angular2 bundle.
 
 Online version: [javascriptobfuscator.herokuapp.com](https://javascriptobfuscator.herokuapp.com)

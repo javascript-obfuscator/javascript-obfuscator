@@ -190,7 +190,7 @@ describe('LiteralTransformer', () => {
         });
 
         describe('variant #8: base64 encoding', () => {
-            const stringArrayRegExp: RegExp = /^var *_0x([a-f0-9]){4} *= *\['dGVzdA\\x3d\\x3d'\];/;
+            const stringArrayRegExp: RegExp = /^var *_0x([a-f0-9]){4} *= *\['dGVzdA=='\];/;
             const stringArrayCallRegExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/;
 
             let obfuscatedCode: string;
@@ -220,7 +220,7 @@ describe('LiteralTransformer', () => {
         });
 
         describe('variant #9: rc4 encoding', () => {
-            const regExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0', *'(?:\w|(?:\\x[a-f0-9]*)){4}'\);/;
+            const regExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0', *'.{4}'\);/;
 
             let obfuscatedCode: string;
 

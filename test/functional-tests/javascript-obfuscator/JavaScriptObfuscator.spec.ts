@@ -254,7 +254,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('cyrillic literal variable value', () => {
-            const stringArrayCyrillicRegExp: RegExp = /^var _0x(\w){4} *= *\['(\\u\d+)+'\];/;
+            const stringArrayCyrillicRegExp: RegExp = /^var _0x(\w){4} *= *\['абц'\];/;
             const stringArrayCallRegExp: RegExp = /var *test *= *_0x(\w){4}\('0x0'\);$/;
 
             let obfuscatedCode: string;

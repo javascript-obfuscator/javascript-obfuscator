@@ -9,8 +9,12 @@ export function SelfDefendingTemplate (): string {
             this.rc4Bytes = rc4Bytes;
             this.states = [1, 0, 0];
             this.newState = function(){return 'newState';};
-            this.firstState = '${Utils.stringToUnicodeEscapeSequence(`\\w+ *\\(\\) *{\\w+ *`)}';
-            this.secondState = '${Utils.stringToUnicodeEscapeSequence(`['|"].+['|"];? *}`)}';
+            this.firstState = '${
+                Utils.stringToUnicodeEscapeSequence(`\\w+ *\\(\\) *{\\w+ *`, true)
+            }';
+            this.secondState = '${
+                Utils.stringToUnicodeEscapeSequence(`['|"].+['|"];? *}`, true)
+            }';
         };
         
         StatesClass.prototype.checkState = function () {

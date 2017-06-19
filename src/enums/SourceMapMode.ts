@@ -1,4 +1,4 @@
-export const SourceMapMode: any = {
-    Inline: 'inline',
-    Separate: 'separate'
-};
+export enum SourceMapMode {
+    Inline = 'inline',
+    Separate = 'separate'
+}

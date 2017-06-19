@@ -1,4 +1,4 @@
-export const StringArrayEncoding: any = {
-    base64: 'base64',
-    rc4: 'rc4'
-};
+export enum StringArrayEncoding {
+    Base64 = 'base64',
+    Rc4 = 'rc4'
+}

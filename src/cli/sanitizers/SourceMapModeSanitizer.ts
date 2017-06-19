@@ -6,7 +6,7 @@ export const SourceMapModeSanitizer: TCLISanitizer = (value: string): string => 
     const availableMode: boolean = Object
         .keys(SourceMapMode)
         .some((key: string): boolean => {
-            return SourceMapMode[key] === value;
+            return SourceMapMode[<any>key] === value;
         });
 
     if (!availableMode) {

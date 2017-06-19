@@ -110,7 +110,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
         }
 
         switch (this.options.stringArrayEncoding) {
-            case StringArrayEncoding.rc4:
+            case StringArrayEncoding.Rc4:
                 decodeStringArrayTemplate = format(StringArrayRc4DecodeNodeTemplate(), {
                     atobPolyfill: AtobTemplate(),
                     rc4Polyfill: Rc4Template(),
@@ -120,7 +120,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
 
                 break;
 
-            case StringArrayEncoding.base64:
+            case StringArrayEncoding.Base64:
                 decodeStringArrayTemplate = format(StringArrayBase64DecodeNodeTemplate(), {
                     atobPolyfill: AtobTemplate(),
                     selfDefendingCode,

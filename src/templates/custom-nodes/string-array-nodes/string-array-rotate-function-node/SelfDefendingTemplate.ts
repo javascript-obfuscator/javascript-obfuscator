@@ -55,7 +55,9 @@ export function SelfDefendingTemplate (): string {
             };
             
             var test1 = function () {
-                var regExp = new RegExp('${Utils.stringToUnicodeEscapeSequence(`\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}`)}');
+                var regExp = new RegExp('${
+                    Utils.stringToUnicodeEscapeSequence(`\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}`, true)
+                }');
                 
                 return regExp.test(object.removeCookie.toString());
             };

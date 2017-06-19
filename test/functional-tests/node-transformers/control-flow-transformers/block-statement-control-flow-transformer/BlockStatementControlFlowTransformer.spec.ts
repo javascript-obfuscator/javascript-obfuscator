@@ -87,7 +87,7 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
 
             describe('switch-case map', () => {
-                const switchCaseMapVariableRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\\x7c'\)/;
+                const switchCaseMapVariableRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\|'\)/;
                 const switchCaseMapStringRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *\{'.*' *: *'(.*)'\};/;
                 const expectedSwitchCasesSequence: string[] = ['0', '1', '2', '3', '4'];
 
@@ -96,7 +96,7 @@ describe('BlockStatementControlFlowTransformer', function () {
                 before(() => {
                     const switchCaseMapMatch: string = getRegExpMatch(obfuscatedCode, switchCaseMapStringRegExp);
 
-                    switchCaseMap = switchCaseMapMatch.replace(/\\x7c/g, '|').split('|').sort();
+                    switchCaseMap = switchCaseMapMatch.split('|').sort();
                 });
 
                 it('should create switch-case map variable', () => {
@@ -176,7 +176,7 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
 
             describe('switch-case map', () => {
-                const switchCaseMapVariableRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\\x7c'\)/;
+                const switchCaseMapVariableRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\|'\)/;
                 const switchCaseMapStringRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *\{'.*' *: *'(.*)'\};/;
                 const expectedSwitchCasesSequence: string[] = ['0', '1', '2', '3', '4'];
 
@@ -185,7 +185,7 @@ describe('BlockStatementControlFlowTransformer', function () {
                 before(() => {
                     const switchCaseMapMatch: string = getRegExpMatch(obfuscatedCode, switchCaseMapStringRegExp);
 
-                    switchCaseMap = switchCaseMapMatch.replace(/\\x7c/g, '|').split('|').sort();
+                    switchCaseMap = switchCaseMapMatch.split('|').sort();
                 });
 
                 it('should create switch-case map variable', () => {

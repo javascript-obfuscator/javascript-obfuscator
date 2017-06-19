@@ -7,11 +7,11 @@ export const StringArrayEncodingSanitizer: TCLISanitizer = (value: string): TStr
     switch (value) {
         case 'true':
         case '1':
-        case StringArrayEncoding.base64:
+        case StringArrayEncoding.Base64:
             return true;
 
-        case StringArrayEncoding.rc4:
-            return StringArrayEncoding.rc4;
+        case StringArrayEncoding.Rc4:
+            return StringArrayEncoding.Rc4;
 
         default:
             return false;

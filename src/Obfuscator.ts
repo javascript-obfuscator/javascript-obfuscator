@@ -188,8 +188,8 @@ export class Obfuscator implements IObfuscator {
         }
 
         estraverse.replace(astTree, {
-            enter: this.mergeVisitorsForDirection(enterVisitors, VisitorDirection.enter),
-            leave: this.mergeVisitorsForDirection(leaveVisitors, VisitorDirection.leave)
+            enter: this.mergeVisitorsForDirection(enterVisitors, VisitorDirection.Enter),
+            leave: this.mergeVisitorsForDirection(leaveVisitors, VisitorDirection.Leave)
         });
 
         return astTree;

@@ -2,7 +2,6 @@ import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
 import { TNodeWithBlockStatement } from '../types/node/TNodeWithBlockStatement';
-import { TObfuscationEvent } from '../types/event-emitters/TObfuscationEvent';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { ICustomNodeGroup } from '../interfaces/custom-nodes/ICustomNodeGroup';
@@ -10,13 +9,14 @@ import { IOptions } from '../interfaces/options/IOptions';
 import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { CustomNode } from '../enums/container/custom-nodes/CustomNode';
+import { ObfuscationEvent } from '../enums/event-emitters/ObfuscationEvent';
 
 @injectable()
 export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     /**
-     * @type {TObfuscationEvent}
+     * @type {ObfuscationEvent}
      */
-    protected abstract readonly appendEvent: TObfuscationEvent;
+    protected abstract readonly appendEvent: ObfuscationEvent;
 
     /**
      * @type {Map<CustomNode, ICustomNode>}
@@ -49,9 +49,9 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     public abstract appendCustomNodes (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void;
 
     /**
-     * @returns {TObfuscationEvent}
+     * @returns {ObfuscationEvent}
      */
-    public getAppendEvent (): TObfuscationEvent {
+    public getAppendEvent (): ObfuscationEvent {
         return this.appendEvent;
     }
 

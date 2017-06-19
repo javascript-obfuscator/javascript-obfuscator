@@ -345,7 +345,7 @@ describe('Utils', () => {
             let actualString: string;
 
             before(() => {
-                actualString = Utils.stringToUnicodeEscapeSequence(string);
+                actualString = Utils.stringToUnicodeEscapeSequence(string, true);
             });
 
             it('should return a unicode escape sequence based on a given string', () => {
@@ -353,17 +353,17 @@ describe('Utils', () => {
             });
         });
 
-        describe('variant #2: escape non-digits and non-latin letters', () => {
-            const string: string = 'abc!де';
-            const expectedString: string = 'abc\\x21\\u0434\\u0435';
+        describe('variant #2: escape `escape sequences`', () => {
+            const string: string = 'abc\'\\r\\n';
+            const expectedString: string = 'abc\\x27\\x5cr\\x5cn';
 
             let actualString: string;
 
             before(() => {
-                actualString = Utils.stringToUnicodeEscapeSequence(string, true);
+                actualString = Utils.stringToUnicodeEscapeSequence(string, false);
             });
 
-            it('should return a string where only non-digits and non-latin letters are escaped', () => {
+            it('should return a string where all `escape sequences` are escaped', () => {
                 assert.equal(actualString, expectedString);
             });
         });

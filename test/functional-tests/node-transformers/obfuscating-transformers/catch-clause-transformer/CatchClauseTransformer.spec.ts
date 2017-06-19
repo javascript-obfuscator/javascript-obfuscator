@@ -4,6 +4,7 @@ import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationRe
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
+import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
@@ -28,12 +29,8 @@ describe('CatchClauseTransformer', () => {
             );
 
             obfuscatedCode = obfuscationResult.getObfuscatedCode();
-
-            const firstMatchArray: RegExpMatchArray | null = obfuscatedCode.match(paramNameRegExp);
-            const secondMatchArray: RegExpMatchArray | null = obfuscatedCode.match(bodyParamNameRegExp);
-
-            firstMatch = firstMatchArray ? firstMatchArray[1] : undefined;
-            secondMatch = secondMatchArray ? secondMatchArray[1] : undefined;
+            firstMatch = getRegExpMatch(obfuscatedCode, paramNameRegExp);
+            secondMatch = getRegExpMatch(obfuscatedCode, bodyParamNameRegExp);
         });
 
         it('match #1: should transform catch clause node', () => {

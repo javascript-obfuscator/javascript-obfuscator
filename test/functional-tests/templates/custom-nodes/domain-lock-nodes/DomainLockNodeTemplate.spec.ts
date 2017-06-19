@@ -55,7 +55,7 @@ describe('DomainLockNodeTemplate (): string', () => {
             }, singleNodeCallControllerFunctionName, currentDomain);
         });
 
-        it('should correctly runs code inside template', () => {
+        it('should correctly run code inside template', () => {
             assert.doesNotThrow(testFunc);
         });
     });
@@ -80,7 +80,7 @@ describe('DomainLockNodeTemplate (): string', () => {
             }, singleNodeCallControllerFunctionName, currentDomain);
         });
 
-        it('should correctly runs code inside template', () => {
+        it('should correctly run code inside template', () => {
             assert.doesNotThrow(testFunc);
         });
     });

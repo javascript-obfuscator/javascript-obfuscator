@@ -3,7 +3,6 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
 import { TNodeWithBlockStatement } from '../../../types/node/TNodeWithBlockStatement';
-import { TObfuscationEvent } from '../../../types/event-emitters/TObfuscationEvent';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IObfuscationEventEmitter } from '../../../interfaces/event-emitters/IObfuscationEventEmitter';
@@ -22,9 +21,9 @@ import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 @injectable()
 export class ConsoleOutputCustomNodeGroup extends AbstractCustomNodeGroup {
     /**
-     * @type {TObfuscationEvent}
+     * @type {ObfuscationEvent}
      */
-    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvent.BeforeObfuscation;
+    protected readonly appendEvent: ObfuscationEvent = ObfuscationEvent.BeforeObfuscation;
 
     /**
      * @type {Map<CustomNode, ICustomNode>}

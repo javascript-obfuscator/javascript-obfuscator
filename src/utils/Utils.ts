@@ -138,18 +138,18 @@ export class Utils {
         return Array
             .from(string)
             .map((character: string): string => {
-                return JSFuck[character] || character;
+                return JSFuck[<any>character] || character;
             })
             .join(' + ');
     }
 
     /**
      * @param string
-     * @param nonLatinAndNonDigitsOnly
+     * @param usingUnicodeEscapeSequence
      * @returns {string}
      */
-    public static stringToUnicodeEscapeSequence (string: string, nonLatinAndNonDigitsOnly: boolean = false): string {
-        const cacheKey: string = `${string}-${String(nonLatinAndNonDigitsOnly)}`;
+    public static stringToUnicodeEscapeSequence (string: string, usingUnicodeEscapeSequence: boolean): string {
+        const cacheKey: string = `${string}-${String(usingUnicodeEscapeSequence)}`;
 
         if (Utils.stringToUnicodeEscapeSequenceCache.has(cacheKey)) {
             return <string>Utils.stringToUnicodeEscapeSequenceCache.get(cacheKey);
@@ -157,18 +157,18 @@ export class Utils {
 
         const radix: number = 16;
         const replaceRegExp: RegExp = new RegExp('[\\s\\S]', 'g');
-        const escapeRegExp: RegExp = new RegExp('[^a-zA-Z0-9]');
-        const regexp: RegExp = new RegExp('[\\x00-\\x7F]');
+        const escapeSequenceRegExp: RegExp = new RegExp('[\'\"\\\\\\s]');
+        const regExp: RegExp = new RegExp('[\\x00-\\x7F]');
 
         let prefix: string,
             template: string;
 
-        const result: string = string.replace(replaceRegExp, (escape: string): string => {
-            if (nonLatinAndNonDigitsOnly && !escapeRegExp.exec(escape)) {
-                return escape;
+        const result: string = string.replace(replaceRegExp, (character: string): string => {
+            if (!usingUnicodeEscapeSequence && !escapeSequenceRegExp.exec(character)) {
+                return character;
             }
 
-            if (regexp.exec(escape)) {
+            if (regExp.exec(character)) {
                 prefix = '\\x';
                 template = '00';
             } else {
@@ -176,7 +176,7 @@ export class Utils {
                 template = '0000';
             }
 
-            return `${prefix}${(template + escape.charCodeAt(0).toString(radix)).slice(-template.length)}`;
+            return `${prefix}${(template + character.charCodeAt(0).toString(radix)).slice(-template.length)}`;
         });
 
         Utils.stringToUnicodeEscapeSequenceCache.set(cacheKey, result);

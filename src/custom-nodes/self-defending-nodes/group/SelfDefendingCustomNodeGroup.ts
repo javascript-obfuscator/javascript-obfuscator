@@ -2,7 +2,6 @@ import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
-import { TObfuscationEvent } from '../../../types/event-emitters/TObfuscationEvent';
 import { TNodeWithBlockStatement } from '../../../types/node/TNodeWithBlockStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
@@ -22,9 +21,9 @@ import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 @injectable()
 export class SelfDefendingCustomNodeGroup extends AbstractCustomNodeGroup {
     /**
-     * @type {TObfuscationEvent}
+     * @type {ObfuscationEvent}
      */
-    protected appendEvent: TObfuscationEvent = ObfuscationEvent.AfterObfuscation;
+    protected appendEvent: ObfuscationEvent = ObfuscationEvent.AfterObfuscation;
 
     /**
      * @type {Map<CustomNode, ICustomNode>}

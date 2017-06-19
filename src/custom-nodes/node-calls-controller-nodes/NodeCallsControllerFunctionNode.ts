@@ -3,7 +3,6 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as format from 'string-template';
 
-import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
 import { TStatement } from '../../types/node/TStatement';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -29,10 +28,10 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     protected callsControllerFunctionName: string;
 
     /**
-     * @type {TObfuscationEvent}
+     * @type {ObfuscationEvent}
      */
     @initializable()
-    private appendEvent: TObfuscationEvent;
+    private appendEvent: ObfuscationEvent;
 
     /**
      * @param options
@@ -47,7 +46,7 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
      * @param appendEvent
      * @param callsControllerFunctionName
      */
-    public initialize (appendEvent: TObfuscationEvent, callsControllerFunctionName: string): void {
+    public initialize (appendEvent: ObfuscationEvent, callsControllerFunctionName: string): void {
         this.appendEvent = appendEvent;
         this.callsControllerFunctionName = callsControllerFunctionName;
     }

@@ -4,6 +4,7 @@ import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationRe
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
+import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
@@ -157,22 +158,11 @@ describe('VariableDeclarationTransformer', () => {
             );
             const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
 
-            const functionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(functionParamIdentifierRegExp);
-            const innerFunctionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(innerFunctionParamIdentifierRegExp);
-            const constructorIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(constructorIdentifierRegExp);
-            const objectIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(objectIdentifierRegExp);
-            const variableDeclarationIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(variableDeclarationIdentifierRegExp);
-
-            outerFunctionParamIdentifierName = (<RegExpMatchArray>functionParamIdentifierMatch)[1];
-            innerFunctionParamIdentifierName = (<RegExpMatchArray>innerFunctionParamIdentifierMatch)[1];
-            constructorIdentifierName = (<RegExpMatchArray>constructorIdentifierMatch)[1];
-            objectIdentifierName = (<RegExpMatchArray>objectIdentifierMatch)[1];
-            variableDeclarationIdentifierName = (<RegExpMatchArray>variableDeclarationIdentifierMatch)[1];
+            outerFunctionParamIdentifierName = getRegExpMatch(obfuscatedCode, functionParamIdentifierRegExp);
+            innerFunctionParamIdentifierName = getRegExpMatch(obfuscatedCode, innerFunctionParamIdentifierRegExp);
+            constructorIdentifierName = getRegExpMatch(obfuscatedCode, constructorIdentifierRegExp);
+            objectIdentifierName = getRegExpMatch(obfuscatedCode, objectIdentifierRegExp);
+            variableDeclarationIdentifierName = getRegExpMatch(obfuscatedCode, variableDeclarationIdentifierRegExp);
         });
 
         it('match #1: should\'t name variables inside inner function with names from outer function params', () => {
@@ -223,22 +213,11 @@ describe('VariableDeclarationTransformer', () => {
             );
             const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
 
-            const catchClauseParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(catchClauseParamIdentifierRegExp);
-            const innerFunctionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(innerFunctionParamIdentifierRegExp);
-            const constructorIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(constructorIdentifierRegExp);
-            const objectIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(objectIdentifierRegExp);
-            const variableDeclarationIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(variableDeclarationIdentifierRegExp);
-
-            catchClauseParamIdentifierName = (<RegExpMatchArray>catchClauseParamIdentifierMatch)[1];
-            innerFunctionParamIdentifierName = (<RegExpMatchArray>innerFunctionParamIdentifierMatch)[1];
-            constructorIdentifierName = (<RegExpMatchArray>constructorIdentifierMatch)[1];
-            objectIdentifierName = (<RegExpMatchArray>objectIdentifierMatch)[1];
-            variableDeclarationIdentifierName = (<RegExpMatchArray>variableDeclarationIdentifierMatch)[1];
+            catchClauseParamIdentifierName = getRegExpMatch(obfuscatedCode, catchClauseParamIdentifierRegExp);
+            innerFunctionParamIdentifierName = getRegExpMatch(obfuscatedCode, innerFunctionParamIdentifierRegExp);
+            constructorIdentifierName = getRegExpMatch(obfuscatedCode, constructorIdentifierRegExp);
+            objectIdentifierName = getRegExpMatch(obfuscatedCode, objectIdentifierRegExp);
+            variableDeclarationIdentifierName = getRegExpMatch(obfuscatedCode, variableDeclarationIdentifierRegExp);
         });
 
         it('match #1: should\'t name variables inside inner function with names from catch clause param', () => {
@@ -360,10 +339,10 @@ describe('VariableDeclarationTransformer', () => {
 
             obfuscatedCode = obfuscationResult.getObfuscatedCode();
 
-            objectPatternIdentifierName1 = obfuscatedCode.match(objectPatternVariableDeclaratorRegExp)![1];
-            objectPatternIdentifierName2 = obfuscatedCode.match(objectPatternVariableDeclaratorRegExp)![2];
-            identifierName1 = obfuscatedCode.match(variableUsageRegExp)![1];
-            identifierName2 = obfuscatedCode.match(variableUsageRegExp)![2];
+            objectPatternIdentifierName1 = getRegExpMatch(obfuscatedCode, objectPatternVariableDeclaratorRegExp);
+            objectPatternIdentifierName2 = getRegExpMatch(obfuscatedCode, objectPatternVariableDeclaratorRegExp, 1);
+            identifierName1 = getRegExpMatch(obfuscatedCode, variableUsageRegExp);
+            identifierName2 = getRegExpMatch(obfuscatedCode, variableUsageRegExp, 1);
         });
 
         it('match #1: should transform array pattern variable declarator', () => {

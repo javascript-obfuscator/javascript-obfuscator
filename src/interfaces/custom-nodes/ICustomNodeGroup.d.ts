@@ -1,11 +1,11 @@
 import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
-import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
 
 import { ICustomNode } from './ICustomNode';
 import { IInitializable } from '../IInitializable';
 import { IStackTraceData } from '../stack-trace-analyzer/IStackTraceData';
 
 import { CustomNode } from '../../enums/container/custom-nodes/CustomNode';
+import { ObfuscationEvent } from '../../enums/event-emitters/ObfuscationEvent';
 
 export interface ICustomNodeGroup extends IInitializable {
     /**
@@ -15,9 +15,9 @@ export interface ICustomNodeGroup extends IInitializable {
     appendCustomNodes (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void;
 
     /**
-     * @returns {TObfuscationEvent}
+     * @returns {ObfuscationEvent}
      */
-    getAppendEvent (): TObfuscationEvent;
+    getAppendEvent (): ObfuscationEvent;
 
     /**
      * @type {Map <CustomNode, ICustomNode>}

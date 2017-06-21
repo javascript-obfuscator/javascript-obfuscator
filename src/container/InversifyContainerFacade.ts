@@ -7,6 +7,7 @@ import { obfuscatingTransformersModule } from './modules/node-transformers/Obfus
 import { nodeTransformersModule } from './modules/node-transformers/NodeTransformersModule';
 import { stackTraceAnalyzerModule } from './modules/stack-trace-analyzer/StackTraceAnalyzerModule';
 import { storagesModule } from './modules/storages/StoragesModule';
+import { utilsModule } from './modules/utils/UtilsModule';
 
 import { TInputOptions } from '../types/options/TInputOptions';
 
@@ -31,64 +32,8 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      */
     private readonly container: interfaces.Container;
 
-    /**
-     * @param options
-     */
-    constructor (options: TInputOptions) {
+    constructor () {
         this.container = new Container();
-
-        this.container
-            .bind<IOptions>(ServiceIdentifiers.IOptions)
-            .toDynamicValue(() => {
-                return new Options(options);
-            })
-            .inSingletonScope();
-
-        this.container
-            .bind<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator)
-            .to(JavaScriptObfuscatorInternal)
-            .inSingletonScope();
-
-        this.container
-            .bind<IObfuscator>(ServiceIdentifiers.IObfuscator)
-            .to(Obfuscator)
-            .inSingletonScope();
-
-        this.container
-            .bind<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult)
-            .to(ObfuscationResult)
-            .inSingletonScope();
-
-        this.container
-            .bind<IObfuscationResult>(ServiceIdentifiers.Factory__IObfuscationResult)
-            .toFactory<IObfuscationResult>((context: interfaces.Context) => {
-                return (obfuscatedCode: string, sourceMap: string) => {
-                    const obfuscationResult: IObfuscationResult = context.container
-                        .get<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult);
-
-                    obfuscationResult.initialize(obfuscatedCode, sourceMap);
-
-                    return obfuscationResult;
-                };
-            });
-
-        this.container
-            .bind<ISourceMapCorrector>(ServiceIdentifiers.ISourceMapCorrector)
-            .to(SourceMapCorrector)
-            .inSingletonScope();
-
-        this.container
-            .bind<IObfuscationEventEmitter>(ServiceIdentifiers.IObfuscationEventEmitter)
-            .to(ObfuscationEventEmitter)
-            .inSingletonScope();
-
-        // modules
-        this.container.load(storagesModule);
-        this.container.load(stackTraceAnalyzerModule);
-        this.container.load(customNodesModule);
-        this.container.load(nodeTransformersModule);
-        this.container.load(controlFlowTransformersModule);
-        this.container.load(obfuscatingTransformersModule);
     }
 
     /**
@@ -131,6 +76,43 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
 
     /**
      * @param serviceIdentifier
+     * @param dependencies
+     * @return {(context: interfaces.Context) => (bindingName: T) => U}
+     */
+    public static getConstructorFactory <T extends number, U> (
+        serviceIdentifier: interfaces.ServiceIdentifier<interfaces.Newable<U>>,
+        ...dependencies: any[]
+    ): (context: interfaces.Context) => (bindingName: T) => U {
+        return (context: interfaces.Context): (bindingName: T) => U => {
+            const cache: Map<T, interfaces.Newable<U>> = new Map();
+            const cachedDependencies: any[] = [];
+
+            return (bindingName: T) => {
+                dependencies.forEach((dependency: any, index: number) => {
+                    if (!cachedDependencies[index]) {
+                        cachedDependencies[index] = context.container.get<any>(dependency);
+                    }
+                });
+
+                if (cache.has(bindingName)) {
+                    return new (<interfaces.Newable<U>>cache.get(bindingName))(...cachedDependencies);
+                }
+
+                const constructor: interfaces.Newable<U> = context.container
+                    .getNamed<interfaces.Newable<U>>(
+                        serviceIdentifier,
+                        bindingName
+                    );
+
+                cache.set(bindingName, constructor);
+
+                return new constructor(...cachedDependencies);
+            };
+        };
+    }
+
+    /**
+     * @param serviceIdentifier
      * @returns {T}
      */
     public get <T> (serviceIdentifier: interfaces.ServiceIdentifier<T>): T {
@@ -144,5 +126,66 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      */
     public getNamed <T> (serviceIdentifier: interfaces.ServiceIdentifier<T>, named: string | number | symbol): T {
         return this.container.getNamed<T>(serviceIdentifier, named);
+    }
+
+    /**
+     * @param options
+     */
+    public load (options: TInputOptions): void {
+        this.container
+            .bind<IOptions>(ServiceIdentifiers.IOptions)
+            .toDynamicValue(() => new Options(options))
+            .inSingletonScope();
+
+        this.container
+            .bind<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator)
+            .to(JavaScriptObfuscatorInternal)
+            .inSingletonScope();
+
+        this.container
+            .bind<IObfuscator>(ServiceIdentifiers.IObfuscator)
+            .to(Obfuscator)
+            .inSingletonScope();
+
+        this.container
+            .bind<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult)
+            .to(ObfuscationResult)
+            .inSingletonScope();
+
+        this.container
+            .bind<IObfuscationResult>(ServiceIdentifiers.Factory__IObfuscationResult)
+            .toFactory<IObfuscationResult>((context: interfaces.Context) => {
+                return (obfuscatedCode: string, sourceMap: string) => {
+                    const obfuscationResult: IObfuscationResult = context.container
+                        .get<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult);
+
+                    obfuscationResult.initialize(obfuscatedCode, sourceMap);
+
+                    return obfuscationResult;
+                };
+            });
+
+        this.container
+            .bind<ISourceMapCorrector>(ServiceIdentifiers.ISourceMapCorrector)
+            .to(SourceMapCorrector)
+            .inSingletonScope();
+
+        this.container
+            .bind<IObfuscationEventEmitter>(ServiceIdentifiers.IObfuscationEventEmitter)
+            .to(ObfuscationEventEmitter)
+            .inSingletonScope();
+
+        // modules
+        this.container.load(utilsModule);
+        this.container.load(storagesModule);
+        this.container.load(stackTraceAnalyzerModule);
+        this.container.load(customNodesModule);
+        this.container.load(nodeTransformersModule);
+        this.container.load(controlFlowTransformersModule);
+        this.container.load(obfuscatingTransformersModule);
+    }
+
+    public unload (): void {
+        this.container.unbindAll();
     }
 }

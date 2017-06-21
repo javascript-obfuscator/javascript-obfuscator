@@ -6,6 +6,7 @@ import { Expression } from 'estree';
 import { TStatement } from '../../../types/node/TStatement';
 
 import { IOptions } from '../../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 
 import { initializable } from '../../../decorators/Initializable';
 
@@ -34,18 +35,27 @@ export class ExpressionWithOperatorControlFlowStorageCallNode extends AbstractCu
     private leftValue: Expression;
 
     /**
+     * @type {IRandomGenerator}
+     */
+    private readonly randomGenerator: IRandomGenerator;
+
+    /**
      * @type {ESTree.Expression}
      */
     @initializable()
     private rightValue: Expression;
 
     /**
+     * @param randomGenerator
      * @param options
      */
     constructor (
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+
+        this.randomGenerator = randomGenerator;
     }
 
     /**

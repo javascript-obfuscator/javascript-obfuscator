@@ -1,12 +1,21 @@
 import { assert } from 'chai';
 
+import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
+
+import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
+import { IRandomGenerator } from '../../../src/interfaces/utils/IRandomGenerator';
 import { IStorage } from '../../../src/interfaces/storages/IStorage';
 
 import { ArrayStorage } from '../../../src/storages/ArrayStorage';
+import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
 
 class ConcreteStorage extends ArrayStorage <string> {
     constructor () {
-        super();
+        const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
+
+        inversifyContainerFacade.load({});
+
+        super(inversifyContainerFacade.get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator));
     }
 }
 

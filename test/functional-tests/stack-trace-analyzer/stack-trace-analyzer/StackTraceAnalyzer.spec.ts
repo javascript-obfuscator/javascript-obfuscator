@@ -148,12 +148,17 @@ function getObjectFunctionExpressionByName (astTree: ESTree.Node, objectName: st
 
 describe('StackTraceAnalyzer', () => {
     describe('extract (): IStackTraceData[]', () => {
-        const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade({});
-        const stackTraceAnalyzer: IStackTraceAnalyzer = inversifyContainerFacade
-            .get<IStackTraceAnalyzer>(ServiceIdentifiers.IStackTraceAnalyzer);
-
-        let expectedStackTraceData: IStackTraceData[],
+        let stackTraceAnalyzer: IStackTraceAnalyzer,
+            expectedStackTraceData: IStackTraceData[],
             stackTraceData: IStackTraceData[];
+
+        before(() => {
+            const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
+
+            inversifyContainerFacade.load({});
+            stackTraceAnalyzer = inversifyContainerFacade
+                .get<IStackTraceAnalyzer>(ServiceIdentifiers.IStackTraceAnalyzer);
+        });
 
         describe('variant #1: basic-1', () => {
             before(() => {

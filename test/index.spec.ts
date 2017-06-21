@@ -15,9 +15,11 @@ import './unit-tests/source-map-corrector/SourceMapCorrector.spec';
 import './unit-tests/stack-trace-analyzer/stack-trace-analyzer/StackTraceAnalyzer.spec';
 import './unit-tests/storages/ArrayStorage.spec';
 import './unit-tests/storages/MapStorage.spec';
-import './unit-tests/utils/crypt-utils/CryptUtils.spec';
-import './unit-tests/utils/random-generator-utils/RandomGeneratorUtils.spec';
-import './unit-tests/utils/utils/Utils.spec';
+import './unit-tests/utils/ArrayUtils.spec';
+import './unit-tests/utils/CryptUtils.spec';
+import './unit-tests/utils/RandomGeneratorUtils.spec';
+import './unit-tests/utils/EscapeSequenceEncoder.spec';
+import './unit-tests/utils/Utils.spec';
 
 /**
  * Functional tests

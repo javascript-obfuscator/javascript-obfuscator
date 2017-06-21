@@ -2,67 +2,31 @@ import * as format from 'string-template';
 
 import { assert } from 'chai';
 
+import { ServiceIdentifiers } from '../../../../../src/container/ServiceIdentifiers';
+
+import { ICryptUtils } from '../../../../../src/interfaces/utils/ICryptUtils';
+import { IInversifyContainerFacade } from '../../../../../src/interfaces/container/IInversifyContainerFacade';
+
 import { AtobTemplate } from '../../../../../src/templates/custom-nodes/AtobTemplate';
 import { Rc4Template } from '../../../../../src/templates/custom-nodes/Rc4Template';
 import { StringArrayBase64DecodeNodeTemplate } from '../../../../../src/templates/custom-nodes/string-array-nodes/string-array-calls-wrapper/StringArrayBase64DecodeNodeTemplate';
 import { StringArrayCallsWrapperTemplate } from '../../../../../src/templates/custom-nodes/string-array-nodes/string-array-calls-wrapper/StringArrayCallsWrapperTemplate';
 import { StringArrayRc4DecodeNodeTemplate } from '../../../../../src/templates/custom-nodes/string-array-nodes/string-array-calls-wrapper/StringArrayRC4DecodeNodeTemplate';
 
-import { CryptUtils } from '../../../../../src/utils/CryptUtils';
-
-/**
- * @param templateData
- * @param stringArrayName
- * @param stringArrayCallsWrapperName
- * @param index
- * @returns {Function}
- */
-function getFunctionFromTemplateBase64Encoding (
-    templateData: any,
-    stringArrayName: string,
-    stringArrayCallsWrapperName: string,
-    index: string
-) {
-    const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), templateData);
-
-    return Function(`
-        var ${stringArrayName} = ['${CryptUtils.btoa('test1')}'];
-    
-        ${stringArrayCallsWrapperTemplate}
-        
-        return ${stringArrayCallsWrapperName}(${index});
-    `)();
-}
-
-/**
- * @param templateData
- * @param stringArrayName
- * @param stringArrayCallsWrapperName
- * @param index
- * @param key
- * @returns {Function}
- */
-function getFunctionFromTemplateRc4Encoding (
-    templateData: any,
-    stringArrayName: string,
-    stringArrayCallsWrapperName: string,
-    index: string,
-    key: string
-) {
-    const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), templateData);
-
-    return Function(`
-        var ${stringArrayName} = ['${CryptUtils.btoa(CryptUtils.rc4('test1', key))}'];
-    
-        ${stringArrayCallsWrapperTemplate}
-        
-        return ${stringArrayCallsWrapperName}('${index}', '${key}');
-    `)();
-}
+import { InversifyContainerFacade } from '../../../../../src/container/InversifyContainerFacade';
 
 describe('StringArrayCallsWrapperNodeTemplate (): string', () => {
     const stringArrayName: string = 'stringArrayName';
     const stringArrayCallsWrapperName: string = 'stringArrayCallsWrapperName';
+
+    let cryptUtils: ICryptUtils;
+
+    before(() => {
+        const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
+
+        inversifyContainerFacade.load({});
+        cryptUtils = inversifyContainerFacade.get<ICryptUtils>(ServiceIdentifiers.ICryptUtils);
+    });
 
     describe('variant #1: `base64` encoding', () => {
         const atobDecodeNodeTemplate: string = format(StringArrayBase64DecodeNodeTemplate(), {
@@ -76,11 +40,19 @@ describe('StringArrayCallsWrapperNodeTemplate (): string', () => {
         let decodedValue: string;
 
         before(() => {
-            decodedValue = getFunctionFromTemplateBase64Encoding({
+            const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
                 decodeNodeTemplate: atobDecodeNodeTemplate,
                 stringArrayCallsWrapperName,
                 stringArrayName
-            }, stringArrayName, stringArrayCallsWrapperName, index);
+            });
+
+            decodedValue = Function(`
+                var ${stringArrayName} = ['${cryptUtils.btoa('test1')}'];
+            
+                ${stringArrayCallsWrapperTemplate}
+                
+                return ${stringArrayCallsWrapperName}(${index});
+            `)();
         });
 
         it('should correctly return decoded value', () => {
@@ -102,11 +74,19 @@ describe('StringArrayCallsWrapperNodeTemplate (): string', () => {
         let decodedValue: string;
 
         before(() => {
-            decodedValue = getFunctionFromTemplateRc4Encoding({
+            const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
                 decodeNodeTemplate: rc4DecodeNodeTemplate,
                 stringArrayCallsWrapperName,
                 stringArrayName
-            }, stringArrayName, stringArrayCallsWrapperName, index, key);
+            });
+
+            decodedValue = Function(`
+                var ${stringArrayName} = ['${cryptUtils.btoa(cryptUtils.rc4('test1', key))}'];
+            
+                ${stringArrayCallsWrapperTemplate}
+                
+                return ${stringArrayCallsWrapperName}('${index}', '${key}');
+            `)();
         });
 
         it('should correctly return decoded value', () => {

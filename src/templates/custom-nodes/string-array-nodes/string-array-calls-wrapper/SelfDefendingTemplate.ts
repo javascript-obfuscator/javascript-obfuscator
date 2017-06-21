@@ -1,19 +1,19 @@
-import { Utils } from '../../../../utils/Utils';
+import { IEscapeSequenceEncoder } from '../../../../interfaces/utils/IEscapeSequenceEncoder';
 
 /**
  * @returns {string}
  */
-export function SelfDefendingTemplate (): string {
+export function SelfDefendingTemplate (escapeSequenceEncoder: IEscapeSequenceEncoder): string {
     return `
         var StatesClass = function (rc4Bytes) {
             this.rc4Bytes = rc4Bytes;
             this.states = [1, 0, 0];
             this.newState = function(){return 'newState';};
             this.firstState = '${
-                Utils.stringToUnicodeEscapeSequence(`\\w+ *\\(\\) *{\\w+ *`, true)
+                escapeSequenceEncoder.encode(`\\w+ *\\(\\) *{\\w+ *`, true)
             }';
             this.secondState = '${
-                Utils.stringToUnicodeEscapeSequence(`['|"].+['|"];? *}`, true)
+                escapeSequenceEncoder.encode(`['|"].+['|"];? *}`, true)
             }';
         };
         

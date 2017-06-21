@@ -5,7 +5,9 @@ import * as format from 'string-template';
 
 import { TStatement } from '../../types/node/TStatement';
 
+import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { initializable } from '../../decorators/Initializable';
 
@@ -16,23 +18,39 @@ import { SelfDefendingTemplate } from '../../templates/custom-nodes/self-defendi
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeUtils } from '../../node/NodeUtils';
-import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     /**
+     * @type {IEscapeSequenceEncoder}
+     */
+    private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
+
+    /**
      * @type {string}
      */
     @initializable()
-    protected callsControllerFunctionName: string;
+    private callsControllerFunctionName: string;
 
     /**
+     * @type {IRandomGenerator}
+     */
+    private readonly randomGenerator: IRandomGenerator;
+
+    /**
+     * @param randomGenerator
+     * @param escapeSequenceEncoder
      * @param options
      */
     constructor (
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
+        @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+
+        this.randomGenerator = randomGenerator;
+        this.escapeSequenceEncoder = escapeSequenceEncoder;
     }
 
     /**
@@ -54,8 +72,8 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
      */
     protected getTemplate (): string {
         return JavaScriptObfuscator.obfuscate(
-            format(SelfDefendingTemplate(), {
-                selfDefendingFunctionName: RandomGeneratorUtils.getRandomVariableName(6),
+            format(SelfDefendingTemplate(this.escapeSequenceEncoder), {
+                selfDefendingFunctionName: this.randomGenerator.getRandomVariableName(6),
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
             }),
             {

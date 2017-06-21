@@ -1,0 +1,78 @@
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
+
+import { IArrayUtils } from '../interfaces/utils/IArrayUtils';
+import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
+
+@injectable()
+export class ArrayUtils implements IArrayUtils {
+    /**
+     * @type {IRandomGenerator}
+     */
+    private readonly randomGenerator: IRandomGenerator;
+
+    /**
+     * @param randomGenerator
+     */
+    constructor (
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator
+    ) {
+        this.randomGenerator = randomGenerator;
+    }
+
+    /**
+     * @param length
+     * @return {number[]}
+     */
+    public arrayRange (length: number): number[] {
+        const range: number[] = [];
+
+        for (let i: number = 0; i < length; i++) {
+            range.push(i);
+        }
+
+        return range;
+    }
+
+    /**
+     * @param array
+     * @param times
+     * @returns {T[]}
+     */
+    public arrayRotate <T> (array: T[], times: number): T[] {
+        if (!array.length) {
+            throw new ReferenceError(`Cannot rotate empty array.`);
+        }
+
+        if (times <= 0) {
+            return array;
+        }
+
+        const newArray: T[] = array;
+
+        let temp: T | undefined;
+
+        while (times--) {
+            temp = newArray.pop()!;
+            newArray.unshift(temp);
+        }
+
+        return newArray;
+    }
+
+    /**
+     * @param array
+     * @return {T[]}
+     */
+    public arrayShuffle <T> (array: T[]): T[] {
+        const shuffledArray: T[] = [...array];
+
+        for (let i: number = shuffledArray.length; i; i--) {
+            const j: number = Math.floor(this.randomGenerator.getMathRandom() * i);
+
+            [shuffledArray[i - 1], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i - 1]];
+        }
+
+        return shuffledArray;
+    }
+}

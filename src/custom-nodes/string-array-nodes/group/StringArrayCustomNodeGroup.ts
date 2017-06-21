@@ -7,6 +7,7 @@ import { TNodeWithBlockStatement } from '../../../types/node/TNodeWithBlockState
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IObfuscationEventEmitter } from '../../../interfaces/event-emitters/IObfuscationEventEmitter';
 import { IOptions } from '../../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStackTraceData';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
@@ -17,7 +18,6 @@ import { ObfuscationEvent } from '../../../enums/event-emitters/ObfuscationEvent
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
-import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 import { Utils } from '../../../utils/Utils';
 
 @injectable()
@@ -52,16 +52,18 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
     /**
      * @param customNodeFactory
      * @param obfuscationEventEmitter
+     * @param randomGenerator
      * @param stringArrayStorage
      * @param options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
         @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: IStorage<string>,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
+        super(randomGenerator, options);
 
         this.customNodeFactory = customNodeFactory;
         this.obfuscationEventEmitter = obfuscationEventEmitter;
@@ -112,7 +114,7 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
         let stringArrayRotateValue: number;
 
         if (this.options.rotateStringArray) {
-            stringArrayRotateValue = RandomGeneratorUtils.getRandomInteger(100, 500);
+            stringArrayRotateValue = this.randomGenerator.getRandomInteger(100, 500);
         } else {
             stringArrayRotateValue = 0;
         }

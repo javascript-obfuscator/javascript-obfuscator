@@ -6,6 +6,7 @@ import { TNodeWithBlockStatement } from '../types/node/TNodeWithBlockStatement';
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { ICustomNodeGroup } from '../interfaces/custom-nodes/ICustomNodeGroup';
 import { IOptions } from '../interfaces/options/IOptions';
+import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { CustomNode } from '../enums/container/custom-nodes/CustomNode';
@@ -34,11 +35,19 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     protected readonly options: IOptions;
 
     /**
+     * @type {IRandomGenerator}
+     */
+    protected readonly randomGenerator: IRandomGenerator;
+
+    /**
+     * @param randomGenerator
      * @param options
      */
     constructor (
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
+        this.randomGenerator = randomGenerator;
         this.options = options;
     }
 
@@ -76,5 +85,12 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
         }
 
         callback(customNode);
+    }
+
+    /**
+     * @param stackTraceLength
+     */
+    protected getRandomStackTraceIndex (stackTraceLength: number): number {
+        return this.randomGenerator.getRandomInteger(0, Math.max(0, Math.round(stackTraceLength - 1)));
     }
 }

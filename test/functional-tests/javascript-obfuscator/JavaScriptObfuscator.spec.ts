@@ -8,14 +8,8 @@ import { NO_CUSTOM_NODES_PRESET } from '../../../src/options/presets/NoCustomNod
 
 import { readFileAsString } from '../../helpers/readFileAsString';
 
-import { RandomGeneratorUtils } from '../../../src/utils/RandomGeneratorUtils';
-
 describe('JavaScriptObfuscator', () => {
     describe('obfuscate (sourceCode: string, customOptions?: IObfuscatorOptions): IObfuscationResult', () => {
-        beforeEach(() => {
-            RandomGeneratorUtils.initializeRandomGenerator(0);
-        });
-
         describe('correct source code', () => {
             let obfuscatedCode: string,
                 sourceMap: string;
@@ -428,10 +422,6 @@ describe('JavaScriptObfuscator', () => {
             it('should mangle obfuscated code', () => {
                 assert.match(obfuscatedCode, regExp);
             });
-        });
-
-        afterEach(() => {
-            RandomGeneratorUtils.initializeRandomGenerator(0);
         });
     });
 });

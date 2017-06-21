@@ -1,13 +1,30 @@
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+
+import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
+import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { ArrayStorage } from '../ArrayStorage';
-import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
-import { Utils } from '../../utils/Utils';
+import { RandomGenerator } from '../../utils/RandomGenerator';
 
 @injectable()
 export class StringArrayStorage extends ArrayStorage <string> {
-    constructor () {
-        super();
+    /**
+     * @type {IArrayUtils}
+     */
+    private readonly arrayUtils: IArrayUtils;
+
+    /**
+     * @param arrayUtils
+     * @param randomGenerator
+     */
+    constructor (
+        @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator
+    ) {
+        super(randomGenerator);
+
+        this.arrayUtils = arrayUtils;
 
         this.initialize();
     }
@@ -18,14 +35,14 @@ export class StringArrayStorage extends ArrayStorage <string> {
     public initialize (...args: any[]): void {
         super.initialize(args);
 
-        this.storageId = RandomGeneratorUtils.getRandomString(4, RandomGeneratorUtils.randomGeneratorPoolHexadecimal);
+        this.storageId = this.randomGenerator.getRandomString(4, RandomGenerator.randomGeneratorPoolHexadecimal);
     }
 
     /**
      * @param rotationValue
      */
     public rotateArray (rotationValue: number): void {
-        this.storage = Utils.arrayRotate(this.storage, rotationValue);
+        this.storage = this.arrayUtils.arrayRotate(this.storage, rotationValue);
     }
 
     /**

@@ -10,6 +10,7 @@ v0.10.0
 * increased runtime performance with `rc4` `stringArrayEncoding`.
 * added support for async functions
 * fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/57
+* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/54
 
 v0.9.3
 ---

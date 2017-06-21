@@ -5,11 +5,11 @@ import { TCustomNodeGroupFactory } from '../../types/container/custom-nodes/TCus
 
 import { ICustomNodeGroup } from '../../interfaces/custom-nodes/ICustomNodeGroup';
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { CustomNodeGroup } from '../../enums/container/custom-nodes/CustomNodeGroup';
 
 import { MapStorage } from '../MapStorage';
-import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class CustomNodeGroupStorage extends MapStorage <ICustomNodeGroup> {
@@ -36,13 +36,15 @@ export class CustomNodeGroupStorage extends MapStorage <ICustomNodeGroup> {
 
     /**
      * @param customNodeGroupFactory
+     * @param randomGenerator
      * @param options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__ICustomNodeGroup) customNodeGroupFactory: TCustomNodeGroupFactory,
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super();
+        super(randomGenerator);
 
         this.customNodeGroupFactory = customNodeGroupFactory;
         this.options = options;
@@ -52,7 +54,7 @@ export class CustomNodeGroupStorage extends MapStorage <ICustomNodeGroup> {
 
     public initialize (): void {
         this.storage = new Map <string, ICustomNodeGroup> ();
-        this.storageId = RandomGeneratorUtils.getRandomString(6);
+        this.storageId = this.randomGenerator.getRandomString(6);
 
         CustomNodeGroupStorage.customNodeGroupsList.forEach((customNodeGroupName: CustomNodeGroup) => {
             const customNodeGroup: ICustomNodeGroup = this.customNodeGroupFactory(

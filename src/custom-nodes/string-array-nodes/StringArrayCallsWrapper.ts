@@ -5,6 +5,7 @@ import * as format from 'string-template';
 
 import { TStatement } from '../../types/node/TStatement';
 
+import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IStorage } from '../../interfaces/storages/IStorage';
 
@@ -28,6 +29,11 @@ import { NodeUtils } from '../../node/NodeUtils';
 @injectable()
 export class StringArrayCallsWrapper extends AbstractCustomNode {
     /**
+     * @type {IEscapeSequenceEncoder}
+     */
+    private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
+
+    /**
      * @type {IStorage <string>}
      */
     @initializable()
@@ -46,12 +52,16 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
     private stringArrayCallsWrapperName: string;
 
     /**
+     * @param escapeSequenceEncoder
      * @param options
      */
     constructor (
+        @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+
+        this.escapeSequenceEncoder = escapeSequenceEncoder;
     }
 
     /**
@@ -103,7 +113,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
             selfDefendingCode: string = '';
 
         if (this.options.selfDefending) {
-            selfDefendingCode = format(SelfDefendingTemplate(), {
+            selfDefendingCode = format(SelfDefendingTemplate(this.escapeSequenceEncoder), {
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
                 stringArrayName: this.stringArrayName
             });

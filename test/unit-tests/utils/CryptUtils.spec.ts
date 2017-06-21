@@ -1,15 +1,29 @@
 import { assert } from 'chai';
 
-import { CryptUtils } from '../../../../src/utils/CryptUtils';
+import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
+
+import { ICryptUtils } from '../../../src/interfaces/utils/ICryptUtils';
+import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
+
+import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
 
 describe('CryptUtils', () => {
+    let cryptUtils: ICryptUtils;
+
+    before(() => {
+        const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
+
+        inversifyContainerFacade.load({});
+        cryptUtils = inversifyContainerFacade.get<ICryptUtils>(ServiceIdentifiers.ICryptUtils);
+    });
+
     describe('btoa (string: string): string', () => {
         const expectedString: string = 'c3RyaW5n';
 
         let string: string;
 
         before(() => {
-            string = CryptUtils.btoa('string');
+            string = cryptUtils.btoa('string');
         });
 
         it('should create a base-64 encoded string from a given string', () => {
@@ -25,7 +39,7 @@ describe('CryptUtils', () => {
             diffString: string;
 
         before(() => {
-            [hiddenString, diffString] = CryptUtils.hideString(originalString, hiddenStringLength);
+            [hiddenString, diffString] = cryptUtils.hideString(originalString, hiddenStringLength);
         });
 
         describe('hidden string length check', () => {
@@ -65,8 +79,8 @@ describe('CryptUtils', () => {
             decodedString: string;
 
         before(() => {
-            encodedString = CryptUtils.rc4(string, key);
-            decodedString = CryptUtils.rc4(encodedString, key);
+            encodedString = cryptUtils.rc4(string, key);
+            decodedString = cryptUtils.rc4(encodedString, key);
         });
 
         it('should encode string using the rc4 algorithm', () => {

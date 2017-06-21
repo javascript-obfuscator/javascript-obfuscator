@@ -58,14 +58,19 @@ describe('NodeAppender', () => {
     });
 
     describe('appendNodeToOptimalBlockScope (blockScopeStackTraceData: IStackTraceData[], blockScopeNode: TNodeWithBlockStatement, nodeBodyStatements: TStatement[], index: number = 0): void', () => {
-        const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade({});
-        const stackTraceAnalyzer: IStackTraceAnalyzer = inversifyContainerFacade
-            .get<IStackTraceAnalyzer>(ServiceIdentifiers.IStackTraceAnalyzer);
-
-        let astTree: ESTree.Program,
+        let stackTraceAnalyzer: IStackTraceAnalyzer,
+            astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
             node: TStatement[],
             stackTraceData: IStackTraceData[];
+
+        before(() => {
+            const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
+
+            inversifyContainerFacade.load({});
+            stackTraceAnalyzer = inversifyContainerFacade
+                .get<IStackTraceAnalyzer>(ServiceIdentifiers.IStackTraceAnalyzer);
+        });
 
         beforeEach(() => {
             node = convertCodeToStructure('/fixtures/simple-input.js');
@@ -145,7 +150,7 @@ describe('NodeAppender', () => {
                         stackTraceData,
                         astTree,
                         node,
-                        NodeAppender.getRandomStackTraceIndex(stackTraceData.length)
+                        stackTraceData.length - 1
                     );
 
                 });
@@ -154,19 +159,6 @@ describe('NodeAppender', () => {
                     assert.deepEqual(astTree, expectedAstTree);
                 });
             });
-        });
-    });
-
-    describe('getRandomStackTraceIndex (stackTraceRootLength: number): number', () => {
-        it('should return random index between 0 and stack trace data root length', () => {
-            let index: number;
-
-            for (let i: number = 0; i < 100; i++) {
-                index = NodeAppender.getRandomStackTraceIndex(100);
-
-                assert.isAtLeast(index, 0);
-                assert.isAtMost(index, 100);
-            }
         });
     });
 

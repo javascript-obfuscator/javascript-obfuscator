@@ -1,4 +1,4 @@
-import { Utils } from '../../../../utils/Utils';
+import { IEscapeSequenceEncoder } from '../../../../interfaces/utils/IEscapeSequenceEncoder';
 
 /**
  * SelfDefendingTemplate. Enters code in infinity loop.
@@ -6,7 +6,7 @@ import { Utils } from '../../../../utils/Utils';
  *
  * @returns {string}
  */
-export function SelfDefendingTemplate (): string {
+export function SelfDefendingTemplate (escapeSequenceEncoder: IEscapeSequenceEncoder): string {
     return `
         var {selfDefendingFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {
             var func1 = function(){return 'dev';},
@@ -16,7 +16,7 @@ export function SelfDefendingTemplate (): string {
                 
             var test1 = function () {
                 var regExp = new RegExp('${
-                    Utils.stringToUnicodeEscapeSequence(`\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}`, true)
+                    escapeSequenceEncoder.encode(`\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}`, true)
                 }');
                 
                 return !regExp.test(func1.toString());
@@ -24,7 +24,7 @@ export function SelfDefendingTemplate (): string {
             
             var test2 = function () {
                 var regExp = new RegExp('${
-                    Utils.stringToUnicodeEscapeSequence(`(\\\\[x|u](\\w){2,4})+`, true)
+                    escapeSequenceEncoder.encode(`(\\\\[x|u](\\w){2,4})+`, true)
                 }');
                 
                 return regExp.test(func2.toString());

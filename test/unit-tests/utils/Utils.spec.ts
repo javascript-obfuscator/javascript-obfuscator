@@ -1,108 +1,10 @@
 import { assert } from 'chai';
 
-import { Utils } from '../../../../src/utils/Utils';
+import { JSFuck } from '../../../src/enums/JSFuck';
 
-import { JSFuck } from '../../../../src/enums/JSFuck';
+import { Utils } from '../../../src/utils/Utils';
 
 describe('Utils', () => {
-    describe('arrayRange (length: number): number[]', () => {
-        describe('range length more than 0', () => {
-            const rangeLength: number = 5;
-            const expectedArray: number[] = [0, 1, 2, 3, 4];
-
-            let array: number[];
-
-            before(() => {
-                array = Utils.arrayRange(rangeLength);
-            });
-
-            it('should return array with range of numbers', () => {
-                assert.deepEqual(array, expectedArray);
-            });
-        });
-
-        describe('range length is 0', () => {
-            const rangeLength: number = 0;
-            const expectedArray: number[] = [];
-
-            let array: number[];
-
-            before(() => {
-                array = Utils.arrayRange(rangeLength);
-            });
-
-            it('should return empty array', () => {
-                assert.deepEqual(array, expectedArray);
-            });
-        });
-
-        describe('range length less than 0', () => {
-            const rangeLength: number = -5;
-            const expectedArray: number[] = [];
-
-            let array: number[];
-
-            before(() => {
-                array = Utils.arrayRange(rangeLength);
-            });
-
-            it('should return empty array', () => {
-                assert.deepEqual(array, expectedArray);
-            });
-        });
-    });
-
-    describe('arrayRotate <T> (array: T[], times: number): T[]', () => {
-        let array: number[],
-            rotatedArray: number[];
-
-        beforeEach(() => {
-            array = [1, 2, 3, 4, 5, 6];
-        });
-
-        describe('value is not 0', () => {
-            const rotateValue: number = 2;
-            const expectedArray: number[] = [5, 6, 1, 2, 3, 4];
-
-            beforeEach(() => {
-                rotatedArray = Utils.arrayRotate(array, rotateValue);
-            });
-
-            it('should rotate (shift) array by a given value', () => {
-                assert.deepEqual(rotatedArray, expectedArray);
-            });
-        });
-
-        describe('value equals or less 0', () => {
-            const rotateValue: number = 0;
-            const expectedArray: number[] = [1, 2, 3, 4, 5, 6];
-
-            beforeEach(() => {
-                rotatedArray = Utils.arrayRotate(array, rotateValue);
-            });
-
-            it('shouldn\'t rotate array', () => {
-                assert.deepEqual(rotatedArray, expectedArray);
-            });
-        });
-
-        describe('empty array', () => {
-            const emptyArray: number[] = [];
-            const rotateValue: number = 5;
-            const expectedError: ReferenceErrorConstructor = ReferenceError;
-
-            let testFunc: () => void;
-
-            beforeEach(() => {
-                testFunc = () => Utils.arrayRotate(emptyArray, rotateValue);
-            });
-
-            it('should throw exception if array is empty', () => {
-                assert.throws(testFunc, expectedError);
-            });
-        });
-    });
-
     describe('decToHex (dec: number): string', () => {
         describe('variant #1: number `0`', () => {
             const number: number = 0;
@@ -334,38 +236,6 @@ describe('Utils', () => {
 
         it('should create a JSFuck encoded string from a given string', () => {
             assert.equal(actualString, expectedString);
-        });
-    });
-
-    describe('stringToUnicodeEscapeSequence (string: string, nonLatinAndNonDigitsOnly: boolean = false): string', () => {
-        describe('variant #1: default', () => {
-            const string: string = 'string';
-            const expectedString: string = '\\x73\\x74\\x72\\x69\\x6e\\x67';
-
-            let actualString: string;
-
-            before(() => {
-                actualString = Utils.stringToUnicodeEscapeSequence(string, true);
-            });
-
-            it('should return a unicode escape sequence based on a given string', () => {
-                assert.equal(actualString, expectedString);
-            });
-        });
-
-        describe('variant #2: escape `escape sequences`', () => {
-            const string: string = 'abc\'\\r\\n';
-            const expectedString: string = 'abc\\x27\\x5cr\\x5cn';
-
-            let actualString: string;
-
-            before(() => {
-                actualString = Utils.stringToUnicodeEscapeSequence(string, false);
-            });
-
-            it('should return a string where all `escape sequences` are escaped', () => {
-                assert.equal(actualString, expectedString);
-            });
         });
     });
 });

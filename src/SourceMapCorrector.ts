@@ -3,16 +3,20 @@ import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 
 import { TObfuscationResultFactory } from './types/container/TObfuscationResultFactory';
 
+import { ICryptUtils } from './interfaces/utils/ICryptUtils';
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
 import { IOptions } from './interfaces/options/IOptions';
 import { ISourceMapCorrector } from './interfaces/ISourceMapCorrector';
 
 import { SourceMapMode } from './enums/SourceMapMode';
 
-import { CryptUtils } from './utils/CryptUtils';
-
 @injectable()
 export class SourceMapCorrector implements ISourceMapCorrector {
+    /**
+     * @type {ICryptUtils}
+     */
+    private readonly cryptUtils: ICryptUtils;
+
     /**
      * @type {TObfuscationResultFactory}
      */
@@ -25,13 +29,16 @@ export class SourceMapCorrector implements ISourceMapCorrector {
 
     /**
      * @param obfuscationResultFactory
+     * @param cryptUtils
      * @param options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IObfuscationResult) obfuscationResultFactory: TObfuscationResultFactory,
+        @inject(ServiceIdentifiers.ICryptUtils) cryptUtils: ICryptUtils,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.obfuscationResultFactory = obfuscationResultFactory;
+        this.cryptUtils = cryptUtils;
         this.options = options;
     }
 
@@ -63,7 +70,7 @@ export class SourceMapCorrector implements ISourceMapCorrector {
 
         switch (this.options.sourceMapMode) {
             case SourceMapMode.Inline:
-                sourceMappingUrl += `data:application/json;base64,${CryptUtils.btoa(sourceMap)}`;
+                sourceMappingUrl += `data:application/json;base64,${this.cryptUtils.btoa(sourceMap)}`;
 
                 break;
 

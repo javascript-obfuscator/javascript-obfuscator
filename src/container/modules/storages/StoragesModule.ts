@@ -5,6 +5,8 @@ import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage
 import { TCustomNodeGroupStorage } from '../../../types/storages/TCustomNodeGroupStorage';
 import { TStringArrayStorage } from '../../../types/storages/TStringArrayStorage';
 
+import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
+
 import { ControlFlowStorage } from '../../../storages/control-flow/ControlFlowStorage';
 import { CustomNodeGroupStorage } from '../../../storages/custom-node-group/CustomNodeGroupStorage';
 import { StringArrayStorage } from '../../../storages/string-array/StringArrayStorage';
@@ -28,8 +30,10 @@ export const storagesModule: interfaces.ContainerModule = new ContainerModule((b
             return () => {
                 const constructor: interfaces.Newable<TControlFlowStorage> = context.container
                     .get<interfaces.Newable<TControlFlowStorage>>(ServiceIdentifiers.Newable__TControlFlowStorage);
+                const randomGenerator: IRandomGenerator = context.container
+                    .get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator);
 
-                return new constructor();
+                return new constructor(randomGenerator);
             };
         });
 });

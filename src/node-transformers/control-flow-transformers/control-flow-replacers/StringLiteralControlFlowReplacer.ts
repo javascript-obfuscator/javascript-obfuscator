@@ -3,14 +3,15 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
+import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TStatement } from '../../../types/node/TStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
-import { CustomNode } from '../../../enums/container/custom-nodes/CustomNode';
+import { ControlFlowCustomNode } from '../../../enums/container/custom-nodes/ControlFlowCustomNode';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
 import { Node } from '../../../node/Node';
@@ -23,14 +24,17 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
     private static readonly usingExistingIdentifierChance: number = 1;
 
     /**
-     * @param customNodeFactory
+     * @param controlFlowCustomNodeFactory
+     * @param randomGenerator
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
+            controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(customNodeFactory, options);
+        super(controlFlowCustomNodeFactory, randomGenerator, options);
     }
 
     /**
@@ -53,7 +57,9 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
         }
 
         const replacerId: string = String(literalNode.value);
-        const literalFunctionCustomNode: ICustomNode = this.customNodeFactory(CustomNode.StringLiteralNode);
+        const literalFunctionCustomNode: ICustomNode = this.controlFlowCustomNodeFactory(
+            ControlFlowCustomNode.StringLiteralNode
+        );
 
         literalFunctionCustomNode.initialize(literalNode.value);
 
@@ -76,8 +82,8 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
         controlFlowStorageId: string,
         storageKey: string
     ): ESTree.Node {
-        const controlFlowStorageCallCustomNode: ICustomNode = this.customNodeFactory(
-            CustomNode.StringLiteralControlFlowStorageCallNode
+        const controlFlowStorageCallCustomNode: ICustomNode = this.controlFlowCustomNodeFactory(
+            ControlFlowCustomNode.StringLiteralControlFlowStorageCallNode
         );
 
         controlFlowStorageCallCustomNode.initialize(controlFlowStorageId, storageKey);

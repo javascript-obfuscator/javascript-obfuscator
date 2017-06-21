@@ -3,21 +3,20 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
+import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 
 import { IControlFlowReplacer } from '../../../interfaces/node-transformers/control-flow-transformers/IControlFlowReplacer';
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { IStorage } from '../../../interfaces/storages/IStorage';
-
-import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 
 @injectable()
 export abstract class AbstractControlFlowReplacer implements IControlFlowReplacer {
     /**
-     * @type {TCustomNodeFactory}
+     * @type {TControlFlowCustomNodeFactory}
      */
-    protected readonly customNodeFactory: TCustomNodeFactory;
+    protected readonly controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory;
 
     /**
      * @type {IOptions}
@@ -25,19 +24,28 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
     protected readonly options: IOptions;
 
     /**
+     * @type {IRandomGenerator}
+     */
+    protected readonly randomGenerator: IRandomGenerator;
+
+    /**
      * @type {Map<string, Map<string, string[]>>}
      */
     protected readonly replacerDataByControlFlowStorageId: Map <string, Map<string, string[]>> = new Map();
 
     /**
-     * @param customNodeFactory
+     * @param controlFlowCustomNodeFactory
+     * @param randomGenerator
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
+            controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        this.customNodeFactory = customNodeFactory;
+        this.controlFlowCustomNodeFactory = controlFlowCustomNodeFactory;
+        this.randomGenerator = randomGenerator;
         this.options = options;
     }
 
@@ -88,15 +96,15 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
         const storageKeysForCurrentId: string[] | undefined = storageKeysById.get(replacerId);
 
         if (
-            RandomGeneratorUtils.getMathRandom() < usingExistingIdentifierChance &&
+            this.randomGenerator.getMathRandom() < usingExistingIdentifierChance &&
             storageKeysForCurrentId &&
             storageKeysForCurrentId.length
         ) {
-            return RandomGeneratorUtils.getRandomGenerator().pickone(storageKeysForCurrentId);
+            return this.randomGenerator.getRandomGenerator().pickone(storageKeysForCurrentId);
         }
 
         const generateStorageKey: (length: number) => string = (length: number) => {
-            const storageKey: string = RandomGeneratorUtils.getRandomString(length);
+            const storageKey: string = this.randomGenerator.getRandomString(length);
 
             if (controlFlowStorage.getStorage().has(storageKey)) {
                 return generateStorageKey(length);

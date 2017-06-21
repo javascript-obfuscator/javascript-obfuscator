@@ -3,18 +3,19 @@ import { ServiceIdentifiers } from '../../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
+import { ICryptUtils } from '../../../../interfaces/utils/ICryptUtils';
 import { ICustomNodeGroup } from '../../../../interfaces/custom-nodes/ICustomNodeGroup';
 import { IEncodedValue } from '../../../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/literal-obfuscating-replacers/IEncodedValue';
+import { IEscapeSequenceEncoder } from '../../../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../../../interfaces/utils/IRandomGenerator';
 import { IStorage } from '../../../../interfaces/storages/IStorage';
 import { IStringArrayIndexData } from '../../../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/literal-obfuscating-replacers/IStringArrayIndexData';
 
 import { StringArrayEncoding } from '../../../../enums/StringArrayEncoding';
 
 import { AbstractObfuscatingReplacer } from '../AbstractObfuscatingReplacer';
-import { CryptUtils } from '../../../../utils/CryptUtils';
 import { Nodes } from '../../../../node/Nodes';
-import { RandomGeneratorUtils } from '../../../../utils/RandomGeneratorUtils';
 import { Utils } from '../../../../utils/Utils';
 
 @injectable()
@@ -35,14 +36,29 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     private static rc4KeysCount: number = 50;
 
     /**
+     * @type {ICryptUtils}
+     */
+    private readonly cryptUtils: ICryptUtils;
+
+    /**
      * @type {IStorage<ICustomNodeGroup>}
      */
     private readonly customNodeGroupStorage: IStorage<ICustomNodeGroup>;
 
     /**
+     * @type {IEscapeSequenceEncoder}
+     */
+    private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
+
+    /**
      * @type {Map<string, ESTree.Node>}
      */
     private readonly nodesCache: Map <string, ESTree.Node> = new Map();
+
+    /**
+     * @type {IRandomGenerator}
+     */
+    private readonly randomGenerator: IRandomGenerator;
 
     /**
      * @type {string[]}
@@ -62,21 +78,30 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     /**
      * @param customNodeGroupStorage
      * @param stringArrayStorage
+     * @param escapeSequenceEncoder
+     * @param randomGenerator
+     * @param cryptUtils
      * @param options
      */
     constructor (
         @inject(ServiceIdentifiers.TCustomNodeGroupStorage) customNodeGroupStorage: IStorage<ICustomNodeGroup>,
         @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: IStorage<string>,
+        @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
+        @inject(ServiceIdentifiers.ICryptUtils) cryptUtils: ICryptUtils,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
         this.customNodeGroupStorage = customNodeGroupStorage;
         this.stringArrayStorage = stringArrayStorage;
+        this.escapeSequenceEncoder = escapeSequenceEncoder;
+        this.randomGenerator = randomGenerator;
+        this.cryptUtils = cryptUtils;
 
-        this.rc4Keys = RandomGeneratorUtils.getRandomGenerator()
+        this.rc4Keys = this.randomGenerator.getRandomGenerator()
             .n(
-                () => RandomGeneratorUtils.getRandomGenerator().string({
+                () => this.randomGenerator.getRandomGenerator().string({
                     length: StringLiteralObfuscatingReplacer.rc4KeyLength
                 }),
                 StringLiteralObfuscatingReplacer.rc4KeysCount
@@ -137,7 +162,7 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
         return (
             this.options.stringArray &&
             nodeValue.length >= StringLiteralObfuscatingReplacer.minimumLengthForStringArray &&
-            RandomGeneratorUtils.getMathRandom() <= this.options.stringArrayThreshold
+            this.randomGenerator.getMathRandom() <= this.options.stringArrayThreshold
         );
     }
 
@@ -175,13 +200,13 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
 
         switch (this.options.stringArrayEncoding) {
             case StringArrayEncoding.Rc4:
-                key = RandomGeneratorUtils.getRandomGenerator().pickone(this.rc4Keys);
-                encodedValue = CryptUtils.btoa(CryptUtils.rc4(value, key));
+                key = this.randomGenerator.getRandomGenerator().pickone(this.rc4Keys);
+                encodedValue = this.cryptUtils.btoa(this.cryptUtils.rc4(value, key));
 
                 break;
 
             case StringArrayEncoding.Base64:
-                encodedValue = CryptUtils.btoa(value);
+                encodedValue = this.cryptUtils.btoa(value);
 
                 break;
 
@@ -198,10 +223,7 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
      */
     private replaceWithLiteralNode (value: string): ESTree.Node {
         return Nodes.getLiteralNode(
-            Utils.stringToUnicodeEscapeSequence(
-                value,
-                this.options.unicodeEscapeSequence
-            )
+            this.escapeSequenceEncoder.encode(value, this.options.unicodeEscapeSequence)
         );
     }
 
@@ -211,7 +233,7 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
      */
     private replaceWithStringArrayCallNode (value: string): ESTree.Node {
         const { encodedValue, key }: IEncodedValue = this.getEncodedValue(value);
-        const escapedValue: string = Utils.stringToUnicodeEscapeSequence(encodedValue, this.options.unicodeEscapeSequence);
+        const escapedValue: string = this.escapeSequenceEncoder.encode(encodedValue, this.options.unicodeEscapeSequence);
 
         const stringArrayStorageLength: number = this.stringArrayStorage.getLength();
         const rotatedStringArrayStorageId: string = Utils.stringRotate(this.stringArrayStorage.getStorageId(), 1);
@@ -232,7 +254,7 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
 
         if (key) {
             callExpressionArgs.push(StringLiteralObfuscatingReplacer.getRc4KeyLiteralNode(
-                Utils.stringToUnicodeEscapeSequence(key, this.options.unicodeEscapeSequence)
+                this.escapeSequenceEncoder.encode(key, this.options.unicodeEscapeSequence)
             ));
         }
 

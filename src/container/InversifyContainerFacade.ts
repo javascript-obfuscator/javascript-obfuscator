@@ -17,6 +17,7 @@ import { IObfuscationEventEmitter } from '../interfaces/event-emitters/IObfuscat
 import { IObfuscationResult } from '../interfaces/IObfuscationResult';
 import { IObfuscator } from '../interfaces/IObfuscator';
 import { IOptions } from '../interfaces/options/IOptions';
+import { ISourceCode } from '../interfaces/ISourceCode';
 import { ISourceMapCorrector } from '../interfaces/ISourceMapCorrector';
 
 import { JavaScriptObfuscatorInternal } from '../JavaScriptObfuscatorInternal';
@@ -24,6 +25,7 @@ import { ObfuscationEventEmitter } from '../event-emitters/ObfuscationEventEmitt
 import { ObfuscationResult } from '../ObfuscationResult';
 import { Obfuscator } from '../Obfuscator';
 import { Options } from "../options/Options";
+import { SourceCode } from '../SourceCode';
 import { SourceMapCorrector } from '../SourceMapCorrector';
 
 export class InversifyContainerFacade implements IInversifyContainerFacade {
@@ -129,9 +131,15 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
     }
 
     /**
+     * @param sourceCode
      * @param options
      */
-    public load (options: TInputOptions): void {
+    public load (sourceCode: string, options: TInputOptions): void {
+        this.container
+            .bind<ISourceCode>(ServiceIdentifiers.ISourceCode)
+            .toDynamicValue(() => new SourceCode(sourceCode))
+            .inSingletonScope();
+
         this.container
             .bind<IOptions>(ServiceIdentifiers.IOptions)
             .toDynamicValue(() => new Options(options))

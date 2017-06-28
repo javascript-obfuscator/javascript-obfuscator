@@ -28,12 +28,15 @@ function getCorrectedObfuscationResult (
 ): IObfuscationResult {
     const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-    inversifyContainerFacade.load({
-        sourceMap: true,
-        sourceMapBaseUrl: sourceMapBaseUrl,
-        sourceMapFileName: sourceMapFileName,
-        sourceMapMode: sourceMapMode
-    });
+    inversifyContainerFacade.load(
+        '',
+        {
+            sourceMap: true,
+            sourceMapBaseUrl: sourceMapBaseUrl,
+            sourceMapFileName: sourceMapFileName,
+            sourceMapMode: sourceMapMode
+        }
+    );
 
     const sourceMapCorrector: ISourceMapCorrector = inversifyContainerFacade
         .get<ISourceMapCorrector>(ServiceIdentifiers.ISourceMapCorrector);

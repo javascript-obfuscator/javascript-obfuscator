@@ -45,7 +45,7 @@ describe('DomainLockNodeTemplate (): string', () => {
     before(() => {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-        inversifyContainerFacade.load({});
+        inversifyContainerFacade.load('', {});
         cryptUtils = inversifyContainerFacade.get<ICryptUtils>(ServiceIdentifiers.ICryptUtils);
     });
 

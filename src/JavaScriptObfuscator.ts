@@ -20,7 +20,7 @@ export class JavaScriptObfuscator {
     public static obfuscate (sourceCode: string, inputOptions: TInputOptions = {}): IObfuscationResult {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-        inversifyContainerFacade.load(inputOptions);
+        inversifyContainerFacade.load(sourceCode, inputOptions);
 
         const javaScriptObfuscator: IJavaScriptObfuscator = inversifyContainerFacade
             .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);

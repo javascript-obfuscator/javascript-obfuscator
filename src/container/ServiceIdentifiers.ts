@@ -26,6 +26,7 @@ export enum ServiceIdentifiers {
     IOptions = 'IOptions',
     IObfuscatingReplacer = 'IObfuscatingReplacer',
     IRandomGenerator = 'IRandomGenerator',
+    ISourceCode = 'ISourceCode',
     ISourceMapCorrector = 'ISourceMapCorrector',
     IStackTraceAnalyzer = 'IStackTraceAnalyzer',
     Newable__ICustomNode = 'Newable<ICustomNode>',

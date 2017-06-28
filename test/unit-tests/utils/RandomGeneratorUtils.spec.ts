@@ -16,7 +16,7 @@ describe('RandomGeneratorUtils', () => {
         before(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-            inversifyContainerFacade.load({});
+            inversifyContainerFacade.load('', {});
             randomGenerator = inversifyContainerFacade.get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator)
         });
 

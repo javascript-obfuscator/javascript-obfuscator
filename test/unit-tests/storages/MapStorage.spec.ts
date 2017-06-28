@@ -13,7 +13,7 @@ class ConcreteStorage extends MapStorage <string> {
     constructor () {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-        inversifyContainerFacade.load({});
+        inversifyContainerFacade.load('', {});
 
         super(inversifyContainerFacade.get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator));
     }

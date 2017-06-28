@@ -15,9 +15,10 @@ export interface IInversifyContainerFacade {
     getNamed <T> (serviceIdentifier: interfaces.ServiceIdentifier<T>, named: string | number | symbol): T;
 
     /**
+     * @param sourceCode
      * @param options
      */
-    load (options: TInputOptions): void;
+    load (sourceCode: string, options: TInputOptions): void;
 
     unload (): void;
 }

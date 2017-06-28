@@ -6,6 +6,7 @@ import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscator';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../src/options/presets/NoCustomNodes';
 
+import { getRegExpMatch } from '../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../helpers/readFileAsString';
 
 describe('JavaScriptObfuscator', () => {
@@ -376,6 +377,41 @@ describe('JavaScriptObfuscator', () => {
 
                 it('should return different obfuscated code with different `seed` option value', () => {
                     assert.notEqual(obfuscatedCode1, obfuscatedCode2);
+                });
+            });
+
+            describe('variant #3: same seed for different source code', () => {
+                const code1: string = readFileAsString(__dirname + '/fixtures/simple-input-cyrillic.js');
+                const code2: string = readFileAsString(__dirname + '/fixtures/simple-input-2.js');
+
+                const regExp: RegExp = /var (_0x(\w){4}) *= *\['.*'\];/;
+
+                let match1: string,
+                    match2: string;
+
+                beforeEach(() => {
+                    const obfuscationResult1: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code1,
+                        {
+                            seed: 123
+                        }
+                    );
+                    const obfuscationResult2: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code2,
+                        {
+                            seed: 123
+                        }
+                    );
+
+                    const obfuscatedCode1: string = obfuscationResult1.getObfuscatedCode();
+                    const obfuscatedCode2: string = obfuscationResult2.getObfuscatedCode();
+
+                    match1 = getRegExpMatch(obfuscatedCode1, regExp);
+                    match2 = getRegExpMatch(obfuscatedCode2, regExp);
+                });
+
+                it('should return different String Array names for different source code with same seed', () => {
+                    assert.notEqual(match1, match2);
                 });
             });
         });

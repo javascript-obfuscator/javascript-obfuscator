@@ -58,11 +58,9 @@ export class RandomGenerator implements IRandomGenerator {
         this.sourceCode = sourceCode;
         this.options = options;
 
-        if (options.seed !== 0) {
-            this.randomGenerator = new Chance(this.getSeed());
-        } else {
-            this.randomGenerator = new Chance();
-        }
+        this.randomGenerator = options.seed === 0
+            ? new Chance()
+            : new Chance(this.getSeed());
     }
 
     /**

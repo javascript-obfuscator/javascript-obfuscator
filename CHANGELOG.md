@@ -11,7 +11,7 @@ v0.10.0
 * added support for async functions
 * fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/54
 * fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/57
-* https://github.com/javascript-obfuscator/javascript-obfuscator/issues/58
+* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/58
 
 v0.9.3
 ---

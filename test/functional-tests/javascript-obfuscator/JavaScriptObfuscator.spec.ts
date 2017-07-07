@@ -6,6 +6,7 @@ import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscator';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../src/options/presets/NoCustomNodes';
 
+import { buildLargeCode } from '../../helpers/buildLargeCode';
 import { getRegExpMatch } from '../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../helpers/readFileAsString';
 
@@ -457,6 +458,41 @@ describe('JavaScriptObfuscator', () => {
 
             it('should mangle obfuscated code', () => {
                 assert.match(obfuscatedCode, regExp);
+            });
+        });
+
+        describe('3.5k variables', function () {
+            this.timeout(100000);
+
+            const expectedValue: number = 3500;
+
+            let result: number;
+
+            beforeEach(() => {
+                const code: string = buildLargeCode(expectedValue);
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        compact: true,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1,
+                        disableConsoleOutput: false,
+                        rotateStringArray: true,
+                        stringArray: true,
+                        stringArrayEncoding: 'rc4',
+                        stringArrayThreshold: 1,
+                        unicodeEscapeSequence: false
+                    }
+                );
+
+                const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+                result = eval(obfuscatedCode);
+            });
+
+            it('should correctly obfuscate 3.5k variables', () => {
+                assert.equal(result, expectedValue);
             });
         });
     });

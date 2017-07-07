@@ -195,7 +195,9 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                     return node;
                 }
 
-                const randomIndex: number = this.randomGenerator.getRandomInteger(0, this.collectedBlockStatements.length - 1);
+                const minInteger: number = 0;
+                const maxInteger: number = this.collectedBlockStatements.length - 1;
+                const randomIndex: number = this.randomGenerator.getRandomInteger(minInteger, maxInteger);
                 const randomBlockStatementNode: ESTree.BlockStatement = this.collectedBlockStatements.splice(randomIndex, 1)[0];
 
                 if (randomBlockStatementNode === node) {

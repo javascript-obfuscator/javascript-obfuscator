@@ -119,11 +119,9 @@ export class RandomGenerator implements IRandomGenerator {
         const prefix: string = `_${Utils.hexadecimalPrefix}`;
         const rangeMinInteger: number = 10000;
         const rangeMaxInteger: number = 99999999;
-        const randomVariableName: string = `${prefix}${(
-            Utils.decToHex(
-                this.getRandomInteger(rangeMinInteger, rangeMaxInteger)
-            )
-        ).substr(0, length)}`;
+        const randomInteger: number = this.getRandomInteger(rangeMinInteger, rangeMaxInteger);
+        const hexadecimalNumber: string = Utils.decToHex(randomInteger);
+        const randomVariableName: string = `${prefix}${hexadecimalNumber.substr(0, length)}`;
 
         if (this.randomVariableNameSet.has(randomVariableName)) {
             return this.getRandomVariableName(length);

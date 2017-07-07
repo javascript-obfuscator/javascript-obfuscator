@@ -60,9 +60,13 @@ var obfuscationResult = JavaScriptObfuscator.obfuscate(
             var variable1 = '5' - 3;
             var variable2 = '5' + 3;
             var variable3 = '5' + - '2';
+            var variable4 = ['10','10','10','10','10'].map(parseInt);
+            var variable5 = 'foo ' + 1 + 1;
             console.log(variable1);
             console.log(variable2);
             console.log(variable3);
+            console.log(variable4);
+            console.log(variable5);
         })();
     `,
     {
@@ -74,55 +78,79 @@ var obfuscationResult = JavaScriptObfuscator.obfuscate(
 
 console.log(obfuscationResult.getObfuscatedCode());
 /*
-var _0x6b22 = [
-    '\x67\x63\x73',
-    '\x32\x7c\x34\x7c\x30\x7c\x35\x7c\x31\x7c\x33',
-    '\x73\x70\x6c\x69\x74',
-    '\x6c\x6f\x67',
-    '\x68\x49\x4d'
+var _0x2218 = [
+    '8|3|1|2|0|4|6|9|7|5',
+    'bqndd',
+    'dySIh',
+    'kTiiG',
+    'log',
+    'tuvgv'
 ];
-(function (_0xe12ddf, _0x9bc9d1) {
-    var _0x3a950b = function (_0x78e498) {
-        while (--_0x78e498) {
-            _0xe12ddf['\x70\x75\x73\x68'](_0xe12ddf['\x73\x68\x69\x66\x74']());
+(function (_0x38b423, _0x1d6bd4) {
+    var _0x39a849 = function (_0x5794c7) {
+        while (--_0x5794c7) {
+            _0x38b423['push'](_0x38b423['shift']());
         }
     };
-    _0x3a950b(++_0x9bc9d1);
-}(_0x6b22, 0x1cd));
-var _0x26b2 = function (_0x348b1e, _0x346c2a) {
-    _0x348b1e = _0x348b1e - 0x0;
-    var _0x45ae32 = _0x6b22[_0x348b1e];
-    return _0x45ae32;
+    _0x39a849(++_0x1d6bd4);
+}(_0x2218, 0x114));
+var _0x8221 = function (_0xcac13e, _0x3627d7) {
+    _0xcac13e = _0xcac13e - 0x0;
+    var _0x1eae4d = _0x2218[_0xcac13e];
+    return _0x1eae4d;
 };
 (function () {
-    var _0x3a3615 = {
-        '\x68\x49\x4d': function _0x4c002e(_0x5a880a, _0xe710e3) {
-            return _0x5a880a - _0xe710e3;
+    var _0x5336d5 = {
+        'bqndd': _0x8221('0x0'),
+        'islRd': function _0x2abb6c(_0x2f45f8, _0x4d47b0) {
+            return _0x2f45f8 + _0x4d47b0;
         },
-        '\x67\x63\x73': function _0x4cbf4b(_0xe1f02d, _0x5d1157) {
-            return _0xe1f02d + _0x5d1157;
+        'kTiiG': function _0x32525a(_0x44ba8d, _0x2c5e0c) {
+            return _0x44ba8d + _0x2c5e0c;
+        },
+        'dySIh': 'foo\x20',
+        'tuvgv': function _0x28d015(_0x35d81a, _0x2d2463) {
+            return _0x35d81a - _0x2d2463;
         }
     };
-    var _0x26dbf0 = _0x26b2('0x0')[_0x26b2('0x1')]('\x7c'), _0x345ed7 = 0x0;
+    var _0x5000ba = _0x5336d5[_0x8221('0x1')]['split']('|'), _0x5c972f = 0x0;
     while (!![]) {
-        switch (_0x26dbf0[_0x345ed7++]) {
-        case '\x30':
-            var _0x5eb388 = '\x35' + -'\x32';
+        switch (_0x5000ba[_0x5c972f++]) {
+        case '0':
+            var _0x586faa = _0x5336d5['islRd'](_0x5336d5['kTiiG'](_0x5336d5[_0x8221('0x2')], 0x1), 0x1);
             continue;
-        case '\x31':
-            console[_0x26b2('0x2')](_0x52a502);
+        case '1':
+            var _0xab6a82 = _0x5336d5[_0x8221('0x3')]('5', -'2');
             continue;
-        case '\x32':
-            var _0xd18cf9 = _0x3a3615[_0x26b2('0x3')]('\x35', 0x3);
+        case '2':
+            var _0x19ab9d = [
+                '10',
+                '10',
+                '10',
+                '10',
+                '10'
+            ]['map'](parseInt);
             continue;
-        case '\x33':
-            console[_0x26b2('0x2')](_0x5eb388);
+        case '3':
+            var _0x321653 = _0x5336d5[_0x8221('0x3')]('5', 0x3);
             continue;
-        case '\x34':
-            var _0x52a502 = _0x3a3615[_0x26b2('0x4')]('\x35', 0x3);
+        case '4':
+            console['log'](_0x2c1b0c);
             continue;
-        case '\x35':
-            console[_0x26b2('0x2')](_0xd18cf9);
+        case '5':
+            console[_0x8221('0x4')](_0x586faa);
+            continue;
+        case '6':
+            console[_0x8221('0x4')](_0x321653);
+            continue;
+        case '7':
+            console[_0x8221('0x4')](_0x19ab9d);
+            continue;
+        case '8':
+            var _0x2c1b0c = _0x5336d5[_0x8221('0x5')]('5', 0x3);
+            continue;
+        case '9':
+            console[_0x8221('0x4')](_0xab6a82);
             continue;
         }
         break;
@@ -256,46 +284,51 @@ Example:
             console.log(6);
         }
     }
+    
+    foo()();
 })();
 
 // output
 (function () {
-    function _0x425898() {
+    function _0x3bfc5c() {
         return function () {
-            var _0x2b972d = {
-                '\x42\x6c\x67': function _0x160d18(_0xdc9f31, _0x3741dd) {
-                    return _0xdc9f31 + _0x3741dd;
+            var _0x3260a5 = {
+                'WtABe': '4|0|6|5|3|2|1',
+                'GokKo': function _0xf87260(_0x427a8e, _0x43354c) {
+                    return _0x427a8e + _0x43354c;
                 }
             };
-            var _0x170490 = '\x35\x7c\x34\x7c\x33\x7c\x32\x7c\x30\x7c\x36\x7c\x31'['\x73\x70\x6c\x69\x74']('\x7c'), _0x4f3437 = 0x0;
+            var _0x1ad4d6 = _0x3260a5['WtABe']['split']('|'), _0x1a7b12 = 0x0;
             while (!![]) {
-                switch (_0x170490[_0x4f3437++]) {
-                case '\x30':
-                    console['\x6c\x6f\x67'](0x4);
+                switch (_0x1ad4d6[_0x1a7b12++]) {
+                case '0':
+                    console['log'](0x1);
                     continue;
-                case '\x31':
-                    console['\x6c\x6f\x67'](0x6);
+                case '1':
+                    console['log'](0x6);
                     continue;
-                case '\x32':
-                    console['\x6c\x6f\x67'](0x3);
+                case '2':
+                    console['log'](0x5);
                     continue;
-                case '\x33':
-                    console['\x6c\x6f\x67'](0x2);
+                case '3':
+                    console['log'](0x4);
                     continue;
-                case '\x34':
-                    console['\x6c\x6f\x67'](0x1);
+                case '4':
+                    var _0x1f2f2f = _0x3260a5['GokKo'](0x1, 0x2);
                     continue;
-                case '\x35':
-                    var _0x476f51 = _0x2b972d['\x42\x6c\x67'](0x1, 0x2);
+                case '5':
+                    console['log'](0x3);
                     continue;
-                case '\x36':
-                    console['\x6c\x6f\x67'](0x5);
+                case '6':
+                    console['log'](0x2);
                     continue;
                 }
                 break;
             }
         };
     }
+
+	_0x3bfc5c()();
 }());
 ```
 

@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "0.10.0-beta.6",
+  "version": "0.10.0-beta.7",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -21,12 +21,12 @@
   "dependencies": {
     "chance": "1.0.10",
     "class-validator": "0.7.2",
-    "commander": "2.10.0",
+    "commander": "2.11.0",
     "escodegen-wallaby": "1.6.11",
     "esmangle": "1.0.1",
     "esprima": "4.0.0",
     "estraverse": "4.2.0",
-    "inversify": "4.1.1",
+    "inversify": "4.2.0",
     "md5": "2.2.1",
     "mkdirp": "0.5.1",
     "opencollective": "1.0.3",
@@ -46,7 +46,7 @@
     "@types/md5": "2.1.32",
     "@types/mkdirp": "0.3.29",
     "@types/mocha": "2.2.41",
-    "@types/node": "8.0.5",
+    "@types/node": "8.0.8",
     "@types/sinon": "2.3.2",
     "@types/string-template": "1.0.2",
     "awesome-typescript-loader": "3.2.1",
@@ -60,11 +60,11 @@
     "mocha": "3.4.2",
     "pre-commit": "1.2.2",
     "sinon": "2.3.6",
-    "ts-node": "3.1.0",
-    "tslint": "5.4.3",
+    "ts-node": "3.2.0",
+    "tslint": "5.5.0",
     "tslint-loader": "3.5.3",
     "typescript": "2.4.1",
-    "webpack": "3.0.0",
+    "webpack": "3.1.0",
     "webpack-node-externals": "1.6.0"
   },
   "repository": {

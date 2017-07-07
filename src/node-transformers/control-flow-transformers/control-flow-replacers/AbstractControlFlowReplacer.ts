@@ -104,15 +104,15 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
         }
 
         const generateStorageKey: (length: number) => string = (length: number) => {
-            const storageKey: string = this.randomGenerator.getRandomString(length);
+            const key: string = this.randomGenerator.getRandomString(length);
 
-            if (controlFlowStorage.getStorage().has(storageKey)) {
+            if (controlFlowStorage.getStorage().has(key)) {
                 return generateStorageKey(length);
             }
 
-            return storageKey;
+            return key;
         };
-        const storageKey: string = generateStorageKey(3);
+        const storageKey: string = generateStorageKey(5);
 
         storageKeysById.set(replacerId, [storageKey]);
         this.replacerDataByControlFlowStorageId.set(controlFlowStorageId, storageKeysById);

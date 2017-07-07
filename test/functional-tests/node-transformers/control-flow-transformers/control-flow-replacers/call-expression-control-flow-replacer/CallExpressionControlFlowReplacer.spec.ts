@@ -13,7 +13,7 @@ describe('CallExpressionControlFlowReplacer', function () {
 
     describe('replace (callExpressionNode: ESTree.CallExpression,parentNode: ESTree.Node,controlFlowStorage: IStorage <ICustomNode>)', () => {
         describe('variant #1 - single call expression', () => {
-            const controlFlowStorageCallRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{3}'\]\(_0x([a-f0-9]){4,6}, *0x1, *0x2\);/;
+            const controlFlowStorageCallRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{5}'\]\(_0x([a-f0-9]){4,6}, *0x1, *0x2\);/;
 
             let obfuscatedCode: string;
 
@@ -43,8 +43,8 @@ describe('CallExpressionControlFlowReplacer', function () {
             const samplesCount: number = 1000;
             const delta: number = 0.1;
 
-            const controlFlowStorageCallRegExp1: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *(_0x([a-f0-9]){4,6}\['\w{3}'\])\(_0x([a-f0-9]){4,6}, *0x1, *0x2\);/;
-            const controlFlowStorageCallRegExp2: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *(_0x([a-f0-9]){4,6}\['\w{3}'\])\(_0x([a-f0-9]){4,6}, *0x2, *0x3\);/;
+            const controlFlowStorageCallRegExp1: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *(_0x([a-f0-9]){4,6}\['\w{5}'\])\(_0x([a-f0-9]){4,6}, *0x1, *0x2\);/;
+            const controlFlowStorageCallRegExp2: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *(_0x([a-f0-9]){4,6}\['\w{5}'\])\(_0x([a-f0-9]){4,6}, *0x2, *0x3\);/;
 
             let matchErrorsCount: number = 0,
                 usingExistingIdentifierChance: number;

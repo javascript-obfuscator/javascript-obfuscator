@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "0.10.0-beta.7",
+  "version": "0.10.0-beta.8",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -46,7 +46,7 @@
     "@types/md5": "2.1.32",
     "@types/mkdirp": "0.3.29",
     "@types/mocha": "2.2.41",
-    "@types/node": "8.0.8",
+    "@types/node": "8.0.9",
     "@types/sinon": "2.3.2",
     "@types/string-template": "1.0.2",
     "awesome-typescript-loader": "3.2.1",

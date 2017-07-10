@@ -462,7 +462,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('3.5k variables', function () {
-            this.timeout(100000);
+            this.timeout(200000);
 
             const expectedValue: number = 3500;
 

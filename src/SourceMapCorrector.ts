@@ -28,9 +28,9 @@ export class SourceMapCorrector implements ISourceMapCorrector {
     private readonly options: IOptions;
 
     /**
-     * @param obfuscationResultFactory
-     * @param cryptUtils
-     * @param options
+     * @param {TObfuscationResultFactory} obfuscationResultFactory
+     * @param {ICryptUtils} cryptUtils
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IObfuscationResult) obfuscationResultFactory: TObfuscationResultFactory,
@@ -43,9 +43,9 @@ export class SourceMapCorrector implements ISourceMapCorrector {
     }
 
     /**
-     * @returns {ObfuscationResult}
-     * @param obfuscatedCode
-     * @param sourceMap
+     * @param {string} obfuscatedCode
+     * @param {string} sourceMap
+     * @returns {IObfuscationResult}
      */
     public correct (obfuscatedCode: string, sourceMap: string): IObfuscationResult {
         return this.obfuscationResultFactory(
@@ -55,8 +55,8 @@ export class SourceMapCorrector implements ISourceMapCorrector {
     }
 
     /**
-     * @param obfuscatedCode
-     * @param sourceMap
+     * @param {string} obfuscatedCode
+     * @param {string} sourceMap
      * @returns {string}
      */
     private correctObfuscatedCode (obfuscatedCode: string, sourceMap: string): string {

@@ -79,7 +79,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     }
 
     /**
-     * @param blockScopeBodyLength
+     * @param {number} blockScopeBodyLength
      * @returns {number}
      */
     public static getLimitIndex (blockScopeBodyLength: number): number {
@@ -102,7 +102,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     }
 
     /**
-     * @param blockScopeBody
+     * @param {Node[]} blockScopeBody
      * @returns {IStackTraceData[]}
      */
     public analyze (blockScopeBody: ESTree.Node[]): IStackTraceData[] {
@@ -110,7 +110,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     }
 
     /**
-     * @param blockScopeBody
+     * @param {Node[]} blockScopeBody
      * @returns {IStackTraceData[]}
      */
     private analyzeRecursive (blockScopeBody: ESTree.Node[]): IStackTraceData[] {
@@ -144,10 +144,9 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     }
 
     /**
-     * @param stackTraceData
-     * @param blockScopeBody
-     * @param callExpressionNode
-     * @returns {IStackTraceData[]}
+     * @param {IStackTraceData[]} stackTraceData
+     * @param {Node[]} blockScopeBody
+     * @param {CallExpression} callExpressionNode
      */
     private analyzeCallExpressionNode (
         stackTraceData: IStackTraceData[],

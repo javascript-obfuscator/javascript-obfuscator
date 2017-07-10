@@ -24,9 +24,9 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
     private static readonly usingExistingIdentifierChance: number = 0.5;
 
     /**
-     * @param controlFlowCustomNodeFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
@@ -38,10 +38,10 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
     }
 
     /**
-     * @param callExpressionNode
-     * @param parentNode
-     * @param controlFlowStorage
-     * @returns {ESTree.Node}
+     * @param {CallExpression} callExpressionNode
+     * @param {Node} parentNode
+     * @param {IStorage<ICustomNode>} controlFlowStorage
+     * @returns {Node}
      */
     public replace (
         callExpressionNode: ESTree.CallExpression,
@@ -78,12 +78,11 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
     }
 
     /**
-     * @param controlFlowStorageId
-     * @param storageKey
-     * @param callee
-     * @param expressionArguments
-     * @param arguments
-     * @returns {ESTree.Node}
+     * @param {string} controlFlowStorageId
+     * @param {string} storageKey
+     * @param {Expression} callee
+     * @param {(Expression | SpreadElement)[]} expressionArguments
+     * @returns {Node}
      */
     protected getControlFlowStorageCallNode (
         controlFlowStorageId: string,

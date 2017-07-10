@@ -39,8 +39,8 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
     }
 
     /**
-     * @param serviceIdentifier
-     * @return {(context:interfaces.Context)=>(bindingName:T)=>U}
+     * @param {interfaces.ServiceIdentifier<U>} serviceIdentifier
+     * @returns {U}
      */
     public static getFactory <T extends number, U> (
         serviceIdentifier: interfaces.ServiceIdentifier<U>
@@ -53,8 +53,8 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
     }
 
     /**
-     * @param serviceIdentifier
-     * @return {(context:interfaces.Context)=>(bindingName:T)=>U}
+     * @param {interfaces.ServiceIdentifier<U>} serviceIdentifier
+     * @returns {U}
      */
     public static getCacheFactory <T extends number, U> (
         serviceIdentifier: interfaces.ServiceIdentifier<U>
@@ -77,9 +77,9 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
     }
 
     /**
-     * @param serviceIdentifier
-     * @param dependencies
-     * @return {(context: interfaces.Context) => (bindingName: T) => U}
+     * @param {interfaces.ServiceIdentifier<interfaces.Newable<U>>} serviceIdentifier
+     * @param {any[]} dependencies
+     * @returns {U}
      */
     public static getConstructorFactory <T extends number, U> (
         serviceIdentifier: interfaces.ServiceIdentifier<interfaces.Newable<U>>,
@@ -114,7 +114,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
     }
 
     /**
-     * @param serviceIdentifier
+     * @param {interfaces.ServiceIdentifier<T>} serviceIdentifier
      * @returns {T}
      */
     public get <T> (serviceIdentifier: interfaces.ServiceIdentifier<T>): T {
@@ -122,8 +122,8 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
     }
 
     /**
-     * @param serviceIdentifier
-     * @param named
+     * @param {interfaces.ServiceIdentifier<T>} serviceIdentifier
+     * @param {string | number | symbol} named
      * @returns {T}
      */
     public getNamed <T> (serviceIdentifier: interfaces.ServiceIdentifier<T>, named: string | number | symbol): T {
@@ -131,8 +131,8 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
     }
 
     /**
-     * @param sourceCode
-     * @param options
+     * @param {string} sourceCode
+     * @param {TInputOptions} options
      */
     public load (sourceCode: string, options: TInputOptions): void {
         this.container

@@ -10,8 +10,8 @@ export class EscapeSequenceEncoder implements IEscapeSequenceEncoder {
     private readonly stringsCache: Map <string, string> = new Map();
 
     /**
-     * @param string
-     * @param encodeAllSymbols
+     * @param {string} string
+     * @param {boolean} encodeAllSymbols
      * @returns {string}
      */
     public encode (string: string, encodeAllSymbols: boolean): string {

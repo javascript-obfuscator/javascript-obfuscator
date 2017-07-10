@@ -39,9 +39,9 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
     private readonly sourceMapCorrector: ISourceMapCorrector;
 
     /**
-     * @param obfuscator
-     * @param sourceMapCorrector
-     * @param options
+     * @param {IObfuscator} obfuscator
+     * @param {ISourceMapCorrector} sourceMapCorrector
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IObfuscator) obfuscator: IObfuscator,
@@ -54,7 +54,7 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
     }
 
     /**
-     * @param sourceCode
+     * @param {string} sourceCode
      * @returns {IObfuscationResult}
      */
     public obfuscate (sourceCode: string): IObfuscationResult {
@@ -71,8 +71,8 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
     }
 
     /**
-     * @param sourceCode
-     * @return {ESTree.Program}
+     * @param {string} sourceCode
+     * @returns {Program}
      */
     private parseCode (sourceCode: string): ESTree.Program {
         return esprima.parse(sourceCode, {
@@ -81,8 +81,9 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
     }
 
     /**
-     * @param sourceCode
-     * @param astTree
+     * @param {string} sourceCode
+     * @param {Program} astTree
+     * @returns {IGeneratorOutput}
      */
     private generateCode (sourceCode: string, astTree: ESTree.Program): IGeneratorOutput {
         const escodegenParams: escodegen.GenerateOptions = {
@@ -111,7 +112,7 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
     }
 
     /**
-     * @param generatorOutput
+     * @param {IGeneratorOutput} generatorOutput
      * @returns {IObfuscationResult}
      */
     private getObfuscationResult (generatorOutput: IGeneratorOutput): IObfuscationResult {

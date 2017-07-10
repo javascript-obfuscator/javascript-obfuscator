@@ -29,8 +29,8 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
     private readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -42,7 +42,7 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
     }
 
     /**
-     * @param callsControllerFunctionName
+     * @param {string} callsControllerFunctionName
      */
     public initialize (callsControllerFunctionName: string): void {
         this.callsControllerFunctionName = callsControllerFunctionName;

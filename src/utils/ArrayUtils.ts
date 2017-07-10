@@ -12,7 +12,7 @@ export class ArrayUtils implements IArrayUtils {
     private readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @param randomGenerator
+     * @param {IRandomGenerator} randomGenerator
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator
@@ -21,8 +21,8 @@ export class ArrayUtils implements IArrayUtils {
     }
 
     /**
-     * @param length
-     * @return {number[]}
+     * @param {number} length
+     * @returns {number[]}
      */
     public arrayRange (length: number): number[] {
         const range: number[] = [];
@@ -35,8 +35,8 @@ export class ArrayUtils implements IArrayUtils {
     }
 
     /**
-     * @param array
-     * @param times
+     * @param {T[]} array
+     * @param {number} times
      * @returns {T[]}
      */
     public arrayRotate <T> (array: T[], times: number): T[] {
@@ -61,8 +61,8 @@ export class ArrayUtils implements IArrayUtils {
     }
 
     /**
-     * @param array
-     * @return {T[]}
+     * @param {T[]} array
+     * @returns {T[]}
      */
     public arrayShuffle <T> (array: T[]): T[] {
         const shuffledArray: T[] = [...array];

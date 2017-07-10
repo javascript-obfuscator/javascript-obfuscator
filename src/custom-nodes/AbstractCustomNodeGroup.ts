@@ -40,8 +40,8 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     protected readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -52,8 +52,8 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     }
 
     /**
-     * @param blockScopeNode
-     * @param stackTraceData
+     * @param {TNodeWithBlockStatement} blockScopeNode
+     * @param {IStackTraceData[]} stackTraceData
      */
     public abstract appendCustomNodes (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void;
 
@@ -74,8 +74,8 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     public abstract initialize (): void;
 
     /**
-     * @param customNodeName
-     * @param callback
+     * @param {CustomNode} customNodeName
+     * @param {callback} callback
      */
     protected appendCustomNodeIfExist (customNodeName: CustomNode, callback: (customNode: ICustomNode) => void): void {
         const customNode: ICustomNode | undefined = this.customNodes.get(customNodeName);
@@ -88,7 +88,8 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     }
 
     /**
-     * @param stackTraceLength
+     * @param {number} stackTraceLength
+     * @returns {number}
      */
     protected getRandomStackTraceIndex (stackTraceLength: number): number {
         return this.randomGenerator.getRandomInteger(0, Math.max(0, Math.round(stackTraceLength - 1)));

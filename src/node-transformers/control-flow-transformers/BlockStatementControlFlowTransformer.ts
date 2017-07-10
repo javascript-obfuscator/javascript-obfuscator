@@ -29,10 +29,10 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
     private readonly controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory;
 
     /**
-     * @param controlFlowCustomNodeFactory
-     * @param arrayUtils
-     * @param randomGenerator
-     * @param options
+     * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
+     * @param {IArrayUtils} arrayUtils
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
@@ -48,14 +48,14 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
     }
 
     /**
-     * @param blockStatementNode
-     * @return {boolean}
+     * @param {BlockStatement} blockStatementNode
+     * @returns {boolean}
      */
     private static blockStatementHasProhibitedStatements (blockStatementNode: ESTree.BlockStatement): boolean {
         return blockStatementNode.body.some((statement: ESTree.Statement) => {
             const isBreakOrContinueStatement: boolean = Node.isBreakStatementNode(statement) || Node.isContinueStatementNode(statement);
-            const isVariableDeclarationWithLetOrConstKind: boolean = Node.isVariableDeclarationNode(statement) &&
-                (statement.kind === 'const' ||  statement.kind === 'let');
+            const isVariableDeclarationWithLetOrConstKind: boolean = Node.isVariableDeclarationNode(statement)
+                && (statement.kind === 'const' || statement.kind === 'let');
 
             return Node.isFunctionDeclarationNode(statement) || isBreakOrContinueStatement || isVariableDeclarationWithLetOrConstKind;
         });
@@ -75,9 +75,9 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
     }
 
     /**
-     * @param blockStatementNode
-     * @param parentNode
-     * @returns {ESTree.Node}
+     * @param {BlockStatement} blockStatementNode
+     * @param {Node} parentNode
+     * @returns {Node}
      */
     public transformNode (blockStatementNode: ESTree.BlockStatement, parentNode: ESTree.Node): ESTree.Node {
         if (

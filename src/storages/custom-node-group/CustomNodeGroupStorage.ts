@@ -35,9 +35,9 @@ export class CustomNodeGroupStorage extends MapStorage <ICustomNodeGroup> {
     private readonly options: IOptions;
 
     /**
-     * @param customNodeGroupFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TCustomNodeGroupFactory} customNodeGroupFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__ICustomNodeGroup) customNodeGroupFactory: TCustomNodeGroupFactory,
@@ -53,7 +53,7 @@ export class CustomNodeGroupStorage extends MapStorage <ICustomNodeGroup> {
     }
 
     public initialize (): void {
-        this.storage = new Map <string, ICustomNodeGroup> ();
+        this.storage = new Map <string, ICustomNodeGroup>();
         this.storageId = this.randomGenerator.getRandomString(6);
 
         CustomNodeGroupStorage.customNodeGroupsList.forEach((customNodeGroupName: CustomNodeGroup) => {

@@ -26,7 +26,7 @@ export abstract class MapStorage <T> implements IStorage <T> {
     protected storage: Map <string | number, T>;
 
     /**
-     * @param randomGenerator
+     * @param {IRandomGenerator} randomGenerator
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator
@@ -35,7 +35,7 @@ export abstract class MapStorage <T> implements IStorage <T> {
     }
 
     /**
-     * @param key
+     * @param {string | number} key
      * @returns {T}
      */
     public get (key: string | number): T {
@@ -49,7 +49,7 @@ export abstract class MapStorage <T> implements IStorage <T> {
     }
 
     /**
-     * @param value
+     * @param {T} value
      * @returns {string | number | null}
      */
     public getKeyOf (value: T): string | number | null {
@@ -84,19 +84,19 @@ export abstract class MapStorage <T> implements IStorage <T> {
     }
 
     /**
-     * @param args
+     * @param {any[]} args
      */
     public initialize (...args: any[]): void {
-        this.storage = new Map <string | number, T> ();
+        this.storage = new Map <string | number, T>();
         this.storageId = this.randomGenerator.getRandomString(6);
     }
 
     /**
-     * @param storage
-     * @param mergeId
+     * @param {this} storage
+     * @param {boolean} mergeId
      */
     public mergeWith (storage: this, mergeId: boolean = false): void {
-        this.storage = new Map <string | number, T> ([...this.storage, ...storage.getStorage()]);
+        this.storage = new Map <string | number, T>([...this.storage, ...storage.getStorage()]);
 
         if (mergeId) {
             this.storageId = storage.getStorageId();
@@ -104,8 +104,8 @@ export abstract class MapStorage <T> implements IStorage <T> {
     }
 
     /**
-     * @param key
-     * @param value
+     * @param {string | number} key
+     * @param {T} value
      */
     public set (key: string | number, value: T): void {
         this.storage.set(key, value);

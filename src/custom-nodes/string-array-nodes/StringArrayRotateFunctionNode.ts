@@ -53,9 +53,9 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     private stringArrayRotateValue: number;
 
     /**
-     * @param randomGenerator
-     * @param escapeSequenceEncoder
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -69,9 +69,9 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     }
 
     /**
-     * @param stringArrayStorage
-     * @param stringArrayName
-     * @param stringArrayRotateValue
+     * @param {IStorage<string>} stringArrayStorage
+     * @param {string} stringArrayName
+     * @param {number} stringArrayRotateValue
      */
     public initialize (
         stringArrayStorage: IStorage <string>,

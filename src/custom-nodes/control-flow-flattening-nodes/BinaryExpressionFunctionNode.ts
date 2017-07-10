@@ -28,8 +28,8 @@ export class BinaryExpressionFunctionNode extends AbstractCustomNode {
     private readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -41,7 +41,7 @@ export class BinaryExpressionFunctionNode extends AbstractCustomNode {
     }
 
     /**
-     * @param operator
+     * @param {BinaryOperator} operator
      */
     public initialize (operator: BinaryOperator): void {
         this.operator = operator;

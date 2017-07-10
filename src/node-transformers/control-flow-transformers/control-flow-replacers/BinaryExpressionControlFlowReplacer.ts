@@ -22,9 +22,9 @@ export class BinaryExpressionControlFlowReplacer extends ExpressionWithOperatorC
     private static readonly usingExistingIdentifierChance: number = 0.5;
 
     /**
-     * @param controlFlowCustomNodeFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
@@ -36,10 +36,10 @@ export class BinaryExpressionControlFlowReplacer extends ExpressionWithOperatorC
     }
 
     /**
-     * @param binaryExpressionNode
-     * @param parentNode
-     * @param controlFlowStorage
-     * @returns {ESTree.Node}
+     * @param {BinaryExpression} binaryExpressionNode
+     * @param {Node} parentNode
+     * @param {IStorage<ICustomNode>} controlFlowStorage
+     * @returns {Node}
      */
     public replace (
         binaryExpressionNode: ESTree.BinaryExpression,

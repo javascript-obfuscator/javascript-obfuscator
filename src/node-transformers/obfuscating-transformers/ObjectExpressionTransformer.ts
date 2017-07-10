@@ -22,8 +22,8 @@ import { Node } from '../../node/Node';
 @injectable()
 export class ObjectExpressionTransformer extends AbstractNodeTransformer {
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -33,8 +33,8 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param node
-     * @returns {ESTree.Literal}
+     * @param {Identifier} node
+     * @returns {Literal}
      */
     private static transformIdentifierPropertyKey (node: ESTree.Identifier): ESTree.Literal {
         return {
@@ -58,9 +58,9 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param objectExpressionNode
-     * @param parentNode
-     * @returns {ESTree.Node}
+     * @param {ObjectExpression} objectExpressionNode
+     * @param {Node} parentNode
+     * @returns {Node}
      */
     public transformNode (objectExpressionNode: ESTree.ObjectExpression, parentNode: ESTree.Node): ESTree.Node {
         objectExpressionNode.properties

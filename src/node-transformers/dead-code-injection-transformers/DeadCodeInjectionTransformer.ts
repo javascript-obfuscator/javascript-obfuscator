@@ -31,8 +31,8 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     private readonly collectedBlockStatements: ESTree.BlockStatement[] = [];
 
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -55,9 +55,9 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param programNode
-     * @param parentNode
-     * @returns {ESTree.Node}
+     * @param {Program} programNode
+     * @param {Node} parentNode
+     * @returns {Node}
      */
     public transformNode (programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
         this.transformProgramNode(programNode);
@@ -66,8 +66,8 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param blockStatementNode
-     * @param collectedBlockStatements
+     * @param {BlockStatement} blockStatementNode
+     * @param {BlockStatement[]} collectedBlockStatements
      */
     private collectBlockStatementNodes (
         blockStatementNode: ESTree.BlockStatement,
@@ -121,9 +121,9 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param blockStatementNode
-     * @param randomBlockStatementNode
-     * @return {ESTree.BlockStatement}
+     * @param {BlockStatement} blockStatementNode
+     * @param {BlockStatement} randomBlockStatementNode
+     * @returns {BlockStatement}
      */
     private replaceBlockStatementNode (
         blockStatementNode: ESTree.BlockStatement,
@@ -165,7 +165,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param programNode
+     * @param {Program} programNode
      */
     private transformProgramNode (programNode: ESTree.Program): void {
         estraverse.traverse(programNode, {

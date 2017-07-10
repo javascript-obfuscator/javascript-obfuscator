@@ -29,8 +29,8 @@ export class MethodDefinitionTransformer extends AbstractNodeTransformer {
     private static readonly ignoredNames: string[] = ['constructor'];
 
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -63,9 +63,9 @@ export class MethodDefinitionTransformer extends AbstractNodeTransformer {
      *     object[identifier] = 1;
      * Literal node will be obfuscated by LiteralTransformer
      *
-     * @param methodDefinitionNode
-     * @param parentNode
-     * @returns {ESTree.Node}
+     * @param {MethodDefinition} methodDefinitionNode
+     * @param {Node} parentNode
+     * @returns {Node}
      */
     public transformNode (methodDefinitionNode: ESTree.MethodDefinition, parentNode: ESTree.Node): ESTree.Node {
         if (

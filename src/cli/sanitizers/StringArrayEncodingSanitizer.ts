@@ -3,6 +3,10 @@ import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 
 import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
 
+/**
+ * @param {string} value
+ * @returns {TStringArrayEncoding}
+ */
 export const StringArrayEncodingSanitizer: TCLISanitizer = (value: string): TStringArrayEncoding => {
     switch (value) {
         case 'true':

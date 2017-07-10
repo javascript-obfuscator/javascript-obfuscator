@@ -12,9 +12,9 @@ import { NodeUtils } from '../../node/NodeUtils';
 @injectable()
 export class FunctionDeclarationCalleeDataExtractor extends AbstractCalleeDataExtractor {
     /**
-     * @param blockScopeBody
-     * @param callee
-     * @returns {ICalleeData|null}
+     * @param {Node[]} blockScopeBody
+     * @param {Identifier} callee
+     * @returns {ICalleeData}
      */
     public extract (blockScopeBody: ESTree.Node[], callee: ESTree.Identifier): ICalleeData|null {
         if (!Node.isIdentifierNode(callee)) {
@@ -37,9 +37,9 @@ export class FunctionDeclarationCalleeDataExtractor extends AbstractCalleeDataEx
     }
 
     /**
-     * @param targetNode
-     * @param name
-     * @returns {ESTree.BlockStatement|null}
+     * @param {Node} targetNode
+     * @param {string} name
+     * @returns {BlockStatement}
      */
     private getCalleeBlockStatement (targetNode: ESTree.Node, name: string): ESTree.BlockStatement|null {
         let calleeBlockStatement: ESTree.BlockStatement|null = null;

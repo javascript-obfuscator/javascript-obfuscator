@@ -31,7 +31,7 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
     private storageLength: number = 0;
 
     /**
-     * @param randomGenerator
+     * @param {IRandomGenerator} randomGenerator
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator
@@ -40,7 +40,7 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
     }
 
     /**
-     * @param key
+     * @param {number} key
      * @returns {T}
      */
     public get (key: number): T {
@@ -54,8 +54,8 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
     }
 
     /**
-     * @param value
-     * @returns {number | null}
+     * @param {T} value
+     * @returns {number}
      */
     public getKeyOf (value: T): number | null {
         const key: number = this.storage.indexOf(value);
@@ -85,7 +85,7 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
     }
 
     /**
-     * @param args
+     * @param {any[]} args
      */
     public initialize (...args: any[]): void {
         this.storage = [];
@@ -93,8 +93,8 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
     }
 
     /**
-     * @param storage
-     * @param mergeId
+     * @param {this} storage
+     * @param {boolean} mergeId
      */
     public mergeWith (storage: this, mergeId: boolean = false): void {
         this.storage = [...this.storage, ...storage.getStorage()];
@@ -105,8 +105,8 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
     }
 
     /**
-     * @param key
-     * @param value
+     * @param {number} key
+     * @param {T} value
      */
     public set (key: number, value: T): void {
         if (key === this.storageLength) {

@@ -7,8 +7,8 @@ import { NodeType } from '../enums/NodeType';
 
 export class Nodes {
     /**
-     * @param body
-     * @returns {ESTree.Program}
+     * @param {TStatement[]} body
+     * @returns {Program}
      */
     public static getProgramNode (body: TStatement[] = []): ESTree.Program {
         return {
@@ -20,8 +20,8 @@ export class Nodes {
     }
 
     /**
-     * @param elements
-     * @return {ESTree.ArrayExpression}
+     * @param {(Expression | SpreadElement)[]} elements
+     * @returns {ArrayExpression}
      */
     public static getArrayExpressionNode (
         elements: (ESTree.Expression | ESTree.SpreadElement)[] = []
@@ -33,10 +33,10 @@ export class Nodes {
     }
 
     /**
-     * @param operator
-     * @param left
-     * @param right
-     * @return {ESTree.AssignmentExpression}
+     * @param {AssignmentOperator} operator
+     * @param {Pattern | MemberExpression} left
+     * @param {Expression} right
+     * @returns {AssignmentExpression}
      */
     public static getAssignmentExpressionNode (
         operator: ESTree.AssignmentOperator,
@@ -53,10 +53,10 @@ export class Nodes {
     }
 
     /**
-     * @param operator
-     * @param left
-     * @param right
-     * @returns {ESTree.BinaryExpression}
+     * @param {BinaryOperator} operator
+     * @param {Expression} left
+     * @param {Expression} right
+     * @returns {BinaryExpression}
      */
     public static getBinaryExpressionNode (
         operator: ESTree.BinaryOperator,
@@ -73,8 +73,8 @@ export class Nodes {
     }
 
     /**
-     * @param body
-     * @returns {ESTree.BlockStatement}
+     * @param {Statement[]} body
+     * @returns {BlockStatement}
      */
     public static getBlockStatementNode (body: ESTree.Statement[] = []): ESTree.BlockStatement {
         return {
@@ -85,8 +85,8 @@ export class Nodes {
     }
 
     /**
-     * @param label
-     * @return {ESTree.BreakStatement}
+     * @param {Identifier} label
+     * @returns {BreakStatement}
      */
     public static getBreakStatement (label?: ESTree.Identifier): ESTree.BreakStatement {
         const breakStatementNode: ESTree.BreakStatement = {
@@ -102,8 +102,8 @@ export class Nodes {
     }
 
     /**
-     * @param body
-     * @returns {ESTree.CatchClause}
+     * @param {Statement[]} body
+     * @returns {CatchClause}
      */
     public static getCatchClauseNode (body: ESTree.Statement[] = []): ESTree.CatchClause {
         return {
@@ -115,9 +115,9 @@ export class Nodes {
     }
 
     /**
-     * @param callee
-     * @param args
-     * @returns {ESTree.CallExpression}
+     * @param {Expression} callee
+     * @param {(Expression | SpreadElement)[]} args
+     * @returns {CallExpression}
      */
     public static getCallExpressionNode (
         callee: ESTree.Expression,
@@ -132,8 +132,8 @@ export class Nodes {
     }
 
     /**
-     * @param label
-     * @return {ESTree.ContinueStatement}
+     * @param {Identifier} label
+     * @returns {ContinueStatement}
      */
     public static getContinueStatement (label?: ESTree.Identifier): ESTree.ContinueStatement {
         const continueStatementNode: ESTree.ContinueStatement = {
@@ -149,8 +149,8 @@ export class Nodes {
     }
 
     /**
-     * @param expression
-     * @returns {ESTree.ExpressionStatement}
+     * @param {Expression} expression
+     * @returns {ExpressionStatement}
      */
     public static getExpressionStatementNode (expression: ESTree.Expression): ESTree.ExpressionStatement {
         return {
@@ -161,10 +161,10 @@ export class Nodes {
     }
 
     /**
-     * @param functionName
-     * @param params
-     * @param body
-     * @returns {ESTree.FunctionDeclaration}
+     * @param {string} functionName
+     * @param {Identifier[]} params
+     * @param {BlockStatement} body
+     * @returns {FunctionDeclaration}
      */
     public static getFunctionDeclarationNode (
         functionName: string,
@@ -182,9 +182,9 @@ export class Nodes {
     }
 
     /**
-     * @param params
-     * @param body
-     * @returns {ESTree.FunctionExpression}
+     * @param {Identifier[]} params
+     * @param {BlockStatement} body
+     * @returns {FunctionExpression}
      */
     public static getFunctionExpressionNode (
         params: ESTree.Identifier[],
@@ -200,10 +200,10 @@ export class Nodes {
     }
 
     /**
-     * @param test
-     * @param consequent
-     * @param alternate
-     * @returns {ESTree.IfStatement}
+     * @param {Expression} test
+     * @param {BlockStatement} consequent
+     * @param {BlockStatement} alternate
+     * @returns {IfStatement}
      */
     public static getIfStatementNode (
         test: ESTree.Expression,
@@ -214,14 +214,14 @@ export class Nodes {
             type: NodeType.IfStatement,
             test,
             consequent,
-            ...alternate && {alternate},
+            ...alternate && { alternate },
             obfuscatedNode: false
         };
     }
 
     /**
-     * @param name
-     * @returns {ESTree.Identifier}
+     * @param {string} name
+     * @returns {Identifier}
      */
     public static getIdentifierNode (name: string): ESTree.Identifier {
         return {
@@ -232,9 +232,9 @@ export class Nodes {
     }
 
     /**
-     * @param label
-     * @param body
-     * @returns {ESTree.LabeledStatement}
+     * @param {Identifier} label
+     * @param {Statement} body
+     * @returns {LabeledStatement}
      */
     public static getLabeledStatement (label: ESTree.Identifier, body: ESTree.Statement): ESTree.LabeledStatement {
         return {
@@ -246,9 +246,9 @@ export class Nodes {
     }
 
     /**
-     * @param value
-     * @param raw
-     * @returns {ESTree.Literal}
+     * @param {boolean | number | string} value
+     * @param {string} raw
+     * @returns {Literal}
      */
     public static getLiteralNode (value: boolean|number|string, raw?: string): ESTree.Literal {
         raw = raw !== undefined ? raw : `'${value}'`;
@@ -266,10 +266,10 @@ export class Nodes {
     }
 
     /**
-     * @param operator
-     * @param left
-     * @param right
-     * @returns {ESTree.LogicalExpression}
+     * @param {LogicalOperator} operator
+     * @param {Expression} left
+     * @param {Expression} right
+     * @returns {LogicalExpression}
      */
     public static getLogicalExpressionNode (
         operator: ESTree.LogicalOperator,
@@ -286,10 +286,10 @@ export class Nodes {
     }
 
     /**
-     * @param object
-     * @param property
-     * @param computed
-     * @return {ESTree.MemberExpression}
+     * @param {Expression | Super} object
+     * @param {Expression} property
+     * @param {boolean} computed
+     * @returns {MemberExpression}
      */
     public static getMemberExpressionNode (
         object: ESTree.Expression | ESTree.Super,
@@ -306,8 +306,8 @@ export class Nodes {
     }
 
     /**
-     * @param properties
-     * @return {ESTree.ObjectExpression}
+     * @param {Property[]} properties
+     * @returns {ObjectExpression}
      */
     public static getObjectExpressionNode (properties: ESTree.Property[]): ESTree.ObjectExpression {
         return {
@@ -318,7 +318,10 @@ export class Nodes {
     }
 
     /**
-     * @return {ESTree.Property}
+     * @param {Expression} key
+     * @param {Expression | Pattern} value
+     * @param {boolean} computed
+     * @returns {Property}
      */
     public static getPropertyNode (
         key: ESTree.Expression,
@@ -338,10 +341,10 @@ export class Nodes {
     }
 
     /**
-     * @param operator
-     * @param argument
-     * @param prefix
-     * @returns {ESTree.Literal}
+     * @param {UnaryOperator} operator
+     * @param {Expression} argument
+     * @param {boolean} prefix
+     * @returns {UnaryExpression}
      */
     public static getUnaryExpressionNode (
         operator: ESTree.UnaryOperator,
@@ -358,8 +361,8 @@ export class Nodes {
     }
 
     /**
-     * @param argument
-     * @return {ReturnStatement}
+     * @param {Expression} argument
+     * @returns {ReturnStatement}
      */
     public static getReturnStatementNode (argument: ESTree.Expression): ESTree.ReturnStatement {
         return {
@@ -370,9 +373,9 @@ export class Nodes {
     }
 
     /**
-     * @param discriminant
-     * @param cases
-     * @returns {ESTree.SwitchStatement}
+     * @param {Expression} discriminant
+     * @param {SwitchCase[]} cases
+     * @returns {SwitchStatement}
      */
     public static getSwitchStatementNode (
         discriminant: ESTree.Expression,
@@ -387,9 +390,9 @@ export class Nodes {
     }
 
     /**
-     * @param test
-     * @param consequent
-     * @returns {ESTree.SwitchCase}
+     * @param {Expression} test
+     * @param {Statement[]} consequent
+     * @returns {SwitchCase}
      */
     public static getSwitchCaseNode (test: ESTree.Expression, consequent: ESTree.Statement[]): ESTree.SwitchCase {
         return {
@@ -401,9 +404,9 @@ export class Nodes {
     }
 
     /**
-     * @param operator
-     * @param argumentExpr
-     * @returns {ESTree.UpdateExpression}
+     * @param {UpdateOperator} operator
+     * @param {Expression} argumentExpr
+     * @returns {UpdateExpression}
      */
     public static getUpdateExpressionNode (operator: ESTree.UpdateOperator, argumentExpr: ESTree.Expression): ESTree.UpdateExpression {
         return {
@@ -416,9 +419,9 @@ export class Nodes {
     }
 
     /**
-     * @param declarations
-     * @param kind
-     * @returns {ESTree.VariableDeclaration}
+     * @param {VariableDeclarator[]} declarations
+     * @param {string} kind
+     * @returns {VariableDeclaration}
      */
     public static getVariableDeclarationNode (
         declarations: ESTree.VariableDeclarator[] = [],
@@ -433,9 +436,9 @@ export class Nodes {
     }
 
     /**
-     * @param id
-     * @param init
-     * @returns {ESTree.VariableDeclarator}
+     * @param {Identifier} id
+     * @param {any} init
+     * @returns {VariableDeclarator}
      */
     public static getVariableDeclaratorNode (id: ESTree.Identifier, init: any): ESTree.VariableDeclarator {
         return {
@@ -447,9 +450,9 @@ export class Nodes {
     }
 
     /**
-     * @param test
-     * @param body
-     * @return {ESTree.WhileStatement}
+     * @param {Expression} test
+     * @param {Statement} body
+     * @returns {WhileStatement}
      */
     public static getWhileStatementNode (test: ESTree.Expression, body: ESTree.Statement): ESTree.WhileStatement {
         return {

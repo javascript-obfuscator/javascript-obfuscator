@@ -15,8 +15,8 @@ export class StringArrayStorage extends ArrayStorage <string> {
     private readonly arrayUtils: IArrayUtils;
 
     /**
-     * @param arrayUtils
-     * @param randomGenerator
+     * @param {IArrayUtils} arrayUtils
+     * @param {IRandomGenerator} randomGenerator
      */
     constructor (
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
@@ -30,7 +30,7 @@ export class StringArrayStorage extends ArrayStorage <string> {
     }
 
     /**
-     * @param args
+     * @param {any[]} args
      */
     public initialize (...args: any[]): void {
         super.initialize(args);
@@ -39,7 +39,7 @@ export class StringArrayStorage extends ArrayStorage <string> {
     }
 
     /**
-     * @param rotationValue
+     * @param {number} rotationValue
      */
     public rotateArray (rotationValue: number): void {
         this.storage = this.arrayUtils.arrayRotate(this.storage, rotationValue);

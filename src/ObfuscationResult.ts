@@ -19,8 +19,8 @@ export class ObfuscationResult implements IObfuscationResult {
     private sourceMap: string;
 
     /**
-     * @param obfuscatedCode
-     * @param sourceMap
+     * @param {string} obfuscatedCode
+     * @param {string} sourceMap
      */
     public initialize (obfuscatedCode: string, sourceMap: string): void {
         this.obfuscatedCode = obfuscatedCode;

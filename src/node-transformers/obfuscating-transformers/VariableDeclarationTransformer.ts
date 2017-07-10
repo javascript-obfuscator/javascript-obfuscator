@@ -42,9 +42,9 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     private readonly replaceableIdentifiers: Map <ESTree.Node, ESTree.Identifier[]> = new Map();
 
     /**
-     * @param identifierObfuscatingReplacerFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TIdentifierObfuscatingReplacerFactory} identifierObfuscatingReplacerFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierObfuscatingReplacer)
@@ -73,9 +73,9 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param variableDeclarationNode
-     * @param parentNode
-     * @returns {ESTree.Node}
+     * @param {VariableDeclaration} variableDeclarationNode
+     * @param {Node} parentNode
+     * @returns {Node}
      */
     public transformNode (variableDeclarationNode: ESTree.VariableDeclaration, parentNode: ESTree.Node): ESTree.Node {
         const blockScopeOfVariableDeclarationNode: TNodeWithBlockStatement = NodeUtils
@@ -103,8 +103,8 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param variableDeclarationNode
-     * @param nodeIdentifier
+     * @param {VariableDeclaration} variableDeclarationNode
+     * @param {number} nodeIdentifier
      */
     private storeVariableNames (variableDeclarationNode: ESTree.VariableDeclaration, nodeIdentifier: number): void {
         variableDeclarationNode.declarations
@@ -120,8 +120,8 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param scopeNode
-     * @param nodeIdentifier
+     * @param {Node} scopeNode
+     * @param {number} nodeIdentifier
      */
     private replaceScopeCachedIdentifiers (scopeNode: ESTree.Node, nodeIdentifier: number): void {
         const cachedReplaceableIdentifiers: ESTree.Identifier[] = <ESTree.Identifier[]>this.replaceableIdentifiers.get(scopeNode);
@@ -134,8 +134,8 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param scopeNode
-     * @param nodeIdentifier
+     * @param {Node} scopeNode
+     * @param {number} nodeIdentifier
      */
     private replaceScopeIdentifiers (scopeNode: ESTree.Node, nodeIdentifier: number): void {
         const storedReplaceableIdentifiers: ESTree.Identifier[] = [];

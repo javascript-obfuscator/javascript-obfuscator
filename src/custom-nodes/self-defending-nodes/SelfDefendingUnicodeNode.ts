@@ -38,9 +38,9 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     private readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @param randomGenerator
-     * @param escapeSequenceEncoder
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -54,7 +54,7 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     }
 
     /**
-     * @param callsControllerFunctionName
+     * @param {string} callsControllerFunctionName
      */
     public initialize (callsControllerFunctionName: string): void {
         this.callsControllerFunctionName = callsControllerFunctionName;

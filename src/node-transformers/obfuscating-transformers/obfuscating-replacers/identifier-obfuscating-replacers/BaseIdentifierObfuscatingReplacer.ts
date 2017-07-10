@@ -23,8 +23,8 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
     private readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -36,9 +36,9 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
     }
 
     /**
-     * @param nodeValue
-     * @param nodeIdentifier
-     * @returns {ESTree.Identifier}
+     * @param {string} nodeValue
+     * @param {number} nodeIdentifier
+     * @returns {Identifier}
      */
     public replace (nodeValue: string, nodeIdentifier: number): ESTree.Identifier {
         const mapKey: string = `${nodeValue}-${String(nodeIdentifier)}`;
@@ -54,8 +54,8 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
      * Store all `nodeIdentifier`'s as keys in given `namesMap` with random names as value.
      * Reserved names will be ignored.
      *
-     * @param nodeName
-     * @param nodeIdentifier
+     * @param {string} nodeName
+     * @param {number} nodeIdentifier
      */
     public storeNames (nodeName: string, nodeIdentifier: number): void {
         if (!this.isReservedName(nodeName)) {
@@ -64,7 +64,7 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
     }
 
     /**
-     * @param name
+     * @param {string} name
      * @returns {boolean}
      */
     private isReservedName (name: string): boolean {

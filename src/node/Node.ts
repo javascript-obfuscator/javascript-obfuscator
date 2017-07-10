@@ -6,7 +6,7 @@ import { NodeType } from '../enums/NodeType';
 
 export class Node {
     /**
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isArrowFunctionExpressionNode (node: ESTree.Node): node is ESTree.ArrowFunctionExpression {
@@ -14,7 +14,7 @@ export class Node {
     }
 
     /**
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isAssignmentPatternNode (node: ESTree.Node): node is ESTree.AssignmentPattern {
@@ -22,7 +22,7 @@ export class Node {
     }
 
     /**
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isBlockStatementNode (node: ESTree.Node): node is ESTree.BlockStatement {
@@ -30,7 +30,7 @@ export class Node {
     }
 
     /**
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isBreakStatementNode (node: ESTree.Node): node is ESTree.BreakStatement {
@@ -38,7 +38,7 @@ export class Node {
     }
 
     /**
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isCallExpressionNode (node: ESTree.Node): node is ESTree.CallExpression {
@@ -46,7 +46,7 @@ export class Node {
     }
 
     /**
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isCatchClauseNode (node: ESTree.Node): node is ESTree.CatchClause {
@@ -54,7 +54,7 @@ export class Node {
     }
 
     /**
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isContinueStatementNode (node: ESTree.Node): node is ESTree.ContinueStatement {
@@ -62,7 +62,7 @@ export class Node {
     }
 
     /**
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isExpressionStatementNode (node: ESTree.Node): node is ESTree.ExpressionStatement {
@@ -70,7 +70,7 @@ export class Node {
     }
 
     /**
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isFunctionDeclarationNode (node: ESTree.Node): node is ESTree.FunctionDeclaration {
@@ -78,7 +78,7 @@ export class Node {
     }
 
     /**
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isFunctionExpressionNode (node: ESTree.Node): node is ESTree.FunctionExpression {
@@ -86,7 +86,7 @@ export class Node {
     }
 
     /**
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isIdentifierNode (node: ESTree.Node): node is ESTree.Identifier {
@@ -94,7 +94,7 @@ export class Node {
     }
 
     /**
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isIfStatementNode (node: ESTree.Node): node is ESTree.IfStatement {
@@ -102,8 +102,8 @@ export class Node {
     }
 
     /**
-     * @param node
-     * @param parentNode
+     * @param {Node} node
+     * @param {Node} parentNode
      * @returns {boolean}
      */
     public static isLabelIdentifierNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
@@ -115,7 +115,7 @@ export class Node {
     }
 
     /**
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isLabeledStatementNode (node: ESTree.Node): node is ESTree.LabeledStatement {
@@ -123,7 +123,7 @@ export class Node {
     }
 
     /**
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isLiteralNode (node: ESTree.Node): node is ESTree.Literal {
@@ -131,7 +131,7 @@ export class Node {
     }
 
     /**
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isMemberExpressionNode (node: ESTree.Node): node is ESTree.MemberExpression {
@@ -139,7 +139,7 @@ export class Node {
     }
 
     /**
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isMethodDefinitionNode (node: ESTree.Node): node is ESTree.MethodDefinition {
@@ -147,7 +147,7 @@ export class Node {
     }
 
     /**
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isObjectPatternNode (node: ESTree.Node): node is ESTree.ObjectPattern {
@@ -155,7 +155,7 @@ export class Node {
     }
 
     /**
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isObjectExpressionNode (node: ESTree.Node): node is ESTree.ObjectExpression {
@@ -163,8 +163,7 @@ export class Node {
     }
 
     /**
-     *
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isProgramNode (node: ESTree.Node): node is ESTree.Program {
@@ -172,8 +171,7 @@ export class Node {
     }
 
     /**
-     *
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isPropertyNode (node: ESTree.Node): node is ESTree.Property {
@@ -181,8 +179,8 @@ export class Node {
     }
 
     /**
-     * @param node
-     * @param parentNode
+     * @param {Node} node
+     * @param {Node} parentNode
      * @returns {boolean}
      */
     public static isReplaceableIdentifierNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
@@ -201,8 +199,7 @@ export class Node {
     }
 
     /**
-     *
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isTemplateLiteralNode (node: ESTree.Node): node is ESTree.TemplateLiteral {
@@ -210,8 +207,7 @@ export class Node {
     }
 
     /**
-     *
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isUnaryExpressionNode (node: ESTree.Node): node is ESTree.UnaryExpression {
@@ -219,8 +215,7 @@ export class Node {
     }
 
     /**
-     *
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isVariableDeclarationNode (node: ESTree.Node): node is ESTree.VariableDeclaration {
@@ -228,8 +223,7 @@ export class Node {
     }
 
     /**
-     *
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isVariableDeclaratorNode (node: ESTree.Node): node is ESTree.VariableDeclarator {
@@ -237,7 +231,7 @@ export class Node {
     }
 
     /**
-     * @param node
+     * @param {Node} node
      * @returns {boolean}
      */
     public static isNodeHasBlockStatement (node: ESTree.Node): node is TNodeWithBlockStatement {

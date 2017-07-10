@@ -22,9 +22,9 @@ export class LiteralTransformer extends AbstractNodeTransformer {
     private readonly literalObfuscatingReplacerFactory: TLiteralObfuscatingReplacerFactory;
 
     /**
-     * @param literalObfuscatingReplacerFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TLiteralObfuscatingReplacerFactory} literalObfuscatingReplacerFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IObfuscatingReplacer)
@@ -51,9 +51,9 @@ export class LiteralTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param literalNode
-     * @param parentNode
-     * @returns {ESTree.Node}
+     * @param {Literal} literalNode
+     * @param {Node} parentNode
+     * @returns {Node}
      */
     public transformNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
         if (Node.isPropertyNode(parentNode) && parentNode.key === literalNode) {

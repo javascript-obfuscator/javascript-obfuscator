@@ -32,9 +32,9 @@ export class FunctionTransformer extends AbstractNodeTransformer {
     private readonly identifierObfuscatingReplacer: IIdentifierObfuscatingReplacer;
 
     /**
-     * @param identifierObfuscatingReplacerFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TIdentifierObfuscatingReplacerFactory} identifierObfuscatingReplacerFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierObfuscatingReplacer)
@@ -67,9 +67,9 @@ export class FunctionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param functionNode
-     * @param parentNode
-     * @returns {ESTree.Node}
+     * @param {Function} functionNode
+     * @param {Node} parentNode
+     * @returns {Node}
      */
     public transformNode (functionNode: ESTree.Function, parentNode: ESTree.Node): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
@@ -81,8 +81,8 @@ export class FunctionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param functionNode
-     * @param nodeIdentifier
+     * @param {Function} functionNode
+     * @param {number} nodeIdentifier
      */
     private storeFunctionParams (functionNode: ESTree.Function, nodeIdentifier: number): void {
         functionNode.params
@@ -108,8 +108,8 @@ export class FunctionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param functionNode
-     * @param nodeIdentifier
+     * @param {Function} functionNode
+     * @param {number} nodeIdentifier
      */
     private replaceFunctionParams (functionNode: ESTree.Function, nodeIdentifier: number): void {
         const replaceVisitor: estraverse.Visitor = {

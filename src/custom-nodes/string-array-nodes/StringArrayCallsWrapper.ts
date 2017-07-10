@@ -52,8 +52,8 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
     private stringArrayCallsWrapperName: string;
 
     /**
-     * @param escapeSequenceEncoder
-     * @param options
+     * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
@@ -65,9 +65,9 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
     }
 
     /**
-     * @param stringArrayStorage
-     * @param stringArrayName
-     * @param stringArrayCallsWrapperName
+     * @param {IStorage<string>} stringArrayStorage
+     * @param {string} stringArrayName
+     * @param {string} stringArrayCallsWrapperName
      */
     public initialize (
         stringArrayStorage: IStorage <string>,

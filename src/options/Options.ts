@@ -1,19 +1,19 @@
 import { injectable } from 'inversify';
 
 import {
-ArrayUnique,
-IsBoolean,
-IsArray,
-IsIn,
-IsNumber,
-IsString,
-IsUrl,
-Min,
-Max,
-ValidateIf,
-validateSync,
-ValidationError,
-ValidatorOptions
+    ArrayUnique,
+    IsBoolean,
+    IsArray,
+    IsIn,
+    IsNumber,
+    IsString,
+    IsUrl,
+    Min,
+    Max,
+    ValidateIf,
+    validateSync,
+    ValidationError,
+    ValidatorOptions
 } from 'class-validator';
 
 import { TInputOptions } from '../types/options/TInputOptions';
@@ -189,7 +189,7 @@ export class Options implements IOptions {
     public readonly unicodeEscapeSequence: boolean;
 
     /**
-     * @param inputOptions
+     * @param {TInputOptions} inputOptions
      */
     constructor (inputOptions: TInputOptions) {
         Object.assign(this, DEFAULT_PRESET, inputOptions);

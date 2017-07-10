@@ -25,8 +25,8 @@ export class StringLiteralNode extends AbstractCustomNode {
     private readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -38,7 +38,7 @@ export class StringLiteralNode extends AbstractCustomNode {
     }
 
     /**
-     * @param literalValue
+     * @param {string} literalValue
      */
     public initialize (literalValue: string): void {
         this.literalValue = literalValue;

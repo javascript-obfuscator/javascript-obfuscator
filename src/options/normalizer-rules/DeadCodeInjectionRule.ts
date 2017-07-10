@@ -4,6 +4,10 @@ import { IOptions } from '../../interfaces/options/IOptions';
 
 import { DEFAULT_PRESET } from '../presets/Default';
 
+/**
+ * @param {IOptions} options
+ * @returns {IOptions}
+ */
 export const DeadCodeInjectionRule: TOptionsNormalizerRule = (options: IOptions): IOptions => {
     if (options.deadCodeInjection) {
         options = {

@@ -42,10 +42,10 @@ export class ConsoleOutputCustomNodeGroup extends AbstractCustomNodeGroup {
     private readonly obfuscationEventEmitter: IObfuscationEventEmitter;
 
     /**
-     * @param customNodeFactory
-     * @param obfuscationEventEmitter
-     * @param randomGenerator
-     * @param options
+     * @param {TCustomNodeFactory} customNodeFactory
+     * @param {IObfuscationEventEmitter} obfuscationEventEmitter
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
@@ -60,8 +60,8 @@ export class ConsoleOutputCustomNodeGroup extends AbstractCustomNodeGroup {
     }
 
     /**
-     * @param blockScopeNode
-     * @param stackTraceData
+     * @param {TNodeWithBlockStatement} blockScopeNode
+     * @param {IStackTraceData[]} stackTraceData
      */
     public appendCustomNodes (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
         const randomStackTraceIndex: number = this.getRandomStackTraceIndex(stackTraceData.length);
@@ -91,7 +91,7 @@ export class ConsoleOutputCustomNodeGroup extends AbstractCustomNodeGroup {
     }
 
     public initialize (): void {
-        this.customNodes = new Map <CustomNode, ICustomNode> ();
+        this.customNodes = new Map <CustomNode, ICustomNode>();
 
         if (!this.options.disableConsoleOutput) {
             return;

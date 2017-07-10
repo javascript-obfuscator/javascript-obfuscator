@@ -28,9 +28,9 @@ export abstract class ExpressionWithOperatorControlFlowReplacer extends Abstract
     protected readonly replacerDataByControlFlowStorageId: Map <string, Map<string, string[]>> = new Map();
 
     /**
-     * @param controlFlowCustomNodeFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
@@ -42,11 +42,11 @@ export abstract class ExpressionWithOperatorControlFlowReplacer extends Abstract
     }
 
     /**
-     * @param controlFlowStorageId
-     * @param storageKey
-     * @param leftExpression
-     * @param rightExpression
-     * @returns {ESTree.Node}
+     * @param {string} controlFlowStorageId
+     * @param {string} storageKey
+     * @param {Expression} leftExpression
+     * @param {Expression} rightExpression
+     * @returns {Node}
      */
     protected getControlFlowStorageCallNode (
         controlFlowStorageId: string,

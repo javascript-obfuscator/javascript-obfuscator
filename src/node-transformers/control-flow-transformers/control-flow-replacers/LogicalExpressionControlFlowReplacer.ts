@@ -24,9 +24,9 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
     private static readonly usingExistingIdentifierChance: number = 0.5;
 
     /**
-     * @param controlFlowCustomNodeFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
@@ -38,10 +38,10 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
     }
 
     /**
-     * @param logicalExpressionNode
-     * @param parentNode
-     * @param controlFlowStorage
-     * @returns {ESTree.Node}
+     * @param {LogicalExpression} logicalExpressionNode
+     * @param {Node} parentNode
+     * @param {IStorage<ICustomNode>} controlFlowStorage
+     * @returns {Node}
      */
     public replace (
         logicalExpressionNode: ESTree.LogicalExpression,
@@ -75,8 +75,8 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
     }
 
     /**
-     * @param leftExpression
-     * @param rightExpression
+     * @param {Expression} leftExpression
+     * @param {Expression} rightExpression
      * @returns {boolean}
      */
     private checkForProhibitedExpressions (leftExpression: ESTree.Expression, rightExpression: ESTree.Expression): boolean {

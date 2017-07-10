@@ -14,9 +14,9 @@ import { AbstractCalleeDataExtractor } from './AbstractCalleeDataExtractor';
 @injectable()
 export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtractor {
     /**
-     * @param blockScopeBody
-     * @param callee
-     * @returns {ICalleeData|null}
+     * @param {Node[]} blockScopeBody
+     * @param {MemberExpression} callee
+     * @returns {ICalleeData}
      */
     public extract (blockScopeBody: ESTree.Node[], callee: ESTree.MemberExpression): ICalleeData|null {
         if (!Node.isMemberExpressionNode(callee)) {
@@ -50,8 +50,8 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
      *
      * Example: object.foo.bar(); // ['object', 'foo', 'bar']
      *
-     * @param currentChain
-     * @param memberExpression
+     * @param {TObjectMembersCallsChain} currentChain
+     * @param {MemberExpression} memberExpression
      * @returns {TObjectMembersCallsChain}
      */
     private createObjectMembersCallsChain (
@@ -84,9 +84,9 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
     }
 
     /**
-     * @param targetNode
-     * @param objectMembersCallsChain
-     * @returns {ESTree.BlockStatement|null}
+     * @param {Node} targetNode
+     * @param {TObjectMembersCallsChain} objectMembersCallsChain
+     * @returns {BlockStatement}
      */
     private getCalleeBlockStatement (
         targetNode: ESTree.Node,
@@ -120,9 +120,9 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
     }
 
     /**
-     * @param objectExpressionProperties
-     * @param objectMembersCallsChain
-     * @returns {ESTree.BlockStatement|null}
+     * @param {Property[]} objectExpressionProperties
+     * @param {TObjectMembersCallsChain} objectMembersCallsChain
+     * @returns {BlockStatement}
      */
     private findCalleeBlockStatement (
         objectExpressionProperties: ESTree.Property[],

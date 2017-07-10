@@ -18,8 +18,8 @@ export class CLIUtils {
     private static readonly encoding: BufferEncoding = 'utf8';
 
     /**
-     * @param outputPath
-     * @param inputPath
+     * @param {string} outputPath
+     * @param {string} inputPath
      * @returns {string}
      */
     public static getOutputCodePath (outputPath: string, inputPath: string): string {
@@ -36,8 +36,8 @@ export class CLIUtils {
     }
 
     /**
-     * @param outputCodePath
-     * @param sourceMapFileName
+     * @param {string} outputCodePath
+     * @param {string} sourceMapFileName
      * @returns {string}
      */
     public static getOutputSourceMapPath (outputCodePath: string, sourceMapFileName: string = ''): string {
@@ -74,7 +74,8 @@ export class CLIUtils {
     }
 
     /**
-     * @param filePath
+     * @param {string} filePath
+     * @returns {boolean}
      */
     public static isFilePath (filePath: string): boolean {
         try {
@@ -85,7 +86,7 @@ export class CLIUtils {
     }
 
     /**
-     * @param inputPath
+     * @param {string} inputPath
      * @returns {string}
      */
     public static readFile (inputPath: string): string {
@@ -93,7 +94,7 @@ export class CLIUtils {
     }
 
     /**
-     * @param inputPath
+     * @param {string} inputPath
      */
     public static validateInputPath (inputPath: string): void {
         if (!CLIUtils.isFilePath(inputPath)) {
@@ -106,8 +107,8 @@ export class CLIUtils {
     }
 
     /**
-     * @param outputPath
-     * @param data
+     * @param {string} outputPath
+     * @param {any} data
      */
     public static writeFile (outputPath: string, data: any): void {
         mkdirp.sync(path.dirname(outputPath));

@@ -5,11 +5,13 @@ const nodeExternals = require('webpack-node-externals');
 const webpack = require('webpack');
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 
+const copyright = 'Copyright (C) 2017 Timofey Kachalov <sanex3339@yandex.ru>';
+
 /**
  * @return {string}
  */
 const getLicenseText = () => {
-    return "/*\nCopyright (C) 2017 Timofey Kachalov <sanex3339@yandex.ru>\n\n" +
+    return `/*\n${copyright}\n\n` +
         fs.readFileSync('./LICENSE.BSD', 'utf8') + "\n*/";
 };
 

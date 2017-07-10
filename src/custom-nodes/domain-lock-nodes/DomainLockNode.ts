@@ -35,9 +35,9 @@ export class DomainLockNode extends AbstractCustomNode {
     private readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @param randomGenerator
-     * @param cryptUtils
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {ICryptUtils} cryptUtils
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -51,7 +51,7 @@ export class DomainLockNode extends AbstractCustomNode {
     }
 
     /**
-     * @param callsControllerFunctionName
+     * @param {string} callsControllerFunctionName
      */
     public initialize (callsControllerFunctionName: string): void {
         this.callsControllerFunctionName = callsControllerFunctionName;

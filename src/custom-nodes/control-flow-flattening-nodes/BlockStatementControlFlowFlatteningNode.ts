@@ -40,8 +40,8 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
     private shuffledKeys: number[];
 
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -52,10 +52,10 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
         this.randomGenerator = randomGenerator;
     }
 
-    /***
-     * @param blockStatementBody
-     * @param shuffledKeys
-     * @param originalKeysIndexesInShuffledArray
+    /**
+     * @param {Statement[]} blockStatementBody
+     * @param {number[]} shuffledKeys
+     * @param {number[]} originalKeysIndexesInShuffledArray
      */
     public initialize (
         blockStatementBody: ESTree.Statement[],

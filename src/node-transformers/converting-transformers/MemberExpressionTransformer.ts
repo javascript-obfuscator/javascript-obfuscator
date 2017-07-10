@@ -15,8 +15,8 @@ import { Node } from '../../node/Node';
 @injectable()
 export class MemberExpressionTransformer extends AbstractNodeTransformer {
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -50,9 +50,9 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
      *
      * Literal node will be obfuscated by LiteralTransformer
      *
-     * @param memberExpressionNode
-     * @param parentNode
-     * @returns {ESTree.Node}
+     * @param {MemberExpression} memberExpressionNode
+     * @param {Node} parentNode
+     * @returns {Node}
      */
     public transformNode (memberExpressionNode: ESTree.MemberExpression, parentNode: ESTree.Node): ESTree.Node {
         if (Node.isIdentifierNode(memberExpressionNode.property)) {

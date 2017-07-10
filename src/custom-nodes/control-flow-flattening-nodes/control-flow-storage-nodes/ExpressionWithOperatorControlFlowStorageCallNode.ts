@@ -46,8 +46,8 @@ export class ExpressionWithOperatorControlFlowStorageCallNode extends AbstractCu
     private rightValue: Expression;
 
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -59,10 +59,10 @@ export class ExpressionWithOperatorControlFlowStorageCallNode extends AbstractCu
     }
 
     /**
-     * @param controlFlowStorageName
-     * @param controlFlowStorageKey
-     * @param leftValue
-     * @param rightValue
+     * @param {string} controlFlowStorageName
+     * @param {string} controlFlowStorageKey
+     * @param {Expression} leftValue
+     * @param {Expression} rightValue
      */
     public initialize (
         controlFlowStorageName: string,

@@ -13,9 +13,9 @@ import { JavaScriptObfuscatorCLI } from './cli/JavaScriptObfuscatorCLI';
 
 export class JavaScriptObfuscator {
     /**
-     * @param sourceCode
-     * @param inputOptions
-     * @returns {string}
+     * @param {string} sourceCode
+     * @param {TInputOptions} inputOptions
+     * @returns {IObfuscationResult}
      */
     public static obfuscate (sourceCode: string, inputOptions: TInputOptions = {}): IObfuscationResult {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
@@ -32,7 +32,7 @@ export class JavaScriptObfuscator {
     }
 
     /**
-     * @param argv
+     * @param {string[]} argv
      */
     public static runCLI (argv: string[]): void {
         new JavaScriptObfuscatorCLI(argv).run();

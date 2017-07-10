@@ -24,8 +24,8 @@ export class NodeUtils {
     ];
 
     /**
-     * @param astTree
-     * @return {T}
+     * @param {T} astTree
+     * @returns {T}
      */
     public static addXVerbatimPropertyToLiterals <T extends ESTree.Node> (astTree: T): T {
         NodeUtils.typedReplace(astTree, NodeType.Literal, {
@@ -41,8 +41,8 @@ export class NodeUtils {
     }
 
     /**
-     * @param astTree
-     * @return {ESTree.Node}
+     * @param {T} astTree
+     * @returns {T}
      */
     public static clone <T extends ESTree.Node> (astTree: T): T {
         const cloneRecursive: (node: T) => T = (node: T) => {
@@ -76,7 +76,7 @@ export class NodeUtils {
     }
 
     /**
-     * @param code
+     * @param {string} code
      * @returns {TStatement[]}
      */
     public static convertCodeToStructure (code: string): TStatement[] {
@@ -89,7 +89,7 @@ export class NodeUtils {
     }
 
     /**
-     * @param structure
+     * @param {Node[]} structure
      * @returns {string}
      */
     public static convertStructureToCode (structure: ESTree.Node[]): string {
@@ -105,9 +105,9 @@ export class NodeUtils {
     }
 
     /**
-     * @param node
-     * @param index
-     * @returns {ESTree.Node}
+     * @param {Node} node
+     * @param {number} index
+     * @returns {Node}
      */
     public static getBlockStatementNodeByIndex (node: ESTree.Node, index: number = 0): ESTree.Node {
         if (Node.isNodeHasBlockStatement(node)) {
@@ -122,9 +122,9 @@ export class NodeUtils {
     }
 
     /**
-     * @param node
-     * @param blockScopes
-     * @returns {ESTree.Node}
+     * @param {Node} node
+     * @param {TNodeWithBlockStatement[]} blockScopes
+     * @returns {TNodeWithBlockStatement[]}
      */
     public static getBlockScopesOfNode (node: ESTree.Node, blockScopes: TNodeWithBlockStatement[] = []): TNodeWithBlockStatement[] {
         const parentNode: ESTree.Node | undefined = node.parentNode;
@@ -153,8 +153,8 @@ export class NodeUtils {
     }
 
     /**
-     * @param node
-     * @param depth
+     * @param {Node} node
+     * @param {number} depth
      * @returns {number}
      */
     public static getNodeBlockScopeDepth (node: ESTree.Node, depth: number = 0): number {
@@ -176,8 +176,8 @@ export class NodeUtils {
     }
 
     /**
-     * @param unaryExpressionNode
-     * @returns {ESTree.Node}
+     * @param {UnaryExpression} unaryExpressionNode
+     * @returns {Node}
      */
     public static getUnaryExpressionArgumentNode (unaryExpressionNode: ESTree.UnaryExpression): ESTree.Node {
         if (Node.isUnaryExpressionNode(unaryExpressionNode.argument)) {
@@ -188,8 +188,8 @@ export class NodeUtils {
     }
 
     /**
-     * @param astTree
-     * @return {T}
+     * @param {T} astTree
+     * @returns {T}
      */
     public static parentize <T extends ESTree.Node> (astTree: T): T {
         let isRootNode: boolean = true;
@@ -220,9 +220,9 @@ export class NodeUtils {
     }
 
     /**
-     * @param astTree
-     * @param nodeType
-     * @param visitor
+     * @param {Node} astTree
+     * @param {string} nodeType
+     * @param {visitor} visitor
      */
     public static typedReplace (
         astTree: ESTree.Node,
@@ -233,10 +233,10 @@ export class NodeUtils {
     }
 
     /**
-     * @param astTree
-     * @param nodeType
-     * @param visitor
-     * @param traverseType
+     * @param {Node} astTree
+     * @param {string} nodeType
+     * @param {Visitor} visitor
+     * @param {string} traverseType
      */
     public static typedTraverse (
         astTree: ESTree.Node,

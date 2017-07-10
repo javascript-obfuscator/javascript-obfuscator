@@ -8,9 +8,9 @@ import { ICalleeDataExtractor } from '../../interfaces/stack-trace-analyzer/ICal
 @injectable()
 export abstract class AbstractCalleeDataExtractor implements ICalleeDataExtractor {
     /**
-     * @param blockScopeBody
-     * @param callee
-     * @returns {ICalleeData|null}
+     * @param {Node[]} blockScopeBody
+     * @param {Node} callee
+     * @returns {ICalleeData}
      */
     public abstract extract (blockScopeBody: ESTree.Node[], callee: ESTree.Node): ICalleeData|null;
 }

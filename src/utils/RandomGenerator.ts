@@ -45,11 +45,11 @@ export class RandomGenerator implements IRandomGenerator {
     /**
      * @type {ISourceCode}
      */
-    private readonly  sourceCode: ISourceCode;
+    private readonly sourceCode: ISourceCode;
 
     /**
-     * @param sourceCode
-     * @param options
+     * @param {ISourceCode} sourceCode
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.ISourceCode) sourceCode: ISourceCode,
@@ -71,8 +71,8 @@ export class RandomGenerator implements IRandomGenerator {
     }
 
     /**
-     * @param min
-     * @param max
+     * @param {number} min
+     * @param {number} max
      * @returns {number}
      */
     public getRandomFloat (min: number, max: number): number {
@@ -91,8 +91,8 @@ export class RandomGenerator implements IRandomGenerator {
     }
 
     /**
-     * @param min
-     * @param max
+     * @param {number} min
+     * @param {number} max
      * @returns {number}
      */
     public getRandomInteger (min: number, max: number): number {
@@ -103,8 +103,8 @@ export class RandomGenerator implements IRandomGenerator {
     }
 
     /**
-     * @param length
-     * @param pool
+     * @param {number} length
+     * @param {string} pool
      * @returns {string}
      */
     public getRandomString (length: number, pool: string = RandomGenerator.randomGeneratorPool): string {
@@ -112,7 +112,7 @@ export class RandomGenerator implements IRandomGenerator {
     }
 
     /**
-     * @param length
+     * @param {number} length
      * @returns {string}
      */
     public getRandomVariableName (length: number): string {

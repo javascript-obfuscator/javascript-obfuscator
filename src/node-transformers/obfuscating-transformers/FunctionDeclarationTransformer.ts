@@ -41,9 +41,9 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
     private readonly replaceableIdentifiers: Map <ESTree.Node, ESTree.Identifier[]> = new Map();
 
     /**
-     * @param identifierObfuscatingReplacerFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TIdentifierObfuscatingReplacerFactory} identifierObfuscatingReplacerFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierObfuscatingReplacer)
@@ -72,9 +72,9 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param functionDeclarationNode
-     * @param parentNode
-     * @returns {ESTree.Node}
+     * @param {FunctionDeclaration} functionDeclarationNode
+     * @param {Node} parentNode
+     * @returns {Node}
      */
     public transformNode (functionDeclarationNode: ESTree.FunctionDeclaration, parentNode: ESTree.Node): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
@@ -98,16 +98,16 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param functionDeclarationNode
-     * @param nodeIdentifier
+     * @param {FunctionDeclaration} functionDeclarationNode
+     * @param {number} nodeIdentifier
      */
     private storeFunctionName (functionDeclarationNode: ESTree.FunctionDeclaration, nodeIdentifier: number): void {
         this.identifierObfuscatingReplacer.storeNames(functionDeclarationNode.id.name, nodeIdentifier);
     }
 
     /**
-     * @param scopeNode
-     * @param nodeIdentifier
+     * @param {Node} scopeNode
+     * @param {number} nodeIdentifier
      */
     private replaceScopeCachedIdentifiers (scopeNode: ESTree.Node, nodeIdentifier: number): void {
         const cachedReplaceableIdentifiers: ESTree.Identifier[] = <ESTree.Identifier[]>this.replaceableIdentifiers.get(scopeNode);
@@ -120,8 +120,8 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param scopeNode
-     * @param nodeIdentifier
+     * @param {Node} scopeNode
+     * @param {number} nodeIdentifier
      */
     private replaceScopeIdentifiers (scopeNode: ESTree.Node, nodeIdentifier: number): void {
         const storedReplaceableIdentifiers: ESTree.Identifier[] = [];

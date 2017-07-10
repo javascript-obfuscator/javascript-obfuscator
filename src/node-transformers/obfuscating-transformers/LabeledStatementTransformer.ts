@@ -40,9 +40,9 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
     private readonly identifierObfuscatingReplacer: IIdentifierObfuscatingReplacer;
 
     /**
-     * @param identifierObfuscatingReplacerFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TIdentifierObfuscatingReplacerFactory} identifierObfuscatingReplacerFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierObfuscatingReplacer)
@@ -71,9 +71,9 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param labeledStatementNode
-     * @param parentNode
-     * @returns {ESTree.Node}
+     * @param {LabeledStatement} labeledStatementNode
+     * @param {Node} parentNode
+     * @returns {Node}
      */
     public transformNode (labeledStatementNode: ESTree.LabeledStatement, parentNode: ESTree.Node): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
@@ -85,16 +85,16 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param labeledStatementNode
-     * @param nodeIdentifier
+     * @param {LabeledStatement} labeledStatementNode
+     * @param {number} nodeIdentifier
      */
     private storeLabeledStatementName (labeledStatementNode: ESTree.LabeledStatement, nodeIdentifier: number): void {
         this.identifierObfuscatingReplacer.storeNames(labeledStatementNode.label.name, nodeIdentifier);
     }
 
     /**
-     * @param labeledStatementNode
-     * @param nodeIdentifier
+     * @param {LabeledStatement} labeledStatementNode
+     * @param {number} nodeIdentifier
      */
     private replaceLabeledStatementName (labeledStatementNode: ESTree.LabeledStatement, nodeIdentifier: number): void {
         estraverse.replace(labeledStatementNode, {

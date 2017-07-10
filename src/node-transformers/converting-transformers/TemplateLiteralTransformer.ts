@@ -18,8 +18,8 @@ import { Nodes } from '../../node/Nodes';
 @injectable()
 export class TemplateLiteralTransformer extends AbstractNodeTransformer {
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -29,8 +29,8 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param node
-     * @return {boolean}
+     * @param {Node} node
+     * @returns {boolean}
      */
     private static isLiteralNodeWithStringValue (node: ESTree.Node): boolean {
         return node && Node.isLiteralNode(node) && typeof node.value === 'string';
@@ -50,9 +50,9 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param templateLiteralNode
-     * @param parentNode
-     * @returns {ESTree.Node}
+     * @param {TemplateLiteral} templateLiteralNode
+     * @param {Node} parentNode
+     * @returns {Node}
      */
     public transformNode (templateLiteralNode: ESTree.TemplateLiteral, parentNode: ESTree.Node): ESTree.Node {
         const templateLiteralExpressions: ESTree.Expression[] = templateLiteralNode.expressions;

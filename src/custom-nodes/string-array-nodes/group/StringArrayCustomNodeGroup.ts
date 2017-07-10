@@ -50,11 +50,11 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
     private stringArrayStorage: IStorage <string>;
 
     /**
-     * @param customNodeFactory
-     * @param obfuscationEventEmitter
-     * @param randomGenerator
-     * @param stringArrayStorage
-     * @param options
+     * @param {TCustomNodeFactory} customNodeFactory
+     * @param {IObfuscationEventEmitter} obfuscationEventEmitter
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IStorage<string>} stringArrayStorage
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
@@ -71,8 +71,8 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
     }
 
     /**
-     * @param blockScopeNode
-     * @param stackTraceData
+     * @param {TNodeWithBlockStatement} blockScopeNode
+     * @param {IStackTraceData[]} stackTraceData
      */
     public appendCustomNodes (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
         if (!this.stringArrayStorage.getLength()) {
@@ -96,7 +96,7 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
     }
 
     public initialize (): void {
-        this.customNodes = new Map <CustomNode, ICustomNode> ();
+        this.customNodes = new Map <CustomNode, ICustomNode>();
 
         if (!this.options.stringArray) {
             return;

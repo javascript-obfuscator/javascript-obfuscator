@@ -24,9 +24,9 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
     private static readonly usingExistingIdentifierChance: number = 1;
 
     /**
-     * @param controlFlowCustomNodeFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
@@ -38,10 +38,10 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
     }
 
     /**
-     * @param literalNode
-     * @param parentNode
-     * @param controlFlowStorage
-     * @returns {ESTree.Node}
+     * @param {Literal} literalNode
+     * @param {Node} parentNode
+     * @param {IStorage<ICustomNode>} controlFlowStorage
+     * @returns {Node}
      */
     public replace (
         literalNode: ESTree.Literal,
@@ -74,9 +74,9 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
     }
 
     /**
-     * @param controlFlowStorageId
-     * @param storageKey
-     * @returns {ESTree.Node}
+     * @param {string} controlFlowStorageId
+     * @param {string} storageKey
+     * @returns {Node}
      */
     protected getControlFlowStorageCallNode (
         controlFlowStorageId: string,

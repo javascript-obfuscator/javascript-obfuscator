@@ -28,8 +28,8 @@ export class LogicalExpressionFunctionNode extends AbstractCustomNode {
     private readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -41,7 +41,7 @@ export class LogicalExpressionFunctionNode extends AbstractCustomNode {
     }
 
     /**
-     * @param operator
+     * @param {LogicalOperator} operator
      */
     public initialize (operator: LogicalOperator): void {
         this.operator = operator;

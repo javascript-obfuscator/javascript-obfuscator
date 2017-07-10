@@ -15,7 +15,7 @@ export class CryptUtils implements ICryptUtils {
     private readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @param randomGenerator
+     * @param {IRandomGenerator} randomGenerator
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator
@@ -23,10 +23,11 @@ export class CryptUtils implements ICryptUtils {
         this.randomGenerator = randomGenerator;
     }
 
-    /**
-     * @param string
-     */
     /* tslint:disable */
+    /**
+     * @param {string} string
+     * @returns {string}
+     */
     public btoa (string: string): string {
         const chars: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
@@ -55,9 +56,9 @@ export class CryptUtils implements ICryptUtils {
     /* tslint:enable */
 
     /**
-     * @param str
-     * @param length
-     * @returns {[string, string]}
+     * @param {string} str
+     * @param {number} length
+     * @returns {[string , string]}
      */
     public hideString (str: string, length: number): [string, string] {
         const escapeRegExp: (s: string) => string = (s: string) =>
@@ -96,15 +97,15 @@ export class CryptUtils implements ICryptUtils {
         return [randomMerge(str, randomStringDiff), randomStringDiff];
     }
 
+    /* tslint:disable */
     /**
      * RC4 symmetric cipher encryption/decryption
      * https://gist.github.com/farhadi/2185197
      *
-     * @param key
-     * @param string
+     * @param {string} string
+     * @param {string} key
      * @returns {string}
      */
-    /* tslint:disable */
     public rc4 (string: string, key: string): string {
         let s: number[] = [],
             j: number = 0,

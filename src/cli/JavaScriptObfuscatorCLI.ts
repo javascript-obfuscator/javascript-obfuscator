@@ -41,7 +41,7 @@ export class JavaScriptObfuscatorCLI {
     private sourceCode: string = '';
 
     /**
-     * @param argv
+     * @param {string[]} argv
      */
     constructor (argv: string[]) {
         this.rawArguments = argv;
@@ -234,8 +234,8 @@ export class JavaScriptObfuscatorCLI {
     }
 
     /**
-     * @param outputCodePath
-     * @param options
+     * @param {string} outputCodePath
+     * @param {TInputOptions} options
      */
     private processDataWithoutSourceMap (outputCodePath: string, options: TInputOptions): void {
         const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(this.sourceCode, options).getObfuscatedCode();
@@ -244,8 +244,8 @@ export class JavaScriptObfuscatorCLI {
     }
 
     /**
-     * @param outputCodePath
-     * @param options
+     * @param {string} outputCodePath
+     * @param {TInputOptions} options
      */
     private processDataWithSourceMap (outputCodePath: string, options: TInputOptions): void {
         const outputSourceMapPath: string = CLIUtils.getOutputSourceMapPath(

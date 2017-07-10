@@ -7,7 +7,7 @@ export class Utils {
     public static readonly hexadecimalPrefix: string = '0x';
 
     /**
-     * @param dec
+     * @param {number} dec
      * @returns {string}
      */
     public static decToHex (dec: number): string {
@@ -17,7 +17,7 @@ export class Utils {
     }
 
     /**
-     * @param url
+     * @param {string} url
      * @returns {string}
      */
     public static extractDomainFromUrl (url: string): string {
@@ -35,7 +35,7 @@ export class Utils {
     }
 
     /**
-     * @param number
+     * @param {number} number
      * @returns {boolean}
      */
     public static isCeilNumber (number: number): boolean {
@@ -43,8 +43,8 @@ export class Utils {
     }
 
     /**
-     * @param string
-     * @param times
+     * @param {string} string
+     * @param {number} times
      * @returns {string}
      */
     public static stringRotate (string: string, times: number): string {
@@ -60,7 +60,7 @@ export class Utils {
     }
 
     /**
-     * @param string
+     * @param {string} string
      * @returns {string}
      */
     public static stringToJSFuck (string: string): string {

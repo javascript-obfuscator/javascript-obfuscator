@@ -2,6 +2,10 @@ import { TCLISanitizer } from '../../types/cli/TCLISanitizer';
 
 import { SourceMapMode } from '../../enums/SourceMapMode';
 
+/**
+ * @param {string} value
+ * @returns {string}
+ */
 export const SourceMapModeSanitizer: TCLISanitizer = (value: string): string => {
     const availableMode: boolean = Object
         .keys(SourceMapMode)

@@ -14,7 +14,7 @@ export abstract class AbstractObfuscatingReplacer implements IObfuscatingReplace
     protected readonly options: IOptions;
 
     /**
-     * @param options
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IOptions) options: IOptions
@@ -23,9 +23,9 @@ export abstract class AbstractObfuscatingReplacer implements IObfuscatingReplace
     }
 
     /**
-     * @param nodeValue
-     * @param nodeIdentifier
-     * @returns {ESTree.Node}
+     * @param {any} nodeValue
+     * @param {number} nodeIdentifier
+     * @returns {Node}
      */
     public abstract replace (nodeValue: any, nodeIdentifier?: number): ESTree.Node;
 }

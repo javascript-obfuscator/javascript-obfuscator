@@ -3,8 +3,8 @@
 import { IInitializable } from '../interfaces/IInitializable';
 
 /**
- * @param initializeMethodKey
- * @returns {(target:IInitializable, propertyKey:(string|symbol))=>PropertyDescriptor}
+ * @param {string} initializeMethodKey
+ * @returns {any}
  */
 export function initializable (
     initializeMethodKey: string = 'initialize'
@@ -19,7 +19,7 @@ export function initializable (
         const initializeMethod: Function = target[initializeMethodKey];
 
         if (!initializeMethod || typeof initializeMethod !== 'function') {
-           throw new Error(`\`${initializeMethodKey}\` method with initialization logic not found. \`@${decoratorName}\` decorator requires \`${initializeMethodKey}\` method`);
+            throw new Error(`\`${initializeMethodKey}\` method with initialization logic not found. \`@${decoratorName}\` decorator requires \`${initializeMethodKey}\` method`);
         }
 
         const metadataPropertyKey: string = `_${propertyKey}`;

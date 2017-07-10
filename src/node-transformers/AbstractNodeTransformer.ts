@@ -26,8 +26,8 @@ export abstract class AbstractNodeTransformer implements INodeTransformer {
     protected readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -45,9 +45,9 @@ export abstract class AbstractNodeTransformer implements INodeTransformer {
     public abstract getVisitor (): IVisitor;
 
     /**
-     * @param node
-     * @param parentNode
-     * @returns {ESTree.Node}
+     * @param {Node} node
+     * @param {Node} parentNode
+     * @returns {Node}
      */
     public abstract transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node;
 }

@@ -30,8 +30,8 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
     private readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -43,7 +43,7 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
     }
 
     /**
-     * @param controlFlowStorage
+     * @param {IStorage<ICustomNode>} controlFlowStorage
      */
     public initialize (controlFlowStorage: IStorage <ICustomNode>): void {
         this.controlFlowStorage = controlFlowStorage;

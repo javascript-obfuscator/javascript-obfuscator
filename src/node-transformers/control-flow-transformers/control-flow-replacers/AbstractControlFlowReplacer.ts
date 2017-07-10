@@ -34,9 +34,9 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
     protected readonly replacerDataByControlFlowStorageId: Map <string, Map<string, string[]>> = new Map();
 
     /**
-     * @param controlFlowCustomNodeFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
@@ -50,8 +50,8 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
     }
 
     /**
-     * @param identifierDataByControlFlowStorageId
-     * @param controlFlowStorageId
+     * @param {Map<string, Map<string, string[]>>} identifierDataByControlFlowStorageId
+     * @param {string} controlFlowStorageId
      * @returns {Map<string, string[]>}
      */
     protected static getStorageKeysByIdForCurrentStorage (
@@ -63,25 +63,25 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
         if (identifierDataByControlFlowStorageId.has(controlFlowStorageId)) {
             storageKeysById = <Map<string, string[]>>identifierDataByControlFlowStorageId.get(controlFlowStorageId);
         } else {
-            storageKeysById = new Map <string, string[]> ();
+            storageKeysById = new Map <string, string[]>();
         }
 
         return storageKeysById;
     }
 
     /**
-     * @param node
-     * @param parentNode
-     * @param controlFlowStorage
-     * @returns {ESTree.Node}
+     * @param {Node} node
+     * @param {Node} parentNode
+     * @param {IStorage<ICustomNode>} controlFlowStorage
+     * @returns {Node}
      */
     public abstract replace (node: ESTree.Node, parentNode: ESTree.Node, controlFlowStorage: IStorage <ICustomNode>): ESTree.Node;
 
     /**
-     * @param customNode
-     * @param controlFlowStorage
-     * @param replacerId
-     * @param usingExistingIdentifierChance
+     * @param {ICustomNode} customNode
+     * @param {IStorage<ICustomNode>} controlFlowStorage
+     * @param {string} replacerId
+     * @param {number} usingExistingIdentifierChance
      * @returns {string}
      */
     protected insertCustomNodeToControlFlowStorage (

@@ -89,11 +89,11 @@ export class Obfuscator implements IObfuscator {
     private readonly stackTraceAnalyzer: IStackTraceAnalyzer;
 
     /**
-     * @param stackTraceAnalyzer
-     * @param obfuscationEventEmitter
-     * @param customNodeGroupStorage
-     * @param nodeTransformerFactory
-     * @param options
+     * @param {IStackTraceAnalyzer} stackTraceAnalyzer
+     * @param {IObfuscationEventEmitter} obfuscationEventEmitter
+     * @param {IStorage<ICustomNodeGroup>} customNodeGroupStorage
+     * @param {TNodeTransformerFactory} nodeTransformerFactory
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IStackTraceAnalyzer) stackTraceAnalyzer: IStackTraceAnalyzer,
@@ -110,8 +110,8 @@ export class Obfuscator implements IObfuscator {
     }
 
     /**
-     * @param astTree
-     * @returns {ESTree.Program}
+     * @param {Program} astTree
+     * @returns {Program}
      */
     public obfuscateAstTree (astTree: ESTree.Program): ESTree.Program {
         if (Node.isProgramNode(astTree) && !astTree.body.length) {
@@ -158,8 +158,9 @@ export class Obfuscator implements IObfuscator {
     }
 
     /**
-     * @param astTree
-     * @param nodeTransformers
+     * @param {Program} astTree
+     * @param {NodeTransformer[]} nodeTransformers
+     * @returns {Program}
      */
     private transformAstTree (
         astTree: ESTree.Program,
@@ -196,9 +197,9 @@ export class Obfuscator implements IObfuscator {
     }
 
     /**
-     * @param visitors
-     * @param direction
-     * @return {TVisitorDirection}
+     * @param {IVisitor[]} visitors
+     * @param {TVisitorDirection} direction
+     * @returns {TVisitorFunction}
      */
     private mergeVisitorsForDirection (visitors: IVisitor[], direction: TVisitorDirection): TVisitorFunction {
         if (!visitors.length) {

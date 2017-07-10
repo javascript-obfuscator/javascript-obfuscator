@@ -24,8 +24,8 @@ import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceD
  */
 export class NodeAppender {
     /**
-     * @param blockScopeNode
-     * @param nodeBodyStatements
+     * @param {TNodeWithBlockStatement} blockScopeNode
+     * @param {TStatement[]} nodeBodyStatements
      */
     public static appendNode (
         blockScopeNode: TNodeWithBlockStatement,
@@ -44,10 +44,10 @@ export class NodeAppender {
     }
 
     /**
-     * @param blockScopeStackTraceData
-     * @param blockScopeNode
-     * @param nodeBodyStatements
-     * @param index
+     * @param {IStackTraceData[]} blockScopeStackTraceData
+     * @param {TNodeWithBlockStatement} blockScopeNode
+     * @param {TStatement[]} nodeBodyStatements
+     * @param {number} index
      */
     public static appendNodeToOptimalBlockScope (
         blockScopeStackTraceData: IStackTraceData[],
@@ -72,10 +72,10 @@ export class NodeAppender {
     /**
      * Returns deepest block scope node at given deep.
      *
-     * @param blockScopeTraceData
-     * @param index
-     * @param deep
-     * @returns {ESTree.BlockStatement}
+     * @param {IStackTraceData[]} blockScopeTraceData
+     * @param {number} index
+     * @param {number} deep
+     * @returns {BlockStatement}
      */
     public static getOptimalBlockScope (
         blockScopeTraceData: IStackTraceData[],
@@ -96,9 +96,9 @@ export class NodeAppender {
     }
 
     /**
-     * @param blockScopeNode
-     * @param nodeBodyStatements
-     * @param index
+     * @param {TNodeWithBlockStatement} blockScopeNode
+     * @param {TStatement[]} nodeBodyStatements
+     * @param {number} index
      */
     public static insertNodeAtIndex (
         blockScopeNode: TNodeWithBlockStatement,
@@ -119,8 +119,8 @@ export class NodeAppender {
     }
 
     /**
-     * @param blockScopeNode
-     * @param nodeBodyStatements
+     * @param {TNodeWithBlockStatement} blockScopeNode
+     * @param {TStatement[]} nodeBodyStatements
      */
     public static prependNode (
         blockScopeNode: TNodeWithBlockStatement,
@@ -139,8 +139,9 @@ export class NodeAppender {
     }
 
     /**
-     * @param blockScopeNode
-     * @param nodeBodyStatements
+     * @param {TNodeWithBlockStatement} blockScopeNode
+     * @param {TStatement[]} nodeBodyStatements
+     * @returns {TStatement[]}
      */
     private static parentizeBodyStatementsBeforeAppend (
         blockScopeNode: TNodeWithBlockStatement,
@@ -154,7 +155,7 @@ export class NodeAppender {
     }
 
     /**
-     * @param nodeBodyStatements
+     * @param {TStatement[]} nodeBodyStatements
      * @returns {boolean}
      */
     private static validateBodyStatements (nodeBodyStatements: TStatement[]): boolean {

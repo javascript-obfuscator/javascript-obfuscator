@@ -5,16 +5,16 @@ import * as format from 'string-template';
 
 import { TStatement } from '../../types/node/TStatement';
 
+import { ICryptUtils } from '../../interfaces/utils/ICryptUtils';
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { initializable } from '../../decorators/Initializable';
 
 import { DomainLockNodeTemplate } from '../../templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { CryptUtils } from '../../utils/CryptUtils';
 import { NodeUtils } from '../../node/NodeUtils';
-import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class DomainLockNode extends AbstractCustomNode {
@@ -25,12 +25,29 @@ export class DomainLockNode extends AbstractCustomNode {
     protected callsControllerFunctionName: string;
 
     /**
+     * @type {ICryptUtils}
+     */
+    private readonly cryptUtils: ICryptUtils;
+
+    /**
+     * @type {IRandomGenerator}
+     */
+    private readonly randomGenerator: IRandomGenerator;
+
+    /**
+     * @param randomGenerator
+     * @param cryptUtils
      * @param options
      */
     constructor (
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
+        @inject(ServiceIdentifiers.ICryptUtils) cryptUtils: ICryptUtils,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+
+        this.randomGenerator = randomGenerator;
+        this.cryptUtils = cryptUtils;
     }
 
     /**
@@ -52,10 +69,13 @@ export class DomainLockNode extends AbstractCustomNode {
      */
     protected getTemplate (): string {
         const domainsString: string = this.options.domainLock.join(';');
-        const [hiddenDomainsString, diff]: string[] = CryptUtils.hideString(domainsString, domainsString.length * 3);
+        const [hiddenDomainsString, diff]: string[] = this.cryptUtils.hideString(
+            domainsString,
+            domainsString.length * 3
+        );
 
         return format(DomainLockNodeTemplate(), {
-            domainLockFunctionName: RandomGeneratorUtils.getRandomVariableName(6),
+            domainLockFunctionName: this.randomGenerator.getRandomVariableName(6),
             diff: diff,
             domains: hiddenDomainsString,
             singleNodeCallControllerFunctionName: this.callsControllerFunctionName

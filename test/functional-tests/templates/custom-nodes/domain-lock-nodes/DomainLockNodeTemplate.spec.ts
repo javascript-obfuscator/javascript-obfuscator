@@ -2,9 +2,14 @@ import * as format from 'string-template';
 
 import { assert } from 'chai';
 
+import { ServiceIdentifiers } from '../../../../../src/container/ServiceIdentifiers';
+
+import { ICryptUtils } from '../../../../../src/interfaces/utils/ICryptUtils';
+import { IInversifyContainerFacade } from '../../../../../src/interfaces/container/IInversifyContainerFacade';
+
 import { DomainLockNodeTemplate } from '../../../../../src/templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
 
-import { CryptUtils } from '../../../../../src/utils/CryptUtils';
+import { InversifyContainerFacade } from '../../../../../src/container/InversifyContainerFacade';
 
 /**
  * @param templateData
@@ -35,6 +40,15 @@ function getFunctionFromTemplate (templateData: any, callsControllerFunctionName
 describe('DomainLockNodeTemplate (): string', () => {
     const singleNodeCallControllerFunctionName: string = 'callsController';
 
+    let cryptUtils: ICryptUtils;
+
+    before(() => {
+        const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
+
+        inversifyContainerFacade.load('', {});
+        cryptUtils = inversifyContainerFacade.get<ICryptUtils>(ServiceIdentifiers.ICryptUtils);
+    });
+
     describe('variant #1: current domain matches with `domainsString`', () => {
         const domainsString: string = ['www.example.com'].join(';');
         const currentDomain: string = 'www.example.com';
@@ -45,7 +59,7 @@ describe('DomainLockNodeTemplate (): string', () => {
             const [
                 hiddenDomainsString,
                 diff
-            ] = CryptUtils.hideString(domainsString, domainsString.length * 3);
+            ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
             testFunc = () => getFunctionFromTemplate({
                 domainLockFunctionName: 'domainLockFunction',
@@ -55,7 +69,7 @@ describe('DomainLockNodeTemplate (): string', () => {
             }, singleNodeCallControllerFunctionName, currentDomain);
         });
 
-        it('should correctly runs code inside template', () => {
+        it('should correctly run code inside template', () => {
             assert.doesNotThrow(testFunc);
         });
     });
@@ -70,7 +84,7 @@ describe('DomainLockNodeTemplate (): string', () => {
             const [
                 hiddenDomainsString,
                 diff
-            ] = CryptUtils.hideString(domainsString, domainsString.length * 3);
+            ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
             testFunc = () => getFunctionFromTemplate({
                 domainLockFunctionName: 'domainLockFunction',
@@ -80,7 +94,7 @@ describe('DomainLockNodeTemplate (): string', () => {
             }, singleNodeCallControllerFunctionName, currentDomain);
         });
 
-        it('should correctly runs code inside template', () => {
+        it('should correctly run code inside template', () => {
             assert.doesNotThrow(testFunc);
         });
     });
@@ -95,7 +109,7 @@ describe('DomainLockNodeTemplate (): string', () => {
             const [
                 hiddenDomainsString,
                 diff
-            ] = CryptUtils.hideString(domainsString, domainsString.length * 3);
+            ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
             testFunc = () => getFunctionFromTemplate({
                 domainLockFunctionName: 'domainLockFunction',

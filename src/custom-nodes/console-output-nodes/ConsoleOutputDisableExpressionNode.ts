@@ -6,6 +6,7 @@ import * as format from 'string-template';
 import { TStatement } from '../../types/node/TStatement';
 
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { ConsoleOutputDisableExpressionTemplate } from '../../templates/custom-nodes/console-output-nodes/console-output-disable-expression-node/ConsoleOutputDisableExpressionTemplate';
 
@@ -13,7 +14,6 @@ import { initializable } from '../../decorators/Initializable';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeUtils } from '../../node/NodeUtils';
-import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
@@ -24,12 +24,21 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
     private callsControllerFunctionName: string;
 
     /**
+     * @type {IRandomGenerator}
+     */
+    private readonly randomGenerator: IRandomGenerator;
+
+    /**
+     * @param randomGenerator
      * @param options
      */
     constructor (
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+
+        this.randomGenerator = randomGenerator;
     }
 
     /**
@@ -51,7 +60,7 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
      */
     protected getTemplate (): string {
         return format(ConsoleOutputDisableExpressionTemplate(), {
-            consoleLogDisableFunctionName: RandomGeneratorUtils.getRandomVariableName(6),
+            consoleLogDisableFunctionName: this.randomGenerator.getRandomVariableName(6),
             singleNodeCallControllerFunctionName: this.callsControllerFunctionName
         });
     }

@@ -13,7 +13,7 @@ describe('LogicalExpressionControlFlowReplacer', function () {
 
     describe('replace (logicalExpressionNode: ESTree.LogicalExpression,parentNode: ESTree.Node,controlFlowStorage: IStorage <ICustomNode>)', () => {
         describe('variant #1 - single logical expression', () => {
-            const controlFlowStorageCallRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{3}'\]\(!!\[\], *!\[\]\);/;
+            const controlFlowStorageCallRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{5}'\]\(!!\[\], *!\[\]\);/;
 
             let obfuscatedCode: string;
 
@@ -43,8 +43,8 @@ describe('LogicalExpressionControlFlowReplacer', function () {
             const samplesCount: number = 1000;
             const delta: number = 0.1;
 
-            const controlFlowStorageCallRegExp1: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *(_0x([a-f0-9]){4,6}\['\w{3}'\])\(!!\[\], *!\[\]\);/;
-            const controlFlowStorageCallRegExp2: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *(_0x([a-f0-9]){4,6}\['\w{3}'\])\(!\[\], *!!\[\]\);/;
+            const controlFlowStorageCallRegExp1: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *(_0x([a-f0-9]){4,6}\['\w{5}'\])\(!!\[\], *!\[\]\);/;
+            const controlFlowStorageCallRegExp2: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *(_0x([a-f0-9]){4,6}\['\w{5}'\])\(!\[\], *!!\[\]\);/;
 
             let matchErrorsCount: number = 0,
                 usingExistingIdentifierChance: number;
@@ -102,7 +102,7 @@ describe('LogicalExpressionControlFlowReplacer', function () {
         });
 
         describe('variant #3 - single logical expression with unary expression', () => {
-            const controlFlowStorageCallRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{3}'\]\(!_0x([a-f0-9]){4,6}, *!_0x([a-f0-9]){4,6}\);/;
+            const controlFlowStorageCallRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{5}'\]\(!_0x([a-f0-9]){4,6}, *!_0x([a-f0-9]){4,6}\);/;
 
             let obfuscatedCode: string;
 

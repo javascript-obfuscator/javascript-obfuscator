@@ -5,7 +5,9 @@ import * as format from 'string-template';
 
 import { TStatement } from '../../types/node/TStatement';
 
+import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { initializable } from '../../decorators/Initializable';
@@ -18,11 +20,20 @@ import { StringArrayRotateFunctionTemplate } from '../../templates/custom-nodes/
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
 import { NodeUtils } from '../../node/NodeUtils';
-import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 import { Utils } from '../../utils/Utils';
 
 @injectable()
 export class StringArrayRotateFunctionNode extends AbstractCustomNode {
+    /**
+     * @type {IEscapeSequenceEncoder}
+     */
+    private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
+
+    /**
+     * @type {IRandomGenerator}
+     */
+    private readonly randomGenerator: IRandomGenerator;
+
     /**
      * @type {IStorage <string>}
      */
@@ -42,12 +53,19 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     private stringArrayRotateValue: number;
 
     /**
+     * @param randomGenerator
+     * @param escapeSequenceEncoder
      * @param options
      */
     constructor (
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
+        @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+
+        this.randomGenerator = randomGenerator;
+        this.escapeSequenceEncoder = escapeSequenceEncoder;
     }
 
     /**
@@ -76,13 +94,13 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
      * @returns {string}
      */
     protected getTemplate (): string {
-        const timesName: string = RandomGeneratorUtils.getRandomVariableName(6);
-        const whileFunctionName: string = RandomGeneratorUtils.getRandomVariableName(6);
+        const timesName: string = this.randomGenerator.getRandomVariableName(6);
+        const whileFunctionName: string = this.randomGenerator.getRandomVariableName(6);
 
         let code: string = '';
 
         if (this.options.selfDefending) {
-            code = format(SelfDefendingTemplate(), {
+            code = format(SelfDefendingTemplate(this.escapeSequenceEncoder), {
                 timesName,
                 whileFunctionName
             });

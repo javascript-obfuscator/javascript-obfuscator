@@ -6,13 +6,13 @@ import { BinaryOperator } from 'estree';
 import { TStatement } from '../../types/node/TStatement';
 
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { initializable } from '../../decorators/Initializable';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { Nodes } from '../../node/Nodes';
 import { NodeUtils } from '../../node/NodeUtils';
-import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class BinaryExpressionFunctionNode extends AbstractCustomNode {
@@ -23,12 +23,21 @@ export class BinaryExpressionFunctionNode extends AbstractCustomNode {
     private operator: BinaryOperator;
 
     /**
+     * @type {IRandomGenerator}
+     */
+    private readonly randomGenerator: IRandomGenerator;
+
+    /**
+     * @param randomGenerator
      * @param options
      */
     constructor (
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+
+        this.randomGenerator = randomGenerator;
     }
 
     /**
@@ -43,7 +52,7 @@ export class BinaryExpressionFunctionNode extends AbstractCustomNode {
      */
     protected getNodeStructure (): TStatement[] {
         const structure: TStatement = Nodes.getFunctionDeclarationNode(
-            RandomGeneratorUtils.getRandomString(3),
+            this.randomGenerator.getRandomString(3),
             [
                 Nodes.getIdentifierNode('x'),
                 Nodes.getIdentifierNode('y')

@@ -1,6 +1,6 @@
 import Events = NodeJS.Events;
 
-import { TObfuscationEvent } from '../../types/event-emitters/TObfuscationEvent';
+import { ObfuscationEvent } from '../../enums/event-emitters/ObfuscationEvent';
 
 export interface IObfuscationEventEmitter extends Events {
     /**
@@ -8,12 +8,12 @@ export interface IObfuscationEventEmitter extends Events {
      * @param listener
      * @returns this
      */
-    on(event: TObfuscationEvent, listener: Function): this;
+    on (event: ObfuscationEvent, listener: Function): this;
 
     /**
      * @param event
      * @param listener
      * @returns this
      */
-    once(event: TObfuscationEvent, listener: Function): this;
+    once (event: ObfuscationEvent, listener: Function): this;
 }

@@ -6,16 +6,12 @@ import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscator';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../src/options/presets/NoCustomNodes';
 
+import { buildLargeCode } from '../../helpers/buildLargeCode';
+import { getRegExpMatch } from '../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../helpers/readFileAsString';
-
-import { RandomGeneratorUtils } from '../../../src/utils/RandomGeneratorUtils';
 
 describe('JavaScriptObfuscator', () => {
     describe('obfuscate (sourceCode: string, customOptions?: IObfuscatorOptions): IObfuscationResult', () => {
-        beforeEach(() => {
-            RandomGeneratorUtils.initializeRandomGenerator(0);
-        });
-
         describe('correct source code', () => {
             let obfuscatedCode: string,
                 sourceMap: string;
@@ -254,7 +250,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('cyrillic literal variable value', () => {
-            const stringArrayCyrillicRegExp: RegExp = /^var _0x(\w){4} *= *\['(\\u\d+)+'\];/;
+            const stringArrayCyrillicRegExp: RegExp = /^var _0x(\w){4} *= *\['абц'\];/;
             const stringArrayCallRegExp: RegExp = /var *test *= *_0x(\w){4}\('0x0'\);$/;
 
             let obfuscatedCode: string;
@@ -384,6 +380,41 @@ describe('JavaScriptObfuscator', () => {
                     assert.notEqual(obfuscatedCode1, obfuscatedCode2);
                 });
             });
+
+            describe('variant #3: same seed for different source code', () => {
+                const code1: string = readFileAsString(__dirname + '/fixtures/simple-input-cyrillic.js');
+                const code2: string = readFileAsString(__dirname + '/fixtures/simple-input-2.js');
+
+                const regExp: RegExp = /var (_0x(\w){4}) *= *\['.*'\];/;
+
+                let match1: string,
+                    match2: string;
+
+                beforeEach(() => {
+                    const obfuscationResult1: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code1,
+                        {
+                            seed: 123
+                        }
+                    );
+                    const obfuscationResult2: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code2,
+                        {
+                            seed: 123
+                        }
+                    );
+
+                    const obfuscatedCode1: string = obfuscationResult1.getObfuscatedCode();
+                    const obfuscatedCode2: string = obfuscationResult2.getObfuscatedCode();
+
+                    match1 = getRegExpMatch(obfuscatedCode1, regExp);
+                    match2 = getRegExpMatch(obfuscatedCode2, regExp);
+                });
+
+                it('should return different String Array names for different source code with same seed', () => {
+                    assert.notEqual(match1, match2);
+                });
+            });
         });
 
         describe('new.target MetaProperty', () => {
@@ -430,8 +461,39 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
-        afterEach(() => {
-            RandomGeneratorUtils.initializeRandomGenerator(0);
+        describe('3.5k variables', function () {
+            this.timeout(100000);
+
+            const expectedValue: number = 3500;
+
+            let result: number;
+
+            beforeEach(() => {
+                const code: string = buildLargeCode(expectedValue);
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        compact: true,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1,
+                        disableConsoleOutput: false,
+                        rotateStringArray: true,
+                        stringArray: true,
+                        stringArrayEncoding: 'rc4',
+                        stringArrayThreshold: 1,
+                        unicodeEscapeSequence: false
+                    }
+                );
+
+                const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+                result = eval(obfuscatedCode);
+            });
+
+            it('should correctly obfuscate 3.5k variables', () => {
+                assert.equal(result, expectedValue);
+            });
         });
     });
 });

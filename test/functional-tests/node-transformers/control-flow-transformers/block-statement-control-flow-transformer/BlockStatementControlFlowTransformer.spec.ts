@@ -4,6 +4,7 @@ import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationRe
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
+import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
@@ -86,17 +87,16 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
 
             describe('switch-case map', () => {
-                const switchCaseMapVariableRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\\x7c'\)/;
+                const switchCaseMapVariableRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\|'\)/;
+                const switchCaseMapStringRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *\{'.*' *: *'(.*)'\};/;
                 const expectedSwitchCasesSequence: string[] = ['0', '1', '2', '3', '4'];
 
                 let switchCaseMap: string[];
 
                 before(() => {
-                    const switchCaseMapStringRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *\{'.*' *: *'(.*)'\};/;
-                    const switchCaseMapStringMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(switchCaseMapStringRegExp);
-                    const switchCaseMapMatch: string = switchCaseMapStringMatches[1];
+                    const switchCaseMapMatch: string = getRegExpMatch(obfuscatedCode, switchCaseMapStringRegExp);
 
-                    switchCaseMap = switchCaseMapMatch.replace(/\\x7c/g, '|').split('|').sort();
+                    switchCaseMap = switchCaseMapMatch.split('|').sort();
                 });
 
                 it('should create switch-case map variable', () => {
@@ -157,13 +157,12 @@ describe('BlockStatementControlFlowTransformer', function () {
 
             describe('block statement statements', () => {
                 const switchCaseRegExp: RegExp = /switch *\(_0x([a-f0-9]){4,6}\[_0x([a-f0-9]){4,6}\+\+\]\) *\{/;
+                const switchCaseLengthRegExp: RegExp = /case *'[0-5]': *console\['log'\]\(0x[0-6]\);/g;
                 const expectedSwitchCaseLength: number = 5;
 
                 let switchCaseLength: number;
 
                 before(() => {
-                    const switchCaseLengthRegExp: RegExp = /case *'[0-5]': *console\['log'\]\(0x[0-6]\);/g;
-
                     switchCaseLength = obfuscatedCode.match(switchCaseLengthRegExp)!.length;
                 });
 
@@ -177,17 +176,16 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
 
             describe('switch-case map', () => {
-                const switchCaseMapVariableRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\\x7c'\)/;
+                const switchCaseMapVariableRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\|'\)/;
+                const switchCaseMapStringRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *\{'.*' *: *'(.*)'\};/;
                 const expectedSwitchCasesSequence: string[] = ['0', '1', '2', '3', '4'];
 
                 let switchCaseMap: string[];
 
                 before(() => {
-                    const switchCaseMapStringRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *\{'.*' *: *'(.*)'\};/;
-                    const switchCaseMapStringMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(switchCaseMapStringRegExp);
-                    const switchCaseMapMatch: string = switchCaseMapStringMatches[1];
+                    const switchCaseMapMatch: string = getRegExpMatch(obfuscatedCode, switchCaseMapStringRegExp);
 
-                    switchCaseMap = switchCaseMapMatch.replace(/\\x7c/g, '|').split('|').sort();
+                    switchCaseMap = switchCaseMapMatch.split('|').sort();
                 });
 
                 it('should create switch-case map variable', () => {

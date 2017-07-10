@@ -10,8 +10,8 @@ import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscator
 
 describe('StringLiteralControlFlowReplacer', () => {
     describe('replace (literalNode: ESTree.Literal,parentNode: ESTree.Node,controlFlowStorage: IStorage <ICustomNode>)', () => {
-        const controlFlowStorageStringLiteralRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *\{'\w{3}' *: *'test'\};/;
-        const controlFlowStorageCallRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{3}'\];/;
+        const controlFlowStorageStringLiteralRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *\{'\w{5}' *: *'test'\};/;
+        const controlFlowStorageCallRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{5}'\];/;
 
         let obfuscatedCode: string;
 

@@ -15,8 +15,7 @@ describe('JavaScriptObfuscatorInternal', () => {
         const code: string = 'var test = 1;';
         const sourceMapUrl: string = 'test.js.map';
 
-        let inversifyContainerFacade: IInversifyContainerFacade,
-            javaScriptObfuscator: IJavaScriptObfuscator;
+        let javaScriptObfuscator: IJavaScriptObfuscator;
 
         describe('variant #1: default behaviour', () => {
             const regExp: RegExp = new RegExp(`sourceMappingURL=${sourceMapUrl}`);
@@ -25,11 +24,16 @@ describe('JavaScriptObfuscatorInternal', () => {
                 sourceMapObject: any;
 
             before(() => {
-                inversifyContainerFacade = new InversifyContainerFacade({
-                    ...NO_CUSTOM_NODES_PRESET,
-                    sourceMap: true,
-                    sourceMapFileName: sourceMapUrl
-                });
+                const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
+
+                inversifyContainerFacade.load(
+                    '',
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
+                        sourceMap: true,
+                        sourceMapFileName: sourceMapUrl
+                    }
+                );
                 javaScriptObfuscator = inversifyContainerFacade
                     .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);
 
@@ -56,12 +60,17 @@ describe('JavaScriptObfuscatorInternal', () => {
                 sourceMapObject: any;
 
             before(() => {
-                inversifyContainerFacade = new InversifyContainerFacade({
-                    ...NO_CUSTOM_NODES_PRESET,
-                    sourceMap: true,
-                    sourceMapBaseUrl: sourceMapBaseUrl,
-                    sourceMapFileName: sourceMapUrl
-                });
+                const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
+
+                inversifyContainerFacade.load(
+                    '',
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
+                        sourceMap: true,
+                        sourceMapBaseUrl: sourceMapBaseUrl,
+                        sourceMapFileName: sourceMapUrl
+                    }
+                );
                 javaScriptObfuscator = inversifyContainerFacade
                     .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);
 

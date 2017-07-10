@@ -7,6 +7,7 @@ import { NO_CUSTOM_NODES_PRESET } from '../../../../../src/options/presets/NoCus
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
+import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
 
 describe('FunctionTransformer', () => {
     describe('identifiers transformation inside `FunctionDeclaration` and `FunctionExpression` node body', () => {
@@ -123,11 +124,10 @@ describe('FunctionTransformer', () => {
                 );
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
-
-                variableDeclarationIdentifierName = obfuscatedCode.match(variableDeclarationRegExp)![1];
-                functionParameterIdentifierName = obfuscatedCode.match(functionParameterRegExp)![1];
-                functionDefaultParameterIdentifierName = obfuscatedCode.match(functionParameterRegExp)![2];
-                functionBodyIdentifierName = obfuscatedCode.match(functionBodyRegExp)![1];
+                variableDeclarationIdentifierName = getRegExpMatch(obfuscatedCode, variableDeclarationRegExp);
+                functionParameterIdentifierName = getRegExpMatch(obfuscatedCode, functionParameterRegExp);
+                functionDefaultParameterIdentifierName = getRegExpMatch(obfuscatedCode, functionParameterRegExp, 1);
+                functionBodyIdentifierName = getRegExpMatch(obfuscatedCode, functionBodyRegExp);
             });
 
             it('match #1: should transform function parameter assignment pattern identifier', () => {
@@ -175,13 +175,13 @@ describe('FunctionTransformer', () => {
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
 
-                variableDeclarationIdentifierName = obfuscatedCode.match(variableDeclarationRegExp)![1];
-                functionParameterIdentifierName = obfuscatedCode.match(functionParameterRegExp)![1];
-                functionDefaultParameterIdentifierName1 = obfuscatedCode.match(functionParameterRegExp)![2];
-                functionDefaultParameterIdentifierName2 = obfuscatedCode.match(functionParameterRegExp)![3];
+                variableDeclarationIdentifierName = getRegExpMatch(obfuscatedCode, variableDeclarationRegExp);
+                functionParameterIdentifierName = getRegExpMatch(obfuscatedCode, functionParameterRegExp);
+                functionDefaultParameterIdentifierName1 = getRegExpMatch(obfuscatedCode, functionParameterRegExp, 1);
+                functionDefaultParameterIdentifierName2 = getRegExpMatch(obfuscatedCode, functionParameterRegExp, 2);
 
-                functionBodyIdentifierName1 = obfuscatedCode.match(functionBodyRegExp)![1];
-                functionBodyIdentifierName2 = obfuscatedCode.match(functionBodyRegExp)![2];
+                functionBodyIdentifierName1 = getRegExpMatch(obfuscatedCode, functionBodyRegExp);
+                functionBodyIdentifierName2 = getRegExpMatch(obfuscatedCode, functionBodyRegExp, 1);
             });
 
             it('match #1: should transform function parameter assignment pattern identifier', () => {
@@ -241,10 +241,10 @@ describe('FunctionTransformer', () => {
             );
             const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
 
-            arrayPatternIdentifierName1 = obfuscatedCode.match(functionParameterRegExp)![1];
-            arrayPatternIdentifierName2 = obfuscatedCode.match(functionParameterRegExp)![2];
-            functionBodyIdentifierName1 = obfuscatedCode.match(functionBodyRegExp)![1];
-            functionBodyIdentifierName2 = obfuscatedCode.match(functionBodyRegExp)![2];
+            arrayPatternIdentifierName1 = getRegExpMatch(obfuscatedCode, functionParameterRegExp);
+            arrayPatternIdentifierName2 = getRegExpMatch(obfuscatedCode, functionParameterRegExp, 1);
+            functionBodyIdentifierName1 = getRegExpMatch(obfuscatedCode, functionBodyRegExp);
+            functionBodyIdentifierName2 = getRegExpMatch(obfuscatedCode, functionBodyRegExp, 1);
         });
 
         it('equal #1: should keep same names for identifiers in function parameter array pattern and function body', () => {

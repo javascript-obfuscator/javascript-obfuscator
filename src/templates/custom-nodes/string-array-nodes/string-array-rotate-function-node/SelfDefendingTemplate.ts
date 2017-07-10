@@ -1,11 +1,11 @@
-import { Utils } from '../../../../utils/Utils';
+import { IEscapeSequenceEncoder } from '../../../../interfaces/utils/IEscapeSequenceEncoder';
 
 /**
  * SelfDefendingTemplate. Enter code in infinity loop.
  *
  * @returns {string}
  */
-export function SelfDefendingTemplate (): string {
+export function SelfDefendingTemplate (escapeSequenceEncoder: IEscapeSequenceEncoder): string {
     return `
         var selfDefendingFunc = function () {            
             var object = {
@@ -55,7 +55,9 @@ export function SelfDefendingTemplate (): string {
             };
             
             var test1 = function () {
-                var regExp = new RegExp('${Utils.stringToUnicodeEscapeSequence(`\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}`)}');
+                var regExp = new RegExp('${
+                    escapeSequenceEncoder.encode(`\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}`, true)
+                }');
                 
                 return regExp.test(object.removeCookie.toString());
             };

@@ -1,13 +1,18 @@
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
+import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 import { IStorage } from '../interfaces/storages/IStorage';
 
 import { initializable } from '../decorators/Initializable';
 
-import { RandomGeneratorUtils } from '../utils/RandomGeneratorUtils';
-
 @injectable()
 export abstract class ArrayStorage <T> implements IStorage <T> {
+    /**
+     * @type {IRandomGenerator}
+     */
+    protected readonly randomGenerator: IRandomGenerator;
+
     /**
      * @type {T[]}
      */
@@ -24,6 +29,15 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
      * @type {number}
      */
     private storageLength: number = 0;
+
+    /**
+     * @param randomGenerator
+     */
+    constructor (
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator
+    ) {
+        this.randomGenerator = randomGenerator;
+    }
 
     /**
      * @param key
@@ -75,7 +89,7 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
      */
     public initialize (...args: any[]): void {
         this.storage = [];
-        this.storageId = RandomGeneratorUtils.getRandomString(6);
+        this.storageId = this.randomGenerator.getRandomString(6);
     }
 
     /**

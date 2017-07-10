@@ -4,6 +4,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/IVisitor';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
@@ -17,12 +18,14 @@ import { Nodes } from '../../node/Nodes';
 @injectable()
 export class TemplateLiteralTransformer extends AbstractNodeTransformer {
     /**
+     * @param randomGenerator
      * @param options
      */
     constructor (
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
+        super(randomGenerator, options);
     }
 
     /**

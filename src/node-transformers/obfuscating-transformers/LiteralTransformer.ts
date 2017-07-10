@@ -6,6 +6,7 @@ import * as ESTree from 'estree';
 import { TLiteralObfuscatingReplacerFactory } from '../../types/container/node-transformers/TLiteralObfuscatingReplacerFactory';
 
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/IVisitor';
 
 import { LiteralObfuscatingReplacer } from '../../enums/container/node-transformers/LiteralObfuscatingReplacer';
@@ -22,14 +23,16 @@ export class LiteralTransformer extends AbstractNodeTransformer {
 
     /**
      * @param literalObfuscatingReplacerFactory
+     * @param randomGenerator
      * @param options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IObfuscatingReplacer)
             literalObfuscatingReplacerFactory: TLiteralObfuscatingReplacerFactory,
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
+        super(randomGenerator, options);
 
         this.literalObfuscatingReplacerFactory = literalObfuscatingReplacerFactory;
     }

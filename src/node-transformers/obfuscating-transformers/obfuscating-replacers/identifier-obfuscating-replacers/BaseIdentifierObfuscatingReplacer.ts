@@ -5,10 +5,10 @@ import * as ESTree from 'estree';
 
 import { IIdentifierObfuscatingReplacer } from '../../../../interfaces/node-transformers/obfuscating-transformers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../../../interfaces/utils/IRandomGenerator';
 
 import { AbstractObfuscatingReplacer } from '../AbstractObfuscatingReplacer';
 import { Nodes } from '../../../../node/Nodes';
-import { RandomGeneratorUtils } from '../../../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplacer implements IIdentifierObfuscatingReplacer {
@@ -18,12 +18,21 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
     private readonly namesMap: Map<string, string> = new Map();
 
     /**
+     * @type {IRandomGenerator}
+     */
+    private readonly randomGenerator: IRandomGenerator;
+
+    /**
+     * @param randomGenerator
      * @param options
      */
     constructor (
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+
+        this.randomGenerator = randomGenerator;
     }
 
     /**
@@ -50,7 +59,7 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
      */
     public storeNames (nodeName: string, nodeIdentifier: number): void {
         if (!this.isReservedName(nodeName)) {
-            this.namesMap.set(`${nodeName}-${String(nodeIdentifier)}`, RandomGeneratorUtils.getRandomVariableName(6));
+            this.namesMap.set(`${nodeName}-${String(nodeIdentifier)}`, this.randomGenerator.getRandomVariableName(6));
         }
     }
 

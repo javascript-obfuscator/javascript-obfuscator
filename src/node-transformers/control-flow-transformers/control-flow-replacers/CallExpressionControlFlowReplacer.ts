@@ -3,14 +3,15 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
+import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TStatement } from '../../../types/node/TStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
-import { CustomNode } from '../../../enums/container/custom-nodes/CustomNode';
+import { ControlFlowCustomNode } from '../../../enums/container/custom-nodes/ControlFlowCustomNode';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
 import { Node } from '../../../node/Node';
@@ -23,14 +24,17 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
     private static readonly usingExistingIdentifierChance: number = 0.5;
 
     /**
-     * @param customNodeFactory
+     * @param controlFlowCustomNodeFactory
+     * @param randomGenerator
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
+            controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(customNodeFactory, options);
+        super(controlFlowCustomNodeFactory, randomGenerator, options);
     }
 
     /**
@@ -51,7 +55,9 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
         }
 
         const replacerId: string = String(callExpressionNode.arguments.length);
-        const callExpressionFunctionCustomNode: ICustomNode = this.customNodeFactory(CustomNode.CallExpressionFunctionNode);
+        const callExpressionFunctionCustomNode: ICustomNode = this.controlFlowCustomNodeFactory(
+            ControlFlowCustomNode.CallExpressionFunctionNode
+        );
         const expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[] = callExpressionNode.arguments;
 
         callExpressionFunctionCustomNode.initialize(expressionArguments);
@@ -85,8 +91,8 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
         callee: ESTree.Expression,
         expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[]
     ): ESTree.Node {
-        const controlFlowStorageCallCustomNode: ICustomNode = this.customNodeFactory(
-            CustomNode.CallExpressionControlFlowStorageCallNode
+        const controlFlowStorageCallCustomNode: ICustomNode = this.controlFlowCustomNodeFactory(
+            ControlFlowCustomNode.CallExpressionControlFlowStorageCallNode
         );
 
         controlFlowStorageCallCustomNode.initialize(controlFlowStorageId, storageKey, callee, expressionArguments);

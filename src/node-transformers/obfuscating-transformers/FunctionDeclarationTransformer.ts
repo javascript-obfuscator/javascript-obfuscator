@@ -9,6 +9,7 @@ import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatemen
 
 import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/IVisitor';
 
 import { IdentifierObfuscatingReplacer } from "../../enums/container/node-transformers/IdentifierObfuscatingReplacer";
@@ -41,14 +42,16 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
 
     /**
      * @param identifierObfuscatingReplacerFactory
+     * @param randomGenerator
      * @param options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierObfuscatingReplacer)
             identifierObfuscatingReplacerFactory: TIdentifierObfuscatingReplacerFactory,
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
+        super(randomGenerator, options);
 
         this.identifierObfuscatingReplacer = identifierObfuscatingReplacerFactory(
             IdentifierObfuscatingReplacer.BaseIdentifierObfuscatingReplacer

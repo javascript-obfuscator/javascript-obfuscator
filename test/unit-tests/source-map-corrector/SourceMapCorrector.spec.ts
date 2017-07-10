@@ -26,12 +26,18 @@ function getCorrectedObfuscationResult (
     sourceMapFileName: string,
     sourceMapMode: TSourceMapMode
 ): IObfuscationResult {
-    const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade({
-        sourceMap: true,
-        sourceMapBaseUrl: sourceMapBaseUrl,
-        sourceMapFileName: sourceMapFileName,
-        sourceMapMode: sourceMapMode
-    });
+    const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
+
+    inversifyContainerFacade.load(
+        '',
+        {
+            sourceMap: true,
+            sourceMapBaseUrl: sourceMapBaseUrl,
+            sourceMapFileName: sourceMapFileName,
+            sourceMapMode: sourceMapMode
+        }
+    );
+
     const sourceMapCorrector: ISourceMapCorrector = inversifyContainerFacade
         .get<ISourceMapCorrector>(ServiceIdentifiers.ISourceMapCorrector);
 

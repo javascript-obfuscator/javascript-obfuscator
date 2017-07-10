@@ -1,21 +1,12 @@
 export enum CustomNode {
-    BinaryExpressionFunctionNode,
-    BlockStatementControlFlowFlatteningNode,
-    CallExpressionControlFlowStorageCallNode,
-    CallExpressionFunctionNode,
-    ControlFlowStorageNode,
     ConsoleOutputDisableExpressionNode,
     DebugProtectionFunctionCallNode,
     DebugProtectionFunctionIntervalNode,
     DebugProtectionFunctionNode,
     DomainLockNode,
-    ExpressionWithOperatorControlFlowStorageCallNode,
-    LogicalExpressionFunctionNode,
     NodeCallsControllerFunctionNode,
     SelfDefendingUnicodeNode,
     StringArrayCallsWrapper,
     StringArrayNode,
-    StringArrayRotateFunctionNode,
-    StringLiteralControlFlowStorageCallNode,
-    StringLiteralNode,
+    StringArrayRotateFunctionNode
 }

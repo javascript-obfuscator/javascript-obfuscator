@@ -4,8 +4,8 @@ import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { ICustomNodeGroup } from '../../../interfaces/custom-nodes/ICustomNodeGroup';
-import { IOptions } from '../../../interfaces/options/IOptions';
 
+import { ControlFlowCustomNode } from "../../../enums/container/custom-nodes/ControlFlowCustomNode";
 import { CustomNode } from '../../../enums/container/custom-nodes/CustomNode';
 import { CustomNodeGroup } from '../../../enums/container/custom-nodes/CustomNodeGroup';
 
@@ -37,81 +37,82 @@ import { StringLiteralNode } from '../../../custom-nodes/control-flow-flattening
 
 export const customNodesModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // custom nodes
+    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
+        .to(ConsoleOutputDisableExpressionNode)
+        .whenTargetNamed(CustomNode.ConsoleOutputDisableExpressionNode);
+
+    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
+        .to(DebugProtectionFunctionCallNode)
+        .whenTargetNamed(CustomNode.DebugProtectionFunctionCallNode);
+
+    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
+        .to(DebugProtectionFunctionIntervalNode)
+        .whenTargetNamed(CustomNode.DebugProtectionFunctionIntervalNode);
+
+    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
+        .to(DebugProtectionFunctionNode)
+        .whenTargetNamed(CustomNode.DebugProtectionFunctionNode);
+
+    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
+        .to(DomainLockNode)
+        .whenTargetNamed(CustomNode.DomainLockNode);
+
+    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
+        .to(NodeCallsControllerFunctionNode)
+        .whenTargetNamed(CustomNode.NodeCallsControllerFunctionNode);
+
+    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
+        .to(SelfDefendingUnicodeNode)
+        .whenTargetNamed(CustomNode.SelfDefendingUnicodeNode);
+
+    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
+        .to(StringArrayCallsWrapper)
+        .whenTargetNamed(CustomNode.StringArrayCallsWrapper);
+
+    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
+        .to(StringArrayNode)
+        .whenTargetNamed(CustomNode.StringArrayNode);
+
+    bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
+        .to(StringArrayRotateFunctionNode)
+        .whenTargetNamed(CustomNode.StringArrayRotateFunctionNode);
+
+    // control flow custom nodes
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(BinaryExpressionFunctionNode)
-        .whenTargetNamed(CustomNode.BinaryExpressionFunctionNode);
+        .whenTargetNamed(ControlFlowCustomNode.BinaryExpressionFunctionNode);
 
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(BlockStatementControlFlowFlatteningNode)
-        .whenTargetNamed(CustomNode.BlockStatementControlFlowFlatteningNode);
+        .whenTargetNamed(ControlFlowCustomNode.BlockStatementControlFlowFlatteningNode);
 
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(CallExpressionControlFlowStorageCallNode)
-        .whenTargetNamed(CustomNode.CallExpressionControlFlowStorageCallNode);
+        .whenTargetNamed(ControlFlowCustomNode.CallExpressionControlFlowStorageCallNode);
 
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(CallExpressionFunctionNode)
-        .whenTargetNamed(CustomNode.CallExpressionFunctionNode);
+        .whenTargetNamed(ControlFlowCustomNode.CallExpressionFunctionNode);
 
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(ControlFlowStorageNode)
-        .whenTargetNamed(CustomNode.ControlFlowStorageNode);
-
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(ConsoleOutputDisableExpressionNode)
-        .whenTargetNamed(CustomNode.ConsoleOutputDisableExpressionNode);
-
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(DebugProtectionFunctionCallNode)
-        .whenTargetNamed(CustomNode.DebugProtectionFunctionCallNode);
-
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(DebugProtectionFunctionIntervalNode)
-        .whenTargetNamed(CustomNode.DebugProtectionFunctionIntervalNode);
-
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(DebugProtectionFunctionNode)
-        .whenTargetNamed(CustomNode.DebugProtectionFunctionNode);
-
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(DomainLockNode)
-        .whenTargetNamed(CustomNode.DomainLockNode);
+        .whenTargetNamed(ControlFlowCustomNode.ControlFlowStorageNode);
 
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(ExpressionWithOperatorControlFlowStorageCallNode)
-        .whenTargetNamed(CustomNode.ExpressionWithOperatorControlFlowStorageCallNode);
+        .whenTargetNamed(ControlFlowCustomNode.ExpressionWithOperatorControlFlowStorageCallNode);
 
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(LogicalExpressionFunctionNode)
-        .whenTargetNamed(CustomNode.LogicalExpressionFunctionNode);
-
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(NodeCallsControllerFunctionNode)
-        .whenTargetNamed(CustomNode.NodeCallsControllerFunctionNode);
-
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(SelfDefendingUnicodeNode)
-        .whenTargetNamed(CustomNode.SelfDefendingUnicodeNode);
-
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(StringArrayCallsWrapper)
-        .whenTargetNamed(CustomNode.StringArrayCallsWrapper);
-
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(StringArrayNode)
-        .whenTargetNamed(CustomNode.StringArrayNode);
-
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(StringArrayRotateFunctionNode)
-        .whenTargetNamed(CustomNode.StringArrayRotateFunctionNode);
-
-    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(StringLiteralControlFlowStorageCallNode)
-        .whenTargetNamed(CustomNode.StringLiteralControlFlowStorageCallNode);
+        .whenTargetNamed(ControlFlowCustomNode.LogicalExpressionFunctionNode);
 
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
         .toConstructor(StringLiteralNode)
-        .whenTargetNamed(CustomNode.StringLiteralNode);
+        .whenTargetNamed(ControlFlowCustomNode.StringLiteralNode);
+
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstructor(StringLiteralControlFlowStorageCallNode)
+        .whenTargetNamed(ControlFlowCustomNode.StringLiteralControlFlowStorageCallNode);
 
     // node groups
     bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
@@ -136,31 +137,17 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
 
     // customNode factory
     bind<ICustomNode>(ServiceIdentifiers.Factory__ICustomNode)
-        .toFactory<ICustomNode>((context: interfaces.Context) => {
-            const cache: Map <CustomNode, interfaces.Newable<ICustomNode>> = new Map();
+        .toFactory<ICustomNode>(InversifyContainerFacade
+            .getFactory<CustomNode, ICustomNode>(ServiceIdentifiers.ICustomNode));
 
-            let cachedOptions: IOptions;
-
-            return (customNodeName: CustomNode) => {
-                if (!cachedOptions) {
-                    cachedOptions = context.container.get<IOptions>(ServiceIdentifiers.IOptions);
-                }
-
-                if (cache.has(customNodeName)) {
-                    return new (<interfaces.Newable<ICustomNode>>cache.get(customNodeName));
-                }
-
-                const constructor: interfaces.Newable<ICustomNode> = context.container
-                    .getNamed<interfaces.Newable<ICustomNode>>(
-                        ServiceIdentifiers.Newable__ICustomNode,
-                        customNodeName
-                    );
-
-                cache.set(customNodeName, constructor);
-
-                return new constructor(cachedOptions);
-            };
-        });
+    // control flow storage customNode constructor factory
+    bind<ICustomNode>(ServiceIdentifiers.Factory__IControlFlowCustomNode)
+        .toFactory<ICustomNode>(InversifyContainerFacade
+            .getConstructorFactory<ControlFlowCustomNode, ICustomNode>(
+                ServiceIdentifiers.Newable__ICustomNode,
+                ServiceIdentifiers.IRandomGenerator,
+                ServiceIdentifiers.IOptions
+            ));
 
     // customNodeGroup factory
     bind<ICustomNodeGroup>(ServiceIdentifiers.Factory__ICustomNodeGroup)

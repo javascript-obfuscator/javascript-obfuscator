@@ -3,23 +3,20 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
+import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TStatement } from '../../../types/node/TStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
+
+import { ControlFlowCustomNode } from '../../../enums/container/custom-nodes/ControlFlowCustomNode';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
-import { CustomNode } from '../../../enums/container/custom-nodes/CustomNode';
 import { Node } from '../../../node/Node';
 
 @injectable()
 export abstract class ExpressionWithOperatorControlFlowReplacer extends AbstractControlFlowReplacer {
-    /**
-     * @type {TCustomNodeFactory}
-     */
-    protected readonly customNodeFactory: TCustomNodeFactory;
-
     /**
      * @type {IOptions}
      */
@@ -31,14 +28,17 @@ export abstract class ExpressionWithOperatorControlFlowReplacer extends Abstract
     protected readonly replacerDataByControlFlowStorageId: Map <string, Map<string, string[]>> = new Map();
 
     /**
-     * @param customNodeFactory
+     * @param controlFlowCustomNodeFactory
+     * @param randomGenerator
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
+            controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(customNodeFactory, options);
+        super(controlFlowCustomNodeFactory, randomGenerator, options);
     }
 
     /**
@@ -54,8 +54,8 @@ export abstract class ExpressionWithOperatorControlFlowReplacer extends Abstract
         leftExpression: ESTree.Expression,
         rightExpression: ESTree.Expression
     ): ESTree.Node {
-        const controlFlowStorageCallCustomNode: ICustomNode = this.customNodeFactory(
-            CustomNode.ExpressionWithOperatorControlFlowStorageCallNode
+        const controlFlowStorageCallCustomNode: ICustomNode = this.controlFlowCustomNodeFactory(
+            ControlFlowCustomNode.ExpressionWithOperatorControlFlowStorageCallNode
         );
 
         controlFlowStorageCallCustomNode.initialize(controlFlowStorageId, storageKey, leftExpression, rightExpression);

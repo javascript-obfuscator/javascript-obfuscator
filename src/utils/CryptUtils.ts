@@ -1,12 +1,33 @@
-import { RandomGeneratorUtils } from './RandomGeneratorUtils';
+import { injectable, inject } from 'inversify';
+import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
+
+import { ICryptUtils } from '../interfaces/utils/ICryptUtils';
+import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
+
+import { RandomGenerator } from './RandomGenerator';
 import { Utils } from './Utils';
 
-export class CryptUtils {
+@injectable()
+export class CryptUtils implements ICryptUtils {
+    /**
+     * @type {IRandomGenerator}
+     */
+    private readonly randomGenerator: IRandomGenerator;
+
+    /**
+     * @param randomGenerator
+     */
+    constructor (
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator
+    ) {
+        this.randomGenerator = randomGenerator;
+    }
+
     /**
      * @param string
      */
     /* tslint:disable */
-    public static btoa (string: string): string {
+    public btoa (string: string): string {
         const chars: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
         let output: string = '';
@@ -36,9 +57,9 @@ export class CryptUtils {
     /**
      * @param str
      * @param length
-     * @returns {string[]}
+     * @returns {[string, string]}
      */
-    public static hideString (str: string, length: number): [string, string] {
+    public hideString (str: string, length: number): [string, string] {
         const escapeRegExp: (s: string) => string = (s: string) =>
             s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 
@@ -48,7 +69,7 @@ export class CryptUtils {
                 result: string = '';
 
             while (i1 < s1.length || i2 < s2.length) {
-                if (RandomGeneratorUtils.getMathRandom() < 0.5 && i2 < s2.length) {
+                if (this.randomGenerator.getMathRandom() < 0.5 && i2 < s2.length) {
                     result += s2.charAt(++i2);
                 } else {
                     result += s1.charAt(++i1);
@@ -58,9 +79,9 @@ export class CryptUtils {
             return result;
         };
 
-        const randomString: string = RandomGeneratorUtils.getRandomGenerator().string({
+        const randomString: string = this.randomGenerator.getRandomGenerator().string({
             length: length,
-            pool: RandomGeneratorUtils.randomGeneratorPool
+            pool: RandomGenerator.randomGeneratorPool
         });
 
         let randomStringDiff: string = randomString.replace(
@@ -69,7 +90,7 @@ export class CryptUtils {
 
         const randomStringDiffArray: string[] = randomStringDiff.split('');
 
-        RandomGeneratorUtils.getRandomGenerator().shuffle(randomStringDiffArray);
+        this.randomGenerator.getRandomGenerator().shuffle(randomStringDiffArray);
         randomStringDiff = randomStringDiffArray.join('');
 
         return [randomMerge(str, randomStringDiff), randomStringDiff];
@@ -84,7 +105,7 @@ export class CryptUtils {
      * @returns {string}
      */
     /* tslint:disable */
-    public static rc4 (string: string, key: string): string {
+    public rc4 (string: string, key: string): string {
         let s: number[] = [],
             j: number = 0,
             x: number,

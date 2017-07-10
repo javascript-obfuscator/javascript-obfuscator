@@ -2,12 +2,12 @@ import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
-import { TObfuscationEvent } from '../../../types/event-emitters/TObfuscationEvent';
 import { TNodeWithBlockStatement } from '../../../types/node/TNodeWithBlockStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IObfuscationEventEmitter } from '../../../interfaces/event-emitters/IObfuscationEventEmitter';
 import { IOptions } from '../../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { initializable } from '../../../decorators/Initializable';
@@ -17,14 +17,13 @@ import { ObfuscationEvent } from '../../../enums/event-emitters/ObfuscationEvent
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
-import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class SelfDefendingCustomNodeGroup extends AbstractCustomNodeGroup {
     /**
-     * @type {TObfuscationEvent}
+     * @type {ObfuscationEvent}
      */
-    protected appendEvent: TObfuscationEvent = ObfuscationEvent.AfterObfuscation;
+    protected appendEvent: ObfuscationEvent = ObfuscationEvent.AfterObfuscation;
 
     /**
      * @type {Map<CustomNode, ICustomNode>}
@@ -45,14 +44,16 @@ export class SelfDefendingCustomNodeGroup extends AbstractCustomNodeGroup {
     /**
      * @param customNodeFactory
      * @param obfuscationEventEmitter
+     * @param randomGenerator
      * @param options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
         @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
+        super(randomGenerator, options);
 
         this.customNodeFactory = customNodeFactory;
         this.obfuscationEventEmitter = obfuscationEventEmitter;
@@ -63,7 +64,7 @@ export class SelfDefendingCustomNodeGroup extends AbstractCustomNodeGroup {
      * @param stackTraceData
      */
     public appendCustomNodes (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
-        const randomStackTraceIndex: number = NodeAppender.getRandomStackTraceIndex(stackTraceData.length);
+        const randomStackTraceIndex: number = this.getRandomStackTraceIndex(stackTraceData.length);
 
         // selfDefendingUnicodeNode append
         this.appendCustomNodeIfExist(CustomNode.SelfDefendingUnicodeNode, (customNode: ICustomNode) => {
@@ -96,7 +97,7 @@ export class SelfDefendingCustomNodeGroup extends AbstractCustomNodeGroup {
             return;
         }
 
-        const callsControllerFunctionName: string = RandomGeneratorUtils.getRandomVariableName(6);
+        const callsControllerFunctionName: string = this.randomGenerator.getRandomVariableName(6);
 
         const selfDefendingUnicodeNode: ICustomNode = this.customNodeFactory(CustomNode.SelfDefendingUnicodeNode);
         const nodeCallsControllerFunctionNode: ICustomNode = this.customNodeFactory(CustomNode.NodeCallsControllerFunctionNode);

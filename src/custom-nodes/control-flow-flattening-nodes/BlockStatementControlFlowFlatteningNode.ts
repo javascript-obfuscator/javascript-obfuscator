@@ -6,13 +6,13 @@ import * as ESTree from 'estree';
 import { TStatement } from '../../types/node/TStatement';
 
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { initializable } from '../../decorators/Initializable';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { Nodes } from '../../node/Nodes';
 import { NodeUtils } from '../../node/NodeUtils';
-import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode {
@@ -29,18 +29,27 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
     private originalKeysIndexesInShuffledArray: number[];
 
     /**
+     * @type {IRandomGenerator}
+     */
+    private readonly randomGenerator: IRandomGenerator;
+
+    /**
      * @type {number[]}
      */
     @initializable()
     private shuffledKeys: number[];
 
     /**
+     * @param randomGenerator
      * @param options
      */
     constructor (
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
+
+        this.randomGenerator = randomGenerator;
     }
 
     /***
@@ -62,8 +71,8 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
      * @returns {TStatement[]}
      */
     protected getNodeStructure (): TStatement[] {
-        const controllerIdentifierName: string = RandomGeneratorUtils.getRandomString(3);
-        const indexIdentifierName: string = RandomGeneratorUtils.getRandomString(3);
+        const controllerIdentifierName: string = this.randomGenerator.getRandomString(3);
+        const indexIdentifierName: string = this.randomGenerator.getRandomString(3);
         const structure: ESTree.BlockStatement = Nodes.getBlockStatementNode([
             Nodes.getVariableDeclarationNode([
                 Nodes.getVariableDeclaratorNode(

@@ -3,37 +3,48 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { TCustomNodeFactory } from '../../types/container/custom-nodes/TCustomNodeFactory';
+import { TControlFlowCustomNodeFactory } from '../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 
+import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/IVisitor';
 
-import { CustomNode } from '../../enums/container/custom-nodes/CustomNode';
+import { ControlFlowCustomNode } from '../../enums/container/custom-nodes/ControlFlowCustomNode';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
-import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
-import { Utils } from '../../utils/Utils';
 
 @injectable()
 export class BlockStatementControlFlowTransformer extends AbstractNodeTransformer {
     /**
-     * @type {TCustomNodeFactory}
+     * @type {IArrayUtils}
      */
-    private readonly customNodeFactory: TCustomNodeFactory;
+    private readonly arrayUtils: IArrayUtils;
 
     /**
-     * @param customNodeFactory
+     * @type {TControlFlowCustomNodeFactory}
+     */
+    private readonly controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory;
+
+    /**
+     * @param controlFlowCustomNodeFactory
+     * @param arrayUtils
+     * @param randomGenerator
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
+            controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
+        super(randomGenerator, options);
 
-        this.customNodeFactory = customNodeFactory;
+        this.controlFlowCustomNodeFactory = controlFlowCustomNodeFactory;
+        this.arrayUtils = arrayUtils;
     }
 
     /**
@@ -70,7 +81,7 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
      */
     public transformNode (blockStatementNode: ESTree.BlockStatement, parentNode: ESTree.Node): ESTree.Node {
         if (
-            RandomGeneratorUtils.getMathRandom() > this.options.controlFlowFlatteningThreshold ||
+            this.randomGenerator.getMathRandom() > this.options.controlFlowFlatteningThreshold ||
             BlockStatementControlFlowTransformer.blockStatementHasProhibitedStatements(blockStatementNode)
         ) {
             return blockStatementNode;
@@ -82,11 +93,11 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
             return blockStatementNode;
         }
 
-        const originalKeys: number[] = Utils.arrayRange(blockStatementBody.length);
-        const shuffledKeys: number[] = Utils.arrayShuffle(originalKeys);
+        const originalKeys: number[] = this.arrayUtils.arrayRange(blockStatementBody.length);
+        const shuffledKeys: number[] = this.arrayUtils.arrayShuffle(originalKeys);
         const originalKeysIndexesInShuffledArray: number[] = originalKeys.map((key: number) => shuffledKeys.indexOf(key));
-        const blockStatementControlFlowFlatteningCustomNode: ICustomNode = this.customNodeFactory(
-            CustomNode.BlockStatementControlFlowFlatteningNode
+        const blockStatementControlFlowFlatteningCustomNode: ICustomNode = this.controlFlowCustomNodeFactory(
+            ControlFlowCustomNode.BlockStatementControlFlowFlatteningNode
         );
 
         blockStatementControlFlowFlatteningCustomNode.initialize(

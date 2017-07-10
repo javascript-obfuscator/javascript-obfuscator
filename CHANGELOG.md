@@ -8,6 +8,11 @@ v0.10.0
 * `escapeUnicodeSequence` option now disabled by default.
 * `controlFlowFlattening` now affects string literal nodes.
 * increased runtime performance with `rc4` `stringArrayEncoding`.
+* added support for async functions
+* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/54
+* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/60
+* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/57
+* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/58
 
 v0.9.3
 ---

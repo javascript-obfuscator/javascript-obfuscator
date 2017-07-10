@@ -1,4 +1,4 @@
 export interface IEncodedValue {
     encodedValue: string;
-    key?: string;
+    key: string|null;
 }

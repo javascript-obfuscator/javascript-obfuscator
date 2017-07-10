@@ -4,17 +4,18 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
+import { TControlFlowCustomNodeFactory } from '../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TControlFlowReplacerFactory } from '../../types/container/node-transformers/TControlFlowReplacerFactory';
 import { TControlFlowStorageFactory } from '../../types/container/node-transformers/TControlFlowStorageFactory';
-import { TCustomNodeFactory } from '../../types/container/custom-nodes/TCustomNodeFactory';
 import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IStorage } from '../../interfaces/storages/IStorage';
 import { IVisitor } from '../../interfaces/IVisitor';
 
-import { CustomNode } from '../../enums/container/custom-nodes/CustomNode';
+import { ControlFlowCustomNode } from '../../enums/container/custom-nodes/ControlFlowCustomNode';
 import { NodeType } from '../../enums/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
@@ -22,7 +23,6 @@ import { Node } from '../../node/Node';
 import { NodeAppender } from '../../node/NodeAppender';
 import { ControlFlowReplacer } from '../../enums/container/node-transformers/ControlFlowReplacer';
 import { NodeUtils } from '../../node/NodeUtils';
-import { RandomGeneratorUtils } from '../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
@@ -72,51 +72,32 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     private readonly controlFlowStorageFactory: TControlFlowStorageFactory;
 
     /**
-     * @type {TCustomNodeFactory}
+     * @type {TControlFlowCustomNodeFactory}
      */
-    private readonly customNodeFactory: TCustomNodeFactory;
+    private readonly controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory;
 
     /**
      * @param controlFlowStorageFactory
      * @param controlFlowReplacerFactory
-     * @param customNodeFactory
+     * @param controlFlowCustomNodeFactory
+     * @param randomGenerator
      * @param options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__TControlFlowStorage) controlFlowStorageFactory: TControlFlowStorageFactory,
-        @inject(ServiceIdentifiers.Factory__IControlFlowReplacer) controlFlowReplacerFactory: TControlFlowReplacerFactory,
-        @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__TControlFlowStorage)
+            controlFlowStorageFactory: TControlFlowStorageFactory,
+        @inject(ServiceIdentifiers.Factory__IControlFlowReplacer)
+            controlFlowReplacerFactory: TControlFlowReplacerFactory,
+        @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
+            controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
+        super(randomGenerator, options);
 
         this.controlFlowStorageFactory = controlFlowStorageFactory;
         this.controlFlowReplacerFactory = controlFlowReplacerFactory;
-        this.customNodeFactory = customNodeFactory;
-    }
-
-    /**
-     * @param functionNodeBody
-     * @returns {TNodeWithBlockStatement}
-     */
-    private static getHostNode (functionNodeBody: ESTree.BlockStatement): TNodeWithBlockStatement {
-        const blockScopesOfNode: TNodeWithBlockStatement[] = NodeUtils.getBlockScopesOfNode(functionNodeBody);
-
-        if (blockScopesOfNode.length === 1) {
-            return functionNodeBody;
-        } else {
-            blockScopesOfNode.pop();
-        }
-
-        if (blockScopesOfNode.length > FunctionControlFlowTransformer.hostNodeSearchMinDepth) {
-            blockScopesOfNode.splice(0, FunctionControlFlowTransformer.hostNodeSearchMinDepth);
-        }
-
-        if (blockScopesOfNode.length > FunctionControlFlowTransformer.hostNodeSearchMaxDepth) {
-            blockScopesOfNode.length = FunctionControlFlowTransformer.hostNodeSearchMaxDepth;
-        }
-
-        return RandomGeneratorUtils.getRandomGenerator().pickone(blockScopesOfNode);
+        this.controlFlowCustomNodeFactory = controlFlowCustomNodeFactory;
     }
 
     /**
@@ -148,7 +129,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
             return functionNode;
         }
 
-        const hostNode: TNodeWithBlockStatement = FunctionControlFlowTransformer.getHostNode(functionNode.body);
+        const hostNode: TNodeWithBlockStatement = this.getHostNode(functionNode.body);
         const controlFlowStorage: IStorage<ICustomNode> = this.getControlFlowStorage(hostNode);
 
         this.controlFlowData.set(hostNode, controlFlowStorage);
@@ -158,7 +139,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
             return functionNode;
         }
 
-        const controlFlowStorageCustomNode: ICustomNode = this.customNodeFactory(CustomNode.ControlFlowStorageNode);
+        const controlFlowStorageCustomNode: ICustomNode = this.controlFlowCustomNodeFactory(
+            ControlFlowCustomNode.ControlFlowStorageNode
+        );
 
         controlFlowStorageCustomNode.initialize(controlFlowStorage);
         NodeAppender.prependNode(hostNode, controlFlowStorageCustomNode.getNode());
@@ -188,6 +171,30 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @param functionNodeBody
+     * @returns {TNodeWithBlockStatement}
+     */
+    private getHostNode (functionNodeBody: ESTree.BlockStatement): TNodeWithBlockStatement {
+        const blockScopesOfNode: TNodeWithBlockStatement[] = NodeUtils.getBlockScopesOfNode(functionNodeBody);
+
+        if (blockScopesOfNode.length === 1) {
+            return functionNodeBody;
+        } else {
+            blockScopesOfNode.pop();
+        }
+
+        if (blockScopesOfNode.length > FunctionControlFlowTransformer.hostNodeSearchMinDepth) {
+            blockScopesOfNode.splice(0, FunctionControlFlowTransformer.hostNodeSearchMinDepth);
+        }
+
+        if (blockScopesOfNode.length > FunctionControlFlowTransformer.hostNodeSearchMaxDepth) {
+            blockScopesOfNode.length = FunctionControlFlowTransformer.hostNodeSearchMaxDepth;
+        }
+
+        return this.randomGenerator.getRandomGenerator().pickone(blockScopesOfNode);
+    }
+
+    /**
      * @param node
      * @return {boolean}
      */
@@ -214,7 +221,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
                     return node;
                 }
 
-                if (RandomGeneratorUtils.getMathRandom() > this.options.controlFlowFlatteningThreshold) {
+                if (this.randomGenerator.getMathRandom() > this.options.controlFlowFlatteningThreshold) {
                     return node;
                 }
 

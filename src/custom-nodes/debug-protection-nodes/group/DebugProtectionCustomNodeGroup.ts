@@ -3,11 +3,11 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
 import { TNodeWithBlockStatement } from '../../../types/node/TNodeWithBlockStatement';
-import { TObfuscationEvent } from '../../../types/event-emitters/TObfuscationEvent';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IObfuscationEventEmitter } from '../../../interfaces/event-emitters/IObfuscationEventEmitter';
 import { IOptions } from '../../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStackTraceData';
 
 import { initializable } from '../../../decorators/Initializable';
@@ -17,14 +17,13 @@ import { ObfuscationEvent } from '../../../enums/event-emitters/ObfuscationEvent
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
-import { RandomGeneratorUtils } from '../../../utils/RandomGeneratorUtils';
 
 @injectable()
 export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
     /**
-     * @type {TObfuscationEvent}
+     * @type {ObfuscationEvent}
      */
-    protected readonly appendEvent: TObfuscationEvent = ObfuscationEvent.BeforeObfuscation;
+    protected readonly appendEvent: ObfuscationEvent = ObfuscationEvent.BeforeObfuscation;
 
     /**
      * @type {Map<CustomNode, ICustomNode>}
@@ -45,14 +44,16 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
     /**
      * @param customNodeFactory
      * @param obfuscationEventEmitter
+     * @param randomGenerator
      * @param options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
         @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
+        super(randomGenerator, options);
 
         this.customNodeFactory = customNodeFactory;
         this.obfuscationEventEmitter = obfuscationEventEmitter;
@@ -76,7 +77,7 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
         // debugProtectionFunctionIntervalNode append
         this.appendCustomNodeIfExist(CustomNode.DebugProtectionFunctionIntervalNode, (customNode: ICustomNode) => {
             const programBodyLength: number = blockScopeNode.body.length;
-            const randomIndex: number = RandomGeneratorUtils.getRandomInteger(0, programBodyLength);
+            const randomIndex: number = this.randomGenerator.getRandomInteger(0, programBodyLength);
 
             NodeAppender.insertNodeAtIndex(blockScopeNode, customNode.getNode(), randomIndex);
         });
@@ -89,7 +90,7 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
             return;
         }
 
-        const debugProtectionFunctionName: string = RandomGeneratorUtils.getRandomVariableName(6);
+        const debugProtectionFunctionName: string = this.randomGenerator.getRandomVariableName(6);
 
         const debugProtectionFunctionNode: ICustomNode = this.customNodeFactory(CustomNode.DebugProtectionFunctionNode);
         const debugProtectionFunctionCallNode: ICustomNode = this.customNodeFactory(CustomNode.DebugProtectionFunctionCallNode);

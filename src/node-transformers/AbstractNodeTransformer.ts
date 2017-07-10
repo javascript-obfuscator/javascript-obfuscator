@@ -5,16 +5,15 @@ import * as ESTree from 'estree';
 
 import { INodeTransformer } from '../interfaces/node-transformers/INodeTransformer';
 import { IOptions } from '../interfaces/options/IOptions';
+import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../interfaces/IVisitor';
-
-import { RandomGeneratorUtils } from '../utils/RandomGeneratorUtils';
 
 @injectable()
 export abstract class AbstractNodeTransformer implements INodeTransformer {
     /**
      * @type {number}
      */
-    protected nodeIdentifier: number = RandomGeneratorUtils.getRandomInteger(0, 10000);
+    protected nodeIdentifier: number;
 
     /**
      * @type {IOptions}
@@ -22,12 +21,22 @@ export abstract class AbstractNodeTransformer implements INodeTransformer {
     protected readonly options: IOptions;
 
     /**
+     * @type {IRandomGenerator}
+     */
+    protected readonly randomGenerator: IRandomGenerator;
+
+    /**
+     * @param randomGenerator
      * @param options
      */
     constructor (
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
+        this.randomGenerator = randomGenerator;
         this.options = options;
+
+        this.nodeIdentifier = this.randomGenerator.getRandomInteger(0, 10000);
     }
 
     /**

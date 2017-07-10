@@ -30,6 +30,10 @@ Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/
 
 *NOTE! the README on the master branch might not match that of the latest stable release!*
 
+If this project helps you, you can support it:
+* (Bitcoin) 1EnQsZc35CjVy92HN9gZXHjjMnqiW6BsGF
+* (OpenCollective) https://opencollective.com/javascript-obfuscator
+
 ## :warning: Important
 ##### Obfuscate only the code that belongs to you. 
 

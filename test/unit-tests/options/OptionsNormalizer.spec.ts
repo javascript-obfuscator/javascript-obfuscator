@@ -1,13 +1,13 @@
 import { assert } from 'chai';
 
-import { TInputOptions } from '../../../../src/types/options/TInputOptions';
+import { TInputOptions } from '../../../src/types/options/TInputOptions';
 
-import { IOptions } from '../../../../src/interfaces/options/IOptions';
+import { IOptions } from '../../../src/interfaces/options/IOptions';
 
-import { DEFAULT_PRESET } from '../../../../src/options/presets/Default';
+import { DEFAULT_PRESET } from '../../../src/options/presets/Default';
 
-import { Options } from '../../../../src/options/Options';
-import { OptionsNormalizer } from '../../../../src/options/OptionsNormalizer';
+import { Options } from '../../../src/options/Options';
+import { OptionsNormalizer } from '../../../src/options/OptionsNormalizer';
 
 /**
  * @param optionsPreset

@@ -44,9 +44,9 @@
     "@types/estraverse": "0.0.6",
     "@types/estree": "0.0.35",
     "@types/md5": "2.1.32",
-    "@types/mkdirp": "0.3.29",
+    "@types/mkdirp": "0.5.0",
     "@types/mocha": "2.2.41",
-    "@types/node": "8.0.11",
+    "@types/node": "8.0.13",
     "@types/sinon": "2.3.2",
     "@types/string-template": "1.0.2",
     "awesome-typescript-loader": "3.2.1",
@@ -65,7 +65,7 @@
     "tslint-eslint-rules": "4.1.1",
     "tslint-loader": "3.5.3",
     "typescript": "2.4.1",
-    "webpack": "3.2.0",
+    "webpack": "3.3.0",
     "webpack-node-externals": "1.6.0"
   },
   "repository": {

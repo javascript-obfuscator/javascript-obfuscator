@@ -42,21 +42,19 @@
   dependencies:
     "@types/node" "*"
 
-"@types/mkdirp@0.3.29":
-  version "0.3.29"
-  resolved "https://registry.yarnpkg.com/@types/mkdirp/-/mkdirp-0.3.29.tgz#7f2ad7ec55f914482fc9b1ec4bb1ae6028d46066"
+"@types/mkdirp@0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@types/mkdirp/-/mkdirp-0.5.0.tgz#31fe3dbf963048a53fbc433bab9de376c276182e"
+  dependencies:
+    "@types/node" "*"
 
 "@types/mocha@2.2.41":
   version "2.2.41"
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-2.2.41.tgz#e27cf0817153eb9f2713b2d3f6c68f1e1c3ca608"
 
-"@types/node@*":
-  version "8.0.10"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.10.tgz#12efec9183b072d5f951cf86395a4c780f868a17"
-
-"@types/node@8.0.11":
-  version "8.0.11"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.11.tgz#3cf80de7185292c6dab156ece696dffed0cc3502"
+"@types/node@*", "@types/node@8.0.13":
+  version "8.0.13"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.13.tgz#530f0f9254209b0335bf5cc6387822594ef47093"
 
 "@types/sinon@2.3.2":
   version "2.3.2"
@@ -951,7 +949,7 @@ check-error@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/check-error/-/check-error-1.0.2.tgz#574d312edd88bb5dd8912e9286dd6c0aed4aac82"
 
-chokidar@^1.4.3, chokidar@^1.6.1:
+chokidar@^1.6.1, chokidar@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-1.7.0.tgz#798e689778151c8076b4b360e5edd28cda2bb468"
   dependencies:
@@ -3730,7 +3728,7 @@ tslib@1.7.1, tslib@^1.0.0, tslib@^1.7.1:
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.7.1.tgz#bc8004164691923a79fe8378bbeb3da2017538ec"
 
-tslint-eslint-rules@^4.1.1:
+tslint-eslint-rules@4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/tslint-eslint-rules/-/tslint-eslint-rules-4.1.1.tgz#7c30e7882f26bc276bff91d2384975c69daf88ba"
   dependencies:
@@ -3920,12 +3918,12 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
-watchpack@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-1.3.1.tgz#7d8693907b28ce6013e7f3610aa2a1acf07dad87"
+watchpack@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-1.4.0.tgz#4a1472bcbb952bd0a9bb4036801f954dfb39faac"
   dependencies:
     async "^2.1.2"
-    chokidar "^1.4.3"
+    chokidar "^1.7.0"
     graceful-fs "^4.1.2"
 
 webpack-node-externals@1.6.0:
@@ -3939,9 +3937,9 @@ webpack-sources@^1.0.1:
     source-list-map "^2.0.0"
     source-map "~0.5.3"
 
-webpack@3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-3.2.0.tgz#8b0cae0e1a9fd76bfbf0eab61a8c2ada848c312f"
+webpack@3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-3.3.0.tgz#ce2f9e076566aba91f74887133a883fd7da187bc"
   dependencies:
     acorn "^5.0.0"
     acorn-dynamic-import "^2.0.0"
@@ -3962,7 +3960,7 @@ webpack@3.2.0:
     supports-color "^3.1.0"
     tapable "~0.2.5"
     uglifyjs-webpack-plugin "^0.4.6"
-    watchpack "^1.3.1"
+    watchpack "^1.4.0"
     webpack-sources "^1.0.1"
     yargs "^6.0.0"
 

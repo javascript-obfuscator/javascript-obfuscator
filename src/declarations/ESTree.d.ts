@@ -8,6 +8,10 @@ declare module 'estree' {
         parentNode?: ESTree.Node;
     }
 
+    interface ExpressionStatement extends ESTree.BaseStatement {
+        directive?: 'use strict';
+    }
+
     interface SimpleLiteral extends ESTree.BaseNode, ESTree.BaseExpression {
         'x-verbatim-property'?: any;
     }

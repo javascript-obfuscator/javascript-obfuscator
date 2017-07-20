@@ -147,6 +147,22 @@ export class Node {
     }
 
     /**
+     * @param {Object} object
+     * @returns {boolean}
+     */
+    public static isNode (object: Object & { type?: string }): object is ESTree.Node {
+        return object && !object.type !== undefined;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isNodeHasBlockStatement (node: ESTree.Node): node is TNodeWithBlockStatement {
+        return Array.isArray((<TNodeWithBlockStatement>node).body);
+    }
+
+    /**
      * @param {Node} node
      * @returns {boolean}
      */
@@ -218,6 +234,14 @@ export class Node {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isUseStrictOperator (node: ESTree.Node): node is ESTree.ExpressionStatement {
+        return node.type === NodeType.ExpressionStatement && node.directive === 'use strict';
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isVariableDeclarationNode (node: ESTree.Node): node is ESTree.VariableDeclaration {
         return node.type === NodeType.VariableDeclaration;
     }
@@ -228,13 +252,5 @@ export class Node {
      */
     public static isVariableDeclaratorNode (node: ESTree.Node): node is ESTree.VariableDeclarator {
         return node.type === NodeType.VariableDeclarator;
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
-    public static isNodeHasBlockStatement (node: ESTree.Node): node is TNodeWithBlockStatement {
-        return node.hasOwnProperty('body') && Array.isArray((<TNodeWithBlockStatement>node).body);
     }
 }

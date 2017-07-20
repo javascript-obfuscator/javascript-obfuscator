@@ -1,4 +1,4 @@
-import { injectable, inject } from 'inversify';
+import { injectable, inject, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
@@ -37,6 +37,12 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator
     ) {
         this.randomGenerator = randomGenerator;
+    }
+
+    @postConstruct()
+    public initialize (): void {
+        this.storage = [];
+        this.storageId = this.randomGenerator.getRandomString(6);
     }
 
     /**
@@ -82,14 +88,6 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
      */
     public getStorageId (): string {
         return this.storageId;
-    }
-
-    /**
-     * @param {any[]} args
-     */
-    public initialize (...args: any[]): void {
-        this.storage = [];
-        this.storageId = this.randomGenerator.getRandomString(6);
     }
 
     /**

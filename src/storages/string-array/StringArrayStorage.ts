@@ -1,4 +1,4 @@
-import { injectable, inject } from 'inversify';
+import { injectable, inject, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
@@ -25,15 +25,11 @@ export class StringArrayStorage extends ArrayStorage <string> {
         super(randomGenerator);
 
         this.arrayUtils = arrayUtils;
-
-        this.initialize();
     }
 
-    /**
-     * @param {any[]} args
-     */
-    public initialize (...args: any[]): void {
-        super.initialize(args);
+    @postConstruct()
+    public initialize (): void {
+        super.initialize();
 
         this.storageId = this.randomGenerator.getRandomString(4, RandomGenerator.randomGeneratorPoolHexadecimal);
     }

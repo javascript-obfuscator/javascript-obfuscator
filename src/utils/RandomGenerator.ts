@@ -1,9 +1,10 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
 import * as md5 from 'md5';
 import { Chance } from 'chance';
 
+import { IInitializable } from '../interfaces/IInitializable';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 
@@ -11,7 +12,7 @@ import { Utils } from './Utils';
 import { ISourceCode } from '../interfaces/ISourceCode';
 
 @injectable()
-export class RandomGenerator implements IRandomGenerator {
+export class RandomGenerator implements IRandomGenerator, IInitializable {
     /**
      * @type {string}
      */
@@ -40,7 +41,7 @@ export class RandomGenerator implements IRandomGenerator {
     /**
      * @type {Chance.Chance | Chance.SeededChance}
      */
-    private readonly randomGenerator: Chance.Chance | Chance.SeededChance;
+    private randomGenerator: Chance.Chance | Chance.SeededChance;
 
     /**
      * @type {ISourceCode}
@@ -57,8 +58,11 @@ export class RandomGenerator implements IRandomGenerator {
     ) {
         this.sourceCode = sourceCode;
         this.options = options;
+    }
 
-        this.randomGenerator = options.seed === 0
+    @postConstruct()
+    public initialize (): void {
+        this.randomGenerator = this.options.seed === 0
             ? new Chance()
             : new Chance(this.getSeed());
     }

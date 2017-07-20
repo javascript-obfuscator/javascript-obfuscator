@@ -1,4 +1,4 @@
-import { injectable, inject } from 'inversify';
+import { injectable, inject, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TCustomNodeGroupFactory } from '../../types/container/custom-nodes/TCustomNodeGroupFactory';
@@ -48,10 +48,9 @@ export class CustomNodeGroupStorage extends MapStorage <ICustomNodeGroup> {
 
         this.customNodeGroupFactory = customNodeGroupFactory;
         this.options = options;
-
-        this.initialize();
     }
 
+    @postConstruct()
     public initialize (): void {
         this.storage = new Map <string, ICustomNodeGroup>();
         this.storageId = this.randomGenerator.getRandomString(6);

@@ -1,15 +1,16 @@
-import { injectable, inject } from 'inversify';
+import { injectable, inject, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
+import { IInitializable } from '../interfaces/IInitializable';
 import { INodeTransformer } from '../interfaces/node-transformers/INodeTransformer';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../interfaces/IVisitor';
 
 @injectable()
-export abstract class AbstractNodeTransformer implements INodeTransformer {
+export abstract class AbstractNodeTransformer implements INodeTransformer, IInitializable {
     /**
      * @type {number}
      */
@@ -35,7 +36,10 @@ export abstract class AbstractNodeTransformer implements INodeTransformer {
     ) {
         this.randomGenerator = randomGenerator;
         this.options = options;
+    }
 
+    @postConstruct()
+    public initialize (): void {
         this.nodeIdentifier = this.randomGenerator.getRandomInteger(0, 10000);
     }
 

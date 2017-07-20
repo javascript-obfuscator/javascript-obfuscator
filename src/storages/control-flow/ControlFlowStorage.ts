@@ -15,7 +15,5 @@ export class ControlFlowStorage extends MapStorage <ICustomNode> {
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator
     ) {
         super(randomGenerator);
-
-        this.initialize();
     }
 }

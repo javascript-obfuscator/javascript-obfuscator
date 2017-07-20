@@ -4,9 +4,11 @@ import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
+import { TNodeGuard } from './types/node/TNodeGuard';
 import { TNodeTransformerFactory } from './types/container/node-transformers/TNodeTransformerFactory';
 import { TVisitorDirection } from './types/TVisitorDirection';
 import { TVisitorFunction } from './types/TVisitorFunction';
+import { TVisitorResult } from './types/TVisitorResult';
 
 import { ICustomNodeGroup } from './interfaces/custom-nodes/ICustomNodeGroup';
 import { IObfuscationEventEmitter } from './interfaces/event-emitters/IObfuscationEventEmitter';
@@ -26,6 +28,13 @@ import { NodeUtils } from './node/NodeUtils';
 
 @injectable()
 export class Obfuscator implements IObfuscator {
+    /**
+     * @type {((node: Node) => boolean)[]}
+     */
+    private static readonly blackListGuards: TNodeGuard[] = [
+        Node.isUseStrictOperator
+    ];
+
     /**
      * @type {NodeTransformer[]}
      */
@@ -107,6 +116,26 @@ export class Obfuscator implements IObfuscator {
         this.customNodeGroupStorage = customNodeGroupStorage;
         this.nodeTransformerFactory = nodeTransformerFactory;
         this.options = options;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    private static isBlackListNode (node: ESTree.Node): boolean {
+        const guardsLength: number = Obfuscator.blackListGuards.length;
+
+        let guard: TNodeGuard;
+
+        for (let i: number = 0; i < guardsLength; i++) {
+            guard = Obfuscator.blackListGuards[i];
+
+            if (guard(node)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -211,6 +240,10 @@ export class Obfuscator implements IObfuscator {
         let visitor: IVisitor;
 
         return (node: ESTree.Node, parentNode: ESTree.Node) => {
+            if (Obfuscator.isBlackListNode(node)) {
+                return estraverse.VisitorOption.Skip;
+            }
+
             for (let i: number = 0; i < visitorsLength; i++) {
                 visitor = visitors[i];
 
@@ -220,9 +253,9 @@ export class Obfuscator implements IObfuscator {
                     continue;
                 }
 
-                const visitorResult: ESTree.Node | void = visitorFunction(node, parentNode);
+                const visitorResult: TVisitorResult = visitorFunction(node, parentNode);
 
-                if (!visitorResult) {
+                if (!visitorResult || !Node.isNode(visitorResult)) {
                     continue;
                 }
 

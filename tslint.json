@@ -171,7 +171,7 @@
     "typeof-compare": true,
     "unified-signatures": true,
     "use-isnan": true,
-    "valid-jsdoc": [true, {
+    "valid-jsdoc": [false, {
       "requireReturn": false,
       "requireParamDescription": false,
       "requireReturnDescription": false

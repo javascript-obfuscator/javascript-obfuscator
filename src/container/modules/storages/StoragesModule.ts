@@ -33,7 +33,11 @@ export const storagesModule: interfaces.ContainerModule = new ContainerModule((b
                 const randomGenerator: IRandomGenerator = context.container
                     .get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator);
 
-                return new constructor(randomGenerator);
+                const storage: TControlFlowStorage = new constructor(randomGenerator);
+
+                storage.initialize();
+
+                return storage;
             };
         });
 });

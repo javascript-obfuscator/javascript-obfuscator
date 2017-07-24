@@ -75,8 +75,7 @@ var obfuscationResult = JavaScriptObfuscator.obfuscate(
     `,
     {
         compact: false,
-        controlFlowFlattening: true,
-        disableConsoleOutput: false
+        controlFlowFlattening: true
     }
 );
 
@@ -214,7 +213,7 @@ Following options are available for the JS Obfuscator:
     deadCodeInjectionThreshold: 0.4,
     debugProtection: false,
     debugProtectionInterval: false,
-    disableConsoleOutput: true,
+    disableConsoleOutput: false,
     mangle: false,
     reservedNames: [],
     rotateStringArray: true,
@@ -473,7 +472,7 @@ Type: `boolean` Default: `false`
 If checked, an interval is used to force the debug mode on the Console tab, making it harder to use other features of the Developer Tools. Works if [`debugProtection`](#debugprotection) is enabled.
 
 ### `disableConsoleOutput`
-Type: `boolean` Default: `true`
+Type: `boolean` Default: `false`
 
 Disables the use of `console.log`, `console.info`, `console.error`, `console.warn`, `console.debug`, `console.exception` and `console.trace` by replacing them with empty functions. This makes the use of the debugger harder.
 

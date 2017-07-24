@@ -5,6 +5,7 @@ v0.10.0
 * **New option:** `deadCodeInjection`. With this option random blocks of dead code will add to the obfuscated code.
 * **New option:** `deadCodeInjectionThreshold` allows to set percentage of nodes that will affected by `deadCodeInjection`.
 * **New option:** `mangle` enables mangling of variable names.
+* **Breaking change:** `disableConsoleOutput` option now disabled by default.
 * `escapeUnicodeSequence` option now disabled by default.
 * `controlFlowFlattening` now affects string literal nodes.
 * increased runtime performance with `rc4` `stringArrayEncoding`.

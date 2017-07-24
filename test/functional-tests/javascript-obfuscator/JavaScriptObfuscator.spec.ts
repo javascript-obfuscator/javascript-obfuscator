@@ -394,13 +394,15 @@ describe('JavaScriptObfuscator', () => {
                     const obfuscationResult1: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                         code1,
                         {
-                            seed: 123
+                            seed: 123,
+                            stringArrayThreshold: 1
                         }
                     );
                     const obfuscationResult2: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                         code2,
                         {
-                            seed: 123
+                            seed: 123,
+                            stringArrayThreshold: 1
                         }
                     );
 

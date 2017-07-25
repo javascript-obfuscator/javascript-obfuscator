@@ -20,9 +20,9 @@
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/@types/escodegen/-/escodegen-0.0.6.tgz#5230a9ce796e042cda6f086dbf19f22ea330659c"
 
-"@types/esprima@2.1.33":
-  version "2.1.33"
-  resolved "https://registry.yarnpkg.com/@types/esprima/-/esprima-2.1.33.tgz#c132313f0d19733e5ddb2054b6853deafe7af63d"
+"@types/esprima@2.1.34":
+  version "2.1.34"
+  resolved "https://registry.yarnpkg.com/@types/esprima/-/esprima-2.1.34.tgz#6e26aadaa60c51304da29a2ad2183a7166a52474"
   dependencies:
     "@types/estree" "*"
 
@@ -32,9 +32,13 @@
   dependencies:
     "@types/estree" "*"
 
-"@types/estree@*", "@types/estree@0.0.36":
+"@types/estree@*":
   version "0.0.36"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.36.tgz#dc601017bb2e1ac3ad8c438757b542aff515f548"
+
+"@types/estree@0.0.37":
+  version "0.0.37"
+  resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.37.tgz#48949c1516d46139c1e521195f9e12993b69d751"
 
 "@types/md5@2.1.32":
   version "2.1.32"
@@ -52,9 +56,13 @@
   version "2.2.41"
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-2.2.41.tgz#e27cf0817153eb9f2713b2d3f6c68f1e1c3ca608"
 
-"@types/node@*", "@types/node@8.0.15":
+"@types/node@*":
   version "8.0.15"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.15.tgz#8f23f8a4642ced357704d048010876fc0c7f179a"
+
+"@types/node@8.0.16":
+  version "8.0.16"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.16.tgz#5aa51abd72621a0ce53fb86bccd76825ee1b4ca9"
 
 "@types/sinon@2.3.3":
   version "2.3.3"
@@ -3704,9 +3712,9 @@ trim-right@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/trim-right/-/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
 
-ts-node@3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-3.2.1.tgz#9595dd840d03e62bc79214ce5a7b51e55e3c4ffc"
+ts-node@3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-3.3.0.tgz#c13c6a3024e30be1180dd53038fc209289d4bf69"
   dependencies:
     arrify "^1.0.0"
     chalk "^2.0.0"

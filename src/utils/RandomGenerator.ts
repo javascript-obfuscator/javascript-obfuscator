@@ -29,6 +29,11 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
     public static readonly randomGeneratorPoolHexadecimal: string = `abcdef${RandomGenerator.randomGeneratorPoolNumbers}`;
 
     /**
+     * @type {number}
+     */
+    public seed: number;
+
+    /**
      * @type {IOptions}
      */
     private readonly options: IOptions;
@@ -62,9 +67,14 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
 
     @postConstruct()
     public initialize (): void {
-        this.randomGenerator = this.options.seed === 0
-            ? new Chance()
-            : new Chance(this.getSeed());
+        const getRandomInteger: (min: number, max: number) => number = (min: number, max: number) => {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        };
+
+        this.seed = this.options.seed !== 0 ? this.options.seed : getRandomInteger(0, 999999999);
+        this.randomGenerator = new Chance(this.getSeed());
+
+        console.log(`seed is ${this.seed}`);
     }
 
     /**
@@ -145,6 +155,6 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
     private getSeed (): number {
         const md5Hash: string = md5(this.sourceCode.getSourceCode());
 
-        return this.options.seed + Number(md5Hash.replace(/\D/g, ''));
+        return this.seed + Number(md5Hash.replace(/\D/g, ''));
     }
 }

@@ -42,6 +42,11 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
     private readonly options: IOptions;
 
     /**
+     * @type {number}
+     */
+    private randomVariableNameAdditionalLength: number = 0;
+
+    /**
      * @type {Set<string>}
      */
     private readonly randomVariableNameSet: Set <string> = new Set();
@@ -89,8 +94,6 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
 
         this.seed = this.options.seed !== 0 ? this.options.seed : getRandomInteger(0, 999999999);
         this.randomGenerator = new Chance(getSeed());
-
-        console.log(`seed is ${this.seed}`);
     }
 
     /**
@@ -151,10 +154,13 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
         const rangeMaxInteger: number = 99999999;
         const randomInteger: number = this.getRandomInteger(rangeMinInteger, rangeMaxInteger);
         const hexadecimalNumber: string = Utils.decToHex(randomInteger);
-        const randomVariableName: string = `${prefix}${hexadecimalNumber.substr(0, length)}`;
+        const randomVariableNameLength: number = length + this.randomVariableNameAdditionalLength;
+        const randomVariableName: string = `${prefix}${hexadecimalNumber.repeat(2).substr(0, randomVariableNameLength)}`;
 
         if (this.randomVariableNameSet.has(randomVariableName)) {
-            return this.getRandomVariableName(length);
+            this.randomVariableNameAdditionalLength++;
+
+            return this.getRandomVariableName(randomVariableNameLength);
         }
 
         this.randomVariableNameSet.add(randomVariableName);

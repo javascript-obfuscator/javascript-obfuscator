@@ -7,9 +7,11 @@ import { Chance } from 'chance';
 import { IInitializable } from '../interfaces/IInitializable';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
+import { ISourceCode } from '../interfaces/ISourceCode';
+
+import { initializable } from '../decorators/Initializable';
 
 import { Utils } from './Utils';
-import { ISourceCode } from '../interfaces/ISourceCode';
 
 @injectable()
 export class RandomGenerator implements IRandomGenerator, IInitializable {
@@ -31,6 +33,7 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
     /**
      * @type {number}
      */
+    @initializable()
     public seed: number;
 
     /**
@@ -46,6 +49,7 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
     /**
      * @type {Chance.Chance | Chance.SeededChance}
      */
+    @initializable()
     private randomGenerator: Chance.Chance | Chance.SeededChance;
 
     /**
@@ -71,8 +75,20 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
             return Math.floor(Math.random() * (max - min + 1) + min);
         };
 
+        /**
+         * We need to add numbers from md5 hash of source code to input seed to prevent same String Array name
+         * for different bundles with same seed
+         *
+         * @returns {number}
+         */
+        const getSeed: () => number = (): number => {
+            const md5Hash: string = md5(this.sourceCode.getSourceCode());
+
+            return this.seed + Number(md5Hash.replace(/\D/g, ''));
+        };
+
         this.seed = this.options.seed !== 0 ? this.options.seed : getRandomInteger(0, 999999999);
-        this.randomGenerator = new Chance(this.getSeed());
+        this.randomGenerator = new Chance(getSeed());
 
         console.log(`seed is ${this.seed}`);
     }
@@ -144,17 +160,5 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
         this.randomVariableNameSet.add(randomVariableName);
 
         return randomVariableName;
-    }
-
-    /**
-     * We need to add numbers from md5 hash of source code to input seed to prevent same String Array name
-     * for different bundles with same seed
-     *
-     * @returns {number}
-     */
-    private getSeed (): number {
-        const md5Hash: string = md5(this.sourceCode.getSourceCode());
-
-        return this.seed + Number(md5Hash.replace(/\D/g, ''));
     }
 }

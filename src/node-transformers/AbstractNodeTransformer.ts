@@ -9,11 +9,14 @@ import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../interfaces/IVisitor';
 
+import { initializable } from '../decorators/Initializable';
+
 @injectable()
 export abstract class AbstractNodeTransformer implements INodeTransformer, IInitializable {
     /**
      * @type {number}
      */
+    @initializable()
     protected nodeIdentifier: number;
 
     /**

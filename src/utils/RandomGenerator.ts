@@ -94,6 +94,8 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
 
         this.seed = this.options.seed !== 0 ? this.options.seed : getRandomInteger(0, 999999999);
         this.randomGenerator = new Chance(getSeed());
+
+        console.log(`Seed is ${this.seed}`);
     }
 
     /**

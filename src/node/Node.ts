@@ -253,4 +253,12 @@ export class Node {
     public static isVariableDeclaratorNode (node: ESTree.Node): node is ESTree.VariableDeclarator {
         return node.type === NodeType.VariableDeclarator;
     }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isWhileStatementNode (node: ESTree.Node): node is ESTree.WhileStatement {
+        return node.type === NodeType.WhileStatement;
+    }
 }

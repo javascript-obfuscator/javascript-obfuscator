@@ -8,15 +8,16 @@ v0.10.0
 * **Breaking change:** `disableConsoleOutput` option now disabled by default.
 * **Breaking change:** `escapeUnicodeSequence` option now disabled by default.
 * `controlFlowFlattening` now affects string literal nodes.
-* increased runtime performance with `rc4` `stringArrayEncoding`.
-* added support for async functions
-* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/65
-* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/60
-* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/59
-* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/54
-* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/57
-* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/58
-* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/58
+* Increased runtime performance with `rc4` `stringArrayEncoding`.
+* Added support for async functions
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/71
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/65
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/60
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/59
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/54
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/57
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/58
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/58
 
 v0.9.3
 ---
@@ -70,15 +71,15 @@ v0.9.0-beta.1
 
 v0.8.6
 ---
-* additional fixes for https://github.com/javascript-obfuscator/javascript-obfuscator/issues/29
+* Additional fixes for https://github.com/javascript-obfuscator/javascript-obfuscator/issues/29
 
 v0.8.5
 ---
-* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/29
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/29
 
 v0.8.4
 ---
-* fixed https://github.com/javascript-obfuscator/webpack-obfuscator/issues/13
+* Fixed https://github.com/javascript-obfuscator/webpack-obfuscator/issues/13
 
 v0.8.3
 ---
@@ -113,9 +114,9 @@ v0.7.3
 
 v0.7.2
 ---
-* runtime error fix [#7](https://github.com/sanex3339/webpack-obfuscator/issues/7)
+* Runtime error fix [#7](https://github.com/sanex3339/webpack-obfuscator/issues/7)
 
-* shorthand object expression fix [#16](https://github.com/sanex3339/javascript-obfuscator/issues/16)
+* Shorthand object expression fix [#16](https://github.com/sanex3339/javascript-obfuscator/issues/16)
 
 v0.7.1
 ---

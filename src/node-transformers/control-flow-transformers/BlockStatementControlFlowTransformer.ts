@@ -1,6 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
@@ -62,6 +63,35 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
     }
 
     /**
+     * @param {BlockStatement} blockStatementNode
+     * @returns {boolean}
+     */
+    private static canTransformBlockStatementNode (blockStatementNode: ESTree.BlockStatement): boolean {
+        let canTransform: boolean = true;
+
+        estraverse.traverse(blockStatementNode, {
+            enter: (node: ESTree.Node): any => {
+                if (Node.isWhileStatementNode(node)) {
+                    return estraverse.VisitorOption.Skip;
+                }
+
+                if (
+                    Node.isBlockStatementNode(node)
+                    && BlockStatementControlFlowTransformer.blockStatementHasProhibitedStatements(node)
+                ) {
+                    canTransform = false;
+                }
+            }
+        });
+
+        if (blockStatementNode.body.length <= 4) {
+            canTransform = false;
+        }
+
+        return canTransform;
+    }
+
+    /**
      * @return {IVisitor}
      */
     public getVisitor (): IVisitor {
@@ -82,17 +112,12 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
     public transformNode (blockStatementNode: ESTree.BlockStatement, parentNode: ESTree.Node): ESTree.Node {
         if (
             this.randomGenerator.getMathRandom() > this.options.controlFlowFlatteningThreshold ||
-            BlockStatementControlFlowTransformer.blockStatementHasProhibitedStatements(blockStatementNode)
+            !BlockStatementControlFlowTransformer.canTransformBlockStatementNode(blockStatementNode)
         ) {
             return blockStatementNode;
         }
 
         const blockStatementBody: ESTree.Statement[] = blockStatementNode.body;
-
-        if (blockStatementBody.length <= 4) {
-            return blockStatementNode;
-        }
-
         const originalKeys: number[] = this.arrayUtils.arrayRange(blockStatementBody.length);
         const shuffledKeys: number[] = this.arrayUtils.arrayShuffle(originalKeys);
         const originalKeysIndexesInShuffledArray: number[] = originalKeys.map((key: number) => shuffledKeys.indexOf(key));

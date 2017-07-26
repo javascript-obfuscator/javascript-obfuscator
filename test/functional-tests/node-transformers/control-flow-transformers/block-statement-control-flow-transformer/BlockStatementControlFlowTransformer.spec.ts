@@ -270,13 +270,13 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #6: block statement contain break statement', () => {
+        describe('variant #6: block statement contain break statement #1', () => {
             const statementRegExp: RegExp = /^\(function *\( *\) *\{ *while *\(!!\[\]\) *\{ *break; *console\['log'\]\(0x1\);/;
 
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/break-statement.js');
+                const code: string = readFileAsString(__dirname + '/fixtures/break-statement-1.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
@@ -294,13 +294,69 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #7: block statement contain continue statement', () => {
+        describe('variant #7: block statement contain break statement #2', () => {
+            const statementRegExp: RegExp = /^\(function *\( *\) *\{ *while *\(!!\[\]\) *\{ *if *\(!!\[\]\) *\{ *break; *\} *console\['log'\]\(0x1\);/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/break-statement-2.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('shouldn\'t transform block statement', () => {
+                assert.match(obfuscatedCode, statementRegExp);
+            });
+        });
+
+        describe('variant #8: block statement contain while statement with break statement', () => {
+            const switchCaseRegExp: RegExp = /switch *\(_0x([a-f0-9]){4,6}\[_0x([a-f0-9]){4,6}\+\+\]\) *\{/;
+            const switchCaseLengthRegExp: RegExp = /case *'[0-5]': *console\['log'\]\(0x[0-6]\);/g;
+            const expectedSwitchCaseLength: number = 5;
+
+            let obfuscatedCode: string,
+                switchCaseLength: number;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/break-statement-inside-while-statement.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                switchCaseLength = obfuscatedCode.match(switchCaseLengthRegExp)!.length;
+            });
+
+            it('should wrap block statement statements in switch-case structure', () => {
+                assert.match(obfuscatedCode, switchCaseRegExp);
+            });
+
+            it('each statement should be wrapped by switch-case structure', () => {
+                assert.equal(switchCaseLength, expectedSwitchCaseLength);
+            });
+        });
+
+        describe('variant #9: block statement contain continue statement #1', () => {
             const statementRegExp: RegExp = /^\(function *\( *\) *\{ *while *\(!!\[\]\) *\{ *continue; *console\['log'\]\(0x1\);/;
 
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/continue-statement.js');
+                const code: string = readFileAsString(__dirname + '/fixtures/continue-statement-1.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
@@ -318,7 +374,63 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #8: block statement contain function declaration', () => {
+        describe('variant #10: block statement contain continue statement #2', () => {
+            const statementRegExp: RegExp = /^\(function *\( *\) *\{ *while *\(!!\[\]\) *\{ *if *\(!!\[\]\) *\{ *continue; *\} *console\['log'\]\(0x1\);/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/continue-statement-2.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('shouldn\'t transform block statement', () => {
+                assert.match(obfuscatedCode, statementRegExp);
+            });
+        });
+
+        describe('variant #11: block statement contain while statement with continue statement', () => {
+            const switchCaseRegExp: RegExp = /switch *\(_0x([a-f0-9]){4,6}\[_0x([a-f0-9]){4,6}\+\+\]\) *\{/;
+            const switchCaseLengthRegExp: RegExp = /case *'[0-5]': *console\['log'\]\(0x[0-6]\);/g;
+            const expectedSwitchCaseLength: number = 5;
+
+            let obfuscatedCode: string,
+                switchCaseLength: number;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/continue-statement-inside-while-statement.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                switchCaseLength = obfuscatedCode.match(switchCaseLengthRegExp)!.length;
+            });
+
+            it('should wrap block statement statements in switch-case structure', () => {
+                assert.match(obfuscatedCode, switchCaseRegExp);
+            });
+
+            it('each statement should be wrapped by switch-case structure', () => {
+                assert.equal(switchCaseLength, expectedSwitchCaseLength);
+            });
+        });
+
+        describe('variant #12: block statement contain function declaration', () => {
             const statementRegExp: RegExp = /^\(function *\( *\) *\{ *function *_0x([a-f0-9]){4,6} *\( *\) *\{ *\} *console\['log'\]\(0x1\);/
 
             let obfuscatedCode: string;
@@ -342,7 +454,7 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #9: `controlFlowFlatteningThreshold` chance', () => {
+        describe('variant #13: `controlFlowFlatteningThreshold` chance', () => {
             const samples: number = 1000;
             const delta: number = 0.1;
 

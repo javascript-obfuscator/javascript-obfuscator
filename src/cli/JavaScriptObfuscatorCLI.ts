@@ -71,11 +71,25 @@ export class JavaScriptObfuscatorCLI {
      * @returns {TInputOptions}
      */
     private buildOptions (): TInputOptions {
-        const inputOptions: TInputOptions = {};
+        const inputOptions: TInputOptions = this.sanitizeOptions(this.commands);
+        const configFileLocation: string = this.commands.config ?
+            path.resolve(this.commands.config, '.') : '';
+        const configFileOptions: TInputOptions = configFileLocation ?
+            this.sanitizeOptions(require(configFileLocation)) : {};
+
+        return {
+            ...DEFAULT_PRESET,
+            ...configFileOptions,
+            ...inputOptions
+        };
+    }
+
+    private sanitizeOptions (options: any): TInputOptions {
+        const filteredOptions: TInputOptions = {};
         const availableOptions: string[] = Object.keys(DEFAULT_PRESET);
 
-        for (const option in this.commands) {
-            if (!this.commands.hasOwnProperty(option)) {
+        for (const option in options) {
+            if (!options.hasOwnProperty(option)) {
                 continue;
             }
 
@@ -83,13 +97,9 @@ export class JavaScriptObfuscatorCLI {
                 continue;
             }
 
-            (<any>inputOptions)[option] = (<any>this.commands)[option];
+            (<any>filteredOptions)[option] = (<any>options)[option];
         }
-
-        return {
-            ...DEFAULT_PRESET,
-            ...inputOptions
-        };
+        return filteredOptions;
     }
 
     private configureCommands (): void {
@@ -104,6 +114,10 @@ export class JavaScriptObfuscatorCLI {
                 '--compact <boolean>',
                 'Disable one line output code compacting',
                 BooleanSanitizer
+            )
+            .option(
+                '--config <boolean>',
+                'Name of js / json config file'
             )
             .option(
                 '--controlFlowFlattening <boolean>',

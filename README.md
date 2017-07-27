@@ -238,6 +238,7 @@ Following options are available for the JS Obfuscator:
     -o, --output
 
     --compact <boolean>
+    --config <string>
     --controlFlowFlattening <boolean>
     --controlFlowFlatteningThreshold <number>
     --deadCodeInjection <boolean>
@@ -264,6 +265,11 @@ Following options are available for the JS Obfuscator:
 Type: `boolean` Default: `true`
 
 Compact code output on one line.
+
+### `config`
+Type: `string` Default: ``
+
+Name of JS/JSON config file which contains options mentioned above. These will be overridden by options passed directly to CLI
 
 ### `controlFlowFlattening`
 Type: `boolean` Default: `false`

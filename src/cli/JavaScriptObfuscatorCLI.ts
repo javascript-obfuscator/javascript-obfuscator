@@ -50,6 +50,29 @@ export class JavaScriptObfuscatorCLI {
         this.commands = <commander.CommanderStatic>(new commander.Command());
     }
 
+    /**
+     * @param options
+     * @returns {TInputOptions}
+     */
+    private static sanitizeOptions (options: {[key: string]: any}): TInputOptions {
+        const filteredOptions: TInputOptions = {};
+        const availableOptions: string[] = Object.keys(DEFAULT_PRESET);
+
+        for (const option in options) {
+            if (!options.hasOwnProperty(option)) {
+                continue;
+            }
+
+            if (!availableOptions.includes(option)) {
+                continue;
+            }
+
+            (<any>filteredOptions)[option] = (<any>options)[option];
+        }
+
+        return filteredOptions;
+    }
+
     public run (): void {
         this.configureCommands();
         this.configureHelp();
@@ -71,35 +94,19 @@ export class JavaScriptObfuscatorCLI {
      * @returns {TInputOptions}
      */
     private buildOptions (): TInputOptions {
-        const inputOptions: TInputOptions = this.sanitizeOptions(this.commands);
-        const configFileLocation: string = this.commands.config ?
-            path.resolve(this.commands.config, '.') : '';
-        const configFileOptions: TInputOptions = configFileLocation ?
-            this.sanitizeOptions(require(configFileLocation)) : {};
+        const inputOptions: TInputOptions = JavaScriptObfuscatorCLI.sanitizeOptions(this.commands);
+        const configFileLocation: string = this.commands.config
+            ? path.resolve(this.commands.config, '.')
+            : '';
+        const configFileOptions: TInputOptions = configFileLocation
+            ? JavaScriptObfuscatorCLI.sanitizeOptions(require(configFileLocation))
+            : {};
 
         return {
             ...DEFAULT_PRESET,
             ...configFileOptions,
             ...inputOptions
         };
-    }
-
-    private sanitizeOptions (options: any): TInputOptions {
-        const filteredOptions: TInputOptions = {};
-        const availableOptions: string[] = Object.keys(DEFAULT_PRESET);
-
-        for (const option in options) {
-            if (!options.hasOwnProperty(option)) {
-                continue;
-            }
-
-            if (!availableOptions.includes(option)) {
-                continue;
-            }
-
-            (<any>filteredOptions)[option] = (<any>options)[option];
-        }
-        return filteredOptions;
     }
 
     private configureCommands (): void {

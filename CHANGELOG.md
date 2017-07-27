@@ -5,6 +5,7 @@ v0.10.0
 * **New option:** `deadCodeInjection`. With this option random blocks of dead code will add to the obfuscated code.
 * **New option:** `deadCodeInjectionThreshold` allows to set percentage of nodes that will affected by `deadCodeInjection`.
 * **New option:** `mangle` enables mangling of variable names.
+* **New CLI option:** `--config` allows to set config file with obfuscator options.
 * **Breaking change:** `disableConsoleOutput` option now disabled by default.
 * **Breaking change:** `escapeUnicodeSequence` option now disabled by default.
 * `controlFlowFlattening` now affects string literal nodes.

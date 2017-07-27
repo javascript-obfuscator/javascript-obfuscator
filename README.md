@@ -269,7 +269,7 @@ Compact code output on one line.
 ### `config`
 Type: `string` Default: ``
 
-Name of JS/JSON config file which contains options mentioned above. These will be overridden by options passed directly to CLI
+Name of JS/JSON config file which contains obfuscator options. These will be overridden by options passed directly to CLI
 
 ### `controlFlowFlattening`
 Type: `boolean` Default: `false`

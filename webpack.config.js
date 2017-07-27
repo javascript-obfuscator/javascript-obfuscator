@@ -43,6 +43,7 @@ module.exports = {
     target: 'node',
     externals: [nodeExternals()],
     module: {
+        exprContextCritical: false,
         rules: [
             {
                 enforce: 'pre',

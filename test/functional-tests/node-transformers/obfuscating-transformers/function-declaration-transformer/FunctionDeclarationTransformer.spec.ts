@@ -85,11 +85,11 @@ describe('FunctionDeclarationTransformer', () => {
                     obfuscatedCode = obfuscationResult.getObfuscatedCode();
                 });
 
-                it('match #1: shouldn\'t transform function name', () => {
+                it('match #1: should transform function name', () => {
                     assert.match(obfuscatedCode, functionNameIdentifierRegExp);
                 });
 
-                it('match #2: shouldn\'t transform function name', () => {
+                it('match #2: should transform function name', () => {
                     assert.match(obfuscatedCode, functionCallIdentifierRegExp);
                 });
             });

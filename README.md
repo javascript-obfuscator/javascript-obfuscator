@@ -500,9 +500,9 @@ Enables mangling of variable names.
 ### `renameGlobals`
 Type: `boolean` Default: `false`
 
-Enables obfuscation of global variable and function names **with declaration**.
-
 ##### :warning: this option can break your code. Enable it only if you know what it does!
+
+Enables obfuscation of global variable and function names **with declaration**.
 
 ### `reservedNames`
 Type: `string[]` Default: `[]`

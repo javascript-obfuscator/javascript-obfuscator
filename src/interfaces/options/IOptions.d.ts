@@ -12,6 +12,7 @@ export interface IOptions {
     readonly disableConsoleOutput: boolean;
     readonly domainLock: string[];
     readonly mangle: boolean;
+    readonly renameGlobals: boolean;
     readonly reservedNames: string[];
     readonly rotateStringArray: boolean;
     readonly seed: number;

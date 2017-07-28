@@ -176,6 +176,10 @@ export class JavaScriptObfuscatorCLI {
                 (value: string) => value.split(',')
             )
             .option(
+                '--renameGlobals <boolean>', 'Allows to enable obfuscation of global variable and function names with declaration.',
+                BooleanSanitizer
+            )
+            .option(
                 '--rotateStringArray <boolean>', 'Disable rotation of unicode array values during obfuscation',
                 BooleanSanitizer
             )

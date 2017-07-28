@@ -215,6 +215,7 @@ Following options are available for the JS Obfuscator:
     debugProtectionInterval: false,
     disableConsoleOutput: false,
     mangle: false,
+    renameGlobals: false,
     reservedNames: [],
     rotateStringArray: true,
     seed: 0,
@@ -247,6 +248,7 @@ Following options are available for the JS Obfuscator:
     --debugProtectionInterval <boolean>
     --disableConsoleOutput <boolean>
     --mangle <boolean>
+    --renameGlobals <boolean>
     --reservedNames <list> (comma separated)
     --rotateStringArray <boolean>
     --seed <number>
@@ -495,6 +497,13 @@ Type: `boolean` Default: `false`
 
 Enables mangling of variable names.
 
+### `renameGlobals`
+Type: `boolean` Default: `false`
+
+Enables obfuscation of global variable and function names **with declaration**.
+
+##### :warning: this option can break your code. Enable it only if you know what it does!
+
 ### `reservedNames`
 Type: `string[]` Default: `[]`
 
@@ -632,6 +641,7 @@ Performance will 50-100% slower than without obfuscation
 	debugProtectionInterval: true,
 	disableConsoleOutput: true,
 	mangle: false,
+	renameGlobals: false,
 	rotateStringArray: true,
 	selfDefending: true,
 	stringArray: true,
@@ -656,6 +666,7 @@ Performance will 30-35% slower than without obfuscation
 	debugProtectionInterval: false,
 	disableConsoleOutput: true,
 	mangle: false,
+	renameGlobals: false,
 	rotateStringArray: true,
 	selfDefending: true,
 	stringArray: true,
@@ -678,6 +689,7 @@ Performance will slightly slower than without obfuscation
 	debugProtectionInterval: false,
 	disableConsoleOutput: true,
 	mangle: true,
+	renameGlobals: false,
 	rotateStringArray: true,
 	selfDefending: true,
 	stringArray: true,

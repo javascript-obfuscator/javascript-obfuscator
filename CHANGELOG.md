@@ -1,5 +1,9 @@
 Change Log
 ===
+v0.11.0
+---
+* **New option:** `renameGlobals` allows to enable obfuscation of global variable and function names with declaration.
+
 v0.10.0
 ---
 * **New option:** `deadCodeInjection`. With this option random blocks of dead code will add to the obfuscated code.

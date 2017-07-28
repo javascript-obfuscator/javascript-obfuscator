@@ -39,29 +39,59 @@ describe('FunctionDeclarationTransformer', () => {
         });
 
         describe('variant #2: `functionDeclaration` parent block scope is a `ProgramNode`', () => {
-            const functionNameIdentifierRegExp: RegExp = /function *foo *\(\) *\{/;
-            const functionCallIdentifierRegExp: RegExp = /foo *\( *\);/;
+            describe('variant #1: `renameGlobals` option is disabled', () => {
+                const functionNameIdentifierRegExp: RegExp = /function *foo *\(\) *\{/;
+                const functionCallIdentifierRegExp: RegExp = /foo *\( *\);/;
 
-            let obfuscatedCode: string;
+                let obfuscatedCode: string;
 
-            before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/input.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_CUSTOM_NODES_PRESET
-                    }
-                );
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_CUSTOM_NODES_PRESET
+                        }
+                    );
 
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('match #1: shouldn\'t transform function name', () => {
+                    assert.match(obfuscatedCode, functionNameIdentifierRegExp);
+                });
+
+                it('match #2: shouldn\'t transform function name', () => {
+                    assert.match(obfuscatedCode, functionCallIdentifierRegExp);
+                });
             });
 
-            it('match #1: shouldn\'t transform function name', () => {
-                assert.match(obfuscatedCode, functionNameIdentifierRegExp);
-            });
+            describe('variant #2: `renameGlobals` option is enabled', () => {
+                const functionNameIdentifierRegExp: RegExp = /function *(_0x[a-f0-9]{4,6}) *\(\) *\{/;
+                const functionCallIdentifierRegExp: RegExp = /(_0x[a-f0-9]{4,6}) *\( *\);/;
 
-            it('match #2: shouldn\'t transform function name', () => {
-                assert.match(obfuscatedCode, functionCallIdentifierRegExp);
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_CUSTOM_NODES_PRESET,
+                            renameGlobals: true
+                        }
+                    );
+
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('match #1: shouldn\'t transform function name', () => {
+                    assert.match(obfuscatedCode, functionNameIdentifierRegExp);
+                });
+
+                it('match #2: shouldn\'t transform function name', () => {
+                    assert.match(obfuscatedCode, functionCallIdentifierRegExp);
+                });
             });
         });
 

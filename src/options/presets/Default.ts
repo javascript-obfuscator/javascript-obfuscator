@@ -14,6 +14,7 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     disableConsoleOutput: false,
     domainLock: [],
     mangle: false,
+    renameGlobals: false,
     reservedNames: [],
     rotateStringArray: true,
     seed: 0,

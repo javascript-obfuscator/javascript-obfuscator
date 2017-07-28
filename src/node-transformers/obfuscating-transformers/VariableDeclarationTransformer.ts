@@ -81,7 +81,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
         const blockScopeOfVariableDeclarationNode: TNodeWithBlockStatement = NodeUtils
             .getBlockScopesOfNode(variableDeclarationNode)[0];
 
-        if (blockScopeOfVariableDeclarationNode.type === NodeType.Program) {
+        if (!this.options.renameGlobals && blockScopeOfVariableDeclarationNode.type === NodeType.Program) {
             return variableDeclarationNode;
         }
 

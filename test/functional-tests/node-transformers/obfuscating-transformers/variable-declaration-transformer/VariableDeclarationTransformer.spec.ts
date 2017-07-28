@@ -38,29 +38,59 @@ describe('VariableDeclarationTransformer', () => {
     });
 
     describe('variant #2: parent block scope node is `Program` node', () => {
-        const variableDeclarationRegExp: RegExp = /var *test *= *0xa;/;
-        const variableCallRegExp: RegExp = /console\['log'\]\(test\);/;
+        describe('variant #1: `renameGlobals` option is disabled', () => {
+            const variableDeclarationRegExp: RegExp = /var *test *= *0xa;/;
+            const variableCallRegExp: RegExp = /console\['log'\]\(test\);/;
 
-        let obfuscatedCode: string;
+            let obfuscatedCode: string;
 
-        before(() => {
-            const code: string = readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_CUSTOM_NODES_PRESET
-                }
-            );
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET
+                    }
+                );
 
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('match #1: shouldn\'t transform `variableDeclaration` node', () => {
+                assert.match(obfuscatedCode, variableDeclarationRegExp);
+            });
+
+            it('match #2: shouldn\'t transform `variableDeclaration` node', () => {
+                assert.match(obfuscatedCode, variableCallRegExp);
+            });
         });
 
-        it('match #1: shouldn\'t transform `variableDeclaration` node', () => {
-            assert.match(obfuscatedCode, variableDeclarationRegExp);
-        });
+        describe('variant #2: `renameGlobals` option is enabled', () => {
+            const variableDeclarationRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *0xa;/;
+            const variableCallRegExp: RegExp = /console\['log'\]\(_0x([a-f0-9]){4,6}\);/;
 
-        it('match #2: shouldn\'t transform `variableDeclaration` node', () => {
-            assert.match(obfuscatedCode, variableCallRegExp);
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
+                        renameGlobals: true
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('match #1: should transform `variableDeclaration` node', () => {
+                assert.match(obfuscatedCode, variableDeclarationRegExp);
+            });
+
+            it('match #2: should transform `variableDeclaration` node', () => {
+                assert.match(obfuscatedCode, variableCallRegExp);
+            });
         });
     });
 

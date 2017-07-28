@@ -81,7 +81,7 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
         const blockScopeOfFunctionDeclarationNode: TNodeWithBlockStatement = NodeUtils
             .getBlockScopesOfNode(functionDeclarationNode)[0];
 
-        if (blockScopeOfFunctionDeclarationNode.type === NodeType.Program) {
+        if (!this.options.renameGlobals && blockScopeOfFunctionDeclarationNode.type === NodeType.Program) {
             return functionDeclarationNode;
         }
 

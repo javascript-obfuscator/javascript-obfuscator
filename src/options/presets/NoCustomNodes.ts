@@ -13,6 +13,7 @@ export const NO_CUSTOM_NODES_PRESET: TInputOptions = Object.freeze({
     disableConsoleOutput: false,
     domainLock: [],
     mangle: false,
+    renameGlobals: false,
     reservedNames: [],
     rotateStringArray: false,
     seed: 0,

@@ -19,6 +19,7 @@ export enum ServiceIdentifiers {
     IEscapeSequenceEncoder = 'IEscapeSequenceEncoder',
     IIdentifierObfuscatingReplacer = 'IIdentifierObfuscatingReplacer',
     IJavaScriptObfuscator = 'IJavaScriptObfuscator',
+    ILogger = 'ILogger',
     INodeTransformer = 'INodeTransformer',
     IObfuscationEventEmitter = 'IObfuscationEventEmitter',
     IObfuscationResult = 'IObfuscationResult',

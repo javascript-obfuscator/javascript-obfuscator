@@ -167,6 +167,10 @@ export class JavaScriptObfuscatorCLI {
                 (value: string) => value.split(',')
             )
             .option(
+                '--log <boolean>', 'Enables logging of the information to the console',
+                BooleanSanitizer
+            )
+            .option(
                 '--mangle <boolean>', 'Enables mangling of variable names',
                 BooleanSanitizer
             )

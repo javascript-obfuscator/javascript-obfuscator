@@ -6,6 +6,10 @@
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.0.1.tgz#37fea779617cfec3fd2b19a0247e8bbdd5133bf6"
 
+"@types/chalk@^0.4.31":
+  version "0.4.31"
+  resolved "https://registry.yarnpkg.com/@types/chalk/-/chalk-0.4.31.tgz#a31d74241a6b1edbb973cf36d97a2896834a51f9"
+
 "@types/chance@0.7.33":
   version "0.7.33"
   resolved "https://registry.yarnpkg.com/@types/chance/-/chance-0.7.33.tgz#9666ae5c8f602a14a67e5b608dabf1a7853a1e28"
@@ -52,11 +56,7 @@
   version "2.2.41"
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-2.2.41.tgz#e27cf0817153eb9f2713b2d3f6c68f1e1c3ca608"
 
-"@types/node@*":
-  version "8.0.15"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.15.tgz#8f23f8a4642ced357704d048010876fc0c7f179a"
-
-"@types/node@8.0.17":
+"@types/node@*", "@types/node@8.0.17":
   version "8.0.17"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.17.tgz#677bc8c118cfb76013febb62ede1f31d2c7222a1"
 
@@ -933,7 +933,7 @@ chalk@1.1.3, chalk@^1.0.0, chalk@^1.1.0, chalk@^1.1.1:
     strip-ansi "^3.0.0"
     supports-color "^2.0.0"
 
-chalk@^2.0.0:
+chalk@^2.0.0, chalk@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.0.1.tgz#dbec49436d2ae15f536114e76d14656cdbc0f44d"
   dependencies:

@@ -19,6 +19,7 @@
     "javascript-obfuscator": "./bin/javascript-obfuscator.js"
   },
   "dependencies": {
+    "chalk": "2.0.1",
     "chance": "1.0.10",
     "class-validator": "0.7.2",
     "commander": "2.11.0",
@@ -37,6 +38,7 @@
   },
   "devDependencies": {
     "@types/chai": "4.0.1",
+    "@types/chalk": "0.4.31",
     "@types/chance": "0.7.33",
     "@types/commander": "2.9.1",
     "@types/escodegen": "0.0.6",

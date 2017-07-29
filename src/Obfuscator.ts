@@ -11,6 +11,7 @@ import { TVisitorFunction } from './types/TVisitorFunction';
 import { TVisitorResult } from './types/TVisitorResult';
 
 import { ICustomNodeGroup } from './interfaces/custom-nodes/ICustomNodeGroup';
+import { ILogger } from './interfaces/logger/ILogger';
 import { IObfuscationEventEmitter } from './interfaces/event-emitters/IObfuscationEventEmitter';
 import { IObfuscator } from './interfaces/IObfuscator';
 import { IOptions } from './interfaces/options/IOptions';
@@ -19,6 +20,7 @@ import { IStackTraceData } from './interfaces/stack-trace-analyzer/IStackTraceDa
 import { IStorage } from './interfaces/storages/IStorage';
 import { IVisitor } from './interfaces/IVisitor';
 
+import { LoggingMessage } from './enums/logger/LoggingMessage';
 import { NodeTransformer } from './enums/container/node-transformers/NodeTransformer';
 import { ObfuscationEvent } from './enums/event-emitters/ObfuscationEvent';
 import { VisitorDirection } from './enums/VisitorDirection';
@@ -78,6 +80,11 @@ export class Obfuscator implements IObfuscator {
     private readonly customNodeGroupStorage: IStorage<ICustomNodeGroup>;
 
     /**
+     * @type {Ilogger}
+     */
+    private readonly logger: ILogger;
+
+    /**
      * @type {TNodeTransformerFactory}
      */
     private readonly nodeTransformerFactory: TNodeTransformerFactory;
@@ -102,6 +109,7 @@ export class Obfuscator implements IObfuscator {
      * @param {IObfuscationEventEmitter} obfuscationEventEmitter
      * @param {IStorage<ICustomNodeGroup>} customNodeGroupStorage
      * @param {TNodeTransformerFactory} nodeTransformerFactory
+     * @param {ILogger} logger
      * @param {IOptions} options
      */
     constructor (
@@ -109,12 +117,14 @@ export class Obfuscator implements IObfuscator {
         @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
         @inject(ServiceIdentifiers.TCustomNodeGroupStorage) customNodeGroupStorage: IStorage<ICustomNodeGroup>,
         @inject(ServiceIdentifiers.Factory__INodeTransformer) nodeTransformerFactory: TNodeTransformerFactory,
+        @inject(ServiceIdentifiers.ILogger) logger: ILogger,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.stackTraceAnalyzer = stackTraceAnalyzer;
         this.obfuscationEventEmitter = obfuscationEventEmitter;
         this.customNodeGroupStorage = customNodeGroupStorage;
         this.nodeTransformerFactory = nodeTransformerFactory;
+        this.logger = logger;
         this.options = options;
     }
 
@@ -166,16 +176,21 @@ export class Obfuscator implements IObfuscator {
         this.obfuscationEventEmitter.emit(ObfuscationEvent.BeforeObfuscation, astTree, stackTraceData);
 
         // first pass transformers: dead code injection transformer
-        astTree = this.transformAstTree(astTree, [
-            ...this.options.deadCodeInjection ? Obfuscator.deadCodeInjectionTransformersList : []
-        ]);
+        if (this.options.deadCodeInjection) {
+            this.logger.logInfo(LoggingMessage.StageDeadCodeInjection);
+
+            astTree = this.transformAstTree(astTree, Obfuscator.deadCodeInjectionTransformersList);
+        }
 
         // second pass transformers: control flow flattening transformers
-        astTree = this.transformAstTree(astTree, [
-            ...this.options.controlFlowFlattening ? Obfuscator.controlFlowTransformersList : []
-        ]);
+        if (this.options.controlFlowFlattening) {
+            this.logger.logInfo(LoggingMessage.StageControlFlowFlattening);
+
+            astTree = this.transformAstTree(astTree, Obfuscator.controlFlowTransformersList);
+        }
 
         // third pass: converting and obfuscating transformers
+        this.logger.logInfo(LoggingMessage.StageObfuscation);
         astTree = this.transformAstTree(astTree, [
             ...Obfuscator.convertingTransformersList,
             ...Obfuscator.obfuscatingTransformersList

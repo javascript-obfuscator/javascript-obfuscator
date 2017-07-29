@@ -13,6 +13,7 @@ import { TInputOptions } from '../types/options/TInputOptions';
 
 import { IInversifyContainerFacade } from '../interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from '../interfaces/IJavaScriptObfsucator';
+import { ILogger } from '../interfaces/logger/ILogger';
 import { IObfuscationEventEmitter } from '../interfaces/event-emitters/IObfuscationEventEmitter';
 import { IObfuscationResult } from '../interfaces/IObfuscationResult';
 import { IObfuscator } from '../interfaces/IObfuscator';
@@ -21,6 +22,7 @@ import { ISourceCode } from '../interfaces/ISourceCode';
 import { ISourceMapCorrector } from '../interfaces/ISourceMapCorrector';
 
 import { JavaScriptObfuscatorInternal } from '../JavaScriptObfuscatorInternal';
+import { Logger } from '../logger/Logger';
 import { ObfuscationEventEmitter } from '../event-emitters/ObfuscationEventEmitter';
 import { ObfuscationResult } from '../ObfuscationResult';
 import { Obfuscator } from '../Obfuscator';
@@ -143,6 +145,11 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         this.container
             .bind<IOptions>(ServiceIdentifiers.IOptions)
             .toDynamicValue(() => new Options(options))
+            .inSingletonScope();
+
+        this.container
+            .bind<ILogger>(ServiceIdentifiers.ILogger)
+            .to(Logger)
             .inSingletonScope();
 
         this.container

@@ -103,6 +103,12 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
+    public readonly log: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
     public readonly mangle: boolean;
 
     /**

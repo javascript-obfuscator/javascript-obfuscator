@@ -214,6 +214,7 @@ Following options are available for the JS Obfuscator:
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: false,
+    log: false,
     mangle: false,
     renameGlobals: false,
     reservedNames: [],
@@ -247,6 +248,7 @@ Following options are available for the JS Obfuscator:
     --debugProtection <boolean>
     --debugProtectionInterval <boolean>
     --disableConsoleOutput <boolean>
+    --log <boolean>
     --mangle <boolean>
     --renameGlobals <boolean>
     --reservedNames <list> (comma separated)
@@ -492,6 +494,11 @@ Locks the obfuscated source code so it only runs on specific domains and/or sub-
 ##### Multiple domains and sub-domains
 It's possible to lock your code to more than one domain or sub-domain. For instance, to lock it so the code only runs on **www.example.com** add `www.example.com`, to make it work on any sub-domain from example.com, use `.example.com`.
 
+### `log`
+Type: `boolean` Default: `false`
+
+Enables logging of the information to the console..
+
 ### `mangle`
 Type: `boolean` Default: `false`
 
@@ -640,6 +647,7 @@ Performance will 50-100% slower than without obfuscation
 	debugProtection: true,
 	debugProtectionInterval: true,
 	disableConsoleOutput: true,
+	log: false,
 	mangle: false,
 	renameGlobals: false,
 	rotateStringArray: true,
@@ -665,6 +673,7 @@ Performance will 30-35% slower than without obfuscation
 	debugProtection: false,
 	debugProtectionInterval: false,
 	disableConsoleOutput: true,
+    log: false,
 	mangle: false,
 	renameGlobals: false,
 	rotateStringArray: true,
@@ -688,6 +697,7 @@ Performance will slightly slower than without obfuscation
 	debugProtection: false,
 	debugProtectionInterval: false,
 	disableConsoleOutput: true,
+    log: false,
 	mangle: true,
 	renameGlobals: false,
 	rotateStringArray: true,

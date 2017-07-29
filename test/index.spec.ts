@@ -10,6 +10,7 @@ import './unit-tests/cli/sanitizers/SourceMapModeSanitizer.spec';
 import './unit-tests/cli/sanitizers/StringArrayEncodingSanitizer.spec';
 import './unit-tests/cli/utils/CLIUtils.spec';
 import './unit-tests/decorators/initializable/Initializable.spec';
+import './unit-tests/logger/Logger.spec';
 import './unit-tests/node/node-appender/NodeAppender.spec';
 import './unit-tests/node/node-utils/NodeUtils.spec';
 import './unit-tests/obfuscation-result/ObfuscationResult.spec';

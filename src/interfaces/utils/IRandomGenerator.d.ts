@@ -37,4 +37,9 @@ export interface IRandomGenerator {
      * @returns {string}
      */
     getRandomVariableName (length: number): string
+
+    /**
+     * @returns {number}
+     */
+    getSeed (): number;
 }

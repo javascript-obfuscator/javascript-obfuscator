@@ -3,13 +3,19 @@ import { LoggingMessage } from '../../enums/logger/LoggingMessage';
 export interface ILogger {
     /**
      * @param {LoggingMessage} loggingMessage
-     * @param {string} value
+     * @param {string | number} value
      */
-    logInfo (loggingMessage: LoggingMessage, value?: string): void;
+    info (loggingMessage: LoggingMessage, value?: string | number): void;
 
     /**
      * @param {LoggingMessage} loggingMessage
-     * @param {string} value
+     * @param {string | number} value
      */
-    logSuccess (loggingMessage: LoggingMessage, value?: string): void;
+    success (loggingMessage: LoggingMessage, value?: string | number): void;
+
+    /**
+     * @param {LoggingMessage} loggingMessage
+     * @param {string | number} value
+     */
+    warn (loggingMessage: LoggingMessage, value?: string | number): void;
 }

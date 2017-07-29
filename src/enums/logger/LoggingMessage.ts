@@ -1,7 +1,9 @@
 export enum LoggingMessage {
+    EmptySourceCode = 'Empty source code. Obfuscation canceled...',
+    ObfuscationCompleted = 'Obfuscation completed. Total time: %s sec.',
     ObfuscationStarted = 'Obfuscation started...',
-    StageDeadCodeInjection = 'Stage: dead code injection...',
+    RandomGeneratorSeed = 'Random generator seed: %s...',
     StageControlFlowFlattening = 'Stage: control flow flattening...',
-    StageObfuscation = 'Stage: obfuscation...',
-    ObfuscationCompleted = 'Obfuscation completed, %s sec.'
+    StageDeadCodeInjection = 'Stage: dead code injection...',
+    StageObfuscation = 'Stage: obfuscation...'
 }

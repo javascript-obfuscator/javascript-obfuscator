@@ -497,7 +497,7 @@ It's possible to lock your code to more than one domain or sub-domain. For insta
 ### `log`
 Type: `boolean` Default: `false`
 
-Enables logging of the information to the console..
+Enables logging of the information to the console.
 
 ### `mangle`
 Type: `boolean` Default: `false`

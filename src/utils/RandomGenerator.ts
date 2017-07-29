@@ -31,12 +31,6 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
     public static readonly randomGeneratorPoolHexadecimal: string = `abcdef${RandomGenerator.randomGeneratorPoolNumbers}`;
 
     /**
-     * @type {number}
-     */
-    @initializable()
-    public seed: number;
-
-    /**
      * @type {IOptions}
      */
     private readonly options: IOptions;
@@ -51,6 +45,12 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
      */
     @initializable()
     private randomGenerator: Chance.Chance | Chance.SeededChance;
+
+    /**
+     * @type {number}
+     */
+    @initializable()
+    private seed: number;
 
     /**
      * @type {ISourceCode}
@@ -158,5 +158,12 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
         this.randomVariableNameSet.add(randomVariableName);
 
         return randomVariableName;
+    }
+
+    /**
+     * @returns {number}
+     */
+    public getSeed (): number {
+        return this.seed;
     }
 }

@@ -12,6 +12,7 @@ import { ILogger } from './interfaces/logger/ILogger';
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
 import { IObfuscator } from './interfaces/IObfuscator';
 import { IOptions } from './interfaces/options/IOptions';
+import { IRandomGenerator } from './interfaces/utils/IRandomGenerator';
 import { ISourceMapCorrector } from './interfaces/ISourceMapCorrector';
 
 import { LoggingMessage } from './enums/logger/LoggingMessage';
@@ -42,6 +43,11 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
     private readonly options: IOptions;
 
     /**
+     * @type {IRandomGenerator}
+     */
+    private readonly randomGenerator: IRandomGenerator;
+
+    /**
      * @type {ISourceMapCorrector}
      */
     private readonly sourceMapCorrector: ISourceMapCorrector;
@@ -49,17 +55,20 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
     /**
      * @param {IObfuscator} obfuscator
      * @param {ISourceMapCorrector} sourceMapCorrector
+     * @param {IRandomGenerator} randomGenerator
      * @param {ILogger} logger
      * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IObfuscator) obfuscator: IObfuscator,
         @inject(ServiceIdentifiers.ISourceMapCorrector) sourceMapCorrector: ISourceMapCorrector,
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.ILogger) logger: ILogger,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.obfuscator = obfuscator;
         this.sourceMapCorrector = sourceMapCorrector;
+        this.randomGenerator = randomGenerator;
         this.logger = logger;
         this.options = options;
     }
@@ -69,8 +78,9 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
      * @returns {IObfuscationResult}
      */
     public obfuscate (sourceCode: string): IObfuscationResult {
-        const timeStart: number = +(new Date());
-        this.logger.logInfo(LoggingMessage.ObfuscationStarted);
+        const timeStart: number = Date.now();
+        this.logger.info(LoggingMessage.ObfuscationStarted);
+        this.logger.info(LoggingMessage.RandomGeneratorSeed, this.randomGenerator.getSeed());
 
         // parse AST tree
         const astTree: ESTree.Program = this.parseCode(sourceCode);
@@ -81,8 +91,8 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
         // generate code
         const generatorOutput: IGeneratorOutput = this.generateCode(sourceCode, obfuscatedAstTree);
 
-        const obfuscationTime: number = (+(new Date()) - timeStart) / 1000;
-        this.logger.logSuccess(LoggingMessage.ObfuscationCompleted, String(obfuscationTime));
+        const obfuscationTime: number = (Date.now() - timeStart) / 1000;
+        this.logger.success(LoggingMessage.ObfuscationCompleted, obfuscationTime);
 
         return this.getObfuscationResult(generatorOutput);
     }

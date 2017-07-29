@@ -154,6 +154,8 @@ export class Obfuscator implements IObfuscator {
      */
     public obfuscateAstTree (astTree: ESTree.Program): ESTree.Program {
         if (Node.isProgramNode(astTree) && !astTree.body.length) {
+            this.logger.warn(LoggingMessage.EmptySourceCode);
+
             return astTree;
         }
 
@@ -177,20 +179,20 @@ export class Obfuscator implements IObfuscator {
 
         // first pass transformers: dead code injection transformer
         if (this.options.deadCodeInjection) {
-            this.logger.logInfo(LoggingMessage.StageDeadCodeInjection);
+            this.logger.info(LoggingMessage.StageDeadCodeInjection);
 
             astTree = this.transformAstTree(astTree, Obfuscator.deadCodeInjectionTransformersList);
         }
 
         // second pass transformers: control flow flattening transformers
         if (this.options.controlFlowFlattening) {
-            this.logger.logInfo(LoggingMessage.StageControlFlowFlattening);
+            this.logger.info(LoggingMessage.StageControlFlowFlattening);
 
             astTree = this.transformAstTree(astTree, Obfuscator.controlFlowTransformersList);
         }
 
         // third pass: converting and obfuscating transformers
-        this.logger.logInfo(LoggingMessage.StageObfuscation);
+        this.logger.info(LoggingMessage.StageObfuscation);
         astTree = this.transformAstTree(astTree, [
             ...Obfuscator.convertingTransformersList,
             ...Obfuscator.obfuscatingTransformersList
@@ -206,10 +208,7 @@ export class Obfuscator implements IObfuscator {
      * @param {NodeTransformer[]} nodeTransformers
      * @returns {Program}
      */
-    private transformAstTree (
-        astTree: ESTree.Program,
-        nodeTransformers: NodeTransformer[]
-    ): ESTree.Program {
+    private transformAstTree (astTree: ESTree.Program, nodeTransformers: NodeTransformer[]): ESTree.Program {
         if (!nodeTransformers.length) {
             return astTree;
         }

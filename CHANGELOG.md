@@ -2,7 +2,7 @@ Change Log
 ===
 v0.11.0
 ---
-* **New option:** `--log` enables logging of the information to the console.
+* **New option:** `log` enables logging of the information to the console.
 * **New option:** `renameGlobals` allows to enable obfuscation of global variable and function names with declaration.
 
 v0.10.0

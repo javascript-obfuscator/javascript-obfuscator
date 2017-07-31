@@ -78,11 +78,15 @@ export class CLIUtils {
      * @returns {Object}
      */
     public static getUserConfig (configPath: string): Object {
-        const nativeRequire: Function = typeof __non_webpack_require__ === 'function'
-            ? __non_webpack_require__
-            : require;
+        let config: Object;
 
-        return nativeRequire(configPath);
+        try {
+            config = require(configPath);
+        } catch (e) {
+            config = __non_webpack_require__(configPath);
+        }
+
+        return config;
     }
 
     /**

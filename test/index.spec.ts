@@ -30,7 +30,7 @@ import './unit-tests/utils/Utils.spec';
  * Functional tests
  */
 import './functional-tests/javascript-obfuscator/JavaScriptObfuscator.spec';
-import './functional-tests/javascript-obfuscator-cli/JavaScriptObfuscatorCLI.spec';
+import './functional-tests/cli/JavaScriptObfuscatorCLI.spec';
 import './functional-tests/javascript-obfuscator-internal/JavaScriptObfuscatorInternal.spec';
 import './functional-tests/custom-nodes/console-output-nodes/ConsoleOutputDisableExpressionNode.spec';
 import './functional-tests/custom-nodes/domain-lock-nodes/DomainLockNode.spec';

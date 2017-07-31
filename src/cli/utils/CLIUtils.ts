@@ -74,6 +74,18 @@ export class CLIUtils {
     }
 
     /**
+     * @param {string} configPath
+     * @returns {Object}
+     */
+    public static getUserConfig (configPath: string): Object {
+        const nativeRequire: Function = typeof __non_webpack_require__ === 'function'
+            ? __non_webpack_require__
+            : require;
+
+        return nativeRequire(configPath);
+    }
+
+    /**
      * @param {string} filePath
      * @returns {boolean}
      */

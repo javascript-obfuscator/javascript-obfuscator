@@ -51,10 +51,10 @@ export class JavaScriptObfuscatorCLI {
     }
 
     /**
-     * @param options
+     * @param {Object} options
      * @returns {TInputOptions}
      */
-    private static sanitizeOptions (options: {[key: string]: any}): TInputOptions {
+    private static sanitizeOptions (options: Object): TInputOptions {
         const filteredOptions: TInputOptions = {};
         const availableOptions: string[] = Object.keys(DEFAULT_PRESET);
 
@@ -99,7 +99,7 @@ export class JavaScriptObfuscatorCLI {
             ? path.resolve(this.commands.config, '.')
             : '';
         const configFileOptions: TInputOptions = configFileLocation
-            ? JavaScriptObfuscatorCLI.sanitizeOptions(require(configFileLocation))
+            ? JavaScriptObfuscatorCLI.sanitizeOptions(CLIUtils.getUserConfig(configFileLocation))
             : {};
 
         return {

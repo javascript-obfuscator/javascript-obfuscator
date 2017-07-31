@@ -51,6 +51,7 @@
     "@types/node": "8.0.17",
     "@types/sinon": "2.3.3",
     "@types/string-template": "1.0.2",
+    "@types/webpack-env": "1.13.0",
     "awesome-typescript-loader": "3.2.2",
     "babel-cli": "6.24.1",
     "babel-loader": "7.1.1",

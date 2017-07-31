@@ -3,6 +3,8 @@ import * as mkdirp from 'mkdirp';
 
 import { assert } from 'chai';
 
+import { TInputOptions } from '../../../../src/types/options/TInputOptions';
+
 import { CLIUtils } from '../../../../src/cli/utils/CLIUtils';
 
 describe('CLIUtils', () => {
@@ -43,6 +45,27 @@ describe('CLIUtils', () => {
 
         it('should return `package.json` `version` field for current CLI program as object', () => {
             assert.property(CLIUtils.getPackageConfig(), 'version');
+        });
+    });
+
+    describe('getUserConfig (configPath: string): Object', () => {
+        const configDirName: string = 'test/fixtures';
+        const configFileName: string = 'config.js';
+        const configFilePath: string = `../../../${configDirName}/${configFileName}`;
+        const expectedResult: TInputOptions = {
+            compact: true,
+            selfDefending: false,
+            sourceMap: true
+        };
+
+        let result: Object;
+
+        before(() => {
+            result = CLIUtils.getUserConfig(configFilePath);
+        });
+
+        it('should return object with user configuration', () => {
+            assert.deepEqual(result, expectedResult);
         });
     });
 

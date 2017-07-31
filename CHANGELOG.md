@@ -1,5 +1,9 @@
 Change Log
 ===
+v0.10.1
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/76.
+
 v0.10.0
 ---
 * **New option:** `deadCodeInjection`. With this option random blocks of dead code will add to the obfuscated code.
@@ -10,7 +14,7 @@ v0.10.0
 * **Breaking change:** `escapeUnicodeSequence` option now disabled by default.
 * `controlFlowFlattening` now affects string literal nodes.
 * Increased runtime performance with `rc4` `stringArrayEncoding`.
-* Added support for async functions
+* Added support for async functions.
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/71
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/65
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/60

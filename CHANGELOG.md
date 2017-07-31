@@ -2,7 +2,7 @@ Change Log
 ===
 v0.10.1
 ---
-* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/76.
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/76
 
 v0.10.0
 ---

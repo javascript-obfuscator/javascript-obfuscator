@@ -5,6 +5,10 @@ v0.11.0
 * **New option:** `log` enables logging of the information to the console.
 * **New option:** `renameGlobals` allows to enable obfuscation of global variable and function names with declaration.
 
+v0.10.2
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/78
+
 v0.10.1
 ---
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/76

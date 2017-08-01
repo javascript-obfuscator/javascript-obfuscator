@@ -27,52 +27,98 @@ describe('NodeUtils', () => {
     });
 
     describe('clone <T extends ESTree.Node> (astTree: T): T', () => {
-        let programNode: ESTree.Program,
-            expectedProgramNode: ESTree.Program;
+        describe('variant #1: simple AST-tree', () => {
+            let programNode: ESTree.Program,
+                expectedProgramNode: ESTree.Program;
 
-        before(() => {
-            // actual AST tree
-            const expressionStatementNode1: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
-            const expressionStatementNode2: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+            before(() => {
+                // actual AST tree
+                const expressionStatementNode1: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+                const expressionStatementNode2: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
 
-            const ifStatementBlockStatementNode1: ESTree.BlockStatement = Nodes.getBlockStatementNode([
-                expressionStatementNode1,
-                expressionStatementNode2
-            ]);
+                const ifStatementBlockStatementNode1: ESTree.BlockStatement = Nodes.getBlockStatementNode([
+                    expressionStatementNode1,
+                    expressionStatementNode2
+                ]);
 
-            const ifStatementNode1: ESTree.IfStatement = Nodes.getIfStatementNode(
-                Nodes.getLiteralNode(true),
-                ifStatementBlockStatementNode1
-            );
+                const ifStatementNode1: ESTree.IfStatement = Nodes.getIfStatementNode(
+                    Nodes.getLiteralNode(true),
+                    ifStatementBlockStatementNode1
+                );
 
-            // expected AST tree
-            const expressionStatementNode3: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
-            const expressionStatementNode4: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+                // expected AST tree
+                const expressionStatementNode3: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+                const expressionStatementNode4: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
 
-            const ifStatementBlockStatementNode2: ESTree.BlockStatement = Nodes.getBlockStatementNode([
-                expressionStatementNode3,
-                expressionStatementNode4
-            ]);
+                const ifStatementBlockStatementNode2: ESTree.BlockStatement = Nodes.getBlockStatementNode([
+                    expressionStatementNode3,
+                    expressionStatementNode4
+                ]);
 
-            const ifStatementNode2: ESTree.IfStatement = Nodes.getIfStatementNode(
-                Nodes.getLiteralNode(true),
-                ifStatementBlockStatementNode2
-            );
+                const ifStatementNode2: ESTree.IfStatement = Nodes.getIfStatementNode(
+                    Nodes.getLiteralNode(true),
+                    ifStatementBlockStatementNode2
+                );
 
-            programNode = NodeUtils.clone(
-                Nodes.getProgramNode([
-                    ifStatementNode1
-                ])
-            );
-            expectedProgramNode = NodeUtils.parentize(
-                Nodes.getProgramNode([
-                    ifStatementNode2
-                ])
-            );
+                programNode = NodeUtils.clone(
+                    Nodes.getProgramNode([
+                        ifStatementNode1
+                    ])
+                );
+                expectedProgramNode = NodeUtils.parentize(
+                    Nodes.getProgramNode([
+                        ifStatementNode2
+                    ])
+                );
+            });
+
+            it('should clone given AST-tree', () => {
+                assert.deepEqual(programNode, expectedProgramNode);
+            });
         });
 
-        it('should clone given AST-tree', () => {
-            assert.deepEqual(programNode, expectedProgramNode);
+        describe('variant #2: array expression with `null` element', () => {
+            let programNode: ESTree.Program,
+                expectedProgramNode: ESTree.Program;
+
+            before(() => {
+                // actual AST tree
+                const arrayExpressionNode: ESTree.ArrayExpression = Nodes.getArrayExpressionNode([
+                    Nodes.getLiteralNode(1),
+                    Nodes.getLiteralNode(2),
+                    <any>null,
+                    Nodes.getLiteralNode(4)
+                ]);
+                const expressionStatementNode: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(
+                    arrayExpressionNode
+                );
+
+                // expected AST tree
+                const expectedArrayExpressionNode: ESTree.ArrayExpression = Nodes.getArrayExpressionNode([
+                    Nodes.getLiteralNode(1),
+                    Nodes.getLiteralNode(2),
+                    <any>null,
+                    Nodes.getLiteralNode(4)
+                ]);
+                const expectedExpressionStatementNode: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(
+                    expectedArrayExpressionNode
+                );
+
+                programNode = NodeUtils.clone(
+                    Nodes.getProgramNode([
+                        expressionStatementNode
+                    ])
+                );
+                expectedProgramNode = NodeUtils.parentize(
+                    Nodes.getProgramNode([
+                        expectedExpressionStatementNode
+                    ])
+                );
+            });
+
+            it('should clone given AST-tree', () => {
+                assert.deepEqual(programNode, expectedProgramNode);
+            });
         });
     });
 

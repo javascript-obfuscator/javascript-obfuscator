@@ -46,6 +46,10 @@ export class NodeUtils {
      */
     public static clone <T extends ESTree.Node> (astTree: T): T {
         const cloneRecursive: (node: T) => T = (node: T) => {
+            if (node === null) {
+                return node;
+            }
+
             const copy: {[key: string]: any} = {};
 
             Object

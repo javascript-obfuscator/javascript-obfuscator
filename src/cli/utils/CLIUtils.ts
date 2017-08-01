@@ -83,7 +83,11 @@ export class CLIUtils {
         try {
             config = require(configPath);
         } catch (e) {
-            config = __non_webpack_require__(configPath);
+            try {
+                config = __non_webpack_require__(configPath);
+            } catch (e) {
+                throw new ReferenceError('Given config path must be a valid file path');
+            }
         }
 
         return config;

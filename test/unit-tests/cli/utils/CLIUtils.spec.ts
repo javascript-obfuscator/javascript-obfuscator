@@ -49,23 +49,41 @@ describe('CLIUtils', () => {
     });
 
     describe('getUserConfig (configPath: string): Object', () => {
-        const configDirName: string = 'test/fixtures';
-        const configFileName: string = 'config.js';
-        const configFilePath: string = `../../../${configDirName}/${configFileName}`;
-        const expectedResult: TInputOptions = {
-            compact: true,
-            selfDefending: false,
-            sourceMap: true
-        };
+        describe('variant #1: valid config file path', () => {
+            const configDirName: string = 'test/fixtures';
+            const configFileName: string = 'config.js';
+            const configFilePath: string = `../../../${configDirName}/${configFileName}`;
+            const expectedResult: TInputOptions = {
+                compact: true,
+                selfDefending: false,
+                sourceMap: true
+            };
 
-        let result: Object;
+            let result: Object;
 
-        before(() => {
-            result = CLIUtils.getUserConfig(configFilePath);
+            before(() => {
+                result = CLIUtils.getUserConfig(configFilePath);
+            });
+
+            it('should return object with user configuration', () => {
+                assert.deepEqual(result, expectedResult);
+            });
         });
 
-        it('should return object with user configuration', () => {
-            assert.deepEqual(result, expectedResult);
+        describe('variant #2: invalid config file path', () => {
+            const configDirName: string = 'test/fixtures';
+            const configFileName: string = 'configs.js';
+            const configFilePath: string = `../../../${configDirName}/${configFileName}`;
+
+            let testFunc: () => void;
+
+            before(() => {
+                testFunc = () => CLIUtils.getUserConfig(configFilePath);
+            });
+
+            it('should throw an error if `configFilePath` is not a valid path', () => {
+                assert.throws(testFunc, ReferenceError);
+            });
         });
     });
 
@@ -74,12 +92,15 @@ describe('CLIUtils', () => {
             const tmpFileName: string = 'test.js';
             const inputPath: string = `${tmpDir}/${tmpFileName}`;
 
+            let testFunc: () => void;
+
             before(() => {
                 fs.writeFileSync(inputPath, fileContent);
+                testFunc = () => CLIUtils.validateInputPath(inputPath);
             });
 
             it('shouldn\'t throw an error if `inputPath` is a valid path', () => {
-                assert.doesNotThrow(() => CLIUtils.validateInputPath(inputPath), ReferenceError);
+                assert.doesNotThrow(testFunc, ReferenceError);
             });
 
             after(() => {
@@ -91,8 +112,14 @@ describe('CLIUtils', () => {
             const tmpFileName: string = 'test.js';
             const inputPath: string = `${tmpDir}/${tmpFileName}`;
 
+            let testFunc: () => void;
+
+            before(() => {
+                testFunc = () => CLIUtils.validateInputPath(inputPath);
+            });
+
             it('should throw an error if `inputPath` is not a valid path', () => {
-                assert.throws(() => CLIUtils.validateInputPath(inputPath), ReferenceError);
+                assert.throws(testFunc, ReferenceError);
             });
         });
 
@@ -100,12 +127,15 @@ describe('CLIUtils', () => {
             const tmpFileName: string = 'test.ts';
             const inputPath: string = `${tmpDir}/${tmpFileName}`;
 
+            let testFunc: () => void;
+
             before(() => {
                 fs.writeFileSync(inputPath, fileContent);
+                testFunc = () => CLIUtils.validateInputPath(inputPath);
             });
 
             it('should throw an error if `inputPath` is a file name has invalid extension', () => {
-                assert.throws(() => CLIUtils.validateInputPath(inputPath), ReferenceError);
+                assert.throws(testFunc, ReferenceError);
             });
 
             after(() => {

@@ -2,6 +2,7 @@ import * as commander from 'commander';
 import * as path from 'path';
 
 import { TInputOptions } from '../types/options/TInputOptions';
+import { TObject } from '../types/TObject';
 
 import { IObfuscationResult } from '../interfaces/IObfuscationResult';
 
@@ -51,23 +52,19 @@ export class JavaScriptObfuscatorCLI {
     }
 
     /**
-     * @param {Object} options
+     * @param {TObject} options
      * @returns {TInputOptions}
      */
-    private static sanitizeOptions (options: Object): TInputOptions {
+    private static sanitizeOptions (options: TObject): TInputOptions {
         const filteredOptions: TInputOptions = {};
         const availableOptions: string[] = Object.keys(DEFAULT_PRESET);
 
         for (const option in options) {
-            if (!options.hasOwnProperty(option)) {
+            if (!options.hasOwnProperty(option) || !availableOptions.includes(option)) {
                 continue;
             }
 
-            if (!availableOptions.includes(option)) {
-                continue;
-            }
-
-            (<any>filteredOptions)[option] = (<any>options)[option];
+            filteredOptions[option] = options[option];
         }
 
         return filteredOptions;
@@ -253,7 +250,7 @@ export class JavaScriptObfuscatorCLI {
 
     private processData (): void {
         const options: TInputOptions = this.buildOptions();
-        const outputCodePath: string = CLIUtils.getOutputCodePath((<any>this.commands).output, this.inputPath);
+        const outputCodePath: string = CLIUtils.getOutputCodePath(this.commands.output, this.inputPath);
 
         if (options.sourceMap) {
             this.processDataWithSourceMap(outputCodePath, options);

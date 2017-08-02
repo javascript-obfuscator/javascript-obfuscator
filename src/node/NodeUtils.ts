@@ -45,6 +45,10 @@ export class NodeUtils {
      * @returns {T}
      */
     public static clone <T extends ESTree.Node> (astTree: T): T {
+        /**
+         * @param {T} node
+         * @returns {T}
+         */
         const cloneRecursive: (node: T) => T = (node: T) => {
             if (node === null) {
                 return node;
@@ -89,7 +93,7 @@ export class NodeUtils {
         structure = NodeUtils.addXVerbatimPropertyToLiterals(structure);
         structure = NodeUtils.parentize(structure);
 
-        return <TStatement[]>structure.body;
+        return structure.body;
     }
 
     /**

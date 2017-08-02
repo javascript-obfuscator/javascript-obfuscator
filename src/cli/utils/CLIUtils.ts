@@ -2,6 +2,8 @@ import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as path from 'path';
 
+import { TObject } from '../../types/TObject';
+
 import { IPackageConfig } from '../../interfaces/IPackageConfig';
 
 export class CLIUtils {
@@ -75,9 +77,9 @@ export class CLIUtils {
 
     /**
      * @param {string} configPath
-     * @returns {Object}
+     * @returns {TObject}
      */
-    public static getUserConfig (configPath: string): Object {
+    public static getUserConfig (configPath: string): TObject {
         let config: Object;
 
         try {

@@ -24,14 +24,14 @@ export class CLIUtils {
      * @param {string} inputPath
      * @returns {string}
      */
-    public static getOutputCodePath (outputPath: string, inputPath: string): string {
+    public static getOutputCodePath (outputPath: string|undefined, inputPath: string): string {
         if (outputPath) {
             return outputPath;
         }
 
         return inputPath
             .split('.')
-            .map<string>((value: string, index: number) => {
+            .map((value: string, index: number) => {
                 return index === 0 ? `${value}-obfuscated` : value;
             })
             .join('.');
@@ -62,7 +62,7 @@ export class CLIUtils {
      * @returns {IPackageConfig}
      */
     public static getPackageConfig (): IPackageConfig {
-        return <IPackageConfig>JSON.parse(
+        return JSON.parse(
             fs.readFileSync(
                 path.join(
                     path.dirname(
@@ -111,14 +111,7 @@ export class CLIUtils {
      * @param {string} inputPath
      * @returns {string}
      */
-    public static readFile (inputPath: string): string {
-        return fs.readFileSync(inputPath, CLIUtils.encoding);
-    }
-
-    /**
-     * @param {string} inputPath
-     */
-    public static validateInputPath (inputPath: string): void {
+    public static readSourceCode (inputPath: string): string {
         if (!CLIUtils.isFilePath(inputPath)) {
             throw new ReferenceError(`Given input path must be a valid file path`);
         }
@@ -126,6 +119,8 @@ export class CLIUtils {
         if (!CLIUtils.availableInputExtensions.includes(path.extname(inputPath))) {
             throw new ReferenceError(`Input file must have .js extension`);
         }
+
+        return fs.readFileSync(inputPath, CLIUtils.encoding);
     }
 
     /**

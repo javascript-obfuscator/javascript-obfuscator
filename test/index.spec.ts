@@ -5,6 +5,7 @@ require('source-map-support').install();
 /**
  * Unit tests
  */
+import './unit-tests/cli/sanitizers/ArraySanitizer.spec';
 import './unit-tests/cli/sanitizers/BooleanSanitizer.spec';
 import './unit-tests/cli/sanitizers/SourceMapModeSanitizer.spec';
 import './unit-tests/cli/sanitizers/StringArrayEncodingSanitizer.spec';

@@ -87,20 +87,20 @@ describe('CLIUtils', () => {
         });
     });
 
-    describe('validateInputPath (inputPath: string): void', () => {
+    describe('readSourceCode (inputPath: string): void', () => {
         describe('`inputPath` is a valid path', () => {
             const tmpFileName: string = 'test.js';
             const inputPath: string = `${tmpDir}/${tmpFileName}`;
 
-            let testFunc: () => void;
+            let result: string;
 
             before(() => {
                 fs.writeFileSync(inputPath, fileContent);
-                testFunc = () => CLIUtils.validateInputPath(inputPath);
+                result = CLIUtils.readSourceCode(inputPath);
             });
 
-            it('shouldn\'t throw an error if `inputPath` is a valid path', () => {
-                assert.doesNotThrow(testFunc, ReferenceError);
+            it('should return content of file', () => {
+                assert.equal(result, fileContent);
             });
 
             after(() => {
@@ -115,7 +115,7 @@ describe('CLIUtils', () => {
             let testFunc: () => void;
 
             before(() => {
-                testFunc = () => CLIUtils.validateInputPath(inputPath);
+                testFunc = () => CLIUtils.readSourceCode(inputPath);
             });
 
             it('should throw an error if `inputPath` is not a valid path', () => {
@@ -131,7 +131,7 @@ describe('CLIUtils', () => {
 
             before(() => {
                 fs.writeFileSync(inputPath, fileContent);
-                testFunc = () => CLIUtils.validateInputPath(inputPath);
+                testFunc = () => CLIUtils.readSourceCode(inputPath);
             });
 
             it('should throw an error if `inputPath` is a file name has invalid extension', () => {

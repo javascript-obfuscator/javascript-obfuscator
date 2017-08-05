@@ -1,13 +1,18 @@
 import * as commander from 'commander';
 import * as path from 'path';
 
+import { TInputCLIOptions } from '../types/options/TInputCLIOptions';
 import { TInputOptions } from '../types/options/TInputOptions';
 import { TObject } from '../types/TObject';
 
+import { IInitializable } from '../interfaces/IInitializable';
 import { IObfuscationResult } from '../interfaces/IObfuscationResult';
+
+import { initializable } from '../decorators/Initializable';
 
 import { DEFAULT_PRESET } from '../options/presets/Default';
 
+import { ArraySanitizer } from './sanitizers/ArraySanitizer';
 import { BooleanSanitizer } from './sanitizers/BooleanSanitizer';
 import { SourceMapModeSanitizer } from './sanitizers/SourceMapModeSanitizer';
 import { StringArrayEncodingSanitizer } from './sanitizers/StringArrayEncodingSanitizer';
@@ -15,7 +20,7 @@ import { StringArrayEncodingSanitizer } from './sanitizers/StringArrayEncodingSa
 import { CLIUtils } from './utils/CLIUtils';
 import { JavaScriptObfuscator } from '../JavaScriptObfuscator';
 
-export class JavaScriptObfuscatorCLI {
+export class JavaScriptObfuscatorCLI implements IInitializable {
     /**
      * @type {string[]}
      */
@@ -29,16 +34,25 @@ export class JavaScriptObfuscatorCLI {
     /**
      * @type {commander.CommanderStatic}
      */
+    @initializable()
     private commands: commander.CommanderStatic;
+
+    /**
+     * @type {TInputCLIOptions}
+     */
+    @initializable()
+    private inputCLIOptions: TInputCLIOptions;
 
     /**
      * @type {string}
      */
+    @initializable()
     private inputPath: string;
 
     /**
      * @type {string}
      */
+    @initializable()
     private sourceCode: string = '';
 
     /**
@@ -46,21 +60,18 @@ export class JavaScriptObfuscatorCLI {
      */
     constructor (argv: string[]) {
         this.rawArguments = argv;
-        this.arguments = this.rawArguments.slice(2);
-
-        this.commands = <commander.CommanderStatic>(new commander.Command());
+        this.arguments = argv.slice(2);
     }
 
     /**
      * @param {TObject} options
      * @returns {TInputOptions}
      */
-    private static sanitizeOptions (options: TObject): TInputOptions {
+    private static filterOptions (options: TObject): TInputOptions {
         const filteredOptions: TInputOptions = {};
-        const availableOptions: string[] = Object.keys(DEFAULT_PRESET);
 
         for (const option in options) {
-            if (!options.hasOwnProperty(option) || !availableOptions.includes(option)) {
+            if (!options.hasOwnProperty(option) || options[option] === undefined) {
                 continue;
             }
 
@@ -70,46 +81,50 @@ export class JavaScriptObfuscatorCLI {
         return filteredOptions;
     }
 
-    public run (): void {
+    public initialize (): void {
+        this.inputPath = this.arguments[0] || '';
+        this.commands = <commander.CommanderStatic>(new commander.Command());
+
         this.configureCommands();
         this.configureHelp();
 
-        if (!this.arguments.length || this.arguments.includes('--help')) {
-            this.commands.outputHelp();
+        this.inputCLIOptions = this.commands.opts();
+    }
 
-            return;
+    public run (): void {
+        const canShowHelp: boolean = !this.arguments.length || this.arguments.includes('--help');
+
+        if (canShowHelp) {
+            return this.commands.outputHelp();
         }
 
-        this.inputPath = this.arguments[0];
-        CLIUtils.validateInputPath(this.inputPath);
-
-        this.getData();
-        this.processData();
+        this.sourceCode = CLIUtils.readSourceCode(this.inputPath);
+        this.processSourceCode();
     }
 
     /**
      * @returns {TInputOptions}
      */
     private buildOptions (): TInputOptions {
-        const inputOptions: TInputOptions = JavaScriptObfuscatorCLI.sanitizeOptions(this.commands);
-        const configFileLocation: string = this.commands.config
-            ? path.resolve(this.commands.config, '.')
-            : '';
-        const configFileOptions: TInputOptions = configFileLocation
-            ? JavaScriptObfuscatorCLI.sanitizeOptions(CLIUtils.getUserConfig(configFileLocation))
-            : {};
+        const inputCLIOptions: TInputOptions = JavaScriptObfuscatorCLI.filterOptions(this.inputCLIOptions);
+        const configFilePath: string|undefined = this.inputCLIOptions.config;
+        const configFileLocation: string = configFilePath ? path.resolve(configFilePath, '.') : '';
+        const configFileOptions: TInputOptions = configFileLocation ? CLIUtils.getUserConfig(configFileLocation) : {};
 
         return {
             ...DEFAULT_PRESET,
             ...configFileOptions,
-            ...inputOptions
+            ...inputCLIOptions
         };
     }
 
     private configureCommands (): void {
         this.commands
-            .version(CLIUtils.getPackageConfig().version, '-v, --version')
             .usage('<inputPath> [options]')
+            .version(
+                CLIUtils.getPackageConfig().version,
+                '-v, --version'
+            )
             .option(
                 '-o, --output <path>',
                 'Output path for obfuscated code'
@@ -161,7 +176,7 @@ export class JavaScriptObfuscatorCLI {
             .option(
                 '--domainLock <list>',
                 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)',
-                (value: string) => value.split(',')
+                ArraySanitizer
             )
             .option(
                 '--log <boolean>', 'Enables logging of the information to the console',
@@ -174,7 +189,7 @@ export class JavaScriptObfuscatorCLI {
             .option(
                 '--reservedNames <list>',
                 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)',
-                (value: string) => value.split(',')
+                ArraySanitizer
             )
             .option(
                 '--renameGlobals <boolean>', 'Allows to enable obfuscation of global variable and function names with declaration.',
@@ -244,18 +259,14 @@ export class JavaScriptObfuscatorCLI {
         });
     }
 
-    private getData (): void {
-        this.sourceCode = CLIUtils.readFile(this.inputPath);
-    }
-
-    private processData (): void {
+    private processSourceCode (): void {
         const options: TInputOptions = this.buildOptions();
-        const outputCodePath: string = CLIUtils.getOutputCodePath(this.commands.output, this.inputPath);
+        const outputCodePath: string = CLIUtils.getOutputCodePath(this.inputCLIOptions.output, this.inputPath);
 
         if (options.sourceMap) {
-            this.processDataWithSourceMap(outputCodePath, options);
+            this.processSourceCodeWithSourceMap(outputCodePath, options);
         } else {
-            this.processDataWithoutSourceMap(outputCodePath, options);
+            this.processSourceCodeWithoutSourceMap(outputCodePath, options);
         }
     }
 
@@ -263,7 +274,7 @@ export class JavaScriptObfuscatorCLI {
      * @param {string} outputCodePath
      * @param {TInputOptions} options
      */
-    private processDataWithoutSourceMap (outputCodePath: string, options: TInputOptions): void {
+    private processSourceCodeWithoutSourceMap (outputCodePath: string, options: TInputOptions): void {
         const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(this.sourceCode, options).getObfuscatedCode();
 
         CLIUtils.writeFile(outputCodePath, obfuscatedCode);
@@ -273,7 +284,7 @@ export class JavaScriptObfuscatorCLI {
      * @param {string} outputCodePath
      * @param {TInputOptions} options
      */
-    private processDataWithSourceMap (outputCodePath: string, options: TInputOptions): void {
+    private processSourceCodeWithSourceMap (outputCodePath: string, options: TInputOptions): void {
         const outputSourceMapPath: string = CLIUtils.getOutputSourceMapPath(
             outputCodePath,
             options.sourceMapFileName || ''

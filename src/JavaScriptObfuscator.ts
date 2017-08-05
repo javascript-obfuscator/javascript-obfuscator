@@ -35,6 +35,9 @@ export class JavaScriptObfuscator {
      * @param {string[]} argv
      */
     public static runCLI (argv: string[]): void {
-        new JavaScriptObfuscatorCLI(argv).run();
+        const javaScriptObfuscatorCLI: JavaScriptObfuscatorCLI = new JavaScriptObfuscatorCLI(argv);
+
+        javaScriptObfuscatorCLI.initialize();
+        javaScriptObfuscatorCLI.run();
     }
 }

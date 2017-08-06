@@ -135,12 +135,8 @@ export class Obfuscator implements IObfuscator {
     private static isBlackListNode (node: ESTree.Node): boolean {
         const guardsLength: number = Obfuscator.blackListGuards.length;
 
-        let guard: TNodeGuard;
-
         for (let i: number = 0; i < guardsLength; i++) {
-            guard = Obfuscator.blackListGuards[i];
-
-            if (guard(node)) {
+            if (Obfuscator.blackListGuards[i](node)) {
                 return true;
             }
         }
@@ -245,13 +241,11 @@ export class Obfuscator implements IObfuscator {
      * @returns {TVisitorFunction}
      */
     private mergeVisitorsForDirection (visitors: IVisitor[], direction: TVisitorDirection): TVisitorFunction {
-        if (!visitors.length) {
-            return (node: ESTree.Node, parentNode: ESTree.Node) => node;
-        }
-
         const visitorsLength: number = visitors.length;
 
-        let visitor: IVisitor;
+        if (!visitorsLength) {
+            return (node: ESTree.Node, parentNode: ESTree.Node) => node;
+        }
 
         return (node: ESTree.Node, parentNode: ESTree.Node) => {
             if (Obfuscator.isBlackListNode(node)) {
@@ -259,9 +253,7 @@ export class Obfuscator implements IObfuscator {
             }
 
             for (let i: number = 0; i < visitorsLength; i++) {
-                visitor = visitors[i];
-
-                const visitorFunction: TVisitorFunction | undefined = visitor[direction];
+                const visitorFunction: TVisitorFunction | undefined = visitors[i][direction];
 
                 if (!visitorFunction) {
                     continue;

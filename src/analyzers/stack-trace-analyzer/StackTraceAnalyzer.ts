@@ -1,19 +1,19 @@
 import { injectable, inject } from 'inversify';
-import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TCalleeDataExtractorFactory } from '../types/container/stack-trace-analyzer/TCalleeDataExtractorFactory';
+import { TCalleeDataExtractorFactory } from '../../types/container/stack-trace-analyzer/TCalleeDataExtractorFactory';
 
-import { ICalleeData } from '../interfaces/stack-trace-analyzer/ICalleeData';
-import { IStackTraceAnalyzer } from '../interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
-import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
+import { ICalleeData } from '../../interfaces/analyzers/stack-trace-analyzer/ICalleeData';
+import { IStackTraceAnalyzer } from '../../interfaces/analyzers/stack-trace-analyzer/IStackTraceAnalyzer';
+import { IStackTraceData } from '../../interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
 
-import { CalleeDataExtractor } from '../enums/container/stack-trace-analyzer/CalleeDataExtractor';
+import { CalleeDataExtractor } from '../../enums/container/stack-trace-analyzer/CalleeDataExtractor';
 
-import { Node } from '../node/Node';
-import { NodeUtils } from '../node/NodeUtils';
+import { Node } from '../../node/Node';
+import { NodeUtils } from '../../node/NodeUtils';
 
 /**
  * This class generates a data with a stack trace of functions calls

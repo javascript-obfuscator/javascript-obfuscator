@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { ServiceIdentifiers } from '../../../../src/container/ServiceIdentifiers';
 
 import * as estraverse from 'estraverse';
@@ -8,8 +10,8 @@ import { assert } from 'chai';
 import { TNodeWithBlockStatement } from '../../../../src/types/node/TNodeWithBlockStatement';
 
 import { IInversifyContainerFacade } from '../../../../src/interfaces/container/IInversifyContainerFacade';
-import { IStackTraceAnalyzer } from '../../../../src/interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
-import { IStackTraceData } from '../../../../src/interfaces/stack-trace-analyzer/IStackTraceData';
+import { IStackTraceAnalyzer } from '../../../../src/interfaces/analyzers/stack-trace-analyzer/IStackTraceAnalyzer';
+import { IStackTraceData } from '../../../../src/interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
 
 import { readFileAsString } from '../../../helpers/readFileAsString';
 

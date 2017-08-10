@@ -7,8 +7,8 @@ import { assert } from 'chai';
 import { TStatement } from '../../../../src/types/node/TStatement';
 
 import { IInversifyContainerFacade } from '../../../../src/interfaces/container/IInversifyContainerFacade';
-import { IStackTraceAnalyzer } from '../../../../src/interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
-import { IStackTraceData } from '../../../../src/interfaces/stack-trace-analyzer/IStackTraceData';
+import { IStackTraceAnalyzer } from '../../../../src/interfaces/analyzers/stack-trace-analyzer/IStackTraceAnalyzer';
+import { IStackTraceData } from '../../../../src/interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
 
 import { readFileAsString } from '../../../helpers/readFileAsString';
 

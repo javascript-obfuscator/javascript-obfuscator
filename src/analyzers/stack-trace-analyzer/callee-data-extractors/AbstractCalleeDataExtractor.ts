@@ -2,8 +2,8 @@ import { injectable } from 'inversify';
 
 import * as ESTree from 'estree';
 
-import { ICalleeData } from '../../interfaces/stack-trace-analyzer/ICalleeData';
-import { ICalleeDataExtractor } from '../../interfaces/stack-trace-analyzer/ICalleeDataExtractor';
+import { ICalleeData } from '../../../interfaces/analyzers/stack-trace-analyzer/ICalleeData';
+import { ICalleeDataExtractor } from '../../../interfaces/analyzers/stack-trace-analyzer/ICalleeDataExtractor';
 
 @injectable()
 export abstract class AbstractCalleeDataExtractor implements ICalleeDataExtractor {

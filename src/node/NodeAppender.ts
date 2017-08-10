@@ -3,7 +3,7 @@ import * as ESTree from 'estree';
 import { TNodeWithBlockStatement } from '../types/node/TNodeWithBlockStatement';
 import { TStatement } from '../types/node/TStatement';
 
-import { IStackTraceData } from '../interfaces/stack-trace-analyzer/IStackTraceData';
+import { IStackTraceData } from '../interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
 
 /**
  * This class appends node into a first deepest BlockStatement in order of function calls

@@ -2,16 +2,16 @@ import { InversifyContainerFacade } from '../../InversifyContainerFacade';
 import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
-import { ICalleeDataExtractor } from '../../../interfaces/stack-trace-analyzer/ICalleeDataExtractor';
-import { IStackTraceAnalyzer } from '../../../interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
+import { ICalleeDataExtractor } from '../../../interfaces/analyzers/stack-trace-analyzer/ICalleeDataExtractor';
+import { IStackTraceAnalyzer } from '../../../interfaces/analyzers/stack-trace-analyzer/IStackTraceAnalyzer';
 
 import { CalleeDataExtractor } from '../../../enums/container/stack-trace-analyzer/CalleeDataExtractor';
-import { FunctionDeclarationCalleeDataExtractor } from '../../../stack-trace-analyzer/callee-data-extractors/FunctionDeclarationCalleeDataExtractor';
-import { FunctionExpressionCalleeDataExtractor } from '../../../stack-trace-analyzer/callee-data-extractors/FunctionExpressionCalleeDataExtractor';
-import { ObjectExpressionCalleeDataExtractor } from '../../../stack-trace-analyzer/callee-data-extractors/ObjectExpressionCalleeDataExtractor';
-import { StackTraceAnalyzer } from '../../../stack-trace-analyzer/StackTraceAnalyzer';
+import { FunctionDeclarationCalleeDataExtractor } from '../../../analyzers/stack-trace-analyzer/callee-data-extractors/FunctionDeclarationCalleeDataExtractor';
+import { FunctionExpressionCalleeDataExtractor } from '../../../analyzers/stack-trace-analyzer/callee-data-extractors/FunctionExpressionCalleeDataExtractor';
+import { ObjectExpressionCalleeDataExtractor } from '../../../analyzers/stack-trace-analyzer/callee-data-extractors/ObjectExpressionCalleeDataExtractor';
+import { StackTraceAnalyzer } from '../../../analyzers/stack-trace-analyzer/StackTraceAnalyzer';
 
-export const stackTraceAnalyzerModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
+export const analyzersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // stack trace analyzer
     bind<IStackTraceAnalyzer>(ServiceIdentifiers.IStackTraceAnalyzer)
         .to(StackTraceAnalyzer)

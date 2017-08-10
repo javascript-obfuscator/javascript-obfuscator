@@ -8,7 +8,7 @@ import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IObfuscationEventEmitter } from '../../../interfaces/event-emitters/IObfuscationEventEmitter';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
-import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStackTraceData';
+import { IStackTraceData } from '../../../interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
 import { initializable } from '../../../decorators/Initializable';

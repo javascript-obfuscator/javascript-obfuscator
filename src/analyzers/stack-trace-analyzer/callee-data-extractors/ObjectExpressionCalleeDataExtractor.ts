@@ -3,12 +3,12 @@ import { injectable } from 'inversify';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TObjectMembersCallsChain } from '../../types/stack-trace-analyzer/TObjectMembersCallsChain';
+import { TObjectMembersCallsChain } from '../../../types/analyzers/stack-trace-analyzer/TObjectMembersCallsChain';
 
-import { ICalleeData } from '../../interfaces/stack-trace-analyzer/ICalleeData';
+import { ICalleeData } from '../../../interfaces/analyzers/stack-trace-analyzer/ICalleeData';
 
-import { Node } from '../../node/Node';
-import { NodeUtils } from '../../node/NodeUtils';
+import { Node } from '../../../node/Node';
+import { NodeUtils } from '../../../node/NodeUtils';
 import { AbstractCalleeDataExtractor } from './AbstractCalleeDataExtractor';
 
 @injectable()

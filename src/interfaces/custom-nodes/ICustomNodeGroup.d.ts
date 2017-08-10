@@ -2,7 +2,7 @@ import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatemen
 
 import { ICustomNode } from './ICustomNode';
 import { IInitializable } from '../IInitializable';
-import { IStackTraceData } from '../stack-trace-analyzer/IStackTraceData';
+import { IStackTraceData } from '../analyzers/stack-trace-analyzer/IStackTraceData';
 
 import { CustomNode } from '../../enums/container/custom-nodes/CustomNode';
 import { ObfuscationEvent } from '../../enums/event-emitters/ObfuscationEvent';

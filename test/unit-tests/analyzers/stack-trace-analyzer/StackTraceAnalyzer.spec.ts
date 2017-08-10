@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { StackTraceAnalyzer } from '../../../../src/stack-trace-analyzer/StackTraceAnalyzer';
+import { StackTraceAnalyzer } from '../../../../src/analyzers/stack-trace-analyzer/StackTraceAnalyzer';
 
 describe('StackTraceAnalyzer', () => {
     describe('getLimitIndex (blockScopeBodyLength: number): number', () => {

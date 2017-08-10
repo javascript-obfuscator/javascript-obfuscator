@@ -1,4 +1,4 @@
-import { ICalleeDataExtractor } from '../../../interfaces/stack-trace-analyzer/ICalleeDataExtractor';
+import { ICalleeDataExtractor } from '../../../interfaces/analyzers/stack-trace-analyzer/ICalleeDataExtractor';
 
 import { CalleeDataExtractor } from '../../../enums/container/stack-trace-analyzer/CalleeDataExtractor';
 

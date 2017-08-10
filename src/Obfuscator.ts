@@ -15,8 +15,8 @@ import { ILogger } from './interfaces/logger/ILogger';
 import { IObfuscationEventEmitter } from './interfaces/event-emitters/IObfuscationEventEmitter';
 import { IObfuscator } from './interfaces/IObfuscator';
 import { IOptions } from './interfaces/options/IOptions';
-import { IStackTraceAnalyzer } from './interfaces/stack-trace-analyzer/IStackTraceAnalyzer';
-import { IStackTraceData } from './interfaces/stack-trace-analyzer/IStackTraceData';
+import { IStackTraceAnalyzer } from './interfaces/analyzers/stack-trace-analyzer/IStackTraceAnalyzer';
+import { IStackTraceData } from './interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
 import { IStorage } from './interfaces/storages/IStorage';
 import { IVisitor } from './interfaces/IVisitor';
 
@@ -157,6 +157,7 @@ export class Obfuscator implements IObfuscator {
 
         astTree = <ESTree.Program>NodeUtils.parentize(astTree);
 
+        this.logger.info(LoggingMessage.StageAnalyzingASTTree);
         const stackTraceData: IStackTraceData[] = this.stackTraceAnalyzer.analyze(astTree.body);
 
         // initialize custom node groups and configure custom nodes

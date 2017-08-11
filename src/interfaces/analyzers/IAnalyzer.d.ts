@@ -1,9 +1,10 @@
 import * as ESTree from 'estree';
+import { TObject } from '../../types/TObject';
 
 export interface IAnalyzer {
     /**
-     * @param blockScopeBody
-     * @returns any
+     * @param {Program} astTree
+     * @returns {TObject[]}
      */
-    analyze (blockScopeBody: ESTree.Node[]): any;
+    analyze (astTree: ESTree.Program): TObject[];
 }

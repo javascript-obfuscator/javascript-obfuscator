@@ -102,11 +102,11 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     }
 
     /**
-     * @param {Node[]} blockScopeBody
+     * @param {Program} astTree
      * @returns {IStackTraceData[]}
      */
-    public analyze (blockScopeBody: ESTree.Node[]): IStackTraceData[] {
-        return this.analyzeRecursive(blockScopeBody);
+    public analyze (astTree: ESTree.Program): IStackTraceData[] {
+        return this.analyzeRecursive(astTree.body);
     }
 
     /**

@@ -204,7 +204,7 @@ describe('StackTraceAnalyzer', () => {
                     }
                 ];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                stackTraceData = stackTraceAnalyzer.analyze(astTree);
             });
 
             it('should return correct stack trace data', () => {
@@ -243,7 +243,7 @@ describe('StackTraceAnalyzer', () => {
                     }
                 ];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                stackTraceData = stackTraceAnalyzer.analyze(astTree);
             });
 
             it('should return correct stack trace data', () => {
@@ -282,7 +282,7 @@ describe('StackTraceAnalyzer', () => {
                     }
                 ];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                stackTraceData = stackTraceAnalyzer.analyze(astTree);
             });
 
             it('should return correct stack trace data', () => {
@@ -305,7 +305,7 @@ describe('StackTraceAnalyzer', () => {
                     }
                 ];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                stackTraceData = stackTraceAnalyzer.analyze(astTree);
             });
 
             it('should return correct stack trace data', () => {
@@ -364,7 +364,7 @@ describe('StackTraceAnalyzer', () => {
                     }
                 ];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                stackTraceData = stackTraceAnalyzer.analyze(astTree);
             });
 
             it('should return correct stack trace data', () => {
@@ -392,7 +392,7 @@ describe('StackTraceAnalyzer', () => {
                     },
                 ];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                stackTraceData = stackTraceAnalyzer.analyze(astTree);
             });
 
             it('should return correct stack trace data', () => {
@@ -409,7 +409,7 @@ describe('StackTraceAnalyzer', () => {
 
                 expectedStackTraceData = [];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                stackTraceData = stackTraceAnalyzer.analyze(astTree);
             });
 
             it('should return correct stack trace data', () => {
@@ -426,7 +426,7 @@ describe('StackTraceAnalyzer', () => {
 
                 expectedStackTraceData = [];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                stackTraceData = stackTraceAnalyzer.analyze(astTree);
             });
 
             it('should return correct stack trace data', () => {
@@ -461,7 +461,7 @@ describe('StackTraceAnalyzer', () => {
                     }
                 ];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                stackTraceData = stackTraceAnalyzer.analyze(astTree);
             });
 
             it('should return correct stack trace data', () => {
@@ -484,7 +484,7 @@ describe('StackTraceAnalyzer', () => {
                     }
                 ];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree.body);
+                stackTraceData = stackTraceAnalyzer.analyze(astTree);
             });
 
             it('should return correct stack trace data', () => {

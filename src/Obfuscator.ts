@@ -158,7 +158,7 @@ export class Obfuscator implements IObfuscator {
         astTree = <ESTree.Program>NodeUtils.parentize(astTree);
 
         this.logger.info(LoggingMessage.StageAnalyzingASTTree);
-        const stackTraceData: IStackTraceData[] = this.stackTraceAnalyzer.analyze(astTree.body);
+        const stackTraceData: IStackTraceData[] = this.stackTraceAnalyzer.analyze(astTree);
 
         // initialize custom node groups and configure custom nodes
         this.customNodeGroupStorage

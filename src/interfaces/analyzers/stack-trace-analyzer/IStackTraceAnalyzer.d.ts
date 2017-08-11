@@ -5,8 +5,8 @@ import { IStackTraceData } from './IStackTraceData';
 
 export interface IStackTraceAnalyzer extends IAnalyzer {
     /**
-     * @param blockScopeBody
-     * @returns IStackTraceData[]
+     * @param {Program} astTree
+     * @returns {IStackTraceData[]}
      */
-    analyze (blockScopeBody: ESTree.Node[]): IStackTraceData[];
+    analyze (astTree: ESTree.Program): IStackTraceData[];
 }

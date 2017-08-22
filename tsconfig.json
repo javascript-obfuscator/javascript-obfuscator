@@ -5,7 +5,7 @@
     "importHelpers": true,
     "lib": [
       "es2017",
-      "DOM"
+      "dom"
     ],
     "module": "commonjs",
     "noEmitHelpers": true,

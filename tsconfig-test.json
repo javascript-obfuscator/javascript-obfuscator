@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
     "outDir": "test-tmp",
-    "target": "ES6",
+    "target": "es6",
     "lib": [
       "es2017",
-      "DOM"
+      "dom"
     ],
     "noEmitHelpers": true,
     "importHelpers": true,

@@ -953,7 +953,7 @@ chalk@1.1.3, chalk@^1.0.0, chalk@^1.1.0, chalk@^1.1.1, chalk@^1.1.3:
     strip-ansi "^3.0.0"
     supports-color "^2.0.0"
 
-chalk@2.1.0, chalk@^2.0.0:
+chalk@2.1.0, chalk@^2.0.0, chalk@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.1.0.tgz#ac5becf14fa21b99c6c92ca7a7d7cfd5b17e743e"
   dependencies:
@@ -3378,7 +3378,7 @@ right-align@^0.1.1:
   dependencies:
     align-text "^0.1.1"
 
-rimraf@2, rimraf@^2.4.4, rimraf@^2.5.1, rimraf@^2.6.1:
+rimraf@2, rimraf@^2.5.1, rimraf@^2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.6.1.tgz#c2338ec643df7a1b7fe5c54fa86f57428a55f33d"
   dependencies:
@@ -3831,15 +3831,11 @@ tslint-eslint-rules@4.1.1:
     tslib "^1.0.0"
     tsutils "^1.4.0"
 
-tslint-loader@3.5.3:
-  version "3.5.3"
-  resolved "https://registry.yarnpkg.com/tslint-loader/-/tslint-loader-3.5.3.tgz#343f74122d94f356b689457d3f59f64a69ab606f"
+tslint-webpack-plugin@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/tslint-webpack-plugin/-/tslint-webpack-plugin-1.0.0.tgz#c3fdf3b29e77ae4f54e6981b3a85a65909f39ec9"
   dependencies:
-    loader-utils "^1.0.2"
-    mkdirp "^0.5.1"
-    object-assign "^4.1.1"
-    rimraf "^2.4.4"
-    semver "^5.3.0"
+    chalk "^2.1.0"
 
 tslint@5.6.0:
   version "5.6.0"

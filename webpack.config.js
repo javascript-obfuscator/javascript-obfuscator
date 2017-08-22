@@ -4,6 +4,7 @@ const fs = require("fs");
 const nodeExternals = require('webpack-node-externals');
 const webpack = require('webpack');
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
+const TSLintPlugin = require('tslint-webpack-plugin');
 
 const copyright = 'Copyright (C) 2017 Timofey Kachalov <sanex3339@yandex.ru>';
 
@@ -46,12 +47,6 @@ module.exports = {
         exprContextCritical: false,
         rules: [
             {
-                enforce: 'pre',
-                test: /\.ts(x?)$/,
-                loader: 'tslint-loader',
-                exclude: /(node_modules)/
-            },
-            {
                 test: /\.ts(x?)$/,
                 loader: 'awesome-typescript-loader',
                 query: {
@@ -72,7 +67,10 @@ module.exports = {
                 entryOnly: false
             }
         ),
-        new CheckerPlugin()
+        new CheckerPlugin(),
+        new TSLintPlugin({
+            files: ['./src/**/*.ts']
+        })
     ],
     output: {
         path: __dirname + '/dist',

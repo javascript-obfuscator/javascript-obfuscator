@@ -24,6 +24,5 @@ export interface ICustomNodeGroup extends IInitializable {
      */
     getCustomNodes (): Map <CustomNode, ICustomNode>;
 
-
     initialize (): void;
 }

@@ -66,6 +66,7 @@
     "ts-node": "3.3.0",
     "tslint": "5.7.0",
     "tslint-eslint-rules": "4.1.1",
+    "tslint-language-service": "^0.9.6",
     "tslint-webpack-plugin": "1.0.0",
     "typescript": "2.5.0",
     "webpack": "3.5.5",

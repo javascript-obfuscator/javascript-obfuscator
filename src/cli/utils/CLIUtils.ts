@@ -24,7 +24,7 @@ export class CLIUtils {
      * @param {string} inputPath
      * @returns {string}
      */
-    public static getOutputCodePath (outputPath: string|undefined, inputPath: string): string {
+    public static getOutputCodePath (outputPath: string | undefined, inputPath: string): string {
         if (outputPath) {
             return outputPath;
         }

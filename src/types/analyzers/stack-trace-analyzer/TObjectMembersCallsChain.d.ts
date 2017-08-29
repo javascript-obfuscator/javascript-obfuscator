@@ -1,1 +1,1 @@
-export type TObjectMembersCallsChain = (string|number)[];
+export type TObjectMembersCallsChain = (string | number)[];

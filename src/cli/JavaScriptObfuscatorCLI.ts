@@ -107,7 +107,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
      */
     private buildOptions (): TInputOptions {
         const inputCLIOptions: TInputOptions = JavaScriptObfuscatorCLI.filterOptions(this.inputCLIOptions);
-        const configFilePath: string|undefined = this.inputCLIOptions.config;
+        const configFilePath: string | undefined = this.inputCLIOptions.config;
         const configFileLocation: string = configFilePath ? path.resolve(configFilePath, '.') : '';
         const configFileOptions: TInputOptions = configFileLocation ? CLIUtils.getUserConfig(configFileLocation) : {};
 

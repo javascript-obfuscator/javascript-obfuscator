@@ -18,7 +18,7 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
      * @param {MemberExpression} callee
      * @returns {ICalleeData}
      */
-    public extract (blockScopeBody: ESTree.Node[], callee: ESTree.MemberExpression): ICalleeData|null {
+    public extract (blockScopeBody: ESTree.Node[], callee: ESTree.MemberExpression): ICalleeData | null {
         if (!Node.isMemberExpressionNode(callee)) {
             return null;
         }
@@ -29,8 +29,8 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
             return null;
         }
 
-        const functionExpressionName: string|number|null = objectMembersCallsChain[objectMembersCallsChain.length - 1];
-        const calleeBlockStatement: ESTree.BlockStatement|null = this.getCalleeBlockStatement(
+        const functionExpressionName: string | number | null = objectMembersCallsChain[objectMembersCallsChain.length - 1];
+        const calleeBlockStatement: ESTree.BlockStatement | null = this.getCalleeBlockStatement(
             NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0],
             objectMembersCallsChain
         );
@@ -91,14 +91,14 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
     private getCalleeBlockStatement (
         targetNode: ESTree.Node,
         objectMembersCallsChain: TObjectMembersCallsChain
-    ): ESTree.BlockStatement|null {
-        const objectName: string|number|undefined = objectMembersCallsChain.shift();
+    ): ESTree.BlockStatement | null {
+        const objectName: string | number | undefined = objectMembersCallsChain.shift();
 
         if (!objectName) {
             return null;
         }
 
-        let calleeBlockStatement: ESTree.BlockStatement|null = null;
+        let calleeBlockStatement: ESTree.BlockStatement | null = null;
 
         estraverse.traverse(targetNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
@@ -127,8 +127,8 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
     private findCalleeBlockStatement (
         objectExpressionProperties: ESTree.Property[],
         objectMembersCallsChain: TObjectMembersCallsChain
-    ): ESTree.BlockStatement|null {
-        const nextItemInCallsChain: string|number|undefined = objectMembersCallsChain.shift();
+    ): ESTree.BlockStatement | null {
+        const nextItemInCallsChain: string | number | undefined = objectMembersCallsChain.shift();
 
         if (!nextItemInCallsChain) {
             return null;

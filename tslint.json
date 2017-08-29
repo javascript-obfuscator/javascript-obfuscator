@@ -82,6 +82,7 @@
     "no-multi-spaces": [true],
     "no-null-keyword": false,
     "no-parameter-properties": true,
+    "no-parameter-reassignment": false,
     "no-reference": true,
     "no-reference-import": true,
     "no-regex-spaces": true,
@@ -89,6 +90,7 @@
     "no-shadowed-variable": true,
     "no-string-literal": true,
     "no-string-throw": true,
+    "no-submodule-imports": true,
     "no-switch-case-fall-through": false,
     "no-trailing-whitespace": false,
     "no-unnecessary-callback-wrapper": true,
@@ -184,7 +186,9 @@
       "check-decl",
       "check-operator",
       "check-separator",
-      "check-type"
+      "check-type",
+      "check-type-operator",
+      "check-rest-spread"
     ]
   }
 }

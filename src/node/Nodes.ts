@@ -250,7 +250,7 @@ export class Nodes {
      * @param {string} raw
      * @returns {Literal}
      */
-    public static getLiteralNode (value: boolean|number|string, raw?: string): ESTree.Literal {
+    public static getLiteralNode (value: boolean | number | string, raw?: string): ESTree.Literal {
         raw = raw !== undefined ? raw : `'${value}'`;
 
         return {

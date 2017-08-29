@@ -8,5 +8,5 @@ export interface ICalleeDataExtractor {
      * @param callee
      * @returns ICalleeData|null
      */
-    extract (blockScopeBody: ESTree.Node[], callee: ESTree.Node): ICalleeData|null;
+    extract (blockScopeBody: ESTree.Node[], callee: ESTree.Node): ICalleeData | null;
 }

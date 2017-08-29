@@ -12,5 +12,5 @@ export abstract class AbstractCalleeDataExtractor implements ICalleeDataExtracto
      * @param {Node} callee
      * @returns {ICalleeData}
      */
-    public abstract extract (blockScopeBody: ESTree.Node[], callee: ESTree.Node): ICalleeData|null;
+    public abstract extract (blockScopeBody: ESTree.Node[], callee: ESTree.Node): ICalleeData | null;
 }

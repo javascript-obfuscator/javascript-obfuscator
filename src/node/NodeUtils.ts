@@ -88,7 +88,7 @@ export class NodeUtils {
      * @returns {TStatement[]}
      */
     public static convertCodeToStructure (code: string): TStatement[] {
-        let structure: ESTree.Program = esprima.parse(code);
+        let structure: ESTree.Program = esprima.parseScript(code);
 
         structure = NodeUtils.addXVerbatimPropertyToLiterals(structure);
         structure = NodeUtils.parentize(structure);

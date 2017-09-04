@@ -1,5 +1,9 @@
 Change Log
 ===
+v0.12.0
+---
+* Added obfuscation of `es2015` class names.
+
 v0.11.0
 ---
 * **New option:** `log` enables logging of the information to the console.

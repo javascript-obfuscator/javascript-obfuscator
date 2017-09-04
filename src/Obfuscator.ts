@@ -66,6 +66,7 @@ export class Obfuscator implements IObfuscator {
      */
     private static readonly obfuscatingTransformersList: NodeTransformer[] = [
         NodeTransformer.CatchClauseTransformer,
+        NodeTransformer.ClassDeclarationTransformer,
         NodeTransformer.FunctionDeclarationTransformer,
         NodeTransformer.FunctionTransformer,
         NodeTransformer.LabeledStatementTransformer,

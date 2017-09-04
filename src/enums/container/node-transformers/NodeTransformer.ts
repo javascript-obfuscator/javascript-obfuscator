@@ -1,5 +1,6 @@
 export enum NodeTransformer {
     BlockStatementControlFlowTransformer,
+    ClassDeclarationTransformer,
     DeadCodeInjectionTransformer,
     FunctionControlFlowTransformer,
     CatchClauseTransformer,

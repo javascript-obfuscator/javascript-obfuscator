@@ -57,6 +57,14 @@ export class Node {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isClassDeclarationNode (node: ESTree.Node): node is ESTree.ClassDeclaration {
+        return node.type === NodeType.ClassDeclaration;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isContinueStatementNode (node: ESTree.Node): node is ESTree.ContinueStatement {
         return node.type === NodeType.ContinueStatement;
     }

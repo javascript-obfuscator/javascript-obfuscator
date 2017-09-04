@@ -50,6 +50,7 @@ import './functional-tests/node-transformers/converting-transformers/method-defi
 import './functional-tests/node-transformers/converting-transformers/template-literal-transformer/TemplateLiteralTransformer.spec';
 import './functional-tests/node-transformers/dead-code-injection-transformers/DeadCodeInjectionTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/catch-clause-transformer/CatchClauseTransformer.spec';
+import './functional-tests/node-transformers/obfuscating-transformers/class-declaration-transformer/ClassDeclarationTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/function-declaration-transformer/FunctionDeclarationTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/function-transformer/FunctionTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/labeled-statement-transformer/LabeledStatementTransformer.spec';

@@ -4,8 +4,9 @@ import { ServiceIdentifiers } from './ServiceIdentifiers';
 import { analyzersModule } from './modules/analyzers/AnalyzersModule';
 import { controlFlowTransformersModule } from './modules/node-transformers/ControlFlowTransformersModule';
 import { customNodesModule } from './modules/custom-nodes/CustomNodesModule';
-import { obfuscatingTransformersModule } from './modules/node-transformers/ObfuscatingTransformersModule';
+import { nodeGuardsModule } from './modules/node-guards/NodeGuardsModule';
 import { nodeTransformersModule } from './modules/node-transformers/NodeTransformersModule';
+import { obfuscatingTransformersModule } from './modules/node-transformers/ObfuscatingTransformersModule';
 import { storagesModule } from './modules/storages/StoragesModule';
 import { utilsModule } from './modules/utils/UtilsModule';
 
@@ -194,6 +195,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         this.container.load(analyzersModule);
         this.container.load(controlFlowTransformersModule);
         this.container.load(customNodesModule);
+        this.container.load(nodeGuardsModule);
         this.container.load(nodeTransformersModule);
         this.container.load(obfuscatingTransformersModule);
         this.container.load(storagesModule);

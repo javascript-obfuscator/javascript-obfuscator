@@ -39,6 +39,7 @@ import './functional-tests/custom-nodes/string-array-nodes/StringArrayRotateFunc
 import './functional-tests/custom-nodes/string-array-nodes/StringArrayNode.spec';
 import './functional-tests/javascript-obfuscator/JavaScriptObfuscator.spec';
 import './functional-tests/javascript-obfuscator-internal/JavaScriptObfuscatorInternal.spec';
+import './functional-tests/node-guards/black-list-node-guard/BlackListNodeGuard.spec';
 import './functional-tests/node-transformers/control-flow-transformers/block-statement-control-flow-transformer/BlockStatementControlFlowTransformer.spec';
 import './functional-tests/node-transformers/control-flow-transformers/function-control-flow-transformer/FunctionControlFlowTransformer.spec';
 import './functional-tests/node-transformers/control-flow-transformers/control-flow-replacers/binary-expression-control-flow-replacer/BinaryExpressionControlFlowReplacer.spec';

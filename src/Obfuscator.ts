@@ -4,7 +4,7 @@ import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TNodeGuard } from './types/node/TNodeGuard';
+import { TNodeGuardFactory } from './types/container/node-guards/TNodeGuardFactory';
 import { TNodeTransformerFactory } from './types/container/node-transformers/TNodeTransformerFactory';
 import { TVisitorDirection } from './types/TVisitorDirection';
 import { TVisitorFunction } from './types/TVisitorFunction';
@@ -21,6 +21,7 @@ import { IStorage } from './interfaces/storages/IStorage';
 import { IVisitor } from './interfaces/IVisitor';
 
 import { LoggingMessage } from './enums/logger/LoggingMessage';
+import { NodeGuard } from './enums/container/node-guards/NodeGuard';
 import { NodeTransformer } from './enums/container/node-transformers/NodeTransformer';
 import { ObfuscationEvent } from './enums/event-emitters/ObfuscationEvent';
 import { VisitorDirection } from './enums/VisitorDirection';
@@ -30,13 +31,6 @@ import { NodeUtils } from './node/NodeUtils';
 
 @injectable()
 export class Obfuscator implements IObfuscator {
-    /**
-     * @type {((node: Node) => boolean)[]}
-     */
-    private static readonly blackListGuards: TNodeGuard[] = [
-        Node.isUseStrictOperator
-    ];
-
     /**
      * @type {NodeTransformer[]}
      */
@@ -75,6 +69,11 @@ export class Obfuscator implements IObfuscator {
         NodeTransformer.VariableDeclarationTransformer
     ];
 
+    private static readonly nodeGuardsList: NodeGuard[] = [
+        NodeGuard.BlackListNodeGuard,
+        NodeGuard.ConditionalCommentNodeGuard
+    ];
+
     /**
      * @type {IStorage<ICustomNodeGroup>}
      */
@@ -84,6 +83,11 @@ export class Obfuscator implements IObfuscator {
      * @type {Ilogger}
      */
     private readonly logger: ILogger;
+
+    /**
+     * @type {TNodeGuardFactory}
+     */
+    private readonly nodeGuardFactory: TNodeGuardFactory;
 
     /**
      * @type {TNodeTransformerFactory}
@@ -109,6 +113,7 @@ export class Obfuscator implements IObfuscator {
      * @param {IStackTraceAnalyzer} stackTraceAnalyzer
      * @param {IObfuscationEventEmitter} obfuscationEventEmitter
      * @param {IStorage<ICustomNodeGroup>} customNodeGroupStorage
+     * @param {TNodeGuardFactory} nodeGuardFactory
      * @param {TNodeTransformerFactory} nodeTransformerFactory
      * @param {ILogger} logger
      * @param {IOptions} options
@@ -117,6 +122,7 @@ export class Obfuscator implements IObfuscator {
         @inject(ServiceIdentifiers.IStackTraceAnalyzer) stackTraceAnalyzer: IStackTraceAnalyzer,
         @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
         @inject(ServiceIdentifiers.TCustomNodeGroupStorage) customNodeGroupStorage: IStorage<ICustomNodeGroup>,
+        @inject(ServiceIdentifiers.Factory__INodeGuard) nodeGuardFactory: TNodeGuardFactory,
         @inject(ServiceIdentifiers.Factory__INodeTransformer) nodeTransformerFactory: TNodeTransformerFactory,
         @inject(ServiceIdentifiers.ILogger) logger: ILogger,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
@@ -124,25 +130,10 @@ export class Obfuscator implements IObfuscator {
         this.stackTraceAnalyzer = stackTraceAnalyzer;
         this.obfuscationEventEmitter = obfuscationEventEmitter;
         this.customNodeGroupStorage = customNodeGroupStorage;
+        this.nodeGuardFactory = nodeGuardFactory;
         this.nodeTransformerFactory = nodeTransformerFactory;
         this.logger = logger;
         this.options = options;
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
-    private static isBlackListNode (node: ESTree.Node): boolean {
-        const guardsLength: number = Obfuscator.blackListGuards.length;
-
-        for (let i: number = 0; i < guardsLength; i++) {
-            if (Obfuscator.blackListGuards[i](node)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -250,7 +241,10 @@ export class Obfuscator implements IObfuscator {
         }
 
         return (node: ESTree.Node, parentNode: ESTree.Node) => {
-            if (Obfuscator.isBlackListNode(node)) {
+            const obfuscationEnabled: boolean = Obfuscator.nodeGuardsList
+                .every((nodeGuardName: NodeGuard) => this.nodeGuardFactory(nodeGuardName).check(node));
+
+            if (!obfuscationEnabled) {
                 return estraverse.VisitorOption.Skip;
             }
 

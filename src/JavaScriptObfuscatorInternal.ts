@@ -103,6 +103,7 @@ export class JavaScriptObfuscatorInternal implements IJavaScriptObfuscator {
      */
     private parseCode (sourceCode: string): ESTree.Program {
         return esprima.parseScript(sourceCode, {
+            attachComment: true,
             loc: this.options.sourceMap
         });
     }

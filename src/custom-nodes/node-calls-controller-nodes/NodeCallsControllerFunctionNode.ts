@@ -16,7 +16,7 @@ import { SingleNodeCallControllerTemplate } from '../../templates/custom-nodes/S
 import { NO_CUSTOM_NODES_PRESET } from '../../options/presets/NoCustomNodes';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
+import { JavaScriptObfuscator } from '../../JavaScriptObfuscatorFacade';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()

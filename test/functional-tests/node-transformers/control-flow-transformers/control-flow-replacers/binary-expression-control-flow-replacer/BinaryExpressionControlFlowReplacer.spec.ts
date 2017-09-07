@@ -6,7 +6,7 @@ import { NO_CUSTOM_NODES_PRESET } from '../../../../../../src/options/presets/No
 
 import { readFileAsString } from '../../../../../helpers/readFileAsString';
 
-import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscator';
+import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscatorFacade';
 
 describe('BinaryExpressionControlFlowReplacer', function () {
     this.timeout(100000);

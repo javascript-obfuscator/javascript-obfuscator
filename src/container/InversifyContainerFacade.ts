@@ -17,19 +17,19 @@ import { IJavaScriptObfuscator } from '../interfaces/IJavaScriptObfsucator';
 import { ILogger } from '../interfaces/logger/ILogger';
 import { IObfuscationEventEmitter } from '../interfaces/event-emitters/IObfuscationEventEmitter';
 import { IObfuscationResult } from '../interfaces/IObfuscationResult';
-import { IObfuscator } from '../interfaces/IObfuscator';
 import { IOptions } from '../interfaces/options/IOptions';
 import { ISourceCode } from '../interfaces/ISourceCode';
 import { ISourceMapCorrector } from '../interfaces/ISourceMapCorrector';
+import { ITransformersRunner } from '../interfaces/ITransformersRunner';
 
-import { JavaScriptObfuscatorInternal } from '../JavaScriptObfuscatorInternal';
+import { JavaScriptObfuscator } from '../JavaScriptObfuscator';
 import { Logger } from '../logger/Logger';
 import { ObfuscationEventEmitter } from '../event-emitters/ObfuscationEventEmitter';
 import { ObfuscationResult } from '../ObfuscationResult';
-import { Obfuscator } from '../Obfuscator';
 import { Options } from "../options/Options";
 import { SourceCode } from '../SourceCode';
 import { SourceMapCorrector } from '../SourceMapCorrector';
+import { TransformersRunner } from '../TransformersRunner';
 
 export class InversifyContainerFacade implements IInversifyContainerFacade {
     /**
@@ -155,12 +155,12 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
 
         this.container
             .bind<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator)
-            .to(JavaScriptObfuscatorInternal)
+            .to(JavaScriptObfuscator)
             .inSingletonScope();
 
         this.container
-            .bind<IObfuscator>(ServiceIdentifiers.IObfuscator)
-            .to(Obfuscator)
+            .bind<ITransformersRunner>(ServiceIdentifiers.ITransformersRunner)
+            .to(TransformersRunner)
             .inSingletonScope();
 
         this.container

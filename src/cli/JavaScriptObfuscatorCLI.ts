@@ -18,7 +18,7 @@ import { SourceMapModeSanitizer } from './sanitizers/SourceMapModeSanitizer';
 import { StringArrayEncodingSanitizer } from './sanitizers/StringArrayEncodingSanitizer';
 
 import { CLIUtils } from './utils/CLIUtils';
-import { JavaScriptObfuscator } from '../JavaScriptObfuscator';
+import { JavaScriptObfuscator } from '../JavaScriptObfuscatorFacade';
 
 export class JavaScriptObfuscatorCLI implements IInitializable {
     /**

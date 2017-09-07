@@ -18,7 +18,7 @@ import { SelfDefendingTemplate } from '../../templates/custom-nodes/string-array
 import { StringArrayRotateFunctionTemplate } from '../../templates/custom-nodes/string-array-nodes/string-array-rotate-function-node/StringArrayRotateFunctionTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
+import { JavaScriptObfuscator } from '../../JavaScriptObfuscatorFacade';
 import { NodeUtils } from '../../node/NodeUtils';
 import { Utils } from '../../utils/Utils';
 

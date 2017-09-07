@@ -6,7 +6,7 @@ import { NO_CUSTOM_NODES_PRESET } from '../../../../src/options/presets/NoCustom
 
 import { readFileAsString } from '../../../helpers/readFileAsString';
 
-import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
+import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade';
 
 describe('StringArrayCallsWrapper', () => {
     const regExp: RegExp = /_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6} *- *0x0\;/;

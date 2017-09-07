@@ -9,7 +9,6 @@ import { TStatement } from '../types/node/TStatement';
 import { NodeType } from '../enums/NodeType';
 
 import { Node } from './Node';
-import { Nodes } from './Nodes';
 
 export class NodeUtils {
     /**
@@ -44,7 +43,7 @@ export class NodeUtils {
      * @param {T} astTree
      * @returns {T}
      */
-    public static clone <T extends ESTree.Node> (astTree: T): T {
+    public static clone <T extends ESTree.Node = ESTree.Node> (astTree: T): T {
         /**
          * @param {T} node
          * @returns {T}
@@ -151,11 +150,13 @@ export class NodeUtils {
             }
         }
 
-        if (!Node.isProgramNode(parentNode)) {
+        if (node !== parentNode) {
             return NodeUtils.getBlockScopesOfNode(parentNode, blockScopes);
         }
 
-        blockScopes.push(parentNode);
+        if (Node.isNodeHasBlockStatement(parentNode)) {
+            blockScopes.push(parentNode);
+        }
 
         return blockScopes;
     }
@@ -199,27 +200,10 @@ export class NodeUtils {
      * @param {T} astTree
      * @returns {T}
      */
-    public static parentize <T extends ESTree.Node> (astTree: T): T {
-        let isRootNode: boolean = true;
-
+    public static parentize <T extends ESTree.Node = ESTree.Program> (astTree: T): T {
         estraverse.traverse(astTree, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                let value: ESTree.Node;
-
-                if (isRootNode) {
-                    if (node.type === NodeType.Program) {
-                        value = node;
-                    } else {
-                        value = Nodes.getProgramNode(<TStatement[]>[node]);
-                        value.parentNode = value;
-                    }
-
-                    isRootNode = false;
-                } else {
-                    value = parentNode || node;
-                }
-
-                node.parentNode = value;
+                node.parentNode = parentNode || node;
                 node.obfuscatedNode = false;
             }
         });

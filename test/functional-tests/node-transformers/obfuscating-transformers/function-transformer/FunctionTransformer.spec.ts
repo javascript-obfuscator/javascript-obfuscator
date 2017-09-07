@@ -6,7 +6,7 @@ import { NO_CUSTOM_NODES_PRESET } from '../../../../../src/options/presets/NoCus
 
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
-import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
+import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
 
 describe('FunctionTransformer', () => {

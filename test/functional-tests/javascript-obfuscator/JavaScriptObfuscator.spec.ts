@@ -2,7 +2,7 @@ import { assert } from 'chai';
 
 import { IObfuscationResult } from '../../../src/interfaces/IObfuscationResult';
 
-import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscator';
+import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscatorFacade';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../src/options/presets/NoCustomNodes';
 

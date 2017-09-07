@@ -1,6 +1,7 @@
 import { injectable, inject, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
+import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { IInitializable } from '../interfaces/IInitializable';
@@ -54,7 +55,7 @@ export abstract class AbstractNodeTransformer implements INodeTransformer, IInit
     /**
      * @param {Node} node
      * @param {Node} parentNode
-     * @returns {Node}
+     * @returns {Node | VisitorOption}
      */
-    public abstract transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node;
+    public abstract transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node | estraverse.VisitorOption;
 }

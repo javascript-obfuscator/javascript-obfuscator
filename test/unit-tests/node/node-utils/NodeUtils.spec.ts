@@ -525,16 +525,11 @@ describe('NodeUtils', () => {
 
         describe('parentize AST-tree', () => {
             beforeEach(() => {
-                programNode = Nodes.getProgramNode([
-                    ifStatementNode
-                ]);
-                programNode.parentNode = programNode;
-
                 ifStatementNode = NodeUtils.parentize(ifStatementNode);
             });
 
             it('should parentize `ifStatement` node', () => {
-                assert.deepEqual(ifStatementNode.parentNode, programNode);
+                assert.deepEqual(ifStatementNode.parentNode, ifStatementNode);
             });
 
             it('should parentize `ifStatement blockStatement` node', () => {

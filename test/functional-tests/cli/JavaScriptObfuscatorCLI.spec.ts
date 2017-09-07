@@ -6,7 +6,7 @@ import { assert } from 'chai';
 
 import { StdoutWriteMock } from '../../mocks/StdoutWriteMock';
 
-import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscator';
+import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscatorFacade';
 
 describe('JavaScriptObfuscatorCLI', function (): void {
     this.timeout(100000);

@@ -4,7 +4,7 @@ import { IObfuscationResult } from '../../src/interfaces/IObfuscationResult';
 
 import { readFileAsString } from '../helpers/readFileAsString';
 
-import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscator';
+import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscatorFacade';
 
 describe('JavaScriptObfuscator runtime eval', function () {
     this.timeout(100000);

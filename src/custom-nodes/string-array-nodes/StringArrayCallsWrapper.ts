@@ -23,7 +23,7 @@ import { StringArrayCallsWrapperTemplate } from '../../templates/custom-nodes/st
 import { StringArrayRc4DecodeNodeTemplate } from '../../templates/custom-nodes/string-array-nodes/string-array-calls-wrapper/StringArrayRC4DecodeNodeTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
+import { JavaScriptObfuscator } from '../../JavaScriptObfuscatorFacade';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()

@@ -31,6 +31,11 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     private readonly collectedBlockStatements: ESTree.BlockStatement[] = [];
 
     /**
+     * @type {number}
+     */
+    private collectedBlockStatementsLength: number;
+
+    /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
@@ -46,8 +51,15 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (): IVisitor {
         return {
-            leave: (node: ESTree.Node, parentNode: ESTree.Node) => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
                 if (Node.isProgramNode(node)) {
+                    this.analyzeNode(node, parentNode);
+
+                    return node;
+                }
+            },
+            leave: (node: ESTree.Node, parentNode: ESTree.Node) => {
+                if (Node.isBlockStatementNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -55,14 +67,52 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {Program} programNode
+     * @param {Node} programNode
      * @param {Node} parentNode
-     * @returns {Node}
      */
-    public transformNode (programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
-        this.transformProgramNode(programNode);
+    public analyzeNode (programNode: ESTree.Node, parentNode: ESTree.Node): void {
+        estraverse.traverse(programNode, {
+            enter: (node: ESTree.Node): any => {
+                if (Node.isBlockStatementNode(node)) {
+                    this.collectBlockStatementNodes(node, this.collectedBlockStatements);
+                }
+            }
+        });
 
-        return programNode;
+        this.collectedBlockStatementsLength = this.collectedBlockStatements.length;
+    }
+
+    /**
+     * @param {BlockStatement} blockStatementNode
+     * @param {Node} parentNode
+     * @returns {Node | VisitorOption}
+     */
+    public transformNode (
+        blockStatementNode: ESTree.BlockStatement,
+        parentNode: ESTree.Node
+    ): ESTree.Node | estraverse.VisitorOption {
+        if (this.collectedBlockStatementsLength < DeadCodeInjectionTransformer.minCollectedBlockStatementsCount) {
+            return estraverse.VisitorOption.Break;
+        }
+
+        if (!this.collectedBlockStatements.length) {
+            return estraverse.VisitorOption.Break;
+        }
+
+        if (this.randomGenerator.getMathRandom() > this.options.deadCodeInjectionThreshold) {
+            return blockStatementNode;
+        }
+
+        const minInteger: number = 0;
+        const maxInteger: number = this.collectedBlockStatements.length - 1;
+        const randomIndex: number = this.randomGenerator.getRandomInteger(minInteger, maxInteger);
+        const randomBlockStatementNode: ESTree.BlockStatement = this.collectedBlockStatements.splice(randomIndex, 1)[0];
+
+        if (randomBlockStatementNode === blockStatementNode) {
+            return blockStatementNode;
+        }
+
+        return this.replaceBlockStatementNode(blockStatementNode, randomBlockStatementNode);
     }
 
     /**
@@ -162,50 +212,5 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         newBlockStatementNode = NodeUtils.parentize(newBlockStatementNode);
 
         return newBlockStatementNode;
-    }
-
-    /**
-     * @param {Program} programNode
-     */
-    private transformProgramNode (programNode: ESTree.Program): void {
-        estraverse.traverse(programNode, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (!Node.isBlockStatementNode(node)) {
-                    return;
-                }
-
-                this.collectBlockStatementNodes(node, this.collectedBlockStatements);
-            }
-        });
-
-        if (this.collectedBlockStatements.length < DeadCodeInjectionTransformer.minCollectedBlockStatementsCount) {
-            return;
-        }
-
-        estraverse.replace(programNode, {
-            leave: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (!this.collectedBlockStatements.length) {
-                    return estraverse.VisitorOption.Break;
-                }
-
-                if (
-                    !Node.isBlockStatementNode(node) ||
-                    this.randomGenerator.getMathRandom() > this.options.deadCodeInjectionThreshold
-                ) {
-                    return node;
-                }
-
-                const minInteger: number = 0;
-                const maxInteger: number = this.collectedBlockStatements.length - 1;
-                const randomIndex: number = this.randomGenerator.getRandomInteger(minInteger, maxInteger);
-                const randomBlockStatementNode: ESTree.BlockStatement = this.collectedBlockStatements.splice(randomIndex, 1)[0];
-
-                if (randomBlockStatementNode === node) {
-                    return node;
-                }
-
-                return this.replaceBlockStatementNode(node, randomBlockStatementNode);
-            }
-        });
     }
 }

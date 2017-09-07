@@ -19,10 +19,21 @@ import { LiteralTransformer } from '../../../node-transformers/obfuscating-trans
 import { MemberExpressionTransformer } from '../../../node-transformers/converting-transformers/MemberExpressionTransformer';
 import { MethodDefinitionTransformer } from '../../../node-transformers/converting-transformers/MethodDefinitionTransformer';
 import { ObjectExpressionTransformer } from '../../../node-transformers/obfuscating-transformers/ObjectExpressionTransformer';
+import { ParentizeTransformer } from '../../../node-transformers/preparing-transformers/ParentizeTransformer';
 import { TemplateLiteralTransformer } from '../../../node-transformers/converting-transformers/TemplateLiteralTransformer';
 import { VariableDeclarationTransformer } from '../../../node-transformers/obfuscating-transformers/VariableDeclarationTransformer';
+import { NodeGuardTransformer } from '../../../node-transformers/preparing-transformers/NodeGuardTransformer';
 
 export const nodeTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
+    // preparing transformers
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(ParentizeTransformer)
+        .whenTargetNamed(NodeTransformer.ParentizeTransformer);
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(NodeGuardTransformer)
+        .whenTargetNamed(NodeTransformer.NodeGuardTransformer);
+
     // control flow transformers
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(BlockStatementControlFlowTransformer)

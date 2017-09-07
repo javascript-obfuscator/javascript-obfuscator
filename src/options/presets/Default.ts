@@ -1,6 +1,6 @@
 import { TInputOptions } from '../../types/options/TInputOptions';
 
-import { SourceMapMode } from '../../enums/SourceMapMode';
+import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
 
 export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     compact: true,

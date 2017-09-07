@@ -10,7 +10,7 @@ import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IVisitor } from '../../interfaces/IVisitor';
+import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { ControlFlowCustomNode } from '../../enums/container/custom-nodes/ControlFlowCustomNode';
 

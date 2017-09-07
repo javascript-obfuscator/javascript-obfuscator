@@ -1,7 +1,7 @@
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { IVisitor } from '../IVisitor';
+import { IVisitor } from './IVisitor';
 
 export interface INodeTransformer {
     /**

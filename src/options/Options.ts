@@ -20,7 +20,7 @@ import { TInputOptions } from '../types/options/TInputOptions';
 
 import { IOptions } from '../interfaces/options/IOptions';
 
-import { TSourceMapMode } from '../types/TSourceMapMode';
+import { TSourceMapMode } from '../types/source-map/TSourceMapMode';
 import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 
 import { DEFAULT_PRESET } from './presets/Default';

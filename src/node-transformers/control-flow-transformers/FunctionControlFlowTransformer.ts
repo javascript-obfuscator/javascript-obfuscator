@@ -13,10 +13,10 @@ import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IStorage } from '../../interfaces/storages/IStorage';
-import { IVisitor } from '../../interfaces/IVisitor';
+import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { ControlFlowCustomNode } from '../../enums/container/custom-nodes/ControlFlowCustomNode';
-import { NodeType } from '../../enums/NodeType';
+import { NodeType } from '../../enums/node/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';

@@ -10,10 +10,10 @@ import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatemen
 import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IVisitor } from '../../interfaces/IVisitor';
+import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { IdentifierObfuscatingReplacer } from "../../enums/container/node-transformers/IdentifierObfuscatingReplacer";
-import { NodeType } from '../../enums/NodeType';
+import { NodeType } from '../../enums/node/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';

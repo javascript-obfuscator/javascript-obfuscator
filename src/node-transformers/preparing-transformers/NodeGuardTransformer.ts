@@ -5,7 +5,7 @@ import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IVisitor } from '../../interfaces/IVisitor';
+import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { NodeGuard } from '../../enums/container/node-guards/NodeGuard';
 

@@ -1,21 +1,21 @@
 import { injectable, inject } from 'inversify';
-import { ServiceIdentifiers } from './container/ServiceIdentifiers';
+import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TNodeTransformerFactory } from './types/container/node-transformers/TNodeTransformerFactory';
-import { TVisitorDirection } from './types/TVisitorDirection';
-import { TVisitorFunction } from './types/TVisitorFunction';
-import { TVisitorResult } from './types/TVisitorResult';
+import { TNodeTransformerFactory } from '../types/container/node-transformers/TNodeTransformerFactory';
+import { TVisitorDirection } from '../types/node-transformers/TVisitorDirection';
+import { TVisitorFunction } from '../types/node-transformers/TVisitorFunction';
+import { TVisitorResult } from '../types/node-transformers/TVisitorResult';
 
-import { ITransformersRunner } from './interfaces/ITransformersRunner';
-import { IVisitor } from './interfaces/IVisitor';
+import { ITransformersRunner } from '../interfaces/node-transformers/ITransformersRunner';
+import { IVisitor } from '../interfaces/node-transformers/IVisitor';
 
-import { NodeTransformer } from './enums/container/node-transformers/NodeTransformer';
-import { VisitorDirection } from './enums/VisitorDirection';
+import { NodeTransformer } from '../enums/container/node-transformers/NodeTransformer';
+import { VisitorDirection } from '../enums/node-transformers/VisitorDirection';
 
-import { Node } from './node/Node';
+import { Node } from '../node/Node';
 
 @injectable()
 export class TransformersRunner implements ITransformersRunner {

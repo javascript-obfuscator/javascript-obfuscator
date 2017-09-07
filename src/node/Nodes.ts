@@ -3,7 +3,7 @@ import * as ESTree from 'estree';
 
 import { TStatement } from '../types/node/TStatement';
 
-import { NodeType } from '../enums/NodeType';
+import { NodeType } from '../enums/node/NodeType';
 
 export class Nodes {
     /**

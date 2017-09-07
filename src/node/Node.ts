@@ -2,7 +2,7 @@ import * as ESTree from 'estree';
 
 import { TNodeWithBlockStatement } from '../types/node/TNodeWithBlockStatement';
 
-import { NodeType } from '../enums/NodeType';
+import { NodeType } from '../enums/node/NodeType';
 
 export class Node {
     /**

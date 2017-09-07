@@ -1,6 +1,6 @@
 import * as ESTree from 'estree';
 
-import { NodeTransformer } from '../enums/container/node-transformers/NodeTransformer';
+import { NodeTransformer } from '../../enums/container/node-transformers/NodeTransformer';
 
 export interface ITransformersRunner {
     /**

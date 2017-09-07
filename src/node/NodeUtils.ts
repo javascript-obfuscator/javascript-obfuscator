@@ -6,7 +6,7 @@ import * as ESTree from 'estree';
 import { TNodeWithBlockStatement } from '../types/node/TNodeWithBlockStatement';
 import { TStatement } from '../types/node/TStatement';
 
-import { NodeType } from '../enums/NodeType';
+import { NodeType } from '../enums/node/NodeType';
 
 import { Node } from './Node';
 

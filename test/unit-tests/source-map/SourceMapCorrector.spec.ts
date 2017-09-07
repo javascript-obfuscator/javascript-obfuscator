@@ -2,13 +2,13 @@ import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
 
 import { assert } from 'chai';
 
-import { TSourceMapMode } from '../../../src/types/TSourceMapMode';
+import { TSourceMapMode } from '../../../src/types/source-map/TSourceMapMode';
 
 import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
 import { IObfuscationResult } from '../../../src/interfaces/IObfuscationResult';
-import { ISourceMapCorrector } from '../../../src/interfaces/ISourceMapCorrector';
+import { ISourceMapCorrector } from '../../../src/interfaces/source-map/ISourceMapCorrector';
 
-import { SourceMapMode } from '../../../src/enums/SourceMapMode';
+import { SourceMapMode } from '../../../src/enums/source-map/SourceMapMode';
 
 import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
 

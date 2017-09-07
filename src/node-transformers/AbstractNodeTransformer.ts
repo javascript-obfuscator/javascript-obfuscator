@@ -8,7 +8,7 @@ import { IInitializable } from '../interfaces/IInitializable';
 import { INodeTransformer } from '../interfaces/node-transformers/INodeTransformer';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
-import { IVisitor } from '../interfaces/IVisitor';
+import { IVisitor } from '../interfaces/node-transformers/IVisitor';
 
 import { initializable } from '../decorators/Initializable';
 

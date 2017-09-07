@@ -19,8 +19,8 @@ import { IObfuscationEventEmitter } from '../interfaces/event-emitters/IObfuscat
 import { IObfuscationResult } from '../interfaces/IObfuscationResult';
 import { IOptions } from '../interfaces/options/IOptions';
 import { ISourceCode } from '../interfaces/ISourceCode';
-import { ISourceMapCorrector } from '../interfaces/ISourceMapCorrector';
-import { ITransformersRunner } from '../interfaces/ITransformersRunner';
+import { ISourceMapCorrector } from '../interfaces/source-map/ISourceMapCorrector';
+import { ITransformersRunner } from '../interfaces/node-transformers/ITransformersRunner';
 
 import { JavaScriptObfuscator } from '../JavaScriptObfuscator';
 import { Logger } from '../logger/Logger';
@@ -28,8 +28,8 @@ import { ObfuscationEventEmitter } from '../event-emitters/ObfuscationEventEmitt
 import { ObfuscationResult } from '../ObfuscationResult';
 import { Options } from "../options/Options";
 import { SourceCode } from '../SourceCode';
-import { SourceMapCorrector } from '../SourceMapCorrector';
-import { TransformersRunner } from '../TransformersRunner';
+import { SourceMapCorrector } from '../source-map/SourceMapCorrector';
+import { TransformersRunner } from '../node-transformers/TransformersRunner';
 
 export class InversifyContainerFacade implements IInversifyContainerFacade {
     /**

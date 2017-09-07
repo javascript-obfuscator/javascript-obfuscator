@@ -7,7 +7,7 @@ import { TLiteralObfuscatingReplacerFactory } from '../../types/container/node-t
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IVisitor } from '../../interfaces/IVisitor';
+import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { LiteralObfuscatingReplacer } from '../../enums/container/node-transformers/LiteralObfuscatingReplacer';
 

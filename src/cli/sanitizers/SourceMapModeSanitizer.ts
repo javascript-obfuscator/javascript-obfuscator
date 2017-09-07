@@ -1,6 +1,6 @@
 import { TCLISanitizer } from '../../types/cli/TCLISanitizer';
 
-import { SourceMapMode } from '../../enums/SourceMapMode';
+import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
 
 /**
  * @param {string} value

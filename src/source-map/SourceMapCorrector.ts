@@ -1,14 +1,14 @@
 import { injectable, inject } from 'inversify';
-import { ServiceIdentifiers } from './container/ServiceIdentifiers';
+import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
-import { TObfuscationResultFactory } from './types/container/TObfuscationResultFactory';
+import { TObfuscationResultFactory } from '../types/container/TObfuscationResultFactory';
 
-import { ICryptUtils } from './interfaces/utils/ICryptUtils';
-import { IObfuscationResult } from './interfaces/IObfuscationResult';
-import { IOptions } from './interfaces/options/IOptions';
-import { ISourceMapCorrector } from './interfaces/ISourceMapCorrector';
+import { ICryptUtils } from '../interfaces/utils/ICryptUtils';
+import { IObfuscationResult } from '../interfaces/IObfuscationResult';
+import { IOptions } from '../interfaces/options/IOptions';
+import { ISourceMapCorrector } from '../interfaces/source-map/ISourceMapCorrector';
 
-import { SourceMapMode } from './enums/SourceMapMode';
+import { SourceMapMode } from '../enums/source-map/SourceMapMode';
 
 @injectable()
 export class SourceMapCorrector implements ISourceMapCorrector {

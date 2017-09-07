@@ -1,4 +1,4 @@
-import { TSourceMapMode } from '../../types/TSourceMapMode';
+import { TSourceMapMode } from '../../types/source-map/TSourceMapMode';
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 
 export interface IOptions {

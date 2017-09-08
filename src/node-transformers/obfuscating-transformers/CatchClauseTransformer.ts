@@ -6,15 +6,15 @@ import * as ESTree from 'estree';
 
 import { TIdentifierObfuscatingReplacerFactory } from '../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory';
 
-import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/IIdentifierObfuscatingReplacer';
+import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
-import { IdentifierObfuscatingReplacer } from '../../enums/container/node-transformers/IdentifierObfuscatingReplacer';
+import { IdentifierObfuscatingReplacer } from '../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/IdentifierObfuscatingReplacer';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { Node } from '../../node/Node';
+import { NodeGuards } from '../../node/NodeGuards';
 
 /**
  * replaces:
@@ -55,7 +55,7 @@ export class CatchClauseTransformer extends AbstractNodeTransformer {
     public getVisitor (): IVisitor {
         return {
             enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (Node.isCatchClauseNode(node)) {
+                if (NodeGuards.isCatchClauseNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -64,8 +64,8 @@ export class CatchClauseTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {CatchClause} catchClauseNode
-     * @param {Node} parentNode
-     * @returns {Node}
+     * @param {NodeGuards} parentNode
+     * @returns {NodeGuards}
      */
     public transformNode (catchClauseNode: ESTree.CatchClause, parentNode: ESTree.Node): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
@@ -81,7 +81,7 @@ export class CatchClauseTransformer extends AbstractNodeTransformer {
      * @param {number} nodeIdentifier
      */
     private storeCatchClauseParam (catchClauseNode: ESTree.CatchClause, nodeIdentifier: number): void {
-        if (Node.isIdentifierNode(catchClauseNode.param)) {
+        if (NodeGuards.isIdentifierNode(catchClauseNode.param)) {
             this.identifierObfuscatingReplacer.storeNames(catchClauseNode.param.name, nodeIdentifier);
         }
     }
@@ -93,7 +93,7 @@ export class CatchClauseTransformer extends AbstractNodeTransformer {
     private replaceCatchClauseParam (catchClauseNode: ESTree.CatchClause, nodeIdentifier: number): void {
         estraverse.replace(catchClauseNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (Node.isReplaceableIdentifierNode(node, parentNode)) {
+                if (NodeGuards.isReplaceableIdentifierNode(node, parentNode)) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer.replace(node.name, nodeIdentifier);
                     const newIdentifierName: string = newIdentifier.name;
 

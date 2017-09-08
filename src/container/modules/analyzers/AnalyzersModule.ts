@@ -5,7 +5,7 @@ import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 import { ICalleeDataExtractor } from '../../../interfaces/analyzers/stack-trace-analyzer/ICalleeDataExtractor';
 import { IStackTraceAnalyzer } from '../../../interfaces/analyzers/stack-trace-analyzer/IStackTraceAnalyzer';
 
-import { CalleeDataExtractor } from '../../../enums/container/stack-trace-analyzer/CalleeDataExtractor';
+import { CalleeDataExtractor } from '../../../enums/analyzers/stack-trace-analyzer/CalleeDataExtractor';
 import { FunctionDeclarationCalleeDataExtractor } from '../../../analyzers/stack-trace-analyzer/callee-data-extractors/FunctionDeclarationCalleeDataExtractor';
 import { FunctionExpressionCalleeDataExtractor } from '../../../analyzers/stack-trace-analyzer/callee-data-extractors/FunctionExpressionCalleeDataExtractor';
 import { ObjectExpressionCalleeDataExtractor } from '../../../analyzers/stack-trace-analyzer/callee-data-extractors/ObjectExpressionCalleeDataExtractor';

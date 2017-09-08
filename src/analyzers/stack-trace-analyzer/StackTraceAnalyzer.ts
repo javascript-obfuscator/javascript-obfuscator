@@ -10,9 +10,9 @@ import { ICalleeData } from '../../interfaces/analyzers/stack-trace-analyzer/ICa
 import { IStackTraceAnalyzer } from '../../interfaces/analyzers/stack-trace-analyzer/IStackTraceAnalyzer';
 import { IStackTraceData } from '../../interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
 
-import { CalleeDataExtractor } from '../../enums/container/stack-trace-analyzer/CalleeDataExtractor';
+import { CalleeDataExtractor } from '../../enums/analyzers/stack-trace-analyzer/CalleeDataExtractor';
 
-import { Node } from '../../node/Node';
+import { NodeGuards } from '../../node/NodeGuards';
 import { NodeUtils } from '../../node/NodeUtils';
 
 /**
@@ -110,7 +110,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     }
 
     /**
-     * @param {Node[]} blockScopeBody
+     * @param {NodeGuards[]} blockScopeBody
      * @returns {IStackTraceData[]}
      */
     private analyzeRecursive (blockScopeBody: ESTree.Node[]): IStackTraceData[] {
@@ -127,7 +127,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
 
             estraverse.traverse(blockScopeBodyNode, {
                 enter: (node: ESTree.Node): any => {
-                    if (!Node.isCallExpressionNode(node)) {
+                    if (!NodeGuards.isCallExpressionNode(node)) {
                         return;
                     }
 
@@ -145,7 +145,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
 
     /**
      * @param {IStackTraceData[]} stackTraceData
-     * @param {Node[]} blockScopeBody
+     * @param {NodeGuards[]} blockScopeBody
      * @param {CallExpression} callExpressionNode
      */
     private analyzeCallExpressionNode (

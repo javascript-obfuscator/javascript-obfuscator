@@ -6,18 +6,18 @@ import * as ESTree from 'estree';
 import { ICalleeData } from '../../../interfaces/analyzers/stack-trace-analyzer/ICalleeData';
 
 import { AbstractCalleeDataExtractor } from './AbstractCalleeDataExtractor';
-import { Node } from '../../../node/Node';
+import { NodeGuards } from '../../../node/NodeGuards';
 import { NodeUtils } from '../../../node/NodeUtils';
 
 @injectable()
 export class FunctionDeclarationCalleeDataExtractor extends AbstractCalleeDataExtractor {
     /**
-     * @param {Node[]} blockScopeBody
+     * @param {NodeGuards[]} blockScopeBody
      * @param {Identifier} callee
      * @returns {ICalleeData}
      */
     public extract (blockScopeBody: ESTree.Node[], callee: ESTree.Identifier): ICalleeData | null {
-        if (!Node.isIdentifierNode(callee)) {
+        if (!NodeGuards.isIdentifierNode(callee)) {
             return null;
         }
 
@@ -37,7 +37,7 @@ export class FunctionDeclarationCalleeDataExtractor extends AbstractCalleeDataEx
     }
 
     /**
-     * @param {Node} targetNode
+     * @param {NodeGuards} targetNode
      * @param {string} name
      * @returns {BlockStatement}
      */
@@ -46,7 +46,7 @@ export class FunctionDeclarationCalleeDataExtractor extends AbstractCalleeDataEx
 
         estraverse.traverse(targetNode, {
             enter: (node: ESTree.Node): any => {
-                if (Node.isFunctionDeclarationNode(node) && node.id.name === name) {
+                if (NodeGuards.isFunctionDeclarationNode(node) && node.id.name === name) {
                     calleeBlockStatement = node.body;
 
                     return estraverse.VisitorOption.Break;

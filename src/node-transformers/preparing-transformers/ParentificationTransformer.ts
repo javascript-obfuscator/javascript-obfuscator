@@ -13,7 +13,7 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
  * Adds `parentNode` properties to each node
  */
 @injectable()
-export class ParentizeTransformer extends AbstractNodeTransformer {
+export class ParentificationTransformer extends AbstractNodeTransformer {
     /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options

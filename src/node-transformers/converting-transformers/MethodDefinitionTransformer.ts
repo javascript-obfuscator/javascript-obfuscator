@@ -10,7 +10,7 @@ import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 import { NodeType } from '../../enums/node/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { Node } from '../../node/Node';
+import { NodeGuards } from '../../node/NodeGuards';
 
 /**
  * replaces:
@@ -45,7 +45,7 @@ export class MethodDefinitionTransformer extends AbstractNodeTransformer {
     public getVisitor (): IVisitor {
         return {
             enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (Node.isMethodDefinitionNode(node)) {
+                if (NodeGuards.isMethodDefinitionNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -64,12 +64,12 @@ export class MethodDefinitionTransformer extends AbstractNodeTransformer {
      * Literal node will be obfuscated by LiteralTransformer
      *
      * @param {MethodDefinition} methodDefinitionNode
-     * @param {Node} parentNode
-     * @returns {Node}
+     * @param {NodeGuards} parentNode
+     * @returns {NodeGuards}
      */
     public transformNode (methodDefinitionNode: ESTree.MethodDefinition, parentNode: ESTree.Node): ESTree.Node {
         if (
-            Node.isIdentifierNode(methodDefinitionNode.key) &&
+            NodeGuards.isIdentifierNode(methodDefinitionNode.key) &&
             !MethodDefinitionTransformer.ignoredNames.includes(methodDefinitionNode.key.name) &&
             methodDefinitionNode.computed === false
         ) {

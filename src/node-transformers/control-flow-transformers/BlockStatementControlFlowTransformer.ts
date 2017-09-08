@@ -12,10 +12,10 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
-import { ControlFlowCustomNode } from '../../enums/container/custom-nodes/ControlFlowCustomNode';
+import { ControlFlowCustomNode } from '../../enums/custom-nodes/ControlFlowCustomNode';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { Node } from '../../node/Node';
+import { NodeGuards } from '../../node/NodeGuards';
 
 @injectable()
 export class BlockStatementControlFlowTransformer extends AbstractNodeTransformer {
@@ -54,11 +54,11 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
      */
     private static blockStatementHasProhibitedStatements (blockStatementNode: ESTree.BlockStatement): boolean {
         return blockStatementNode.body.some((statement: ESTree.Statement) => {
-            const isBreakOrContinueStatement: boolean = Node.isBreakStatementNode(statement) || Node.isContinueStatementNode(statement);
-            const isVariableDeclarationWithLetOrConstKind: boolean = Node.isVariableDeclarationNode(statement)
+            const isBreakOrContinueStatement: boolean = NodeGuards.isBreakStatementNode(statement) || NodeGuards.isContinueStatementNode(statement);
+            const isVariableDeclarationWithLetOrConstKind: boolean = NodeGuards.isVariableDeclarationNode(statement)
                 && (statement.kind === 'const' || statement.kind === 'let');
 
-            return Node.isFunctionDeclarationNode(statement) || isBreakOrContinueStatement || isVariableDeclarationWithLetOrConstKind;
+            return NodeGuards.isFunctionDeclarationNode(statement) || isBreakOrContinueStatement || isVariableDeclarationWithLetOrConstKind;
         });
     }
 
@@ -71,12 +71,12 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
 
         estraverse.traverse(blockStatementNode, {
             enter: (node: ESTree.Node): any => {
-                if (Node.isWhileStatementNode(node)) {
+                if (NodeGuards.isWhileStatementNode(node)) {
                     return estraverse.VisitorOption.Skip;
                 }
 
                 if (
-                    Node.isBlockStatementNode(node)
+                    NodeGuards.isBlockStatementNode(node)
                     && BlockStatementControlFlowTransformer.blockStatementHasProhibitedStatements(node)
                 ) {
                     canTransform = false;
@@ -97,7 +97,7 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
     public getVisitor (): IVisitor {
         return {
             leave: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (Node.isBlockStatementNode(node)) {
+                if (NodeGuards.isBlockStatementNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -106,8 +106,8 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
 
     /**
      * @param {BlockStatement} blockStatementNode
-     * @param {Node} parentNode
-     * @returns {Node}
+     * @param {NodeGuards} parentNode
+     * @returns {NodeGuards}
      */
     public transformNode (blockStatementNode: ESTree.BlockStatement, parentNode: ESTree.Node): ESTree.Node {
         if (

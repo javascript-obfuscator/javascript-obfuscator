@@ -10,7 +10,7 @@ import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 import { NodeType } from '../../enums/node/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { Node } from '../../node/Node';
+import { NodeGuards } from '../../node/NodeGuards';
 
 @injectable()
 export class MemberExpressionTransformer extends AbstractNodeTransformer {
@@ -31,7 +31,7 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
     public getVisitor (): IVisitor {
         return {
             enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (Node.isMemberExpressionNode(node)) {
+                if (NodeGuards.isMemberExpressionNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -51,11 +51,11 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
      * Literal node will be obfuscated by LiteralTransformer
      *
      * @param {MemberExpression} memberExpressionNode
-     * @param {Node} parentNode
-     * @returns {Node}
+     * @param {NodeGuards} parentNode
+     * @returns {NodeGuards}
      */
     public transformNode (memberExpressionNode: ESTree.MemberExpression, parentNode: ESTree.Node): ESTree.Node {
-        if (Node.isIdentifierNode(memberExpressionNode.property)) {
+        if (NodeGuards.isIdentifierNode(memberExpressionNode.property)) {
             if (memberExpressionNode.computed) {
                 return memberExpressionNode;
             }

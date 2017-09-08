@@ -5,9 +5,9 @@ import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { ICustomNodeGroup } from '../../../interfaces/custom-nodes/ICustomNodeGroup';
 
-import { ControlFlowCustomNode } from "../../../enums/container/custom-nodes/ControlFlowCustomNode";
-import { CustomNode } from '../../../enums/container/custom-nodes/CustomNode';
-import { CustomNodeGroup } from '../../../enums/container/custom-nodes/CustomNodeGroup';
+import { ControlFlowCustomNode } from "../../../enums/custom-nodes/ControlFlowCustomNode";
+import { CustomNode } from '../../../enums/custom-nodes/CustomNode';
+import { CustomNodeGroup } from '../../../enums/custom-nodes/CustomNodeGroup';
 
 import { ConsoleOutputCustomNodeGroup } from '../../../custom-nodes/console-output-nodes/group/ConsoleOutputCustomNodeGroup';
 import { DebugProtectionCustomNodeGroup } from '../../../custom-nodes/debug-protection-nodes/group/DebugProtectionCustomNodeGroup';

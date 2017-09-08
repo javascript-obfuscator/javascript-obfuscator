@@ -1,14 +1,14 @@
 import { assert } from 'chai';
 
-import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResult';
+import { IObfuscationResult } from '../../../../../../src/interfaces/IObfuscationResult';
 
-import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade';
+import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscatorFacade';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
+import { NO_CUSTOM_NODES_PRESET } from '../../../../../../src/options/presets/NoCustomNodes';
 
-import { readFileAsString } from '../../../helpers/readFileAsString';
+import { readFileAsString } from '../../../../../helpers/readFileAsString';
 
-describe('BlackListNodeGuard', () => {
+describe('BlackListObfuscatingGuard', () => {
     describe('check (node: ESTree.Node): boolean', () => {
         describe('`\'use strict\';` operator', () => {
             const useStrictOperatorRegExp: RegExp = /'use *strict';/;

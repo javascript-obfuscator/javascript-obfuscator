@@ -16,7 +16,7 @@ import { IStackTraceData } from '../../../../src/interfaces/analyzers/stack-trac
 import { readFileAsString } from '../../../helpers/readFileAsString';
 
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
-import { Node } from '../../../../src/node/Node';
+import { NodeGuards } from '../../../../src/node/NodeGuards';
 import { Nodes } from '../../../../src/node/Nodes';
 import { NodeUtils } from '../../../../src/node/NodeUtils';
 
@@ -31,8 +31,8 @@ function getFunctionDeclarationByName (astTree: ESTree.Node, name: string): ESTr
     estraverse.traverse(astTree, {
         enter: (node: ESTree.Node): any => {
             if (
-                Node.isFunctionDeclarationNode(node) &&
-                Node.isIdentifierNode(node.id) &&
+                NodeGuards.isFunctionDeclarationNode(node) &&
+                NodeGuards.isIdentifierNode(node.id) &&
                 node.id.name === name
             ) {
                 functionDeclarationNode = node;
@@ -56,10 +56,10 @@ function getFunctionExpressionByName (astTree: ESTree.Node, name: string): ESTre
     estraverse.traverse(astTree, {
         enter: (node: ESTree.Node): any => {
             if (
-                Node.isVariableDeclaratorNode(node) &&
+                NodeGuards.isVariableDeclaratorNode(node) &&
                 node.init &&
-                Node.isFunctionExpressionNode(node.init) &&
-                Node.isIdentifierNode(node.id) &&
+                NodeGuards.isFunctionExpressionNode(node.init) &&
+                NodeGuards.isIdentifierNode(node.id) &&
                 node.id.name === name
             ) {
                 functionExpressionNode = node.init;
@@ -83,9 +83,9 @@ function getFunctionExpressionById (astTree: ESTree.Node, id: string): ESTree.Fu
     estraverse.traverse(astTree, {
         enter: (node: ESTree.Node): any => {
             if (
-                Node.isFunctionExpressionNode(node) &&
+                NodeGuards.isFunctionExpressionNode(node) &&
                 node.id &&
-                Node.isIdentifierNode(node.id) &&
+                NodeGuards.isIdentifierNode(node.id) &&
                 node.id.name === id
             ) {
                 functionExpressionNode = node;
@@ -111,10 +111,10 @@ function getObjectFunctionExpressionByName (astTree: ESTree.Node, objectName: st
     estraverse.traverse(astTree, {
         enter: (node: ESTree.Node): any => {
             if (
-                Node.isVariableDeclaratorNode(node) &&
-                Node.isIdentifierNode(node.id) &&
+                NodeGuards.isVariableDeclaratorNode(node) &&
+                NodeGuards.isIdentifierNode(node.id) &&
                 node.init &&
-                Node.isObjectExpressionNode(node.init) &&
+                NodeGuards.isObjectExpressionNode(node.init) &&
                 node.id.name === objectName
             ) {
                 targetObjectExpressionNode = node.init;
@@ -131,11 +131,11 @@ function getObjectFunctionExpressionByName (astTree: ESTree.Node, objectName: st
     estraverse.traverse(targetObjectExpressionNode, {
         enter: (node: ESTree.Node): any => {
             if (
-                Node.isPropertyNode(node) &&
-                Node.isFunctionExpressionNode(node.value) &&
+                NodeGuards.isPropertyNode(node) &&
+                NodeGuards.isFunctionExpressionNode(node.value) &&
                 (
-                    (Node.isIdentifierNode(node.key) && node.key.name === name) ||
-                    (Node.isLiteralNode(node.key) && node.key.value === name)
+                    (NodeGuards.isIdentifierNode(node.key) && node.key.name === name) ||
+                    (NodeGuards.isLiteralNode(node.key) && node.key.value === name)
                 )
             ) {
                 functionExpressionNode = node.value;

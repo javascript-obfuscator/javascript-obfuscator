@@ -9,7 +9,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { Node } from '../../node/Node';
+import { NodeGuards } from '../../node/NodeGuards';
 import { Nodes } from '../../node/Nodes';
 import { NodeUtils } from '../../node/NodeUtils';
 
@@ -52,14 +52,14 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     public getVisitor (): IVisitor {
         return {
             enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (Node.isProgramNode(node)) {
+                if (NodeGuards.isProgramNode(node)) {
                     this.analyzeNode(node, parentNode);
 
                     return node;
                 }
             },
             leave: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (Node.isBlockStatementNode(node)) {
+                if (NodeGuards.isBlockStatementNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -67,13 +67,13 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {Node} programNode
-     * @param {Node} parentNode
+     * @param {NodeGuards} programNode
+     * @param {NodeGuards} parentNode
      */
     public analyzeNode (programNode: ESTree.Node, parentNode: ESTree.Node): void {
         estraverse.traverse(programNode, {
             enter: (node: ESTree.Node): any => {
-                if (Node.isBlockStatementNode(node)) {
+                if (NodeGuards.isBlockStatementNode(node)) {
                     this.collectBlockStatementNodes(node, this.collectedBlockStatements);
                 }
             }
@@ -84,8 +84,8 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {BlockStatement} blockStatementNode
-     * @param {Node} parentNode
-     * @returns {Node | VisitorOption}
+     * @param {NodeGuards} parentNode
+     * @returns {NodeGuards | VisitorOption}
      */
     public transformNode (
         blockStatementNode: ESTree.BlockStatement,
@@ -133,7 +133,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                 /**
                  * First step: count nested block statements in current block statement
                  */
-                if (Node.isBlockStatementNode(node)) {
+                if (NodeGuards.isBlockStatementNode(node)) {
                     nestedBlockStatementsCount++;
                 }
 
@@ -143,8 +143,8 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                  */
                 if (
                     nestedBlockStatementsCount > DeadCodeInjectionTransformer.maxNestedBlockStatementsCount ||
-                    Node.isBreakStatementNode(node) ||
-                    Node.isContinueStatementNode(node)
+                    NodeGuards.isBreakStatementNode(node) ||
+                    NodeGuards.isContinueStatementNode(node)
                 ) {
                     isValidBlockStatementNode = false;
 
@@ -155,7 +155,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                  * Second step: rename all identifiers (except identifiers in member expressions)
                  * in current block statement
                  */
-                if (Node.isIdentifierNode(node) && !Node.isMemberExpressionNode(parentNode)) {
+                if (NodeGuards.isIdentifierNode(node) && !NodeGuards.isMemberExpressionNode(parentNode)) {
                     node.name = this.randomGenerator.getRandomVariableName(6);
                 }
 

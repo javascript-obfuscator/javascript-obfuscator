@@ -12,10 +12,10 @@ import { TVisitorResult } from '../types/node-transformers/TVisitorResult';
 import { ITransformersRunner } from '../interfaces/node-transformers/ITransformersRunner';
 import { IVisitor } from '../interfaces/node-transformers/IVisitor';
 
-import { NodeTransformer } from '../enums/container/node-transformers/NodeTransformer';
+import { NodeTransformer } from '../enums/node-transformers/NodeTransformer';
 import { VisitorDirection } from '../enums/node-transformers/VisitorDirection';
 
-import { Node } from '../node/Node';
+import { NodeGuards } from '../node/NodeGuards';
 
 @injectable()
 export class TransformersRunner implements ITransformersRunner {
@@ -98,7 +98,7 @@ export class TransformersRunner implements ITransformersRunner {
 
                 const visitorResult: TVisitorResult = visitorFunction(node, parentNode);
 
-                if (!visitorResult || !Node.isNode(visitorResult)) {
+                if (!visitorResult || !NodeGuards.isNode(visitorResult)) {
                     continue;
                 }
 

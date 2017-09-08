@@ -8,7 +8,7 @@ import { TStatement } from '../types/node/TStatement';
 
 import { NodeType } from '../enums/node/NodeType';
 
-import { Node } from './Node';
+import { NodeGuards } from './NodeGuards';
 
 export class NodeUtils {
     /**
@@ -96,7 +96,7 @@ export class NodeUtils {
     }
 
     /**
-     * @param {Node[]} structure
+     * @param {NodeGuards[]} structure
      * @returns {string}
      */
     public static convertStructureToCode (structure: ESTree.Node[]): string {
@@ -112,12 +112,12 @@ export class NodeUtils {
     }
 
     /**
-     * @param {Node} node
+     * @param {NodeGuards} node
      * @param {number} index
-     * @returns {Node}
+     * @returns {NodeGuards}
      */
     public static getBlockStatementNodeByIndex (node: ESTree.Node, index: number = 0): ESTree.Node {
-        if (Node.isNodeHasBlockStatement(node)) {
+        if (NodeGuards.isNodeHasBlockStatement(node)) {
             if (node.body[index] === undefined) {
                 throw new ReferenceError(`Wrong index \`${index}\`. Block-statement body length is \`${node.body.length}\``);
             }
@@ -129,7 +129,7 @@ export class NodeUtils {
     }
 
     /**
-     * @param {Node} node
+     * @param {NodeGuards} node
      * @param {TNodeWithBlockStatement[]} blockScopes
      * @returns {TNodeWithBlockStatement[]}
      */
@@ -140,7 +140,7 @@ export class NodeUtils {
             throw new ReferenceError('`parentNode` property of given node is `undefined`');
         }
 
-        if (Node.isBlockStatementNode(parentNode)) {
+        if (NodeGuards.isBlockStatementNode(parentNode)) {
             if (!parentNode.parentNode) {
                 throw new ReferenceError('`parentNode` property of `parentNode` of given node is `undefined`');
             }
@@ -154,7 +154,7 @@ export class NodeUtils {
             return NodeUtils.getBlockScopesOfNode(parentNode, blockScopes);
         }
 
-        if (Node.isNodeHasBlockStatement(parentNode)) {
+        if (NodeGuards.isNodeHasBlockStatement(parentNode)) {
             blockScopes.push(parentNode);
         }
 
@@ -162,7 +162,7 @@ export class NodeUtils {
     }
 
     /**
-     * @param {Node} node
+     * @param {NodeGuards} node
      * @param {number} depth
      * @returns {number}
      */
@@ -173,11 +173,11 @@ export class NodeUtils {
             throw new ReferenceError('`parentNode` property of given node is `undefined`');
         }
 
-        if (Node.isProgramNode(parentNode)) {
+        if (NodeGuards.isProgramNode(parentNode)) {
             return depth;
         }
 
-        if (Node.isBlockStatementNode(node) && NodeUtils.nodesWithBlockScope.includes(parentNode.type)) {
+        if (NodeGuards.isBlockStatementNode(node) && NodeUtils.nodesWithBlockScope.includes(parentNode.type)) {
             return NodeUtils.getNodeBlockScopeDepth(parentNode, ++depth);
         }
 
@@ -186,10 +186,10 @@ export class NodeUtils {
 
     /**
      * @param {UnaryExpression} unaryExpressionNode
-     * @returns {Node}
+     * @returns {NodeGuards}
      */
     public static getUnaryExpressionArgumentNode (unaryExpressionNode: ESTree.UnaryExpression): ESTree.Node {
-        if (Node.isUnaryExpressionNode(unaryExpressionNode.argument)) {
+        if (NodeGuards.isUnaryExpressionNode(unaryExpressionNode.argument)) {
             return NodeUtils.getUnaryExpressionArgumentNode(unaryExpressionNode.argument);
         }
 
@@ -212,7 +212,7 @@ export class NodeUtils {
     }
 
     /**
-     * @param {Node} astTree
+     * @param {NodeGuards} astTree
      * @param {string} nodeType
      * @param {visitor} visitor
      */
@@ -225,7 +225,7 @@ export class NodeUtils {
     }
 
     /**
-     * @param {Node} astTree
+     * @param {NodeGuards} astTree
      * @param {string} nodeType
      * @param {Visitor} visitor
      * @param {string} traverseType

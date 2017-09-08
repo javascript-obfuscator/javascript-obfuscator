@@ -7,7 +7,7 @@ import { ICustomNodeGroup } from '../../interfaces/custom-nodes/ICustomNodeGroup
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
-import { CustomNodeGroup } from '../../enums/container/custom-nodes/CustomNodeGroup';
+import { CustomNodeGroup } from '../../enums/custom-nodes/CustomNodeGroup';
 
 import { MapStorage } from '../MapStorage';
 

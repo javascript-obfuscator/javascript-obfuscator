@@ -1,4 +1,4 @@
-export enum NodeGuard {
+export enum ObfuscatingGuard {
     BlackListNodeGuard,
     ConditionalCommentNodeGuard
 }

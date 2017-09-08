@@ -9,7 +9,7 @@ import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 import { IStackTraceData } from '../interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
 
-import { CustomNode } from '../enums/container/custom-nodes/CustomNode';
+import { CustomNode } from '../enums/custom-nodes/CustomNode';
 import { ObfuscationEvent } from '../enums/event-emitters/ObfuscationEvent';
 
 @injectable()

@@ -4,7 +4,7 @@ import { TNodeWithBlockStatement } from '../types/node/TNodeWithBlockStatement';
 
 import { NodeType } from '../enums/node/NodeType';
 
-export class Node {
+export class NodeGuards {
     /**
      * @param {Node} node
      * @returns {boolean}
@@ -115,9 +115,9 @@ export class Node {
      * @returns {boolean}
      */
     public static isLabelIdentifierNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
-        const parentNodeIsLabeledStatementNode: boolean = Node.isLabeledStatementNode(parentNode) && parentNode.label === node;
-        const parentNodeIsContinueStatementNode: boolean = Node.isContinueStatementNode(parentNode) && parentNode.label === node;
-        const parentNodeIsBreakStatementNode: boolean = Node.isBreakStatementNode(parentNode) && parentNode.label === node;
+        const parentNodeIsLabeledStatementNode: boolean = NodeGuards.isLabeledStatementNode(parentNode) && parentNode.label === node;
+        const parentNodeIsContinueStatementNode: boolean = NodeGuards.isContinueStatementNode(parentNode) && parentNode.label === node;
+        const parentNodeIsBreakStatementNode: boolean = NodeGuards.isBreakStatementNode(parentNode) && parentNode.label === node;
 
         return parentNodeIsLabeledStatementNode || parentNodeIsContinueStatementNode || parentNodeIsBreakStatementNode;
     }
@@ -208,18 +208,18 @@ export class Node {
      * @returns {boolean}
      */
     public static isReplaceableIdentifierNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
-        if (!Node.isIdentifierNode(node)) {
+        if (!NodeGuards.isIdentifierNode(node)) {
             return false;
         }
 
-        const parentNodeIsPropertyNode: boolean = Node.isPropertyNode(parentNode) && parentNode.key === node;
+        const parentNodeIsPropertyNode: boolean = NodeGuards.isPropertyNode(parentNode) && parentNode.key === node;
         const parentNodeIsMemberExpressionNode: boolean = (
-            Node.isMemberExpressionNode(parentNode) &&
+            NodeGuards.isMemberExpressionNode(parentNode) &&
             parentNode.computed === false &&
             parentNode.property === node
         );
 
-        return !parentNodeIsPropertyNode && !parentNodeIsMemberExpressionNode && !Node.isLabelIdentifierNode(node, parentNode);
+        return !parentNodeIsPropertyNode && !parentNodeIsMemberExpressionNode && !NodeGuards.isLabelIdentifierNode(node, parentNode);
     }
 
     /**

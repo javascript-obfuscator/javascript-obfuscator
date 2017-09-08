@@ -15,13 +15,13 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IStorage } from '../../interfaces/storages/IStorage';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
-import { ControlFlowCustomNode } from '../../enums/container/custom-nodes/ControlFlowCustomNode';
+import { ControlFlowCustomNode } from '../../enums/custom-nodes/ControlFlowCustomNode';
+import { ControlFlowReplacer } from '../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/ControlFlowReplacer';
 import { NodeType } from '../../enums/node/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { Node } from '../../node/Node';
+import { NodeGuards } from '../../node/NodeGuards';
 import { NodeAppender } from '../../node/NodeAppender';
-import { ControlFlowReplacer } from '../../enums/container/node-transformers/ControlFlowReplacer';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
@@ -107,9 +107,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         return {
             leave: (node: ESTree.Node, parentNode: ESTree.Node) => {
                 if (
-                    Node.isFunctionDeclarationNode(node) ||
-                    Node.isFunctionExpressionNode(node) ||
-                    Node.isArrowFunctionExpressionNode(node)
+                    NodeGuards.isFunctionDeclarationNode(node) ||
+                    NodeGuards.isFunctionExpressionNode(node) ||
+                    NodeGuards.isArrowFunctionExpressionNode(node)
                 ) {
                     return this.transformNode(node, parentNode);
                 }
@@ -119,13 +119,13 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {Function} functionNode
-     * @param {Node} parentNode
+     * @param {NodeGuards} parentNode
      * @returns {Function}
      */
     public transformNode (functionNode: ESTree.Function, parentNode: ESTree.Node): ESTree.Function {
         this.visitedFunctionNodes.add(functionNode);
 
-        if (!Node.isBlockStatementNode(functionNode.body)) {
+        if (!NodeGuards.isBlockStatementNode(functionNode.body)) {
             return functionNode;
         }
 
@@ -195,14 +195,14 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {Node} node
+     * @param {NodeGuards} node
      * @returns {boolean}
      */
     private isVisitedFunctionNode (node: ESTree.Node): boolean {
         return (
-            Node.isFunctionDeclarationNode(node) ||
-            Node.isFunctionExpressionNode(node) ||
-            Node.isArrowFunctionExpressionNode(node)
+            NodeGuards.isFunctionDeclarationNode(node) ||
+            NodeGuards.isFunctionExpressionNode(node) ||
+            NodeGuards.isArrowFunctionExpressionNode(node)
         ) && this.visitedFunctionNodes.has(node);
     }
 

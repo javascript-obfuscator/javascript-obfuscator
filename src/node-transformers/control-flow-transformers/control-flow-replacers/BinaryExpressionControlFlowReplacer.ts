@@ -10,7 +10,7 @@ import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
-import { ControlFlowCustomNode } from '../../../enums/container/custom-nodes/ControlFlowCustomNode';
+import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCustomNode';
 
 import { ExpressionWithOperatorControlFlowReplacer } from './ExpressionWithOperatorControlFlowReplacer';
 

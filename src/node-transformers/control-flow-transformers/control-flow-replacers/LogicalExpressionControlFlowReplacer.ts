@@ -10,10 +10,10 @@ import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
-import { ControlFlowCustomNode } from '../../../enums/container/custom-nodes/ControlFlowCustomNode';
+import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCustomNode';
 
 import { ExpressionWithOperatorControlFlowReplacer } from './ExpressionWithOperatorControlFlowReplacer';
-import { Node } from '../../../node/Node';
+import { NodeGuards } from '../../../node/NodeGuards';
 import { NodeUtils } from '../../../node/NodeUtils';
 
 @injectable()
@@ -39,9 +39,9 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
 
     /**
      * @param {LogicalExpression} logicalExpressionNode
-     * @param {Node} parentNode
+     * @param {NodeGuards} parentNode
      * @param {IStorage<ICustomNode>} controlFlowStorage
-     * @returns {Node}
+     * @returns {NodeGuards}
      */
     public replace (
         logicalExpressionNode: ESTree.LogicalExpression,
@@ -83,16 +83,16 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
         return [leftExpression, rightExpression].some((expressionNode: ESTree.Node | ESTree.Expression): boolean => {
             let nodeForCheck: ESTree.Node | ESTree.Expression;
 
-            if (!Node.isUnaryExpressionNode(expressionNode)) {
+            if (!NodeGuards.isUnaryExpressionNode(expressionNode)) {
                 nodeForCheck = expressionNode;
             } else {
                 nodeForCheck = NodeUtils.getUnaryExpressionArgumentNode(expressionNode);
             }
 
-            return !Node.isLiteralNode(nodeForCheck) &&
-                !Node.isIdentifierNode(nodeForCheck) &&
-                !Node.isObjectExpressionNode(nodeForCheck) &&
-                !Node.isExpressionStatementNode(nodeForCheck);
+            return !NodeGuards.isLiteralNode(nodeForCheck) &&
+                !NodeGuards.isIdentifierNode(nodeForCheck) &&
+                !NodeGuards.isObjectExpressionNode(nodeForCheck) &&
+                !NodeGuards.isExpressionStatementNode(nodeForCheck);
         });
     }
 }

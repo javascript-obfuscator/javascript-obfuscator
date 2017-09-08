@@ -10,7 +10,7 @@ import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 import { NodeType } from '../../enums/node/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { Node } from '../../node/Node';
+import { NodeGuards } from '../../node/NodeGuards';
 
 /**
  * replaces:
@@ -50,7 +50,7 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
     public getVisitor (): IVisitor {
         return {
             enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (Node.isObjectExpressionNode(node)) {
+                if (NodeGuards.isObjectExpressionNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -59,8 +59,8 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {ObjectExpression} objectExpressionNode
-     * @param {Node} parentNode
-     * @returns {Node}
+     * @param {NodeGuards} parentNode
+     * @returns {NodeGuards}
      */
     public transformNode (objectExpressionNode: ESTree.ObjectExpression, parentNode: ESTree.Node): ESTree.Node {
         objectExpressionNode.properties
@@ -69,7 +69,7 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
                     property.shorthand = false;
                 }
 
-                if (Node.isIdentifierNode(property.key)) {
+                if (NodeGuards.isIdentifierNode(property.key)) {
                     property.key = ObjectExpressionTransformer.transformIdentifierPropertyKey(property.key);
                 }
             });

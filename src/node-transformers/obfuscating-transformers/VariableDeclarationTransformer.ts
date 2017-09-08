@@ -7,16 +7,16 @@ import * as ESTree from 'estree';
 import { TIdentifierObfuscatingReplacerFactory } from '../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory';
 import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
 
-import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/IIdentifierObfuscatingReplacer';
+import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
-import { IdentifierObfuscatingReplacer } from "../../enums/container/node-transformers/IdentifierObfuscatingReplacer";
+import { IdentifierObfuscatingReplacer } from "../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/IdentifierObfuscatingReplacer";
 import { NodeType } from '../../enums/node/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { Node } from '../../node/Node';
+import { NodeGuards } from '../../node/NodeGuards';
 import { NodeUtils } from '../../node/NodeUtils';
 
 /**
@@ -65,7 +65,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     public getVisitor (): IVisitor {
         return {
             enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (Node.isVariableDeclarationNode(node)) {
+                if (NodeGuards.isVariableDeclarationNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -74,8 +74,8 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {VariableDeclaration} variableDeclarationNode
-     * @param {Node} parentNode
-     * @returns {Node}
+     * @param {NodeGuards} parentNode
+     * @returns {NodeGuards}
      */
     public transformNode (variableDeclarationNode: ESTree.VariableDeclaration, parentNode: ESTree.Node): ESTree.Node {
         const blockScopeOfVariableDeclarationNode: TNodeWithBlockStatement = NodeUtils
@@ -109,7 +109,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     private storeVariableNames (variableDeclarationNode: ESTree.VariableDeclaration, nodeIdentifier: number): void {
         variableDeclarationNode.declarations
             .forEach((declarationNode: ESTree.VariableDeclarator) => {
-                if (Node.isObjectPatternNode(declarationNode.id)) {
+                if (NodeGuards.isObjectPatternNode(declarationNode.id)) {
                     return estraverse.VisitorOption.Skip;
                 }
 
@@ -120,7 +120,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {Node} scopeNode
+     * @param {NodeGuards} scopeNode
      * @param {number} nodeIdentifier
      */
     private replaceScopeCachedIdentifiers (scopeNode: ESTree.Node, nodeIdentifier: number): void {
@@ -134,7 +134,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {Node} scopeNode
+     * @param {NodeGuards} scopeNode
      * @param {number} nodeIdentifier
      */
     private replaceScopeIdentifiers (scopeNode: ESTree.Node, nodeIdentifier: number): void {
@@ -142,7 +142,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
 
         estraverse.replace(scopeNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (!node.obfuscatedNode && Node.isReplaceableIdentifierNode(node, parentNode)) {
+                if (!node.obfuscatedNode && NodeGuards.isReplaceableIdentifierNode(node, parentNode)) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer.replace(node.name, nodeIdentifier);
                     const newIdentifierName: string = newIdentifier.name;
 

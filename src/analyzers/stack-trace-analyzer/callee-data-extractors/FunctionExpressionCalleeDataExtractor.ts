@@ -6,27 +6,27 @@ import * as ESTree from 'estree';
 import { ICalleeData } from '../../../interfaces/analyzers/stack-trace-analyzer/ICalleeData';
 
 import { AbstractCalleeDataExtractor } from './AbstractCalleeDataExtractor';
-import { Node } from '../../../node/Node';
+import { NodeGuards } from '../../../node/NodeGuards';
 import { NodeUtils } from '../../../node/NodeUtils';
 
 @injectable()
 export class FunctionExpressionCalleeDataExtractor extends AbstractCalleeDataExtractor {
     /**
-     * @param {Node[]} blockScopeBody
+     * @param {NodeGuards[]} blockScopeBody
      * @param {Identifier} callee
      * @returns {ICalleeData}
      */
     public extract (blockScopeBody: ESTree.Node[], callee: ESTree.Identifier): ICalleeData | null {
         let calleeBlockStatement: ESTree.BlockStatement | null = null;
 
-        if (Node.isIdentifierNode(callee)) {
+        if (NodeGuards.isIdentifierNode(callee)) {
             calleeBlockStatement = this.getCalleeBlockStatement(
                 NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0],
                 callee.name
             );
         }
 
-        if (Node.isFunctionExpressionNode(callee)) {
+        if (NodeGuards.isFunctionExpressionNode(callee)) {
             calleeBlockStatement = callee.body;
         }
 
@@ -41,7 +41,7 @@ export class FunctionExpressionCalleeDataExtractor extends AbstractCalleeDataExt
     }
 
     /**
-     * @param {Node} targetNode
+     * @param {NodeGuards} targetNode
      * @param {string} name
      * @returns {BlockStatement}
      */
@@ -51,9 +51,9 @@ export class FunctionExpressionCalleeDataExtractor extends AbstractCalleeDataExt
         estraverse.traverse(targetNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
                 if (
-                    Node.isFunctionExpressionNode(node) &&
-                    Node.isVariableDeclaratorNode(parentNode) &&
-                    Node.isIdentifierNode(parentNode.id) &&
+                    NodeGuards.isFunctionExpressionNode(node) &&
+                    NodeGuards.isVariableDeclaratorNode(parentNode) &&
+                    NodeGuards.isIdentifierNode(parentNode.id) &&
                     parentNode.id.name === name
                 ) {
                     calleeBlockStatement = node.body;

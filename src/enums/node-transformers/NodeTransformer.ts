@@ -10,9 +10,9 @@ export enum NodeTransformer {
     LiteralTransformer,
     MemberExpressionTransformer,
     MethodDefinitionTransformer,
-    NodeGuardTransformer,
+    ObfuscatingGuardsTransformer,
     ObjectExpressionTransformer,
-    ParentizeTransformer,
+    ParentificationTransformer,
     TemplateLiteralTransformer,
     VariableDeclarationTransformer
 }

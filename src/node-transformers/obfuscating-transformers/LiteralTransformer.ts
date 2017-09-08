@@ -9,10 +9,10 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
-import { LiteralObfuscatingReplacer } from '../../enums/container/node-transformers/LiteralObfuscatingReplacer';
+import { LiteralObfuscatingReplacer } from '../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/LiteralObfuscatingReplacer';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { Node } from '../../node/Node';
+import { NodeGuards } from '../../node/NodeGuards';
 
 @injectable()
 export class LiteralTransformer extends AbstractNodeTransformer {
@@ -43,7 +43,7 @@ export class LiteralTransformer extends AbstractNodeTransformer {
     public getVisitor (): IVisitor {
         return {
             enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (Node.isLiteralNode(node) && !node.obfuscatedNode) {
+                if (NodeGuards.isLiteralNode(node) && !node.obfuscatedNode) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -52,11 +52,11 @@ export class LiteralTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {Literal} literalNode
-     * @param {Node} parentNode
-     * @returns {Node}
+     * @param {NodeGuards} parentNode
+     * @returns {NodeGuards}
      */
     public transformNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
-        if (Node.isPropertyNode(parentNode) && parentNode.key === literalNode) {
+        if (NodeGuards.isPropertyNode(parentNode) && parentNode.key === literalNode) {
             return literalNode;
         }
 

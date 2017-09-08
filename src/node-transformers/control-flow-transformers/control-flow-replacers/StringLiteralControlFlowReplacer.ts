@@ -11,10 +11,10 @@ import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
-import { ControlFlowCustomNode } from '../../../enums/container/custom-nodes/ControlFlowCustomNode';
+import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCustomNode';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
-import { Node } from '../../../node/Node';
+import { NodeGuards } from '../../../node/NodeGuards';
 
 @injectable()
 export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplacer {
@@ -39,16 +39,16 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
 
     /**
      * @param {Literal} literalNode
-     * @param {Node} parentNode
+     * @param {NodeGuards} parentNode
      * @param {IStorage<ICustomNode>} controlFlowStorage
-     * @returns {Node}
+     * @returns {NodeGuards}
      */
     public replace (
         literalNode: ESTree.Literal,
         parentNode: ESTree.Node,
         controlFlowStorage: IStorage <ICustomNode>
     ): ESTree.Node {
-        if (Node.isPropertyNode(parentNode) && parentNode.key === literalNode) {
+        if (NodeGuards.isPropertyNode(parentNode) && parentNode.key === literalNode) {
             return literalNode;
         }
 
@@ -76,7 +76,7 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
     /**
      * @param {string} controlFlowStorageId
      * @param {string} storageKey
-     * @returns {Node}
+     * @returns {NodeGuards}
      */
     protected getControlFlowStorageCallNode (
         controlFlowStorageId: string,
@@ -90,7 +90,7 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
 
         const statementNode: TStatement = controlFlowStorageCallCustomNode.getNode()[0];
 
-        if (!statementNode || !Node.isExpressionStatementNode(statementNode)) {
+        if (!statementNode || !NodeGuards.isExpressionStatementNode(statementNode)) {
             throw new Error(`\`controlFlowStorageCallCustomNode.getNode()[0]\` should returns array with \`ExpressionStatement\` node`);
         }
 

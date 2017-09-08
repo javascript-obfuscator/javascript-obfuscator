@@ -21,10 +21,10 @@ import { IStorage } from './interfaces/storages/IStorage';
 import { ITransformersRunner } from './interfaces/node-transformers/ITransformersRunner';
 
 import { LoggingMessage } from './enums/logger/LoggingMessage';
-import { NodeTransformer } from './enums/container/node-transformers/NodeTransformer';
+import { NodeTransformer } from './enums/node-transformers/NodeTransformer';
 import { ObfuscationEvent } from './enums/event-emitters/ObfuscationEvent';
 
-import { Node } from './node/Node';
+import { NodeGuards } from './node/NodeGuards';
 
 @injectable()
 export class JavaScriptObfuscator implements IJavaScriptObfuscator {
@@ -78,8 +78,8 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @type {NodeTransformer[]}
      */
     private static readonly preparingTransformersList: NodeTransformer[] = [
-        NodeTransformer.ParentizeTransformer,
-        NodeTransformer.NodeGuardTransformer
+        NodeTransformer.ObfuscatingGuardsTransformer,
+        NodeTransformer.ParentificationTransformer
     ];
 
     /**
@@ -192,7 +192,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @returns {Program}
      */
     private transformAstTree (astTree: ESTree.Program): ESTree.Program {
-        if (Node.isProgramNode(astTree) && !astTree.body.length) {
+        if (NodeGuards.isProgramNode(astTree) && !astTree.body.length) {
             this.logger.warn(LoggingMessage.EmptySourceCode);
 
             return astTree;

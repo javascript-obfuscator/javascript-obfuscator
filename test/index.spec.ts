@@ -39,7 +39,6 @@ import './functional-tests/custom-nodes/string-array-nodes/StringArrayCallsWrapp
 import './functional-tests/custom-nodes/string-array-nodes/StringArrayRotateFunctionNode.spec';
 import './functional-tests/custom-nodes/string-array-nodes/StringArrayNode.spec';
 import './functional-tests/javascript-obfuscator/JavaScriptObfuscator.spec';
-import './functional-tests/node-guards/black-list-node-guard/BlackListNodeGuard.spec';
 import './functional-tests/node-transformers/control-flow-transformers/block-statement-control-flow-transformer/BlockStatementControlFlowTransformer.spec';
 import './functional-tests/node-transformers/control-flow-transformers/function-control-flow-transformer/FunctionControlFlowTransformer.spec';
 import './functional-tests/node-transformers/control-flow-transformers/control-flow-replacers/binary-expression-control-flow-replacer/BinaryExpressionControlFlowReplacer.spec';
@@ -58,6 +57,7 @@ import './functional-tests/node-transformers/obfuscating-transformers/labeled-st
 import './functional-tests/node-transformers/obfuscating-transformers/literal-transformer/LiteralTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/object-expression-transformer/ObjectExpressionTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/variable-declaration-transformer/VariableDeclarationTransformer.spec';
+import './functional-tests/node-transformers/parentizing-transformers/obfuscating-guards/black-list-node-guard/BlackListObfuscatingGuard.spec';
 import './functional-tests/templates/custom-nodes/domain-lock-nodes/DomainLockNodeTemplate.spec';
 import './functional-tests/templates/custom-nodes/string-array-nodes/StringArrayCallsWrapperNodeTemplate.spec';
 

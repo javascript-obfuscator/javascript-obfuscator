@@ -8,7 +8,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { Node } from '../../node/Node';
+import { NodeGuards } from '../../node/NodeGuards';
 import { Nodes } from '../../node/Nodes';
 
 /**
@@ -29,11 +29,11 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {Node} node
+     * @param {NodeGuards} node
      * @returns {boolean}
      */
     private static isLiteralNodeWithStringValue (node: ESTree.Node): boolean {
-        return node && Node.isLiteralNode(node) && typeof node.value === 'string';
+        return node && NodeGuards.isLiteralNode(node) && typeof node.value === 'string';
     }
 
     /**
@@ -42,7 +42,7 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
     public getVisitor (): IVisitor {
         return {
             enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (Node.isTemplateLiteralNode(node)) {
+                if (NodeGuards.isTemplateLiteralNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -51,8 +51,8 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {TemplateLiteral} templateLiteralNode
-     * @param {Node} parentNode
-     * @returns {Node}
+     * @param {NodeGuards} parentNode
+     * @returns {NodeGuards}
      */
     public transformNode (templateLiteralNode: ESTree.TemplateLiteral, parentNode: ESTree.Node): ESTree.Node {
         const templateLiteralExpressions: ESTree.Expression[] = templateLiteralNode.expressions;
@@ -72,7 +72,7 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
         });
 
         nodes = nodes.filter((node: ESTree.Literal | ESTree.Expression) => {
-            return !(Node.isLiteralNode(node) && node.value === '');
+            return !(NodeGuards.isLiteralNode(node) && node.value === '');
         });
 
         // since `+` is left-to-right associative

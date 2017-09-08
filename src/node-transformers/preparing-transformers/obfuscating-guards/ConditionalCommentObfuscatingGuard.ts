@@ -2,10 +2,10 @@ import { injectable } from 'inversify';
 
 import * as ESTree from 'estree';
 
-import { INodeGuard } from '../interfaces/node-guards/INodeGuard';
+import { IObfuscatingGuard } from '../../../interfaces/node-transformers/preparing-transformers/obfuscating-guards/IObfuscatingGuard';
 
 @injectable()
-export class ConditionalCommentNodeGuard implements INodeGuard {
+export class ConditionalCommentObfuscatingGuard implements IObfuscatingGuard {
     /**
      * @type {RegExp}
      */
@@ -66,13 +66,13 @@ export class ConditionalCommentNodeGuard implements INodeGuard {
         for (let i: number = 0; i < commentsLength; i++) {
             const comment: ESTree.Comment = comments[i];
 
-            if (ConditionalCommentNodeGuard.obfuscationEnableCommentRegExp.test(comment.value)) {
+            if (ConditionalCommentObfuscatingGuard.obfuscationEnableCommentRegExp.test(comment.value)) {
                 obfuscationAllowed = true;
 
                 continue;
             }
 
-            if (ConditionalCommentNodeGuard.obfuscationDisableCommentRegExp.test(comment.value)) {
+            if (ConditionalCommentObfuscatingGuard.obfuscationDisableCommentRegExp.test(comment.value)) {
                 obfuscationAllowed = false;
             }
         }

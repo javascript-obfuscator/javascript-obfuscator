@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { IIdentifierObfuscatingReplacer } from '../../../../interfaces/node-transformers/obfuscating-transformers/IIdentifierObfuscatingReplacer';
+import { IIdentifierObfuscatingReplacer } from '../../../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../../interfaces/utils/IRandomGenerator';
 

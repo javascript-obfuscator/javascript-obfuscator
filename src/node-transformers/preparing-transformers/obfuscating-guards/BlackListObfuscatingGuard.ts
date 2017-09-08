@@ -2,19 +2,19 @@ import { injectable } from 'inversify';
 
 import * as ESTree from 'estree';
 
-import { TNodeGuard } from '../types/node/TNodeGuard';
+import { TNodeGuard } from '../../../types/node/TNodeGuard';
 
-import { INodeGuard } from '../interfaces/node-guards/INodeGuard';
+import { IObfuscatingGuard } from '../../../interfaces/node-transformers/preparing-transformers/obfuscating-guards/IObfuscatingGuard';
 
-import { Node } from '../node/Node';
+import { NodeGuards } from '../../../node/NodeGuards';
 
 @injectable()
-export class BlackListNodeGuard implements INodeGuard {
+export class BlackListObfuscatingGuard implements IObfuscatingGuard {
     /**
      * @type {((node: Node) => boolean)[]}
      */
     private static readonly blackListGuards: TNodeGuard[] = [
-        Node.isUseStrictOperator
+        NodeGuards.isUseStrictOperator
     ];
 
     /**
@@ -23,7 +23,7 @@ export class BlackListNodeGuard implements INodeGuard {
     private readonly blackListGuardsLength: number;
 
     constructor () {
-        this.blackListGuardsLength = BlackListNodeGuard.blackListGuards.length;
+        this.blackListGuardsLength = BlackListObfuscatingGuard.blackListGuards.length;
     }
 
     /**
@@ -32,7 +32,7 @@ export class BlackListNodeGuard implements INodeGuard {
      */
     public check (node: ESTree.Node): boolean {
         for (let i: number = 0; i < this.blackListGuardsLength; i++) {
-            if (BlackListNodeGuard.blackListGuards[i](node)) {
+            if (BlackListObfuscatingGuard.blackListGuards[i](node)) {
                 return false;
             }
         }

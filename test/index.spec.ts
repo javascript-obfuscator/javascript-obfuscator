@@ -16,6 +16,8 @@ import './unit-tests/javascript-obfuscator/JavaScriptObfuscator.spec';
 import './unit-tests/logger/Logger.spec';
 import './unit-tests/node/node-appender/NodeAppender.spec';
 import './unit-tests/node/node-utils/NodeUtils.spec';
+import './unit-tests/node-transformers/preparing-transformers/ObfuscatingGuardsTransformer.spec';
+import './unit-tests/node-transformers/preparing-transformers/ParentificationTransformer.spec';
 import './unit-tests/obfuscation-result/ObfuscationResult.spec';
 import './unit-tests/options/OptionsNormalizer.spec';
 import './unit-tests/options/ValidationErrorsFormatter.spec';

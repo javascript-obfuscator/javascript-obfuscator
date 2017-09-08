@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-    const JavaScriptObfuscator: any = require("../../index");
+    const JavaScriptObfuscator: any = require('../../index');
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(`
         var start = new Date();

@@ -8,5 +8,5 @@ export interface ITransformersRunner {
      * @param {NodeTransformer[]} nodeTransformers
      * @returns {T}
      */
-    transform <T extends ESTree.Program> (astTree: T, nodeTransformers: NodeTransformer[]): T;
+    transform <T extends ESTree.Node = ESTree.Program> (astTree: T, nodeTransformers: NodeTransformer[]): T;
 }

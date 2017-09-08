@@ -200,15 +200,24 @@ export class NodeUtils {
      * @param {T} astTree
      * @returns {T}
      */
-    public static parentize <T extends ESTree.Node = ESTree.Program> (astTree: T): T {
+    public static parentize <T extends ESTree.Node = ESTree.Node> (astTree: T): T {
         estraverse.traverse(astTree, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                node.parentNode = parentNode || node;
-                node.obfuscatedNode = false;
-            }
+            enter: NodeUtils.parentizeNode
         });
 
         return astTree;
+    }
+
+    /**
+     * @param {T} node
+     * @param {Node} parentNode
+     * @returns {T}
+     */
+    public static parentizeNode <T extends ESTree.Node = ESTree.Node> (node: T, parentNode: ESTree.Node): T {
+        node.parentNode = parentNode || node;
+        node.obfuscatedNode = false;
+
+        return node;
     }
 
     /**

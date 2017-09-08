@@ -8,6 +8,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
+import { NodeUtils } from '../../node/NodeUtils';
 
 /**
  * Adds `parentNode` properties to each node
@@ -42,9 +43,6 @@ export class ParentificationTransformer extends AbstractNodeTransformer {
      * @returns {Node}
      */
     public transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node {
-        node.parentNode = parentNode || node;
-        node.obfuscatedNode = false;
-
-        return node;
+        return NodeUtils.parentizeNode(node, parentNode);
     }
 }

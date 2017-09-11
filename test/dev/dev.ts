@@ -11,14 +11,12 @@ import { NO_CUSTOM_NODES_PRESET } from '../../src/options/presets/NoCustomNodes'
                 var foo = function () {
                     console.log('abc');
                 };
-                // javascript-obfuscator:disable
                 var bar = function () {
                     console.log('def');
                 };
                 var baz = function () {
                     console.log('ghi');
                 };
-                // javascript-obfuscator:enable
                 var bark = function () {
                     console.log('jkl');
                 };

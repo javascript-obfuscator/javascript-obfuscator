@@ -21,6 +21,7 @@ Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/
 * Webpack: [webpack-obfuscator](https://github.com/javascript-obfuscator/webpack-obfuscator)
 * Gulp: [gulp-javascript-obfuscator](https://github.com/javascript-obfuscator/gulp-javascript-obfuscator)
 * Grunt: [grunt-contrib-obfuscator](https://github.com/javascript-obfuscator/grunt-contrib-obfuscator)
+* Rollup: [rollup-plugin-javascript-obfuscator](https://github.com/javascript-obfuscator/rollup-plugin-javascript-obfuscator)
 
 [![npm version](https://badge.fury.io/js/javascript-obfuscator.svg)](https://badge.fury.io/js/javascript-obfuscator)
 [![Build Status](https://travis-ci.org/javascript-obfuscator/javascript-obfuscator.svg?branch=master)](https://travis-ci.org/javascript-obfuscator/javascript-obfuscator)

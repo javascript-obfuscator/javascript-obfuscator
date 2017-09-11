@@ -18,6 +18,7 @@ import { NO_CUSTOM_NODES_PRESET } from '../../src/options/presets/NoCustomNodes'
                 var baz = function () {
                     console.log('ghi');
                 };
+                // javascript-obfuscator:enable
                 var bark = function () {
                     console.log('jkl');
                 };
@@ -36,8 +37,6 @@ import { NO_CUSTOM_NODES_PRESET } from '../../src/options/presets/NoCustomNodes'
         {
             ...NO_CUSTOM_NODES_PRESET,
             compact: false,
-            stringArray: false,
-            stringArrayThreshold: 1,
             deadCodeInjection: true,
             deadCodeInjectionThreshold: 1
         }

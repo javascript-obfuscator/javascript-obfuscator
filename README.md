@@ -198,6 +198,29 @@ javascript-obfuscator samples/sample.js --output output/output.js --compact true
 
 See [CLI options](#cli-options).
 
+## Conditional comments
+You can disable and enable obfuscation for specific parts of the code by adding following comments: 
+* disable: `// javascript-obfuscator:disable` or `/* javascript-obfuscator:disable */`;
+* enable: `// javascript-obfuscator:enable` or `/* javascript-obfuscator:enable */`.
+
+Example:
+```javascript
+// input
+var foo = 1;
+// javascript-obfuscator:disable
+var bar = 2;
+
+// output
+var _0xabc123 = 0x1;
+var bar = 2;
+```
+Conditional comments affect only direct transformations of AST-tree nodes. All child transformations still will be applied to the AST-tree nodes. 
+
+For example:
+* Obfuscation of the variable's name at its declaration is called direct transformation;
+* Obfuscation of the variable's name beyond its declaration is called child transformation.
+
+
 ## JavaScript Obfuscator Options
 
 Following options are available for the JS Obfuscator:

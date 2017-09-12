@@ -391,4 +391,26 @@ describe('VariableDeclarationTransformer', () => {
             assert.equal(objectPatternIdentifierName2, identifierName2);
         });
     });
+
+    describe('variant #11: computed object expression identifier', () => {
+        const computedObjectExpressionRegExp: RegExp = /var *_0x[a-f0-9]{4,6} *= *\{\[_0x[a-f0-9]{4,6}\]: *0x1\};/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/computed-object-expression-identifier.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('should transform computed object expression identifier', () => {
+            assert.match(obfuscatedCode, computedObjectExpressionRegExp);
+        });
+    });
 });

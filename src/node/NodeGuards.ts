@@ -212,7 +212,9 @@ export class NodeGuards {
             return false;
         }
 
-        const parentNodeIsPropertyNode: boolean = NodeGuards.isPropertyNode(parentNode) && parentNode.key === node;
+        const parentNodeIsPropertyNode: boolean = NodeGuards.isPropertyNode(parentNode)
+            && !parentNode.computed
+            && parentNode.key === node;
         const parentNodeIsMemberExpressionNode: boolean = (
             NodeGuards.isMemberExpressionNode(parentNode) &&
             parentNode.computed === false &&

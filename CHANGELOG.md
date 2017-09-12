@@ -5,6 +5,10 @@ v0.12.0
 * Added ability to disable and enable obfuscation for specific parts of the code by adding conditional comments. 
 * Added obfuscation of `es2015` class names.
 
+v0.11.2
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/98
+
 v0.11.1
 ---
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/94

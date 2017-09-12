@@ -1,5 +1,9 @@
 Change Log
 ===
+v0.11.1
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/94
+
 v0.11.0
 ---
 * **New option:** `log` enables logging of the information to the console.

@@ -4,9 +4,13 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
+import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
+
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/IVisitor';
+
+import { NodeType } from '../../enums/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { Node } from '../../node/Node';
@@ -192,6 +196,13 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                     !Node.isBlockStatementNode(node) ||
                     this.randomGenerator.getMathRandom() > this.options.deadCodeInjectionThreshold
                 ) {
+                    return node;
+                }
+
+                const blockScopeOfBlockStatementNode: TNodeWithBlockStatement = NodeUtils
+                    .getBlockScopesOfNode(node)[0];
+
+                if (blockScopeOfBlockStatementNode.type === NodeType.Program) {
                     return node;
                 }
 

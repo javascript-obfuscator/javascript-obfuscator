@@ -1,4 +1,4 @@
-import { TSourceMapMode } from '../../types/TSourceMapMode';
+import { TSourceMapMode } from '../../types/source-map/TSourceMapMode';
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 
 export interface IOptions {
@@ -11,7 +11,9 @@ export interface IOptions {
     readonly debugProtectionInterval: boolean;
     readonly disableConsoleOutput: boolean;
     readonly domainLock: string[];
+    readonly log: boolean;
     readonly mangle: boolean;
+    readonly renameGlobals: boolean;
     readonly reservedNames: string[];
     readonly rotateStringArray: boolean;
     readonly seed: number;

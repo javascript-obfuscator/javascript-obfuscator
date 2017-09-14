@@ -1,18 +1,21 @@
 import { TInputOptions } from '../../types/options/TInputOptions';
 
-import { SourceMapMode } from '../../enums/SourceMapMode';
+import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
 
 export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     compact: true,
+    config: '',
     controlFlowFlattening: false,
     controlFlowFlatteningThreshold: 0.75,
     deadCodeInjection: false,
     deadCodeInjectionThreshold: 0.4,
     debugProtection: false,
     debugProtectionInterval: false,
-    disableConsoleOutput: true,
+    disableConsoleOutput: false,
     domainLock: [],
+    log: false,
     mangle: false,
+    renameGlobals: false,
     reservedNames: [],
     rotateStringArray: true,
     seed: 0,

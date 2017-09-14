@@ -25,7 +25,7 @@ export abstract class AbstractCustomNode implements ICustomNode {
     protected readonly options: IOptions;
 
     /**
-     * @param options
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IOptions) options: IOptions
@@ -34,7 +34,7 @@ export abstract class AbstractCustomNode implements ICustomNode {
     }
 
     /**
-     * @param args
+     * @param {any[]} args
      */
     public abstract initialize (...args: any[]): void;
 

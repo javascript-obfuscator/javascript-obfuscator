@@ -1,18 +1,23 @@
-import { injectable, inject } from 'inversify';
+import { injectable, inject, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
+import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
+import { IInitializable } from '../interfaces/IInitializable';
 import { INodeTransformer } from '../interfaces/node-transformers/INodeTransformer';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
-import { IVisitor } from '../interfaces/IVisitor';
+import { IVisitor } from '../interfaces/node-transformers/IVisitor';
+
+import { initializable } from '../decorators/Initializable';
 
 @injectable()
-export abstract class AbstractNodeTransformer implements INodeTransformer {
+export abstract class AbstractNodeTransformer implements INodeTransformer, IInitializable {
     /**
      * @type {number}
      */
+    @initializable()
     protected nodeIdentifier: number;
 
     /**
@@ -26,8 +31,8 @@ export abstract class AbstractNodeTransformer implements INodeTransformer {
     protected readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -35,7 +40,10 @@ export abstract class AbstractNodeTransformer implements INodeTransformer {
     ) {
         this.randomGenerator = randomGenerator;
         this.options = options;
+    }
 
+    @postConstruct()
+    public initialize (): void {
         this.nodeIdentifier = this.randomGenerator.getRandomInteger(0, 10000);
     }
 
@@ -45,9 +53,9 @@ export abstract class AbstractNodeTransformer implements INodeTransformer {
     public abstract getVisitor (): IVisitor;
 
     /**
-     * @param node
-     * @param parentNode
-     * @returns {ESTree.Node}
+     * @param {Node} node
+     * @param {Node} parentNode
+     * @returns {Node | VisitorOption}
      */
-    public abstract transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node;
+    public abstract transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node | estraverse.VisitorOption;
 }

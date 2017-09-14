@@ -3,6 +3,7 @@ import { IEscapeSequenceEncoder } from '../../../../interfaces/utils/IEscapeSequ
 /**
  * SelfDefendingTemplate. Enter code in infinity loop.
  *
+ * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
  * @returns {string}
  */
 export function SelfDefendingTemplate (escapeSequenceEncoder: IEscapeSequenceEncoder): string {

@@ -13,15 +13,15 @@ import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IStorage } from '../../interfaces/storages/IStorage';
-import { IVisitor } from '../../interfaces/IVisitor';
+import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
-import { ControlFlowCustomNode } from '../../enums/container/custom-nodes/ControlFlowCustomNode';
-import { NodeType } from '../../enums/NodeType';
+import { ControlFlowCustomNode } from '../../enums/custom-nodes/ControlFlowCustomNode';
+import { ControlFlowReplacer } from '../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/ControlFlowReplacer';
+import { NodeType } from '../../enums/node/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { Node } from '../../node/Node';
+import { NodeGuards } from '../../node/NodeGuards';
 import { NodeAppender } from '../../node/NodeAppender';
-import { ControlFlowReplacer } from '../../enums/container/node-transformers/ControlFlowReplacer';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
@@ -77,11 +77,11 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     private readonly controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory;
 
     /**
-     * @param controlFlowStorageFactory
-     * @param controlFlowReplacerFactory
-     * @param controlFlowCustomNodeFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TControlFlowStorageFactory} controlFlowStorageFactory
+     * @param {TControlFlowReplacerFactory} controlFlowReplacerFactory
+     * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__TControlFlowStorage)
@@ -107,9 +107,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         return {
             leave: (node: ESTree.Node, parentNode: ESTree.Node) => {
                 if (
-                    Node.isFunctionDeclarationNode(node) ||
-                    Node.isFunctionExpressionNode(node) ||
-                    Node.isArrowFunctionExpressionNode(node)
+                    NodeGuards.isFunctionDeclarationNode(node) ||
+                    NodeGuards.isFunctionExpressionNode(node) ||
+                    NodeGuards.isArrowFunctionExpressionNode(node)
                 ) {
                     return this.transformNode(node, parentNode);
                 }
@@ -118,14 +118,14 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param functionNode
-     * @param parentNode
-     * @returns {ESTree.Function}
+     * @param {Function} functionNode
+     * @param {NodeGuards} parentNode
+     * @returns {Function}
      */
     public transformNode (functionNode: ESTree.Function, parentNode: ESTree.Node): ESTree.Function {
         this.visitedFunctionNodes.add(functionNode);
 
-        if (!Node.isBlockStatementNode(functionNode.body)) {
+        if (!NodeGuards.isBlockStatementNode(functionNode.body)) {
             return functionNode;
         }
 
@@ -151,8 +151,8 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param hostNode
-     * @return {IStorage<ICustomNode>}
+     * @param {TNodeWithBlockStatement} hostNode
+     * @returns {IStorage<ICustomNode>}
      */
     private getControlFlowStorage (hostNode: TNodeWithBlockStatement): IStorage<ICustomNode> {
         const controlFlowStorage: IStorage <ICustomNode> = this.controlFlowStorageFactory();
@@ -171,7 +171,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param functionNodeBody
+     * @param {BlockStatement} functionNodeBody
      * @returns {TNodeWithBlockStatement}
      */
     private getHostNode (functionNodeBody: ESTree.BlockStatement): TNodeWithBlockStatement {
@@ -195,20 +195,20 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param node
-     * @return {boolean}
+     * @param {NodeGuards} node
+     * @returns {boolean}
      */
     private isVisitedFunctionNode (node: ESTree.Node): boolean {
         return (
-            Node.isFunctionDeclarationNode(node) ||
-            Node.isFunctionExpressionNode(node) ||
-            Node.isArrowFunctionExpressionNode(node)
+            NodeGuards.isFunctionDeclarationNode(node) ||
+            NodeGuards.isFunctionExpressionNode(node) ||
+            NodeGuards.isArrowFunctionExpressionNode(node)
         ) && this.visitedFunctionNodes.has(node);
     }
 
     /**
-     * @param functionNodeBody
-     * @param controlFlowStorage
+     * @param {BlockStatement} functionNodeBody
+     * @param {IStorage<ICustomNode>} controlFlowStorage
      */
     private transformFunctionBody (functionNodeBody: ESTree.BlockStatement, controlFlowStorage: IStorage<ICustomNode>): void {
         estraverse.replace(functionNodeBody, {

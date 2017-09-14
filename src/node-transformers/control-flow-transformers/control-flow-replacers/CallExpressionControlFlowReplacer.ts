@@ -11,10 +11,10 @@ import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
-import { ControlFlowCustomNode } from '../../../enums/container/custom-nodes/ControlFlowCustomNode';
+import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCustomNode';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
-import { Node } from '../../../node/Node';
+import { NodeGuards } from '../../../node/NodeGuards';
 
 @injectable()
 export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplacer {
@@ -24,9 +24,9 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
     private static readonly usingExistingIdentifierChance: number = 0.5;
 
     /**
-     * @param controlFlowCustomNodeFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
@@ -38,10 +38,10 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
     }
 
     /**
-     * @param callExpressionNode
-     * @param parentNode
-     * @param controlFlowStorage
-     * @returns {ESTree.Node}
+     * @param {CallExpression} callExpressionNode
+     * @param {NodeGuards} parentNode
+     * @param {IStorage<ICustomNode>} controlFlowStorage
+     * @returns {NodeGuards}
      */
     public replace (
         callExpressionNode: ESTree.CallExpression,
@@ -50,7 +50,7 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
     ): ESTree.Node {
         const callee: ESTree.Expression = <ESTree.Expression>callExpressionNode.callee;
 
-        if (!Node.isIdentifierNode(callee)) {
+        if (!NodeGuards.isIdentifierNode(callee)) {
             return callExpressionNode;
         }
 
@@ -78,12 +78,11 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
     }
 
     /**
-     * @param controlFlowStorageId
-     * @param storageKey
-     * @param callee
-     * @param expressionArguments
-     * @param arguments
-     * @returns {ESTree.Node}
+     * @param {string} controlFlowStorageId
+     * @param {string} storageKey
+     * @param {Expression} callee
+     * @param {(Expression | SpreadElement)[]} expressionArguments
+     * @returns {NodeGuards}
      */
     protected getControlFlowStorageCallNode (
         controlFlowStorageId: string,
@@ -99,7 +98,7 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
 
         const statementNode: TStatement = controlFlowStorageCallCustomNode.getNode()[0];
 
-        if (!statementNode || !Node.isExpressionStatementNode(statementNode)) {
+        if (!statementNode || !NodeGuards.isExpressionStatementNode(statementNode)) {
             throw new Error(`\`controlFlowStorageCallCustomNode.getNode()[0]\` should returns array with \`ExpressionStatement\` node`);
         }
 

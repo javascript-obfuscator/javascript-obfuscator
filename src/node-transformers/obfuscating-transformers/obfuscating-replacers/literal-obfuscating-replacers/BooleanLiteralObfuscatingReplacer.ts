@@ -11,7 +11,7 @@ import { Nodes } from '../../../../node/Nodes';
 @injectable()
 export class BooleanLiteralObfuscatingReplacer extends AbstractObfuscatingReplacer {
     /**
-     * @param options
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IOptions) options: IOptions
@@ -40,8 +40,8 @@ export class BooleanLiteralObfuscatingReplacer extends AbstractObfuscatingReplac
     }
 
     /**
-     * @param nodeValue
-     * @returns {ESTree.Node}
+     * @param {boolean} nodeValue
+     * @returns {Node}
      */
     public replace (nodeValue: boolean): ESTree.Node {
         return nodeValue

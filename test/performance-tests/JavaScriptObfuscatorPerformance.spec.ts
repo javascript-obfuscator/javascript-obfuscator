@@ -2,7 +2,7 @@ import { assert } from 'chai';
 
 import { readFileAsString } from '../helpers/readFileAsString';
 
-import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscator';
+import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscatorFacade';
 
 describe('JavaScriptObfuscator performance', function () {
     const iterationsCount: number = 500;

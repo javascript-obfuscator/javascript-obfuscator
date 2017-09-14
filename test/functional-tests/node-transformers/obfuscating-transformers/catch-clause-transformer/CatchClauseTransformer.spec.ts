@@ -7,7 +7,7 @@ import { NO_CUSTOM_NODES_PRESET } from '../../../../../src/options/presets/NoCus
 import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
-import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
+import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
 describe('CatchClauseTransformer', () => {
     let obfuscatedCode: string;

@@ -31,7 +31,7 @@ export class OptionsNormalizer {
     ];
 
     /**
-     * @param options
+     * @param {IOptions} options
      * @returns {IOptions}
      */
     public static normalizeOptions (options: IOptions): IOptions {

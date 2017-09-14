@@ -6,10 +6,10 @@ import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IVisitor } from '../../interfaces/IVisitor';
+import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { Node } from '../../node/Node';
+import { NodeGuards } from '../../node/NodeGuards';
 import { Nodes } from '../../node/Nodes';
 import { NodeUtils } from '../../node/NodeUtils';
 
@@ -31,8 +31,13 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     private readonly collectedBlockStatements: ESTree.BlockStatement[] = [];
 
     /**
-     * @param randomGenerator
-     * @param options
+     * @type {number}
+     */
+    private collectedBlockStatementsLength: number;
+
+    /**
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -46,8 +51,15 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (): IVisitor {
         return {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
+                if (NodeGuards.isProgramNode(node)) {
+                    this.analyzeNode(node, parentNode);
+
+                    return node;
+                }
+            },
             leave: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (Node.isProgramNode(node)) {
+                if (NodeGuards.isBlockStatementNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -55,19 +67,57 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param programNode
-     * @param parentNode
-     * @returns {ESTree.Node}
+     * @param {NodeGuards} programNode
+     * @param {NodeGuards} parentNode
      */
-    public transformNode (programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
-        this.transformProgramNode(programNode);
+    public analyzeNode (programNode: ESTree.Node, parentNode: ESTree.Node): void {
+        estraverse.traverse(programNode, {
+            enter: (node: ESTree.Node): any => {
+                if (NodeGuards.isBlockStatementNode(node)) {
+                    this.collectBlockStatementNodes(node, this.collectedBlockStatements);
+                }
+            }
+        });
 
-        return programNode;
+        this.collectedBlockStatementsLength = this.collectedBlockStatements.length;
     }
 
     /**
-     * @param blockStatementNode
-     * @param collectedBlockStatements
+     * @param {BlockStatement} blockStatementNode
+     * @param {NodeGuards} parentNode
+     * @returns {NodeGuards | VisitorOption}
+     */
+    public transformNode (
+        blockStatementNode: ESTree.BlockStatement,
+        parentNode: ESTree.Node
+    ): ESTree.Node | estraverse.VisitorOption {
+        if (this.collectedBlockStatementsLength < DeadCodeInjectionTransformer.minCollectedBlockStatementsCount) {
+            return estraverse.VisitorOption.Break;
+        }
+
+        if (!this.collectedBlockStatements.length) {
+            return estraverse.VisitorOption.Break;
+        }
+
+        if (this.randomGenerator.getMathRandom() > this.options.deadCodeInjectionThreshold) {
+            return blockStatementNode;
+        }
+
+        const minInteger: number = 0;
+        const maxInteger: number = this.collectedBlockStatements.length - 1;
+        const randomIndex: number = this.randomGenerator.getRandomInteger(minInteger, maxInteger);
+        const randomBlockStatementNode: ESTree.BlockStatement = this.collectedBlockStatements.splice(randomIndex, 1)[0];
+
+        if (randomBlockStatementNode === blockStatementNode) {
+            return blockStatementNode;
+        }
+
+        return this.replaceBlockStatementNode(blockStatementNode, randomBlockStatementNode);
+    }
+
+    /**
+     * @param {BlockStatement} blockStatementNode
+     * @param {BlockStatement[]} collectedBlockStatements
      */
     private collectBlockStatementNodes (
         blockStatementNode: ESTree.BlockStatement,
@@ -83,7 +133,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                 /**
                  * First step: count nested block statements in current block statement
                  */
-                if (Node.isBlockStatementNode(node)) {
+                if (NodeGuards.isBlockStatementNode(node)) {
                     nestedBlockStatementsCount++;
                 }
 
@@ -93,8 +143,8 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                  */
                 if (
                     nestedBlockStatementsCount > DeadCodeInjectionTransformer.maxNestedBlockStatementsCount ||
-                    Node.isBreakStatementNode(node) ||
-                    Node.isContinueStatementNode(node)
+                    NodeGuards.isBreakStatementNode(node) ||
+                    NodeGuards.isContinueStatementNode(node)
                 ) {
                     isValidBlockStatementNode = false;
 
@@ -105,7 +155,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                  * Second step: rename all identifiers (except identifiers in member expressions)
                  * in current block statement
                  */
-                if (Node.isIdentifierNode(node) && !Node.isMemberExpressionNode(parentNode)) {
+                if (NodeGuards.isIdentifierNode(node) && !NodeGuards.isMemberExpressionNode(parentNode)) {
                     node.name = this.randomGenerator.getRandomVariableName(6);
                 }
 
@@ -121,9 +171,9 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param blockStatementNode
-     * @param randomBlockStatementNode
-     * @return {ESTree.BlockStatement}
+     * @param {BlockStatement} blockStatementNode
+     * @param {BlockStatement} randomBlockStatementNode
+     * @returns {BlockStatement}
      */
     private replaceBlockStatementNode (
         blockStatementNode: ESTree.BlockStatement,
@@ -162,50 +212,5 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         newBlockStatementNode = NodeUtils.parentize(newBlockStatementNode);
 
         return newBlockStatementNode;
-    }
-
-    /**
-     * @param programNode
-     */
-    private transformProgramNode (programNode: ESTree.Program): void {
-        estraverse.traverse(programNode, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (!Node.isBlockStatementNode(node)) {
-                    return;
-                }
-
-                this.collectBlockStatementNodes(node, this.collectedBlockStatements);
-            }
-        });
-
-        if (this.collectedBlockStatements.length < DeadCodeInjectionTransformer.minCollectedBlockStatementsCount) {
-            return;
-        }
-
-        estraverse.replace(programNode, {
-            leave: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (!this.collectedBlockStatements.length) {
-                    return estraverse.VisitorOption.Break;
-                }
-
-                if (
-                    !Node.isBlockStatementNode(node) ||
-                    this.randomGenerator.getMathRandom() > this.options.deadCodeInjectionThreshold
-                ) {
-                    return node;
-                }
-
-                const minInteger: number = 0;
-                const maxInteger: number = this.collectedBlockStatements.length - 1;
-                const randomIndex: number = this.randomGenerator.getRandomInteger(minInteger, maxInteger);
-                const randomBlockStatementNode: ESTree.BlockStatement = this.collectedBlockStatements.splice(randomIndex, 1)[0];
-
-                if (randomBlockStatementNode === node) {
-                    return node;
-                }
-
-                return this.replaceBlockStatementNode(node, randomBlockStatementNode);
-            }
-        });
     }
 }

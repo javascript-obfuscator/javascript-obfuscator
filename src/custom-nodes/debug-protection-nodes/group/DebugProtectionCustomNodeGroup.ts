@@ -8,11 +8,11 @@ import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IObfuscationEventEmitter } from '../../../interfaces/event-emitters/IObfuscationEventEmitter';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
-import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStackTraceData';
+import { IStackTraceData } from '../../../interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
 
 import { initializable } from '../../../decorators/Initializable';
 
-import { CustomNode } from '../../../enums/container/custom-nodes/CustomNode';
+import { CustomNode } from '../../../enums/custom-nodes/CustomNode';
 import { ObfuscationEvent } from '../../../enums/event-emitters/ObfuscationEvent';
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
@@ -42,10 +42,10 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
     private readonly obfuscationEventEmitter: IObfuscationEventEmitter;
 
     /**
-     * @param customNodeFactory
-     * @param obfuscationEventEmitter
-     * @param randomGenerator
-     * @param options
+     * @param {TCustomNodeFactory} customNodeFactory
+     * @param {IObfuscationEventEmitter} obfuscationEventEmitter
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
@@ -60,8 +60,8 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
     }
 
     /**
-     * @param blockScopeNode
-     * @param stackTraceData
+     * @param {TNodeWithBlockStatement} blockScopeNode
+     * @param {IStackTraceData[]} stackTraceData
      */
     public appendCustomNodes (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
         // debugProtectionFunctionNode append
@@ -84,7 +84,7 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
     }
 
     public initialize (): void {
-        this.customNodes = new Map <CustomNode, ICustomNode> ();
+        this.customNodes = new Map <CustomNode, ICustomNode>();
 
         if (!this.options.debugProtection) {
             return;

@@ -1,11 +1,13 @@
 import { Container, interfaces } from 'inversify';
 import { ServiceIdentifiers } from './ServiceIdentifiers';
 
+import { analyzersModule } from './modules/analyzers/AnalyzersModule';
 import { controlFlowTransformersModule } from './modules/node-transformers/ControlFlowTransformersModule';
+import { convertingTransformersModule } from './modules/node-transformers/ConvertingTransformersModule';
 import { customNodesModule } from './modules/custom-nodes/CustomNodesModule';
-import { obfuscatingTransformersModule } from './modules/node-transformers/ObfuscatingTransformersModule';
 import { nodeTransformersModule } from './modules/node-transformers/NodeTransformersModule';
-import { stackTraceAnalyzerModule } from './modules/stack-trace-analyzer/StackTraceAnalyzerModule';
+import { obfuscatingTransformersModule } from './modules/node-transformers/ObfuscatingTransformersModule';
+import { preparingTransformersModule } from './modules/node-transformers/PreparingTransformersModule';
 import { storagesModule } from './modules/storages/StoragesModule';
 import { utilsModule } from './modules/utils/UtilsModule';
 
@@ -13,20 +15,22 @@ import { TInputOptions } from '../types/options/TInputOptions';
 
 import { IInversifyContainerFacade } from '../interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from '../interfaces/IJavaScriptObfsucator';
+import { ILogger } from '../interfaces/logger/ILogger';
 import { IObfuscationEventEmitter } from '../interfaces/event-emitters/IObfuscationEventEmitter';
 import { IObfuscationResult } from '../interfaces/IObfuscationResult';
-import { IObfuscator } from '../interfaces/IObfuscator';
 import { IOptions } from '../interfaces/options/IOptions';
 import { ISourceCode } from '../interfaces/ISourceCode';
-import { ISourceMapCorrector } from '../interfaces/ISourceMapCorrector';
+import { ISourceMapCorrector } from '../interfaces/source-map/ISourceMapCorrector';
+import { ITransformersRunner } from '../interfaces/node-transformers/ITransformersRunner';
 
-import { JavaScriptObfuscatorInternal } from '../JavaScriptObfuscatorInternal';
+import { JavaScriptObfuscator } from '../JavaScriptObfuscator';
+import { Logger } from '../logger/Logger';
 import { ObfuscationEventEmitter } from '../event-emitters/ObfuscationEventEmitter';
 import { ObfuscationResult } from '../ObfuscationResult';
-import { Obfuscator } from '../Obfuscator';
 import { Options } from "../options/Options";
 import { SourceCode } from '../SourceCode';
-import { SourceMapCorrector } from '../SourceMapCorrector';
+import { SourceMapCorrector } from '../source-map/SourceMapCorrector';
+import { TransformersRunner } from '../node-transformers/TransformersRunner';
 
 export class InversifyContainerFacade implements IInversifyContainerFacade {
     /**
@@ -39,8 +43,8 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
     }
 
     /**
-     * @param serviceIdentifier
-     * @return {(context:interfaces.Context)=>(bindingName:T)=>U}
+     * @param {interfaces.ServiceIdentifier<U>} serviceIdentifier
+     * @returns {U}
      */
     public static getFactory <T extends number, U> (
         serviceIdentifier: interfaces.ServiceIdentifier<U>
@@ -53,8 +57,8 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
     }
 
     /**
-     * @param serviceIdentifier
-     * @return {(context:interfaces.Context)=>(bindingName:T)=>U}
+     * @param {interfaces.ServiceIdentifier<U>} serviceIdentifier
+     * @returns {U}
      */
     public static getCacheFactory <T extends number, U> (
         serviceIdentifier: interfaces.ServiceIdentifier<U>
@@ -77,9 +81,9 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
     }
 
     /**
-     * @param serviceIdentifier
-     * @param dependencies
-     * @return {(context: interfaces.Context) => (bindingName: T) => U}
+     * @param {interfaces.ServiceIdentifier<interfaces.Newable<U>>} serviceIdentifier
+     * @param {any[]} dependencies
+     * @returns {U}
      */
     public static getConstructorFactory <T extends number, U> (
         serviceIdentifier: interfaces.ServiceIdentifier<interfaces.Newable<U>>,
@@ -114,7 +118,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
     }
 
     /**
-     * @param serviceIdentifier
+     * @param {interfaces.ServiceIdentifier<T>} serviceIdentifier
      * @returns {T}
      */
     public get <T> (serviceIdentifier: interfaces.ServiceIdentifier<T>): T {
@@ -122,8 +126,8 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
     }
 
     /**
-     * @param serviceIdentifier
-     * @param named
+     * @param {interfaces.ServiceIdentifier<T>} serviceIdentifier
+     * @param {string | number | symbol} named
      * @returns {T}
      */
     public getNamed <T> (serviceIdentifier: interfaces.ServiceIdentifier<T>, named: string | number | symbol): T {
@@ -131,8 +135,8 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
     }
 
     /**
-     * @param sourceCode
-     * @param options
+     * @param {string} sourceCode
+     * @param {TInputOptions} options
      */
     public load (sourceCode: string, options: TInputOptions): void {
         this.container
@@ -146,13 +150,18 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
             .inSingletonScope();
 
         this.container
-            .bind<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator)
-            .to(JavaScriptObfuscatorInternal)
+            .bind<ILogger>(ServiceIdentifiers.ILogger)
+            .to(Logger)
             .inSingletonScope();
 
         this.container
-            .bind<IObfuscator>(ServiceIdentifiers.IObfuscator)
-            .to(Obfuscator)
+            .bind<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator)
+            .to(JavaScriptObfuscator)
+            .inSingletonScope();
+
+        this.container
+            .bind<ITransformersRunner>(ServiceIdentifiers.ITransformersRunner)
+            .to(TransformersRunner)
             .inSingletonScope();
 
         this.container
@@ -184,13 +193,15 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
             .inSingletonScope();
 
         // modules
-        this.container.load(utilsModule);
-        this.container.load(storagesModule);
-        this.container.load(stackTraceAnalyzerModule);
+        this.container.load(analyzersModule);
+        this.container.load(controlFlowTransformersModule);
+        this.container.load(convertingTransformersModule);
         this.container.load(customNodesModule);
         this.container.load(nodeTransformersModule);
-        this.container.load(controlFlowTransformersModule);
         this.container.load(obfuscatingTransformersModule);
+        this.container.load(preparingTransformersModule);
+        this.container.load(storagesModule);
+        this.container.load(utilsModule);
     }
 
     public unload (): void {

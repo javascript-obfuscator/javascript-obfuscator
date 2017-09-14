@@ -1,18 +1,41 @@
 Change Log
 ===
+v0.12.0
+---
+* Added obfuscation of `es2015` class names.
+
+v0.11.0
+---
+* **New option:** `log` enables logging of the information to the console.
+* **New option:** `renameGlobals` allows to enable obfuscation of global variable and function names with declaration.
+
+v0.10.2
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/78
+
+v0.10.1
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/76
+
 v0.10.0
 ---
 * **New option:** `deadCodeInjection`. With this option random blocks of dead code will add to the obfuscated code.
 * **New option:** `deadCodeInjectionThreshold` allows to set percentage of nodes that will affected by `deadCodeInjection`.
 * **New option:** `mangle` enables mangling of variable names.
-* `escapeUnicodeSequence` option now disabled by default.
+* **New CLI option:** `--config` allows to set config file with obfuscator options.
+* **Breaking change:** `disableConsoleOutput` option now disabled by default.
+* **Breaking change:** `escapeUnicodeSequence` option now disabled by default.
 * `controlFlowFlattening` now affects string literal nodes.
-* increased runtime performance with `rc4` `stringArrayEncoding`.
-* added support for async functions
-* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/54
-* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/60
-* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/57
-* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/58
+* Increased runtime performance with `rc4` `stringArrayEncoding`.
+* Added support for async functions
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/71
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/65
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/60
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/59
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/54
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/57
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/58
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/58
 
 v0.9.3
 ---
@@ -66,15 +89,15 @@ v0.9.0-beta.1
 
 v0.8.6
 ---
-* additional fixes for https://github.com/javascript-obfuscator/javascript-obfuscator/issues/29
+* Additional fixes for https://github.com/javascript-obfuscator/javascript-obfuscator/issues/29
 
 v0.8.5
 ---
-* fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/29
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/29
 
 v0.8.4
 ---
-* fixed https://github.com/javascript-obfuscator/webpack-obfuscator/issues/13
+* Fixed https://github.com/javascript-obfuscator/webpack-obfuscator/issues/13
 
 v0.8.3
 ---
@@ -109,9 +132,9 @@ v0.7.3
 
 v0.7.2
 ---
-* runtime error fix [#7](https://github.com/sanex3339/webpack-obfuscator/issues/7)
+* Runtime error fix [#7](https://github.com/sanex3339/webpack-obfuscator/issues/7)
 
-* shorthand object expression fix [#16](https://github.com/sanex3339/javascript-obfuscator/issues/16)
+* Shorthand object expression fix [#16](https://github.com/sanex3339/javascript-obfuscator/issues/16)
 
 v0.7.1
 ---

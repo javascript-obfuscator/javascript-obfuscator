@@ -10,10 +10,10 @@ import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
-import { ControlFlowCustomNode } from '../../../enums/container/custom-nodes/ControlFlowCustomNode';
+import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCustomNode';
 
 import { ExpressionWithOperatorControlFlowReplacer } from './ExpressionWithOperatorControlFlowReplacer';
-import { Node } from '../../../node/Node';
+import { NodeGuards } from '../../../node/NodeGuards';
 import { NodeUtils } from '../../../node/NodeUtils';
 
 @injectable()
@@ -24,9 +24,9 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
     private static readonly usingExistingIdentifierChance: number = 0.5;
 
     /**
-     * @param controlFlowCustomNodeFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
@@ -38,10 +38,10 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
     }
 
     /**
-     * @param logicalExpressionNode
-     * @param parentNode
-     * @param controlFlowStorage
-     * @returns {ESTree.Node}
+     * @param {LogicalExpression} logicalExpressionNode
+     * @param {NodeGuards} parentNode
+     * @param {IStorage<ICustomNode>} controlFlowStorage
+     * @returns {NodeGuards}
      */
     public replace (
         logicalExpressionNode: ESTree.LogicalExpression,
@@ -75,24 +75,24 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
     }
 
     /**
-     * @param leftExpression
-     * @param rightExpression
+     * @param {Expression} leftExpression
+     * @param {Expression} rightExpression
      * @returns {boolean}
      */
     private checkForProhibitedExpressions (leftExpression: ESTree.Expression, rightExpression: ESTree.Expression): boolean {
         return [leftExpression, rightExpression].some((expressionNode: ESTree.Node | ESTree.Expression): boolean => {
             let nodeForCheck: ESTree.Node | ESTree.Expression;
 
-            if (!Node.isUnaryExpressionNode(expressionNode)) {
+            if (!NodeGuards.isUnaryExpressionNode(expressionNode)) {
                 nodeForCheck = expressionNode;
             } else {
                 nodeForCheck = NodeUtils.getUnaryExpressionArgumentNode(expressionNode);
             }
 
-            return !Node.isLiteralNode(nodeForCheck) &&
-                !Node.isIdentifierNode(nodeForCheck) &&
-                !Node.isObjectExpressionNode(nodeForCheck) &&
-                !Node.isExpressionStatementNode(nodeForCheck);
+            return !NodeGuards.isLiteralNode(nodeForCheck) &&
+                !NodeGuards.isIdentifierNode(nodeForCheck) &&
+                !NodeGuards.isObjectExpressionNode(nodeForCheck) &&
+                !NodeGuards.isExpressionStatementNode(nodeForCheck);
         });
     }
 }

@@ -4,26 +4,43 @@
 export function DomainLockNodeTemplate (): string {
     return `
         var {domainLockFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {
-            var getGlobal = Function('return (function () ' + '{}.constructor("return this")()' + ');');
-
+            var getGlobal = function () {
+                var globalObject;
+            
+                try {                     
+                    globalObject = Function('return (function() ' + '{}.constructor("return this")( )' + ');')(); 
+                } catch (e) { 
+                    globalObject = window; 
+                }
+                
+                return globalObject;
+            };
+            var that = getGlobal();
             var func = function () { 
                 return {
                     key: 'item',
                     value: 'attribute',
                     getAttribute: function () {
-                        getGlobal()['eval']('while(true){}')();
+                        for (var i = 0; i < 1000; i--) {
+                            var isPositive = i > 0;
+                            
+                            switch (isPositive) {
+                                case true:
+                                    return this.item + '_' + this.value + '_' + i;
+                                default:
+                                    this.item + '_' + this.value;
+                            }
+                        }
                     }()
                 };
             };
                         
             var regExp = new RegExp("[{diff}]", "g");
             var domains = "{domains}".replace(regExp, "").split(";");
-            var eval = []["forEach"]["constructor"];
-            var windowObject = eval("return this")();
             var document;
             var domain;
                         
-            for (var d in windowObject) {
+            for (var d in that) {
                 if (d.length == 8 && d.charCodeAt(7) == 116 && d.charCodeAt(5) == 101 && d.charCodeAt(3) == 117 && d.charCodeAt(0) == 100) {
                     document = d;
                 
@@ -31,7 +48,7 @@ export function DomainLockNodeTemplate (): string {
                 }
             }
 
-            for (var d1 in windowObject[document]) {
+            for (var d1 in that[document]) {
                 if (d1.length == 6 && d1.charCodeAt(5) == 110 && d1.charCodeAt(0) == 100) {
                     domain = d1;
                     
@@ -39,11 +56,11 @@ export function DomainLockNodeTemplate (): string {
                 }
             }
             
-            if ((!document && !domain) || (!windowObject[document] && !windowObject[document][domain])) {
+            if ((!document && !domain) || (!that[document] && !that[document][domain])) {
                 return;
             }
             
-            var currentDomain = windowObject[document][domain];
+            var currentDomain = that[document][domain];
 
             var ok = false;
                         

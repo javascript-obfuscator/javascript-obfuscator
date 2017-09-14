@@ -2,7 +2,7 @@ import { ValidationError } from 'class-validator';
 
 export class ValidationErrorsFormatter {
     /**
-     * @param validationErrors
+     * @param {ValidationError[]} validationErrors
      * @returns {string}
      */
     public static format (validationErrors: ValidationError[]): string {
@@ -16,7 +16,7 @@ export class ValidationErrorsFormatter {
     }
 
     /**
-     * @param validationError
+     * @param {ValidationError} validationError
      * @returns {string}
      */
     private static formatError (validationError: ValidationError): string {

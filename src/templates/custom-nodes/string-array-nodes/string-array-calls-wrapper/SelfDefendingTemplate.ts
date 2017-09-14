@@ -1,6 +1,7 @@
 import { IEscapeSequenceEncoder } from '../../../../interfaces/utils/IEscapeSequenceEncoder';
 
 /**
+ * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
  * @returns {string}
  */
 export function SelfDefendingTemplate (escapeSequenceEncoder: IEscapeSequenceEncoder): string {

@@ -23,7 +23,7 @@ export class DebugProtectionFunctionCallNode extends AbstractCustomNode {
     private debugProtectionFunctionName: string;
 
     /**
-     * @param options
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IOptions) options: IOptions
@@ -32,7 +32,7 @@ export class DebugProtectionFunctionCallNode extends AbstractCustomNode {
     }
 
     /**
-     * @param debugProtectionFunctionName
+     * @param {string} debugProtectionFunctionName
      */
     public initialize (debugProtectionFunctionName: string): void {
         this.debugProtectionFunctionName = debugProtectionFunctionName;

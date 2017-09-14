@@ -11,10 +11,10 @@ import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { IStorage } from '../../../interfaces/storages/IStorage';
 
-import { ControlFlowCustomNode } from '../../../enums/container/custom-nodes/ControlFlowCustomNode';
+import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCustomNode';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
-import { Node } from '../../../node/Node';
+import { NodeGuards } from '../../../node/NodeGuards';
 
 @injectable()
 export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplacer {
@@ -24,9 +24,9 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
     private static readonly usingExistingIdentifierChance: number = 1;
 
     /**
-     * @param controlFlowCustomNodeFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
@@ -38,17 +38,17 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
     }
 
     /**
-     * @param literalNode
-     * @param parentNode
-     * @param controlFlowStorage
-     * @returns {ESTree.Node}
+     * @param {Literal} literalNode
+     * @param {NodeGuards} parentNode
+     * @param {IStorage<ICustomNode>} controlFlowStorage
+     * @returns {NodeGuards}
      */
     public replace (
         literalNode: ESTree.Literal,
         parentNode: ESTree.Node,
         controlFlowStorage: IStorage <ICustomNode>
     ): ESTree.Node {
-        if (Node.isPropertyNode(parentNode) && parentNode.key === literalNode) {
+        if (NodeGuards.isPropertyNode(parentNode) && parentNode.key === literalNode) {
             return literalNode;
         }
 
@@ -74,9 +74,9 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
     }
 
     /**
-     * @param controlFlowStorageId
-     * @param storageKey
-     * @returns {ESTree.Node}
+     * @param {string} controlFlowStorageId
+     * @param {string} storageKey
+     * @returns {NodeGuards}
      */
     protected getControlFlowStorageCallNode (
         controlFlowStorageId: string,
@@ -90,7 +90,7 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
 
         const statementNode: TStatement = controlFlowStorageCallCustomNode.getNode()[0];
 
-        if (!statementNode || !Node.isExpressionStatementNode(statementNode)) {
+        if (!statementNode || !NodeGuards.isExpressionStatementNode(statementNode)) {
             throw new Error(`\`controlFlowStorageCallCustomNode.getNode()[0]\` should returns array with \`ExpressionStatement\` node`);
         }
 

@@ -1,17 +1,20 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
 import * as md5 from 'md5';
 import { Chance } from 'chance';
 
+import { IInitializable } from '../interfaces/IInitializable';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
-
-import { Utils } from './Utils';
 import { ISourceCode } from '../interfaces/ISourceCode';
 
+import { initializable } from '../decorators/Initializable';
+
+import { Utils } from './Utils';
+
 @injectable()
-export class RandomGenerator implements IRandomGenerator {
+export class RandomGenerator implements IRandomGenerator, IInitializable {
     /**
      * @type {string}
      */
@@ -40,16 +43,23 @@ export class RandomGenerator implements IRandomGenerator {
     /**
      * @type {Chance.Chance | Chance.SeededChance}
      */
-    private readonly randomGenerator: Chance.Chance | Chance.SeededChance;
+    @initializable()
+    private randomGenerator: Chance.Chance | Chance.SeededChance;
+
+    /**
+     * @type {number}
+     */
+    @initializable()
+    private seed: number;
 
     /**
      * @type {ISourceCode}
      */
-    private readonly  sourceCode: ISourceCode;
+    private readonly sourceCode: ISourceCode;
 
     /**
-     * @param sourceCode
-     * @param options
+     * @param {ISourceCode} sourceCode
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.ISourceCode) sourceCode: ISourceCode,
@@ -57,10 +67,28 @@ export class RandomGenerator implements IRandomGenerator {
     ) {
         this.sourceCode = sourceCode;
         this.options = options;
+    }
 
-        this.randomGenerator = options.seed === 0
-            ? new Chance()
-            : new Chance(this.getSeed());
+    @postConstruct()
+    public initialize (): void {
+        const getRandomInteger: (min: number, max: number) => number = (min: number, max: number) => {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        };
+
+        /**
+         * We need to add numbers from md5 hash of source code to input seed to prevent same String Array name
+         * for different bundles with same seed
+         *
+         * @returns {number}
+         */
+        const getSeed: () => number = (): number => {
+            const md5Hash: string = md5(this.sourceCode.getSourceCode());
+
+            return this.seed + Number(md5Hash.replace(/\D/g, ''));
+        };
+
+        this.seed = this.options.seed !== 0 ? this.options.seed : getRandomInteger(0, 999999999);
+        this.randomGenerator = new Chance(getSeed());
     }
 
     /**
@@ -71,8 +99,8 @@ export class RandomGenerator implements IRandomGenerator {
     }
 
     /**
-     * @param min
-     * @param max
+     * @param {number} min
+     * @param {number} max
      * @returns {number}
      */
     public getRandomFloat (min: number, max: number): number {
@@ -91,8 +119,8 @@ export class RandomGenerator implements IRandomGenerator {
     }
 
     /**
-     * @param min
-     * @param max
+     * @param {number} min
+     * @param {number} max
      * @returns {number}
      */
     public getRandomInteger (min: number, max: number): number {
@@ -103,8 +131,8 @@ export class RandomGenerator implements IRandomGenerator {
     }
 
     /**
-     * @param length
-     * @param pool
+     * @param {number} length
+     * @param {string} pool
      * @returns {string}
      */
     public getRandomString (length: number, pool: string = RandomGenerator.randomGeneratorPool): string {
@@ -112,7 +140,7 @@ export class RandomGenerator implements IRandomGenerator {
     }
 
     /**
-     * @param length
+     * @param {number} length
      * @returns {string}
      */
     public getRandomVariableName (length: number): string {
@@ -133,14 +161,9 @@ export class RandomGenerator implements IRandomGenerator {
     }
 
     /**
-     * We need to add numbers from md5 hash of source code to input seed to prevent same String Array name
-     * for different bundles with same seed
-     *
      * @returns {number}
      */
-    private getSeed (): number {
-        const md5Hash: string = md5(this.sourceCode.getSourceCode());
-
-        return this.options.seed + Number(md5Hash.replace(/\D/g, ''));
+    public getSeed (): number {
+        return this.seed;
     }
 }

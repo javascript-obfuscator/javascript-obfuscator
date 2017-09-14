@@ -1,12 +1,16 @@
 import { TCLISanitizer } from '../../types/cli/TCLISanitizer';
 
-import { SourceMapMode } from '../../enums/SourceMapMode';
+import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
 
+/**
+ * @param {string} value
+ * @returns {string}
+ */
 export const SourceMapModeSanitizer: TCLISanitizer = (value: string): string => {
     const availableMode: boolean = Object
         .keys(SourceMapMode)
-        .some((key: string): boolean => {
-            return SourceMapMode[<any>key] === value;
+        .some((key: any): boolean => {
+            return SourceMapMode[key] === value;
         });
 
     if (!availableMode) {

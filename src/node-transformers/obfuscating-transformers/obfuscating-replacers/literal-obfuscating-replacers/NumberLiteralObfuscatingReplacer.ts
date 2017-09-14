@@ -17,7 +17,7 @@ export class NumberLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     private readonly numberLiteralCache: Map <number, string> = new Map();
 
     /**
-     * @param options
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IOptions) options: IOptions
@@ -26,8 +26,8 @@ export class NumberLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     }
 
     /**
-     * @param nodeValue
-     * @returns {ESTree.Node}
+     * @param {number} nodeValue
+     * @returns {Node}
      */
     public replace (nodeValue: number): ESTree.Node {
         let rawValue: string;

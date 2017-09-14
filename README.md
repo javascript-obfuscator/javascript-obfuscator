@@ -21,6 +21,7 @@ Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/
 * Webpack: [webpack-obfuscator](https://github.com/javascript-obfuscator/webpack-obfuscator)
 * Gulp: [gulp-javascript-obfuscator](https://github.com/javascript-obfuscator/gulp-javascript-obfuscator)
 * Grunt: [grunt-contrib-obfuscator](https://github.com/javascript-obfuscator/grunt-contrib-obfuscator)
+* Rollup: [rollup-plugin-javascript-obfuscator](https://github.com/javascript-obfuscator/rollup-plugin-javascript-obfuscator)
 
 [![npm version](https://badge.fury.io/js/javascript-obfuscator.svg)](https://badge.fury.io/js/javascript-obfuscator)
 [![Build Status](https://travis-ci.org/javascript-obfuscator/javascript-obfuscator.svg?branch=master)](https://travis-ci.org/javascript-obfuscator/javascript-obfuscator)
@@ -29,6 +30,10 @@ Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/
 [![Sponsors on Open Collective](https://opencollective.com/javascript-obfuscator/sponsors/badge.svg)](#sponsors)
 
 *NOTE! the README on the master branch might not match that of the latest stable release!*
+
+If this project helps you, you can support it:
+* (Bitcoin) 1EnQsZc35CjVy92HN9gZXHjjMnqiW6BsGF
+* (OpenCollective) https://opencollective.com/javascript-obfuscator
 
 ## :warning: Important
 ##### Obfuscate only the code that belongs to you. 
@@ -71,8 +76,7 @@ var obfuscationResult = JavaScriptObfuscator.obfuscate(
     `,
     {
         compact: false,
-        controlFlowFlattening: true,
-        disableConsoleOutput: false
+        controlFlowFlattening: true
     }
 );
 
@@ -195,6 +199,29 @@ javascript-obfuscator samples/sample.js --output output/output.js --compact true
 
 See [CLI options](#cli-options).
 
+## Conditional comments
+You can disable and enable obfuscation for specific parts of the code by adding following comments: 
+* disable: `// javascript-obfuscator:disable` or `/* javascript-obfuscator:disable */`;
+* enable: `// javascript-obfuscator:enable` or `/* javascript-obfuscator:enable */`.
+
+Example:
+```javascript
+// input
+var foo = 1;
+// javascript-obfuscator:disable
+var bar = 2;
+
+// output
+var _0xabc123 = 0x1;
+var bar = 2;
+```
+Conditional comments affect only direct transformations of AST-tree nodes. All child transformations still will be applied to the AST-tree nodes. 
+
+For example:
+* Obfuscation of the variable's name at its declaration is called direct transformation;
+* Obfuscation of the variable's name beyond its declaration is called child transformation.
+
+
 ## JavaScript Obfuscator Options
 
 Following options are available for the JS Obfuscator:
@@ -210,8 +237,10 @@ Following options are available for the JS Obfuscator:
     deadCodeInjectionThreshold: 0.4,
     debugProtection: false,
     debugProtectionInterval: false,
-    disableConsoleOutput: true,
+    disableConsoleOutput: false,
+    log: false,
     mangle: false,
+    renameGlobals: false,
     reservedNames: [],
     rotateStringArray: true,
     seed: 0,
@@ -235,6 +264,7 @@ Following options are available for the JS Obfuscator:
     -o, --output
 
     --compact <boolean>
+    --config <string>
     --controlFlowFlattening <boolean>
     --controlFlowFlatteningThreshold <number>
     --deadCodeInjection <boolean>
@@ -242,7 +272,9 @@ Following options are available for the JS Obfuscator:
     --debugProtection <boolean>
     --debugProtectionInterval <boolean>
     --disableConsoleOutput <boolean>
+    --log <boolean>
     --mangle <boolean>
+    --renameGlobals <boolean>
     --reservedNames <list> (comma separated)
     --rotateStringArray <boolean>
     --seed <number>
@@ -261,6 +293,11 @@ Following options are available for the JS Obfuscator:
 Type: `boolean` Default: `true`
 
 Compact code output on one line.
+
+### `config`
+Type: `string` Default: ``
+
+Name of JS/JSON config file which contains obfuscator options. These will be overridden by options passed directly to CLI
 
 ### `controlFlowFlattening`
 Type: `boolean` Default: `false`
@@ -469,7 +506,7 @@ Type: `boolean` Default: `false`
 If checked, an interval is used to force the debug mode on the Console tab, making it harder to use other features of the Developer Tools. Works if [`debugProtection`](#debugprotection) is enabled.
 
 ### `disableConsoleOutput`
-Type: `boolean` Default: `true`
+Type: `boolean` Default: `false`
 
 Disables the use of `console.log`, `console.info`, `console.error`, `console.warn`, `console.debug`, `console.exception` and `console.trace` by replacing them with empty functions. This makes the use of the debugger harder.
 
@@ -481,10 +518,22 @@ Locks the obfuscated source code so it only runs on specific domains and/or sub-
 ##### Multiple domains and sub-domains
 It's possible to lock your code to more than one domain or sub-domain. For instance, to lock it so the code only runs on **www.example.com** add `www.example.com`, to make it work on any sub-domain from example.com, use `.example.com`.
 
+### `log`
+Type: `boolean` Default: `false`
+
+Enables logging of the information to the console.
+
 ### `mangle`
 Type: `boolean` Default: `false`
 
 Enables mangling of variable names.
+
+### `renameGlobals`
+Type: `boolean` Default: `false`
+
+##### :warning: this option can break your code. Enable it only if you know what it does!
+
+Enables obfuscation of global variable and function names **with declaration**.
 
 ### `reservedNames`
 Type: `string[]` Default: `[]`
@@ -622,7 +671,9 @@ Performance will 50-100% slower than without obfuscation
 	debugProtection: true,
 	debugProtectionInterval: true,
 	disableConsoleOutput: true,
+	log: false,
 	mangle: false,
+	renameGlobals: false,
 	rotateStringArray: true,
 	selfDefending: true,
 	stringArray: true,
@@ -646,7 +697,9 @@ Performance will 30-35% slower than without obfuscation
 	debugProtection: false,
 	debugProtectionInterval: false,
 	disableConsoleOutput: true,
+    	log: false,
 	mangle: false,
+	renameGlobals: false,
 	rotateStringArray: true,
 	selfDefending: true,
 	stringArray: true,
@@ -668,7 +721,9 @@ Performance will slightly slower than without obfuscation
 	debugProtection: false,
 	debugProtectionInterval: false,
 	disableConsoleOutput: true,
+    	log: false,
 	mangle: true,
+	renameGlobals: false,
 	rotateStringArray: true,
 	selfDefending: true,
 	stringArray: true,

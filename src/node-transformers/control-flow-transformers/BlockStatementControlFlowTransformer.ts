@@ -1,6 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
@@ -9,12 +10,12 @@ import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IVisitor } from '../../interfaces/IVisitor';
+import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
-import { ControlFlowCustomNode } from '../../enums/container/custom-nodes/ControlFlowCustomNode';
+import { ControlFlowCustomNode } from '../../enums/custom-nodes/ControlFlowCustomNode';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { Node } from '../../node/Node';
+import { NodeGuards } from '../../node/NodeGuards';
 
 @injectable()
 export class BlockStatementControlFlowTransformer extends AbstractNodeTransformer {
@@ -29,10 +30,10 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
     private readonly controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory;
 
     /**
-     * @param controlFlowCustomNodeFactory
-     * @param arrayUtils
-     * @param randomGenerator
-     * @param options
+     * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
+     * @param {IArrayUtils} arrayUtils
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
@@ -48,17 +49,46 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
     }
 
     /**
-     * @param blockStatementNode
-     * @return {boolean}
+     * @param {BlockStatement} blockStatementNode
+     * @returns {boolean}
      */
     private static blockStatementHasProhibitedStatements (blockStatementNode: ESTree.BlockStatement): boolean {
         return blockStatementNode.body.some((statement: ESTree.Statement) => {
-            const isBreakOrContinueStatement: boolean = Node.isBreakStatementNode(statement) || Node.isContinueStatementNode(statement);
-            const isVariableDeclarationWithLetOrConstKind: boolean = Node.isVariableDeclarationNode(statement) &&
-                (statement.kind === 'const' ||  statement.kind === 'let');
+            const isBreakOrContinueStatement: boolean = NodeGuards.isBreakStatementNode(statement) || NodeGuards.isContinueStatementNode(statement);
+            const isVariableDeclarationWithLetOrConstKind: boolean = NodeGuards.isVariableDeclarationNode(statement)
+                && (statement.kind === 'const' || statement.kind === 'let');
 
-            return Node.isFunctionDeclarationNode(statement) || isBreakOrContinueStatement || isVariableDeclarationWithLetOrConstKind;
+            return NodeGuards.isFunctionDeclarationNode(statement) || isBreakOrContinueStatement || isVariableDeclarationWithLetOrConstKind;
         });
+    }
+
+    /**
+     * @param {BlockStatement} blockStatementNode
+     * @returns {boolean}
+     */
+    private static canTransformBlockStatementNode (blockStatementNode: ESTree.BlockStatement): boolean {
+        let canTransform: boolean = true;
+
+        estraverse.traverse(blockStatementNode, {
+            enter: (node: ESTree.Node): any => {
+                if (NodeGuards.isWhileStatementNode(node)) {
+                    return estraverse.VisitorOption.Skip;
+                }
+
+                if (
+                    NodeGuards.isBlockStatementNode(node)
+                    && BlockStatementControlFlowTransformer.blockStatementHasProhibitedStatements(node)
+                ) {
+                    canTransform = false;
+                }
+            }
+        });
+
+        if (blockStatementNode.body.length <= 4) {
+            canTransform = false;
+        }
+
+        return canTransform;
     }
 
     /**
@@ -67,7 +97,7 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
     public getVisitor (): IVisitor {
         return {
             leave: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (Node.isBlockStatementNode(node)) {
+                if (NodeGuards.isBlockStatementNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -75,24 +105,19 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
     }
 
     /**
-     * @param blockStatementNode
-     * @param parentNode
-     * @returns {ESTree.Node}
+     * @param {BlockStatement} blockStatementNode
+     * @param {NodeGuards} parentNode
+     * @returns {NodeGuards}
      */
     public transformNode (blockStatementNode: ESTree.BlockStatement, parentNode: ESTree.Node): ESTree.Node {
         if (
             this.randomGenerator.getMathRandom() > this.options.controlFlowFlatteningThreshold ||
-            BlockStatementControlFlowTransformer.blockStatementHasProhibitedStatements(blockStatementNode)
+            !BlockStatementControlFlowTransformer.canTransformBlockStatementNode(blockStatementNode)
         ) {
             return blockStatementNode;
         }
 
         const blockStatementBody: ESTree.Statement[] = blockStatementNode.body;
-
-        if (blockStatementBody.length <= 4) {
-            return blockStatementNode;
-        }
-
         const originalKeys: number[] = this.arrayUtils.arrayRange(blockStatementBody.length);
         const shuffledKeys: number[] = this.arrayUtils.arrayShuffle(originalKeys);
         const originalKeysIndexesInShuffledArray: number[] = originalKeys.map((key: number) => shuffledKeys.indexOf(key));

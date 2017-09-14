@@ -4,12 +4,15 @@ const fs = require("fs");
 const nodeExternals = require('webpack-node-externals');
 const webpack = require('webpack');
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
+const TSLintPlugin = require('tslint-webpack-plugin');
+
+const copyright = 'Copyright (C) 2017 Timofey Kachalov <sanex3339@yandex.ru>';
 
 /**
  * @return {string}
  */
 const getLicenseText = () => {
-    return "/*\nCopyright (C) 2017 Timofey Kachalov <sanex3339@yandex.ru>\n\n" +
+    return `/*!\n${copyright}\n\n` +
         fs.readFileSync('./LICENSE.BSD', 'utf8') + "\n*/";
 };
 
@@ -41,13 +44,8 @@ module.exports = {
     target: 'node',
     externals: [nodeExternals()],
     module: {
+        exprContextCritical: false,
         rules: [
-            {
-                enforce: 'pre',
-                test: /\.ts(x?)$/,
-                loader: 'tslint-loader',
-                exclude: /(node_modules)/
-            },
             {
                 test: /\.ts(x?)$/,
                 loader: 'awesome-typescript-loader',
@@ -69,7 +67,10 @@ module.exports = {
                 entryOnly: false
             }
         ),
-        new CheckerPlugin()
+        new CheckerPlugin(),
+        new TSLintPlugin({
+            files: ['./src/**/*.ts']
+        })
     ],
     output: {
         path: __dirname + '/dist',

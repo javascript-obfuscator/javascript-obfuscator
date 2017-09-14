@@ -32,8 +32,8 @@ export class StringLiteralControlFlowStorageCallNode extends AbstractCustomNode 
     private readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -45,8 +45,8 @@ export class StringLiteralControlFlowStorageCallNode extends AbstractCustomNode 
     }
 
     /**
-     * @param controlFlowStorageName
-     * @param controlFlowStorageKey
+     * @param {string} controlFlowStorageName
+     * @param {string} controlFlowStorageKey
      */
     public initialize (
         controlFlowStorageName: string,

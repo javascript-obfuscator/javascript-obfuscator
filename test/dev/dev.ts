@@ -2,7 +2,7 @@
 import { NO_CUSTOM_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
 
 (function () {
-    const JavaScriptObfuscator: any = require("../../index");
+    const JavaScriptObfuscator: any = require('../../index');
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
@@ -35,8 +35,6 @@ import { NO_CUSTOM_NODES_PRESET } from '../../src/options/presets/NoCustomNodes'
         {
             ...NO_CUSTOM_NODES_PRESET,
             compact: false,
-            stringArray: false,
-            stringArrayThreshold: 1,
             deadCodeInjection: true,
             deadCodeInjectionThreshold: 1
         }

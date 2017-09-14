@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "outDir": "test-tmp",
+    "target": "es6",
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+    "noEmitHelpers": true,
+    "importHelpers": true,
+    "module": "commonjs",
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

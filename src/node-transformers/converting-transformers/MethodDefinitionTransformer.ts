@@ -5,12 +5,12 @@ import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IVisitor } from '../../interfaces/IVisitor';
+import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
-import { NodeType } from '../../enums/NodeType';
+import { NodeType } from '../../enums/node/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { Node } from '../../node/Node';
+import { NodeGuards } from '../../node/NodeGuards';
 
 /**
  * replaces:
@@ -29,8 +29,8 @@ export class MethodDefinitionTransformer extends AbstractNodeTransformer {
     private static readonly ignoredNames: string[] = ['constructor'];
 
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -45,7 +45,7 @@ export class MethodDefinitionTransformer extends AbstractNodeTransformer {
     public getVisitor (): IVisitor {
         return {
             enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (Node.isMethodDefinitionNode(node)) {
+                if (NodeGuards.isMethodDefinitionNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -63,13 +63,13 @@ export class MethodDefinitionTransformer extends AbstractNodeTransformer {
      *     object[identifier] = 1;
      * Literal node will be obfuscated by LiteralTransformer
      *
-     * @param methodDefinitionNode
-     * @param parentNode
-     * @returns {ESTree.Node}
+     * @param {MethodDefinition} methodDefinitionNode
+     * @param {NodeGuards} parentNode
+     * @returns {NodeGuards}
      */
     public transformNode (methodDefinitionNode: ESTree.MethodDefinition, parentNode: ESTree.Node): ESTree.Node {
         if (
-            Node.isIdentifierNode(methodDefinitionNode.key) &&
+            NodeGuards.isIdentifierNode(methodDefinitionNode.key) &&
             !MethodDefinitionTransformer.ignoredNames.includes(methodDefinitionNode.key.name) &&
             methodDefinitionNode.computed === false
         ) {

@@ -7,16 +7,16 @@ import * as ESTree from 'estree';
 import { TIdentifierObfuscatingReplacerFactory } from '../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory';
 import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
 
-import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/IIdentifierObfuscatingReplacer';
+import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IVisitor } from '../../interfaces/IVisitor';
+import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
-import { IdentifierObfuscatingReplacer } from "../../enums/container/node-transformers/IdentifierObfuscatingReplacer";
-import { NodeType } from '../../enums/NodeType';
+import { IdentifierObfuscatingReplacer } from "../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/IdentifierObfuscatingReplacer";
+import { NodeType } from '../../enums/node/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { Node } from '../../node/Node';
+import { NodeGuards } from '../../node/NodeGuards';
 import { NodeUtils } from '../../node/NodeUtils';
 
 /**
@@ -42,9 +42,9 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     private readonly replaceableIdentifiers: Map <ESTree.Node, ESTree.Identifier[]> = new Map();
 
     /**
-     * @param identifierObfuscatingReplacerFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TIdentifierObfuscatingReplacerFactory} identifierObfuscatingReplacerFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierObfuscatingReplacer)
@@ -65,7 +65,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     public getVisitor (): IVisitor {
         return {
             enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (Node.isVariableDeclarationNode(node)) {
+                if (NodeGuards.isVariableDeclarationNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -73,15 +73,15 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param variableDeclarationNode
-     * @param parentNode
-     * @returns {ESTree.Node}
+     * @param {VariableDeclaration} variableDeclarationNode
+     * @param {NodeGuards} parentNode
+     * @returns {NodeGuards}
      */
     public transformNode (variableDeclarationNode: ESTree.VariableDeclaration, parentNode: ESTree.Node): ESTree.Node {
         const blockScopeOfVariableDeclarationNode: TNodeWithBlockStatement = NodeUtils
             .getBlockScopesOfNode(variableDeclarationNode)[0];
 
-        if (blockScopeOfVariableDeclarationNode.type === NodeType.Program) {
+        if (!this.options.renameGlobals && blockScopeOfVariableDeclarationNode.type === NodeType.Program) {
             return variableDeclarationNode;
         }
 
@@ -103,13 +103,13 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param variableDeclarationNode
-     * @param nodeIdentifier
+     * @param {VariableDeclaration} variableDeclarationNode
+     * @param {number} nodeIdentifier
      */
     private storeVariableNames (variableDeclarationNode: ESTree.VariableDeclaration, nodeIdentifier: number): void {
         variableDeclarationNode.declarations
             .forEach((declarationNode: ESTree.VariableDeclarator) => {
-                if (Node.isObjectPatternNode(declarationNode.id)) {
+                if (NodeGuards.isObjectPatternNode(declarationNode.id)) {
                     return estraverse.VisitorOption.Skip;
                 }
 
@@ -120,8 +120,8 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param scopeNode
-     * @param nodeIdentifier
+     * @param {NodeGuards} scopeNode
+     * @param {number} nodeIdentifier
      */
     private replaceScopeCachedIdentifiers (scopeNode: ESTree.Node, nodeIdentifier: number): void {
         const cachedReplaceableIdentifiers: ESTree.Identifier[] = <ESTree.Identifier[]>this.replaceableIdentifiers.get(scopeNode);
@@ -134,15 +134,15 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param scopeNode
-     * @param nodeIdentifier
+     * @param {NodeGuards} scopeNode
+     * @param {number} nodeIdentifier
      */
     private replaceScopeIdentifiers (scopeNode: ESTree.Node, nodeIdentifier: number): void {
         const storedReplaceableIdentifiers: ESTree.Identifier[] = [];
 
         estraverse.replace(scopeNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (!node.obfuscatedNode && Node.isReplaceableIdentifierNode(node, parentNode)) {
+                if (!node.obfuscatedNode && NodeGuards.isReplaceableIdentifierNode(node, parentNode)) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer.replace(node.name, nodeIdentifier);
                     const newIdentifierName: string = newIdentifier.name;
 

@@ -1,5 +1,5 @@
 "use strict";
 
-import { JavaScriptObfuscator } from './src/JavaScriptObfuscator';
+import { JavaScriptObfuscator } from './src/JavaScriptObfuscatorFacade';
 
 module.exports = JavaScriptObfuscator;

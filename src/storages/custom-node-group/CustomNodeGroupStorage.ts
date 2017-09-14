@@ -1,4 +1,4 @@
-import { injectable, inject } from 'inversify';
+import { injectable, inject, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TCustomNodeGroupFactory } from '../../types/container/custom-nodes/TCustomNodeGroupFactory';
@@ -7,7 +7,7 @@ import { ICustomNodeGroup } from '../../interfaces/custom-nodes/ICustomNodeGroup
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
-import { CustomNodeGroup } from '../../enums/container/custom-nodes/CustomNodeGroup';
+import { CustomNodeGroup } from '../../enums/custom-nodes/CustomNodeGroup';
 
 import { MapStorage } from '../MapStorage';
 
@@ -35,9 +35,9 @@ export class CustomNodeGroupStorage extends MapStorage <ICustomNodeGroup> {
     private readonly options: IOptions;
 
     /**
-     * @param customNodeGroupFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TCustomNodeGroupFactory} customNodeGroupFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__ICustomNodeGroup) customNodeGroupFactory: TCustomNodeGroupFactory,
@@ -48,12 +48,11 @@ export class CustomNodeGroupStorage extends MapStorage <ICustomNodeGroup> {
 
         this.customNodeGroupFactory = customNodeGroupFactory;
         this.options = options;
-
-        this.initialize();
     }
 
+    @postConstruct()
     public initialize (): void {
-        this.storage = new Map <string, ICustomNodeGroup> ();
+        this.storage = new Map <string, ICustomNodeGroup>();
         this.storageId = this.randomGenerator.getRandomString(6);
 
         CustomNodeGroupStorage.customNodeGroupsList.forEach((customNodeGroupName: CustomNodeGroup) => {

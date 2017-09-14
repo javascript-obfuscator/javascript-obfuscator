@@ -76,12 +76,12 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     private readonly stringArrayStorage: IStorage<string>;
 
     /**
-     * @param customNodeGroupStorage
-     * @param stringArrayStorage
-     * @param escapeSequenceEncoder
-     * @param randomGenerator
-     * @param cryptUtils
-     * @param options
+     * @param {IStorage<ICustomNodeGroup>} customNodeGroupStorage
+     * @param {IStorage<string>} stringArrayStorage
+     * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
+     * @param {IRandomGenerator} randomGenerator
+     * @param {ICryptUtils} cryptUtils
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.TCustomNodeGroupStorage) customNodeGroupStorage: IStorage<ICustomNodeGroup>,
@@ -91,7 +91,9 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
         @inject(ServiceIdentifiers.ICryptUtils) cryptUtils: ICryptUtils,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
+        super(
+            options
+        );
 
         this.customNodeGroupStorage = customNodeGroupStorage;
         this.stringArrayStorage = stringArrayStorage;
@@ -109,8 +111,8 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     }
 
     /**
-     * @param hexadecimalIndex
-     * @return {ESTree.Literal}
+     * @param {string} hexadecimalIndex
+     * @returns {Literal}
      */
     private static getHexadecimalLiteralNode (hexadecimalIndex: string): ESTree.Literal {
         const hexadecimalLiteralNode: ESTree.Literal = Nodes.getLiteralNode(hexadecimalIndex);
@@ -121,8 +123,8 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     }
 
     /**
-     * @param literalValue
-     * @return {ESTree.Literal}
+     * @param {string} literalValue
+     * @returns {Literal}
      */
     private static getRc4KeyLiteralNode (literalValue: string): ESTree.Literal {
         const rc4KeyLiteralNode: ESTree.Literal = Nodes.getLiteralNode(literalValue);
@@ -133,8 +135,8 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     }
 
     /**
-     * @param nodeValue
-     * @returns {ESTree.Node}
+     * @param {string} nodeValue
+     * @returns {Node}
      */
     public replace (nodeValue: string): ESTree.Node {
         const useStringArray: boolean = this.canUseStringArray(nodeValue);
@@ -155,8 +157,8 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     }
 
     /**
-     * @param nodeValue
-     * @return {boolean}
+     * @param {string} nodeValue
+     * @returns {boolean}
      */
     private canUseStringArray (nodeValue: string): boolean {
         return (
@@ -167,9 +169,9 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     }
 
     /**
-     * @param value
-     * @param stringArrayStorageLength
-     * @return {IStringArrayIndexData}
+     * @param {string} value
+     * @param {number} stringArrayStorageLength
+     * @returns {IStringArrayIndexData}
      */
     private getStringArrayHexadecimalIndex (value: string, stringArrayStorageLength: number): IStringArrayIndexData {
         if (this.stringLiteralHexadecimalIndexCache.has(value)) {
@@ -191,7 +193,7 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     }
 
     /**
-     * @param value
+     * @param {string} value
      * @returns {IEncodedValue}
      */
     private getEncodedValue (value: string): IEncodedValue {
@@ -218,8 +220,8 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     }
 
     /**
-     * @param value
-     * @return {ESTree.Literal}
+     * @param {string} value
+     * @returns {Node}
      */
     private replaceWithLiteralNode (value: string): ESTree.Node {
         return Nodes.getLiteralNode(
@@ -228,8 +230,8 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     }
 
     /**
-     * @param value
-     * @returns {ESTree.Node}
+     * @param {string} value
+     * @returns {Node}
      */
     private replaceWithStringArrayCallNode (value: string): ESTree.Node {
         const { encodedValue, key }: IEncodedValue = this.getEncodedValue(value);

@@ -2,6 +2,10 @@ import { TOptionsNormalizerRule } from '../../types/options/TOptionsNormalizerRu
 
 import { IOptions } from '../../interfaces/options/IOptions';
 
+/**
+ * @param {IOptions} options
+ * @returns {IOptions}
+ */
 export const SourceMapFileNameRule: TOptionsNormalizerRule = (options: IOptions): IOptions => {
     let { sourceMapFileName }: { sourceMapFileName: string } = options;
 

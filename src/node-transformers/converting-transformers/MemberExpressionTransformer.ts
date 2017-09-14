@@ -5,18 +5,18 @@ import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IVisitor } from '../../interfaces/IVisitor';
+import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
-import { NodeType } from '../../enums/NodeType';
+import { NodeType } from '../../enums/node/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { Node } from '../../node/Node';
+import { NodeGuards } from '../../node/NodeGuards';
 
 @injectable()
 export class MemberExpressionTransformer extends AbstractNodeTransformer {
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -31,7 +31,7 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
     public getVisitor (): IVisitor {
         return {
             enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (Node.isMemberExpressionNode(node)) {
+                if (NodeGuards.isMemberExpressionNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -50,12 +50,12 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
      *
      * Literal node will be obfuscated by LiteralTransformer
      *
-     * @param memberExpressionNode
-     * @param parentNode
-     * @returns {ESTree.Node}
+     * @param {MemberExpression} memberExpressionNode
+     * @param {NodeGuards} parentNode
+     * @returns {NodeGuards}
      */
     public transformNode (memberExpressionNode: ESTree.MemberExpression, parentNode: ESTree.Node): ESTree.Node {
-        if (Node.isIdentifierNode(memberExpressionNode.property)) {
+        if (NodeGuards.isIdentifierNode(memberExpressionNode.property)) {
             if (memberExpressionNode.computed) {
                 return memberExpressionNode;
             }

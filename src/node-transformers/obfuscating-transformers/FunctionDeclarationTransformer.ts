@@ -7,16 +7,16 @@ import * as ESTree from 'estree';
 import { TIdentifierObfuscatingReplacerFactory } from "../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory";
 import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
 
-import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/IIdentifierObfuscatingReplacer';
+import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IVisitor } from '../../interfaces/IVisitor';
+import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
-import { IdentifierObfuscatingReplacer } from "../../enums/container/node-transformers/IdentifierObfuscatingReplacer";
-import { NodeType } from '../../enums/NodeType';
+import { IdentifierObfuscatingReplacer } from "../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/IdentifierObfuscatingReplacer";
+import { NodeType } from '../../enums/node/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { Node } from '../../node/Node';
+import { NodeGuards } from '../../node/NodeGuards';
 import { NodeUtils } from '../../node/NodeUtils';
 
 /**
@@ -41,9 +41,9 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
     private readonly replaceableIdentifiers: Map <ESTree.Node, ESTree.Identifier[]> = new Map();
 
     /**
-     * @param identifierObfuscatingReplacerFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TIdentifierObfuscatingReplacerFactory} identifierObfuscatingReplacerFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierObfuscatingReplacer)
@@ -64,7 +64,7 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
     public getVisitor (): IVisitor {
         return {
             enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (Node.isFunctionDeclarationNode(node)) {
+                if (NodeGuards.isFunctionDeclarationNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -72,16 +72,16 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param functionDeclarationNode
-     * @param parentNode
-     * @returns {ESTree.Node}
+     * @param {FunctionDeclaration} functionDeclarationNode
+     * @param {NodeGuards} parentNode
+     * @returns {NodeGuards}
      */
     public transformNode (functionDeclarationNode: ESTree.FunctionDeclaration, parentNode: ESTree.Node): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
         const blockScopeOfFunctionDeclarationNode: TNodeWithBlockStatement = NodeUtils
             .getBlockScopesOfNode(functionDeclarationNode)[0];
 
-        if (blockScopeOfFunctionDeclarationNode.type === NodeType.Program) {
+        if (!this.options.renameGlobals && blockScopeOfFunctionDeclarationNode.type === NodeType.Program) {
             return functionDeclarationNode;
         }
 
@@ -98,16 +98,16 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param functionDeclarationNode
-     * @param nodeIdentifier
+     * @param {FunctionDeclaration} functionDeclarationNode
+     * @param {number} nodeIdentifier
      */
     private storeFunctionName (functionDeclarationNode: ESTree.FunctionDeclaration, nodeIdentifier: number): void {
         this.identifierObfuscatingReplacer.storeNames(functionDeclarationNode.id.name, nodeIdentifier);
     }
 
     /**
-     * @param scopeNode
-     * @param nodeIdentifier
+     * @param {NodeGuards} scopeNode
+     * @param {number} nodeIdentifier
      */
     private replaceScopeCachedIdentifiers (scopeNode: ESTree.Node, nodeIdentifier: number): void {
         const cachedReplaceableIdentifiers: ESTree.Identifier[] = <ESTree.Identifier[]>this.replaceableIdentifiers.get(scopeNode);
@@ -120,15 +120,15 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param scopeNode
-     * @param nodeIdentifier
+     * @param {NodeGuards} scopeNode
+     * @param {number} nodeIdentifier
      */
     private replaceScopeIdentifiers (scopeNode: ESTree.Node, nodeIdentifier: number): void {
         const storedReplaceableIdentifiers: ESTree.Identifier[] = [];
 
         estraverse.replace(scopeNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (Node.isReplaceableIdentifierNode(node, parentNode)) {
+                if (NodeGuards.isReplaceableIdentifierNode(node, parentNode)) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer.replace(node.name, nodeIdentifier);
                     const newIdentifierName: string = newIdentifier.name;
 

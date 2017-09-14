@@ -47,8 +47,8 @@ export class CallExpressionControlFlowStorageCallNode extends AbstractCustomNode
     private readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @param randomGenerator
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -60,10 +60,10 @@ export class CallExpressionControlFlowStorageCallNode extends AbstractCustomNode
     }
 
     /**
-     * @param controlFlowStorageName
-     * @param controlFlowStorageKey
-     * @param callee
-     * @param expressionArguments
+     * @param {string} controlFlowStorageName
+     * @param {string} controlFlowStorageKey
+     * @param {Expression} callee
+     * @param {(Expression | SpreadElement)[]} expressionArguments
      */
     public initialize (
         controlFlowStorageName: string,

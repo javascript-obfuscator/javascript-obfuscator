@@ -37,7 +37,7 @@ export class StringArrayNode extends AbstractCustomNode {
     private stringArrayRotateValue: number;
 
     /**
-     * @param options
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IOptions) options: IOptions
@@ -46,9 +46,9 @@ export class StringArrayNode extends AbstractCustomNode {
     }
 
     /**
-     * @param stringArrayStorage
-     * @param stringArrayName
-     * @param stringArrayRotateValue
+     * @param {IStorage<string>} stringArrayStorage
+     * @param {string} stringArrayName
+     * @param {number} stringArrayRotateValue
      */
     public initialize (
         stringArrayStorage: IStorage <string>,

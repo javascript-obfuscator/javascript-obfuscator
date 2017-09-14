@@ -3,7 +3,7 @@
 import * as fs from 'fs';
 
 (function () {
-    const JavaScriptObfuscator: any = require("../../index");
+    const JavaScriptObfuscator: any = require('../../index');
 
     let start: any = new Date();
 

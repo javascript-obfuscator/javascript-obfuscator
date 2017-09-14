@@ -10,10 +10,10 @@ import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 
-import { ControlFlowCustomNode } from '../../../enums/container/custom-nodes/ControlFlowCustomNode';
+import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCustomNode';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
-import { Node } from '../../../node/Node';
+import { NodeGuards } from '../../../node/NodeGuards';
 
 @injectable()
 export abstract class ExpressionWithOperatorControlFlowReplacer extends AbstractControlFlowReplacer {
@@ -28,9 +28,9 @@ export abstract class ExpressionWithOperatorControlFlowReplacer extends Abstract
     protected readonly replacerDataByControlFlowStorageId: Map <string, Map<string, string[]>> = new Map();
 
     /**
-     * @param controlFlowCustomNodeFactory
-     * @param randomGenerator
-     * @param options
+     * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
@@ -42,11 +42,11 @@ export abstract class ExpressionWithOperatorControlFlowReplacer extends Abstract
     }
 
     /**
-     * @param controlFlowStorageId
-     * @param storageKey
-     * @param leftExpression
-     * @param rightExpression
-     * @returns {ESTree.Node}
+     * @param {string} controlFlowStorageId
+     * @param {string} storageKey
+     * @param {Expression} leftExpression
+     * @param {Expression} rightExpression
+     * @returns {NodeGuards}
      */
     protected getControlFlowStorageCallNode (
         controlFlowStorageId: string,
@@ -62,7 +62,7 @@ export abstract class ExpressionWithOperatorControlFlowReplacer extends Abstract
 
         const statementNode: TStatement = controlFlowStorageCallCustomNode.getNode()[0];
 
-        if (!statementNode || !Node.isExpressionStatementNode(statementNode)) {
+        if (!statementNode || !NodeGuards.isExpressionStatementNode(statementNode)) {
             throw new Error(`\`controlFlowStorageCallCustomNode.getNode()[0]\` should returns array with \`ExpressionStatement\` node`);
         }
 

@@ -16,7 +16,7 @@ import { SingleNodeCallControllerTemplate } from '../../templates/custom-nodes/S
 import { NO_CUSTOM_NODES_PRESET } from '../../options/presets/NoCustomNodes';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
+import { JavaScriptObfuscator } from '../../JavaScriptObfuscatorFacade';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
@@ -34,7 +34,7 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     private appendEvent: ObfuscationEvent;
 
     /**
-     * @param options
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IOptions) options: IOptions
@@ -43,8 +43,8 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     }
 
     /**
-     * @param appendEvent
-     * @param callsControllerFunctionName
+     * @param {ObfuscationEvent} appendEvent
+     * @param {string} callsControllerFunctionName
      */
     public initialize (appendEvent: ObfuscationEvent, callsControllerFunctionName: string): void {
         this.appendEvent = appendEvent;

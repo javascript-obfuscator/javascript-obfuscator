@@ -1,4 +1,4 @@
-import { injectable, inject } from 'inversify';
+import { injectable, inject, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
@@ -15,8 +15,8 @@ export class StringArrayStorage extends ArrayStorage <string> {
     private readonly arrayUtils: IArrayUtils;
 
     /**
-     * @param arrayUtils
-     * @param randomGenerator
+     * @param {IArrayUtils} arrayUtils
+     * @param {IRandomGenerator} randomGenerator
      */
     constructor (
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
@@ -25,21 +25,17 @@ export class StringArrayStorage extends ArrayStorage <string> {
         super(randomGenerator);
 
         this.arrayUtils = arrayUtils;
-
-        this.initialize();
     }
 
-    /**
-     * @param args
-     */
-    public initialize (...args: any[]): void {
-        super.initialize(args);
+    @postConstruct()
+    public initialize (): void {
+        super.initialize();
 
         this.storageId = this.randomGenerator.getRandomString(4, RandomGenerator.randomGeneratorPoolHexadecimal);
     }
 
     /**
-     * @param rotationValue
+     * @param {number} rotationValue
      */
     public rotateArray (rotationValue: number): void {
         this.storage = this.arrayUtils.arrayRotate(this.storage, rotationValue);

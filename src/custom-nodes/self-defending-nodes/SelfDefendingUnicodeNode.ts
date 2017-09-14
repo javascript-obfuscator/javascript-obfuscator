@@ -16,7 +16,7 @@ import { NO_CUSTOM_NODES_PRESET } from '../../options/presets/NoCustomNodes';
 import { SelfDefendingTemplate } from '../../templates/custom-nodes/self-defending-nodes/self-defending-unicode-node/SelfDefendingTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { JavaScriptObfuscator } from '../../JavaScriptObfuscator';
+import { JavaScriptObfuscator } from '../../JavaScriptObfuscatorFacade';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
@@ -38,9 +38,9 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     private readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @param randomGenerator
-     * @param escapeSequenceEncoder
-     * @param options
+     * @param {IRandomGenerator} randomGenerator
+     * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -54,7 +54,7 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     }
 
     /**
-     * @param callsControllerFunctionName
+     * @param {string} callsControllerFunctionName
      */
     public initialize (callsControllerFunctionName: string): void {
         this.callsControllerFunctionName = callsControllerFunctionName;

@@ -1,26 +1,26 @@
 import { injectable } from 'inversify';
 
 import {
-ArrayUnique,
-IsBoolean,
-IsArray,
-IsIn,
-IsNumber,
-IsString,
-IsUrl,
-Min,
-Max,
-ValidateIf,
-validateSync,
-ValidationError,
-ValidatorOptions
+    ArrayUnique,
+    IsBoolean,
+    IsArray,
+    IsIn,
+    IsNumber,
+    IsString,
+    IsUrl,
+    Min,
+    Max,
+    ValidateIf,
+    validateSync,
+    ValidationError,
+    ValidatorOptions
 } from 'class-validator';
 
 import { TInputOptions } from '../types/options/TInputOptions';
 
 import { IOptions } from '../interfaces/options/IOptions';
 
-import { TSourceMapMode } from '../types/TSourceMapMode';
+import { TSourceMapMode } from '../types/source-map/TSourceMapMode';
 import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 
 import { DEFAULT_PRESET } from './presets/Default';
@@ -103,7 +103,19 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
+    public readonly log: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
     public readonly mangle: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
+    public readonly renameGlobals: boolean;
 
     /**
      * @type {string[]}
@@ -189,7 +201,7 @@ export class Options implements IOptions {
     public readonly unicodeEscapeSequence: boolean;
 
     /**
-     * @param inputOptions
+     * @param {TInputOptions} inputOptions
      */
     constructor (inputOptions: TInputOptions) {
         Object.assign(this, DEFAULT_PRESET, inputOptions);

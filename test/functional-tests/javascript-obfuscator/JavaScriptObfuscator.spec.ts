@@ -2,7 +2,7 @@ import { assert } from 'chai';
 
 import { IObfuscationResult } from '../../../src/interfaces/IObfuscationResult';
 
-import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscator';
+import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscatorFacade';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../src/options/presets/NoCustomNodes';
 
@@ -394,13 +394,15 @@ describe('JavaScriptObfuscator', () => {
                     const obfuscationResult1: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                         code1,
                         {
-                            seed: 123
+                            seed: 123,
+                            stringArrayThreshold: 1
                         }
                     );
                     const obfuscationResult2: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                         code2,
                         {
-                            seed: 123
+                            seed: 123,
+                            stringArrayThreshold: 1
                         }
                     );
 
@@ -462,7 +464,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('3.5k variables', function () {
-            this.timeout(100000);
+            this.timeout(200000);
 
             const expectedValue: number = 3500;
 

@@ -1,3 +1,3 @@
 import * as ESTree from 'estree';
 
-export type TNodeWithBlockStatement = ESTree.BlockStatement|ESTree.Program;
+export type TNodeWithBlockStatement = ESTree.BlockStatement | ESTree.Program;

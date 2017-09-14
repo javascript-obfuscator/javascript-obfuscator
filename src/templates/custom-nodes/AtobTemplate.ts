@@ -4,9 +4,16 @@
 export function AtobTemplate (): string {
     return `
         (function () {
-            var getGlobal = Function('return (function () ' + '{}.constructor("return this")()' + ');');
-
-            var object = getGlobal();
+            var object;
+            
+            try { 
+                var getGlobal = Function('return (function() ' + '{}.constructor("return this")( )' + ');');
+                
+                object = getGlobal(); 
+            } catch (e) { 
+                object = window; 
+            }
+            
             var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
             object.atob || (

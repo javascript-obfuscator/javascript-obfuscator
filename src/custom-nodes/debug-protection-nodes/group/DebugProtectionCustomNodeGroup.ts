@@ -64,13 +64,20 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
      * @param {IStackTraceData[]} stackTraceData
      */
     public appendCustomNodes (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
-        // debugProtectionFunctionNode append
-        this.appendCustomNodeIfExist(CustomNode.DebugProtectionFunctionNode, (customNode: ICustomNode) => {
-            NodeAppender.appendNode(blockScopeNode, customNode.getNode());
-        });
+        const randomStackTraceIndex: number = this.getRandomStackTraceIndex(stackTraceData.length);
 
         // debugProtectionFunctionCallNode append
         this.appendCustomNodeIfExist(CustomNode.DebugProtectionFunctionCallNode, (customNode: ICustomNode) => {
+            NodeAppender.appendNodeToOptimalBlockScope(
+                stackTraceData,
+                blockScopeNode,
+                customNode.getNode(),
+                randomStackTraceIndex
+            );
+        });
+
+        // debugProtectionFunctionNode append
+        this.appendCustomNodeIfExist(CustomNode.DebugProtectionFunctionNode, (customNode: ICustomNode) => {
             NodeAppender.appendNode(blockScopeNode, customNode.getNode());
         });
 

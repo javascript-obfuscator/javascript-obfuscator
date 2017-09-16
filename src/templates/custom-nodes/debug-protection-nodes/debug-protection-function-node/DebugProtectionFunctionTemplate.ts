@@ -2,21 +2,30 @@
  * @returns {string}
  */
 export function DebugProtectionFunctionTemplate (): string {
-    return `
-        var {debugProtectionFunctionName} = function () {
+    return `     
+        function {debugProtectionFunctionName} (ret) {
             function debuggerProtection (counter) {
-                if (('' + counter / counter)['length'] !== 1 || counter % 20 === 0) {
-                    (function () {}.constructor('debugger')());
+                if (typeof counter === 'string') {
+                    return (function (arg) {}.constructor('while (true) {}').apply('counter'));
                 } else {
-                    (function () {}.constructor('debugger')());
+                    if (('' + counter / counter)['length'] !== 1 || counter % 20 === 0) {
+                        (function () {return true;}.constructor('debu' + 'gger').call('action'));
+                    } else {
+                        (function () {return false;}.constructor('debu' + 'gger').apply('stateObject'));
+                    }
+                    
                 }
                 
                 debuggerProtection(++counter);
             }
             
             try {
-                debuggerProtection(0);
+                if (ret) {
+                    return debuggerProtection;
+                } else {
+                    debuggerProtection(0);
+                }
             } catch (y) {}
-        };
+        }
     `;
 }

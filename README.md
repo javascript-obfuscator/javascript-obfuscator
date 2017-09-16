@@ -6,6 +6,8 @@
 
 # JavaScript obfuscator for Node.js
 
+![logo](https://raw.githubusercontent.com/javascript-obfuscator/javascript-obfuscator/master/images/logo_1_300.png)
+
 JavaScript obfuscator is a powerful free obfuscator for JavaScript and Node.js with a wide number of features which provides protection for your source code.
 
 * has no limits or restrictions

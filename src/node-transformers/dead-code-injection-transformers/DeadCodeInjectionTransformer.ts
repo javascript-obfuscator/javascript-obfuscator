@@ -197,16 +197,9 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         const leftString: string = this.randomGenerator.getRandomString(3);
         const rightString: string = random2 ? leftString : this.randomGenerator.getRandomString(3);
 
-        let consequent: ESTree.BlockStatement,
-            alternate: ESTree.BlockStatement;
-
-        if ((random1 && random2) || (!random1 && !random2)) {
-            consequent = blockStatementNode;
-            alternate = randomBlockStatementNode;
-        } else {
-            consequent = randomBlockStatementNode;
-            alternate = blockStatementNode;
-        }
+        const [consequent, alternate]: [ESTree.BlockStatement, ESTree.BlockStatement] = random1 === random2
+            ? [blockStatementNode, randomBlockStatementNode]
+            : [randomBlockStatementNode, blockStatementNode];
 
         let newBlockStatementNode: ESTree.BlockStatement = Nodes.getBlockStatementNode([
             Nodes.getIfStatementNode(

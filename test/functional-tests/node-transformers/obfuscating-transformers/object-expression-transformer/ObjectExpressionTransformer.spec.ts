@@ -52,4 +52,26 @@ describe('ObjectExpressionTransformer', () => {
             assert.match(obfuscatedCode, regExp);
         });
     });
+
+    describe('computed property name', () => {
+        const regExp: RegExp = /var *_0x[a-f0-9]{4,6} *= *\{\[_0x[a-f0-9]{4,6}\]: *0x1\};/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/computed-property-name.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('should ignore computed property identifier', () => {
+            assert.match(obfuscatedCode, regExp);
+        });
+    });
 });

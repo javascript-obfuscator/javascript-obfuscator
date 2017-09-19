@@ -204,7 +204,9 @@ export class Node {
             return false;
         }
 
-        const parentNodeIsPropertyNode: boolean = Node.isPropertyNode(parentNode) && parentNode.key === node;
+        const parentNodeIsPropertyNode: boolean = Node.isPropertyNode(parentNode)
+            && !parentNode.computed
+            && parentNode.key === node;
         const parentNodeIsMemberExpressionNode: boolean = (
             Node.isMemberExpressionNode(parentNode) &&
             parentNode.computed === false &&

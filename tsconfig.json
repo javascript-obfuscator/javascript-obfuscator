@@ -17,7 +17,8 @@
     "target": "es2015",
     "plugins": [
       {
-        "name": "tslint-language-service"
+        "name": "tslint-language-service",
+        "ignoreDefinitionFiles": true
       }
     ]
   },

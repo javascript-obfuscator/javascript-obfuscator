@@ -11,6 +11,7 @@ import './unit-tests/cli/sanitizers/BooleanSanitizer.spec';
 import './unit-tests/cli/sanitizers/SourceMapModeSanitizer.spec';
 import './unit-tests/cli/sanitizers/StringArrayEncodingSanitizer.spec';
 import './unit-tests/cli/utils/CLIUtils.spec';
+import './unit-tests/cli/utils/SourceCodeReader.spec';
 import './unit-tests/decorators/initializable/Initializable.spec';
 import './unit-tests/javascript-obfuscator/JavaScriptObfuscator.spec';
 import './unit-tests/logger/Logger.spec';

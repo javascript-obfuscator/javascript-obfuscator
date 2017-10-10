@@ -4,31 +4,19 @@ import * as path from 'path';
 
 import { TObject } from '../../types/TObject';
 
-import { IPackageConfig } from '../../interfaces/IPackageConfig';
+import { IPackageConfig } from '../../interfaces/cli/IPackageConfig';
 
 export class CLIUtils {
-    /**
-     * @type {string[]}
-     */
-    private static readonly availableInputExtensions: string[] = [
-        '.js'
-    ];
-
     /**
      * @type {BufferEncoding}
      */
     private static readonly encoding: BufferEncoding = 'utf8';
 
     /**
-     * @param {string} outputPath
      * @param {string} inputPath
      * @returns {string}
      */
-    public static getOutputCodePath (outputPath: string | undefined, inputPath: string): string {
-        if (outputPath) {
-            return outputPath;
-        }
-
+    public static getOutputCodePath (inputPath: string): string {
         return inputPath
             .split('.')
             .map((value: string, index: number) => {
@@ -93,34 +81,6 @@ export class CLIUtils {
         }
 
         return config;
-    }
-
-    /**
-     * @param {string} filePath
-     * @returns {boolean}
-     */
-    public static isFilePath (filePath: string): boolean {
-        try {
-            return fs.statSync(filePath).isFile();
-        } catch (e) {
-            return false;
-        }
-    }
-
-    /**
-     * @param {string} inputPath
-     * @returns {string}
-     */
-    public static readSourceCode (inputPath: string): string {
-        if (!CLIUtils.isFilePath(inputPath)) {
-            throw new ReferenceError(`Given input path must be a valid file path`);
-        }
-
-        if (!CLIUtils.availableInputExtensions.includes(path.extname(inputPath))) {
-            throw new ReferenceError(`Input file must have .js extension`);
-        }
-
-        return fs.readFileSync(inputPath, CLIUtils.encoding);
     }
 
     /**

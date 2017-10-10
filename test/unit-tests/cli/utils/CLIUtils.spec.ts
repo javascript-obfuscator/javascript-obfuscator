@@ -1,6 +1,3 @@
-import * as fs from 'fs';
-import * as mkdirp from 'mkdirp';
-
 import { assert } from 'chai';
 
 import { TInputOptions } from '../../../../src/types/options/TInputOptions';
@@ -8,24 +5,12 @@ import { TInputOptions } from '../../../../src/types/options/TInputOptions';
 import { CLIUtils } from '../../../../src/cli/utils/CLIUtils';
 
 describe('CLIUtils', () => {
-    const fileContent: string = 'test';
-    const tmpDir: string = 'test/tmp';
-
-    before(() => {
-        mkdirp.sync(tmpDir);
-    });
-
-    describe('getOutputCodePath (outputPath: string, inputPath: string): string', () => {
+    describe('getOutputCodePath (inputPath: string): string', () => {
         let expectedInputPath: string = 'test/input/test-obfuscated.js',
-            inputPath: string = 'test/input/test.js',
-            outputPath: string = 'test/output/test.js';
+            inputPath: string = 'test/input/test.js';
 
-        it('should return `outputPath` if this path is set', () => {
-            assert.equal(CLIUtils.getOutputCodePath(outputPath, inputPath), outputPath);
-        });
-
-        it('should output path based on `inputPath` if `outputPath` is not set', () => {
-            assert.equal(CLIUtils.getOutputCodePath('', inputPath), expectedInputPath);
+        it('should output path based on `inputPath`', () => {
+            assert.equal(CLIUtils.getOutputCodePath(inputPath), expectedInputPath);
         });
     });
 
@@ -85,66 +70,5 @@ describe('CLIUtils', () => {
                 assert.throws(testFunc, ReferenceError);
             });
         });
-    });
-
-    describe('readSourceCode (inputPath: string): void', () => {
-        describe('`inputPath` is a valid path', () => {
-            const tmpFileName: string = 'test.js';
-            const inputPath: string = `${tmpDir}/${tmpFileName}`;
-
-            let result: string;
-
-            before(() => {
-                fs.writeFileSync(inputPath, fileContent);
-                result = CLIUtils.readSourceCode(inputPath);
-            });
-
-            it('should return content of file', () => {
-                assert.equal(result, fileContent);
-            });
-
-            after(() => {
-                fs.unlinkSync(inputPath);
-            });
-        });
-
-        describe('`inputPath` is not a valid path', () => {
-            const tmpFileName: string = 'test.js';
-            const inputPath: string = `${tmpDir}/${tmpFileName}`;
-
-            let testFunc: () => void;
-
-            before(() => {
-                testFunc = () => CLIUtils.readSourceCode(inputPath);
-            });
-
-            it('should throw an error if `inputPath` is not a valid path', () => {
-                assert.throws(testFunc, ReferenceError);
-            });
-        });
-
-        describe('`inputPath` is a file name has invalid extension', () => {
-            const tmpFileName: string = 'test.ts';
-            const inputPath: string = `${tmpDir}/${tmpFileName}`;
-
-            let testFunc: () => void;
-
-            before(() => {
-                fs.writeFileSync(inputPath, fileContent);
-                testFunc = () => CLIUtils.readSourceCode(inputPath);
-            });
-
-            it('should throw an error if `inputPath` is a file name has invalid extension', () => {
-                assert.throws(testFunc, ReferenceError);
-            });
-
-            after(() => {
-                fs.unlinkSync(inputPath);
-            });
-        });
-    });
-
-    after(() => {
-        fs.rmdirSync(tmpDir);
     });
 });

@@ -4,7 +4,9 @@ import * as path from 'path';
 import { TInputCLIOptions } from '../types/options/TInputCLIOptions';
 import { TInputOptions } from '../types/options/TInputOptions';
 import { TObject } from '../types/TObject';
+import { TSourceCodeData } from '../types/cli/TSourceCodeData';
 
+import { IFileData } from '../interfaces/cli/IFileData';
 import { IInitializable } from '../interfaces/IInitializable';
 import { IObfuscationResult } from '../interfaces/IObfuscationResult';
 
@@ -19,6 +21,7 @@ import { StringArrayEncodingSanitizer } from './sanitizers/StringArrayEncodingSa
 
 import { CLIUtils } from './utils/CLIUtils';
 import { JavaScriptObfuscator } from '../JavaScriptObfuscatorFacade';
+import { SourceCodeReader } from './utils/SourceCodeReader';
 
 export class JavaScriptObfuscatorCLI implements IInitializable {
     /**
@@ -50,12 +53,6 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     private inputPath: string;
 
     /**
-     * @type {string}
-     */
-    @initializable()
-    private sourceCode: string = '';
-
-    /**
      * @param {string[]} argv
      */
     constructor (argv: string[]) {
@@ -81,6 +78,50 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         return filteredOptions;
     }
 
+    /**
+     * @param {string} sourceCode
+     * @param {string} outputCodePath
+     * @param {TInputOptions} options
+     */
+    private static processSourceCodeWithoutSourceMap (
+        sourceCode: string,
+        outputCodePath: string,
+        options: TInputOptions
+    ): void {
+        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(sourceCode, options).getObfuscatedCode();
+
+        CLIUtils.writeFile(outputCodePath, obfuscatedCode);
+    }
+
+    /**
+     * @param {string} sourceCode
+     * @param {string} outputCodePath
+     * @param {TInputOptions} options
+     */
+    private static processSourceCodeWithSourceMap (
+        sourceCode: string,
+        outputCodePath: string,
+        options: TInputOptions
+    ): void {
+        const outputSourceMapPath: string = CLIUtils.getOutputSourceMapPath(
+            outputCodePath,
+            options.sourceMapFileName || ''
+        );
+
+        options = {
+            ...options,
+            sourceMapFileName: path.basename(outputSourceMapPath)
+        };
+
+        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(sourceCode, options);
+
+        CLIUtils.writeFile(outputCodePath, obfuscationResult.getObfuscatedCode());
+
+        if (options.sourceMapMode === 'separate' && obfuscationResult.getSourceMap()) {
+            CLIUtils.writeFile(outputSourceMapPath, obfuscationResult.getSourceMap());
+        }
+    }
+
     public initialize (): void {
         this.inputPath = this.arguments[0] || '';
         this.commands = <commander.CommanderStatic>(new commander.Command());
@@ -98,8 +139,9 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             return this.commands.outputHelp();
         }
 
-        this.sourceCode = CLIUtils.readSourceCode(this.inputPath);
-        this.processSourceCode();
+        const sourceCodeData: TSourceCodeData = SourceCodeReader.readSourceCode(this.inputPath);
+
+        this.processSourceCodeData(sourceCodeData);
     }
 
     /**
@@ -259,48 +301,34 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         });
     }
 
-    private processSourceCode (): void {
-        const options: TInputOptions = this.buildOptions();
-        const outputCodePath: string = CLIUtils.getOutputCodePath(this.inputCLIOptions.output, this.inputPath);
+    /**
+     * @param {TSourceCodeData} sourceCodeData
+     */
+    private processSourceCodeData (sourceCodeData: TSourceCodeData): void {
+        if (!Array.isArray(sourceCodeData)) {
+            const outputCodePath: string = this.inputCLIOptions.output || CLIUtils.getOutputCodePath(this.inputPath);
 
-        if (options.sourceMap) {
-            this.processSourceCodeWithSourceMap(outputCodePath, options);
+            this.processSourceCode(sourceCodeData, outputCodePath);
         } else {
-            this.processSourceCodeWithoutSourceMap(outputCodePath, options);
+            sourceCodeData.forEach(({ filePath, content }: IFileData) => {
+                const outputCodePath: string = CLIUtils.getOutputCodePath(filePath);
+
+                this.processSourceCode(content, outputCodePath);
+            });
         }
     }
 
     /**
+     * @param {string} sourceCode
      * @param {string} outputCodePath
-     * @param {TInputOptions} options
      */
-    private processSourceCodeWithoutSourceMap (outputCodePath: string, options: TInputOptions): void {
-        const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(this.sourceCode, options).getObfuscatedCode();
+    private processSourceCode (sourceCode: string, outputCodePath: string): void {
+        const options: TInputOptions = this.buildOptions();
 
-        CLIUtils.writeFile(outputCodePath, obfuscatedCode);
-    }
-
-    /**
-     * @param {string} outputCodePath
-     * @param {TInputOptions} options
-     */
-    private processSourceCodeWithSourceMap (outputCodePath: string, options: TInputOptions): void {
-        const outputSourceMapPath: string = CLIUtils.getOutputSourceMapPath(
-            outputCodePath,
-            options.sourceMapFileName || ''
-        );
-
-        options = {
-            ...options,
-            sourceMapFileName: path.basename(outputSourceMapPath)
-        };
-
-        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(this.sourceCode, options);
-
-        CLIUtils.writeFile(outputCodePath, obfuscationResult.getObfuscatedCode());
-
-        if (options.sourceMapMode === 'separate' && obfuscationResult.getSourceMap()) {
-            CLIUtils.writeFile(outputSourceMapPath, obfuscationResult.getSourceMap());
+        if (options.sourceMap) {
+            JavaScriptObfuscatorCLI.processSourceCodeWithSourceMap(sourceCode, outputCodePath, options);
+        } else {
+            JavaScriptObfuscatorCLI.processSourceCodeWithoutSourceMap(sourceCode, outputCodePath, options);
         }
     }
 }

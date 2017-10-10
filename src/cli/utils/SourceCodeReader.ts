@@ -5,19 +5,9 @@ import { TSourceCodeData } from '../../types/cli/TSourceCodeData';
 
 import { IFileData } from '../../interfaces/cli/IFileData';
 
+import { JavaScriptObfuscatorCLI } from '../JavaScriptObfuscatorCLI';
+
 export class SourceCodeReader {
-    /**
-     * @type {string[]}
-     */
-    private static readonly availableInputExtensions: string[] = [
-        '.js'
-    ];
-
-    /**
-     * @type {BufferEncoding}
-     */
-    private static readonly encoding: BufferEncoding = 'utf8';
-
     /**
      * @param {string} inputPath
      * @returns {TSourceCodeData}
@@ -63,11 +53,11 @@ export class SourceCodeReader {
      * @returns {IFileData[]}
      */
     private static readDirectory (directoryPath: string): IFileData[] {
-        return fs.readdirSync(directoryPath, SourceCodeReader.encoding)
+        return fs.readdirSync(directoryPath, JavaScriptObfuscatorCLI.encoding)
             .filter(SourceCodeReader.isValidFile)
             .map((fileName: string) => {
                 const filePath: string = `${directoryPath}/${fileName}`;
-                const content: string = fs.readFileSync(filePath, SourceCodeReader.encoding);
+                const content: string = fs.readFileSync(filePath, JavaScriptObfuscatorCLI.encoding);
 
                 return { filePath, content };
             });
@@ -82,7 +72,7 @@ export class SourceCodeReader {
             throw new ReferenceError(`Input file must have .js extension`);
         }
 
-        return fs.readFileSync(filePath, SourceCodeReader.encoding);
+        return fs.readFileSync(filePath, JavaScriptObfuscatorCLI.encoding);
     }
 
     /**
@@ -90,6 +80,7 @@ export class SourceCodeReader {
      * @returns {boolean}
      */
     private static isValidFile (filePath: string): boolean {
-        return SourceCodeReader.availableInputExtensions.includes(path.extname(filePath));
+        return JavaScriptObfuscatorCLI.availableInputExtensions.includes(path.extname(filePath))
+            && !filePath.includes(JavaScriptObfuscatorCLI.obfuscatedFilePrefix);
     }
 }

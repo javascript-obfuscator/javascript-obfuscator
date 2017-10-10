@@ -252,6 +252,7 @@ Following options are available for the JS Obfuscator:
     debugProtection: false,
     debugProtectionInterval: false,
     disableConsoleOutput: false,
+    domainLock: [],
     log: false,
     mangle: false,
     renameGlobals: false,
@@ -286,10 +287,11 @@ Following options are available for the JS Obfuscator:
     --debugProtection <boolean>
     --debugProtectionInterval <boolean>
     --disableConsoleOutput <boolean>
+    --domainLock '<list>' (comma separated)
     --log <boolean>
     --mangle <boolean>
     --renameGlobals <boolean>
-    --reservedNames <list> (comma separated)
+    --reservedNames '<list>' (comma separated)
     --rotateStringArray <boolean>
     --seed <number>
     --selfDefending <boolean>

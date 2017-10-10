@@ -27,6 +27,23 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     /**
      * @type {string[]}
      */
+    public static readonly availableInputExtensions: string[] = [
+        '.js'
+    ];
+
+    /**
+     * @type {BufferEncoding}
+     */
+    public static readonly encoding: BufferEncoding = 'utf8';
+
+    /**
+     * @type {string}
+     */
+    public static obfuscatedFilePrefix: string = '-obfuscated';
+
+    /**
+     * @type {string[]}
+     */
     private readonly arguments: string[];
 
     /**
@@ -295,8 +312,9 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     private configureHelp (): void {
         this.commands.on('--help', () => {
             console.log('  Examples:\n');
-            console.log('    %> javascript-obfuscator in.js --compact true --selfDefending false');
-            console.log('    %> javascript-obfuscator in.js --output out.js --compact true --selfDefending false');
+            console.log('    %> javascript-obfuscator input_file_name.js --compact true --selfDefending false');
+            console.log('    %> javascript-obfuscator input_file_name.js --output output_file_name.js --compact true --selfDefending false');
+            console.log('    %> javascript-obfuscator input_directory_name --compact true --selfDefending false');
             console.log('');
         });
     }

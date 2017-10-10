@@ -6,12 +6,9 @@ import { TObject } from '../../types/TObject';
 
 import { IPackageConfig } from '../../interfaces/cli/IPackageConfig';
 
-export class CLIUtils {
-    /**
-     * @type {BufferEncoding}
-     */
-    private static readonly encoding: BufferEncoding = 'utf8';
+import { JavaScriptObfuscatorCLI } from '../JavaScriptObfuscatorCLI';
 
+export class CLIUtils {
     /**
      * @param {string} inputPath
      * @returns {string}
@@ -20,7 +17,7 @@ export class CLIUtils {
         return inputPath
             .split('.')
             .map((value: string, index: number) => {
-                return index === 0 ? `${value}-obfuscated` : value;
+                return index === 0 ? `${value}${JavaScriptObfuscatorCLI.obfuscatedFilePrefix}` : value;
             })
             .join('.');
     }
@@ -58,7 +55,7 @@ export class CLIUtils {
                     ),
                     '../package.json'
                 ),
-                CLIUtils.encoding
+                JavaScriptObfuscatorCLI.encoding
             )
         );
     }
@@ -91,7 +88,7 @@ export class CLIUtils {
         mkdirp.sync(path.dirname(outputPath));
 
         fs.writeFileSync(outputPath, data, {
-            encoding: CLIUtils.encoding
+            encoding: JavaScriptObfuscatorCLI.encoding
         });
     }
 }

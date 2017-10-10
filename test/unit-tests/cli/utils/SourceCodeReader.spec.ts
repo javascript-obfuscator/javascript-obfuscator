@@ -77,9 +77,11 @@ describe('SourceCodeReader', () => {
                 const tmpFileName1: string = 'foo.js';
                 const tmpFileName2: string = 'bar.js';
                 const tmpFileName3: string = 'baz.png';
+                const tmpFileName4: string = 'bark-obfuscated.js';
                 const filePath1: string = `${tmpDir}/${tmpFileName1}`;
                 const filePath2: string = `${tmpDir}/${tmpFileName2}`;
                 const filePath3: string = `${tmpDir}/${tmpFileName3}`;
+                const filePath4: string = `${tmpDir}/${tmpFileName4}`;
 
                 const expectedResult: IFileData[] = [
                     {
@@ -98,6 +100,7 @@ describe('SourceCodeReader', () => {
                     fs.writeFileSync(filePath1, fileContent);
                     fs.writeFileSync(filePath2, fileContent);
                     fs.writeFileSync(filePath3, fileContent);
+                    fs.writeFileSync(filePath4, fileContent);
                     result = SourceCodeReader.readSourceCode(tmpDir);
                 });
 
@@ -109,6 +112,7 @@ describe('SourceCodeReader', () => {
                     fs.unlinkSync(filePath1);
                     fs.unlinkSync(filePath2);
                     fs.unlinkSync(filePath3);
+                    fs.unlinkSync(filePath4);
                 });
             });
 

@@ -235,7 +235,6 @@ For example:
 * Obfuscation of the variable's name at its declaration is called direct transformation;
 * Obfuscation of the variable's name beyond its declaration is called child transformation.
 
-
 ## JavaScript Obfuscator Options
 
 Following options are available for the JS Obfuscator:

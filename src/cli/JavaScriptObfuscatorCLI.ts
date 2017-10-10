@@ -233,7 +233,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 BooleanSanitizer
             )
             .option(
-                '--domainLock <list>',
+                '--domainLock \'<list>\' (comma separated)',
                 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)',
                 ArraySanitizer
             )
@@ -246,7 +246,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 BooleanSanitizer
             )
             .option(
-                '--reservedNames <list>',
+                '--reservedNames \'<list>\' (comma separated)',
                 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)',
                 ArraySanitizer
             )

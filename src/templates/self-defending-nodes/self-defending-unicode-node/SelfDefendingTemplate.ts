@@ -1,4 +1,4 @@
-import { IEscapeSequenceEncoder } from '../../../../interfaces/utils/IEscapeSequenceEncoder';
+import { IEscapeSequenceEncoder } from '../../../interfaces/utils/IEscapeSequenceEncoder';
 
 /**
  * SelfDefendingTemplate. Enters code in infinity loop.

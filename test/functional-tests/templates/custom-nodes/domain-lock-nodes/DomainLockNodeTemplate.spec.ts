@@ -7,7 +7,8 @@ import { ServiceIdentifiers } from '../../../../../src/container/ServiceIdentifi
 import { ICryptUtils } from '../../../../../src/interfaces/utils/ICryptUtils';
 import { IInversifyContainerFacade } from '../../../../../src/interfaces/container/IInversifyContainerFacade';
 
-import { DomainLockNodeTemplate } from '../../../../../src/templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
+import { DomainLockNodeTemplate } from '../../../../../src/templates/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
+import { GlobalVariableTemplate1 } from '../../../../../src/templates/GlobalVariableTemplate1';
 
 import { InversifyContainerFacade } from '../../../../../src/container/InversifyContainerFacade';
 
@@ -65,6 +66,7 @@ describe('DomainLockNodeTemplate (): string', () => {
                 domainLockFunctionName: 'domainLockFunction',
                 diff: diff,
                 domains: hiddenDomainsString,
+                globalVariableTemplate: GlobalVariableTemplate1(),
                 singleNodeCallControllerFunctionName
             }, singleNodeCallControllerFunctionName, currentDomain);
         });
@@ -90,6 +92,7 @@ describe('DomainLockNodeTemplate (): string', () => {
                 domainLockFunctionName: 'domainLockFunction',
                 diff: diff,
                 domains: hiddenDomainsString,
+                globalVariableTemplate: GlobalVariableTemplate1(),
                 singleNodeCallControllerFunctionName
             }, singleNodeCallControllerFunctionName, currentDomain);
         });
@@ -115,6 +118,7 @@ describe('DomainLockNodeTemplate (): string', () => {
                 domainLockFunctionName: 'domainLockFunction',
                 diff: diff,
                 domains: hiddenDomainsString,
+                globalVariableTemplate: GlobalVariableTemplate1(),
                 singleNodeCallControllerFunctionName
             }, singleNodeCallControllerFunctionName, currentDomain);
         });

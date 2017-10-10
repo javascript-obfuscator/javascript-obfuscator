@@ -4,20 +4,12 @@
 export function AtobTemplate (): string {
     return `
         (function () {
-            var object;
-            
-            try { 
-                var getGlobal = Function('return (function() ' + '{}.constructor("return this")( )' + ');');
-                
-                object = getGlobal(); 
-            } catch (e) { 
-                object = window; 
-            }
+            {globalVariableTemplate}
             
             var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
-            object.atob || (
-                object.atob = function(input) {
+            that.atob || (
+                that.atob = function(input) {
                     var str = String(input).replace(/=+$/, '');
                     for (
                         var bc = 0, bs, buffer, idx = 0, output = '';

@@ -7,20 +7,23 @@ import { TStatement } from '../../types/node/TStatement';
 
 import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IStorage } from '../../interfaces/storages/IStorage';
 
+import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
 
 import { initializable } from '../../decorators/Initializable';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../options/presets/NoCustomNodes';
 
-import { AtobTemplate } from '../../templates/custom-nodes/AtobTemplate';
-import { Rc4Template } from '../../templates/custom-nodes/Rc4Template';
-import { SelfDefendingTemplate } from '../../templates/custom-nodes/string-array-nodes/string-array-calls-wrapper/SelfDefendingTemplate';
-import { StringArrayBase64DecodeNodeTemplate } from '../../templates/custom-nodes/string-array-nodes/string-array-calls-wrapper/StringArrayBase64DecodeNodeTemplate';
-import { StringArrayCallsWrapperTemplate } from '../../templates/custom-nodes/string-array-nodes/string-array-calls-wrapper/StringArrayCallsWrapperTemplate';
-import { StringArrayRc4DecodeNodeTemplate } from '../../templates/custom-nodes/string-array-nodes/string-array-calls-wrapper/StringArrayRC4DecodeNodeTemplate';
+import { AtobTemplate } from '../../templates/AtobTemplate';
+import { GlobalVariableNoEvalTemplate } from '../../templates/GlobalVariableNoEvalTemplate';
+import { Rc4Template } from '../../templates/Rc4Template';
+import { SelfDefendingTemplate } from '../../templates/string-array-nodes/string-array-calls-wrapper/SelfDefendingTemplate';
+import { StringArrayBase64DecodeNodeTemplate } from '../../templates/string-array-nodes/string-array-calls-wrapper/StringArrayBase64DecodeNodeTemplate';
+import { StringArrayCallsWrapperTemplate } from '../../templates/string-array-nodes/string-array-calls-wrapper/StringArrayCallsWrapperTemplate';
+import { StringArrayRc4DecodeNodeTemplate } from '../../templates/string-array-nodes/string-array-calls-wrapper/StringArrayRC4DecodeNodeTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscatorFacade';
@@ -52,14 +55,16 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
     private stringArrayCallsWrapperName: string;
 
     /**
+     * @param {IRandomGenerator} randomGenerator
      * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      * @param {IOptions} options
      */
     constructor (
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
+        super(randomGenerator, options);
 
         this.escapeSequenceEncoder = escapeSequenceEncoder;
     }
@@ -109,6 +114,11 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
      * @returns {string}
      */
     private getDecodeStringArrayTemplate (): string {
+        const globalVariableTemplate: string = this.options.target !== ObfuscationTarget.Extension
+            ? this.getGlobalVariableTemplate()
+            : GlobalVariableNoEvalTemplate();
+        const atobPolyfill: string = format(AtobTemplate(), { globalVariableTemplate });
+
         let decodeStringArrayTemplate: string = '',
             selfDefendingCode: string = '';
 
@@ -122,7 +132,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
         switch (this.options.stringArrayEncoding) {
             case StringArrayEncoding.Rc4:
                 decodeStringArrayTemplate = format(StringArrayRc4DecodeNodeTemplate(), {
-                    atobPolyfill: AtobTemplate(),
+                    atobPolyfill,
                     rc4Polyfill: Rc4Template(),
                     selfDefendingCode,
                     stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
@@ -132,7 +142,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
 
             case StringArrayEncoding.Base64:
                 decodeStringArrayTemplate = format(StringArrayBase64DecodeNodeTemplate(), {
-                    atobPolyfill: AtobTemplate(),
+                    atobPolyfill,
                     selfDefendingCode,
                     stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
                 });

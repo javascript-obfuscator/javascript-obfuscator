@@ -14,8 +14,8 @@ import { initializable } from '../../decorators/Initializable';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../options/presets/NoCustomNodes';
 
-import { SelfDefendingTemplate } from '../../templates/custom-nodes/string-array-nodes/string-array-rotate-function-node/SelfDefendingTemplate';
-import { StringArrayRotateFunctionTemplate } from '../../templates/custom-nodes/string-array-nodes/string-array-rotate-function-node/StringArrayRotateFunctionTemplate';
+import { SelfDefendingTemplate } from '../../templates/string-array-nodes/string-array-rotate-function-node/SelfDefendingTemplate';
+import { StringArrayRotateFunctionTemplate } from '../../templates/string-array-nodes/string-array-rotate-function-node/StringArrayRotateFunctionTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscatorFacade';
@@ -28,11 +28,6 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
      * @type {IEscapeSequenceEncoder}
      */
     private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
-
-    /**
-     * @type {IRandomGenerator}
-     */
-    private readonly randomGenerator: IRandomGenerator;
 
     /**
      * @type {IStorage <string>}
@@ -62,9 +57,8 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
         @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
+        super(randomGenerator, options);
 
-        this.randomGenerator = randomGenerator;
         this.escapeSequenceEncoder = escapeSequenceEncoder;
     }
 

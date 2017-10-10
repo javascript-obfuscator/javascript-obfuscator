@@ -16,6 +16,7 @@ import { DEFAULT_PRESET } from '../options/presets/Default';
 
 import { ArraySanitizer } from './sanitizers/ArraySanitizer';
 import { BooleanSanitizer } from './sanitizers/BooleanSanitizer';
+import { ObfuscationTargetSanitizer } from './sanitizers/ObfuscatingTargetSanitizer';
 import { SourceMapModeSanitizer } from './sanitizers/SourceMapModeSanitizer';
 import { StringArrayEncodingSanitizer } from './sanitizers/StringArrayEncodingSanitizer';
 
@@ -300,6 +301,11 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 '--stringArrayThreshold <number>',
                 'The probability that the literal string will be inserted into stringArray (Default: 0.8, Min: 0, Max: 1)',
                 parseFloat
+            )
+            .option(
+                '--target <string>',
+                'Allows to set target environment for obfuscated code.',
+                ObfuscationTargetSanitizer
             )
             .option(
                 '--unicodeEscapeSequence <boolean>',

@@ -23,11 +23,6 @@ export class CallExpressionFunctionNode extends AbstractCustomNode {
     private expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[];
 
     /**
-     * @type {IRandomGenerator}
-     */
-    private readonly randomGenerator: IRandomGenerator;
-
-    /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
@@ -35,9 +30,7 @@ export class CallExpressionFunctionNode extends AbstractCustomNode {
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
-
-        this.randomGenerator = randomGenerator;
+        super(randomGenerator, options);
     }
 
     /**

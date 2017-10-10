@@ -4,6 +4,8 @@ import { TInputOptions } from '../../../src/types/options/TInputOptions';
 
 import { IOptions } from '../../../src/interfaces/options/IOptions';
 
+import { StringArrayEncoding } from '../../../src/enums/StringArrayEncoding';
+
 import { DEFAULT_PRESET } from '../../../src/options/presets/Default';
 
 import { Options } from '../../../src/options/Options';
@@ -247,7 +249,7 @@ describe('OptionsNormalizer', () => {
                 optionsPreset = getNormalizedOptions({
                     ...DEFAULT_PRESET,
                     stringArray: false,
-                    stringArrayEncoding: 'rc4',
+                    stringArrayEncoding: StringArrayEncoding.Rc4,
                     stringArrayThreshold: 0.5,
                     rotateStringArray: true
                 });
@@ -275,7 +277,7 @@ describe('OptionsNormalizer', () => {
 
                 expectedOptionsPreset = {
                     ...DEFAULT_PRESET,
-                    stringArrayEncoding: 'base64'
+                    stringArrayEncoding: StringArrayEncoding.Base64
                 };
             });
 

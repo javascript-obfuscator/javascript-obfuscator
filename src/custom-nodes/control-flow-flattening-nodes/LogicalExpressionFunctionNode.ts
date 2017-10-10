@@ -23,11 +23,6 @@ export class LogicalExpressionFunctionNode extends AbstractCustomNode {
     private operator: LogicalOperator;
 
     /**
-     * @type {IRandomGenerator}
-     */
-    private readonly randomGenerator: IRandomGenerator;
-
-    /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
@@ -35,9 +30,7 @@ export class LogicalExpressionFunctionNode extends AbstractCustomNode {
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
-
-        this.randomGenerator = randomGenerator;
+        super(randomGenerator, options);
     }
 
     /**

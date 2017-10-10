@@ -1,1 +1,3 @@
-export type TStringArrayEncoding = boolean | 'base64' | 'rc4';
+import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
+
+export type TStringArrayEncoding = boolean | StringArrayEncoding;

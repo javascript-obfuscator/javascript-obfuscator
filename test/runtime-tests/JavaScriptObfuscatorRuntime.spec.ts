@@ -2,6 +2,8 @@ import { assert } from 'chai';
 
 import { IObfuscationResult } from '../../src/interfaces/IObfuscationResult';
 
+import { StringArrayEncoding } from '../../src/enums/StringArrayEncoding';
+
 import { readFileAsString } from '../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscatorFacade';
@@ -20,7 +22,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
                 deadCodeInjection: true,
                 debugProtection: true,
                 selfDefending: true,
-                stringArrayEncoding: 'rc4'
+                stringArrayEncoding: StringArrayEncoding.Rc4
             }
         );
 

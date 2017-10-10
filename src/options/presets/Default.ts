@@ -1,5 +1,6 @@
 import { TInputOptions } from '../../types/options/TInputOptions';
 
+import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
 
 export const DEFAULT_PRESET: TInputOptions = Object.freeze({
@@ -27,5 +28,6 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     stringArray: true,
     stringArrayEncoding: false,
     stringArrayThreshold: 0.75,
+    target: ObfuscationTarget.Browser,
     unicodeEscapeSequence: false
 });

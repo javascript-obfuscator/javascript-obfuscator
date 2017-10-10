@@ -17,11 +17,13 @@ import {
 } from 'class-validator';
 
 import { TInputOptions } from '../types/options/TInputOptions';
+import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 
 import { IOptions } from '../interfaces/options/IOptions';
 
-import { TSourceMapMode } from '../types/source-map/TSourceMapMode';
-import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
+import { ObfuscationTarget } from '../enums/ObfuscationTarget';
+import { SourceMapMode } from '../enums/source-map/SourceMapMode';
+import { StringArrayEncoding } from '../enums/StringArrayEncoding';
 
 import { DEFAULT_PRESET } from './presets/Default';
 
@@ -169,10 +171,10 @@ export class Options implements IOptions {
     public readonly sourceMapFileName: string;
 
     /**
-     * @type {TSourceMapMode}
+     * @type {SourceMapMode}
      */
-    @IsIn(['inline', 'separate'])
-    public readonly sourceMapMode: TSourceMapMode;
+    @IsIn([SourceMapMode.Inline, SourceMapMode.Separate])
+    public readonly sourceMapMode: SourceMapMode;
 
     /**
      * @type {boolean}
@@ -183,7 +185,7 @@ export class Options implements IOptions {
     /**
      * @type {TStringArrayEncoding}
      */
-    @IsIn([true, false, 'base64', 'rc4'])
+    @IsIn([true, false, StringArrayEncoding.Base64, StringArrayEncoding.Rc4])
     public readonly stringArrayEncoding: TStringArrayEncoding;
 
     /**
@@ -193,6 +195,12 @@ export class Options implements IOptions {
     @Min(0)
     @Max(1)
     public readonly stringArrayThreshold: number;
+
+    /**
+     * @type {ObfuscationTarget}
+     */
+    @IsIn([ObfuscationTarget.Browser, ObfuscationTarget.Extension, ObfuscationTarget.Node])
+    public readonly target: ObfuscationTarget;
 
     /**
      * @type {boolean}

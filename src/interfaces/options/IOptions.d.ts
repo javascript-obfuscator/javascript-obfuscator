@@ -1,5 +1,7 @@
-import { TSourceMapMode } from '../../types/source-map/TSourceMapMode';
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
+
+import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
+import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
 
 export interface IOptions {
     readonly compact: boolean;
@@ -21,9 +23,10 @@ export interface IOptions {
     readonly sourceMap: boolean;
     readonly sourceMapBaseUrl: string;
     readonly sourceMapFileName: string;
-    readonly sourceMapMode: TSourceMapMode;
+    readonly sourceMapMode: SourceMapMode;
     readonly stringArray: boolean;
     readonly stringArrayEncoding: TStringArrayEncoding;
     readonly stringArrayThreshold: number;
+    readonly target: ObfuscationTarget;
     readonly unicodeEscapeSequence: boolean;
 }

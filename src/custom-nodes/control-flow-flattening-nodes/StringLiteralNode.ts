@@ -20,11 +20,6 @@ export class StringLiteralNode extends AbstractCustomNode {
     private literalValue: string;
 
     /**
-     * @type {IRandomGenerator}
-     */
-    private readonly randomGenerator: IRandomGenerator;
-
-    /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
@@ -32,9 +27,7 @@ export class StringLiteralNode extends AbstractCustomNode {
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
-
-        this.randomGenerator = randomGenerator;
+        super(randomGenerator, options);
     }
 
     /**

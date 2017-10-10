@@ -1,4 +1,4 @@
-import { IEscapeSequenceEncoder } from '../../../../interfaces/utils/IEscapeSequenceEncoder';
+import { IEscapeSequenceEncoder } from '../../../interfaces/utils/IEscapeSequenceEncoder';
 
 /**
  * @param {IEscapeSequenceEncoder} escapeSequenceEncoder

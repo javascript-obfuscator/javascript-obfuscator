@@ -6,12 +6,13 @@ import * as format from 'string-template';
 import { TStatement } from '../../types/node/TStatement';
 
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { ObfuscationEvent } from '../../enums/event-emitters/ObfuscationEvent';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { SingleNodeCallControllerTemplate } from '../../templates/custom-nodes/SingleNodeCallControllerTemplate';
+import { SingleNodeCallControllerTemplate } from '../../templates/SingleNodeCallControllerTemplate';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../options/presets/NoCustomNodes';
 
@@ -34,12 +35,14 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     private appendEvent: ObfuscationEvent;
 
     /**
+     * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
+        super(randomGenerator, options);
     }
 
     /**

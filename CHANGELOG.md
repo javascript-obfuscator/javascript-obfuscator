@@ -2,6 +2,7 @@ Change Log
 ===
 v0.12.0
 ---
+* **New option:** `target` allows to set target environment for obfuscated code.
 * Added ability to disable and enable obfuscation for specific parts of the code by adding conditional comments. 
 * Added obfuscation of `es2015` class names.
 * CLI: added directory obfuscation.

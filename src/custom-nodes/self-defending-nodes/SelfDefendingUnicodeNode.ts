@@ -13,7 +13,7 @@ import { initializable } from '../../decorators/Initializable';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../options/presets/NoCustomNodes';
 
-import { SelfDefendingTemplate } from '../../templates/custom-nodes/self-defending-nodes/self-defending-unicode-node/SelfDefendingTemplate';
+import { SelfDefendingTemplate } from '../../templates/self-defending-nodes/self-defending-unicode-node/SelfDefendingTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscatorFacade';
@@ -33,11 +33,6 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     private callsControllerFunctionName: string;
 
     /**
-     * @type {IRandomGenerator}
-     */
-    private readonly randomGenerator: IRandomGenerator;
-
-    /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      * @param {IOptions} options
@@ -47,9 +42,8 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
         @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
+        super(randomGenerator, options);
 
-        this.randomGenerator = randomGenerator;
         this.escapeSequenceEncoder = escapeSequenceEncoder;
     }
 

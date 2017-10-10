@@ -8,7 +8,10 @@ import { TStatement } from '../../types/node/TStatement';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
-import { ConsoleOutputDisableExpressionTemplate } from '../../templates/custom-nodes/console-output-nodes/console-output-disable-expression-node/ConsoleOutputDisableExpressionTemplate';
+import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
+
+import { ConsoleOutputDisableExpressionTemplate } from '../../templates/console-output-nodes/console-output-disable-expression-node/ConsoleOutputDisableExpressionTemplate';
+import { GlobalVariableNoEvalTemplate } from '../../templates/GlobalVariableNoEvalTemplate';
 
 import { initializable } from '../../decorators/Initializable';
 
@@ -24,11 +27,6 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
     private callsControllerFunctionName: string;
 
     /**
-     * @type {IRandomGenerator}
-     */
-    private readonly randomGenerator: IRandomGenerator;
-
-    /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
@@ -36,9 +34,7 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
-
-        this.randomGenerator = randomGenerator;
+        super(randomGenerator, options);
     }
 
     /**
@@ -59,8 +55,13 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
      * @returns {string}
      */
     protected getTemplate (): string {
+        const globalVariableTemplate: string = this.options.target !== ObfuscationTarget.Extension
+            ? this.getGlobalVariableTemplate()
+            : GlobalVariableNoEvalTemplate();
+
         return format(ConsoleOutputDisableExpressionTemplate(), {
             consoleLogDisableFunctionName: this.randomGenerator.getRandomVariableName(6),
+            globalVariableTemplate,
             singleNodeCallControllerFunctionName: this.callsControllerFunctionName
         });
     }

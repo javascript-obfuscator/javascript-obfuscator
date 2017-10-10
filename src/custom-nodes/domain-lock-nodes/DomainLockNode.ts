@@ -9,9 +9,12 @@ import { ICryptUtils } from '../../interfaces/utils/ICryptUtils';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
+import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
+
 import { initializable } from '../../decorators/Initializable';
 
-import { DomainLockNodeTemplate } from '../../templates/custom-nodes/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
+import { DomainLockNodeTemplate } from '../../templates/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
+import { GlobalVariableNoEvalTemplate } from '../../templates/GlobalVariableNoEvalTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeUtils } from '../../node/NodeUtils';
@@ -30,11 +33,6 @@ export class DomainLockNode extends AbstractCustomNode {
     private readonly cryptUtils: ICryptUtils;
 
     /**
-     * @type {IRandomGenerator}
-     */
-    private readonly randomGenerator: IRandomGenerator;
-
-    /**
      * @param {IRandomGenerator} randomGenerator
      * @param {ICryptUtils} cryptUtils
      * @param {IOptions} options
@@ -44,9 +42,8 @@ export class DomainLockNode extends AbstractCustomNode {
         @inject(ServiceIdentifiers.ICryptUtils) cryptUtils: ICryptUtils,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
+        super(randomGenerator, options);
 
-        this.randomGenerator = randomGenerator;
         this.cryptUtils = cryptUtils;
     }
 
@@ -73,11 +70,15 @@ export class DomainLockNode extends AbstractCustomNode {
             domainsString,
             domainsString.length * 3
         );
+        const globalVariableTemplate: string = this.options.target !== ObfuscationTarget.Extension
+            ? this.getGlobalVariableTemplate()
+            : GlobalVariableNoEvalTemplate();
 
         return format(DomainLockNodeTemplate(), {
             domainLockFunctionName: this.randomGenerator.getRandomVariableName(6),
             diff: diff,
             domains: hiddenDomainsString,
+            globalVariableTemplate,
             singleNodeCallControllerFunctionName: this.callsControllerFunctionName
         });
     }

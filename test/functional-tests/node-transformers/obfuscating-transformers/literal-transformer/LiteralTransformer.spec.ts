@@ -2,6 +2,8 @@ import { assert } from 'chai';
 
 import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationResult';
 
+import { StringArrayEncoding } from '../../../../../src/enums/StringArrayEncoding';
+
 import { NO_CUSTOM_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../../helpers/readFileAsString';
@@ -202,7 +204,7 @@ describe('LiteralTransformer', () => {
                     {
                         ...NO_CUSTOM_NODES_PRESET,
                         stringArray: true,
-                        stringArrayEncoding: 'base64',
+                        stringArrayEncoding: StringArrayEncoding.Base64,
                         stringArrayThreshold: 1
                     }
                 );
@@ -231,7 +233,7 @@ describe('LiteralTransformer', () => {
                     {
                         ...NO_CUSTOM_NODES_PRESET,
                         stringArray: true,
-                        stringArrayEncoding: 'rc4',
+                        stringArrayEncoding: StringArrayEncoding.Rc4,
                         stringArrayThreshold: 1
                     }
                 );

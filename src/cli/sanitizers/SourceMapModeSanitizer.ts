@@ -7,13 +7,13 @@ import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
  * @returns {string}
  */
 export const SourceMapModeSanitizer: TCLISanitizer = (value: string): string => {
-    const availableMode: boolean = Object
+    const isCorrectSourceMapMode: boolean = Object
         .keys(SourceMapMode)
         .some((key: any): boolean => {
             return SourceMapMode[key] === value;
         });
 
-    if (!availableMode) {
+    if (!isCorrectSourceMapMode) {
         throw new ReferenceError('Invalid value of `--sourceMapMode` option');
     }
 

@@ -29,11 +29,6 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
     private originalKeysIndexesInShuffledArray: number[];
 
     /**
-     * @type {IRandomGenerator}
-     */
-    private readonly randomGenerator: IRandomGenerator;
-
-    /**
      * @type {number[]}
      */
     @initializable()
@@ -47,9 +42,7 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
-
-        this.randomGenerator = randomGenerator;
+        super(randomGenerator, options);
     }
 
     /**

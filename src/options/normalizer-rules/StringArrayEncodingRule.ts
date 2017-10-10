@@ -2,6 +2,8 @@ import { TOptionsNormalizerRule } from '../../types/options/TOptionsNormalizerRu
 
 import { IOptions } from '../../interfaces/options/IOptions';
 
+import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
+
 /**
  * @param {IOptions} options
  * @returns {IOptions}
@@ -10,7 +12,7 @@ export const StringArrayEncodingRule: TOptionsNormalizerRule = (options: IOption
     if (options.stringArrayEncoding === true) {
         options = {
             ...options,
-            stringArrayEncoding: 'base64'
+            stringArrayEncoding: StringArrayEncoding.Base64
         };
     }
 

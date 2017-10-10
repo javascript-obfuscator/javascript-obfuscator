@@ -2,8 +2,6 @@ import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
 
 import { assert } from 'chai';
 
-import { TSourceMapMode } from '../../../src/types/source-map/TSourceMapMode';
-
 import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
 import { IObfuscationResult } from '../../../src/interfaces/IObfuscationResult';
 import { ISourceMapCorrector } from '../../../src/interfaces/source-map/ISourceMapCorrector';
@@ -24,7 +22,7 @@ function getCorrectedObfuscationResult (
     sourceMap: string,
     sourceMapBaseUrl: string,
     sourceMapFileName: string,
-    sourceMapMode: TSourceMapMode
+    sourceMapMode: SourceMapMode
 ): IObfuscationResult {
     const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 

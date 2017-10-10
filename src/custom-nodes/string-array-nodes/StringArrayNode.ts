@@ -6,11 +6,12 @@ import * as format from 'string-template';
 import { TStatement } from '../../types/node/TStatement';
 
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { StringArrayTemplate } from '../../templates/custom-nodes/string-array-nodes/string-array-node/StringArrayTemplate';
+import { StringArrayTemplate } from '../../templates/string-array-nodes/string-array-node/StringArrayTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeUtils } from '../../node/NodeUtils';
@@ -37,12 +38,14 @@ export class StringArrayNode extends AbstractCustomNode {
     private stringArrayRotateValue: number;
 
     /**
+     * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(options);
+        super(randomGenerator, options);
     }
 
     /**

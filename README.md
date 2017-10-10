@@ -266,6 +266,7 @@ Following options are available for the JS Obfuscator:
     stringArray: true,
     stringArrayEncoding: false,
     stringArrayThreshold: 0.75,
+    target: 'browser',
     unicodeEscapeSequence: false
 }
 ```
@@ -301,6 +302,7 @@ Following options are available for the JS Obfuscator:
     --stringArray <boolean>
     --stringArrayEncoding <boolean|string> [true, false, base64, rc4]
     --stringArrayThreshold <number>
+    --target <string> [browser, extension, node]
     --unicodeEscapeSequence <boolean>
 ```
 
@@ -663,6 +665,19 @@ You can use this setting to adjust the probability (from 0 to 1) that a string l
 This setting is especially useful for large code size because it repeatedly calls to the `string array` and can slow down your code.
 
 `stringArrayThreshold: 0` equals to `stringArray: false`.
+
+### `target`
+Type: `string` Default: `browser`
+
+Allows to set target environment for obfuscated code.
+
+Available values: 
+* `browser`;
+* `extension`;
+* `node`.
+
+Currently output code for `browser` and `node` targets is identical.
+Output code for `extension` target is not using `eval`.
 
 ### `unicodeEscapeSequence`
 Type: `boolean` Default: `false`

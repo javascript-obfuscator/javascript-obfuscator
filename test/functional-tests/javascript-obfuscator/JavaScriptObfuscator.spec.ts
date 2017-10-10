@@ -2,6 +2,9 @@ import { assert } from 'chai';
 
 import { IObfuscationResult } from '../../../src/interfaces/IObfuscationResult';
 
+import { SourceMapMode } from '../../../src/enums/source-map/SourceMapMode';
+import { StringArrayEncoding } from '../../../src/enums/StringArrayEncoding';
+
 import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscatorFacade';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../src/options/presets/NoCustomNodes';
@@ -113,7 +116,7 @@ describe('JavaScriptObfuscator', () => {
                         {
                             ...NO_CUSTOM_NODES_PRESET,
                             sourceMap: true,
-                            sourceMapMode: 'inline'
+                            sourceMapMode: SourceMapMode.Inline
                         }
                     );
 
@@ -483,7 +486,7 @@ describe('JavaScriptObfuscator', () => {
                         disableConsoleOutput: false,
                         rotateStringArray: true,
                         stringArray: true,
-                        stringArrayEncoding: 'rc4',
+                        stringArrayEncoding: StringArrayEncoding.Rc4,
                         stringArrayThreshold: 1,
                         unicodeEscapeSequence: false
                     }

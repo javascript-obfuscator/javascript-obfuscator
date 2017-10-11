@@ -183,6 +183,8 @@ For available options see [options](#options).
 
 ## CLI usage
 
+See [CLI options](#cli-options).
+
 #### Obfuscate single file
 
 Usage:
@@ -191,7 +193,9 @@ javascript-obfuscator input_file_name.js [options]
 javascript-obfuscator input_file_name.js --output output_file_name.js [options]
 ```
 
-If the destination path is not specified with the `--output` option, obfuscated code will saved into the input file directory with name like `INPUT_FILE_NAME-obfuscated.js`
+Obfuscation of single input file with `.js` extension.
+
+If the destination path is not specified with the `--output` option, obfuscated file will saved into the input file directory with `INPUT_FILE_NAME-obfuscated.js` name.
 
 Examples:
 ```sh
@@ -202,8 +206,6 @@ javascript-obfuscator samples/sample.js --output output/output.js --compact true
 // creates a new file output/output.js
 ```
 
-See [CLI options](#cli-options).
-
 #### Obfuscate directory
 
 Usage:
@@ -211,7 +213,9 @@ Usage:
 javascript-obfuscator input_directory_name [options]
 ```
 
-Obfuscated code always will saved into the input directory under `INPUT_FILE_NAME-obfuscated.js` name.
+Obfuscation of all `.js` files under input directory. If this directory contains already obfuscated files with `-obfuscated` postfix - these files will ignored.
+
+Obfuscated files will saved into the input directory under `INPUT_FILE_NAME-obfuscated.js` name.
 
 ## Conditional comments
 You can disable and enable obfuscation for specific parts of the code by adding following comments: 

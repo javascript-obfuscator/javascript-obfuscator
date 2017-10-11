@@ -34,7 +34,7 @@
     "reflect-metadata": "0.1.10",
     "source-map-support": "0.5.0",
     "string-template": "1.0.0",
-    "tslib": "1.7.1"
+    "tslib": "1.8.0"
   },
   "devDependencies": {
     "@types/chai": "4.0.4",
@@ -48,8 +48,8 @@
     "@types/md5": "2.1.32",
     "@types/mkdirp": "0.5.1",
     "@types/mocha": "2.2.43",
-    "@types/node": "8.0.32",
-    "@types/sinon": "2.3.5",
+    "@types/node": "8.0.34",
+    "@types/sinon": "2.3.6",
     "@types/string-template": "1.0.2",
     "@types/webpack-env": "1.13.1",
     "awesome-typescript-loader": "3.2.3",

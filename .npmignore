@@ -1,3 +1,6 @@
-test/fixtures/compile-performance.js
+.awcache
+.github
+.idea
 coverage
 images
+test/fixtures/compile-performance.js

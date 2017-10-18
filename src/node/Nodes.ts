@@ -349,7 +349,7 @@ export class Nodes {
     public static getUnaryExpressionNode (
         operator: ESTree.UnaryOperator,
         argument: ESTree.Expression,
-        prefix: boolean = true
+        prefix: true = true
     ): ESTree.UnaryExpression {
         return {
             type: NodeType.UnaryExpression,

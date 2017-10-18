@@ -1,7 +1,7 @@
 import { injectable, inject, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
-import * as chalk from 'chalk';
+import chalk, { Chalk } from 'chalk';
 
 import { IInitializable } from '../interfaces/IInitializable';
 import { ILogger } from '../interfaces/logger/ILogger';
@@ -19,22 +19,22 @@ export class Logger implements ILogger, IInitializable {
     private static readonly loggingPrefix: string = '[javascript-obfuscator]';
 
     /**
-     * @type {ChalkChain}
+     * @type {Chalk}
      */
     @initializable()
-    private colorInfo: chalk.ChalkChain;
+    private colorInfo: Chalk;
 
     /**
-     * @type {ChalkChain}
+     * @type {Chalk}
      */
     @initializable()
-    private colorSuccess: chalk.ChalkChain;
+    private colorSuccess: Chalk;
 
     /**
-     * @type {ChalkChain}
+     * @type {Chalk}
      */
     @initializable()
-    private colorWarn: chalk.ChalkChain;
+    private colorWarn: Chalk;
 
     /**
      * @type {IOptions}
@@ -83,11 +83,11 @@ export class Logger implements ILogger, IInitializable {
 
     /**
      *
-     * @param {ChalkChain} loggingLevelColor
+     * @param {Chalk} loggingLevelColor
      * @param {LoggingMessage} loggingMessage
      * @param {string | number} value
      */
-    private log (loggingLevelColor: chalk.ChalkChain, loggingMessage: LoggingMessage, value?: string | number): void {
+    private log (loggingLevelColor: Chalk, loggingMessage: LoggingMessage, value?: string | number): void {
         if (!this.options.log) {
             return;
         }

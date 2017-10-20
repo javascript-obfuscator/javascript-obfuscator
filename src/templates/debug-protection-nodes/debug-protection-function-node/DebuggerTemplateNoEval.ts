@@ -2,7 +2,7 @@
  * @returns {string}
  */
 export function DebuggerTemplateNoEval (): string {
-    return `     
+    return `
         if (typeof counter === 'string') {
             var func = function () {
                 while (true) {}

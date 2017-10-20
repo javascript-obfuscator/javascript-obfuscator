@@ -8,7 +8,7 @@ import { IEscapeSequenceEncoder } from '../../../interfaces/utils/IEscapeSequenc
  */
 export function SelfDefendingTemplate (escapeSequenceEncoder: IEscapeSequenceEncoder): string {
     return `
-        var selfDefendingFunc = function () {            
+        var selfDefendingFunc = function () {
             var object = {
                 data: {
                     key: 'cookie',
@@ -21,7 +21,7 @@ export function SelfDefendingTemplate (escapeSequenceEncoder: IEscapeSequenceEnc
 
                     var i = 0;
                                                             
-                    for (var i = 0, len = options.length; i < len; i++) {                          
+                    for (var i = 0, len = options.length; i < len; i++) {
                         var propName = options[i];
                                      
                         updatedCookie += "; " + propName;
@@ -39,7 +39,7 @@ export function SelfDefendingTemplate (escapeSequenceEncoder: IEscapeSequenceEnc
                     document['cookie'] = updatedCookie;
                 },
                 removeCookie: function(){return 'dev';},
-                getCookie: function (document, name) {    
+                getCookie: function (document, name) {
                     document = document || function (value) { return value };
                     var matches = document(new RegExp(
                         "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
@@ -71,7 +71,7 @@ export function SelfDefendingTemplate (escapeSequenceEncoder: IEscapeSequenceEnc
             if (!result) {
                 object['setCookie'](['*'], 'counter', 1);
             } else if (result) {
-                cookie = object['getCookie'](null, 'counter');     
+                cookie = object['getCookie'](null, 'counter');
             } else {
                 object['removeCookie']();
             }

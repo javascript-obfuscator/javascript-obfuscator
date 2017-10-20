@@ -1,4 +1,4 @@
-import { injectable, inject, postConstruct } from 'inversify';
+import { inject, injectable, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';

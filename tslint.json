@@ -16,6 +16,7 @@
       [ "$", "each" ],
       [ "angular", "forEach" ]
     ],
+    "ban-comma-operator": true,
     "block-spacing": [true, "always"],
     "brace-style": [true, "1tbs"],
     "class-name": true,
@@ -38,8 +39,8 @@
     "import-spacing": true,
     "jsdoc-format": true,
     "label-position": true,
-    "max-line-length": false,
-    "member-access": true,
+    "max-classes-per-file": [true, 1],
+    "member-access": [true],
     "member-ordering": [
       true,
       { "order": "fields-first" }
@@ -65,6 +66,7 @@
     "no-debugger": true,
     "no-default-export": true,
     "no-duplicate-case": true,
+    "no-duplicate-switch-case": true,
     "no-duplicate-variable": true,
     "no-empty": false,
     "no-empty-character-class": true,
@@ -92,8 +94,9 @@
     "no-string-throw": true,
     "no-submodule-imports": true,
     "no-switch-case-fall-through": false,
-    "no-trailing-whitespace": false,
+    "no-trailing-whitespace": [true, "ignore-blank-lines"],
     "no-unnecessary-callback-wrapper": true,
+    "no-unnecessary-class": [true, "allow-static-only"],
     "no-unexpected-multiline": true,
     "no-unused-expression": true,
     "no-use-before-declare": true,
@@ -111,6 +114,14 @@
     ],
     "one-variable-per-declaration": false,
     "only-arrow-functions": [true, "allow-declarations"],
+    "ordered-imports": [
+      true,
+      {
+        "import-sources-order": "any",
+        "grouped-imports": true,
+        "named-imports-order": "case-insensitive"
+      }
+    ],
     "prefer-const": true,
     "prefer-template": true,
     "quotemark": false,

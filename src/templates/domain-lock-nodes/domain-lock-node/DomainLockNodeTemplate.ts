@@ -7,7 +7,7 @@ export function DomainLockNodeTemplate (): string {
             
             {globalVariableTemplate}
             
-            var func = function () { 
+            var func = function () {
                 return {
                     key: 'item',
                     value: 'attribute',

@@ -2,14 +2,14 @@ import { injectable } from 'inversify';
 
 import {
     ArrayUnique,
-    IsBoolean,
     IsArray,
+    IsBoolean,
     IsIn,
     IsNumber,
     IsString,
     IsUrl,
-    Min,
     Max,
+    Min,
     ValidateIf,
     validateSync,
     ValidationError,

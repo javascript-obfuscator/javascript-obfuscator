@@ -19,7 +19,8 @@ export function initializable (
         const initializeMethod: Function = target[initializeMethodKey];
 
         if (!initializeMethod || typeof initializeMethod !== 'function') {
-            throw new Error(`\`${initializeMethodKey}\` method with initialization logic not found. \`@${decoratorName}\` decorator requires \`${initializeMethodKey}\` method`);
+            throw new Error(`\`${initializeMethodKey}\` method with initialization logic not ` +
+                `found. \`@${decoratorName}\` decorator requires \`${initializeMethodKey}\` method`);
         }
 
         const metadataPropertyKey: string = `_${propertyKey}`;

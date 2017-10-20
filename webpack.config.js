@@ -70,7 +70,6 @@ module.exports = {
         new CheckerPlugin(),
         new TSLintPlugin({
             files: ['./src/**/*.ts'],
-            typeCheck: true,
             project: './tsconfig.json'
         })
     ],

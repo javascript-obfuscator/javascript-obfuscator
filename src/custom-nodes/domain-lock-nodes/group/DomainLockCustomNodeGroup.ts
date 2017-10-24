@@ -5,7 +5,6 @@ import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCusto
 import { TNodeWithBlockStatement } from '../../../types/node/TNodeWithBlockStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
-import { IObfuscationEventEmitter } from '../../../interfaces/event-emitters/IObfuscationEventEmitter';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { IStackTraceData } from '../../../interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
@@ -37,26 +36,18 @@ export class DomainLockCustomNodeGroup extends AbstractCustomNodeGroup {
     private readonly customNodeFactory: TCustomNodeFactory;
 
     /**
-     * @type {IObfuscationEventEmitter}
-     */
-    private readonly obfuscationEventEmitter: IObfuscationEventEmitter;
-
-    /**
      * @param {TCustomNodeFactory} customNodeFactory
-     * @param {IObfuscationEventEmitter} obfuscationEventEmitter
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
-        @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
 
         this.customNodeFactory = customNodeFactory;
-        this.obfuscationEventEmitter = obfuscationEventEmitter;
     }
 
     /**

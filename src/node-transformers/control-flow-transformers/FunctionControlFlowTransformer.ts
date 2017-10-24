@@ -105,11 +105,13 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (): IVisitor {
         return {
-            leave: (node: ESTree.Node, parentNode: ESTree.Node) => {
+            leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
                 if (
-                    NodeGuards.isFunctionDeclarationNode(node) ||
-                    NodeGuards.isFunctionExpressionNode(node) ||
-                    NodeGuards.isArrowFunctionExpressionNode(node)
+                    parentNode && (
+                        NodeGuards.isFunctionDeclarationNode(node) ||
+                        NodeGuards.isFunctionExpressionNode(node) ||
+                        NodeGuards.isArrowFunctionExpressionNode(node)
+                    )
                 ) {
                     return this.transformNode(node, parentNode);
                 }
@@ -212,8 +214,8 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      */
     private transformFunctionBody (functionNodeBody: ESTree.BlockStatement, controlFlowStorage: IStorage<ICustomNode>): void {
         estraverse.replace(functionNodeBody, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (this.isVisitedFunctionNode(node)) {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): any => {
+                if (this.isVisitedFunctionNode(node) || !parentNode) {
                     return estraverse.VisitorOption.Skip;
                 }
 

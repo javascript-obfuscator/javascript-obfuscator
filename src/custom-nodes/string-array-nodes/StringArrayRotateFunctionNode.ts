@@ -8,7 +8,6 @@ import { TStatement } from '../../types/node/TStatement';
 import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { initializable } from '../../decorators/Initializable';
 
@@ -28,12 +27,6 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
      * @type {IEscapeSequenceEncoder}
      */
     private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
-
-    /**
-     * @type {IStorage <string>}
-     */
-    @initializable()
-    private stringArrayStorage: IStorage <string>;
 
     /**
      * @type {string}
@@ -63,16 +56,13 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     }
 
     /**
-     * @param {IStorage<string>} stringArrayStorage
      * @param {string} stringArrayName
      * @param {number} stringArrayRotateValue
      */
     public initialize (
-        stringArrayStorage: IStorage <string>,
         stringArrayName: string,
         stringArrayRotateValue: number
     ): void {
-        this.stringArrayStorage = stringArrayStorage;
         this.stringArrayName = stringArrayName;
         this.stringArrayRotateValue = stringArrayRotateValue;
     }

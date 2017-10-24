@@ -11,14 +11,14 @@ export interface INodeTransformer {
 
     /**
      * @param {Node} node
-     * @param {Node} parentNode
+     * @param {Node | null} parentNode
      */
-    analyzeNode ? (node: ESTree.Node, parentNode: ESTree.Node): void;
+    analyzeNode ? (node: ESTree.Node, parentNode: ESTree.Node | null): void;
 
     /**
      * @param {Node} node
-     * @param {Node} parentNode
+     * @param {Node | null} parentNode
      * @returns {Node | VisitorOption}
      */
-    transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node | estraverse.VisitorOption;
+    transformNode (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | estraverse.VisitorOption;
 }

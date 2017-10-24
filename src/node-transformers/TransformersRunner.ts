@@ -81,10 +81,10 @@ export class TransformersRunner implements ITransformersRunner {
         const visitorsLength: number = visitors.length;
 
         if (!visitorsLength) {
-            return (node: ESTree.Node, parentNode: ESTree.Node) => node;
+            return (node: ESTree.Node, parentNode: ESTree.Node | null) => node;
         }
 
-        return (node: ESTree.Node, parentNode: ESTree.Node) => {
+        return (node: ESTree.Node, parentNode: ESTree.Node | null) => {
             if (node.ignoredNode) {
                 return estraverse.VisitorOption.Skip;
             }

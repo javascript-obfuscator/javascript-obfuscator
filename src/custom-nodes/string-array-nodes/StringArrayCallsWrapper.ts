@@ -8,7 +8,6 @@ import { TStatement } from '../../types/node/TStatement';
 import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
@@ -35,12 +34,6 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
      * @type {IEscapeSequenceEncoder}
      */
     private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
-
-    /**
-     * @type {IStorage <string>}
-     */
-    @initializable()
-    private stringArrayStorage: IStorage <string>;
 
     /**
      * @type {string}
@@ -70,16 +63,13 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
     }
 
     /**
-     * @param {IStorage<string>} stringArrayStorage
      * @param {string} stringArrayName
      * @param {string} stringArrayCallsWrapperName
      */
     public initialize (
-        stringArrayStorage: IStorage <string>,
         stringArrayName: string,
         stringArrayCallsWrapperName: string
     ): void {
-        this.stringArrayStorage = stringArrayStorage;
         this.stringArrayName = stringArrayName;
         this.stringArrayCallsWrapperName = stringArrayCallsWrapperName;
     }

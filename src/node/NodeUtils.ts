@@ -26,13 +26,15 @@ export class NodeUtils {
      * @param {T} astTree
      * @returns {T}
      */
-    public static addXVerbatimPropertyToLiterals <T extends ESTree.Node> (astTree: T): T {
-        NodeUtils.typedReplace(astTree, NodeType.Literal, {
-            leave: (literalNode: ESTree.Literal) => {
-                literalNode['x-verbatim-property'] = {
-                    content : literalNode.raw,
-                    precedence: escodegen.Precedence.Primary
-                };
+    public static addXVerbatimPropertyToLiterals <T extends ESTree.Node = ESTree.Node> (astTree: T): T {
+        estraverse.replace(astTree, {
+            leave: (node: ESTree.Node) => {
+                if (NodeGuards.isLiteralNode(node)) {
+                    node['x-verbatim-property'] = {
+                        content: node.raw,
+                        precedence: escodegen.Precedence.Primary
+                    };
+                }
             }
         });
 
@@ -213,49 +215,10 @@ export class NodeUtils {
      * @param {Node} parentNode
      * @returns {T}
      */
-    public static parentizeNode <T extends ESTree.Node = ESTree.Node> (node: T, parentNode: ESTree.Node): T {
+    public static parentizeNode <T extends ESTree.Node = ESTree.Node> (node: T, parentNode: ESTree.Node | null): T {
         node.parentNode = parentNode || node;
         node.obfuscatedNode = false;
 
         return node;
-    }
-
-    /**
-     * @param {NodeGuards} astTree
-     * @param {string} nodeType
-     * @param {visitor} visitor
-     */
-    public static typedReplace (
-        astTree: ESTree.Node,
-        nodeType: string,
-        visitor: {enter?: (node: ESTree.Node) => void, leave?: (node: ESTree.Node) => void},
-    ): void {
-        NodeUtils.typedTraverse(astTree, nodeType, visitor, 'replace');
-    }
-
-    /**
-     * @param {NodeGuards} astTree
-     * @param {string} nodeType
-     * @param {Visitor} visitor
-     * @param {string} traverseType
-     */
-    public static typedTraverse (
-        astTree: ESTree.Node,
-        nodeType: string,
-        visitor: estraverse.Visitor,
-        traverseType: string = 'traverse'
-    ): void {
-        (<any>estraverse)[traverseType](astTree, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (node.type === nodeType && visitor.enter) {
-                    return visitor.enter(node, parentNode);
-                }
-            },
-            leave: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (node.type === nodeType && visitor.leave) {
-                    return visitor.leave(node, parentNode);
-                }
-            }
-        });
     }
 }

@@ -30,8 +30,8 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (): IVisitor {
         return {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (NodeGuards.isMemberExpressionNode(node)) {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                if (parentNode && NodeGuards.isMemberExpressionNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }

@@ -31,7 +31,7 @@ export class ParentificationTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (): IVisitor {
         return {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
                 return this.transformNode(node, parentNode);
             }
         };
@@ -42,7 +42,7 @@ export class ParentificationTransformer extends AbstractNodeTransformer {
      * @param {Node} parentNode
      * @returns {Node}
      */
-    public transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node {
         return NodeUtils.parentizeNode(node, parentNode);
     }
 }

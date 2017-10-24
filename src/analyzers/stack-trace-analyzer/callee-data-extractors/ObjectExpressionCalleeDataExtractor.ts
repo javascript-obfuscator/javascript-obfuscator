@@ -101,7 +101,7 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
         let calleeBlockStatement: ESTree.BlockStatement | null = null;
 
         estraverse.traverse(targetNode, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+            enter: (node: ESTree.Node): any => {
                 if (
                     NodeGuards.isVariableDeclaratorNode(node) &&
                     NodeGuards.isIdentifierNode(node.id) &&

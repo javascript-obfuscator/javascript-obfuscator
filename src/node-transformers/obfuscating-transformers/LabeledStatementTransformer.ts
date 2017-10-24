@@ -62,8 +62,8 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (): IVisitor {
         return {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (NodeGuards.isLabeledStatementNode(node)) {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                if (parentNode && NodeGuards.isLabeledStatementNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -89,7 +89,8 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
      * @param {number} nodeIdentifier
      */
     private storeLabeledStatementName (labeledStatementNode: ESTree.LabeledStatement, nodeIdentifier: number): void {
-        this.identifierObfuscatingReplacer.storeNames(labeledStatementNode.label.name, nodeIdentifier);
+        this.identifierObfuscatingReplacer
+            .storeNames(labeledStatementNode.label.name, nodeIdentifier);
     }
 
     /**
@@ -98,9 +99,10 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
      */
     private replaceLabeledStatementName (labeledStatementNode: ESTree.LabeledStatement, nodeIdentifier: number): void {
         estraverse.replace(labeledStatementNode, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (NodeGuards.isLabelIdentifierNode(node, parentNode)) {
-                    const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer.replace(node.name, nodeIdentifier);
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): any => {
+                if (parentNode && NodeGuards.isLabelIdentifierNode(node, parentNode)) {
+                    const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
+                        .replace(node.name, nodeIdentifier);
 
                     node.name = newIdentifier.name;
                 }

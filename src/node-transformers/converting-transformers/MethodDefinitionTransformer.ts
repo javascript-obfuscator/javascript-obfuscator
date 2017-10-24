@@ -44,8 +44,8 @@ export class MethodDefinitionTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (): IVisitor {
         return {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (NodeGuards.isMethodDefinitionNode(node)) {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                if (parentNode && NodeGuards.isMethodDefinitionNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }

@@ -58,9 +58,11 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
      * @param {number} nodeIdentifier
      */
     public storeNames (nodeName: string, nodeIdentifier: number): void {
-        if (!this.isReservedName(nodeName)) {
-            this.namesMap.set(`${nodeName}-${String(nodeIdentifier)}`, this.randomGenerator.getRandomVariableName(6));
+        if (this.isReservedName(nodeName)) {
+            return;
         }
+
+        this.namesMap.set(`${nodeName}-${String(nodeIdentifier)}`, this.randomGenerator.getRandomVariableName(6));
     }
 
     /**

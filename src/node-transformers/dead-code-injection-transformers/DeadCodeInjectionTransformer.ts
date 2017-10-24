@@ -55,15 +55,15 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (): IVisitor {
         return {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (NodeGuards.isProgramNode(node)) {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                if (parentNode && NodeGuards.isProgramNode(node)) {
                     this.analyzeNode(node, parentNode);
 
                     return node;
                 }
             },
-            leave: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (NodeGuards.isBlockStatementNode(node)) {
+            leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                if (parentNode && NodeGuards.isBlockStatementNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -91,10 +91,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards | VisitorOption}
      */
-    public transformNode (
-        blockStatementNode: ESTree.BlockStatement,
-        parentNode: ESTree.Node
-    ): ESTree.Node | estraverse.VisitorOption {
+    public transformNode (blockStatementNode: ESTree.BlockStatement, parentNode: ESTree.Node): ESTree.Node | estraverse.VisitorOption {
         if (this.collectedBlockStatementsLength < DeadCodeInjectionTransformer.minCollectedBlockStatementsCount) {
             return estraverse.VisitorOption.Break;
         }
@@ -140,7 +137,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
             isValidBlockStatementNode: boolean = true;
 
         estraverse.replace(clonedBlockStatementNode, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): any => {
                 /**
                  * First step: count nested block statements in current block statement
                  */
@@ -166,7 +163,11 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                  * Second step: rename all identifiers (except identifiers in member expressions)
                  * in current block statement
                  */
-                if (NodeGuards.isIdentifierNode(node) && !NodeGuards.isMemberExpressionNode(parentNode)) {
+                if (
+                    NodeGuards.isIdentifierNode(node) &&
+                    parentNode &&
+                    !NodeGuards.isMemberExpressionNode(parentNode)
+                ) {
                     node.name = this.randomGenerator.getRandomVariableName(6);
                 }
 

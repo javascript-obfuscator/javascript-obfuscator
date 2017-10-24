@@ -49,9 +49,10 @@ export class FunctionExpressionCalleeDataExtractor extends AbstractCalleeDataExt
         let calleeBlockStatement: ESTree.BlockStatement | null = null;
 
         estraverse.traverse(targetNode, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): any => {
                 if (
                     NodeGuards.isFunctionExpressionNode(node) &&
+                    parentNode &&
                     NodeGuards.isVariableDeclaratorNode(parentNode) &&
                     NodeGuards.isIdentifierNode(parentNode.id) &&
                     parentNode.id.name === name

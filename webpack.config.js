@@ -51,7 +51,8 @@ module.exports = {
                 loader: 'awesome-typescript-loader',
                 query: {
                     useBabel: true,
-                    useCache: true
+                    useCache: true,
+                    forceIsolatedModules: true
                 }
             }
         ]

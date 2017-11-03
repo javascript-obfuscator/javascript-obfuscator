@@ -343,7 +343,7 @@ export class Nodes {
     /**
      * @param {UnaryOperator} operator
      * @param {Expression} argument
-     * @param {boolean} prefix
+     * @param {true} prefix
      * @returns {UnaryExpression}
      */
     public static getUnaryExpressionNode (

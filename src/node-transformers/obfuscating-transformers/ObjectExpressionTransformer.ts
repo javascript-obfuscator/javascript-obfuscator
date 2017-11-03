@@ -1,4 +1,4 @@
-import { injectable, inject } from 'inversify';
+import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -49,8 +49,8 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (): IVisitor {
         return {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (NodeGuards.isObjectExpressionNode(node)) {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                if (parentNode && NodeGuards.isObjectExpressionNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }

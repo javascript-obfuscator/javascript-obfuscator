@@ -1,4 +1,4 @@
-import { injectable, inject } from 'inversify';
+import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from 'estraverse';
@@ -54,11 +54,13 @@ export class FunctionTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (): IVisitor {
         return {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
                 if (
-                    NodeGuards.isFunctionDeclarationNode(node) ||
-                    NodeGuards.isFunctionExpressionNode(node) ||
-                    NodeGuards.isArrowFunctionExpressionNode(node)
+                    parentNode && (
+                        NodeGuards.isFunctionDeclarationNode(node) ||
+                        NodeGuards.isFunctionExpressionNode(node) ||
+                        NodeGuards.isArrowFunctionExpressionNode(node)
+                    )
                 ) {
                     return this.transformNode(node, parentNode);
                 }
@@ -113,8 +115,8 @@ export class FunctionTransformer extends AbstractNodeTransformer {
      */
     private replaceFunctionParams (functionNode: ESTree.Function, nodeIdentifier: number): void {
         const replaceVisitor: estraverse.Visitor = {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (NodeGuards.isReplaceableIdentifierNode(node, parentNode)) {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): any => {
+                if (parentNode && NodeGuards.isReplaceableIdentifierNode(node, parentNode)) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer.replace(node.name, nodeIdentifier);
                     const newIdentifierName: string = newIdentifier.name;
 

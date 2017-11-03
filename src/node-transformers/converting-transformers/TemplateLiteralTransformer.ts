@@ -1,4 +1,4 @@
-import { injectable, inject } from 'inversify';
+import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -41,8 +41,8 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (): IVisitor {
         return {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (NodeGuards.isTemplateLiteralNode(node)) {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                if (parentNode && NodeGuards.isTemplateLiteralNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }

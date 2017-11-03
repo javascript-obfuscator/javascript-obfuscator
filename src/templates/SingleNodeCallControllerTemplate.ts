@@ -6,7 +6,7 @@ export function SingleNodeCallControllerTemplate (): string {
         var {singleNodeCallControllerFunctionName} = (function(){
             var firstCall = true;
             
-            return function (context, fn){	
+            return function (context, fn){
                 var rfn = firstCall ? function(){
                     if(fn){
                         var res = fn.apply(context, arguments);

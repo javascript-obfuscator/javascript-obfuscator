@@ -1,4 +1,4 @@
-import { injectable, inject } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
 import * as estraverse from 'estraverse';
@@ -81,10 +81,10 @@ export class TransformersRunner implements ITransformersRunner {
         const visitorsLength: number = visitors.length;
 
         if (!visitorsLength) {
-            return (node: ESTree.Node, parentNode: ESTree.Node) => node;
+            return (node: ESTree.Node, parentNode: ESTree.Node | null) => node;
         }
 
-        return (node: ESTree.Node, parentNode: ESTree.Node) => {
+        return (node: ESTree.Node, parentNode: ESTree.Node | null) => {
             if (node.ignoredNode) {
                 return estraverse.VisitorOption.Skip;
             }

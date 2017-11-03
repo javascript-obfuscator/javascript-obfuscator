@@ -1,5 +1,9 @@
 Change Log
 ===
+v0.12.1
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/117
+
 v0.12.0
 ---
 * **New option:** `target` allows to set target environment for obfuscated code.

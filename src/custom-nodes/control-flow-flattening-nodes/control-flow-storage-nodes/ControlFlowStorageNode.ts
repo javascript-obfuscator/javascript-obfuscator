@@ -1,4 +1,4 @@
-import { injectable, inject } from 'inversify';
+import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -51,7 +51,7 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
                 Nodes.getIdentifierNode(this.controlFlowStorage.getStorageId()),
                 Nodes.getObjectExpressionNode(
                     Array
-                        .from(this.controlFlowStorage.getStorage())
+                        .from<[string, ICustomNode]>(this.controlFlowStorage.getStorage())
                         .map(([key, value]: [string, ICustomNode]) => {
                             return Nodes.getPropertyNode(
                                 Nodes.getIdentifierNode(key),

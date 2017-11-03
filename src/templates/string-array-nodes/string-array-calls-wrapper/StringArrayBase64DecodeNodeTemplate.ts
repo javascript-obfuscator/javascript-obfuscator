@@ -2,7 +2,7 @@
  * @returns {string}
  */
 export function StringArrayBase64DecodeNodeTemplate (): string {
-    return `      
+    return `
         if ({stringArrayCallsWrapperName}.initialized === undefined) {
             {atobPolyfill}
             
@@ -31,6 +31,6 @@ export function StringArrayBase64DecodeNodeTemplate (): string {
             {stringArrayCallsWrapperName}.data[index] = value;
         } else {
             value = cachedValue;
-        }  
+        }
     `;
 }

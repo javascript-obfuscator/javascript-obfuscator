@@ -6,10 +6,10 @@ export function GlobalVariableTemplate2 (): string {
         var getGlobal = function () {
             var globalObject;
         
-            try {                     
-                globalObject = Function('return (function() ' + '{}.constructor("return this")( )' + ');')(); 
-            } catch (e) { 
-                globalObject = window; 
+            try {
+                globalObject = Function('return (function() ' + '{}.constructor("return this")( )' + ');')();
+            } catch (e) {
+                globalObject = window;
             }
             
             return globalObject;

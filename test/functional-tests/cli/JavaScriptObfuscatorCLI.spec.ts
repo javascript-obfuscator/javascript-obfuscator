@@ -482,8 +482,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
         describe('`--config` option is set but overridden by CLI option', () => {
             const outputSourceMapPath: string = `${outputFilePath}.map`;
 
-            let isFileExist: boolean,
-                sourceMapObject: any;
+            let isFileExist: boolean;
 
             before(() => {
                 JavaScriptObfuscator.runCLI([
@@ -499,10 +498,9 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 ]);
 
                 try {
-                    const content: string = fs.readFileSync(outputSourceMapPath, {encoding: 'utf8'});
+                    fs.readFileSync(outputSourceMapPath, {encoding: 'utf8'});
 
                     isFileExist = true;
-                    sourceMapObject = JSON.parse(content);
                 } catch (e) {
                     isFileExist = false;
                 }

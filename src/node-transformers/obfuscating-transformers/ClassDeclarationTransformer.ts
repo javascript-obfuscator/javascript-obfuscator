@@ -1,4 +1,4 @@
-import { injectable, inject } from 'inversify';
+import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as estraverse from 'estraverse';
@@ -63,8 +63,8 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (): IVisitor {
         return {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (NodeGuards.isClassDeclarationNode(node)) {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                if (parentNode && NodeGuards.isClassDeclarationNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -78,20 +78,20 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
      */
     public transformNode (classDeclarationNode: ESTree.ClassDeclaration, parentNode: ESTree.Node): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
-        const blockScopeOfClassDeclarationNode: TNodeWithBlockStatement = NodeUtils
+        const blockScopeNode: TNodeWithBlockStatement = NodeUtils
             .getBlockScopesOfNode(classDeclarationNode)[0];
 
-        if (!this.options.renameGlobals && blockScopeOfClassDeclarationNode.type === NodeType.Program) {
+        if (!this.options.renameGlobals && blockScopeNode.type === NodeType.Program) {
             return classDeclarationNode;
         }
 
         this.storeClassName(classDeclarationNode, nodeIdentifier);
 
         // check for cached identifiers for current scope node. If exist - loop through them.
-        if (this.replaceableIdentifiers.has(blockScopeOfClassDeclarationNode)) {
-            this.replaceScopeCachedIdentifiers(blockScopeOfClassDeclarationNode, nodeIdentifier);
+        if (this.replaceableIdentifiers.has(blockScopeNode)) {
+            this.replaceScopeCachedIdentifiers(blockScopeNode, nodeIdentifier);
         } else {
-            this.replaceScopeIdentifiers(blockScopeOfClassDeclarationNode, nodeIdentifier);
+            this.replaceScopeIdentifiers(blockScopeNode, nodeIdentifier);
         }
 
         return classDeclarationNode;
@@ -106,30 +106,32 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {NodeGuards} scopeNode
+     * @param {TNodeWithBlockStatement} blockScopeNode
      * @param {number} nodeIdentifier
      */
-    private replaceScopeCachedIdentifiers (scopeNode: ESTree.Node, nodeIdentifier: number): void {
-        const cachedReplaceableIdentifiers: ESTree.Identifier[] = <ESTree.Identifier[]>this.replaceableIdentifiers.get(scopeNode);
+    private replaceScopeCachedIdentifiers (blockScopeNode: TNodeWithBlockStatement, nodeIdentifier: number): void {
+        const cachedReplaceableIdentifiers: ESTree.Identifier[] = <ESTree.Identifier[]>this.replaceableIdentifiers.get(blockScopeNode);
 
         cachedReplaceableIdentifiers.forEach((replaceableIdentifier: ESTree.Identifier) => {
-            const newReplaceableIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer.replace(replaceableIdentifier.name, nodeIdentifier);
+            const newReplaceableIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
+                .replace(replaceableIdentifier.name, nodeIdentifier);
 
             replaceableIdentifier.name = newReplaceableIdentifier.name;
         });
     }
 
     /**
-     * @param {NodeGuards} scopeNode
+     * @param {TNodeWithBlockStatement} blockScopeNode
      * @param {number} nodeIdentifier
      */
-    private replaceScopeIdentifiers (scopeNode: ESTree.Node, nodeIdentifier: number): void {
+    private replaceScopeIdentifiers (blockScopeNode: TNodeWithBlockStatement, nodeIdentifier: number): void {
         const storedReplaceableIdentifiers: ESTree.Identifier[] = [];
 
-        estraverse.replace(scopeNode, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                if (NodeGuards.isReplaceableIdentifierNode(node, parentNode)) {
-                    const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer.replace(node.name, nodeIdentifier);
+        estraverse.replace(blockScopeNode, {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): any => {
+                if (parentNode && NodeGuards.isReplaceableIdentifierNode(node, parentNode)) {
+                    const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
+                        .replace(node.name, nodeIdentifier);
                     const newIdentifierName: string = newIdentifier.name;
 
                     if (node.name !== newIdentifierName) {
@@ -141,6 +143,6 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
             }
         });
 
-        this.replaceableIdentifiers.set(scopeNode, storedReplaceableIdentifiers);
+        this.replaceableIdentifiers.set(blockScopeNode, storedReplaceableIdentifiers);
     }
 }

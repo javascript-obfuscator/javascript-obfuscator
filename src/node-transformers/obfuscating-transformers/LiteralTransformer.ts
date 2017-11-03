@@ -1,4 +1,4 @@
-import { injectable, inject } from 'inversify';
+import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -42,8 +42,8 @@ export class LiteralTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (): IVisitor {
         return {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
-                if (NodeGuards.isLiteralNode(node) && !node.obfuscatedNode) {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                if (parentNode && NodeGuards.isLiteralNode(node) && !node.obfuscatedNode) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -56,7 +56,7 @@ export class LiteralTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
-        if (NodeGuards.isPropertyNode(parentNode) && parentNode.key === literalNode) {
+        if (parentNode && NodeGuards.isPropertyNode(parentNode) && parentNode.key === literalNode) {
             return literalNode;
         }
 

@@ -1,10 +1,9 @@
-import { injectable, inject } from 'inversify';
+import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
 import { ICryptUtils } from '../../../../interfaces/utils/ICryptUtils';
-import { ICustomNodeGroup } from '../../../../interfaces/custom-nodes/ICustomNodeGroup';
 import { IEncodedValue } from '../../../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/literal-obfuscating-replacers/IEncodedValue';
 import { IEscapeSequenceEncoder } from '../../../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../../../interfaces/options/IOptions';
@@ -41,11 +40,6 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     private readonly cryptUtils: ICryptUtils;
 
     /**
-     * @type {IStorage<ICustomNodeGroup>}
-     */
-    private readonly customNodeGroupStorage: IStorage<ICustomNodeGroup>;
-
-    /**
      * @type {IEscapeSequenceEncoder}
      */
     private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
@@ -76,7 +70,6 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     private readonly stringArrayStorage: IStorage<string>;
 
     /**
-     * @param {IStorage<ICustomNodeGroup>} customNodeGroupStorage
      * @param {IStorage<string>} stringArrayStorage
      * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      * @param {IRandomGenerator} randomGenerator
@@ -84,7 +77,6 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
      * @param {IOptions} options
      */
     constructor (
-        @inject(ServiceIdentifiers.TCustomNodeGroupStorage) customNodeGroupStorage: IStorage<ICustomNodeGroup>,
         @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: IStorage<string>,
         @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -95,7 +87,6 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
             options
         );
 
-        this.customNodeGroupStorage = customNodeGroupStorage;
         this.stringArrayStorage = stringArrayStorage;
         this.escapeSequenceEncoder = escapeSequenceEncoder;
         this.randomGenerator = randomGenerator;

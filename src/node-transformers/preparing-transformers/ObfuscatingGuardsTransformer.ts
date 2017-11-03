@@ -1,4 +1,4 @@
-import { injectable, inject } from 'inversify';
+import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -52,7 +52,7 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (): IVisitor {
         return {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node) => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
                 return this.transformNode(node, parentNode);
             }
         };
@@ -63,7 +63,7 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
      * @param {Node} parentNode
      * @returns {Node}
      */
-    public transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node {
         const obfuscationAllowed: boolean = this.obfuscatingGuards.every((nodeGuard: IObfuscatingGuard) => nodeGuard.check(node));
 
         node.ignoredNode = !obfuscationAllowed;

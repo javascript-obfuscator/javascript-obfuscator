@@ -2,7 +2,7 @@
  * @returns {string}
  */
 export function DebugProtectionFunctionTemplate (): string {
-    return `     
+    return `
         function {debugProtectionFunctionName} (ret) {
             function debuggerProtection (counter) {
             

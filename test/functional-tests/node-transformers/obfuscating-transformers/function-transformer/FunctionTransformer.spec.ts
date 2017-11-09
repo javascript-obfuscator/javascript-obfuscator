@@ -49,29 +49,58 @@ describe('FunctionTransformer', () => {
     });
 
     describe('object pattern as parameter', () => {
-        const functionParameterRegExp: RegExp = /function *\(\{ *bar *\}\) *\{/;
-        const functionBodyRegExp: RegExp = /return *bar;/;
+        describe('variant #1: simple', () => {
+            const functionParameterRegExp: RegExp = /function *\(\{ *bar *\}\) *\{/;
+            const functionBodyRegExp: RegExp = /return *bar;/;
 
-        let obfuscatedCode: string;
+            let obfuscatedCode: string;
 
-        before(() => {
-            const code: string = readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_CUSTOM_NODES_PRESET
-                }
-            );
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter-1.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET
+                    }
+                );
 
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('match #1: shouldn\'t transform function parameter object pattern identifier', () => {
+                assert.match(obfuscatedCode, functionParameterRegExp);
+            });
+
+            it('match #2: shouldn\'t transform function parameter object pattern identifier', () => {
+                assert.match(obfuscatedCode, functionBodyRegExp);
+            });
         });
 
-        it('match #1: shouldn\'t transform function parameter object pattern identifier', () => {
-            assert.match(obfuscatedCode, functionParameterRegExp);
-        });
+        describe('variant #2: correct transformation when identifier with same name in parent scope exist', () => {
+            const callbackParameterRegExp: RegExp = /\['then'] *\(\({ *data *}\)/;
+            const callbackBodyRegExp: RegExp = /console\['log']\(data\)/;
 
-        it('match #2: shouldn\'t transform function parameter object pattern identifier', () => {
-            assert.match(obfuscatedCode, functionBodyRegExp);
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter-2.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('match #1: shouldn\'t transform callback parameter object pattern identifier', () => {
+                assert.match(obfuscatedCode, callbackParameterRegExp);
+            });
+
+            it('match #2: shouldn\'t transform callback parameter object pattern identifier', () => {
+                assert.match(obfuscatedCode, callbackBodyRegExp);
+            });
         });
     });
 

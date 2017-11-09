@@ -221,7 +221,9 @@ export class NodeGuards {
             parentNode.property === node
         );
 
-        return !parentNodeIsPropertyNode && !parentNodeIsMemberExpressionNode && !NodeGuards.isLabelIdentifierNode(node, parentNode);
+        return !parentNodeIsPropertyNode &&
+            !parentNodeIsMemberExpressionNode &&
+            !NodeGuards.isLabelIdentifierNode(node, parentNode);
     }
 
     /**

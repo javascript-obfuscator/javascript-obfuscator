@@ -1,5 +1,9 @@
 Change Log
 ===
+v0.12.2
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/119
+
 v0.12.1
 ---
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/117

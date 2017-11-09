@@ -82,9 +82,9 @@ export class CLIUtils {
 
     /**
      * @param {string} outputPath
-     * @param {any} data
+     * @param {string} data
      */
-    public static writeFile (outputPath: string, data: any): void {
+    public static writeFile (outputPath: string, data: string): void {
         mkdirp.sync(path.dirname(outputPath));
 
         fs.writeFileSync(outputPath, data, {

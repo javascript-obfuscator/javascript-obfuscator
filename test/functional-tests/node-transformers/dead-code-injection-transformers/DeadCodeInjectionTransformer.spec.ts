@@ -190,26 +190,26 @@ describe('DeadCodeInjectionTransformer', () => {
                 `if *\\(${variableMatch}\\('${hexMatch}'\\) *=== *${variableMatch}\\('${hexMatch}'\\)\\) *\\{` +
                     `console.*` +
                 `\\} *else *\\{` +
-                    `${variableMatch}.*` +
+                    `alert.*` +
                 `\\}` +
             ``;
             const match2: string = `` +
                 `if *\\(${variableMatch}\\('${hexMatch}'\\) *!== *${variableMatch}\\('${hexMatch}'\\)\\) *\\{` +
                     `console.*` +
                 `\\} *else *\\{` +
-                    `${variableMatch}.*` +
+                    `alert.*` +
                 `\\}` +
             ``;
             const match3: string = `` +
                 `if *\\(${variableMatch}\\('${hexMatch}'\\) *=== *${variableMatch}\\('${hexMatch}'\\)\\) *\\{` +
-                    `${variableMatch}.*` +
+                    `alert.*` +
                 `\\} *else *\\{` +
                     `console.*` +
                 `\\}` +
             ``;
             const match4: string = `` +
                 `if *\\(${variableMatch}\\('${hexMatch}'\\) *!== *${variableMatch}\\('${hexMatch}'\\)\\) *\\{` +
-                    `${variableMatch}.*` +
+                    `alert.*` +
                 `\\} *else *\\{` +
                     `console.*` +
                 `\\}` +
@@ -307,6 +307,31 @@ describe('DeadCodeInjectionTransformer', () => {
 
             it('shouldn\'t add dead code in block statements with `ProgramNode` block scope', () => {
                 assert.match(obfuscatedCode, regExp);
+            });
+        });
+
+        describe('variant #7 - correct obfuscation of dead-code block statements', () => {
+            const variableName: string = 'importantVariableName';
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/obfuscation-of-dead-code-block-statements.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1,
+                        debugProtection: true
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('should correctly obfuscate dead-code block statements and prevent any exposing of internal variable names', () => {
+                assert.notInclude(obfuscatedCode, variableName);
             });
         });
     });

@@ -8,8 +8,10 @@ import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatemen
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { ITransformersRunner } from '../../interfaces/node-transformers/ITransformersRunner';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
+import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { NodeType } from '../../enums/node/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
@@ -30,6 +32,18 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     private static readonly minCollectedBlockStatementsCount: number = 5;
 
     /**
+     * @type {NodeTransformer[]}
+     */
+    private static readonly transformersToRenameBlockScopeIdentifiers: NodeTransformer[] = [
+        NodeTransformer.CatchClauseTransformer,
+        NodeTransformer.ClassDeclarationTransformer,
+        NodeTransformer.FunctionDeclarationTransformer,
+        NodeTransformer.FunctionTransformer,
+        NodeTransformer.LabeledStatementTransformer,
+        NodeTransformer.VariableDeclarationTransformer
+    ];
+
+    /**
      * @type {ESTree.BlockStatement[]}
      */
     private readonly collectedBlockStatements: ESTree.BlockStatement[] = [];
@@ -40,14 +54,23 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     private collectedBlockStatementsLength: number;
 
     /**
+     * @type {ITransformersRunner}
+     */
+    private readonly transformersRunner: ITransformersRunner;
+
+    /**
+     * @param {ITransformersRunner} transformersRunner
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
+        @inject(ServiceIdentifiers.ITransformersRunner) transformersRunner: ITransformersRunner,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
+
+        this.transformersRunner = transformersRunner;
     }
 
     /**
@@ -131,15 +154,14 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         blockStatementNode: ESTree.BlockStatement,
         collectedBlockStatements: ESTree.BlockStatement[]
     ): void {
-        const clonedBlockStatementNode: ESTree.BlockStatement = NodeUtils.clone(blockStatementNode);
-
-        let nestedBlockStatementsCount: number = 0,
+        let clonedBlockStatementNode: ESTree.BlockStatement = NodeUtils.clone(blockStatementNode),
+            nestedBlockStatementsCount: number = 0,
             isValidBlockStatementNode: boolean = true;
 
         estraverse.replace(clonedBlockStatementNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): any => {
                 /**
-                 * First step: count nested block statements in current block statement
+                 * Count nested block statements in current block statement
                  */
                 if (NodeGuards.isBlockStatementNode(node)) {
                     nestedBlockStatementsCount++;
@@ -159,18 +181,6 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                     return estraverse.VisitorOption.Break;
                 }
 
-                /**
-                 * Second step: rename all identifiers (except identifiers in member expressions)
-                 * in current block statement
-                 */
-                if (
-                    NodeGuards.isIdentifierNode(node) &&
-                    parentNode &&
-                    !NodeGuards.isMemberExpressionNode(parentNode)
-                ) {
-                    node.name = this.randomGenerator.getRandomVariableName(6);
-                }
-
                 return node;
             }
         });
@@ -178,6 +188,14 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         if (!isValidBlockStatementNode) {
             return;
         }
+
+        /**
+         * We should transform identifiers in the dead code block statement to avoid conflicts with original code
+         */
+        clonedBlockStatementNode = this.transformersRunner.transform(
+            clonedBlockStatementNode,
+            DeadCodeInjectionTransformer.transformersToRenameBlockScopeIdentifiers
+        );
 
         collectedBlockStatements.push(clonedBlockStatementNode);
     }

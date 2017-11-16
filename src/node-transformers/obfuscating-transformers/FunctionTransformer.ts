@@ -110,13 +110,40 @@ export class FunctionTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @param {Property[]} properties
+     * @param {Set<string>} ignoredIdentifierNamesSet
+     */
+    private addIdentifiersToIgnoredIdentifierNamesSet (
+        properties: ESTree.Property[],
+        ignoredIdentifierNamesSet: Set<string>
+    ): void {
+        properties.forEach((property: ESTree.Property) => {
+            if (!NodeGuards.isIdentifierNode(property.key)) {
+                return;
+            }
+
+            ignoredIdentifierNamesSet.add(property.key.name);
+        });
+    }
+
+    /**
      * @param {Function} functionNode
      * @param {number} nodeIdentifier
      */
     private replaceFunctionParams (functionNode: ESTree.Function, nodeIdentifier: number): void {
+        const ignoredIdentifierNamesSet: Set<string> = new Set();
+
         const replaceVisitor: estraverse.Visitor = {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): any => {
-                if (parentNode && NodeGuards.isReplaceableIdentifierNode(node, parentNode)) {
+                if (NodeGuards.isObjectPatternNode(node)) {
+                    this.addIdentifiersToIgnoredIdentifierNamesSet(node.properties, ignoredIdentifierNamesSet);
+                }
+
+                if (
+                    parentNode &&
+                    NodeGuards.isReplaceableIdentifierNode(node, parentNode) &&
+                    !ignoredIdentifierNamesSet.has(node.name)
+                ) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer.replace(node.name, nodeIdentifier);
                     const newIdentifierName: string = newIdentifier.name;
 

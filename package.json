@@ -37,7 +37,7 @@
     "tslib": "1.8.0"
   },
   "devDependencies": {
-    "@types/chai": "4.0.4",
+    "@types/chai": "4.0.5",
     "@types/chance": "0.7.35",
     "@types/commander": "2.11.0",
     "@types/escodegen": "0.0.6",
@@ -47,11 +47,11 @@
     "@types/md5": "2.1.32",
     "@types/mkdirp": "0.5.1",
     "@types/mocha": "2.2.44",
-    "@types/node": "8.0.50",
-    "@types/sinon": "2.3.7",
+    "@types/node": "8.0.53",
+    "@types/sinon": "4.0.0",
     "@types/string-template": "1.0.2",
     "@types/webpack-env": "1.13.2",
-    "awesome-typescript-loader": "3.3.0",
+    "awesome-typescript-loader": "3.4.0",
     "babel-cli": "6.26.0",
     "babel-loader": "7.1.2",
     "babel-plugin-array-includes": "2.0.3",

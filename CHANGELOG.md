@@ -1,5 +1,10 @@
 Change Log
 ===
+v0.12.3
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/125 (dead code injection and await expression)
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/123
+
 v0.12.2
 ---
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/121

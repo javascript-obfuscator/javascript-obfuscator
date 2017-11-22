@@ -178,7 +178,60 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('variant #5 - chance of `IfStatement` variant', () => {
+        describe('variant #5 - await expression in block statement', () => {
+            const functionRegExp: RegExp = new RegExp(
+                `var *${variableMatch} *= *function *\\(\\) *\\{` +
+                    `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
+                `\\};`,
+                'g'
+            );
+            const awaitExpressionRegExp: RegExp = new RegExp(
+                `await *${variableMatch}\\(\\)`,
+                'g'
+            );
+            const expectedFunctionMatchesLength: number = 4;
+            const expectedAwaitExpressionMatchesLength: number = 1;
+
+            let functionMatchesLength: number = 0,
+                awaitExpressionMatchesLength: number = 0;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/await-expression.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }
+                );
+                const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+                const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
+                const awaitExpressionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(awaitExpressionRegExp);
+
+                console.log(obfuscatedCode);
+
+                if (functionMatches) {
+                    functionMatchesLength = functionMatches.length;
+                }
+
+                if (awaitExpressionMatches) {
+                    awaitExpressionMatchesLength = awaitExpressionMatches.length;
+                }
+            });
+
+            it('match #1: shouldn\'t add dead code', () => {
+                assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
+            });
+
+            it('match #2: shouldn\'t add dead code', () => {
+                assert.equal(awaitExpressionMatchesLength, expectedAwaitExpressionMatchesLength);
+            });
+        });
+
+        describe('variant #6 - chance of `IfStatement` variant', () => {
             const samplesCount: number = 1000;
             const delta: number = 0.1;
             const expectedDistribution: number = 0.25;
@@ -280,7 +333,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('variant #6 - block scope of block statement is `ProgramNode`', () => {
+        describe('variant #7 - block scope of block statement is `ProgramNode`', () => {
             const regExp: RegExp = new RegExp(
                 `if *\\(!!\\[\\]\\) *{` +
                     `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
@@ -310,7 +363,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('variant #7 - correct obfuscation of dead-code block statements', () => {
+        describe('variant #8 - correct obfuscation of dead-code block statements', () => {
             const variableName: string = 'importantVariableName';
 
             let obfuscatedCode: string;

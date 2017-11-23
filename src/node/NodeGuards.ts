@@ -238,6 +238,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isReturnStatementNode (node: ESTree.Node): node is ESTree.ReturnStatement {
+        return node.type === NodeType.ReturnStatement;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isTemplateLiteralNode (node: ESTree.Node): node is ESTree.TemplateLiteral {
         return node.type === NodeType.TemplateLiteral;
     }

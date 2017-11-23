@@ -3,6 +3,7 @@ export enum NodeType {
     ArrowFunctionExpression = 'ArrowFunctionExpression',
     AssignmentExpression = 'AssignmentExpression',
     AssignmentPattern = 'AssignmentPattern',
+    AwaitExpression = 'AwaitExpression',
     BinaryExpression = 'BinaryExpression',
     BlockStatement = 'BlockStatement',
     BreakStatement = 'BreakStatement',

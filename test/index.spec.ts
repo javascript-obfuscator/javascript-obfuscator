@@ -62,6 +62,7 @@ import './functional-tests/node-transformers/obfuscating-transformers/object-exp
 import './functional-tests/node-transformers/obfuscating-transformers/variable-declaration-transformer/VariableDeclarationTransformer.spec';
 import './functional-tests/node-transformers/parentizing-transformers/obfuscating-guards/black-list-obfuscating-guard/BlackListObfuscatingGuard.spec';
 import './functional-tests/node-transformers/parentizing-transformers/obfuscating-guards/conditional-comment-obfuscating-guard/ConditionalCommentObfuscatingGuard.spec';
+import './functional-tests/templates/custom-nodes/debug-protection-nodes/DebufProtectionFunctionCallTemplate.spec';
 import './functional-tests/templates/custom-nodes/domain-lock-nodes/DomainLockNodeTemplate.spec';
 import './functional-tests/templates/custom-nodes/string-array-nodes/StringArrayCallsWrapperNodeTemplate.spec';
 

@@ -1,4 +1,5 @@
 import * as escodegen from 'escodegen';
+import * as ESTree from 'estree';
 
 import { IGeneratorOutput } from '../interfaces/IGeneratorOutput';
 
@@ -8,5 +9,5 @@ declare module 'escodegen' {
      * @param options
      * @returns IGeneratorOutput
      */
-    export function generate (ast: any, options?: escodegen.GenerateOptions): IGeneratorOutput;
+    export function generate (ast: ESTree.Node, options?: escodegen.GenerateOptions): IGeneratorOutput;
 }

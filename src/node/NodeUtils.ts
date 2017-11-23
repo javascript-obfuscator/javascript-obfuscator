@@ -4,6 +4,7 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TNodeWithBlockStatement } from '../types/node/TNodeWithBlockStatement';
+import { TObject } from '../types/TObject';
 import { TStatement } from '../types/node/TStatement';
 
 import { NodeType } from '../enums/node/NodeType';
@@ -55,13 +56,13 @@ export class NodeUtils {
                 return node;
             }
 
-            const copy: {[key: string]: any} = {};
+            const copy: TObject = {};
 
             Object
                 .keys(node)
                 .filter((property: string) => property !== 'parentNode')
                 .forEach((property: string): void => {
-                    const value: any = (<{[key: string]: any}>node)[property];
+                    const value: any = (<TObject>node)[property];
 
                     let clonedValue: any | null;
 

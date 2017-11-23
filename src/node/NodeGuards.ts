@@ -25,6 +25,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isAwaitExpressionNode (node: ESTree.Node): node is ESTree.AwaitExpression {
+        return node.type === NodeType.AwaitExpression;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isBlockStatementNode (node: ESTree.Node): node is ESTree.BlockStatement {
         return node.type === NodeType.BlockStatement;
     }

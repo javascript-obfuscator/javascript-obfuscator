@@ -11,6 +11,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { initializable } from '../../decorators/Initializable';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
+import { NodeGuards } from '../../node/NodeGuards';
 import { Nodes } from '../../node/Nodes';
 import { NodeUtils } from '../../node/NodeUtils';
 
@@ -100,12 +101,20 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
                             true
                         ),
                         this.shuffledKeys.map((key: number, index: number) => {
+                            const statement: ESTree.Statement = this.blockStatementBody[key];
+                            const consequent: ESTree.Statement[] = [statement];
+
+                            /**
+                             * We shouldn't add continue statement after return statement
+                             * to prevent `unreachable code after return statement` warnings
+                             */
+                            if (!NodeGuards.isReturnStatementNode(statement)) {
+                                consequent.push(Nodes.getContinueStatement());
+                            }
+
                             return Nodes.getSwitchCaseNode(
                                 Nodes.getLiteralNode(String(index)),
-                                [
-                                    this.blockStatementBody[key],
-                                    Nodes.getContinueStatement()
-                                ]
+                                consequent
                             );
                         })
                     ),

@@ -498,5 +498,42 @@ describe('BlockStatementControlFlowTransformer', function () {
                 assert.closeTo(untouchedStatementPercentage, controlFlowFlatteningThreshold, delta);
             });
         });
+
+        describe('variant #14: No `unreachable code after return statement` warning', () => {
+            const switchCaseRegExp: RegExp = /switch *\(_0x([a-f0-9]){4,6}\[_0x([a-f0-9]){4,6}\+\+\]\) *\{/;
+            const switchCaseLengthRegExp: RegExp = /case *'[0-5]': *console\['log'\]\(0x[0-6]\);/g;
+            const returnStatementRegExp: RegExp = /case *'[0-5]': *return; *(case|})/;
+            const expectedSwitchCaseLength: number = 5;
+
+            let obfuscatedCode: string,
+                switchCaseLength: number;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/no-unreachable-code-warning.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                switchCaseLength = obfuscatedCode.match(switchCaseLengthRegExp)!.length;
+            });
+
+            it('should wrap block statement statements in switch-case structure', () => {
+                assert.match(obfuscatedCode, switchCaseRegExp);
+            });
+
+            it('each statement should be wrapped by switch-case structure', () => {
+                assert.equal(switchCaseLength, expectedSwitchCaseLength);
+            });
+
+            it('should not add `continue` statement after `return` statement', () => {
+                assert.match(obfuscatedCode, returnStatementRegExp);
+            });
+        });
     });
 });

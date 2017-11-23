@@ -54,11 +54,14 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
      */
     private static blockStatementHasProhibitedStatements (blockStatementNode: ESTree.BlockStatement): boolean {
         return blockStatementNode.body.some((statement: ESTree.Statement) => {
-            const isBreakOrContinueStatement: boolean = NodeGuards.isBreakStatementNode(statement) || NodeGuards.isContinueStatementNode(statement);
+            const isBreakOrContinueStatement: boolean = NodeGuards.isBreakStatementNode(statement)
+                || NodeGuards.isContinueStatementNode(statement);
             const isVariableDeclarationWithLetOrConstKind: boolean = NodeGuards.isVariableDeclarationNode(statement)
                 && (statement.kind === 'const' || statement.kind === 'let');
 
-            return NodeGuards.isFunctionDeclarationNode(statement) || isBreakOrContinueStatement || isVariableDeclarationWithLetOrConstKind;
+            return NodeGuards.isFunctionDeclarationNode(statement)
+                || isBreakOrContinueStatement
+                || isVariableDeclarationWithLetOrConstKind;
         });
     }
 

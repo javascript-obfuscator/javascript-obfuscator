@@ -211,8 +211,6 @@ describe('DeadCodeInjectionTransformer', () => {
                 const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
                 const awaitExpressionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(awaitExpressionRegExp);
 
-                console.log(obfuscatedCode);
-
                 if (functionMatches) {
                     functionMatchesLength = functionMatches.length;
                 }

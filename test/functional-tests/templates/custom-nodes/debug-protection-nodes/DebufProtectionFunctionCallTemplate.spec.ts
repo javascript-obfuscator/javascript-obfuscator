@@ -17,7 +17,7 @@ function spawnThread(inputCallback: Function, threadCallback: Function, timeoutC
     const timeout = setTimeout(() => {
         thread.kill();
         timeoutCallback();
-    }, 500);
+    }, 1500);
 
     thread
         .send(inputCallback())

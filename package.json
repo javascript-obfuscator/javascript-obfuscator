@@ -24,7 +24,6 @@
     "class-validator": "0.7.3",
     "commander": "2.11.0",
     "escodegen-wallaby": "1.6.14",
-    "esmangle": "1.0.1",
     "esprima": "4.0.0",
     "estraverse": "4.2.0",
     "inversify": "4.5.2",

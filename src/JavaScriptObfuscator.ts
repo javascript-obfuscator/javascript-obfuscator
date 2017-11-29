@@ -3,7 +3,6 @@ import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 
 import * as esprima from 'esprima';
 import * as escodegen from 'escodegen-wallaby';
-import * as esmangle from 'esmangle';
 import * as ESTree from 'estree';
 
 import { ICustomNodeGroup } from './interfaces/custom-nodes/ICustomNodeGroup';
@@ -268,10 +267,6 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
         if (this.options.sourceMap) {
             escodegenParams.sourceMap = 'sourceMap';
             escodegenParams.sourceContent = sourceCode;
-        }
-
-        if (this.options.mangle) {
-            astTree = esmangle.mangle(astTree);
         }
 
         const generatorOutput: IGeneratorOutput = escodegen.generate(astTree, {

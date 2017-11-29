@@ -229,8 +229,7 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
         const escapedValue: string = this.escapeSequenceEncoder.encode(encodedValue, this.options.unicodeEscapeSequence);
 
         const stringArrayStorageLength: number = this.stringArrayStorage.getLength();
-        const rotatedStringArrayStorageId: string = Utils.stringRotate(this.stringArrayStorage.getStorageId(), 1);
-        const stringArrayStorageCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${rotatedStringArrayStorageId}`;
+        const stringArrayStorageCallsWrapperName: string = this.stringArrayStorage.getStorageId().split('|')[1];
 
         const { fromCache, index }: IStringArrayIndexData = this.getStringArrayHexadecimalIndex(
             escapedValue,

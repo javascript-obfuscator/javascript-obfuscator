@@ -3,6 +3,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as format from 'string-template';
 
+import { TIdentifierNameGeneratorFactory } from '../../types/container/generators/TIdentifierNameGeneratorFactory';
 import { TStatement } from '../../types/node/TStatement';
 
 import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
@@ -33,16 +34,19 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     private callsControllerFunctionName: string;
 
     /**
+     * @param {TIdentifierNameGeneratorFactory} identifierNameGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      * @param {IOptions} options
      */
     constructor (
+        @inject(ServiceIdentifiers.Factory__IIdentifierNameGenerator)
+            identifierNameGeneratorFactory: TIdentifierNameGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(randomGenerator, options);
+        super(identifierNameGeneratorFactory, randomGenerator, options);
 
         this.escapeSequenceEncoder = escapeSequenceEncoder;
     }
@@ -67,11 +71,12 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     protected getTemplate (): string {
         return JavaScriptObfuscator.obfuscate(
             format(SelfDefendingTemplate(this.escapeSequenceEncoder), {
-                selfDefendingFunctionName: this.randomGenerator.getRandomVariableName(6),
+                selfDefendingFunctionName: this.identifierNameGenerator.generate(6),
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
             }),
             {
                 ...NO_CUSTOM_NODES_PRESET,
+                mangle: this.options.mangle,
                 seed: this.options.seed,
                 unicodeEscapeSequence: true
             }

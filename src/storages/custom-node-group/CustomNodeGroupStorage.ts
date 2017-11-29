@@ -4,6 +4,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import { TCustomNodeGroupFactory } from '../../types/container/custom-nodes/TCustomNodeGroupFactory';
 
 import { ICustomNodeGroup } from '../../interfaces/custom-nodes/ICustomNodeGroup';
+import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { CustomNodeGroup } from '../../enums/custom-nodes/CustomNodeGroup';
@@ -31,12 +32,14 @@ export class CustomNodeGroupStorage extends MapStorage <ICustomNodeGroup> {
     /**
      * @param {TCustomNodeGroupFactory} customNodeGroupFactory
      * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__ICustomNodeGroup) customNodeGroupFactory: TCustomNodeGroupFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(randomGenerator);
+        super(randomGenerator, options);
 
         this.customNodeGroupFactory = customNodeGroupFactory;
     }

@@ -1,10 +1,12 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
+import { TIdentifierNameGeneratorFactory } from '../types/container/generators/TIdentifierNameGeneratorFactory';
 import { TNodeWithBlockStatement } from '../types/node/TNodeWithBlockStatement';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { ICustomNodeGroup } from '../interfaces/custom-nodes/ICustomNodeGroup';
+import { IIdentifierNameGenerator } from '../interfaces/generators/identifier-name-generators/IIdentifierNameGenerator';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 import { IStackTraceData } from '../interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
@@ -25,9 +27,9 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     protected abstract customNodes: Map <CustomNode, ICustomNode>;
 
     /**
-     * @type {IStackTraceData[]}
+     * @type {IIdentifierNameGenerator}
      */
-    protected readonly stackTraceData: IStackTraceData[];
+    protected readonly identifierNameGenerator: IIdentifierNameGenerator;
 
     /**
      * @type {IOptions}
@@ -40,13 +42,22 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     protected readonly randomGenerator: IRandomGenerator;
 
     /**
+     * @type {IStackTraceData[]}
+     */
+    protected readonly stackTraceData: IStackTraceData[];
+
+    /**
+     * @param {TIdentifierNameGeneratorFactory} identifierNameGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
+        @inject(ServiceIdentifiers.Factory__IIdentifierNameGenerator)
+            identifierNameGeneratorFactory: TIdentifierNameGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
+        this.identifierNameGenerator = identifierNameGeneratorFactory(options);
         this.randomGenerator = randomGenerator;
         this.options = options;
     }

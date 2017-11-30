@@ -26,6 +26,7 @@ export enum NodeType {
     Program = 'Program',
     Property = 'Property',
     ReturnStatement = 'ReturnStatement',
+    Super = 'Super',
     SwitchCase = 'SwitchCase',
     SwitchStatement = 'SwitchStatement',
     TemplateLiteral = 'TemplateLiteral',

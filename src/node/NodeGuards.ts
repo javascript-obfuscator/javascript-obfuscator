@@ -246,6 +246,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isSuperNode (node: ESTree.Node): node is ESTree.Super {
+        return node.type === NodeType.Super;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isTemplateLiteralNode (node: ESTree.Node): node is ESTree.TemplateLiteral {
         return node.type === NodeType.TemplateLiteral;
     }

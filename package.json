@@ -30,6 +30,7 @@
     "md5": "2.2.1",
     "mkdirp": "0.5.1",
     "opencollective": "1.0.3",
+    "pjson": "^1.0.9",
     "reflect-metadata": "0.1.10",
     "source-map-support": "0.5.0",
     "string-template": "1.0.0",

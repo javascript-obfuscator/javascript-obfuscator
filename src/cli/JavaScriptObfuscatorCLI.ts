@@ -1,4 +1,5 @@
 import * as commander from 'commander';
+import * as packageJson from 'pjson';
 import * as path from 'path';
 
 import { TInputCLIOptions } from '../types/options/TInputCLIOptions';
@@ -182,7 +183,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         this.commands
             .usage('<inputPath> [options]')
             .version(
-                CLIUtils.getPackageConfig().version,
+                packageJson.version,
                 '-v, --version'
             )
             .option(

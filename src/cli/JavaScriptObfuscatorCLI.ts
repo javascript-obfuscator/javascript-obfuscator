@@ -199,42 +199,42 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 'Name of js / json config file'
             )
             .option(
-                '--controlFlowFlattening <boolean>',
+                '--control-flow-flattening <boolean>',
                 'Enables control flow flattening',
                 BooleanSanitizer
             )
             .option(
-                '--controlFlowFlatteningThreshold <number>',
+                '--control-flow-flattening-threshold <number>',
                 'The probability that the control flow flattening transformation will be applied to the node',
                 parseFloat
             )
             .option(
-                '--deadCodeInjection <boolean>',
+                '--dead-code-injection <boolean>',
                 'Enables dead code injection',
                 BooleanSanitizer
             )
             .option(
-                '--deadCodeInjectionThreshold <number>',
+                '--dead-code-injection-threshold <number>',
                 'The probability that the dead code injection transformation will be applied to the node',
                 parseFloat
             )
             .option(
-                '--debugProtection <boolean>',
+                '--debug-protection <boolean>',
                 'Disable browser Debug panel (can cause DevTools enabled browser freeze)',
                 BooleanSanitizer
             )
             .option(
-                '--debugProtectionInterval <boolean>',
+                '--debug-protection-interval <boolean>',
                 'Disable browser Debug panel even after page was loaded (can cause DevTools enabled browser freeze)',
                 BooleanSanitizer
             )
             .option(
-                '--disableConsoleOutput <boolean>',
+                '--disable-console-output <boolean>',
                 'Allow console.log, console.info, console.error and console.warn messages output into browser console',
                 BooleanSanitizer
             )
             .option(
-                '--domainLock <list> (comma separated, without whitespaces)',
+                '--domain-lock <list> (comma separated, without whitespaces)',
                 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)',
                 ArraySanitizer
             )
@@ -247,16 +247,16 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 BooleanSanitizer
             )
             .option(
-                '--reservedNames <list> (comma separated, without whitespaces)',
+                '--reserved-names <list> (comma separated, without whitespaces)',
                 'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)',
                 ArraySanitizer
             )
             .option(
-                '--renameGlobals <boolean>', 'Allows to enable obfuscation of global variable and function names with declaration.',
+                '--rename-globals <boolean>', 'Allows to enable obfuscation of global variable and function names with declaration.',
                 BooleanSanitizer
             )
             .option(
-                '--rotateStringArray <boolean>', 'Disable rotation of unicode array values during obfuscation',
+                '--rotate-string-array <boolean>', 'Disable rotation of unicode array values during obfuscation',
                 BooleanSanitizer
             )
             .option(
@@ -265,40 +265,40 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 parseFloat
             )
             .option(
-                '--selfDefending <boolean>',
+                '--self-defending <boolean>',
                 'Disables self-defending for obfuscated code',
                 BooleanSanitizer
             )
             .option(
-                '--sourceMap <boolean>',
+                '--source-map <boolean>',
                 'Enables source map generation',
                 BooleanSanitizer
             )
             .option(
-                '--sourceMapBaseUrl <string>',
-                'Sets base url to the source map import url when `--sourceMapMode=separate`'
+                '--source-map-base-url <string>',
+                'Sets base url to the source map import url when `--source-map-mode=separate`'
             )
             .option(
-                '--sourceMapFileName <string>',
-                'Sets file name for output source map when `--sourceMapMode=separate`'
+                '--source-map-file-name <string>',
+                'Sets file name for output source map when `--source-map-mode=separate`'
             )
             .option(
-                '--sourceMapMode <string> [inline, separate]',
+                '--source-map-mode <string> [inline, separate]',
                 'Specify source map output mode',
                 SourceMapModeSanitizer
             )
             .option(
-                '--stringArray <boolean>',
+                '--string-array <boolean>',
                 'Disables gathering of all literal strings into an array and replacing every literal string with an array call',
                 BooleanSanitizer
             )
             .option(
-                '--stringArrayEncoding <boolean|string> [true, false, base64, rc4]',
+                '--string-array-encoding <boolean|string> [true, false, base64, rc4]',
                 'Encodes all strings in strings array using base64 or rc4 (this option can slow down your code speed',
                 StringArrayEncodingSanitizer
             )
             .option(
-                '--stringArrayThreshold <number>',
+                '--string-array-threshold <number>',
                 'The probability that the literal string will be inserted into stringArray (Default: 0.8, Min: 0, Max: 1)',
                 parseFloat
             )
@@ -308,7 +308,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 ObfuscationTargetSanitizer
             )
             .option(
-                '--unicodeEscapeSequence <boolean>',
+                '--unicode-escape-sequence <boolean>',
                 'Allows to enable/disable string conversion to unicode escape sequence',
                 BooleanSanitizer
             )
@@ -318,9 +318,9 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     private configureHelp (): void {
         this.commands.on('--help', () => {
             console.log('  Examples:\n');
-            console.log('    %> javascript-obfuscator input_file_name.js --compact true --selfDefending false');
-            console.log('    %> javascript-obfuscator input_file_name.js --output output_file_name.js --compact true --selfDefending false');
-            console.log('    %> javascript-obfuscator input_directory_name --compact true --selfDefending false');
+            console.log('    %> javascript-obfuscator input_file_name.js --compact true --self-defending false');
+            console.log('    %> javascript-obfuscator input_file_name.js --output output_file_name.js --compact true --self-defending false');
+            console.log('    %> javascript-obfuscator input_directory_name --compact true --self-defending false');
             console.log('');
         });
     }

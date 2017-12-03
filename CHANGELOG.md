@@ -2,6 +2,7 @@ Change Log
 ===
 v0.13.0
 ---
+* **Breaking change:** all CLI options were renamed to `kebab-case` format (`--disableConsoleOutout` -> `--disable-console-output`)
 * Implemented custom `mangle` option algorithm without `esmangle`; fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/110
 
 v0.12.5

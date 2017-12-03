@@ -16,7 +16,7 @@ export class MangledIdentifierNameGenerator extends AbstractIdentifierNameGenera
     /**
      * @type {string[]}
      */
-    private static nameSequence: string[] = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_$'.split('');
+    private static nameSequence: string[] = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
     /**
      * Reserved JS words with length of 2-4 symbols that can be possible generated with this replacer

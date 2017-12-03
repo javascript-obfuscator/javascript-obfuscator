@@ -50,11 +50,11 @@ describe('MangledIdentifierNameGenerator', () => {
             })
         });
 
-        describe('variant #3: special character as mangled name', () => {
-            const expectedMangledIdentifierName: string = '_';
+        describe('variant #3: last mangled name with single character', () => {
+            const expectedMangledIdentifierName: string = 'Z';
 
             before(() => {
-                for (let i: number = 0; i <= 50; i++) {
+                for (let i: number = 0; i <= 49; i++) {
                     mangledIdentifierName = identifierNameGenerator.generate(6);
                 }
             });
@@ -68,7 +68,7 @@ describe('MangledIdentifierNameGenerator', () => {
             const expectedMangledIdentifierName: string = 'a0';
 
             before(() => {
-                for (let i: number = 0; i < 2; i++) {
+                for (let i: number = 0; i < 1; i++) {
                     mangledIdentifierName = identifierNameGenerator.generate(6);
                 }
             });

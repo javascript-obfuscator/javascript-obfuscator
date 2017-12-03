@@ -83,6 +83,19 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
 
             NodeAppender.insertNodeAtIndex(blockScopeNode, customNode.getNode(), randomIndex);
         });
+
+        // nodeCallsControllerFunctionNode append
+        this.appendCustomNodeIfExist(CustomNode.NodeCallsControllerFunctionNode, (customNode: ICustomNode) => {
+            let targetBlockScope: TNodeWithBlockStatement;
+
+            if (stackTraceData.length) {
+                targetBlockScope = NodeAppender.getOptimalBlockScope(stackTraceData, randomStackTraceIndex, 1);
+            } else {
+                targetBlockScope = blockScopeNode;
+            }
+
+            NodeAppender.prependNode(targetBlockScope, customNode.getNode());
+        });
     }
 
     public initialize (): void {
@@ -93,14 +106,17 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
         }
 
         const debugProtectionFunctionName: string = this.identifierNameGenerator.generate(6);
+        const callsControllerFunctionName: string = this.identifierNameGenerator.generate(6);
 
         const debugProtectionFunctionNode: ICustomNode = this.customNodeFactory(CustomNode.DebugProtectionFunctionNode);
         const debugProtectionFunctionCallNode: ICustomNode = this.customNodeFactory(CustomNode.DebugProtectionFunctionCallNode);
         const debugProtectionFunctionIntervalNode: ICustomNode = this.customNodeFactory(CustomNode.DebugProtectionFunctionIntervalNode);
+        const nodeCallsControllerFunctionNode: ICustomNode = this.customNodeFactory(CustomNode.NodeCallsControllerFunctionNode);
 
         debugProtectionFunctionNode.initialize(debugProtectionFunctionName);
-        debugProtectionFunctionCallNode.initialize(debugProtectionFunctionName);
+        debugProtectionFunctionCallNode.initialize(debugProtectionFunctionName, callsControllerFunctionName);
         debugProtectionFunctionIntervalNode.initialize(debugProtectionFunctionName);
+        nodeCallsControllerFunctionNode.initialize(this.appendEvent, callsControllerFunctionName);
 
         this.customNodes.set(CustomNode.DebugProtectionFunctionNode, debugProtectionFunctionNode);
         this.customNodes.set(CustomNode.DebugProtectionFunctionCallNode, debugProtectionFunctionCallNode);
@@ -108,5 +124,7 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
         if (this.options.debugProtectionInterval) {
             this.customNodes.set(CustomNode.DebugProtectionFunctionIntervalNode, debugProtectionFunctionIntervalNode);
         }
+
+        this.customNodes.set(CustomNode.NodeCallsControllerFunctionNode, nodeCallsControllerFunctionNode);
     }
 }

@@ -74,6 +74,17 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    private static isValidBlockStatementNode (node: ESTree.Node): boolean {
+        return !NodeGuards.isBreakStatementNode(node) &&
+            !NodeGuards.isContinueStatementNode(node) &&
+            !NodeGuards.isAwaitExpressionNode(node) &&
+            !NodeGuards.isSuperNode(node);
+    }
+
+    /**
      * @return {IVisitor}
      */
     public getVisitor (): IVisitor {
@@ -173,9 +184,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                  */
                 if (
                     nestedBlockStatementsCount > DeadCodeInjectionTransformer.maxNestedBlockStatementsCount ||
-                    NodeGuards.isBreakStatementNode(node) ||
-                    NodeGuards.isContinueStatementNode(node) ||
-                    NodeGuards.isAwaitExpressionNode(node)
+                    !DeadCodeInjectionTransformer.isValidBlockStatementNode(node)
                 ) {
                     isValidBlockStatementNode = false;
 

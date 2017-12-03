@@ -229,7 +229,58 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('variant #6 - chance of `IfStatement` variant', () => {
+        describe('variant #6 - super expression in block statement', () => {
+            const functionRegExp: RegExp = new RegExp(
+                `var *${variableMatch} *= *function *\\(\\) *\\{` +
+                    `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
+                `\\};`,
+                'g'
+            );
+            const superExpressionRegExp: RegExp = new RegExp(
+                `super *\\(\\);`,
+                'g'
+            );
+            const expectedFunctionMatchesLength: number = 4;
+            const expectedSuperExpressionMatchesLength: number = 1;
+
+            let functionMatchesLength: number = 0,
+                superExpressionMatchesLength: number = 0;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/super-expression.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }
+                );
+                const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+                const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
+                const superExpressionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(superExpressionRegExp);
+
+                if (functionMatches) {
+                    functionMatchesLength = functionMatches.length;
+                }
+
+                if (superExpressionMatches) {
+                    superExpressionMatchesLength = superExpressionMatches.length;
+                }
+            });
+
+            it('match #1: shouldn\'t add dead code', () => {
+                assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
+            });
+
+            it('match #2: shouldn\'t add dead code', () => {
+                assert.equal(superExpressionMatchesLength, expectedSuperExpressionMatchesLength);
+            });
+        });
+
+        describe('variant #7- chance of `IfStatement` variant', () => {
             const samplesCount: number = 1000;
             const delta: number = 0.1;
             const expectedDistribution: number = 0.25;
@@ -331,7 +382,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('variant #7 - block scope of block statement is `ProgramNode`', () => {
+        describe('variant #8 - block scope of block statement is `ProgramNode`', () => {
             const regExp: RegExp = new RegExp(
                 `if *\\(!!\\[\\]\\) *{` +
                     `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
@@ -361,7 +412,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('variant #8 - correct obfuscation of dead-code block statements', () => {
+        describe('variant #9 - correct obfuscation of dead-code block statements', () => {
             const variableName: string = 'importantVariableName';
 
             let obfuscatedCode: string;

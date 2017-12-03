@@ -117,7 +117,7 @@ describe('DebugProtectionFunctionCallTemplate (): string', () => {
             );
 
             obfuscatedCode = obfuscationResult.getObfuscatedCode();
-            obfuscatedCode = obfuscatedCode.replace(/\+\+ *_0x([a-f0-9]){4,6}/, '++abc');
+            obfuscatedCode = obfuscatedCode.replace(/\+\+ *_0x([a-f0-9]){4,6}/, '');
 
             spawnThread(
                 () => obfuscatedCode,

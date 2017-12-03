@@ -4,8 +4,11 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
+import { TIdentifierNameGeneratorFactory } from '../../types/container/generators/TIdentifierNameGeneratorFactory';
+import { IIdentifierNameGenerator } from '../../interfaces/generators/identifier-name-generators/IIdentifierNameGenerator';
+import { IOptions } from '../../interfaces/options/IOptions';
+
 import { ArrayStorage } from '../ArrayStorage';
-import { RandomGenerator } from '../../utils/RandomGenerator';
 
 @injectable()
 export class StringArrayStorage extends ArrayStorage <string> {
@@ -15,15 +18,26 @@ export class StringArrayStorage extends ArrayStorage <string> {
     private readonly arrayUtils: IArrayUtils;
 
     /**
+     * @type {IIdentifierNameGenerator}
+     */
+    private readonly identifierNameGenerator: IIdentifierNameGenerator;
+
+    /**
+     * @param {TIdentifierNameGeneratorFactory} identifierNameGeneratorFactory
      * @param {IArrayUtils} arrayUtils
      * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
+        @inject(ServiceIdentifiers.Factory__IIdentifierNameGenerator)
+            identifierNameGeneratorFactory: TIdentifierNameGeneratorFactory,
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
-        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(randomGenerator);
+        super(randomGenerator, options);
 
+        this.identifierNameGenerator = identifierNameGeneratorFactory(options);
         this.arrayUtils = arrayUtils;
     }
 
@@ -31,7 +45,10 @@ export class StringArrayStorage extends ArrayStorage <string> {
     public initialize (): void {
         super.initialize();
 
-        this.storageId = this.randomGenerator.getRandomString(4, RandomGenerator.randomGeneratorPoolHexadecimal);
+        const stringArrayName: string = this.identifierNameGenerator.generate(4);
+        const stringArrayCallsWrapperName: string = this.identifierNameGenerator.generate(4);
+
+        this.storageId = `${stringArrayName}|${stringArrayCallsWrapperName}`;
     }
 
     /**

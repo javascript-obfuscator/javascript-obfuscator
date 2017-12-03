@@ -14,6 +14,8 @@ import './unit-tests/cli/sanitizers/StringArrayEncodingSanitizer.spec';
 import './unit-tests/cli/utils/CLIUtils.spec';
 import './unit-tests/cli/utils/SourceCodeReader.spec';
 import './unit-tests/decorators/initializable/Initializable.spec';
+import './unit-tests/generators/identifier-name-generators/HexadecimalIdentifierNameGenerator.spec';
+import './unit-tests/generators/identifier-name-generators/MangledlIdentifierNameGenerator.spec';
 import './unit-tests/javascript-obfuscator/JavaScriptObfuscator.spec';
 import './unit-tests/logger/Logger.spec';
 import './unit-tests/node/node-appender/NodeAppender.spec';
@@ -27,7 +29,6 @@ import './unit-tests/storages/ArrayStorage.spec';
 import './unit-tests/storages/MapStorage.spec';
 import './unit-tests/utils/ArrayUtils.spec';
 import './unit-tests/utils/CryptUtils.spec';
-import './unit-tests/utils/RandomGeneratorUtils.spec';
 import './unit-tests/utils/EscapeSequenceEncoder.spec';
 import './unit-tests/utils/Utils.spec';
 

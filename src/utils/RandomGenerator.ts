@@ -11,8 +11,6 @@ import { ISourceCode } from '../interfaces/ISourceCode';
 
 import { initializable } from '../decorators/Initializable';
 
-import { Utils } from './Utils';
-
 @injectable()
 export class RandomGenerator implements IRandomGenerator, IInitializable {
     /**
@@ -34,11 +32,6 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
      * @type {IOptions}
      */
     private readonly options: IOptions;
-
-    /**
-     * @type {Set<string>}
-     */
-    private readonly randomVariableNameSet: Set <string> = new Set();
 
     /**
      * @type {Chance.Chance | Chance.SeededChance}
@@ -137,27 +130,6 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
      */
     public getRandomString (length: number, pool: string = RandomGenerator.randomGeneratorPool): string {
         return this.getRandomGenerator().string({ length, pool });
-    }
-
-    /**
-     * @param {number} length
-     * @returns {string}
-     */
-    public getRandomVariableName (length: number): string {
-        const prefix: string = `_${Utils.hexadecimalPrefix}`;
-        const rangeMinInteger: number = 10000;
-        const rangeMaxInteger: number = 99999999;
-        const randomInteger: number = this.getRandomInteger(rangeMinInteger, rangeMaxInteger);
-        const hexadecimalNumber: string = Utils.decToHex(randomInteger);
-        const randomVariableName: string = `${prefix}${hexadecimalNumber.substr(0, length)}`;
-
-        if (this.randomVariableNameSet.has(randomVariableName)) {
-            return this.getRandomVariableName(length);
-        }
-
-        this.randomVariableNameSet.add(randomVariableName);
-
-        return randomVariableName;
     }
 
     /**

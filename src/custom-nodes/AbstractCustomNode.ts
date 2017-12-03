@@ -1,9 +1,11 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
+import { TIdentifierNameGeneratorFactory } from '../types/container/generators/TIdentifierNameGeneratorFactory';
 import { TStatement } from '../types/node/TStatement';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
+import { IIdentifierNameGenerator } from '../interfaces/generators/identifier-name-generators/IIdentifierNameGenerator';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 
@@ -33,6 +35,11 @@ export abstract class AbstractCustomNode implements ICustomNode {
     protected cachedNode: TStatement[];
 
     /**
+     * @type {IIdentifierNameGenerator}
+     */
+    protected readonly identifierNameGenerator: IIdentifierNameGenerator;
+
+    /**
      * @type {IOptions}
      */
     protected readonly options: IOptions;
@@ -43,13 +50,17 @@ export abstract class AbstractCustomNode implements ICustomNode {
     protected readonly randomGenerator: IRandomGenerator;
 
     /**
+     * @param {TIdentifierNameGeneratorFactory} identifierNameGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
+        @inject(ServiceIdentifiers.Factory__IIdentifierNameGenerator)
+            identifierNameGeneratorFactory: TIdentifierNameGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
+        this.identifierNameGenerator = identifierNameGeneratorFactory(options);
         this.randomGenerator = randomGenerator;
         this.options = options;
     }

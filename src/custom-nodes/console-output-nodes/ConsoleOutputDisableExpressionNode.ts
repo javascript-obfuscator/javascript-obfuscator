@@ -17,6 +17,7 @@ import { initializable } from '../../decorators/Initializable';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeUtils } from '../../node/NodeUtils';
+import { TIdentifierNameGeneratorFactory } from '../../types/container/generators/TIdentifierNameGeneratorFactory';
 
 @injectable()
 export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
@@ -27,14 +28,17 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
     private callsControllerFunctionName: string;
 
     /**
+     * @param {TIdentifierNameGeneratorFactory} identifierNameGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
+        @inject(ServiceIdentifiers.Factory__IIdentifierNameGenerator)
+            identifierNameGeneratorFactory: TIdentifierNameGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(randomGenerator, options);
+        super(identifierNameGeneratorFactory, randomGenerator, options);
     }
 
     /**
@@ -60,7 +64,7 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
             : GlobalVariableNoEvalTemplate();
 
         return format(ConsoleOutputDisableExpressionTemplate(), {
-            consoleLogDisableFunctionName: this.randomGenerator.getRandomVariableName(6),
+            consoleLogDisableFunctionName: this.identifierNameGenerator.generate(6),
             globalVariableTemplate,
             singleNodeCallControllerFunctionName: this.callsControllerFunctionName
         });

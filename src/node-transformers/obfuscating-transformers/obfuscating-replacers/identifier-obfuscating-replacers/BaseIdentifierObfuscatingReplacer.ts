@@ -3,9 +3,11 @@ import { ServiceIdentifiers } from '../../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
+import { TIdentifierNameGeneratorFactory } from '../../../../types/container/generators/TIdentifierNameGeneratorFactory';
+
+import { IIdentifierNameGenerator } from '../../../../interfaces/generators/identifier-name-generators/IIdentifierNameGenerator';
 import { IIdentifierObfuscatingReplacer } from '../../../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../../../interfaces/options/IOptions';
-import { IRandomGenerator } from '../../../../interfaces/utils/IRandomGenerator';
 
 import { AbstractObfuscatingReplacer } from '../AbstractObfuscatingReplacer';
 import { Nodes } from '../../../../node/Nodes';
@@ -13,26 +15,27 @@ import { Nodes } from '../../../../node/Nodes';
 @injectable()
 export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplacer implements IIdentifierObfuscatingReplacer {
     /**
+     * @type {IIdentifierNameGenerator}
+     */
+    private readonly identifierNameGenerator: IIdentifierNameGenerator;
+
+    /**
      * @type {Map<string, string>}
      */
     private readonly namesMap: Map<string, string> = new Map();
 
     /**
-     * @type {IRandomGenerator}
-     */
-    private readonly randomGenerator: IRandomGenerator;
-
-    /**
-     * @param {IRandomGenerator} randomGenerator
+     * @param {TIdentifierNameGeneratorFactory} identifierNameGeneratorFactory
      * @param {IOptions} options
      */
     constructor (
-        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
+        @inject(ServiceIdentifiers.Factory__IIdentifierNameGenerator)
+            identifierNameGeneratorFactory: TIdentifierNameGeneratorFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
-        this.randomGenerator = randomGenerator;
+        this.identifierNameGenerator = identifierNameGeneratorFactory(options);
     }
 
     /**
@@ -62,7 +65,7 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
             return;
         }
 
-        this.namesMap.set(`${nodeName}-${String(nodeIdentifier)}`, this.randomGenerator.getRandomVariableName(6));
+        this.namesMap.set(`${nodeName}-${String(nodeIdentifier)}`, this.identifierNameGenerator.generate(6));
     }
 
     /**

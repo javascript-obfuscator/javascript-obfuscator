@@ -2,6 +2,7 @@ import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
+import { TIdentifierNameGeneratorFactory } from '../../../types/container/generators/TIdentifierNameGeneratorFactory';
 import { TNodeWithBlockStatement } from '../../../types/node/TNodeWithBlockStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
@@ -17,7 +18,6 @@ import { ObfuscationEvent } from '../../../enums/event-emitters/ObfuscationEvent
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
-import { Utils } from '../../../utils/Utils';
 
 @injectable()
 export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
@@ -45,17 +45,20 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
 
     /**
      * @param {TCustomNodeFactory} customNodeFactory
-     * @param {IRandomGenerator} randomGenerator
      * @param {IStorage<string>} stringArrayStorage
+     * @param {TIdentifierNameGeneratorFactory} identifierNameGeneratorFactory
+     * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
-        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: IStorage<string>,
+        @inject(ServiceIdentifiers.Factory__IIdentifierNameGenerator)
+            identifierNameGeneratorFactory: TIdentifierNameGeneratorFactory,
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(randomGenerator, options);
+        super(identifierNameGeneratorFactory, randomGenerator, options);
 
         this.customNodeFactory = customNodeFactory;
         this.stringArrayStorage = stringArrayStorage;
@@ -99,8 +102,7 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
 
         const stringArrayStorageId: string = this.stringArrayStorage.getStorageId();
 
-        const stringArrayName: string = `_${Utils.hexadecimalPrefix}${stringArrayStorageId}`;
-        const stringArrayCallsWrapperName: string = `_${Utils.hexadecimalPrefix}${Utils.stringRotate(stringArrayStorageId, 1)}`;
+        const [stringArrayName, stringArrayCallsWrapperName]: string[] = stringArrayStorageId.split('|');
 
         let stringArrayRotateValue: number;
 

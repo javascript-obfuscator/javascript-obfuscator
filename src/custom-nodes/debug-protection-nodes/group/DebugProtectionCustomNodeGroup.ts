@@ -2,6 +2,7 @@ import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
+import { TIdentifierNameGeneratorFactory } from '../../../types/container/generators/TIdentifierNameGeneratorFactory';
 import { TNodeWithBlockStatement } from '../../../types/node/TNodeWithBlockStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
@@ -37,15 +38,18 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
 
     /**
      * @param {TCustomNodeFactory} customNodeFactory
+     * @param {TIdentifierNameGeneratorFactory} identifierNameGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__IIdentifierNameGenerator)
+            identifierNameGeneratorFactory: TIdentifierNameGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(randomGenerator, options);
+        super(identifierNameGeneratorFactory, randomGenerator, options);
 
         this.customNodeFactory = customNodeFactory;
     }
@@ -101,8 +105,8 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
             return;
         }
 
-        const debugProtectionFunctionName: string = this.randomGenerator.getRandomVariableName(6);
-        const callsControllerFunctionName: string = this.randomGenerator.getRandomVariableName(6);
+        const debugProtectionFunctionName: string = this.identifierNameGenerator.generate(6);
+        const callsControllerFunctionName: string = this.identifierNameGenerator.generate(6);
 
         const debugProtectionFunctionNode: ICustomNode = this.customNodeFactory(CustomNode.DebugProtectionFunctionNode);
         const debugProtectionFunctionCallNode: ICustomNode = this.customNodeFactory(CustomNode.DebugProtectionFunctionCallNode);

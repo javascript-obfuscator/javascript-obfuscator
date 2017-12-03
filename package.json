@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "0.12.5",
+  "version": "0.13.0-dev.0",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -24,7 +24,6 @@
     "class-validator": "0.7.3",
     "commander": "2.12.2",
     "escodegen-wallaby": "1.6.15",
-    "esmangle": "1.0.1",
     "esprima": "4.0.0",
     "estraverse": "4.2.0",
     "inversify": "4.5.2",

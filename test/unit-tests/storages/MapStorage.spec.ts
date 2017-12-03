@@ -3,6 +3,7 @@ import { assert } from 'chai';
 import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
 
 import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
+import { IOptions } from '../../../src/interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../src/interfaces/utils/IRandomGenerator';
 import { IStorage } from '../../../src/interfaces/storages/IStorage';
 
@@ -15,7 +16,10 @@ class ConcreteStorage extends MapStorage <string> {
 
         inversifyContainerFacade.load('', {});
 
-        super(inversifyContainerFacade.get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator));
+        super(
+            inversifyContainerFacade.get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator),
+            inversifyContainerFacade.get<IOptions>(ServiceIdentifiers.IOptions)
+        );
     }
 }
 

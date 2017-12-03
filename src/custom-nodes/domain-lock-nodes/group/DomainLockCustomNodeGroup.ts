@@ -2,6 +2,7 @@ import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
+import { TIdentifierNameGeneratorFactory } from '../../../types/container/generators/TIdentifierNameGeneratorFactory';
 import { TNodeWithBlockStatement } from '../../../types/node/TNodeWithBlockStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
@@ -37,15 +38,18 @@ export class DomainLockCustomNodeGroup extends AbstractCustomNodeGroup {
 
     /**
      * @param {TCustomNodeFactory} customNodeFactory
+     * @param {TIdentifierNameGeneratorFactory} identifierNameGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
+        @inject(ServiceIdentifiers.Factory__IIdentifierNameGenerator)
+            identifierNameGeneratorFactory: TIdentifierNameGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(randomGenerator, options);
+        super(identifierNameGeneratorFactory, randomGenerator, options);
 
         this.customNodeFactory = customNodeFactory;
     }
@@ -88,7 +92,7 @@ export class DomainLockCustomNodeGroup extends AbstractCustomNodeGroup {
             return;
         }
 
-        const callsControllerFunctionName: string = this.randomGenerator.getRandomVariableName(6);
+        const callsControllerFunctionName: string = this.identifierNameGenerator.generate(6);
 
         const domainLockNode: ICustomNode = this.customNodeFactory(CustomNode.DomainLockNode);
         const nodeCallsControllerFunctionNode: ICustomNode = this.customNodeFactory(CustomNode.NodeCallsControllerFunctionNode);

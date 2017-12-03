@@ -2,6 +2,7 @@ import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
+import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { MapStorage } from '../MapStorage';
@@ -10,10 +11,12 @@ import { MapStorage } from '../MapStorage';
 export class ControlFlowStorage extends MapStorage <ICustomNode> {
     /**
      * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
-        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(randomGenerator);
+        super(randomGenerator, options);
     }
 }

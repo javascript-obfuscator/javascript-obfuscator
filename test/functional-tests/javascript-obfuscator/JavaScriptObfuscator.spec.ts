@@ -445,7 +445,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('mangle', () => {
-            const regExp: RegExp = /var *a *= *0x1/;
+            const regExp: RegExp = /var *c *= *0x1/;
 
             let obfuscatedCode: string;
 

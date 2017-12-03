@@ -1,6 +1,7 @@
 import { inject, injectable, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
+import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 import { IStorage } from '../interfaces/storages/IStorage';
 
@@ -8,6 +9,11 @@ import { initializable } from '../decorators/Initializable';
 
 @injectable()
 export abstract class MapStorage <T> implements IStorage <T> {
+    /**
+     * @type {IOptions}
+     */
+    protected readonly options: IOptions;
+
     /**
      * @type {IRandomGenerator}
      */
@@ -27,11 +33,14 @@ export abstract class MapStorage <T> implements IStorage <T> {
 
     /**
      * @param {IRandomGenerator} randomGenerator
+     * @param {IOptions} options
      */
     constructor (
-        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator
+        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
+        @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.randomGenerator = randomGenerator;
+        this.options = options;
     }
 
     @postConstruct()

@@ -4,6 +4,7 @@ import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 import * as esprima from 'esprima';
 import * as escodegen from 'escodegen-wallaby';
 import * as ESTree from 'estree';
+import * as packageJson from 'pjson';
 
 import { ICustomNodeGroup } from './interfaces/custom-nodes/ICustomNodeGroup';
 import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
@@ -157,6 +158,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      */
     public obfuscate (sourceCode: string): IObfuscationResult {
         const timeStart: number = Date.now();
+        this.logger.info(LoggingMessage.Version, packageJson.version);
         this.logger.info(LoggingMessage.ObfuscationStarted);
         this.logger.info(LoggingMessage.RandomGeneratorSeed, this.randomGenerator.getSeed());
 

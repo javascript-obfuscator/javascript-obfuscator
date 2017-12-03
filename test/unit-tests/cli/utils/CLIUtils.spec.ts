@@ -23,16 +23,6 @@ describe('CLIUtils', () => {
         });
     });
 
-    describe('getPackageConfig (): IPackageConfig', () => {
-        it('should return `package.json` `name` field for current CLI program as object', () => {
-            assert.property(CLIUtils.getPackageConfig(), 'name');
-        });
-
-        it('should return `package.json` `version` field for current CLI program as object', () => {
-            assert.property(CLIUtils.getPackageConfig(), 'version');
-        });
-    });
-
     describe('getUserConfig (configPath: string): Object', () => {
         describe('variant #1: valid config file path', () => {
             const configDirName: string = 'test/fixtures';

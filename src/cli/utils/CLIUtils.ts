@@ -4,8 +4,6 @@ import * as path from 'path';
 
 import { TObject } from '../../types/TObject';
 
-import { IPackageConfig } from '../../interfaces/cli/IPackageConfig';
-
 import { JavaScriptObfuscatorCLI } from '../JavaScriptObfuscatorCLI';
 
 export class CLIUtils {
@@ -41,23 +39,6 @@ export class CLIUtils {
         }
 
         return outputCodePath;
-    }
-
-    /**
-     * @returns {IPackageConfig}
-     */
-    public static getPackageConfig (): IPackageConfig {
-        return JSON.parse(
-            fs.readFileSync(
-                path.join(
-                    path.dirname(
-                        fs.realpathSync(process.argv[1])
-                    ),
-                    '../package.json'
-                ),
-                JavaScriptObfuscatorCLI.encoding
-            )
-        );
     }
 
     /**

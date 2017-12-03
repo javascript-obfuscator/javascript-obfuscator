@@ -40,7 +40,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         outputFilePath,
                         '--compact',
                         'true',
-                        '--selfDefending',
+                        '--self-defending',
                         '0'
                     ]);
 
@@ -192,9 +192,9 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                             outputFilePath,
                             '--compact',
                             'true',
-                            '--selfDefending',
+                            '--self-defending',
                             '0',
-                            '--sourceMap',
+                            '--source-map',
                             'true'
                         ]);
 
@@ -243,11 +243,11 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                             outputFilePath,
                             '--compact',
                             'true',
-                            '--selfDefending',
+                            '--self-defending',
                             '0',
-                            '--sourceMap',
+                            '--source-map',
                             'true',
-                            '--sourceMapBaseUrl',
+                            '--source-map-base-url',
                             'http://localhost:9000/'
                         ]);
 
@@ -300,11 +300,11 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                             outputFilePath,
                             '--compact',
                             'true',
-                            '--selfDefending',
+                            '--self-defending',
                             '0',
-                            '--sourceMap',
+                            '--source-map',
                             'true',
-                            '--sourceMapFileName',
+                            '--source-map-file-name',
                             sourceMapFileName
                         ]);
 
@@ -353,11 +353,11 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         outputFilePath,
                         '--compact',
                         'true',
-                        '--selfDefending',
+                        '--self-defending',
                         '0',
-                        '--sourceMap',
+                        '--source-map',
                         'true',
-                        '--sourceMapMode',
+                        '--source-map-mode',
                         'inline'
                     ]);
 
@@ -493,7 +493,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     outputFilePath,
                     '--config',
                     configFilePath,
-                    '--sourceMap',
+                    '--source-map',
                     'false',
                 ]);
 

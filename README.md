@@ -199,10 +199,10 @@ If the destination path is not specified with the `--output` option, obfuscated 
 
 Examples:
 ```sh
-javascript-obfuscator samples/sample.js --compact true --selfDefending false
+javascript-obfuscator samples/sample.js --compact true --self-defending false
 // creates a new file samples/sample-obfuscated.js
 
-javascript-obfuscator samples/sample.js --output output/output.js --compact true --selfDefending false
+javascript-obfuscator samples/sample.js --output output/output.js --compact true --self-defending false
 // creates a new file output/output.js
 ```
 
@@ -284,30 +284,30 @@ Following options are available for the JS Obfuscator:
 
     --compact <boolean>
     --config <string>
-    --controlFlowFlattening <boolean>
-    --controlFlowFlatteningThreshold <number>
-    --deadCodeInjection <boolean>
-    --deadCodeInjectionThreshold <number>
-    --debugProtection <boolean>
-    --debugProtectionInterval <boolean>
-    --disableConsoleOutput <boolean>
-    --domainLock '<list>' (comma separated)
+    --control-flow-flattening <boolean>
+    --control-flow-flattening-threshold <number>
+    --dead-code-njection <boolean>
+    --dead-code-injection-threshold <number>
+    --debug-protection <boolean>
+    --debug-protection-interval <boolean>
+    --disable-console-output <boolean>
+    --domain-lock '<list>' (comma separated)
     --log <boolean>
     --mangle <boolean>
-    --renameGlobals <boolean>
-    --reservedNames '<list>' (comma separated)
-    --rotateStringArray <boolean>
+    --rename-globals <boolean>
+    --reserved-names '<list>' (comma separated)
+    --rotate-string-array <boolean>
     --seed <number>
-    --selfDefending <boolean>
-    --sourceMap <boolean>
-    --sourceMapBaseUrl <string>
-    --sourceMapFileName <string>
-    --sourceMapMode <string> [inline, separate]
-    --stringArray <boolean>
-    --stringArrayEncoding <boolean|string> [true, false, base64, rc4]
-    --stringArrayThreshold <number>
+    --self-defending <boolean>
+    --source-map <boolean>
+    --source-map-base-url <string>
+    --source-map-file-name <string>
+    --source-map-mode <string> [inline, separate]
+    --string-array <boolean>
+    --string-array-encoding <boolean|string> [true, false, base64, rc4]
+    --string-array-threshold <number>
     --target <string> [browser, extension, node]
-    --unicodeEscapeSequence <boolean>
+    --unicode-escape-sequence <boolean>
 ```
 
 ### `compact`

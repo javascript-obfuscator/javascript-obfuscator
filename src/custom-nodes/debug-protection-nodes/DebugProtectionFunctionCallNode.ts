@@ -10,13 +10,19 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { DebugProtectionFunctionCallTemplate } from '../../templates/debug-protection-nodes/debug-protection-function-call-node/DebufProtectionFunctionCallTemplate';
+import { DebugProtectionFunctionCallTemplate } from '../../templates/debug-protection-nodes/debug-protection-function-call-node/DebugProtectionFunctionCallTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class DebugProtectionFunctionCallNode extends AbstractCustomNode {
+    /**
+     * @type {string}
+     */
+    @initializable()
+    private callsControllerFunctionName: string;
+
     /**
      * @type {string}
      */
@@ -36,9 +42,11 @@ export class DebugProtectionFunctionCallNode extends AbstractCustomNode {
 
     /**
      * @param {string} debugProtectionFunctionName
+     * @param {string} callsControllerFunctionName
      */
-    public initialize (debugProtectionFunctionName: string): void {
+    public initialize (debugProtectionFunctionName: string, callsControllerFunctionName: string): void {
         this.debugProtectionFunctionName = debugProtectionFunctionName;
+        this.callsControllerFunctionName = callsControllerFunctionName;
     }
 
     /**
@@ -53,7 +61,8 @@ export class DebugProtectionFunctionCallNode extends AbstractCustomNode {
      */
     protected getTemplate (): string {
         return format(DebugProtectionFunctionCallTemplate(), {
-            debugProtectionFunctionName: this.debugProtectionFunctionName
+            debugProtectionFunctionName: this.debugProtectionFunctionName,
+            singleNodeCallControllerFunctionName: this.callsControllerFunctionName
         });
     }
 }

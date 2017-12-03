@@ -100,7 +100,7 @@ describe('DebugProtectionFunctionCallTemplate (): string', () => {
         });
     });
 
-    describe('variant #3: obfuscated code with removed debug protection function call', () => {
+    describe('variant #3: obfuscated code with removed debug protection code', () => {
         const expectedEvaluationResult: number = 0;
 
         let obfuscatedCode: string,
@@ -132,6 +132,41 @@ describe('DebugProtectionFunctionCallTemplate (): string', () => {
         });
 
         it('should enter code in infinity loop', () => {
+            assert.equal(evaluationResult, expectedEvaluationResult);
+        });
+    });
+
+    describe('variant #4: single call of debug protection code', () => {
+        const expectedEvaluationResult: number = 1;
+
+        let obfuscatedCode: string,
+            evaluationResult: number = 0;
+
+        beforeEach((done) => {
+            const code: string = readFileAsString(__dirname + '/fixtures/single-call.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
+                    debugProtection: true
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+
+            spawnThread(
+                () => obfuscatedCode,
+                (response: number) => {
+                    evaluationResult = response;
+                    done();
+                },
+                () => {
+                    done();
+                }
+            );
+        });
+
+        it('should correctly evaluate code with enabled debug protection', () => {
             assert.equal(evaluationResult, expectedEvaluationResult);
         });
     });

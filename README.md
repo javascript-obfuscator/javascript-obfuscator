@@ -286,7 +286,7 @@ Following options are available for the JS Obfuscator:
     --config <string>
     --control-flow-flattening <boolean>
     --control-flow-flattening-threshold <number>
-    --dead-code-njection <boolean>
+    --dead-code-injection <boolean>
     --dead-code-injection-threshold <number>
     --debug-protection <boolean>
     --debug-protection-interval <boolean>

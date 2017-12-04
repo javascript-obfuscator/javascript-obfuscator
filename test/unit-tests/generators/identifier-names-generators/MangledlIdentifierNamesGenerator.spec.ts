@@ -4,25 +4,25 @@ import { assert } from 'chai';
 
 import { ServiceIdentifiers } from '../../../../src/container/ServiceIdentifiers';
 
-import { IIdentifierNameGenerator } from '../../../../src/interfaces/generators/identifier-name-generators/IIdentifierNameGenerator';
+import { IIdentifierNamesGenerator } from '../../../../src/interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IInversifyContainerFacade } from '../../../../src/interfaces/container/IInversifyContainerFacade';
 
-import { IdentifierNameGenerator } from '../../../../src/enums/generators/identifier-name-generators/IdentifierNameGenerator';
+import { IdentifierNamesGenerator } from '../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
 
-describe('MangledIdentifierNameGenerator', () => {
+describe('MangledIdentifierNamesGenerator', () => {
     describe('generate (length: number): string', () => {
-        let identifierNameGenerator: IIdentifierNameGenerator,
+        let identifierNamesGenerator: IIdentifierNamesGenerator,
             mangledIdentifierName: string;
 
         before(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
             inversifyContainerFacade.load('', {});
-            identifierNameGenerator = inversifyContainerFacade.getNamed<IIdentifierNameGenerator>(
-                ServiceIdentifiers.IIdentifierNameGenerator,
-                IdentifierNameGenerator.MangledIdentifierNameGenerator
+            identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
+                ServiceIdentifiers.IIdentifierNamesGenerator,
+                IdentifierNamesGenerator.MangledIdentifierNamesGenerator
             )
         });
 
@@ -30,7 +30,7 @@ describe('MangledIdentifierNameGenerator', () => {
             const expectedMangledIdentifierName: string = 'a';
 
             before(() => {
-                mangledIdentifierName = identifierNameGenerator.generate(4);
+                mangledIdentifierName = identifierNamesGenerator.generate(4);
             });
 
             it('should return hexadecimal name', () => {
@@ -42,7 +42,7 @@ describe('MangledIdentifierNameGenerator', () => {
             const expectedMangledIdentifierName: string = 'b';
 
             before(() => {
-                mangledIdentifierName = identifierNameGenerator.generate(6);
+                mangledIdentifierName = identifierNamesGenerator.generate(6);
             });
 
             it('should return hexadecimal name', () => {
@@ -55,7 +55,7 @@ describe('MangledIdentifierNameGenerator', () => {
 
             before(() => {
                 for (let i: number = 0; i <= 49; i++) {
-                    mangledIdentifierName = identifierNameGenerator.generate(6);
+                    mangledIdentifierName = identifierNamesGenerator.generate(6);
                 }
             });
 
@@ -69,7 +69,7 @@ describe('MangledIdentifierNameGenerator', () => {
 
             before(() => {
                 for (let i: number = 0; i < 1; i++) {
-                    mangledIdentifierName = identifierNameGenerator.generate(6);
+                    mangledIdentifierName = identifierNamesGenerator.generate(6);
                 }
             });
 
@@ -83,7 +83,7 @@ describe('MangledIdentifierNameGenerator', () => {
 
             before(() => {
                 for (let i: number = 0; i < 10; i++) {
-                    mangledIdentifierName = identifierNameGenerator.generate(6);
+                    mangledIdentifierName = identifierNamesGenerator.generate(6);
                 }
             });
 

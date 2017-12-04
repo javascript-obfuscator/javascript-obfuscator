@@ -3,9 +3,9 @@ import { ServiceIdentifiers } from '../../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { TIdentifierNameGeneratorFactory } from '../../../../types/container/generators/TIdentifierNameGeneratorFactory';
+import { TIdentifierNamesGeneratorFactory } from '../../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 
-import { IIdentifierNameGenerator } from '../../../../interfaces/generators/identifier-name-generators/IIdentifierNameGenerator';
+import { IIdentifierNamesGenerator } from '../../../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IIdentifierObfuscatingReplacer } from '../../../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../../../interfaces/options/IOptions';
 
@@ -15,9 +15,9 @@ import { Nodes } from '../../../../node/Nodes';
 @injectable()
 export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplacer implements IIdentifierObfuscatingReplacer {
     /**
-     * @type {IIdentifierNameGenerator}
+     * @type {IIdentifierNamesGenerator}
      */
-    private readonly identifierNameGenerator: IIdentifierNameGenerator;
+    private readonly identifierNamesGenerator: IIdentifierNamesGenerator;
 
     /**
      * @type {Map<string, string>}
@@ -25,17 +25,17 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
     private readonly namesMap: Map<string, string> = new Map();
 
     /**
-     * @param {TIdentifierNameGeneratorFactory} identifierNameGeneratorFactory
+     * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IOptions} options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__IIdentifierNameGenerator)
-            identifierNameGeneratorFactory: TIdentifierNameGeneratorFactory,
+        @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
+            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
-        this.identifierNameGenerator = identifierNameGeneratorFactory(options);
+        this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
     }
 
     /**
@@ -65,7 +65,7 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
             return;
         }
 
-        this.namesMap.set(`${nodeName}-${String(nodeIdentifier)}`, this.identifierNameGenerator.generate(6));
+        this.namesMap.set(`${nodeName}-${String(nodeIdentifier)}`, this.identifierNamesGenerator.generate(6));
     }
 
     /**

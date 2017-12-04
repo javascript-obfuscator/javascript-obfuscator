@@ -17,7 +17,7 @@ import { initializable } from '../../decorators/Initializable';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeUtils } from '../../node/NodeUtils';
-import { TIdentifierNameGeneratorFactory } from '../../types/container/generators/TIdentifierNameGeneratorFactory';
+import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
 
 @injectable()
 export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
@@ -28,17 +28,17 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
     private callsControllerFunctionName: string;
 
     /**
-     * @param {TIdentifierNameGeneratorFactory} identifierNameGeneratorFactory
+     * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__IIdentifierNameGenerator)
-            identifierNameGeneratorFactory: TIdentifierNameGeneratorFactory,
+        @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
+            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(identifierNameGeneratorFactory, randomGenerator, options);
+        super(identifierNamesGeneratorFactory, randomGenerator, options);
     }
 
     /**
@@ -64,7 +64,7 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
             : GlobalVariableNoEvalTemplate();
 
         return format(ConsoleOutputDisableExpressionTemplate(), {
-            consoleLogDisableFunctionName: this.identifierNameGenerator.generate(6),
+            consoleLogDisableFunctionName: this.identifierNamesGenerator.generate(6),
             globalVariableTemplate,
             singleNodeCallControllerFunctionName: this.callsControllerFunctionName
         });

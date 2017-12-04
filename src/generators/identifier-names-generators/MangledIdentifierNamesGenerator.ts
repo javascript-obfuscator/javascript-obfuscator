@@ -4,10 +4,10 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
-import { AbstractIdentifierNameGenerator } from './AbstractIdentifierNameGenerator';
+import { AbstractIdentifierNamesGenerator } from './AbstractIdentifierNamesGenerator';
 
 @injectable()
-export class MangledIdentifierNameGenerator extends AbstractIdentifierNameGenerator {
+export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGenerator {
     /**
      * @type {string}
      */
@@ -32,7 +32,7 @@ export class MangledIdentifierNameGenerator extends AbstractIdentifierNameGenera
     /**
      * @type {string}
      */
-    private previousMangledName: string = MangledIdentifierNameGenerator.initMangledNameCharacter;
+    private previousMangledName: string = MangledIdentifierNamesGenerator.initMangledNameCharacter;
 
     /**
      * @param {IRandomGenerator} randomGenerator
@@ -51,7 +51,7 @@ export class MangledIdentifierNameGenerator extends AbstractIdentifierNameGenera
      */
     private static generateNewMangledName (previousMangledName: string): string {
         const generateNewMangledName: (name: string) => string = (name: string): string => {
-            const nameSequence: string[] = MangledIdentifierNameGenerator.nameSequence;
+            const nameSequence: string[] = MangledIdentifierNamesGenerator.nameSequence;
             const zeroSequenceCache: string[] = [];
 
             const zeroSequence: (num: number) => string = (num: number): string => {
@@ -87,8 +87,8 @@ export class MangledIdentifierNameGenerator extends AbstractIdentifierNameGenera
 
         let newMangledName: string = generateNewMangledName(previousMangledName);
 
-        if (!MangledIdentifierNameGenerator.validateMangledName(newMangledName)) {
-            newMangledName = MangledIdentifierNameGenerator.generateNewMangledName(newMangledName);
+        if (!MangledIdentifierNamesGenerator.validateMangledName(newMangledName)) {
+            newMangledName = MangledIdentifierNamesGenerator.generateNewMangledName(newMangledName);
         }
 
         return newMangledName;
@@ -99,7 +99,7 @@ export class MangledIdentifierNameGenerator extends AbstractIdentifierNameGenera
      * @returns {boolean}
      */
     private static validateMangledName (mangledName: string): boolean {
-        return !MangledIdentifierNameGenerator.reservedNames.includes(mangledName);
+        return !MangledIdentifierNamesGenerator.reservedNames.includes(mangledName);
     }
 
     /**
@@ -107,7 +107,7 @@ export class MangledIdentifierNameGenerator extends AbstractIdentifierNameGenera
      * @returns {string}
      */
     public generate (length: number): string {
-        const newName: string = MangledIdentifierNameGenerator.generateNewMangledName(this.previousMangledName);
+        const newName: string = MangledIdentifierNamesGenerator.generateNewMangledName(this.previousMangledName);
 
         this.previousMangledName = newName;
 

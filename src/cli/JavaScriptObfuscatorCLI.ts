@@ -240,11 +240,11 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 ArraySanitizer
             )
             .option(
-                '--log <boolean>', 'Enables logging of the information to the console',
+                '--identifier-names-generator <string> [hexadecimal, mangled]', 'Sets identifier names generator (Default: hexadecimal)',
                 BooleanSanitizer
             )
             .option(
-                '--mangle <boolean>', 'Enables mangling of variable names',
+                '--log <boolean>', 'Enables logging of the information to the console',
                 BooleanSanitizer
             )
             .option(

@@ -1,5 +1,6 @@
 import { TInputOptions } from '../../types/options/TInputOptions';
 
+import { IdentifierNamesGenerator } from '../../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
 
@@ -13,8 +14,8 @@ export const NO_CUSTOM_NODES_PRESET: TInputOptions = Object.freeze({
     debugProtectionInterval: false,
     disableConsoleOutput: false,
     domainLock: [],
+    identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
     log: false,
-    mangle: false,
     renameGlobals: false,
     reservedNames: [],
     rotateStringArray: false,

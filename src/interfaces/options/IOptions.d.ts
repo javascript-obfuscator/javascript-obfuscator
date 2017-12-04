@@ -1,5 +1,6 @@
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 
+import { IdentifierNamesGenerator } from '../../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
 
@@ -13,8 +14,8 @@ export interface IOptions {
     readonly debugProtectionInterval: boolean;
     readonly disableConsoleOutput: boolean;
     readonly domainLock: string[];
+    readonly identifierNamesGenerator: IdentifierNamesGenerator;
     readonly log: boolean;
-    readonly mangle: boolean;
     readonly renameGlobals: boolean;
     readonly reservedNames: string[];
     readonly rotateStringArray: boolean;

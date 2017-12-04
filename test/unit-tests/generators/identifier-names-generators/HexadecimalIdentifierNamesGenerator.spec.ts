@@ -4,16 +4,16 @@ import { assert } from 'chai';
 
 import { ServiceIdentifiers } from '../../../../src/container/ServiceIdentifiers';
 
-import { IIdentifierNameGenerator } from '../../../../src/interfaces/generators/identifier-name-generators/IIdentifierNameGenerator';
+import { IIdentifierNamesGenerator } from '../../../../src/interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IInversifyContainerFacade } from '../../../../src/interfaces/container/IInversifyContainerFacade';
 
-import { IdentifierNameGenerator } from '../../../../src/enums/generators/identifier-name-generators/IdentifierNameGenerator';
+import { IdentifierNamesGenerator } from '../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
 
-describe('HexadecimalIdentifierNameGenerator', () => {
+describe('HexadecimalIdentifierNamesGenerator', () => {
     describe('generate (length: number): string', () => {
-        let identifierNameGenerator: IIdentifierNameGenerator,
+        let identifierNamesGenerator: IIdentifierNamesGenerator,
             hexadecimalIdentifierName: string,
             regExp: RegExp;
 
@@ -21,15 +21,15 @@ describe('HexadecimalIdentifierNameGenerator', () => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
             inversifyContainerFacade.load('', {});
-            identifierNameGenerator = inversifyContainerFacade.getNamed<IIdentifierNameGenerator>(
-                ServiceIdentifiers.IIdentifierNameGenerator,
-                IdentifierNameGenerator.HexadecimalIdentifierNameGenerator
+            identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
+                ServiceIdentifiers.IIdentifierNamesGenerator,
+                IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
             )
         });
 
         describe('variant #1: hexadecimal name with length `4`', () => {
             before(() => {
-                hexadecimalIdentifierName = identifierNameGenerator.generate(4);
+                hexadecimalIdentifierName = identifierNamesGenerator.generate(4);
                 regExp = /^_0x(\w){4}$/;
             });
 
@@ -40,7 +40,7 @@ describe('HexadecimalIdentifierNameGenerator', () => {
 
         describe('variant #2: hexadecimal name with length `6`', () => {
             before(() => {
-                hexadecimalIdentifierName = identifierNameGenerator.generate(6);
+                hexadecimalIdentifierName = identifierNamesGenerator.generate(6);
                 regExp = /^_0x(\w){4,6}$/;
             });
 

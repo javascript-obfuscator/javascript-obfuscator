@@ -1,12 +1,12 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import { IIdentifierNameGenerator } from '../../interfaces/generators/identifier-name-generators/IIdentifierNameGenerator';
+import { IIdentifierNamesGenerator } from '../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 @injectable()
-export abstract class AbstractIdentifierNameGenerator implements IIdentifierNameGenerator {
+export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNamesGenerator {
     /**
      * @type {IOptions}
      */

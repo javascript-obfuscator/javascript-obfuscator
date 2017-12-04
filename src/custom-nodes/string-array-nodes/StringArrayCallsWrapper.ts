@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as format from 'string-template';
 
-import { TIdentifierNameGeneratorFactory } from '../../types/container/generators/TIdentifierNameGeneratorFactory';
+import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../types/node/TStatement';
 
 import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
@@ -49,19 +49,19 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
     private stringArrayCallsWrapperName: string;
 
     /**
-     * @param {TIdentifierNameGeneratorFactory} identifierNameGeneratorFactory
+     * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      * @param {IOptions} options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__IIdentifierNameGenerator)
-            identifierNameGeneratorFactory: TIdentifierNameGeneratorFactory,
+        @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
+            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(identifierNameGeneratorFactory, randomGenerator, options);
+        super(identifierNamesGeneratorFactory, randomGenerator, options);
 
         this.escapeSequenceEncoder = escapeSequenceEncoder;
     }
@@ -99,7 +99,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
             }),
             {
                 ...NO_CUSTOM_NODES_PRESET,
-                mangle: this.options.mangle,
+                identifierNamesGenerator: this.options.identifierNamesGenerator,
                 seed: this.options.seed
             }
         ).getObfuscatedCode();

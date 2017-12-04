@@ -1,58 +1,58 @@
 import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
-import { IIdentifierNameGenerator } from '../../../interfaces/generators/identifier-name-generators/IIdentifierNameGenerator';
+import { IIdentifierNamesGenerator } from '../../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IOptions } from '../../../interfaces/options/IOptions';
 
-import { IdentifierNameGenerator } from '../../../enums/generators/identifier-name-generators/IdentifierNameGenerator';
+import { IdentifierNamesGenerator } from '../../../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
-import { HexadecimalIdentifierNameGenerator } from '../../../generators/identifier-name-generators/HexadecimalIdentifierNameGenerator';
-import { MangledIdentifierNameGenerator } from '../../../generators/identifier-name-generators/MangledIdentifierNameGenerator';
+import { HexadecimalIdentifierNamesGenerator } from '../../../generators/identifier-names-generators/HexadecimalIdentifierNamesGenerator';
+import { MangledIdentifierNamesGenerator } from '../../../generators/identifier-names-generators/MangledIdentifierNamesGenerator';
 
 export const generatorsModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // identifier name generators
-    bind<IIdentifierNameGenerator>(ServiceIdentifiers.IIdentifierNameGenerator)
-        .to(HexadecimalIdentifierNameGenerator)
+    bind<IIdentifierNamesGenerator>(ServiceIdentifiers.IIdentifierNamesGenerator)
+        .to(HexadecimalIdentifierNamesGenerator)
         .inSingletonScope()
-        .whenTargetNamed(IdentifierNameGenerator.HexadecimalIdentifierNameGenerator);
+        .whenTargetNamed(IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator);
 
-    bind<IIdentifierNameGenerator>(ServiceIdentifiers.IIdentifierNameGenerator)
-        .to(MangledIdentifierNameGenerator)
+    bind<IIdentifierNamesGenerator>(ServiceIdentifiers.IIdentifierNamesGenerator)
+        .to(MangledIdentifierNamesGenerator)
         .inSingletonScope()
-        .whenTargetNamed(IdentifierNameGenerator.MangledIdentifierNameGenerator);
+        .whenTargetNamed(IdentifierNamesGenerator.MangledIdentifierNamesGenerator);
 
     // identifier name generator factory
-    bind<IIdentifierNameGenerator>(ServiceIdentifiers.Factory__IIdentifierNameGenerator)
-        .toFactory<IIdentifierNameGenerator>((context: interfaces.Context): (options: IOptions) => IIdentifierNameGenerator => {
-            const cache: Map <boolean, IIdentifierNameGenerator> = new Map();
+    bind<IIdentifierNamesGenerator>(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
+        .toFactory<IIdentifierNamesGenerator>((context: interfaces.Context): (options: IOptions) => IIdentifierNamesGenerator => {
+            let cachedIdentifierNamesGenerator: IIdentifierNamesGenerator | null = null;
 
             return (options: IOptions) => {
-                if (cache.has(options.mangle)) {
-                    return <IIdentifierNameGenerator>cache.get(options.mangle);
+                if (cachedIdentifierNamesGenerator) {
+                    return cachedIdentifierNamesGenerator;
                 }
 
-                let identifierNameGenerator: IIdentifierNameGenerator;
+                let identifierNamesGenerator: IIdentifierNamesGenerator;
 
-                switch (options.mangle) {
-                    case true:
-                        identifierNameGenerator = context.container.getNamed<IIdentifierNameGenerator>(
-                            ServiceIdentifiers.IIdentifierNameGenerator,
-                            IdentifierNameGenerator.MangledIdentifierNameGenerator
+                switch (options.identifierNamesGenerator) {
+                    case IdentifierNamesGenerator.MangledIdentifierNamesGenerator:
+                        identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
+                            ServiceIdentifiers.IIdentifierNamesGenerator,
+                            IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                         );
 
                         break;
 
-                    case false:
+                    case IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator:
                     default:
-                        identifierNameGenerator = context.container.getNamed<IIdentifierNameGenerator>(
-                            ServiceIdentifiers.IIdentifierNameGenerator,
-                            IdentifierNameGenerator.HexadecimalIdentifierNameGenerator
+                        identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
+                            ServiceIdentifiers.IIdentifierNamesGenerator,
+                            IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
                         );
                 }
 
-                cache.set(options.mangle, identifierNameGenerator);
+                cachedIdentifierNamesGenerator = identifierNamesGenerator;
 
-                return identifierNameGenerator;
+                return identifierNamesGenerator;
             };
         });
 });

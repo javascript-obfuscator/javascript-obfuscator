@@ -1,12 +1,12 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
-import { TIdentifierNameGeneratorFactory } from '../types/container/generators/TIdentifierNameGeneratorFactory';
+import { TIdentifierNamesGeneratorFactory } from '../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TNodeWithBlockStatement } from '../types/node/TNodeWithBlockStatement';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { ICustomNodeGroup } from '../interfaces/custom-nodes/ICustomNodeGroup';
-import { IIdentifierNameGenerator } from '../interfaces/generators/identifier-name-generators/IIdentifierNameGenerator';
+import { IIdentifierNamesGenerator } from '../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 import { IStackTraceData } from '../interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
@@ -27,9 +27,9 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     protected abstract customNodes: Map <CustomNode, ICustomNode>;
 
     /**
-     * @type {IIdentifierNameGenerator}
+     * @type {IIdentifierNamesGenerator}
      */
-    protected readonly identifierNameGenerator: IIdentifierNameGenerator;
+    protected readonly identifierNamesGenerator: IIdentifierNamesGenerator;
 
     /**
      * @type {IOptions}
@@ -47,17 +47,17 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     protected readonly stackTraceData: IStackTraceData[];
 
     /**
-     * @param {TIdentifierNameGeneratorFactory} identifierNameGeneratorFactory
+     * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__IIdentifierNameGenerator)
-            identifierNameGeneratorFactory: TIdentifierNameGeneratorFactory,
+        @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
+            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        this.identifierNameGenerator = identifierNameGeneratorFactory(options);
+        this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
         this.randomGenerator = randomGenerator;
         this.options = options;
     }

@@ -4,11 +4,11 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
-import { AbstractIdentifierNameGenerator } from './AbstractIdentifierNameGenerator';
+import { AbstractIdentifierNamesGenerator } from './AbstractIdentifierNamesGenerator';
 import { Utils } from '../../utils/Utils';
 
 @injectable()
-export class HexadecimalIdentifierNameGenerator extends AbstractIdentifierNameGenerator {
+export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNamesGenerator {
     /**
      * @type {Set<string>}
      */

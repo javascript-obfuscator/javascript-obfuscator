@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as format from 'string-template';
 
-import { TIdentifierNameGeneratorFactory } from '../../types/container/generators/TIdentifierNameGeneratorFactory';
+import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../types/node/TStatement';
 
 import { ICryptUtils } from '../../interfaces/utils/ICryptUtils';
@@ -34,19 +34,19 @@ export class DomainLockNode extends AbstractCustomNode {
     private readonly cryptUtils: ICryptUtils;
 
     /**
-     * @param {TIdentifierNameGeneratorFactory} identifierNameGeneratorFactory
+     * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {ICryptUtils} cryptUtils
      * @param {IOptions} options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__IIdentifierNameGenerator)
-            identifierNameGeneratorFactory: TIdentifierNameGeneratorFactory,
+        @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
+            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.ICryptUtils) cryptUtils: ICryptUtils,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(identifierNameGeneratorFactory, randomGenerator, options);
+        super(identifierNamesGeneratorFactory, randomGenerator, options);
 
         this.cryptUtils = cryptUtils;
     }
@@ -79,7 +79,7 @@ export class DomainLockNode extends AbstractCustomNode {
             : GlobalVariableNoEvalTemplate();
 
         return format(DomainLockNodeTemplate(), {
-            domainLockFunctionName: this.identifierNameGenerator.generate(6),
+            domainLockFunctionName: this.identifierNamesGenerator.generate(6),
             diff: diff,
             domains: hiddenDomainsString,
             globalVariableTemplate,

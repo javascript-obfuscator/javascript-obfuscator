@@ -2,19 +2,19 @@
 # yarn lockfile v1
 
 
-"@types/chai@4.0.6":
-  version "4.0.6"
-  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.0.6.tgz#9cb5a7fb7dd83be0cfcaafdbd95a2b5dd351762f"
+"@types/chai@4.0.7":
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.0.7.tgz#cab25b9fcb45903fe6c7fa716dc6394314c13dd8"
 
 "@types/chance@0.7.35":
   version "0.7.35"
   resolved "https://registry.yarnpkg.com/@types/chance/-/chance-0.7.35.tgz#e76f3441b7763476c58eb7dc32f62da3d8ea547e"
 
-"@types/commander@2.11.0":
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/@types/commander/-/commander-2.11.0.tgz#7fc765ccad14827e2babd6a99583359ff3e40563"
+"@types/commander@2.12.2":
+  version "2.12.2"
+  resolved "https://registry.yarnpkg.com/@types/commander/-/commander-2.12.2.tgz#183041a23842d4281478fa5d23c5ca78e6fd08ae"
   dependencies:
-    "@types/node" "*"
+    commander "*"
 
 "@types/escodegen@0.0.6":
   version "0.0.6"
@@ -36,15 +36,19 @@
   version "0.0.38"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.38.tgz#c1be40aa933723c608820a99a373a16d215a1ca2"
 
+"@types/events@*":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@types/events/-/events-1.1.0.tgz#93b1be91f63c184450385272c47b6496fd028e02"
+
 "@types/md5@2.1.32":
   version "2.1.32"
   resolved "https://registry.yarnpkg.com/@types/md5/-/md5-2.1.32.tgz#93e23437fcd17a7b9ca98d02aa6002e835842fe8"
   dependencies:
     "@types/node" "*"
 
-"@types/mkdirp@0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@types/mkdirp/-/mkdirp-0.5.1.tgz#ea887cd024f691c1ca67cce20b7606b053e43b0f"
+"@types/mkdirp@0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@types/mkdirp/-/mkdirp-0.5.2.tgz#503aacfe5cc2703d5484326b1b27efa67a339c1f"
   dependencies:
     "@types/node" "*"
 
@@ -52,9 +56,15 @@
   version "2.2.44"
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-2.2.44.tgz#1d4a798e53f35212fd5ad4d04050620171cd5b5e"
 
-"@types/node@*", "@types/node@8.0.53":
+"@types/node@*":
   version "8.0.53"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.53.tgz#396b35af826fa66aad472c8cb7b8d5e277f4e6d8"
+
+"@types/node@8.0.54":
+  version "8.0.54"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.54.tgz#3fd9357db4af388b79e03845340259440edffde6"
+  dependencies:
+    "@types/events" "*"
 
 "@types/sinon@4.0.0":
   version "4.0.0"
@@ -1054,13 +1064,13 @@ combined-stream@^1.0.5, combined-stream@~1.0.5:
   dependencies:
     delayed-stream "~1.0.0"
 
+commander@*, commander@2.12.2, commander@^2.11.0, commander@^2.9.0:
+  version "2.12.2"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.12.2.tgz#0f5946c427ed9ec0d91a46bb9def53e54650e555"
+
 commander@2.11.0:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.11.0.tgz#157152fd1e7a6c8d98a5b715cf376df928004563"
-
-commander@2.12.2, commander@^2.11.0, commander@^2.9.0:
-  version "2.12.2"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-2.12.2.tgz#0f5946c427ed9ec0d91a46bb9def53e54650e555"
 
 commondir@^1.0.1:
   version "1.0.1"
@@ -3670,9 +3680,9 @@ tslint-eslint-rules@4.1.1:
     tslib "^1.0.0"
     tsutils "^1.4.0"
 
-tslint-language-service@0.9.6:
-  version "0.9.6"
-  resolved "https://registry.yarnpkg.com/tslint-language-service/-/tslint-language-service-0.9.6.tgz#882bb0704cf8397b332ddc0af7168c7f22f279ea"
+tslint-language-service@0.9.7:
+  version "0.9.7"
+  resolved "https://registry.yarnpkg.com/tslint-language-service/-/tslint-language-service-0.9.7.tgz#94a35442bc1163e4629df8804e6fa694ced549ff"
 
 tslint-webpack-plugin@1.0.0:
   version "1.0.0"
@@ -3872,9 +3882,9 @@ webpack-sources@^1.0.1:
     source-list-map "^2.0.0"
     source-map "~0.5.3"
 
-webpack@3.9.1:
-  version "3.9.1"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-3.9.1.tgz#9a60aa544ed5d4d454c069e3f521aa007e02643c"
+webpack@3.10.0:
+  version "3.10.0"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-3.10.0.tgz#5291b875078cf2abf42bdd23afe3f8f96c17d725"
   dependencies:
     acorn "^5.0.0"
     acorn-dynamic-import "^2.0.0"

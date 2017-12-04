@@ -21,6 +21,7 @@ import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 
 import { IOptions } from '../interfaces/options/IOptions';
 
+import { IdentifierNamesGenerator } from '../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { ObfuscationTarget } from '../enums/ObfuscationTarget';
 import { SourceMapMode } from '../enums/source-map/SourceMapMode';
 import { StringArrayEncoding } from '../enums/StringArrayEncoding';
@@ -102,16 +103,19 @@ export class Options implements IOptions {
     public readonly domainLock: string[];
 
     /**
-     * @type {boolean}
+     * @type {IdentifierNamesGenerator}
      */
-    @IsBoolean()
-    public readonly log: boolean;
+    @IsIn([
+        IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
+        IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+    ])
+    public readonly identifierNamesGenerator: IdentifierNamesGenerator;
 
     /**
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly mangle: boolean;
+    public readonly log: boolean;
 
     /**
      * @type {boolean}

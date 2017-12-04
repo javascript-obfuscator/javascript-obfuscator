@@ -145,7 +145,7 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
         .toFactory<ICustomNode>(InversifyContainerFacade
             .getConstructorFactory<ControlFlowCustomNode, ICustomNode>(
                 ServiceIdentifiers.Newable__ICustomNode,
-                ServiceIdentifiers.Factory__IIdentifierNameGenerator,
+                ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
                 ServiceIdentifiers.IRandomGenerator,
                 ServiceIdentifiers.IOptions
             ));

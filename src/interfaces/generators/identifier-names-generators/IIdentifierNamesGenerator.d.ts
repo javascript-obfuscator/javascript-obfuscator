@@ -1,4 +1,4 @@
-export interface IIdentifierNameGenerator {
+export interface IIdentifierNamesGenerator {
     /**
      * @param {number} length
      * @returns {string}

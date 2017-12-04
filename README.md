@@ -256,8 +256,8 @@ Following options are available for the JS Obfuscator:
     debugProtectionInterval: false,
     disableConsoleOutput: false,
     domainLock: [],
+    identifierNamesGenerator: 'hexadecimal',
     log: false,
-    mangle: false,
     renameGlobals: false,
     reservedNames: [],
     rotateStringArray: true,
@@ -292,8 +292,8 @@ Following options are available for the JS Obfuscator:
     --debug-protection-interval <boolean>
     --disable-console-output <boolean>
     --domain-lock '<list>' (comma separated)
+    --identifier-names-generator <string> [hexadecimal, mangled]
     --log <boolean>
-    --mangle <boolean>
     --rename-globals <boolean>
     --reserved-names '<list>' (comma separated)
     --rotate-string-array <boolean>
@@ -539,15 +539,19 @@ Locks the obfuscated source code so it only runs on specific domains and/or sub-
 ##### Multiple domains and sub-domains
 It's possible to lock your code to more than one domain or sub-domain. For instance, to lock it so the code only runs on **www.example.com** add `www.example.com`, to make it work on any sub-domain from example.com, use `.example.com`.
 
+### `identifierNamesGenerator`
+Type: `string` Default: `hexadecimal`
+
+Sets identifier names generator.
+
+Available values:
+* `hexadecimal`: identifier names like `_0xabc123`
+* `mangled`: short identifier names like `a`, `b`, `c`
+
 ### `log`
 Type: `boolean` Default: `false`
 
 Enables logging of the information to the console.
-
-### `mangle`
-Type: `boolean` Default: `false`
-
-Enables mangling of variable names.
 
 ### `renameGlobals`
 Type: `boolean` Default: `false`
@@ -649,7 +653,7 @@ Type: `boolean|string` Default: `false`
 
 ##### :warning: `stringArray` option must be enabled
 
-This option can slightly slow down your script.
+This option can slow down your script.
 
 Encode all string literals of the [`stringArray`](#stringarray) using `base64` or `rc4` and inserts a special code that used to decode it back at runtime.
 
@@ -697,23 +701,23 @@ Performance will 50-100% slower than without obfuscation
 
 ```javascript
 {
-	compact: true,
-	controlFlowFlattening: true,
-	controlFlowFlatteningThreshold: 1,
-	deadCodeInjection: true,
-	deadCodeInjectionThreshold: 1,
-	debugProtection: true,
-	debugProtectionInterval: true,
-	disableConsoleOutput: true,
-	log: false,
-	mangle: false,
-	renameGlobals: false,
-	rotateStringArray: true,
-	selfDefending: true,
-	stringArray: true,
-	stringArrayEncoding: 'rc4',
-	stringArrayThreshold: 1,
-	unicodeEscapeSequence: false
+    compact: true,
+    controlFlowFlattening: true,
+    controlFlowFlatteningThreshold: 1,
+    deadCodeInjection: true,
+    deadCodeInjectionThreshold: 1,
+    debugProtection: true,
+    debugProtectionInterval: true,
+    disableConsoleOutput: true,
+    identifierNamesGenerator: 'hexadecimal',
+    log: false,
+    renameGlobals: false,
+    rotateStringArray: true,
+    selfDefending: true,
+    stringArray: true,
+    stringArrayEncoding: 'rc4',
+    stringArrayThreshold: 1,
+    unicodeEscapeSequence: false
 }
 ```
 
@@ -723,23 +727,23 @@ Performance will 30-35% slower than without obfuscation
 
 ```javascript
 {
-	compact: true,
-	controlFlowFlattening: true,
-	controlFlowFlatteningThreshold: 0.75,
-	deadCodeInjection: true,
-	deadCodeInjectionThreshold: 0.4,
-	debugProtection: false,
-	debugProtectionInterval: false,
-	disableConsoleOutput: true,
-    	log: false,
-	mangle: false,
-	renameGlobals: false,
-	rotateStringArray: true,
-	selfDefending: true,
-	stringArray: true,
-	stringArrayEncoding: 'base64',
-	stringArrayThreshold: 0.75,
-	unicodeEscapeSequence: false
+    compact: true,
+    controlFlowFlattening: true,
+    controlFlowFlatteningThreshold: 0.75,
+    deadCodeInjection: true,
+    deadCodeInjectionThreshold: 0.4,
+    debugProtection: false,
+    debugProtectionInterval: false,
+    disableConsoleOutput: true,
+    identifierNamesGenerator: 'hexadecimal',
+    log: false,
+    renameGlobals: false,
+    rotateStringArray: true,
+    selfDefending: true,
+    stringArray: true,
+    stringArrayEncoding: 'base64',
+    stringArrayThreshold: 0.75,
+    unicodeEscapeSequence: false
 }
 ```
 
@@ -749,21 +753,21 @@ Performance will slightly slower than without obfuscation
 
 ```javascript
 {
-	compact: true,
-	controlFlowFlattening: false,
-	deadCodeInjection: false,
-	debugProtection: false,
-	debugProtectionInterval: false,
-	disableConsoleOutput: true,
-    	log: false,
-	mangle: true,
-	renameGlobals: false,
-	rotateStringArray: true,
-	selfDefending: true,
-	stringArray: true,
-	stringArrayEncoding: false,
-	stringArrayThreshold: 0.75,
-	unicodeEscapeSequence: false
+    compact: true,
+    controlFlowFlattening: false,
+    deadCodeInjection: false,
+    debugProtection: false,
+    debugProtectionInterval: false,
+    disableConsoleOutput: true,
+    identifierNamesGenerator: 'hexadecimal',
+    log: false,
+    renameGlobals: false,
+    rotateStringArray: true,
+    selfDefending: true,
+    stringArray: true,
+    stringArrayEncoding: false,
+    stringArrayThreshold: 0.75,
+    unicodeEscapeSequence: false
 }
 ```
 

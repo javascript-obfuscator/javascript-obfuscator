@@ -2,7 +2,7 @@ import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
-import { TIdentifierNameGeneratorFactory } from '../../../types/container/generators/TIdentifierNameGeneratorFactory';
+import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TNodeWithBlockStatement } from '../../../types/node/TNodeWithBlockStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
@@ -46,19 +46,19 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
     /**
      * @param {TCustomNodeFactory} customNodeFactory
      * @param {IStorage<string>} stringArrayStorage
-     * @param {TIdentifierNameGeneratorFactory} identifierNameGeneratorFactory
+     * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
         @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: IStorage<string>,
-        @inject(ServiceIdentifiers.Factory__IIdentifierNameGenerator)
-            identifierNameGeneratorFactory: TIdentifierNameGeneratorFactory,
+        @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
+            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(identifierNameGeneratorFactory, randomGenerator, options);
+        super(identifierNamesGeneratorFactory, randomGenerator, options);
 
         this.customNodeFactory = customNodeFactory;
         this.stringArrayStorage = stringArrayStorage;

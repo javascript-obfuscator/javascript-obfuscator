@@ -4,8 +4,8 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
-import { TIdentifierNameGeneratorFactory } from '../../types/container/generators/TIdentifierNameGeneratorFactory';
-import { IIdentifierNameGenerator } from '../../interfaces/generators/identifier-name-generators/IIdentifierNameGenerator';
+import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
+import { IIdentifierNamesGenerator } from '../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IOptions } from '../../interfaces/options/IOptions';
 
 import { ArrayStorage } from '../ArrayStorage';
@@ -18,26 +18,26 @@ export class StringArrayStorage extends ArrayStorage <string> {
     private readonly arrayUtils: IArrayUtils;
 
     /**
-     * @type {IIdentifierNameGenerator}
+     * @type {IIdentifierNamesGenerator}
      */
-    private readonly identifierNameGenerator: IIdentifierNameGenerator;
+    private readonly identifierNamesGenerator: IIdentifierNamesGenerator;
 
     /**
-     * @param {TIdentifierNameGeneratorFactory} identifierNameGeneratorFactory
+     * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IArrayUtils} arrayUtils
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__IIdentifierNameGenerator)
-            identifierNameGeneratorFactory: TIdentifierNameGeneratorFactory,
+        @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
+            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
 
-        this.identifierNameGenerator = identifierNameGeneratorFactory(options);
+        this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
         this.arrayUtils = arrayUtils;
     }
 
@@ -45,8 +45,8 @@ export class StringArrayStorage extends ArrayStorage <string> {
     public initialize (): void {
         super.initialize();
 
-        const stringArrayName: string = this.identifierNameGenerator.generate(4);
-        const stringArrayCallsWrapperName: string = this.identifierNameGenerator.generate(4);
+        const stringArrayName: string = this.identifierNamesGenerator.generate(4);
+        const stringArrayCallsWrapperName: string = this.identifierNamesGenerator.generate(4);
 
         this.storageId = `${stringArrayName}|${stringArrayCallsWrapperName}`;
     }

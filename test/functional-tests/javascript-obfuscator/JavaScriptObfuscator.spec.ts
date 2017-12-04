@@ -9,6 +9,8 @@ import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscatorFacade';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../src/options/presets/NoCustomNodes';
 
+import { IdentifierNamesGenerator } from '../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
+
 import { buildLargeCode } from '../../helpers/buildLargeCode';
 import { getRegExpMatch } from '../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../helpers/readFileAsString';
@@ -444,7 +446,7 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
-        describe('mangle', () => {
+        describe('mangled identifier names generator', () => {
             const regExp: RegExp = /var *c *= *0x1/;
 
             let obfuscatedCode: string;
@@ -454,7 +456,7 @@ describe('JavaScriptObfuscator', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        mangle: true
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                     }
                 );
 

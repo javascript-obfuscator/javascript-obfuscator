@@ -4,8 +4,9 @@ v0.13.0
 ---
 * **Breaking change:** `mangle` option was removed.
 * **New option:** `identifierNamesGenerator` allows to set identifier names generator (`hexadecimal` or `mangled`).
-* **Breaking change:** all CLI options were renamed to `kebab-case` format (`--disableConsoleOutout` -> `--disable-console-output`)
+* **Breaking change:** all CLI options were renamed to `kebab-case` format (`--disableConsoleOutout` -> `--disable-console-output`).
 * Implemented custom `mangle` option algorithm without `esmangle`; fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/110
+* Comments with `@license`, `@preserve` and `javascript-obfuscator` words won't be removed from obfuscated code.
 
 v0.12.5
 ---

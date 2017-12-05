@@ -32,6 +32,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @type {GenerateOptions}
      */
     private static readonly escodegenParams: escodegen.GenerateOptions = {
+        comment: true,
         verbatim: 'x-verbatim-property',
         sourceMapWithCode: true
     };
@@ -78,6 +79,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @type {NodeTransformer[]}
      */
     private static readonly preparingTransformersList: NodeTransformer[] = [
+        NodeTransformer.CommentsTransformer,
         NodeTransformer.ObfuscatingGuardsTransformer,
         NodeTransformer.ParentificationTransformer
     ];
@@ -193,7 +195,11 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @returns {Program}
      */
     private transformAstTree (astTree: ESTree.Program): ESTree.Program {
-        if (NodeGuards.isProgramNode(astTree) && !astTree.body.length) {
+        const isEmptyAstTree: boolean = NodeGuards.isProgramNode(astTree)
+            && !astTree.body.length
+            && !astTree.leadingComments;
+
+        if (isEmptyAstTree) {
             this.logger.warn(LoggingMessage.EmptySourceCode);
 
             return astTree;

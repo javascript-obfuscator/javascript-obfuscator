@@ -9,12 +9,17 @@ import { NodeTransformer } from '../../../enums/node-transformers/NodeTransforme
 import { ObfuscatingGuard } from '../../../enums/node-transformers/preparing-transformers/obfuscating-guards/ObfuscatingGuard';
 
 import { BlackListObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/BlackListObfuscatingGuard';
+import { CommentsTransformer } from '../../../node-transformers/preparing-transformers/CommentsTransformer';
 import { ConditionalCommentObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/ConditionalCommentObfuscatingGuard';
 import { ObfuscatingGuardsTransformer } from '../../../node-transformers/preparing-transformers/ObfuscatingGuardsTransformer';
 import { ParentificationTransformer } from '../../../node-transformers/preparing-transformers/ParentificationTransformer';
 
 export const preparingTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // preparing transformers
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(CommentsTransformer)
+        .whenTargetNamed(NodeTransformer.CommentsTransformer);
+
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(ObfuscatingGuardsTransformer)
         .whenTargetNamed(NodeTransformer.ObfuscatingGuardsTransformer);

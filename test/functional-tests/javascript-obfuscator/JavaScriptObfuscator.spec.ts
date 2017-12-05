@@ -67,6 +67,10 @@ describe('JavaScriptObfuscator', () => {
                 const code: string = readFileAsString(__dirname + '/fixtures/comments-only.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
+                    {
+                        controlFlowFlattening: true,
+                        deadCodeInjection: true
+                    }
                 );
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();

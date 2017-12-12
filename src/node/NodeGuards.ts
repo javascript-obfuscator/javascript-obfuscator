@@ -182,6 +182,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isNodeWithComments (node: ESTree.Node): node is ESTree.Node {
+        return Boolean(node.leadingComments) || Boolean(node.trailingComments);
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isObjectPatternNode (node: ESTree.Node): node is ESTree.ObjectPattern {
         return node.type === NodeType.ObjectPattern;
     }

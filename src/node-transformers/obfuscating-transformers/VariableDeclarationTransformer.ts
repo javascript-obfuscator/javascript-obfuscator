@@ -6,6 +6,8 @@ import * as ESTree from 'estree';
 
 import { TIdentifierObfuscatingReplacerFactory } from '../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory';
 import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
+import { TReplaceableIdentifiers } from '../../types/node-transformers/TReplaceableIdentifiers';
+import { TReplaceableIdentifiersNames } from '../../types/node-transformers/TReplaceableIdentifiersNamesMap';
 
 import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -37,9 +39,9 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     private readonly identifierObfuscatingReplacer: IIdentifierObfuscatingReplacer;
 
     /**
-     * @type {Map<ESTree.Node, ESTree.Identifier[]>}
+     * @type {TReplaceableIdentifiers}
      */
-    private readonly replaceableIdentifiers: Map <ESTree.Node, ESTree.Identifier[]> = new Map();
+    private readonly replaceableIdentifiers: TReplaceableIdentifiers = new Map();
 
     /**
      * @param {TIdentifierObfuscatingReplacerFactory} identifierObfuscatingReplacerFactory
@@ -94,7 +96,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
 
         // check for cached identifiers for current scope node. If exist - loop through them.
         if (this.replaceableIdentifiers.has(scopeNode)) {
-            this.replaceScopeCachedIdentifiers(scopeNode, nodeIdentifier);
+            this.replaceScopeCachedIdentifiers(variableDeclarationNode, scopeNode, nodeIdentifier);
         } else {
             this.replaceScopeIdentifiers(scopeNode, nodeIdentifier);
         }
@@ -107,34 +109,54 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
      * @param {number} nodeIdentifier
      */
     private storeVariableNames (variableDeclarationNode: ESTree.VariableDeclaration, nodeIdentifier: number): void {
-        variableDeclarationNode.declarations
-            .forEach((declarationNode: ESTree.VariableDeclarator) => {
-                if (NodeGuards.isObjectPatternNode(declarationNode.id)) {
-                    return estraverse.VisitorOption.Skip;
-                }
-
-                estraverse.traverse(declarationNode.id, {
-                    enter: (node: ESTree.Node) => {
-                        if (NodeGuards.isIdentifierNode(node)) {
-                            this.identifierObfuscatingReplacer.storeNames(node.name, nodeIdentifier);
-                        }
-                    }
-                });
-            });
+        this.traverseDeclarationIdentifiers(variableDeclarationNode, (identifierNode: ESTree.Identifier) => {
+            this.identifierObfuscatingReplacer.storeNames(identifierNode.name, nodeIdentifier);
+        });
     }
 
     /**
+     * @param {VariableDeclaration} variableDeclarationNode
      * @param {Node} scopeNode
      * @param {number} nodeIdentifier
      */
-    private replaceScopeCachedIdentifiers (scopeNode: ESTree.Node, nodeIdentifier: number): void {
-        const cachedReplaceableIdentifiers: ESTree.Identifier[] = <ESTree.Identifier[]>this.replaceableIdentifiers.get(scopeNode);
+    private replaceScopeCachedIdentifiers (
+        variableDeclarationNode: ESTree.VariableDeclaration,
+        scopeNode: ESTree.Node,
+        nodeIdentifier: number
+    ): void {
+        const cachedReplaceableIdentifiersNamesMap: TReplaceableIdentifiersNames | undefined = this.replaceableIdentifiers.get(scopeNode);
 
-        cachedReplaceableIdentifiers.forEach((replaceableIdentifier: ESTree.Identifier) => {
-            const newReplaceableIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                .replace(replaceableIdentifier.name, nodeIdentifier);
+        if (!cachedReplaceableIdentifiersNamesMap) {
+            return;
+        }
 
-            replaceableIdentifier.name = newReplaceableIdentifier.name;
+        const identifierNames: string[] = [];
+
+        this.traverseDeclarationIdentifiers(variableDeclarationNode, (identifierNode: ESTree.Identifier) => {
+            identifierNames.push(identifierNode.name);
+        });
+
+        identifierNames.forEach((identifierName: string) => {
+            const cachedReplaceableIdentifiers: ESTree.Identifier[] | undefined = cachedReplaceableIdentifiersNamesMap.get(identifierName);
+
+            if (!cachedReplaceableIdentifiers) {
+                return;
+            }
+
+            const cachedReplaceableIdentifierLength: number = cachedReplaceableIdentifiers.length;
+
+            for (let i: number = 0; i < cachedReplaceableIdentifierLength; i++) {
+                const replaceableIdentifier: ESTree.Identifier = cachedReplaceableIdentifiers[i];
+
+                if (identifierName !== replaceableIdentifier.name) {
+                    continue;
+                }
+
+                const newReplaceableIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
+                    .replace(replaceableIdentifier.name, nodeIdentifier);
+
+                replaceableIdentifier.name = newReplaceableIdentifier.name;
+            }
         });
     }
 
@@ -143,7 +165,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
      * @param {number} nodeIdentifier
      */
     private replaceScopeIdentifiers (blockScopeNode: ESTree.Node, nodeIdentifier: number): void {
-        const storedReplaceableIdentifiers: ESTree.Identifier[] = [];
+        const storedReplaceableIdentifiersNamesMap: TReplaceableIdentifiersNames = new Map();
 
         estraverse.replace(blockScopeNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): any => {
@@ -154,12 +176,39 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
                     if (node.name !== newIdentifierName) {
                         node.name = newIdentifierName;
                     } else {
+                        const storedReplaceableIdentifiers: ESTree.Identifier[] = storedReplaceableIdentifiersNamesMap.get(node.name) || [];
+
                         storedReplaceableIdentifiers.push(node);
+                        storedReplaceableIdentifiersNamesMap.set(node.name, storedReplaceableIdentifiers);
                     }
                 }
             }
         });
 
-        this.replaceableIdentifiers.set(blockScopeNode, storedReplaceableIdentifiers);
+        this.replaceableIdentifiers.set(blockScopeNode, storedReplaceableIdentifiersNamesMap);
+    }
+
+    /**
+     * @param {VariableDeclaration} variableDeclarationNode
+     * @param {(identifier: Identifier) => void} callback
+     */
+    private traverseDeclarationIdentifiers (
+        variableDeclarationNode: ESTree.VariableDeclaration,
+        callback: (identifier: ESTree.Identifier) => void
+    ): void {
+        variableDeclarationNode.declarations
+            .forEach((declarationNode: ESTree.VariableDeclarator) => {
+                if (NodeGuards.isObjectPatternNode(declarationNode.id)) {
+                    return estraverse.VisitorOption.Skip;
+                }
+
+                estraverse.traverse(declarationNode.id, {
+                    enter: (node: ESTree.Node) => {
+                        if (NodeGuards.isIdentifierNode(node)) {
+                            callback(node);
+                        }
+                    }
+                });
+            });
     }
 }

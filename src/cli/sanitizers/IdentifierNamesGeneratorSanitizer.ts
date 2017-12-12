@@ -1,0 +1,21 @@
+import { TCLISanitizer } from '../../types/cli/TCLISanitizer';
+
+import { IdentifierNamesGenerator } from '../../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
+
+/**
+ * @param {string} value
+ * @returns {string}
+ */
+export const IdentifierNamesGeneratorSanitizer: TCLISanitizer = (value: string): string => {
+    const isCorrectIdentifierNamesGenerator: boolean = Object
+        .keys(IdentifierNamesGenerator)
+        .some((key: any): boolean => {
+            return IdentifierNamesGenerator[key] === value;
+        });
+
+    if (!isCorrectIdentifierNamesGenerator) {
+        throw new ReferenceError('Invalid value of `--identifier-names-generator` option');
+    }
+
+    return value;
+};

@@ -14,7 +14,7 @@ export const SourceMapModeSanitizer: TCLISanitizer = (value: string): string => 
         });
 
     if (!isCorrectSourceMapMode) {
-        throw new ReferenceError('Invalid value of `--sourceMapMode` option');
+        throw new ReferenceError('Invalid value of `--source-map-mode` option');
     }
 
     return value;

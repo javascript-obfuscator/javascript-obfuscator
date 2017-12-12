@@ -4,6 +4,8 @@ import * as ESTree from 'estree';
 
 import { IObfuscatingGuard } from '../../../interfaces/node-transformers/preparing-transformers/obfuscating-guards/IObfuscatingGuard';
 
+import { NodeGuards } from '../../../node/NodeGuards';
+
 @injectable()
 export class ConditionalCommentObfuscatingGuard implements IObfuscatingGuard {
     /**
@@ -36,7 +38,7 @@ export class ConditionalCommentObfuscatingGuard implements IObfuscatingGuard {
             this.obfuscationAllowedForNextNode = null;
         }
 
-        if (!node.leadingComments && !node.trailingComments) {
+        if (!NodeGuards.isNodeWithComments(node)) {
             return this.obfuscationAllowedForCurrentNode;
         }
 

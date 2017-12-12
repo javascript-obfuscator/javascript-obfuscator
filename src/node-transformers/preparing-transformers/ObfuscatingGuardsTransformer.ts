@@ -64,7 +64,8 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
      * @returns {Node}
      */
     public transformNode (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node {
-        const obfuscationAllowed: boolean = this.obfuscatingGuards.every((nodeGuard: IObfuscatingGuard) => nodeGuard.check(node));
+        const obfuscationAllowed: boolean = this.obfuscatingGuards
+            .every((nodeGuard: IObfuscatingGuard) => nodeGuard.check(node));
 
         node.ignoredNode = !obfuscationAllowed;
 

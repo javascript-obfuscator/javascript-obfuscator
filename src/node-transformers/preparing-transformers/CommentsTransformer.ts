@@ -66,20 +66,9 @@ export class CommentsTransformer extends AbstractNodeTransformer {
      * @returns {Comment[]}
      */
     private transformComments (comments: ESTree.Comment[]): ESTree.Comment[] {
-        let i: number = comments.length;
-
-        while (i--) {
-            const comment: ESTree.Comment = comments[i];
-            const commentHasPreservedWords: boolean = CommentsTransformer.preservedWords
-                .some((availableWord: string) => comment.value.includes(availableWord));
-
-            if (commentHasPreservedWords) {
-                continue;
-            }
-
-            comments.splice(i, 1);
-        }
-
-        return comments;
+        return comments.filter((comment: ESTree.Comment) =>
+            CommentsTransformer.preservedWords
+                .some((availableWord: string) => comment.value.includes(availableWord))
+        );
     }
 }

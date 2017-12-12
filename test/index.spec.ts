@@ -8,6 +8,7 @@ require('source-map-support').install();
 import './unit-tests/analyzers/stack-trace-analyzer/StackTraceAnalyzer.spec';
 import './unit-tests/cli/sanitizers/ArraySanitizer.spec';
 import './unit-tests/cli/sanitizers/BooleanSanitizer.spec';
+import './unit-tests/cli/sanitizers/IdentifierNamesGeneratorSanitizer.spec';
 import './unit-tests/cli/sanitizers/ObfuscationTargetSanitizer.spec';
 import './unit-tests/cli/sanitizers/SourceMapModeSanitizer.spec';
 import './unit-tests/cli/sanitizers/StringArrayEncodingSanitizer.spec';

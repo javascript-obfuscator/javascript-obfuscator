@@ -17,6 +17,7 @@ import { DEFAULT_PRESET } from '../options/presets/Default';
 
 import { ArraySanitizer } from './sanitizers/ArraySanitizer';
 import { BooleanSanitizer } from './sanitizers/BooleanSanitizer';
+import { IdentifierNamesGeneratorSanitizer } from './sanitizers/IdentifierNamesGeneratorSanitizer';
 import { ObfuscationTargetSanitizer } from './sanitizers/ObfuscatingTargetSanitizer';
 import { SourceMapModeSanitizer } from './sanitizers/SourceMapModeSanitizer';
 import { StringArrayEncodingSanitizer } from './sanitizers/StringArrayEncodingSanitizer';
@@ -241,7 +242,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             )
             .option(
                 '--identifier-names-generator <string> [hexadecimal, mangled]', 'Sets identifier names generator (Default: hexadecimal)',
-                BooleanSanitizer
+                IdentifierNamesGeneratorSanitizer
             )
             .option(
                 '--log <boolean>', 'Enables logging of the information to the console',

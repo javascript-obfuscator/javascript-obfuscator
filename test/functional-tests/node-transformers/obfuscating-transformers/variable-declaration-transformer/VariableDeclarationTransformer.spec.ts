@@ -413,4 +413,26 @@ describe('VariableDeclarationTransformer', () => {
             assert.match(obfuscatedCode, computedObjectExpressionRegExp);
         });
     });
+
+    describe('variant #12: method definition key identifier', () => {
+        const regExp: RegExp = /\['bar'] *\(\) *{}/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/method-definition-identifier.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('shouldn\'t transform method definition node key identifier', () => {
+            assert.match(obfuscatedCode, regExp);
+        });
+    });
 });

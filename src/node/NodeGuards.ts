@@ -228,17 +228,20 @@ export class NodeGuards {
             return false;
         }
 
-        const parentNodeIsPropertyNode: boolean = NodeGuards.isPropertyNode(parentNode)
-            && !parentNode.computed
-            && parentNode.key === node;
+        const parentNodeIsPropertyNode: boolean = NodeGuards.isPropertyNode(parentNode) &&
+            !parentNode.computed &&
+            parentNode.key === node;
         const parentNodeIsMemberExpressionNode: boolean = (
             NodeGuards.isMemberExpressionNode(parentNode) &&
             parentNode.computed === false &&
             parentNode.property === node
         );
+        const parentNodeIsMethodDefinitionNode: boolean = NodeGuards.isMethodDefinitionNode(parentNode) &&
+            !parentNode.computed;
 
         return !parentNodeIsPropertyNode &&
             !parentNodeIsMemberExpressionNode &&
+            !parentNodeIsMethodDefinitionNode &&
             !NodeGuards.isLabelIdentifierNode(node, parentNode);
     }
 

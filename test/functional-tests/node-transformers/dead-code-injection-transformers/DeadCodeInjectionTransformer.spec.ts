@@ -280,7 +280,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('variant #7- chance of `IfStatement` variant', () => {
+        describe('variant #7 - chance of `IfStatement` variant', () => {
             const samplesCount: number = 1000;
             const delta: number = 0.1;
             const expectedDistribution: number = 0.25;

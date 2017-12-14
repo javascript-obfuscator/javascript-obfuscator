@@ -9,14 +9,13 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
 describe('MethodDefinitionTransformer', () => {
-    const code: string = readFileAsString(__dirname + '/fixtures/input.js');
-
     describe('variant #1: default behaviour', () => {
         const regExp: RegExp = /\['bar'\]\(\)\{\}/;
 
         let obfuscatedCode: string;
 
         before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/sample-input.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
@@ -39,6 +38,7 @@ describe('MethodDefinitionTransformer', () => {
         let obfuscatedCode: string;
 
         before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/sample-input.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
@@ -66,6 +66,7 @@ describe('MethodDefinitionTransformer', () => {
         let obfuscatedCode: string;
 
         before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/sample-input.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {

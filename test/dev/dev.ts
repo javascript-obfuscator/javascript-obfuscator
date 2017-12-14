@@ -35,7 +35,6 @@ import { NO_CUSTOM_NODES_PRESET } from '../../src/options/presets/NoCustomNodes'
         {
             ...NO_CUSTOM_NODES_PRESET,
             compact: false,
-            identifierNamesGenerator: 'mangled'
         }
     ).getObfuscatedCode();
 

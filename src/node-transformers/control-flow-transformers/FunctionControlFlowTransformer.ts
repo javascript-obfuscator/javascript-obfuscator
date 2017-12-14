@@ -215,6 +215,10 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     private transformFunctionBody (functionNodeBody: ESTree.BlockStatement, controlFlowStorage: IStorage<ICustomNode>): void {
         estraverse.replace(functionNodeBody, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): any => {
+                if (node.ignoredNode) {
+                    return estraverse.VisitorOption.Skip;
+                }
+
                 if (this.isVisitedFunctionNode(node) || !parentNode) {
                     return estraverse.VisitorOption.Skip;
                 }

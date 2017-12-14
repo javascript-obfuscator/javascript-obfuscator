@@ -7,6 +7,7 @@ v0.13.0
 * **Breaking change:** all CLI options were renamed to `kebab-case` format (`--disableConsoleOutout` -> `--disable-console-output`).
 * Implemented custom `mangle` option algorithm without `esmangle`; fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/110
 * Comments with `@license`, `@preserve` and `javascript-obfuscator` words won't be removed from obfuscated code.
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/147
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/149
 
 v0.12.5

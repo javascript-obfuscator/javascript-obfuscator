@@ -53,6 +53,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         const generateNewMangledName: (name: string) => string = (name: string): string => {
             const nameSequence: string[] = MangledIdentifierNamesGenerator.nameSequence;
             const zeroSequenceCache: string[] = [];
+            const nameLength: number = name.length;
 
             const zeroSequence: (num: number) => string = (num: number): string => {
                 let result: string = zeroSequenceCache[num];
@@ -67,22 +68,25 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
                 return result;
             };
 
-            let cur: number = name.length - 1;
+            let index: number = nameLength - 1;
 
             do {
-                let character: string, index: number;
+                const character: string = name.charAt(index);
+                const indexInSequence: number = nameSequence.indexOf(character);
+                const lastNameSequenceIndex: number = nameSequence.length - 1;
 
-                character = name.charAt(cur);
-                index = nameSequence.indexOf(character);
+                if (indexInSequence !== lastNameSequenceIndex) {
+                    const previousNamePart: string = name.substring(0, index);
+                    const nextCharacter: string = nameSequence[indexInSequence + 1];
+                    const zeroSequenceCharacters: string = zeroSequence(nameLength - (index + 1));
 
-                if (index !== (nameSequence.length - 1)) {
-                    return name.substring(0, cur) + nameSequence[index + 1] + zeroSequence(name.length - (cur + 1));
+                    return previousNamePart + nextCharacter + zeroSequenceCharacters;
                 }
 
-                --cur;
-            } while (cur >= 0);
+                --index;
+            } while (index >= 0);
 
-            return `a${zeroSequence(name.length)}`;
+            return `a${zeroSequence(nameLength)}`;
         };
 
         let newMangledName: string = generateNewMangledName(previousMangledName);

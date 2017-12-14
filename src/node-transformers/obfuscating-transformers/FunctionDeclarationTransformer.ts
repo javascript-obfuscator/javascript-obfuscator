@@ -7,7 +7,7 @@ import * as ESTree from 'estree';
 import { TIdentifierObfuscatingReplacerFactory } from "../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory";
 import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
 import { TReplaceableIdentifiers } from '../../types/node-transformers/TReplaceableIdentifiers';
-import { TReplaceableIdentifiersNames } from '../../types/node-transformers/TReplaceableIdentifiersNamesMap';
+import { TReplaceableIdentifiersNames } from '../../types/node-transformers/TReplaceableIdentifiersNames';
 
 import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';

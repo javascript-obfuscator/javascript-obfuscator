@@ -171,5 +171,34 @@ describe('ConditionalCommentObfuscatingGuard', () => {
                 assert.equal(obfuscatedFunctionCallMatchesLength, expectedObfuscatedFunctionCallsLength);
             });
         });
+
+        describe('variant #5: `disable` and `enable` conditional comments with control flow flattening', () => {
+            const obfuscatedVariableDeclarationRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['[a-zA-Z0-9]{1,5}'];/;
+            const ignoredVariableDeclarationRegExp: RegExp = /var *bar *= *'bar';/;
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/control-flow-flattening.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('match #1: should obfuscate variable declaration before `disable` conditional comment', () => {
+                assert.match(obfuscatedCode, obfuscatedVariableDeclarationRegExp);
+            });
+
+            it('match #2: should ignore variable declaration after `disable` conditional comment', () => {
+                assert.match(obfuscatedCode, ignoredVariableDeclarationRegExp);
+            });
+        });
     });
 });

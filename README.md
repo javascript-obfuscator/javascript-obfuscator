@@ -33,13 +33,13 @@ Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/
 [![Backers on Open Collective](https://opencollective.com/javascript-obfuscator/backers/badge.svg)](#backers) 
 [![Sponsors on Open Collective](https://opencollective.com/javascript-obfuscator/sponsors/badge.svg)](#sponsors)
 
-#####You can support this project by donating:
+#### You can support this project by donating:
 * (Bitcoin) 14yhtZxLNp6ekZAgmEmPJqEKUP2VtUxQK6
 * (OpenCollective) https://opencollective.com/javascript-obfuscator
 
 Big thanks to all supporters!
 
-#####*NOTE! the README on the master branch might not match that of the latest stable release!*
+#### *NOTE! the README on the master branch might not match that of the latest stable release!*
 
 ## :warning: Important
 ##### Obfuscate only the code that belongs to you. 

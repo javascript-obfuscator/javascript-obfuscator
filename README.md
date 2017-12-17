@@ -34,7 +34,7 @@ Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/
 [![Sponsors on Open Collective](https://opencollective.com/javascript-obfuscator/sponsors/badge.svg)](#sponsors)
 
 #####You can support this project by donating:
-* (Bitcoin) 1EnQsZc35CjVy92HN9gZXHjjMnqiW6BsGF
+* (Bitcoin) 14yhtZxLNp6ekZAgmEmPJqEKUP2VtUxQK6
 * (OpenCollective) https://opencollective.com/javascript-obfuscator
 
 Big thanks to all supporters!

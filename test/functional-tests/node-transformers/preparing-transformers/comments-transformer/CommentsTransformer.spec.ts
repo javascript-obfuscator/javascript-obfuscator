@@ -82,7 +82,6 @@ describe('CommentsTransformer', () => {
             ` *\\* *test\\n` +
             ` *\\*\\/\\n` +
             `var *test *= *0x1;` +
-            `\\/\\/javascript-obfuscator\\n` +
             ` *\\/\\*\\* *@preserved *\\*\\/$` +
         ``);
 

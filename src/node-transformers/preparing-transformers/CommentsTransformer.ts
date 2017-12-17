@@ -15,7 +15,7 @@ export class CommentsTransformer extends AbstractNodeTransformer {
     /**
      * @type {string[]}
      */
-    private static preservedWords: string[] = ['@license', '@preserve', 'javascript-obfuscator'];
+    private static preservedWords: string[] = ['@license', '@preserve'];
 
     /**
      * @param {IRandomGenerator} randomGenerator
@@ -33,7 +33,7 @@ export class CommentsTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (): IVisitor {
         return {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+            leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
                 if (parentNode && NodeGuards.isNodeWithComments(node)) {
                     return this.transformNode(node, parentNode);
                 }

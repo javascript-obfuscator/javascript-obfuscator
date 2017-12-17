@@ -1,7 +1,7 @@
 <!--
   Title: JavaScript Obfuscator
   Description: A powerful obfuscator for JavaScript and Node.js.
-  Author: sanex3339
+  Author: Timofey Kachalov
   -->
 
 # JavaScript obfuscator for Node.js
@@ -24,6 +24,8 @@ Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/
 * Gulp: [gulp-javascript-obfuscator](https://github.com/javascript-obfuscator/gulp-javascript-obfuscator)
 * Grunt: [grunt-contrib-obfuscator](https://github.com/javascript-obfuscator/grunt-contrib-obfuscator)
 * Rollup: [rollup-plugin-javascript-obfuscator](https://github.com/javascript-obfuscator/rollup-plugin-javascript-obfuscator)
+* Weex: [weex-devtool](https://www.npmjs.com/package/weex-devtool)
+* Malta: [malta-js-obfuscator](https://github.com/fedeghe/malta-js-obfuscator)
 
 [![npm version](https://badge.fury.io/js/javascript-obfuscator.svg)](https://badge.fury.io/js/javascript-obfuscator)
 [![Build Status](https://travis-ci.org/javascript-obfuscator/javascript-obfuscator.svg?branch=master)](https://travis-ci.org/javascript-obfuscator/javascript-obfuscator)
@@ -31,11 +33,13 @@ Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/
 [![Backers on Open Collective](https://opencollective.com/javascript-obfuscator/backers/badge.svg)](#backers) 
 [![Sponsors on Open Collective](https://opencollective.com/javascript-obfuscator/sponsors/badge.svg)](#sponsors)
 
-*NOTE! the README on the master branch might not match that of the latest stable release!*
-
-If this project helps you, you can support it:
+#####You can support this project by donating:
 * (Bitcoin) 14yhtZxLNp6ekZAgmEmPJqEKUP2VtUxQK6
 * (OpenCollective) https://opencollective.com/javascript-obfuscator
+
+Big thanks to all supporters!
+
+#####*NOTE! the README on the master branch might not match that of the latest stable release!*
 
 ## :warning: Important
 ##### Obfuscate only the code that belongs to you. 

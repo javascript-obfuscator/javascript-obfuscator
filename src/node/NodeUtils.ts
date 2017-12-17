@@ -60,8 +60,11 @@ export class NodeUtils {
 
             Object
                 .keys(node)
-                .filter((property: string) => property !== 'parentNode')
                 .forEach((property: string): void => {
+                    if (property === 'parentNode') {
+                        return;
+                    }
+
                     const value: any = (<TObject>node)[property];
 
                     let clonedValue: any | null;
@@ -103,15 +106,11 @@ export class NodeUtils {
      * @returns {string}
      */
     public static convertStructureToCode (structure: ESTree.Node[]): string {
-        let code: string = '';
-
-        structure.forEach((node: ESTree.Node) => {
-            code += escodegen.generate(node, {
+        return structure.reduce((code: string, node: ESTree.Node) => {
+            return code + escodegen.generate(node, {
                 sourceMapWithCode: true
             }).code;
-        });
-
-        return code;
+        }, '');
     }
 
     /**
@@ -120,15 +119,15 @@ export class NodeUtils {
      * @returns {NodeGuards}
      */
     public static getBlockStatementNodeByIndex (node: ESTree.Node, index: number = 0): ESTree.Node {
-        if (NodeGuards.isNodeHasBlockStatement(node)) {
-            if (node.body[index] === undefined) {
-                throw new ReferenceError(`Wrong index \`${index}\`. Block-statement body length is \`${node.body.length}\``);
-            }
-
-            return node.body[index];
+        if (!NodeGuards.isNodeHasBlockStatement(node)) {
+            throw new TypeError('The specified node have no a block-statement');
         }
 
-        throw new TypeError('The specified node have no a block-statement');
+        if (node.body[index] === undefined) {
+            throw new ReferenceError(`Wrong index \`${index}\`. Block-statement body length is \`${node.body.length}\``);
+        }
+
+        return node.body[index];
     }
 
     /**

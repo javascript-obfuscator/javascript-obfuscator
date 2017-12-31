@@ -36,11 +36,27 @@
   version "0.0.38"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.38.tgz#c1be40aa933723c608820a99a373a16d215a1ca2"
 
+"@types/events@*":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@types/events/-/events-1.1.0.tgz#93b1be91f63c184450385272c47b6496fd028e02"
+
+"@types/glob@*":
+  version "5.0.34"
+  resolved "https://registry.yarnpkg.com/@types/glob/-/glob-5.0.34.tgz#ee626c9be3da877d717911c6101eee0a9871bbf4"
+  dependencies:
+    "@types/events" "*"
+    "@types/minimatch" "*"
+    "@types/node" "*"
+
 "@types/md5@2.1.32":
   version "2.1.32"
   resolved "https://registry.yarnpkg.com/@types/md5/-/md5-2.1.32.tgz#93e23437fcd17a7b9ca98d02aa6002e835842fe8"
   dependencies:
     "@types/node" "*"
+
+"@types/minimatch@*":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.2.tgz#09c06877e478a5d5f32ce5017c2eb2b33006f6f5"
 
 "@types/mkdirp@0.5.2":
   version "0.5.2"
@@ -48,17 +64,26 @@
   dependencies:
     "@types/node" "*"
 
-"@types/mocha@2.2.44":
-  version "2.2.44"
-  resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-2.2.44.tgz#1d4a798e53f35212fd5ad4d04050620171cd5b5e"
+"@types/mocha@2.2.45":
+  version "2.2.45"
+  resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-2.2.45.tgz#816572b6e45164526a36d4faa123e8267d6d5d0a"
+  dependencies:
+    "@types/node" "*"
 
 "@types/node@*":
   version "8.0.53"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.53.tgz#396b35af826fa66aad472c8cb7b8d5e277f4e6d8"
 
-"@types/node@8.5.1":
-  version "8.5.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.5.1.tgz#4ec3020bcdfe2abffeef9ba3fbf26fca097514b5"
+"@types/node@8.5.2":
+  version "8.5.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.5.2.tgz#83b8103fa9a2c2e83d78f701a9aa7c9539739aa5"
+
+"@types/rimraf@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@types/rimraf/-/rimraf-2.0.2.tgz#7f0fc3cf0ff0ad2a99bb723ae1764f30acaf8b6e"
+  dependencies:
+    "@types/glob" "*"
+    "@types/node" "*"
 
 "@types/sinon@4.1.2":
   version "4.1.2"
@@ -955,9 +980,9 @@ chalk@2.3.0, chalk@^2.1.0, chalk@^2.3.0:
     escape-string-regexp "^1.0.5"
     supports-color "^4.0.0"
 
-chance@1.0.12:
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/chance/-/chance-1.0.12.tgz#6764c9cb7b4f34856fb780d07f0e17a6601c6c08"
+chance@1.0.13:
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/chance/-/chance-1.0.13.tgz#666bec2db42b3084456a3e4f4c28a82db5ccb7e6"
 
 charenc@~0.0.1:
   version "0.0.2"
@@ -1973,9 +1998,9 @@ invariant@^2.2.2:
   dependencies:
     loose-envify "^1.0.0"
 
-inversify@4.8.0:
-  version "4.8.0"
-  resolved "https://registry.yarnpkg.com/inversify/-/inversify-4.8.0.tgz#750c3c204ee9fe9a7529062dc6196c69d05fee7e"
+inversify@4.9.0:
+  version "4.9.0"
+  resolved "https://registry.yarnpkg.com/inversify/-/inversify-4.9.0.tgz#caa01f5856cfa0499aaaed9b1a635ef0c4a9f4d3"
 
 invert-kv@^1.0.0:
   version "1.0.0"
@@ -2541,9 +2566,9 @@ mkdirp@0.5.1, mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.1, mkdirp@~0.5.0:
   dependencies:
     minimist "0.0.8"
 
-mocha@4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/mocha/-/mocha-4.0.1.tgz#0aee5a95cf69a4618820f5e51fa31717117daf1b"
+mocha@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/mocha/-/mocha-4.1.0.tgz#7d86cfbcf35cb829e2754c32e17355ec05338794"
   dependencies:
     browser-stdout "1.3.0"
     commander "2.11.0"
@@ -3212,7 +3237,7 @@ right-align@^0.1.1:
   dependencies:
     align-text "^0.1.1"
 
-rimraf@2, rimraf@^2.5.1, rimraf@^2.6.1:
+rimraf@2, rimraf@^2.5.1, rimraf@^2.6.1, rimraf@^2.6.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.6.2.tgz#2ed8150d24a16ea8651e6d6ef0f47c4158ce7a36"
   dependencies:
@@ -3648,9 +3673,9 @@ trim-right@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/trim-right/-/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
 
-ts-node@4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-4.0.2.tgz#cb3d039b9898fdc79ad09ab7e69c84564c8c41ee"
+ts-node@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-4.1.0.tgz#36d9529c7b90bb993306c408cd07f7743de20712"
   dependencies:
     arrify "^1.0.0"
     chalk "^2.3.0"

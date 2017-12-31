@@ -18,7 +18,7 @@ export class SourceCodeReader {
         }
 
         if (SourceCodeReader.isDirectoryPath(inputPath)) {
-            return SourceCodeReader.readDirectory(inputPath);
+            return SourceCodeReader.readDirectoryRecursive(inputPath);
         }
 
         throw new ReferenceError(`Given input path must be a valid source code file or directory path`);
@@ -50,17 +50,26 @@ export class SourceCodeReader {
 
     /**
      * @param {string} directoryPath
+     * @param {IFileData[]} fileData
      * @returns {IFileData[]}
      */
-    private static readDirectory (directoryPath: string): IFileData[] {
-        return fs.readdirSync(directoryPath, JavaScriptObfuscatorCLI.encoding)
-            .filter(SourceCodeReader.isValidFile)
-            .map((fileName: string) => {
+    private static readDirectoryRecursive (directoryPath: string, fileData: IFileData[] = []): IFileData[] {
+        fs.readdirSync(directoryPath, JavaScriptObfuscatorCLI.encoding)
+            .forEach((fileName: string) => {
                 const filePath: string = `${directoryPath}/${fileName}`;
-                const content: string = fs.readFileSync(filePath, JavaScriptObfuscatorCLI.encoding);
 
-                return { filePath, content };
+                if (SourceCodeReader.isDirectoryPath(filePath)) {
+                    fileData.push(
+                        ...SourceCodeReader.readDirectoryRecursive(filePath)
+                    );
+                } else if (SourceCodeReader.isFilePath(filePath) && SourceCodeReader.isValidFile(fileName)) {
+                    const content: string = fs.readFileSync(filePath, JavaScriptObfuscatorCLI.encoding);
+
+                    fileData.push({ filePath, content });
+                }
             });
+
+        return fileData;
     }
 
     /**

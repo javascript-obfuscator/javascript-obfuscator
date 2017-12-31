@@ -1,5 +1,10 @@
 Change Log
 ===
+v0.14.0
+---
+* **Breaking change:** Now CLI obfuscating directory recursively. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/157
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/156
+
 v0.13.0
 ---
 * **Breaking change:** `mangle` option was removed.

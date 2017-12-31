@@ -6,11 +6,22 @@ import { CLIUtils } from '../../../../src/cli/utils/CLIUtils';
 
 describe('CLIUtils', () => {
     describe('getOutputCodePath (inputPath: string): string', () => {
-        let expectedInputPath: string = 'test/input/test-obfuscated.js',
-            inputPath: string = 'test/input/test.js';
+        describe('variant #1: base input path', () => {
+            let expectedOutputPath: string = 'test/input/test-obfuscated.js',
+                inputPath: string = 'test/input/test.js';
 
-        it('should output path based on `inputPath`', () => {
-            assert.equal(CLIUtils.getOutputCodePath(inputPath), expectedInputPath);
+            it('should output path based on `inputPath`', () => {
+                assert.equal(CLIUtils.getOutputCodePath(inputPath), expectedOutputPath);
+            });
+        });
+
+        describe('variant #2: relative input path with dot', () => {
+            let expectedOutputPath: string = 'input-obfuscated.js',
+                inputPath: string = './input.js';
+
+            it('should output path based on `inputPath`', () => {
+                assert.equal(CLIUtils.getOutputCodePath(inputPath), expectedOutputPath);
+            });
         });
     });
 

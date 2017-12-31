@@ -6,7 +6,7 @@ const webpack = require('webpack');
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 const TSLintPlugin = require('tslint-webpack-plugin');
 
-const copyright = 'Copyright (C) 2017 Timofey Kachalov <sanex3339@yandex.ru>';
+const copyright = 'Copyright (C) 2016-2018 Timofey Kachalov <sanex3339@yandex.ru>';
 
 /**
  * @return {string}

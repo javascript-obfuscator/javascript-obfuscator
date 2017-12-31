@@ -832,7 +832,7 @@ Become a sponsor and get your logo on our README on Github with a link to your s
 
 
 ## License
-Copyright (C) 2017 [Timofey Kachalov](http://github.com/sanex3339).
+Copyright (C) 2016-2018 [Timofey Kachalov](http://github.com/sanex3339).
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:

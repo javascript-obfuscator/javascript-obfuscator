@@ -1,30 +1,39 @@
+import { Utils } from '../../../utils/Utils';
+
 /**
  * @returns {string}
  */
 export function StringArrayRc4DecodeNodeTemplate (): string {
+    const symTbl: { [key: string]: string } = {
+        'initialized': Utils.generateIden(),
+        'rc4': Utils.generateIden(),
+        'data': Utils.generateIden(),
+        'once': Utils.generateIden()
+    };
+  
     return `
-        if ({stringArrayCallsWrapperName}.initialized === undefined) {
+        if ({stringArrayCallsWrapperName}.${symTbl.initialized} === undefined) {
             {atobPolyfill}
             
             {rc4Polyfill}
-            {stringArrayCallsWrapperName}.rc4 = rc4;
+            {stringArrayCallsWrapperName}.${symTbl.rc4} = rc4;
             
-            {stringArrayCallsWrapperName}.data = {};
+            {stringArrayCallsWrapperName}.${symTbl.data} = {};
             
-            {stringArrayCallsWrapperName}.initialized = true;
+            {stringArrayCallsWrapperName}.${symTbl.initialized} = true;
         }
   
-        var cachedValue = {stringArrayCallsWrapperName}.data[index];
+        var cachedValue = {stringArrayCallsWrapperName}.${symTbl.data}[index];
 
         if (cachedValue === undefined) {
-            if ({stringArrayCallsWrapperName}.once === undefined) {
+            if ({stringArrayCallsWrapperName}.${symTbl.once} === undefined) {
                 {selfDefendingCode}
                 
-                {stringArrayCallsWrapperName}.once = true;
+                {stringArrayCallsWrapperName}.${symTbl.once} = true;
             }
             
-            value = {stringArrayCallsWrapperName}.rc4(value, key);
-            {stringArrayCallsWrapperName}.data[index] = value;
+            value = {stringArrayCallsWrapperName}.${symTbl.rc4}(value, key);
+            {stringArrayCallsWrapperName}.${symTbl.data}[index] = value;
         } else {
             value = cachedValue;
         }

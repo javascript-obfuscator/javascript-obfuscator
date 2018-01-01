@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import * as format from 'string-template';
 
 import { assert } from 'chai';
@@ -6,6 +8,7 @@ import { ServiceIdentifiers } from '../../../../../src/container/ServiceIdentifi
 
 import { ICryptUtils } from '../../../../../src/interfaces/utils/ICryptUtils';
 import { IInversifyContainerFacade } from '../../../../../src/interfaces/container/IInversifyContainerFacade';
+import { IRandomGenerator } from '../../../../../src/interfaces/utils/IRandomGenerator';
 
 import { AtobTemplate } from '../../../../../src/templates/AtobTemplate';
 import { GlobalVariableTemplate1 } from '../../../../../src/templates/GlobalVariableTemplate1';
@@ -20,30 +23,35 @@ describe('StringArrayCallsWrapperNodeTemplate (): string', () => {
     const stringArrayName: string = 'stringArrayName';
     const stringArrayCallsWrapperName: string = 'stringArrayCallsWrapperName';
 
-    let cryptUtils: ICryptUtils;
+    let cryptUtils: ICryptUtils,
+        randomGenerator: IRandomGenerator;
 
     before(() => {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
         inversifyContainerFacade.load('', {});
         cryptUtils = inversifyContainerFacade.get<ICryptUtils>(ServiceIdentifiers.ICryptUtils);
+        randomGenerator = inversifyContainerFacade.get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator);
     });
 
     describe('variant #1: `base64` encoding', () => {
-        const atobPolyfill = format(AtobTemplate(), {
-            globalVariableTemplate: GlobalVariableTemplate1()
-        });
-        const atobDecodeNodeTemplate: string = format(StringArrayBase64DecodeNodeTemplate(), {
-            atobPolyfill,
-            selfDefendingCode: '',
-            stringArrayCallsWrapperName
-        });
         const index: string = '0x0';
         const expectedDecodedValue: string = 'test1';
 
         let decodedValue: string;
 
         before(() => {
+            const atobPolyfill = format(AtobTemplate(), {
+                globalVariableTemplate: GlobalVariableTemplate1()
+            });
+            const atobDecodeNodeTemplate: string = format(
+                StringArrayBase64DecodeNodeTemplate(randomGenerator),
+                {
+                    atobPolyfill,
+                    selfDefendingCode: '',
+                    stringArrayCallsWrapperName
+                }
+            );
             const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
                 decodeNodeTemplate: atobDecodeNodeTemplate,
                 stringArrayCallsWrapperName,
@@ -65,15 +73,6 @@ describe('StringArrayCallsWrapperNodeTemplate (): string', () => {
     });
 
     describe('variant #2: `rc4` encoding', () => {
-        const atobPolyfill = format(AtobTemplate(), {
-            globalVariableTemplate: GlobalVariableTemplate1()
-        });
-        const rc4DecodeNodeTemplate: string = format(StringArrayRc4DecodeNodeTemplate(), {
-            atobPolyfill,
-            rc4Polyfill: Rc4Template(),
-            selfDefendingCode: '',
-            stringArrayCallsWrapperName
-        });
         const index: string = '0x0';
         const key: string = 'key';
         const expectedDecodedValue: string = 'test1';
@@ -81,6 +80,18 @@ describe('StringArrayCallsWrapperNodeTemplate (): string', () => {
         let decodedValue: string;
 
         before(() => {
+            const atobPolyfill = format(AtobTemplate(), {
+                globalVariableTemplate: GlobalVariableTemplate1()
+            });
+            const rc4DecodeNodeTemplate: string = format(
+                StringArrayRc4DecodeNodeTemplate(randomGenerator),
+                {
+                    atobPolyfill,
+                    rc4Polyfill: Rc4Template(),
+                    selfDefendingCode: '',
+                    stringArrayCallsWrapperName
+                }
+            );
             const stringArrayCallsWrapperTemplate: string = format(StringArrayCallsWrapperTemplate(), {
                 decodeNodeTemplate: rc4DecodeNodeTemplate,
                 stringArrayCallsWrapperName,

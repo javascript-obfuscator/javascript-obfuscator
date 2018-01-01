@@ -1,59 +1,66 @@
 import { IEscapeSequenceEncoder } from '../../../interfaces/utils/IEscapeSequenceEncoder';
-import { Utils } from '../../../utils/Utils';
+import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 
 /**
+ * @param {IRandomGenerator} randomGenerator
  * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
  * @returns {string}
+ * @constructor
  */
-export function SelfDefendingTemplate (escapeSequenceEncoder: IEscapeSequenceEncoder): string {
-    const symTbl: { [key: string]: string } = {
-        'rc4Bytes': Utils.generateIden(),
-        'states': Utils.generateIden(),
-        'newState': Utils.generateIden(),
-        'firstState': Utils.generateIden(),
-        'secondState': Utils.generateIden(),
-        'checkState': Utils.generateIden(),
-        'runState': Utils.generateIden(),
-        'getState': Utils.generateIden(),
-        'stateResult': Utils.generateIden()
-    };
+export function SelfDefendingTemplate (
+    randomGenerator: IRandomGenerator,
+    escapeSequenceEncoder: IEscapeSequenceEncoder
+): string {
+    const identifierLength: number = 6;
+    const rc4BytesIdentifier: string = randomGenerator.getRandomString(identifierLength);
+    const statesIdentifier: string = randomGenerator.getRandomString(identifierLength);
+    const newStateIdentifier: string = randomGenerator.getRandomString(identifierLength);
+    const firstStateIdentifier: string = randomGenerator.getRandomString(identifierLength);
+    const secondStateIdentifier: string = randomGenerator.getRandomString(identifierLength);
+    const checkStateIdentifier: string = randomGenerator.getRandomString(identifierLength);
+    const runStateIdentifier: string = randomGenerator.getRandomString(identifierLength);
+    const getStateIdentifier: string = randomGenerator.getRandomString(identifierLength);
+    const stateResultIdentifier: string = randomGenerator.getRandomString(identifierLength);
     
     return `
-        var StatesClass = function (${symTbl.rc4Bytes}) {
-            this.${symTbl.rc4Bytes} = ${symTbl.rc4Bytes};
-            this.${symTbl.states} = [1, 0, 0];
-            this.${symTbl.newState} = function(){return 'newState';};
-            this.${symTbl.firstState} = '${
+        var StatesClass = function (${rc4BytesIdentifier}) {
+            this.${rc4BytesIdentifier} = ${rc4BytesIdentifier};
+            this.${statesIdentifier} = [1, 0, 0];
+            this.${newStateIdentifier} = function(){return 'newState';};
+            this.${firstStateIdentifier} = '${
                 escapeSequenceEncoder.encode(`\\w+ *\\(\\) *{\\w+ *`, true)
             }';
-            this.${symTbl.secondState} = '${
+            this.${secondStateIdentifier} = '${
                 escapeSequenceEncoder.encode(`['|"].+['|"];? *}`, true)
             }';
         };
         
-        StatesClass.prototype.${symTbl.checkState} = function () {
-            var regExp = new RegExp(this.${symTbl.firstState} + this.${symTbl.secondState});
-
-            return this.${symTbl.runState}(regExp.test(this.${symTbl.newState}.toString()) ? --this.${symTbl.states}[1] : --this.${symTbl.states}[0]);
+        StatesClass.prototype.${checkStateIdentifier} = function () {
+            var regExp = new RegExp(this.${firstStateIdentifier} + this.${secondStateIdentifier});
+            var expression = regExp.test(this.${newStateIdentifier}.toString())
+                ? --this.${statesIdentifier}[1]
+                : --this.${statesIdentifier}[0];
+            
+            return this.${runStateIdentifier}(expression);
         };
         
-        StatesClass.prototype.${symTbl.runState} = function (${symTbl.stateResult}) {
-            if (!Boolean(~${symTbl.stateResult})) {
-                return ${symTbl.stateResult};
+        StatesClass.prototype.${runStateIdentifier} = function (${stateResultIdentifier}) {
+            if (!Boolean(~${stateResultIdentifier})) {
+                return ${stateResultIdentifier};
             }
             
-            return this.${symTbl.getState}(this.${symTbl.rc4Bytes});
+            return this.${getStateIdentifier}(this.${rc4BytesIdentifier});
         };
 
-        StatesClass.prototype.${symTbl.getState} = function (${symTbl.rc4Bytes}) {
-            for (var i = 0, len = this.${symTbl.states}.length; i < len; i++) {
-                this.${symTbl.states}.push(Math.round(Math.random()));
-                len = this.${symTbl.states}.length;
+        StatesClass.prototype.${getStateIdentifier} = function (${rc4BytesIdentifier}) {
+            for (var i = 0, len = this.${statesIdentifier}.length; i < len; i++) {
+                this.${statesIdentifier}.push(Math.round(Math.random()));
+                len = this.${statesIdentifier}.length;
             }
             
-            return ${symTbl.rc4Bytes}(this.${symTbl.states}[0]);
+            return ${rc4BytesIdentifier}(this.${statesIdentifier}[0]);
         };
 
-        new StatesClass({stringArrayCallsWrapperName}).${symTbl.checkState}();
+        new StatesClass({stringArrayCallsWrapperName}).${checkStateIdentifier}();
     `;
 }

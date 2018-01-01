@@ -12,7 +12,8 @@ export class CLIUtils {
      * @returns {string}
      */
     public static getOutputCodePath (inputPath: string): string {
-        return inputPath
+        return path
+            .normalize(inputPath)
             .split('.')
             .map((value: string, index: number) => {
                 return index === 0 ? `${value}${JavaScriptObfuscatorCLI.obfuscatedFilePrefix}` : value;

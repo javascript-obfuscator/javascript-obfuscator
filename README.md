@@ -210,11 +210,15 @@ javascript-obfuscator samples/sample.js --output output/output.js --compact true
 // creates a new file output/output.js
 ```
 
-#### Obfuscate directory
+#### Obfuscate directory recursively
 
 Usage:
 ```sh
-javascript-obfuscator input_directory_name [options]
+javascript-obfuscator ./dist [options]
+// creates a new obfuscated files under `./dist` directory near the input files with `obfuscated` postfix
+
+javascript-obfuscator ./dist --output ./dist/obfuscated [options]
+// creates a folder structure with obfuscated files under `./dist/obfuscated` path
 ```
 
 Obfuscation of all `.js` files under input directory. If this directory contains already obfuscated files with `-obfuscated` postfix - these files will ignored.
@@ -828,7 +832,7 @@ Become a sponsor and get your logo on our README on Github with a link to your s
 
 
 ## License
-Copyright (C) 2017 [Timofey Kachalov](http://github.com/sanex3339).
+Copyright (C) 2016-2018 [Timofey Kachalov](http://github.com/sanex3339).
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:

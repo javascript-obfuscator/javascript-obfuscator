@@ -143,7 +143,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     }
 
     public initialize (): void {
-        this.inputPath = this.arguments[0] || '';
+        this.inputPath = path.normalize(this.arguments[0] || '');
         this.commands = <commander.CommanderStatic>(new commander.Command());
 
         this.configureCommands();
@@ -331,13 +331,19 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
      * @param {TSourceCodeData} sourceCodeData
      */
     private processSourceCodeData (sourceCodeData: TSourceCodeData): void {
+        const outputPath: string = this.inputCLIOptions.output
+            ? path.normalize(this.inputCLIOptions.output)
+            : '';
+
         if (!Array.isArray(sourceCodeData)) {
-            const outputCodePath: string = this.inputCLIOptions.output || CLIUtils.getOutputCodePath(this.inputPath);
+            const outputCodePath: string = outputPath || CLIUtils.getOutputCodePath(this.inputPath);
 
             this.processSourceCode(sourceCodeData, outputCodePath);
         } else {
             sourceCodeData.forEach(({ filePath, content }: IFileData) => {
-                const outputCodePath: string = CLIUtils.getOutputCodePath(filePath);
+                const outputCodePath: string = outputPath
+                    ? path.join(outputPath, filePath)
+                    : CLIUtils.getOutputCodePath(filePath);
 
                 this.processSourceCode(content, outputCodePath);
             });

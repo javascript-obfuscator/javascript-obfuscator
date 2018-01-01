@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
+import * as rimraf from 'rimraf';
 import * as sinon from 'sinon';
 
 import { assert } from 'chai';
@@ -170,8 +171,70 @@ describe('JavaScriptObfuscatorCLI', function (): void {
             });
 
             after(() => {
-                fs.unlinkSync(outputFixturesFilePath1);
-                fs.unlinkSync(outputFixturesFilePath2);
+                rimraf.sync(outputFixturesFilePath1);
+                rimraf.sync(outputFixturesFilePath2);
+            });
+        });
+
+        describe('Variant #3: obfuscation of directory with `output` option', () => {
+            const directoryPath: string = `${fixturesDirName}/directory-obfuscation`;
+            const outputDirectoryName: string = 'obfuscated';
+            const outputDirectoryPath: string = `${directoryPath}/${outputDirectoryName}`;
+            const outputFileName1: string = 'foo.js';
+            const outputFileName2: string = 'bar.js';
+            const outputFileName3: string = 'baz.js';
+
+            let outputFixturesFilePath1: string,
+                outputFixturesFilePath2: string,
+                outputFixturesFilePath3: string,
+                isFileExist1: boolean,
+                isFileExist2: boolean,
+                isFileExist3: boolean;
+
+            before(() => {
+                outputFixturesFilePath1 = `${outputDirectoryPath}/${directoryPath}/${outputFileName1}`;
+                outputFixturesFilePath2 = `${outputDirectoryPath}/${directoryPath}/${outputFileName2}`;
+                outputFixturesFilePath3 = `${outputDirectoryPath}/${directoryPath}/${outputFileName3}`;
+
+                JavaScriptObfuscator.runCLI([
+                    'node',
+                    'javascript-obfuscator',
+                    directoryPath,
+                    '--output',
+                    outputDirectoryPath
+                ]);
+
+                isFileExist1 = fs.existsSync(outputFixturesFilePath1);
+                isFileExist2 = fs.existsSync(outputFixturesFilePath2);
+                isFileExist3 = fs.existsSync(outputFixturesFilePath3);
+            });
+
+            it(
+                `should create file \`${outputFileName1}\` with obfuscated code in ` +
+                `\`${fixturesDirName}/${outputDirectoryName}\` directory`,
+                () => {
+                    assert.equal(isFileExist1, true);
+                }
+            );
+
+            it(
+                `should create file \`${outputFileName2}\` with obfuscated code in ` +
+                `\`${fixturesDirName}/${outputDirectoryName}\` directory`,
+                () => {
+                    assert.equal(isFileExist2, true);
+                }
+            );
+
+            it(
+                `shouldn't create file \`${outputFileName3}\` in ` +
+                `\`${fixturesDirName}/${outputDirectoryName}\` directory`,
+                () => {
+                    assert.equal(isFileExist3, false);
+                }
+            );
+
+            after(() => {
+                rimraf.sync(outputDirectoryPath);
             });
         });
 
@@ -225,8 +288,8 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     });
 
                     after(() => {
-                        fs.unlinkSync(outputFilePath);
-                        fs.unlinkSync(outputSourceMapPath);
+                        rimraf.sync(outputFilePath);
+                        rimraf.sync(outputSourceMapPath);
                     });
                 });
 
@@ -516,7 +579,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
         });
 
         after(() => {
-            fs.rmdirSync(outputDirName);
+            rimraf.sync(outputDirName);
         });
     });
 });

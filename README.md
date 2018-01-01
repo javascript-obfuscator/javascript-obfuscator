@@ -251,9 +251,9 @@ For example:
 
 Some input source code that will obfuscated with some obfuscation options can trigger false positive alerts in a few antiviruses. If you will get this false positive triggers, try to play with obfuscation options.
 
-* Change `stringArrayEncoding` from between `rc4` and `base64` or disable it;
-* Change `identifierNamesGenerator` option value from `hexadecimal` on `mangled`;
-* Disable `selfDefending`.
+* Try to change `stringArrayEncoding` option value between `rc4` and `base64` values or disable it completely;
+* Try to change `identifierNamesGenerator` option value from `hexadecimal` on `mangled`;
+* Try to disable `selfDefending`.
 
 If this wont help - attach your source code and describe your obfuscation options here:
 https://github.com/javascript-obfuscator/javascript-obfuscator/issues/51

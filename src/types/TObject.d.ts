@@ -1,1 +1,1 @@
-export type TObject = {[key: string]: any};
+export type TObject <T = any> = {[key: string]: T};

@@ -1,12 +1,23 @@
+import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
+
 /**
+ * @param {IRandomGenerator} randomGenerator
  * @returns {string}
+ * @constructor
  */
-export function StringArrayBase64DecodeNodeTemplate (): string {
+export function StringArrayBase64DecodeNodeTemplate (
+    randomGenerator: IRandomGenerator
+): string {
+    const identifierLength: number = 6;
+    const initializedIdentifier: string = randomGenerator.getRandomString(identifierLength);
+    const base64DecodeFunctionIdentifier: string = randomGenerator.getRandomString(identifierLength);
+    const dataIdentifier: string = randomGenerator.getRandomString(identifierLength);
+
     return `
-        if ({stringArrayCallsWrapperName}.initialized === undefined) {
+        if ({stringArrayCallsWrapperName}.${initializedIdentifier} === undefined) {
             {atobPolyfill}
             
-            {stringArrayCallsWrapperName}.base64DecodeUnicode = function (str) {
+            {stringArrayCallsWrapperName}.${base64DecodeFunctionIdentifier} = function (str) {
                 var string = atob(str);
                 var newStringChars = [];
                 
@@ -17,18 +28,18 @@ export function StringArrayBase64DecodeNodeTemplate (): string {
                 return decodeURIComponent(newStringChars);
             };
             
-            {stringArrayCallsWrapperName}.data = {};
+            {stringArrayCallsWrapperName}.${dataIdentifier} = {};
             
-            {stringArrayCallsWrapperName}.initialized = true;
+            {stringArrayCallsWrapperName}.${initializedIdentifier} = true;
         }
                   
-        var cachedValue = {stringArrayCallsWrapperName}.data[index];
+        var cachedValue = {stringArrayCallsWrapperName}.${dataIdentifier}[index];
                         
         if (cachedValue === undefined) {
             {selfDefendingCode}
             
-            value = {stringArrayCallsWrapperName}.base64DecodeUnicode(value);
-            {stringArrayCallsWrapperName}.data[index] = value;
+            value = {stringArrayCallsWrapperName}.${base64DecodeFunctionIdentifier}(value);
+            {stringArrayCallsWrapperName}.${dataIdentifier}[index] = value;
         } else {
             value = cachedValue;
         }

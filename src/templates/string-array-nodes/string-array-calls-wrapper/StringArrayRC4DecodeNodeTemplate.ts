@@ -1,39 +1,42 @@
-import { Utils } from '../../../utils/Utils';
+import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 
 /**
+ * @param {IRandomGenerator} randomGenerator
  * @returns {string}
+ * @constructor
  */
-export function StringArrayRc4DecodeNodeTemplate (): string {
-    const symTbl: { [key: string]: string } = {
-        'initialized': Utils.generateIden(),
-        'rc4': Utils.generateIden(),
-        'data': Utils.generateIden(),
-        'once': Utils.generateIden()
-    };
+export function StringArrayRc4DecodeNodeTemplate (
+    randomGenerator: IRandomGenerator
+): string {
+    const identifierLength: number = 6;
+    const initializedIdentifier: string = randomGenerator.getRandomString(identifierLength);
+    const rc4Identifier: string = randomGenerator.getRandomString(identifierLength);
+    const dataIdentifier: string = randomGenerator.getRandomString(identifierLength);
+    const onceIdentifier: string = randomGenerator.getRandomString(identifierLength);
   
     return `
-        if ({stringArrayCallsWrapperName}.${symTbl.initialized} === undefined) {
+        if ({stringArrayCallsWrapperName}.${initializedIdentifier} === undefined) {
             {atobPolyfill}
             
             {rc4Polyfill}
-            {stringArrayCallsWrapperName}.${symTbl.rc4} = rc4;
+            {stringArrayCallsWrapperName}.${rc4Identifier} = rc4;
             
-            {stringArrayCallsWrapperName}.${symTbl.data} = {};
+            {stringArrayCallsWrapperName}.${dataIdentifier} = {};
             
-            {stringArrayCallsWrapperName}.${symTbl.initialized} = true;
+            {stringArrayCallsWrapperName}.${initializedIdentifier} = true;
         }
   
-        var cachedValue = {stringArrayCallsWrapperName}.${symTbl.data}[index];
+        var cachedValue = {stringArrayCallsWrapperName}.${dataIdentifier}[index];
 
         if (cachedValue === undefined) {
-            if ({stringArrayCallsWrapperName}.${symTbl.once} === undefined) {
+            if ({stringArrayCallsWrapperName}.${onceIdentifier} === undefined) {
                 {selfDefendingCode}
                 
-                {stringArrayCallsWrapperName}.${symTbl.once} = true;
+                {stringArrayCallsWrapperName}.${onceIdentifier} = true;
             }
             
-            value = {stringArrayCallsWrapperName}.${symTbl.rc4}(value, key);
-            {stringArrayCallsWrapperName}.${symTbl.data}[index] = value;
+            value = {stringArrayCallsWrapperName}.${rc4Identifier}(value, key);
+            {stringArrayCallsWrapperName}.${dataIdentifier}[index] = value;
         } else {
             value = cachedValue;
         }

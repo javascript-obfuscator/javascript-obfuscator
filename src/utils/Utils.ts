@@ -71,24 +71,4 @@ export class Utils {
             })
             .join(' + ');
     }
-    
-    /**
-     * @returns {string}
-     */
-    public static generateIden (): string {
-        let validIden: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_';
-        let ret: string = '';
-        
-        const idenIdx: (() => number) = () => Math.floor(Math.random() * validIden.length) % validIden.length;
-
-        ret += validIden[idenIdx()];
-        validIden += '0123456789';
-        
-        const len: number = Math.floor((Math.random() * 10) + 3);
-        for (let i: number = 0; i < len; i++) {
-            ret += validIden[idenIdx()];
-        }
-        
-        return ret;
-    }
 }

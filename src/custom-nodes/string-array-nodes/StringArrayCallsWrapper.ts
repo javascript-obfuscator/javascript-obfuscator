@@ -118,29 +118,41 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
             selfDefendingCode: string = '';
 
         if (this.options.selfDefending) {
-            selfDefendingCode = format(SelfDefendingTemplate(this.escapeSequenceEncoder), {
-                stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
-                stringArrayName: this.stringArrayName
-            });
+            selfDefendingCode = format(
+                SelfDefendingTemplate(
+                    this.randomGenerator,
+                    this.escapeSequenceEncoder
+                ),
+                {
+                    stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
+                    stringArrayName: this.stringArrayName
+                }
+            );
         }
 
         switch (this.options.stringArrayEncoding) {
             case StringArrayEncoding.Rc4:
-                decodeStringArrayTemplate = format(StringArrayRc4DecodeNodeTemplate(), {
-                    atobPolyfill,
-                    rc4Polyfill: Rc4Template(),
-                    selfDefendingCode,
-                    stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
-                });
+                decodeStringArrayTemplate = format(
+                    StringArrayRc4DecodeNodeTemplate(this.randomGenerator),
+                    {
+                        atobPolyfill,
+                        rc4Polyfill: Rc4Template(),
+                        selfDefendingCode,
+                        stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
+                    }
+                );
 
                 break;
 
             case StringArrayEncoding.Base64:
-                decodeStringArrayTemplate = format(StringArrayBase64DecodeNodeTemplate(), {
-                    atobPolyfill,
-                    selfDefendingCode,
-                    stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
-                });
+                decodeStringArrayTemplate = format(
+                    StringArrayBase64DecodeNodeTemplate(this.randomGenerator),
+                    {
+                        atobPolyfill,
+                        selfDefendingCode,
+                        stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
+                    }
+                );
 
                 break;
         }

@@ -18,9 +18,9 @@ import { NodeUtils } from '../../node/NodeUtils';
 @injectable()
 export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
     /**
-     * @type {Map<VariableDeclarator, BlockStatement>}
+     * @type {Map<VariableDeclarator, TNodeWithScope>}
      */
-    private cachedScopeNodesMap: Map <ESTree.VariableDeclarator, ESTree.BlockStatement> = new Map();
+    private cachedScopeNodesMap: Map <ESTree.VariableDeclarator, TNodeWithScope> = new Map();
 
     /**
      * @param {IRandomGenerator} randomGenerator
@@ -34,27 +34,22 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {BlockStatement} scopeNode
+     * @param {TNodeWithScope} scopeNode
      * @param {ExpressionStatement[]} expressionStatements
      * @param {Node} variableDeclarator
      */
     private static appendExpressionStatements (
-        scopeNode: ESTree.BlockStatement,
+        scopeNode: TNodeWithScope,
         expressionStatements: ESTree.ExpressionStatement[],
         variableDeclarator: ESTree.Node
     ): void {
         const variableDeclaration: ESTree.Node | undefined = variableDeclarator.parentNode;
 
-        if (
-            !variableDeclaration
-            || !NodeGuards.isVariableDeclarationNode(variableDeclaration)
-        ) {
+        if (!variableDeclaration || !NodeGuards.isVariableDeclarationNode(variableDeclaration)) {
             throw new Error('Cannot find variable declaration for variable declarator');
         }
 
-        const indexInBlockStatement: number = scopeNode.body.indexOf(variableDeclaration);
-
-        NodeAppender.insertNodeAtIndex(scopeNode, expressionStatements, indexInBlockStatement + 1);
+        NodeAppender.insertNodeAfter(scopeNode, expressionStatements, variableDeclaration);
     }
 
     /**
@@ -108,7 +103,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
 
         const scopeNode: TNodeWithScope | null = NodeUtils.getScopeOfNode(variableDeclarator);
 
-        if (!scopeNode || !NodeGuards.isBlockStatementNode(scopeNode)) {
+        if (!scopeNode || !NodeGuards.isNodeHasScope(scopeNode)) {
             return objectExpressionNode;
         }
 
@@ -216,7 +211,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
             return objectExpressionNode;
         }
 
-        const scopeNode: ESTree.BlockStatement | undefined = this.cachedScopeNodesMap.get(variableDeclarator);
+        const scopeNode: TNodeWithScope | undefined = this.cachedScopeNodesMap.get(variableDeclarator);
 
         if (!scopeNode) {
             return objectExpressionNode;

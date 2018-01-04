@@ -193,16 +193,13 @@ describe('ObjectExpressionKeysTransformer', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });
-    });
 
-    describe('Ignore transformation', () => {
-        describe('variant #1: switch catch statement', () => {
+        describe('variant #4: switch catch statement', () => {
             const match: string = `` +
                 `switch *\\(!!\\[]\\) *{` +
                     `case *!!\\[]:` +
-                        `var *${variableMatch} *= *{` +
-                            `'foo': *'bar'` +
-                        `};` +
+                        `var *${variableMatch} *= *{};` +
+                        `${variableMatch}\\['foo'] *= *'bar';` +
                 `}` +
             ``;
             const regExp: RegExp = new RegExp(match);
@@ -222,11 +219,13 @@ describe('ObjectExpressionKeysTransformer', () => {
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
 
-            it('shouldn\'t transform object keys', () => {
+            it('should transform object keys', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });
+    });
 
+    describe('Ignore transformation', () => {
         describe('variant #2: variable declaration without initialization', () => {
             const match: string = `` +
                 `var *${variableMatch};` +

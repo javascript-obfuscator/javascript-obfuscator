@@ -197,7 +197,7 @@ export class NodeGuards {
         const parentNode: ESTree.Node | undefined = node.parentNode;
 
         if (!parentNode) {
-            return false;
+            throw new ReferenceError('`parentNode` property of given node is `undefined`');
         }
 
         return NodeGuards.isProgramNode(node) || (
@@ -271,7 +271,7 @@ export class NodeGuards {
             parentNode.key === node;
         const parentNodeIsMemberExpressionNode: boolean = (
             NodeGuards.isMemberExpressionNode(parentNode) &&
-            parentNode.computed === false &&
+            !parentNode.computed &&
             parentNode.property === node
         );
         const parentNodeIsMethodDefinitionNode: boolean = NodeGuards.isMethodDefinitionNode(parentNode) &&

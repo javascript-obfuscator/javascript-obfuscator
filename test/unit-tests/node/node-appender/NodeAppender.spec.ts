@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { ServiceIdentifiers } from '../../../../src/container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -159,6 +161,29 @@ describe('NodeAppender', () => {
                     assert.deepEqual(astTree, expectedAstTree);
                 });
             });
+        });
+    });
+
+    describe('insertNodeAfter (scopeNode: TNodeWithScope, scopeStatements: TStatement[], targetStatement: ESTree.Statement): void', () => {
+        let astTree: ESTree.Program,
+            expectedAstTree: ESTree.Program,
+            node: TStatement[],
+            targetStatement: ESTree.Statement;
+
+        before(() => {
+            node = convertCodeToStructure('/fixtures/simple-input.js');
+            astTree = convertCodeToAst('/fixtures/insert-node-after.js');
+            expectedAstTree = convertCodeToAst('/fixtures/insert-node-after-expected.js');
+            targetStatement = <ESTree.Statement>astTree.body[1];
+
+            astTree = NodeUtils.parentize(astTree);
+            expectedAstTree = NodeUtils.parentize(expectedAstTree);
+
+            NodeAppender.insertNodeAfter(astTree, node, targetStatement);
+        });
+
+        it('should insert given node in `BlockStatement` node body after target statement', () => {
+            assert.deepEqual(astTree, expectedAstTree);
         });
     });
 

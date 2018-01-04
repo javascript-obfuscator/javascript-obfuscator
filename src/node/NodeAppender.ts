@@ -24,21 +24,21 @@ import { IStackTraceData } from '../interfaces/analyzers/stack-trace-analyzer/IS
  */
 export class NodeAppender {
     /**
-     * @param {TNodeWithBlockScope} scopeNode
+     * @param {TNodeWithBlockScope} blockScopeNode
      * @param {TStatement[]} nodeBodyStatements
      */
     public static appendNode (
-        scopeNode: TNodeWithBlockScope,
+        blockScopeNode: TNodeWithBlockScope,
         nodeBodyStatements: TStatement[]
     ): void {
         if (!NodeAppender.validateBodyStatements(nodeBodyStatements)) {
             nodeBodyStatements = [];
         }
 
-        nodeBodyStatements = NodeAppender.parentizeBodyStatementsBeforeAppend(scopeNode, nodeBodyStatements);
+        nodeBodyStatements = NodeAppender.parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements);
 
-        scopeNode.body = [
-            ...scopeNode.body,
+        blockScopeNode.body = [
+            ...blockScopeNode.body,
             ...nodeBodyStatements
         ];
     }

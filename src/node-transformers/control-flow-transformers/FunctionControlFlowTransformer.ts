@@ -7,7 +7,7 @@ import * as ESTree from 'estree';
 import { TControlFlowCustomNodeFactory } from '../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TControlFlowReplacerFactory } from '../../types/container/node-transformers/TControlFlowReplacerFactory';
 import { TControlFlowStorageFactory } from '../../types/container/node-transformers/TControlFlowStorageFactory';
-import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
+import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -57,9 +57,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     private readonly visitedFunctionNodes: Set<ESTree.Function> = new Set();
 
     /**
-     * @type {Set<TNodeWithBlockStatement>}
+     * @type {Set<TNodeWithBlockScope>}
      */
-    private readonly hostNodesWithControlFlowNode: Set<TNodeWithBlockStatement> = new Set();
+    private readonly hostNodesWithControlFlowNode: Set<TNodeWithBlockScope> = new Set();
 
     /**
      * @type {TControlFlowReplacerFactory}
@@ -131,7 +131,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
             return functionNode;
         }
 
-        const hostNode: TNodeWithBlockStatement = this.getHostNode(functionNode.body);
+        const hostNode: TNodeWithBlockScope = this.getHostNode(functionNode.body);
         const controlFlowStorage: IStorage<ICustomNode> = this.getControlFlowStorage(hostNode);
 
         this.controlFlowData.set(hostNode, controlFlowStorage);
@@ -153,10 +153,10 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {TNodeWithBlockStatement} hostNode
+     * @param {TNodeWithBlockScope} hostNode
      * @returns {IStorage<ICustomNode>}
      */
-    private getControlFlowStorage (hostNode: TNodeWithBlockStatement): IStorage<ICustomNode> {
+    private getControlFlowStorage (hostNode: TNodeWithBlockScope): IStorage<ICustomNode> {
         const controlFlowStorage: IStorage <ICustomNode> = this.controlFlowStorageFactory();
 
         if (this.controlFlowData.has(hostNode)) {
@@ -174,10 +174,10 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {BlockStatement} functionNodeBody
-     * @returns {TNodeWithBlockStatement}
+     * @returns {TNodeWithBlockScope}
      */
-    private getHostNode (functionNodeBody: ESTree.BlockStatement): TNodeWithBlockStatement {
-        const blockScopesOfNode: TNodeWithBlockStatement[] = NodeUtils.getBlockScopesOfNode(functionNodeBody);
+    private getHostNode (functionNodeBody: ESTree.BlockStatement): TNodeWithBlockScope {
+        const blockScopesOfNode: TNodeWithBlockScope[] = NodeUtils.getBlockScopesOfNode(functionNodeBody);
 
         if (blockScopesOfNode.length === 1) {
             return functionNodeBody;

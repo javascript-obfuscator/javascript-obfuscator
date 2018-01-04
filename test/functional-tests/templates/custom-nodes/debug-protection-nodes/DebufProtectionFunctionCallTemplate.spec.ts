@@ -5,7 +5,7 @@ import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationRe
 
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
@@ -40,7 +40,7 @@ describe('DebugProtectionFunctionCallTemplate (): string', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_CUSTOM_NODES_PRESET,
+                    ...NO_ADDITIONAL_NODES_PRESET,
                     debugProtection: true
                 }
             );
@@ -75,7 +75,7 @@ describe('DebugProtectionFunctionCallTemplate (): string', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_CUSTOM_NODES_PRESET,
+                    ...NO_ADDITIONAL_NODES_PRESET,
                     debugProtection: true,
                     mangle: true
                 }
@@ -111,7 +111,7 @@ describe('DebugProtectionFunctionCallTemplate (): string', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_CUSTOM_NODES_PRESET,
+                    ...NO_ADDITIONAL_NODES_PRESET,
                     debugProtection: true
                 }
             );
@@ -147,7 +147,7 @@ describe('DebugProtectionFunctionCallTemplate (): string', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_CUSTOM_NODES_PRESET,
+                    ...NO_ADDITIONAL_NODES_PRESET,
                     debugProtection: true
                 }
             );

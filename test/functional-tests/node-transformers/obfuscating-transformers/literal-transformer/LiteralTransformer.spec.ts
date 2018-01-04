@@ -4,7 +4,7 @@ import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationRe
 
 import { StringArrayEncoding } from '../../../../../src/enums/StringArrayEncoding';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
@@ -23,7 +23,7 @@ describe('LiteralTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
@@ -51,7 +51,7 @@ describe('LiteralTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET
+                        ...NO_ADDITIONAL_NODES_PRESET
                     }
                 );
 
@@ -72,7 +72,7 @@ describe('LiteralTransformer', () => {
                 testFunc = () => JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
@@ -95,7 +95,7 @@ describe('LiteralTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
@@ -123,7 +123,7 @@ describe('LiteralTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         unicodeEscapeSequence: true
 
                     }
@@ -148,7 +148,7 @@ describe('LiteralTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1,
                         unicodeEscapeSequence: true
@@ -177,7 +177,7 @@ describe('LiteralTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
@@ -202,7 +202,7 @@ describe('LiteralTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayEncoding: StringArrayEncoding.Base64,
                         stringArrayThreshold: 1
@@ -231,7 +231,7 @@ describe('LiteralTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayEncoding: StringArrayEncoding.Rc4,
                         stringArrayThreshold: 1
@@ -262,7 +262,7 @@ describe('LiteralTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     `${code}\n`.repeat(samples),
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: stringArrayThreshold
                     }
@@ -301,7 +301,7 @@ describe('LiteralTransformer', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_CUSTOM_NODES_PRESET,
+                    ...NO_ADDITIONAL_NODES_PRESET,
                     stringArray: true,
                     stringArrayThreshold: 1
                 }
@@ -325,7 +325,7 @@ describe('LiteralTransformer', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_CUSTOM_NODES_PRESET,
+                    ...NO_ADDITIONAL_NODES_PRESET,
                     stringArray: true,
                     stringArrayThreshold: 1
                 }
@@ -349,7 +349,7 @@ describe('LiteralTransformer', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_CUSTOM_NODES_PRESET,
+                    ...NO_ADDITIONAL_NODES_PRESET,
                     stringArray: true,
                     stringArrayThreshold: 1
                 }

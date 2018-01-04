@@ -36,7 +36,7 @@ const convertCodeToAst: (fixturePath: string) => ESTree.Program = (fixturePath) 
 };
 
 describe('NodeAppender', () => {
-    describe('appendNode (blockScopeNode: TNodeWithBlockStatement[], nodeBodyStatements: TStatement[]): void', () => {
+    describe('appendNode (blockScopeNode: TNodeWithBlockScope[], nodeBodyStatements: TStatement[]): void', () => {
         let astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
             node: TStatement[];
@@ -57,7 +57,7 @@ describe('NodeAppender', () => {
         });
     });
 
-    describe('appendNodeToOptimalBlockScope (blockScopeStackTraceData: IStackTraceData[], blockScopeNode: TNodeWithBlockStatement, nodeBodyStatements: TStatement[], index: number = 0): void', () => {
+    describe('appendNodeToOptimalBlockScope (blockScopeStackTraceData: IStackTraceData[], blockScopeNode: TNodeWithBlockScope, nodeBodyStatements: TStatement[], index: number = 0): void', () => {
         let stackTraceAnalyzer: IStackTraceAnalyzer,
             astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
@@ -162,7 +162,7 @@ describe('NodeAppender', () => {
         });
     });
 
-    describe('insertNodeAtIndex (blockScopeNode: TNodeWithBlockStatement[], nodeBodyStatements: TStatement[], index: number): void', () => {
+    describe('insertNodeAtIndex (blockScopeNode: TNodeWithBlockScope[], nodeBodyStatements: TStatement[], index: number): void', () => {
         let astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
             node: TStatement[];
@@ -183,7 +183,7 @@ describe('NodeAppender', () => {
         });
     });
 
-    describe('prependNode (blockScopeNode: TNodeWithBlockStatement[], nodeBodyStatements: TStatement[]): void', () => {
+    describe('prependNode (blockScopeNode: TNodeWithBlockScope[], nodeBodyStatements: TStatement[]): void', () => {
         let astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
             node: TStatement[];

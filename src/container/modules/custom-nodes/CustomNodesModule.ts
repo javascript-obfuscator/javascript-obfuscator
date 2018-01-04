@@ -8,6 +8,7 @@ import { ICustomNodeGroup } from '../../../interfaces/custom-nodes/ICustomNodeGr
 import { ControlFlowCustomNode } from "../../../enums/custom-nodes/ControlFlowCustomNode";
 import { CustomNode } from '../../../enums/custom-nodes/CustomNode';
 import { CustomNodeGroup } from '../../../enums/custom-nodes/CustomNodeGroup';
+import { DeadCodeInjectionCustomNode } from '../../../enums/custom-nodes/DeadCodeInjectionCustomNode';
 
 import { ConsoleOutputCustomNodeGroup } from '../../../custom-nodes/console-output-nodes/group/ConsoleOutputCustomNodeGroup';
 import { DebugProtectionCustomNodeGroup } from '../../../custom-nodes/debug-protection-nodes/group/DebugProtectionCustomNodeGroup';
@@ -17,6 +18,7 @@ import { StringArrayCustomNodeGroup } from '../../../custom-nodes/string-array-n
 
 import { BinaryExpressionFunctionNode } from '../../../custom-nodes/control-flow-flattening-nodes/BinaryExpressionFunctionNode';
 import { BlockStatementControlFlowFlatteningNode } from '../../../custom-nodes/control-flow-flattening-nodes/BlockStatementControlFlowFlatteningNode';
+import { BlockStatementDeadCodeInjectionNode } from '../../../custom-nodes/dead-code-injection-nodes/BlockStatementDeadCodeInjectionNode';
 import { CallExpressionControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/CallExpressionControlFlowStorageCallNode';
 import { CallExpressionFunctionNode } from '../../../custom-nodes/control-flow-flattening-nodes/CallExpressionFunctionNode';
 import { ControlFlowStorageNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/ControlFlowStorageNode';
@@ -114,6 +116,11 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
         .toConstructor(StringLiteralControlFlowStorageCallNode)
         .whenTargetNamed(ControlFlowCustomNode.StringLiteralControlFlowStorageCallNode);
 
+    // dead code injection custom nodes
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstructor(BlockStatementDeadCodeInjectionNode)
+        .whenTargetNamed(DeadCodeInjectionCustomNode.BlockStatementDeadCodeInjectionNode);
+
     // node groups
     bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
         .to(ConsoleOutputCustomNodeGroup)
@@ -140,10 +147,20 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
         .toFactory<ICustomNode>(InversifyContainerFacade
             .getFactory<CustomNode, ICustomNode>(ServiceIdentifiers.ICustomNode));
 
-    // control flow storage customNode constructor factory
+    // control flow customNode constructor factory
     bind<ICustomNode>(ServiceIdentifiers.Factory__IControlFlowCustomNode)
         .toFactory<ICustomNode>(InversifyContainerFacade
             .getConstructorFactory<ControlFlowCustomNode, ICustomNode>(
+                ServiceIdentifiers.Newable__ICustomNode,
+                ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
+                ServiceIdentifiers.IRandomGenerator,
+                ServiceIdentifiers.IOptions
+            ));
+
+    // dead code injection customNode constructor factory
+    bind<ICustomNode>(ServiceIdentifiers.Factory__IDeadCodeInjectionCustomNode)
+        .toFactory<ICustomNode>(InversifyContainerFacade
+            .getConstructorFactory<DeadCodeInjectionCustomNode, ICustomNode>(
                 ServiceIdentifiers.Newable__ICustomNode,
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
                 ServiceIdentifiers.IRandomGenerator,

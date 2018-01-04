@@ -5,7 +5,7 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TIdentifierObfuscatingReplacerFactory } from '../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory';
-import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
+import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
 import { TReplaceableIdentifiers } from '../../types/node-transformers/TReplaceableIdentifiers';
 import { TReplaceableIdentifiersNames } from '../../types/node-transformers/TReplaceableIdentifiersNames';
 
@@ -80,7 +80,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (variableDeclarationNode: ESTree.VariableDeclaration, parentNode: ESTree.Node): ESTree.Node {
-        const blockScopeNode: TNodeWithBlockStatement = NodeUtils
+        const blockScopeNode: TNodeWithBlockScope = NodeUtils
             .getBlockScopesOfNode(variableDeclarationNode)[0];
 
         if (!this.options.renameGlobals && blockScopeNode.type === NodeType.Program) {

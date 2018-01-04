@@ -1,6 +1,6 @@
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockStatement } from '../types/node/TNodeWithBlockStatement';
+import { TNodeWithBlockScope } from '../types/node/TNodeWithBlockScope';
 import { TStatement } from '../types/node/TStatement';
 
 import { IStackTraceData } from '../interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
@@ -24,38 +24,38 @@ import { IStackTraceData } from '../interfaces/analyzers/stack-trace-analyzer/IS
  */
 export class NodeAppender {
     /**
-     * @param {TNodeWithBlockStatement} blockScopeNode
+     * @param {TNodeWithBlockScope} scopeNode
      * @param {TStatement[]} nodeBodyStatements
      */
     public static appendNode (
-        blockScopeNode: TNodeWithBlockStatement,
+        scopeNode: TNodeWithBlockScope,
         nodeBodyStatements: TStatement[]
     ): void {
         if (!NodeAppender.validateBodyStatements(nodeBodyStatements)) {
             nodeBodyStatements = [];
         }
 
-        nodeBodyStatements = NodeAppender.parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements);
+        nodeBodyStatements = NodeAppender.parentizeBodyStatementsBeforeAppend(scopeNode, nodeBodyStatements);
 
-        blockScopeNode.body = [
-            ...blockScopeNode.body,
+        scopeNode.body = [
+            ...scopeNode.body,
             ...nodeBodyStatements
         ];
     }
 
     /**
      * @param {IStackTraceData[]} blockScopeStackTraceData
-     * @param {TNodeWithBlockStatement} blockScopeNode
+     * @param {TNodeWithBlockScope} blockScopeNode
      * @param {TStatement[]} nodeBodyStatements
      * @param {number} index
      */
     public static appendNodeToOptimalBlockScope (
         blockScopeStackTraceData: IStackTraceData[],
-        blockScopeNode: TNodeWithBlockStatement,
+        blockScopeNode: TNodeWithBlockScope,
         nodeBodyStatements: TStatement[],
         index: number = 0
     ): void {
-        let targetBlockScope: TNodeWithBlockStatement;
+        let targetBlockScope: TNodeWithBlockScope;
 
         if (!blockScopeStackTraceData.length) {
             targetBlockScope = blockScopeNode;
@@ -96,12 +96,12 @@ export class NodeAppender {
     }
 
     /**
-     * @param {TNodeWithBlockStatement} blockScopeNode
+     * @param {TNodeWithBlockScope} blockScopeNode
      * @param {TStatement[]} nodeBodyStatements
      * @param {number} index
      */
     public static insertNodeAtIndex (
-        blockScopeNode: TNodeWithBlockStatement,
+        blockScopeNode: TNodeWithBlockScope,
         nodeBodyStatements: TStatement[],
         index: number
     ): void {
@@ -119,11 +119,11 @@ export class NodeAppender {
     }
 
     /**
-     * @param {TNodeWithBlockStatement} blockScopeNode
+     * @param {TNodeWithBlockScope} blockScopeNode
      * @param {TStatement[]} nodeBodyStatements
      */
     public static prependNode (
-        blockScopeNode: TNodeWithBlockStatement,
+        blockScopeNode: TNodeWithBlockScope,
         nodeBodyStatements: TStatement[]
     ): void {
         if (!NodeAppender.validateBodyStatements(nodeBodyStatements)) {
@@ -139,12 +139,12 @@ export class NodeAppender {
     }
 
     /**
-     * @param {TNodeWithBlockStatement} blockScopeNode
+     * @param {TNodeWithBlockScope} blockScopeNode
      * @param {TStatement[]} nodeBodyStatements
      * @returns {TStatement[]}
      */
     private static parentizeBodyStatementsBeforeAppend (
-        blockScopeNode: TNodeWithBlockStatement,
+        blockScopeNode: TNodeWithBlockScope,
         nodeBodyStatements: TStatement[]
     ): TStatement[] {
         nodeBodyStatements.forEach((statement: TStatement) => {

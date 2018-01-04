@@ -2,7 +2,7 @@ import { assert } from 'chai';
 
 import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationResult';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
@@ -29,13 +29,14 @@ describe('BlockStatementControlFlowTransformer', function () {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
                 );
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                console.log(obfuscatedCode);
             });
 
             describe('`console.log` statements', ()=> {
@@ -117,7 +118,7 @@ describe('BlockStatementControlFlowTransformer', function () {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1,
                         unicodeEscapeSequence: false
@@ -208,7 +209,7 @@ describe('BlockStatementControlFlowTransformer', function () {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
@@ -232,7 +233,7 @@ describe('BlockStatementControlFlowTransformer', function () {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
@@ -256,7 +257,7 @@ describe('BlockStatementControlFlowTransformer', function () {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
@@ -280,7 +281,7 @@ describe('BlockStatementControlFlowTransformer', function () {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
@@ -304,7 +305,7 @@ describe('BlockStatementControlFlowTransformer', function () {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
@@ -331,7 +332,7 @@ describe('BlockStatementControlFlowTransformer', function () {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
@@ -360,7 +361,7 @@ describe('BlockStatementControlFlowTransformer', function () {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
@@ -384,7 +385,7 @@ describe('BlockStatementControlFlowTransformer', function () {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
@@ -411,7 +412,7 @@ describe('BlockStatementControlFlowTransformer', function () {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
@@ -440,7 +441,7 @@ describe('BlockStatementControlFlowTransformer', function () {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
@@ -471,7 +472,7 @@ describe('BlockStatementControlFlowTransformer', function () {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code.repeat(samples),
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: controlFlowFlatteningThreshold,
                     }
@@ -513,7 +514,7 @@ describe('BlockStatementControlFlowTransformer', function () {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }

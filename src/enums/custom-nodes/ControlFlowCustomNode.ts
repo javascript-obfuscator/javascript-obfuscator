@@ -1,11 +1,11 @@
 export enum ControlFlowCustomNode {
-    BinaryExpressionFunctionNode,
-    BlockStatementControlFlowFlatteningNode,
-    CallExpressionControlFlowStorageCallNode,
-    CallExpressionFunctionNode,
-    ControlFlowStorageNode,
-    ExpressionWithOperatorControlFlowStorageCallNode,
-    LogicalExpressionFunctionNode,
-    StringLiteralControlFlowStorageCallNode,
-    StringLiteralNode,
+    BinaryExpressionFunctionNode = 'BinaryExpressionFunctionNode',
+    BlockStatementControlFlowFlatteningNode = 'BlockStatementControlFlowFlatteningNode',
+    CallExpressionControlFlowStorageCallNode = 'CallExpressionControlFlowStorageCallNode',
+    CallExpressionFunctionNode = 'CallExpressionFunctionNode',
+    ControlFlowStorageNode = 'ControlFlowStorageNode',
+    ExpressionWithOperatorControlFlowStorageCallNode = 'ExpressionWithOperatorControlFlowStorageCallNode',
+    LogicalExpressionFunctionNode = 'LogicalExpressionFunctionNode',
+    StringLiteralControlFlowStorageCallNode = 'StringLiteralControlFlowStorageCallNode',
+    StringLiteralNode = 'StringLiteralNode'
 }

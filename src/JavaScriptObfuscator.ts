@@ -51,6 +51,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
     private static readonly convertingTransformersList: NodeTransformer[] = [
         NodeTransformer.MemberExpressionTransformer,
         NodeTransformer.MethodDefinitionTransformer,
+        NodeTransformer.ObjectExpressionKeysTransformer,
         NodeTransformer.TemplateLiteralTransformer
     ];
 
@@ -250,12 +251,19 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
             );
         }
 
-        // fifth pass: converting and obfuscating transformers
+        // fifth pass: converting transformers
+        this.logger.info(LoggingMessage.StagePreObfuscation);
+        astTree = this.transformersRunner.transform(
+            astTree,
+            JavaScriptObfuscator.convertingTransformersList
+        );
+
+        // sixth pass: obfuscating transformers
         this.logger.info(LoggingMessage.StageObfuscation);
-        astTree = this.transformersRunner.transform(astTree, [
-            ...JavaScriptObfuscator.convertingTransformersList,
-            ...JavaScriptObfuscator.obfuscatingTransformersList
-        ]);
+        astTree = this.transformersRunner.transform(
+            astTree,
+            JavaScriptObfuscator.obfuscatingTransformersList
+        );
 
         this.obfuscationEventEmitter.emit(ObfuscationEvent.AfterObfuscation, astTree, stackTraceData);
 

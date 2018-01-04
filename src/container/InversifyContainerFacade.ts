@@ -47,7 +47,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      * @param {interfaces.ServiceIdentifier<U>} serviceIdentifier
      * @returns {U}
      */
-    public static getFactory <T extends number, U> (
+    public static getFactory <T extends string, U> (
         serviceIdentifier: interfaces.ServiceIdentifier<U>
     ): (context: interfaces.Context) => (bindingName: T) => U {
         return (context: interfaces.Context): (bindingName: T) => U => {
@@ -61,7 +61,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      * @param {interfaces.ServiceIdentifier<U>} serviceIdentifier
      * @returns {U}
      */
-    public static getCacheFactory <T extends number, U> (
+    public static getCacheFactory <T extends string, U> (
         serviceIdentifier: interfaces.ServiceIdentifier<U>
     ): (context: interfaces.Context) => (bindingName: T) => U {
         return (context: interfaces.Context): (bindingName: T) => U => {
@@ -86,7 +86,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      * @param {any[]} dependencies
      * @returns {U}
      */
-    public static getConstructorFactory <T extends number, U> (
+    public static getConstructorFactory <T extends string, U> (
         serviceIdentifier: interfaces.ServiceIdentifier<interfaces.Newable<U>>,
         ...dependencies: any[]
     ): (context: interfaces.Context) => (bindingName: T) => U {

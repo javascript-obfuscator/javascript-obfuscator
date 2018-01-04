@@ -4,7 +4,7 @@ import { IdentifierNamesGenerator } from '../../enums/generators/identifier-name
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
 
-export const NO_CUSTOM_NODES_PRESET: TInputOptions = Object.freeze({
+export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     compact: true,
     controlFlowFlattening: false,
     controlFlowFlatteningThreshold: 0,
@@ -29,5 +29,6 @@ export const NO_CUSTOM_NODES_PRESET: TInputOptions = Object.freeze({
     stringArrayEncoding: false,
     stringArrayThreshold: 0,
     target: ObfuscationTarget.Browser,
+    transformObjectKeys: false,
     unicodeEscapeSequence: false
 });

@@ -3,26 +3,14 @@ import * as esprima from 'esprima';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockStatement } from '../types/node/TNodeWithBlockStatement';
+import { TNodeWithBlockScope } from '../types/node/TNodeWithBlockScope';
+import { TNodeWithScope } from '../types/node/TNodeWithScope';
 import { TObject } from '../types/TObject';
 import { TStatement } from '../types/node/TStatement';
-
-import { NodeType } from '../enums/node/NodeType';
 
 import { NodeGuards } from './NodeGuards';
 
 export class NodeUtils {
-    /**
-     * @type {string[]}
-     */
-    private static readonly nodesWithBlockScope: string[] = [
-        NodeType.ArrowFunctionExpression,
-        NodeType.FunctionDeclaration,
-        NodeType.FunctionExpression,
-        NodeType.MethodDefinition,
-        NodeType.Program
-    ];
-
     /**
      * @param {T} astTree
      * @returns {T}
@@ -115,48 +103,25 @@ export class NodeUtils {
 
     /**
      * @param {NodeGuards} node
-     * @param {number} index
-     * @returns {NodeGuards}
+     * @param {TNodeWithBlockScope[]} blockScopes
+     * @returns {TNodeWithBlockScope[]}
      */
-    public static getBlockStatementNodeByIndex (node: ESTree.Node, index: number = 0): ESTree.Node {
-        if (!NodeGuards.isNodeHasBlockStatement(node)) {
-            throw new TypeError('The specified node have no a block-statement');
-        }
-
-        if (node.body[index] === undefined) {
-            throw new ReferenceError(`Wrong index \`${index}\`. Block-statement body length is \`${node.body.length}\``);
-        }
-
-        return node.body[index];
-    }
-
-    /**
-     * @param {NodeGuards} node
-     * @param {TNodeWithBlockStatement[]} blockScopes
-     * @returns {TNodeWithBlockStatement[]}
-     */
-    public static getBlockScopesOfNode (node: ESTree.Node, blockScopes: TNodeWithBlockStatement[] = []): TNodeWithBlockStatement[] {
+    public static getBlockScopesOfNode (node: ESTree.Node, blockScopes: TNodeWithBlockScope[] = []): TNodeWithBlockScope[] {
         const parentNode: ESTree.Node | undefined = node.parentNode;
 
         if (!parentNode) {
             throw new ReferenceError('`parentNode` property of given node is `undefined`');
         }
 
-        if (NodeGuards.isBlockStatementNode(parentNode)) {
-            if (!parentNode.parentNode) {
-                throw new ReferenceError('`parentNode` property of `parentNode` of given node is `undefined`');
-            }
-
-            if (NodeUtils.nodesWithBlockScope.includes(parentNode.parentNode.type)) {
-                blockScopes.push(parentNode);
-            }
+        if (NodeGuards.isBlockStatementNode(parentNode) && NodeGuards.isNodeHasBlockScope(parentNode)) {
+            blockScopes.push(parentNode);
         }
 
         if (node !== parentNode) {
             return NodeUtils.getBlockScopesOfNode(parentNode, blockScopes);
         }
 
-        if (NodeGuards.isNodeHasBlockStatement(parentNode)) {
+        if (NodeGuards.isNodeHasBlockScope(parentNode)) {
             blockScopes.push(parentNode);
         }
 
@@ -165,25 +130,20 @@ export class NodeUtils {
 
     /**
      * @param {NodeGuards} node
-     * @param {number} depth
-     * @returns {number}
+     * @returns {TNodeWithScope}
      */
-    public static getNodeBlockScopeDepth (node: ESTree.Node, depth: number = 0): number {
+    public static getScopeOfNode (node: ESTree.Node): TNodeWithScope {
         const parentNode: ESTree.Node | undefined = node.parentNode;
 
         if (!parentNode) {
             throw new ReferenceError('`parentNode` property of given node is `undefined`');
         }
 
-        if (NodeGuards.isProgramNode(parentNode)) {
-            return depth;
+        if (!NodeGuards.isNodeHasScope(parentNode)) {
+            return NodeUtils.getScopeOfNode(parentNode);
         }
 
-        if (NodeGuards.isBlockStatementNode(node) && NodeUtils.nodesWithBlockScope.includes(parentNode.type)) {
-            return NodeUtils.getNodeBlockScopeDepth(parentNode, ++depth);
-        }
-
-        return NodeUtils.getNodeBlockScopeDepth(parentNode, depth);
+        return parentNode;
     }
 
     /**
@@ -203,7 +163,7 @@ export class NodeUtils {
      * @returns {T}
      */
     public static parentize <T extends ESTree.Node = ESTree.Node> (astTree: T): T {
-        estraverse.traverse(astTree, {
+        estraverse.replace(astTree, {
             enter: NodeUtils.parentizeNode
         });
 

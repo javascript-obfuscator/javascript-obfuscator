@@ -6,9 +6,9 @@
   version "4.0.10"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.0.10.tgz#0eb222c7353adde8e0980bea04165d4d3b6afef3"
 
-"@types/chance@0.7.35":
-  version "0.7.35"
-  resolved "https://registry.yarnpkg.com/@types/chance/-/chance-0.7.35.tgz#e76f3441b7763476c58eb7dc32f62da3d8ea547e"
+"@types/chance@0.7.36":
+  version "0.7.36"
+  resolved "https://registry.yarnpkg.com/@types/chance/-/chance-0.7.36.tgz#1c3e14b9b11463d454182393ebcd8e977f1daff5"
 
 "@types/commander@2.12.2":
   version "2.12.2"
@@ -74,9 +74,9 @@
   version "8.0.53"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.53.tgz#396b35af826fa66aad472c8cb7b8d5e277f4e6d8"
 
-"@types/node@8.5.2":
-  version "8.5.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.5.2.tgz#83b8103fa9a2c2e83d78f701a9aa7c9539739aa5"
+"@types/node@8.5.5":
+  version "8.5.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.5.5.tgz#6f9e8164ae1a55a9beb1d2571cfb7acf9d720c61"
 
 "@types/rimraf@^2.0.2":
   version "2.0.2"
@@ -1450,9 +1450,9 @@ escape-string-regexp@1.0.5, escape-string-regexp@^1.0.2, escape-string-regexp@^1
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
 
-escodegen-wallaby@1.6.15:
-  version "1.6.15"
-  resolved "https://registry.yarnpkg.com/escodegen-wallaby/-/escodegen-wallaby-1.6.15.tgz#9d5ef67dd4d8c7c8a58aff1e4edd63512566ba9f"
+escodegen-wallaby@1.6.16:
+  version "1.6.16"
+  resolved "https://registry.yarnpkg.com/escodegen-wallaby/-/escodegen-wallaby-1.6.16.tgz#f55b65d1a846d98584f1be18a2bf463f96280527"
   dependencies:
     esprima "^2.7.1"
     estraverse "^1.9.1"

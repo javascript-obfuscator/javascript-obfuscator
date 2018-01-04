@@ -6,7 +6,7 @@ import { IInversifyContainerFacade } from '../../../src/interfaces/container/IIn
 import { IJavaScriptObfuscator } from '../../../src/interfaces/IJavaScriptObfsucator';
 import { IObfuscationResult } from '../../../src/interfaces/IObfuscationResult';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../src/options/presets/NoCustomNodes';
 
 import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
 
@@ -30,7 +30,7 @@ describe('JavaScriptObfuscator', () => {
                     inversifyContainerFacade.load(
                         '',
                         {
-                            ...NO_CUSTOM_NODES_PRESET,
+                            ...NO_ADDITIONAL_NODES_PRESET,
                             sourceMap: true,
                             sourceMapFileName: sourceMapUrl
                         }
@@ -66,7 +66,7 @@ describe('JavaScriptObfuscator', () => {
                     inversifyContainerFacade.load(
                         '',
                         {
-                            ...NO_CUSTOM_NODES_PRESET,
+                            ...NO_ADDITIONAL_NODES_PRESET,
                             sourceMap: true,
                             sourceMapBaseUrl: sourceMapBaseUrl,
                             sourceMapFileName: sourceMapUrl

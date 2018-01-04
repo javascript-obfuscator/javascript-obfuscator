@@ -310,6 +310,11 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 ObfuscationTargetSanitizer
             )
             .option(
+                '--transform-object-keys <boolean>',
+                'Enables transformation of object keys',
+                BooleanSanitizer
+            )
+            .option(
                 '--unicode-escape-sequence <boolean>',
                 'Allows to enable/disable string conversion to unicode escape sequence',
                 BooleanSanitizer

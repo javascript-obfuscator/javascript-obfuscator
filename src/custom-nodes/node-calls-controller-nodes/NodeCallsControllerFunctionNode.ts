@@ -15,7 +15,7 @@ import { initializable } from '../../decorators/Initializable';
 
 import { SingleNodeCallControllerTemplate } from '../../templates/SingleNodeCallControllerTemplate';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../options/presets/NoCustomNodes';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscatorFacade';
@@ -75,7 +75,7 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
                     singleNodeCallControllerFunctionName: this.callsControllerFunctionName
                 }),
                 {
-                    ...NO_CUSTOM_NODES_PRESET,
+                    ...NO_ADDITIONAL_NODES_PRESET,
                     identifierNamesGenerator: this.options.identifierNamesGenerator,
                     seed: this.options.seed
                 }

@@ -1,5 +1,5 @@
 'use strict';
-import { NO_CUSTOM_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
 
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
@@ -7,34 +7,20 @@ import { NO_CUSTOM_NODES_PRESET } from '../../src/options/presets/NoCustomNodes'
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
         (function(){
-            if (true) {
-                var foo = function () {
-                    console.log('abc');
-                };
-                var bar = function () {
-                    console.log('def');
-                };
-                var baz = function () {
-                    console.log('ghi');
-                };
-                var bark = function () {
-                    console.log('jkl');
-                };
-                var hawk = function () {
-                    console.log('mno');
-                };
-            
-                foo();
-                bar();
-                baz();
-                bark();
-                hawk();
-            }
+            var object = {
+                foo: 'test1',
+                bar: {
+                    baz: 'test2'
+                }
+            };
         })();
         `,
         {
-            ...NO_CUSTOM_NODES_PRESET,
+            ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
+            transformObjectKeys: true,
+            stringArray: true,
+            stringArrayThreshold: 1
         }
     ).getObfuscatedCode();
 

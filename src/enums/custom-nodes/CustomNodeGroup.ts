@@ -1,7 +1,7 @@
 export enum CustomNodeGroup {
-    ConsoleOutputCustomNodeGroup,
-    DebugProtectionCustomNodeGroup,
-    DomainLockCustomNodeGroup,
-    SelfDefendingCustomNodeGroup,
-    StringArrayCustomNodeGroup
+    ConsoleOutputCustomNodeGroup = 'ConsoleOutputCustomNodeGroup',
+    DebugProtectionCustomNodeGroup = 'DebugProtectionCustomNodeGroup',
+    DomainLockCustomNodeGroup = 'DomainLockCustomNodeGroup',
+    SelfDefendingCustomNodeGroup = 'SelfDefendingCustomNodeGroup',
+    StringArrayCustomNodeGroup = 'StringArrayCustomNodeGroup'
 }

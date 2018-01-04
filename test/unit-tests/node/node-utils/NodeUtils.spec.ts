@@ -9,8 +9,8 @@ import { NodeUtils } from '../../../../src/node/NodeUtils';
 
 describe('NodeUtils', () => {
     describe('addXVerbatimPropertyToLiterals (node: ESTree.Node): void', () => {
-        let literalNode: any,
-            expectedLiteralNode: any;
+        let literalNode: ESTree.Literal,
+            expectedLiteralNode: ESTree.Literal;
 
         before(() => {
             literalNode = Nodes.getLiteralNode('value');
@@ -179,39 +179,7 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('getBlockStatementNodeByIndex (node: ESTree.Node, index: number = 0): ESTree.Node', () => {
-        let blockStatementNode: ESTree.BlockStatement,
-            expressionStatementNode1: ESTree.ExpressionStatement,
-            expressionStatementNode2: ESTree.ExpressionStatement;
-
-        beforeEach(() => {
-            expressionStatementNode1 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
-            expressionStatementNode2 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
-
-            blockStatementNode = Nodes.getBlockStatementNode([
-                expressionStatementNode1,
-                expressionStatementNode2
-            ]);
-        });
-
-        it('should return block-statement child node of given node if that node has block-statement', () => {
-            assert.deepEqual(NodeUtils.getBlockStatementNodeByIndex(blockStatementNode), expressionStatementNode1);
-        });
-
-        it('should return block-statement child node of given node with index `1` if that node has block-statement', () => {
-            assert.deepEqual(NodeUtils.getBlockStatementNodeByIndex(blockStatementNode, 1), expressionStatementNode2);
-        });
-
-        it('should throw a `ReferenceError` if index is out of boundaries', () => {
-            assert.throws(() => NodeUtils.getBlockStatementNodeByIndex(blockStatementNode, 2), ReferenceError);
-        });
-
-        it('should throw a `TypeError` if node have no a block-statement', () => {
-            assert.throws(() => NodeUtils.getBlockStatementNodeByIndex(expressionStatementNode1, 1), TypeError);
-        });
-    });
-
-    describe('getBlockScopesOfNode (node: ESTree.Node, blockScopes: TNodeWithBlockStatement[] = []): TNodeWithBlockStatement[]', () => {
+    describe('getBlockScopesOfNode (node: ESTree.Node, blockScopes: TNodeWithBlockScope[] = []): TNodeWithBlockScope[]', () => {
         let functionDeclarationBlockStatementNode: ESTree.BlockStatement,
             ifStatementBlockStatementNode1: ESTree.BlockStatement,
             ifStatementBlockStatementNode2: ESTree.BlockStatement,
@@ -326,18 +294,20 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('getNodeBlockScopeDepth (node: ESTree.Node, depth: number = 0): number', () => {
-        let functionDeclarationBlockStatementNode1: ESTree.BlockStatement,
-            functionDeclarationBlockStatementNode2: ESTree.BlockStatement,
+    describe('getScopeOfNode (node: ESTree.Node): TNodeWithScope | null', () => {
+        let functionDeclarationBlockStatementNode: ESTree.BlockStatement,
             ifStatementBlockStatementNode1: ESTree.BlockStatement,
             ifStatementBlockStatementNode2: ESTree.BlockStatement,
+            ifStatementBlockStatementNode3: ESTree.BlockStatement,
             ifStatementNode1: ESTree.IfStatement,
             ifStatementNode2: ESTree.IfStatement,
-            expressionStatementNode1: ESTree.ExpressionStatement,
-            expressionStatementNode2: ESTree.ExpressionStatement,
+            ifStatementNode3: ESTree.IfStatement,
+            switchCaseNode: ESTree.SwitchCase,
+            switchStatementNode: ESTree.SwitchStatement,
             expressionStatementNode3: ESTree.ExpressionStatement,
-            functionDeclarationNode1: ESTree.FunctionDeclaration,
-            functionDeclarationNode2: ESTree.FunctionDeclaration,
+            expressionStatementNode2: ESTree.ExpressionStatement,
+            expressionStatementNode1: ESTree.ExpressionStatement,
+            functionDeclarationNode: ESTree.FunctionDeclaration,
             programNode: ESTree.Program;
 
         before(() => {
@@ -345,8 +315,20 @@ describe('NodeUtils', () => {
             expressionStatementNode2 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
             expressionStatementNode3 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
 
-            ifStatementBlockStatementNode2 = Nodes.getBlockStatementNode([
+            ifStatementBlockStatementNode3 = Nodes.getBlockStatementNode([
+                expressionStatementNode2,
                 expressionStatementNode3
+            ]);
+
+            ifStatementNode3 = Nodes.getIfStatementNode(
+                Nodes.getLiteralNode(true),
+                ifStatementBlockStatementNode3
+            );
+
+            ifStatementBlockStatementNode2 = Nodes.getBlockStatementNode();
+
+            ifStatementBlockStatementNode1 = Nodes.getBlockStatementNode([
+                ifStatementNode3
             ]);
 
             ifStatementNode2 = Nodes.getIfStatementNode(
@@ -354,92 +336,102 @@ describe('NodeUtils', () => {
                 ifStatementBlockStatementNode2
             );
 
-            functionDeclarationBlockStatementNode2 = Nodes.getBlockStatementNode([
-                ifStatementNode2,
-                expressionStatementNode2
-            ]);
-
-            functionDeclarationNode2 = Nodes.getFunctionDeclarationNode('test', [], functionDeclarationBlockStatementNode2);
-
-            ifStatementBlockStatementNode1 = Nodes.getBlockStatementNode([
-                functionDeclarationNode2
-            ]);
-
             ifStatementNode1 = Nodes.getIfStatementNode(
                 Nodes.getLiteralNode(true),
                 ifStatementBlockStatementNode1
             );
 
-            functionDeclarationBlockStatementNode1 = Nodes.getBlockStatementNode([
+            switchCaseNode = Nodes.getSwitchCaseNode(
+                Nodes.getLiteralNode(1),
+                [
+                    ifStatementNode2
+                ]
+            );
+
+            switchStatementNode = Nodes.getSwitchStatementNode(
+                Nodes.getLiteralNode(1),
+                [
+                    switchCaseNode
+                ]
+            );
+
+            functionDeclarationBlockStatementNode = Nodes.getBlockStatementNode([
                 expressionStatementNode1,
-                ifStatementNode1
+                ifStatementNode1,
+                switchStatementNode
             ]);
 
-            functionDeclarationNode1 = Nodes.getFunctionDeclarationNode('test', [], functionDeclarationBlockStatementNode1);
+            functionDeclarationNode = Nodes.getFunctionDeclarationNode('test', [], functionDeclarationBlockStatementNode);
 
             programNode = Nodes.getProgramNode([
-                functionDeclarationNode1
+                functionDeclarationNode
             ]);
 
             programNode.parentNode = programNode;
-            functionDeclarationNode1.parentNode = programNode;
-            functionDeclarationBlockStatementNode1.parentNode = functionDeclarationNode1;
-            expressionStatementNode1.parentNode = functionDeclarationBlockStatementNode1;
-            ifStatementNode1.parentNode = functionDeclarationBlockStatementNode1;
+            functionDeclarationNode.parentNode = programNode;
+            functionDeclarationBlockStatementNode.parentNode = functionDeclarationNode;
+            expressionStatementNode1.parentNode = functionDeclarationBlockStatementNode;
+            ifStatementNode1.parentNode = functionDeclarationBlockStatementNode;
             ifStatementBlockStatementNode1.parentNode = ifStatementNode1;
-            functionDeclarationNode2.parentNode = ifStatementBlockStatementNode1;
-            functionDeclarationBlockStatementNode2.parentNode = functionDeclarationNode2;
-            expressionStatementNode2.parentNode = functionDeclarationBlockStatementNode2;
-            ifStatementNode2.parentNode = functionDeclarationBlockStatementNode2;
+            switchStatementNode.parentNode = functionDeclarationBlockStatementNode;
+            switchCaseNode.parentNode = switchStatementNode;
+            ifStatementNode2.parentNode = switchCaseNode;
             ifStatementBlockStatementNode2.parentNode = ifStatementNode2;
+            ifStatementNode3.parentNode = ifStatementBlockStatementNode1;
+            ifStatementBlockStatementNode3.parentNode = ifStatementNode3;
+            expressionStatementNode3.parentNode = ifStatementBlockStatementNode3;
         });
 
-        it('should return block-scope depth for `program` node', () => {
-            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(programNode), 0);
+        it('should return scope node for `program` node child', () => {
+            assert.deepEqual(NodeUtils.getScopeOfNode(programNode), programNode);
         });
 
-        it('should return block-scope depth for `functionDeclaration` node #1', () => {
-            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(functionDeclarationNode1), 0);
+        it('should return scope node for `functionDeclaration` node child node #1', () => {
+            assert.deepEqual(NodeUtils.getScopeOfNode(functionDeclarationNode), programNode);
         });
 
-        it('should return block-scope depth for `functionDeclaration blockStatement` node #1', () => {
-            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(functionDeclarationBlockStatementNode1), 1);
+        it('should return scope node for `functionDeclaration blockStatement` node child node #1', () => {
+            assert.deepEqual(NodeUtils.getScopeOfNode(functionDeclarationBlockStatementNode), programNode);
         });
 
-        it('should return block-scope depth for `expressionStatement` node #1', () => {
-            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(expressionStatementNode1), 1);
+        it('should return scope node for `expressionStatement` node #1 child node', () => {
+            assert.deepEqual(NodeUtils.getScopeOfNode(expressionStatementNode1), functionDeclarationBlockStatementNode);
         });
 
-        it('should return block-scope depth for `ifStatement` node #1', () => {
-            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(ifStatementNode1), 1);
+        it('should return scope node for `ifStatement` node #1 child node', () => {
+            assert.deepEqual(NodeUtils.getScopeOfNode(ifStatementNode1), functionDeclarationBlockStatementNode);
         });
 
-        it('should return block-scope depth for `ifStatement blockStatement` node #1', () => {
-            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(ifStatementBlockStatementNode1), 1);
+        it('should return scope node for `switchStatement` node child node', () => {
+            assert.deepEqual(NodeUtils.getScopeOfNode(switchStatementNode), functionDeclarationBlockStatementNode);
         });
 
-        it('should return block-scope depth for `functionDeclaration` node #2', () => {
-            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(functionDeclarationNode2), 1);
+        it('should return scope node for `switchCase` node child node', () => {
+            assert.deepEqual(NodeUtils.getScopeOfNode(switchCaseNode), functionDeclarationBlockStatementNode);
         });
 
-        it('should return block-scope depth for `functionDeclaration blockStatement` node #2', () => {
-            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(functionDeclarationBlockStatementNode2), 2);
+        it('should return scope node for `ifStatement` node #2 child node', () => {
+            assert.deepEqual(NodeUtils.getScopeOfNode(ifStatementNode2), switchCaseNode);
         });
 
-        it('should return block-scope depth for `expressionStatement` node #2', () => {
-            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(expressionStatementNode2), 2);
+        it('should return scope node for `ifStatement blockStatement` node #2 child node', () => {
+            assert.deepEqual(NodeUtils.getScopeOfNode(ifStatementBlockStatementNode2), switchCaseNode);
         });
 
-        it('should return block-scope depth for `ifStatement` node #2', () => {
-            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(ifStatementNode2), 2);
+        it('should return scope node for `ifStatement blockStatement` node #1 child node', () => {
+            assert.deepEqual(NodeUtils.getScopeOfNode(ifStatementBlockStatementNode1), functionDeclarationBlockStatementNode);
         });
 
-        it('should return block-scope depth for `ifStatement blockStatement` node #2', () => {
-            assert.deepEqual(NodeUtils.getNodeBlockScopeDepth(ifStatementBlockStatementNode2), 2);
+        it('should return scope node for `ifStatement blockStatement` node #3 child node', () => {
+            assert.deepEqual(NodeUtils.getScopeOfNode(ifStatementBlockStatementNode3), ifStatementBlockStatementNode1);
+        });
+
+        it('should return scope node for `expressionStatement` node #3 child node', () => {
+            assert.deepEqual(NodeUtils.getScopeOfNode(expressionStatementNode3), ifStatementBlockStatementNode3);
         });
 
         it('should throw a `ReferenceError` if node has no `parentNode` property', () => {
-            assert.throws(() => NodeUtils.getNodeBlockScopeDepth(expressionStatementNode3), ReferenceError);
+            assert.throws(() => NodeUtils.getScopeOfNode(expressionStatementNode2), ReferenceError);
         });
     });
 

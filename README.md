@@ -290,6 +290,7 @@ Following options are available for the JS Obfuscator:
     stringArrayEncoding: false,
     stringArrayThreshold: 0.75,
     target: 'browser',
+    transformObjectKeys: false,
     unicodeEscapeSequence: false
 }
 ```
@@ -326,6 +327,7 @@ Following options are available for the JS Obfuscator:
     --string-array-encoding <boolean|string> [true, false, base64, rc4]
     --string-array-threshold <number>
     --target <string> [browser, extension, node]
+    --transform-object-keys <boolean>
     --unicode-escape-sequence <boolean>
 ```
 
@@ -706,6 +708,44 @@ Available values:
 Currently output code for `browser` and `node` targets is identical.
 Output code for `extension` target is not using `eval`.
 
+### `transformObjectKeys`
+Type: `boolean` Default: `false`
+
+Enables transformation of object keys.
+
+Example:
+```ts
+// input
+(function(){
+    var object = {
+        foo: 'test1',
+        bar: {
+            baz: 'test2'
+        }
+    };
+})();
+
+// output
+var _0x5a21 = [
+    'foo',
+    'test1',
+    'bar',
+    'baz',
+    'test2'
+];
+var _0x223f = function (_0x474dc0, _0x10db96) {
+    _0x474dc0 = _0x474dc0 - 0x0;
+    var _0x4c8bf7 = _0x5a21[_0x474dc0];
+    return _0x4c8bf7;
+};
+(function () {
+    var _0x2e1a8e = {};
+    _0x2e1a8e[_0x223f('0x0')] = _0x223f('0x1');
+    _0x2e1a8e[_0x223f('0x2')] = {};
+    _0x2e1a8e[_0x223f('0x2')][_0x223f('0x3')] = _0x223f('0x4');
+}());
+```
+
 ### `unicodeEscapeSequence`
 Type: `boolean` Default: `false`
 
@@ -736,6 +776,7 @@ Performance will 50-100% slower than without obfuscation
     stringArray: true,
     stringArrayEncoding: 'rc4',
     stringArrayThreshold: 1,
+    transformObjectKeys: true,
     unicodeEscapeSequence: false
 }
 ```
@@ -762,6 +803,7 @@ Performance will 30-35% slower than without obfuscation
     stringArray: true,
     stringArrayEncoding: 'base64',
     stringArrayThreshold: 0.75,
+    transformObjectKeys: true,
     unicodeEscapeSequence: false
 }
 ```

@@ -30,5 +30,6 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     stringArrayEncoding: false,
     stringArrayThreshold: 0.75,
     target: ObfuscationTarget.Browser,
+    transformObjectKeys: false,
     unicodeEscapeSequence: false
 });

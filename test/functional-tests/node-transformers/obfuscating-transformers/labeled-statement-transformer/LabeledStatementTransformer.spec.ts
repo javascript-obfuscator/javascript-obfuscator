@@ -2,7 +2,7 @@ import { assert } from 'chai';
 
 import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationResult';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
@@ -25,7 +25,7 @@ describe('LabeledStatementTransformer', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_CUSTOM_NODES_PRESET
+                    ...NO_ADDITIONAL_NODES_PRESET
                 }
             );
 

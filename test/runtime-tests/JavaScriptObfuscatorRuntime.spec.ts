@@ -22,7 +22,8 @@ describe('JavaScriptObfuscator runtime eval', function () {
                 deadCodeInjection: true,
                 debugProtection: true,
                 selfDefending: true,
-                stringArrayEncoding: StringArrayEncoding.Rc4
+                stringArrayEncoding: StringArrayEncoding.Rc4,
+                transformObjectKeys: true
             }
         );
 

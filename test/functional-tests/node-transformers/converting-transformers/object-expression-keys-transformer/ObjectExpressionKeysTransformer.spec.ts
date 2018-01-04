@@ -40,7 +40,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
         });
 
-        describe('variant #2: nested objects', () => {
+        describe('variant #2: nested objects #1', () => {
             const match: string = `` +
                 `var *${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
@@ -53,7 +53,40 @@ describe('ObjectExpressionKeysTransformer', () => {
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/nested-objects.js');
+                const code: string = readFileAsString(__dirname + '/fixtures/nested-objects-1.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('should correctly transform object keys', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        describe('variant #3: nested objects #2', () => {
+            const match: string = `` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['foo'] *= *'bar';` +
+                `${variableMatch}\\['inner'] *= *{};` +
+                `${variableMatch}\\['ball'] *= *'door';` +
+                `${variableMatch}\\['inner']\\['baz'] *= *'bark';` +
+                `${variableMatch}\\['inner']\\['inner1'] *= *{};` +
+                `${variableMatch}\\['inner']\\['cow'] *= *'bear';` +
+                `${variableMatch}\\['inner']\\['inner1']\\['hawk'] *= *'geek';` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/nested-objects-2.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {

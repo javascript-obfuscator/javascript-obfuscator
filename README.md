@@ -35,6 +35,7 @@ Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/
 
 #### You can support this project by donating:
 * (Bitcoin) 14yhtZxLNp6ekZAgmEmPJqEKUP2VtUxQK6
+* (Ether) 0x5Df9eBcFB2D0f3315d03Ac112104b9023C409dc1
 * (OpenCollective) https://opencollective.com/javascript-obfuscator
 
 Big thanks to all supporters!

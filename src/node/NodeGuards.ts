@@ -191,15 +191,10 @@ export class NodeGuards {
 
     /**
      * @param {Node} node
+     * @param {Node} parentNode
      * @returns {boolean}
      */
-    public static isNodeHasBlockScope (node: ESTree.Node): node is TNodeWithBlockScope {
-        const parentNode: ESTree.Node | undefined = node.parentNode;
-
-        if (!parentNode) {
-            throw new ReferenceError('`parentNode` property of given node is `undefined`');
-        }
-
+    public static isNodeHasBlockScope (node: ESTree.Node, parentNode: ESTree.Node): node is TNodeWithBlockScope {
         return NodeGuards.isProgramNode(node) || (
             NodeGuards.isBlockStatementNode(node)
             && NodeGuards.nodesWithBlockScope.includes(parentNode.type)

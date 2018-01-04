@@ -22,7 +22,7 @@ describe('NodeGuards', () => {
 
                 before(() => {
                     NodeUtils.parentize(parentNode);
-                    result = NodeGuards.isNodeHasBlockScope(node);
+                    result = NodeGuards.isNodeHasBlockScope(node, parentNode);
                 });
 
                 it('should check if node has block scope', () => {
@@ -42,7 +42,7 @@ describe('NodeGuards', () => {
 
                 before(() => {
                     NodeUtils.parentize(parentNode);
-                    result = NodeGuards.isNodeHasBlockScope(node);
+                    result = NodeGuards.isNodeHasBlockScope(node, parentNode);
                 });
 
                 it('should check if node has block scope', () => {
@@ -80,7 +80,7 @@ describe('NodeGuards', () => {
 
                 before(() => {
                     NodeUtils.parentize(parentNode);
-                    result = NodeGuards.isNodeHasBlockScope(node);
+                    result = NodeGuards.isNodeHasBlockScope(node, parentNode);
                 });
 
                 it('should check if node has block scope', () => {
@@ -108,7 +108,7 @@ describe('NodeGuards', () => {
 
                 before(() => {
                     NodeUtils.parentize(parentNode);
-                    result = NodeGuards.isNodeHasBlockScope(node);
+                    result = NodeGuards.isNodeHasBlockScope(node, parentNode);
                 });
 
                 it('should check if node has block scope', () => {
@@ -128,27 +128,11 @@ describe('NodeGuards', () => {
 
                 before(() => {
                     NodeUtils.parentize(parentNode);
-                    result = NodeGuards.isNodeHasBlockScope(node);
+                    result = NodeGuards.isNodeHasBlockScope(node, parentNode);
                 });
 
                 it('should check if node has block scope', () => {
                     assert.equal(result, expectedResult);
-                });
-            });
-        });
-
-        describe('exception checks', () => {
-            describe('no `parentNode` property', () => {
-                const node: ESTree.Node = Nodes.getBlockStatementNode();
-
-                let testFunc: Function;
-
-                before(() => {
-                    testFunc = () => NodeGuards.isNodeHasBlockScope(node);
-                });
-
-                it('should check if node has block scope', () => {
-                    assert.throw(testFunc, Error);
                 });
             });
         });

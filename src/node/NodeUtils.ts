@@ -35,45 +35,7 @@ export class NodeUtils {
      * @returns {T}
      */
     public static clone <T extends ESTree.Node = ESTree.Node> (astTree: T): T {
-        /**
-         * @param {T} node
-         * @returns {T}
-         */
-        const cloneRecursive: (node: T) => T = (node: T) => {
-            if (node === null) {
-                return node;
-            }
-
-            const copy: TObject = {};
-
-            Object
-                .keys(node)
-                .forEach((property: string): void => {
-                    if (property === 'parentNode') {
-                        return;
-                    }
-
-                    const value: any = (<TObject>node)[property];
-
-                    let clonedValue: any | null;
-
-                    if (value === null || value instanceof RegExp) {
-                        clonedValue = value;
-                    } else if (Array.isArray(value)) {
-                        clonedValue = value.map(cloneRecursive);
-                    } else if (typeof value === 'object') {
-                        clonedValue = cloneRecursive(value);
-                    } else {
-                        clonedValue = value;
-                    }
-
-                    copy[property] = clonedValue;
-                });
-
-            return <T>copy;
-        };
-
-        return NodeUtils.parentize(cloneRecursive(astTree));
+        return NodeUtils.parentize(NodeUtils.cloneRecursive(astTree));
     }
 
     /**
@@ -102,30 +64,11 @@ export class NodeUtils {
     }
 
     /**
-     * @param {NodeGuards} node
-     * @param {TNodeWithBlockScope[]} blockScopes
+     * @param {Node} targetNode
      * @returns {TNodeWithBlockScope[]}
      */
-    public static getBlockScopesOfNode (node: ESTree.Node, blockScopes: TNodeWithBlockScope[] = []): TNodeWithBlockScope[] {
-        const parentNode: ESTree.Node | undefined = node.parentNode;
-
-        if (!parentNode) {
-            throw new ReferenceError('`parentNode` property of given node is `undefined`');
-        }
-
-        if (NodeGuards.isBlockStatementNode(parentNode) && NodeGuards.isNodeHasBlockScope(parentNode)) {
-            blockScopes.push(parentNode);
-        }
-
-        if (node !== parentNode) {
-            return NodeUtils.getBlockScopesOfNode(parentNode, blockScopes);
-        }
-
-        if (NodeGuards.isNodeHasBlockScope(parentNode)) {
-            blockScopes.push(parentNode);
-        }
-
-        return blockScopes;
+    public static getBlockScopesOfNode (targetNode: ESTree.Node): TNodeWithBlockScope[] {
+        return NodeUtils.getBlockScopesOfNodeRecursive(targetNode);
     }
 
     /**
@@ -180,5 +123,81 @@ export class NodeUtils {
         node.obfuscatedNode = false;
 
         return node;
+    }
+
+    /**
+     * @param {T} node
+     * @returns {T}
+     */
+    private static cloneRecursive <T> (node: T): T {
+        if (node === null) {
+            return node;
+        }
+
+        const copy: TObject = {};
+
+        Object
+            .keys(node)
+            .forEach((property: string): void => {
+                if (property === 'parentNode') {
+                    return;
+                }
+
+                const value: any = (<TObject>node)[property];
+
+                let clonedValue: any | null;
+
+                if (value === null || value instanceof RegExp) {
+                    clonedValue = value;
+                } else if (Array.isArray(value)) {
+                    clonedValue = value.map(NodeUtils.cloneRecursive);
+                } else if (typeof value === 'object') {
+                    clonedValue = NodeUtils.cloneRecursive(value);
+                } else {
+                    clonedValue = value;
+                }
+
+                copy[property] = clonedValue;
+            });
+
+        return <T>copy;
+    }
+
+    /**
+     * @param {Node} node
+     * @param {TNodeWithBlockScope[]} blockScopes
+     * @param {number} depth
+     * @returns {TNodeWithBlockScope[]}
+     */
+    private static getBlockScopesOfNodeRecursive (
+        node: ESTree.Node,
+        blockScopes: TNodeWithBlockScope[] = [],
+        depth: number = 0
+    ): TNodeWithBlockScope[] {
+        const parentNode: ESTree.Node | undefined = node.parentNode;
+
+        if (!parentNode) {
+            throw new ReferenceError('`parentNode` property of given node is `undefined`');
+        }
+
+        if (
+            /**
+             * we can add program node instantly
+             */
+            NodeGuards.isProgramNode(node) ||
+            /**
+             * we shouldn't add to the array input node that is node with block scope itself
+             * so, on depth 0 we will skip push to the array of block scopes
+             */
+            (depth && NodeGuards.isNodeHasBlockScope(node, parentNode))
+        ) {
+            blockScopes.push(node);
+        }
+
+        if (node !== parentNode) {
+            return NodeUtils.getBlockScopesOfNodeRecursive(parentNode, blockScopes, ++depth);
+        }
+
+        return blockScopes;
     }
 }

@@ -46,7 +46,7 @@
     "@types/estree": "0.0.38",
     "@types/md5": "2.1.32",
     "@types/mkdirp": "0.5.2",
-    "@types/mocha": "2.2.45",
+    "@types/mocha": "2.2.46",
     "@types/node": "8.5.5",
     "@types/rimraf": "^2.0.2",
     "@types/sinon": "4.1.2",

@@ -64,11 +64,9 @@
   dependencies:
     "@types/node" "*"
 
-"@types/mocha@2.2.45":
-  version "2.2.45"
-  resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-2.2.45.tgz#816572b6e45164526a36d4faa123e8267d6d5d0a"
-  dependencies:
-    "@types/node" "*"
+"@types/mocha@2.2.46":
+  version "2.2.46"
+  resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-2.2.46.tgz#b04713f7759d1cf752effdaae7b3969e285ebc16"
 
 "@types/node@*":
   version "8.0.53"

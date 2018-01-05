@@ -102,6 +102,38 @@ describe('ObjectExpressionKeysTransformer', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });
+
+        describe('variant #4: correct integration with control flow flattening object', () => {
+            const match: string = `` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['\\w{5}'] *= *function *${variableMatch} *\\(${variableMatch}, *${variableMatch}\\) *{` +
+                    `return *${variableMatch} *\\+ *${variableMatch};` +
+                `};` +
+                `var *${variableMatch} *= *${variableMatch}\\['\\w{5}']\\(0x1, *0x2\\);` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/integration-with-control-flow-flattening.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1,
+                        transformObjectKeys: true
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('should correctly transform object keys', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
     });
 
     describe('correct placement of expression statements', () => {
@@ -226,6 +258,34 @@ describe('ObjectExpressionKeysTransformer', () => {
     });
 
     describe('Ignore transformation', () => {
+        describe('variant #1: disabled option', () => {
+            const match: string = `` +
+                `var *${variableMatch} *= *{` +
+                    `'foo': *'bar',` +
+                    `'baz': *'bark'` +
+                `}` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/simple.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('shouldn\'t transform object keys', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
         describe('variant #2: variable declaration without initialization', () => {
             const match: string = `` +
                 `var *${variableMatch};` +

@@ -7,23 +7,6 @@ import { IStackTraceData } from '../interfaces/analyzers/stack-trace-analyzer/IS
 import { TNodeWithScope } from '../types/node/TNodeWithScope';
 import { NodeGuards } from './NodeGuards';
 
-/**
- * This class appends node into a first deepest BlockStatement in order of function calls
- *
- * For example:
- *
- * function Foo () {
- *     var baz = function () {
- *
- *     }
- *
- *     baz();
- * }
- *
- * foo();
- *
- * Appends node into block statement of `baz` function expression.
- */
 export class NodeAppender {
     /**
      * @param {TNodeWithScope} scopeNode
@@ -43,6 +26,22 @@ export class NodeAppender {
     }
 
     /**
+     * Appends node into a first deepest BlockStatement in order of function calls
+     *
+     * For example:
+     *
+     * function Foo () {
+     *     var baz = function () {
+     *
+     *     }
+     *
+     *     baz();
+     * }
+     *
+     * foo();
+     *
+     * Appends node into block statement of `baz` function expression
+     *
      * @param {IStackTraceData[]} blockScopeStackTraceData
      * @param {TNodeWithBlockScope} blockScopeNode
      * @param {TStatement[]} nodeBodyStatements
@@ -175,9 +174,11 @@ export class NodeAppender {
     private static setScopeNodeStatements (scopeNode: TNodeWithScope, statements: TStatement[]): void {
         if (NodeGuards.isSwitchCaseNode(scopeNode)) {
             scopeNode.consequent = <ESTree.Statement[]>statements;
-        } else {
-            scopeNode.body = statements;
+
+            return;
         }
+
+        scopeNode.body = statements;
     }
 
     /**

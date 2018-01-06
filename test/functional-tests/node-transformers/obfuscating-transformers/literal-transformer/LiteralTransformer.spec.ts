@@ -2,6 +2,7 @@ import { assert } from 'chai';
 
 import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationResult';
 
+import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { StringArrayEncoding } from '../../../../../src/enums/StringArrayEncoding';
 
 import { NO_CUSTOM_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
@@ -287,6 +288,31 @@ describe('LiteralTransformer', () => {
 
             it('variant #2: shouldn\'t replace literal node value with value from string array with `(1 - stringArrayThreshold)` chance', () => {
                 assert.closeTo(noStringArrayProbability, stringArrayThreshold, delta);
+            });
+        });
+
+        describe('variant #11: string array calls wrapper name', () => {
+            const regExp: RegExp = /console\[b\('0x0'\)]\('a'\);/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/string-array-calls-wrapper-name.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('match #1: should keep identifier with string array calls wrapper name untouched after obfuscation', () => {
+                assert.match(obfuscatedCode, regExp);
             });
         });
     });

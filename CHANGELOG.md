@@ -3,6 +3,8 @@ Change Log
 v0.14.0
 ---
 * **Breaking change:** Now CLI obfuscating directory recursively. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/157
+* Fixed runtime errors when `deadCodeInjection` is enabled and `identifierNamesGenerator` is set to `mangled`
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/166
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/156
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/159
 

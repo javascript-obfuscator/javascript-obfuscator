@@ -223,8 +223,8 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         const random2: boolean = this.randomGenerator.getMathRandom() > 0.5;
 
         const operator: ESTree.BinaryOperator = random1 ? '===' : '!==';
-        const leftString: string = this.randomGenerator.getRandomString(3);
-        const rightString: string = random2 ? leftString : this.randomGenerator.getRandomString(3);
+        const leftString: string = this.randomGenerator.getRandomString(5);
+        const rightString: string = random2 ? leftString : this.randomGenerator.getRandomString(5);
 
         const [consequent, alternate]: [ESTree.BlockStatement, ESTree.BlockStatement] = random1 === random2
             ? [blockStatementNode, randomBlockStatementNode]

@@ -271,11 +271,12 @@ export class NodeGuards {
         );
         const parentNodeIsMethodDefinitionNode: boolean = NodeGuards.isMethodDefinitionNode(parentNode) &&
             !parentNode.computed;
+        const isLabelIdentifierNode: boolean = NodeGuards.isLabelIdentifierNode(node, parentNode);
 
         return !parentNodeIsPropertyNode &&
             !parentNodeIsMemberExpressionNode &&
             !parentNodeIsMethodDefinitionNode &&
-            !NodeGuards.isLabelIdentifierNode(node, parentNode);
+            !isLabelIdentifierNode;
     }
 
     /**

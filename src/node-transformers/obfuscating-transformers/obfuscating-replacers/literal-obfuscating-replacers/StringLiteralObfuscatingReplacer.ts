@@ -250,8 +250,13 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
             ));
         }
 
+        const stringArrayIdentifierNode: ESTree.Identifier = Nodes.getIdentifierNode(stringArrayStorageCallsWrapperName);
+
+        // prevent obfuscation of this identifier
+        stringArrayIdentifierNode.obfuscatedNode = true;
+
         return Nodes.getCallExpressionNode(
-            Nodes.getIdentifierNode(stringArrayStorageCallsWrapperName),
+            stringArrayIdentifierNode,
             callExpressionArgs
         );
     }

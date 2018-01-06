@@ -63,8 +63,8 @@ export class BlockStatementDeadCodeInjectionNode extends AbstractCustomNode {
         const random2: boolean = this.randomGenerator.getMathRandom() > 0.5;
 
         const operator: BinaryOperator = random1 ? '===' : '!==';
-        const leftString: string = this.randomGenerator.getRandomString(3);
-        const rightString: string = random2 ? leftString : this.randomGenerator.getRandomString(3);
+        const leftString: string = this.randomGenerator.getRandomString(5);
+        const rightString: string = random2 ? leftString : this.randomGenerator.getRandomString(5);
 
         const [consequent, alternate]: [BlockStatement, BlockStatement] = random1 === random2
             ? [this.blockStatementNode, this.randomBlockStatementNode]

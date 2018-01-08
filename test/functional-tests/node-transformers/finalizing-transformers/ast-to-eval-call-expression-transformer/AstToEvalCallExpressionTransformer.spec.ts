@@ -66,7 +66,7 @@ describe('AstToEvalCallExpressionTransformer', () => {
         });
 
         it('should obfuscate eval string', () => {
-            assert.match(obfuscatedCode,  variableReferenceIdentifierRegExp);
+            assert.match(obfuscatedCode, variableReferenceIdentifierRegExp);
         });
 
         it('should correctly transform function parameter inside eval expression', () => {
@@ -92,7 +92,7 @@ describe('AstToEvalCallExpressionTransformer', () => {
         });
 
         it('should obfuscate eval string', () => {
-            assert.match(obfuscatedCode,  regExp);
+            assert.match(obfuscatedCode, regExp);
         });
     });
 
@@ -117,11 +117,11 @@ describe('AstToEvalCallExpressionTransformer', () => {
         });
 
         it('match #1: should add strings from eval expression to the string array', () => {
-            assert.match(obfuscatedCode,  stringArrayRegExp);
+            assert.match(obfuscatedCode, stringArrayRegExp);
         });
 
         it('match #1: should replace string with call to the string array calls wrapper', () => {
-            assert.match(obfuscatedCode,  stringArrayCallsWrapperRegExp);
+            assert.match(obfuscatedCode, stringArrayCallsWrapperRegExp);
         });
     });
 
@@ -149,11 +149,48 @@ describe('AstToEvalCallExpressionTransformer', () => {
         });
 
         it('should obfuscate eval string', () => {
-            assert.match(obfuscatedCode,  variableReferenceIdentifierRegExp);
+            assert.match(obfuscatedCode, variableReferenceIdentifierRegExp);
         });
 
         it('should correctly transform function parameter inside eval expression', () => {
             assert.equal(functionIdentifierName, variableReferenceIdentifierName);
+        });
+    });
+
+    describe('variant #6: integration with control flow flattening', () => {
+        const variableMatch: string = '_0x([a-f0-9]){4,6}';
+        const controlFlowStorageNodeMatch: string = `` +
+            `var *${variableMatch} *= *\\{` +
+                `'\\w{5}' *: *function *${variableMatch} *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
+                    `return *${variableMatch} *\\+ *${variableMatch};` +
+                `\\}` +
+            `\\};` +
+        ``;
+        const controlFlowStorageNodeRegExp: RegExp = new RegExp(controlFlowStorageNodeMatch);
+        const evalExpressionRegExp: RegExp = /eval *\('_0x([a-f0-9]){4,6}\[\\'\w{5}\\']\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\);'\);/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/control-flow-flattening-integration.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    controlFlowFlattening: true,
+                    controlFlowFlatteningThreshold: 1
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('should add control flow storage node', () => {
+            assert.match(obfuscatedCode, controlFlowStorageNodeRegExp);
+        });
+
+        it('should obfuscate eval string', () => {
+            assert.match(obfuscatedCode, evalExpressionRegExp);
         });
     });
 });

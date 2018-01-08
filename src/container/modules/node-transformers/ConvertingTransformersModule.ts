@@ -5,8 +5,6 @@ import { INodeTransformer } from '../../../interfaces/node-transformers/INodeTra
 
 import { NodeTransformer } from '../../../enums/node-transformers/NodeTransformer';
 
-import { AstToEvalCallExpressionTransformer } from '../../../node-transformers/converting-transformers/AstToEvalCallExpressionTransformer';
-import { EvalCallExpressionToAstTransformer } from '../../../node-transformers/converting-transformers/EvaCallExpressionToAstTransformer';
 import { MemberExpressionTransformer } from '../../../node-transformers/converting-transformers/MemberExpressionTransformer';
 import { MethodDefinitionTransformer } from '../../../node-transformers/converting-transformers/MethodDefinitionTransformer';
 import { ObjectExpressionKeysTransformer } from '../../../node-transformers/converting-transformers/ObjectExpressionKeysTransformer';
@@ -14,14 +12,6 @@ import { TemplateLiteralTransformer } from '../../../node-transformers/convertin
 
 export const convertingTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // converting transformers
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(AstToEvalCallExpressionTransformer)
-        .whenTargetNamed(NodeTransformer.AstToEvalCallExpressionTransformer);
-
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(EvalCallExpressionToAstTransformer)
-        .whenTargetNamed(NodeTransformer.EvalCallExpressionToAstTransformer);
-
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(MemberExpressionTransformer)
         .whenTargetNamed(NodeTransformer.MemberExpressionTransformer);

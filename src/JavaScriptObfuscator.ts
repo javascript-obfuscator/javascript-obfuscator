@@ -48,15 +48,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
     /**
      * @type {NodeTransformer[]}
      */
-    private static readonly postObfuscationConvertingTransformersList: NodeTransformer[] = [
-        NodeTransformer.AstToEvalCallExpressionTransformer
-    ];
-
-    /**
-     * @type {NodeTransformer[]}
-     */
-    private static readonly preObfuscationConvertingTransformersList: NodeTransformer[] = [
-        NodeTransformer.EvalCallExpressionToAstTransformer,
+    private static readonly convertingTransformersList: NodeTransformer[] = [
         NodeTransformer.MemberExpressionTransformer,
         NodeTransformer.MethodDefinitionTransformer,
         NodeTransformer.ObjectExpressionKeysTransformer,
@@ -68,6 +60,13 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      */
     private static readonly deadCodeInjectionTransformersList: NodeTransformer[] = [
         NodeTransformer.DeadCodeInjectionTransformer
+    ];
+
+    /**
+     * @type {NodeTransformer[]}
+     */
+    private static readonly finalizingTransformersList: NodeTransformer[] = [
+        NodeTransformer.AstToEvalCallExpressionTransformer
     ];
 
     /**
@@ -89,6 +88,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      */
     private static readonly preparingTransformersList: NodeTransformer[] = [
         NodeTransformer.CommentsTransformer,
+        NodeTransformer.EvalCallExpressionToAstTransformer,
         NodeTransformer.ObfuscatingGuardsTransformer,
         NodeTransformer.ParentificationTransformer
     ];
@@ -259,11 +259,11 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
             );
         }
 
-        // fifth pass: pre-obfuscation converting transformers
+        // fifth pass: converting transformers
         this.logger.info(LoggingMessage.StagePreObfuscation);
         astTree = this.transformersRunner.transform(
             astTree,
-            JavaScriptObfuscator.preObfuscationConvertingTransformersList
+            JavaScriptObfuscator.convertingTransformersList
         );
 
         // sixth pass: obfuscating transformers
@@ -273,11 +273,11 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
             JavaScriptObfuscator.obfuscatingTransformersList
         );
 
-        // seventh pass: post-obfuscation converting transformers
+        // seventh pass: finalizing transformers
         this.logger.info(LoggingMessage.StagePostObfuscation);
         astTree = this.transformersRunner.transform(
             astTree,
-            JavaScriptObfuscator.postObfuscationConvertingTransformersList
+            JavaScriptObfuscator.finalizingTransformersList
         );
 
         this.obfuscationEventEmitter.emit(ObfuscationEvent.AfterObfuscation, astTree, stackTraceData);

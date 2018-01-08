@@ -9,6 +9,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
+import { NodeGuards } from '../../node/NodeGuards';
 import { Nodes } from '../../node/Nodes';
 import { NodeUtils } from '../../node/NodeUtils';
 
@@ -30,8 +31,8 @@ export class AstToEvalCallExpressionTransformer extends AbstractNodeTransformer 
      */
     public getVisitor (): IVisitor {
         return {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                if (parentNode && node.isEvalRoot) {
+            leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                if (parentNode && node.isEvalRoot && NodeGuards.isFunctionDeclarationNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -39,12 +40,13 @@ export class AstToEvalCallExpressionTransformer extends AbstractNodeTransformer 
     }
 
     /**
-     * @param {ExpressionStatement} node
+     * @param {FunctionDeclaration} functionDeclaration
      * @param {Node} parentNode
      * @returns {Node}
      */
-    public transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node {
-        const code: string = NodeUtils.convertStructureToCode([node]);
+    public transformNode (functionDeclaration: ESTree.FunctionDeclaration, parentNode: ESTree.Node): ESTree.Node {
+        const targetAst: ESTree.Statement[] = functionDeclaration.body.body;
+        const code: string = NodeUtils.convertStructureToCode(targetAst);
 
         return Nodes.getCallExpressionNode(
             Nodes.getIdentifierNode('eval'),

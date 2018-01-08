@@ -63,10 +63,14 @@ export class EvalCallExpressionToAstTransformer extends AbstractNodeTransformer 
 
         const code: string = callExpressionFirstArgument.value;
         const ast: TStatement[] = NodeUtils.convertCodeToStructure(code);
-        const programNode: ESTree.Program = Nodes.getProgramNode(ast);
+        const functionDeclaration: ESTree.FunctionDeclaration = Nodes.getFunctionDeclarationNode(
+            'evalRoot',
+            [],
+            Nodes.getBlockStatementNode(<any>ast)
+        );
 
-        programNode.isEvalRoot = true;
+        functionDeclaration.isEvalRoot = true;
 
-        return programNode;
+        return functionDeclaration;
     }
 }

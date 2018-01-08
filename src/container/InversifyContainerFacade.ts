@@ -1,6 +1,8 @@
 import { Container, interfaces } from 'inversify';
 import { ServiceIdentifiers } from './ServiceIdentifiers';
 
+import * as ESTree from 'estree';
+
 import { analyzersModule } from './modules/analyzers/AnalyzersModule';
 import { controlFlowTransformersModule } from './modules/node-transformers/ControlFlowTransformersModule';
 import { convertingTransformersModule } from './modules/node-transformers/ConvertingTransformersModule';
@@ -173,11 +175,11 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         this.container
             .bind<IObfuscationResult>(ServiceIdentifiers.Factory__IObfuscationResult)
             .toFactory<IObfuscationResult>((context: interfaces.Context) => {
-                return (obfuscatedCode: string, sourceMap: string) => {
+                return (obfuscatedAst: ESTree.Program, obfuscatedCode: string, sourceMap: string) => {
                     const obfuscationResult: IObfuscationResult = context.container
                         .get<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult);
 
-                    obfuscationResult.initialize(obfuscatedCode, sourceMap);
+                    obfuscationResult.initialize(obfuscatedAst, obfuscatedCode, sourceMap);
 
                     return obfuscationResult;
                 };

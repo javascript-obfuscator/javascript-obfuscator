@@ -1,6 +1,8 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
+import * as ESTree from 'estree';
+
 import { TObfuscationResultFactory } from '../types/container/TObfuscationResultFactory';
 
 import { ICryptUtils } from '../interfaces/utils/ICryptUtils';
@@ -43,12 +45,14 @@ export class SourceMapCorrector implements ISourceMapCorrector {
     }
 
     /**
+     * @param {Program} obfuscatedAst
      * @param {string} obfuscatedCode
      * @param {string} sourceMap
      * @returns {IObfuscationResult}
      */
-    public correct (obfuscatedCode: string, sourceMap: string): IObfuscationResult {
+    public correct (obfuscatedAst: ESTree.Program, obfuscatedCode: string, sourceMap: string): IObfuscationResult {
         return this.obfuscationResultFactory(
+            obfuscatedAst,
             this.correctObfuscatedCode(obfuscatedCode, sourceMap),
             sourceMap
         );

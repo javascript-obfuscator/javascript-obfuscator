@@ -49,6 +49,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @type {NodeTransformer[]}
      */
     private static readonly convertingTransformersList: NodeTransformer[] = [
+        NodeTransformer.CallExpressionTransformer,
         NodeTransformer.MemberExpressionTransformer,
         NodeTransformer.MethodDefinitionTransformer,
         NodeTransformer.TemplateLiteralTransformer
@@ -176,7 +177,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
         const obfuscationTime: number = (Date.now() - timeStart) / 1000;
         this.logger.success(LoggingMessage.ObfuscationCompleted, obfuscationTime);
 
-        return this.getObfuscationResult(generatorOutput);
+        return this.getObfuscationResult(obfuscatedAstTree, generatorOutput);
     }
 
     /**
@@ -290,11 +291,16 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
     }
 
     /**
+     * @param {Program} obfuscatedAstTree
      * @param {IGeneratorOutput} generatorOutput
      * @returns {IObfuscationResult}
      */
-    private getObfuscationResult (generatorOutput: IGeneratorOutput): IObfuscationResult {
+    private getObfuscationResult (
+        obfuscatedAstTree: ESTree.Program,
+        generatorOutput: IGeneratorOutput
+    ): IObfuscationResult {
         return this.sourceMapCorrector.correct(
+            obfuscatedAstTree,
             generatorOutput.code,
             generatorOutput.map
         );

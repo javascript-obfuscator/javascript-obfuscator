@@ -2,7 +2,7 @@ import { assert } from 'chai';
 
 import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResult';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../helpers/readFileAsString';
 
@@ -33,7 +33,7 @@ describe('DeadCodeInjectionTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         deadCodeInjection: true,
                         deadCodeInjectionThreshold: 1,
                         stringArray: true,
@@ -69,7 +69,7 @@ describe('DeadCodeInjectionTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         deadCodeInjection: true,
                         deadCodeInjectionThreshold: 1,
                         stringArray: true,
@@ -105,7 +105,7 @@ describe('DeadCodeInjectionTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         deadCodeInjection: true,
                         deadCodeInjectionThreshold: 0,
                         stringArray: true,
@@ -149,7 +149,7 @@ describe('DeadCodeInjectionTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         deadCodeInjection: true,
                         deadCodeInjectionThreshold: 1,
                         stringArray: true,
@@ -200,7 +200,7 @@ describe('DeadCodeInjectionTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         deadCodeInjection: true,
                         deadCodeInjectionThreshold: 1,
                         stringArray: true,
@@ -251,7 +251,7 @@ describe('DeadCodeInjectionTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         deadCodeInjection: true,
                         deadCodeInjectionThreshold: 1,
                         stringArray: true,
@@ -339,7 +339,7 @@ describe('DeadCodeInjectionTransformer', () => {
                     const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                         code,
                         {
-                            ...NO_CUSTOM_NODES_PRESET,
+                            ...NO_ADDITIONAL_NODES_PRESET,
                             deadCodeInjection: true,
                             deadCodeInjectionThreshold: 1,
                             stringArray: true,
@@ -396,7 +396,7 @@ describe('DeadCodeInjectionTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1,
                         deadCodeInjection: true,
@@ -422,7 +422,7 @@ describe('DeadCodeInjectionTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         deadCodeInjection: true,
                         deadCodeInjectionThreshold: 1,
                         debugProtection: true

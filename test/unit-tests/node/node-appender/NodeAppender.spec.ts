@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { ServiceIdentifiers } from '../../../../src/container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
@@ -36,7 +38,7 @@ const convertCodeToAst: (fixturePath: string) => ESTree.Program = (fixturePath) 
 };
 
 describe('NodeAppender', () => {
-    describe('appendNode (blockScopeNode: TNodeWithBlockStatement[], nodeBodyStatements: TStatement[]): void', () => {
+    describe('appendNode (blockScopeNode: TNodeWithBlockScope[], nodeBodyStatements: TStatement[]): void', () => {
         let astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
             node: TStatement[];
@@ -57,7 +59,7 @@ describe('NodeAppender', () => {
         });
     });
 
-    describe('appendNodeToOptimalBlockScope (blockScopeStackTraceData: IStackTraceData[], blockScopeNode: TNodeWithBlockStatement, nodeBodyStatements: TStatement[], index: number = 0): void', () => {
+    describe('appendNodeToOptimalBlockScope (blockScopeStackTraceData: IStackTraceData[], blockScopeNode: TNodeWithBlockScope, nodeBodyStatements: TStatement[], index: number = 0): void', () => {
         let stackTraceAnalyzer: IStackTraceAnalyzer,
             astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
@@ -162,7 +164,30 @@ describe('NodeAppender', () => {
         });
     });
 
-    describe('insertNodeAtIndex (blockScopeNode: TNodeWithBlockStatement[], nodeBodyStatements: TStatement[], index: number): void', () => {
+    describe('insertNodeAfter (scopeNode: TNodeWithScope, scopeStatements: TStatement[], targetStatement: ESTree.Statement): void', () => {
+        let astTree: ESTree.Program,
+            expectedAstTree: ESTree.Program,
+            node: TStatement[],
+            targetStatement: ESTree.Statement;
+
+        before(() => {
+            node = convertCodeToStructure('/fixtures/simple-input.js');
+            astTree = convertCodeToAst('/fixtures/insert-node-after.js');
+            expectedAstTree = convertCodeToAst('/fixtures/insert-node-after-expected.js');
+            targetStatement = <ESTree.Statement>astTree.body[1];
+
+            astTree = NodeUtils.parentize(astTree);
+            expectedAstTree = NodeUtils.parentize(expectedAstTree);
+
+            NodeAppender.insertNodeAfter(astTree, node, targetStatement);
+        });
+
+        it('should insert given node in `BlockStatement` node body after target statement', () => {
+            assert.deepEqual(astTree, expectedAstTree);
+        });
+    });
+
+    describe('insertNodeAtIndex (blockScopeNode: TNodeWithBlockScope[], nodeBodyStatements: TStatement[], index: number): void', () => {
         let astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
             node: TStatement[];
@@ -183,7 +208,7 @@ describe('NodeAppender', () => {
         });
     });
 
-    describe('prependNode (blockScopeNode: TNodeWithBlockStatement[], nodeBodyStatements: TStatement[]): void', () => {
+    describe('prependNode (blockScopeNode: TNodeWithBlockScope[], nodeBodyStatements: TStatement[]): void', () => {
         let astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
             node: TStatement[];

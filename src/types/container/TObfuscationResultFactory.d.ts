@@ -1,5 +1,3 @@
-import * as ESTree from 'estree';
-
 import { IObfuscationResult } from '../../interfaces/IObfuscationResult';
 
-export type TObfuscationResultFactory = (obfuscatedAst: ESTree.Program, obfuscatedCode: string, sourceMap: string) => IObfuscationResult;
+export type TObfuscationResultFactory = (obfuscatedCode: string, sourceMap: string) => IObfuscationResult;

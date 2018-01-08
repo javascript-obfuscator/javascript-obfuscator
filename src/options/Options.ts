@@ -210,6 +210,12 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
+    public readonly transformObjectKeys: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
     public readonly unicodeEscapeSequence: boolean;
 
     /**

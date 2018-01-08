@@ -15,7 +15,7 @@ import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../options/presets/NoCustomNodes';
 
 import { AtobTemplate } from '../../templates/AtobTemplate';
 import { GlobalVariableNoEvalTemplate } from '../../templates/GlobalVariableNoEvalTemplate';
@@ -98,7 +98,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
                 stringArrayName: this.stringArrayName
             }),
             {
-                ...NO_CUSTOM_NODES_PRESET,
+                ...NO_ADDITIONAL_NODES_PRESET,
                 identifierNamesGenerator: this.options.identifierNamesGenerator,
                 seed: this.options.seed
             }

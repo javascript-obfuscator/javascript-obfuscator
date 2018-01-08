@@ -29,5 +29,6 @@ export interface IOptions {
     readonly stringArrayEncoding: TStringArrayEncoding;
     readonly stringArrayThreshold: number;
     readonly target: ObfuscationTarget;
+    readonly transformObjectKeys: boolean;
     readonly unicodeEscapeSequence: boolean;
 }

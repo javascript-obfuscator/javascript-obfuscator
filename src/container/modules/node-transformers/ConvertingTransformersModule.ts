@@ -5,16 +5,22 @@ import { INodeTransformer } from '../../../interfaces/node-transformers/INodeTra
 
 import { NodeTransformer } from '../../../enums/node-transformers/NodeTransformer';
 
-import { CallExpressionTransformer } from '../../../node-transformers/converting-transformers/CallExpressionTransformer';
+import { AstToEvalCallExpressionTransformer } from '../../../node-transformers/converting-transformers/AstToEvalCallExpressionTransformer';
+import { EvalCallExpressionToAstTransformer } from '../../../node-transformers/converting-transformers/EvaCallExpressionToAstTransformer';
 import { MemberExpressionTransformer } from '../../../node-transformers/converting-transformers/MemberExpressionTransformer';
 import { MethodDefinitionTransformer } from '../../../node-transformers/converting-transformers/MethodDefinitionTransformer';
+import { ObjectExpressionKeysTransformer } from '../../../node-transformers/converting-transformers/ObjectExpressionKeysTransformer';
 import { TemplateLiteralTransformer } from '../../../node-transformers/converting-transformers/TemplateLiteralTransformer';
 
 export const convertingTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // converting transformers
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(CallExpressionTransformer)
-        .whenTargetNamed(NodeTransformer.CallExpressionTransformer);
+        .to(AstToEvalCallExpressionTransformer)
+        .whenTargetNamed(NodeTransformer.AstToEvalCallExpressionTransformer);
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(EvalCallExpressionToAstTransformer)
+        .whenTargetNamed(NodeTransformer.EvalCallExpressionToAstTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(MemberExpressionTransformer)
@@ -23,6 +29,10 @@ export const convertingTransformersModule: interfaces.ContainerModule = new Cont
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(MethodDefinitionTransformer)
         .whenTargetNamed(NodeTransformer.MethodDefinitionTransformer);
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(ObjectExpressionKeysTransformer)
+        .whenTargetNamed(NodeTransformer.ObjectExpressionKeysTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(TemplateLiteralTransformer)

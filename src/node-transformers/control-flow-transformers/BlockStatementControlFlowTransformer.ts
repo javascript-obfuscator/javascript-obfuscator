@@ -5,6 +5,7 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
+import { TStatement } from '../../types/node/TStatement';
 
 import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
@@ -16,6 +17,7 @@ import { ControlFlowCustomNode } from '../../enums/custom-nodes/ControlFlowCusto
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class BlockStatementControlFlowTransformer extends AbstractNodeTransformer {
@@ -134,6 +136,10 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
             originalKeysIndexesInShuffledArray
         );
 
-        return blockStatementControlFlowFlatteningCustomNode.getNode()[0];
+        const newBlockStatementNode: TStatement = blockStatementControlFlowFlatteningCustomNode.getNode()[0];
+
+        NodeUtils.parentizeNode(newBlockStatementNode, parentNode);
+
+        return newBlockStatementNode;
     }
 }

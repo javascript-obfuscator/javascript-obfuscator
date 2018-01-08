@@ -7,6 +7,8 @@ export enum LoggingMessage {
     StageAnalyzingASTTree = 'Stage: analyzing AST-tree...',
     StageControlFlowFlattening = 'Stage: control flow flattening...',
     StageDeadCodeInjection = 'Stage: dead code injection...',
+    StagePostObfuscation = 'Stage: post-obfuscation...',
+    StagePreObfuscation = 'Stage: pre-obfuscation...',
     StageObfuscation = 'Stage: obfuscation...',
     Version = 'Version: %s'
 }

@@ -20,6 +20,7 @@ import './unit-tests/generators/identifier-names-generators/MangledlIdentifierNa
 import './unit-tests/javascript-obfuscator/JavaScriptObfuscator.spec';
 import './unit-tests/logger/Logger.spec';
 import './unit-tests/node/node-appender/NodeAppender.spec';
+import './unit-tests/node/node-guards/NodeGuards.spec';
 import './unit-tests/node/node-utils/NodeUtils.spec';
 import './unit-tests/node-transformers/preparing-transformers/ObfuscatingGuardsTransformer.spec';
 import './unit-tests/obfuscation-result/ObfuscationResult.spec';
@@ -52,6 +53,7 @@ import './functional-tests/node-transformers/control-flow-transformers/control-f
 import './functional-tests/node-transformers/control-flow-transformers/control-flow-replacers/string-litertal-control-flow-replacer/StringLiteralControlFlowReplacer.spec';
 import './functional-tests/node-transformers/converting-transformers/member-expression-transformer/MemberExpressionTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/method-definition-transformer/MethodDefinitionTransformer.spec';
+import './functional-tests/node-transformers/converting-transformers/object-expression-keys-transformer/ObjectExpressionKeysTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/template-literal-transformer/TemplateLiteralTransformer.spec';
 import './functional-tests/node-transformers/dead-code-injection-transformers/DeadCodeInjectionTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/catch-clause-transformer/CatchClauseTransformer.spec';

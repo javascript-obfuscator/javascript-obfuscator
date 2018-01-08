@@ -5,7 +5,7 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TIdentifierObfuscatingReplacerFactory } from "../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory";
-import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
+import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
 
 import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -78,7 +78,7 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
      */
     public transformNode (classDeclarationNode: ESTree.ClassDeclaration, parentNode: ESTree.Node): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
-        const blockScopeNode: TNodeWithBlockStatement = NodeUtils
+        const blockScopeNode: TNodeWithBlockScope = NodeUtils
             .getBlockScopesOfNode(classDeclarationNode)[0];
 
         if (!this.options.renameGlobals && blockScopeNode.type === NodeType.Program) {
@@ -106,10 +106,10 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {TNodeWithBlockStatement} blockScopeNode
+     * @param {TNodeWithBlockScope} blockScopeNode
      * @param {number} nodeIdentifier
      */
-    private replaceScopeCachedIdentifiers (blockScopeNode: TNodeWithBlockStatement, nodeIdentifier: number): void {
+    private replaceScopeCachedIdentifiers (blockScopeNode: TNodeWithBlockScope, nodeIdentifier: number): void {
         const cachedReplaceableIdentifiers: ESTree.Identifier[] = <ESTree.Identifier[]>this.replaceableIdentifiers.get(blockScopeNode);
 
         cachedReplaceableIdentifiers.forEach((replaceableIdentifier: ESTree.Identifier) => {
@@ -121,10 +121,10 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {TNodeWithBlockStatement} blockScopeNode
+     * @param {TNodeWithBlockScope} blockScopeNode
      * @param {number} nodeIdentifier
      */
-    private replaceScopeIdentifiers (blockScopeNode: TNodeWithBlockStatement, nodeIdentifier: number): void {
+    private replaceScopeIdentifiers (blockScopeNode: TNodeWithBlockScope, nodeIdentifier: number): void {
         const storedReplaceableIdentifiers: ESTree.Identifier[] = [];
 
         estraverse.replace(blockScopeNode, {

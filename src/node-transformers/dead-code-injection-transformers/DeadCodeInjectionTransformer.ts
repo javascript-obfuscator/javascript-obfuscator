@@ -4,19 +4,21 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
+import { TDeadNodeInjectionCustomNodeFactory } from '../../types/container/custom-nodes/TDeadNodeInjectionCustomNodeFactory';
+import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
 
+import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { ITransformersRunner } from '../../interfaces/node-transformers/ITransformersRunner';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
+import { DeadCodeInjectionCustomNode } from '../../enums/custom-nodes/DeadCodeInjectionCustomNode';
 import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { NodeType } from '../../enums/node/NodeType';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
-import { Nodes } from '../../node/Nodes';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
@@ -54,22 +56,31 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     private collectedBlockStatementsLength: number;
 
     /**
+     * @type {TDeadNodeInjectionCustomNodeFactory}
+     */
+    private readonly deadCodeInjectionCustomNodeFactory: TDeadNodeInjectionCustomNodeFactory;
+
+    /**
      * @type {ITransformersRunner}
      */
     private readonly transformersRunner: ITransformersRunner;
 
     /**
+     * @param {TControlFlowCustomNodeFactory} deadCodeInjectionCustomNodeFactory
      * @param {ITransformersRunner} transformersRunner
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
+        @inject(ServiceIdentifiers.Factory__IDeadCodeInjectionCustomNode)
+            deadCodeInjectionCustomNodeFactory: TDeadNodeInjectionCustomNodeFactory,
         @inject(ServiceIdentifiers.ITransformersRunner) transformersRunner: ITransformersRunner,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
 
+        this.deadCodeInjectionCustomNodeFactory = deadCodeInjectionCustomNodeFactory;
         this.transformersRunner = transformersRunner;
     }
 
@@ -112,7 +123,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         estraverse.traverse(programNode, {
             enter: (node: ESTree.Node): any => {
                 if (NodeGuards.isBlockStatementNode(node)) {
-                    this.collectBlockStatementNodes(node, this.collectedBlockStatements);
+                    this.collectBlockStatementNodes(node, this.collectedBlockStatements, parentNode);
                 }
             }
         });
@@ -138,7 +149,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
             return blockStatementNode;
         }
 
-        const blockScopeOfBlockStatementNode: TNodeWithBlockStatement = NodeUtils
+        const blockScopeOfBlockStatementNode: TNodeWithBlockScope = NodeUtils
             .getBlockScopesOfNode(blockStatementNode)[0];
 
         if (blockScopeOfBlockStatementNode.type === NodeType.Program) {
@@ -154,23 +165,25 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
             return blockStatementNode;
         }
 
-        return this.replaceBlockStatementNode(blockStatementNode, randomBlockStatementNode);
+        return this.replaceBlockStatementNode(blockStatementNode, randomBlockStatementNode, parentNode);
     }
 
     /**
      * @param {BlockStatement} blockStatementNode
      * @param {BlockStatement[]} collectedBlockStatements
+     * @param {Node} parentNode
      */
     private collectBlockStatementNodes (
         blockStatementNode: ESTree.BlockStatement,
-        collectedBlockStatements: ESTree.BlockStatement[]
+        collectedBlockStatements: ESTree.BlockStatement[],
+        parentNode: ESTree.Node
     ): void {
         let clonedBlockStatementNode: ESTree.BlockStatement = NodeUtils.clone(blockStatementNode),
             nestedBlockStatementsCount: number = 0,
             isValidBlockStatementNode: boolean = true;
 
         estraverse.replace(clonedBlockStatementNode, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): any => {
+            enter: (node: ESTree.Node): any => {
                 /**
                  * Count nested block statements in current block statement
                  */
@@ -202,6 +215,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         /**
          * We should transform identifiers in the dead code block statement to avoid conflicts with original code
          */
+        NodeUtils.parentizeNode(clonedBlockStatementNode, parentNode);
         clonedBlockStatementNode = this.transformersRunner.transform(
             clonedBlockStatementNode,
             DeadCodeInjectionTransformer.transformersToRenameBlockScopeIdentifiers
@@ -213,36 +227,26 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     /**
      * @param {BlockStatement} blockStatementNode
      * @param {BlockStatement} randomBlockStatementNode
+     * @param {Node} parentNode
      * @returns {BlockStatement}
      */
     private replaceBlockStatementNode (
         blockStatementNode: ESTree.BlockStatement,
-        randomBlockStatementNode: ESTree.BlockStatement
+        randomBlockStatementNode: ESTree.BlockStatement,
+        parentNode: ESTree.Node
     ): ESTree.BlockStatement {
-        const random1: boolean = this.randomGenerator.getMathRandom() > 0.5;
-        const random2: boolean = this.randomGenerator.getMathRandom() > 0.5;
+        const blockStatementDeadCodeInjectionCustomNode: ICustomNode = this.deadCodeInjectionCustomNodeFactory(
+            DeadCodeInjectionCustomNode.BlockStatementDeadCodeInjectionNode
+        );
 
-        const operator: ESTree.BinaryOperator = random1 ? '===' : '!==';
-        const leftString: string = this.randomGenerator.getRandomString(5);
-        const rightString: string = random2 ? leftString : this.randomGenerator.getRandomString(5);
+        blockStatementDeadCodeInjectionCustomNode.initialize(
+            blockStatementNode,
+            randomBlockStatementNode
+        );
 
-        const [consequent, alternate]: [ESTree.BlockStatement, ESTree.BlockStatement] = random1 === random2
-            ? [blockStatementNode, randomBlockStatementNode]
-            : [randomBlockStatementNode, blockStatementNode];
+        const newBlockStatementNode: ESTree.BlockStatement = <ESTree.BlockStatement>blockStatementDeadCodeInjectionCustomNode.getNode()[0];
 
-        let newBlockStatementNode: ESTree.BlockStatement = Nodes.getBlockStatementNode([
-            Nodes.getIfStatementNode(
-                Nodes.getBinaryExpressionNode(
-                    operator,
-                    Nodes.getLiteralNode(leftString),
-                    Nodes.getLiteralNode(rightString)
-                ),
-                consequent,
-                alternate
-            )
-        ]);
-
-        newBlockStatementNode = NodeUtils.parentize(newBlockStatementNode);
+        NodeUtils.parentizeNode(newBlockStatementNode, parentNode);
 
         return newBlockStatementNode;
     }

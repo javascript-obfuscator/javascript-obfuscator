@@ -1,8 +1,6 @@
 import { Container, interfaces } from 'inversify';
 import { ServiceIdentifiers } from './ServiceIdentifiers';
 
-import * as ESTree from 'estree';
-
 import { analyzersModule } from './modules/analyzers/AnalyzersModule';
 import { controlFlowTransformersModule } from './modules/node-transformers/ControlFlowTransformersModule';
 import { convertingTransformersModule } from './modules/node-transformers/ConvertingTransformersModule';
@@ -49,7 +47,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      * @param {interfaces.ServiceIdentifier<U>} serviceIdentifier
      * @returns {U}
      */
-    public static getFactory <T extends number, U> (
+    public static getFactory <T extends string, U> (
         serviceIdentifier: interfaces.ServiceIdentifier<U>
     ): (context: interfaces.Context) => (bindingName: T) => U {
         return (context: interfaces.Context): (bindingName: T) => U => {
@@ -63,7 +61,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      * @param {interfaces.ServiceIdentifier<U>} serviceIdentifier
      * @returns {U}
      */
-    public static getCacheFactory <T extends number, U> (
+    public static getCacheFactory <T extends string, U> (
         serviceIdentifier: interfaces.ServiceIdentifier<U>
     ): (context: interfaces.Context) => (bindingName: T) => U {
         return (context: interfaces.Context): (bindingName: T) => U => {
@@ -88,7 +86,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      * @param {any[]} dependencies
      * @returns {U}
      */
-    public static getConstructorFactory <T extends number, U> (
+    public static getConstructorFactory <T extends string, U> (
         serviceIdentifier: interfaces.ServiceIdentifier<interfaces.Newable<U>>,
         ...dependencies: any[]
     ): (context: interfaces.Context) => (bindingName: T) => U {
@@ -175,11 +173,11 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         this.container
             .bind<IObfuscationResult>(ServiceIdentifiers.Factory__IObfuscationResult)
             .toFactory<IObfuscationResult>((context: interfaces.Context) => {
-                return (obfuscatedAst: ESTree.Program, obfuscatedCode: string, sourceMap: string) => {
+                return (obfuscatedCode: string, sourceMap: string) => {
                     const obfuscationResult: IObfuscationResult = context.container
                         .get<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult);
 
-                    obfuscationResult.initialize(obfuscatedAst, obfuscatedCode, sourceMap);
+                    obfuscationResult.initialize(obfuscatedCode, sourceMap);
 
                     return obfuscationResult;
                 };

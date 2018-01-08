@@ -5,6 +5,7 @@ import * as ESTree from 'estree';
 declare module 'estree' {
     interface BaseNode {
         ignoredNode?: boolean;
+        isEvalRoot?: boolean;
         obfuscatedNode?: boolean;
         parentNode?: ESTree.Node;
     }

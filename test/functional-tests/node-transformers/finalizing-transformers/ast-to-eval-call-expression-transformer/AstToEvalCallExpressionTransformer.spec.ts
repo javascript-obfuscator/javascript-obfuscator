@@ -233,7 +233,29 @@ describe('AstToEvalCallExpressionTransformer', () => {
         });
     });
 
-    describe('variant #7: integration with control flow flattening', () => {
+    describe('variant #7: wrong eval string', () => {
+        const evalExpressionRegExp: RegExp = /eval *\('~'\);/;
+
+        let obfuscatedCode: string
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/wrong-eval-string.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('should skip obfuscation of eval string', () => {
+            assert.match(obfuscatedCode, evalExpressionRegExp);
+        });
+    });
+
+    describe('variant #8: integration with control flow flattening', () => {
         const variableMatch: string = '_0x([a-f0-9]){4,6}';
         const controlFlowStorageNodeMatch: string = `` +
             `var *${variableMatch} *= *\\{` +

@@ -32,7 +32,7 @@ export class AstToEvalCallExpressionTransformer extends AbstractNodeTransformer 
     public getVisitor (): IVisitor {
         return {
             leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                if (parentNode && node.isEvalRoot && NodeGuards.isFunctionDeclarationNode(node)) {
+                if (parentNode && node.isEvalRoot && NodeGuards.isFunctionExpressionNode(node)) {
                     return this.transformNode(node, parentNode);
                 }
             }
@@ -40,18 +40,18 @@ export class AstToEvalCallExpressionTransformer extends AbstractNodeTransformer 
     }
 
     /**
-     * @param {FunctionDeclaration} functionDeclaration
+     * @param {FunctionExpression} evalRootAstHostNode
      * @param {Node} parentNode
      * @returns {Node}
      */
-    public transformNode (functionDeclaration: ESTree.FunctionDeclaration, parentNode: ESTree.Node): ESTree.Node {
-        const targetAst: ESTree.Statement[] = functionDeclaration.body.body;
-        const code: string = NodeUtils.convertStructureToCode(targetAst);
+    public transformNode (evalRootAstHostNode: ESTree.FunctionExpression, parentNode: ESTree.Node): ESTree.Node {
+        const targetAst: ESTree.Statement[] = evalRootAstHostNode.body.body;
+        const obfuscatedCode: string = NodeUtils.convertStructureToCode(targetAst);
 
         return Nodes.getCallExpressionNode(
             Nodes.getIdentifierNode('eval'),
             [
-                Nodes.getLiteralNode(jsStringEscape(code))
+                Nodes.getLiteralNode(jsStringEscape(obfuscatedCode))
             ]
         );
     }

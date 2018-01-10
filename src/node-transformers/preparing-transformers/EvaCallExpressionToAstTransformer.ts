@@ -46,31 +46,39 @@ export class EvalCallExpressionToAstTransformer extends AbstractNodeTransformer 
     }
 
     /**
-     * @param {CallExpression} callExpression
+     * @param {CallExpression} callExpressionNode
      * @param {Node} parentNode
      * @returns {Node}
      */
-    public transformNode (callExpression: ESTree.CallExpression, parentNode: ESTree.Node): ESTree.Node {
-        const callExpressionFirstArgument: ESTree.Expression | ESTree.SpreadElement = callExpression.arguments[0];
+    public transformNode (callExpressionNode: ESTree.CallExpression, parentNode: ESTree.Node): ESTree.Node {
+        const callExpressionFirstArgument: ESTree.Expression | ESTree.SpreadElement = callExpressionNode.arguments[0];
 
-        if (!callExpressionFirstArgument || !NodeGuards.isLiteralNode(callExpressionFirstArgument)) {
-            return callExpression;
-        }
-
-        if (typeof callExpressionFirstArgument.value !== 'string') {
-            return callExpression;
+        if (
+            !callExpressionFirstArgument
+            || !NodeGuards.isLiteralNode(callExpressionFirstArgument)
+            || typeof callExpressionFirstArgument.value !== 'string'
+        ) {
+            return callExpressionNode;
         }
 
         const code: string = callExpressionFirstArgument.value;
-        const ast: TStatement[] = NodeUtils.convertCodeToStructure(code);
-        const functionDeclaration: ESTree.FunctionDeclaration = Nodes.getFunctionDeclarationNode(
-            'evalRoot',
+
+        let ast: TStatement[];
+
+        // wrapping into try-catch to prevent parsing of incorrect `eval` string
+        try {
+            ast = NodeUtils.convertCodeToStructure(code);
+        } catch (e) {
+            return callExpressionNode;
+        }
+
+        const evalRootAstHost: ESTree.FunctionExpression = Nodes.getFunctionExpressionNode(
             [],
             Nodes.getBlockStatementNode(<any>ast)
         );
 
-        functionDeclaration.isEvalRoot = true;
+        evalRootAstHost.isEvalRoot = true;
 
-        return functionDeclaration;
+        return evalRootAstHost;
     }
 }

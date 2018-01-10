@@ -36,7 +36,6 @@ describe('BlockStatementControlFlowTransformer', function () {
                 );
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
-                console.log(obfuscatedCode);
             });
 
             describe('`console.log` statements', ()=> {

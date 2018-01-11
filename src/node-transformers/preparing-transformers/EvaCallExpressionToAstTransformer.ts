@@ -28,6 +28,47 @@ export class EvalCallExpressionToAstTransformer extends AbstractNodeTransformer 
     }
 
     /**
+     * @param {Expression | SpreadElement} node
+     * @returns {string | null}
+     */
+    private static extractEvalStringFromCallExpressionArgument (node: ESTree.Expression | ESTree.SpreadElement): string | null {
+        if (NodeGuards.isLiteralNode(node)) {
+            return EvalCallExpressionToAstTransformer
+                .getEvalStringFromLiteralNode(node);
+        }
+
+        if (NodeGuards.isTemplateLiteralNode(node)) {
+            return EvalCallExpressionToAstTransformer
+                .getEvalStringFromTemplateLiteralNode(node);
+        }
+
+        return null;
+    }
+
+    /**
+     * @param {Literal} node
+     * @returns {string | null}
+     */
+    private static getEvalStringFromLiteralNode (node: ESTree.Literal): string | null {
+        return typeof node.value === 'string' ? node.value : null;
+    }
+
+    /**
+     * @param {TemplateLiteral} node
+     * @returns {string | null}
+     */
+    private static getEvalStringFromTemplateLiteralNode (node: ESTree.TemplateLiteral): string | null {
+        const quasis: ESTree.TemplateElement[] = node.quasis;
+        const allowedQuasisLength: number = 1;
+
+        if (quasis.length !== allowedQuasisLength || node.expressions.length) {
+            return null;
+        }
+
+        return quasis[0].value.cooked;
+    }
+
+    /**
      * @return {IVisitor}
      */
     public getVisitor (): IVisitor {
@@ -53,32 +94,31 @@ export class EvalCallExpressionToAstTransformer extends AbstractNodeTransformer 
     public transformNode (callExpressionNode: ESTree.CallExpression, parentNode: ESTree.Node): ESTree.Node {
         const callExpressionFirstArgument: ESTree.Expression | ESTree.SpreadElement = callExpressionNode.arguments[0];
 
-        if (
-            !callExpressionFirstArgument
-            || !NodeGuards.isLiteralNode(callExpressionFirstArgument)
-            || typeof callExpressionFirstArgument.value !== 'string'
-        ) {
+        if (!callExpressionFirstArgument) {
             return callExpressionNode;
         }
 
-        const code: string = callExpressionFirstArgument.value;
+        const evalString: string | null = EvalCallExpressionToAstTransformer
+            .extractEvalStringFromCallExpressionArgument(callExpressionFirstArgument);
+
+        if (!evalString) {
+            return callExpressionNode;
+        }
 
         let ast: TStatement[];
 
         // wrapping into try-catch to prevent parsing of incorrect `eval` string
         try {
-            ast = NodeUtils.convertCodeToStructure(code);
+            ast = NodeUtils.convertCodeToStructure(evalString);
         } catch (e) {
             return callExpressionNode;
         }
 
-        const evalRootAstHost: ESTree.FunctionExpression = Nodes.getFunctionExpressionNode(
-            [],
-            Nodes.getBlockStatementNode(<any>ast)
-        );
+        const evalRootAstHostNode: ESTree.FunctionExpression = Nodes
+            .getFunctionExpressionNode([], Nodes.getBlockStatementNode(<any>ast));
 
-        evalRootAstHost.isEvalRoot = true;
+        evalRootAstHostNode.isEvalRoot = true;
 
-        return evalRootAstHost;
+        return evalRootAstHostNode;
     }
 }

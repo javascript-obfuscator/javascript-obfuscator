@@ -255,7 +255,39 @@ describe('AstToEvalCallExpressionTransformer', () => {
         });
     });
 
-    describe('variant #8: integration with control flow flattening', () => {
+    describe('variant #8: template literal inside eval expression', () => {
+        const functionIdentifierRegExp: RegExp = /function *_0x(?:[a-f0-9]){4,6} *\((_0x(?:[a-f0-9]){4,6})\)/;
+        const evalExpressionRegExp: RegExp = /eval *\('(_0x(?:[a-f0-9]){4,6});'\);/;
+
+        let functionIdentifierName: string | null,
+            obfuscatedCode: string,
+            variableReferenceIdentifierName: string | null;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/eval-expression-template-literal.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+
+            functionIdentifierName = getRegExpMatch(obfuscatedCode, functionIdentifierRegExp);
+            variableReferenceIdentifierName = getRegExpMatch(obfuscatedCode, evalExpressionRegExp);
+        });
+
+        it('should obfuscate eval string', () => {
+            assert.match(obfuscatedCode, evalExpressionRegExp);
+        });
+
+        it('should correctly transform function parameter inside eval expression', () => {
+            assert.equal(functionIdentifierName, variableReferenceIdentifierName);
+        });
+    });
+
+    describe('variant #9: integration with control flow flattening', () => {
         const variableMatch: string = '_0x([a-f0-9]){4,6}';
         const controlFlowStorageNodeMatch: string = `` +
             `var *${variableMatch} *= *\\{` +

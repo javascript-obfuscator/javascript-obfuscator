@@ -34,12 +34,12 @@ export class EvalCallExpressionToAstTransformer extends AbstractNodeTransformer 
     private static extractEvalStringFromCallExpressionArgument (node: ESTree.Expression | ESTree.SpreadElement): string | null {
         if (NodeGuards.isLiteralNode(node)) {
             return EvalCallExpressionToAstTransformer
-                .getEvalStringFromLiteralNode(node);
+                .extractEvalStringFromLiteralNode(node);
         }
 
         if (NodeGuards.isTemplateLiteralNode(node)) {
             return EvalCallExpressionToAstTransformer
-                .getEvalStringFromTemplateLiteralNode(node);
+                .extractEvalStringFromTemplateLiteralNode(node);
         }
 
         return null;
@@ -49,7 +49,7 @@ export class EvalCallExpressionToAstTransformer extends AbstractNodeTransformer 
      * @param {Literal} node
      * @returns {string | null}
      */
-    private static getEvalStringFromLiteralNode (node: ESTree.Literal): string | null {
+    private static extractEvalStringFromLiteralNode (node: ESTree.Literal): string | null {
         return typeof node.value === 'string' ? node.value : null;
     }
 
@@ -57,7 +57,7 @@ export class EvalCallExpressionToAstTransformer extends AbstractNodeTransformer 
      * @param {TemplateLiteral} node
      * @returns {string | null}
      */
-    private static getEvalStringFromTemplateLiteralNode (node: ESTree.TemplateLiteral): string | null {
+    private static extractEvalStringFromTemplateLiteralNode (node: ESTree.TemplateLiteral): string | null {
         const quasis: ESTree.TemplateElement[] = node.quasis;
         const allowedQuasisLength: number = 1;
 

@@ -12,6 +12,8 @@ import { IVisitor } from '../interfaces/node-transformers/IVisitor';
 
 import { initializable } from '../decorators/Initializable';
 
+import { TransformationStage } from '../enums/node-transformers/TransformationStage';
+
 @injectable()
 export abstract class AbstractNodeTransformer implements INodeTransformer, IInitializable {
     /**
@@ -48,9 +50,10 @@ export abstract class AbstractNodeTransformer implements INodeTransformer, IInit
     }
 
     /**
-     * @returns {IVisitor}
+     * @param {TransformationStage} transformationStage
+     * @returns {IVisitor | null}
      */
-    public abstract getVisitor (): IVisitor;
+    public abstract getVisitor (transformationStage: TransformationStage): IVisitor | null;
 
     /**
      * @param {Node} node

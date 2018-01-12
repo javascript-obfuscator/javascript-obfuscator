@@ -23,6 +23,7 @@ import { ITransformersRunner } from './interfaces/node-transformers/ITransformer
 import { LoggingMessage } from './enums/logger/LoggingMessage';
 import { NodeTransformer } from './enums/node-transformers/NodeTransformer';
 import { ObfuscationEvent } from './enums/event-emitters/ObfuscationEvent';
+import { TransformationStage } from './enums/node-transformers/TransformationStage';
 
 import { NodeGuards } from './node/NodeGuards';
 
@@ -40,57 +41,26 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
     /**
      * @type {NodeTransformer[]}
      */
-    private static readonly controlFlowTransformersList: NodeTransformer[] = [
+    private static readonly transformersList: NodeTransformer[] = [
         NodeTransformer.BlockStatementControlFlowTransformer,
-        NodeTransformer.FunctionControlFlowTransformer
-    ];
-
-    /**
-     * @type {NodeTransformer[]}
-     */
-    private static readonly convertingTransformersList: NodeTransformer[] = [
-        NodeTransformer.MemberExpressionTransformer,
-        NodeTransformer.MethodDefinitionTransformer,
-        NodeTransformer.ObjectExpressionKeysTransformer,
-        NodeTransformer.TemplateLiteralTransformer
-    ];
-
-    /**
-     * @type {NodeTransformer[]}
-     */
-    private static readonly deadCodeInjectionTransformersList: NodeTransformer[] = [
-        NodeTransformer.DeadCodeInjectionTransformer
-    ];
-
-    /**
-     * @type {NodeTransformer[]}
-     */
-    private static readonly finalizingTransformersList: NodeTransformer[] = [
-        NodeTransformer.AstToEvalCallExpressionTransformer
-    ];
-
-    /**
-     * @type {NodeTransformer[]}
-     */
-    private static readonly obfuscatingTransformersList: NodeTransformer[] = [
-        NodeTransformer.CatchClauseTransformer,
         NodeTransformer.ClassDeclarationTransformer,
+        NodeTransformer.CommentsTransformer,
+        NodeTransformer.DeadCodeInjectionTransformer,
+        NodeTransformer.EvalCallExpressionTransformer,
+        NodeTransformer.FunctionControlFlowTransformer,
+        NodeTransformer.CatchClauseTransformer,
         NodeTransformer.FunctionDeclarationTransformer,
         NodeTransformer.FunctionTransformer,
         NodeTransformer.LabeledStatementTransformer,
         NodeTransformer.LiteralTransformer,
-        NodeTransformer.ObjectExpressionTransformer,
-        NodeTransformer.VariableDeclarationTransformer
-    ];
-
-    /**
-     * @type {NodeTransformer[]}
-     */
-    private static readonly preparingTransformersList: NodeTransformer[] = [
-        NodeTransformer.CommentsTransformer,
-        NodeTransformer.EvalCallExpressionToAstTransformer,
+        NodeTransformer.MemberExpressionTransformer,
+        NodeTransformer.MethodDefinitionTransformer,
         NodeTransformer.ObfuscatingGuardsTransformer,
-        NodeTransformer.ParentificationTransformer
+        NodeTransformer.ObjectExpressionKeysTransformer,
+        NodeTransformer.ObjectExpressionTransformer,
+        NodeTransformer.ParentificationTransformer,
+        NodeTransformer.TemplateLiteralTransformer,
+        NodeTransformer.VariableDeclarationTransformer
     ];
 
     /**
@@ -215,14 +185,15 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
         }
 
         // first pass: AST-tree preparation
-        this.logger.info(LoggingMessage.StagePreparingASTTree);
+        this.logger.info(LoggingMessage.TransformationStage, TransformationStage.Preparing);
         astTree = this.transformersRunner.transform(
             astTree,
-            JavaScriptObfuscator.preparingTransformersList
+            JavaScriptObfuscator.transformersList,
+            TransformationStage.Preparing
         );
 
         // second pass: AST-tree analyzing
-        this.logger.info(LoggingMessage.StageAnalyzingASTTree);
+        this.logger.info(LoggingMessage.AnalyzingASTTreeStage);
         const stackTraceData: IStackTraceData[] = this.stackTraceAnalyzer.analyze(astTree);
 
         // initialize custom node groups and configure custom nodes
@@ -241,43 +212,48 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
 
         // third pass: dead code injection transformer
         if (this.options.deadCodeInjection) {
-            this.logger.info(LoggingMessage.StageDeadCodeInjection);
+            this.logger.info(LoggingMessage.TransformationStage, TransformationStage.DeadCodeInjection);
 
             astTree = this.transformersRunner.transform(
                 astTree,
-                JavaScriptObfuscator.deadCodeInjectionTransformersList
+                JavaScriptObfuscator.transformersList,
+                TransformationStage.DeadCodeInjection
             );
         }
 
         // fourth pass: control flow flattening transformers
         if (this.options.controlFlowFlattening) {
-            this.logger.info(LoggingMessage.StageControlFlowFlattening);
+            this.logger.info(LoggingMessage.TransformationStage, TransformationStage.ControlFlowFlattening);
 
             astTree = this.transformersRunner.transform(
                 astTree,
-                JavaScriptObfuscator.controlFlowTransformersList
+                JavaScriptObfuscator.transformersList,
+                TransformationStage.ControlFlowFlattening
             );
         }
 
         // fifth pass: converting transformers
-        this.logger.info(LoggingMessage.StagePreObfuscation);
+        this.logger.info(LoggingMessage.TransformationStage, TransformationStage.Converting);
         astTree = this.transformersRunner.transform(
             astTree,
-            JavaScriptObfuscator.convertingTransformersList
+            JavaScriptObfuscator.transformersList,
+            TransformationStage.Converting
         );
 
         // sixth pass: obfuscating transformers
-        this.logger.info(LoggingMessage.StageObfuscation);
+        this.logger.info(LoggingMessage.TransformationStage, TransformationStage.Obfuscating);
         astTree = this.transformersRunner.transform(
             astTree,
-            JavaScriptObfuscator.obfuscatingTransformersList
+            JavaScriptObfuscator.transformersList,
+            TransformationStage.Obfuscating
         );
 
         // seventh pass: finalizing transformers
-        this.logger.info(LoggingMessage.StagePostObfuscation);
+        this.logger.info(LoggingMessage.TransformationStage, TransformationStage.Finalizing);
         astTree = this.transformersRunner.transform(
             astTree,
-            JavaScriptObfuscator.finalizingTransformersList
+            JavaScriptObfuscator.transformersList,
+            TransformationStage.Finalizing
         );
 
         this.obfuscationEventEmitter.emit(ObfuscationEvent.AfterObfuscation, astTree, stackTraceData);

@@ -13,6 +13,7 @@ import { ITransformersRunner } from '../interfaces/node-transformers/ITransforme
 import { IVisitor } from '../interfaces/node-transformers/IVisitor';
 
 import { NodeTransformer } from '../enums/node-transformers/NodeTransformer';
+import { TransformationStage } from '../enums/node-transformers/TransformationStage';
 import { VisitorDirection } from '../enums/node-transformers/VisitorDirection';
 
 import { NodeGuards } from '../node/NodeGuards';
@@ -36,11 +37,13 @@ export class TransformersRunner implements ITransformersRunner {
     /**
      * @param {T} astTree
      * @param {NodeTransformer[]} nodeTransformers
+     * @param {TransformationStage} transformationStage
      * @returns {T}
      */
     public transform <T extends ESTree.Node = ESTree.Program> (
         astTree: T,
-        nodeTransformers: NodeTransformer[]
+        nodeTransformers: NodeTransformer[],
+        transformationStage: TransformationStage
     ): T {
         if (!nodeTransformers.length) {
             return astTree;
@@ -50,10 +53,14 @@ export class TransformersRunner implements ITransformersRunner {
         const leaveVisitors: IVisitor[] = [];
         const nodeTransformersLength: number = nodeTransformers.length;
 
-        let visitor: IVisitor;
+        let visitor: IVisitor | null;
 
         for (let i: number = 0; i < nodeTransformersLength; i++) {
-            visitor = this.nodeTransformerFactory(nodeTransformers[i]).getVisitor();
+            visitor = this.nodeTransformerFactory(nodeTransformers[i]).getVisitor(transformationStage);
+
+            if (!visitor) {
+                continue;
+            }
 
             if (visitor.enter) {
                 enterVisitors.push(visitor);

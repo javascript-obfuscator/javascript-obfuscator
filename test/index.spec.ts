@@ -56,7 +56,6 @@ import './functional-tests/node-transformers/converting-transformers/method-defi
 import './functional-tests/node-transformers/converting-transformers/object-expression-keys-transformer/ObjectExpressionKeysTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/template-literal-transformer/TemplateLiteralTransformer.spec';
 import './functional-tests/node-transformers/dead-code-injection-transformers/DeadCodeInjectionTransformer.spec';
-import './functional-tests/node-transformers/finalizing-transformers/ast-to-eval-call-expression-transformer/AstToEvalCallExpressionTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/catch-clause-transformer/CatchClauseTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/class-declaration-transformer/ClassDeclarationTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/function-declaration-transformer/FunctionDeclarationTransformer.spec';
@@ -65,6 +64,7 @@ import './functional-tests/node-transformers/obfuscating-transformers/labeled-st
 import './functional-tests/node-transformers/obfuscating-transformers/literal-transformer/LiteralTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/object-expression-transformer/ObjectExpressionTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/variable-declaration-transformer/VariableDeclarationTransformer.spec';
+import './functional-tests/node-transformers/preparing-transformers/eval-call-expression-transformer/EvalCallExpressionTransformer.spec';
 import './functional-tests/node-transformers/preparing-transformers/comments-transformer/CommentsTransformer.spec';
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/black-list-obfuscating-guard/BlackListObfuscatingGuard.spec';
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/conditional-comment-obfuscating-guard/ConditionalCommentObfuscatingGuard.spec';

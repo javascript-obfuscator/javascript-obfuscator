@@ -16,6 +16,7 @@ import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 import { DeadCodeInjectionCustomNode } from '../../enums/custom-nodes/DeadCodeInjectionCustomNode';
 import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { NodeType } from '../../enums/node/NodeType';
+import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
@@ -96,23 +97,30 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @return {IVisitor}
+     * @param {TransformationStage} transformationStage
+     * @returns {IVisitor | null}
      */
-    public getVisitor (): IVisitor {
-        return {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                if (parentNode && NodeGuards.isProgramNode(node)) {
-                    this.analyzeNode(node, parentNode);
+    public getVisitor (transformationStage: TransformationStage): IVisitor | null {
+        switch (transformationStage) {
+            case TransformationStage.DeadCodeInjection:
+                return {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                        if (parentNode && NodeGuards.isProgramNode(node)) {
+                            this.analyzeNode(node, parentNode);
 
-                    return node;
-                }
-            },
-            leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                if (parentNode && NodeGuards.isBlockStatementNode(node)) {
-                    return this.transformNode(node, parentNode);
-                }
-            }
-        };
+                            return node;
+                        }
+                    },
+                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                        if (parentNode && NodeGuards.isBlockStatementNode(node)) {
+                            return this.transformNode(node, parentNode);
+                        }
+                    }
+                };
+
+            default:
+                return null;
+        }
     }
 
     /**
@@ -218,7 +226,8 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         NodeUtils.parentizeNode(clonedBlockStatementNode, parentNode);
         clonedBlockStatementNode = this.transformersRunner.transform(
             clonedBlockStatementNode,
-            DeadCodeInjectionTransformer.transformersToRenameBlockScopeIdentifiers
+            DeadCodeInjectionTransformer.transformersToRenameBlockScopeIdentifiers,
+            TransformationStage.Obfuscating
         );
 
         collectedBlockStatements.push(clonedBlockStatementNode);

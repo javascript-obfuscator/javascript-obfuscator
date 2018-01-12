@@ -1,10 +1,9 @@
 export enum NodeTransformer {
-    AstToEvalCallExpressionTransformer = 'AstToEvalCallExpressionTransformer',
     BlockStatementControlFlowTransformer = 'BlockStatementControlFlowTransformer',
     ClassDeclarationTransformer = 'ClassDeclarationTransformer',
     CommentsTransformer = 'CommentsTransformer',
     DeadCodeInjectionTransformer = 'DeadCodeInjectionTransformer',
-    EvalCallExpressionToAstTransformer = 'EvalCallExpressionToAstTransformer',
+    EvalCallExpressionTransformer = 'EvalCallExpressionTransformer',
     FunctionControlFlowTransformer = 'FunctionControlFlowTransformer',
     CatchClauseTransformer = 'CatchClauseTransformer',
     FunctionDeclarationTransformer = 'FunctionDeclarationTransformer',

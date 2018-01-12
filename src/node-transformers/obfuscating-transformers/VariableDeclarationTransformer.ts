@@ -16,6 +16,7 @@ import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { IdentifierObfuscatingReplacer } from "../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/IdentifierObfuscatingReplacer";
 import { NodeType } from '../../enums/node/NodeType';
+import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
@@ -62,16 +63,23 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @return {IVisitor}
+     * @param {TransformationStage} transformationStage
+     * @returns {IVisitor | null}
      */
-    public getVisitor (): IVisitor {
-        return {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                if (parentNode && NodeGuards.isVariableDeclarationNode(node)) {
-                    return this.transformNode(node, parentNode);
-                }
-            }
-        };
+    public getVisitor (transformationStage: TransformationStage): IVisitor | null {
+        switch (transformationStage) {
+            case TransformationStage.Obfuscating:
+                return {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                        if (parentNode && NodeGuards.isVariableDeclarationNode(node)) {
+                            return this.transformNode(node, parentNode);
+                        }
+                    }
+                };
+
+            default:
+                return null;
+        }
     }
 
     /**

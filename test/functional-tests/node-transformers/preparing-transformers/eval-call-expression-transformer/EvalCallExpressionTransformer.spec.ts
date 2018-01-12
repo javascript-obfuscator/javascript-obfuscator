@@ -9,7 +9,7 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
 
-describe('AstToEvalCallExpressionTransformer', () => {
+describe('EvalCallExpressionTransformer', () => {
     describe('variant #1: identifier reference', () => {
         const functionIdentifierRegExp: RegExp = /function *_0x(?:[a-f0-9]){4,6} *\((_0x(?:[a-f0-9]){4,6})\)/;
         const evalExpressionRegExp: RegExp = /eval *\('(_0x(?:[a-f0-9]){4,6});'\);/;

@@ -24,6 +24,11 @@ import { NodeUtils } from '../../node/NodeUtils';
 @injectable()
 export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     /**
+     * @type {string}
+     */
+    private static deadCodeInjectionRootAstHostNodeName: string = 'deadCodeInjectionRootAstHostNode';
+
+    /**
      * @type {number}
      */
     private static readonly maxNestedBlockStatementsCount: number = 4;
@@ -70,14 +75,37 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {Node} node
+     * @param {Node} blockStatementNode
      * @returns {boolean}
      */
-    private static isValidBlockStatementNode (node: ESTree.Node): boolean {
-        return !NodeGuards.isBreakStatementNode(node) &&
-            !NodeGuards.isContinueStatementNode(node) &&
-            !NodeGuards.isAwaitExpressionNode(node) &&
-            !NodeGuards.isSuperNode(node);
+    private static isValidBlockStatementNode (blockStatementNode: ESTree.Node): boolean {
+        const isProhibitedNode: (node: ESTree.Node) => boolean =
+            (node: ESTree.Node): boolean => NodeGuards.isBreakStatementNode(node) ||
+                NodeGuards.isContinueStatementNode(node) ||
+                NodeGuards.isAwaitExpressionNode(node) ||
+                NodeGuards.isSuperNode(node);
+
+        let nestedBlockStatementsCount: number = 0,
+            isValidBlockStatementNode: boolean = true;
+
+        estraverse.traverse(blockStatementNode, {
+            enter: (node: ESTree.Node): any => {
+                if (NodeGuards.isBlockStatementNode(node)) {
+                    nestedBlockStatementsCount++;
+                }
+
+                if (
+                    nestedBlockStatementsCount > DeadCodeInjectionTransformer.maxNestedBlockStatementsCount ||
+                    isProhibitedNode(node)
+                ) {
+                    isValidBlockStatementNode = false;
+
+                    return estraverse.VisitorOption.Break;
+                }
+            }
+        });
+
+        return isValidBlockStatementNode;
     }
 
     /**
@@ -127,9 +155,17 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     public analyzeNode (programNode: ESTree.Node, parentNode: ESTree.Node): void {
         estraverse.traverse(programNode, {
             enter: (node: ESTree.Node): any => {
-                if (NodeGuards.isBlockStatementNode(node)) {
-                    this.collectBlockStatementNodes(node, this.collectedBlockStatements, parentNode);
+                if (!NodeGuards.isBlockStatementNode(node)) {
+                    return;
                 }
+
+                const clonedBlockStatementNode: ESTree.BlockStatement = NodeUtils.clone(node);
+
+                if (!DeadCodeInjectionTransformer.isValidBlockStatementNode(clonedBlockStatementNode)) {
+                    return;
+                }
+
+                this.collectedBlockStatements.push(clonedBlockStatementNode);
             }
         });
 
@@ -189,54 +225,6 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {BlockStatement} blockStatementNode
-     * @param {BlockStatement[]} collectedBlockStatements
-     * @param {Node} parentNode
-     */
-    private collectBlockStatementNodes (
-        blockStatementNode: ESTree.BlockStatement,
-        collectedBlockStatements: ESTree.BlockStatement[],
-        parentNode: ESTree.Node
-    ): void {
-        const clonedBlockStatementNode: ESTree.BlockStatement = NodeUtils.clone(blockStatementNode);
-
-        let nestedBlockStatementsCount: number = 0,
-            isValidBlockStatementNode: boolean = true;
-
-        estraverse.replace(clonedBlockStatementNode, {
-            enter: (node: ESTree.Node): any => {
-                /**
-                 * Count nested block statements in current block statement
-                 */
-                if (NodeGuards.isBlockStatementNode(node)) {
-                    nestedBlockStatementsCount++;
-                }
-
-                /**
-                 * If nested block statements count bigger then specified amount or current block statement
-                 * contains prohibited nodes - we will stop traversing and leave method
-                 */
-                if (
-                    nestedBlockStatementsCount > DeadCodeInjectionTransformer.maxNestedBlockStatementsCount ||
-                    !DeadCodeInjectionTransformer.isValidBlockStatementNode(node)
-                ) {
-                    isValidBlockStatementNode = false;
-
-                    return estraverse.VisitorOption.Break;
-                }
-
-                return node;
-            }
-        });
-
-        if (!isValidBlockStatementNode) {
-            return;
-        }
-
-        collectedBlockStatements.push(clonedBlockStatementNode);
-    }
-
-    /**
      * @param {Node} node
      * @returns {boolean}
      */
@@ -262,7 +250,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
          */
         const deadCodeInjectionRootAstHostNode: ESTree.BlockStatement = Nodes.getBlockStatementNode([
             Nodes.getFunctionDeclarationNode(
-                'foobar',
+                DeadCodeInjectionTransformer.deadCodeInjectionRootAstHostNodeName,
                 [],
                 randomBlockStatementNode
             )

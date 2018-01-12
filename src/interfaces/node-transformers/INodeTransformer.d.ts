@@ -21,6 +21,12 @@ export interface INodeTransformer {
     /**
      * @param {Node} node
      * @param {Node | null} parentNode
+     */
+    restoreNode ? (node: ESTree.Node, parentNode: ESTree.Node | null): void;
+
+    /**
+     * @param {Node} node
+     * @param {Node | null} parentNode
      * @returns {Node | VisitorOption}
      */
     transformNode (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | estraverse.VisitorOption;

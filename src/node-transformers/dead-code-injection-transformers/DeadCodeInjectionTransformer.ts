@@ -10,16 +10,15 @@ import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { ITransformersRunner } from '../../interfaces/node-transformers/ITransformersRunner';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { DeadCodeInjectionCustomNode } from '../../enums/custom-nodes/DeadCodeInjectionCustomNode';
-import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { NodeType } from '../../enums/node/NodeType';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
+import { Nodes } from '../../node/Nodes';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
@@ -35,16 +34,9 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     private static readonly minCollectedBlockStatementsCount: number = 5;
 
     /**
-     * @type {NodeTransformer[]}
+     * @type {WeakSet <BlockStatement>}
      */
-    private static readonly transformersToRenameBlockScopeIdentifiers: NodeTransformer[] = [
-        NodeTransformer.CatchClauseTransformer,
-        NodeTransformer.ClassDeclarationTransformer,
-        NodeTransformer.FunctionDeclarationTransformer,
-        NodeTransformer.FunctionTransformer,
-        NodeTransformer.LabeledStatementTransformer,
-        NodeTransformer.VariableDeclarationTransformer
-    ];
+    private readonly deadCodeInjectionRootAstHostNodeSet: WeakSet <ESTree.BlockStatement> = new WeakSet();
 
     /**
      * @type {ESTree.BlockStatement[]}
@@ -62,27 +54,19 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     private readonly deadCodeInjectionCustomNodeFactory: TDeadNodeInjectionCustomNodeFactory;
 
     /**
-     * @type {ITransformersRunner}
-     */
-    private readonly transformersRunner: ITransformersRunner;
-
-    /**
      * @param {TControlFlowCustomNodeFactory} deadCodeInjectionCustomNodeFactory
-     * @param {ITransformersRunner} transformersRunner
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IDeadCodeInjectionCustomNode)
             deadCodeInjectionCustomNodeFactory: TDeadNodeInjectionCustomNodeFactory,
-        @inject(ServiceIdentifiers.ITransformersRunner) transformersRunner: ITransformersRunner,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
 
         this.deadCodeInjectionCustomNodeFactory = deadCodeInjectionCustomNodeFactory;
-        this.transformersRunner = transformersRunner;
     }
 
     /**
@@ -101,6 +85,10 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      * @returns {IVisitor | null}
      */
     public getVisitor (transformationStage: TransformationStage): IVisitor | null {
+        if (!this.options.deadCodeInjection) {
+            return null;
+        }
+
         switch (transformationStage) {
             case TransformationStage.DeadCodeInjection:
                 return {
@@ -114,6 +102,15 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                     leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
                         if (parentNode && NodeGuards.isBlockStatementNode(node)) {
                             return this.transformNode(node, parentNode);
+                        }
+                    }
+                };
+
+            case TransformationStage.Finalizing:
+                return {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                        if (parentNode && this.isDeadCodeInjectionRootAstHostNode(node)) {
+                            return this.restoreNode(node, parentNode);
                         }
                     }
                 };
@@ -177,6 +174,21 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @param {FunctionExpression} deadCodeInjectionRootAstHostNode
+     * @param {Node} parentNode
+     * @returns {Node}
+     */
+    public restoreNode (deadCodeInjectionRootAstHostNode: ESTree.BlockStatement, parentNode: ESTree.Node): ESTree.Node {
+        const hostNodeFirstStatement: ESTree.Statement = deadCodeInjectionRootAstHostNode.body[0];
+
+        if (!NodeGuards.isFunctionDeclarationNode(hostNodeFirstStatement)) {
+            throw new Error('Wrong dead code injection root AST host node. Host node should contain `FunctionDeclaration` node');
+        }
+
+        return hostNodeFirstStatement.body;
+    }
+
+    /**
      * @param {BlockStatement} blockStatementNode
      * @param {BlockStatement[]} collectedBlockStatements
      * @param {Node} parentNode
@@ -186,8 +198,9 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         collectedBlockStatements: ESTree.BlockStatement[],
         parentNode: ESTree.Node
     ): void {
-        let clonedBlockStatementNode: ESTree.BlockStatement = NodeUtils.clone(blockStatementNode),
-            nestedBlockStatementsCount: number = 0,
+        const clonedBlockStatementNode: ESTree.BlockStatement = NodeUtils.clone(blockStatementNode);
+
+        let nestedBlockStatementsCount: number = 0,
             isValidBlockStatementNode: boolean = true;
 
         estraverse.replace(clonedBlockStatementNode, {
@@ -220,17 +233,15 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
             return;
         }
 
-        /**
-         * We should transform identifiers in the dead code block statement to avoid conflicts with original code
-         */
-        NodeUtils.parentizeNode(clonedBlockStatementNode, parentNode);
-        clonedBlockStatementNode = this.transformersRunner.transform(
-            clonedBlockStatementNode,
-            DeadCodeInjectionTransformer.transformersToRenameBlockScopeIdentifiers,
-            TransformationStage.Obfuscating
-        );
-
         collectedBlockStatements.push(clonedBlockStatementNode);
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    private isDeadCodeInjectionRootAstHostNode (node: ESTree.Node): node is ESTree.BlockStatement {
+        return NodeGuards.isBlockStatementNode(node) && this.deadCodeInjectionRootAstHostNodeSet.has(node);
     }
 
     /**
@@ -244,14 +255,29 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         randomBlockStatementNode: ESTree.BlockStatement,
         parentNode: ESTree.Node
     ): ESTree.BlockStatement {
+        /**
+         * we should wrap original random block statement node into the parent block statement node (ast root host node)
+         * with function declaration node. This function declaration node will create block scope for all identifiers
+         * inside random block statement node and this identifiers won't affect identifiers of the rest AST tree.
+         */
+        const deadCodeInjectionRootAstHostNode: ESTree.BlockStatement = Nodes.getBlockStatementNode([
+            Nodes.getFunctionDeclarationNode(
+                'foobar',
+                [],
+                randomBlockStatementNode
+            )
+        ]);
+
+        /**
+         * we should store that host node and then extract random block statement node on the `finalizing` stage
+         */
+        this.deadCodeInjectionRootAstHostNodeSet.add(deadCodeInjectionRootAstHostNode);
+
         const blockStatementDeadCodeInjectionCustomNode: ICustomNode = this.deadCodeInjectionCustomNodeFactory(
             DeadCodeInjectionCustomNode.BlockStatementDeadCodeInjectionNode
         );
 
-        blockStatementDeadCodeInjectionCustomNode.initialize(
-            blockStatementNode,
-            randomBlockStatementNode
-        );
+        blockStatementDeadCodeInjectionCustomNode.initialize(blockStatementNode, deadCodeInjectionRootAstHostNode);
 
         const newBlockStatementNode: ESTree.BlockStatement = <ESTree.BlockStatement>blockStatementDeadCodeInjectionCustomNode.getNode()[0];
 

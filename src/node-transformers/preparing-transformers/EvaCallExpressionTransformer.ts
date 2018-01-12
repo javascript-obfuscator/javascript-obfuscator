@@ -22,7 +22,7 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
     /**
      * @type {WeakSet <FunctionExpression>}
      */
-    private readonly evalRootAstHostNodeStorage: WeakSet <ESTree.FunctionExpression> = new WeakSet();
+    private readonly evalRootAstHostNodeSet: WeakSet <ESTree.FunctionExpression> = new WeakSet();
 
     /**
      * @param {IRandomGenerator} randomGenerator
@@ -100,7 +100,7 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
                 return {
                     leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
                         if (parentNode && this.isEvalRootAstHostNode(node)) {
-                            return this.restoreEvalExpressionNode(node, parentNode);
+                            return this.restoreNode(node, parentNode);
                         }
                     }
                 };
@@ -138,20 +138,19 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
             return callExpressionNode;
         }
 
+        /**
+         * we should wrap AST-tree into the parent function expression node (ast root host node).
+         * This function expression node will help to correctly transform AST-tree.
+         */
         const evalRootAstHostNode: ESTree.FunctionExpression = Nodes
             .getFunctionExpressionNode([], Nodes.getBlockStatementNode(<any>ast));
 
-        this.evalRootAstHostNodeStorage.add(evalRootAstHostNode);
+        /**
+         * we should store that host node and then extract AST-tree on the `finalizing` stage
+         */
+        this.evalRootAstHostNodeSet.add(evalRootAstHostNode);
 
         return evalRootAstHostNode;
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
-    private isEvalRootAstHostNode (node: ESTree.Node): node is ESTree.FunctionExpression {
-        return NodeGuards.isFunctionExpressionNode(node) && this.evalRootAstHostNodeStorage.has(node);
     }
 
     /**
@@ -159,7 +158,7 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
      * @param {Node} parentNode
      * @returns {Node}
      */
-    private restoreEvalExpressionNode (evalRootAstHostNode: ESTree.FunctionExpression, parentNode: ESTree.Node): ESTree.Node {
+    public restoreNode (evalRootAstHostNode: ESTree.FunctionExpression, parentNode: ESTree.Node): ESTree.Node {
         const targetAst: ESTree.Statement[] = evalRootAstHostNode.body.body;
         const obfuscatedCode: string = NodeUtils.convertStructureToCode(targetAst);
 
@@ -169,5 +168,13 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
                 Nodes.getLiteralNode(jsStringEscape(obfuscatedCode))
             ]
         );
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    private isEvalRootAstHostNode (node: ESTree.Node): node is ESTree.FunctionExpression {
+        return NodeGuards.isFunctionExpressionNode(node) && this.evalRootAstHostNodeSet.has(node);
     }
 }

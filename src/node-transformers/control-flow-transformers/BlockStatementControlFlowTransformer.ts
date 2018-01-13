@@ -61,10 +61,12 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
                 || NodeGuards.isContinueStatementNode(statement);
             const isVariableDeclarationWithLetOrConstKind: boolean = NodeGuards.isVariableDeclarationNode(statement)
                 && (statement.kind === 'const' || statement.kind === 'let');
+            const isClassDeclaration: boolean = NodeGuards.isClassDeclarationNode(statement);
 
             return NodeGuards.isFunctionDeclarationNode(statement)
                 || isBreakOrContinueStatement
-                || isVariableDeclarationWithLetOrConstKind;
+                || isVariableDeclarationWithLetOrConstKind
+                || isClassDeclaration;
         });
     }
 

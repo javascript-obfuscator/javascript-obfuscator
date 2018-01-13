@@ -39,9 +39,9 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     private static readonly minCollectedBlockStatementsCount: number = 5;
 
     /**
-     * @type {WeakSet <BlockStatement>}
+     * @type {Set <BlockStatement>}
      */
-    private readonly deadCodeInjectionRootAstHostNodeSet: WeakSet <ESTree.BlockStatement> = new WeakSet();
+    private readonly deadCodeInjectionRootAstHostNodeSet: Set <ESTree.BlockStatement> = new Set();
 
     /**
      * @type {ESTree.BlockStatement[]}
@@ -135,6 +135,10 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                 };
 
             case TransformationStage.Finalizing:
+                if (!this.deadCodeInjectionRootAstHostNodeSet.size) {
+                    return null;
+                }
+
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
                         if (parentNode && this.isDeadCodeInjectionRootAstHostNode(node)) {

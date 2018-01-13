@@ -20,9 +20,9 @@ import { NodeUtils } from '../../node/NodeUtils';
 @injectable()
 export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
     /**
-     * @type {WeakSet <FunctionExpression>}
+     * @type {Set <FunctionExpression>}
      */
-    private readonly evalRootAstHostNodeSet: WeakSet <ESTree.FunctionExpression> = new WeakSet();
+    private readonly evalRootAstHostNodeSet: Set <ESTree.FunctionExpression> = new Set();
 
     /**
      * @param {IRandomGenerator} randomGenerator
@@ -97,6 +97,10 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
                 };
 
             case TransformationStage.Finalizing:
+                if (!this.evalRootAstHostNodeSet.size) {
+                    return null;
+                }
+
                 return {
                     leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
                         if (parentNode && this.isEvalRootAstHostNode(node)) {

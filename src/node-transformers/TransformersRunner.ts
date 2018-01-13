@@ -63,12 +63,16 @@ export class TransformersRunner implements ITransformersRunner {
             }
 
             if (visitor.enter) {
-                enterVisitors.push(visitor);
+                enterVisitors.push({ enter: visitor.enter });
             }
 
             if (visitor.leave) {
-                leaveVisitors.push(visitor);
+                leaveVisitors.push({ leave: visitor.leave });
             }
+        }
+
+        if (!enterVisitors.length && !leaveVisitors.length) {
+            return astTree;
         }
 
         estraverse.replace(astTree, {

@@ -1,13 +1,15 @@
 import { assert } from 'chai';
 import { spawn } from 'threads';
 
-import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationResult';
+import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResult';
 
-import { readFileAsString } from '../../../../helpers/readFileAsString';
+import { readFileAsString } from '../../../helpers/readFileAsString';
 
-import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
 
-import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
+import { ObfuscationTarget } from '../../../../src/enums/ObfuscationTarget';
+
+import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade';
 
 function spawnThread(inputCallback: Function, threadCallback: Function, timeoutCallback: Function): void {
     const thread = spawn<string, number>((input: string, postMessage: Function) => {
@@ -100,7 +102,43 @@ describe('DebugProtectionFunctionCallTemplate (): string', () => {
         });
     });
 
-    describe('variant #3: obfuscated code with removed debug protection code', () => {
+    describe('variant #3: correctly obfuscated code with target `extension`', () => {
+        const expectedEvaluationResult: number = 1;
+
+        let obfuscatedCode: string,
+            evaluationResult: number = 0;
+
+        beforeEach((done) => {
+            const code: string = readFileAsString(__dirname + '/fixtures/input.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    debugProtection: true,
+                    target: ObfuscationTarget.Extension
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+
+            spawnThread(
+                () => obfuscatedCode,
+                (response: number) => {
+                    evaluationResult = response;
+                    done();
+                },
+                () => {
+                    done();
+                }
+            );
+        });
+
+        it('should correctly evaluate code with enabled debug protection', () => {
+            assert.equal(evaluationResult, expectedEvaluationResult);
+        });
+    });
+
+    describe('variant #4: obfuscated code with removed debug protection code', () => {
         const expectedEvaluationResult: number = 0;
 
         let obfuscatedCode: string,
@@ -136,7 +174,7 @@ describe('DebugProtectionFunctionCallTemplate (): string', () => {
         });
     });
 
-    describe('variant #4: single call of debug protection code', () => {
+    describe('variant #5: single call of debug protection code', () => {
         const expectedEvaluationResult: number = 1;
 
         let obfuscatedCode: string,

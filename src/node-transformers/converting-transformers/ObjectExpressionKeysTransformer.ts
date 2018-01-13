@@ -9,6 +9,8 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
+import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
+
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeAppender } from '../../node/NodeAppender';
 import { NodeGuards } from '../../node/NodeGuards';
@@ -62,21 +64,28 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @return {IVisitor}
+     * @param {TransformationStage} transformationStage
+     * @returns {IVisitor | null}
      */
-    public getVisitor (): IVisitor {
-        return {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                if (
-                    this.options.transformObjectKeys
-                    && parentNode
-                    && NodeGuards.isObjectExpressionNode(node)
-                    && NodeGuards.isVariableDeclaratorNode(parentNode)
-                ) {
-                    return this.transformNode(node, parentNode);
-                }
-            }
-        };
+    public getVisitor (transformationStage: TransformationStage): IVisitor | null {
+        switch (transformationStage) {
+            case TransformationStage.Converting:
+                return {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                        if (
+                            this.options.transformObjectKeys
+                            && parentNode
+                            && NodeGuards.isObjectExpressionNode(node)
+                            && NodeGuards.isVariableDeclaratorNode(parentNode)
+                        ) {
+                            return this.transformNode(node, parentNode);
+                        }
+                    }
+                };
+
+            default:
+                return null;
+        }
     }
 
     /**

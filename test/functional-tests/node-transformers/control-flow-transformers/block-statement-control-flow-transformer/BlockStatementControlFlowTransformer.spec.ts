@@ -36,7 +36,6 @@ describe('BlockStatementControlFlowTransformer', function () {
                 );
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
-                console.log(obfuscatedCode);
             });
 
             describe('`console.log` statements', ()=> {
@@ -455,7 +454,31 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #13: `controlFlowFlatteningThreshold` chance', () => {
+        describe('variant #13: block statement contain class declaration', () => {
+            const statementRegExp: RegExp = /^\(function *\( *\) *{ * *class *_0x([a-f0-9]){4,6} *{.*?} *}.*class *_0x([a-f0-9]){4,6} *{.*?} *}.*class *_0x([a-f0-9]){4,6} *{.*?} *}/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/class-declaration.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('shouldn\'t transform block statement', () => {
+                assert.match(obfuscatedCode, statementRegExp);
+            });
+        });
+
+        describe('variant #14: `controlFlowFlatteningThreshold` chance', () => {
             const samples: number = 1000;
             const delta: number = 0.1;
 
@@ -500,7 +523,7 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #14: No `unreachable code after return statement` warning', () => {
+        describe('variant #15: No `unreachable code after return statement` warning', () => {
             const switchCaseRegExp: RegExp = /switch *\(_0x([a-f0-9]){4,6}\[_0x([a-f0-9]){4,6}\+\+\]\) *\{/;
             const switchCaseLengthRegExp: RegExp = /case *'[0-5]': *console\['log'\]\(0x[0-6]\);/g;
             const returnStatementRegExp: RegExp = /case *'[0-5]': *return; *(case|})/;

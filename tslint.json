@@ -181,7 +181,6 @@
         "variable-declaration": "space"
       }
     ],
-    "typeof-compare": true,
     "unified-signatures": true,
     "use-isnan": true,
     "valid-jsdoc": [false, {

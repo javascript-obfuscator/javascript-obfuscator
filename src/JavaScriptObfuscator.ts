@@ -23,6 +23,7 @@ import { ITransformersRunner } from './interfaces/node-transformers/ITransformer
 import { LoggingMessage } from './enums/logger/LoggingMessage';
 import { NodeTransformer } from './enums/node-transformers/NodeTransformer';
 import { ObfuscationEvent } from './enums/event-emitters/ObfuscationEvent';
+import { TransformationStage } from './enums/node-transformers/TransformationStage';
 
 import { NodeGuards } from './node/NodeGuards';
 
@@ -40,49 +41,26 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
     /**
      * @type {NodeTransformer[]}
      */
-    private static readonly controlFlowTransformersList: NodeTransformer[] = [
+    private static readonly transformersList: NodeTransformer[] = [
         NodeTransformer.BlockStatementControlFlowTransformer,
-        NodeTransformer.FunctionControlFlowTransformer
-    ];
-
-    /**
-     * @type {NodeTransformer[]}
-     */
-    private static readonly convertingTransformersList: NodeTransformer[] = [
-        NodeTransformer.MemberExpressionTransformer,
-        NodeTransformer.MethodDefinitionTransformer,
-        NodeTransformer.ObjectExpressionKeysTransformer,
-        NodeTransformer.TemplateLiteralTransformer
-    ];
-
-    /**
-     * @type {NodeTransformer[]}
-     */
-    private static readonly deadCodeInjectionTransformersList: NodeTransformer[] = [
-        NodeTransformer.DeadCodeInjectionTransformer
-    ];
-
-    /**
-     * @type {NodeTransformer[]}
-     */
-    private static readonly obfuscatingTransformersList: NodeTransformer[] = [
-        NodeTransformer.CatchClauseTransformer,
         NodeTransformer.ClassDeclarationTransformer,
+        NodeTransformer.CommentsTransformer,
+        NodeTransformer.DeadCodeInjectionTransformer,
+        NodeTransformer.EvalCallExpressionTransformer,
+        NodeTransformer.FunctionControlFlowTransformer,
+        NodeTransformer.CatchClauseTransformer,
         NodeTransformer.FunctionDeclarationTransformer,
         NodeTransformer.FunctionTransformer,
         NodeTransformer.LabeledStatementTransformer,
         NodeTransformer.LiteralTransformer,
-        NodeTransformer.ObjectExpressionTransformer,
-        NodeTransformer.VariableDeclarationTransformer
-    ];
-
-    /**
-     * @type {NodeTransformer[]}
-     */
-    private static readonly preparingTransformersList: NodeTransformer[] = [
-        NodeTransformer.CommentsTransformer,
+        NodeTransformer.MemberExpressionTransformer,
+        NodeTransformer.MethodDefinitionTransformer,
         NodeTransformer.ObfuscatingGuardsTransformer,
-        NodeTransformer.ParentificationTransformer
+        NodeTransformer.ObjectExpressionKeysTransformer,
+        NodeTransformer.ObjectExpressionTransformer,
+        NodeTransformer.ParentificationTransformer,
+        NodeTransformer.TemplateLiteralTransformer,
+        NodeTransformer.VariableDeclarationTransformer
     ];
 
     /**
@@ -206,18 +184,11 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
             return astTree;
         }
 
-        // first pass: AST-tree preparation
-        this.logger.info(LoggingMessage.StagePreparingASTTree);
-        astTree = this.transformersRunner.transform(
-            astTree,
-            JavaScriptObfuscator.preparingTransformersList
-        );
+        astTree = this.runTransformationStage(astTree, TransformationStage.Preparing);
 
-        // second pass: AST-tree analyzing
-        this.logger.info(LoggingMessage.StageAnalyzingASTTree);
+        this.logger.info(LoggingMessage.AnalyzingASTTreeStage);
         const stackTraceData: IStackTraceData[] = this.stackTraceAnalyzer.analyze(astTree);
 
-        // initialize custom node groups and configure custom nodes
         this.customNodeGroupStorage
             .getStorage()
             .forEach((customNodeGroup: ICustomNodeGroup) => {
@@ -231,39 +202,17 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
 
         this.obfuscationEventEmitter.emit(ObfuscationEvent.BeforeObfuscation, astTree, stackTraceData);
 
-        // third pass: dead code injection transformer
         if (this.options.deadCodeInjection) {
-            this.logger.info(LoggingMessage.StageDeadCodeInjection);
-
-            astTree = this.transformersRunner.transform(
-                astTree,
-                JavaScriptObfuscator.deadCodeInjectionTransformersList
-            );
+            astTree = this.runTransformationStage(astTree, TransformationStage.DeadCodeInjection);
         }
 
-        // fourth pass: control flow flattening transformers
         if (this.options.controlFlowFlattening) {
-            this.logger.info(LoggingMessage.StageControlFlowFlattening);
-
-            astTree = this.transformersRunner.transform(
-                astTree,
-                JavaScriptObfuscator.controlFlowTransformersList
-            );
+            astTree = this.runTransformationStage(astTree, TransformationStage.ControlFlowFlattening);
         }
 
-        // fifth pass: converting transformers
-        this.logger.info(LoggingMessage.StagePreObfuscation);
-        astTree = this.transformersRunner.transform(
-            astTree,
-            JavaScriptObfuscator.convertingTransformersList
-        );
-
-        // sixth pass: obfuscating transformers
-        this.logger.info(LoggingMessage.StageObfuscation);
-        astTree = this.transformersRunner.transform(
-            astTree,
-            JavaScriptObfuscator.obfuscatingTransformersList
-        );
+        astTree = this.runTransformationStage(astTree, TransformationStage.Converting);
+        astTree = this.runTransformationStage(astTree, TransformationStage.Obfuscating);
+        astTree = this.runTransformationStage(astTree, TransformationStage.Finalizing);
 
         this.obfuscationEventEmitter.emit(ObfuscationEvent.AfterObfuscation, astTree, stackTraceData);
 
@@ -305,6 +254,21 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
         return this.sourceMapCorrector.correct(
             generatorOutput.code,
             generatorOutput.map
+        );
+    }
+
+    /**
+     * @param {Program} astTree
+     * @param {TransformationStage} transformationStage
+     * @returns {Program}
+     */
+    private runTransformationStage (astTree: ESTree.Program, transformationStage: TransformationStage): ESTree.Program {
+        this.logger.info(LoggingMessage.TransformationStage, transformationStage);
+
+        return this.transformersRunner.transform(
+            astTree,
+            JavaScriptObfuscator.transformersList,
+            transformationStage
         );
     }
 }

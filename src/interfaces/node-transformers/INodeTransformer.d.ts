@@ -3,17 +3,26 @@ import * as ESTree from 'estree';
 
 import { IVisitor } from './IVisitor';
 
+import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
+
 export interface INodeTransformer {
     /**
-     * @returns {IVisitor}
+     * @param {TransformationStage} transformationStage
+     * @returns {IVisitor | null}
      */
-    getVisitor (): IVisitor;
+    getVisitor (transformationStage: TransformationStage): IVisitor | null;
 
     /**
      * @param {Node} node
      * @param {Node | null} parentNode
      */
     analyzeNode ? (node: ESTree.Node, parentNode: ESTree.Node | null): void;
+
+    /**
+     * @param {Node} node
+     * @param {Node | null} parentNode
+     */
+    restoreNode ? (node: ESTree.Node, parentNode: ESTree.Node | null): void;
 
     /**
      * @param {Node} node

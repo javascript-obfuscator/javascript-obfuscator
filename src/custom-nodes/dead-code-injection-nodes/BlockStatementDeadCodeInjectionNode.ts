@@ -27,7 +27,7 @@ export class BlockStatementDeadCodeInjectionNode extends AbstractCustomNode {
      * @type {BlockStatement}
      */
     @initializable()
-    private randomBlockStatementNode: BlockStatement;
+    private deadCodeInjectionRootAstHostNode: BlockStatement;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -45,14 +45,14 @@ export class BlockStatementDeadCodeInjectionNode extends AbstractCustomNode {
 
     /**
      * @param {BlockStatement} blockStatementNode
-     * @param {BlockStatement} randomBlockStatementNode
+     * @param {BlockStatement} deadCodeInjectionRootAstHostNode
      */
     public initialize (
         blockStatementNode: BlockStatement,
-        randomBlockStatementNode: BlockStatement
+        deadCodeInjectionRootAstHostNode: BlockStatement
     ): void {
         this.blockStatementNode = blockStatementNode;
-        this.randomBlockStatementNode = randomBlockStatementNode;
+        this.deadCodeInjectionRootAstHostNode = deadCodeInjectionRootAstHostNode;
     }
 
     /**
@@ -67,8 +67,8 @@ export class BlockStatementDeadCodeInjectionNode extends AbstractCustomNode {
         const rightString: string = random2 ? leftString : this.randomGenerator.getRandomString(5);
 
         const [consequent, alternate]: [BlockStatement, BlockStatement] = random1 === random2
-            ? [this.blockStatementNode, this.randomBlockStatementNode]
-            : [this.randomBlockStatementNode, this.blockStatementNode];
+            ? [this.blockStatementNode, this.deadCodeInjectionRootAstHostNode]
+            : [this.deadCodeInjectionRootAstHostNode, this.blockStatementNode];
 
         const structure: BlockStatement = Nodes.getBlockStatementNode([
             Nodes.getIfStatementNode(

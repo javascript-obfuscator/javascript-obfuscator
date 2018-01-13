@@ -10,19 +10,24 @@ import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { ITransformersRunner } from '../../interfaces/node-transformers/ITransformersRunner';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { DeadCodeInjectionCustomNode } from '../../enums/custom-nodes/DeadCodeInjectionCustomNode';
-import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { NodeType } from '../../enums/node/NodeType';
+import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
+import { Nodes } from '../../node/Nodes';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
+    /**
+     * @type {string}
+     */
+    private static deadCodeInjectionRootAstHostNodeName: string = 'deadCodeInjectionRootAstHostNode';
+
     /**
      * @type {number}
      */
@@ -34,16 +39,9 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     private static readonly minCollectedBlockStatementsCount: number = 5;
 
     /**
-     * @type {NodeTransformer[]}
+     * @type {Set <BlockStatement>}
      */
-    private static readonly transformersToRenameBlockScopeIdentifiers: NodeTransformer[] = [
-        NodeTransformer.CatchClauseTransformer,
-        NodeTransformer.ClassDeclarationTransformer,
-        NodeTransformer.FunctionDeclarationTransformer,
-        NodeTransformer.FunctionTransformer,
-        NodeTransformer.LabeledStatementTransformer,
-        NodeTransformer.VariableDeclarationTransformer
-    ];
+    private readonly deadCodeInjectionRootAstHostNodeSet: Set <ESTree.BlockStatement> = new Set();
 
     /**
      * @type {ESTree.BlockStatement[]}
@@ -53,7 +51,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     /**
      * @type {number}
      */
-    private collectedBlockStatementsLength: number;
+    private collectedBlockStatementsTotalLength: number;
 
     /**
      * @type {TDeadNodeInjectionCustomNodeFactory}
@@ -61,58 +59,93 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     private readonly deadCodeInjectionCustomNodeFactory: TDeadNodeInjectionCustomNodeFactory;
 
     /**
-     * @type {ITransformersRunner}
-     */
-    private readonly transformersRunner: ITransformersRunner;
-
-    /**
      * @param {TControlFlowCustomNodeFactory} deadCodeInjectionCustomNodeFactory
-     * @param {ITransformersRunner} transformersRunner
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IDeadCodeInjectionCustomNode)
             deadCodeInjectionCustomNodeFactory: TDeadNodeInjectionCustomNodeFactory,
-        @inject(ServiceIdentifiers.ITransformersRunner) transformersRunner: ITransformersRunner,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
 
         this.deadCodeInjectionCustomNodeFactory = deadCodeInjectionCustomNodeFactory;
-        this.transformersRunner = transformersRunner;
     }
 
     /**
-     * @param {Node} node
+     * @param {Node} blockStatementNode
      * @returns {boolean}
      */
-    private static isValidBlockStatementNode (node: ESTree.Node): boolean {
-        return !NodeGuards.isBreakStatementNode(node) &&
-            !NodeGuards.isContinueStatementNode(node) &&
-            !NodeGuards.isAwaitExpressionNode(node) &&
-            !NodeGuards.isSuperNode(node);
+    private static isValidBlockStatementNode (blockStatementNode: ESTree.Node): boolean {
+        const isProhibitedNode: (node: ESTree.Node) => boolean =
+            (node: ESTree.Node): boolean => NodeGuards.isBreakStatementNode(node) ||
+                NodeGuards.isContinueStatementNode(node) ||
+                NodeGuards.isAwaitExpressionNode(node) ||
+                NodeGuards.isSuperNode(node);
+
+        let nestedBlockStatementsCount: number = 0,
+            isValidBlockStatementNode: boolean = true;
+
+        estraverse.traverse(blockStatementNode, {
+            enter: (node: ESTree.Node): any => {
+                if (NodeGuards.isBlockStatementNode(node)) {
+                    nestedBlockStatementsCount++;
+                }
+
+                if (
+                    nestedBlockStatementsCount > DeadCodeInjectionTransformer.maxNestedBlockStatementsCount ||
+                    isProhibitedNode(node)
+                ) {
+                    isValidBlockStatementNode = false;
+
+                    return estraverse.VisitorOption.Break;
+                }
+            }
+        });
+
+        return isValidBlockStatementNode;
     }
 
     /**
-     * @return {IVisitor}
+     * @param {TransformationStage} transformationStage
+     * @returns {IVisitor | null}
      */
-    public getVisitor (): IVisitor {
-        return {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                if (parentNode && NodeGuards.isProgramNode(node)) {
-                    this.analyzeNode(node, parentNode);
+    public getVisitor (transformationStage: TransformationStage): IVisitor | null {
+        switch (transformationStage) {
+            case TransformationStage.DeadCodeInjection:
+                return {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                        if (parentNode && NodeGuards.isProgramNode(node)) {
+                            this.analyzeNode(node, parentNode);
 
-                    return node;
+                            return node;
+                        }
+                    },
+                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                        if (parentNode && NodeGuards.isBlockStatementNode(node)) {
+                            return this.transformNode(node, parentNode);
+                        }
+                    }
+                };
+
+            case TransformationStage.Finalizing:
+                if (!this.deadCodeInjectionRootAstHostNodeSet.size) {
+                    return null;
                 }
-            },
-            leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                if (parentNode && NodeGuards.isBlockStatementNode(node)) {
-                    return this.transformNode(node, parentNode);
-                }
-            }
-        };
+
+                return {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                        if (parentNode && this.isDeadCodeInjectionRootAstHostNode(node)) {
+                            return this.restoreNode(node, parentNode);
+                        }
+                    }
+                };
+
+            default:
+                return null;
+        }
     }
 
     /**
@@ -122,13 +155,21 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     public analyzeNode (programNode: ESTree.Node, parentNode: ESTree.Node): void {
         estraverse.traverse(programNode, {
             enter: (node: ESTree.Node): any => {
-                if (NodeGuards.isBlockStatementNode(node)) {
-                    this.collectBlockStatementNodes(node, this.collectedBlockStatements, parentNode);
+                if (!NodeGuards.isBlockStatementNode(node)) {
+                    return;
                 }
+
+                const clonedBlockStatementNode: ESTree.BlockStatement = NodeUtils.clone(node);
+
+                if (!DeadCodeInjectionTransformer.isValidBlockStatementNode(clonedBlockStatementNode)) {
+                    return;
+                }
+
+                this.collectedBlockStatements.push(clonedBlockStatementNode);
             }
         });
 
-        this.collectedBlockStatementsLength = this.collectedBlockStatements.length;
+        this.collectedBlockStatementsTotalLength = this.collectedBlockStatements.length;
     }
 
     /**
@@ -137,7 +178,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards | VisitorOption}
      */
     public transformNode (blockStatementNode: ESTree.BlockStatement, parentNode: ESTree.Node): ESTree.Node | estraverse.VisitorOption {
-        if (this.collectedBlockStatementsLength < DeadCodeInjectionTransformer.minCollectedBlockStatementsCount) {
+        if (this.collectedBlockStatementsTotalLength < DeadCodeInjectionTransformer.minCollectedBlockStatementsCount) {
             return estraverse.VisitorOption.Break;
         }
 
@@ -169,59 +210,26 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {BlockStatement} blockStatementNode
-     * @param {BlockStatement[]} collectedBlockStatements
+     * @param {FunctionExpression} deadCodeInjectionRootAstHostNode
      * @param {Node} parentNode
+     * @returns {Node}
      */
-    private collectBlockStatementNodes (
-        blockStatementNode: ESTree.BlockStatement,
-        collectedBlockStatements: ESTree.BlockStatement[],
-        parentNode: ESTree.Node
-    ): void {
-        let clonedBlockStatementNode: ESTree.BlockStatement = NodeUtils.clone(blockStatementNode),
-            nestedBlockStatementsCount: number = 0,
-            isValidBlockStatementNode: boolean = true;
+    public restoreNode (deadCodeInjectionRootAstHostNode: ESTree.BlockStatement, parentNode: ESTree.Node): ESTree.Node {
+        const hostNodeFirstStatement: ESTree.Statement = deadCodeInjectionRootAstHostNode.body[0];
 
-        estraverse.replace(clonedBlockStatementNode, {
-            enter: (node: ESTree.Node): any => {
-                /**
-                 * Count nested block statements in current block statement
-                 */
-                if (NodeGuards.isBlockStatementNode(node)) {
-                    nestedBlockStatementsCount++;
-                }
-
-                /**
-                 * If nested block statements count bigger then specified amount or current block statement
-                 * contains prohibited nodes - we will stop traversing and leave method
-                 */
-                if (
-                    nestedBlockStatementsCount > DeadCodeInjectionTransformer.maxNestedBlockStatementsCount ||
-                    !DeadCodeInjectionTransformer.isValidBlockStatementNode(node)
-                ) {
-                    isValidBlockStatementNode = false;
-
-                    return estraverse.VisitorOption.Break;
-                }
-
-                return node;
-            }
-        });
-
-        if (!isValidBlockStatementNode) {
-            return;
+        if (!NodeGuards.isFunctionDeclarationNode(hostNodeFirstStatement)) {
+            throw new Error('Wrong dead code injection root AST host node. Host node should contain `FunctionDeclaration` node');
         }
 
-        /**
-         * We should transform identifiers in the dead code block statement to avoid conflicts with original code
-         */
-        NodeUtils.parentizeNode(clonedBlockStatementNode, parentNode);
-        clonedBlockStatementNode = this.transformersRunner.transform(
-            clonedBlockStatementNode,
-            DeadCodeInjectionTransformer.transformersToRenameBlockScopeIdentifiers
-        );
+        return hostNodeFirstStatement.body;
+    }
 
-        collectedBlockStatements.push(clonedBlockStatementNode);
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    private isDeadCodeInjectionRootAstHostNode (node: ESTree.Node): node is ESTree.BlockStatement {
+        return NodeGuards.isBlockStatementNode(node) && this.deadCodeInjectionRootAstHostNodeSet.has(node);
     }
 
     /**
@@ -235,14 +243,29 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         randomBlockStatementNode: ESTree.BlockStatement,
         parentNode: ESTree.Node
     ): ESTree.BlockStatement {
+        /**
+         * we should wrap original random block statement node into the parent block statement node (ast root host node)
+         * with function declaration node. This function declaration node will create block scope for all identifiers
+         * inside random block statement node and this identifiers won't affect identifiers of the rest AST tree.
+         */
+        const deadCodeInjectionRootAstHostNode: ESTree.BlockStatement = Nodes.getBlockStatementNode([
+            Nodes.getFunctionDeclarationNode(
+                DeadCodeInjectionTransformer.deadCodeInjectionRootAstHostNodeName,
+                [],
+                randomBlockStatementNode
+            )
+        ]);
+
+        /**
+         * we should store that host node and then extract random block statement node on the `finalizing` stage
+         */
+        this.deadCodeInjectionRootAstHostNodeSet.add(deadCodeInjectionRootAstHostNode);
+
         const blockStatementDeadCodeInjectionCustomNode: ICustomNode = this.deadCodeInjectionCustomNodeFactory(
             DeadCodeInjectionCustomNode.BlockStatementDeadCodeInjectionNode
         );
 
-        blockStatementDeadCodeInjectionCustomNode.initialize(
-            blockStatementNode,
-            randomBlockStatementNode
-        );
+        blockStatementDeadCodeInjectionCustomNode.initialize(blockStatementNode, deadCodeInjectionRootAstHostNode);
 
         const newBlockStatementNode: ESTree.BlockStatement = <ESTree.BlockStatement>blockStatementDeadCodeInjectionCustomNode.getNode()[0];
 

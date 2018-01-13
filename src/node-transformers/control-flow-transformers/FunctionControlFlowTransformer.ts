@@ -18,6 +18,7 @@ import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 import { ControlFlowCustomNode } from '../../enums/custom-nodes/ControlFlowCustomNode';
 import { ControlFlowReplacer } from '../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/ControlFlowReplacer';
 import { NodeType } from '../../enums/node/NodeType';
+import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
@@ -101,22 +102,29 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @return {IVisitor}
+     * @param {TransformationStage} transformationStage
+     * @returns {IVisitor | null}
      */
-    public getVisitor (): IVisitor {
-        return {
-            leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                if (
-                    parentNode && (
-                        NodeGuards.isFunctionDeclarationNode(node) ||
-                        NodeGuards.isFunctionExpressionNode(node) ||
-                        NodeGuards.isArrowFunctionExpressionNode(node)
-                    )
-                ) {
-                    return this.transformNode(node, parentNode);
-                }
-            }
-        };
+    public getVisitor (transformationStage: TransformationStage): IVisitor | null {
+        switch (transformationStage) {
+            case TransformationStage.ControlFlowFlattening:
+                return {
+                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                        if (
+                            parentNode && (
+                                NodeGuards.isFunctionDeclarationNode(node) ||
+                                NodeGuards.isFunctionExpressionNode(node) ||
+                                NodeGuards.isArrowFunctionExpressionNode(node)
+                            )
+                        ) {
+                            return this.transformNode(node, parentNode);
+                        }
+                    }
+                };
+
+            default:
+                return null;
+        }
     }
 
     /**

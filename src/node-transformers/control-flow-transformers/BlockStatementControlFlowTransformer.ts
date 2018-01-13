@@ -14,6 +14,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { ControlFlowCustomNode } from '../../enums/custom-nodes/ControlFlowCustomNode';
+import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
@@ -60,10 +61,12 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
                 || NodeGuards.isContinueStatementNode(statement);
             const isVariableDeclarationWithLetOrConstKind: boolean = NodeGuards.isVariableDeclarationNode(statement)
                 && (statement.kind === 'const' || statement.kind === 'let');
+            const isClassDeclaration: boolean = NodeGuards.isClassDeclarationNode(statement);
 
             return NodeGuards.isFunctionDeclarationNode(statement)
                 || isBreakOrContinueStatement
-                || isVariableDeclarationWithLetOrConstKind;
+                || isVariableDeclarationWithLetOrConstKind
+                || isClassDeclaration;
         });
     }
 
@@ -97,16 +100,23 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
     }
 
     /**
-     * @return {IVisitor}
+     * @param {TransformationStage} transformationStage
+     * @returns {IVisitor | null}
      */
-    public getVisitor (): IVisitor {
-        return {
-            leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                if (parentNode && NodeGuards.isBlockStatementNode(node)) {
-                    return this.transformNode(node, parentNode);
-                }
-            }
-        };
+    public getVisitor (transformationStage: TransformationStage): IVisitor | null {
+        switch (transformationStage) {
+            case TransformationStage.ControlFlowFlattening:
+                return {
+                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                        if (parentNode && NodeGuards.isBlockStatementNode(node)) {
+                            return this.transformNode(node, parentNode);
+                        }
+                    }
+                };
+
+            default:
+                return null;
+        }
     }
 
     /**

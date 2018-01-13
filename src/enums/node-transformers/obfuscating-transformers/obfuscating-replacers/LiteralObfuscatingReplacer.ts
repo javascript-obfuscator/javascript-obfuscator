@@ -1,5 +1,5 @@
 export enum LiteralObfuscatingReplacer {
-    BooleanLiteralObfuscatingReplacer,
-    NumberLiteralObfuscatingReplacer,
-    StringLiteralObfuscatingReplacer
+    BooleanLiteralObfuscatingReplacer = 'BooleanLiteralObfuscatingReplacer',
+    NumberLiteralObfuscatingReplacer = 'NumberLiteralObfuscatingReplacer',
+    StringLiteralObfuscatingReplacer = 'StringLiteralObfuscatingReplacer'
 }

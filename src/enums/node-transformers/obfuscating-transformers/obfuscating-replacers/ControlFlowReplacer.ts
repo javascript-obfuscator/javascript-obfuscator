@@ -1,6 +1,6 @@
 export enum ControlFlowReplacer {
-    BinaryExpressionControlFlowReplacer,
-    CallExpressionControlFlowReplacer,
-    LogicalExpressionControlFlowReplacer,
-    StringLiteralControlFlowReplacer,
+    BinaryExpressionControlFlowReplacer = 'BinaryExpressionControlFlowReplacer',
+    CallExpressionControlFlowReplacer = 'CallExpressionControlFlowReplacer',
+    LogicalExpressionControlFlowReplacer = 'LogicalExpressionControlFlowReplacer',
+    StringLiteralControlFlowReplacer = 'StringLiteralControlFlowReplacer'
 }

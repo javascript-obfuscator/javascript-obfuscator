@@ -12,7 +12,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../options/presets/NoCustomNodes';
 
 import { SelfDefendingTemplate } from '../../templates/self-defending-nodes/self-defending-unicode-node/SelfDefendingTemplate';
 
@@ -75,7 +75,7 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
             }),
             {
-                ...NO_CUSTOM_NODES_PRESET,
+                ...NO_ADDITIONAL_NODES_PRESET,
                 identifierNamesGenerator: this.options.identifierNamesGenerator,
                 seed: this.options.seed,
                 unicodeEscapeSequence: true

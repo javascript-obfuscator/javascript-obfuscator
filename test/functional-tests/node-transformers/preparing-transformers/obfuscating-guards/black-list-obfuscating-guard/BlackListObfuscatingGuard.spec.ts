@@ -4,7 +4,7 @@ import { IObfuscationResult } from '../../../../../../src/interfaces/IObfuscatio
 
 import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscatorFacade';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../../../../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../../../helpers/readFileAsString';
 
@@ -22,7 +22,7 @@ describe('BlackListObfuscatingGuard', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }

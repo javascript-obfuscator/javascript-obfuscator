@@ -2,7 +2,7 @@ import { assert } from 'chai';
 
 import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationResult';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
@@ -21,7 +21,7 @@ describe('VariableDeclarationTransformer', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_CUSTOM_NODES_PRESET
+                    ...NO_ADDITIONAL_NODES_PRESET
                 }
             );
 
@@ -49,7 +49,7 @@ describe('VariableDeclarationTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET
+                        ...NO_ADDITIONAL_NODES_PRESET
                     }
                 );
 
@@ -76,7 +76,7 @@ describe('VariableDeclarationTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         renameGlobals: true
                     }
                 );
@@ -104,7 +104,7 @@ describe('VariableDeclarationTransformer', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_CUSTOM_NODES_PRESET
+                    ...NO_ADDITIONAL_NODES_PRESET
                 }
             );
 
@@ -126,7 +126,7 @@ describe('VariableDeclarationTransformer', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_CUSTOM_NODES_PRESET
+                    ...NO_ADDITIONAL_NODES_PRESET
                 }
             );
 
@@ -149,7 +149,7 @@ describe('VariableDeclarationTransformer', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_CUSTOM_NODES_PRESET
+                    ...NO_ADDITIONAL_NODES_PRESET
                 }
             );
 
@@ -183,7 +183,7 @@ describe('VariableDeclarationTransformer', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_CUSTOM_NODES_PRESET
+                    ...NO_ADDITIONAL_NODES_PRESET
                 }
             );
             const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
@@ -238,7 +238,7 @@ describe('VariableDeclarationTransformer', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_CUSTOM_NODES_PRESET
+                    ...NO_ADDITIONAL_NODES_PRESET
                 }
             );
             const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
@@ -286,7 +286,7 @@ describe('VariableDeclarationTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET
+                        ...NO_ADDITIONAL_NODES_PRESET
                     }
                 );
 
@@ -308,7 +308,7 @@ describe('VariableDeclarationTransformer', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET
+                        ...NO_ADDITIONAL_NODES_PRESET
                     }
                 );
 
@@ -332,7 +332,7 @@ describe('VariableDeclarationTransformer', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_CUSTOM_NODES_PRESET
+                    ...NO_ADDITIONAL_NODES_PRESET
                 }
             );
 
@@ -363,7 +363,7 @@ describe('VariableDeclarationTransformer', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_CUSTOM_NODES_PRESET
+                    ...NO_ADDITIONAL_NODES_PRESET
                 }
             );
 
@@ -402,7 +402,7 @@ describe('VariableDeclarationTransformer', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_CUSTOM_NODES_PRESET
+                    ...NO_ADDITIONAL_NODES_PRESET
                 }
             );
 
@@ -424,7 +424,7 @@ describe('VariableDeclarationTransformer', () => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
-                    ...NO_CUSTOM_NODES_PRESET
+                    ...NO_ADDITIONAL_NODES_PRESET
                 }
             );
 

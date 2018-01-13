@@ -4,6 +4,7 @@ export enum ServiceIdentifiers {
     Factory__IControlFlowReplacer = 'Factory<IControlFlowReplacer>',
     Factory__ICustomNode = 'Factory<ICustomNode>',
     Factory__ICustomNodeGroup = 'Factory<ICustomNodeGroup>',
+    Factory__IDeadCodeInjectionCustomNode = 'Factory<IDeadCodeInjectionCustomNode>',
     Factory__IIdentifierNamesGenerator = 'Factory<IIdentifierNamesGenerator>',
     Factory__IIdentifierObfuscatingReplacer = 'Factory<IIdentifierObfuscatingReplacer>',
     Factory__INodeGuard = 'Factory<INodeGuard>',

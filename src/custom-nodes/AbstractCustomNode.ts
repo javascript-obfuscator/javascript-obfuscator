@@ -12,8 +12,6 @@ import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 import { GlobalVariableTemplate1 } from '../templates/GlobalVariableTemplate1';
 import { GlobalVariableTemplate2 } from '../templates/GlobalVariableTemplate2';
 
-import { NodeUtils } from '../node/NodeUtils';
-
 @injectable()
 export abstract class AbstractCustomNode implements ICustomNode {
     /**
@@ -23,11 +21,6 @@ export abstract class AbstractCustomNode implements ICustomNode {
         GlobalVariableTemplate1(),
         GlobalVariableTemplate2()
     ];
-
-    /**
-     * @type {string}
-     */
-    protected cachedCode: string;
 
     /**
      * @type {TStatement[]}
@@ -69,17 +62,6 @@ export abstract class AbstractCustomNode implements ICustomNode {
      * @param {any[]} args
      */
     public abstract initialize (...args: any[]): void;
-
-    /**
-     * @returns {string}
-     */
-    public getCode (): string {
-        if (!this.cachedCode) {
-            this.cachedCode = NodeUtils.convertStructureToCode(this.getNode());
-        }
-
-        return this.cachedCode;
-    }
 
     /**
      * @returns {TStatement[]}

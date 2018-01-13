@@ -1,4 +1,4 @@
-import { TNodeWithBlockStatement } from '../../types/node/TNodeWithBlockStatement';
+import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
 
 import { ICustomNode } from './ICustomNode';
 import { IInitializable } from '../IInitializable';
@@ -12,7 +12,7 @@ export interface ICustomNodeGroup extends IInitializable {
      * @param blockScopeNode
      * @param stackTraceData
      */
-    appendCustomNodes (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void;
+    appendCustomNodes (blockScopeNode: TNodeWithBlockScope, stackTraceData: IStackTraceData[]): void;
 
     /**
      * @returns {ObfuscationEvent}

@@ -1,61 +1,59 @@
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockStatement } from '../types/node/TNodeWithBlockStatement';
+import { TNodeWithBlockScope } from '../types/node/TNodeWithBlockScope';
 import { TStatement } from '../types/node/TStatement';
 
 import { IStackTraceData } from '../interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
+import { TNodeWithScope } from '../types/node/TNodeWithScope';
+import { NodeGuards } from './NodeGuards';
 
-/**
- * This class appends node into a first deepest BlockStatement in order of function calls
- *
- * For example:
- *
- * function Foo () {
- *     var baz = function () {
- *
- *     }
- *
- *     baz();
- * }
- *
- * foo();
- *
- * Appends node into block statement of `baz` function expression.
- */
 export class NodeAppender {
     /**
-     * @param {TNodeWithBlockStatement} blockScopeNode
-     * @param {TStatement[]} nodeBodyStatements
+     * @param {TNodeWithScope} scopeNode
+     * @param {TStatement[]} scopeStatements
      */
-    public static appendNode (
-        blockScopeNode: TNodeWithBlockStatement,
-        nodeBodyStatements: TStatement[]
-    ): void {
-        if (!NodeAppender.validateBodyStatements(nodeBodyStatements)) {
-            nodeBodyStatements = [];
+    public static appendNode (scopeNode: TNodeWithScope, scopeStatements: TStatement[]): void {
+        if (!NodeAppender.validateScopeStatements(scopeStatements)) {
+            scopeStatements = [];
         }
 
-        nodeBodyStatements = NodeAppender.parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements);
+        scopeStatements = NodeAppender.parentizeScopeStatementsBeforeAppend(scopeNode, scopeStatements);
 
-        blockScopeNode.body = [
-            ...blockScopeNode.body,
-            ...nodeBodyStatements
-        ];
+        NodeAppender.setScopeNodeStatements(scopeNode, [
+            ...NodeAppender.getScopeNodeStatements(scopeNode),
+            ...scopeStatements
+        ]);
     }
 
     /**
+     * Appends node into a first deepest BlockStatement in order of function calls
+     *
+     * For example:
+     *
+     * function Foo () {
+     *     var baz = function () {
+     *
+     *     }
+     *
+     *     baz();
+     * }
+     *
+     * foo();
+     *
+     * Appends node into block statement of `baz` function expression
+     *
      * @param {IStackTraceData[]} blockScopeStackTraceData
-     * @param {TNodeWithBlockStatement} blockScopeNode
+     * @param {TNodeWithBlockScope} blockScopeNode
      * @param {TStatement[]} nodeBodyStatements
      * @param {number} index
      */
     public static appendNodeToOptimalBlockScope (
         blockScopeStackTraceData: IStackTraceData[],
-        blockScopeNode: TNodeWithBlockStatement,
+        blockScopeNode: TNodeWithBlockScope,
         nodeBodyStatements: TStatement[],
         index: number = 0
     ): void {
-        let targetBlockScope: TNodeWithBlockStatement;
+        let targetBlockScope: TNodeWithBlockScope;
 
         if (!blockScopeStackTraceData.length) {
             targetBlockScope = blockScopeNode;
@@ -96,70 +94,99 @@ export class NodeAppender {
     }
 
     /**
-     * @param {TNodeWithBlockStatement} blockScopeNode
-     * @param {TStatement[]} nodeBodyStatements
+     * @param {TNodeWithScope} scopeNode
+     * @param {TStatement[]} scopeStatements
+     * @param {Node} targetStatement
+     */
+    public static insertNodeAfter (scopeNode: TNodeWithScope, scopeStatements: TStatement[], targetStatement: ESTree.Statement): void {
+        const indexInScopeStatement: number = NodeAppender
+            .getScopeNodeStatements(scopeNode)
+            .indexOf(targetStatement);
+
+        NodeAppender.insertNodeAtIndex(scopeNode, scopeStatements, indexInScopeStatement + 1);
+    }
+
+    /**
+     * @param {TNodeWithScope} scopeNode
+     * @param {TStatement[]} scopeStatements
      * @param {number} index
      */
-    public static insertNodeAtIndex (
-        blockScopeNode: TNodeWithBlockStatement,
-        nodeBodyStatements: TStatement[],
-        index: number
-    ): void {
-        if (!NodeAppender.validateBodyStatements(nodeBodyStatements)) {
-            nodeBodyStatements = [];
+    public static insertNodeAtIndex (scopeNode: TNodeWithScope, scopeStatements: TStatement[], index: number): void {
+        if (!NodeAppender.validateScopeStatements(scopeStatements)) {
+            scopeStatements = [];
         }
 
-        nodeBodyStatements = NodeAppender.parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements);
+        scopeStatements = NodeAppender.parentizeScopeStatementsBeforeAppend(scopeNode, scopeStatements);
 
-        blockScopeNode.body = [
-            ...blockScopeNode.body.slice(0, index),
-            ...nodeBodyStatements,
-            ...blockScopeNode.body.slice(index)
-        ];
+        NodeAppender.setScopeNodeStatements(scopeNode, [
+            ...NodeAppender.getScopeNodeStatements(scopeNode).slice(0, index),
+            ...scopeStatements,
+            ...NodeAppender.getScopeNodeStatements(scopeNode).slice(index)
+        ]);
     }
 
     /**
-     * @param {TNodeWithBlockStatement} blockScopeNode
-     * @param {TStatement[]} nodeBodyStatements
+     * @param {TNodeWithScope} scopeNode
+     * @param {TStatement[]} scopeStatements
      */
-    public static prependNode (
-        blockScopeNode: TNodeWithBlockStatement,
-        nodeBodyStatements: TStatement[]
-    ): void {
-        if (!NodeAppender.validateBodyStatements(nodeBodyStatements)) {
-            nodeBodyStatements = [];
+    public static prependNode (scopeNode: TNodeWithScope, scopeStatements: TStatement[]): void {
+        if (!NodeAppender.validateScopeStatements(scopeStatements)) {
+            scopeStatements = [];
         }
 
-        nodeBodyStatements = NodeAppender.parentizeBodyStatementsBeforeAppend(blockScopeNode, nodeBodyStatements);
+        scopeStatements = NodeAppender.parentizeScopeStatementsBeforeAppend(scopeNode, scopeStatements);
 
-        blockScopeNode.body = [
-            ...nodeBodyStatements,
-            ...blockScopeNode.body,
-        ];
+        NodeAppender.setScopeNodeStatements(scopeNode, [
+            ...scopeStatements,
+            ...NodeAppender.getScopeNodeStatements(scopeNode),
+        ]);
     }
 
     /**
-     * @param {TNodeWithBlockStatement} blockScopeNode
-     * @param {TStatement[]} nodeBodyStatements
+     * @param {TNodeWithScope} scopeNode
      * @returns {TStatement[]}
      */
-    private static parentizeBodyStatementsBeforeAppend (
-        blockScopeNode: TNodeWithBlockStatement,
-        nodeBodyStatements: TStatement[]
-    ): TStatement[] {
-        nodeBodyStatements.forEach((statement: TStatement) => {
-            statement.parentNode = blockScopeNode;
-        });
+    private static getScopeNodeStatements (scopeNode: TNodeWithScope): TStatement[] {
+        if (NodeGuards.isSwitchCaseNode(scopeNode)) {
+            return scopeNode.consequent;
+        }
 
-        return nodeBodyStatements;
+        return scopeNode.body;
     }
 
     /**
-     * @param {TStatement[]} nodeBodyStatements
+     * @param {TNodeWithScope} scopeNode
+     * @param {TStatement[]} scopeStatements
+     * @returns {TStatement[]}
+     */
+    private static parentizeScopeStatementsBeforeAppend (scopeNode: TNodeWithScope, scopeStatements: TStatement[]): TStatement[] {
+        scopeStatements.forEach((statement: TStatement) => {
+            statement.parentNode = scopeNode;
+        });
+
+        return scopeStatements;
+    }
+
+    /**
+     * @param {TNodeWithScope} scopeNode
+     * @param {TStatement[]} statements
+     */
+    private static setScopeNodeStatements (scopeNode: TNodeWithScope, statements: TStatement[]): void {
+        if (NodeGuards.isSwitchCaseNode(scopeNode)) {
+            scopeNode.consequent = <ESTree.Statement[]>statements;
+
+            return;
+        }
+
+        scopeNode.body = statements;
+    }
+
+    /**
+     * @param {TStatement[]} scopeStatement
      * @returns {boolean}
      */
-    private static validateBodyStatements (nodeBodyStatements: TStatement[]): boolean {
-        return nodeBodyStatements.every((statementNode: TStatement) => {
+    private static validateScopeStatements (scopeStatement: TStatement[]): boolean {
+        return scopeStatement.every((statementNode: TStatement) => {
             return !!statementNode && statementNode.hasOwnProperty('type');
         });
     }

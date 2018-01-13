@@ -5,6 +5,7 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
+import { TStatement } from '../../types/node/TStatement';
 
 import { IArrayUtils } from '../../interfaces/utils/IArrayUtils';
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
@@ -13,9 +14,11 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { ControlFlowCustomNode } from '../../enums/custom-nodes/ControlFlowCustomNode';
+import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class BlockStatementControlFlowTransformer extends AbstractNodeTransformer {
@@ -97,16 +100,23 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
     }
 
     /**
-     * @return {IVisitor}
+     * @param {TransformationStage} transformationStage
+     * @returns {IVisitor | null}
      */
-    public getVisitor (): IVisitor {
-        return {
-            leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                if (parentNode && NodeGuards.isBlockStatementNode(node)) {
-                    return this.transformNode(node, parentNode);
-                }
-            }
-        };
+    public getVisitor (transformationStage: TransformationStage): IVisitor | null {
+        switch (transformationStage) {
+            case TransformationStage.ControlFlowFlattening:
+                return {
+                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                        if (parentNode && NodeGuards.isBlockStatementNode(node)) {
+                            return this.transformNode(node, parentNode);
+                        }
+                    }
+                };
+
+            default:
+                return null;
+        }
     }
 
     /**
@@ -136,6 +146,10 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
             originalKeysIndexesInShuffledArray
         );
 
-        return blockStatementControlFlowFlatteningCustomNode.getNode()[0];
+        const newBlockStatementNode: TStatement = blockStatementControlFlowFlatteningCustomNode.getNode()[0];
+
+        NodeUtils.parentizeNode(newBlockStatementNode, parentNode);
+
+        return newBlockStatementNode;
     }
 }

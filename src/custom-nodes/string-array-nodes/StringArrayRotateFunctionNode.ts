@@ -12,7 +12,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../options/presets/NoCustomNodes';
 
 import { SelfDefendingTemplate } from '../../templates/string-array-nodes/string-array-rotate-function-node/SelfDefendingTemplate';
 import { StringArrayRotateFunctionTemplate } from '../../templates/string-array-nodes/string-array-rotate-function-node/StringArrayRotateFunctionTemplate';
@@ -105,7 +105,7 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
                 whileFunctionName
             }),
             {
-                ...NO_CUSTOM_NODES_PRESET,
+                ...NO_ADDITIONAL_NODES_PRESET,
                 identifierNamesGenerator: this.options.identifierNamesGenerator,
                 seed: this.options.seed
             }

@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
-import { TNodeWithBlockStatement } from '../../../types/node/TNodeWithBlockStatement';
+import { TNodeWithBlockScope } from '../../../types/node/TNodeWithBlockScope';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -55,10 +55,10 @@ export class SelfDefendingCustomNodeGroup extends AbstractCustomNodeGroup {
     }
 
     /**
-     * @param {TNodeWithBlockStatement} blockScopeNode
+     * @param {TNodeWithBlockScope} blockScopeNode
      * @param {IStackTraceData[]} stackTraceData
      */
-    public appendCustomNodes (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
+    public appendCustomNodes (blockScopeNode: TNodeWithBlockScope, stackTraceData: IStackTraceData[]): void {
         const randomStackTraceIndex: number = this.getRandomStackTraceIndex(stackTraceData.length);
 
         // selfDefendingUnicodeNode append
@@ -73,7 +73,7 @@ export class SelfDefendingCustomNodeGroup extends AbstractCustomNodeGroup {
 
         // nodeCallsControllerFunctionNode append
         this.appendCustomNodeIfExist(CustomNode.NodeCallsControllerFunctionNode, (customNode: ICustomNode) => {
-            let targetBlockScope: TNodeWithBlockStatement;
+            let targetBlockScope: TNodeWithBlockScope;
 
             if (stackTraceData.length) {
                 targetBlockScope = NodeAppender.getOptimalBlockScope(stackTraceData, randomStackTraceIndex, 1);

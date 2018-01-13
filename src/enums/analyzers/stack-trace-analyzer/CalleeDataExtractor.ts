@@ -1,5 +1,5 @@
 export enum CalleeDataExtractor {
-    FunctionDeclarationCalleeDataExtractor,
-    FunctionExpressionCalleeDataExtractor,
-    ObjectExpressionCalleeDataExtractor,
+    FunctionDeclarationCalleeDataExtractor = 'FunctionDeclarationCalleeDataExtractor',
+    FunctionExpressionCalleeDataExtractor = 'FunctionExpressionCalleeDataExtractor',
+    ObjectExpressionCalleeDataExtractor = 'ObjectExpressionCalleeDataExtractor',
 }

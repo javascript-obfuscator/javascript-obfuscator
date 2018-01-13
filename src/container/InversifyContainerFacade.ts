@@ -5,6 +5,7 @@ import { analyzersModule } from './modules/analyzers/AnalyzersModule';
 import { controlFlowTransformersModule } from './modules/node-transformers/ControlFlowTransformersModule';
 import { convertingTransformersModule } from './modules/node-transformers/ConvertingTransformersModule';
 import { customNodesModule } from './modules/custom-nodes/CustomNodesModule';
+import { finalizingTransformersModule } from './modules/node-transformers/FinalizingTransformersModule';
 import { generatorsModule } from './modules/generators/GeneratorsModule';
 import { nodeTransformersModule } from './modules/node-transformers/NodeTransformersModule';
 import { obfuscatingTransformersModule } from './modules/node-transformers/ObfuscatingTransformersModule';
@@ -47,7 +48,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      * @param {interfaces.ServiceIdentifier<U>} serviceIdentifier
      * @returns {U}
      */
-    public static getFactory <T extends number, U> (
+    public static getFactory <T extends string, U> (
         serviceIdentifier: interfaces.ServiceIdentifier<U>
     ): (context: interfaces.Context) => (bindingName: T) => U {
         return (context: interfaces.Context): (bindingName: T) => U => {
@@ -61,7 +62,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      * @param {interfaces.ServiceIdentifier<U>} serviceIdentifier
      * @returns {U}
      */
-    public static getCacheFactory <T extends number, U> (
+    public static getCacheFactory <T extends string, U> (
         serviceIdentifier: interfaces.ServiceIdentifier<U>
     ): (context: interfaces.Context) => (bindingName: T) => U {
         return (context: interfaces.Context): (bindingName: T) => U => {
@@ -86,7 +87,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      * @param {any[]} dependencies
      * @returns {U}
      */
-    public static getConstructorFactory <T extends number, U> (
+    public static getConstructorFactory <T extends string, U> (
         serviceIdentifier: interfaces.ServiceIdentifier<interfaces.Newable<U>>,
         ...dependencies: any[]
     ): (context: interfaces.Context) => (bindingName: T) => U {
@@ -198,6 +199,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         this.container.load(controlFlowTransformersModule);
         this.container.load(convertingTransformersModule);
         this.container.load(customNodesModule);
+        this.container.load(finalizingTransformersModule);
         this.container.load(generatorsModule);
         this.container.load(nodeTransformersModule);
         this.container.load(obfuscatingTransformersModule);

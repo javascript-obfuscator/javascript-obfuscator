@@ -1,12 +1,12 @@
 export enum CustomNode {
-    ConsoleOutputDisableExpressionNode,
-    DebugProtectionFunctionCallNode,
-    DebugProtectionFunctionIntervalNode,
-    DebugProtectionFunctionNode,
-    DomainLockNode,
-    NodeCallsControllerFunctionNode,
-    SelfDefendingUnicodeNode,
-    StringArrayCallsWrapper,
-    StringArrayNode,
-    StringArrayRotateFunctionNode
+    ConsoleOutputDisableExpressionNode = 'ConsoleOutputDisableExpressionNode',
+    DebugProtectionFunctionCallNode = 'DebugProtectionFunctionCallNode',
+    DebugProtectionFunctionIntervalNode = 'DebugProtectionFunctionIntervalNode',
+    DebugProtectionFunctionNode = 'DebugProtectionFunctionNode',
+    DomainLockNode = 'DomainLockNode',
+    NodeCallsControllerFunctionNode = 'NodeCallsControllerFunctionNode',
+    SelfDefendingUnicodeNode = 'SelfDefendingUnicodeNode',
+    StringArrayCallsWrapper = 'StringArrayCallsWrapper',
+    StringArrayNode = 'StringArrayNode',
+    StringArrayRotateFunctionNode = 'StringArrayRotateFunctionNode'
 }

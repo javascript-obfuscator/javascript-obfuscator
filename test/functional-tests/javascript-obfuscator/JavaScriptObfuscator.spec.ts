@@ -7,7 +7,7 @@ import { StringArrayEncoding } from '../../../src/enums/StringArrayEncoding';
 
 import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscatorFacade';
 
-import { NO_CUSTOM_NODES_PRESET } from '../../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../src/options/presets/NoCustomNodes';
 
 import { IdentifierNamesGenerator } from '../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
@@ -26,7 +26,7 @@ describe('JavaScriptObfuscator', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET
+                        ...NO_ADDITIONAL_NODES_PRESET
                     }
                 );
 
@@ -91,7 +91,7 @@ describe('JavaScriptObfuscator', () => {
                     const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                         code,
                         {
-                            ...NO_CUSTOM_NODES_PRESET,
+                            ...NO_ADDITIONAL_NODES_PRESET,
                             sourceMap: true
                         }
                     );
@@ -120,7 +120,7 @@ describe('JavaScriptObfuscator', () => {
                     const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                         code,
                         {
-                            ...NO_CUSTOM_NODES_PRESET,
+                            ...NO_ADDITIONAL_NODES_PRESET,
                             sourceMap: true,
                             sourceMapMode: SourceMapMode.Inline
                         }
@@ -195,7 +195,7 @@ describe('JavaScriptObfuscator', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET
+                        ...NO_ADDITIONAL_NODES_PRESET
                     }
                 );
 
@@ -217,7 +217,7 @@ describe('JavaScriptObfuscator', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET
+                        ...NO_ADDITIONAL_NODES_PRESET
                     }
                 );
 
@@ -240,7 +240,7 @@ describe('JavaScriptObfuscator', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
@@ -269,7 +269,7 @@ describe('JavaScriptObfuscator', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET,
+                        ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
@@ -438,7 +438,7 @@ describe('JavaScriptObfuscator', () => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_CUSTOM_NODES_PRESET
+                        ...NO_ADDITIONAL_NODES_PRESET
                     }
                 );
 
@@ -494,6 +494,7 @@ describe('JavaScriptObfuscator', () => {
                         stringArray: true,
                         stringArrayEncoding: StringArrayEncoding.Rc4,
                         stringArrayThreshold: 1,
+                        transformObjectKeys: true,
                         unicodeEscapeSequence: false
                     }
                 );

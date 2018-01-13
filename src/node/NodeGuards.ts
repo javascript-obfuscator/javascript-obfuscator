@@ -1,10 +1,29 @@
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockStatement } from '../types/node/TNodeWithBlockStatement';
+import { TNodeWithBlockScope } from '../types/node/TNodeWithBlockScope';
+import { TNodeWithScope } from '../types/node/TNodeWithScope';
 
 import { NodeType } from '../enums/node/NodeType';
 
 export class NodeGuards {
+    /**
+     * @type {string[]}
+     */
+    private static readonly nodesWithBlockScope: string[] = [
+        NodeType.ArrowFunctionExpression,
+        NodeType.FunctionDeclaration,
+        NodeType.FunctionExpression,
+        NodeType.MethodDefinition,
+    ];
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isArrayPatternNode (node: ESTree.Node): node is ESTree.ArrayPattern {
+        return node.type === NodeType.ArrayPattern;
+    }
+
     /**
      * @param {Node} node
      * @returns {boolean}
@@ -172,10 +191,24 @@ export class NodeGuards {
 
     /**
      * @param {Node} node
+     * @param {Node} parentNode
      * @returns {boolean}
      */
-    public static isNodeHasBlockStatement (node: ESTree.Node): node is TNodeWithBlockStatement {
-        return Array.isArray((<TNodeWithBlockStatement>node).body);
+    public static isNodeHasBlockScope (node: ESTree.Node, parentNode: ESTree.Node): node is TNodeWithBlockScope {
+        return NodeGuards.isProgramNode(node) || (
+            NodeGuards.isBlockStatementNode(node)
+            && NodeGuards.nodesWithBlockScope.includes(parentNode.type)
+        );
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isNodeHasScope (node: ESTree.Node): node is TNodeWithScope {
+        return NodeGuards.isProgramNode(node)
+            || NodeGuards.isBlockStatementNode(node)
+            || NodeGuards.isSwitchCaseNode(node);
     }
 
     /**
@@ -233,7 +266,7 @@ export class NodeGuards {
             parentNode.key === node;
         const parentNodeIsMemberExpressionNode: boolean = (
             NodeGuards.isMemberExpressionNode(parentNode) &&
-            parentNode.computed === false &&
+            !parentNode.computed &&
             parentNode.property === node
         );
         const parentNodeIsMethodDefinitionNode: boolean = NodeGuards.isMethodDefinitionNode(parentNode) &&
@@ -250,6 +283,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isRestElementNode (node: ESTree.Node): node is ESTree.RestElement {
+        return node.type === NodeType.RestElement;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isReturnStatementNode (node: ESTree.Node): node is ESTree.ReturnStatement {
         return node.type === NodeType.ReturnStatement;
     }
@@ -260,6 +301,14 @@ export class NodeGuards {
      */
     public static isSuperNode (node: ESTree.Node): node is ESTree.Super {
         return node.type === NodeType.Super;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isSwitchCaseNode (node: ESTree.Node): node is ESTree.SwitchCase {
+        return node.type === NodeType.SwitchCase;
     }
 
     /**

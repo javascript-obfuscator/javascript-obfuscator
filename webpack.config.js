@@ -71,7 +71,8 @@ module.exports = {
         new CheckerPlugin(),
         new TSLintPlugin({
             files: ['./src/**/*.ts'],
-            project: './tsconfig.json'
+            project: './tsconfig.json',
+            exclude: []
         })
     ],
     output: {

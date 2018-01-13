@@ -51,7 +51,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     /**
      * @type {number}
      */
-    private collectedBlockStatementsLength: number;
+    private collectedBlockStatementsTotalLength: number;
 
     /**
      * @type {TDeadNodeInjectionCustomNodeFactory}
@@ -113,10 +113,6 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      * @returns {IVisitor | null}
      */
     public getVisitor (transformationStage: TransformationStage): IVisitor | null {
-        if (!this.options.deadCodeInjection) {
-            return null;
-        }
-
         switch (transformationStage) {
             case TransformationStage.DeadCodeInjection:
                 return {
@@ -173,7 +169,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
             }
         });
 
-        this.collectedBlockStatementsLength = this.collectedBlockStatements.length;
+        this.collectedBlockStatementsTotalLength = this.collectedBlockStatements.length;
     }
 
     /**
@@ -182,7 +178,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards | VisitorOption}
      */
     public transformNode (blockStatementNode: ESTree.BlockStatement, parentNode: ESTree.Node): ESTree.Node | estraverse.VisitorOption {
-        if (this.collectedBlockStatementsLength < DeadCodeInjectionTransformer.minCollectedBlockStatementsCount) {
+        if (this.collectedBlockStatementsTotalLength < DeadCodeInjectionTransformer.minCollectedBlockStatementsCount) {
             return estraverse.VisitorOption.Break;
         }
 

@@ -106,10 +106,6 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @returns {IVisitor | null}
      */
     public getVisitor (transformationStage: TransformationStage): IVisitor | null {
-        if (!this.options.controlFlowFlattening) {
-            return null;
-        }
-
         switch (transformationStage) {
             case TransformationStage.ControlFlowFlattening:
                 return {

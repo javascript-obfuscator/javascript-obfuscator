@@ -184,7 +184,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
             return astTree;
         }
 
-        astTree = this.runPreparingStage(astTree);
+        astTree = this.runTransformationStage(astTree, TransformationStage.Preparing);
 
         this.logger.info(LoggingMessage.AnalyzingASTTreeStage);
         const stackTraceData: IStackTraceData[] = this.stackTraceAnalyzer.analyze(astTree);
@@ -202,11 +202,17 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
 
         this.obfuscationEventEmitter.emit(ObfuscationEvent.BeforeObfuscation, astTree, stackTraceData);
 
-        astTree = this.runDeadCodeInjectionStage(astTree);
-        astTree = this.runControlFlowFlatteningStage(astTree);
-        astTree = this.runConvertingStage(astTree);
-        astTree = this.runObfuscatingStage(astTree);
-        astTree = this.runFinalizingStage(astTree);
+        if (this.options.deadCodeInjection) {
+            astTree = this.runTransformationStage(astTree, TransformationStage.DeadCodeInjection);
+        }
+
+        if (this.options.controlFlowFlattening) {
+            astTree = this.runTransformationStage(astTree, TransformationStage.ControlFlowFlattening);
+        }
+
+        astTree = this.runTransformationStage(astTree, TransformationStage.Converting);
+        astTree = this.runTransformationStage(astTree, TransformationStage.Obfuscating);
+        astTree = this.runTransformationStage(astTree, TransformationStage.Finalizing);
 
         this.obfuscationEventEmitter.emit(ObfuscationEvent.AfterObfuscation, astTree, stackTraceData);
 
@@ -253,89 +259,16 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
 
     /**
      * @param {Program} astTree
+     * @param {TransformationStage} transformationStage
      * @returns {Program}
      */
-    private runPreparingStage (astTree: ESTree.Program): ESTree.Program {
-        this.logger.info(LoggingMessage.TransformationStage, TransformationStage.Preparing);
+    private runTransformationStage (astTree: ESTree.Program, transformationStage: TransformationStage): ESTree.Program {
+        this.logger.info(LoggingMessage.TransformationStage, transformationStage);
 
         return this.transformersRunner.transform(
             astTree,
             JavaScriptObfuscator.transformersList,
-            TransformationStage.Preparing
-        );
-    }
-
-    /**
-     * @param {Program} astTree
-     * @returns {Program}
-     */
-    private runDeadCodeInjectionStage (astTree: ESTree.Program): ESTree.Program {
-        if (this.options.deadCodeInjection) {
-            this.logger.info(LoggingMessage.TransformationStage, TransformationStage.DeadCodeInjection);
-        }
-
-        return this.transformersRunner.transform(
-            astTree,
-            JavaScriptObfuscator.transformersList,
-            TransformationStage.DeadCodeInjection
-        );
-    }
-
-    /**
-     * @param {Program} astTree
-     * @returns {Program}
-     */
-    private runControlFlowFlatteningStage (astTree: ESTree.Program): ESTree.Program {
-        if (this.options.controlFlowFlattening) {
-            this.logger.info(LoggingMessage.TransformationStage, TransformationStage.ControlFlowFlattening);
-        }
-
-        return this.transformersRunner.transform(
-            astTree,
-            JavaScriptObfuscator.transformersList,
-            TransformationStage.ControlFlowFlattening
-        );
-    }
-
-    /**
-     * @param {Program} astTree
-     * @returns {Program}
-     */
-    private runConvertingStage (astTree: ESTree.Program): ESTree.Program {
-        this.logger.info(LoggingMessage.TransformationStage, TransformationStage.Converting);
-
-        return this.transformersRunner.transform(
-            astTree,
-            JavaScriptObfuscator.transformersList,
-            TransformationStage.Converting
-        );
-    }
-
-    /**
-     * @param {Program} astTree
-     * @returns {Program}
-     */
-    private runObfuscatingStage (astTree: ESTree.Program): ESTree.Program {
-        this.logger.info(LoggingMessage.TransformationStage, TransformationStage.Obfuscating);
-
-        return this.transformersRunner.transform(
-            astTree,
-            JavaScriptObfuscator.transformersList,
-            TransformationStage.Obfuscating
-        );
-    }
-
-    /**
-     * @param {Program} astTree
-     * @returns {Program}
-     */
-    private runFinalizingStage (astTree: ESTree.Program): ESTree.Program {
-        this.logger.info(LoggingMessage.TransformationStage, TransformationStage.Finalizing);
-
-        return this.transformersRunner.transform(
-            astTree,
-            JavaScriptObfuscator.transformersList,
-            TransformationStage.Finalizing
+            transformationStage
         );
     }
 }

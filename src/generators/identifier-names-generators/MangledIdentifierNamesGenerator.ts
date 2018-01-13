@@ -52,20 +52,10 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     private static generateNewMangledName (previousMangledName: string): string {
         const generateNewMangledName: (name: string) => string = (name: string): string => {
             const nameSequence: string[] = MangledIdentifierNamesGenerator.nameSequence;
-            const zeroSequenceCache: string[] = [];
             const nameLength: number = name.length;
 
             const zeroSequence: (num: number) => string = (num: number): string => {
-                let result: string = zeroSequenceCache[num];
-
-                if (result !== undefined) {
-                    return result;
-                }
-
-                result = '0'.repeat(num);
-                zeroSequenceCache[num] = result;
-
-                return result;
+                return '0'.repeat(num);
             };
 
             let index: number = nameLength - 1;
@@ -78,7 +68,8 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
                 if (indexInSequence !== lastNameSequenceIndex) {
                     const previousNamePart: string = name.substring(0, index);
                     const nextCharacter: string = nameSequence[indexInSequence + 1];
-                    const zeroSequenceCharacters: string = zeroSequence(nameLength - (index + 1));
+                    const zeroSequenceLength: number = nameLength - (index + 1);
+                    const zeroSequenceCharacters: string = zeroSequence(zeroSequenceLength);
 
                     return previousNamePart + nextCharacter + zeroSequenceCharacters;
                 }

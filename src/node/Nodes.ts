@@ -102,19 +102,6 @@ export class Nodes {
     }
 
     /**
-     * @param {Statement[]} body
-     * @returns {CatchClause}
-     */
-    public static getCatchClauseNode (body: ESTree.Statement[] = []): ESTree.CatchClause {
-        return {
-            type: NodeType.CatchClause,
-            param: Nodes.getIdentifierNode('err'),
-            body: Nodes.getBlockStatementNode(body),
-            obfuscatedNode: false
-        };
-    }
-
-    /**
      * @param {Expression} callee
      * @param {(Expression | SpreadElement)[]} args
      * @returns {CallExpression}
@@ -227,20 +214,6 @@ export class Nodes {
         return {
             type: NodeType.Identifier,
             name,
-            obfuscatedNode: false
-        };
-    }
-
-    /**
-     * @param {Identifier} label
-     * @param {Statement} body
-     * @returns {LabeledStatement}
-     */
-    public static getLabeledStatement (label: ESTree.Identifier, body: ESTree.Statement): ESTree.LabeledStatement {
-        return {
-            type: NodeType.LabeledStatement,
-            label,
-            body,
             obfuscatedNode: false
         };
     }

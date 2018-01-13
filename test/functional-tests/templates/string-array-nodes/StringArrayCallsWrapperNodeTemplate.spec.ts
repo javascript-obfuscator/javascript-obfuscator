@@ -4,20 +4,20 @@ import * as format from 'string-template';
 
 import { assert } from 'chai';
 
-import { ServiceIdentifiers } from '../../../../../src/container/ServiceIdentifiers';
+import { ServiceIdentifiers } from '../../../../src/container/ServiceIdentifiers';
 
-import { ICryptUtils } from '../../../../../src/interfaces/utils/ICryptUtils';
-import { IInversifyContainerFacade } from '../../../../../src/interfaces/container/IInversifyContainerFacade';
-import { IRandomGenerator } from '../../../../../src/interfaces/utils/IRandomGenerator';
+import { ICryptUtils } from '../../../../src/interfaces/utils/ICryptUtils';
+import { IInversifyContainerFacade } from '../../../../src/interfaces/container/IInversifyContainerFacade';
+import { IRandomGenerator } from '../../../../src/interfaces/utils/IRandomGenerator';
 
-import { AtobTemplate } from '../../../../../src/templates/AtobTemplate';
-import { GlobalVariableTemplate1 } from '../../../../../src/templates/GlobalVariableTemplate1';
-import { Rc4Template } from '../../../../../src/templates/Rc4Template';
-import { StringArrayBase64DecodeNodeTemplate } from '../../../../../src/templates/string-array-nodes/string-array-calls-wrapper/StringArrayBase64DecodeNodeTemplate';
-import { StringArrayCallsWrapperTemplate } from '../../../../../src/templates/string-array-nodes/string-array-calls-wrapper/StringArrayCallsWrapperTemplate';
-import { StringArrayRc4DecodeNodeTemplate } from '../../../../../src/templates/string-array-nodes/string-array-calls-wrapper/StringArrayRC4DecodeNodeTemplate';
+import { AtobTemplate } from '../../../../src/templates/AtobTemplate';
+import { GlobalVariableTemplate1 } from '../../../../src/templates/GlobalVariableTemplate1';
+import { Rc4Template } from '../../../../src/templates/Rc4Template';
+import { StringArrayBase64DecodeNodeTemplate } from '../../../../src/templates/string-array-nodes/string-array-calls-wrapper/StringArrayBase64DecodeNodeTemplate';
+import { StringArrayCallsWrapperTemplate } from '../../../../src/templates/string-array-nodes/string-array-calls-wrapper/StringArrayCallsWrapperTemplate';
+import { StringArrayRc4DecodeNodeTemplate } from '../../../../src/templates/string-array-nodes/string-array-calls-wrapper/StringArrayRC4DecodeNodeTemplate';
 
-import { InversifyContainerFacade } from '../../../../../src/container/InversifyContainerFacade';
+import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
 
 describe('StringArrayCallsWrapperNodeTemplate (): string', () => {
     const stringArrayName: string = 'stringArrayName';

@@ -13,10 +13,6 @@ export class NodeAppender {
      * @param {TStatement[]} scopeStatements
      */
     public static appendNode (scopeNode: TNodeWithScope, scopeStatements: TStatement[]): void {
-        if (!NodeAppender.validateScopeStatements(scopeStatements)) {
-            scopeStatements = [];
-        }
-
         scopeStatements = NodeAppender.parentizeScopeStatementsBeforeAppend(scopeNode, scopeStatements);
 
         NodeAppender.setScopeNodeStatements(scopeNode, [
@@ -112,10 +108,6 @@ export class NodeAppender {
      * @param {number} index
      */
     public static insertNodeAtIndex (scopeNode: TNodeWithScope, scopeStatements: TStatement[], index: number): void {
-        if (!NodeAppender.validateScopeStatements(scopeStatements)) {
-            scopeStatements = [];
-        }
-
         scopeStatements = NodeAppender.parentizeScopeStatementsBeforeAppend(scopeNode, scopeStatements);
 
         NodeAppender.setScopeNodeStatements(scopeNode, [
@@ -130,10 +122,6 @@ export class NodeAppender {
      * @param {TStatement[]} scopeStatements
      */
     public static prependNode (scopeNode: TNodeWithScope, scopeStatements: TStatement[]): void {
-        if (!NodeAppender.validateScopeStatements(scopeStatements)) {
-            scopeStatements = [];
-        }
-
         scopeStatements = NodeAppender.parentizeScopeStatementsBeforeAppend(scopeNode, scopeStatements);
 
         NodeAppender.setScopeNodeStatements(scopeNode, [
@@ -179,15 +167,5 @@ export class NodeAppender {
         }
 
         scopeNode.body = statements;
-    }
-
-    /**
-     * @param {TStatement[]} scopeStatement
-     * @returns {boolean}
-     */
-    private static validateScopeStatements (scopeStatement: TStatement[]): boolean {
-        return scopeStatement.every((statementNode: TStatement) => {
-            return !!statementNode && statementNode.hasOwnProperty('type');
-        });
     }
 }

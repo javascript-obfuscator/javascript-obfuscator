@@ -16,80 +16,116 @@ describe('MangledIdentifierNamesGenerator', () => {
         let identifierNamesGenerator: IIdentifierNamesGenerator,
             mangledIdentifierName: string;
 
-        before(() => {
+        beforeEach(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
             inversifyContainerFacade.load('', {});
             identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
                 ServiceIdentifiers.IIdentifierNamesGenerator,
                 IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-            )
+            );
         });
 
         describe('variant #1: initial mangled name', () => {
             const expectedMangledIdentifierName: string = 'a';
 
-            before(() => {
+            beforeEach(() => {
                 mangledIdentifierName = identifierNamesGenerator.generate(4);
             });
 
-            it('should return hexadecimal name', () => {
+            it('should return mangled name', () => {
                 assert.equal(mangledIdentifierName, expectedMangledIdentifierName);
-            })
+            });
         });
 
         describe('variant #2: second mangled name', () => {
             const expectedMangledIdentifierName: string = 'b';
+            const expectedMangledIdentifierPosition: number = 1;
 
-            before(() => {
-                mangledIdentifierName = identifierNamesGenerator.generate(6);
+            beforeEach(() => {
+                for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
+                    mangledIdentifierName = identifierNamesGenerator.generate(6);
+                }
             });
 
-            it('should return hexadecimal name', () => {
+            it('should return mangled name', () => {
                 assert.equal(mangledIdentifierName, expectedMangledIdentifierName);
-            })
+            });
         });
 
         describe('variant #3: last mangled name with single character', () => {
             const expectedMangledIdentifierName: string = 'Z';
+            const expectedMangledIdentifierPosition: number = 51;
 
-            before(() => {
-                for (let i: number = 0; i <= 49; i++) {
+            beforeEach(() => {
+                for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
                     mangledIdentifierName = identifierNamesGenerator.generate(6);
                 }
             });
 
-            it('should return hexadecimal name', () => {
+            it('should return mangled name', () => {
                 assert.equal(mangledIdentifierName, expectedMangledIdentifierName);
-            })
+            });
         });
 
         describe('variant #4: correct increase of mangled name length', () => {
             const expectedMangledIdentifierName: string = 'a0';
+            const expectedMangledIdentifierPosition: number = 52;
 
-            before(() => {
-                for (let i: number = 0; i < 1; i++) {
+            beforeEach(() => {
+                for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
                     mangledIdentifierName = identifierNamesGenerator.generate(6);
                 }
             });
 
-            it('should return hexadecimal name', () => {
+            it('should return mangled name', () => {
                 assert.equal(mangledIdentifierName, expectedMangledIdentifierName);
-            })
+            });
         });
 
-        describe('variant #4: correct increase of mangled name length #2', () => {
+        describe('variant #5: correct increase of mangled name length #2', () => {
             const expectedMangledIdentifierName: string = 'aa';
+            const expectedMangledIdentifierPosition: number = 62;
 
-            before(() => {
-                for (let i: number = 0; i < 10; i++) {
+            beforeEach(() => {
+                for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
                     mangledIdentifierName = identifierNamesGenerator.generate(6);
                 }
             });
 
-            it('should return hexadecimal name', () => {
+            it('should return mangled name', () => {
                 assert.equal(mangledIdentifierName, expectedMangledIdentifierName);
-            })
+            });
+        });
+
+        describe('variant #6: reserved names', () => {
+            const expectedMangledIdentifierName1: string = 'dn';
+            const expectedMangledIdentifierName2: string = 'dp';
+            const expectedMangledIdentifierPosition1: number = 261;
+            const expectedMangledIdentifierPosition2: number = 262;
+
+            let mangledIdentifierName1: string,
+                mangledIdentifierName2: string;
+
+            beforeEach(() => {
+                for (let i: number = 0; i <= expectedMangledIdentifierPosition2; i++) {
+                    mangledIdentifierName = identifierNamesGenerator.generate(6);
+
+                    if (i === expectedMangledIdentifierPosition1) {
+                        mangledIdentifierName1 = mangledIdentifierName;
+                    } else if (i === expectedMangledIdentifierPosition2) {
+                        mangledIdentifierName2 = mangledIdentifierName;
+                    }
+                }
+            });
+
+            it('should return mangled name', () => {
+                assert.equal(mangledIdentifierName1, expectedMangledIdentifierName1);
+            });
+
+            it('shouldn\'t return reserved mangled name', () => {
+                assert.equal(mangledIdentifierName2, expectedMangledIdentifierName2);
+            });
         });
     });
 });

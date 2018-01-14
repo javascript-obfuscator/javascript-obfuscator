@@ -2,6 +2,7 @@ export enum NodeTransformer {
     BlockStatementControlFlowTransformer = 'BlockStatementControlFlowTransformer',
     ClassDeclarationTransformer = 'ClassDeclarationTransformer',
     CommentsTransformer = 'CommentsTransformer',
+    CustomNodesTransformer = 'CustomNodesTransformer',
     DeadCodeInjectionTransformer = 'DeadCodeInjectionTransformer',
     EvalCallExpressionTransformer = 'EvalCallExpressionTransformer',
     FunctionControlFlowTransformer = 'FunctionControlFlowTransformer',

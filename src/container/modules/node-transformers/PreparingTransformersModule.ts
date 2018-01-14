@@ -11,6 +11,7 @@ import { ObfuscatingGuard } from '../../../enums/node-transformers/preparing-tra
 import { BlackListObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/BlackListObfuscatingGuard';
 import { CommentsTransformer } from '../../../node-transformers/preparing-transformers/CommentsTransformer';
 import { ConditionalCommentObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/ConditionalCommentObfuscatingGuard';
+import { CustomNodesTransformer } from '../../../node-transformers/preparing-transformers/CustomNodesTransformer';
 import { EvalCallExpressionTransformer } from '../../../node-transformers/preparing-transformers/EvaCallExpressionTransformer';
 import { ObfuscatingGuardsTransformer } from '../../../node-transformers/preparing-transformers/ObfuscatingGuardsTransformer';
 import { ParentificationTransformer } from '../../../node-transformers/preparing-transformers/ParentificationTransformer';
@@ -20,6 +21,10 @@ export const preparingTransformersModule: interfaces.ContainerModule = new Conta
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(CommentsTransformer)
         .whenTargetNamed(NodeTransformer.CommentsTransformer);
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(CustomNodesTransformer)
+        .whenTargetNamed(NodeTransformer.CustomNodesTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(EvalCallExpressionTransformer)

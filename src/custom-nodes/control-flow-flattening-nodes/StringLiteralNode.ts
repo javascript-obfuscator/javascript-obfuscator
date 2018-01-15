@@ -45,7 +45,9 @@ export class StringLiteralNode extends AbstractCustomNode {
      * @returns {TStatement[]}
      */
     protected getNodeStructure (): TStatement[] {
-        const structure: TStatement = <any>Nodes.getLiteralNode(this.literalValue);
+        const structure: TStatement = Nodes.getExpressionStatementNode(
+            Nodes.getLiteralNode(this.literalValue)
+        );
 
         return [structure];
     }

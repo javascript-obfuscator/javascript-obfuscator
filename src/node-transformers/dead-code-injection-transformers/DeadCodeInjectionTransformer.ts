@@ -244,7 +244,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         parentNode: ESTree.Node
     ): ESTree.BlockStatement {
         /**
-         * we should wrap original random block statement node into the parent block statement node (ast root host node)
+         * Should wrap original random block statement node into the parent block statement node (ast root host node)
          * with function declaration node. This function declaration node will create block scope for all identifiers
          * inside random block statement node and this identifiers won't affect identifiers of the rest AST tree.
          */
@@ -257,7 +257,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         ]);
 
         /**
-         * we should store that host node and then extract random block statement node on the `finalizing` stage
+         * Should store that host node and then extract random block statement node on the `finalizing` stage
          */
         this.deadCodeInjectionRootAstHostNodeSet.add(deadCodeInjectionRootAstHostNode);
 

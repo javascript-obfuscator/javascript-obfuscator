@@ -48,21 +48,22 @@ export class LogicalExpressionFunctionNode extends AbstractCustomNode {
      * @returns {TStatement[]}
      */
     protected getNodeStructure (): TStatement[] {
-        const structure: TStatement = Nodes.getFunctionDeclarationNode(
-            this.randomGenerator.getRandomString(3),
-            [
-                Nodes.getIdentifierNode('x'),
-                Nodes.getIdentifierNode('y')
-            ],
-            Nodes.getBlockStatementNode([
-                Nodes.getReturnStatementNode(
-                    Nodes.getLogicalExpressionNode(
-                        this.operator,
-                        Nodes.getIdentifierNode('x'),
-                        Nodes.getIdentifierNode('y')
+        const structure: TStatement = Nodes.getExpressionStatementNode(
+            Nodes.getFunctionExpressionNode(
+                [
+                    Nodes.getIdentifierNode('x'),
+                    Nodes.getIdentifierNode('y')
+                ],
+                Nodes.getBlockStatementNode([
+                    Nodes.getReturnStatementNode(
+                        Nodes.getLogicalExpressionNode(
+                            this.operator,
+                            Nodes.getIdentifierNode('x'),
+                            Nodes.getIdentifierNode('y')
+                        )
                     )
-                )
-            ])
+                ])
+            )
         );
 
         NodeUtils.parentize(structure);

@@ -14,14 +14,14 @@ describe('FunctionControlFlowTransformer', function () {
     const variableMatch: string = '_0x([a-f0-9]){4,6}';
     const rootControlFlowStorageNodeMatch: string = `` +
         `var *${variableMatch} *= *\\{` +
-            `'\\w{5}' *: *function *${variableMatch} *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
+            `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
                 `return *${variableMatch} *\\+ *${variableMatch};` +
             `\\}` +
         `\\};` +
     ``;
     const innerControlFlowStorageNodeMatch: string = `` +
         `var *${variableMatch} *= *\\{` +
-            `'\\w{5}' *: *function *${variableMatch} *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
+            `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
                 `return *${variableMatch}\\['\\w{5}'\\]\\(${variableMatch}, *${variableMatch}\\);` +
             `\\}` +
         `\\};` +
@@ -107,10 +107,10 @@ describe('FunctionControlFlowTransformer', function () {
         describe('variant #3 - single `control flow storage` node with multiple items', () => {
             const regexp: RegExp = new RegExp(
                 `var *${variableMatch} *= *\\{` +
-                    `'\\w{5}' *: *function *${variableMatch} *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
+                    `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
                         `return *${variableMatch} *\\+ *${variableMatch};` +
                     `\\}, *` +
-                    `'\\w{5}' *: *function *${variableMatch} *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
+                    `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
                         `return *${variableMatch} *- *${variableMatch};` +
                     `\\}` +
                 `\\};`
@@ -167,7 +167,7 @@ describe('FunctionControlFlowTransformer', function () {
 
             const regExp: RegExp = new RegExp(
                 `var *[a-zA-Z]{6} *= *\\{` +
-                    `'\\w{5}' *: *function *_0x[0-9] *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
+                    `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
                         `return *${variableMatch} *\\+ *${variableMatch};` +
                     `\\}` +
                 `\\};`

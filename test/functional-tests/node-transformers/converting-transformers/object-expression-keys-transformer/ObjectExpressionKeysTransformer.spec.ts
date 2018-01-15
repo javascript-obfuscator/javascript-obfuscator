@@ -106,7 +106,7 @@ describe('ObjectExpressionKeysTransformer', () => {
         describe('variant #4: correct integration with control flow flattening object', () => {
             const match: string = `` +
                 `var *${variableMatch} *= *{};` +
-                `${variableMatch}\\['\\w{5}'] *= *function *${variableMatch} *\\(${variableMatch}, *${variableMatch}\\) *{` +
+                `${variableMatch}\\['\\w{5}'] *= *function *\\(${variableMatch}, *${variableMatch}\\) *{` +
                     `return *${variableMatch} *\\+ *${variableMatch};` +
                 `};` +
                 `var *${variableMatch} *= *${variableMatch}\\['\\w{5}']\\(0x1, *0x2\\);` +

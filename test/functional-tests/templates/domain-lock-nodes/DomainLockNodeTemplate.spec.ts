@@ -2,15 +2,15 @@ import * as format from 'string-template';
 
 import { assert } from 'chai';
 
-import { ServiceIdentifiers } from '../../../../../src/container/ServiceIdentifiers';
+import { ServiceIdentifiers } from '../../../../src/container/ServiceIdentifiers';
 
-import { ICryptUtils } from '../../../../../src/interfaces/utils/ICryptUtils';
-import { IInversifyContainerFacade } from '../../../../../src/interfaces/container/IInversifyContainerFacade';
+import { ICryptUtils } from '../../../../src/interfaces/utils/ICryptUtils';
+import { IInversifyContainerFacade } from '../../../../src/interfaces/container/IInversifyContainerFacade';
 
-import { DomainLockNodeTemplate } from '../../../../../src/templates/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
-import { GlobalVariableTemplate1 } from '../../../../../src/templates/GlobalVariableTemplate1';
+import { DomainLockNodeTemplate } from '../../../../src/templates/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
+import { GlobalVariableTemplate1 } from '../../../../src/templates/GlobalVariableTemplate1';
 
-import { InversifyContainerFacade } from '../../../../../src/container/InversifyContainerFacade';
+import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
 
 /**
  * @param templateData

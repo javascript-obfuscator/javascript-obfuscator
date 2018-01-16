@@ -180,6 +180,16 @@ export class NodeUtils {
             throw new ReferenceError('`parentNode` property of given node is `undefined`');
         }
 
+        /**
+         * Stage 1: process root block statement node of the slice of AST-tree
+         */
+        if (NodeGuards.isBlockStatementNode(node) && parentNode === node) {
+            blockScopes.push(node);
+        }
+
+        /**
+         * Stage 2: process any other nodes
+         */
         if (
             /**
              * we can add program node instantly

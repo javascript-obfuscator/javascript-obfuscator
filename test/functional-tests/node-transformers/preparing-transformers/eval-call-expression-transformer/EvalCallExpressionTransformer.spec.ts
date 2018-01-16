@@ -291,7 +291,7 @@ describe('EvalCallExpressionTransformer', () => {
         const variableMatch: string = '_0x([a-f0-9]){4,6}';
         const controlFlowStorageNodeMatch: string = `` +
             `var *${variableMatch} *= *\\{` +
-                `'\\w{5}' *: *function *${variableMatch} *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
+                `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
                     `return *${variableMatch} *\\+ *${variableMatch};` +
                 `\\}` +
             `\\};` +

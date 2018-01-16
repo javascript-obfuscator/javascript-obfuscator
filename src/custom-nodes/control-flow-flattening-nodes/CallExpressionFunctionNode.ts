@@ -56,20 +56,21 @@ export class CallExpressionFunctionNode extends AbstractCustomNode {
             params.push(Nodes.getIdentifierNode(`param${i + 1}`));
         }
 
-        const structure: TStatement = Nodes.getFunctionDeclarationNode(
-            this.randomGenerator.getRandomString(3),
-            [
-                calleeIdentifier,
-                ...params
-            ],
-            Nodes.getBlockStatementNode([
-                Nodes.getReturnStatementNode(
-                    Nodes.getCallExpressionNode(
-                        calleeIdentifier,
-                        params
+        const structure: TStatement = Nodes.getExpressionStatementNode(
+            Nodes.getFunctionExpressionNode(
+                [
+                    calleeIdentifier,
+                    ...params
+                ],
+                Nodes.getBlockStatementNode([
+                    Nodes.getReturnStatementNode(
+                        Nodes.getCallExpressionNode(
+                            calleeIdentifier,
+                            params
+                        )
                     )
-                )
-            ])
+                ])
+            )
         );
 
         NodeUtils.parentize(structure);

@@ -1,5 +1,4 @@
 export enum LoggingMessage {
-    AnalyzingASTTreeStage = 'Stage: analyzing AST-tree...',
     EmptySourceCode = 'Empty source code. Obfuscation canceled...',
     ObfuscationCompleted = 'Obfuscation completed. Total time: %s sec.',
     ObfuscationStarted = 'Obfuscation started...',

@@ -4,6 +4,9 @@ import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResul
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
 
+import { IdentifierNamesGenerator } from '../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
+
+import { getRegExpMatch } from '../../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade';
@@ -434,6 +437,48 @@ describe('DeadCodeInjectionTransformer', () => {
 
             it('should correctly obfuscate dead-code block statements and prevent any exposing of internal variable names', () => {
                 assert.notInclude(obfuscatedCode, variableName);
+            });
+        });
+
+        describe('variant #10 - unique names for dead code identifiers', () => {
+            const deadCodeMatch: string = `` +
+                `if *\\(.*?\\) *{` +
+                    `var *(\\w).*?;` +
+                `} *else *{` +
+                    `return *(\\w).*?;` +
+                `}` +
+            ``;
+            const deadCodeRegExp: RegExp = new RegExp(deadCodeMatch);
+
+            let returnIdentifierName: string | null,
+                variableDeclarationIdentifierName: string | null,
+                obfuscatedCode: string;
+
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/unique-names-for-dead-code-identifiers.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+                        seed: 1
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                variableDeclarationIdentifierName = getRegExpMatch(obfuscatedCode, deadCodeRegExp, 0);
+                returnIdentifierName = getRegExpMatch(obfuscatedCode, deadCodeRegExp, 1);
+            });
+
+            it('should correctly add dead code', () => {
+                assert.match(obfuscatedCode, deadCodeRegExp);
+            });
+
+            it('should generate separate identifiers for common AST and dead code', () => {
+                assert.notEqual(returnIdentifierName, variableDeclarationIdentifierName);
             });
         });
     });

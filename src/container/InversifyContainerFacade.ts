@@ -9,6 +9,7 @@ import { finalizingTransformersModule } from './modules/node-transformers/Finali
 import { generatorsModule } from './modules/generators/GeneratorsModule';
 import { nodeTransformersModule } from './modules/node-transformers/NodeTransformersModule';
 import { obfuscatingTransformersModule } from './modules/node-transformers/ObfuscatingTransformersModule';
+import { optionsModule } from './modules/options/OptionsModule';
 import { preparingTransformersModule } from './modules/node-transformers/PreparingTransformersModule';
 import { storagesModule } from './modules/storages/StoragesModule';
 import { utilsModule } from './modules/utils/UtilsModule';
@@ -20,7 +21,6 @@ import { IJavaScriptObfuscator } from '../interfaces/IJavaScriptObfsucator';
 import { ILogger } from '../interfaces/logger/ILogger';
 import { IObfuscationEventEmitter } from '../interfaces/event-emitters/IObfuscationEventEmitter';
 import { IObfuscationResult } from '../interfaces/IObfuscationResult';
-import { IOptions } from '../interfaces/options/IOptions';
 import { ISourceCode } from '../interfaces/ISourceCode';
 import { ISourceMapCorrector } from '../interfaces/source-map/ISourceMapCorrector';
 import { ITransformersRunner } from '../interfaces/node-transformers/ITransformersRunner';
@@ -29,7 +29,6 @@ import { JavaScriptObfuscator } from '../JavaScriptObfuscator';
 import { Logger } from '../logger/Logger';
 import { ObfuscationEventEmitter } from '../event-emitters/ObfuscationEventEmitter';
 import { ObfuscationResult } from '../ObfuscationResult';
-import { Options } from "../options/Options";
 import { SourceCode } from '../SourceCode';
 import { SourceMapCorrector } from '../source-map/SourceMapCorrector';
 import { TransformersRunner } from '../node-transformers/TransformersRunner';
@@ -147,8 +146,8 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
             .inSingletonScope();
 
         this.container
-            .bind<IOptions>(ServiceIdentifiers.IOptions)
-            .toDynamicValue(() => new Options(options))
+            .bind<TInputOptions>(ServiceIdentifiers.TInputOptions)
+            .toDynamicValue(() => options)
             .inSingletonScope();
 
         this.container
@@ -203,6 +202,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         this.container.load(generatorsModule);
         this.container.load(nodeTransformersModule);
         this.container.load(obfuscatingTransformersModule);
+        this.container.load(optionsModule);
         this.container.load(preparingTransformersModule);
         this.container.load(storagesModule);
         this.container.load(utilsModule);

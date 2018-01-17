@@ -16,7 +16,9 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
-            compact: false
+            compact: false,
+            identifiersPrefix: 'foo',
+            identifierNamesGenerator: 'mangled'
         }
     ).getObfuscatedCode();
 

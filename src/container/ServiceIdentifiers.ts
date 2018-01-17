@@ -28,6 +28,7 @@ export enum ServiceIdentifiers {
     IObfuscationEventEmitter = 'IObfuscationEventEmitter',
     IObfuscationResult = 'IObfuscationResult',
     IOptions = 'IOptions',
+    IOptionsNormalizer = 'IOptionsNormalizer',
     IObfuscatingReplacer = 'IObfuscatingReplacer',
     IRandomGenerator = 'IRandomGenerator',
     ISourceCode = 'ISourceCode',
@@ -37,5 +38,6 @@ export enum ServiceIdentifiers {
     Newable__ICustomNode = 'Newable<ICustomNode>',
     Newable__TControlFlowStorage = 'Newable<TControlFlowStorage>',
     TCustomNodeGroupStorage = 'TCustomNodeGroupStorage',
+    TInputOptions = 'TInputOptions',
     TStringArrayStorage = 'TStringArrayStorage'
 }

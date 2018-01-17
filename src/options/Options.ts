@@ -1,4 +1,5 @@
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
+import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
 import {
     ArrayUnique,
@@ -20,6 +21,7 @@ import { TInputOptions } from '../types/options/TInputOptions';
 import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 
 import { IOptions } from '../interfaces/options/IOptions';
+import { IOptionsNormalizer } from '../interfaces/options/IOptionsNormalizer';
 
 import { IdentifierNamesGenerator } from '../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { ObfuscationTarget } from '../enums/ObfuscationTarget';
@@ -28,7 +30,6 @@ import { StringArrayEncoding } from '../enums/StringArrayEncoding';
 
 import { DEFAULT_PRESET } from './presets/Default';
 
-import { OptionsNormalizer } from './OptionsNormalizer';
 import { ValidationErrorsFormatter } from './ValidationErrorsFormatter';
 
 @injectable()
@@ -110,6 +111,12 @@ export class Options implements IOptions {
         IdentifierNamesGenerator.MangledIdentifierNamesGenerator
     ])
     public readonly identifierNamesGenerator: IdentifierNamesGenerator;
+
+    /**
+     * @type {string}
+     */
+    @IsString()
+    public readonly identifiersPrefix: string;
 
     /**
      * @type {boolean}
@@ -220,8 +227,12 @@ export class Options implements IOptions {
 
     /**
      * @param {TInputOptions} inputOptions
+     * @param {IOptionsNormalizer} optionsNormalizer
      */
-    constructor (inputOptions: TInputOptions) {
+    constructor (
+        @inject(ServiceIdentifiers.TInputOptions) inputOptions: TInputOptions,
+        @inject(ServiceIdentifiers.IOptionsNormalizer) optionsNormalizer: IOptionsNormalizer
+    ) {
         Object.assign(this, DEFAULT_PRESET, inputOptions);
 
         const errors: ValidationError[] = validateSync(this, Options.validatorOptions);
@@ -230,6 +241,6 @@ export class Options implements IOptions {
             throw new ReferenceError(`Validation failed. errors:\n${ValidationErrorsFormatter.format(errors)}`);
         }
 
-        Object.assign(this, OptionsNormalizer.normalizeOptions(this));
+        Object.assign(this, optionsNormalizer.normalize(this));
     }
 }

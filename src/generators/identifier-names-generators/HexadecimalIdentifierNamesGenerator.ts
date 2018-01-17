@@ -30,7 +30,7 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
      * @returns {string}
      */
     public generate (length: number): string {
-        const prefix: string = `_${Utils.hexadecimalPrefix}`;
+        const prefix: string = `${this.options.identifiersPrefix}_${Utils.hexadecimalPrefix}`;
         const rangeMinInteger: number = 10000;
         const rangeMaxInteger: number = 99999999;
         const randomInteger: number = this.randomGenerator.getRandomInteger(rangeMinInteger, rangeMaxInteger);

@@ -245,6 +245,10 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 IdentifierNamesGeneratorSanitizer
             )
             .option(
+                '--identifiers-prefix <string>',
+                'Sets prefix for all generated identifiers.',
+            )
+            .option(
                 '--log <boolean>', 'Enables logging of the information to the console',
                 BooleanSanitizer
             )

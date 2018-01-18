@@ -18,6 +18,7 @@ import { DEFAULT_PRESET } from '../options/presets/Default';
 import { ArraySanitizer } from './sanitizers/ArraySanitizer';
 import { BooleanSanitizer } from './sanitizers/BooleanSanitizer';
 import { IdentifierNamesGeneratorSanitizer } from './sanitizers/IdentifierNamesGeneratorSanitizer';
+import { IdentifiersPrefixSanitizer } from './sanitizers/IdentifiersPrefixSanitizer';
 import { ObfuscationTargetSanitizer } from './sanitizers/ObfuscatingTargetSanitizer';
 import { SourceMapModeSanitizer } from './sanitizers/SourceMapModeSanitizer';
 import { StringArrayEncodingSanitizer } from './sanitizers/StringArrayEncodingSanitizer';
@@ -245,8 +246,9 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 IdentifierNamesGeneratorSanitizer
             )
             .option(
-                '--identifiers-prefix <string>',
+                '--identifiers-prefix <string|boolean>',
                 'Sets prefix for all generated identifiers.',
+                IdentifiersPrefixSanitizer
             )
             .option(
                 '--log <boolean>', 'Enables logging of the information to the console',
@@ -299,7 +301,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 BooleanSanitizer
             )
             .option(
-                '--string-array-encoding <boolean|string> [true, false, base64, rc4]',
+                '--string-array-encoding <string|boolean> [true, false, base64, rc4]',
                 'Encodes all strings in strings array using base64 or rc4 (this option can slow down your code speed',
                 StringArrayEncodingSanitizer
             )

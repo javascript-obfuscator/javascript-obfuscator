@@ -52,9 +52,10 @@ describe('HexadecimalIdentifierNamesGenerator', () => {
         });
 
         describe('Hexadecimal name with prefix', () => {
+            const regExp: RegExp = /^foo_0x(\w){4,6}$/;
+
             let identifierNamesGenerator: IIdentifierNamesGenerator,
-                hexadecimalIdentifierName: string,
-                regExp: RegExp;
+                hexadecimalIdentifierName: string;
 
             before(() => {
                 const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
@@ -65,19 +66,39 @@ describe('HexadecimalIdentifierNamesGenerator', () => {
                 identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
                     ServiceIdentifiers.IIdentifierNamesGenerator,
                     IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
-                )
+                );
+
+                hexadecimalIdentifierName = identifierNamesGenerator.generate(6);
             });
 
-            describe('variant #1: hexadecimal name with prefix', () => {
-                before(() => {
-                    hexadecimalIdentifierName = identifierNamesGenerator.generate(6);
-                    regExp = /^foo_0x(\w){4,6}$/;
+            it('should return hexadecimal name with prefix', () => {
+                assert.match(hexadecimalIdentifierName, regExp);
+            })
+        });
+
+        describe('Hexadecimal name with random prefix', () => {
+            const regExp: RegExp = /^(\w){3}_0x(\w){4,6}$/;
+
+            let identifierNamesGenerator: IIdentifierNamesGenerator,
+                hexadecimalIdentifierName: string;
+
+            before(() => {
+                const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
+
+                inversifyContainerFacade.load('', {
+                    identifiersPrefix: true
                 });
+                identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
+                    ServiceIdentifiers.IIdentifierNamesGenerator,
+                    IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
+                );
 
-                it('should return hexadecimal name', () => {
-                    assert.match(hexadecimalIdentifierName, regExp);
-                })
+                hexadecimalIdentifierName = identifierNamesGenerator.generate(6);
             });
+
+            it('should return hexadecimal name with prefix', () => {
+                assert.match(hexadecimalIdentifierName, regExp);
+            })
         });
     });
 });

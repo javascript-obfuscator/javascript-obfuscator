@@ -134,7 +134,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             let identifierNamesGenerator: IIdentifierNamesGenerator,
                 mangledIdentifierName: string;
 
-            beforeEach(() => {
+            before(() => {
                 const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
                 inversifyContainerFacade.load('', {
@@ -153,8 +153,61 @@ describe('MangledIdentifierNamesGenerator', () => {
                     mangledIdentifierName = identifierNamesGenerator.generate(4);
                 });
 
-                it('should return mangled name', () => {
+                it('should return mangled name with prefix', () => {
                     assert.equal(mangledIdentifierName, expectedMangledIdentifierName);
+                });
+            });
+
+            describe('variant #2: second mangled name', () => {
+                const expectedMangledIdentifierName: string = 'foo_b';
+
+                beforeEach(() => {
+                    mangledIdentifierName = identifierNamesGenerator.generate(4);
+                });
+
+                it('should return mangled name with prefix', () => {
+                    assert.equal(mangledIdentifierName, expectedMangledIdentifierName);
+                });
+            });
+        });
+
+        describe('Mangled name with random prefix', () => {
+            let identifierNamesGenerator: IIdentifierNamesGenerator,
+                mangledIdentifierName: string;
+
+            before(() => {
+                const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
+
+                inversifyContainerFacade.load('', {
+                    identifiersPrefix: true
+                });
+                identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
+                    ServiceIdentifiers.IIdentifierNamesGenerator,
+                    IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                );
+            });
+
+            describe('variant #1: initial mangled name', () => {
+                const expectedMangledIdentifierNameRegExp: RegExp = /(?:\w){3}_a/;
+
+                beforeEach(() => {
+                    mangledIdentifierName = identifierNamesGenerator.generate(4);
+                });
+
+                it('should return mangled name with prefix', () => {
+                    assert.match(mangledIdentifierName, expectedMangledIdentifierNameRegExp);
+                });
+            });
+
+            describe('variant #2: second mangled name', () => {
+                const expectedMangledIdentifierNameRegExp: RegExp = /(?:\w){3}_b/;
+
+                beforeEach(() => {
+                    mangledIdentifierName = identifierNamesGenerator.generate(4);
+                });
+
+                it('should return mangled name with prefix', () => {
+                    assert.match(mangledIdentifierName, expectedMangledIdentifierNameRegExp);
                 });
             });
         });

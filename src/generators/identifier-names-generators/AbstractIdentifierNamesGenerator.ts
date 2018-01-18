@@ -8,6 +8,11 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 @injectable()
 export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNamesGenerator {
     /**
+     * @type {string}
+     */
+    protected readonly identifiersPrefix: string;
+
+    /**
      * @type {IOptions}
      */
     protected readonly options: IOptions;
@@ -27,6 +32,10 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     ) {
         this.randomGenerator = randomGenerator;
         this.options = options;
+
+        this.identifiersPrefix = this.options.identifiersPrefix === true
+            ? this.randomGenerator.getRandomString(3)
+            : this.options.identifiersPrefix || '';
     }
 
     /**

@@ -9,6 +9,7 @@ import { ControlFlowFlatteningThresholdRule } from './normalizer-rules/ControlFl
 import { DeadCodeInjectionRule } from './normalizer-rules/DeadCodeInjectionRule';
 import { DeadCodeInjectionThresholdRule } from './normalizer-rules/DeadCodeInjectionThresholdRule';
 import { DomainLockRule } from './normalizer-rules/DomainLockRule';
+import { IdentifiersPrefixRule } from './normalizer-rules/IdentifiersPrefixRule';
 import { SelfDefendingRule } from './normalizer-rules/SelfDefendingRule';
 import { SourceMapBaseUrlRule } from './normalizer-rules/SourceMapBaseUrlRule';
 import { SourceMapFileNameRule } from './normalizer-rules/SourceMapFileNameRule';
@@ -26,6 +27,7 @@ export class OptionsNormalizer implements IOptionsNormalizer {
         DeadCodeInjectionRule,
         DeadCodeInjectionThresholdRule,
         DomainLockRule,
+        IdentifiersPrefixRule,
         SelfDefendingRule,
         SourceMapBaseUrlRule,
         SourceMapFileNameRule,

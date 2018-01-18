@@ -113,10 +113,12 @@ export class Options implements IOptions {
     public readonly identifierNamesGenerator: IdentifierNamesGenerator;
 
     /**
+     * We won't validate this field, because of missing support of multiple types validation in `class-validator`.
+     * Value of this field will transformed to the string in `OptionsNormalizer`
+     *
      * @type {string}
      */
-    @IsString()
-    public readonly identifiersPrefix: string;
+    public readonly identifiersPrefix: string | boolean;
 
     /**
      * @type {boolean}

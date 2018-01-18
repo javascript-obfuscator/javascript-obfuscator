@@ -577,7 +577,7 @@ Type: `string` Default: ``
 
 Sets prefix for all generated identifiers.
 
-Use this option when `identifierNamesGenerator: 'mangled'` and you want to obfuscate multiple files. This option will help to avoid conflicts between variables of these files. For each file prefix should be different.
+Use this option when you want to obfuscate multiple files. This option helps to avoid conflicts between identifiers of these files. Prefix should be different for every file.
 
 ### `log`
 Type: `boolean` Default: `false`

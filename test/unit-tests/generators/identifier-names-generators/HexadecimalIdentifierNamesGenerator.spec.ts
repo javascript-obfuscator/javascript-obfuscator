@@ -77,7 +77,7 @@ describe('HexadecimalIdentifierNamesGenerator', () => {
         });
 
         describe('Hexadecimal name with random prefix', () => {
-            const regExp: RegExp = /^(\w){3}_0x(\w){4,6}$/;
+            const regExp: RegExp = /^(\w){6}_0x(\w){4,6}$/;
 
             let identifierNamesGenerator: IIdentifierNamesGenerator,
                 hexadecimalIdentifierName: string;

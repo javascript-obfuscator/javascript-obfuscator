@@ -573,9 +573,9 @@ Available values:
 * `mangled`: short identifier names like `a`, `b`, `c`
 
 ### `identifiersPrefix`
-Type: `string|boolean` Default: `false`
+Type: `string` Default: `''`
 
-Sets prefix for all generated identifiers. If prefix sets to `true` - random prefix will generated. If prefix sets to `false` or empty string - prefix won't generated.
+Sets prefix for all generated identifiers. If prefix sets to `true` - random prefix with length of 6 characters will generated. If prefix sets to `false` or empty string - prefix won't generated.
 
 Use this option when you want to obfuscate multiple files. This option helps to avoid conflicts between identifiers of these files. Prefix should be different for every file.
 

@@ -188,7 +188,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             });
 
             describe('variant #1: initial mangled name', () => {
-                const expectedMangledIdentifierNameRegExp: RegExp = /(?:\w){3}_a/;
+                const expectedMangledIdentifierNameRegExp: RegExp = /(\w){6}_a/;
 
                 beforeEach(() => {
                     mangledIdentifierName = identifierNamesGenerator.generate(4);
@@ -200,7 +200,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             });
 
             describe('variant #2: second mangled name', () => {
-                const expectedMangledIdentifierNameRegExp: RegExp = /(?:\w){3}_b/;
+                const expectedMangledIdentifierNameRegExp: RegExp = /(\w){6}_b/;
 
                 beforeEach(() => {
                     mangledIdentifierName = identifierNamesGenerator.generate(4);

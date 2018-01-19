@@ -88,10 +88,10 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (variableDeclarationNode: ESTree.VariableDeclaration, parentNode: ESTree.Node): ESTree.Node {
-        const blockScopeNode: TNodeWithBlockScope = NodeUtils
-            .getBlockScopesOfNode(variableDeclarationNode)[0];
+        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopesOfNode(variableDeclarationNode)[0];
+        const isGlobalDeclaration: boolean = blockScopeNode.type === NodeType.Program;
 
-        if (!this.options.renameGlobals && blockScopeNode.type === NodeType.Program) {
+        if (!this.options.renameGlobals && isGlobalDeclaration) {
             return variableDeclarationNode;
         }
 

@@ -103,7 +103,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      */
     public generate (length: number): string {
         const prefix: string = this.options.identifiersPrefix ?
-            `${this.options.identifiersPrefix}_`
+            `${this.identifiersPrefix}_`
             : '';
         const newName: string = MangledIdentifierNamesGenerator.generateNewMangledName(this.previousMangledName);
 

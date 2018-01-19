@@ -23,7 +23,7 @@
     "chance": "1.0.13",
     "class-validator": "0.7.3",
     "commander": "2.13.0",
-    "escodegen-wallaby": "1.6.16",
+    "escodegen-wallaby": "1.6.17",
     "esprima": "4.0.0",
     "estraverse": "4.2.0",
     "inversify": "4.9.0",
@@ -33,9 +33,9 @@
     "opencollective": "1.0.3",
     "pjson": "1.0.9",
     "reflect-metadata": "0.1.12",
-    "source-map-support": "0.5.1",
+    "source-map-support": "0.5.2",
     "string-template": "1.0.0",
-    "tslib": "1.8.1"
+    "tslib": "1.9.0"
   },
   "devDependencies": {
     "@types/chai": "4.1.1",
@@ -64,7 +64,7 @@
     "pre-commit": "1.2.2",
     "rimraf": "2.6.2",
     "sinon": "4.1.6",
-    "threads": "0.10.0",
+    "threads": "0.10.1",
     "ts-node": "4.1.0",
     "tslint": "5.9.1",
     "tslint-eslint-rules": "4.1.1",

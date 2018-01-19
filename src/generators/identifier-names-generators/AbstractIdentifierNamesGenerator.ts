@@ -34,7 +34,7 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
         this.options = options;
 
         this.identifiersPrefix = this.options.identifiersPrefix === true
-            ? this.randomGenerator.getRandomString(3)
+            ? this.randomGenerator.getRandomString(6)
             : this.options.identifiersPrefix || '';
     }
 

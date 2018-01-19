@@ -1446,9 +1446,9 @@ escape-string-regexp@1.0.5, escape-string-regexp@^1.0.2, escape-string-regexp@^1
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
 
-escodegen-wallaby@1.6.16:
-  version "1.6.16"
-  resolved "https://registry.yarnpkg.com/escodegen-wallaby/-/escodegen-wallaby-1.6.16.tgz#f55b65d1a846d98584f1be18a2bf463f96280527"
+escodegen-wallaby@1.6.17:
+  version "1.6.17"
+  resolved "https://registry.yarnpkg.com/escodegen-wallaby/-/escodegen-wallaby-1.6.17.tgz#3e1f334884d4214c94309cf734ec7cfa0b3d438d"
   dependencies:
     esprima "^2.7.1"
     estraverse "^1.9.1"
@@ -3392,9 +3392,9 @@ source-map-resolve@^0.5.0:
     source-map-url "^0.4.0"
     urix "^0.1.0"
 
-source-map-support@0.5.1:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.1.tgz#72291517d1fd0cb9542cee6c27520884b5da1a07"
+source-map-support@0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.2.tgz#1a6297fd5b2e762b39688c7fc91233b60984f0a5"
   dependencies:
     source-map "^0.6.0"
 
@@ -3623,9 +3623,9 @@ text-encoding@^0.6.4:
   version "0.6.4"
   resolved "https://registry.yarnpkg.com/text-encoding/-/text-encoding-0.6.4.tgz#e399a982257a276dae428bb92845cb71bdc26d19"
 
-threads@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/threads/-/threads-0.10.0.tgz#a6b0bc5d916fa75434b166c612769684b65fead5"
+threads@0.10.1:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/threads/-/threads-0.10.1.tgz#637765dc434ab3373d3c14754c8f7ac6515d6815"
   dependencies:
     eventemitter3 "^2.0.2"
     native-promise-only "^0.8.1"
@@ -3709,7 +3709,11 @@ tsconfig@^7.0.0:
     strip-bom "^3.0.0"
     strip-json-comments "^2.0.0"
 
-tslib@1.8.1, tslib@^1.0.0, tslib@^1.7.1, tslib@^1.8.0:
+tslib@1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.0.tgz#e37a86fda8cbbaf23a057f473c9f4dc64e5fc2e8"
+
+tslib@^1.0.0, tslib@^1.7.1, tslib@^1.8.0:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.8.1.tgz#6946af2d1d651a7b1863b531d6e5afa41aa44eac"
 

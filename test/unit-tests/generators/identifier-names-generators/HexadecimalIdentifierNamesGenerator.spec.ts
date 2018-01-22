@@ -12,7 +12,7 @@ import { IdentifierNamesGenerator } from '../../../../src/enums/generators/ident
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
 
 describe('HexadecimalIdentifierNamesGenerator', () => {
-    describe('generate (length: number): string', () => {
+    describe('generate (length: number, attachPrefix: boolean): string', () => {
         describe('Hexadecimal name without prefix', () => {
             let identifierNamesGenerator: IIdentifierNamesGenerator,
                 hexadecimalIdentifierName: string,
@@ -25,30 +25,15 @@ describe('HexadecimalIdentifierNamesGenerator', () => {
                 identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
                     ServiceIdentifiers.IIdentifierNamesGenerator,
                     IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
-                )
+                );
+
+                hexadecimalIdentifierName = identifierNamesGenerator.generate();
+                regExp = /^_0x(\w){4,6}$/;
             });
 
-            describe('variant #1: hexadecimal name with length `4`', () => {
-                before(() => {
-                    hexadecimalIdentifierName = identifierNamesGenerator.generate(4);
-                    regExp = /^_0x(\w){4}$/;
-                });
-
-                it('should return hexadecimal name', () => {
-                    assert.match(hexadecimalIdentifierName, regExp);
-                })
-            });
-
-            describe('variant #2: hexadecimal name with length `6`', () => {
-                before(() => {
-                    hexadecimalIdentifierName = identifierNamesGenerator.generate(6);
-                    regExp = /^_0x(\w){4,6}$/;
-                });
-
-                it('should return hexadecimal name', () => {
-                    assert.match(hexadecimalIdentifierName, regExp);
-                })
-            });
+            it('should return hexadecimal name', () => {
+                assert.match(hexadecimalIdentifierName, regExp);
+            })
         });
 
         describe('Hexadecimal name with prefix', () => {
@@ -68,7 +53,7 @@ describe('HexadecimalIdentifierNamesGenerator', () => {
                     IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
                 );
 
-                hexadecimalIdentifierName = identifierNamesGenerator.generate(6);
+                hexadecimalIdentifierName = identifierNamesGenerator.generateWithPrefix();
             });
 
             it('should return hexadecimal name with prefix', () => {
@@ -93,7 +78,7 @@ describe('HexadecimalIdentifierNamesGenerator', () => {
                     IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
                 );
 
-                hexadecimalIdentifierName = identifierNamesGenerator.generate(6);
+                hexadecimalIdentifierName = identifierNamesGenerator.generateWithPrefix();
             });
 
             it('should return hexadecimal name with prefix', () => {

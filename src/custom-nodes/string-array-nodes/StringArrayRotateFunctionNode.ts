@@ -82,8 +82,8 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
      * @returns {string}
      */
     protected getTemplate (): string {
-        const timesName: string = this.identifierNamesGenerator.generate(6);
-        const whileFunctionName: string = this.identifierNamesGenerator.generate(6);
+        const timesName: string = this.identifierNamesGenerator.generate();
+        const whileFunctionName: string = this.identifierNamesGenerator.generate();
 
         let code: string = '';
 

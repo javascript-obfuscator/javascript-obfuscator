@@ -100,7 +100,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
             ? blockScopeNode
             : parentNode;
 
-        this.storeVariableNames(variableDeclarationNode, nodeIdentifier);
+        this.storeVariableNames(variableDeclarationNode, isGlobalDeclaration, nodeIdentifier);
 
         // check for cached identifiers for current scope node. If exist - loop through them.
         if (this.replaceableIdentifiers.has(scopeNode)) {
@@ -114,11 +114,16 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {VariableDeclaration} variableDeclarationNode
+     * @param {boolean} isGlobalDeclaration
      * @param {number} nodeIdentifier
      */
-    private storeVariableNames (variableDeclarationNode: ESTree.VariableDeclaration, nodeIdentifier: number): void {
+    private storeVariableNames (
+        variableDeclarationNode: ESTree.VariableDeclaration,
+        isGlobalDeclaration: boolean,
+        nodeIdentifier: number
+    ): void {
         this.traverseDeclarationIdentifiers(variableDeclarationNode, (identifierNode: ESTree.Identifier) => {
-            this.identifierObfuscatingReplacer.storeNames(identifierNode.name, nodeIdentifier);
+            this.identifierObfuscatingReplacer.storeNames(identifierNode.name, isGlobalDeclaration, nodeIdentifier);
         });
     }
 

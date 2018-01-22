@@ -6,19 +6,18 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
+        var bar = 1;
+        var baz = 2;
         (function(){
-            function foo () {
-                eval('var s = 1;');
-            }
-        
-            foo();
+            var bark = bar + baz;
         })();
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
             identifiersPrefix: 'foo',
-            identifierNamesGenerator: 'mangled'
+            identifierNamesGenerator: 'mangled',
+            renameGlobals: true
         }
     ).getObfuscatedCode();
 

@@ -93,7 +93,7 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
             return classDeclarationNode;
         }
 
-        this.storeClassName(classDeclarationNode, nodeIdentifier);
+        this.storeClassName(classDeclarationNode, isGlobalDeclaration, nodeIdentifier);
 
         // check for cached identifiers for current scope node. If exist - loop through them.
         if (this.replaceableIdentifiers.has(blockScopeNode)) {
@@ -107,10 +107,15 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {ClassDeclaration} classDeclarationNode
+     * @param {boolean} isGlobalDeclaration
      * @param {number} nodeIdentifier
      */
-    private storeClassName (classDeclarationNode: ESTree.ClassDeclaration, nodeIdentifier: number): void {
-        this.identifierObfuscatingReplacer.storeNames(classDeclarationNode.id.name, nodeIdentifier);
+    private storeClassName (
+        classDeclarationNode: ESTree.ClassDeclaration,
+        isGlobalDeclaration: boolean,
+        nodeIdentifier: number
+    ): void {
+        this.identifierObfuscatingReplacer.storeNames(classDeclarationNode.id.name, isGlobalDeclaration, nodeIdentifier);
     }
 
     /**

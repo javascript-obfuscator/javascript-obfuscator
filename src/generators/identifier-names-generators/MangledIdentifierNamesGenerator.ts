@@ -98,17 +98,25 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     }
 
     /**
-     * @param {number} length
      * @returns {string}
      */
-    public generate (length: number): string {
+    public generate (): string {
+        const identifierName: string = MangledIdentifierNamesGenerator.generateNewMangledName(this.previousMangledName);
+
+        this.previousMangledName = identifierName;
+
+        return identifierName;
+    }
+
+    /**
+     * @returns {string}
+     */
+    public generateWithPrefix (): string {
         const prefix: string = this.options.identifiersPrefix ?
             `${this.identifiersPrefix}_`
             : '';
-        const newName: string = MangledIdentifierNamesGenerator.generateNewMangledName(this.previousMangledName);
+        const identifierName: string = this.generate();
 
-        this.previousMangledName = newName;
-
-        return `${prefix}${newName}`;
+        return `${prefix}${identifierName}`;
     }
 }

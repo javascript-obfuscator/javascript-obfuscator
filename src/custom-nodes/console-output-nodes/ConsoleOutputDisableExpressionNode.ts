@@ -64,7 +64,7 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
             : GlobalVariableNoEvalTemplate();
 
         return format(ConsoleOutputDisableExpressionTemplate(), {
-            consoleLogDisableFunctionName: this.identifierNamesGenerator.generate(6),
+            consoleLogDisableFunctionName: this.identifierNamesGenerator.generate(),
             globalVariableTemplate,
             singleNodeCallControllerFunctionName: this.callsControllerFunctionName
         });

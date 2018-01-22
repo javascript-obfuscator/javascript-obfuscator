@@ -95,7 +95,7 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
             return functionDeclarationNode;
         }
 
-        this.storeFunctionName(functionDeclarationNode, nodeIdentifier);
+        this.storeFunctionName(functionDeclarationNode, isGlobalDeclaration, nodeIdentifier);
 
         // check for cached identifiers for current scope node. If exist - loop through them.
         if (this.replaceableIdentifiers.has(blockScopeNode)) {
@@ -109,10 +109,15 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {FunctionDeclaration} functionDeclarationNode
+     * @param {boolean} isGlobalDeclaration
      * @param {number} nodeIdentifier
      */
-    private storeFunctionName (functionDeclarationNode: ESTree.FunctionDeclaration, nodeIdentifier: number): void {
-        this.identifierObfuscatingReplacer.storeNames(functionDeclarationNode.id.name, nodeIdentifier);
+    private storeFunctionName (
+        functionDeclarationNode: ESTree.FunctionDeclaration,
+        isGlobalDeclaration: boolean,
+        nodeIdentifier: number
+    ): void {
+        this.identifierObfuscatingReplacer.storeNames(functionDeclarationNode.id.name, isGlobalDeclaration, nodeIdentifier);
     }
 
     /**

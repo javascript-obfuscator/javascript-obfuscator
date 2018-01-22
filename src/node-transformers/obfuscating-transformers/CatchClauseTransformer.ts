@@ -90,7 +90,7 @@ export class CatchClauseTransformer extends AbstractNodeTransformer {
      */
     private storeCatchClauseParam (catchClauseNode: ESTree.CatchClause, nodeIdentifier: number): void {
         if (NodeGuards.isIdentifierNode(catchClauseNode.param)) {
-            this.identifierObfuscatingReplacer.storeNames(catchClauseNode.param.name, nodeIdentifier);
+            this.identifierObfuscatingReplacer.storeNames(catchClauseNode.param.name, false, nodeIdentifier);
         }
     }
 

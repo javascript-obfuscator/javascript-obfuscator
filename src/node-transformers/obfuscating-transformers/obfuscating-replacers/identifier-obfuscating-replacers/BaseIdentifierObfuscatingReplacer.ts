@@ -58,14 +58,19 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
      * Reserved names will be ignored.
      *
      * @param {string} nodeName
+     * @param {boolean} isGlobalDeclaration
      * @param {number} nodeIdentifier
      */
-    public storeNames (nodeName: string, nodeIdentifier: number): void {
+    public storeNames (nodeName: string, isGlobalDeclaration: boolean, nodeIdentifier: number): void {
         if (this.isReservedName(nodeName)) {
             return;
         }
 
-        this.namesMap.set(`${nodeName}-${String(nodeIdentifier)}`, this.identifierNamesGenerator.generate(6));
+        const identifierName: string = isGlobalDeclaration
+            ? this.identifierNamesGenerator.generateWithPrefix()
+            : this.identifierNamesGenerator.generate();
+
+        this.namesMap.set(`${nodeName}-${String(nodeIdentifier)}`, identifierName);
     }
 
     /**

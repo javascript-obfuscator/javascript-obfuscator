@@ -123,7 +123,11 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
         nodeIdentifier: number
     ): void {
         this.traverseDeclarationIdentifiers(variableDeclarationNode, (identifierNode: ESTree.Identifier) => {
-            this.identifierObfuscatingReplacer.storeNames(identifierNode.name, isGlobalDeclaration, nodeIdentifier);
+            if (isGlobalDeclaration) {
+                this.identifierObfuscatingReplacer.storeGlobalName(identifierNode.name, nodeIdentifier);
+            } else {
+                this.identifierObfuscatingReplacer.storeLocalName(identifierNode.name, nodeIdentifier);
+            }
         });
     }
 

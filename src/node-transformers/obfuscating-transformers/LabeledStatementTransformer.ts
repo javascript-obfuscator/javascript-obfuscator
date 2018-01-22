@@ -97,8 +97,7 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
      * @param {number} nodeIdentifier
      */
     private storeLabeledStatementName (labeledStatementNode: ESTree.LabeledStatement, nodeIdentifier: number): void {
-        this.identifierObfuscatingReplacer
-            .storeNames(labeledStatementNode.label.name, false, nodeIdentifier);
+        this.identifierObfuscatingReplacer.storeLocalName(labeledStatementNode.label.name, nodeIdentifier);
     }
 
     /**

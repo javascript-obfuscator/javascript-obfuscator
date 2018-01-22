@@ -54,21 +54,35 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
     }
 
     /**
-     * Store all `nodeIdentifier`'s as keys in given `namesMap` with random names as value.
-     * Reserved names will be ignored.
+     * Store `nodeName` of global identifiers as key in map with random name as value.
+     * Reserved name will be ignored.
      *
      * @param {string} nodeName
-     * @param {boolean} isGlobalDeclaration
      * @param {number} nodeIdentifier
      */
-    public storeNames (nodeName: string, isGlobalDeclaration: boolean, nodeIdentifier: number): void {
+    public storeGlobalName (nodeName: string, nodeIdentifier: number): void {
         if (this.isReservedName(nodeName)) {
             return;
         }
 
-        const identifierName: string = isGlobalDeclaration
-            ? this.identifierNamesGenerator.generateWithPrefix()
-            : this.identifierNamesGenerator.generate();
+        const identifierName: string = this.identifierNamesGenerator.generateWithPrefix();
+
+        this.namesMap.set(`${nodeName}-${String(nodeIdentifier)}`, identifierName);
+    }
+
+    /**
+     * Store `nodeName` of local identifier as key in map with random name as value.
+     * Reserved name will be ignored.
+     *
+     * @param {string} nodeName
+     * @param {number} nodeIdentifier
+     */
+    public storeLocalName (nodeName: string, nodeIdentifier: number): void {
+        if (this.isReservedName(nodeName)) {
+            return;
+        }
+
+        const identifierName: string = this.identifierNamesGenerator.generate();
 
         this.namesMap.set(`${nodeName}-${String(nodeIdentifier)}`, identifierName);
     }

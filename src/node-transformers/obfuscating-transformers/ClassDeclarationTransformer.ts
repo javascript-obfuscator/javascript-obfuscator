@@ -115,7 +115,11 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
         isGlobalDeclaration: boolean,
         nodeIdentifier: number
     ): void {
-        this.identifierObfuscatingReplacer.storeNames(classDeclarationNode.id.name, isGlobalDeclaration, nodeIdentifier);
+        if (isGlobalDeclaration) {
+            this.identifierObfuscatingReplacer.storeGlobalName(classDeclarationNode.id.name, nodeIdentifier);
+        } else {
+            this.identifierObfuscatingReplacer.storeLocalName(classDeclarationNode.id.name, nodeIdentifier);
+        }
     }
 
     /**

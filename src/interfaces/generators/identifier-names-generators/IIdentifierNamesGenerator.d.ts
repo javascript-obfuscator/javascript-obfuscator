@@ -8,4 +8,9 @@ export interface IIdentifierNamesGenerator {
      * @returns {string}
      */
     generateWithPrefix (): string;
+
+    /**
+     * @returns {string}
+     */
+    getPrefix (): string;
 }

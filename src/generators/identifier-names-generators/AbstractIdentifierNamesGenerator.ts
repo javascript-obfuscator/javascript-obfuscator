@@ -47,4 +47,11 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
      * @returns {string}
      */
     public abstract generateWithPrefix (): string;
+
+    /**
+     * @returns {string}
+     */
+    public getPrefix (): string {
+        return this.identifiersPrefix;
+    }
 }

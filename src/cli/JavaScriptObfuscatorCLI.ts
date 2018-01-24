@@ -352,17 +352,14 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         if (!Array.isArray(sourceCodeData)) {
             const outputCodePath: string = outputPath || CLIUtils.getOutputCodePath(this.inputPath);
 
-            this.processSourceCode(sourceCodeData, outputCodePath);
+            this.processSourceCode(sourceCodeData, outputCodePath, null);
         } else {
             sourceCodeData.forEach(({ filePath, content }: IFileData, index: number) => {
                 const outputCodePath: string = outputPath
                     ? path.join(outputPath, filePath)
                     : CLIUtils.getOutputCodePath(filePath);
-                const baseIdentifiersPrefix: string = this.inputCLIOptions.identifiersPrefix
-                    || JavaScriptObfuscatorCLI.baseIdentifiersPrefix;
-                const identifiersPrefix: string = `${baseIdentifiersPrefix}${index}`;
 
-                this.processSourceCode(content, outputCodePath, identifiersPrefix);
+                this.processSourceCode(content, outputCodePath, index);
             });
         }
     }
@@ -370,16 +367,20 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     /**
      * @param {string} sourceCode
      * @param {string} outputCodePath
-     * @param {string | null} identifiersPrefix
+     * @param {number | null} sourceCodeIndex
      */
     private processSourceCode (
         sourceCode: string,
         outputCodePath: string,
-        identifiersPrefix: string | null = null
+        sourceCodeIndex: number | null
     ): void {
         let options: TInputOptions = this.buildOptions();
 
-        if (identifiersPrefix !== null) {
+        if (sourceCodeIndex !== null) {
+            const baseIdentifiersPrefix: string = this.inputCLIOptions.identifiersPrefix
+                || JavaScriptObfuscatorCLI.baseIdentifiersPrefix;
+            const identifiersPrefix: string = `${baseIdentifiersPrefix}${sourceCodeIndex}`;
+
             options = {
                 ...options,
                 identifiersPrefix

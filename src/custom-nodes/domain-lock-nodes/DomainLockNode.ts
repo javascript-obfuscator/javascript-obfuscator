@@ -79,7 +79,7 @@ export class DomainLockNode extends AbstractCustomNode {
             : GlobalVariableNoEvalTemplate();
 
         return format(DomainLockNodeTemplate(), {
-            domainLockFunctionName: this.identifierNamesGenerator.generate(6),
+            domainLockFunctionName: this.identifierNamesGenerator.generate(),
             diff: diff,
             domains: hiddenDomainsString,
             globalVariableTemplate,

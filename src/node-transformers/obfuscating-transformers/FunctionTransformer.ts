@@ -104,13 +104,13 @@ export class FunctionTransformer extends AbstractNodeTransformer {
                 estraverse.traverse(paramsNode, {
                     enter: (node: ESTree.Node): any => {
                         if (NodeGuards.isAssignmentPatternNode(node) && NodeGuards.isIdentifierNode(node.left)) {
-                            this.identifierObfuscatingReplacer.storeNames(node.left.name, nodeIdentifier);
+                            this.identifierObfuscatingReplacer.storeLocalName(node.left.name, nodeIdentifier);
 
                             return estraverse.VisitorOption.Skip;
                         }
 
                         if (NodeGuards.isIdentifierNode(node)) {
-                            this.identifierObfuscatingReplacer.storeNames(node.name, nodeIdentifier);
+                            this.identifierObfuscatingReplacer.storeLocalName(node.name, nodeIdentifier);
                         }
                     }
                 });

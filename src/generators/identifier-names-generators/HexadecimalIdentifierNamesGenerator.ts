@@ -10,6 +10,11 @@ import { Utils } from '../../utils/Utils';
 @injectable()
 export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNamesGenerator {
     /**
+     * @type {number}
+     */
+    private static baseIdentifierNameLength: number = 6;
+
+    /**
      * @type {Set<string>}
      */
     private readonly randomVariableNameSet: Set <string> = new Set();
@@ -26,23 +31,31 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
     }
 
     /**
-     * @param {number} length
      * @returns {string}
      */
-    public generate (length: number): string {
-        const prefix: string = `_${Utils.hexadecimalPrefix}`;
+    public generate (): string {
         const rangeMinInteger: number = 10000;
         const rangeMaxInteger: number = 99999999;
         const randomInteger: number = this.randomGenerator.getRandomInteger(rangeMinInteger, rangeMaxInteger);
         const hexadecimalNumber: string = Utils.decToHex(randomInteger);
-        const randomVariableName: string = `${prefix}${hexadecimalNumber.substr(0, length)}`;
+        const baseIdentifierName: string = hexadecimalNumber.substr(0, HexadecimalIdentifierNamesGenerator.baseIdentifierNameLength);
+        const identifierName: string = `_${Utils.hexadecimalPrefix}${baseIdentifierName}`;
 
-        if (this.randomVariableNameSet.has(randomVariableName)) {
-            return this.generate(length);
+        if (this.randomVariableNameSet.has(identifierName)) {
+            return this.generate();
         }
 
-        this.randomVariableNameSet.add(randomVariableName);
+        this.randomVariableNameSet.add(identifierName);
 
-        return randomVariableName;
+        return identifierName;
+    }
+
+    /**
+     * @returns {string}
+     */
+    public generateWithPrefix (): string {
+        const identifierName: string = this.generate();
+
+        return `${this.options.identifiersPrefix}${identifierName}`.replace('__', '_');
     }
 }

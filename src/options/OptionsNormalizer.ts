@@ -1,6 +1,9 @@
+import { injectable } from 'inversify';
+
 import { TOptionsNormalizerRule } from '../types/options/TOptionsNormalizerRule';
 
 import { IOptions } from '../interfaces/options/IOptions';
+import { IOptionsNormalizer } from '../interfaces/options/IOptionsNormalizer';
 
 import { ControlFlowFlatteningThresholdRule } from './normalizer-rules/ControlFlowFlatteningThresholdRule';
 import { DeadCodeInjectionRule } from './normalizer-rules/DeadCodeInjectionRule';
@@ -13,7 +16,8 @@ import { StringArrayRule } from './normalizer-rules/StringArrayRule';
 import { StringArrayEncodingRule } from './normalizer-rules/StringArrayEncodingRule';
 import { StringArrayThresholdRule } from './normalizer-rules/StringArrayThresholdRule';
 
-export class OptionsNormalizer {
+@injectable()
+export class OptionsNormalizer implements IOptionsNormalizer {
     /**
      * @type {TOptionsNormalizerRule[]}
      */
@@ -34,7 +38,7 @@ export class OptionsNormalizer {
      * @param {IOptions} options
      * @returns {IOptions}
      */
-    public static normalizeOptions (options: IOptions): IOptions {
+    public normalize (options: IOptions): IOptions {
         let normalizedOptions: IOptions = {
             ...options
         };

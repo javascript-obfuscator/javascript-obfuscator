@@ -105,8 +105,8 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
             return;
         }
 
-        const debugProtectionFunctionName: string = this.identifierNamesGenerator.generate(6);
-        const callsControllerFunctionName: string = this.identifierNamesGenerator.generate(6);
+        const debugProtectionFunctionName: string = this.identifierNamesGenerator.generate();
+        const callsControllerFunctionName: string = this.identifierNamesGenerator.generate();
 
         const debugProtectionFunctionNode: ICustomNode = this.customNodeFactory(CustomNode.DebugProtectionFunctionNode);
         const debugProtectionFunctionCallNode: ICustomNode = this.customNodeFactory(CustomNode.DebugProtectionFunctionCallNode);

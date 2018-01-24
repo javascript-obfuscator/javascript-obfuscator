@@ -16,6 +16,7 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     disableConsoleOutput: false,
     domainLock: [],
     identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
+    identifiersPrefix: '',
     log: false,
     renameGlobals: false,
     reservedNames: [],

@@ -86,14 +86,14 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
      */
     public transformNode (classDeclarationNode: ESTree.ClassDeclaration, parentNode: ESTree.Node): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
-        const blockScopeNode: TNodeWithBlockScope = NodeUtils
-            .getBlockScopesOfNode(classDeclarationNode)[0];
+        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopesOfNode(classDeclarationNode)[0];
+        const isGlobalDeclaration: boolean = blockScopeNode.type === NodeType.Program;
 
-        if (!this.options.renameGlobals && blockScopeNode.type === NodeType.Program) {
+        if (!this.options.renameGlobals && isGlobalDeclaration) {
             return classDeclarationNode;
         }
 
-        this.storeClassName(classDeclarationNode, nodeIdentifier);
+        this.storeClassName(classDeclarationNode, isGlobalDeclaration, nodeIdentifier);
 
         // check for cached identifiers for current scope node. If exist - loop through them.
         if (this.replaceableIdentifiers.has(blockScopeNode)) {
@@ -107,10 +107,19 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {ClassDeclaration} classDeclarationNode
+     * @param {boolean} isGlobalDeclaration
      * @param {number} nodeIdentifier
      */
-    private storeClassName (classDeclarationNode: ESTree.ClassDeclaration, nodeIdentifier: number): void {
-        this.identifierObfuscatingReplacer.storeNames(classDeclarationNode.id.name, nodeIdentifier);
+    private storeClassName (
+        classDeclarationNode: ESTree.ClassDeclaration,
+        isGlobalDeclaration: boolean,
+        nodeIdentifier: number
+    ): void {
+        if (isGlobalDeclaration) {
+            this.identifierObfuscatingReplacer.storeGlobalName(classDeclarationNode.id.name, nodeIdentifier);
+        } else {
+            this.identifierObfuscatingReplacer.storeLocalName(classDeclarationNode.id.name, nodeIdentifier);
+        }
     }
 
     /**

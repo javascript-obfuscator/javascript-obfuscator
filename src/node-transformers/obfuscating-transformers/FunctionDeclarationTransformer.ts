@@ -88,14 +88,14 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
      */
     public transformNode (functionDeclarationNode: ESTree.FunctionDeclaration, parentNode: ESTree.Node): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
-        const blockScopeNode: TNodeWithBlockScope = NodeUtils
-            .getBlockScopesOfNode(functionDeclarationNode)[0];
+        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopesOfNode(functionDeclarationNode)[0];
+        const isGlobalDeclaration: boolean = blockScopeNode.type === NodeType.Program;
 
-        if (!this.options.renameGlobals && blockScopeNode.type === NodeType.Program) {
+        if (!this.options.renameGlobals && isGlobalDeclaration) {
             return functionDeclarationNode;
         }
 
-        this.storeFunctionName(functionDeclarationNode, nodeIdentifier);
+        this.storeFunctionName(functionDeclarationNode, isGlobalDeclaration, nodeIdentifier);
 
         // check for cached identifiers for current scope node. If exist - loop through them.
         if (this.replaceableIdentifiers.has(blockScopeNode)) {
@@ -109,10 +109,19 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {FunctionDeclaration} functionDeclarationNode
+     * @param {boolean} isGlobalDeclaration
      * @param {number} nodeIdentifier
      */
-    private storeFunctionName (functionDeclarationNode: ESTree.FunctionDeclaration, nodeIdentifier: number): void {
-        this.identifierObfuscatingReplacer.storeNames(functionDeclarationNode.id.name, nodeIdentifier);
+    private storeFunctionName (
+        functionDeclarationNode: ESTree.FunctionDeclaration,
+        isGlobalDeclaration: boolean,
+        nodeIdentifier: number
+    ): void {
+        if (isGlobalDeclaration) {
+            this.identifierObfuscatingReplacer.storeGlobalName(functionDeclarationNode.id.name, nodeIdentifier);
+        } else {
+            this.identifierObfuscatingReplacer.storeLocalName(functionDeclarationNode.id.name, nodeIdentifier);
+        }
     }
 
     /**

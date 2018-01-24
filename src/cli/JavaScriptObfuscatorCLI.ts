@@ -45,6 +45,11 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     public static obfuscatedFilePrefix: string = '-obfuscated';
 
     /**
+     * @type {string}
+     */
+    private static readonly baseIdentifiersPrefix: string = 'a';
+
+    /**
      * @type {string[]}
      */
     private readonly arguments: string[];
@@ -245,6 +250,10 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 IdentifierNamesGeneratorSanitizer
             )
             .option(
+                '--identifiers-prefix <string>',
+                'Sets prefix for all generated identifiers.'
+            )
+            .option(
                 '--log <boolean>', 'Enables logging of the information to the console',
                 BooleanSanitizer
             )
@@ -295,7 +304,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 BooleanSanitizer
             )
             .option(
-                '--string-array-encoding <boolean|string> [true, false, base64, rc4]',
+                '--string-array-encoding <string|boolean> [true, false, base64, rc4]',
                 'Encodes all strings in strings array using base64 or rc4 (this option can slow down your code speed',
                 StringArrayEncodingSanitizer
             )
@@ -343,14 +352,14 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         if (!Array.isArray(sourceCodeData)) {
             const outputCodePath: string = outputPath || CLIUtils.getOutputCodePath(this.inputPath);
 
-            this.processSourceCode(sourceCodeData, outputCodePath);
+            this.processSourceCode(sourceCodeData, outputCodePath, null);
         } else {
-            sourceCodeData.forEach(({ filePath, content }: IFileData) => {
+            sourceCodeData.forEach(({ filePath, content }: IFileData, index: number) => {
                 const outputCodePath: string = outputPath
                     ? path.join(outputPath, filePath)
                     : CLIUtils.getOutputCodePath(filePath);
 
-                this.processSourceCode(content, outputCodePath);
+                this.processSourceCode(content, outputCodePath, index);
             });
         }
     }
@@ -358,9 +367,25 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     /**
      * @param {string} sourceCode
      * @param {string} outputCodePath
+     * @param {number | null} sourceCodeIndex
      */
-    private processSourceCode (sourceCode: string, outputCodePath: string): void {
-        const options: TInputOptions = this.buildOptions();
+    private processSourceCode (
+        sourceCode: string,
+        outputCodePath: string,
+        sourceCodeIndex: number | null
+    ): void {
+        let options: TInputOptions = this.buildOptions();
+
+        if (sourceCodeIndex !== null) {
+            const baseIdentifiersPrefix: string = this.inputCLIOptions.identifiersPrefix
+                || JavaScriptObfuscatorCLI.baseIdentifiersPrefix;
+            const identifiersPrefix: string = `${baseIdentifiersPrefix}${sourceCodeIndex}`;
+
+            options = {
+                ...options,
+                identifiersPrefix
+            };
+        }
 
         if (options.sourceMap) {
             JavaScriptObfuscatorCLI.processSourceCodeWithSourceMap(sourceCode, outputCodePath, options);

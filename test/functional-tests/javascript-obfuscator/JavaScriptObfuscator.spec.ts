@@ -186,28 +186,108 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('variable inside global scope', () => {
-            const regExp: RegExp = /^var *test *= *0x\d+;$/;
+            describe('variant #1: without `renameGlobals` option', () => {
+                const regExp: RegExp = /^var *test *= *0x\d+;$/;
 
-            let obfuscatedCode: string;
+                let obfuscatedCode: string;
 
-            beforeEach(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET
-                    }
-                );
+                beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET
+                        }
+                    );
 
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('should return correct obfuscated code', () => {
+                    assert.match(obfuscatedCode, regExp);
+                });
             });
 
-            it('should return correct obfuscated code', () => {
-                assert.match(obfuscatedCode, regExp);
+            describe('variant #2: with `renameGlobals` option', () => {
+                const regExp: RegExp = /^var *_0x(\w){4,6} *= *0x\d+;$/;
+
+                let obfuscatedCode: string;
+
+                beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameGlobals: true
+                        }
+                    );
+
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('should return correct obfuscated code', () => {
+                    assert.match(obfuscatedCode, regExp);
+                });
+            });
+
+            describe('variant #3: with `renameGlobals` and `identifiersPrefix` options', () => {
+                const regExp: RegExp = /^var *foo_0x(\w){4,6} *= *0x\d+;$/;
+
+                let obfuscatedCode: string;
+
+                beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameGlobals: true,
+                            identifiersPrefix: 'foo'
+                        }
+                    );
+
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('should return correct obfuscated code', () => {
+                    assert.match(obfuscatedCode, regExp);
+                });
+            });
+
+            describe('variant #4: with `stringArray`, `renameGlobals` and `identifiersPrefix` options', () => {
+                const stringArrayRegExp: RegExp = /^var foo_0x(\w){4} *= *\['abc'\];/;
+                const stringArrayCallRegExp: RegExp = /var *foo_0x(\w){4,6} *= *foo_0x(\w){4}\('0x0'\);$/;
+
+                let obfuscatedCode: string;
+
+                beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/simple-input-2.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameGlobals: true,
+                            identifiersPrefix: 'foo',
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }
+                    );
+
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('match #1: should return correct obfuscated code', () => {
+                    assert.match(obfuscatedCode, stringArrayRegExp);
+                });
+
+                it('match #2: should return correct obfuscated code', () => {
+                    assert.match(obfuscatedCode, stringArrayCallRegExp);
+                });
             });
         });
 
-        describe('variable inside global scope', () => {
+        describe('variable inside block scope', () => {
             const regExp: RegExp = /^\(function *\(\) *\{ *var *_0x[\w]+ *= *0x\d+; *\}(\(\)\)|\)\(\));?$/;
 
             let obfuscatedCode: string;
@@ -226,6 +306,47 @@ describe('JavaScriptObfuscator', () => {
 
             it('should return correct obfuscated code', () => {
                 assert.match(obfuscatedCode, regExp);
+            });
+        });
+
+        describe('variables inside global and block scopes', () => {
+            describe('variant #1: with `renameGlobals` and `identifiersPrefix` options', () => {
+                const variableDeclaration1: RegExp = /var foo_0x(\w){4,6} *= *0x1;/;
+                const variableDeclaration2: RegExp = /var foo_0x(\w){4,6} *= *0x2;/;
+                const variableDeclaration3: RegExp = /var _0x(\w){4,6} *= *foo_0x(\w){4,6} *\+ *foo_0x(\w){4,6}/;
+                const functionDeclaration: RegExp = /var foo_0x(\w){4,6} *= *function/;
+
+                let obfuscatedCode: string;
+
+                beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/identifiers-prefix.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameGlobals: true,
+                            identifiersPrefix: 'foo'
+                        }
+                    );
+
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('match #1: should return correct obfuscated code', () => {
+                    assert.match(obfuscatedCode, variableDeclaration1);
+                });
+
+                it('match #2: should return correct obfuscated code', () => {
+                    assert.match(obfuscatedCode, variableDeclaration2);
+                });
+
+                it('match #3: should return correct obfuscated code', () => {
+                    assert.match(obfuscatedCode, variableDeclaration3);
+                });
+
+                it('match #4: should return correct obfuscated code', () => {
+                    assert.match(obfuscatedCode, functionDeclaration);
+                });
             });
         });
 

@@ -277,6 +277,7 @@ Following options are available for the JS Obfuscator:
     disableConsoleOutput: false,
     domainLock: [],
     identifierNamesGenerator: 'hexadecimal',
+    identifiersPrefix: '',
     log: false,
     renameGlobals: false,
     reservedNames: [],
@@ -314,6 +315,7 @@ Following options are available for the JS Obfuscator:
     --disable-console-output <boolean>
     --domain-lock '<list>' (comma separated)
     --identifier-names-generator <string> [hexadecimal, mangled]
+    --identifiers-prefix <string>
     --log <boolean>
     --rename-globals <boolean>
     --reserved-names '<list>' (comma separated)
@@ -569,6 +571,13 @@ Sets identifier names generator.
 Available values:
 * `hexadecimal`: identifier names like `_0xabc123`
 * `mangled`: short identifier names like `a`, `b`, `c`
+
+### `identifiersPrefix`
+Type: `string` Default: `''`
+
+Sets prefix for all generated identifiers.
+
+Use this option when you want to obfuscate multiple files. This option helps to avoid conflicts between identifiers of these files. Prefix should be different for every file.
 
 ### `log`
 Type: `boolean` Default: `false`

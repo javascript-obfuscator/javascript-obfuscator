@@ -1,28 +1,40 @@
+import 'reflect-metadata';
+
+import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
+
 import { assert } from 'chai';
 
 import { TInputOptions } from '../../../src/types/options/TInputOptions';
 
+import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
 import { IOptions } from '../../../src/interfaces/options/IOptions';
+import { IOptionsNormalizer } from '../../../src/interfaces/options/IOptionsNormalizer';
 
 import { StringArrayEncoding } from '../../../src/enums/StringArrayEncoding';
 
 import { DEFAULT_PRESET } from '../../../src/options/presets/Default';
 
-import { Options } from '../../../src/options/Options';
-import { OptionsNormalizer } from '../../../src/options/OptionsNormalizer';
+import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
 
 /**
  * @param optionsPreset
  * @returns {IOptions}
  */
 function getNormalizedOptions (optionsPreset: TInputOptions): TInputOptions {
-    const options: IOptions = new Options(optionsPreset);
+    const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-    return OptionsNormalizer.normalizeOptions(options);
+    inversifyContainerFacade.load('', optionsPreset);
+
+    const options: IOptions = inversifyContainerFacade
+        .get<IOptions>(ServiceIdentifiers.IOptions);
+    const optionsNormalizer: IOptionsNormalizer = inversifyContainerFacade
+        .get<IOptionsNormalizer>(ServiceIdentifiers.IOptionsNormalizer);
+
+    return optionsNormalizer.normalize(options);
 }
 
 describe('OptionsNormalizer', () => {
-    describe('normalizeOptions (options: IObfuscatorOptions): IObfuscatorOptions', () => {
+    describe('normalize (options: IObfuscatorOptions): IObfuscatorOptions', () => {
         let optionsPreset: TInputOptions,
             expectedOptionsPreset: TInputOptions;
 

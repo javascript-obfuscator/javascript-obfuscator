@@ -13,6 +13,11 @@ import { ArrayStorage } from '../ArrayStorage';
 @injectable()
 export class StringArrayStorage extends ArrayStorage <string> {
     /**
+     * @type {number}
+     */
+    private static readonly stringArrayNameLength: number = 7;
+
+    /**
      * @type {IArrayUtils}
      */
     private readonly arrayUtils: IArrayUtils;
@@ -45,8 +50,14 @@ export class StringArrayStorage extends ArrayStorage <string> {
     public initialize (): void {
         super.initialize();
 
-        const stringArrayName: string = this.identifierNamesGenerator.generate(4);
-        const stringArrayCallsWrapperName: string = this.identifierNamesGenerator.generate(4);
+        const baseStringArrayName: string = this.identifierNamesGenerator
+            .generate()
+            .slice(0, StringArrayStorage.stringArrayNameLength);
+        const baseStringArrayCallsWrapperName: string = this.identifierNamesGenerator
+            .generate()
+            .slice(0, StringArrayStorage.stringArrayNameLength);
+        const stringArrayName: string = `${this.options.identifiersPrefix}${baseStringArrayName}`;
+        const stringArrayCallsWrapperName: string = `${this.options.identifiersPrefix}${baseStringArrayCallsWrapperName}`;
 
         this.storageId = `${stringArrayName}|${stringArrayCallsWrapperName}`;
     }

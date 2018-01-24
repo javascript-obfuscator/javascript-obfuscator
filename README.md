@@ -575,9 +575,9 @@ Available values:
 ### `identifiersPrefix`
 Type: `string` Default: `''`
 
-Sets prefix for all generated identifiers.
+Sets prefix for all global generated identifiers.
 
-Use this option when you want to obfuscate multiple files. This option helps to avoid conflicts between identifiers of these files. Prefix should be different for every file.
+Use this option when you want to obfuscate multiple files. This option helps to avoid conflicts between global identifiers of these files. Prefix should be different for every file.
 
 ### `log`
 Type: `boolean` Default: `false`

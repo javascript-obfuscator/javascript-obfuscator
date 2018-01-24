@@ -18,7 +18,6 @@ import { DEFAULT_PRESET } from '../options/presets/Default';
 import { ArraySanitizer } from './sanitizers/ArraySanitizer';
 import { BooleanSanitizer } from './sanitizers/BooleanSanitizer';
 import { IdentifierNamesGeneratorSanitizer } from './sanitizers/IdentifierNamesGeneratorSanitizer';
-import { IdentifiersPrefixSanitizer } from './sanitizers/IdentifiersPrefixSanitizer';
 import { ObfuscationTargetSanitizer } from './sanitizers/ObfuscatingTargetSanitizer';
 import { SourceMapModeSanitizer } from './sanitizers/SourceMapModeSanitizer';
 import { StringArrayEncodingSanitizer } from './sanitizers/StringArrayEncodingSanitizer';
@@ -246,9 +245,8 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 IdentifierNamesGeneratorSanitizer
             )
             .option(
-                '--identifiers-prefix <string|boolean>',
-                'Sets prefix for all generated identifiers.',
-                IdentifiersPrefixSanitizer
+                '--identifiers-prefix <string>',
+                'Sets prefix for all generated identifiers.'
             )
             .option(
                 '--log <boolean>', 'Enables logging of the information to the console',
@@ -351,7 +349,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
 
             this.processSourceCode(sourceCodeData, outputCodePath);
         } else {
-            sourceCodeData.forEach(({ filePath, content }: IFileData) => {
+            sourceCodeData.forEach(({ filePath, content }: IFileData, index: number) => {
                 const outputCodePath: string = outputPath
                     ? path.join(outputPath, filePath)
                     : CLIUtils.getOutputCodePath(filePath);

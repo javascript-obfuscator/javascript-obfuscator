@@ -56,6 +56,6 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
     public generateWithPrefix (): string {
         const identifierName: string = this.generate();
 
-        return `${this.identifiersPrefix}${identifierName}`.replace('__', '_');
+        return `${this.options.identifiersPrefix}${identifierName}`.replace('__', '_');
     }
 }

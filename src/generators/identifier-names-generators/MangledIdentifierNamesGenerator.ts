@@ -113,7 +113,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      */
     public generateWithPrefix (): string {
         const prefix: string = this.options.identifiersPrefix ?
-            `${this.identifiersPrefix}_`
+            `${this.options.identifiersPrefix}_`
             : '';
         const identifierName: string = this.generate();
 

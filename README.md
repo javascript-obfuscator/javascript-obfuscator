@@ -575,7 +575,7 @@ Available values:
 ### `identifiersPrefix`
 Type: `string` Default: `''`
 
-Sets prefix for all generated identifiers. If prefix sets to `true` - random prefix with length of 6 characters will generated. If prefix sets to `false` or empty string - prefix won't generated.
+Sets prefix for all generated identifiers.
 
 Use this option when you want to obfuscate multiple files. This option helps to avoid conflicts between identifiers of these files. Prefix should be different for every file.
 

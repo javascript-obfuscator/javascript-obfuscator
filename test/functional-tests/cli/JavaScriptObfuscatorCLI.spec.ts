@@ -134,13 +134,18 @@ describe('JavaScriptObfuscatorCLI', function (): void {
             const outputFileName1: string = 'foo-obfuscated.js';
             const outputFileName2: string = 'bar-obfuscated.js';
             const outputFileName3: string = 'baz-obfuscated.js';
+            const readFileEncoding: string = 'utf8';
+            const regExp1: RegExp = /^var *a1_0x(\w){4,6} *= *0x1;$/;
+            const regExp2: RegExp = /^var *a0_0x(\w){4,6} *= *0x2;$/;
 
             let outputFixturesFilePath1: string,
                 outputFixturesFilePath2: string,
                 outputFixturesFilePath3: string,
                 isFileExist1: boolean,
                 isFileExist2: boolean,
-                isFileExist3: boolean;
+                isFileExist3: boolean,
+                fileContent1: string,
+                fileContent2: string;
 
             before(() => {
                 outputFixturesFilePath1 = `${directoryPath}/${outputFileName1}`;
@@ -150,12 +155,17 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 JavaScriptObfuscator.runCLI([
                     'node',
                     'javascript-obfuscator',
-                    directoryPath
+                    directoryPath,
+                    '--rename-globals',
+                    'true'
                 ]);
 
                 isFileExist1 = fs.existsSync(outputFixturesFilePath1);
                 isFileExist2 = fs.existsSync(outputFixturesFilePath2);
                 isFileExist3 = fs.existsSync(outputFixturesFilePath3);
+
+                fileContent1 = fs.readFileSync(outputFixturesFilePath1, readFileEncoding);
+                fileContent2 = fs.readFileSync(outputFixturesFilePath2, readFileEncoding);
             });
 
             it(`should create file \`${outputFileName1}\` with obfuscated code in \`${fixturesDirName}\` directory`, () => {
@@ -170,13 +180,80 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 assert.equal(isFileExist3, false);
             });
 
+            it(`match #1: should create file with obfuscated code with prefixed identifier`, () => {
+                assert.match(fileContent1, regExp1);
+            });
+
+            it(`match #2: should create file with obfuscated code with prefixed identifier`, () => {
+                assert.match(fileContent2, regExp2);
+            });
+
             after(() => {
                 rimraf.sync(outputFixturesFilePath1);
                 rimraf.sync(outputFixturesFilePath2);
             });
         });
 
-        describe('Variant #3: obfuscation of directory with `output` option', () => {
+        describe('Variant #3: obfuscation of directory with `identifiersPrefix` option value', () => {
+            const directoryPath: string = `${fixturesDirName}/directory-obfuscation`;
+            const identifiersPrefix: string = 'foo';
+            const outputFileName1: string = 'foo-obfuscated.js';
+            const outputFileName2: string = 'bar-obfuscated.js';
+            const readFileEncoding: string = 'utf8';
+            const regExp1: RegExp = /^var *foo1_0x(\w){4,6} *= *0x1;$/;
+            const regExp2: RegExp = /^var *foo0_0x(\w){4,6} *= *0x2;$/;
+
+            let outputFixturesFilePath1: string,
+                outputFixturesFilePath2: string,
+                isFileExist1: boolean,
+                isFileExist2: boolean,
+                fileContent1: string,
+                fileContent2: string;
+
+            before(() => {
+                outputFixturesFilePath1 = `${directoryPath}/${outputFileName1}`;
+                outputFixturesFilePath2 = `${directoryPath}/${outputFileName2}`;
+
+                JavaScriptObfuscator.runCLI([
+                    'node',
+                    'javascript-obfuscator',
+                    directoryPath,
+                    '--identifiers-prefix',
+                    identifiersPrefix,
+                    '--rename-globals',
+                    'true'
+                ]);
+
+                isFileExist1 = fs.existsSync(outputFixturesFilePath1);
+                isFileExist2 = fs.existsSync(outputFixturesFilePath2);
+
+                fileContent1 = fs.readFileSync(outputFixturesFilePath1, readFileEncoding);
+                fileContent2 = fs.readFileSync(outputFixturesFilePath2, readFileEncoding);
+            });
+
+            it(`should create file \`${outputFileName1}\` with obfuscated code in \`${fixturesDirName}\` directory`, () => {
+                assert.equal(isFileExist1, true);
+            });
+
+            it(`should create file \`${outputFileName2}\` with obfuscated code in \`${fixturesDirName}\` directory`, () => {
+                assert.equal(isFileExist2, true);
+            });
+
+            it(`match #1: should create file with obfuscated code with prefixed identifier`, () => {
+                assert.match(fileContent1, regExp1);
+            });
+
+            it(`match #2: should create file with obfuscated code with prefixed identifier`, () => {
+                assert.match(fileContent2, regExp2);
+            });
+
+            after(() => {
+                rimraf.sync(outputFixturesFilePath1);
+                rimraf.sync(outputFixturesFilePath2);
+            });
+        });
+
+        describe('Variant #4: obfuscation of directory with `output` option', () => {
             const directoryPath: string = `${fixturesDirName}/directory-obfuscation`;
             const outputDirectoryName: string = 'obfuscated';
             const outputDirectoryPath: string = `${directoryPath}/${outputDirectoryName}`;

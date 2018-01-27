@@ -6,7 +6,7 @@ v0.14.0
 * **New option:** `transformObjectKeys` enables object keys transformation and obfuscation.
 * **New feature:** `eval` expressions obfuscation.
 * **Breaking change:** Now CLI obfuscating directory recursively. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/157
-* Fixed runtime errors when `deadCodeInjection` is enabled and `identifierNamesGenerator` is set to `mangled`
+* Fixed runtime errors when `deadCodeInjection` is enabled and `identifierNamesGenerator` is set to `mangled`.
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/171
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/166
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/156

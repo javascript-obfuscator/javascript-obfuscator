@@ -18,16 +18,6 @@ import { NodeGuards } from '../../../node/NodeGuards';
 @injectable()
 export abstract class ExpressionWithOperatorControlFlowReplacer extends AbstractControlFlowReplacer {
     /**
-     * @type {IOptions}
-     */
-    protected readonly options: IOptions;
-
-    /**
-     * @type {Map<string, Map<string, string[]>>}
-     */
-    protected readonly replacerDataByControlFlowStorageId: Map <string, Map<string, string[]>> = new Map();
-
-    /**
      * @param {TControlFlowCustomNodeFactory} controlFlowCustomNodeFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options

@@ -21,25 +21,25 @@ export class ExpressionWithOperatorControlFlowStorageCallNode extends AbstractCu
      * @type {string}
      */
     @initializable()
-    private controlFlowStorageKey: string;
+    private controlFlowStorageKey!: string;
 
     /**
      * @type {string}
      */
     @initializable()
-    private controlFlowStorageName: string;
+    private controlFlowStorageName!: string;
 
     /**
      * @type {Expression}
      */
     @initializable()
-    private leftValue: Expression;
+    private leftValue!: Expression;
 
     /**
      * @type {ESTree.Expression}
      */
     @initializable()
-    private rightValue: Expression;
+    private rightValue!: Expression;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

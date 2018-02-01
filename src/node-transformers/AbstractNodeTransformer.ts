@@ -20,7 +20,7 @@ export abstract class AbstractNodeTransformer implements INodeTransformer, IInit
      * @type {number}
      */
     @initializable()
-    protected nodeIdentifier: number;
+    protected nodeIdentifier!: number;
 
     /**
      * @type {IOptions}

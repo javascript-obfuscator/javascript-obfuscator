@@ -24,19 +24,19 @@ export class StringArrayNode extends AbstractCustomNode {
      * @type {IStorage <string>}
      */
     @initializable()
-    private stringArrayStorage: IStorage <string>;
+    private stringArrayStorage!: IStorage <string>;
 
     /**
      * @type {string}
      */
     @initializable()
-    private stringArrayName: string;
+    private stringArrayName!: string;
 
     /**
      * @type {number}
      */
     @initializable()
-    private stringArrayRotateValue: number;
+    private stringArrayRotateValue!: number;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

@@ -22,25 +22,25 @@ export class CallExpressionControlFlowStorageCallNode extends AbstractCustomNode
      * @type {Expression}
      */
     @initializable()
-    private callee: Expression;
+    private callee!: Expression;
 
     /**
      * @type {string}
      */
     @initializable()
-    private controlFlowStorageKey: string;
+    private controlFlowStorageKey!: string;
 
     /**
      * @type {string}
      */
     @initializable()
-    private controlFlowStorageName: string;
+    private controlFlowStorageName!: string;
 
     /**
      * @type {(ESTree.Expression | ESTree.SpreadElement)[]}
      */
     @initializable()
-    private expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[];
+    private expressionArguments!: (ESTree.Expression | ESTree.SpreadElement)[];
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

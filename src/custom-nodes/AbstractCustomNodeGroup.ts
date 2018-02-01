@@ -42,11 +42,6 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     protected readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @type {IStackTraceData[]}
-     */
-    protected readonly stackTraceData: IStackTraceData[];
-
-    /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options

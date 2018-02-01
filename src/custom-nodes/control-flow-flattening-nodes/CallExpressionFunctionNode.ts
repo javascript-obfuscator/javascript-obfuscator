@@ -21,7 +21,7 @@ export class CallExpressionFunctionNode extends AbstractCustomNode {
      * @type {(ESTree.Expression | ESTree.SpreadElement)[]}
      */
     @initializable()
-    private expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[];
+    private expressionArguments!: (ESTree.Expression | ESTree.SpreadElement)[];
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

@@ -30,7 +30,7 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
      * @type {Map<CustomNode, ICustomNode>}
      */
     @initializable()
-    protected customNodes: Map <CustomNode, ICustomNode>;
+    protected customNodes!: Map <CustomNode, ICustomNode>;
 
     /**
      * @type {TCustomNodeFactory}
@@ -40,7 +40,6 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
     /**
      * @type {IStorage <string>}
      */
-    @initializable()
     private stringArrayStorage: IStorage <string>;
 
     /**

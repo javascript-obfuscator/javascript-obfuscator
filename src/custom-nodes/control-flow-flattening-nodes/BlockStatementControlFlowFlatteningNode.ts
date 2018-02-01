@@ -22,19 +22,19 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
      * @type {ESTree.Statement[]}
      */
     @initializable()
-    private blockStatementBody: ESTree.Statement[];
+    private blockStatementBody!: ESTree.Statement[];
 
     /**
      * @type {number[]}
      */
     @initializable()
-    private originalKeysIndexesInShuffledArray: number[];
+    private originalKeysIndexesInShuffledArray!: number[];
 
     /**
      * @type {number[]}
      */
     @initializable()
-    private shuffledKeys: number[];
+    private shuffledKeys!: number[];
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

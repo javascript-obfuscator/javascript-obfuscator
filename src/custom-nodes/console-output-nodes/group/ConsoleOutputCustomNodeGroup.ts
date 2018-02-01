@@ -29,7 +29,7 @@ export class ConsoleOutputCustomNodeGroup extends AbstractCustomNodeGroup {
      * @type {Map<CustomNode, ICustomNode>}
      */
     @initializable()
-    protected customNodes: Map <CustomNode, ICustomNode>;
+    protected customNodes!: Map <CustomNode, ICustomNode>;
 
     /**
      * @type {TCustomNodeFactory}

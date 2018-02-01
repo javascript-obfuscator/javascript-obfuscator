@@ -23,13 +23,13 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
      * @type {T[]}
      */
     @initializable()
-    protected storage: T[];
+    protected storage!: T[];
 
     /**
      * @type {string}
      */
     @initializable()
-    protected storageId: string;
+    protected storageId!: string;
 
     /**
      * @type {number}

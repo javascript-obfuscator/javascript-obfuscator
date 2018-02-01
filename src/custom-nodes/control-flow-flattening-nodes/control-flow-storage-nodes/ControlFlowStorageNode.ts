@@ -24,7 +24,7 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
      * @type {IStorage <ICustomNode>}
      */
     @initializable()
-    private controlFlowStorage: IStorage <ICustomNode>;
+    private controlFlowStorage!: IStorage <ICustomNode>;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

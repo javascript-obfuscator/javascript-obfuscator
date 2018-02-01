@@ -33,13 +33,13 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
      * @type {string}
      */
     @initializable()
-    private stringArrayName: string;
+    private stringArrayName!: string;
 
     /**
      * @param {number}
      */
     @initializable()
-    private stringArrayRotateValue: number;
+    private stringArrayRotateValue!: number;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

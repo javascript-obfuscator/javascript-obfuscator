@@ -23,9 +23,9 @@ export abstract class AbstractCustomNode implements ICustomNode {
     ];
 
     /**
-     * @type {TStatement[]}
+     * @type {TStatement[] | null}
      */
-    protected cachedNode: TStatement[];
+    protected cachedNode: TStatement[] | null = null;
 
     /**
      * @type {IIdentifierNamesGenerator}

@@ -26,7 +26,7 @@ export class DebugProtectionFunctionNode extends AbstractCustomNode {
      * @type {string}
      */
     @initializable()
-    private debugProtectionFunctionName: string;
+    private debugProtectionFunctionName!: string;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

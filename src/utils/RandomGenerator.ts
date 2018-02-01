@@ -27,13 +27,13 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
      * @type {Chance.Chance | Chance.SeededChance}
      */
     @initializable()
-    private randomGenerator: Chance.Chance | Chance.SeededChance;
+    private randomGenerator!: Chance.Chance | Chance.SeededChance;
 
     /**
      * @type {number}
      */
     @initializable()
-    private seed: number;
+    private seed!: number;
 
     /**
      * @type {ISourceCode}

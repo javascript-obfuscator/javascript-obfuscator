@@ -41,7 +41,7 @@ export class CustomNodesTransformer extends AbstractNodeTransformer {
     /**
      * @type {IStackTraceData[]}
      */
-    private stackTraceData: IStackTraceData[];
+    private stackTraceData: IStackTraceData[] = [];
 
     /**
      * @param {IStackTraceAnalyzer} stackTraceAnalyzer

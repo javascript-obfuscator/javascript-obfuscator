@@ -9,7 +9,7 @@ describe('@initializable', () => {
             const testFunc: () => void = () => {
                 class Foo implements IInitializable {
                     @initializable()
-                    public property: string;
+                    public property!: string;
 
                     public initialize (property: string): void {
                         this.property = property;
@@ -32,7 +32,7 @@ describe('@initializable', () => {
             const testFunc: () => void = () => {
                 class Foo implements IInitializable {
                     @initializable()
-                    public property: string;
+                    public property!: string;
 
                     public initialize (): void {
                     }
@@ -58,7 +58,7 @@ describe('@initializable', () => {
             const testFunc: () => void = () => {
                 class Foo implements IInitializable {
                     @initializable()
-                    public property: string;
+                    public property!: string;
 
                     public initialize (property: string): void {
                     }
@@ -80,7 +80,7 @@ describe('@initializable', () => {
             const testFunc: () => void = () => {
                 class Foo {
                     @initializable('bar')
-                    public property: string;
+                    public property!: string;
 
                     public initialize (property: string): void {
                         this.property = property;

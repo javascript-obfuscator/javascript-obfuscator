@@ -26,7 +26,7 @@ export class DomainLockNode extends AbstractCustomNode {
      * @type {string}
      */
     @initializable()
-    protected callsControllerFunctionName: string;
+    protected callsControllerFunctionName!: string;
 
     /**
      * @type {ICryptUtils}

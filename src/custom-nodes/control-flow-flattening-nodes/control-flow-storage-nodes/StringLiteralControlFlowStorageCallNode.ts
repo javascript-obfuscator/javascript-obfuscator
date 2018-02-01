@@ -19,13 +19,13 @@ export class StringLiteralControlFlowStorageCallNode extends AbstractCustomNode 
      * @type {string}
      */
     @initializable()
-    private controlFlowStorageKey: string;
+    private controlFlowStorageKey!: string;
 
     /**
      * @type {string}
      */
     @initializable()
-    private controlFlowStorageName: string;
+    private controlFlowStorageName!: string;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

@@ -21,7 +21,7 @@ export class LogicalExpressionFunctionNode extends AbstractCustomNode {
      * @type {LogicalOperator}
      */
     @initializable()
-    private operator: LogicalOperator;
+    private operator!: LogicalOperator;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

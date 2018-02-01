@@ -21,7 +21,7 @@ export class BinaryExpressionFunctionNode extends AbstractCustomNode {
      * @type {BinaryOperator}
      */
     @initializable()
-    private operator: BinaryOperator;
+    private operator!: BinaryOperator;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

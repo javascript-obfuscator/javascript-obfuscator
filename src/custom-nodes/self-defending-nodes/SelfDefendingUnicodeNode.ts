@@ -31,7 +31,7 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
      * @type {string}
      */
     @initializable()
-    private callsControllerFunctionName: string;
+    private callsControllerFunctionName!: string;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

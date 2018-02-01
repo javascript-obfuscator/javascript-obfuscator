@@ -40,13 +40,13 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
      * @type {string}
      */
     @initializable()
-    private stringArrayName: string;
+    private stringArrayName!: string;
 
     /**
      * @type {string}
      */
     @initializable()
-    private stringArrayCallsWrapperName: string;
+    private stringArrayCallsWrapperName!: string;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

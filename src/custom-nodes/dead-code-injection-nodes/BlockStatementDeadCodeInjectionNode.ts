@@ -21,13 +21,13 @@ export class BlockStatementDeadCodeInjectionNode extends AbstractCustomNode {
      * @type {BlockStatement}
      */
     @initializable()
-    private blockStatementNode: BlockStatement;
+    private blockStatementNode!: BlockStatement;
 
     /**
      * @type {BlockStatement}
      */
     @initializable()
-    private deadCodeInjectionRootAstHostNode: BlockStatement;
+    private deadCodeInjectionRootAstHostNode!: BlockStatement;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

@@ -23,13 +23,13 @@ export abstract class MapStorage <T> implements IStorage <T> {
      * @type {string}
      */
     @initializable()
-    protected storageId: string;
+    protected storageId!: string;
 
     /**
      * @type {Map <string | number, T>}
      */
     @initializable()
-    protected storage: Map <string | number, T>;
+    protected storage!: Map <string | number, T>;
 
     /**
      * @param {IRandomGenerator} randomGenerator

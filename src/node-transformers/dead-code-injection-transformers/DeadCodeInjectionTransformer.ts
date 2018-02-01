@@ -65,7 +65,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     /**
      * @type {number}
      */
-    private collectedBlockStatementsTotalLength: number;
+    private collectedBlockStatementsTotalLength: number = 0;
 
     /**
      * @type {TDeadNodeInjectionCustomNodeFactory}

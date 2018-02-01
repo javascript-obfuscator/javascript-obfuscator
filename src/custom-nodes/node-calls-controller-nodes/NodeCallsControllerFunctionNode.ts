@@ -27,13 +27,13 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
      * @type {string}
      */
     @initializable()
-    protected callsControllerFunctionName: string;
+    protected callsControllerFunctionName!: string;
 
     /**
      * @type {ObfuscationEvent}
      */
     @initializable()
-    private appendEvent: ObfuscationEvent;
+    private appendEvent!: ObfuscationEvent;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

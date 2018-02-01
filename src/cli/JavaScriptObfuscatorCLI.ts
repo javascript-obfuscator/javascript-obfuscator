@@ -63,19 +63,19 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
      * @type {commander.CommanderStatic}
      */
     @initializable()
-    private commands: commander.CommanderStatic;
+    private commands!: commander.CommanderStatic;
 
     /**
      * @type {TInputCLIOptions}
      */
     @initializable()
-    private inputCLIOptions: TInputCLIOptions;
+    private inputCLIOptions!: TInputCLIOptions;
 
     /**
      * @type {string}
      */
     @initializable()
-    private inputPath: string;
+    private inputPath!: string;
 
     /**
      * @param {string[]} argv

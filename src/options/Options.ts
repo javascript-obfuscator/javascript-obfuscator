@@ -47,13 +47,13 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly compact: boolean;
+    public readonly compact!: boolean;
 
     /**
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly controlFlowFlattening: boolean;
+    public readonly controlFlowFlattening!: boolean;
 
     /**
      * @type {boolean}
@@ -61,37 +61,37 @@ export class Options implements IOptions {
     @IsNumber()
     @Min(0)
     @Max(1)
-    public readonly controlFlowFlatteningThreshold: number;
+    public readonly controlFlowFlatteningThreshold!: number;
 
     /**
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly deadCodeInjection: boolean;
+    public readonly deadCodeInjection!: boolean;
 
     /**
      * @type {number}
      */
     @IsNumber()
-    public readonly deadCodeInjectionThreshold: number;
+    public readonly deadCodeInjectionThreshold!: number;
 
     /**
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly debugProtection: boolean;
+    public readonly debugProtection!: boolean;
 
     /**
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly debugProtectionInterval: boolean;
+    public readonly debugProtectionInterval!: boolean;
 
     /**
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly disableConsoleOutput: boolean;
+    public readonly disableConsoleOutput!: boolean;
 
     /**
      * @type {string[]}
@@ -101,7 +101,7 @@ export class Options implements IOptions {
     @IsString({
         each: true
     })
-    public readonly domainLock: string[];
+    public readonly domainLock!: string[];
 
     /**
      * @type {IdentifierNamesGenerator}
@@ -110,25 +110,25 @@ export class Options implements IOptions {
         IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
         IdentifierNamesGenerator.MangledIdentifierNamesGenerator
     ])
-    public readonly identifierNamesGenerator: IdentifierNamesGenerator;
+    public readonly identifierNamesGenerator!: IdentifierNamesGenerator;
 
     /**
      * @type {string}
      */
     @IsString()
-    public readonly identifiersPrefix: string;
+    public readonly identifiersPrefix!: string;
 
     /**
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly log: boolean;
+    public readonly log!: boolean;
 
     /**
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly renameGlobals: boolean;
+    public readonly renameGlobals!: boolean;
 
     /**
      * @type {string[]}
@@ -138,31 +138,31 @@ export class Options implements IOptions {
     @IsString({
         each: true
     })
-    public readonly reservedNames: string[];
+    public readonly reservedNames!: string[];
 
     /**
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly rotateStringArray: boolean;
+    public readonly rotateStringArray!: boolean;
 
     /**
      * @type {number}
      */
     @IsNumber()
-    public readonly seed: number;
+    public readonly seed!: number;
 
     /**
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly selfDefending: boolean;
+    public readonly selfDefending!: boolean;
 
     /**
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly sourceMap: boolean;
+    public readonly sourceMap!: boolean;
 
     /**
      * @type {string}
@@ -174,31 +174,31 @@ export class Options implements IOptions {
         require_tld: false,
         require_valid_protocol: true
     })
-    public readonly sourceMapBaseUrl: string;
+    public readonly sourceMapBaseUrl!: string;
 
     /**
      * @type {string}
      */
     @IsString()
-    public readonly sourceMapFileName: string;
+    public readonly sourceMapFileName!: string;
 
     /**
      * @type {SourceMapMode}
      */
     @IsIn([SourceMapMode.Inline, SourceMapMode.Separate])
-    public readonly sourceMapMode: SourceMapMode;
+    public readonly sourceMapMode!: SourceMapMode;
 
     /**
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly stringArray: boolean;
+    public readonly stringArray!: boolean;
 
     /**
      * @type {TStringArrayEncoding}
      */
     @IsIn([true, false, StringArrayEncoding.Base64, StringArrayEncoding.Rc4])
-    public readonly stringArrayEncoding: TStringArrayEncoding;
+    public readonly stringArrayEncoding!: TStringArrayEncoding;
 
     /**
      * @type {number}
@@ -206,25 +206,25 @@ export class Options implements IOptions {
     @IsNumber()
     @Min(0)
     @Max(1)
-    public readonly stringArrayThreshold: number;
+    public readonly stringArrayThreshold!: number;
 
     /**
      * @type {ObfuscationTarget}
      */
     @IsIn([ObfuscationTarget.Browser, ObfuscationTarget.Extension, ObfuscationTarget.Node])
-    public readonly target: ObfuscationTarget;
+    public readonly target!: ObfuscationTarget;
 
     /**
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly transformObjectKeys: boolean;
+    public readonly transformObjectKeys!: boolean;
 
     /**
      * @type {boolean}
      */
     @IsBoolean()
-    public readonly unicodeEscapeSequence: boolean;
+    public readonly unicodeEscapeSequence!: boolean;
 
     /**
      * @param {TInputOptions} inputOptions

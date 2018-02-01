@@ -10,13 +10,13 @@ export class ObfuscationResult implements IObfuscationResult {
      * @type {string}
      */
     @initializable()
-    private obfuscatedCode: string;
+    private obfuscatedCode!: string;
 
     /**
      * @type {string}
      */
     @initializable()
-    private sourceMap: string;
+    private sourceMap!: string;
 
     /**
      * @param {string} obfuscatedCode

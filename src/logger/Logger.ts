@@ -22,19 +22,19 @@ export class Logger implements ILogger, IInitializable {
      * @type {Chalk}
      */
     @initializable()
-    private colorInfo: Chalk;
+    private colorInfo!: Chalk;
 
     /**
      * @type {Chalk}
      */
     @initializable()
-    private colorSuccess: Chalk;
+    private colorSuccess!: Chalk;
 
     /**
      * @type {Chalk}
      */
     @initializable()
-    private colorWarn: Chalk;
+    private colorWarn!: Chalk;
 
     /**
      * @type {IOptions}

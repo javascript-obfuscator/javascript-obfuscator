@@ -15,7 +15,6 @@
     "removeComments": true,
     "sourceMap": true,
     "strict": true,
-    "strictPropertyInitialization": false,
     "target": "es2015",
     "plugins": [
       {

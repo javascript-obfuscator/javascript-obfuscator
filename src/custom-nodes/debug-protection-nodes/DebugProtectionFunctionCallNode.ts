@@ -22,13 +22,13 @@ export class DebugProtectionFunctionCallNode extends AbstractCustomNode {
      * @type {string}
      */
     @initializable()
-    private callsControllerFunctionName: string;
+    private callsControllerFunctionName!: string;
 
     /**
      * @type {string}
      */
     @initializable()
-    private debugProtectionFunctionName: string;
+    private debugProtectionFunctionName!: string;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory

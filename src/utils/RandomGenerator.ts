@@ -1,7 +1,7 @@
 import { inject, injectable, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
-import * as md5 from 'md5';
+import md5 from 'md5';
 import { Chance } from 'chance';
 
 import { IInitializable } from '../interfaces/IInitializable';
@@ -17,16 +17,6 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
      * @type {string}
      */
     public static readonly randomGeneratorPool: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-    /**
-     * @type {string}
-     */
-    public static readonly randomGeneratorPoolNumbers: string = '0123456789';
-
-    /**
-     * @type {string}
-     */
-    public static readonly randomGeneratorPoolHexadecimal: string = `abcdef${RandomGenerator.randomGeneratorPoolNumbers}`;
 
     /**
      * @type {IOptions}

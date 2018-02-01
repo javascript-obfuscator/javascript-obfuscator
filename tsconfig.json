@@ -8,12 +8,14 @@
       "dom"
     ],
     "module": "commonjs",
+    "esModuleInterop": true,
     "noEmitHelpers": true,
     "noImplicitThis": false,
     "noUnusedLocals": true,
     "removeComments": true,
     "sourceMap": true,
     "strict": true,
+    "strictPropertyInitialization": false,
     "target": "es2015",
     "plugins": [
       {

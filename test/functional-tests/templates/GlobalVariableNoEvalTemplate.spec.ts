@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import * as format from 'string-template';
+import format from 'string-template';
 
 import { assert } from 'chai';
 

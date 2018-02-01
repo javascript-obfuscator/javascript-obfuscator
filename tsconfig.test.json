@@ -9,6 +9,7 @@
     "noEmitHelpers": true,
     "importHelpers": true,
     "module": "commonjs",
+    "esModuleInterop": true,
     "inlineSourceMap": true,
     "inlineSources": true,
     "emitDecoratorMetadata": true,

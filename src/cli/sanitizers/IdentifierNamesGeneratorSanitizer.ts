@@ -6,7 +6,7 @@ import { IdentifierNamesGenerator } from '../../enums/generators/identifier-name
  * @param {string} value
  * @returns {string}
  */
-export const IdentifierNamesGeneratorSanitizer: TCLISanitizer = (value: string): string => {
+export const IdentifierNamesGeneratorSanitizer: TCLISanitizer <string> = (value: string): string => {
     const isCorrectIdentifierNamesGenerator: boolean = Object
         .keys(IdentifierNamesGenerator)
         .some((key: any): boolean => {

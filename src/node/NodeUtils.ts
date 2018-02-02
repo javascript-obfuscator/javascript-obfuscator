@@ -136,29 +136,27 @@ export class NodeUtils {
 
         const copy: TObject = {};
 
-        Object
-            .keys(node)
-            .forEach((property: string): void => {
-                if (property === 'parentNode') {
-                    return;
-                }
+        for (const property in node) {
+            if (!node.hasOwnProperty(property) || property === 'parentNode') {
+                continue;
+            }
 
-                const value: any = (<TObject>node)[property];
+            const value: any = node[property];
 
-                let clonedValue: any | null;
+            let clonedValue: any | null;
 
-                if (value === null || value instanceof RegExp) {
-                    clonedValue = value;
-                } else if (Array.isArray(value)) {
-                    clonedValue = value.map(NodeUtils.cloneRecursive);
-                } else if (typeof value === 'object') {
-                    clonedValue = NodeUtils.cloneRecursive(value);
-                } else {
-                    clonedValue = value;
-                }
+            if (value === null || value instanceof RegExp) {
+                clonedValue = value;
+            } else if (Array.isArray(value)) {
+                clonedValue = value.map(NodeUtils.cloneRecursive);
+            } else if (typeof value === 'object') {
+                clonedValue = NodeUtils.cloneRecursive(value);
+            } else {
+                clonedValue = value;
+            }
 
-                copy[property] = clonedValue;
-            });
+            copy[property] = clonedValue;
+        }
 
         return <T>copy;
     }

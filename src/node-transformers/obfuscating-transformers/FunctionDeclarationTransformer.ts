@@ -166,7 +166,7 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
         const storedReplaceableIdentifiersNamesMap: TReplaceableIdentifiersNames = new Map();
 
         estraverse.replace(blockScopeNode, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): any => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
                 if (parentNode && NodeGuards.isReplaceableIdentifierNode(node, parentNode)) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
                         .replace(node.name, nodeIdentifier);

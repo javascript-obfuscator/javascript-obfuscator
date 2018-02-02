@@ -126,7 +126,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
             const blockScopeBodyNode: ESTree.Node = blockScopeBody[index];
 
             estraverse.traverse(blockScopeBodyNode, {
-                enter: (node: ESTree.Node): any => {
+                enter: (node: ESTree.Node): estraverse.VisitorOption | void => {
                     if (!NodeGuards.isCallExpressionNode(node)) {
                         return;
                     }

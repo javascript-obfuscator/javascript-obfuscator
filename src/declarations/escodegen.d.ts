@@ -4,6 +4,11 @@ import * as ESTree from 'estree';
 import { IGeneratorOutput } from '../interfaces/IGeneratorOutput';
 
 declare module 'escodegen' {
+    export type XVerbatimProperty = {
+        content?: string;
+        precedence: escodegen.Precedence;
+    };
+
     /**
      * @param ast
      * @param options

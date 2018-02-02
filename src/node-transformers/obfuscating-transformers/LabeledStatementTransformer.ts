@@ -106,7 +106,7 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
      */
     private replaceLabeledStatementName (labeledStatementNode: ESTree.LabeledStatement, nodeIdentifier: number): void {
         estraverse.replace(labeledStatementNode, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): any => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
                 if (parentNode && NodeGuards.isLabelIdentifierNode(node, parentNode)) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
                         .replace(node.name, nodeIdentifier);

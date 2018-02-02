@@ -434,10 +434,10 @@ export class Nodes {
 
     /**
      * @param {Identifier} id
-     * @param {any} init
+     * @param {Expression | null} init
      * @returns {VariableDeclarator}
      */
-    public static getVariableDeclaratorNode (id: ESTree.Identifier, init: any): ESTree.VariableDeclarator {
+    public static getVariableDeclaratorNode (id: ESTree.Identifier, init: ESTree.Expression | null): ESTree.VariableDeclarator {
         return {
             type: NodeType.VariableDeclarator,
             id,

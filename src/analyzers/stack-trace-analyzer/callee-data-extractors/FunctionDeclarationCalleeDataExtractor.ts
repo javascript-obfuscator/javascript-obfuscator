@@ -45,7 +45,7 @@ export class FunctionDeclarationCalleeDataExtractor extends AbstractCalleeDataEx
         let calleeBlockStatement: ESTree.BlockStatement | null = null;
 
         estraverse.traverse(targetNode, {
-            enter: (node: ESTree.Node): any => {
+            enter: (node: ESTree.Node): estraverse.VisitorOption | void => {
                 if (NodeGuards.isFunctionDeclarationNode(node) && node.id.name === name) {
                     calleeBlockStatement = node.body;
 

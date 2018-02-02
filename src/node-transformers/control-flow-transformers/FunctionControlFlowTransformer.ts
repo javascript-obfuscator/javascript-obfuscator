@@ -222,7 +222,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      */
     private transformFunctionBody (functionNodeBody: ESTree.BlockStatement, controlFlowStorage: IStorage<ICustomNode>): void {
         estraverse.replace(functionNodeBody, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): any => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): estraverse.VisitorOption | ESTree.Node => {
                 if (node.ignoredNode) {
                     return estraverse.VisitorOption.Skip;
                 }

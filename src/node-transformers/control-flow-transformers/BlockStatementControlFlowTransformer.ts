@@ -78,7 +78,7 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
         let canTransform: boolean = true;
 
         estraverse.traverse(blockStatementNode, {
-            enter: (node: ESTree.Node): any => {
+            enter: (node: ESTree.Node): estraverse.VisitorOption | void => {
                 if (NodeGuards.isWhileStatementNode(node)) {
                     return estraverse.VisitorOption.Skip;
                 }

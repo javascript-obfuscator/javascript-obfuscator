@@ -4,7 +4,6 @@ import * as path from 'path';
 
 import { TInputCLIOptions } from '../types/options/TInputCLIOptions';
 import { TInputOptions } from '../types/options/TInputOptions';
-import { TObject } from '../types/TObject';
 import { TSourceCodeData } from '../types/cli/TSourceCodeData';
 
 import { IFileData } from '../interfaces/cli/IFileData';
@@ -89,7 +88,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
      * @param {TObject} options
      * @returns {TInputOptions}
      */
-    private static filterOptions (options: TObject): TInputOptions {
+    private static filterOptions (options: TInputCLIOptions): TInputOptions {
         const filteredOptions: TInputOptions = {};
 
         for (const option in options) {

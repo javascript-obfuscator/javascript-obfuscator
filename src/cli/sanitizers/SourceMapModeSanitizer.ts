@@ -6,7 +6,7 @@ import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
  * @param {string} value
  * @returns {string}
  */
-export const SourceMapModeSanitizer: TCLISanitizer = (value: string): string => {
+export const SourceMapModeSanitizer: TCLISanitizer <string> = (value: string): string => {
     const isCorrectSourceMapMode: boolean = Object
         .keys(SourceMapMode)
         .some((key: any): boolean => {

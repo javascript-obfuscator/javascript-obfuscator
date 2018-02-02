@@ -1,14 +1,18 @@
 import { assert } from 'chai';
 
+import { TStringArrayEncoding } from '../../../../src/types/options/TStringArrayEncoding';
+
+import { StringArrayEncoding } from '../../../../src/enums/StringArrayEncoding';
+
 import { StringArrayEncodingSanitizer } from '../../../../src/cli/sanitizers/StringArrayEncodingSanitizer';
 
 describe('StringArrayEncodingSanitizer', () => {
     describe('StringArrayEncodingSanitizer: TCLISanitizer = (value: string): TStringArrayEncoding', () => {
         describe('variant #1: string array encoding `base64`', () => {
             const inputValue: string = 'base64';
-            const expectedValue: boolean = true;
+            const expectedValue: TStringArrayEncoding = true;
 
-            let value: boolean;
+            let value: TStringArrayEncoding;
 
             before(() => {
                 value = StringArrayEncodingSanitizer(inputValue);
@@ -21,9 +25,9 @@ describe('StringArrayEncodingSanitizer', () => {
 
         describe('variant #2: string array encoding `true`', () => {
             const inputValue: string = 'true';
-            const expectedValue: boolean = true;
+            const expectedValue: TStringArrayEncoding = true;
 
-            let value: boolean;
+            let value: TStringArrayEncoding;
 
             before(() => {
                 value = StringArrayEncodingSanitizer(inputValue);
@@ -36,9 +40,9 @@ describe('StringArrayEncodingSanitizer', () => {
 
         describe('variant #3: string array encoding `1`', () => {
             const inputValue: string = '1';
-            const expectedValue: boolean = true;
+            const expectedValue: TStringArrayEncoding = true;
 
-            let value: boolean;
+            let value: TStringArrayEncoding;
 
             before(() => {
                 value = StringArrayEncodingSanitizer(inputValue);
@@ -51,9 +55,9 @@ describe('StringArrayEncodingSanitizer', () => {
 
         describe('variant #4: string array encoding `rc4`', () => {
             const inputValue: string = 'rc4';
-            const expectedValue: string = 'rc4';
+            const expectedValue: TStringArrayEncoding = StringArrayEncoding.Rc4;
 
-            let value: string;
+            let value: TStringArrayEncoding;
 
             before(() => {
                 value = StringArrayEncodingSanitizer(inputValue);
@@ -66,9 +70,9 @@ describe('StringArrayEncodingSanitizer', () => {
 
         describe('variant #5: string array encoding `foo`', () => {
             const inputValue: string = 'foo';
-            const expectedValue: boolean = false;
+            const expectedValue: TStringArrayEncoding = false;
 
-            let value: boolean;
+            let value: TStringArrayEncoding;
 
             before(() => {
                 value = StringArrayEncodingSanitizer(inputValue);

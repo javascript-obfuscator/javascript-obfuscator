@@ -102,7 +102,7 @@ export class FunctionTransformer extends AbstractNodeTransformer {
                 }
 
                 estraverse.traverse(paramsNode, {
-                    enter: (node: ESTree.Node): any => {
+                    enter: (node: ESTree.Node): estraverse.VisitorOption | void => {
                         if (NodeGuards.isAssignmentPatternNode(node) && NodeGuards.isIdentifierNode(node.left)) {
                             this.identifierObfuscatingReplacer.storeLocalName(node.left.name, nodeIdentifier);
 
@@ -142,7 +142,7 @@ export class FunctionTransformer extends AbstractNodeTransformer {
         const ignoredIdentifierNamesSet: Set<string> = new Set();
 
         const replaceVisitor: estraverse.Visitor = {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): any => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
                 if (NodeGuards.isObjectPatternNode(node)) {
                     this.addIdentifiersToIgnoredIdentifierNamesSet(node.properties, ignoredIdentifierNamesSet);
                 }

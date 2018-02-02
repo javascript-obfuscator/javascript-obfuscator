@@ -185,7 +185,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
         const storedReplaceableIdentifiersNamesMap: TReplaceableIdentifiersNames = new Map();
 
         estraverse.replace(blockScopeNode, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): any => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
                 if (parentNode && !node.obfuscatedNode && NodeGuards.isReplaceableIdentifierNode(node, parentNode)) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer.replace(node.name, nodeIdentifier);
                     const newIdentifierName: string = newIdentifier.name;

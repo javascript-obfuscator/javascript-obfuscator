@@ -111,7 +111,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
             isValidBlockStatementNode: boolean = true;
 
         estraverse.traverse(blockStatementNode, {
-            enter: (node: ESTree.Node): any => {
+            enter: (node: ESTree.Node): estraverse.VisitorOption | void => {
                 if (NodeGuards.isBlockStatementNode(node)) {
                     nestedBlockStatementsCount++;
                 }
@@ -176,7 +176,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      */
     public analyzeNode (programNode: ESTree.Node, parentNode: ESTree.Node): void {
         estraverse.traverse(programNode, {
-            enter: (node: ESTree.Node): any => {
+            enter: (node: ESTree.Node): void => {
                 if (!NodeGuards.isBlockStatementNode(node)) {
                     return;
                 }

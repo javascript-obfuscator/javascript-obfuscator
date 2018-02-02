@@ -1,5 +1,6 @@
 /* tslint:disable:interface-name */
 
+import * as escodegen from 'escodegen-wallaby';
 import * as ESTree from 'estree';
 
 declare module 'estree' {
@@ -14,10 +15,10 @@ declare module 'estree' {
     }
 
     interface SimpleLiteral extends ESTree.BaseNode, ESTree.BaseExpression {
-        'x-verbatim-property'?: any;
+        'x-verbatim-property'?: escodegen.XVerbatimProperty;
     }
 
     interface RegExpLiteral extends ESTree.BaseNode, ESTree.BaseExpression {
-        'x-verbatim-property'?: any;
+        'x-verbatim-property'?: escodegen.XVerbatimProperty;
     }
 }

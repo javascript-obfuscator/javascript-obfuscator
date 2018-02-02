@@ -83,21 +83,24 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
 
     /**
      * @param {interfaces.ServiceIdentifier<interfaces.Newable<U>>} serviceIdentifier
-     * @param {any[]} dependencies
+     * @param {interfaces.ServiceIdentifier<interfaces.Newable<Object>>[]} dependencies
      * @returns {U}
      */
     public static getConstructorFactory <T extends string, U> (
         serviceIdentifier: interfaces.ServiceIdentifier<interfaces.Newable<U>>,
-        ...dependencies: any[]
+        ...dependencies: interfaces.ServiceIdentifier<interfaces.Newable<Object>>[]
     ): (context: interfaces.Context) => (bindingName: T) => U {
         return (context: interfaces.Context): (bindingName: T) => U => {
             const cache: Map<T, interfaces.Newable<U>> = new Map();
-            const cachedDependencies: any[] = [];
+            const cachedDependencies: Object[] = [];
 
             return (bindingName: T) => {
-                dependencies.forEach((dependency: any, index: number) => {
+                dependencies.forEach((
+                    dependency: interfaces.ServiceIdentifier<interfaces.Newable<Object>>,
+                    index: number
+                ) => {
                     if (!cachedDependencies[index]) {
-                        cachedDependencies[index] = context.container.get<any>(dependency);
+                        cachedDependencies[index] = context.container.get(dependency);
                     }
                 });
 

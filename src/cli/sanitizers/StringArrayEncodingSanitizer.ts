@@ -7,7 +7,7 @@ import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
  * @param {string} value
  * @returns {TStringArrayEncoding}
  */
-export const StringArrayEncodingSanitizer: TCLISanitizer = (value: string): TStringArrayEncoding => {
+export const StringArrayEncodingSanitizer: TCLISanitizer <TStringArrayEncoding> = (value: string): TStringArrayEncoding => {
     switch (value) {
         case 'true':
         case '1':

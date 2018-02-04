@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { assert } from 'chai';
 
 import { initializable } from '../../../../src/decorators/Initializable';
@@ -28,29 +30,76 @@ describe('@initializable', () => {
             });
         });
 
-        describe('variant #2: custom initialization method name is passed', () => {
-            const testFunc: () => void = () => {
-                class Foo implements IInitializable {
-                    @initializable()
-                    public property!: string;
+        describe('variant #2: `initialize` method should be called first', () => {
+            describe('variant #1: `initialize` method was called first', () => {
+                const testFunc: () => void = () => {
+                    class Foo {
+                        @initializable()
+                        public property!: string;
 
-                    public initialize (): void {
+                        public initialize (property: string): void {
+                            this.property = property;
+                        }
+
+                        public bar (): void {}
                     }
 
-                    public bar (property: string): void {
-                        this.property = property;
+                    const foo: Foo = new Foo();
+
+                    foo.initialize('baz');
+                    foo.bar();
+                };
+
+                it('should throws an error if `initialize` method wasn\'t called first', () => {
+                    assert.doesNotThrow(testFunc, /Class should be initialized/);
+                });
+            });
+
+            describe('variant #2: `initialize` method wasn\'t called first', () => {
+                const testFunc: () => void = () => {
+                    class Foo {
+                        @initializable()
+                        public property!: string;
+
+                        public initialize (property: string): void {
+                            this.property = property;
+                        }
+
+                        public bar (): void {}
                     }
-                }
 
-                const foo: Foo = new Foo();
+                    const foo: Foo = new Foo();
 
-                foo.bar('baz');
+                    foo.bar();
+                    foo.initialize('baz');
+                };
 
-                foo.property;
-            };
+                it('should throws an error if `initialize` method wasn\'t called first', () => {
+                    assert.throws(testFunc, /Class should be initialized/);
+                });
+            });
 
-            it('shouldn\'t throws an errors if custom initialization method name is passed', () => {
-                assert.doesNotThrow(testFunc, Error);
+            describe('variant #3: `initialize` method wasn\'t called', () => {
+                const testFunc: () => void = () => {
+                    class Foo {
+                        @initializable()
+                        public property!: string;
+
+                        public initialize (property: string): void {
+                            this.property = property;
+                        }
+
+                        public bar (): void {}
+                    }
+
+                    const foo: Foo = new Foo();
+
+                    foo.bar();
+                };
+
+                it('should throws an error if `initialize` method wasn\'t called first', () => {
+                    assert.throws(testFunc, /Class should be initialized/);
+                });
             });
         });
 

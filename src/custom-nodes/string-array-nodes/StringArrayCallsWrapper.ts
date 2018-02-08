@@ -114,8 +114,8 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
             : GlobalVariableNoEvalTemplate();
         const atobPolyfill: string = format(AtobTemplate(), { globalVariableTemplate });
 
-        let decodeStringArrayTemplate: string = '',
-            selfDefendingCode: string = '';
+        let decodeStringArrayTemplate: string = '';
+        let selfDefendingCode: string = '';
 
         if (this.options.selfDefending) {
             selfDefendingCode = format(

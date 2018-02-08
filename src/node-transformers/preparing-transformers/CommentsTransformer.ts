@@ -17,7 +17,7 @@ export class CommentsTransformer extends AbstractNodeTransformer {
     /**
      * @type {string[]}
      */
-    private static preservedWords: string[] = ['@license', '@preserve'];
+    private static readonly preservedWords: string[] = ['@license', '@preserve'];
 
     /**
      * @param {IRandomGenerator} randomGenerator

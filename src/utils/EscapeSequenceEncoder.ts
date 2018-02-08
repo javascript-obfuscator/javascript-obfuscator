@@ -26,8 +26,8 @@ export class EscapeSequenceEncoder implements IEscapeSequenceEncoder {
         const escapeSequenceRegExp: RegExp = new RegExp('[\'\"\\\\\\s]');
         const regExp: RegExp = new RegExp('[\\x00-\\x7F]');
 
-        let prefix: string,
-            template: string;
+        let prefix: string;
+        let template: string;
 
         const result: string = string.replace(replaceRegExp, (character: string): string => {
             if (!encodeAllSymbols && !escapeSequenceRegExp.exec(character)) {

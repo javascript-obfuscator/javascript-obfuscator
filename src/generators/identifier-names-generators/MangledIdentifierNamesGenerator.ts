@@ -11,19 +11,19 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     /**
      * @type {string}
      */
-    private static initMangledNameCharacter: string = '9';
+    private static readonly initMangledNameCharacter: string = '9';
 
     /**
      * @type {string[]}
      */
-    private static nameSequence: string[] = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    private static readonly nameSequence: string[] = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
     /**
      * Reserved JS words with length of 2-4 symbols that can be possible generated with this replacer
      *
      * @type {string[]}
      */
-    private static reservedNames: string[] = [
+    private static readonly reservedNames: string[] = [
         'byte', 'case', 'char', 'do', 'else', 'enum', 'eval', 'for', 'goto',
         'if', 'in', 'int', 'let', 'long', 'new', 'null', 'this', 'true', 'try',
         'var', 'void', 'with'

@@ -40,7 +40,7 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
     /**
      * @type {IStorage <string>}
      */
-    private stringArrayStorage: IStorage <string>;
+    private readonly stringArrayStorage: IStorage <string>;
 
     /**
      * @param {TCustomNodeFactory} customNodeFactory

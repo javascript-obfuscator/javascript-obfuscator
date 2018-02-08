@@ -22,7 +22,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
     /**
      * @type {Map<VariableDeclarator, TNodeWithScope>}
      */
-    private cachedScopeNodesMap: Map <ESTree.VariableDeclarator, TNodeWithScope> = new Map();
+    private readonly cachedScopeNodesMap: Map <ESTree.VariableDeclarator, TNodeWithScope> = new Map();
 
     /**
      * @param {IRandomGenerator} randomGenerator
@@ -61,6 +61,33 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
      */
     private static filterObjectExpressionProperties (properties: ESTree.Property[], removablePropertyIds: number[]): ESTree.Property[] {
         return properties.filter((property: ESTree.Property, index: number) => !removablePropertyIds.includes(index));
+    }
+
+    /**
+     * @param {Property} propertyNode
+     * @returns {string | null}
+     */
+    private static getPropertyNodeKeyName (propertyNode: ESTree.Property): string | null {
+        const propertyKeyNode: ESTree.Expression = propertyNode.key;
+
+        if (NodeGuards.isLiteralNode(propertyKeyNode) && typeof propertyKeyNode.value === 'string') {
+            return propertyKeyNode.value;
+        } else if (NodeGuards.isIdentifierNode(propertyKeyNode)) {
+            return propertyKeyNode.name;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param {Expression | Pattern} propertyValueNode
+     * @returns {boolean}
+     */
+    private static isValidPropertyValueNode (propertyValueNode: ESTree.Expression | ESTree.Pattern): propertyValueNode is ESTree.Expression {
+        return !NodeGuards.isObjectPatternNode(propertyValueNode)
+        && !NodeGuards.isArrayPatternNode(propertyValueNode)
+        && !NodeGuards.isAssignmentPatternNode(propertyValueNode)
+        && !NodeGuards.isRestElementNode(propertyValueNode);
     }
 
     /**
@@ -142,28 +169,19 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
 
         for (let i: number = 0; i < propertiesLength; i++) {
             const property: ESTree.Property = properties[i];
-            const propertyKey: ESTree.Expression = property.key;
+            const propertyValue: ESTree.Expression | ESTree.Pattern = property.value;
 
             // invalid property nodes
-            if (
-                NodeGuards.isObjectPatternNode(property.value)
-                || NodeGuards.isArrayPatternNode(property.value)
-                || NodeGuards.isAssignmentPatternNode(property.value)
-                || NodeGuards.isRestElementNode(property.value)
-            ) {
+            if (!ObjectExpressionKeysTransformer.isValidPropertyValueNode(propertyValue)) {
                 continue;
             }
 
             /**
-             * Stage 1: collecting property node key names
+             * Stage 1: extract property node key names
              */
-            let propertyKeyName: string;
+            const propertyKeyName: string | null = ObjectExpressionKeysTransformer.getPropertyNodeKeyName(property);
 
-            if (NodeGuards.isLiteralNode(propertyKey) && typeof propertyKey.value === 'string') {
-                propertyKeyName = propertyKey.value;
-            } else if (NodeGuards.isIdentifierNode(propertyKey)) {
-                propertyKeyName = propertyKey.name;
-            } else {
+            if (!propertyKeyName) {
                 continue;
             }
 
@@ -177,20 +195,15 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
                 : Nodes.getIdentifierNode(propertyKeyName);
             const memberExpressionNode: ESTree.MemberExpression = Nodes
                 .getMemberExpressionNode(memberExpressionObject, memberExpressionProperty, true);
-            const rightExpression: ESTree.Expression = property.value;
             const expressionStatementNode: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(
-                Nodes.getAssignmentExpressionNode('=', memberExpressionNode, rightExpression)
+                Nodes.getAssignmentExpressionNode('=', memberExpressionNode, propertyValue)
             );
 
             /**
              * Stage 3: recursively processing nested object expressions
              */
             if (NodeGuards.isObjectExpressionNode(property.value)) {
-                this.transformObjectExpressionNode(
-                    property.value,
-                    memberExpressionNode,
-                    variableDeclarator
-                );
+                this.transformObjectExpressionNode(property.value, memberExpressionNode, variableDeclarator);
             }
 
             /**

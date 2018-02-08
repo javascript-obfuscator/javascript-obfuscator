@@ -12,7 +12,7 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
     /**
      * @type {number}
      */
-    private static baseIdentifierNameLength: number = 6;
+    private static readonly baseIdentifierNameLength: number = 6;
 
     /**
      * @type {Set<string>}

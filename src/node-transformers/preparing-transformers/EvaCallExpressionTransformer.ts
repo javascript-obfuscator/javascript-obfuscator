@@ -2,7 +2,7 @@ import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
-import jsStringEscape = require('js-string-escape');
+import jsStringEscape from 'js-string-escape';
 
 import { TStatement } from '../../types/node/TStatement';
 

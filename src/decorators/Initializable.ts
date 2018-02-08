@@ -53,7 +53,7 @@ export function initializable (
  * @param metadataValue
  * @param {IInitializable} target
  */
-function initializeTargetMetadata (metadataKey: string, metadataValue: any, target: IInitializable, ): void {
+function initializeTargetMetadata (metadataKey: string, metadataValue: any, target: IInitializable): void {
     const hasInitializedMetadata: boolean = Reflect.hasMetadata(metadataKey, target);
 
     if (!hasInitializedMetadata) {
@@ -129,9 +129,13 @@ function wrapInitializeMethodInInitializeCheck (
     Object.defineProperty(target, initializeMethodName, {
         ...methodDescriptor,
         value: function (): void {
-            const result: any = originalMethod.apply(this, arguments);
-
+            /**
+             * should define metadata before `initialize` method call,
+             * because of cases when other methods will called inside `initialize` method
+             */
             Reflect.defineMetadata(initializedTargetMetadataKey, true, this);
+
+            const result: any = originalMethod.apply(this, arguments);
 
             if (this[propertyKey]) {}
 

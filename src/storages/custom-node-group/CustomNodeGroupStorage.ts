@@ -46,8 +46,7 @@ export class CustomNodeGroupStorage extends MapStorage <ICustomNodeGroup> {
 
     @postConstruct()
     public initialize (): void {
-        this.storage = new Map <string, ICustomNodeGroup>();
-        this.storageId = this.randomGenerator.getRandomString(6);
+        super.initialize();
 
         CustomNodeGroupStorage.customNodeGroupsList.forEach((customNodeGroupName: CustomNodeGroup) => {
             const customNodeGroup: ICustomNodeGroup = this.customNodeGroupFactory(
@@ -60,7 +59,5 @@ export class CustomNodeGroupStorage extends MapStorage <ICustomNodeGroup> {
 
             this.storage.set(customNodeGroupName, customNodeGroup);
         });
-
-        console.log(123, this.constructor.name);
     }
 }

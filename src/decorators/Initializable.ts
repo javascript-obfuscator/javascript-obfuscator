@@ -8,6 +8,7 @@ const defaultDescriptor: PropertyDescriptor = {
 };
 const initializedTargetMetadataKey: string = '_initialized';
 const initializablePropertiesSetMetadataKey: string = '_initializablePropertiesSet';
+const wrappedMethodsSetMetadataKey: string = '_wrappedMethodsSet';
 const constructorMethodName: string = 'constructor';
 
 /**
@@ -27,15 +28,37 @@ export function initializable (
                 `found. \`@${decoratorName}\` decorator requires \`${initializeMethodName}\` method`);
         }
 
-        if (!target[initializablePropertiesSetMetadataKey]) {
-            target[initializablePropertiesSetMetadataKey] = new Set();
-        }
+        /**
+         * Stage #1: initialize target metadata
+         */
+        initializeTargetMetadata(initializedTargetMetadataKey, false, target);
+        initializeTargetMetadata(initializablePropertiesSetMetadataKey, new Set(), target);
+        initializeTargetMetadata(wrappedMethodsSetMetadataKey, new Set(), target);
 
+        /**
+         * Stage #2: wrap target methods
+         */
         wrapTargetMethodsInInitializedCheck(target, initializeMethodName);
         wrapInitializeMethodInInitializeCheck(target, initializeMethodName, propertyKey);
 
+        /**
+         * Stage #3: wrap target properties
+         */
         return wrapInitializableProperty(target, propertyKey);
     };
+}
+
+/**
+ * @param {string} metadataKey
+ * @param metadataValue
+ * @param {IInitializable} target
+ */
+function initializeTargetMetadata (metadataKey: string, metadataValue: any, target: IInitializable, ): void {
+    const hasInitializedMetadata: boolean = Reflect.hasMetadata(metadataKey, target);
+
+    if (!hasInitializedMetadata) {
+        Reflect.defineMetadata(metadataKey, metadataValue, target);
+    }
 }
 
 /**
@@ -48,11 +71,15 @@ function wrapTargetMethodsInInitializedCheck (target: IInitializable, initialize
     const ownPropertyNames: string[] = Object.getOwnPropertyNames(target);
     const prohibitedPropertyNames: string[] = [initializeMethodName, constructorMethodName];
 
-    target[initializedTargetMetadataKey] = false;
-
     ownPropertyNames.forEach((propertyName: string) => {
+        const initializablePropertiesSet: Set <string | symbol> = Reflect
+            .getMetadata(initializablePropertiesSetMetadataKey, target);
+        const wrappedMethodsSet: Set <string | symbol> = Reflect
+            .getMetadata(wrappedMethodsSetMetadataKey, target);
+
         const isProhibitedPropertyName: boolean = prohibitedPropertyNames.includes(propertyName)
-            || target[initializablePropertiesSetMetadataKey].has(propertyName);
+            || initializablePropertiesSet.has(propertyName)
+            || wrappedMethodsSet.has(propertyName);
 
         if (isProhibitedPropertyName) {
             return;
@@ -71,13 +98,15 @@ function wrapTargetMethodsInInitializedCheck (target: IInitializable, initialize
         Object.defineProperty(target, propertyName, {
             ...methodDescriptor,
             value: function (): void {
-                if (!this[initializedTargetMetadataKey]) {
+                if (!Reflect.getMetadata(initializedTargetMetadataKey, this)) {
                     throw new Error(`Class should be initialized with \`${initializeMethodName}()\` method`);
                 }
 
-                originalMethod.apply(this, arguments);
+                return originalMethod.apply(this, arguments);
             }
         });
+
+        wrappedMethodsSet.add(propertyName);
     });
 }
 
@@ -100,11 +129,13 @@ function wrapInitializeMethodInInitializeCheck (
     Object.defineProperty(target, initializeMethodName, {
         ...methodDescriptor,
         value: function (): void {
-            originalMethod.apply(this, arguments);
+            const result: any = originalMethod.apply(this, arguments);
 
-            this[initializedTargetMetadataKey] = true;
+            Reflect.defineMetadata(initializedTargetMetadataKey, true, this);
 
             if (this[propertyKey]) {}
+
+            return result;
         }
     });
 }
@@ -117,7 +148,10 @@ function wrapInitializeMethodInInitializeCheck (
  * @returns {PropertyDescriptor}
  */
 function wrapInitializableProperty (target: IInitializable, propertyKey: string | symbol): PropertyDescriptor {
-    target[initializablePropertiesSetMetadataKey].add(propertyKey);
+    const initializablePropertiesSet: Set <string | symbol> = Reflect
+        .getMetadata(initializablePropertiesSetMetadataKey, target);
+
+    initializablePropertiesSet.add(propertyKey);
 
     const initializablePropertyMetadataKey: string = `_${propertyKey}`;
     const propertyDescriptor: PropertyDescriptor = Object

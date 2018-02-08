@@ -60,5 +60,7 @@ export class CustomNodeGroupStorage extends MapStorage <ICustomNodeGroup> {
 
             this.storage.set(customNodeGroupName, customNodeGroup);
         });
+
+        console.log(123, this.constructor.name);
     }
 }

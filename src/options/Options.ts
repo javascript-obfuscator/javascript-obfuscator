@@ -37,7 +37,7 @@ export class Options implements IOptions {
     /**
      * @type {ValidatorOptions}
      */
-    private static validatorOptions: ValidatorOptions = {
+    private static readonly validatorOptions: ValidatorOptions = {
         validationError: {
             target: false
         }

@@ -70,7 +70,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
     /**
      * @type {TCalleeDataExtractorFactory}
      */
-    private calleeDataExtractorFactory: TCalleeDataExtractorFactory;
+    private readonly calleeDataExtractorFactory: TCalleeDataExtractorFactory;
 
     constructor (
         @inject(ServiceIdentifiers.Factory__ICalleeDataExtractor) calleeDataExtractorFactory: TCalleeDataExtractorFactory

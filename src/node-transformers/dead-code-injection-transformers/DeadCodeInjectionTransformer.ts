@@ -28,7 +28,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     /**
      * @type {string}
      */
-    private static deadCodeInjectionRootAstHostNodeName: string = 'deadCodeInjectionRootAstHostNode';
+    private static readonly deadCodeInjectionRootAstHostNodeName: string = 'deadCodeInjectionRootAstHostNode';
 
     /**
      * @type {number}
@@ -107,8 +107,8 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                 NodeGuards.isAwaitExpressionNode(node) ||
                 NodeGuards.isSuperNode(node);
 
-        let nestedBlockStatementsCount: number = 0,
-            isValidBlockStatementNode: boolean = true;
+        let nestedBlockStatementsCount: number = 0;
+        let isValidBlockStatementNode: boolean = true;
 
         estraverse.traverse(blockStatementNode, {
             enter: (node: ESTree.Node): estraverse.VisitorOption | void => {

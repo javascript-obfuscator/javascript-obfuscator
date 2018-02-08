@@ -17,7 +17,7 @@ export abstract class AbstractCustomNode implements ICustomNode {
     /**
      * @type {string[]}
      */
-    private static globalVariableTemplateFunctions: string[] = [
+    private static readonly globalVariableTemplateFunctions: string[] = [
         GlobalVariableTemplate1(),
         GlobalVariableTemplate2()
     ];

@@ -3,12 +3,14 @@
     "tslint-eslint-rules"
   ],
   "rules": {
+    "adjacent-overload-signatures": true,
     "align": [
       true,
       "parameters",
       "statements"
     ],
     "array-bracket-spacing": [true, "never"],
+    "arrow-return-shorthand": true,
     "ban": [
       true,
       [ "_", "forEach" ],
@@ -17,8 +19,10 @@
       [ "angular", "forEach" ]
     ],
     "ban-comma-operator": true,
+    "binary-expression-operand-order": true,
     "block-spacing": [true, "always"],
     "brace-style": [true, "1tbs"],
+    "callable-types": true,
     "class-name": true,
     "comment-format": [
       true,
@@ -26,6 +30,7 @@
       "check-lowercase"
     ],
     "curly": true,
+    "cyclomatic-complexity": [true, 10],
     "eofline": true,
     "forin": true,
     "indent": [
@@ -36,6 +41,7 @@
       true,
       "always-prefix"
     ],
+    "interface-over-type-literal": true,
     "import-spacing": true,
     "jsdoc-format": true,
     "label-position": true,
@@ -45,7 +51,8 @@
       true,
       { "order": "fields-first" }
     ],
-    "new-parens": false,
+    "new-parens": true,
+    "newline-per-chained-call": false,
     "no-angle-bracket-type-assertion": false,
     "no-any": false,
     "no-arg": true,
@@ -66,8 +73,10 @@
     "no-debugger": true,
     "no-default-export": true,
     "no-duplicate-case": true,
+    "no-duplicate-super": true,
     "no-duplicate-switch-case": true,
     "no-duplicate-variable": true,
+    "no-dynamic-delete": true,
     "no-empty": false,
     "no-empty-character-class": true,
     "no-empty-interface": true,
@@ -77,18 +86,21 @@
     "no-extra-semi": true,
     "no-inferrable-types": false,
     "no-inner-declarations": [true, "both"],
+    "no-implicit-dependencies": false,
     "no-internal-module": true,
     "no-invalid-regexp": true,
     "no-invalid-this": true,
     "no-misused-new": true,
     "no-multi-spaces": [true],
+    "no-namespace": true,
     "no-null-keyword": false,
     "no-parameter-properties": true,
     "no-parameter-reassignment": false,
+    "no-redundant-jsdoc": false,
     "no-reference": true,
     "no-reference-import": true,
     "no-regex-spaces": true,
-    "no-require-imports": false,
+    "no-require-imports": true,
     "no-shadowed-variable": true,
     "no-string-literal": true,
     "no-string-throw": true,
@@ -97,11 +109,14 @@
     "no-trailing-whitespace": [true, "ignore-blank-lines"],
     "no-unnecessary-callback-wrapper": true,
     "no-unnecessary-class": [true, "allow-static-only"],
+    "no-unnecessary-initializer": true,
     "no-unexpected-multiline": true,
+    "no-unsafe-finally": true,
     "no-unused-expression": true,
     "no-use-before-declare": true,
     "no-var-keyword": true,
-    "no-var-requires": false,
+    "no-var-requires": true,
+    "max-file-line-count": [true, 500],
     "object-curly-spacing": [true, "always"],
     "object-literal-sort-keys": false,
     "one-line": [
@@ -112,7 +127,7 @@
       "check-finally",
       "check-whitespace"
     ],
-    "one-variable-per-declaration": false,
+    "one-variable-per-declaration": true,
     "only-arrow-functions": [true, "allow-declarations"],
     "ordered-imports": [
       true,
@@ -123,6 +138,8 @@
       }
     ],
     "prefer-const": true,
+    "prefer-method-signature": true,
+    "prefer-readonly": true,
     "prefer-template": true,
     "quotemark": false,
     "radix": true,

@@ -65,9 +65,9 @@ export class CryptUtils implements ICryptUtils {
             s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 
         const randomMerge: (s1: string, s2: string) => string = (s1: string, s2: string): string => {
-            let i1: number = -1,
-                i2: number = -1,
-                result: string = '';
+            let i1: number = -1;
+            let i2: number = -1;
+            let result: string = '';
 
             while (i1 < s1.length || i2 < s2.length) {
                 if (this.randomGenerator.getMathRandom() < 0.5 && i2 < s2.length) {

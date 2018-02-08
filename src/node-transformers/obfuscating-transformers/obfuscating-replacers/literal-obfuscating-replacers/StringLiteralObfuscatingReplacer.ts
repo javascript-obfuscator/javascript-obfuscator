@@ -27,12 +27,12 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     /**
      * @type {number}
      */
-    private static rc4KeyLength: number = 4;
+    private static readonly rc4KeyLength: number = 4;
 
     /**
      * @type {number}
      */
-    private static rc4KeysCount: number = 50;
+    private static readonly rc4KeysCount: number = 50;
 
     /**
      * @type {ICryptUtils}
@@ -188,8 +188,8 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
      * @returns {IEncodedValue}
      */
     private getEncodedValue (value: string): IEncodedValue {
-        let encodedValue: string,
-            key: string | null = null;
+        let encodedValue: string;
+        let key: string | null = null;
 
         switch (this.options.stringArrayEncoding) {
             case StringArrayEncoding.Rc4:

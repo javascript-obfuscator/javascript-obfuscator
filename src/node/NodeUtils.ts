@@ -73,17 +73,17 @@ export class NodeUtils {
 
     /**
      * @param {Statement} node
-     * @returns {Node | null}
+     * @returns {TStatement | null}
      */
-    public static getNextSiblingStatementNode (node: ESTree.Statement): ESTree.Node | null {
+    public static getNextSiblingStatementNode (node: ESTree.Statement): TStatement | null {
         return NodeUtils.getSiblingStatementNodeByOffset(node, 1);
     }
 
     /**
      * @param {Statement} node
-     * @returns {Node | null}
+     * @returns {TStatement | null}
      */
-    public static getPreviousSiblingStatementNode (node: ESTree.Statement): ESTree.Node | null {
+    public static getPreviousSiblingStatementNode (node: ESTree.Statement): TStatement | null {
         return NodeUtils.getSiblingStatementNodeByOffset(node, -1);
     }
 
@@ -228,9 +228,9 @@ export class NodeUtils {
     /**
      * @param {Statement} node
      * @param {number} offset
-     * @returns {Node | null}
+     * @returns {TStatement | null}
      */
-    private static getSiblingStatementNodeByOffset (node: ESTree.Statement, offset: number): ESTree.Node | null {
+    private static getSiblingStatementNodeByOffset (node: ESTree.Statement, offset: number): TStatement | null {
         const scopeNode: TNodeWithScope = NodeUtils.getScopeOfNode(node);
         const scopeBody: TStatement[] = !NodeGuards.isSwitchCaseNode(scopeNode)
             ? scopeNode.body

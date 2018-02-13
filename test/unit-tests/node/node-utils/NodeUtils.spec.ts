@@ -294,7 +294,7 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('getNextSiblingStatementNode (node: ESTree.Statement): ESTree.Node | null', () => {
+    describe('getNextSiblingStatementNode (node: ESTree.Statement): TStatement | null', () => {
         describe('variant #1: block statement node as scope node', () => {
                 let statementNode1: ESTree.Statement,
                 statementNode2: ESTree.Statement,
@@ -379,7 +379,7 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('getPreviousSiblingStatementNode (node: ESTree.Statement): ESTree.Node | null', () => {
+    describe('getPreviousSiblingStatementNode (node: ESTree.Statement): TStatement | null', () => {
         describe('variant #1: block statement node as scope node', () => {
             let statementNode1: ESTree.Statement,
                 statementNode2: ESTree.Statement,

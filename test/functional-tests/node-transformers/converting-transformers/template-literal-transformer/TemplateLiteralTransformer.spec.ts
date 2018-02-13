@@ -48,7 +48,7 @@ describe('TemplateLiteralTransformer', () => {
                 }
             );
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /return *'foo\\x0abar';$/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /{ *return *'foo\\x0abar'; *}$/);
         });
 
         it('variant #3: should transform es6 multiline template literal inside return statement', () => {
@@ -61,7 +61,7 @@ describe('TemplateLiteralTransformer', () => {
                 }
             );
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /return *'foo\\x0abar';$/);
+            assert.match(obfuscationResult.getObfuscatedCode(),  /case *!!\[] *: *return *'foo\\x0abar'; *} *}$/);
         });
     });
 

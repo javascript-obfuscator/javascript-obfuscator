@@ -1,7 +1,10 @@
 import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
+
+import { TStatement } from '../../types/node/TStatement';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
@@ -12,6 +15,7 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 import { Nodes } from '../../node/Nodes';
+import { NodeUtils } from '../../node/NodeUtils';
 
 /**
  * Transform ES2015 template literals to ES5
@@ -47,6 +51,13 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
             case TransformationStage.Converting:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                        if (parentNode
+                            && NodeGuards.isExpressionStatementNode(node)
+                            && NodeGuards.isTemplateLiteralNode(node.expression)
+                        ) {
+                            return this.fixEsprimaReturnStatementTemplateLiteralNode(node, node.expression);
+                        }
+
                         if (parentNode && NodeGuards.isTemplateLiteralNode(node)) {
                             return this.transformNode(node, parentNode);
                         }
@@ -108,5 +119,36 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
         }
 
         return nodes[0];
+    }
+
+    /**
+     * @param {ExpressionStatement} expressionStatementNode
+     * @param {TemplateLiteral} templateLiteralNode
+     * @returns {Node | VisitorOption}
+     */
+    private fixEsprimaReturnStatementTemplateLiteralNode (
+        expressionStatementNode: ESTree.ExpressionStatement,
+        templateLiteralNode: ESTree.TemplateLiteral
+    ): ESTree.Node | estraverse.VisitorOption {
+        const previousSiblingStatementNode: TStatement | null = NodeUtils
+            .getPreviousSiblingStatementNode(expressionStatementNode);
+
+        if (
+            !previousSiblingStatementNode
+            || !templateLiteralNode.parentNode
+            || !NodeGuards.isReturnStatementNode(previousSiblingStatementNode)
+            || previousSiblingStatementNode.argument !== null
+        ) {
+            return expressionStatementNode;
+        }
+
+        previousSiblingStatementNode.argument = <ESTree.Expression>this.transformNode(
+            templateLiteralNode,
+            templateLiteralNode.parentNode
+        );
+
+        NodeUtils.parentizeNode(templateLiteralNode, previousSiblingStatementNode);
+
+        return estraverse.VisitorOption.Remove;
     }
 }

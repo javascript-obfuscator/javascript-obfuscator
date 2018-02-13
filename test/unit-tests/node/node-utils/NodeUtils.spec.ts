@@ -294,6 +294,176 @@ describe('NodeUtils', () => {
         });
     });
 
+    describe('getNextSiblingStatementNode (node: ESTree.Statement): TStatement | null', () => {
+        describe('variant #1: block statement node as scope node', () => {
+                let statementNode1: ESTree.Statement,
+                statementNode2: ESTree.Statement,
+                statementNode3: ESTree.Statement;
+
+            before(() => {
+                statementNode1 = Nodes.getExpressionStatementNode(
+                    Nodes.getIdentifierNode('a')
+                );
+                statementNode2 = Nodes.getExpressionStatementNode(
+                    Nodes.getIdentifierNode('b')
+                );
+                statementNode3 = Nodes.getExpressionStatementNode(
+                    Nodes.getIdentifierNode('c')
+                );
+
+                const blockStatementNode: ESTree.BlockStatement = Nodes.getBlockStatementNode([
+                    statementNode1,
+                    statementNode2,
+                    statementNode3
+                ]);
+
+                statementNode1.parentNode = blockStatementNode;
+                statementNode2.parentNode = blockStatementNode;
+                statementNode3.parentNode = blockStatementNode;
+            });
+
+            it('should return next sibling statement node', () => {
+                assert.deepEqual(NodeUtils.getNextSiblingStatementNode(statementNode1), statementNode2);
+            });
+
+            it('should return next sibling statement node', () => {
+                assert.deepEqual(NodeUtils.getNextSiblingStatementNode(statementNode2), statementNode3);
+            });
+
+            it('should return `null` if given statement node is last node in the scope', () => {
+                assert.deepEqual(NodeUtils.getNextSiblingStatementNode(statementNode3), null);
+            });
+        });
+
+        describe('variant #2: switch case node as scope node', () => {
+            let statementNode1: ESTree.Statement,
+                statementNode2: ESTree.Statement,
+                statementNode3: ESTree.Statement;
+
+            before(() => {
+                statementNode1 = Nodes.getExpressionStatementNode(
+                    Nodes.getIdentifierNode('a')
+                );
+                statementNode2 = Nodes.getExpressionStatementNode(
+                    Nodes.getIdentifierNode('b')
+                );
+                statementNode3 = Nodes.getExpressionStatementNode(
+                    Nodes.getIdentifierNode('c')
+                );
+
+                const switchCaseNode: ESTree.SwitchCase = Nodes.getSwitchCaseNode(
+                    Nodes.getLiteralNode(true),
+                    [
+                        statementNode1,
+                        statementNode2,
+                        statementNode3
+                    ]
+                );
+
+                statementNode1.parentNode = switchCaseNode;
+                statementNode2.parentNode = switchCaseNode;
+                statementNode3.parentNode = switchCaseNode;
+            });
+
+            it('should return next sibling statement node', () => {
+                assert.deepEqual(NodeUtils.getNextSiblingStatementNode(statementNode1), statementNode2);
+            });
+
+            it('should return next sibling statement node', () => {
+                assert.deepEqual(NodeUtils.getNextSiblingStatementNode(statementNode2), statementNode3);
+            });
+
+            it('should return `null` if given statement node is last node in the scope', () => {
+                assert.deepEqual(NodeUtils.getNextSiblingStatementNode(statementNode3), null);
+            });
+        });
+    });
+
+    describe('getPreviousSiblingStatementNode (node: ESTree.Statement): TStatement | null', () => {
+        describe('variant #1: block statement node as scope node', () => {
+            let statementNode1: ESTree.Statement,
+                statementNode2: ESTree.Statement,
+                statementNode3: ESTree.Statement;
+
+            before(() => {
+                statementNode1 = Nodes.getExpressionStatementNode(
+                    Nodes.getIdentifierNode('a')
+                );
+                statementNode2 = Nodes.getExpressionStatementNode(
+                    Nodes.getIdentifierNode('b')
+                );
+                statementNode3 = Nodes.getExpressionStatementNode(
+                    Nodes.getIdentifierNode('c')
+                );
+
+                const blockStatementNode: ESTree.BlockStatement = Nodes.getBlockStatementNode([
+                    statementNode1,
+                    statementNode2,
+                    statementNode3
+                ]);
+
+                statementNode1.parentNode = blockStatementNode;
+                statementNode2.parentNode = blockStatementNode;
+                statementNode3.parentNode = blockStatementNode;
+            });
+
+            it('should return next sibling statement node', () => {
+                assert.deepEqual(NodeUtils.getPreviousSiblingStatementNode(statementNode1), null);
+            });
+
+            it('should return next sibling statement node', () => {
+                assert.deepEqual(NodeUtils.getPreviousSiblingStatementNode(statementNode2), statementNode1);
+            });
+
+            it('should return `null` if given statement node is last node in the scope', () => {
+                assert.deepEqual(NodeUtils.getPreviousSiblingStatementNode(statementNode3), statementNode2);
+            });
+        });
+
+        describe('variant #2: switch case node as scope node', () => {
+            let statementNode1: ESTree.Statement,
+                statementNode2: ESTree.Statement,
+                statementNode3: ESTree.Statement;
+
+            before(() => {
+                statementNode1 = Nodes.getExpressionStatementNode(
+                    Nodes.getIdentifierNode('a')
+                );
+                statementNode2 = Nodes.getExpressionStatementNode(
+                    Nodes.getIdentifierNode('b')
+                );
+                statementNode3 = Nodes.getExpressionStatementNode(
+                    Nodes.getIdentifierNode('c')
+                );
+
+                const switchCaseNode: ESTree.SwitchCase = Nodes.getSwitchCaseNode(
+                    Nodes.getLiteralNode(true),
+                    [
+                        statementNode1,
+                        statementNode2,
+                        statementNode3
+                    ]
+                );
+
+                statementNode1.parentNode = switchCaseNode;
+                statementNode2.parentNode = switchCaseNode;
+                statementNode3.parentNode = switchCaseNode;
+            });
+
+            it('should return next sibling statement node', () => {
+                assert.deepEqual(NodeUtils.getPreviousSiblingStatementNode(statementNode1), null);
+            });
+
+            it('should return next sibling statement node', () => {
+                assert.deepEqual(NodeUtils.getPreviousSiblingStatementNode(statementNode2), statementNode1);
+            });
+
+            it('should return `null` if given statement node is last node in the scope', () => {
+                assert.deepEqual(NodeUtils.getPreviousSiblingStatementNode(statementNode3), statementNode2);
+            });
+        });
+    });
+
     describe('getScopeOfNode (node: ESTree.Node): TNodeWithScope | null', () => {
         let functionDeclarationBlockStatementNode: ESTree.BlockStatement,
             ifStatementBlockStatementNode1: ESTree.BlockStatement,

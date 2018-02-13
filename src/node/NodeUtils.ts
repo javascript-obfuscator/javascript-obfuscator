@@ -72,6 +72,22 @@ export class NodeUtils {
     }
 
     /**
+     * @param {Statement} node
+     * @returns {Node | null}
+     */
+    public static getNextSiblingStatementNode (node: ESTree.Statement): ESTree.Node | null {
+        return NodeUtils.getSiblingStatementNodeByOffset(node, 1);
+    }
+
+    /**
+     * @param {Statement} node
+     * @returns {Node | null}
+     */
+    public static getPreviousSiblingStatementNode (node: ESTree.Statement): ESTree.Node | null {
+        return NodeUtils.getSiblingStatementNodeByOffset(node, -1);
+    }
+
+    /**
      * @param {NodeGuards} node
      * @returns {TNodeWithScope}
      */
@@ -207,5 +223,20 @@ export class NodeUtils {
         }
 
         return blockScopes;
+    }
+
+    /**
+     * @param {Statement} node
+     * @param {number} offset
+     * @returns {Node | null}
+     */
+    private static getSiblingStatementNodeByOffset (node: ESTree.Statement, offset: number): ESTree.Node | null {
+        const scopeNode: TNodeWithScope = NodeUtils.getScopeOfNode(node);
+        const scopeBody: TStatement[] = !NodeGuards.isSwitchCaseNode(scopeNode)
+            ? scopeNode.body
+            : scopeNode.consequent;
+        const indexInScope: number = scopeBody.indexOf(node);
+
+        return scopeBody[indexInScope + offset] || null;
     }
 }

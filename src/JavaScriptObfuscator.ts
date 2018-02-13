@@ -1,7 +1,6 @@
 import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 
-import * as esprima from 'esprima';
 import * as escodegen from 'escodegen-wallaby';
 import * as ESTree from 'estree';
 import * as packageJson from 'pjson';
@@ -19,6 +18,7 @@ import { LoggingMessage } from './enums/logger/LoggingMessage';
 import { NodeTransformer } from './enums/node-transformers/NodeTransformer';
 import { TransformationStage } from './enums/node-transformers/TransformationStage';
 
+import { EsprimaFacade } from './EsprimaFacade';
 import { NodeGuards } from './node/NodeGuards';
 
 @injectable()
@@ -134,7 +134,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @returns {Program}
      */
     private parseCode (sourceCode: string): ESTree.Program {
-        return esprima.parseScript(sourceCode, {
+        return EsprimaFacade.parseScript(sourceCode, {
             attachComment: true,
             loc: this.options.sourceMap
         });

@@ -6,10 +6,8 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-        var bar = 1;
-        var baz = 2;
         (function(){
-            var bark = bar + baz;
+            var foo = 'foo'; var bar = 'bar'; var bark = foo + bar,; var baz = 'baz';
         })();
         `,
         {

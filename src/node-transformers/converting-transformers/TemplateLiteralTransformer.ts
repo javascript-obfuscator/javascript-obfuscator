@@ -4,6 +4,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
+import { TNodeWithScope } from '../../types/node/TNodeWithScope';
 import { TStatement } from '../../types/node/TStatement';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -51,13 +52,11 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
             case TransformationStage.Converting:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                        if (parentNode
-                            && NodeGuards.isExpressionStatementNode(node)
-                            && NodeGuards.isTemplateLiteralNode(node.expression)
-                        ) {
-                            return this.fixEsprimaReturnStatementTemplateLiteralNode(node, node.expression);
+                        if (parentNode && NodeGuards.isReturnStatementNode(node) && node.argument === null) {
+                            return this.fixEsprimaReturnStatementTemplateLiteralNode(node);
                         }
-
+                    },
+                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
                         if (parentNode && NodeGuards.isTemplateLiteralNode(node)) {
                             return this.transformNode(node, parentNode);
                         }
@@ -77,7 +76,7 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
     public transformNode (templateLiteralNode: ESTree.TemplateLiteral, parentNode: ESTree.Node): ESTree.Node {
         const templateLiteralExpressions: ESTree.Expression[] = templateLiteralNode.expressions;
 
-        let nodes: (ESTree.Literal | ESTree.Expression)[] = [];
+        let nodes: ESTree.Expression[] = [];
 
         templateLiteralNode.quasis.forEach((templateElement: ESTree.TemplateElement) => {
             nodes.push(Nodes.getLiteralNode(templateElement.value.cooked));
@@ -122,33 +121,54 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {ExpressionStatement} expressionStatementNode
-     * @param {TemplateLiteral} templateLiteralNode
+     * @param {ReturnStatement} returnStatementNode
      * @returns {Node | VisitorOption}
      */
-    private fixEsprimaReturnStatementTemplateLiteralNode (
-        expressionStatementNode: ESTree.ExpressionStatement,
-        templateLiteralNode: ESTree.TemplateLiteral
-    ): ESTree.Node | estraverse.VisitorOption {
-        const previousSiblingStatementNode: TStatement | null = NodeUtils
-            .getPreviousSiblingStatementNode(expressionStatementNode);
+    private fixEsprimaReturnStatementTemplateLiteralNode (returnStatementNode: ESTree.ReturnStatement): ESTree.Node | void {
+        const scopeNode: TNodeWithScope = NodeUtils.getScopeOfNode(returnStatementNode);
+        const scopeBody: TStatement[] = !NodeGuards.isSwitchCaseNode(scopeNode)
+            ? scopeNode.body
+            : scopeNode.consequent;
+        const indexInScope: number = scopeBody.indexOf(returnStatementNode);
 
-        if (
-            !previousSiblingStatementNode
-            || !templateLiteralNode.parentNode
-            || !NodeGuards.isReturnStatementNode(previousSiblingStatementNode)
-            || previousSiblingStatementNode.argument !== null
-        ) {
-            return expressionStatementNode;
+        // in incorrect AST-tree return statement node should be penultimate
+        if (indexInScope !== scopeBody.length - 2) {
+            return;
         }
 
-        previousSiblingStatementNode.argument = <ESTree.Expression>this.transformNode(
-            templateLiteralNode,
-            templateLiteralNode.parentNode
-        );
+        const nextSiblingStatementNode: TStatement | null = scopeBody[indexInScope + 1];
 
-        NodeUtils.parentizeNode(templateLiteralNode, previousSiblingStatementNode);
+        if (!nextSiblingStatementNode || !NodeGuards.isExpressionStatementNode(nextSiblingStatementNode)) {
+            return;
+        }
 
-        return estraverse.VisitorOption.Remove;
+        let isSiblingStatementHasTemplateLiteralNode: boolean = false;
+
+        estraverse.traverse(nextSiblingStatementNode, {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void | estraverse.VisitorOption => {
+                if (!NodeGuards.isTemplateLiteralNode(node)) {
+                    return;
+                }
+
+                isSiblingStatementHasTemplateLiteralNode = true;
+
+                return estraverse.VisitorOption.Break;
+            }
+        });
+
+        if (!isSiblingStatementHasTemplateLiteralNode) {
+            return;
+        }
+
+        returnStatementNode.argument = nextSiblingStatementNode.expression;
+        scopeBody.pop();
+
+        if (!NodeGuards.isSwitchCaseNode(scopeNode)) {
+            scopeNode.body = [...scopeBody];
+        } else {
+            scopeNode.consequent = <ESTree.Statement[]>[...scopeBody];
+        }
+
+        return returnStatementNode;
     }
 }

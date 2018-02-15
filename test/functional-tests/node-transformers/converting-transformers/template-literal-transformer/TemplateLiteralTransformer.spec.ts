@@ -63,6 +63,32 @@ describe('TemplateLiteralTransformer', () => {
 
             assert.match(obfuscationResult.getObfuscatedCode(),  /case *!!\[] *: *return *'foo\\x0abar'; *} *}$/);
         });
+
+        it('variant #4: should transform es6 multiline template literal inside binary expression inside return statement', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/multiline-template-literal-binary-expression-return-statement-1.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    unicodeEscapeSequence: false
+                }
+            );
+
+            assert.match(obfuscationResult.getObfuscatedCode(),  /{ *return *'foo\\x0abar' *\+ *0x1; *}$/);
+        });
+
+        it('variant #5: should transform es6 multiline template literal inside binary expression inside return statement', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/multiline-template-literal-binary-expression-return-statement-2.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    unicodeEscapeSequence: false
+                }
+            );
+
+            assert.match(obfuscationResult.getObfuscatedCode(),  /case *!!\[] *: *return *'foo\\x0abar' *\+ *0x1; *} *}$/);
+        });
     });
 
     describe('variant #3: simple template literal with expression only', () => {

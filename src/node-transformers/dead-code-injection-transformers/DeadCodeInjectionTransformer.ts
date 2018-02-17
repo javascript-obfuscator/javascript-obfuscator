@@ -180,6 +180,37 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @param {BlockStatement} blockStatementNode
+     * @returns {boolean}
+     */
+    private static isValidWrappedBlockStatementNode (blockStatementNode: ESTree.BlockStatement): boolean {
+        if (!blockStatementNode.body.length) {
+            return false;
+        }
+
+        let isValidBlockStatementNode: boolean = true;
+
+        estraverse.traverse(blockStatementNode, {
+            enter: (node: ESTree.Node): estraverse.VisitorOption | void => {
+                if (DeadCodeInjectionTransformer.isScopeHoistingFunctionDeclaration(node)) {
+                    isValidBlockStatementNode = false;
+
+                    return estraverse.VisitorOption.Break;
+                }
+            }
+        });
+
+        if (!isValidBlockStatementNode) {
+            return false;
+        }
+
+        const blockScopeOfBlockStatementNode: TNodeWithBlockScope = NodeUtils
+            .getBlockScopesOfNode(blockStatementNode)[0];
+
+        return blockScopeOfBlockStatementNode.type !== NodeType.Program;
+    }
+
+    /**
      * @param {TransformationStage} transformationStage
      * @returns {IVisitor | null}
      */
@@ -269,17 +300,10 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
             return estraverse.VisitorOption.Break;
         }
 
-        const isInvalidBlockStatementNode: boolean = !blockStatementNode.body.length
-            || this.randomGenerator.getMathRandom() > this.options.deadCodeInjectionThreshold;
-
-        if (isInvalidBlockStatementNode) {
-            return blockStatementNode;
-        }
-
-        const blockScopeOfBlockStatementNode: TNodeWithBlockScope = NodeUtils
-            .getBlockScopesOfNode(blockStatementNode)[0];
-
-        if (blockScopeOfBlockStatementNode.type === NodeType.Program) {
+        if (
+            this.randomGenerator.getMathRandom() > this.options.deadCodeInjectionThreshold
+            || !DeadCodeInjectionTransformer.isValidWrappedBlockStatementNode(blockStatementNode)
+        ) {
             return blockStatementNode;
         }
 

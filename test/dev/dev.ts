@@ -6,18 +6,36 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-        var bar = 1;
-        var baz = 2;
         (function(){
-            var bark = bar + baz;
+            function foo () {
+                function inner1 () {}
+                inner1();
+            }
+            function bar () {
+                function inner2 () {}
+                inner2();
+            }
+            function baz () {
+                function inner3 () {}
+                inner3();
+            }
+            function bark () {
+                function inner4 () {}
+                inner4();
+            }
+            function hawk () {
+                function inner5 () {}
+                inner5();
+            }
         })();
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
-            identifiersPrefix: 'foo',
-            identifierNamesGenerator: 'mangled',
-            renameGlobals: true
+            stringArray: true,
+            stringArrayThreshold: 1,
+            deadCodeInjection: true,
+            deadCodeInjectionThreshold: 1
         }
     ).getObfuscatedCode();
 

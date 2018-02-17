@@ -6,6 +6,7 @@ import * as ESTree from 'estree';
 
 import { TDeadNodeInjectionCustomNodeFactory } from '../../types/container/custom-nodes/TDeadNodeInjectionCustomNodeFactory';
 import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
+import { TNodeWithScope } from '../../types/node/TNodeWithScope';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -97,15 +98,62 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {Node} blockStatementNode
+     * @param {Node} targetNode
      * @returns {boolean}
      */
-    private static isValidBlockStatementNode (blockStatementNode: ESTree.Node): boolean {
-        const isProhibitedNode: (node: ESTree.Node) => boolean =
-            (node: ESTree.Node): boolean => NodeGuards.isBreakStatementNode(node) ||
-                NodeGuards.isContinueStatementNode(node) ||
-                NodeGuards.isAwaitExpressionNode(node) ||
-                NodeGuards.isSuperNode(node);
+    private static isProhibitedNodeInsideCollectedBlockStatement (targetNode: ESTree.Node): boolean {
+        return NodeGuards.isBreakStatementNode(targetNode)
+            || NodeGuards.isContinueStatementNode(targetNode)
+            || NodeGuards.isAwaitExpressionNode(targetNode)
+            || NodeGuards.isSuperNode(targetNode);
+    }
+
+    /**
+     * @param {Node} targetNode
+     * @returns {boolean}
+     */
+    private static isScopeHoistingFunctionDeclaration (targetNode: ESTree.Node): boolean {
+        if (!NodeGuards.isFunctionDeclarationNode(targetNode)) {
+            return false;
+        }
+
+        const scopeNode: TNodeWithScope = NodeUtils.getScopeOfNode(targetNode);
+        const scopeBody: ESTree.Statement[] = !NodeGuards.isSwitchCaseNode(scopeNode)
+            ? <ESTree.Statement[]>scopeNode.body
+            : scopeNode.consequent;
+        const indexInScope: number = scopeBody.indexOf(targetNode);
+
+        if (indexInScope === 0) {
+            return false;
+        }
+
+        const slicedBody: ESTree.Statement[] = scopeBody.slice(0, indexInScope);
+        const hostBlockStatementNode: ESTree.BlockStatement = Nodes.getBlockStatementNode(slicedBody);
+        const functionDeclarationName: string = targetNode.id.name;
+
+        let isScopeHoistedFunctionDeclaration: boolean = false;
+
+        estraverse.traverse(hostBlockStatementNode, {
+            enter: (node: ESTree.Node): estraverse.VisitorOption | void => {
+                if (NodeGuards.isIdentifierNode(node) && node.name === functionDeclarationName) {
+                    isScopeHoistedFunctionDeclaration = true;
+
+                    return estraverse.VisitorOption.Break;
+                }
+            }
+        });
+
+        return isScopeHoistedFunctionDeclaration;
+    }
+
+    /**
+     * @param {BlockStatement} blockStatementNode
+     * @returns {boolean}
+     */
+    private static isValidCollectedBlockStatementNode (blockStatementNode: ESTree.BlockStatement): boolean {
+        if (!blockStatementNode.body.length) {
+            return false;
+        }
 
         let nestedBlockStatementsCount: number = 0;
         let isValidBlockStatementNode: boolean = true;
@@ -117,8 +165,9 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                 }
 
                 if (
-                    nestedBlockStatementsCount > DeadCodeInjectionTransformer.maxNestedBlockStatementsCount ||
-                    isProhibitedNode(node)
+                    nestedBlockStatementsCount > DeadCodeInjectionTransformer.maxNestedBlockStatementsCount
+                    || DeadCodeInjectionTransformer.isProhibitedNodeInsideCollectedBlockStatement(node)
+                    || DeadCodeInjectionTransformer.isScopeHoistingFunctionDeclaration(node)
                 ) {
                     isValidBlockStatementNode = false;
 
@@ -183,7 +232,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
 
                 let clonedBlockStatementNode: ESTree.BlockStatement = NodeUtils.clone(node);
 
-                if (!DeadCodeInjectionTransformer.isValidBlockStatementNode(clonedBlockStatementNode)) {
+                if (!DeadCodeInjectionTransformer.isValidCollectedBlockStatementNode(clonedBlockStatementNode)) {
                     return;
                 }
 
@@ -209,16 +258,21 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards | VisitorOption}
      */
-    public transformNode (blockStatementNode: ESTree.BlockStatement, parentNode: ESTree.Node): ESTree.Node | estraverse.VisitorOption {
-        if (this.collectedBlockStatementsTotalLength < DeadCodeInjectionTransformer.minCollectedBlockStatementsCount) {
+    public transformNode (
+        blockStatementNode: ESTree.BlockStatement,
+        parentNode: ESTree.Node
+    ): ESTree.Node | estraverse.VisitorOption {
+        const canBreakTraverse: boolean = !this.collectedBlockStatements.length
+            || this.collectedBlockStatementsTotalLength < DeadCodeInjectionTransformer.minCollectedBlockStatementsCount;
+
+        if (canBreakTraverse) {
             return estraverse.VisitorOption.Break;
         }
 
-        if (!this.collectedBlockStatements.length) {
-            return estraverse.VisitorOption.Break;
-        }
+        const isInvalidBlockStatementNode: boolean = !blockStatementNode.body.length
+            || this.randomGenerator.getMathRandom() > this.options.deadCodeInjectionThreshold;
 
-        if (this.randomGenerator.getMathRandom() > this.options.deadCodeInjectionThreshold) {
+        if (isInvalidBlockStatementNode) {
             return blockStatementNode;
         }
 
@@ -233,8 +287,9 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         const maxInteger: number = this.collectedBlockStatements.length - 1;
         const randomIndex: number = this.randomGenerator.getRandomInteger(minInteger, maxInteger);
         const randomBlockStatementNode: ESTree.BlockStatement = this.collectedBlockStatements.splice(randomIndex, 1)[0];
+        const isDuplicateBlockStatementNodes: boolean = randomBlockStatementNode === blockStatementNode;
 
-        if (randomBlockStatementNode === blockStatementNode) {
+        if (isDuplicateBlockStatementNodes) {
             return blockStatementNode;
         }
 

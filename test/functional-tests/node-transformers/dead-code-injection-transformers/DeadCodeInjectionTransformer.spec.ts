@@ -517,5 +517,41 @@ describe('DeadCodeInjectionTransformer', () => {
                 assert.isAtLeast(matchesLength, expectedMatchesLength);
             });
         });
+
+        describe('variant #12 - block statement with scope-hoisting', () => {
+            const regExp: RegExp = new RegExp(
+                `${variableMatch} *\\(\\); *` +
+                `var *${variableMatch} *= *0x2; *` +
+                `function *${variableMatch} *\\(\\) *{ *} *`,
+                'g'
+            );
+            const expectedMatchesLength: number = 5;
+
+            let matchesLength: number = 0;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/block-statement-with-scope-hoisting.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1
+                    }
+                );
+
+                const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+                const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(regExp);
+
+                if (functionMatches) {
+                    matchesLength = functionMatches.length;
+                }            });
+
+            it('shouldn\'t collect block statements with scope-hoisting', () => {
+                assert.equal(matchesLength, expectedMatchesLength);
+            });
+        });
     });
 });

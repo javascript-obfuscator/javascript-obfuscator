@@ -519,38 +519,76 @@ describe('DeadCodeInjectionTransformer', () => {
         });
 
         describe('variant #12 - block statement with scope-hoisting', () => {
-            const regExp: RegExp = new RegExp(
-                `${variableMatch} *\\(\\); *` +
-                `var *${variableMatch} *= *0x2; *` +
-                `function *${variableMatch} *\\(\\) *{ *} *`,
-                'g'
-            );
-            const expectedMatchesLength: number = 5;
+            describe('variant #1: collecting of block statements', () => {
+                const regExp: RegExp = new RegExp(
+                    `${variableMatch} *\\(\\); *` +
+                    `var *${variableMatch} *= *0x2; *` +
+                    `function *${variableMatch} *\\(\\) *{ *} *`,
+                    'g'
+                );
+                const expectedMatchesLength: number = 5;
 
-            let matchesLength: number = 0;
+                let matchesLength: number = 0;
 
-            before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/block-statement-with-scope-hoisting.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        deadCodeInjection: true,
-                        deadCodeInjectionThreshold: 1
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/block-statement-with-scope-hoisting-1.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            stringArray: true,
+                            stringArrayThreshold: 1,
+                            deadCodeInjection: true,
+                            deadCodeInjectionThreshold: 1
+                        }
+                    );
+
+                    const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+                    const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(regExp);
+
+                    if (functionMatches) {
+                        matchesLength = functionMatches.length;
                     }
+                });
+
+                it('shouldn\'t collect block statements with scope-hoisting', () => {
+                    assert.equal(matchesLength, expectedMatchesLength);
+                });
+            });
+
+            describe('variant #2: wrapping of block statements in dead code conditions', () => {
+                const regExp: RegExp = new RegExp(
+                    `function *${variableMatch} *\\(\\) *{ *` +
+                        `var *${variableMatch} *= *0x1; *` +
+                        `${variableMatch} *\\(\\); *` +
+                        `var *${variableMatch} *= *0x2; *` +
+                        `function *${variableMatch} *\\(\\) *{ *} *` +
+                        `var *${variableMatch} *= *0x3; *` +
+                    `}`,
+                    'g'
                 );
 
-                const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
-                const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(regExp);
+                let obfuscatedCode: string;
 
-                if (functionMatches) {
-                    matchesLength = functionMatches.length;
-                }            });
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/block-statement-with-scope-hoisting-2.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            stringArray: true,
+                            stringArrayThreshold: 1,
+                            deadCodeInjection: true,
+                            deadCodeInjectionThreshold: 1
+                        }
+                    );
 
-            it('shouldn\'t collect block statements with scope-hoisting', () => {
-                assert.equal(matchesLength, expectedMatchesLength);
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('shouldn\'t wrap block statements in dead code conditions', () => {
+                    assert.match(obfuscatedCode, regExp);
+                });
             });
         });
     });

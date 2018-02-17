@@ -8,24 +8,26 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
         `
         (function(){
             function foo () {
-                function inner1 () {}
+                var a = 1;
                 inner1();
+                var b = 2;
+                function inner1 () {}
+                var c = 3;
             }
             function bar () {
-                function inner2 () {}
-                inner2();
+                var a = 1;
             }
             function baz () {
-                function inner3 () {}
-                inner3();
+                var a = 1;
             }
             function bark () {
-                function inner4 () {}
-                inner4();
+                var a = 1;
             }
             function hawk () {
-                function inner5 () {}
-                inner5();
+                var a = 1;
+            }
+            function eagle () {
+                var a = 1;
             }
         })();
         `,

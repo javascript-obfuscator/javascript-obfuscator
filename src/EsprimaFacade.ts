@@ -28,7 +28,7 @@ export class EsprimaFacade {
         try {
             return esprima.parseScript(input, config, (node: ESTree.Node, meta: any) => lastMeta = meta);
         } catch (error) {
-            return this.processParsingError(input, error.message, lastMeta);
+            return EsprimaFacade.processParsingError(input, error.message, lastMeta);
         }
     }
 
@@ -43,7 +43,7 @@ export class EsprimaFacade {
             throw new Error(errorMessage);
         }
 
-        const lineNumberMatch: RegExpMatchArray | null = errorMessage.match(/Line *(\d)/);
+        const lineNumberMatch: RegExpMatchArray | null = errorMessage.match(/Line *(\d*)/);
 
         if (!lineNumberMatch) {
             throw new Error(errorMessage);

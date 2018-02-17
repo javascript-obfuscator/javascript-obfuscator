@@ -100,7 +100,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      * @param {Node} blockStatementNode
      * @returns {boolean}
      */
-    private static isValidBlockStatementNode (blockStatementNode: ESTree.Node): boolean {
+    private static isValidCollectedBlockStatementNode (blockStatementNode: ESTree.Node): boolean {
         const isProhibitedNode: (node: ESTree.Node) => boolean =
             (node: ESTree.Node): boolean => NodeGuards.isBreakStatementNode(node) ||
                 NodeGuards.isContinueStatementNode(node) ||
@@ -183,7 +183,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
 
                 let clonedBlockStatementNode: ESTree.BlockStatement = NodeUtils.clone(node);
 
-                if (!DeadCodeInjectionTransformer.isValidBlockStatementNode(clonedBlockStatementNode)) {
+                if (!DeadCodeInjectionTransformer.isValidCollectedBlockStatementNode(clonedBlockStatementNode)) {
                     return;
                 }
 
@@ -210,15 +210,17 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards | VisitorOption}
      */
     public transformNode (blockStatementNode: ESTree.BlockStatement, parentNode: ESTree.Node): ESTree.Node | estraverse.VisitorOption {
-        if (this.collectedBlockStatementsTotalLength < DeadCodeInjectionTransformer.minCollectedBlockStatementsCount) {
+        const canBreakTraverse: boolean = !this.collectedBlockStatements.length
+            || this.collectedBlockStatementsTotalLength < DeadCodeInjectionTransformer.minCollectedBlockStatementsCount;
+
+        if (canBreakTraverse) {
             return estraverse.VisitorOption.Break;
         }
 
-        if (!this.collectedBlockStatements.length) {
-            return estraverse.VisitorOption.Break;
-        }
+        const isInvalidBlockStatementNode: boolean = !blockStatementNode.body.length
+            || this.randomGenerator.getMathRandom() > this.options.deadCodeInjectionThreshold;
 
-        if (this.randomGenerator.getMathRandom() > this.options.deadCodeInjectionThreshold) {
+        if (isInvalidBlockStatementNode) {
             return blockStatementNode;
         }
 
@@ -233,8 +235,10 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         const maxInteger: number = this.collectedBlockStatements.length - 1;
         const randomIndex: number = this.randomGenerator.getRandomInteger(minInteger, maxInteger);
         const randomBlockStatementNode: ESTree.BlockStatement = this.collectedBlockStatements.splice(randomIndex, 1)[0];
+        const isInvalidRandomBlockStatementNode: boolean = randomBlockStatementNode === blockStatementNode
+            || !randomBlockStatementNode.body.length;
 
-        if (randomBlockStatementNode === blockStatementNode) {
+        if (isInvalidRandomBlockStatementNode) {
             return blockStatementNode;
         }
 

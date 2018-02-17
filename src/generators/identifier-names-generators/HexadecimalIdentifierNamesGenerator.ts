@@ -35,7 +35,7 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
      */
     public generate (): string {
         const rangeMinInteger: number = 10000;
-        const rangeMaxInteger: number = 99999999;
+        const rangeMaxInteger: number = 99_999_999;
         const randomInteger: number = this.randomGenerator.getRandomInteger(rangeMinInteger, rangeMaxInteger);
         const hexadecimalNumber: string = Utils.decToHex(randomInteger);
         const baseIdentifierName: string = hexadecimalNumber.substr(0, HexadecimalIdentifierNamesGenerator.baseIdentifierNameLength);

@@ -70,7 +70,7 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
             return this.seed + Number(md5Hash.replace(/\D/g, ''));
         };
 
-        this.seed = this.options.seed !== 0 ? this.options.seed : getRandomInteger(0, 999999999);
+        this.seed = this.options.seed !== 0 ? this.options.seed : getRandomInteger(0, 999_999_999);
         this.randomGenerator = new Chance(getSeed());
     }
 

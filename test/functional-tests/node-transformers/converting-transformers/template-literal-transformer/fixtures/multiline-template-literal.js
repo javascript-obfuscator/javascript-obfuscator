@@ -1,0 +1,2 @@
+var test = `foo
+bar`;

@@ -17,6 +17,7 @@ import './unit-tests/cli/utils/SourceCodeReader.spec';
 import './unit-tests/decorators/initializable/Initializable.spec';
 import './unit-tests/generators/identifier-names-generators/HexadecimalIdentifierNamesGenerator.spec';
 import './unit-tests/generators/identifier-names-generators/MangledlIdentifierNamesGenerator.spec';
+import './unit-tests/javascript-obfuscator/EsprimaFacade.spec';
 import './unit-tests/javascript-obfuscator/JavaScriptObfuscator.spec';
 import './unit-tests/logger/Logger.spec';
 import './unit-tests/node/node-appender/NodeAppender.spec';

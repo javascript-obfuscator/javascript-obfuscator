@@ -15,7 +15,7 @@ v0.14.1
     
 v0.14.0
 ---
-* **New option:** `identifiersPrefix` sets prefix for all generated identifiers.
+* **New option:** `identifiersPrefix` sets prefix for all global identifiers.
 * **New option:** `transformObjectKeys` enables object keys transformation and obfuscation.
 * **New feature:** `eval` expressions obfuscation.
 * **Breaking change:** Now CLI obfuscating directory recursively. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/157

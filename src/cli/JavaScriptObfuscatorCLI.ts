@@ -250,7 +250,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             )
             .option(
                 '--identifiers-prefix <string>',
-                'Sets prefix for all global generated identifiers.'
+                'Sets prefix for all global identifiers.'
             )
             .option(
                 '--log <boolean>', 'Enables logging of the information to the console',

@@ -36,23 +36,46 @@ describe('CLIUtils', () => {
 
     describe('getUserConfig (configPath: string): Object', () => {
         describe('variant #1: valid config file path', () => {
-            const configDirName: string = 'test/fixtures';
-            const configFileName: string = 'config.js';
-            const configFilePath: string = `../../../${configDirName}/${configFileName}`;
-            const expectedResult: TInputOptions = {
-                compact: true,
-                selfDefending: false,
-                sourceMap: true
-            };
+            describe('variant #1: js file with config', () => {
+                const configDirName: string = 'test/fixtures';
+                const configFileName: string = 'config.js';
+                const configFilePath: string = `../../../${configDirName}/${configFileName}`;
+                const expectedResult: TInputOptions = {
+                    compact: true,
+                    selfDefending: false,
+                    sourceMap: true
+                };
 
-            let result: Object;
+                let result: Object;
 
-            before(() => {
-                result = CLIUtils.getUserConfig(configFilePath);
+                before(() => {
+                    result = CLIUtils.getUserConfig(configFilePath);
+                });
+
+                it('should return object with user configuration', () => {
+                    assert.deepEqual(result, expectedResult);
+                });
             });
 
-            it('should return object with user configuration', () => {
-                assert.deepEqual(result, expectedResult);
+            describe('variant #2: json file with config', () => {
+                const configDirName: string = 'test/fixtures';
+                const configFileName: string = 'config.json';
+                const configFilePath: string = `../../../${configDirName}/${configFileName}`;
+                const expectedResult: TInputOptions = {
+                    compact: true,
+                    selfDefending: false,
+                    sourceMap: true
+                };
+
+                let result: Object;
+
+                before(() => {
+                    result = CLIUtils.getUserConfig(configFilePath);
+                });
+
+                it('should return object with user configuration', () => {
+                    assert.deepEqual(result, expectedResult);
+                });
             });
         });
 

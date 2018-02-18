@@ -2,4 +2,4 @@
 
 $(yarn bin)/tsc -p tsconfig.test.json &&
 $(yarn bin)/babel test-tmp --out-dir test-tmp --source-maps inline --presets es2015 &&
-rsync -a --prune-empty-dirs --include '*/' --include '*.js' --exclude '*' test/ test-tmp/test/
+rsync -a --prune-empty-dirs --include '*/' --include '*.js' --include '*.json' --exclude '*' test/ test-tmp/test/

@@ -1,40 +1,30 @@
-import { inject, injectable, postConstruct } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
 import chalk, { Chalk } from 'chalk';
 
-import { IInitializable } from '../interfaces/IInitializable';
 import { ILogger } from '../interfaces/logger/ILogger';
 import { IOptions } from '../interfaces/options/IOptions';
 
 import { LoggingMessage } from '../enums/logger/LoggingMessage';
-
-import { initializable } from '../decorators/Initializable';
+import { LoggingPrefix } from '../enums/logger/LoggingPrefix';
 
 @injectable()
-export class Logger implements ILogger, IInitializable {
+export class Logger implements ILogger {
     /**
-     * @type {string}
+     * @type {Chalk}
      */
-    private static readonly loggingPrefix: string = '[javascript-obfuscator]';
+    public static readonly colorInfo: Chalk = chalk.cyan;
 
     /**
      * @type {Chalk}
      */
-    @initializable()
-    private colorInfo!: Chalk;
+    public static readonly colorSuccess: Chalk = chalk.green;
 
     /**
      * @type {Chalk}
      */
-    @initializable()
-    private colorSuccess!: Chalk;
-
-    /**
-     * @type {Chalk}
-     */
-    @initializable()
-    private colorWarn!: Chalk;
+    public static readonly colorWarn: Chalk = chalk.yellow;
 
     /**
      * @type {IOptions}
@@ -50,11 +40,21 @@ export class Logger implements ILogger, IInitializable {
         this.options = options;
     }
 
-    @postConstruct()
-    public initialize (): void {
-        this.colorInfo = chalk.cyan;
-        this.colorSuccess = chalk.green;
-        this.colorWarn = chalk.yellow;
+    /**
+     * @param {Chalk} loggingLevelColor
+     * @param {LoggingPrefix} loggingPrefix
+     * @param {string} loggingMessage
+     * @param {string | number} value
+     */
+    public static log (
+        loggingLevelColor: Chalk,
+        loggingPrefix: LoggingPrefix,
+        loggingMessage: string,
+        value?: string | number,
+    ): void {
+        const processedMessage: string = loggingLevelColor(`\n${loggingPrefix} ${loggingMessage}`);
+
+        !value ? console.log(processedMessage) : console.log(processedMessage, value);
     }
 
     /**
@@ -62,7 +62,11 @@ export class Logger implements ILogger, IInitializable {
      * @param {string | number} value
      */
     public info (loggingMessage: LoggingMessage, value?: string | number): void {
-        this.log(this.colorInfo, loggingMessage, value);
+        if (!this.options.log) {
+            return;
+        }
+
+        Logger.log(Logger.colorInfo, LoggingPrefix.Base, loggingMessage, value);
     }
 
     /**
@@ -70,7 +74,11 @@ export class Logger implements ILogger, IInitializable {
      * @param {string | number} value
      */
     public success (loggingMessage: LoggingMessage, value?: string | number): void {
-        this.log(this.colorSuccess, loggingMessage, value);
+        if (!this.options.log) {
+            return;
+        }
+
+        Logger.log(Logger.colorSuccess, LoggingPrefix.Base, loggingMessage, value);
     }
 
     /**
@@ -78,22 +86,10 @@ export class Logger implements ILogger, IInitializable {
      * @param {string | number} value
      */
     public warn (loggingMessage: LoggingMessage, value?: string | number): void {
-        this.log(this.colorWarn, loggingMessage, value);
-    }
-
-    /**
-     *
-     * @param {Chalk} loggingLevelColor
-     * @param {LoggingMessage} loggingMessage
-     * @param {string | number} value
-     */
-    private log (loggingLevelColor: Chalk, loggingMessage: LoggingMessage, value?: string | number): void {
         if (!this.options.log) {
             return;
         }
 
-        const processedMessage: string = loggingLevelColor(`\n${Logger.loggingPrefix} ${loggingMessage}`);
-
-        !value ? console.log(processedMessage) : console.log(processedMessage, value);
+        Logger.log(Logger.colorWarn, LoggingPrefix.Base, loggingMessage, value);
     }
 }

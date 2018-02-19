@@ -5,7 +5,10 @@ import { TSourceCodeData } from '../../types/cli/TSourceCodeData';
 
 import { IFileData } from '../../interfaces/cli/IFileData';
 
+import { LoggingPrefix } from '../../enums/logger/LoggingPrefix';
+
 import { JavaScriptObfuscatorCLI } from '../JavaScriptObfuscatorCLI';
+import { Logger } from '../../logger/Logger';
 
 export class SourceCodeReader {
     /**
@@ -63,7 +66,7 @@ export class SourceCodeReader {
                         ...SourceCodeReader.readDirectoryRecursive(filePath)
                     );
                 } else if (SourceCodeReader.isFilePath(filePath) && SourceCodeReader.isValidFile(fileName)) {
-                    const content: string = fs.readFileSync(filePath, JavaScriptObfuscatorCLI.encoding);
+                    const content: string = SourceCodeReader.readFile(filePath);
 
                     fileData.push({ filePath, content });
                 }
@@ -81,6 +84,8 @@ export class SourceCodeReader {
             throw new ReferenceError(`Input file must have .js extension`);
         }
 
+        SourceCodeReader.logFilePath(filePath);
+
         return fs.readFileSync(filePath, JavaScriptObfuscatorCLI.encoding);
     }
 
@@ -91,5 +96,18 @@ export class SourceCodeReader {
     private static isValidFile (filePath: string): boolean {
         return JavaScriptObfuscatorCLI.availableInputExtensions.includes(path.extname(filePath))
             && !filePath.includes(JavaScriptObfuscatorCLI.obfuscatedFilePrefix);
+    }
+
+    /**
+     * @param {string} filePath
+     */
+    private static logFilePath (filePath: string): void {
+        const normalizedFilePath: string = path.normalize(filePath);
+
+        Logger.log(
+            Logger.colorInfo,
+            LoggingPrefix.CLI,
+            `Obfuscating file: ${normalizedFilePath}...`
+        );
     }
 }

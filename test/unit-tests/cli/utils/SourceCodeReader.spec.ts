@@ -3,9 +3,11 @@ import * as mkdirp from 'mkdirp';
 import * as rimraf from 'rimraf';
 
 import { assert } from 'chai';
+import * as sinon from 'sinon';
+
+import { IFileData } from '../../../../src/interfaces/cli/IFileData';
 
 import { SourceCodeReader } from '../../../../src/cli/utils/SourceCodeReader';
-import { IFileData } from '../../../../src/interfaces/cli/IFileData';
 
 describe('SourceCodeReader', () => {
     const fileContent: string = 'test';
@@ -188,6 +190,41 @@ describe('SourceCodeReader', () => {
                     rimraf.sync(parentDirectoryPath1);
                     rimraf.sync(parentDirectoryPath2);
                 });
+            });
+        });
+
+        describe('Variant #3: logging', () => {
+            const tmpFileName: string = 'test.js';
+            const inputPath: string = `${tmpDirectoryPath}/${tmpFileName}`;
+            const expectedConsoleLogCallResult: boolean = true;
+            const expectedLoggingMessage: string = `[javascript-obfuscator-cli] Obfuscating file: ${inputPath}...`;
+
+            let consoleLogSpy: sinon.SinonSpy,
+                consoleLogCallResult: boolean,
+                loggingMessageResult: string;
+
+            before(() => {
+                consoleLogSpy = sinon.spy(console, 'log');
+
+                fs.writeFileSync(inputPath, fileContent);
+                SourceCodeReader.readSourceCode(inputPath);
+
+                consoleLogCallResult = consoleLogSpy.called;
+                loggingMessageResult = consoleLogSpy.getCall(0).args[0];
+            });
+
+            it('should call `console.log`', () => {
+                assert.equal(consoleLogCallResult, expectedConsoleLogCallResult);
+            });
+
+            it('should log file name to the console', () => {
+                assert.include(loggingMessageResult, expectedLoggingMessage);
+            });
+
+
+            after(() => {
+                consoleLogSpy.restore();
+                fs.unlinkSync(inputPath);
             });
         });
     });

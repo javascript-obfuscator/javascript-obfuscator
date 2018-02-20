@@ -3,15 +3,49 @@ import 'reflect-metadata';
 import { assert } from 'chai';
 import * as sinon from 'sinon';
 
+import chalk from 'chalk';
+
 import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
 import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
 
 import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
 import { ILogger } from '../../../src/interfaces/logger/ILogger';
 
+import { LoggingPrefix } from '../../../src/enums/logger/LoggingPrefix';
+
+import { Logger } from '../../../src/logger/Logger';
 import { LoggingMessage } from '../../../src/enums/logger/LoggingMessage';
 
 describe('Logger', () => {
+    describe('log (loggingLevelColor: Chalk, loggingPrefix: LoggingPrefix, loggingMessage: string, value?: string | number): void', () => {
+        const loggingMessage: string = '[javascript-obfuscator] foo';
+        const expectedConsoleLogCallResult: boolean = true;
+
+        let consoleLogSpy: sinon.SinonSpy,
+            consoleLogCallResult: boolean,
+            loggingMessageResult: string;
+
+        before(() => {
+            consoleLogSpy = sinon.spy(console, 'log');
+            Logger.log(chalk.cyan, LoggingPrefix.Base, 'foo');
+
+            consoleLogCallResult = consoleLogSpy.called;
+            loggingMessageResult = consoleLogSpy.getCall(0).args[0];
+        });
+
+        it('should call `console.log`', () => {
+            assert.equal(consoleLogCallResult, expectedConsoleLogCallResult);
+        });
+
+        it('should log message to the console', () => {
+            assert.include(loggingMessageResult, loggingMessage);
+        });
+
+        after(() => {
+            consoleLogSpy.restore();
+        });
+    });
+
     describe('info (loggingMessage: LoggingMessage, value?: string | number): void', () => {
         describe('`log` option is enabled', () => {
             const loggingMessage: string = '[javascript-obfuscator] Obfuscation started...';

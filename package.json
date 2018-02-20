@@ -65,7 +65,7 @@
     "rimraf": "2.6.2",
     "sinon": "4.3.0",
     "threads": "0.10.1",
-    "ts-node": "4.1.0",
+    "ts-node": "5.0.0",
     "tslint": "5.9.1",
     "tslint-eslint-rules": "5.0.0",
     "tslint-language-service": "0.9.8",

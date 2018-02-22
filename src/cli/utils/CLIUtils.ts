@@ -51,10 +51,10 @@ export class CLIUtils {
 
         try {
             config = require(configPath);
-        } catch (e) {
+        } catch {
             try {
                 config = __non_webpack_require__(configPath);
-            } catch (e) {
+            } catch {
                 throw new ReferenceError('Given config path must be a valid `.js` or `.json` file path');
             }
         }

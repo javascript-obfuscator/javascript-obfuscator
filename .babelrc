@@ -2,7 +2,14 @@
   "generatorOpts": {
     "retainFunctionParens": true
   },
-  "presets": ["es2015"],
+  "presets": [
+    ["env", {
+      "targets": {
+        "node": "4.8",
+        "uglify": true
+      }
+    }]
+  ],
   "plugins": [
     "array-includes"
   ]

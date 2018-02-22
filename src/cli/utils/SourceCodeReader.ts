@@ -34,7 +34,7 @@ export class SourceCodeReader {
     private static isDirectoryPath (filePath: string): boolean {
         try {
             return fs.statSync(filePath).isDirectory();
-        } catch (e) {
+        } catch {
             return false;
         }
     }
@@ -46,7 +46,7 @@ export class SourceCodeReader {
     private static isFilePath (filePath: string): boolean {
         try {
             return fs.statSync(filePath).isFile();
-        } catch (e) {
+        } catch {
             return false;
         }
     }

@@ -138,7 +138,7 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
         // wrapping into try-catch to prevent parsing of incorrect `eval` string
         try {
             ast = NodeUtils.convertCodeToStructure(evalString);
-        } catch (e) {
+        } catch {
             return callExpressionNode;
         }
 

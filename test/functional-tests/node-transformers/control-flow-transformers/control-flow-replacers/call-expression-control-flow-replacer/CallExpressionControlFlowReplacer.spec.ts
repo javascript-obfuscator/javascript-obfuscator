@@ -12,7 +12,7 @@ describe('CallExpressionControlFlowReplacer', function () {
     this.timeout(100000);
 
     describe('replace (callExpressionNode: ESTree.CallExpression,parentNode: ESTree.Node,controlFlowStorage: IStorage <ICustomNode>)', () => {
-        describe('variant #1 - single call expression', () => {
+        describe('Variant #1 - single call expression', () => {
             const controlFlowStorageCallRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{5}'\]\(_0x([a-f0-9]){4,6}, *0x1, *0x2\);/;
 
             let obfuscatedCode: string;
@@ -36,7 +36,7 @@ describe('CallExpressionControlFlowReplacer', function () {
             });
         });
 
-        describe('variant #2 - multiple call expressions with threshold = 1', () => {
+        describe('Variant #2 - multiple call expressions with threshold = 1', () => {
             const expectedMatchErrorsCount: number = 0;
             const expectedChance: number = 0.5;
 
@@ -101,7 +101,7 @@ describe('CallExpressionControlFlowReplacer', function () {
             });
         });
 
-        describe('variant #3 - call expression callee is member expression node', () => {
+        describe('Variant #3 - call expression callee is member expression node', () => {
             const regExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['sum'\]\(0x1, *0x2\);/;
 
             let obfuscatedCode: string;

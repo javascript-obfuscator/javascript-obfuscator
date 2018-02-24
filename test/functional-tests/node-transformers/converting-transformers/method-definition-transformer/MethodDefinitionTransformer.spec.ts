@@ -9,7 +9,7 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
 describe('MethodDefinitionTransformer', () => {
-    describe('variant #1: default behaviour', () => {
+    describe('Variant #1: default behaviour', () => {
         const regExp: RegExp = /\['bar'\]\(\)\{\}/;
 
         let obfuscatedCode: string;
@@ -31,7 +31,7 @@ describe('MethodDefinitionTransformer', () => {
         });
     });
 
-    describe('variant #2: `stringArray` option is enabled', () => {
+    describe('Variant #2: `stringArray` option is enabled', () => {
         const stringArrayRegExp: RegExp = /var *_0x([a-f0-9]){4} *= *\['bar'\];/;
         const stringArrayCallRegExp: RegExp = /\[_0x([a-f0-9]){4}\('0x0'\)\]\(\)\{\}/;
 
@@ -60,7 +60,7 @@ describe('MethodDefinitionTransformer', () => {
         });
     });
 
-    describe('variant #3: `constructor` key', () => {
+    describe('Variant #3: `constructor` key', () => {
         const regExp: RegExp = /constructor\(\)\{\}/;
 
         let obfuscatedCode: string;

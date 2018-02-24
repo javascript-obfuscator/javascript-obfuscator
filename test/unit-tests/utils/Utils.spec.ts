@@ -6,7 +6,7 @@ import { Utils } from '../../../src/utils/Utils';
 
 describe('Utils', () => {
     describe('decToHex (dec: number): string', () => {
-        describe('variant #1: number `0`', () => {
+        describe('Variant #1: number `0`', () => {
             const number: number = 0;
             const expectedHexString = '0';
 
@@ -21,7 +21,7 @@ describe('Utils', () => {
             });
         });
 
-        describe('variant #2: number `10`', () => {
+        describe('Variant #2: number `10`', () => {
             const number: number = 10;
             const expectedHexString = 'a';
 
@@ -36,7 +36,7 @@ describe('Utils', () => {
             });
         });
 
-        describe('variant #3: number `17`', () => {
+        describe('Variant #3: number `17`', () => {
             const number: number = 17;
             const expectedHexString = '11';
 
@@ -51,7 +51,7 @@ describe('Utils', () => {
             });
         });
 
-        describe('variant #4: number `536870912`', () => {
+        describe('Variant #4: number `536870912`', () => {
             const number: number = 536870912;
             const expectedHexString = '20000000';
 
@@ -68,7 +68,7 @@ describe('Utils', () => {
     });
 
     describe('extractDomainFromUrl (url: string): string', () => {
-        describe('variant #1: simple url', () => {
+        describe('Variant #1: simple url', () => {
             const url: string = 'http://google.ru';
             const expectedDomain: string = 'google.ru';
 
@@ -83,7 +83,7 @@ describe('Utils', () => {
             });
         });
 
-        describe('variant #2: url with `www` part', () => {
+        describe('Variant #2: url with `www` part', () => {
             const url: string = 'http://www.google.ru';
             const expectedDomain: string = 'www.google.ru';
 
@@ -98,7 +98,7 @@ describe('Utils', () => {
             });
         });
 
-        describe('variant #3: url with `https` protocol and port', () => {
+        describe('Variant #3: url with `https` protocol and port', () => {
             const url: string = 'https://www.google.ru:9000';
             const expectedDomain: string = 'www.google.ru';
 
@@ -113,7 +113,7 @@ describe('Utils', () => {
             });
         });
 
-        describe('variant #4: protocol-wide url and route', () => {
+        describe('Variant #4: protocol-wide url and route', () => {
             const url: string = '//google.ru/abc';
             const expectedDomain: string = 'google.ru';
 
@@ -128,7 +128,7 @@ describe('Utils', () => {
             });
         });
 
-        describe('variant #5: protocol-wide url, `localhost` and port', () => {
+        describe('Variant #5: protocol-wide url, `localhost` and port', () => {
             const url: string = '//localhost:9000';
             const expectedDomain: string = 'localhost';
 

@@ -10,7 +10,7 @@ import { readFileAsString } from '../../../../../helpers/readFileAsString';
 
 describe('ConditionalCommentObfuscatingGuard', () => {
     describe('check (node: ESTree.Node): boolean', () => {
-        describe('variant #1: `disable` conditional comment', () => {
+        describe('Variant #1: `disable` conditional comment', () => {
             const obfuscatedVariableDeclarationRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *0x1;/;
             const ignoredVariableDeclarationRegExp: RegExp = /var *bar *= *2;/;
             const consoleLogRegExp: RegExp = /console.log\(_0x([a-f0-9]){4,6}\);/;
@@ -42,7 +42,7 @@ describe('ConditionalCommentObfuscatingGuard', () => {
             });
         });
 
-        describe('variant #2: `disable` and `enable` conditional comments', () => {
+        describe('Variant #2: `disable` and `enable` conditional comments', () => {
             const obfuscatedVariableDeclaration1RegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *0x1;/;
             const obfuscatedVariableDeclaration2RegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *0x3;/;
             const ignoredVariableDeclarationRegExp: RegExp = /var *bar *= *2;/;
@@ -74,7 +74,7 @@ describe('ConditionalCommentObfuscatingGuard', () => {
             });
         });
 
-        describe('variant #3: `disable` conditional comment from beginning of the code', () => {
+        describe('Variant #3: `disable` conditional comment from beginning of the code', () => {
             const ignoredVariableDeclaration1RegExp: RegExp = /var *foo *= *1;/;
             const ignoredVariableDeclaration2RegExp: RegExp = /var *bar *= *2;/;
 
@@ -101,7 +101,7 @@ describe('ConditionalCommentObfuscatingGuard', () => {
             });
         });
 
-        describe('variant #4: `disable` and `enable` conditional comments with dead code injection', () => {
+        describe('Variant #4: `disable` and `enable` conditional comments with dead code injection', () => {
             const obfuscatedFunctionExpressionRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *function *\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\) *{/g;
             const expectedObfuscatedFunctionExpressionLength: number = 3;
 
@@ -172,7 +172,7 @@ describe('ConditionalCommentObfuscatingGuard', () => {
             });
         });
 
-        describe('variant #5: `disable` and `enable` conditional comments with control flow flattening', () => {
+        describe('Variant #5: `disable` and `enable` conditional comments with control flow flattening', () => {
             const obfuscatedVariableDeclarationRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['[a-zA-Z0-9]{1,5}'];/;
             const ignoredVariableDeclarationRegExp: RegExp = /var *bar *= *'bar';/;
 

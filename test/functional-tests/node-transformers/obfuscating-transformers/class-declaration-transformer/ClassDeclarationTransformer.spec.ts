@@ -11,7 +11,7 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFac
 
 describe('ClassDeclarationTransformer', () => {
     describe('transformation of `classDeclaration` node names', () => {
-        describe('variant #1: `classDeclaration` parent block scope is not a `ProgramNode`', () => {
+        describe('Variant #1: `classDeclaration` parent block scope is not a `ProgramNode`', () => {
             const classNameIdentifierRegExp: RegExp = /class *(_0x[a-f0-9]{4,6}) *\{/;
             const classCallIdentifierRegExp: RegExp = /new *(_0x[a-f0-9]{4,6}) *\( *\);/;
 
@@ -38,8 +38,8 @@ describe('ClassDeclarationTransformer', () => {
             });
         });
 
-        describe('variant #2: `classDeclaration` parent block scope is a `ProgramNode`', () => {
-            describe('variant #1: `renameGlobals` option is disabled', () => {
+        describe('Variant #2: `classDeclaration` parent block scope is a `ProgramNode`', () => {
+            describe('Variant #1: `renameGlobals` option is disabled', () => {
                 const classNameIdentifierRegExp: RegExp = /class *Foo *\{/;
                 const classCallIdentifierRegExp: RegExp = /new *Foo *\( *\);/;
 
@@ -66,7 +66,7 @@ describe('ClassDeclarationTransformer', () => {
                 });
             });
 
-            describe('variant #2: `renameGlobals` option is enabled', () => {
+            describe('Variant #2: `renameGlobals` option is enabled', () => {
                 const classNameIdentifierRegExp: RegExp = /class *(_0x[a-f0-9]{4,6}) *\{/;
                 const classCallIdentifierRegExp: RegExp = /new *(_0x[a-f0-9]{4,6}) *\( *\);/;
 

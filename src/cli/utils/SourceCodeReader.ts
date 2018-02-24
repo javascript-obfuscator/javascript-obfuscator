@@ -1,6 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import multimatch from 'multimatch';
 
+import { TInputCLIOptions } from '../../types/options/TInputCLIOptions';
 import { TSourceCodeData } from '../../types/cli/TSourceCodeData';
 
 import { IFileData } from '../../interfaces/cli/IFileData';
@@ -12,19 +14,41 @@ import { Logger } from '../../logger/Logger';
 
 export class SourceCodeReader {
     /**
-     * @param {string} inputPath
-     * @returns {TSourceCodeData}
+     * @type {string[]}
      */
-    public static readSourceCode (inputPath: string): TSourceCodeData {
-        if (SourceCodeReader.isFilePath(inputPath)) {
-            return SourceCodeReader.readFile(inputPath);
+    public static readonly availableInputExtensions: string[] = [
+        '.js'
+    ];
+
+    /**
+     * @type {TInputCLIOptions}
+     */
+    private readonly options: TInputCLIOptions;
+
+    /**
+     * @param {TInputCLIOptions} options
+     */
+    constructor (options: TInputCLIOptions) {
+        this.options = options;
+    }
+
+    /**
+     * @param {string} filePath
+     * @param {string[]} excludePatterns
+     * @returns {boolean}
+     */
+    private static isExcludedPath (filePath: string, excludePatterns: string[] = []): boolean {
+        if (!excludePatterns.length) {
+            return false;
         }
 
-        if (SourceCodeReader.isDirectoryPath(inputPath)) {
-            return SourceCodeReader.readDirectoryRecursive(inputPath);
-        }
+        const fileName: string = path.basename(filePath);
+        const isExcludedFilePathByGlobPattern: boolean = !!multimatch([filePath], excludePatterns).length;
+        const isExcludedFilePathByInclusion: boolean = excludePatterns.some((excludePattern: string) =>
+            filePath.includes(excludePattern) || fileName.includes(excludePattern)
+        );
 
-        throw new ReferenceError(`Given input path must be a valid source code file or directory path`);
+        return isExcludedFilePathByInclusion || isExcludedFilePathByGlobPattern;
     }
 
     /**
@@ -52,21 +76,54 @@ export class SourceCodeReader {
     }
 
     /**
+     * @param {string} filePath
+     */
+    private static logFilePath (filePath: string): void {
+        const normalizedFilePath: string = path.normalize(filePath);
+
+        Logger.log(
+            Logger.colorInfo,
+            LoggingPrefix.CLI,
+            `Obfuscating file: ${normalizedFilePath}...`
+        );
+    }
+
+    /**
+     * @param {string} inputPath
+     * @param {string[]} excludePatterns
+     * @returns {TSourceCodeData}
+     */
+    public readSourceCode (inputPath: string, excludePatterns: string[] = []): TSourceCodeData {
+        if (SourceCodeReader.isFilePath(inputPath) && this.isValidFile(inputPath)) {
+            return this.readFile(inputPath);
+        }
+
+        if (SourceCodeReader.isDirectoryPath(inputPath) && this.isValidDirectory(inputPath)) {
+            return this.readDirectoryRecursive(inputPath);
+        }
+
+        const availableFilePaths: string = SourceCodeReader
+            .availableInputExtensions
+            .map((extension: string) => `\`${extension}\``)
+            .join(', ');
+
+        throw new ReferenceError(`Given input path must be a valid ${availableFilePaths} file or directory path`);
+    }
+
+    /**
      * @param {string} directoryPath
      * @param {IFileData[]} fileData
      * @returns {IFileData[]}
      */
-    private static readDirectoryRecursive (directoryPath: string, fileData: IFileData[] = []): IFileData[] {
+    private readDirectoryRecursive (directoryPath: string, fileData: IFileData[] = []): IFileData[] {
         fs.readdirSync(directoryPath, JavaScriptObfuscatorCLI.encoding)
             .forEach((fileName: string) => {
                 const filePath: string = `${directoryPath}/${fileName}`;
 
-                if (SourceCodeReader.isDirectoryPath(filePath)) {
-                    fileData.push(
-                        ...SourceCodeReader.readDirectoryRecursive(filePath)
-                    );
-                } else if (SourceCodeReader.isFilePath(filePath) && SourceCodeReader.isValidFile(fileName)) {
-                    const content: string = SourceCodeReader.readFile(filePath);
+                if (SourceCodeReader.isDirectoryPath(filePath) && this.isValidDirectory(filePath)) {
+                    fileData.push(...this.readDirectoryRecursive(filePath));
+                } else if (SourceCodeReader.isFilePath(filePath) && this.isValidFile(filePath)) {
+                    const content: string = this.readFile(filePath);
 
                     fileData.push({ filePath, content });
                 }
@@ -79,35 +136,27 @@ export class SourceCodeReader {
      * @param {string} filePath
      * @returns {string}
      */
-    private static readFile (filePath: string): string {
-        if (!SourceCodeReader.isValidFile(filePath)) {
-            throw new ReferenceError(`Input file must have .js extension`);
-        }
-
+    private readFile (filePath: string): string {
         SourceCodeReader.logFilePath(filePath);
 
         return fs.readFileSync(filePath, JavaScriptObfuscatorCLI.encoding);
     }
 
     /**
-     * @param {string} filePath
+     * @param {string} directoryPath
      * @returns {boolean}
      */
-    private static isValidFile (filePath: string): boolean {
-        return JavaScriptObfuscatorCLI.availableInputExtensions.includes(path.extname(filePath))
-            && !filePath.includes(JavaScriptObfuscatorCLI.obfuscatedFilePrefix);
+    private isValidDirectory (directoryPath: string): boolean {
+        return !SourceCodeReader.isExcludedPath(directoryPath, this.options.exclude);
     }
 
     /**
      * @param {string} filePath
+     * @returns {boolean}
      */
-    private static logFilePath (filePath: string): void {
-        const normalizedFilePath: string = path.normalize(filePath);
-
-        Logger.log(
-            Logger.colorInfo,
-            LoggingPrefix.CLI,
-            `Obfuscating file: ${normalizedFilePath}...`
-        );
+    private isValidFile (filePath: string): boolean {
+        return SourceCodeReader.availableInputExtensions.includes(path.extname(filePath))
+            && !filePath.includes(JavaScriptObfuscatorCLI.obfuscatedFilePrefix)
+            && !SourceCodeReader.isExcludedPath(filePath, this.options.exclude);
     }
 }

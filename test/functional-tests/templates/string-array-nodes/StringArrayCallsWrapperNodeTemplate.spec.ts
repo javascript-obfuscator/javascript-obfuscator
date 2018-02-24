@@ -34,7 +34,7 @@ describe('StringArrayCallsWrapperNodeTemplate (): string', () => {
         randomGenerator = inversifyContainerFacade.get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator);
     });
 
-    describe('variant #1: `base64` encoding', () => {
+    describe('Variant #1: `base64` encoding', () => {
         const index: string = '0x0';
         const expectedDecodedValue: string = 'test1';
 
@@ -72,7 +72,7 @@ describe('StringArrayCallsWrapperNodeTemplate (): string', () => {
         });
     });
 
-    describe('variant #2: `rc4` encoding', () => {
+    describe('Variant #2: `rc4` encoding', () => {
         const index: string = '0x0';
         const key: string = 'key';
         const expectedDecodedValue: string = 'test1';

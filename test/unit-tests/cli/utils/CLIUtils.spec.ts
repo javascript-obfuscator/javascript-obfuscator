@@ -6,7 +6,7 @@ import { CLIUtils } from '../../../../src/cli/utils/CLIUtils';
 
 describe('CLIUtils', () => {
     describe('getOutputCodePath (inputPath: string): string', () => {
-        describe('variant #1: base input path', () => {
+        describe('Variant #1: base input path', () => {
             let expectedOutputPath: string = 'test/input/test-obfuscated.js',
                 inputPath: string = 'test/input/test.js';
 
@@ -15,7 +15,7 @@ describe('CLIUtils', () => {
             });
         });
 
-        describe('variant #2: relative input path with dot', () => {
+        describe('Variant #2: relative input path with dot', () => {
             let expectedOutputPath: string = 'input-obfuscated.js',
                 inputPath: string = './input.js';
 
@@ -35,8 +35,8 @@ describe('CLIUtils', () => {
     });
 
     describe('getUserConfig (configPath: string): Object', () => {
-        describe('variant #1: valid config file path', () => {
-            describe('variant #1: js file with config', () => {
+        describe('Variant #1: valid config file path', () => {
+            describe('Variant #1: js file with config', () => {
                 const configDirName: string = 'test/fixtures';
                 const configFileName: string = 'config.js';
                 const configFilePath: string = `../../../${configDirName}/${configFileName}`;
@@ -57,7 +57,7 @@ describe('CLIUtils', () => {
                 });
             });
 
-            describe('variant #2: json file with config', () => {
+            describe('Variant #2: json file with config', () => {
                 const configDirName: string = 'test/fixtures';
                 const configFileName: string = 'config.json';
                 const configFilePath: string = `../../../${configDirName}/${configFileName}`;
@@ -79,7 +79,7 @@ describe('CLIUtils', () => {
             });
         });
 
-        describe('variant #2: invalid config file path', () => {
+        describe('Variant #2: invalid config file path', () => {
             const configDirName: string = 'test/fixtures';
             const configFileName: string = 'configs.js';
             const configFilePath: string = `../../../${configDirName}/${configFileName}`;

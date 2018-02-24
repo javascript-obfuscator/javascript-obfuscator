@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "0.14.3",
+  "version": "0.15.0-dev.0",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -30,6 +30,7 @@
     "js-string-escape": "1.0.1",
     "md5": "2.2.1",
     "mkdirp": "0.5.1",
+    "multimatch": "2.1.0",
     "opencollective": "1.0.3",
     "pjson": "1.0.9",
     "reflect-metadata": "0.1.12",
@@ -47,6 +48,7 @@
     "@types/md5": "2.1.32",
     "@types/mkdirp": "0.5.2",
     "@types/mocha": "2.2.48",
+    "@types/multimatch": "2.1.2",
     "@types/node": "9.4.6",
     "@types/rimraf": "2.0.2",
     "@types/sinon": "4.1.3",
@@ -63,7 +65,7 @@
     "mocha": "5.0.1",
     "pre-commit": "1.2.2",
     "rimraf": "2.6.2",
-    "sinon": "4.3.0",
+    "sinon": "4.4.1",
     "threads": "0.10.1",
     "ts-node": "5.0.0",
     "tslint": "5.9.1",

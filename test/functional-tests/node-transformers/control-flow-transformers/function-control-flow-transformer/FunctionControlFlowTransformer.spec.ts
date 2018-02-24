@@ -28,7 +28,7 @@ describe('FunctionControlFlowTransformer', function () {
     ``;
 
     describe('transformNode (functionNode: ESTree.Function): ESTree.Node', () => {
-        describe('variant #1 - single `control flow storage` node with single item', () => {
+        describe('Variant #1 - single `control flow storage` node with single item', () => {
             const regexp: RegExp = new RegExp(rootControlFlowStorageNodeMatch);
 
             let obfuscatedCode: string;
@@ -52,7 +52,7 @@ describe('FunctionControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #2 - two `control flow storage` nodes: root and inner', () => {
+        describe('Variant #2 - two `control flow storage` nodes: root and inner', () => {
             const expectedAppendToScopeThreshold: number = 0.5;
 
             const samplesCount: number = 1000;
@@ -104,7 +104,7 @@ describe('FunctionControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #3 - single `control flow storage` node with multiple items', () => {
+        describe('Variant #3 - single `control flow storage` node with multiple items', () => {
             const regexp: RegExp = new RegExp(
                 `var *${variableMatch} *= *\\{` +
                     `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
@@ -137,7 +137,7 @@ describe('FunctionControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #4 - transformed node in the root block scope', () => {
+        describe('Variant #4 - transformed node in the root block scope', () => {
             const regExp: RegExp = /^var *test *= *0x1 *\+ *0x2;$/;
 
             let obfuscatedCode: string;
@@ -161,7 +161,7 @@ describe('FunctionControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #5 - transformed nodes not in the root block scope', () => {
+        describe('Variant #5 - transformed nodes not in the root block scope', () => {
             const expectedValue: number = 0;
             const samplesCount: number = 20;
 
@@ -200,7 +200,7 @@ describe('FunctionControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #6 - threshold is `0`', () => {
+        describe('Variant #6 - threshold is `0`', () => {
             const regexp: RegExp = /var *_0x([a-f0-9]){4,6} *= *0x1 *\+ *0x2;/;
             const controlFlowStorageRegExp: RegExp = new RegExp(rootControlFlowStorageNodeMatch);
 
@@ -230,7 +230,7 @@ describe('FunctionControlFlowTransformer', function () {
         });
 
         describe('arrow function expression', () => {
-            describe('variant #1 - arrow function expression with body', () => {
+            describe('Variant #1 - arrow function expression with body', () => {
                 const regexp: RegExp = new RegExp(rootControlFlowStorageNodeMatch);
 
                 let obfuscatedCode: string;
@@ -254,7 +254,7 @@ describe('FunctionControlFlowTransformer', function () {
                 });
             });
 
-            describe('variant #2 - arrow function expression without body', () => {
+            describe('Variant #2 - arrow function expression without body', () => {
                 const regexp: RegExp = new RegExp(`var *${variableMatch} *= *\\(\\) *=> *0x1 *\\+ *0x2;`);
 
                 let obfuscatedCode: string;

@@ -4,7 +4,7 @@ import { SourceMapModeSanitizer } from '../../../../src/cli/sanitizers/SourceMap
 
 describe('SourceMapModeSanitizer', () => {
     describe('SourceMapModeSanitizer: TCLISanitizer = (value: string): string', () => {
-        describe('variant #1: valid source map mode', () => {
+        describe('Variant #1: valid source map mode', () => {
             const inputValue: string = 'inline';
             const expectedValue: string = inputValue;
 
@@ -19,7 +19,7 @@ describe('SourceMapModeSanitizer', () => {
             });
         });
 
-        describe('variant #2: invalid source map mode', () => {
+        describe('Variant #2: invalid source map mode', () => {
             const inputValue: string = 'foo';
 
             let testFunc: () => void;

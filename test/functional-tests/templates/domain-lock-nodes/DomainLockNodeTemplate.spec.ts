@@ -50,7 +50,7 @@ describe('DomainLockNodeTemplate (): string', () => {
         cryptUtils = inversifyContainerFacade.get<ICryptUtils>(ServiceIdentifiers.ICryptUtils);
     });
 
-    describe('variant #1: current domain matches with `domainsString`', () => {
+    describe('Variant #1: current domain matches with `domainsString`', () => {
         const domainsString: string = ['www.example.com'].join(';');
         const currentDomain: string = 'www.example.com';
 
@@ -76,7 +76,7 @@ describe('DomainLockNodeTemplate (): string', () => {
         });
     });
 
-    describe('variant #2: urrent domain matches with base domain of `domainsString` item', () => {
+    describe('Variant #2: urrent domain matches with base domain of `domainsString` item', () => {
         const domainsString: string = ['www.test.com', '.example.com'].join(';');
         const currentDomain: string = 'subdomain.example.com';
 
@@ -102,7 +102,7 @@ describe('DomainLockNodeTemplate (): string', () => {
         });
     });
 
-    describe('variant #3: current domain doesn\'t match with `domainsString`', () => {
+    describe('Variant #3: current domain doesn\'t match with `domainsString`', () => {
         const domainsString: string = ['www.example.com'].join(';');
         const currentDomain: string = 'www.test.com';
 

@@ -30,7 +30,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
         obfuscatedCode = obfuscationResult.getObfuscatedCode();
     });
 
-    it('should obfuscate code without any runtime errors after obfuscation: variant #1 sha256', () => {
+    it('should obfuscate code without any runtime errors after obfuscation: Variant #1 sha256', () => {
         assert.equal(
             eval(`${obfuscatedCode} sha256('test');`),
             '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08'

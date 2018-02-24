@@ -8,7 +8,7 @@ import { StringArrayEncodingSanitizer } from '../../../../src/cli/sanitizers/Str
 
 describe('StringArrayEncodingSanitizer', () => {
     describe('StringArrayEncodingSanitizer: TCLISanitizer = (value: string): TStringArrayEncoding', () => {
-        describe('variant #1: string array encoding `base64`', () => {
+        describe('Variant #1: string array encoding `base64`', () => {
             const inputValue: string = 'base64';
             const expectedValue: TStringArrayEncoding = true;
 
@@ -23,7 +23,7 @@ describe('StringArrayEncodingSanitizer', () => {
             });
         });
 
-        describe('variant #2: string array encoding `true`', () => {
+        describe('Variant #2: string array encoding `true`', () => {
             const inputValue: string = 'true';
             const expectedValue: TStringArrayEncoding = true;
 
@@ -38,7 +38,7 @@ describe('StringArrayEncodingSanitizer', () => {
             });
         });
 
-        describe('variant #3: string array encoding `1`', () => {
+        describe('Variant #3: string array encoding `1`', () => {
             const inputValue: string = '1';
             const expectedValue: TStringArrayEncoding = true;
 
@@ -53,7 +53,7 @@ describe('StringArrayEncodingSanitizer', () => {
             });
         });
 
-        describe('variant #4: string array encoding `rc4`', () => {
+        describe('Variant #4: string array encoding `rc4`', () => {
             const inputValue: string = 'rc4';
             const expectedValue: TStringArrayEncoding = StringArrayEncoding.Rc4;
 
@@ -68,7 +68,7 @@ describe('StringArrayEncodingSanitizer', () => {
             });
         });
 
-        describe('variant #5: string array encoding `foo`', () => {
+        describe('Variant #5: string array encoding `foo`', () => {
             const inputValue: string = 'foo';
             const expectedValue: TStringArrayEncoding = false;
 

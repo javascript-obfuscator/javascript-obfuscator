@@ -10,7 +10,7 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
 describe('VariableDeclarationTransformer', () => {
-    describe('variant #1: default behaviour', () => {
+    describe('Variant #1: default behaviour', () => {
         const variableDeclarationRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *'abc';/;
         const variableCallRegExp: RegExp = /console\['log'\]\(_0x([a-f0-9]){4,6}\);/;
 
@@ -37,8 +37,8 @@ describe('VariableDeclarationTransformer', () => {
         });
     });
 
-    describe('variant #2: parent block scope node is `Program` node', () => {
-        describe('variant #1: `renameGlobals` option is disabled', () => {
+    describe('Variant #2: parent block scope node is `Program` node', () => {
+        describe('Variant #1: `renameGlobals` option is disabled', () => {
             const variableDeclarationRegExp: RegExp = /var *test *= *0xa;/;
             const variableCallRegExp: RegExp = /console\['log'\]\(test\);/;
 
@@ -65,7 +65,7 @@ describe('VariableDeclarationTransformer', () => {
             });
         });
 
-        describe('variant #2: `renameGlobals` option is enabled', () => {
+        describe('Variant #2: `renameGlobals` option is enabled', () => {
             const variableDeclarationRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *0xa;/;
             const variableCallRegExp: RegExp = /console\['log'\]\(_0x([a-f0-9]){4,6}\);/;
 
@@ -94,7 +94,7 @@ describe('VariableDeclarationTransformer', () => {
         });
     });
 
-    describe('variant #3: scope of `var` kind', () => {
+    describe('Variant #3: scope of `var` kind', () => {
         const regExp: RegExp = /console\['log'\]\(_0x([a-f0-9]){4,6}\);/;
 
         let obfuscatedCode: string;
@@ -116,7 +116,7 @@ describe('VariableDeclarationTransformer', () => {
         });
     });
 
-    describe('variant #4: scope of `let` kind', () => {
+    describe('Variant #4: scope of `let` kind', () => {
         const regExp: RegExp = /console\['log'\]\(test\);/;
 
         let obfuscatedCode: string;
@@ -138,7 +138,7 @@ describe('VariableDeclarationTransformer', () => {
         });
     });
 
-    describe(`variant #5: variable calls before variable declaration`, () => {
+    describe(`Variant #5: variable calls before variable declaration`, () => {
         const functionBodyVariableCallRegExp: RegExp = /console\['log'\]\(_0x([a-f0-9]){4,6}\['item'\]\);/;
         const variableCallBeforeDeclarationRegExp: RegExp = /console\['log'\]\(_0x([a-f0-9]){4,6}\);/;
 
@@ -165,7 +165,7 @@ describe('VariableDeclarationTransformer', () => {
         });
     });
 
-    describe(`variant #6: variable calls before variable declaration when function param has the same name as variables name`, () => {
+    describe(`Variant #6: variable calls before variable declaration when function param has the same name as variables name`, () => {
         const functionParamIdentifierRegExp: RegExp = /function *_0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\,(_0x[a-f0-9]{4,6})\) *\{/;
         const innerFunctionParamIdentifierRegExp: RegExp = /function _0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\) *\{/;
         const constructorIdentifierRegExp: RegExp = /console\['log'\]\((_0x[a-f0-9]{4,6})\)/;
@@ -220,7 +220,7 @@ describe('VariableDeclarationTransformer', () => {
         });
     });
 
-    describe(`variant #7: variable calls before variable declaration when catch clause param has the same name as variables name`, () => {
+    describe(`Variant #7: variable calls before variable declaration when catch clause param has the same name as variables name`, () => {
         const catchClauseParamIdentifierRegExp: RegExp = /catch *\((_0x[a-f0-9]{4,6})\) *\{/;
         const innerFunctionParamIdentifierRegExp: RegExp = /function _0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\) *\{/;
         const constructorIdentifierRegExp: RegExp = /console\['log'\]\((_0x[a-f0-9]{4,6})\)/;
@@ -275,8 +275,8 @@ describe('VariableDeclarationTransformer', () => {
         });
     });
 
-    describe('variant #8: wrong replacement', () => {
-        describe('variant #1: property node identifier', () => {
+    describe('Variant #8: wrong replacement', () => {
+        describe('Variant #1: property node identifier', () => {
             const regExp: RegExp = /var _0x([a-f0-9]){4,6} *= *\{'test/;
 
             let obfuscatedCode: string;
@@ -298,7 +298,7 @@ describe('VariableDeclarationTransformer', () => {
             });
         });
 
-        describe('variant #2: computed member expression identifier', () => {
+        describe('Variant #2: computed member expression identifier', () => {
             const regExp: RegExp = /_0x([a-f0-9]){4,6}\['test'\]/;
 
             let obfuscatedCode: string;
@@ -321,7 +321,7 @@ describe('VariableDeclarationTransformer', () => {
         });
     });
 
-    describe('variant #9: object pattern as variable declarator', () => {
+    describe('Variant #9: object pattern as variable declarator', () => {
         const objectPatternVariableDeclaratorRegExp: RegExp = /var *\{ *bar *\} *= *\{ *'bar' *: *'foo' *\};/;
         const variableUsageRegExp: RegExp = /console\['log'\]\(bar\);/;
 
@@ -348,7 +348,7 @@ describe('VariableDeclarationTransformer', () => {
         });
     });
 
-    describe('variant #10: array pattern as variable declarator', () => {
+    describe('Variant #10: array pattern as variable declarator', () => {
         const objectPatternVariableDeclaratorRegExp: RegExp = /var *\[ *(_0x([a-f0-9]){4,6}), *(_0x([a-f0-9]){4,6}) *\] *= *\[0x1, *0x2\];/;
         const variableUsageRegExp: RegExp = /console\['log'\]\((_0x([a-f0-9]){4,6}), *(_0x([a-f0-9]){4,6})\);/;
 
@@ -392,7 +392,7 @@ describe('VariableDeclarationTransformer', () => {
         });
     });
 
-    describe('variant #11: computed object expression identifier', () => {
+    describe('Variant #11: computed object expression identifier', () => {
         const computedObjectExpressionRegExp: RegExp = /var *_0x[a-f0-9]{4,6} *= *\{\[_0x[a-f0-9]{4,6}\]: *0x1\};/;
 
         let obfuscatedCode: string;
@@ -414,7 +414,7 @@ describe('VariableDeclarationTransformer', () => {
         });
     });
 
-    describe('variant #12: method definition key identifier', () => {
+    describe('Variant #12: method definition key identifier', () => {
         const regExp: RegExp = /\['bar'] *\(\) *{}/;
 
         let obfuscatedCode: string;

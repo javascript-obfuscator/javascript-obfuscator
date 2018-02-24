@@ -5,7 +5,7 @@ import { EsprimaFacade } from '../../../src/EsprimaFacade';
 describe('EsprimaFacade', () => {
     describe(`parseScript (input: string, config: esprima.ParseOptions): ESTree.Program`, () => {
         describe(`\`Unexpected token\` error code preview`, () => {
-            describe('variant #1: 5 lines of code', () => {
+            describe('Variant #1: 5 lines of code', () => {
                 const sourceCode: string = `` +
                 `var foo = 1;
                 var bar = 2;
@@ -24,7 +24,7 @@ describe('EsprimaFacade', () => {
                 });
             });
 
-            describe('variant #2: 15 lines of code', () => {
+            describe('Variant #2: 15 lines of code', () => {
                 const sourceCode: string = `` +
                 `var var1 = 1;
                 var var2 = 2;

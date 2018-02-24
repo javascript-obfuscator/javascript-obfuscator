@@ -27,7 +27,7 @@ describe('NodeUtils', () => {
     });
 
     describe('clone <T extends ESTree.Node> (astTree: T): T', () => {
-        describe('variant #1: simple AST-tree', () => {
+        describe('Variant #1: simple AST-tree', () => {
             let programNode: ESTree.Program,
                 expectedProgramNode: ESTree.Program;
 
@@ -77,7 +77,7 @@ describe('NodeUtils', () => {
             });
         });
 
-        describe('variant #2: array expression with `null` element', () => {
+        describe('Variant #2: array expression with `null` element', () => {
             let programNode: ESTree.Program,
                 expectedProgramNode: ESTree.Program;
 
@@ -295,7 +295,7 @@ describe('NodeUtils', () => {
     });
 
     describe('getNextSiblingStatementNode (node: ESTree.Statement): TStatement | null', () => {
-        describe('variant #1: block statement node as scope node', () => {
+        describe('Variant #1: block statement node as scope node', () => {
                 let statementNode1: ESTree.Statement,
                 statementNode2: ESTree.Statement,
                 statementNode3: ESTree.Statement;
@@ -335,7 +335,7 @@ describe('NodeUtils', () => {
             });
         });
 
-        describe('variant #2: switch case node as scope node', () => {
+        describe('Variant #2: switch case node as scope node', () => {
             let statementNode1: ESTree.Statement,
                 statementNode2: ESTree.Statement,
                 statementNode3: ESTree.Statement;
@@ -380,7 +380,7 @@ describe('NodeUtils', () => {
     });
 
     describe('getPreviousSiblingStatementNode (node: ESTree.Statement): TStatement | null', () => {
-        describe('variant #1: block statement node as scope node', () => {
+        describe('Variant #1: block statement node as scope node', () => {
             let statementNode1: ESTree.Statement,
                 statementNode2: ESTree.Statement,
                 statementNode3: ESTree.Statement;
@@ -420,7 +420,7 @@ describe('NodeUtils', () => {
             });
         });
 
-        describe('variant #2: switch case node as scope node', () => {
+        describe('Variant #2: switch case node as scope node', () => {
             let statementNode1: ESTree.Statement,
                 statementNode2: ESTree.Statement,
                 statementNode3: ESTree.Statement;
@@ -655,7 +655,7 @@ describe('NodeUtils', () => {
             );
         });
 
-        describe('variant #1: parentize AST-tree with `ProgramNode` as root node', () => {
+        describe('Variant #1: parentize AST-tree with `ProgramNode` as root node', () => {
             beforeEach(() => {
                 programNode = Nodes.getProgramNode([
                     ifStatementNode
@@ -685,7 +685,7 @@ describe('NodeUtils', () => {
             });
         });
 
-        describe('variant #2: parentize AST-tree', () => {
+        describe('Variant #2: parentize AST-tree', () => {
             beforeEach(() => {
                 ifStatementNode = NodeUtils.parentize(ifStatementNode);
             });
@@ -709,7 +709,7 @@ describe('NodeUtils', () => {
     });
 
     describe('parentizeNode <T extends ESTree.Node = ESTree.Program> (node: T, parentNode: ESTree.Node): T', () => {
-        describe('variant #1: node with parent node', () => {
+        describe('Variant #1: node with parent node', () => {
             const identifier: ESTree.Identifier = Nodes.getIdentifierNode('foo');
             const breakStatement: ESTree.BreakStatement = Nodes.getBreakStatement(identifier);
 
@@ -728,7 +728,7 @@ describe('NodeUtils', () => {
             });
         });
 
-        describe('variant #2: node without parent node', () => {
+        describe('Variant #2: node without parent node', () => {
             const identifier: ESTree.Identifier = Nodes.getIdentifierNode('Foo');
             const expectedResult: ESTree.Identifier = NodeUtils.clone(identifier);
 

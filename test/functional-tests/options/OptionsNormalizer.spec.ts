@@ -197,7 +197,7 @@ describe('OptionsNormalizer', () => {
         });
 
         describe('sourceMapBaseUrlRule', () => {
-            describe('variant #1: only source map base url', () => {
+            describe('Variant #1: only source map base url', () => {
                 before(() => {
                     optionsPreset = getNormalizedOptions({
                         ...DEFAULT_PRESET,
@@ -215,7 +215,7 @@ describe('OptionsNormalizer', () => {
                 });
             });
 
-            describe('variant #2: source map base url with source map file name', () => {
+            describe('Variant #2: source map base url with source map file name', () => {
                 before(() => {
                     optionsPreset = getNormalizedOptions({
                         ...DEFAULT_PRESET,

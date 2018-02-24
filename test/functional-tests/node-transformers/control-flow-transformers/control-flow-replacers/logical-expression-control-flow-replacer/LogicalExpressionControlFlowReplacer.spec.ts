@@ -12,7 +12,7 @@ describe('LogicalExpressionControlFlowReplacer', function () {
     this.timeout(100000);
 
     describe('replace (logicalExpressionNode: ESTree.LogicalExpression,parentNode: ESTree.Node,controlFlowStorage: IStorage <ICustomNode>)', () => {
-        describe('variant #1 - single logical expression', () => {
+        describe('Variant #1 - single logical expression', () => {
             const controlFlowStorageCallRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{5}'\]\(!!\[\], *!\[\]\);/;
 
             let obfuscatedCode: string;
@@ -36,7 +36,7 @@ describe('LogicalExpressionControlFlowReplacer', function () {
             });
         });
 
-        describe('variant #2 - multiple logical expressions with threshold = 1', () => {
+        describe('Variant #2 - multiple logical expressions with threshold = 1', () => {
             const expectedMatchErrorsCount: number = 0;
             const expectedChance: number = 0.5;
 
@@ -101,7 +101,7 @@ describe('LogicalExpressionControlFlowReplacer', function () {
             });
         });
 
-        describe('variant #3 - single logical expression with unary expression', () => {
+        describe('Variant #3 - single logical expression with unary expression', () => {
             const controlFlowStorageCallRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{5}'\]\(!_0x([a-f0-9]){4,6}, *!_0x([a-f0-9]){4,6}\);/;
 
             let obfuscatedCode: string;
@@ -125,7 +125,7 @@ describe('LogicalExpressionControlFlowReplacer', function () {
             });
         });
 
-        describe('prohibited nodes variant #1', () => {
+        describe('prohibited nodes Variant #1', () => {
             const regExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\[_0x([a-f0-9]){4,6}\] *&& *!\[\];/;
 
             let obfuscatedCode: string;

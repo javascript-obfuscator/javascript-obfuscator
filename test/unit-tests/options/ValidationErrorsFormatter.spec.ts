@@ -6,7 +6,7 @@ import { ValidationErrorsFormatter } from '../../../src/options/ValidationErrors
 
 describe('ValidationErrorsFormatter', () => {
     describe('format (validationErrors: ValidationError[]): string', () => {
-        describe('variant #1: one constraint group with one constraint', () => {
+        describe('Variant #1: one constraint group with one constraint', () => {
             const constraintGroupRegExp: RegExp = /`foo` *errors:/;
             const constraintRegExp: RegExp = /(?: *-)+ *constraint *text/;
             const validationErrors: ValidationError[] = [{
@@ -34,7 +34,7 @@ describe('ValidationErrorsFormatter', () => {
             });
         });
 
-        describe('variant #2: one constraint group with two constraint', () => {
+        describe('Variant #2: one constraint group with two constraint', () => {
             const constraintGroupRegExp: RegExp = /`foo` *errors:/;
             const constraintRegExp1: RegExp = /(?: *-)+ constraint *text *#1/;
             const constraintRegExp2: RegExp = /(?: *-)+ constraint *text *#2/;
@@ -68,7 +68,7 @@ describe('ValidationErrorsFormatter', () => {
             });
         });
 
-        describe('variant #3: two constraint groups', () => {
+        describe('Variant #3: two constraint groups', () => {
             const regExpMatch: string = `` +
                 `\`foo\` *errors:\\n` +
                     `(?: *-)+ *constraint *group *#1 *text\\n+` +

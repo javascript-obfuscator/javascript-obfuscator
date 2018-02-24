@@ -10,6 +10,7 @@ import { IFileData } from '../../../../src/interfaces/cli/IFileData';
 import { SourceCodeReader } from '../../../../src/cli/utils/SourceCodeReader';
 
 describe('SourceCodeReader', () => {
+    const expectedError: RegExp = /Given input path must be a valid/;
     const fileContent: string = 'test';
     const tmpDirectoryPath: string = 'test/tmp';
 
@@ -19,7 +20,7 @@ describe('SourceCodeReader', () => {
 
     describe('readSourceCode (inputPath: string): void', () => {
         describe('Variant #1: input path is a file path', () => {
-            describe('`inputPath` is a valid path', () => {
+            describe('Variant #1: `inputPath` is a valid path', () => {
                 const tmpFileName: string = 'test.js';
                 const inputPath: string = `${tmpDirectoryPath}/${tmpFileName}`;
 
@@ -27,7 +28,7 @@ describe('SourceCodeReader', () => {
 
                 before(() => {
                     fs.writeFileSync(inputPath, fileContent);
-                    result = SourceCodeReader.readSourceCode(inputPath);
+                    result = new SourceCodeReader({}).readSourceCode(inputPath);
                 });
 
                 it('should return content of file', () => {
@@ -39,22 +40,22 @@ describe('SourceCodeReader', () => {
                 });
             });
 
-            describe('`inputPath` is not a valid path', () => {
+            describe('Variant #2: `inputPath` is not a valid path', () => {
                 const tmpFileName: string = 'test.js';
                 const inputPath: string = `${tmpDirectoryPath}/${tmpFileName}`;
 
                 let testFunc: () => void;
 
                 before(() => {
-                    testFunc = () => SourceCodeReader.readSourceCode(inputPath);
+                    testFunc = () => new SourceCodeReader({}).readSourceCode(inputPath);
                 });
 
                 it('should throw an error if `inputPath` is not a valid path', () => {
-                    assert.throws(testFunc, ReferenceError);
+                    assert.throws(testFunc, expectedError);
                 });
             });
 
-            describe('`inputPath` has invalid extension', () => {
+            describe('Variant #3: `inputPath` has invalid extension', () => {
                 const tmpFileName: string = 'test.ts';
                 const inputPath: string = `${tmpDirectoryPath}/${tmpFileName}`;
 
@@ -62,21 +63,112 @@ describe('SourceCodeReader', () => {
 
                 before(() => {
                     fs.writeFileSync(inputPath, fileContent);
-                    testFunc = () => SourceCodeReader.readSourceCode(inputPath);
+                    testFunc = () => new SourceCodeReader({}).readSourceCode(inputPath);
                 });
 
                 it('should throw an error if `inputPath` has invalid extension', () => {
-                    assert.throws(testFunc, ReferenceError);
+                    assert.throws(testFunc, expectedError);
                 });
 
                 after(() => {
                     fs.unlinkSync(inputPath);
                 });
             });
+
+            describe('Variant #4: `exclude` option', () => {
+                describe('Variant #1: `inputPath` isn\'t excluded path', () => {
+                    const tmpFileName: string = 'test.js';
+                    const inputPath: string = `${tmpDirectoryPath}/${tmpFileName}`;
+
+                    let result: string | IFileData[];
+
+                    before(() => {
+                        fs.writeFileSync(inputPath, fileContent);
+                        result = new SourceCodeReader({
+                            exclude: ['**/foo.js']
+                        }).readSourceCode(inputPath);                });
+
+                    it('should return content of file', () => {
+                        assert.equal(result, fileContent);
+                    });
+
+                    after(() => {
+                        fs.unlinkSync(inputPath);
+                    });
+                });
+
+                describe('Variant #2: `inputPath` is excluded path', () => {
+                    describe('Variant #1: exclude by `glob` pattern', () => {
+                        const tmpFileName: string = 'test.js';
+                        const inputPath: string = `${tmpDirectoryPath}/${tmpFileName}`;
+
+                        let testFunc: () => void;
+
+                        before(() => {
+                            fs.writeFileSync(inputPath, fileContent);
+                            testFunc = () => new SourceCodeReader({
+                                exclude: [`**/${tmpFileName}`]
+                            }).readSourceCode(inputPath);
+                        });
+
+                        it('should throw an error if `inputPath` is the excluded file path', () => {
+                            assert.throws(testFunc, expectedError);
+                        });
+
+                        after(() => {
+                            fs.unlinkSync(inputPath);
+                        });
+                    });
+
+                    describe('Variant #2: exclude by file name', () => {
+                        const tmpFileName: string = 'test.js';
+                        const inputPath: string = `${tmpDirectoryPath}/${tmpFileName}`;
+
+                        let testFunc: () => void;
+
+                        before(() => {
+                            fs.writeFileSync(inputPath, fileContent);
+                            testFunc = () => new SourceCodeReader({
+                                exclude: [tmpFileName]
+                            }).readSourceCode(inputPath);
+                        });
+
+                        it('should throw an error if `inputPath` is the excluded file path', () => {
+                            assert.throws(testFunc, expectedError);
+                        });
+
+                        after(() => {
+                            fs.unlinkSync(inputPath);
+                        });
+                    });
+
+                    describe('Variant #3: exclude by file path', () => {
+                        const tmpFileName: string = 'test.js';
+                        const inputPath: string = `${tmpDirectoryPath}/${tmpFileName}`;
+
+                        let testFunc: () => void;
+
+                        before(() => {
+                            fs.writeFileSync(inputPath, fileContent);
+                            testFunc = () => new SourceCodeReader({
+                                exclude: [inputPath]
+                            }).readSourceCode(inputPath);
+                        });
+
+                        it('should throw an error if `inputPath` is the excluded file path', () => {
+                            assert.throws(testFunc, expectedError);
+                        });
+
+                        after(() => {
+                            fs.unlinkSync(inputPath);
+                        });
+                    });
+                });
+            });
         });
 
         describe('Variant #2: input path is a directory path', () => {
-            describe('`inputPath` is a valid path', () => {
+            describe('Variant #1: `inputPath` is a valid path', () => {
                 const tmpFileName1: string = 'foo.js';
                 const tmpFileName2: string = 'bar.js';
                 const tmpFileName3: string = 'baz.png';
@@ -104,7 +196,7 @@ describe('SourceCodeReader', () => {
                     fs.writeFileSync(filePath2, fileContent);
                     fs.writeFileSync(filePath3, fileContent);
                     fs.writeFileSync(filePath4, fileContent);
-                    result = SourceCodeReader.readSourceCode(tmpDirectoryPath);
+                    result = new SourceCodeReader({}).readSourceCode(tmpDirectoryPath);
                 });
 
                 it('should return files data', () => {
@@ -119,21 +211,21 @@ describe('SourceCodeReader', () => {
                 });
             });
 
-            describe('`inputPath` is not a valid path', () => {
+            describe('Variant #2: `inputPath` is not a valid path', () => {
                 const inputPath: string = 'abc';
 
                 let testFunc: () => void;
 
                 before(() => {
-                    testFunc = () => SourceCodeReader.readSourceCode(inputPath);
+                    testFunc = () => new SourceCodeReader({}).readSourceCode(inputPath);
                 });
 
                 it('should throw an error if `inputPath` is not a valid path', () => {
-                    assert.throws(testFunc, ReferenceError);
+                    assert.throws(testFunc, expectedError);
                 });
             });
 
-            describe('`inputPath` is a directory with sub-directories', () => {
+            describe('Variant #3: `inputPath` is a directory with sub-directories', () => {
                 const parentDirectoryName1: string = 'parent1';
                 const parentDirectoryName2: string = 'parent';
                 const parentDirectoryPath1: string = `${tmpDirectoryPath}/${parentDirectoryName1}`;
@@ -175,7 +267,7 @@ describe('SourceCodeReader', () => {
                     fs.writeFileSync(filePath2, fileContent);
                     fs.writeFileSync(filePath3, fileContent);
                     fs.writeFileSync(filePath4, fileContent);
-                    result = SourceCodeReader.readSourceCode(tmpDirectoryPath);
+                    result = new SourceCodeReader({}).readSourceCode(tmpDirectoryPath);
                 });
 
                 it('should return files data', () => {
@@ -189,6 +281,233 @@ describe('SourceCodeReader', () => {
                     fs.unlinkSync(filePath4);
                     rimraf.sync(parentDirectoryPath1);
                     rimraf.sync(parentDirectoryPath2);
+                });
+            });
+
+            describe('Variant #4: `exclude` option', () => {
+                describe('Variant #1: `inputPath` isn\'t excluded path', () => {
+                    const tmpFileName1: string = 'foo.js';
+                    const tmpFileName2: string = 'bar.js';
+                    const tmpFileName3: string = 'baz.png';
+                    const tmpFileName4: string = 'bark-obfuscated.js';
+                    const filePath1: string = `${tmpDirectoryPath}/${tmpFileName1}`;
+                    const filePath2: string = `${tmpDirectoryPath}/${tmpFileName2}`;
+                    const filePath3: string = `${tmpDirectoryPath}/${tmpFileName3}`;
+                    const filePath4: string = `${tmpDirectoryPath}/${tmpFileName4}`;
+
+                    const expectedResult: IFileData[] = [
+                        {
+                            filePath: filePath2,
+                            content: fileContent
+                        },
+                        {
+                            filePath: filePath1,
+                            content: fileContent
+                        }
+                    ];
+
+                    let result: string | IFileData[];
+
+                    before(() => {
+                        fs.writeFileSync(filePath1, fileContent);
+                        fs.writeFileSync(filePath2, fileContent);
+                        fs.writeFileSync(filePath3, fileContent);
+                        fs.writeFileSync(filePath4, fileContent);
+                        result = new SourceCodeReader({
+                            exclude: ['**/hawk.js']
+                        }).readSourceCode(tmpDirectoryPath);
+                    });
+
+                    it('should return files data', () => {
+                        assert.deepEqual(result, expectedResult);
+                    });
+
+                    after(() => {
+                        fs.unlinkSync(filePath1);
+                        fs.unlinkSync(filePath2);
+                        fs.unlinkSync(filePath3);
+                        fs.unlinkSync(filePath4);
+                    });
+                });
+
+                describe('Variant #2: `inputPath` is excluded path', () => {
+                    describe('Variant #1: exclude by `glob` pattern', () => {
+                        const tmpFileName1: string = 'foo.js';
+                        const tmpFileName2: string = 'bar.js';
+                        const tmpFileName3: string = 'baz.js';
+                        const tmpFileName4: string = 'bark.js';
+                        const filePath1: string = `${tmpDirectoryPath}/${tmpFileName1}`;
+                        const filePath2: string = `${tmpDirectoryPath}/${tmpFileName2}`;
+                        const filePath3: string = `${tmpDirectoryPath}/${tmpFileName3}`;
+                        const filePath4: string = `${tmpDirectoryPath}/${tmpFileName4}`;
+
+                        const expectedResult: IFileData[] = [
+                            {
+                                filePath: filePath3,
+                                content: fileContent
+                            },
+                            {
+                                filePath: filePath1,
+                                content: fileContent
+                            }
+                        ];
+
+                        let result: string | IFileData[];
+
+                        before(() => {
+                            fs.writeFileSync(filePath1, fileContent);
+                            fs.writeFileSync(filePath2, fileContent);
+                            fs.writeFileSync(filePath3, fileContent);
+                            fs.writeFileSync(filePath4, fileContent);
+                            result = new SourceCodeReader({
+                                exclude: [
+                                    `**/${tmpFileName2}`,
+                                    `**/${tmpFileName4}`
+                                ]
+                            }).readSourceCode(tmpDirectoryPath);
+                        });
+
+                        it('should return files data', () => {
+                            assert.deepEqual(result, expectedResult);
+                        });
+
+                        after(() => {
+                            fs.unlinkSync(filePath1);
+                            fs.unlinkSync(filePath2);
+                            fs.unlinkSync(filePath3);
+                            fs.unlinkSync(filePath4);
+                        });
+                    });
+
+                    describe('Variant #2: exclude by file name', () => {
+                        const tmpFileName1: string = 'foo.js';
+                        const tmpFileName2: string = 'bar.js';
+                        const tmpFileName3: string = 'baz.js';
+                        const tmpFileName4: string = 'bark.js';
+                        const filePath1: string = `${tmpDirectoryPath}/${tmpFileName1}`;
+                        const filePath2: string = `${tmpDirectoryPath}/${tmpFileName2}`;
+                        const filePath3: string = `${tmpDirectoryPath}/${tmpFileName3}`;
+                        const filePath4: string = `${tmpDirectoryPath}/${tmpFileName4}`;
+
+                        const expectedResult: IFileData[] = [
+                            {
+                                filePath: filePath3,
+                                content: fileContent
+                            },
+                            {
+                                filePath: filePath1,
+                                content: fileContent
+                            }
+                        ];
+
+                        let result: string | IFileData[];
+
+                        before(() => {
+                            fs.writeFileSync(filePath1, fileContent);
+                            fs.writeFileSync(filePath2, fileContent);
+                            fs.writeFileSync(filePath3, fileContent);
+                            fs.writeFileSync(filePath4, fileContent);
+                            result = new SourceCodeReader({
+                                exclude: [
+                                    tmpFileName2,
+                                    tmpFileName4
+                                ]
+                            }).readSourceCode(tmpDirectoryPath);
+                        });
+
+                        it('should return files data', () => {
+                            assert.deepEqual(result, expectedResult);
+                        });
+
+                        after(() => {
+                            fs.unlinkSync(filePath1);
+                            fs.unlinkSync(filePath2);
+                            fs.unlinkSync(filePath3);
+                            fs.unlinkSync(filePath4);
+                        });
+                    });
+
+                    describe('Variant #3: exclude by file path', () => {
+                        const tmpFileName1: string = 'foo.js';
+                        const tmpFileName2: string = 'bar.js';
+                        const tmpFileName3: string = 'baz.js';
+                        const tmpFileName4: string = 'bark.js';
+                        const filePath1: string = `${tmpDirectoryPath}/${tmpFileName1}`;
+                        const filePath2: string = `${tmpDirectoryPath}/${tmpFileName2}`;
+                        const filePath3: string = `${tmpDirectoryPath}/${tmpFileName3}`;
+                        const filePath4: string = `${tmpDirectoryPath}/${tmpFileName4}`;
+
+                        const expectedResult: IFileData[] = [
+                            {
+                                filePath: filePath3,
+                                content: fileContent
+                            },
+                            {
+                                filePath: filePath1,
+                                content: fileContent
+                            }
+                        ];
+
+                        let result: string | IFileData[];
+
+                        before(() => {
+                            fs.writeFileSync(filePath1, fileContent);
+                            fs.writeFileSync(filePath2, fileContent);
+                            fs.writeFileSync(filePath3, fileContent);
+                            fs.writeFileSync(filePath4, fileContent);
+                            result = new SourceCodeReader({
+                                exclude: [
+                                    filePath2,
+                                    filePath4
+                                ]
+                            }).readSourceCode(tmpDirectoryPath);
+                        });
+
+                        it('should return files data', () => {
+                            assert.deepEqual(result, expectedResult);
+                        });
+
+                        after(() => {
+                            fs.unlinkSync(filePath1);
+                            fs.unlinkSync(filePath2);
+                            fs.unlinkSync(filePath3);
+                            fs.unlinkSync(filePath4);
+                        });
+                    });
+
+                    describe('Variant #4: exclude whole directory', () => {
+                        const tmpFileName1: string = 'foo.js';
+                        const tmpFileName2: string = 'bar.js';
+                        const tmpFileName3: string = 'baz.js';
+                        const tmpFileName4: string = 'bark.js';
+                        const filePath1: string = `${tmpDirectoryPath}/${tmpFileName1}`;
+                        const filePath2: string = `${tmpDirectoryPath}/${tmpFileName2}`;
+                        const filePath3: string = `${tmpDirectoryPath}/${tmpFileName3}`;
+                        const filePath4: string = `${tmpDirectoryPath}/${tmpFileName4}`;
+
+                        let testFunc: () => void;
+
+                        before(() => {
+                            fs.writeFileSync(filePath1, fileContent);
+                            fs.writeFileSync(filePath2, fileContent);
+                            fs.writeFileSync(filePath3, fileContent);
+                            fs.writeFileSync(filePath4, fileContent);
+                            testFunc = () => new SourceCodeReader({
+                                exclude: [tmpDirectoryPath]
+                            }).readSourceCode(tmpDirectoryPath);
+                        });
+
+                        it('should return files data', () => {
+                            assert.throws(testFunc, expectedError);
+                        });
+
+                        after(() => {
+                            fs.unlinkSync(filePath1);
+                            fs.unlinkSync(filePath2);
+                            fs.unlinkSync(filePath3);
+                            fs.unlinkSync(filePath4);
+                        });
+                    });
                 });
             });
         });
@@ -207,7 +526,7 @@ describe('SourceCodeReader', () => {
                 consoleLogSpy = sinon.spy(console, 'log');
 
                 fs.writeFileSync(inputPath, fileContent);
-                SourceCodeReader.readSourceCode(inputPath);
+                new SourceCodeReader({}).readSourceCode(inputPath);
 
                 consoleLogCallResult = consoleLogSpy.called;
                 loggingMessageResult = consoleLogSpy.getCall(0).args[0];

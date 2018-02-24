@@ -26,7 +26,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             );
         });
 
-        describe('variant #1: initial mangled name', () => {
+        describe('Variant #1: initial mangled name', () => {
             const expectedMangledIdentifierName: string = 'a';
 
             beforeEach(() => {
@@ -38,7 +38,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             });
         });
 
-        describe('variant #2: second mangled name', () => {
+        describe('Variant #2: second mangled name', () => {
             const expectedMangledIdentifierName: string = 'b';
             const expectedMangledIdentifierPosition: number = 1;
 
@@ -53,7 +53,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             });
         });
 
-        describe('variant #3: last mangled name with single character', () => {
+        describe('Variant #3: last mangled name with single character', () => {
             const expectedMangledIdentifierName: string = 'Z';
             const expectedMangledIdentifierPosition: number = 51;
 
@@ -68,7 +68,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             });
         });
 
-        describe('variant #4: correct increase of mangled name length', () => {
+        describe('Variant #4: correct increase of mangled name length', () => {
             const expectedMangledIdentifierName: string = 'a0';
             const expectedMangledIdentifierPosition: number = 52;
 
@@ -83,7 +83,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             });
         });
 
-        describe('variant #5: correct increase of mangled name length #2', () => {
+        describe('Variant #5: correct increase of mangled name length #2', () => {
             const expectedMangledIdentifierName: string = 'aa';
             const expectedMangledIdentifierPosition: number = 62;
 
@@ -98,7 +98,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             });
         });
 
-        describe('variant #6: reserved names', () => {
+        describe('Variant #6: reserved names', () => {
             const expectedMangledIdentifierName1: string = 'dn';
             const expectedMangledIdentifierName2: string = 'dp';
             const expectedMangledIdentifierPosition1: number = 261;
@@ -145,7 +145,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             );
         });
 
-        describe('variant #1: initial mangled name', () => {
+        describe('Variant #1: initial mangled name', () => {
             const expectedMangledIdentifierName: string = 'foo_a';
 
             beforeEach(() => {
@@ -157,7 +157,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             });
         });
 
-        describe('variant #2: second mangled name', () => {
+        describe('Variant #2: second mangled name', () => {
             const expectedMangledIdentifierName: string = 'foo_b';
 
             beforeEach(() => {

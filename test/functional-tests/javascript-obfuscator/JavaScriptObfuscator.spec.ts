@@ -186,7 +186,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('variable inside global scope', () => {
-            describe('variant #1: without `renameGlobals` option', () => {
+            describe('Variant #1: without `renameGlobals` option', () => {
                 const regExp: RegExp = /^var *test *= *0x\d+;$/;
 
                 let obfuscatedCode: string;
@@ -208,7 +208,7 @@ describe('JavaScriptObfuscator', () => {
                 });
             });
 
-            describe('variant #2: with `renameGlobals` option', () => {
+            describe('Variant #2: with `renameGlobals` option', () => {
                 const regExp: RegExp = /^var *_0x(\w){4,6} *= *0x\d+;$/;
 
                 let obfuscatedCode: string;
@@ -231,7 +231,7 @@ describe('JavaScriptObfuscator', () => {
                 });
             });
 
-            describe('variant #3: with `renameGlobals` and `identifiersPrefix` options', () => {
+            describe('Variant #3: with `renameGlobals` and `identifiersPrefix` options', () => {
                 const regExp: RegExp = /^var *foo_0x(\w){4,6} *= *0x\d+;$/;
 
                 let obfuscatedCode: string;
@@ -255,7 +255,7 @@ describe('JavaScriptObfuscator', () => {
                 });
             });
 
-            describe('variant #4: with `stringArray`, `renameGlobals` and `identifiersPrefix` options', () => {
+            describe('Variant #4: with `stringArray`, `renameGlobals` and `identifiersPrefix` options', () => {
                 const stringArrayRegExp: RegExp = /^var foo_0x(\w){4} *= *\['abc'\];/;
                 const stringArrayCallRegExp: RegExp = /var *foo_0x(\w){4,6} *= *foo_0x(\w){4}\('0x0'\);$/;
 
@@ -310,7 +310,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('variables inside global and block scopes', () => {
-            describe('variant #1: with `renameGlobals` and `identifiersPrefix` options', () => {
+            describe('Variant #1: with `renameGlobals` and `identifiersPrefix` options', () => {
                 const variableDeclaration1: RegExp = /var foo_0x(\w){4,6} *= *0x1;/;
                 const variableDeclaration2: RegExp = /var foo_0x(\w){4,6} *= *0x2;/;
                 const variableDeclaration3: RegExp = /var _0x(\w){4,6} *= *foo_0x(\w){4,6} *\+ *foo_0x(\w){4,6}/;
@@ -453,7 +453,7 @@ describe('JavaScriptObfuscator', () => {
                 });
             });
 
-            describe('variant #1: different seed on each run', () => {
+            describe('Variant #1: different seed on each run', () => {
                 const code: string = readFileAsString('./test/fixtures/sample.js');
 
                 let obfuscatedCode1: string,
@@ -482,7 +482,7 @@ describe('JavaScriptObfuscator', () => {
                 });
             });
 
-            describe('variant #2: different seed on each run', () => {
+            describe('Variant #2: different seed on each run', () => {
                 const code: string = readFileAsString('./test/fixtures/sample.js');
 
                 let obfuscatedCode1: string,
@@ -511,7 +511,7 @@ describe('JavaScriptObfuscator', () => {
                 });
             });
 
-            describe('variant #3: same seed for different source code', () => {
+            describe('Variant #3: same seed for different source code', () => {
                 const code1: string = readFileAsString(__dirname + '/fixtures/simple-input-cyrillic.js');
                 const code2: string = readFileAsString(__dirname + '/fixtures/simple-input-2.js');
 

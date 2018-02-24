@@ -4,7 +4,7 @@ import { IdentifierNamesGeneratorSanitizer } from '../../../../src/cli/sanitizer
 
 describe('IdentifierNamesGeneratorSanitizer', () => {
     describe('IdentifierNamesGeneratorSanitizer: TCLISanitizer = (value: string): string', () => {
-        describe('variant #1: valid identifier names generator', () => {
+        describe('Variant #1: valid identifier names generator', () => {
             const inputValue: string = 'mangled';
             const expectedValue: string = inputValue;
 
@@ -19,7 +19,7 @@ describe('IdentifierNamesGeneratorSanitizer', () => {
             });
         });
 
-        describe('variant #2: invalid identifier names generator', () => {
+        describe('Variant #2: invalid identifier names generator', () => {
             const inputValue: string = 'foo';
 
             let testFunc: () => void;

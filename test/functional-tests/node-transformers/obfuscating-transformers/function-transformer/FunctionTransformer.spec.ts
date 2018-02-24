@@ -49,7 +49,7 @@ describe('FunctionTransformer', () => {
     });
 
     describe('object pattern as parameter', () => {
-        describe('variant #1: simple', () => {
+        describe('Variant #1: simple', () => {
             const functionParameterRegExp: RegExp = /function *\(\{ *bar *\}\) *\{/;
             const functionBodyRegExp: RegExp = /return *bar;/;
 
@@ -76,7 +76,7 @@ describe('FunctionTransformer', () => {
             });
         });
 
-        describe('variant #2: correct transformation when identifier with same name in parent scope exist', () => {
+        describe('Variant #2: correct transformation when identifier with same name in parent scope exist', () => {
             const callbackParameterRegExp: RegExp = /\['then'] *\(\({ *data *}\)/;
             const callbackBodyRegExp: RegExp = /console\['log']\(data\)/;
 
@@ -105,7 +105,7 @@ describe('FunctionTransformer', () => {
     });
 
     describe('assignment pattern as parameter', () => {
-        describe('variant #1: literal as right value', () => {
+        describe('Variant #1: literal as right value', () => {
             const functionParameterRegExp: RegExp = /function *\(_0x[a-f0-9]{4,6} *= *0x1\) *\{/;
             const functionBodyRegExp: RegExp = /return *_0x[a-f0-9]{4,6};/;
 
@@ -132,7 +132,7 @@ describe('FunctionTransformer', () => {
             });
         });
 
-        describe('variant #2: identifier as right value', () => {
+        describe('Variant #2: identifier as right value', () => {
             const variableDeclarationRegExp: RegExp = /var *(_0x[a-f0-9]{4,6}) *= *0x1;/;
             const functionParameterRegExp: RegExp = /function *\((_0x[a-f0-9]{4,6}) *= *(_0x[a-f0-9]{4,6})\) *\{/;
             const functionBodyRegExp: RegExp = /return *(_0x[a-f0-9]{4,6});/;
@@ -180,7 +180,7 @@ describe('FunctionTransformer', () => {
             });
         });
 
-        describe('variant #3: identifier as right value', () => {
+        describe('Variant #3: identifier as right value', () => {
             const variableDeclarationRegExp: RegExp = /var *(_0x[a-f0-9]{4,6}) *= *0x1;/;
             const functionParameterRegExp: RegExp = /function *\((_0x[a-f0-9]{4,6}), *(_0x[a-f0-9]{4,6}) *= *(_0x[a-f0-9]{4,6})\) *\{/;
             const functionBodyRegExp: RegExp = /return *(_0x[a-f0-9]{4,6}) *\+ *(_0x[a-f0-9]{4,6});/;

@@ -5,7 +5,7 @@ import { BooleanSanitizer } from '../../../../src/cli/sanitizers/BooleanSanitize
 
 describe('BooleanSanitizer', () => {
     describe('BooleanSanitizer: TCLISanitizer = (value: string): boolean', () => {
-        describe('variant #1: input value `true`', () => {
+        describe('Variant #1: input value `true`', () => {
             const inputValue: string = 'true';
             const expectedValue: boolean = true;
 
@@ -20,7 +20,7 @@ describe('BooleanSanitizer', () => {
             });
         });
 
-        describe('variant #2: input value `1`', () => {
+        describe('Variant #2: input value `1`', () => {
             const inputValue: string = '1';
             const expectedValue: boolean = true;
 
@@ -35,7 +35,7 @@ describe('BooleanSanitizer', () => {
             });
         });
 
-        describe('variant #3: input value `false`', () => {
+        describe('Variant #3: input value `false`', () => {
             const inputValue: string = 'false';
             const expectedValue: boolean = false;
 
@@ -50,7 +50,7 @@ describe('BooleanSanitizer', () => {
             });
         });
 
-        describe('variant #4: input value `foo`', () => {
+        describe('Variant #4: input value `foo`', () => {
             const inputValue: string = 'foo';
             const expectedValue: boolean = false;
 

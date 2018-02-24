@@ -7,7 +7,7 @@ import { assert } from 'chai';
 import { GlobalVariableNoEvalTemplate } from '../../../src/templates/GlobalVariableNoEvalTemplate';
 
 describe('GlobalVariableNoEvalTemplate (): string', () => {
-    describe('variant #1: simple', () => {
+    describe('Variant #1: simple', () => {
         const expectedGlobalObject: NodeJS.Global = global;
 
         let globalObject: NodeJS.Global;
@@ -27,7 +27,7 @@ describe('GlobalVariableNoEvalTemplate (): string', () => {
         });
     });
 
-    describe('variant #2: call inside function', () => {
+    describe('Variant #2: call inside function', () => {
         const expectedGlobalObject: NodeJS.Global = global;
 
         let globalObject: NodeJS.Global;
@@ -49,7 +49,7 @@ describe('GlobalVariableNoEvalTemplate (): string', () => {
         });
     });
 
-    describe('variant #3: return `window`', () => {
+    describe('Variant #3: return `window`', () => {
         const expectedGlobalObject: {} = {
             document: {}
         };

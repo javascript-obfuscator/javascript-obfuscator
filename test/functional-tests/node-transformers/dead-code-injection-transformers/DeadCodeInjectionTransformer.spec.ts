@@ -18,7 +18,7 @@ describe('DeadCodeInjectionTransformer', () => {
     describe('transformNode (programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node', function () {
         this.timeout(100000);
 
-        describe('variant #1 - 5 simple block statements', () => {
+        describe('Variant #1 - 5 simple block statements', () => {
             const regExp: RegExp = new RegExp(
                 `if *\\(${variableMatch}\\('${hexMatch}'\\) *[=|!]== *${variableMatch}\\('${hexMatch}'\\)\\) *\\{`+
                     `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
@@ -56,7 +56,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('variant #2 - block statements count is less than `5`', () => {
+        describe('Variant #2 - block statements count is less than `5`', () => {
             const regexp: RegExp = new RegExp(
                 `var *${variableMatch} *= *function *\\(\\) *\\{` +
                     `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
@@ -92,7 +92,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('variant #3 - deadCodeInjectionThreshold: 0', () => {
+        describe('Variant #3 - deadCodeInjectionThreshold: 0', () => {
             const regexp: RegExp = new RegExp(
                 `var *${variableMatch} *= *function *\\(\\) *\\{` +
                     `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
@@ -128,7 +128,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('variant #4 - break or continue statement in block statement', () => {
+        describe('Variant #4 - break or continue statement in block statement', () => {
             const functionRegExp: RegExp = new RegExp(
                 `var *${variableMatch} *= *function *\\(\\) *\\{` +
                     `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
@@ -181,7 +181,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('variant #5 - await expression in block statement', () => {
+        describe('Variant #5 - await expression in block statement', () => {
             const functionRegExp: RegExp = new RegExp(
                 `var *${variableMatch} *= *function *\\(\\) *\\{` +
                     `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
@@ -232,7 +232,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('variant #6 - super expression in block statement', () => {
+        describe('Variant #6 - super expression in block statement', () => {
             const functionRegExp: RegExp = new RegExp(
                 `var *${variableMatch} *= *function *\\(\\) *\\{` +
                     `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
@@ -283,7 +283,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('variant #7 - chance of `IfStatement` variant', () => {
+        describe('Variant #7 - chance of `IfStatement` variant', () => {
             const samplesCount: number = 1000;
             const delta: number = 0.1;
             const expectedDistribution: number = 0.25;
@@ -368,24 +368,24 @@ describe('DeadCodeInjectionTransformer', () => {
                 distribution4 = count4 / samplesCount;
             });
 
-            it('variant #1: `IfStatement` variant should have distribution close to `0.25`', () => {
+            it('Variant #1: `IfStatement` variant should have distribution close to `0.25`', () => {
                 assert.closeTo(distribution1, expectedDistribution, delta);
             });
 
-            it('variant #2: `IfStatement` variant should have distribution close to `0.25`', () => {
+            it('Variant #2: `IfStatement` variant should have distribution close to `0.25`', () => {
                 assert.closeTo(distribution2, expectedDistribution, delta);
             });
 
-            it('variant #3: `IfStatement` variant should have distribution close to `0.25`', () => {
+            it('Variant #3: `IfStatement` variant should have distribution close to `0.25`', () => {
                 assert.closeTo(distribution3, expectedDistribution, delta);
             });
 
-            it('variant #4: `IfStatement` variant should have distribution close to `0.25`', () => {
+            it('Variant #4: `IfStatement` variant should have distribution close to `0.25`', () => {
                 assert.closeTo(distribution4, expectedDistribution, delta);
             });
         });
 
-        describe('variant #8 - block scope of block statement is `ProgramNode`', () => {
+        describe('Variant #8 - block scope of block statement is `ProgramNode`', () => {
             const regExp: RegExp = new RegExp(
                 `if *\\(!!\\[\\]\\) *{` +
                     `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
@@ -415,7 +415,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('variant #9 - correct obfuscation of dead-code block statements', () => {
+        describe('Variant #9 - correct obfuscation of dead-code block statements', () => {
             const variableName: string = 'importantVariableName';
 
             let obfuscatedCode: string;
@@ -440,7 +440,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('variant #10 - unique names for dead code identifiers', () => {
+        describe('Variant #10 - unique names for dead code identifiers', () => {
             const deadCodeMatch: string = `` +
                 `if *\\(.*?\\) *{` +
                     `var *(\\w).*?;` +
@@ -482,7 +482,7 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('variant #11 - block statements with empty body', () => {
+        describe('Variant #11 - block statements with empty body', () => {
             const regExp: RegExp = new RegExp(
                 `function *${variableMatch} *\\(\\) *{ *} *` +
                 `${variableMatch} *\\(\\); *`,
@@ -518,8 +518,8 @@ describe('DeadCodeInjectionTransformer', () => {
             });
         });
 
-        describe('variant #12 - block statement with scope-hoisting', () => {
-            describe('variant #1: collecting of block statements', () => {
+        describe('Variant #12 - block statement with scope-hoisting', () => {
+            describe('Variant #1: collecting of block statements', () => {
                 const regExp: RegExp = new RegExp(
                     `${variableMatch} *\\(\\); *` +
                     `var *${variableMatch} *= *0x2; *` +
@@ -556,7 +556,7 @@ describe('DeadCodeInjectionTransformer', () => {
                 });
             });
 
-            describe('variant #2: wrapping of block statements in dead code conditions', () => {
+            describe('Variant #2: wrapping of block statements in dead code conditions', () => {
                 const regExp: RegExp = new RegExp(
                     `function *${variableMatch} *\\(\\) *{ *` +
                         `var *${variableMatch} *= *0x1; *` +

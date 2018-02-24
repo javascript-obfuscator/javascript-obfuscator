@@ -4,7 +4,7 @@ import { ArraySanitizer } from '../../../../src/cli/sanitizers/ArraySanitizer';
 
 describe('ArraySanitizer', () => {
     describe('ArraySanitizer: TCLISanitizer = (value: string): string[]', () => {
-        describe('variant #1: input value `foo`', () => {
+        describe('Variant #1: input value `foo`', () => {
             const inputValue: string = 'foo';
             const expectedValue: string[] = ['foo'];
 
@@ -19,7 +19,7 @@ describe('ArraySanitizer', () => {
             });
         });
 
-        describe('variant #2: input value `foo, bar`', () => {
+        describe('Variant #2: input value `foo, bar`', () => {
             const inputValue: string = 'foo, bar';
             const expectedValue: string[] = ['foo', 'bar'];
 
@@ -34,7 +34,7 @@ describe('ArraySanitizer', () => {
             });
         });
 
-        describe('variant #3: input value `foo,`', () => {
+        describe('Variant #3: input value `foo,`', () => {
             const inputValue: string = 'foo,';
 
             const testFunc: () => void = () => {

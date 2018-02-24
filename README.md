@@ -315,6 +315,7 @@ Following options are available for the JS Obfuscator:
     --debug-protection-interval <boolean>
     --disable-console-output <boolean>
     --domain-lock '<list>' (comma separated)
+    --exclude '<list>' (comma separated)
     --identifier-names-generator <string> [hexadecimal, mangled]
     --identifiers-prefix <string>
     --log <boolean>
@@ -563,6 +564,11 @@ Locks the obfuscated source code so it only runs on specific domains and/or sub-
 
 ##### Multiple domains and sub-domains
 It's possible to lock your code to more than one domain or sub-domain. For instance, to lock it so the code only runs on **www.example.com** add `www.example.com`, to make it work on any sub-domain from example.com, use `.example.com`.
+
+### `exclude`
+Type: `string[]` Default: `[]`
+
+A file names or globs which indicates files to exclude from obfuscation. 
 
 ### `identifierNamesGenerator`
 Type: `string` Default: `hexadecimal`

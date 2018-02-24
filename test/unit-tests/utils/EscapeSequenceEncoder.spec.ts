@@ -19,7 +19,7 @@ describe('EscapeSequenceEncoder', () => {
                 .get<IEscapeSequenceEncoder>(ServiceIdentifiers.IEscapeSequenceEncoder);
         });
 
-        describe('variant #1: default', () => {
+        describe('Variant #1: default', () => {
             const string: string = 'string';
             const expectedString: string = '\\x73\\x74\\x72\\x69\\x6e\\x67';
 
@@ -34,7 +34,7 @@ describe('EscapeSequenceEncoder', () => {
             });
         });
 
-        describe('variant #2: escape `escape sequences`', () => {
+        describe('Variant #2: escape `escape sequences`', () => {
             const string: string = 'abc\'\\r\\n';
             const expectedString: string = 'abc\\x27\\x5cr\\x5cn';
 

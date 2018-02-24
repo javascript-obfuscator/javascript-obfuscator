@@ -21,7 +21,7 @@ describe('BlockStatementControlFlowTransformer', function () {
     this.timeout(100000);
 
     describe('transformNode (blockStatementNode: ESTree.BlockStatement): ESTree.Node', () => {
-        describe('variant #1: 5 simple statements', () => {
+        describe('Variant #1: 5 simple statements', () => {
             let obfuscatedCode: string;
 
             before(() => {
@@ -109,7 +109,7 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #2: 5 simple statements inside while loop without break or continue statement', () => {
+        describe('Variant #2: 5 simple statements inside while loop without break or continue statement', () => {
             let obfuscatedCode: string;
 
             before(() => {
@@ -198,7 +198,7 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #3: statements length less then 5 statements', () => {
+        describe('Variant #3: statements length less then 5 statements', () => {
             const statementRegExp: RegExp = /^\(function *\( *\) *\{ *console\['log'\]\(0x1\); *\} *\( *\) *\);$/;
 
             let obfuscatedCode: string;
@@ -222,7 +222,7 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #4: block statement contain variable declaration with `const` kind', () => {
+        describe('Variant #4: block statement contain variable declaration with `const` kind', () => {
             const statementRegExp: RegExp = /^\(function *\( *\) *\{ *const *_0x([a-f0-9]){4,6} *= *0x1; *console\['log'\]\(0x1\);/;
 
             let obfuscatedCode: string;
@@ -246,7 +246,7 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #5: block statement contain variable declaration with `let` kind', () => {
+        describe('Variant #5: block statement contain variable declaration with `let` kind', () => {
             const statementRegExp: RegExp = /^\(function *\( *\) *\{ *let *_0x([a-f0-9]){4,6} *= *0x1; *console\['log'\]\(0x1\);/;
 
             let obfuscatedCode: string;
@@ -270,7 +270,7 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #6: block statement contain break statement #1', () => {
+        describe('Variant #6: block statement contain break statement #1', () => {
             const statementRegExp: RegExp = /^\(function *\( *\) *\{ *while *\(!!\[\]\) *\{ *break; *console\['log'\]\(0x1\);/;
 
             let obfuscatedCode: string;
@@ -294,7 +294,7 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #7: block statement contain break statement #2', () => {
+        describe('Variant #7: block statement contain break statement #2', () => {
             const statementRegExp: RegExp = /^\(function *\( *\) *\{ *while *\(!!\[\]\) *\{ *if *\(!!\[\]\) *\{ *break; *\} *console\['log'\]\(0x1\);/;
 
             let obfuscatedCode: string;
@@ -318,7 +318,7 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #8: block statement contain while statement with break statement', () => {
+        describe('Variant #8: block statement contain while statement with break statement', () => {
             const switchCaseRegExp: RegExp = /switch *\(_0x([a-f0-9]){4,6}\[_0x([a-f0-9]){4,6}\+\+\]\) *\{/;
             const switchCaseLengthRegExp: RegExp = /case *'[0-5]': *console\['log'\]\(0x[0-6]\);/g;
             const expectedSwitchCaseLength: number = 5;
@@ -350,7 +350,7 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #9: block statement contain continue statement #1', () => {
+        describe('Variant #9: block statement contain continue statement #1', () => {
             const statementRegExp: RegExp = /^\(function *\( *\) *\{ *while *\(!!\[\]\) *\{ *continue; *console\['log'\]\(0x1\);/;
 
             let obfuscatedCode: string;
@@ -374,7 +374,7 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #10: block statement contain continue statement #2', () => {
+        describe('Variant #10: block statement contain continue statement #2', () => {
             const statementRegExp: RegExp = /^\(function *\( *\) *\{ *while *\(!!\[\]\) *\{ *if *\(!!\[\]\) *\{ *continue; *\} *console\['log'\]\(0x1\);/;
 
             let obfuscatedCode: string;
@@ -398,7 +398,7 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #11: block statement contain while statement with continue statement', () => {
+        describe('Variant #11: block statement contain while statement with continue statement', () => {
             const switchCaseRegExp: RegExp = /switch *\(_0x([a-f0-9]){4,6}\[_0x([a-f0-9]){4,6}\+\+\]\) *\{/;
             const switchCaseLengthRegExp: RegExp = /case *'[0-5]': *console\['log'\]\(0x[0-6]\);/g;
             const expectedSwitchCaseLength: number = 5;
@@ -430,7 +430,7 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #12: block statement contain function declaration', () => {
+        describe('Variant #12: block statement contain function declaration', () => {
             const statementRegExp: RegExp = /^\(function *\( *\) *\{ *function *_0x([a-f0-9]){4,6} *\( *\) *\{ *\} *console\['log'\]\(0x1\);/
 
             let obfuscatedCode: string;
@@ -454,7 +454,7 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #13: block statement contain class declaration', () => {
+        describe('Variant #13: block statement contain class declaration', () => {
             const statementRegExp: RegExp = /^\(function *\( *\) *{ * *class *_0x([a-f0-9]){4,6} *{.*?} *}.*class *_0x([a-f0-9]){4,6} *{.*?} *}.*class *_0x([a-f0-9]){4,6} *{.*?} *}/;
 
             let obfuscatedCode: string;
@@ -478,7 +478,7 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #14: `controlFlowFlatteningThreshold` chance', () => {
+        describe('Variant #14: `controlFlowFlatteningThreshold` chance', () => {
             const samples: number = 1000;
             const delta: number = 0.1;
 
@@ -523,7 +523,7 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
         });
 
-        describe('variant #15: No `unreachable code after return statement` warning', () => {
+        describe('Variant #15: No `unreachable code after return statement` warning', () => {
             const switchCaseRegExp: RegExp = /switch *\(_0x([a-f0-9]){4,6}\[_0x([a-f0-9]){4,6}\+\+\]\) *\{/;
             const switchCaseLengthRegExp: RegExp = /case *'[0-5]': *console\['log'\]\(0x[0-6]\);/g;
             const returnStatementRegExp: RegExp = /case *'[0-5]': *return; *(case|})/;

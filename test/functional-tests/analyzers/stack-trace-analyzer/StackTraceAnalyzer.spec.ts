@@ -162,7 +162,7 @@ describe('StackTraceAnalyzer', () => {
                 .get<IStackTraceAnalyzer>(ServiceIdentifiers.IStackTraceAnalyzer);
         });
 
-        describe('variant #1: basic-1', () => {
+        describe('Variant #1: basic-1', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/basic-1.js');
                 const astTree: TNodeWithBlockScope = Nodes.getProgramNode(
@@ -212,7 +212,7 @@ describe('StackTraceAnalyzer', () => {
             });
         });
 
-        describe('variant #2: basic-2', () => {
+        describe('Variant #2: basic-2', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/basic-2.js');
                 const astTree: TNodeWithBlockScope = Nodes.getProgramNode(
@@ -251,7 +251,7 @@ describe('StackTraceAnalyzer', () => {
             });
         });
 
-        describe('variant #3: deep conditions nesting', () => {
+        describe('Variant #3: deep conditions nesting', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/deep-conditions-nesting.js');
                 const astTree: TNodeWithBlockScope = Nodes.getProgramNode(
@@ -290,7 +290,7 @@ describe('StackTraceAnalyzer', () => {
             });
         });
 
-        describe('variant #4: call before declaration', () => {
+        describe('Variant #4: call before declaration', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/call-before-declaration.js');
                 const astTree: TNodeWithBlockScope = Nodes.getProgramNode(
@@ -313,7 +313,7 @@ describe('StackTraceAnalyzer', () => {
             });
         });
 
-        describe('variant #5: call expression of object member #1', () => {
+        describe('Variant #5: call expression of object member #1', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/call-expression-of-object-member-1.js');
                 const astTree: TNodeWithBlockScope = Nodes.getProgramNode(
@@ -372,7 +372,7 @@ describe('StackTraceAnalyzer', () => {
             });
         });
 
-        describe('variant #5: call expression of object member #2', () => {
+        describe('Variant #5: call expression of object member #2', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/call-expression-of-object-member-2.js');
                 const astTree: TNodeWithBlockScope = Nodes.getProgramNode(
@@ -400,7 +400,7 @@ describe('StackTraceAnalyzer', () => {
             });
         });
 
-        describe('variant #6: no call expressions', () => {
+        describe('Variant #6: no call expressions', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/no-call-expressions.js');
                 const astTree: TNodeWithBlockScope = Nodes.getProgramNode(
@@ -417,7 +417,7 @@ describe('StackTraceAnalyzer', () => {
             });
         });
 
-        describe('variant #7: only call expression', () => {
+        describe('Variant #7: only call expression', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/only-call-expression.js');
                 const astTree: TNodeWithBlockScope = Nodes.getProgramNode(
@@ -434,7 +434,7 @@ describe('StackTraceAnalyzer', () => {
             });
         });
 
-        describe('variant #8: self-invoking functions', () => {
+        describe('Variant #8: self-invoking functions', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/self-invoking-functions.js');
                 const astTree: TNodeWithBlockScope = Nodes.getProgramNode(
@@ -469,7 +469,7 @@ describe('StackTraceAnalyzer', () => {
             });
         });
 
-        describe('variant #9: no recursion', () => {
+        describe('Variant #9: no recursion', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/no-recursion.js');
                 const astTree: TNodeWithBlockScope = Nodes.getProgramNode(

@@ -12,7 +12,7 @@ describe('ObjectExpressionKeysTransformer', () => {
     const variableMatch: string = '_0x([a-f0-9]){4,6}';
 
     describe('transformation of object keys', () => {
-        describe('variant #1: simple', () => {
+        describe('Variant #1: simple', () => {
             const match: string = `` +
                 `var *${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
@@ -40,7 +40,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
         });
 
-        describe('variant #2: nested objects #1', () => {
+        describe('Variant #2: nested objects #1', () => {
             const match: string = `` +
                 `var *${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
@@ -70,7 +70,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
         });
 
-        describe('variant #3: nested objects #2', () => {
+        describe('Variant #3: nested objects #2', () => {
             const match: string = `` +
                 `var *${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
@@ -103,7 +103,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
         });
 
-        describe('variant #4: correct integration with control flow flattening object', () => {
+        describe('Variant #4: correct integration with control flow flattening object', () => {
             const match: string = `` +
                 `var *${variableMatch} *= *{};` +
                 `${variableMatch}\\['\\w{5}'] *= *function *\\(${variableMatch}, *${variableMatch}\\) *{` +
@@ -137,7 +137,7 @@ describe('ObjectExpressionKeysTransformer', () => {
     });
 
     describe('correct placement of expression statements', () => {
-        describe('variant #1: if statement', () => {
+        describe('Variant #1: if statement', () => {
             const match: string = `` +
                 `if *\\(!!\\[]\\) *{` +
                     `var *${variableMatch} *= *{};` +
@@ -166,7 +166,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
         });
 
-        describe('variant #2: try statement', () => {
+        describe('Variant #2: try statement', () => {
             const match: string = `` +
                 `try *{` +
                     `var *${variableMatch} *= *{};` +
@@ -196,7 +196,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
         });
 
-        describe('variant #3: catch clause statement', () => {
+        describe('Variant #3: catch clause statement', () => {
             const match: string = `` +
                 `try *{` +
                 `} *catch *\\(${variableMatch}\\) *{` +
@@ -226,7 +226,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
         });
 
-        describe('variant #4: switch catch statement', () => {
+        describe('Variant #4: switch catch statement', () => {
             const match: string = `` +
                 `switch *\\(!!\\[]\\) *{` +
                     `case *!!\\[]:` +
@@ -258,7 +258,7 @@ describe('ObjectExpressionKeysTransformer', () => {
     });
 
     describe('Ignore transformation', () => {
-        describe('variant #1: disabled option', () => {
+        describe('Variant #1: disabled option', () => {
             const match: string = `` +
                 `var *${variableMatch} *= *{` +
                     `'foo': *'bar',` +
@@ -286,7 +286,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
         });
 
-        describe('variant #2: variable declaration without initialization', () => {
+        describe('Variant #2: variable declaration without initialization', () => {
             const match: string = `` +
                 `var *${variableMatch};` +
                 `${variableMatch} *= *{` +

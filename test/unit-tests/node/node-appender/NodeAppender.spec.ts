@@ -78,7 +78,7 @@ describe('NodeAppender', () => {
             node = convertCodeToStructure('/fixtures/simple-input.js');
         });
 
-        describe('variant #1: nested function calls', () => {
+        describe('Variant #1: nested function calls', () => {
             beforeEach(() => {
                 astTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/variant-1.js');
                 expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/variant-1-expected.js');
@@ -92,7 +92,7 @@ describe('NodeAppender', () => {
             });
         });
 
-        describe('variant #2: nested function calls', () => {
+        describe('Variant #2: nested function calls', () => {
             beforeEach(() => {
                 astTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/variant-2.js');
                 expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/variant-2-expected.js');
@@ -114,7 +114,7 @@ describe('NodeAppender', () => {
                 astTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index.js');
             });
 
-            describe('variant #1: append by specific index in nested function calls', () => {
+            describe('Variant #1: append by specific index in nested function calls', () => {
                 beforeEach(() => {
                     expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index-variant-1-expected.js');
 
@@ -128,7 +128,7 @@ describe('NodeAppender', () => {
                 });
             });
 
-            describe('variant #2: append by specific index in nested function calls', () => {
+            describe('Variant #2: append by specific index in nested function calls', () => {
                 beforeEach(() => {
                     expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index-variant-2-expected.js');
 
@@ -142,7 +142,7 @@ describe('NodeAppender', () => {
                 });
             });
 
-            describe('variant #3: append by specific index in nested function calls', () => {
+            describe('Variant #3: append by specific index in nested function calls', () => {
                 beforeEach(() => {
                     astTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index-variant-3.js');
                     expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index-variant-3-expected.js');

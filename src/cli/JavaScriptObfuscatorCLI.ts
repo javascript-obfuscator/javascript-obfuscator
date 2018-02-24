@@ -27,13 +27,6 @@ import { SourceCodeReader } from './utils/SourceCodeReader';
 
 export class JavaScriptObfuscatorCLI implements IInitializable {
     /**
-     * @type {string[]}
-     */
-    public static readonly availableInputExtensions: string[] = [
-        '.js'
-    ];
-
-    /**
      * @type {BufferEncoding}
      */
     public static readonly encoding: BufferEncoding = 'utf8';
@@ -163,7 +156,8 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             return this.commands.outputHelp();
         }
 
-        const sourceCodeData: TSourceCodeData = SourceCodeReader.readSourceCode(this.inputPath);
+        const sourceCodeData: TSourceCodeData = new SourceCodeReader(this.inputCLIOptions)
+            .readSourceCode(this.inputPath, this.inputCLIOptions.exclude);
 
         this.processSourceCodeData(sourceCodeData);
     }
@@ -242,6 +236,11 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             .option(
                 '--domain-lock <list> (comma separated, without whitespaces)',
                 'Blocks the execution of the code in domains that do not match the passed RegExp patterns (comma separated)',
+                ArraySanitizer
+            )
+            .option(
+                '--exclude <list> (comma separated, without whitespaces)',
+                'A filename or glob which indicates files to exclude from obfuscation',
                 ArraySanitizer
             )
             .option(

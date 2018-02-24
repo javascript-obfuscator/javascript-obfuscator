@@ -9,7 +9,7 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
 describe('CommentsTransformer', () => {
-    describe('variant #1: simple comment without preserved words', () => {
+    describe('Variant #1: simple comment without preserved words', () => {
         const regExp: RegExp = /^var *test *= *0x1;$/;
 
         let obfuscatedCode: string;
@@ -31,7 +31,7 @@ describe('CommentsTransformer', () => {
         });
     });
 
-    describe('variant #2: simple comment with preserved words', () => {
+    describe('Variant #2: simple comment with preserved words', () => {
         const regExp: RegExp = /^\/\/ *@license *test *comment *\n*var *test *= *0x1;$/;
 
         let obfuscatedCode: string;
@@ -53,7 +53,7 @@ describe('CommentsTransformer', () => {
         });
     });
 
-    describe('variant #3: comment with preserved and non-preserved words', () => {
+    describe('Variant #3: comment with preserved and non-preserved words', () => {
         const regExp: RegExp = /^\/\/ *@license *test *comment *\n*var *test *= *0x1;$/;
 
         let obfuscatedCode: string;
@@ -75,7 +75,7 @@ describe('CommentsTransformer', () => {
         });
     });
 
-    describe('variant #4: comment with preserved and non-preserved words', () => {
+    describe('Variant #4: comment with preserved and non-preserved words', () => {
         const regExp: RegExp = new RegExp(``+
             `^\\/\\*\\* *\\n` +
             ` *\\* *@license *\\n` +
@@ -104,7 +104,7 @@ describe('CommentsTransformer', () => {
         });
     });
 
-    describe('variant #5: only comment without preserved words', () => {
+    describe('Variant #5: only comment without preserved words', () => {
         let obfuscatedCode: string;
 
         before(() => {
@@ -124,7 +124,7 @@ describe('CommentsTransformer', () => {
         });
     });
 
-    describe('variant #5: only comment with preserved words', () => {
+    describe('Variant #5: only comment with preserved words', () => {
         const regExp: RegExp = /^\/\/ *@license$/;
 
         let obfuscatedCode: string;

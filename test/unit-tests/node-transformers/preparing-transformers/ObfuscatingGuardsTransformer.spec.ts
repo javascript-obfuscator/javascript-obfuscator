@@ -27,7 +27,7 @@ describe('ObfuscatingGuardsTransformer', () => {
                 .getNamed(ServiceIdentifiers.INodeTransformer, NodeTransformer.ObfuscatingGuardsTransformer);
         });
 
-        describe('variant #1: valid node', () => {
+        describe('Variant #1: valid node', () => {
             const identifier: ESTree.Identifier = Nodes.getIdentifierNode('foo');
 
             const expectedResult: ESTree.Identifier = NodeUtils.clone(identifier);
@@ -47,7 +47,7 @@ describe('ObfuscatingGuardsTransformer', () => {
             });
         });
 
-        describe('variant #2: invalid node', () => {
+        describe('Variant #2: invalid node', () => {
             const expressionStatement: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(
                 Nodes.getIdentifierNode('foo')
             );

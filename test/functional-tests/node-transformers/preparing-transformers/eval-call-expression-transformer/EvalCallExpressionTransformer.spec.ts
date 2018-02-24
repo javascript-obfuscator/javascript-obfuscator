@@ -10,7 +10,7 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFac
 import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
 
 describe('EvalCallExpressionTransformer', () => {
-    describe('variant #1: identifier reference', () => {
+    describe('Variant #1: identifier reference', () => {
         const functionIdentifierRegExp: RegExp = /function *_0x(?:[a-f0-9]){4,6} *\((_0x(?:[a-f0-9]){4,6})\)/;
         const evalExpressionRegExp: RegExp = /eval *\('(_0x(?:[a-f0-9]){4,6});'\);/;
 
@@ -42,7 +42,7 @@ describe('EvalCallExpressionTransformer', () => {
         });
     });
 
-    describe('variant #2: call expression with identifier reference', () => {
+    describe('Variant #2: call expression with identifier reference', () => {
         const functionIdentifierRegExp: RegExp = /function *_0x(?:[a-f0-9]){4,6} *\((_0x(?:[a-f0-9]){4,6})\)/;
         const evalExpressionRegExp: RegExp = /eval *\('console\[\\'log\\']\((_0x(?:[a-f0-9]){4,6})\);'\);/;
 
@@ -74,7 +74,7 @@ describe('EvalCallExpressionTransformer', () => {
         });
     });
 
-    describe('variant #3: multiple statements in eval', () => {
+    describe('Variant #3: multiple statements in eval', () => {
         const regExp: RegExp = /eval *\('_0x([a-f0-9]){4,6}; *_0x([a-f0-9]){4,6};'\);/;
 
         let obfuscatedCode: string;
@@ -96,7 +96,7 @@ describe('EvalCallExpressionTransformer', () => {
         });
     });
 
-    describe('variant #4: string array calls wrapper call', () => {
+    describe('Variant #4: string array calls wrapper call', () => {
         const stringArrayRegExp: RegExp = /var *_0x([a-f0-9]){4} *= *\['log', *'bar'];/;
         const stringArrayCallsWrapperRegExp: RegExp = /eval *\('console\[_0x([a-f0-9]){4,6}\(\\'0x0\\'\)]\(_0x([a-f0-9]){4,6}\(\\'0x1\\'\)\);'\);/;
 
@@ -125,7 +125,7 @@ describe('EvalCallExpressionTransformer', () => {
         });
     });
 
-    describe('variant #5: eval expression as argument', () => {
+    describe('Variant #5: eval expression as argument', () => {
         const functionIdentifierRegExp: RegExp = /function *_0x(?:[a-f0-9]){4,6} *\((_0x(?:[a-f0-9]){4,6})\)/;
         const evalExpressionRegExp: RegExp = /console\['log']\(eval *\('(_0x(?:[a-f0-9]){4,6});'\)\);/;
 
@@ -157,7 +157,7 @@ describe('EvalCallExpressionTransformer', () => {
         });
     });
 
-    describe('variant #6: nested eval expressions', () => {
+    describe('Variant #6: nested eval expressions', () => {
         const functionIdentifierRegExp: RegExp = /function *_0x(?:[a-f0-9]){4,6} *\((_0x(?:[a-f0-9]){4,6}), *(_0x(?:[a-f0-9]){4,6})\)/;
         const evalExpressionMatch: string = `` +
             `eval *\\('` +
@@ -233,7 +233,7 @@ describe('EvalCallExpressionTransformer', () => {
         });
     });
 
-    describe('variant #7: wrong eval string', () => {
+    describe('Variant #7: wrong eval string', () => {
         const evalExpressionRegExp: RegExp = /eval *\('~'\);/;
 
         let obfuscatedCode: string
@@ -255,7 +255,7 @@ describe('EvalCallExpressionTransformer', () => {
         });
     });
 
-    describe('variant #8: template literal inside eval expression', () => {
+    describe('Variant #8: template literal inside eval expression', () => {
         const functionIdentifierRegExp: RegExp = /function *_0x(?:[a-f0-9]){4,6} *\((_0x(?:[a-f0-9]){4,6})\)/;
         const evalExpressionRegExp: RegExp = /eval *\('(_0x(?:[a-f0-9]){4,6});'\);/;
 
@@ -287,7 +287,7 @@ describe('EvalCallExpressionTransformer', () => {
         });
     });
 
-    describe('variant #9: integration with control flow flattening', () => {
+    describe('Variant #9: integration with control flow flattening', () => {
         const variableMatch: string = '_0x([a-f0-9]){4,6}';
         const controlFlowStorageNodeMatch: string = `` +
             `var *${variableMatch} *= *\\{` +

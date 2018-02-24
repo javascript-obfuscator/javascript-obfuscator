@@ -72,7 +72,7 @@ describe('MapStorage', () => {
     });
 
     describe('get (key: string | number): T', () => {
-        describe('variant #1: value exist', () => {
+        describe('Variant #1: value exist', () => {
             const expectedValue: string = storageValue;
 
             let value: string;
@@ -89,7 +89,7 @@ describe('MapStorage', () => {
             });
         });
 
-        describe('variant #2: value isn\'t exist', () => {
+        describe('Variant #2: value isn\'t exist', () => {
             const expectedError: ErrorConstructor = Error;
 
             let testFunc: () => void;
@@ -126,7 +126,7 @@ describe('MapStorage', () => {
     describe('getKeyOf (value: T): string | number | null', () => {
         let key: string | number | null;
 
-        describe('variant #1', () => {
+        describe('Variant #1', () => {
             before(() => {
                 storage = getStorageInstance();
                 storage.set(storageKey, storageValue);
@@ -139,7 +139,7 @@ describe('MapStorage', () => {
             });
         });
 
-        describe('variant #2', () => {
+        describe('Variant #2', () => {
             const object: Object = {
                 bar: 'baz'
             };
@@ -156,7 +156,7 @@ describe('MapStorage', () => {
             });
         });
 
-        describe('variant #3', () => {
+        describe('Variant #3', () => {
             const expectedKey: null = null;
             const object: Object = {
                 bar: 'baz'

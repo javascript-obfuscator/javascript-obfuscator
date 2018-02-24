@@ -4,7 +4,7 @@ import { ObfuscationTargetSanitizer } from '../../../../src/cli/sanitizers/Obfus
 
 describe('ObfuscationTargetSanitizer', () => {
     describe('ObfuscationTargetSanitizer: TCLISanitizer = (value: string): string', () => {
-        describe('variant #1: valid obfuscation target', () => {
+        describe('Variant #1: valid obfuscation target', () => {
             const inputValue: string = 'browser';
             const expectedValue: string = inputValue;
 
@@ -19,7 +19,7 @@ describe('ObfuscationTargetSanitizer', () => {
             });
         });
 
-        describe('variant #2: invalid obfuscation target', () => {
+        describe('Variant #2: invalid obfuscation target', () => {
             const inputValue: string = 'foo';
 
             let testFunc: () => void;

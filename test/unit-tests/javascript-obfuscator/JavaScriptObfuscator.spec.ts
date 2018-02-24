@@ -18,7 +18,7 @@ describe('JavaScriptObfuscator', () => {
 
             let javaScriptObfuscator: IJavaScriptObfuscator;
 
-            describe('variant #1: default behaviour', () => {
+            describe('Variant #1: default behaviour', () => {
                 const regExp: RegExp = new RegExp(`sourceMappingURL=${sourceMapUrl}`);
 
                 let obfuscatedCode: string,
@@ -53,7 +53,7 @@ describe('JavaScriptObfuscator', () => {
                 });
             });
 
-            describe('variant #2: `sourceMapBaseUrl` is set', () => {
+            describe('Variant #2: `sourceMapBaseUrl` is set', () => {
                 const sourceMapBaseUrl: string = 'http://localhost:9000';
                 const regExp: RegExp = new RegExp(`sourceMappingURL=${sourceMapBaseUrl}/${sourceMapUrl}$`);
 

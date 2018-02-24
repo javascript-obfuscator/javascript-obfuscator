@@ -31,7 +31,7 @@ function spawnThread(inputCallback: Function, threadCallback: Function, timeoutC
 }
 
 describe('DebugProtectionFunctionCallTemplate (): string', () => {
-    describe('variant #1: correctly obfuscated code`', () => {
+    describe('Variant #1: correctly obfuscated code`', () => {
         const expectedEvaluationResult: number = 1;
 
         let obfuscatedCode: string,
@@ -66,7 +66,7 @@ describe('DebugProtectionFunctionCallTemplate (): string', () => {
         });
     });
 
-    describe('variant #2: correctly obfuscated code with enabled `mangle` option', () => {
+    describe('Variant #2: correctly obfuscated code with enabled `mangle` option', () => {
         const expectedEvaluationResult: number = 1;
 
         let obfuscatedCode: string,
@@ -102,7 +102,7 @@ describe('DebugProtectionFunctionCallTemplate (): string', () => {
         });
     });
 
-    describe('variant #3: correctly obfuscated code with target `extension`', () => {
+    describe('Variant #3: correctly obfuscated code with target `extension`', () => {
         const expectedEvaluationResult: number = 1;
 
         let obfuscatedCode: string,
@@ -138,7 +138,7 @@ describe('DebugProtectionFunctionCallTemplate (): string', () => {
         });
     });
 
-    describe('variant #4: obfuscated code with removed debug protection code', () => {
+    describe('Variant #4: obfuscated code with removed debug protection code', () => {
         const expectedEvaluationResult: number = 0;
 
         let obfuscatedCode: string,
@@ -174,7 +174,7 @@ describe('DebugProtectionFunctionCallTemplate (): string', () => {
         });
     });
 
-    describe('variant #5: single call of debug protection code', () => {
+    describe('Variant #5: single call of debug protection code', () => {
         const expectedEvaluationResult: number = 1;
 
         let obfuscatedCode: string,

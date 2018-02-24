@@ -11,7 +11,7 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFac
 
 describe('FunctionDeclarationTransformer', () => {
     describe('transformation of `functionDeclaration` node names', () => {
-        describe('variant #1: `functionDeclaration` parent block scope is not a `ProgramNode`', () => {
+        describe('Variant #1: `functionDeclaration` parent block scope is not a `ProgramNode`', () => {
             const functionNameIdentifierRegExp: RegExp = /function *(_0x[a-f0-9]{4,6}) *\(\) *\{/;
             const functionCallIdentifierRegExp: RegExp = /(_0x[a-f0-9]{4,6}) *\( *\);/;
 
@@ -38,8 +38,8 @@ describe('FunctionDeclarationTransformer', () => {
             });
         });
 
-        describe('variant #2: `functionDeclaration` parent block scope is a `ProgramNode`', () => {
-            describe('variant #1: `renameGlobals` option is disabled', () => {
+        describe('Variant #2: `functionDeclaration` parent block scope is a `ProgramNode`', () => {
+            describe('Variant #1: `renameGlobals` option is disabled', () => {
                 const functionNameIdentifierRegExp: RegExp = /function *foo *\(\) *\{/;
                 const functionCallIdentifierRegExp: RegExp = /foo *\( *\);/;
 
@@ -66,7 +66,7 @@ describe('FunctionDeclarationTransformer', () => {
                 });
             });
 
-            describe('variant #2: `renameGlobals` option is enabled', () => {
+            describe('Variant #2: `renameGlobals` option is enabled', () => {
                 const functionNameIdentifierRegExp: RegExp = /function *(_0x[a-f0-9]{4,6}) *\(\) *\{/;
                 const functionCallIdentifierRegExp: RegExp = /(_0x[a-f0-9]{4,6}) *\( *\);/;
 
@@ -95,7 +95,7 @@ describe('FunctionDeclarationTransformer', () => {
             });
         });
 
-        describe('variant #3: generator `functionDeclaration`', () => {
+        describe('Variant #3: generator `functionDeclaration`', () => {
             const functionNameIdentifierRegExp: RegExp = /function *\* *(_0x[a-f0-9]{4,6}) *\(\) *\{/;
             const functionCallIdentifierRegExp: RegExp = /let *_0x[a-f0-9]{4,6} *= *(_0x[a-f0-9]{4,6}) *\( *\);/;
 
@@ -122,7 +122,7 @@ describe('FunctionDeclarationTransformer', () => {
             });
         });
 
-        describe('variant #4: async `functionDeclaration`', () => {
+        describe('Variant #4: async `functionDeclaration`', () => {
             const functionNameIdentifierRegExp: RegExp = /async *function *(_0x[a-f0-9]{4,6}) *\(\) *\{/;
             const functionCallIdentifierRegExp: RegExp = /await *(_0x[a-f0-9]{4,6}) *\( *\);/;
 

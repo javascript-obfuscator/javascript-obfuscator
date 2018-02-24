@@ -7,7 +7,7 @@ import { IInitializable } from '../../../../src/interfaces/IInitializable';
 
 describe('@initializable', () => {
     describe('initializable (initializeMethodKey: string): any', () => {
-        describe('variant #1: property was initialized', () => {
+        describe('Variant #1: property was initialized', () => {
             const testFunc: () => void = () => {
                 class Foo implements IInitializable {
                     @initializable()
@@ -30,8 +30,8 @@ describe('@initializable', () => {
             });
         });
 
-        describe('variant #2: `initialize` method should be called first', () => {
-            describe('variant #1: `initialize` method was called first', () => {
+        describe('Variant #2: `initialize` method should be called first', () => {
+            describe('Variant #1: `initialize` method was called first', () => {
                 const testFunc: () => void = () => {
                     class Foo {
                         @initializable()
@@ -55,7 +55,7 @@ describe('@initializable', () => {
                 });
             });
 
-            describe('variant #2: other method was called inside `initialize` method with initialization of the property', () => {
+            describe('Variant #2: other method was called inside `initialize` method with initialization of the property', () => {
                 const testFunc: () => void = () => {
                     class Foo {
                         @initializable()
@@ -80,7 +80,7 @@ describe('@initializable', () => {
                 });
             });
 
-            describe('variant #3: other method was called inside `initialize` method without initialization of the property', () => {
+            describe('Variant #3: other method was called inside `initialize` method without initialization of the property', () => {
                 const testFunc: () => void = () => {
                     class Foo {
                         @initializable()
@@ -104,7 +104,7 @@ describe('@initializable', () => {
                 });
             });
 
-            describe('variant #4: `initialize` method wasn\'t called first', () => {
+            describe('Variant #4: `initialize` method wasn\'t called first', () => {
                 const testFunc: () => void = () => {
                     class Foo {
                         @initializable()
@@ -128,7 +128,7 @@ describe('@initializable', () => {
                 });
             });
 
-            describe('variant #5: `initialize` method wasn\'t called', () => {
+            describe('Variant #5: `initialize` method wasn\'t called', () => {
                 const testFunc: () => void = () => {
                     class Foo {
                         @initializable()
@@ -152,7 +152,7 @@ describe('@initializable', () => {
             });
         });
 
-        describe('variant #3: property didn\'t initialized', () => {
+        describe('Variant #3: property didn\'t initialized', () => {
             const testFunc: () => void = () => {
                 class Foo implements IInitializable {
                     @initializable()
@@ -174,7 +174,7 @@ describe('@initializable', () => {
             });
         });
 
-        describe('variant #4: `initialize` method with custom name', () => {
+        describe('Variant #4: `initialize` method with custom name', () => {
             const testFunc: () => void = () => {
                 class Foo {
                     @initializable('bar')

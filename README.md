@@ -20,7 +20,8 @@ Online version: [javascriptobfuscator.herokuapp.com](https://javascriptobfuscato
 Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/ffc2876123b52e6d11ce45369fd53acf)
 
 #### Plugins:
-* Webpack: [webpack-obfuscator](https://github.com/javascript-obfuscator/webpack-obfuscator)
+* Webpack plugin: [webpack-obfuscator](https://github.com/javascript-obfuscator/webpack-obfuscator)
+* Webpack loader: [obfuscator-loader](https://github.com/javascript-obfuscator/obfuscator-loader)
 * Gulp: [gulp-javascript-obfuscator](https://github.com/javascript-obfuscator/gulp-javascript-obfuscator)
 * Grunt: [grunt-contrib-obfuscator](https://github.com/javascript-obfuscator/grunt-contrib-obfuscator)
 * Rollup: [rollup-plugin-javascript-obfuscator](https://github.com/javascript-obfuscator/rollup-plugin-javascript-obfuscator)

@@ -1,5 +1,5 @@
 #!/bin/bash
 
 $(yarn bin)/tsc -p tsconfig.test.json &&
-$(yarn bin)/babel test-tmp --out-dir test-tmp --source-maps inline --presets env &&
+$(yarn bin)/babel test-tmp --out-dir test-tmp --source-maps inline &&
 rsync -a --prune-empty-dirs --include '*/' --include '*.js' --include '*.json' --exclude '*' test/ test-tmp/test/

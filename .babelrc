@@ -3,14 +3,14 @@
     "retainFunctionParens": true
   },
   "presets": [
-    ["env", {
+    ["@babel/preset-env", {
       "targets": {
-        "node": "4.8",
-        "uglify": true
-      }
+        "node": "4.8"
+      },
+      "forceAllTransforms": true
     }]
   ],
   "plugins": [
-    "array-includes"
+    "@babel/transform-runtime"
   ]
 }

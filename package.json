@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "0.15.0-dev.0",
+  "version": "0.15.0-dev.1",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -12,13 +12,14 @@
     "js obfuscator"
   ],
   "engines": {
-    "node": ">=4.8.0"
+    "node": ">=6.11.5"
   },
   "main": "dist/index.js",
   "bin": {
     "javascript-obfuscator": "./bin/javascript-obfuscator"
   },
   "dependencies": {
+    "@babel/runtime": "7.0.0-beta.40",
     "chalk": "2.3.1",
     "chance": "1.0.13",
     "class-validator": "0.8.1",
@@ -39,6 +40,9 @@
     "tslib": "1.9.0"
   },
   "devDependencies": {
+    "@babel/core": "7.0.0-beta.40",
+    "@babel/plugin-transform-runtime": "7.0.0-beta.40",
+    "@babel/preset-env": "7.0.0-beta.40",
     "@types/chai": "4.1.2",
     "@types/chance": "0.7.36",
     "@types/escodegen": "0.0.6",
@@ -55,17 +59,15 @@
     "@types/string-template": "1.0.2",
     "@types/webpack-env": "1.13.5",
     "awesome-typescript-loader": "4.0.0-0",
-    "babel-cli": "6.26.0",
-    "babel-loader": "7.1.2",
-    "babel-plugin-array-includes": "2.0.3",
-    "babel-preset-env": "1.6.1",
+    "babel-cli": "7.0.0-beta.3",
+    "babel-loader": "8.0.0-beta.1",
     "chai": "4.1.2",
     "coveralls": "3.0.0",
     "istanbul": "1.1.0-alpha.1",
     "mocha": "5.0.1",
     "pre-commit": "1.2.2",
     "rimraf": "2.6.2",
-    "sinon": "4.4.1",
+    "sinon": "4.4.2",
     "threads": "0.10.1",
     "ts-node": "5.0.0",
     "tslint": "5.9.1",

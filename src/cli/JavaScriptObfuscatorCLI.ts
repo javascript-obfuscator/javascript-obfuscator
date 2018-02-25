@@ -157,7 +157,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         }
 
         const sourceCodeData: TSourceCodeData = new SourceCodeReader(this.inputCLIOptions)
-            .readSourceCode(this.inputPath, this.inputCLIOptions.exclude);
+            .readSourceCode(this.inputPath);
 
         this.processSourceCodeData(sourceCodeData);
     }

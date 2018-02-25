@@ -90,10 +90,9 @@ export class SourceCodeReader {
 
     /**
      * @param {string} inputPath
-     * @param {string[]} excludePatterns
      * @returns {TSourceCodeData}
      */
-    public readSourceCode (inputPath: string, excludePatterns: string[] = []): TSourceCodeData {
+    public readSourceCode (inputPath: string): TSourceCodeData {
         if (SourceCodeReader.isFilePath(inputPath) && this.isValidFile(inputPath)) {
             return this.readFile(inputPath);
         }

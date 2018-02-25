@@ -2,6 +2,7 @@ Change Log
 ===
 v0.15.0
 ---
+* **Breaking change:** dropped `node@4` and `node@5` support.
 * **New CLI option:** `exclude` allows to exclude specific files or directories from obfuscation.
 
 v0.14.3

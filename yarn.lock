@@ -8,7 +8,7 @@
   dependencies:
     "@babel/highlight" "7.0.0-beta.40"
 
-"@babel/core@^7.0.0-beta.40":
+"@babel/core@7.0.0-beta.40":
   version "7.0.0-beta.40"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.0.0-beta.40.tgz#455464dd81d499fd97d32b473f0331f74379a33f"
   dependencies:
@@ -331,7 +331,7 @@
   dependencies:
     regenerator-transform "^0.12.3"
 
-"@babel/plugin-transform-runtime@^7.0.0-beta.40":
+"@babel/plugin-transform-runtime@7.0.0-beta.40":
   version "7.0.0-beta.40"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-runtime/-/plugin-transform-runtime-7.0.0-beta.40.tgz#6a4066affced4188b8eacb9e2fe13a5bca4c1542"
   dependencies:
@@ -368,7 +368,7 @@
     "@babel/helper-regex" "7.0.0-beta.40"
     regexpu-core "^4.1.3"
 
-"@babel/preset-env@^7.0.0-beta.40":
+"@babel/preset-env@7.0.0-beta.40":
   version "7.0.0-beta.40"
   resolved "https://registry.yarnpkg.com/@babel/preset-env/-/preset-env-7.0.0-beta.40.tgz#713292f9e410f76b3f4301330756c89343c4b2e4"
   dependencies:
@@ -410,7 +410,7 @@
     invariant "^2.2.2"
     semver "^5.3.0"
 
-"@babel/runtime@^7.0.0-beta.40":
+"@babel/runtime@7.0.0-beta.40":
   version "7.0.0-beta.40"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0-beta.40.tgz#8e3b8f1d2d8639d010e991a7e99c1d9ef578f886"
   dependencies:
@@ -859,9 +859,9 @@ babel-helpers@7.0.0-beta.3:
     babel-traverse "7.0.0-beta.3"
     babel-types "7.0.0-beta.3"
 
-babel-loader@8.0.0-beta.1:
-  version "8.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/babel-loader/-/babel-loader-8.0.0-beta.1.tgz#59df73618a7e27b602a33052456f3f53d2a60aab"
+babel-loader@8.0.0-beta.2:
+  version "8.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/babel-loader/-/babel-loader-8.0.0-beta.2.tgz#4d5b67c964dc8c9cba866fd13d6b90df3acf8723"
   dependencies:
     find-cache-dir "^1.0.0"
     loader-utils "^1.0.2"
@@ -2237,9 +2237,9 @@ invariant@^2.2.2:
   dependencies:
     loose-envify "^1.0.0"
 
-inversify@^4.10.0:
-  version "4.10.0"
-  resolved "https://registry.yarnpkg.com/inversify/-/inversify-4.10.0.tgz#06b97792e69220dd150b986cde9a445b3bcb9482"
+inversify@4.11.1:
+  version "4.11.1"
+  resolved "https://registry.yarnpkg.com/inversify/-/inversify-4.11.1.tgz#9a10635d1fd347da11da96475b3608babd5945a6"
 
 invert-kv@^1.0.0:
   version "1.0.0"

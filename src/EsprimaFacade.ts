@@ -22,11 +22,15 @@ export class EsprimaFacade {
      * @param {ParseOptions} config
      * @returns {Program}
      */
-    public static parseScript (input: string, config: esprima.ParseOptions): ESTree.Program {
+    public static parse (input: string, config: esprima.ParseOptions): ESTree.Program {
         let lastMeta: esprima.NodeMeta | null = null;
 
         try {
             return esprima.parseScript(input, config, (node: ESTree.Node, meta: any) => lastMeta = meta);
+        } catch {}
+
+        try {
+            return esprima.parseModule(input, config, (node: ESTree.Node, meta: any) => lastMeta = meta);
         } catch (error) {
             return EsprimaFacade.processParsingError(input, error.message, lastMeta);
         }

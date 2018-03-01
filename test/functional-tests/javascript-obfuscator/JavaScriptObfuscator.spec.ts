@@ -593,6 +593,23 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
+        describe('parse module', () => {
+            const regExp: RegExp = /var *test *= *0x1/;
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/parse-module.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code);
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('should correctly obfuscate a module', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
         describe('3.5k variables', function () {
             this.timeout(200000);
 

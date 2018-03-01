@@ -134,7 +134,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @returns {Program}
      */
     private parseCode (sourceCode: string): ESTree.Program {
-        return EsprimaFacade.parseScript(sourceCode, {
+        return EsprimaFacade.parse(sourceCode, {
             attachComment: true,
             loc: this.options.sourceMap
         });

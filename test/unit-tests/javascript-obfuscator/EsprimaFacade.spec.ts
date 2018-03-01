@@ -16,7 +16,7 @@ describe('EsprimaFacade', () => {
                 let testFunc: () => void;
 
                 before(() => {
-                    testFunc = () => EsprimaFacade.parseScript(sourceCode, {});
+                    testFunc = () => EsprimaFacade.parse(sourceCode, {});
                 });
 
                 it('should output code preview when `esprima` throws a parse error', () => {
@@ -45,7 +45,7 @@ describe('EsprimaFacade', () => {
                 let testFunc: () => void;
 
                 before(() => {
-                    testFunc = () => EsprimaFacade.parseScript(sourceCode, {});
+                    testFunc = () => EsprimaFacade.parse(sourceCode, {});
                 });
 
                 it('should output code preview when `esprima` throws a parse error', () => {
@@ -69,7 +69,7 @@ describe('EsprimaFacade', () => {
             let testFunc: () => void;
 
             before(() => {
-                testFunc = () => EsprimaFacade.parseScript(sourceCode, {});
+                testFunc = () => EsprimaFacade.parse(sourceCode, {});
             });
 
             it('should output code preview when `esprima` throws a parse error', () => {

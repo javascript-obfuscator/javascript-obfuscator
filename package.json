@@ -75,7 +75,8 @@
     "tslint-language-service": "0.9.8",
     "tslint-webpack-plugin": "1.2.0",
     "typescript": "2.7.2",
-    "webpack": "3.11.0",
+    "webpack": "4.0.1",
+    "webpack-cli": "^2.0.10",
     "webpack-node-externals": "1.6.0"
   },
   "repository": {

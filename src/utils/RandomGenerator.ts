@@ -24,10 +24,10 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
     private readonly options: IOptions;
 
     /**
-     * @type {Chance.Chance | Chance.SeededChance}
+     * @type {Chance.Chance}
      */
     @initializable()
-    private randomGenerator!: Chance.Chance | Chance.SeededChance;
+    private randomGenerator!: Chance.Chance;
 
     /**
      * @type {number}

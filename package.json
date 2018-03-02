@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@babel/runtime": "7.0.0-beta.40",
-    "chalk": "2.3.1",
+    "chalk": "2.3.2",
     "chance": "1.0.13",
     "class-validator": "0.8.1",
     "commander": "2.14.1",
@@ -44,7 +44,7 @@
     "@babel/plugin-transform-runtime": "7.0.0-beta.40",
     "@babel/preset-env": "7.0.0-beta.40",
     "@types/chai": "4.1.2",
-    "@types/chance": "0.7.36",
+    "@types/chance": "1.0.0",
     "@types/escodegen": "0.0.6",
     "@types/esprima": "4.0.1",
     "@types/estraverse": "0.0.6",

@@ -458,9 +458,9 @@
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.1.2.tgz#f1af664769cfb50af805431c407425ed619daa21"
 
-"@types/chance@0.7.36":
-  version "0.7.36"
-  resolved "https://registry.yarnpkg.com/@types/chance/-/chance-0.7.36.tgz#1c3e14b9b11463d454182393ebcd8e977f1daff5"
+"@types/chance@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/chance/-/chance-1.0.0.tgz#f9afc0fea03a24025dfd40396d62e9e152211c8e"
 
 "@types/escodegen@0.0.6":
   version "0.0.6"

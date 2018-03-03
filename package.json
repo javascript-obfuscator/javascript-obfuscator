@@ -58,7 +58,7 @@
     "@types/sinon": "4.3.0",
     "@types/string-template": "1.0.2",
     "@types/webpack-env": "1.13.5",
-    "awesome-typescript-loader": "4.0.0-0",
+    "awesome-typescript-loader": "4.0.0-1",
     "babel-cli": "7.0.0-beta.3",
     "babel-loader": "8.0.0-beta.2",
     "chai": "4.1.2",
@@ -76,7 +76,7 @@
     "tslint-webpack-plugin": "1.2.0",
     "typescript": "2.7.2",
     "webpack": "4.0.1",
-    "webpack-cli": "^2.0.10",
+    "webpack-cli": "2.0.10",
     "webpack-node-externals": "1.6.0"
   },
   "repository": {

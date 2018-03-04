@@ -14,7 +14,6 @@ import { ConsoleOutputCustomNodeGroup } from '../../../custom-nodes/console-outp
 import { DebugProtectionCustomNodeGroup } from '../../../custom-nodes/debug-protection-nodes/group/DebugProtectionCustomNodeGroup';
 import { DomainLockCustomNodeGroup } from '../../../custom-nodes/domain-lock-nodes/group/DomainLockCustomNodeGroup';
 import { SelfDefendingCustomNodeGroup } from '../../../custom-nodes/self-defending-nodes/group/SelfDefendingCustomNodeGroup';
-import { StringArrayCustomNodeGroup } from '../../../custom-nodes/string-array-nodes/group/StringArrayCustomNodeGroup';
 
 import { BinaryExpressionFunctionNode } from '../../../custom-nodes/control-flow-flattening-nodes/BinaryExpressionFunctionNode';
 import { BlockStatementControlFlowFlatteningNode } from '../../../custom-nodes/control-flow-flattening-nodes/BlockStatementControlFlowFlatteningNode';
@@ -69,7 +68,7 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
 
     bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
         .to(StringArrayCallsWrapper)
-        .whenTargetNamed(CustomNode.StringArrayCallsWrapper);
+        .whenTargetNamed(CustomNode.StringArrayCallsWrapperNode);
 
     bind<ICustomNode>(ServiceIdentifiers.ICustomNode)
         .to(StringArrayNode)
@@ -137,10 +136,6 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
     bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
         .to(SelfDefendingCustomNodeGroup)
         .whenTargetNamed(CustomNodeGroup.SelfDefendingCustomNodeGroup);
-
-    bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
-        .to(StringArrayCustomNodeGroup)
-        .whenTargetNamed(CustomNodeGroup.StringArrayCustomNodeGroup);
 
     // customNode factory
     bind<ICustomNode>(ServiceIdentifiers.Factory__ICustomNode)

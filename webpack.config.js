@@ -39,7 +39,6 @@ module.exports = {
     entry: {
         'index': './index.ts'
     },
-    cache: true,
     devtool: 'source-map',
     target: 'node',
     externals: [nodeExternals()],
@@ -76,8 +75,6 @@ module.exports = {
         })
     ],
     output: {
-        path: __dirname + '/dist',
-        filename: '[name].js',
         libraryTarget:  "commonjs2",
         library: "JavaScriptObfuscator"
     },

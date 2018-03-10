@@ -192,6 +192,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
 
                     if (node.name !== newIdentifierName) {
                         node.name = newIdentifierName;
+                        node.obfuscatedNode = true;
                     } else {
                         const storedReplaceableIdentifiers: ESTree.Identifier[] = storedReplaceableIdentifiersNamesMap.get(node.name) || [];
 

@@ -8,6 +8,7 @@ import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
+import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
 describe('FunctionDeclarationTransformer', () => {
     describe('transformation of `functionDeclaration` node names', () => {
@@ -146,6 +147,34 @@ describe('FunctionDeclarationTransformer', () => {
 
             it('should transform async function name', () => {
                 assert.equal(functionNameIdentifier, functionCallIdentifier);
+            });
+        });
+
+        describe('Variant #5: already renamed identifiers shouldn\'t be renamed twice', () => {
+            const functionDeclarationRegExp: RegExp = /function *d\(\) *{/;
+            const variableDeclarationsRegExp: RegExp = /let *e, *f, *g, *h;/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/prevent-renaming-of-renamed-identifiers.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('Match #1: shouldn\'t rename twice function declaration name', () => {
+                assert.match(obfuscatedCode, functionDeclarationRegExp);
+            });
+
+            it('Match #2: should correctly rename variable declarations', () => {
+                assert.match(obfuscatedCode, variableDeclarationsRegExp);
             });
         });
     });

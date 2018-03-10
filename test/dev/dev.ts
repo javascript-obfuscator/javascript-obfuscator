@@ -6,10 +6,10 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-        (function() {        
+        (function() {
             function test() {
-                function func1() {}
-                let a, b, c, d, e;
+                class inner {}
+                let a, b, c, d;
             }
         })();
         `,

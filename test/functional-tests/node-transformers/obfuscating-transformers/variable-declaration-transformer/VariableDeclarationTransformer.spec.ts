@@ -438,9 +438,12 @@ describe('VariableDeclarationTransformer', () => {
         });
     });
 
-    describe('Variant #13: renamed identifiers shouldn\'t be renamed twice', () => {
-        const functionRegExp: RegExp = /function *d\(\) *{/;
-        const variableDeclarationsRegExp: RegExp = /let *e, *f, *g, *h;/;
+    describe('Variant #13: already renamed identifiers shouldn\'t be renamed twice', () => {
+        const variableDeclarationRegExp: RegExp = /var *d *= *0x1;/;
+        const functionDeclarationRegExp1: RegExp = /function *e *\(\) *{}/;
+        const functionDeclarationRegExp2: RegExp = /function *f *\(\) *{}/;
+        const functionDeclarationRegExp3: RegExp = /function *g *\(\) *{}/;
+        const functionDeclarationRegExp4: RegExp = /function *h *\(\) *{}/;
 
         let obfuscatedCode: string;
 
@@ -457,12 +460,24 @@ describe('VariableDeclarationTransformer', () => {
             obfuscatedCode = obfuscationResult.getObfuscatedCode();
         });
 
-        it('Match #1: shouldn\'t rename twice function declaration name', () => {
-            assert.match(obfuscatedCode, functionRegExp);
+        it('Match #1: shouldn\'t rename twice variable declaration name', () => {
+            assert.match(obfuscatedCode, variableDeclarationRegExp);
         });
 
-        it('Match #2: should correctly rename variable declarations', () => {
-            assert.match(obfuscatedCode, variableDeclarationsRegExp);
+        it('Match #2: should correctly rename function declaration name', () => {
+            assert.match(obfuscatedCode, functionDeclarationRegExp1);
+        });
+
+        it('Match #2: should correctly rename function declaration name', () => {
+            assert.match(obfuscatedCode, functionDeclarationRegExp2);
+        });
+
+        it('Match #2: should correctly rename function declaration name', () => {
+            assert.match(obfuscatedCode, functionDeclarationRegExp3);
+        });
+
+        it('Match #2: should correctly rename function declaration name', () => {
+            assert.match(obfuscatedCode, functionDeclarationRegExp4);
         });
     });
 });

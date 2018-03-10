@@ -8,6 +8,7 @@ import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
+import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
 describe('ClassDeclarationTransformer', () => {
     describe('transformation of `classDeclaration` node names', () => {
@@ -92,6 +93,34 @@ describe('ClassDeclarationTransformer', () => {
                 it('match #2: should transform class name', () => {
                     assert.match(obfuscatedCode, classCallIdentifierRegExp);
                 });
+            });
+        });
+
+        describe('Variant #3: already renamed identifiers shouldn\'t be renamed twice', () => {
+            const classDeclarationRegExp: RegExp = /class *d *{/;
+            const variableDeclarationsRegExp: RegExp = /let *e, *f, *g, *h;/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/prevent-renaming-of-renamed-identifiers.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('Match #1: shouldn\'t rename twice class declaration name', () => {
+                assert.match(obfuscatedCode, classDeclarationRegExp);
+            });
+
+            it('Match #2: should correctly rename variable declarations', () => {
+                assert.match(obfuscatedCode, variableDeclarationsRegExp);
             });
         });
     });

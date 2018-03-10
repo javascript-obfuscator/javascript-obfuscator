@@ -146,13 +146,14 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
 
         estraverse.replace(blockScopeNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
-                if (parentNode && NodeGuards.isReplaceableIdentifierNode(node, parentNode)) {
+                if (parentNode && !node.obfuscatedNode && NodeGuards.isReplaceableIdentifierNode(node, parentNode)) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
                         .replace(node.name, nodeIdentifier);
                     const newIdentifierName: string = newIdentifier.name;
 
                     if (node.name !== newIdentifierName) {
                         node.name = newIdentifierName;
+                        node.obfuscatedNode = true;
                     } else {
                         storedReplaceableIdentifiers.push(node);
                     }

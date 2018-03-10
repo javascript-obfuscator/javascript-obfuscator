@@ -1,6 +1,10 @@
 (function() {
     function test() {
-        function inner() {}
-        let a, b, c, d;
+        var inner = 1;
+
+        function a () {}
+        function b () {}
+        function c () {}
+        function d () {}
     }
 })();

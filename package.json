@@ -19,7 +19,7 @@
     "javascript-obfuscator": "./bin/javascript-obfuscator"
   },
   "dependencies": {
-    "@babel/runtime": "7.0.0-beta.41",
+    "@babel/runtime": "7.0.0-beta.40",
     "chalk": "2.3.2",
     "chance": "1.0.13",
     "class-validator": "0.8.1",
@@ -35,15 +35,14 @@
     "opencollective": "1.0.3",
     "pjson": "1.0.9",
     "reflect-metadata": "0.1.12",
-    "source-map-support": "0.5.3",
+    "source-map-support": "0.5.4",
     "string-template": "1.0.0",
     "tslib": "1.9.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.0.0-beta.41",
-    "@babel/core": "7.0.0-beta.41",
-    "@babel/plugin-transform-runtime": "7.0.0-beta.41",
-    "@babel/preset-env": "7.0.0-beta.41",
+    "@babel/core": "7.0.0-beta.40",
+    "@babel/plugin-transform-runtime": "7.0.0-beta.40",
+    "@babel/preset-env": "7.0.0-beta.40",
     "@types/chai": "4.1.2",
     "@types/chance": "1.0.0",
     "@types/escodegen": "0.0.6",
@@ -59,7 +58,8 @@
     "@types/sinon": "4.3.0",
     "@types/string-template": "1.0.2",
     "@types/webpack-env": "1.13.5",
-    "awesome-typescript-loader": "5.0.0-1",
+    "awesome-typescript-loader": "5.0.0-0",
+    "babel-cli": "7.0.0-beta.3",
     "babel-loader": "8.0.0-beta.2",
     "chai": "4.1.2",
     "coveralls": "3.0.0",
@@ -74,7 +74,7 @@
     "tslint-eslint-rules": "5.1.0",
     "tslint-language-service": "0.9.8",
     "tslint-webpack-plugin": "1.2.0",
-    "typescript": "2.8.0-dev.20180315 ",
+    "typescript": "2.7.2",
     "webpack": "4.1.1",
     "webpack-cli": "2.0.12",
     "webpack-node-externals": "1.6.0"

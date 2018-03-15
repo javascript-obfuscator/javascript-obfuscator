@@ -14,8 +14,8 @@ import { IStorage } from '../../../interfaces/storages/IStorage';
 import { initializable } from '../../../decorators/Initializable';
 
 import { AbstractCustomNode } from '../../AbstractCustomNode';
+import { NodeFactory } from '../../../node/NodeFactory';
 import { NodeGuards } from '../../../node/NodeGuards';
-import { Nodes } from '../../../node/Nodes';
 import { NodeUtils } from '../../../node/NodeUtils';
 
 @injectable()
@@ -60,16 +60,16 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
                     throw new Error('Function node for control flow storage object should be passed inside the `ExpressionStatement` node!');
                 }
 
-                return Nodes.getPropertyNode(
-                    Nodes.getIdentifierNode(key),
+                return NodeFactory.propertyNode(
+                    NodeFactory.identifierNode(key),
                     node.expression
                 );
             });
 
-        let structure: ESTree.Node = Nodes.getVariableDeclarationNode([
-            Nodes.getVariableDeclaratorNode(
-                Nodes.getIdentifierNode(this.controlFlowStorage.getStorageId()),
-                Nodes.getObjectExpressionNode(propertyNodes)
+        let structure: ESTree.Node = NodeFactory.variableDeclarationNode([
+            NodeFactory.variableDeclaratorNode(
+                NodeFactory.identifierNode(this.controlFlowStorage.getStorageId()),
+                NodeFactory.objectExpressionNode(propertyNodes)
             )
         ]);
 

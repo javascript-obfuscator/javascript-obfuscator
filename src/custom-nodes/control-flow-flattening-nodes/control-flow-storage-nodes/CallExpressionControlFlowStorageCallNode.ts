@@ -13,7 +13,7 @@ import { IRandomGenerator } from "../../../interfaces/utils/IRandomGenerator";
 import { initializable } from '../../../decorators/Initializable';
 
 import { AbstractCustomNode } from '../../AbstractCustomNode';
-import { Nodes } from '../../../node/Nodes';
+import { NodeFactory } from '../../../node/NodeFactory';
 import { NodeUtils } from '../../../node/NodeUtils';
 
 @injectable()
@@ -75,11 +75,11 @@ export class CallExpressionControlFlowStorageCallNode extends AbstractCustomNode
     }
 
     protected getNodeStructure (): TStatement[] {
-        const structure: TStatement = Nodes.getExpressionStatementNode(
-            Nodes.getCallExpressionNode(
-                Nodes.getMemberExpressionNode(
-                    Nodes.getIdentifierNode(this.controlFlowStorageName),
-                    Nodes.getIdentifierNode(this.controlFlowStorageKey)
+        const structure: TStatement = NodeFactory.expressionStatementNode(
+            NodeFactory.callExpressionNode(
+                NodeFactory.memberExpressionNode(
+                    NodeFactory.identifierNode(this.controlFlowStorageName),
+                    NodeFactory.identifierNode(this.controlFlowStorageKey)
                 ),
                 [
                     this.callee,

@@ -17,6 +17,7 @@ import { TransformationStage } from '../enums/node-transformers/TransformationSt
 import { VisitorDirection } from '../enums/node-transformers/VisitorDirection';
 
 import { NodeGuards } from '../node/NodeGuards';
+import { NodeMetadata } from '../node/NodeMetadata';
 
 @injectable()
 export class TransformersRunner implements ITransformersRunner {
@@ -96,7 +97,7 @@ export class TransformersRunner implements ITransformersRunner {
         }
 
         return (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-            if (node.ignoredNode) {
+            if (NodeMetadata.isIgnoredNode(node)) {
                 return estraverse.VisitorOption.Skip;
             }
 

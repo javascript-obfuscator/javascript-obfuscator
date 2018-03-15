@@ -20,8 +20,8 @@ import { NodeType } from '../../enums/node/NodeType';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
+import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
-import { Nodes } from '../../node/Nodes';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
@@ -128,7 +128,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         }
 
         const slicedBody: ESTree.Statement[] = scopeBody.slice(0, indexInScope);
-        const hostBlockStatementNode: ESTree.BlockStatement = Nodes.getBlockStatementNode(slicedBody);
+        const hostBlockStatementNode: ESTree.BlockStatement = NodeFactory.blockStatementNode(slicedBody);
         const functionDeclarationName: string = targetNode.id.name;
 
         let isScopeHoistedFunctionDeclaration: boolean = false;
@@ -359,8 +359,8 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
          * with function declaration node. This function declaration node will create block scope for all identifiers
          * inside random block statement node and this identifiers won't affect identifiers of the rest AST tree.
          */
-        const deadCodeInjectionRootAstHostNode: ESTree.BlockStatement = Nodes.getBlockStatementNode([
-            Nodes.getFunctionDeclarationNode(
+        const deadCodeInjectionRootAstHostNode: ESTree.BlockStatement = NodeFactory.blockStatementNode([
+            NodeFactory.functionDeclarationNode(
                 DeadCodeInjectionTransformer.deadCodeInjectionRootAstHostNodeName,
                 [],
                 randomBlockStatementNode

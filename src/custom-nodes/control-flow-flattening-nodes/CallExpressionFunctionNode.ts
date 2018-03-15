@@ -12,7 +12,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { initializable } from '../../decorators/Initializable';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { Nodes } from '../../node/Nodes';
+import { NodeFactory } from '../../node/NodeFactory';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
@@ -48,23 +48,23 @@ export class CallExpressionFunctionNode extends AbstractCustomNode {
      * @returns {TStatement[]}
      */
     protected getNodeStructure (): TStatement[] {
-        const calleeIdentifier: ESTree.Identifier = Nodes.getIdentifierNode('callee');
+        const calleeIdentifier: ESTree.Identifier = NodeFactory.identifierNode('callee');
         const params: ESTree.Identifier[] = [];
         const argumentsLength: number = this.expressionArguments.length;
 
         for (let i: number = 0; i < argumentsLength; i++) {
-            params.push(Nodes.getIdentifierNode(`param${i + 1}`));
+            params.push(NodeFactory.identifierNode(`param${i + 1}`));
         }
 
-        const structure: TStatement = Nodes.getExpressionStatementNode(
-            Nodes.getFunctionExpressionNode(
+        const structure: TStatement = NodeFactory.expressionStatementNode(
+            NodeFactory.functionExpressionNode(
                 [
                     calleeIdentifier,
                     ...params
                 ],
-                Nodes.getBlockStatementNode([
-                    Nodes.getReturnStatementNode(
-                        Nodes.getCallExpressionNode(
+                NodeFactory.blockStatementNode([
+                    NodeFactory.returnStatementNode(
+                        NodeFactory.callExpressionNode(
                             calleeIdentifier,
                             params
                         )

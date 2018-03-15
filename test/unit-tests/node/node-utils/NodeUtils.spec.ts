@@ -4,7 +4,7 @@ import { assert } from 'chai';
 
 import { TStatement } from '../../../../src/types/node/TStatement';
 
-import { Nodes } from '../../../../src/node/Nodes';
+import { NodeFactory } from '../../../../src/node/NodeFactory';
 import { NodeUtils } from '../../../../src/node/NodeUtils';
 
 describe('NodeUtils', () => {
@@ -13,10 +13,10 @@ describe('NodeUtils', () => {
             expectedLiteralNode: ESTree.Literal;
 
         before(() => {
-            literalNode = Nodes.getLiteralNode('value');
+            literalNode = NodeFactory.literalNode('value');
             delete literalNode['x-verbatim-property'];
 
-            expectedLiteralNode = Nodes.getLiteralNode('value');
+            expectedLiteralNode = NodeFactory.literalNode('value');
 
             NodeUtils.addXVerbatimPropertyToLiterals(literalNode);
         });
@@ -33,40 +33,40 @@ describe('NodeUtils', () => {
 
             before(() => {
                 // actual AST tree
-                const expressionStatementNode1: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
-                const expressionStatementNode2: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+                const expressionStatementNode1: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(NodeFactory.identifierNode('identifier'));
+                const expressionStatementNode2: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(NodeFactory.identifierNode('identifier'));
 
-                const ifStatementBlockStatementNode1: ESTree.BlockStatement = Nodes.getBlockStatementNode([
+                const ifStatementBlockStatementNode1: ESTree.BlockStatement = NodeFactory.blockStatementNode([
                     expressionStatementNode1,
                     expressionStatementNode2
                 ]);
 
-                const ifStatementNode1: ESTree.IfStatement = Nodes.getIfStatementNode(
-                    Nodes.getLiteralNode(true),
+                const ifStatementNode1: ESTree.IfStatement = NodeFactory.ifStatementNode(
+                    NodeFactory.literalNode(true),
                     ifStatementBlockStatementNode1
                 );
 
                 // expected AST tree
-                const expressionStatementNode3: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
-                const expressionStatementNode4: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+                const expressionStatementNode3: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(NodeFactory.identifierNode('identifier'));
+                const expressionStatementNode4: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(NodeFactory.identifierNode('identifier'));
 
-                const ifStatementBlockStatementNode2: ESTree.BlockStatement = Nodes.getBlockStatementNode([
+                const ifStatementBlockStatementNode2: ESTree.BlockStatement = NodeFactory.blockStatementNode([
                     expressionStatementNode3,
                     expressionStatementNode4
                 ]);
 
-                const ifStatementNode2: ESTree.IfStatement = Nodes.getIfStatementNode(
-                    Nodes.getLiteralNode(true),
+                const ifStatementNode2: ESTree.IfStatement = NodeFactory.ifStatementNode(
+                    NodeFactory.literalNode(true),
                     ifStatementBlockStatementNode2
                 );
 
                 programNode = NodeUtils.clone(
-                    Nodes.getProgramNode([
+                    NodeFactory.programNode([
                         ifStatementNode1
                     ])
                 );
                 expectedProgramNode = NodeUtils.parentize(
-                    Nodes.getProgramNode([
+                    NodeFactory.programNode([
                         ifStatementNode2
                     ])
                 );
@@ -83,34 +83,34 @@ describe('NodeUtils', () => {
 
             before(() => {
                 // actual AST tree
-                const arrayExpressionNode: ESTree.ArrayExpression = Nodes.getArrayExpressionNode([
-                    Nodes.getLiteralNode(1),
-                    Nodes.getLiteralNode(2),
+                const arrayExpressionNode: ESTree.ArrayExpression = NodeFactory.arrayExpressionNode([
+                    NodeFactory.literalNode(1),
+                    NodeFactory.literalNode(2),
                     <any>null,
-                    Nodes.getLiteralNode(4)
+                    NodeFactory.literalNode(4)
                 ]);
-                const expressionStatementNode: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(
+                const expressionStatementNode: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(
                     arrayExpressionNode
                 );
 
                 // expected AST tree
-                const expectedArrayExpressionNode: ESTree.ArrayExpression = Nodes.getArrayExpressionNode([
-                    Nodes.getLiteralNode(1),
-                    Nodes.getLiteralNode(2),
+                const expectedArrayExpressionNode: ESTree.ArrayExpression = NodeFactory.arrayExpressionNode([
+                    NodeFactory.literalNode(1),
+                    NodeFactory.literalNode(2),
                     <any>null,
-                    Nodes.getLiteralNode(4)
+                    NodeFactory.literalNode(4)
                 ]);
-                const expectedExpressionStatementNode: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(
+                const expectedExpressionStatementNode: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(
                     expectedArrayExpressionNode
                 );
 
                 programNode = NodeUtils.clone(
-                    Nodes.getProgramNode([
+                    NodeFactory.programNode([
                         expressionStatementNode
                     ])
                 );
                 expectedProgramNode = NodeUtils.parentize(
-                    Nodes.getProgramNode([
+                    NodeFactory.programNode([
                         expectedExpressionStatementNode
                     ])
                 );
@@ -131,13 +131,13 @@ describe('NodeUtils', () => {
                 var abc = 'cde';
             `;
 
-            const identifierNode: ESTree.Identifier = Nodes.getIdentifierNode('abc');
-            const literalNode: ESTree.Literal = Nodes.getLiteralNode('cde');
-            const variableDeclaratorNode: ESTree.VariableDeclarator = Nodes.getVariableDeclaratorNode(identifierNode, literalNode);
-            const variableDeclarationNode: ESTree.VariableDeclaration = Nodes.getVariableDeclarationNode([
+            const identifierNode: ESTree.Identifier = NodeFactory.identifierNode('abc');
+            const literalNode: ESTree.Literal = NodeFactory.literalNode('cde');
+            const variableDeclaratorNode: ESTree.VariableDeclarator = NodeFactory.variableDeclaratorNode(identifierNode, literalNode);
+            const variableDeclarationNode: ESTree.VariableDeclaration = NodeFactory.variableDeclarationNode([
                 variableDeclaratorNode
             ]);
-            const programNode: ESTree.Program = Nodes.getProgramNode([
+            const programNode: ESTree.Program = NodeFactory.programNode([
                 variableDeclarationNode
             ]);
 
@@ -162,11 +162,11 @@ describe('NodeUtils', () => {
 
         before(() => {
             structure = [
-                Nodes.getProgramNode([
-                    Nodes.getVariableDeclarationNode([
-                        Nodes.getVariableDeclaratorNode(
-                            Nodes.getIdentifierNode('abc'),
-                            Nodes.getLiteralNode('cde')
+                NodeFactory.programNode([
+                    NodeFactory.variableDeclarationNode([
+                        NodeFactory.variableDeclaratorNode(
+                            NodeFactory.identifierNode('abc'),
+                            NodeFactory.literalNode('cde')
                         )
                     ])
                 ])
@@ -192,37 +192,37 @@ describe('NodeUtils', () => {
             programNode: ESTree.Program;
 
         before(() => {
-            expressionStatementNode1 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
-            expressionStatementNode2 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
-            expressionStatementNode3 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+            expressionStatementNode1 = NodeFactory.expressionStatementNode(NodeFactory.identifierNode('identifier'));
+            expressionStatementNode2 = NodeFactory.expressionStatementNode(NodeFactory.identifierNode('identifier'));
+            expressionStatementNode3 = NodeFactory.expressionStatementNode(NodeFactory.identifierNode('identifier'));
 
-            ifStatementBlockStatementNode2 = Nodes.getBlockStatementNode([
+            ifStatementBlockStatementNode2 = NodeFactory.blockStatementNode([
                 expressionStatementNode2,
                 expressionStatementNode3
             ]);
 
-            ifStatementNode2 = Nodes.getIfStatementNode(
-                Nodes.getLiteralNode(true),
+            ifStatementNode2 = NodeFactory.ifStatementNode(
+                NodeFactory.literalNode(true),
                 ifStatementBlockStatementNode2
             );
 
-            ifStatementBlockStatementNode1 = Nodes.getBlockStatementNode([
+            ifStatementBlockStatementNode1 = NodeFactory.blockStatementNode([
                 ifStatementNode2
             ]);
 
-            ifStatementNode1 = Nodes.getIfStatementNode(
-                Nodes.getLiteralNode(true),
+            ifStatementNode1 = NodeFactory.ifStatementNode(
+                NodeFactory.literalNode(true),
                 ifStatementBlockStatementNode1
             );
 
-            functionDeclarationBlockStatementNode = Nodes.getBlockStatementNode([
+            functionDeclarationBlockStatementNode = NodeFactory.blockStatementNode([
                 expressionStatementNode1,
                 ifStatementNode1
             ]);
 
-            functionDeclarationNode = Nodes.getFunctionDeclarationNode('test', [], functionDeclarationBlockStatementNode);
+            functionDeclarationNode = NodeFactory.functionDeclarationNode('test', [], functionDeclarationBlockStatementNode);
 
-            programNode = Nodes.getProgramNode([
+            programNode = NodeFactory.programNode([
                 functionDeclarationNode
             ]);
 
@@ -301,17 +301,17 @@ describe('NodeUtils', () => {
                 statementNode3: ESTree.Statement;
 
             before(() => {
-                statementNode1 = Nodes.getExpressionStatementNode(
-                    Nodes.getIdentifierNode('a')
+                statementNode1 = NodeFactory.expressionStatementNode(
+                    NodeFactory.identifierNode('a')
                 );
-                statementNode2 = Nodes.getExpressionStatementNode(
-                    Nodes.getIdentifierNode('b')
+                statementNode2 = NodeFactory.expressionStatementNode(
+                    NodeFactory.identifierNode('b')
                 );
-                statementNode3 = Nodes.getExpressionStatementNode(
-                    Nodes.getIdentifierNode('c')
+                statementNode3 = NodeFactory.expressionStatementNode(
+                    NodeFactory.identifierNode('c')
                 );
 
-                const blockStatementNode: ESTree.BlockStatement = Nodes.getBlockStatementNode([
+                const blockStatementNode: ESTree.BlockStatement = NodeFactory.blockStatementNode([
                     statementNode1,
                     statementNode2,
                     statementNode3
@@ -341,18 +341,18 @@ describe('NodeUtils', () => {
                 statementNode3: ESTree.Statement;
 
             before(() => {
-                statementNode1 = Nodes.getExpressionStatementNode(
-                    Nodes.getIdentifierNode('a')
+                statementNode1 = NodeFactory.expressionStatementNode(
+                    NodeFactory.identifierNode('a')
                 );
-                statementNode2 = Nodes.getExpressionStatementNode(
-                    Nodes.getIdentifierNode('b')
+                statementNode2 = NodeFactory.expressionStatementNode(
+                    NodeFactory.identifierNode('b')
                 );
-                statementNode3 = Nodes.getExpressionStatementNode(
-                    Nodes.getIdentifierNode('c')
+                statementNode3 = NodeFactory.expressionStatementNode(
+                    NodeFactory.identifierNode('c')
                 );
 
-                const switchCaseNode: ESTree.SwitchCase = Nodes.getSwitchCaseNode(
-                    Nodes.getLiteralNode(true),
+                const switchCaseNode: ESTree.SwitchCase = NodeFactory.switchCaseNode(
+                    NodeFactory.literalNode(true),
                     [
                         statementNode1,
                         statementNode2,
@@ -386,17 +386,17 @@ describe('NodeUtils', () => {
                 statementNode3: ESTree.Statement;
 
             before(() => {
-                statementNode1 = Nodes.getExpressionStatementNode(
-                    Nodes.getIdentifierNode('a')
+                statementNode1 = NodeFactory.expressionStatementNode(
+                    NodeFactory.identifierNode('a')
                 );
-                statementNode2 = Nodes.getExpressionStatementNode(
-                    Nodes.getIdentifierNode('b')
+                statementNode2 = NodeFactory.expressionStatementNode(
+                    NodeFactory.identifierNode('b')
                 );
-                statementNode3 = Nodes.getExpressionStatementNode(
-                    Nodes.getIdentifierNode('c')
+                statementNode3 = NodeFactory.expressionStatementNode(
+                    NodeFactory.identifierNode('c')
                 );
 
-                const blockStatementNode: ESTree.BlockStatement = Nodes.getBlockStatementNode([
+                const blockStatementNode: ESTree.BlockStatement = NodeFactory.blockStatementNode([
                     statementNode1,
                     statementNode2,
                     statementNode3
@@ -426,18 +426,18 @@ describe('NodeUtils', () => {
                 statementNode3: ESTree.Statement;
 
             before(() => {
-                statementNode1 = Nodes.getExpressionStatementNode(
-                    Nodes.getIdentifierNode('a')
+                statementNode1 = NodeFactory.expressionStatementNode(
+                    NodeFactory.identifierNode('a')
                 );
-                statementNode2 = Nodes.getExpressionStatementNode(
-                    Nodes.getIdentifierNode('b')
+                statementNode2 = NodeFactory.expressionStatementNode(
+                    NodeFactory.identifierNode('b')
                 );
-                statementNode3 = Nodes.getExpressionStatementNode(
-                    Nodes.getIdentifierNode('c')
+                statementNode3 = NodeFactory.expressionStatementNode(
+                    NodeFactory.identifierNode('c')
                 );
 
-                const switchCaseNode: ESTree.SwitchCase = Nodes.getSwitchCaseNode(
-                    Nodes.getLiteralNode(true),
+                const switchCaseNode: ESTree.SwitchCase = NodeFactory.switchCaseNode(
+                    NodeFactory.literalNode(true),
                     [
                         statementNode1,
                         statementNode2,
@@ -481,59 +481,59 @@ describe('NodeUtils', () => {
             programNode: ESTree.Program;
 
         before(() => {
-            expressionStatementNode1 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
-            expressionStatementNode2 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
-            expressionStatementNode3 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+            expressionStatementNode1 = NodeFactory.expressionStatementNode(NodeFactory.identifierNode('identifier'));
+            expressionStatementNode2 = NodeFactory.expressionStatementNode(NodeFactory.identifierNode('identifier'));
+            expressionStatementNode3 = NodeFactory.expressionStatementNode(NodeFactory.identifierNode('identifier'));
 
-            ifStatementBlockStatementNode3 = Nodes.getBlockStatementNode([
+            ifStatementBlockStatementNode3 = NodeFactory.blockStatementNode([
                 expressionStatementNode2,
                 expressionStatementNode3
             ]);
 
-            ifStatementNode3 = Nodes.getIfStatementNode(
-                Nodes.getLiteralNode(true),
+            ifStatementNode3 = NodeFactory.ifStatementNode(
+                NodeFactory.literalNode(true),
                 ifStatementBlockStatementNode3
             );
 
-            ifStatementBlockStatementNode2 = Nodes.getBlockStatementNode();
+            ifStatementBlockStatementNode2 = NodeFactory.blockStatementNode();
 
-            ifStatementBlockStatementNode1 = Nodes.getBlockStatementNode([
+            ifStatementBlockStatementNode1 = NodeFactory.blockStatementNode([
                 ifStatementNode3
             ]);
 
-            ifStatementNode2 = Nodes.getIfStatementNode(
-                Nodes.getLiteralNode(true),
+            ifStatementNode2 = NodeFactory.ifStatementNode(
+                NodeFactory.literalNode(true),
                 ifStatementBlockStatementNode2
             );
 
-            ifStatementNode1 = Nodes.getIfStatementNode(
-                Nodes.getLiteralNode(true),
+            ifStatementNode1 = NodeFactory.ifStatementNode(
+                NodeFactory.literalNode(true),
                 ifStatementBlockStatementNode1
             );
 
-            switchCaseNode = Nodes.getSwitchCaseNode(
-                Nodes.getLiteralNode(1),
+            switchCaseNode = NodeFactory.switchCaseNode(
+                NodeFactory.literalNode(1),
                 [
                     ifStatementNode2
                 ]
             );
 
-            switchStatementNode = Nodes.getSwitchStatementNode(
-                Nodes.getLiteralNode(1),
+            switchStatementNode = NodeFactory.switchStatementNode(
+                NodeFactory.literalNode(1),
                 [
                     switchCaseNode
                 ]
             );
 
-            functionDeclarationBlockStatementNode = Nodes.getBlockStatementNode([
+            functionDeclarationBlockStatementNode = NodeFactory.blockStatementNode([
                 expressionStatementNode1,
                 ifStatementNode1,
                 switchStatementNode
             ]);
 
-            functionDeclarationNode = Nodes.getFunctionDeclarationNode('test', [], functionDeclarationBlockStatementNode);
+            functionDeclarationNode = NodeFactory.functionDeclarationNode('test', [], functionDeclarationBlockStatementNode);
 
-            programNode = Nodes.getProgramNode([
+            programNode = NodeFactory.programNode([
                 functionDeclarationNode
             ]);
 
@@ -610,11 +610,11 @@ describe('NodeUtils', () => {
             unaryExpressionArgumentNode: ESTree.Node;
 
         before(() => {
-            const literalNode: ESTree.Literal = Nodes.getLiteralNode('test');
-            const unaryExpressionNode2: ESTree.UnaryExpression = Nodes.getUnaryExpressionNode('!', literalNode);
-            const unaryExpressionNode1: ESTree.UnaryExpression = Nodes.getUnaryExpressionNode('!', unaryExpressionNode2);
-            const expressionStatementNode: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(unaryExpressionNode1);
-            const programNode: ESTree.Program = Nodes.getProgramNode([
+            const literalNode: ESTree.Literal = NodeFactory.literalNode('test');
+            const unaryExpressionNode2: ESTree.UnaryExpression = NodeFactory.unaryExpressionNode('!', literalNode);
+            const unaryExpressionNode1: ESTree.UnaryExpression = NodeFactory.unaryExpressionNode('!', unaryExpressionNode2);
+            const expressionStatementNode: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(unaryExpressionNode1);
+            const programNode: ESTree.Program = NodeFactory.programNode([
                 expressionStatementNode
             ]);
 
@@ -641,23 +641,23 @@ describe('NodeUtils', () => {
             programNode: ESTree.Program;
 
         beforeEach(() => {
-            expressionStatementNode1 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
-            expressionStatementNode2 = Nodes.getExpressionStatementNode(Nodes.getIdentifierNode('identifier'));
+            expressionStatementNode1 = NodeFactory.expressionStatementNode(NodeFactory.identifierNode('identifier'));
+            expressionStatementNode2 = NodeFactory.expressionStatementNode(NodeFactory.identifierNode('identifier'));
 
-            ifStatementBlockStatementNode = Nodes.getBlockStatementNode([
+            ifStatementBlockStatementNode = NodeFactory.blockStatementNode([
                 expressionStatementNode1,
                 expressionStatementNode2
             ]);
 
-            ifStatementNode = Nodes.getIfStatementNode(
-                Nodes.getLiteralNode(true),
+            ifStatementNode = NodeFactory.ifStatementNode(
+                NodeFactory.literalNode(true),
                 ifStatementBlockStatementNode
             );
         });
 
         describe('Variant #1: parentize AST-tree with `ProgramNode` as root node', () => {
             beforeEach(() => {
-                programNode = Nodes.getProgramNode([
+                programNode = NodeFactory.programNode([
                     ifStatementNode
                 ]);
 
@@ -710,8 +710,8 @@ describe('NodeUtils', () => {
 
     describe('parentizeNode <T extends ESTree.Node = ESTree.Program> (node: T, parentNode: ESTree.Node): T', () => {
         describe('Variant #1: node with parent node', () => {
-            const identifier: ESTree.Identifier = Nodes.getIdentifierNode('foo');
-            const breakStatement: ESTree.BreakStatement = Nodes.getBreakStatement(identifier);
+            const identifier: ESTree.Identifier = NodeFactory.identifierNode('foo');
+            const breakStatement: ESTree.BreakStatement = NodeFactory.breakStatement(identifier);
 
             const expectedResult: ESTree.Identifier = NodeUtils.clone(identifier);
 
@@ -729,7 +729,7 @@ describe('NodeUtils', () => {
         });
 
         describe('Variant #2: node without parent node', () => {
-            const identifier: ESTree.Identifier = Nodes.getIdentifierNode('Foo');
+            const identifier: ESTree.Identifier = NodeFactory.identifierNode('Foo');
             const expectedResult: ESTree.Identifier = NodeUtils.clone(identifier);
 
             let result: ESTree.Identifier;

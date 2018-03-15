@@ -1,3 +1,5 @@
+/* tslint:disable:max-file-line-count */
+
 import * as escodegen from 'escodegen-wallaby';
 import * as ESTree from 'estree';
 
@@ -5,17 +7,20 @@ import { TStatement } from '../types/node/TStatement';
 
 import { NodeType } from '../enums/node/NodeType';
 
-export class Nodes {
+export class NodeFactory {
     /**
      * @param {TStatement[]} body
      * @returns {Program}
      */
-    public static getProgramNode (body: TStatement[] = []): ESTree.Program {
+    public static programNode (body: TStatement[] = []): ESTree.Program {
         return {
             type: NodeType.Program,
             body,
             sourceType: 'script',
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -23,12 +28,16 @@ export class Nodes {
      * @param {(Expression | SpreadElement)[]} elements
      * @returns {ArrayExpression}
      */
-    public static getArrayExpressionNode (
+    public static arrayExpressionNode (
         elements: (ESTree.Expression | ESTree.SpreadElement)[] = []
     ): ESTree.ArrayExpression {
         return {
             type: NodeType.ArrayExpression,
-            elements
+            elements,
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -38,7 +47,7 @@ export class Nodes {
      * @param {Expression} right
      * @returns {AssignmentExpression}
      */
-    public static getAssignmentExpressionNode (
+    public static assignmentExpressionNode (
         operator: ESTree.AssignmentOperator,
         left: ESTree.Pattern | ESTree.MemberExpression,
         right: ESTree.Expression
@@ -48,7 +57,10 @@ export class Nodes {
             operator,
             left,
             right,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -58,7 +70,7 @@ export class Nodes {
      * @param {Expression} right
      * @returns {BinaryExpression}
      */
-    public static getBinaryExpressionNode (
+    public static binaryExpressionNode (
         operator: ESTree.BinaryOperator,
         left: ESTree.Expression,
         right: ESTree.Expression,
@@ -68,7 +80,10 @@ export class Nodes {
             operator,
             left,
             right,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -76,11 +91,14 @@ export class Nodes {
      * @param {Statement[]} body
      * @returns {BlockStatement}
      */
-    public static getBlockStatementNode (body: ESTree.Statement[] = []): ESTree.BlockStatement {
+    public static blockStatementNode (body: ESTree.Statement[] = []): ESTree.BlockStatement {
         return {
             type: NodeType.BlockStatement,
             body,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -88,10 +106,13 @@ export class Nodes {
      * @param {Identifier} label
      * @returns {BreakStatement}
      */
-    public static getBreakStatement (label?: ESTree.Identifier): ESTree.BreakStatement {
+    public static breakStatement (label?: ESTree.Identifier): ESTree.BreakStatement {
         const breakStatementNode: ESTree.BreakStatement = {
             type: NodeType.BreakStatement,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
 
         if (label) {
@@ -106,7 +127,7 @@ export class Nodes {
      * @param {(Expression | SpreadElement)[]} args
      * @returns {CallExpression}
      */
-    public static getCallExpressionNode (
+    public static callExpressionNode (
         callee: ESTree.Expression,
         args: (ESTree.Expression | ESTree.SpreadElement)[] = []
     ): ESTree.CallExpression {
@@ -114,7 +135,10 @@ export class Nodes {
             type: NodeType.CallExpression,
             callee,
             arguments: args,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -122,10 +146,13 @@ export class Nodes {
      * @param {Identifier} label
      * @returns {ContinueStatement}
      */
-    public static getContinueStatement (label?: ESTree.Identifier): ESTree.ContinueStatement {
+    public static continueStatement (label?: ESTree.Identifier): ESTree.ContinueStatement {
         const continueStatementNode: ESTree.ContinueStatement = {
             type: NodeType.ContinueStatement,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
 
         if (label) {
@@ -139,11 +166,14 @@ export class Nodes {
      * @param {Expression} expression
      * @returns {ExpressionStatement}
      */
-    public static getExpressionStatementNode (expression: ESTree.Expression): ESTree.ExpressionStatement {
+    public static expressionStatementNode (expression: ESTree.Expression): ESTree.ExpressionStatement {
         return {
             type: NodeType.ExpressionStatement,
             expression,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -153,18 +183,21 @@ export class Nodes {
      * @param {BlockStatement} body
      * @returns {FunctionDeclaration}
      */
-    public static getFunctionDeclarationNode (
+    public static functionDeclarationNode (
         functionName: string,
         params: ESTree.Identifier[],
         body: ESTree.BlockStatement
     ): ESTree.FunctionDeclaration {
         return {
             type: NodeType.FunctionDeclaration,
-            id: Nodes.getIdentifierNode(functionName),
+            id: NodeFactory.identifierNode(functionName),
             params,
             body,
             generator: false,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -173,7 +206,7 @@ export class Nodes {
      * @param {BlockStatement} body
      * @returns {FunctionExpression}
      */
-    public static getFunctionExpressionNode (
+    public static functionExpressionNode (
         params: ESTree.Identifier[],
         body: ESTree.BlockStatement
     ): ESTree.FunctionExpression {
@@ -182,7 +215,10 @@ export class Nodes {
             params,
             body,
             generator: false,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -192,7 +228,7 @@ export class Nodes {
      * @param {BlockStatement} alternate
      * @returns {IfStatement}
      */
-    public static getIfStatementNode (
+    public static ifStatementNode (
         test: ESTree.Expression,
         consequent: ESTree.BlockStatement,
         alternate?: ESTree.BlockStatement
@@ -202,7 +238,10 @@ export class Nodes {
             test,
             consequent,
             ...alternate && { alternate },
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -210,11 +249,14 @@ export class Nodes {
      * @param {string} name
      * @returns {Identifier}
      */
-    public static getIdentifierNode (name: string): ESTree.Identifier {
+    public static identifierNode (name: string): ESTree.Identifier {
         return {
             type: NodeType.Identifier,
             name,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -223,7 +265,7 @@ export class Nodes {
      * @param {string} raw
      * @returns {Literal}
      */
-    public static getLiteralNode (value: boolean | number | string, raw?: string): ESTree.Literal {
+    public static literalNode (value: boolean | number | string, raw?: string): ESTree.Literal {
         raw = raw !== undefined ? raw : `'${value}'`;
 
         return {
@@ -234,7 +276,10 @@ export class Nodes {
                 content: raw,
                 precedence: escodegen.Precedence.Primary
             },
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -244,7 +289,7 @@ export class Nodes {
      * @param {Expression} right
      * @returns {LogicalExpression}
      */
-    public static getLogicalExpressionNode (
+    public static logicalExpressionNode (
         operator: ESTree.LogicalOperator,
         left: ESTree.Expression,
         right: ESTree.Expression,
@@ -254,7 +299,10 @@ export class Nodes {
             operator,
             left,
             right,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -264,7 +312,7 @@ export class Nodes {
      * @param {boolean} computed
      * @returns {MemberExpression}
      */
-    public static getMemberExpressionNode (
+    public static memberExpressionNode (
         object: ESTree.Expression | ESTree.Super,
         property: ESTree.Expression,
         computed: boolean = false
@@ -274,7 +322,10 @@ export class Nodes {
             computed,
             object,
             property,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -285,7 +336,7 @@ export class Nodes {
      * @param {boolean} computed
      * @returns {MethodDefinition}
      */
-    public static getMethodDefinitionNode (
+    public static methodDefinitionNode (
         key: ESTree.Expression,
         value: ESTree.FunctionExpression,
         kind: 'constructor' | 'method' | 'get' | 'set',
@@ -298,7 +349,10 @@ export class Nodes {
             kind,
             computed,
             static: false,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -306,11 +360,14 @@ export class Nodes {
      * @param {Property[]} properties
      * @returns {ObjectExpression}
      */
-    public static getObjectExpressionNode (properties: ESTree.Property[]): ESTree.ObjectExpression {
+    public static objectExpressionNode (properties: ESTree.Property[]): ESTree.ObjectExpression {
         return {
             type: NodeType.ObjectExpression,
             properties,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -320,7 +377,7 @@ export class Nodes {
      * @param {boolean} computed
      * @returns {Property}
      */
-    public static getPropertyNode (
+    public static propertyNode (
         key: ESTree.Expression,
         value: ESTree.Expression | ESTree.Pattern,
         computed: boolean = false
@@ -333,7 +390,62 @@ export class Nodes {
             method: false,
             shorthand: false,
             computed,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
+        };
+    }
+
+    /**
+     * @param {Expression} argument
+     * @returns {ReturnStatement}
+     */
+    public static returnStatementNode (argument: ESTree.Expression): ESTree.ReturnStatement {
+        return {
+            type: NodeType.ReturnStatement,
+            argument,
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
+        };
+    }
+
+    /**
+     * @param {Expression} discriminant
+     * @param {SwitchCase[]} cases
+     * @returns {SwitchStatement}
+     */
+    public static switchStatementNode (
+        discriminant: ESTree.Expression,
+        cases: ESTree.SwitchCase[]
+    ): ESTree.SwitchStatement {
+        return {
+            type: NodeType.SwitchStatement,
+            discriminant,
+            cases,
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
+        };
+    }
+
+    /**
+     * @param {Expression} test
+     * @param {Statement[]} consequent
+     * @returns {SwitchCase}
+     */
+    public static switchCaseNode (test: ESTree.Expression, consequent: ESTree.Statement[]): ESTree.SwitchCase {
+        return {
+            type: NodeType.SwitchCase,
+            test,
+            consequent,
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -343,7 +455,7 @@ export class Nodes {
      * @param {true} prefix
      * @returns {UnaryExpression}
      */
-    public static getUnaryExpressionNode (
+    public static unaryExpressionNode (
         operator: ESTree.UnaryOperator,
         argument: ESTree.Expression,
         prefix: true = true
@@ -353,50 +465,10 @@ export class Nodes {
             operator,
             argument,
             prefix,
-            obfuscatedNode: false
-        };
-    }
-
-    /**
-     * @param {Expression} argument
-     * @returns {ReturnStatement}
-     */
-    public static getReturnStatementNode (argument: ESTree.Expression): ESTree.ReturnStatement {
-        return {
-            type: NodeType.ReturnStatement,
-            argument,
-            obfuscatedNode: false
-        };
-    }
-
-    /**
-     * @param {Expression} discriminant
-     * @param {SwitchCase[]} cases
-     * @returns {SwitchStatement}
-     */
-    public static getSwitchStatementNode (
-        discriminant: ESTree.Expression,
-        cases: ESTree.SwitchCase[]
-    ): ESTree.SwitchStatement {
-        return {
-            type: NodeType.SwitchStatement,
-            discriminant,
-            cases,
-            obfuscatedNode: false
-        };
-    }
-
-    /**
-     * @param {Expression} test
-     * @param {Statement[]} consequent
-     * @returns {SwitchCase}
-     */
-    public static getSwitchCaseNode (test: ESTree.Expression, consequent: ESTree.Statement[]): ESTree.SwitchCase {
-        return {
-            type: NodeType.SwitchCase,
-            test,
-            consequent,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -405,13 +477,16 @@ export class Nodes {
      * @param {Expression} argumentExpr
      * @returns {UpdateExpression}
      */
-    public static getUpdateExpressionNode (operator: ESTree.UpdateOperator, argumentExpr: ESTree.Expression): ESTree.UpdateExpression {
+    public static updateExpressionNode (operator: ESTree.UpdateOperator, argumentExpr: ESTree.Expression): ESTree.UpdateExpression {
         return {
             type: NodeType.UpdateExpression,
             operator,
             argument: argumentExpr,
             prefix: false,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -420,7 +495,7 @@ export class Nodes {
      * @param {string} kind
      * @returns {VariableDeclaration}
      */
-    public static getVariableDeclarationNode (
+    public static variableDeclarationNode (
         declarations: ESTree.VariableDeclarator[] = [],
         kind: 'var' | 'let' | 'const' = 'var'
     ): ESTree.VariableDeclaration {
@@ -428,7 +503,10 @@ export class Nodes {
             type: NodeType.VariableDeclaration,
             declarations,
             kind,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -437,12 +515,15 @@ export class Nodes {
      * @param {Expression | null} init
      * @returns {VariableDeclarator}
      */
-    public static getVariableDeclaratorNode (id: ESTree.Identifier, init: ESTree.Expression | null): ESTree.VariableDeclarator {
+    public static variableDeclaratorNode (id: ESTree.Identifier, init: ESTree.Expression | null): ESTree.VariableDeclarator {
         return {
             type: NodeType.VariableDeclarator,
             id,
             init,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 
@@ -451,12 +532,15 @@ export class Nodes {
      * @param {Statement} body
      * @returns {WhileStatement}
      */
-    public static getWhileStatementNode (test: ESTree.Expression, body: ESTree.Statement): ESTree.WhileStatement {
+    public static whileStatementNode (test: ESTree.Expression, body: ESTree.Statement): ESTree.WhileStatement {
         return {
             type: NodeType.WhileStatement,
             test,
             body,
-            obfuscatedNode: false
+            metadata: {
+                ignoredNode: false,
+                obfuscatedNode: false
+            }
         };
     }
 }

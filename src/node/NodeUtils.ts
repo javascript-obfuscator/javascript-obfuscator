@@ -9,6 +9,7 @@ import { TObject } from '../types/TObject';
 import { TStatement } from '../types/node/TStatement';
 
 import { NodeGuards } from './NodeGuards';
+import { NodeMetadata } from './NodeMetadata';
 
 export class NodeUtils {
     /**
@@ -47,6 +48,17 @@ export class NodeUtils {
 
         structure = NodeUtils.addXVerbatimPropertyToLiterals(structure);
         structure = NodeUtils.parentize(structure);
+
+        estraverse.replace(structure, {
+            enter: (node: ESTree.Node): ESTree.Node => {
+                NodeMetadata.set(node, {
+                    ignoredNode: false,
+                    obfuscatedNode: false
+                });
+
+                return node;
+            }
+        });
 
         return structure.body;
     }
@@ -136,7 +148,6 @@ export class NodeUtils {
      */
     public static parentizeNode <T extends ESTree.Node = ESTree.Node> (node: T, parentNode: ESTree.Node | null): T {
         node.parentNode = parentNode || node;
-        node.obfuscatedNode = false;
 
         return node;
     }

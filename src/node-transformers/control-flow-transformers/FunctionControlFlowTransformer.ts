@@ -21,8 +21,9 @@ import { NodeType } from '../../enums/node/NodeType';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { NodeGuards } from '../../node/NodeGuards';
 import { NodeAppender } from '../../node/NodeAppender';
+import { NodeGuards } from '../../node/NodeGuards';
+import { NodeMetadata } from '../../node/NodeMetadata';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
@@ -223,7 +224,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     private transformFunctionBody (functionNodeBody: ESTree.BlockStatement, controlFlowStorage: IStorage<ICustomNode>): void {
         estraverse.replace(functionNodeBody, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): estraverse.VisitorOption | ESTree.Node => {
-                if (node.ignoredNode) {
+                if (NodeMetadata.isIgnoredNode(node)) {
                     return estraverse.VisitorOption.Skip;
                 }
 

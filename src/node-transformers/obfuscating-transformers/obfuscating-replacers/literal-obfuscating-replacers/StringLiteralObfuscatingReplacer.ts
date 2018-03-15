@@ -14,7 +14,8 @@ import { IStringArrayIndexData } from '../../../../interfaces/node-transformers/
 import { StringArrayEncoding } from '../../../../enums/StringArrayEncoding';
 
 import { AbstractObfuscatingReplacer } from '../AbstractObfuscatingReplacer';
-import { Nodes } from '../../../../node/Nodes';
+import { NodeMetadata } from '../../../../node/NodeMetadata';
+import { NodeFactory } from '../../../../node/NodeFactory';
 import { Utils } from '../../../../utils/Utils';
 
 @injectable()
@@ -106,9 +107,9 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
      * @returns {Literal}
      */
     private static getHexadecimalLiteralNode (hexadecimalIndex: string): ESTree.Literal {
-        const hexadecimalLiteralNode: ESTree.Literal = Nodes.getLiteralNode(hexadecimalIndex);
+        const hexadecimalLiteralNode: ESTree.Literal = NodeFactory.literalNode(hexadecimalIndex);
 
-        hexadecimalLiteralNode.obfuscatedNode = true;
+        NodeMetadata.set(hexadecimalLiteralNode, { obfuscatedNode: true });
 
         return hexadecimalLiteralNode;
     }
@@ -118,9 +119,9 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
      * @returns {Literal}
      */
     private static getRc4KeyLiteralNode (literalValue: string): ESTree.Literal {
-        const rc4KeyLiteralNode: ESTree.Literal = Nodes.getLiteralNode(literalValue);
+        const rc4KeyLiteralNode: ESTree.Literal = NodeFactory.literalNode(literalValue);
 
-        rc4KeyLiteralNode.obfuscatedNode = true;
+        NodeMetadata.set(rc4KeyLiteralNode, { obfuscatedNode: true });
 
         return rc4KeyLiteralNode;
     }
@@ -215,7 +216,7 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
      * @returns {Node}
      */
     private replaceWithLiteralNode (value: string): ESTree.Node {
-        return Nodes.getLiteralNode(
+        return NodeFactory.literalNode(
             this.escapeSequenceEncoder.encode(value, this.options.unicodeEscapeSequence)
         );
     }
@@ -250,12 +251,12 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
             ));
         }
 
-        const stringArrayIdentifierNode: ESTree.Identifier = Nodes.getIdentifierNode(stringArrayStorageCallsWrapperName);
+        const stringArrayIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(stringArrayStorageCallsWrapperName);
 
         // prevent obfuscation of this identifier
-        stringArrayIdentifierNode.obfuscatedNode = true;
+        NodeMetadata.set(stringArrayIdentifierNode, { obfuscatedNode: true });
 
-        return Nodes.getCallExpressionNode(
+        return NodeFactory.callExpressionNode(
             stringArrayIdentifierNode,
             callExpressionArgs
         );

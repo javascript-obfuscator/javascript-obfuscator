@@ -109,7 +109,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
      * @returns {string}
      */
     private getDecodeStringArrayTemplate (): string {
-        const globalVariableTemplate: string = this.options.target !== ObfuscationTarget.Extension
+        const globalVariableTemplate: string = this.options.target !== ObfuscationTarget.BrowserNoEval
             ? this.getGlobalVariableTemplate()
             : GlobalVariableNoEvalTemplate();
         const atobPolyfill: string = format(AtobTemplate(), { globalVariableTemplate });

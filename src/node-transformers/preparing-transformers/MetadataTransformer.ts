@@ -10,11 +10,13 @@ import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { NodeFactory } from '../../node/NodeFactory';
-import { NodeGuards } from '../../node/NodeGuards';
+import { NodeMetadata } from '../../node/NodeMetadata';
 
+/**
+ * Adds metadata properties to each node
+ */
 @injectable()
-export class MemberExpressionTransformer extends AbstractNodeTransformer {
+export class MetadataTransformer extends AbstractNodeTransformer {
     /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
@@ -32,12 +34,10 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (transformationStage: TransformationStage): IVisitor | null {
         switch (transformationStage) {
-            case TransformationStage.Converting:
+            case TransformationStage.Preparing:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                        if (parentNode && NodeGuards.isMemberExpressionNode(node)) {
-                            return this.transformNode(node, parentNode);
-                        }
+                        return this.transformNode(node, parentNode);
                     }
                 };
 
@@ -47,31 +47,16 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * replaces:
-     *     object.identifier = 1;
-     *
-     * on:
-     *     object['identifier'] = 1;
-     *
-     * and skip:
-     *     object[identifier] = 1;
-     *
-     * Literal node will be obfuscated by LiteralTransformer
-     *
-     * @param {MemberExpression} memberExpressionNode
-     * @param {NodeGuards} parentNode
-     * @returns {NodeGuards}
+     * @param {Node} node
+     * @param {Node} parentNode
+     * @returns {Node}
      */
-    public transformNode (memberExpressionNode: ESTree.MemberExpression, parentNode: ESTree.Node): ESTree.Node {
-        if (NodeGuards.isIdentifierNode(memberExpressionNode.property)) {
-            if (memberExpressionNode.computed) {
-                return memberExpressionNode;
-            }
+    public transformNode (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node {
+        NodeMetadata.set(node, {
+            ignoredNode: false,
+            obfuscatedNode: false
+        });
 
-            memberExpressionNode.computed = true;
-            memberExpressionNode.property = NodeFactory.literalNode(memberExpressionNode.property.name);
-        }
-
-        return memberExpressionNode;
+        return node;
     }
 }

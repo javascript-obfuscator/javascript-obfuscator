@@ -14,8 +14,8 @@ import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
+import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
-import { Nodes } from '../../node/Nodes';
 import { NodeUtils } from '../../node/NodeUtils';
 
 /**
@@ -79,7 +79,7 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
         let nodes: ESTree.Expression[] = [];
 
         templateLiteralNode.quasis.forEach((templateElement: ESTree.TemplateElement) => {
-            nodes.push(Nodes.getLiteralNode(templateElement.value.cooked));
+            nodes.push(NodeFactory.literalNode(templateElement.value.cooked));
 
             const expression: ESTree.Expression | undefined = templateLiteralExpressions.shift();
 
@@ -100,18 +100,18 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
             !TemplateLiteralTransformer.isLiteralNodeWithStringValue(nodes[0]) &&
             !TemplateLiteralTransformer.isLiteralNodeWithStringValue(nodes[1])
         ) {
-            nodes.unshift(Nodes.getLiteralNode(''));
+            nodes.unshift(NodeFactory.literalNode(''));
         }
 
         if (nodes.length > 1) {
-            let root: ESTree.BinaryExpression = Nodes.getBinaryExpressionNode(
+            let root: ESTree.BinaryExpression = NodeFactory.binaryExpressionNode(
                 '+',
                 <ESTree.Literal>nodes.shift(),
                 <ESTree.Expression>nodes.shift()
             );
 
             nodes.forEach((node: ESTree.Literal | ESTree.Expression) => {
-                root = Nodes.getBinaryExpressionNode('+', root, <ESTree.Literal | ESTree.Expression>node);
+                root = NodeFactory.binaryExpressionNode('+', root, <ESTree.Literal | ESTree.Expression>node);
             });
 
             return root;

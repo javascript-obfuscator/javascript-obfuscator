@@ -60,7 +60,7 @@ export class DebugProtectionFunctionNode extends AbstractCustomNode {
      * @returns {string}
      */
     protected getTemplate (): string {
-        const debuggerTemplate: string = this.options.target !== ObfuscationTarget.Extension
+        const debuggerTemplate: string = this.options.target !== ObfuscationTarget.BrowserNoEval
             ? DebuggerTemplate()
             : DebuggerTemplateNoEval();
 

@@ -115,7 +115,7 @@ describe('DebugProtectionFunctionCallTemplate (): string', () => {
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     debugProtection: true,
-                    target: ObfuscationTarget.Extension
+                    target: ObfuscationTarget.BrowserNoEval
                 }
             );
 

@@ -13,8 +13,8 @@ import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
+import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
-import { Nodes } from '../../node/Nodes';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
@@ -146,8 +146,8 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
          * we should wrap AST-tree into the parent function expression node (ast root host node).
          * This function expression node will help to correctly transform AST-tree.
          */
-        const evalRootAstHostNode: ESTree.FunctionExpression = Nodes
-            .getFunctionExpressionNode([], Nodes.getBlockStatementNode(<any>ast));
+        const evalRootAstHostNode: ESTree.FunctionExpression = NodeFactory
+            .functionExpressionNode([], NodeFactory.blockStatementNode(<any>ast));
 
         /**
          * we should store that host node and then extract AST-tree on the `finalizing` stage
@@ -166,10 +166,10 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
         const targetAst: ESTree.Statement[] = evalRootAstHostNode.body.body;
         const obfuscatedCode: string = NodeUtils.convertStructureToCode(targetAst);
 
-        return Nodes.getCallExpressionNode(
-            Nodes.getIdentifierNode('eval'),
+        return NodeFactory.callExpressionNode(
+            NodeFactory.identifierNode('eval'),
             [
-                Nodes.getLiteralNode(jsStringEscape(obfuscatedCode))
+                NodeFactory.literalNode(jsStringEscape(obfuscatedCode))
             ]
         );
     }

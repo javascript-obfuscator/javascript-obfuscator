@@ -11,8 +11,9 @@ import { IInversifyContainerFacade } from '../../../../src/interfaces/container/
 import { INodeTransformer } from '../../../../src/interfaces/node-transformers/INodeTransformer';
 
 import { NodeTransformer } from '../../../../src/enums/node-transformers/NodeTransformer';
-import { Nodes } from '../../../../src/node/Nodes';
+import { NodeFactory } from '../../../../src/node/NodeFactory';
 import { NodeUtils } from '../../../../src/node/NodeUtils';
+import { NodeMetadata } from '../../../../src/node/NodeMetadata';
 
 describe('ObfuscatingGuardsTransformer', () => {
     describe('transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node', () => {
@@ -28,7 +29,7 @@ describe('ObfuscatingGuardsTransformer', () => {
         });
 
         describe('Variant #1: valid node', () => {
-            const identifier: ESTree.Identifier = Nodes.getIdentifierNode('foo');
+            const identifier: ESTree.Identifier = NodeFactory.identifierNode('foo');
 
             const expectedResult: ESTree.Identifier = NodeUtils.clone(identifier);
 
@@ -37,7 +38,7 @@ describe('ObfuscatingGuardsTransformer', () => {
             before(() => {
                 identifier.parentNode = identifier;
 
-                expectedResult.ignoredNode = false;
+                NodeMetadata.set(expectedResult, { ignoredNode: false });
 
                 result = <ESTree.Identifier>obfuscatingGuardsTransformer.transformNode(identifier, identifier);
             });
@@ -48,8 +49,8 @@ describe('ObfuscatingGuardsTransformer', () => {
         });
 
         describe('Variant #2: invalid node', () => {
-            const expressionStatement: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(
-                Nodes.getIdentifierNode('foo')
+            const expressionStatement: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(
+                NodeFactory.identifierNode('foo')
             );
 
             const expectedResult: ESTree.ExpressionStatement = NodeUtils.clone(expressionStatement);
@@ -63,7 +64,7 @@ describe('ObfuscatingGuardsTransformer', () => {
 
                 expectedResult.directive = 'use strict';
                 expectedResult.parentNode = expectedResult;
-                expectedResult.ignoredNode = true;
+                NodeMetadata.set(expectedResult, { ignoredNode: true });
 
                 result = <ESTree.ExpressionStatement>obfuscatingGuardsTransformer
                     .transformNode(expressionStatement, expressionStatement);

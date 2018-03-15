@@ -16,7 +16,7 @@ import { readFileAsString } from '../../../helpers/readFileAsString';
 
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
 import { NodeAppender } from '../../../../src/node/NodeAppender';
-import { Nodes } from '../../../../src/node/Nodes';
+import { NodeFactory } from '../../../../src/node/NodeFactory';
 import { NodeUtils } from '../../../../src/node/NodeUtils';
 
 /**
@@ -34,7 +34,7 @@ const convertCodeToStructure: (fixturePath: string) => TStatement[] = (fixturePa
  * @return {ESTree.Program}
  */
 const convertCodeToAst: (fixturePath: string) => ESTree.Program = (fixturePath) => {
-    return Nodes.getProgramNode(convertCodeToStructure(fixturePath));
+    return NodeFactory.programNode(convertCodeToStructure(fixturePath));
 };
 
 describe('NodeAppender', () => {

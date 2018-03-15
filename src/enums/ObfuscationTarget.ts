@@ -1,5 +1,5 @@
 export enum ObfuscationTarget {
     Browser = 'browser',
-    Extension = 'extension',
+    BrowserNoEval = 'browser-no-eval',
     Node = 'node'
 }

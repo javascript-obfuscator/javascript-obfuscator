@@ -12,7 +12,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { initializable } from '../../decorators/Initializable';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { Nodes } from '../../node/Nodes';
+import { NodeFactory } from '../../node/NodeFactory';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
@@ -70,12 +70,12 @@ export class BlockStatementDeadCodeInjectionNode extends AbstractCustomNode {
             ? [this.blockStatementNode, this.deadCodeInjectionRootAstHostNode]
             : [this.deadCodeInjectionRootAstHostNode, this.blockStatementNode];
 
-        const structure: BlockStatement = Nodes.getBlockStatementNode([
-            Nodes.getIfStatementNode(
-                Nodes.getBinaryExpressionNode(
+        const structure: BlockStatement = NodeFactory.blockStatementNode([
+            NodeFactory.ifStatementNode(
+                NodeFactory.binaryExpressionNode(
                     operator,
-                    Nodes.getLiteralNode(leftString),
-                    Nodes.getLiteralNode(rightString)
+                    NodeFactory.literalNode(leftString),
+                    NodeFactory.literalNode(rightString)
                 ),
                 consequent,
                 alternate

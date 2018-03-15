@@ -85,7 +85,7 @@ function wrapTargetMethodsInInitializedCheck (target: IInitializable, initialize
             return;
         }
 
-        const targetProperty: any = target[propertyName];
+        const targetProperty: IInitializable[keyof IInitializable] = target[propertyName];
 
         if (typeof targetProperty !== 'function') {
             return;
@@ -128,14 +128,14 @@ function wrapInitializeMethodInInitializeCheck (
 
     Object.defineProperty(target, initializeMethodName, {
         ...methodDescriptor,
-        value: function (): void {
+        value: function (): typeof originalMethod {
             /**
              * should define metadata before `initialize` method call,
              * because of cases when other methods will called inside `initialize` method
              */
             Reflect.defineMetadata(initializedTargetMetadataKey, true, this);
 
-            const result: any = originalMethod.apply(this, arguments);
+            const result: typeof originalMethod = originalMethod.apply(this, arguments);
 
             if (this[propertyKey]) {}
 

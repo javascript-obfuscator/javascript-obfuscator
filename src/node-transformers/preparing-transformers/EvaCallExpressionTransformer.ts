@@ -4,8 +4,6 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 import jsStringEscape from 'js-string-escape';
 
-import { TStatement } from '../../types/node/TStatement';
-
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
@@ -133,7 +131,7 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
             return callExpressionNode;
         }
 
-        let ast: TStatement[];
+        let ast: ESTree.Statement[];
 
         // wrapping into try-catch to prevent parsing of incorrect `eval` string
         try {
@@ -147,7 +145,7 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
          * This function expression node will help to correctly transform AST-tree.
          */
         const evalRootAstHostNode: ESTree.FunctionExpression = NodeFactory
-            .functionExpressionNode([], NodeFactory.blockStatementNode(<any>ast));
+            .functionExpressionNode([], NodeFactory.blockStatementNode(ast));
 
         /**
          * we should store that host node and then extract AST-tree on the `finalizing` stage

@@ -246,7 +246,7 @@
 
 "@babel/plugin-transform-computed-properties@7.0.0-beta.40":
   version "7.0.0-beta.40"
-  resolved "http://registry.npmjs.org/@babel/plugin-transform-computed-properties/-/plugin-transform-computed-properties-7.0.0-beta.40.tgz#e4bd53455d9f96882cc8e9923895d71690f6969e"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-computed-properties/-/plugin-transform-computed-properties-7.0.0-beta.40.tgz#e4bd53455d9f96882cc8e9923895d71690f6969e"
 
 "@babel/plugin-transform-destructuring@7.0.0-beta.40":
   version "7.0.0-beta.40"
@@ -1527,7 +1527,7 @@ babylon@7.0.0-beta.27:
 
 babylon@7.0.0-beta.40, babylon@^7.0.0-beta.30:
   version "7.0.0-beta.40"
-  resolved "http://registry.npmjs.org/babylon/-/babylon-7.0.0-beta.40.tgz#91fc8cd56d5eb98b28e6fde41045f2957779940a"
+  resolved "https://registry.yarnpkg.com/babylon/-/babylon-7.0.0-beta.40.tgz#91fc8cd56d5eb98b28e6fde41045f2957779940a"
 
 babylon@^6.17.3, babylon@^6.18.0:
   version "6.18.0"
@@ -2052,17 +2052,13 @@ commander@2.11.0:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.11.0.tgz#157152fd1e7a6c8d98a5b715cf376df928004563"
 
-commander@2.15.0:
+commander@2.15.0, commander@^2.8.1:
   version "2.15.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.15.0.tgz#ad2a23a1c3b036e392469b8012cec6b33b4c1322"
 
 commander@^2.12.1, commander@~2.13.0:
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.13.0.tgz#6964bca67685df7c1f1430c584f07d7597885b9c"
-
-commander@^2.8.1:
-  version "2.14.1"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-2.14.1.tgz#2235123e37af8ca3c65df45b026dbd357b01b9aa"
 
 commondir@^1.0.1:
   version "1.0.1"
@@ -2763,8 +2759,8 @@ from2@^2.1.0, from2@^2.1.1:
     readable-stream "^2.0.0"
 
 fs-readdir-recursive@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/fs-readdir-recursive/-/fs-readdir-recursive-1.0.0.tgz#8cd1745c8b4f8a29c8caec392476921ba195f560"
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/fs-readdir-recursive/-/fs-readdir-recursive-1.1.0.tgz#e32fc030a2ccee44a6b5371308da54be0b397d27"
 
 fs-write-stream-atomic@^1.0.8:
   version "1.0.10"
@@ -5787,9 +5783,9 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript@2.7.2:
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.7.2.tgz#2d615a1ef4aee4f574425cdff7026edf81919836"
+typescript@2.8.0-rc:
+  version "2.8.0-rc"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.8.0-rc.tgz#a0256b7d1d39fb7493ba0403f55e95d31e8bc374"
 
 uglify-es@^3.3.4:
   version "3.3.9"

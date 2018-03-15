@@ -41,9 +41,9 @@ export class NodeUtils {
 
     /**
      * @param {string} code
-     * @returns {TStatement[]}
+     * @returns {Statement[]}
      */
-    public static convertCodeToStructure (code: string): TStatement[] {
+    public static convertCodeToStructure (code: string): ESTree.Statement[] {
         let structure: ESTree.Program = esprima.parseScript(code);
 
         structure = NodeUtils.addXVerbatimPropertyToLiterals(structure);
@@ -60,7 +60,7 @@ export class NodeUtils {
             }
         });
 
-        return structure.body;
+        return <ESTree.Statement[]>structure.body;
     }
 
     /**
@@ -168,9 +168,9 @@ export class NodeUtils {
                 continue;
             }
 
-            const value: any = node[property];
+            const value: T[keyof T] = node[property];
 
-            let clonedValue: any | null;
+            let clonedValue: T[keyof T] | T[keyof T][] | null;
 
             if (value === null || value instanceof RegExp) {
                 clonedValue = value;

@@ -19,7 +19,7 @@
     "javascript-obfuscator": "./bin/javascript-obfuscator"
   },
   "dependencies": {
-    "@babel/runtime": "7.0.0-beta.40",
+    "@babel/runtime": "7.0.0-beta.42",
     "chalk": "2.3.2",
     "chance": "1.0.13",
     "class-validator": "0.8.1",
@@ -40,9 +40,10 @@
     "tslib": "1.9.0"
   },
   "devDependencies": {
-    "@babel/core": "7.0.0-beta.40",
-    "@babel/plugin-transform-runtime": "7.0.0-beta.40",
-    "@babel/preset-env": "7.0.0-beta.40",
+    "@babel/cli": "7.0.0-beta.42",
+    "@babel/core": "7.0.0-beta.42",
+    "@babel/plugin-transform-runtime": "7.0.0-beta.42",
+    "@babel/preset-env": "7.0.0-beta.42",
     "@types/chai": "4.1.2",
     "@types/chance": "1.0.0",
     "@types/escodegen": "0.0.6",
@@ -59,7 +60,6 @@
     "@types/string-template": "1.0.2",
     "@types/webpack-env": "1.13.5",
     "awesome-typescript-loader": "5.0.0-0",
-    "babel-cli": "7.0.0-beta.3",
     "babel-loader": "8.0.0-beta.2",
     "chai": "4.1.2",
     "coveralls": "3.0.0",

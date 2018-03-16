@@ -10,6 +10,7 @@ import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
+import { NodeGuards } from '../../node/NodeGuards';
 import { NodeMetadata } from '../../node/NodeMetadata';
 
 /**
@@ -52,9 +53,15 @@ export class MetadataTransformer extends AbstractNodeTransformer {
      * @returns {Node}
      */
     public transformNode (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node {
-        NodeMetadata.set(node, {
-            ignoredNode: false
-        });
+        NodeMetadata.set(node, { ignoredNode: false });
+
+        if (NodeGuards.isIdentifierNode(node)) {
+            NodeMetadata.set(node, { renamedIdentifier: false });
+        }
+
+        if (NodeGuards.isLiteralNode(node)) {
+            NodeMetadata.set(node, { replacedLiteral: false });
+        }
 
         return node;
     }

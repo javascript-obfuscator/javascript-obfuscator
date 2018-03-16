@@ -32,18 +32,18 @@ export class NodeMetadata {
     }
 
     /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
-    public static isObfuscatedNode (node: ESTree.Node): boolean {
-        return NodeMetadata.get(node, 'obfuscatedNode') === true;
-    }
-
-    /**
      * @param {Node} identifierNode
      * @returns {boolean}
      */
     public static isRenamedIdentifier (identifierNode: ESTree.Identifier): boolean {
         return NodeMetadata.get<boolean, ESTree.IdentifierNodeMetadata>(identifierNode, 'renamedIdentifier') === true;
+    }
+
+    /**
+     * @param {Node} literalNode
+     * @returns {boolean}
+     */
+    public static isReplacedLiteral (literalNode: ESTree.Literal): boolean {
+        return NodeMetadata.get<boolean, ESTree.SimpleLiteralNodeMetadata>(literalNode, 'replacedLiteral') === true;
     }
 }

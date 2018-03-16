@@ -53,8 +53,7 @@ export class MetadataTransformer extends AbstractNodeTransformer {
      */
     public transformNode (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node {
         NodeMetadata.set(node, {
-            ignoredNode: false,
-            obfuscatedNode: false
+            ignoredNode: false
         });
 
         return node;

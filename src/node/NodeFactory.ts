@@ -17,10 +17,7 @@ export class NodeFactory {
             type: NodeType.Program,
             body,
             sourceType: 'script',
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -34,10 +31,7 @@ export class NodeFactory {
         return {
             type: NodeType.ArrayExpression,
             elements,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -57,10 +51,7 @@ export class NodeFactory {
             operator,
             left,
             right,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -80,10 +71,7 @@ export class NodeFactory {
             operator,
             left,
             right,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -95,10 +83,7 @@ export class NodeFactory {
         return {
             type: NodeType.BlockStatement,
             body,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -109,10 +94,7 @@ export class NodeFactory {
     public static breakStatement (label?: ESTree.Identifier): ESTree.BreakStatement {
         const breakStatementNode: ESTree.BreakStatement = {
             type: NodeType.BreakStatement,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
 
         if (label) {
@@ -135,10 +117,7 @@ export class NodeFactory {
             type: NodeType.CallExpression,
             callee,
             arguments: args,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -149,10 +128,7 @@ export class NodeFactory {
     public static continueStatement (label?: ESTree.Identifier): ESTree.ContinueStatement {
         const continueStatementNode: ESTree.ContinueStatement = {
             type: NodeType.ContinueStatement,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
 
         if (label) {
@@ -170,10 +146,7 @@ export class NodeFactory {
         return {
             type: NodeType.ExpressionStatement,
             expression,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -194,10 +167,7 @@ export class NodeFactory {
             params,
             body,
             generator: false,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -215,10 +185,7 @@ export class NodeFactory {
             params,
             body,
             generator: false,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -238,10 +205,7 @@ export class NodeFactory {
             test,
             consequent,
             ...alternate && { alternate },
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -253,10 +217,7 @@ export class NodeFactory {
         return {
             type: NodeType.Identifier,
             name,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -276,10 +237,7 @@ export class NodeFactory {
                 content: raw,
                 precedence: escodegen.Precedence.Primary
             },
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -299,10 +257,7 @@ export class NodeFactory {
             operator,
             left,
             right,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -322,10 +277,7 @@ export class NodeFactory {
             computed,
             object,
             property,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -349,10 +301,7 @@ export class NodeFactory {
             kind,
             computed,
             static: false,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -364,10 +313,7 @@ export class NodeFactory {
         return {
             type: NodeType.ObjectExpression,
             properties,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -390,10 +336,7 @@ export class NodeFactory {
             method: false,
             shorthand: false,
             computed,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -405,10 +348,7 @@ export class NodeFactory {
         return {
             type: NodeType.ReturnStatement,
             argument,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -425,10 +365,7 @@ export class NodeFactory {
             type: NodeType.SwitchStatement,
             discriminant,
             cases,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -442,10 +379,7 @@ export class NodeFactory {
             type: NodeType.SwitchCase,
             test,
             consequent,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -465,10 +399,7 @@ export class NodeFactory {
             operator,
             argument,
             prefix,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -483,10 +414,7 @@ export class NodeFactory {
             operator,
             argument: argumentExpr,
             prefix: false,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -503,10 +431,7 @@ export class NodeFactory {
             type: NodeType.VariableDeclaration,
             declarations,
             kind,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -520,10 +445,7 @@ export class NodeFactory {
             type: NodeType.VariableDeclarator,
             id,
             init,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 
@@ -537,10 +459,7 @@ export class NodeFactory {
             type: NodeType.WhileStatement,
             test,
             body,
-            metadata: {
-                ignoredNode: false,
-                obfuscatedNode: false
-            }
+            metadata: { ignoredNode: false }
         };
     }
 }

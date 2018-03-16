@@ -6,11 +6,14 @@ import * as ESTree from 'estree';
 declare module 'estree' {
     export interface BaseNodeMetadata {
         ignoredNode?: boolean;
-        obfuscatedNode?: boolean;
     }
 
     export interface IdentifierNodeMetadata extends BaseNodeMetadata {
         renamedIdentifier?: boolean;
+    }
+
+    export interface SimpleLiteralNodeMetadata extends BaseNodeMetadata {
+        replacedLiteral?: boolean;
     }
 
     interface BaseNode {
@@ -20,6 +23,10 @@ declare module 'estree' {
 
     interface Identifier extends BaseNode {
         metadata?: IdentifierNodeMetadata;
+    }
+
+    interface SimpleLiteral extends BaseNode {
+        metadata?: SimpleLiteralNodeMetadata;
     }
 
     interface ExpressionStatement extends BaseNode {

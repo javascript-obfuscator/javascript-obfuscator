@@ -7,6 +7,7 @@ v0.15.0
 * **New CLI option:** `exclude` allows to exclude specific files or directories from obfuscation.
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/217
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/210
+* Internal: refactoring of many things.
 
 v0.14.3
 ---

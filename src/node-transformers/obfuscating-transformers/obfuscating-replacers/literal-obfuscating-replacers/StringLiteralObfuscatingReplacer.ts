@@ -109,7 +109,7 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     private static getHexadecimalLiteralNode (hexadecimalIndex: string): ESTree.Literal {
         const hexadecimalLiteralNode: ESTree.Literal = NodeFactory.literalNode(hexadecimalIndex);
 
-        NodeMetadata.set(hexadecimalLiteralNode, { obfuscatedNode: true });
+        NodeMetadata.set(hexadecimalLiteralNode, { replacedLiteral: true });
 
         return hexadecimalLiteralNode;
     }
@@ -121,7 +121,7 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     private static getRc4KeyLiteralNode (literalValue: string): ESTree.Literal {
         const rc4KeyLiteralNode: ESTree.Literal = NodeFactory.literalNode(literalValue);
 
-        NodeMetadata.set(rc4KeyLiteralNode, { obfuscatedNode: true });
+        NodeMetadata.set(rc4KeyLiteralNode, { replacedLiteral: true });
 
         return rc4KeyLiteralNode;
     }

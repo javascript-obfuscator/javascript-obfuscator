@@ -51,10 +51,7 @@ export class NodeUtils {
 
         estraverse.replace(structure, {
             enter: (node: ESTree.Node): ESTree.Node => {
-                NodeMetadata.set(node, {
-                    ignoredNode: false,
-                    obfuscatedNode: false
-                });
+                NodeMetadata.set(node, { ignoredNode: false });
 
                 return node;
             }

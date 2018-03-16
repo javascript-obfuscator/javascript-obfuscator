@@ -122,7 +122,7 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('convertCodeToStructure (code: string): ESTree.Node[]', () => {
+    describe('convertCodeToStructure (code: string): ESTree.Statement[]', () => {
         let structure: TStatement[],
             expectedStructure: TStatement[];
 
@@ -133,13 +133,11 @@ describe('NodeUtils', () => {
 
             const identifierNode: ESTree.Identifier = NodeFactory.identifierNode('abc');
             const literalNode: ESTree.Literal = NodeFactory.literalNode('cde');
-            const variableDeclaratorNode: ESTree.VariableDeclarator = NodeFactory.variableDeclaratorNode(identifierNode, literalNode);
-            const variableDeclarationNode: ESTree.VariableDeclaration = NodeFactory.variableDeclarationNode([
-                variableDeclaratorNode
-            ]);
-            const programNode: ESTree.Program = NodeFactory.programNode([
-                variableDeclarationNode
-            ]);
+            const variableDeclaratorNode: ESTree.VariableDeclarator = NodeFactory
+                .variableDeclaratorNode(identifierNode, literalNode);
+            const variableDeclarationNode: ESTree.VariableDeclaration = NodeFactory
+                .variableDeclarationNode([variableDeclaratorNode]);
+            const programNode: ESTree.Program = NodeFactory.programNode([variableDeclarationNode]);
 
             programNode.parentNode = programNode;
             variableDeclarationNode.parentNode = programNode;

@@ -5,10 +5,10 @@ import format from 'string-template';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../types/node/TStatement';
+import { TStringArrayStorage } from '../../types/storages/TStringArrayStorage';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IStorage } from '../../interfaces/storages/IStorage';
 
 import { initializable } from '../../decorators/Initializable';
 
@@ -21,10 +21,10 @@ import { StringArrayStorage } from '../../storages/string-array/StringArrayStora
 @injectable()
 export class StringArrayNode extends AbstractCustomNode {
     /**
-     * @type {IStorage <string>}
+     * @type {TStringArrayStorage}
      */
     @initializable()
-    private stringArrayStorage!: IStorage <string>;
+    private stringArrayStorage!: TStringArrayStorage;
 
     /**
      * @type {string}
@@ -53,12 +53,12 @@ export class StringArrayNode extends AbstractCustomNode {
     }
 
     /**
-     * @param {IStorage<string>} stringArrayStorage
+     * @param {TStringArrayStorage} stringArrayStorage
      * @param {string} stringArrayName
      * @param {number} stringArrayRotateValue
      */
     public initialize (
-        stringArrayStorage: IStorage <string>,
+        stringArrayStorage: TStringArrayStorage,
         stringArrayName: string,
         stringArrayRotateValue: number
     ): void {

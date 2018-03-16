@@ -3,12 +3,13 @@ import { ServiceIdentifiers } from '../../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
+import { TStringArrayStorage } from '../../../../types/storages/TStringArrayStorage';
+
 import { ICryptUtils } from '../../../../interfaces/utils/ICryptUtils';
 import { IEncodedValue } from '../../../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/literal-obfuscating-replacers/IEncodedValue';
 import { IEscapeSequenceEncoder } from '../../../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../../interfaces/utils/IRandomGenerator';
-import { IStorage } from '../../../../interfaces/storages/IStorage';
 import { IStringArrayIndexData } from '../../../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/literal-obfuscating-replacers/IStringArrayIndexData';
 
 import { StringArrayEncoding } from '../../../../enums/StringArrayEncoding';
@@ -66,19 +67,19 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     private readonly stringLiteralHexadecimalIndexCache: Map <string, string> = new Map();
 
     /**
-     * @type {IStorage<string>}
+     * @type {TStringArrayStorage}
      */
-    private readonly stringArrayStorage: IStorage<string>;
+    private readonly stringArrayStorage: TStringArrayStorage;
 
     /**
-     * @param {IStorage<string>} stringArrayStorage
+     * @param {TStringArrayStorage} stringArrayStorage
      * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      * @param {IRandomGenerator} randomGenerator
      * @param {ICryptUtils} cryptUtils
      * @param {IOptions} options
      */
     constructor (
-        @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: IStorage<string>,
+        @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: TStringArrayStorage,
         @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.ICryptUtils) cryptUtils: ICryptUtils,

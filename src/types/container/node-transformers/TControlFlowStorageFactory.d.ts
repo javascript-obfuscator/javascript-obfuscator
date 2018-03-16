@@ -1,4 +1,3 @@
-import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
-import { IStorage } from '../../../interfaces/storages/IStorage';
+import { TControlFlowStorage } from '../../storages/TControlFlowStorage';
 
-export type TControlFlowStorageFactory = () => IStorage<ICustomNode>;
+export type TControlFlowStorageFactory = () => TControlFlowStorage;

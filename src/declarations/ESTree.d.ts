@@ -12,7 +12,7 @@ declare module 'estree' {
         renamedIdentifier?: boolean;
     }
 
-    export interface SimpleLiteralNodeMetadata extends BaseNodeMetadata {
+    export interface LiteralNodeMetadata extends BaseNodeMetadata {
         replacedLiteral?: boolean;
     }
 
@@ -26,7 +26,11 @@ declare module 'estree' {
     }
 
     interface SimpleLiteral extends BaseNode {
-        metadata?: SimpleLiteralNodeMetadata;
+        metadata?: LiteralNodeMetadata;
+    }
+
+    interface RegExpLiteral extends BaseNode {
+        metadata?: LiteralNodeMetadata;
     }
 
     interface ExpressionStatement extends BaseNode {

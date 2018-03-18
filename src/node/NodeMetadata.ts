@@ -2,8 +2,8 @@ import * as ESTree from 'estree';
 
 export class NodeMetadata {
     /**
-     * @param {Node} node
-     * @param {BaseNodeMetadata} metadata
+     * @param {T} node
+     * @param {Partial<T["metadata"]>} metadata
      */
     public static set <T extends ESTree.Node = ESTree.Node> (node: T, metadata: Partial<T['metadata']>): void {
         node.metadata = Object.assign(node.metadata || {}, metadata);
@@ -11,15 +11,12 @@ export class NodeMetadata {
 
     /**
      * @param {Node} node
-     * @param {BaseNodeMetadata} metadataKey
-     * @returns {T | undefined}
+     * @param {keyof T} metadataKey
+     * @returns {T[keyof T] | undefined}
      */
-    public static get <T extends U[keyof U], U extends ESTree.BaseNodeMetadata> (
-        node: ESTree.Node,
-        metadataKey: keyof U
-    ): T | undefined {
+    public static get <T extends ESTree.BaseNodeMetadata> (node: ESTree.Node, metadataKey: keyof T): T[keyof T] | undefined {
         return node.metadata !== undefined
-            ? <T>(<U>node.metadata)[metadataKey]
+            ? (<T>node.metadata)[metadataKey]
             : undefined;
     }
 
@@ -36,7 +33,7 @@ export class NodeMetadata {
      * @returns {boolean}
      */
     public static isRenamedIdentifier (identifierNode: ESTree.Identifier): boolean {
-        return NodeMetadata.get<boolean, ESTree.IdentifierNodeMetadata>(identifierNode, 'renamedIdentifier') === true;
+        return NodeMetadata.get<ESTree.IdentifierNodeMetadata>(identifierNode, 'renamedIdentifier') === true;
     }
 
     /**
@@ -44,6 +41,6 @@ export class NodeMetadata {
      * @returns {boolean}
      */
     public static isReplacedLiteral (literalNode: ESTree.Literal): boolean {
-        return NodeMetadata.get<boolean, ESTree.SimpleLiteralNodeMetadata>(literalNode, 'replacedLiteral') === true;
+        return NodeMetadata.get<ESTree.LiteralNodeMetadata>(literalNode, 'replacedLiteral') === true;
     }
 }

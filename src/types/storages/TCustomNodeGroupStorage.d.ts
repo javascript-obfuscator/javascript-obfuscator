@@ -1,4 +1,4 @@
 import { ICustomNodeGroup } from '../../interfaces/custom-nodes/ICustomNodeGroup';
-import { IStorage } from '../../interfaces/storages/IStorage';
+import { IMapStorage } from '../../interfaces/storages/IMapStorage';
 
-export type TCustomNodeGroupStorage = IStorage<ICustomNodeGroup>;
+export type TCustomNodeGroupStorage = IMapStorage <string, ICustomNodeGroup>;

@@ -3,9 +3,11 @@ Change Log
 v0.15.0
 ---
 * **Breaking change:** dropped `node@4` and `node@5` support.
+* **Breaking change:** renamed `extension` value of `target` option on `browser-no-eval`.
 * **New CLI option:** `exclude` allows to exclude specific files or directories from obfuscation.
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/217
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/210
+* Internal: refactoring of many things.
 
 v0.14.3
 ---

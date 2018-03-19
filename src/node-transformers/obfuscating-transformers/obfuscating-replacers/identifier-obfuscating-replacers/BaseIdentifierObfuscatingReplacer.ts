@@ -10,7 +10,7 @@ import { IIdentifierObfuscatingReplacer } from '../../../../interfaces/node-tran
 import { IOptions } from '../../../../interfaces/options/IOptions';
 
 import { AbstractObfuscatingReplacer } from '../AbstractObfuscatingReplacer';
-import { Nodes } from '../../../../node/Nodes';
+import { NodeFactory } from '../../../../node/NodeFactory';
 
 @injectable()
 export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplacer implements IIdentifierObfuscatingReplacer {
@@ -50,7 +50,7 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
             nodeValue = <string>this.namesMap.get(mapKey);
         }
 
-        return Nodes.getIdentifierNode(nodeValue);
+        return NodeFactory.identifierNode(nodeValue);
     }
 
     /**

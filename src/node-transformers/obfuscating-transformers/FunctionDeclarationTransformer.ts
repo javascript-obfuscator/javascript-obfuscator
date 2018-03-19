@@ -20,6 +20,7 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeMetadata } from '../../node/NodeMetadata';
 import { NodeUtils } from '../../node/NodeUtils';
 
 /**
@@ -167,14 +168,18 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
 
         estraverse.replace(blockScopeNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
-                if (parentNode && !node.obfuscatedNode && NodeGuards.isReplaceableIdentifierNode(node, parentNode)) {
+                if (
+                    parentNode
+                    && NodeGuards.isReplaceableIdentifierNode(node, parentNode)
+                    && !NodeMetadata.isRenamedIdentifier(node)
+                ) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
                         .replace(node.name, nodeIdentifier);
                     const newIdentifierName: string = newIdentifier.name;
 
                     if (node.name !== newIdentifierName) {
                         node.name = newIdentifierName;
-                        node.obfuscatedNode = true;
+                        NodeMetadata.set(node, { renamedIdentifier: true });
                     } else {
                         const storedReplaceableIdentifiers: ESTree.Identifier[] = storedReplaceableIdentifiersNamesMap.get(node.name) || [];
 

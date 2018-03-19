@@ -3,13 +3,14 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
+import { TCustomNodeGroupStorage } from '../../types/storages/TCustomNodeGroupStorage';
+
 import { ICustomNodeGroup } from '../../interfaces/custom-nodes/ICustomNodeGroup';
 import { IObfuscationEventEmitter } from '../../interfaces/event-emitters/IObfuscationEventEmitter';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IStackTraceAnalyzer } from '../../interfaces/analyzers/stack-trace-analyzer/IStackTraceAnalyzer';
 import { IStackTraceData } from '../../interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
-import { IStorage } from '../../interfaces/storages/IStorage';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { ObfuscationEvent } from '../../enums/event-emitters/ObfuscationEvent';
@@ -24,9 +25,9 @@ import { NodeGuards } from '../../node/NodeGuards';
 @injectable()
 export class CustomNodesTransformer extends AbstractNodeTransformer {
     /**
-     * @type {IStorage<ICustomNodeGroup>}
+     * @type {TCustomNodeGroupStorage}
      */
-    private readonly customNodeGroupStorage: IStorage<ICustomNodeGroup>;
+    private readonly customNodeGroupStorage: TCustomNodeGroupStorage;
 
     /**
      * @type {IObfuscationEventEmitter}
@@ -46,14 +47,14 @@ export class CustomNodesTransformer extends AbstractNodeTransformer {
     /**
      * @param {IStackTraceAnalyzer} stackTraceAnalyzer
      * @param {IObfuscationEventEmitter} obfuscationEventEmitter
-     * @param {IStorage<ICustomNodeGroup>} customNodeGroupStorage
+     * @param {TCustomNodeGroupStorage} customNodeGroupStorage
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.IStackTraceAnalyzer) stackTraceAnalyzer: IStackTraceAnalyzer,
         @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
-        @inject(ServiceIdentifiers.TCustomNodeGroupStorage) customNodeGroupStorage: IStorage<ICustomNodeGroup>,
+        @inject(ServiceIdentifiers.TCustomNodeGroupStorage) customNodeGroupStorage: TCustomNodeGroupStorage,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {

@@ -333,7 +333,7 @@ Following options are available for the JS Obfuscator:
     --string-array <boolean>
     --string-array-encoding <boolean|string> [true, false, base64, rc4]
     --string-array-threshold <number>
-    --target <string> [browser, extension, node]
+    --target <string> [browser, browser-no-eval, node]
     --transform-object-keys <boolean>
     --unicode-escape-sequence <boolean>
 ```
@@ -721,11 +721,11 @@ Allows to set target environment for obfuscated code.
 
 Available values: 
 * `browser`;
-* `extension`;
+* `browser-no-eval`;
 * `node`.
 
 Currently output code for `browser` and `node` targets is identical.
-Output code for `extension` target is not using `eval`.
+Output code for `browser-no-eval` target is not using `eval`.
 
 ### `transformObjectKeys`
 Type: `boolean` Default: `false`

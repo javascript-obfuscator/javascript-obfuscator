@@ -59,7 +59,7 @@ export class ConsoleOutputDisableExpressionNode extends AbstractCustomNode {
      * @returns {string}
      */
     protected getTemplate (): string {
-        const globalVariableTemplate: string = this.options.target !== ObfuscationTarget.Extension
+        const globalVariableTemplate: string = this.options.target !== ObfuscationTarget.BrowserNoEval
             ? this.getGlobalVariableTemplate()
             : GlobalVariableNoEvalTemplate();
 

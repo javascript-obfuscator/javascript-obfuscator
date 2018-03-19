@@ -9,6 +9,7 @@ import { TObject } from '../types/TObject';
 import { TStatement } from '../types/node/TStatement';
 
 import { NodeGuards } from './NodeGuards';
+import { NodeMetadata } from './NodeMetadata';
 
 export class NodeUtils {
     /**
@@ -40,15 +41,23 @@ export class NodeUtils {
 
     /**
      * @param {string} code
-     * @returns {TStatement[]}
+     * @returns {Statement[]}
      */
-    public static convertCodeToStructure (code: string): TStatement[] {
+    public static convertCodeToStructure (code: string): ESTree.Statement[] {
         let structure: ESTree.Program = esprima.parseScript(code);
 
         structure = NodeUtils.addXVerbatimPropertyToLiterals(structure);
         structure = NodeUtils.parentize(structure);
 
-        return structure.body;
+        estraverse.replace(structure, {
+            enter: (node: ESTree.Node): ESTree.Node => {
+                NodeMetadata.set(node, { ignoredNode: false });
+
+                return node;
+            }
+        });
+
+        return <ESTree.Statement[]>structure.body;
     }
 
     /**
@@ -136,7 +145,6 @@ export class NodeUtils {
      */
     public static parentizeNode <T extends ESTree.Node = ESTree.Node> (node: T, parentNode: ESTree.Node | null): T {
         node.parentNode = parentNode || node;
-        node.obfuscatedNode = false;
 
         return node;
     }
@@ -157,9 +165,9 @@ export class NodeUtils {
                 continue;
             }
 
-            const value: any = node[property];
+            const value: T[keyof T] = node[property];
 
-            let clonedValue: any | null;
+            let clonedValue: T[keyof T] | T[keyof T][] | null;
 
             if (value === null || value instanceof RegExp) {
                 clonedValue = value;

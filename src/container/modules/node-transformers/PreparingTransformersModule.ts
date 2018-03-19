@@ -13,6 +13,7 @@ import { CommentsTransformer } from '../../../node-transformers/preparing-transf
 import { ConditionalCommentObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/ConditionalCommentObfuscatingGuard';
 import { CustomNodesTransformer } from '../../../node-transformers/preparing-transformers/CustomNodesTransformer';
 import { EvalCallExpressionTransformer } from '../../../node-transformers/preparing-transformers/EvaCallExpressionTransformer';
+import { MetadataTransformer } from '../../../node-transformers/preparing-transformers/MetadataTransformer';
 import { ObfuscatingGuardsTransformer } from '../../../node-transformers/preparing-transformers/ObfuscatingGuardsTransformer';
 import { ParentificationTransformer } from '../../../node-transformers/preparing-transformers/ParentificationTransformer';
 
@@ -29,6 +30,10 @@ export const preparingTransformersModule: interfaces.ContainerModule = new Conta
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(EvalCallExpressionTransformer)
         .whenTargetNamed(NodeTransformer.EvalCallExpressionTransformer);
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(MetadataTransformer)
+        .whenTargetNamed(NodeTransformer.MetadataTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(ObfuscatingGuardsTransformer)

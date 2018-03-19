@@ -4,12 +4,12 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TNodeWithBlockScope } from '../../../types/node/TNodeWithBlockScope';
+import { TStringArrayStorage } from '../../../types/storages/TStringArrayStorage';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { IStackTraceData } from '../../../interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
-import { IStorage } from '../../../interfaces/storages/IStorage';
 
 import { initializable } from '../../../decorators/Initializable';
 
@@ -38,20 +38,20 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
     private readonly customNodeFactory: TCustomNodeFactory;
 
     /**
-     * @type {IStorage <string>}
+     * @type {TStringArrayStorage}
      */
-    private readonly stringArrayStorage: IStorage <string>;
+    private readonly stringArrayStorage: TStringArrayStorage;
 
     /**
      * @param {TCustomNodeFactory} customNodeFactory
-     * @param {IStorage<string>} stringArrayStorage
+     * @param {TStringArrayStorage} stringArrayStorage
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
-        @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: IStorage<string>,
+        @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: TStringArrayStorage,
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,

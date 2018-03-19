@@ -1,14 +1,14 @@
 import { inject, injectable, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
+import { IMapStorage } from '../interfaces/storages/IMapStorage';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
-import { IStorage } from '../interfaces/storages/IStorage';
 
 import { initializable } from '../decorators/Initializable';
 
 @injectable()
-export abstract class MapStorage <T> implements IStorage <T> {
+export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
     /**
      * @type {IOptions}
      */
@@ -26,10 +26,10 @@ export abstract class MapStorage <T> implements IStorage <T> {
     protected storageId!: string;
 
     /**
-     * @type {Map <string | number, T>}
+     * @type {Map <K, V>}
      */
     @initializable()
-    protected storage!: Map <string | number, T>;
+    protected storage!: Map <K, V>;
 
     /**
      * @param {IRandomGenerator} randomGenerator
@@ -45,16 +45,16 @@ export abstract class MapStorage <T> implements IStorage <T> {
 
     @postConstruct()
     public initialize (): void {
-        this.storage = new Map <string | number, T>();
+        this.storage = new Map <K, V>();
         this.storageId = this.randomGenerator.getRandomString(6);
     }
 
     /**
-     * @param {string | number} key
-     * @returns {T}
+     * @param {K} key
+     * @returns {V}
      */
-    public get (key: string | number): T {
-        const value: T | undefined = this.storage.get(key);
+    public get (key: K): V {
+        const value: V | undefined = this.storage.get(key);
 
         if (!value) {
             throw new Error(`No value found in map storage with key \`${key}\``);
@@ -64,10 +64,10 @@ export abstract class MapStorage <T> implements IStorage <T> {
     }
 
     /**
-     * @param {T} value
-     * @returns {string | number | null}
+     * @param {V} value
+     * @returns {K | null}
      */
-    public getKeyOf (value: T): string | number | null {
+    public getKeyOf (value: V): K | null {
         for (const [key, storageValue] of this.storage) {
             if (value === storageValue) {
                 return key;
@@ -85,9 +85,9 @@ export abstract class MapStorage <T> implements IStorage <T> {
     }
 
     /**
-     * @returns {Map <string | number, T>}
+     * @returns {Map<K, V>}
      */
-    public getStorage (): Map <string | number, T> {
+    public getStorage (): Map <K, V> {
         return this.storage;
     }
 
@@ -103,7 +103,7 @@ export abstract class MapStorage <T> implements IStorage <T> {
      * @param {boolean} mergeId
      */
     public mergeWith (storage: this, mergeId: boolean = false): void {
-        this.storage = new Map <string | number, T>([...this.storage, ...storage.getStorage()]);
+        this.storage = new Map <K, V>([...this.storage, ...storage.getStorage()]);
 
         if (mergeId) {
             this.storageId = storage.getStorageId();
@@ -111,10 +111,10 @@ export abstract class MapStorage <T> implements IStorage <T> {
     }
 
     /**
-     * @param {string | number} key
-     * @param {T} value
+     * @param {K} key
+     * @param {V} value
      */
-    public set (key: string | number, value: T): void {
+    public set (key: K, value: V): void {
         this.storage.set(key, value);
     }
 }

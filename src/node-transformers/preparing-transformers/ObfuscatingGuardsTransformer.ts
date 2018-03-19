@@ -14,6 +14,7 @@ import { ObfuscatingGuard } from '../../enums/node-transformers/preparing-transf
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
+import { NodeMetadata } from '../../node/NodeMetadata';
 
 /**
  * Adds `ignoredNode` properties to each node
@@ -75,7 +76,9 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
         const obfuscationAllowed: boolean = this.obfuscatingGuards
             .every((nodeGuard: IObfuscatingGuard) => nodeGuard.check(node));
 
-        node.ignoredNode = !obfuscationAllowed;
+        NodeMetadata.set(node, {
+            ignoredNode: !obfuscationAllowed
+        });
 
         return node;
     }

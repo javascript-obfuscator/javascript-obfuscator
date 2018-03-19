@@ -16,6 +16,7 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeMetadata } from '../../node/NodeMetadata';
 
 /**
  * replaces:
@@ -157,7 +158,7 @@ export class FunctionTransformer extends AbstractNodeTransformer {
 
                     if (node.name !== newIdentifierName) {
                         node.name = newIdentifierName;
-                        node.obfuscatedNode = true;
+                        NodeMetadata.set(node, { renamedIdentifier: true });
                     }
                 }
             }

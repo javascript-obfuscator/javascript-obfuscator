@@ -3,14 +3,14 @@ import { assert } from 'chai';
 import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
 
 import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
+import { IMapStorage } from '../../../src/interfaces/storages/IMapStorage';
 import { IOptions } from '../../../src/interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../src/interfaces/utils/IRandomGenerator';
-import { IStorage } from '../../../src/interfaces/storages/IStorage';
 
 import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
 import { MapStorage } from '../../../src/storages/MapStorage';
 
-class ConcreteStorage extends MapStorage <string> {
+class ConcreteStorage <V> extends MapStorage <string, V> {
     constructor () {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
@@ -24,10 +24,10 @@ class ConcreteStorage extends MapStorage <string> {
 }
 
 /**
- * @type {IStorage<any>}
+ * @returns {IMapStorage<string, V>}
  */
-const getStorageInstance = (): IStorage <any> => {
-    const storage: IStorage<any> = new ConcreteStorage();
+const getStorageInstance = <V>(): IMapStorage <string, V> => {
+    const storage: IMapStorage <string, V> = new ConcreteStorage <V> ();
 
     storage.initialize();
 
@@ -38,7 +38,7 @@ describe('MapStorage', () => {
     const storageKey: string = 'foo';
     const storageValue: string = 'bar';
 
-    let storage: IStorage <any>;
+    let storage: IMapStorage <string, any>;
 
     describe('initialize (...args: any[]): void', () => {
         const expectedError: ErrorConstructor = Error;
@@ -55,13 +55,13 @@ describe('MapStorage', () => {
         });
     });
 
-    describe('getStorage (): Map <string | number, T>', () => {
+    describe('getStorage (): Map <K, V>', () => {
         const expectedInstanceOf: MapConstructor = Map;
 
-        let mapStorage: string[];
+        let mapStorage: Map <string, string>;
 
         before(() => {
-            storage = getStorageInstance();
+            storage = getStorageInstance<string>();
 
             mapStorage = storage.getStorage();
         });
@@ -71,14 +71,14 @@ describe('MapStorage', () => {
         });
     });
 
-    describe('get (key: string | number): T', () => {
+    describe('get (key: K): V', () => {
         describe('Variant #1: value exist', () => {
             const expectedValue: string = storageValue;
 
             let value: string;
 
             before(() => {
-                storage = getStorageInstance();
+                storage = getStorageInstance<string>();
                 storage.set(storageKey, storageValue);
 
                 value = storage.get(storageKey);
@@ -95,7 +95,7 @@ describe('MapStorage', () => {
             let testFunc: () => void;
 
             before(() => {
-                storage = getStorageInstance();
+                storage = getStorageInstance<string>();
 
                 testFunc = () => storage.get(storageKey);
             });
@@ -112,7 +112,7 @@ describe('MapStorage', () => {
         let storageLength: number;
 
         before(() => {
-            storage = getStorageInstance();
+            storage = getStorageInstance<string>();
             storage.set(storageKey, storageValue);
 
             storageLength = storage.getLength();
@@ -123,12 +123,12 @@ describe('MapStorage', () => {
         });
     });
 
-    describe('getKeyOf (value: T): string | number | null', () => {
+    describe('getKeyOf (value: V): K | null', () => {
         let key: string | number | null;
 
         describe('Variant #1', () => {
             before(() => {
-                storage = getStorageInstance();
+                storage = getStorageInstance<string>();
                 storage.set(storageKey, storageValue);
 
                 key = storage.getKeyOf(storageValue);
@@ -145,7 +145,7 @@ describe('MapStorage', () => {
             };
 
             before(() => {
-                storage = getStorageInstance();
+                storage = getStorageInstance<string>();
                 storage.set(storageKey, object);
 
                 key = storage.getKeyOf(object);
@@ -163,7 +163,7 @@ describe('MapStorage', () => {
             };
 
             before(() => {
-                storage = getStorageInstance();
+                storage = getStorageInstance<string>();
                 storage.set(storageKey, object);
 
                 key = storage.getKeyOf({...object});
@@ -175,11 +175,11 @@ describe('MapStorage', () => {
         });
     });
 
-    describe('set (key: string | number, value: T): void', () => {
+    describe('set (key: K, value: V): void', () => {
         let value: string;
 
         before(() => {
-            storage = getStorageInstance();
+            storage = getStorageInstance<string>();
             storage.set(storageKey, storageValue);
 
             value = storage.get(storageKey);
@@ -202,15 +202,15 @@ describe('MapStorage', () => {
         let array: string[][];
 
         before(() => {
-            storage = getStorageInstance();
+            storage = getStorageInstance<string>();
             storage.set(storageKey, storageValue);
 
-            const secondStorage: IStorage <string> = getStorageInstance();
+            const secondStorage: IMapStorage <string, string> = getStorageInstance<string>();
             secondStorage.set(secondStorageKey, secondStorageValue);
 
             storage.mergeWith(secondStorage, false);
 
-            array = <any>Array.from(storage.getStorage());
+            array = Array.from(storage.getStorage());
         });
 
         it('should merge two storages', () => {

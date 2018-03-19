@@ -8,7 +8,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { MapStorage } from '../MapStorage';
 
 @injectable()
-export class ControlFlowStorage extends MapStorage <ICustomNode> {
+export class ControlFlowStorage extends MapStorage <string, ICustomNode> {
     /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options

@@ -2,8 +2,8 @@ import * as ESTree from 'estree';
 
 import { assert } from 'chai';
 
-import { Nodes } from '../../../../src/node/Nodes';
 import { NodeGuards } from '../../../../src/node/NodeGuards';
+import { NodeFactory } from '../../../../src/node/NodeFactory';
 import { NodeUtils } from '../../../../src/node/NodeUtils';
 
 describe('NodeGuards', () => {
@@ -11,8 +11,8 @@ describe('NodeGuards', () => {
         describe('truthful checks', () => {
             describe('Variant #1: block statement of function declaration', () => {
                 const expectedResult: boolean = true;
-                const node: ESTree.Node = Nodes.getBlockStatementNode();
-                const parentNode: ESTree.FunctionDeclaration = Nodes.getFunctionDeclarationNode(
+                const node: ESTree.Node = NodeFactory.blockStatementNode();
+                const parentNode: ESTree.FunctionDeclaration = NodeFactory.functionDeclarationNode(
                     'foo',
                     [],
                     node
@@ -32,8 +32,8 @@ describe('NodeGuards', () => {
 
             describe('Variant #2: block statement of function expression', () => {
                 const expectedResult: boolean = true;
-                const node: ESTree.Node = Nodes.getBlockStatementNode();
-                const parentNode: ESTree.FunctionExpression = Nodes.getFunctionExpressionNode(
+                const node: ESTree.Node = NodeFactory.blockStatementNode();
+                const parentNode: ESTree.FunctionExpression = NodeFactory.functionExpressionNode(
                     [],
                     node
                 );
@@ -54,20 +54,20 @@ describe('NodeGuards', () => {
         describe('false checks', () => {
             describe('Variant #1: switch-case node', () => {
                 const expectedResult: boolean = false;
-                const node: ESTree.Node = Nodes.getSwitchCaseNode(
-                    Nodes.getLiteralNode(1),
+                const node: ESTree.Node = NodeFactory.switchCaseNode(
+                    NodeFactory.literalNode(1),
                     []
                 );
-                const parentNode: ESTree.FunctionDeclaration = Nodes.getFunctionDeclarationNode(
+                const parentNode: ESTree.FunctionDeclaration = NodeFactory.functionDeclarationNode(
                     'foo',
                     [],
-                    Nodes.getBlockStatementNode([
-                        Nodes.getSwitchStatementNode(
-                            Nodes.getMemberExpressionNode(
-                                Nodes.getIdentifierNode('bar'),
-                                Nodes.getUpdateExpressionNode(
+                    NodeFactory.blockStatementNode([
+                        NodeFactory.switchStatementNode(
+                            NodeFactory.memberExpressionNode(
+                                NodeFactory.identifierNode('bar'),
+                                NodeFactory.updateExpressionNode(
                                     '++',
-                                    Nodes.getIdentifierNode('baz')
+                                    NodeFactory.identifierNode('baz')
                                 ),
                                 true
                             ),
@@ -90,14 +90,14 @@ describe('NodeGuards', () => {
 
             describe('Variant #2: literal node', () => {
                 const expectedResult: boolean = false;
-                const node: ESTree.Node = Nodes.getLiteralNode(1);
-                const parentNode: ESTree.FunctionDeclaration = Nodes.getFunctionDeclarationNode(
+                const node: ESTree.Node = NodeFactory.literalNode(1);
+                const parentNode: ESTree.FunctionDeclaration = NodeFactory.functionDeclarationNode(
                     'foo',
                     [],
-                    Nodes.getBlockStatementNode([
-                        Nodes.getExpressionStatementNode(
-                            Nodes.getCallExpressionNode(
-                                Nodes.getIdentifierNode('bar'),
+                    NodeFactory.blockStatementNode([
+                        NodeFactory.expressionStatementNode(
+                            NodeFactory.callExpressionNode(
+                                NodeFactory.identifierNode('bar'),
                                 [node]
                             )
                         )
@@ -118,9 +118,9 @@ describe('NodeGuards', () => {
 
             describe('Variant #3: block statement of if statement', () => {
                 const expectedResult: boolean = false;
-                const node: ESTree.Node = Nodes.getBlockStatementNode();
-                const parentNode: ESTree.IfStatement = Nodes.getIfStatementNode(
-                    Nodes.getIdentifierNode('foo'),
+                const node: ESTree.Node = NodeFactory.blockStatementNode();
+                const parentNode: ESTree.IfStatement = NodeFactory.ifStatementNode(
+                    NodeFactory.identifierNode('foo'),
                     node
                 );
 
@@ -142,7 +142,7 @@ describe('NodeGuards', () => {
         describe('truthful checks', () => {
             describe('Variant #1: program node', () => {
                 const expectedResult: boolean = true;
-                const node: ESTree.Node = Nodes.getProgramNode();
+                const node: ESTree.Node = NodeFactory.programNode();
 
                 let result: boolean;
 
@@ -157,7 +157,7 @@ describe('NodeGuards', () => {
 
             describe('Variant #2: block statement node', () => {
                 const expectedResult: boolean = true;
-                const node: ESTree.Node = Nodes.getBlockStatementNode();
+                const node: ESTree.Node = NodeFactory.blockStatementNode();
 
                 let result: boolean;
 
@@ -172,8 +172,8 @@ describe('NodeGuards', () => {
 
             describe('Variant #3: switch case node', () => {
                 const expectedResult: boolean = true;
-                const node: ESTree.Node = Nodes.getSwitchCaseNode(
-                    Nodes.getLiteralNode(1),
+                const node: ESTree.Node = NodeFactory.switchCaseNode(
+                    NodeFactory.literalNode(1),
                     []
                 );
 
@@ -192,7 +192,7 @@ describe('NodeGuards', () => {
         describe('false checks', () => {
             describe('Variant #1: literal node', () => {
                 const expectedResult: boolean = false;
-                const node: ESTree.Node = Nodes.getLiteralNode(1);
+                const node: ESTree.Node = NodeFactory.literalNode(1);
 
                 let result: boolean;
 
@@ -207,7 +207,7 @@ describe('NodeGuards', () => {
 
             describe('Variant #2: identifier node', () => {
                 const expectedResult: boolean = false;
-                const node: ESTree.Node = Nodes.getIdentifierNode('foo');
+                const node: ESTree.Node = NodeFactory.identifierNode('foo');
 
                 let result: boolean;
 
@@ -222,9 +222,9 @@ describe('NodeGuards', () => {
 
             describe('Variant #3: if-statement node', () => {
                 const expectedResult: boolean = false;
-                const node: ESTree.Node = Nodes.getIfStatementNode(
-                    Nodes.getIdentifierNode('foo'),
-                    Nodes.getBlockStatementNode()
+                const node: ESTree.Node = NodeFactory.ifStatementNode(
+                    NodeFactory.identifierNode('foo'),
+                    NodeFactory.blockStatementNode()
                 );
 
                 let result: boolean;
@@ -240,8 +240,8 @@ describe('NodeGuards', () => {
 
             describe('Variant #4: switch-statement node', () => {
                 const expectedResult: boolean = false;
-                const node: ESTree.Node = Nodes.getSwitchStatementNode(
-                    Nodes.getIdentifierNode('foo'),
+                const node: ESTree.Node = NodeFactory.switchStatementNode(
+                    NodeFactory.identifierNode('foo'),
                     []
                 );
 
@@ -262,11 +262,11 @@ describe('NodeGuards', () => {
         describe('truthful checks', () => {
             describe('Variant #1: parent node is function declaration node', () => {
                 const expectedResult: boolean = true;
-                const identifier: ESTree.Identifier = Nodes.getIdentifierNode('foo');
-                const parentNode: ESTree.Node = Nodes.getFunctionDeclarationNode(
+                const identifier: ESTree.Identifier = NodeFactory.identifierNode('foo');
+                const parentNode: ESTree.Node = NodeFactory.functionDeclarationNode(
                     'bar',
                     [identifier],
-                    Nodes.getBlockStatementNode()
+                    NodeFactory.blockStatementNode()
                 );
 
                 let result: boolean;
@@ -283,10 +283,10 @@ describe('NodeGuards', () => {
 
             describe('Variant #2: parent node is computed property node', () => {
                 const expectedResult: boolean = true;
-                const identifier: ESTree.Identifier = Nodes.getIdentifierNode('foo');
-                const parentNode: ESTree.Node = Nodes.getPropertyNode(
+                const identifier: ESTree.Identifier = NodeFactory.identifierNode('foo');
+                const parentNode: ESTree.Node = NodeFactory.propertyNode(
                     identifier,
-                    Nodes.getLiteralNode('bar'),
+                    NodeFactory.literalNode('bar'),
                     true
                 );
 
@@ -304,9 +304,9 @@ describe('NodeGuards', () => {
 
             describe('Variant #4: parent node is computed member expression node', () => {
                 const expectedResult: boolean = true;
-                const identifier: ESTree.Identifier = Nodes.getIdentifierNode('foo');
-                const parentNode: ESTree.Node = Nodes.getMemberExpressionNode(
-                    Nodes.getIdentifierNode('bar'),
+                const identifier: ESTree.Identifier = NodeFactory.identifierNode('foo');
+                const parentNode: ESTree.Node = NodeFactory.memberExpressionNode(
+                    NodeFactory.identifierNode('bar'),
                     identifier,
                     true
                 );
@@ -325,10 +325,10 @@ describe('NodeGuards', () => {
 
             describe('Variant #4: parent node is computed method definition node', () => {
                 const expectedResult: boolean = true;
-                const identifier: ESTree.Identifier = Nodes.getIdentifierNode('foo');
-                const parentNode: ESTree.Node = Nodes.getMethodDefinitionNode(
+                const identifier: ESTree.Identifier = NodeFactory.identifierNode('foo');
+                const parentNode: ESTree.Node = NodeFactory.methodDefinitionNode(
                     identifier,
-                    Nodes.getFunctionExpressionNode([], Nodes.getBlockStatementNode()),
+                    NodeFactory.functionExpressionNode([], NodeFactory.blockStatementNode()),
                     'method',
                     true
                 );
@@ -349,10 +349,10 @@ describe('NodeGuards', () => {
         describe('false checks', () => {
             describe('Variant #1: node isn\'t an identifier', () => {
                 const expectedResult: boolean = false;
-                const literal: ESTree.Literal = Nodes.getLiteralNode(1);
-                const parentNode: ESTree.Node = Nodes.getExpressionStatementNode(
-                    Nodes.getCallExpressionNode(
-                        Nodes.getIdentifierNode('foo'),
+                const literal: ESTree.Literal = NodeFactory.literalNode(1);
+                const parentNode: ESTree.Node = NodeFactory.expressionStatementNode(
+                    NodeFactory.callExpressionNode(
+                        NodeFactory.identifierNode('foo'),
                         [literal]
                     )
                 );
@@ -371,10 +371,10 @@ describe('NodeGuards', () => {
 
             describe('Variant #2: parent node isn\'t computed property node', () => {
                 const expectedResult: boolean = false;
-                const identifier: ESTree.Identifier = Nodes.getIdentifierNode('foo');
-                const parentNode: ESTree.Node = Nodes.getPropertyNode(
+                const identifier: ESTree.Identifier = NodeFactory.identifierNode('foo');
+                const parentNode: ESTree.Node = NodeFactory.propertyNode(
                     identifier,
-                    Nodes.getLiteralNode('bar'),
+                    NodeFactory.literalNode('bar'),
                     false
                 );
 
@@ -392,9 +392,9 @@ describe('NodeGuards', () => {
 
             describe('Variant #3: parent node isn\'t computed member expression node', () => {
                 const expectedResult: boolean = false;
-                const identifier: ESTree.Identifier = Nodes.getIdentifierNode('foo');
-                const parentNode: ESTree.Node = Nodes.getMemberExpressionNode(
-                    Nodes.getIdentifierNode('bar'),
+                const identifier: ESTree.Identifier = NodeFactory.identifierNode('foo');
+                const parentNode: ESTree.Node = NodeFactory.memberExpressionNode(
+                    NodeFactory.identifierNode('bar'),
                     identifier,
                     false
                 );
@@ -413,10 +413,10 @@ describe('NodeGuards', () => {
 
             describe('Variant #4: parent node isn\'t computed method definition node', () => {
                 const expectedResult: boolean = false;
-                const identifier: ESTree.Identifier = Nodes.getIdentifierNode('foo');
-                const parentNode: ESTree.Node = Nodes.getMethodDefinitionNode(
+                const identifier: ESTree.Identifier = NodeFactory.identifierNode('foo');
+                const parentNode: ESTree.Node = NodeFactory.methodDefinitionNode(
                     identifier,
-                    Nodes.getFunctionExpressionNode([], Nodes.getBlockStatementNode()),
+                    NodeFactory.functionExpressionNode([], NodeFactory.blockStatementNode()),
                     'method',
                     false
                 );

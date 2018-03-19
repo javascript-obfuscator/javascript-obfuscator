@@ -10,7 +10,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { initializable } from '../../decorators/Initializable';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { Nodes } from '../../node/Nodes';
+import { NodeFactory } from '../../node/NodeFactory';
 
 @injectable()
 export class StringLiteralNode extends AbstractCustomNode {
@@ -45,8 +45,8 @@ export class StringLiteralNode extends AbstractCustomNode {
      * @returns {TStatement[]}
      */
     protected getNodeStructure (): TStatement[] {
-        const structure: TStatement = Nodes.getExpressionStatementNode(
-            Nodes.getLiteralNode(this.literalValue)
+        const structure: TStatement = NodeFactory.expressionStatementNode(
+            NodeFactory.literalNode(this.literalValue)
         );
 
         return [structure];

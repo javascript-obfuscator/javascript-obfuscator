@@ -211,7 +211,7 @@ export class Options implements IOptions {
     /**
      * @type {ObfuscationTarget}
      */
-    @IsIn([ObfuscationTarget.Browser, ObfuscationTarget.Extension, ObfuscationTarget.Node])
+    @IsIn([ObfuscationTarget.Browser, ObfuscationTarget.BrowserNoEval, ObfuscationTarget.Node])
     public readonly target!: ObfuscationTarget;
 
     /**

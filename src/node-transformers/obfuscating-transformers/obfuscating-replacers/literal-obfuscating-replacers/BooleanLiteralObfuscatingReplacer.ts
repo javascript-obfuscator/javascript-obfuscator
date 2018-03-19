@@ -6,7 +6,7 @@ import * as ESTree from 'estree';
 import { IOptions } from '../../../../interfaces/options/IOptions';
 
 import { AbstractObfuscatingReplacer } from '../AbstractObfuscatingReplacer';
-import { Nodes } from '../../../../node/Nodes';
+import { NodeFactory } from '../../../../node/NodeFactory';
 
 @injectable()
 export class BooleanLiteralObfuscatingReplacer extends AbstractObfuscatingReplacer {
@@ -23,7 +23,7 @@ export class BooleanLiteralObfuscatingReplacer extends AbstractObfuscatingReplac
      * @return {ESTree.UnaryExpression}
      */
     private static getTrueUnaryExpressionNode (): ESTree.UnaryExpression {
-        return Nodes.getUnaryExpressionNode(
+        return NodeFactory.unaryExpressionNode(
             '!',
             BooleanLiteralObfuscatingReplacer.getFalseUnaryExpressionNode()
         );
@@ -33,9 +33,9 @@ export class BooleanLiteralObfuscatingReplacer extends AbstractObfuscatingReplac
      * @return {ESTree.UnaryExpression}
      */
     private static getFalseUnaryExpressionNode (): ESTree.UnaryExpression {
-        return Nodes.getUnaryExpressionNode(
+        return NodeFactory.unaryExpressionNode(
             '!',
-            Nodes.getArrayExpressionNode()
+            NodeFactory.arrayExpressionNode()
         );
     }
 

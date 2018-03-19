@@ -74,7 +74,7 @@ export class DomainLockNode extends AbstractCustomNode {
             domainsString,
             domainsString.length * 3
         );
-        const globalVariableTemplate: string = this.options.target !== ObfuscationTarget.Extension
+        const globalVariableTemplate: string = this.options.target !== ObfuscationTarget.BrowserNoEval
             ? this.getGlobalVariableTemplate()
             : GlobalVariableNoEvalTemplate();
 

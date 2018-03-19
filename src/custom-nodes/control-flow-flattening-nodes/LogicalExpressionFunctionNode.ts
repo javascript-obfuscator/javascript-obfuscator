@@ -12,7 +12,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { initializable } from '../../decorators/Initializable';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { Nodes } from '../../node/Nodes';
+import { NodeFactory } from '../../node/NodeFactory';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
@@ -48,18 +48,18 @@ export class LogicalExpressionFunctionNode extends AbstractCustomNode {
      * @returns {TStatement[]}
      */
     protected getNodeStructure (): TStatement[] {
-        const structure: TStatement = Nodes.getExpressionStatementNode(
-            Nodes.getFunctionExpressionNode(
+        const structure: TStatement = NodeFactory.expressionStatementNode(
+            NodeFactory.functionExpressionNode(
                 [
-                    Nodes.getIdentifierNode('x'),
-                    Nodes.getIdentifierNode('y')
+                    NodeFactory.identifierNode('x'),
+                    NodeFactory.identifierNode('y')
                 ],
-                Nodes.getBlockStatementNode([
-                    Nodes.getReturnStatementNode(
-                        Nodes.getLogicalExpressionNode(
+                NodeFactory.blockStatementNode([
+                    NodeFactory.returnStatementNode(
+                        NodeFactory.logicalExpressionNode(
                             this.operator,
-                            Nodes.getIdentifierNode('x'),
-                            Nodes.getIdentifierNode('y')
+                            NodeFactory.identifierNode('x'),
+                            NodeFactory.identifierNode('y')
                         )
                     )
                 ])

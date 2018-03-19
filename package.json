@@ -22,7 +22,7 @@
     "@babel/runtime": "7.0.0-beta.42",
     "chalk": "2.3.2",
     "chance": "1.0.13",
-    "class-validator": "0.8.1",
+    "class-validator": "0.8.4",
     "commander": "2.15.0",
     "escodegen-wallaby": "1.6.18",
     "esprima": "4.0.0",

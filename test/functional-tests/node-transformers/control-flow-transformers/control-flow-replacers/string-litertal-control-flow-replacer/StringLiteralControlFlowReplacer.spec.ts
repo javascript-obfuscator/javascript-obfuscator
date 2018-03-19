@@ -9,7 +9,7 @@ import { readFileAsString } from '../../../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscatorFacade';
 
 describe('StringLiteralControlFlowReplacer', () => {
-    describe('replace (literalNode: ESTree.Literal,parentNode: ESTree.Node,controlFlowStorage: IStorage <ICustomNode>)', () => {
+    describe('replace (literalNode, parentNode, controlFlowStorage)', () => {
         const controlFlowStorageStringLiteralRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *\{'\w{5}' *: *'test'\};/;
         const controlFlowStorageCallRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{5}'\];/;
 

@@ -1,17 +1,17 @@
 import { IInitializable } from '../IInitializable';
 
-export interface IStorage <T> extends IInitializable {
+export interface IMapStorage <K, V> extends IInitializable {
     /**
-     * @param key
-     * @returns T
+     * @param {K} key
+     * @returns {V}
      */
-    get (key: string | number): T;
+    get (key: K): V;
 
     /**
-     * @param value
-     * @returns string | number | null
+     * @param {V} value
+     * @returns {K | null}
      */
-    getKeyOf (value: T): string | number | null;
+    getKeyOf (value: V): K | null;
 
     /**
      * @returns number
@@ -19,9 +19,9 @@ export interface IStorage <T> extends IInitializable {
     getLength (): number;
 
     /**
-     * @returns any
+     * @returns {Map<K, V>}
      */
-    getStorage (): any;
+    getStorage (): Map <K, V>;
 
     /**
      * @returns string
@@ -40,10 +40,10 @@ export interface IStorage <T> extends IInitializable {
     mergeWith (storage: this, mergeId: boolean): void;
 
     /**
-     * @param key
-     * @param value
+     * @param {K} key
+     * @param {V} value
      */
-    set (key: string | number, value: T): void;
+    set (key: K, value: V): void;
 
     /**
      * @returns string

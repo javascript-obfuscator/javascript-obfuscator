@@ -2,15 +2,16 @@ import { assert } from 'chai';
 
 import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
 
+import { IArrayStorage } from '../../../src/interfaces/storages/IArrayStorage';
 import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
 import { IOptions } from '../../../src/interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../src/interfaces/utils/IRandomGenerator';
-import { IStorage } from '../../../src/interfaces/storages/IStorage';
+
 
 import { ArrayStorage } from '../../../src/storages/ArrayStorage';
 import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
 
-class ConcreteStorage extends ArrayStorage <string> {
+class ConcreteStorage <V> extends ArrayStorage <V> {
     constructor () {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
@@ -24,10 +25,10 @@ class ConcreteStorage extends ArrayStorage <string> {
 }
 
 /**
- * @type {IStorage<any>}
+ * @returns {IArrayStorage<V>}
  */
-const getStorageInstance = (): IStorage <any> => {
-    const storage: IStorage<any> = new ConcreteStorage();
+const getStorageInstance = <V> (): IArrayStorage <V> => {
+    const storage: IArrayStorage <V> = new ConcreteStorage <V> ();
 
     storage.initialize();
 
@@ -38,7 +39,7 @@ describe('ArrayStorage', () => {
     const storageKey: number = 0;
     const storageValue: string = 'foo';
 
-    let storage: IStorage <any>;
+    let storage: IArrayStorage <any>;
 
     describe('initialize (...args: any[]): void', () => {
         const expectedError: ErrorConstructor = Error;
@@ -46,7 +47,7 @@ describe('ArrayStorage', () => {
         let testFunc: () => void;
 
         before(() => {
-            storage = new ConcreteStorage();
+            storage = new ConcreteStorage<string>();
             testFunc = () => storage.set(storageKey, storageValue);
         });
 
@@ -61,7 +62,7 @@ describe('ArrayStorage', () => {
         let arrayStorage: string[];
 
         before(() => {
-            storage = getStorageInstance();
+            storage = getStorageInstance<string>();
 
             arrayStorage = storage.getStorage();
         });
@@ -78,7 +79,7 @@ describe('ArrayStorage', () => {
             let value: string;
 
             before(() => {
-                storage = getStorageInstance();
+                storage = getStorageInstance<string>();
                 storage.set(storageKey, storageValue);
 
                 value = storage.get(storageKey);
@@ -95,7 +96,7 @@ describe('ArrayStorage', () => {
             let testFunc: () => void;
 
             before(() => {
-                storage = getStorageInstance();
+                storage = getStorageInstance<string>();
 
                 testFunc = () => storage.get(storageKey);
             });
@@ -112,7 +113,7 @@ describe('ArrayStorage', () => {
         let storageLength: number;
 
         before(() => {
-            storage = getStorageInstance();
+            storage = getStorageInstance<string>();
             storage.set(storageKey, storageValue);
 
             storageLength = storage.getLength();
@@ -128,7 +129,7 @@ describe('ArrayStorage', () => {
 
         describe('Variant #1', () => {
             before(() => {
-                storage = getStorageInstance();
+                storage = getStorageInstance<string>();
                 storage.set(storageKey, storageValue);
 
                 key = storage.getKeyOf(storageValue);
@@ -145,7 +146,7 @@ describe('ArrayStorage', () => {
             };
 
             before(() => {
-                storage = getStorageInstance();
+                storage = getStorageInstance<string>();
                 storage.set(storageKey, object);
 
                 key = storage.getKeyOf(object);
@@ -163,7 +164,7 @@ describe('ArrayStorage', () => {
             };
 
             before(() => {
-                storage = getStorageInstance();
+                storage = getStorageInstance<string>();
                 storage.set(storageKey, object);
 
                 key = storage.getKeyOf({...object});
@@ -179,7 +180,7 @@ describe('ArrayStorage', () => {
         let value: string;
 
         before(() => {
-            storage = getStorageInstance();
+            storage = getStorageInstance<string>();
             storage.set(storageKey, storageValue);
 
             value = storage.get(storageKey);
@@ -199,10 +200,10 @@ describe('ArrayStorage', () => {
         let array: string[];
 
         before(() => {
-            storage = getStorageInstance();
+            storage = getStorageInstance<string>();
             storage.set(storageKey, storageValue);
 
-            const secondStorage: IStorage <string> = getStorageInstance();
+            const secondStorage: IArrayStorage <string> = getStorageInstance<string>();
             secondStorage.set(secondStorageKey, secondStorageValue);
 
             storage.mergeWith(secondStorage, false);

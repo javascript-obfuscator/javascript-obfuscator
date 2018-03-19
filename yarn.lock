@@ -709,6 +709,10 @@ ansi-styles@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-1.0.0.tgz#cb102df1c56f5123eab8b67cd7b98027a0279178"
 
+ansicolor@1.1.71:
+  version "1.1.71"
+  resolved "https://registry.yarnpkg.com/ansicolor/-/ansicolor-1.1.71.tgz#38bbf97db282edb1462dcb23400112407a9486e3"
+
 any-observable@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/any-observable/-/any-observable-0.2.0.tgz#c67870058003579009083f54ac0abafb5c33d242"
@@ -1892,10 +1896,11 @@ class-utils@^0.3.5:
     lazy-cache "^2.0.2"
     static-extend "^0.1.1"
 
-class-validator@0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/class-validator/-/class-validator-0.8.1.tgz#f5efd5c613927e3c2f68692e8f14d53a2644fb2f"
+class-validator@0.8.4:
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/class-validator/-/class-validator-0.8.4.tgz#f78d31f5aeabd27e05394be07e93f42e2041a0bb"
   dependencies:
+    ansicolor "1.1.71"
     validator "9.2.0"
 
 cli-cursor@^1.0.2:

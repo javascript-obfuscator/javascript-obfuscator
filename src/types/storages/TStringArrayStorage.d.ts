@@ -1,3 +1,3 @@
-import { IStorage } from '../../interfaces/storages/IStorage';
+import { IArrayStorage } from '../../interfaces/storages/IArrayStorage';
 
-export type TStringArrayStorage = IStorage <string>;
+export type TStringArrayStorage = IArrayStorage <string>;

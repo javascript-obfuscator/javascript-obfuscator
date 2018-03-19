@@ -12,7 +12,7 @@ import { CustomNodeGroup } from '../../enums/custom-nodes/CustomNodeGroup';
 import { MapStorage } from '../MapStorage';
 
 @injectable()
-export class CustomNodeGroupStorage extends MapStorage <ICustomNodeGroup> {
+export class CustomNodeGroupStorage extends MapStorage <string, ICustomNodeGroup> {
     /**
      * @type {CustomNodeGroup[]}
      */

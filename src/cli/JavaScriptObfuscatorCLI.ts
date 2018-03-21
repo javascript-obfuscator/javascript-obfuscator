@@ -257,7 +257,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             )
             .option(
                 '--reserved-names <list> (comma separated, without whitespaces)',
-                'Disable obfuscation of variable names, function names and names of function parameters that match the passed RegExp patterns (comma separated)',
+                'Disable obfuscation and generation of identifiers that matching the passed RegExp patterns (comma separated)',
                 ArraySanitizer
             )
             .option(

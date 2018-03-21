@@ -2029,13 +2029,17 @@ commander@2.11.0:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.11.0.tgz#157152fd1e7a6c8d98a5b715cf376df928004563"
 
-commander@2.15.0, commander@^2.8.1:
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-2.15.0.tgz#ad2a23a1c3b036e392469b8012cec6b33b4c1322"
+commander@2.15.1:
+  version "2.15.1"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.15.1.tgz#df46e867d0fc2aec66a34662b406a9ccafff5b0f"
 
 commander@^2.12.1, commander@~2.13.0:
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.13.0.tgz#6964bca67685df7c1f1430c584f07d7597885b9c"
+
+commander@^2.8.1:
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.15.0.tgz#ad2a23a1c3b036e392469b8012cec6b33b4c1322"
 
 commondir@^1.0.1:
   version "1.0.1"
@@ -5194,9 +5198,9 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
-sinon@4.4.6:
-  version "4.4.6"
-  resolved "https://registry.yarnpkg.com/sinon/-/sinon-4.4.6.tgz#0b21ce56f1b11015749a82a3bbde2f46b78ec0e1"
+sinon@4.4.8:
+  version "4.4.8"
+  resolved "https://registry.yarnpkg.com/sinon/-/sinon-4.4.8.tgz#0479e0ccb8caa0d737ce9773c8d53d57d38f2d84"
   dependencies:
     "@sinonjs/formatio" "^2.0.0"
     diff "^3.1.0"
@@ -5689,9 +5693,9 @@ tslint-language-service@0.9.8:
   version "0.9.8"
   resolved "https://registry.yarnpkg.com/tslint-language-service/-/tslint-language-service-0.9.8.tgz#22a6f2f926b7c0a4cafed3ae1f65021e8008dc96"
 
-tslint-webpack-plugin@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/tslint-webpack-plugin/-/tslint-webpack-plugin-1.2.0.tgz#b7ee325ca2fd020c621f1f123268ea674a49070e"
+tslint-webpack-plugin@1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/tslint-webpack-plugin/-/tslint-webpack-plugin-1.2.2.tgz#364369d2842d5fc8115815e9fe92f0d4dc39b9b7"
   dependencies:
     chalk "^2.1.0"
 
@@ -6026,9 +6030,9 @@ webpack-sources@^1.1.0:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
 
-webpack@4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.1.1.tgz#44e4d6a869dd36fdfc0b227f9bd865a4bccfd81c"
+webpack@4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.2.0.tgz#a4f80807651a0e611bb09609600dc266262efcc1"
   dependencies:
     acorn "^5.0.0"
     acorn-dynamic-import "^3.0.0"

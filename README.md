@@ -603,7 +603,7 @@ Enables obfuscation of global variable and function names **with declaration**.
 ### `reservedNames`
 Type: `string[]` Default: `[]`
 
-Disables the obfuscation of variables names, function names and function parameters that match the Regular Expression used.
+Disables obfuscation and generation of identifiers, which being matched by passed RegExp patterns.
 
 Example:
 ```ts

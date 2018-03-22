@@ -6,7 +6,7 @@ export enum CustomNode {
     DomainLockNode = 'DomainLockNode',
     NodeCallsControllerFunctionNode = 'NodeCallsControllerFunctionNode',
     SelfDefendingUnicodeNode = 'SelfDefendingUnicodeNode',
-    StringArrayCallsWrapper = 'StringArrayCallsWrapper',
+    StringArrayCallsWrapperNode = 'StringArrayCallsWrapperNode',
     StringArrayNode = 'StringArrayNode',
     StringArrayRotateFunctionNode = 'StringArrayRotateFunctionNode'
 }

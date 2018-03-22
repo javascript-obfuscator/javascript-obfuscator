@@ -5,7 +5,7 @@
   "presets": [
     ["@babel/preset-env", {
       "targets": {
-        "node": "4.8"
+        "node": "6.11"
       },
       "forceAllTransforms": true
     }]

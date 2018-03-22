@@ -4,11 +4,11 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
+import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
-import { IStorage } from '../../../interfaces/storages/IStorage';
 
 import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCustomNode';
 
@@ -40,13 +40,13 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
     /**
      * @param {LogicalExpression} logicalExpressionNode
      * @param {NodeGuards} parentNode
-     * @param {IStorage<ICustomNode>} controlFlowStorage
+     * @param {TControlFlowStorage} controlFlowStorage
      * @returns {NodeGuards}
      */
     public replace (
         logicalExpressionNode: ESTree.LogicalExpression,
         parentNode: ESTree.Node,
-        controlFlowStorage: IStorage <ICustomNode>
+        controlFlowStorage: TControlFlowStorage
     ): ESTree.Node {
         if (this.checkForProhibitedExpressions(logicalExpressionNode.left, logicalExpressionNode.right)) {
             return logicalExpressionNode;

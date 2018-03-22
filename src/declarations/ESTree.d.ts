@@ -4,21 +4,44 @@ import * as escodegen from 'escodegen-wallaby';
 import * as ESTree from 'estree';
 
 declare module 'estree' {
-    interface BaseNode {
+    export interface BaseNodeMetadata {
         ignoredNode?: boolean;
-        obfuscatedNode?: boolean;
+    }
+
+    export interface IdentifierNodeMetadata extends BaseNodeMetadata {
+        renamedIdentifier?: boolean;
+    }
+
+    export interface LiteralNodeMetadata extends BaseNodeMetadata {
+        replacedLiteral?: boolean;
+    }
+
+    interface BaseNode {
+        metadata?: BaseNodeMetadata;
         parentNode?: ESTree.Node;
     }
 
-    interface ExpressionStatement extends ESTree.BaseStatement {
+    interface Identifier extends BaseNode {
+        metadata?: IdentifierNodeMetadata;
+    }
+
+    interface SimpleLiteral extends BaseNode {
+        metadata?: LiteralNodeMetadata;
+    }
+
+    interface RegExpLiteral extends BaseNode {
+        metadata?: LiteralNodeMetadata;
+    }
+
+    interface ExpressionStatement extends BaseNode {
         directive?: 'use strict';
     }
 
-    interface SimpleLiteral extends ESTree.BaseNode, ESTree.BaseExpression {
+    interface SimpleLiteral extends BaseNode {
         'x-verbatim-property'?: escodegen.XVerbatimProperty;
     }
 
-    interface RegExpLiteral extends ESTree.BaseNode, ESTree.BaseExpression {
+    interface RegExpLiteral extends BaseNode {
         'x-verbatim-property'?: escodegen.XVerbatimProperty;
     }
 }

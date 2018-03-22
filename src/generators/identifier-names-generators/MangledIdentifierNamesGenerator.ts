@@ -46,10 +46,42 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     }
 
     /**
+     * @returns {string}
+     */
+    public generate (): string {
+        const identifierName: string = this.generateNewMangledName(this.previousMangledName);
+
+        this.previousMangledName = identifierName;
+
+        return identifierName;
+    }
+
+    /**
+     * @returns {string}
+     */
+    public generateWithPrefix (): string {
+        const prefix: string = this.options.identifiersPrefix ?
+            `${this.options.identifiersPrefix}_`
+            : '';
+        const identifierName: string = this.generate();
+
+        return `${prefix}${identifierName}`;
+    }
+
+    /**
+     * @param {string} mangledName
+     * @returns {boolean}
+     */
+    public isValidIdentifierName (mangledName: string): boolean {
+        return super.isValidIdentifierName(mangledName)
+            && !MangledIdentifierNamesGenerator.reservedNames.includes(mangledName);
+    }
+
+    /**
      * @param {string} previousMangledName
      * @returns {string}
      */
-    private static generateNewMangledName (previousMangledName: string): string {
+    private generateNewMangledName (previousMangledName: string): string {
         const generateNewMangledName: (name: string) => string = (name: string): string => {
             const nameSequence: string[] = MangledIdentifierNamesGenerator.nameSequence;
             const nameLength: number = name.length;
@@ -82,41 +114,10 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
 
         let newMangledName: string = generateNewMangledName(previousMangledName);
 
-        if (!MangledIdentifierNamesGenerator.validateMangledName(newMangledName)) {
-            newMangledName = MangledIdentifierNamesGenerator.generateNewMangledName(newMangledName);
+        if (!this.isValidIdentifierName(newMangledName)) {
+            newMangledName = this.generateNewMangledName(newMangledName);
         }
 
         return newMangledName;
-    }
-
-    /**
-     * @param {string} mangledName
-     * @returns {boolean}
-     */
-    private static validateMangledName (mangledName: string): boolean {
-        return !MangledIdentifierNamesGenerator.reservedNames.includes(mangledName);
-    }
-
-    /**
-     * @returns {string}
-     */
-    public generate (): string {
-        const identifierName: string = MangledIdentifierNamesGenerator.generateNewMangledName(this.previousMangledName);
-
-        this.previousMangledName = identifierName;
-
-        return identifierName;
-    }
-
-    /**
-     * @returns {string}
-     */
-    public generateWithPrefix (): string {
-        const prefix: string = this.options.identifiersPrefix ?
-            `${this.options.identifiersPrefix}_`
-            : '';
-        const identifierName: string = this.generate();
-
-        return `${prefix}${identifierName}`;
     }
 }

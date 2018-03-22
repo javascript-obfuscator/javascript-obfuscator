@@ -12,8 +12,8 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { initializable } from '../../decorators/Initializable';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
+import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
-import { Nodes } from '../../node/Nodes';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
@@ -71,36 +71,36 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
     protected getNodeStructure (): TStatement[] {
         const controllerIdentifierName: string = this.randomGenerator.getRandomString(6);
         const indexIdentifierName: string = this.randomGenerator.getRandomString(6);
-        const structure: ESTree.BlockStatement = Nodes.getBlockStatementNode([
-            Nodes.getVariableDeclarationNode([
-                Nodes.getVariableDeclaratorNode(
-                    Nodes.getIdentifierNode(controllerIdentifierName),
-                    Nodes.getCallExpressionNode(
-                        Nodes.getMemberExpressionNode(
-                            Nodes.getLiteralNode(
+        const structure: ESTree.BlockStatement = NodeFactory.blockStatementNode([
+            NodeFactory.variableDeclarationNode([
+                NodeFactory.variableDeclaratorNode(
+                    NodeFactory.identifierNode(controllerIdentifierName),
+                    NodeFactory.callExpressionNode(
+                        NodeFactory.memberExpressionNode(
+                            NodeFactory.literalNode(
                                 this.originalKeysIndexesInShuffledArray.join('|')
                             ),
-                            Nodes.getIdentifierNode('split')
+                            NodeFactory.identifierNode('split')
                         ),
                         [
-                            Nodes.getLiteralNode('|')
+                            NodeFactory.literalNode('|')
                         ]
                     )
                 ),
-                Nodes.getVariableDeclaratorNode(
-                    Nodes.getIdentifierNode(indexIdentifierName),
-                    Nodes.getLiteralNode(0)
+                NodeFactory.variableDeclaratorNode(
+                    NodeFactory.identifierNode(indexIdentifierName),
+                    NodeFactory.literalNode(0)
                 )
             ]),
-            Nodes.getWhileStatementNode(
-                Nodes.getLiteralNode(true),
-                Nodes.getBlockStatementNode([
-                    Nodes.getSwitchStatementNode(
-                        Nodes.getMemberExpressionNode(
-                            Nodes.getIdentifierNode(controllerIdentifierName),
-                            Nodes.getUpdateExpressionNode(
+            NodeFactory.whileStatementNode(
+                NodeFactory.literalNode(true),
+                NodeFactory.blockStatementNode([
+                    NodeFactory.switchStatementNode(
+                        NodeFactory.memberExpressionNode(
+                            NodeFactory.identifierNode(controllerIdentifierName),
+                            NodeFactory.updateExpressionNode(
                                 '++',
-                                Nodes.getIdentifierNode(indexIdentifierName)
+                                NodeFactory.identifierNode(indexIdentifierName)
                             ),
                             true
                         ),
@@ -113,16 +113,16 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
                              * to prevent `unreachable code after return statement` warnings
                              */
                             if (!NodeGuards.isReturnStatementNode(statement)) {
-                                consequent.push(Nodes.getContinueStatement());
+                                consequent.push(NodeFactory.continueStatement());
                             }
 
-                            return Nodes.getSwitchCaseNode(
-                                Nodes.getLiteralNode(String(index)),
+                            return NodeFactory.switchCaseNode(
+                                NodeFactory.literalNode(String(index)),
                                 consequent
                             );
                         })
                     ),
-                    Nodes.getBreakStatement()
+                    NodeFactory.breakStatement()
                 ])
             )
         ]);

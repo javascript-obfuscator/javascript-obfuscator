@@ -16,8 +16,8 @@ import { IStackTraceData } from '../../../../src/interfaces/analyzers/stack-trac
 import { readFileAsString } from '../../../helpers/readFileAsString';
 
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
+import { NodeFactory } from '../../../../src/node/NodeFactory';
 import { NodeGuards } from '../../../../src/node/NodeGuards';
-import { Nodes } from '../../../../src/node/Nodes';
 import { NodeUtils } from '../../../../src/node/NodeUtils';
 
 /**
@@ -165,7 +165,7 @@ describe('StackTraceAnalyzer', () => {
         describe('Variant #1: basic-1', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/basic-1.js');
-                const astTree: TNodeWithBlockScope = Nodes.getProgramNode(
+                const astTree: TNodeWithBlockScope = NodeFactory.programNode(
                     NodeUtils.convertCodeToStructure(code)
                 );
 
@@ -215,7 +215,7 @@ describe('StackTraceAnalyzer', () => {
         describe('Variant #2: basic-2', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/basic-2.js');
-                const astTree: TNodeWithBlockScope = Nodes.getProgramNode(
+                const astTree: TNodeWithBlockScope = NodeFactory.programNode(
                     NodeUtils.convertCodeToStructure(code)
                 );
 
@@ -254,7 +254,7 @@ describe('StackTraceAnalyzer', () => {
         describe('Variant #3: deep conditions nesting', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/deep-conditions-nesting.js');
-                const astTree: TNodeWithBlockScope = Nodes.getProgramNode(
+                const astTree: TNodeWithBlockScope = NodeFactory.programNode(
                     NodeUtils.convertCodeToStructure(code)
                 );
 
@@ -293,7 +293,7 @@ describe('StackTraceAnalyzer', () => {
         describe('Variant #4: call before declaration', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/call-before-declaration.js');
-                const astTree: TNodeWithBlockScope = Nodes.getProgramNode(
+                const astTree: TNodeWithBlockScope = NodeFactory.programNode(
                     NodeUtils.convertCodeToStructure(code)
                 );
 
@@ -316,7 +316,7 @@ describe('StackTraceAnalyzer', () => {
         describe('Variant #5: call expression of object member #1', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/call-expression-of-object-member-1.js');
-                const astTree: TNodeWithBlockScope = Nodes.getProgramNode(
+                const astTree: TNodeWithBlockScope = NodeFactory.programNode(
                     NodeUtils.convertCodeToStructure(code)
                 );
 
@@ -375,7 +375,7 @@ describe('StackTraceAnalyzer', () => {
         describe('Variant #5: call expression of object member #2', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/call-expression-of-object-member-2.js');
-                const astTree: TNodeWithBlockScope = Nodes.getProgramNode(
+                const astTree: TNodeWithBlockScope = NodeFactory.programNode(
                     NodeUtils.convertCodeToStructure(code)
                 );
 
@@ -403,7 +403,7 @@ describe('StackTraceAnalyzer', () => {
         describe('Variant #6: no call expressions', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/no-call-expressions.js');
-                const astTree: TNodeWithBlockScope = Nodes.getProgramNode(
+                const astTree: TNodeWithBlockScope = NodeFactory.programNode(
                     NodeUtils.convertCodeToStructure(code)
                 );
 
@@ -420,7 +420,7 @@ describe('StackTraceAnalyzer', () => {
         describe('Variant #7: only call expression', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/only-call-expression.js');
-                const astTree: TNodeWithBlockScope = Nodes.getProgramNode(
+                const astTree: TNodeWithBlockScope = NodeFactory.programNode(
                     NodeUtils.convertCodeToStructure(code)
                 );
 
@@ -437,7 +437,7 @@ describe('StackTraceAnalyzer', () => {
         describe('Variant #8: self-invoking functions', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/self-invoking-functions.js');
-                const astTree: TNodeWithBlockScope = Nodes.getProgramNode(
+                const astTree: TNodeWithBlockScope = NodeFactory.programNode(
                     NodeUtils.convertCodeToStructure(code)
                 );
 
@@ -472,7 +472,7 @@ describe('StackTraceAnalyzer', () => {
         describe('Variant #9: no recursion', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/no-recursion.js');
-                const astTree: TNodeWithBlockScope = Nodes.getProgramNode(
+                const astTree: TNodeWithBlockScope = NodeFactory.programNode(
                     NodeUtils.convertCodeToStructure(code)
                 );
 

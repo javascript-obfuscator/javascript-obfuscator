@@ -7,10 +7,10 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
-import { NodeType } from '../../enums/node/NodeType';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
+import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
 
 /**
@@ -82,11 +82,7 @@ export class MethodDefinitionTransformer extends AbstractNodeTransformer {
             methodDefinitionNode.computed === false
         ) {
             methodDefinitionNode.computed = true;
-            methodDefinitionNode.key = {
-                type: NodeType.Literal,
-                value: methodDefinitionNode.key.name,
-                raw: `'${methodDefinitionNode.key.name}'`
-            };
+            methodDefinitionNode.key = NodeFactory.literalNode(methodDefinitionNode.key.name);
         }
 
         return methodDefinitionNode;

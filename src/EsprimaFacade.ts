@@ -26,11 +26,11 @@ export class EsprimaFacade {
         let lastMeta: esprima.NodeMeta | null = null;
 
         try {
-            return esprima.parseScript(input, config, (node: ESTree.Node, meta: any) => lastMeta = meta);
+            return esprima.parseScript(input, config, (node: ESTree.Node, meta: esprima.NodeMeta) => lastMeta = meta);
         } catch {}
 
         try {
-            return esprima.parseModule(input, config, (node: ESTree.Node, meta: any) => lastMeta = meta);
+            return esprima.parseModule(input, config, (node: ESTree.Node, meta: esprima.NodeMeta) => lastMeta = meta);
         } catch (error) {
             return EsprimaFacade.processParsingError(input, error.message, lastMeta);
         }

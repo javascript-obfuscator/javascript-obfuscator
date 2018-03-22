@@ -9,8 +9,8 @@ import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
 export const SourceMapModeSanitizer: TCLISanitizer <string> = (value: string): string => {
     const isCorrectSourceMapMode: boolean = Object
         .keys(SourceMapMode)
-        .some((key: any): boolean => {
-            return SourceMapMode[key] === value;
+        .some((key: string): boolean => {
+            return SourceMapMode[<keyof typeof SourceMapMode>key] === value;
         });
 
     if (!isCorrectSourceMapMode) {

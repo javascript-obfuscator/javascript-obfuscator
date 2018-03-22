@@ -1,7 +1,6 @@
 import * as ESTree from 'estree';
 
-import { ICustomNode } from '../../custom-nodes/ICustomNode';
-import { IStorage } from '../../storages/IStorage';
+import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
 
 export interface IControlFlowReplacer {
     /**
@@ -13,6 +12,6 @@ export interface IControlFlowReplacer {
     replace (
         node: ESTree.Node,
         parentNode: ESTree.Node,
-        controlFlowStorage: IStorage <ICustomNode>
+        controlFlowStorage: TControlFlowStorage
     ): ESTree.Node;
 }

@@ -67,7 +67,7 @@ export class Utils {
         return Array
             .from(string)
             .map((character: string): string => {
-                return JSFuck[<any>character] || character;
+                return JSFuck[<keyof typeof JSFuck>character] || character;
             })
             .join(' + ');
     }

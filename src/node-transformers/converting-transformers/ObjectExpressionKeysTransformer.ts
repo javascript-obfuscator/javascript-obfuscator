@@ -13,8 +13,8 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeAppender } from '../../node/NodeAppender';
+import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
-import { Nodes } from '../../node/Nodes';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
@@ -191,12 +191,12 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
             const shouldCreateLiteralNode: boolean = !property.computed
                 || (property.computed && NodeGuards.isLiteralNode(property.key));
             const memberExpressionProperty: ESTree.Expression = shouldCreateLiteralNode
-                ? Nodes.getLiteralNode(propertyKeyName)
-                : Nodes.getIdentifierNode(propertyKeyName);
-            const memberExpressionNode: ESTree.MemberExpression = Nodes
-                .getMemberExpressionNode(memberExpressionObject, memberExpressionProperty, true);
-            const expressionStatementNode: ESTree.ExpressionStatement = Nodes.getExpressionStatementNode(
-                Nodes.getAssignmentExpressionNode('=', memberExpressionNode, propertyValue)
+                ? NodeFactory.literalNode(propertyKeyName)
+                : NodeFactory.identifierNode(propertyKeyName);
+            const memberExpressionNode: ESTree.MemberExpression = NodeFactory
+                .memberExpressionNode(memberExpressionObject, memberExpressionProperty, true);
+            const expressionStatementNode: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(
+                NodeFactory.assignmentExpressionNode('=', memberExpressionNode, propertyValue)
             );
 
             /**

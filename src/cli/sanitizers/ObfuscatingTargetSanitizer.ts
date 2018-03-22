@@ -9,8 +9,8 @@ import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 export const ObfuscationTargetSanitizer: TCLISanitizer <string> = (value: string): string => {
     const isCorrectTarget: boolean = Object
         .keys(ObfuscationTarget)
-        .some((key: any): boolean => {
-            return ObfuscationTarget[key] === value;
+        .some((key: string): boolean => {
+            return ObfuscationTarget[<keyof typeof ObfuscationTarget>key] === value;
         });
 
     if (!isCorrectTarget) {

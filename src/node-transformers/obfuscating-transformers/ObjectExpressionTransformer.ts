@@ -7,10 +7,10 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
-import { NodeType } from '../../enums/node/NodeType';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
+import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
 
 /**
@@ -31,18 +31,6 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
-    }
-
-    /**
-     * @param {Identifier} node
-     * @returns {Literal}
-     */
-    private static transformIdentifierPropertyKey (node: ESTree.Identifier): ESTree.Literal {
-        return {
-            type: NodeType.Literal,
-            value: node.name,
-            raw: `'${node.name}'`
-        };
     }
 
     /**
@@ -82,7 +70,7 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
                 }
 
                 if (NodeGuards.isIdentifierNode(property.key)) {
-                    property.key = ObjectExpressionTransformer.transformIdentifierPropertyKey(property.key);
+                    property.key = NodeFactory.literalNode(property.key.name);
                 }
             });
 

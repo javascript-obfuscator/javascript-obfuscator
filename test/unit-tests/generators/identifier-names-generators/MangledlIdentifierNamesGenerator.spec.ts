@@ -169,4 +169,68 @@ describe('MangledIdentifierNamesGenerator', () => {
             });
         });
     });
+
+    describe('isValidIdentifierName (identifierName: string): boolean', () => {
+        describe('Variant #1: reserved name as simple string', () => {
+            const expectedFirstIdentifier: string = 'a';
+            const expectedSecondIdentifier: string = 'd';
+            const reservedNames: string[] = ['b', 'c'];
+
+            let identifierNamesGenerator: IIdentifierNamesGenerator,
+                firstMangledIdentifierName: string,
+                secondMangledIdentifierName: string;
+
+            beforeEach(() => {
+                const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
+
+                inversifyContainerFacade.load('', { reservedNames });
+                identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
+                    ServiceIdentifiers.IIdentifierNamesGenerator,
+                    IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                );
+
+                firstMangledIdentifierName = identifierNamesGenerator.generate();
+                secondMangledIdentifierName = identifierNamesGenerator.generate();
+            });
+
+            it('should generate first identifier', () => {
+                assert.equal(firstMangledIdentifierName, expectedFirstIdentifier);
+            });
+
+            it('should generate second identifier', () => {
+                assert.equal(secondMangledIdentifierName, expectedSecondIdentifier);
+            });
+        });
+
+        describe('Variant #2: reserved name as string regexp', () => {
+            const expectedFirstIdentifier: string = 'a';
+            const expectedSecondIdentifier: string = 'g';
+            const reservedNames: string[] = ['[b|c|d|e|f]'];
+
+            let identifierNamesGenerator: IIdentifierNamesGenerator,
+                firstMangledIdentifierName: string,
+                secondMangledIdentifierName: string;
+
+            beforeEach(() => {
+                const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
+
+                inversifyContainerFacade.load('', { reservedNames });
+                identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
+                    ServiceIdentifiers.IIdentifierNamesGenerator,
+                    IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                );
+
+                firstMangledIdentifierName = identifierNamesGenerator.generate();
+                secondMangledIdentifierName = identifierNamesGenerator.generate();
+            });
+
+            it('should generate first identifier', () => {
+                assert.equal(firstMangledIdentifierName, expectedFirstIdentifier);
+            });
+
+            it('should generate second identifier', () => {
+                assert.equal(secondMangledIdentifierName, expectedSecondIdentifier);
+            });
+        });
+    });
 });

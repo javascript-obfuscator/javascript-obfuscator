@@ -50,6 +50,7 @@ module.exports = {
                 loader: 'awesome-typescript-loader',
                 query: {
                     useBabel: true,
+                    babelCore: '@babel/core',
                     useCache: true,
                     forceIsolatedModules: true
                 }

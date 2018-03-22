@@ -11,7 +11,7 @@ import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscator
 describe('LogicalExpressionControlFlowReplacer', function () {
     this.timeout(100000);
 
-    describe('replace (logicalExpressionNode: ESTree.LogicalExpression,parentNode: ESTree.Node,controlFlowStorage: IStorage <ICustomNode>)', () => {
+    describe('replace (logicalExpressionNode, parentNode, controlFlowStorage)', () => {
         describe('Variant #1 - single logical expression', () => {
             const controlFlowStorageCallRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{5}'\]\(!!\[\], *!\[\]\);/;
 

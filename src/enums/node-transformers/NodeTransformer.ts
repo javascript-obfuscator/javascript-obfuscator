@@ -12,6 +12,7 @@ export enum NodeTransformer {
     LabeledStatementTransformer = 'LabeledStatementTransformer',
     LiteralTransformer = 'LiteralTransformer',
     MemberExpressionTransformer = 'MemberExpressionTransformer',
+    MetadataTransformer = 'MetadataTransformer',
     MethodDefinitionTransformer = 'MethodDefinitionTransformer',
     ObfuscatingGuardsTransformer = 'ObfuscatingGuardsTransformer',
     ObjectExpressionKeysTransformer = 'ObjectExpressionKeysTransformer',

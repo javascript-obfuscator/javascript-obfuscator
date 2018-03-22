@@ -1,0 +1,52 @@
+import { IInitializable } from '../IInitializable';
+
+export interface IArrayStorage <V> extends IInitializable {
+    /**
+     * @param {number} key
+     * @returns {V}
+     */
+    get (key: number): V;
+
+    /**
+     * @param value
+     * @returns number | null
+     */
+    getKeyOf (value: V): number | null;
+
+    /**
+     * @returns number
+     */
+    getLength (): number;
+
+    /**
+     * @returns {V[]}
+     */
+    getStorage (): V[];
+
+    /**
+     * @returns string
+     */
+    getStorageId (): string;
+
+    /**
+     * @param args
+     */
+    initialize (...args: any[]): void;
+
+    /**
+     * @param storage
+     * @param mergeId
+     */
+    mergeWith (storage: this, mergeId: boolean): void;
+
+    /**
+     * @param {number} key
+     * @param {V} value
+     */
+    set (key: number, value: V): void;
+
+    /**
+     * @returns string
+     */
+    toString (): string;
+}

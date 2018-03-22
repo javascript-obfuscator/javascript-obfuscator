@@ -14,6 +14,7 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeMetadata } from '../../node/NodeMetadata';
 
 @injectable()
 export class LiteralTransformer extends AbstractNodeTransformer {
@@ -47,7 +48,7 @@ export class LiteralTransformer extends AbstractNodeTransformer {
             case TransformationStage.Obfuscating:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                        if (parentNode && NodeGuards.isLiteralNode(node) && !node.obfuscatedNode) {
+                        if (parentNode && NodeGuards.isLiteralNode(node) && !NodeMetadata.isReplacedLiteral(node)) {
                             return this.transformNode(node, parentNode);
                         }
                     }

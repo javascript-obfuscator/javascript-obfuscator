@@ -4,11 +4,11 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
+import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
-import { IStorage } from '../../../interfaces/storages/IStorage';
 
 import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCustomNode';
 
@@ -38,13 +38,13 @@ export class BinaryExpressionControlFlowReplacer extends ExpressionWithOperatorC
     /**
      * @param {BinaryExpression} binaryExpressionNode
      * @param {Node} parentNode
-     * @param {IStorage<ICustomNode>} controlFlowStorage
+     * @param {TControlFlowStorage} controlFlowStorage
      * @returns {Node}
      */
     public replace (
         binaryExpressionNode: ESTree.BinaryExpression,
         parentNode: ESTree.Node,
-        controlFlowStorage: IStorage <ICustomNode>
+        controlFlowStorage: TControlFlowStorage
     ): ESTree.Node {
         const replacerId: string = binaryExpressionNode.operator;
         const binaryExpressionFunctionCustomNode: ICustomNode = this.controlFlowCustomNodeFactory(

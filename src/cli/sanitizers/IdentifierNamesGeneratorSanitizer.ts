@@ -9,8 +9,8 @@ import { IdentifierNamesGenerator } from '../../enums/generators/identifier-name
 export const IdentifierNamesGeneratorSanitizer: TCLISanitizer <string> = (value: string): string => {
     const isCorrectIdentifierNamesGenerator: boolean = Object
         .keys(IdentifierNamesGenerator)
-        .some((key: any): boolean => {
-            return IdentifierNamesGenerator[key] === value;
+        .some((key: string): boolean => {
+            return IdentifierNamesGenerator[<keyof typeof IdentifierNamesGenerator>key] === value;
         });
 
     if (!isCorrectIdentifierNamesGenerator) {

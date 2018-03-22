@@ -5,11 +5,11 @@ import * as ESTree from 'estree';
 
 import { TCustomNodeFactory } from '../../types/container/custom-nodes/TCustomNodeFactory';
 import { TStatement } from '../../types/node/TStatement';
+import { TStringArrayStorage } from '../../types/storages/TStringArrayStorage';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IStorage } from '../../interfaces/storages/IStorage';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { CustomNode } from '../../enums/custom-nodes/CustomNode';
@@ -30,19 +30,19 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
     private readonly customNodeFactory: TCustomNodeFactory;
 
     /**
-     * @type {IStorage <string>}
+     * @type {TStringArrayStorage}
      */
-    private readonly stringArrayStorage: IStorage <string>;
+    private readonly stringArrayStorage: TStringArrayStorage;
 
     /**
      * @param {TCustomNodeFactory} customNodeFactory
-     * @param {IStorage<string>} stringArrayStorage
+     * @param {TStringArrayStorage} stringArrayStorage
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
-        @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: IStorage<string>,
+        @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: TStringArrayStorage,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {

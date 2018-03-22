@@ -4,12 +4,12 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
+import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
 
 import { IControlFlowReplacer } from '../../../interfaces/node-transformers/control-flow-transformers/IControlFlowReplacer';
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
-import { IStorage } from '../../../interfaces/storages/IStorage';
 
 @injectable()
 export abstract class AbstractControlFlowReplacer implements IControlFlowReplacer {
@@ -72,21 +72,21 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
     /**
      * @param {Node} node
      * @param {Node} parentNode
-     * @param {IStorage<ICustomNode>} controlFlowStorage
+     * @param {TControlFlowStorage} controlFlowStorage
      * @returns {Node}
      */
-    public abstract replace (node: ESTree.Node, parentNode: ESTree.Node, controlFlowStorage: IStorage <ICustomNode>): ESTree.Node;
+    public abstract replace (node: ESTree.Node, parentNode: ESTree.Node, controlFlowStorage: TControlFlowStorage): ESTree.Node;
 
     /**
      * @param {ICustomNode} customNode
-     * @param {IStorage<ICustomNode>} controlFlowStorage
+     * @param {TControlFlowStorage} controlFlowStorage
      * @param {string} replacerId
      * @param {number} usingExistingIdentifierChance
      * @returns {string}
      */
     protected insertCustomNodeToControlFlowStorage (
         customNode: ICustomNode,
-        controlFlowStorage: IStorage <ICustomNode>,
+        controlFlowStorage: TControlFlowStorage,
         replacerId: string,
         usingExistingIdentifierChance: number
     ): string {

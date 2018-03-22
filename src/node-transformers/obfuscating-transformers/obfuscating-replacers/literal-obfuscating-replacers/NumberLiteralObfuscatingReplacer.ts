@@ -6,7 +6,7 @@ import * as ESTree from 'estree';
 import { IOptions } from '../../../../interfaces/options/IOptions';
 
 import { AbstractObfuscatingReplacer } from '../AbstractObfuscatingReplacer';
-import { Nodes } from '../../../../node/Nodes';
+import { NodeFactory } from '../../../../node/NodeFactory';
 import { Utils } from '../../../../utils/Utils';
 
 @injectable()
@@ -44,6 +44,6 @@ export class NumberLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
             this.numberLiteralCache.set(nodeValue, rawValue);
         }
 
-        return Nodes.getLiteralNode(nodeValue, rawValue);
+        return NodeFactory.literalNode(nodeValue, rawValue);
     }
 }

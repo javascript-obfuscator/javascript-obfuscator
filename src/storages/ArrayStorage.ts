@@ -1,14 +1,14 @@
 import { inject, injectable, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
+import { IArrayStorage } from '../interfaces/storages/IArrayStorage';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
-import { IStorage } from '../interfaces/storages/IStorage';
 
 import { initializable } from '../decorators/Initializable';
 
 @injectable()
-export abstract class ArrayStorage <T> implements IStorage <T> {
+export abstract class ArrayStorage <V> implements IArrayStorage <V> {
     /**
      * @type {IRandomGenerator}
      */
@@ -20,10 +20,10 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
     protected readonly options: IOptions;
 
     /**
-     * @type {T[]}
+     * @type {V[]}
      */
     @initializable()
-    protected storage!: T[];
+    protected storage!: V[];
 
     /**
      * @type {string}
@@ -56,10 +56,10 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
 
     /**
      * @param {number} key
-     * @returns {T}
+     * @returns {V}
      */
-    public get (key: number): T {
-        const value: T | undefined = this.storage[key];
+    public get (key: number): V {
+        const value: V | undefined = this.storage[key];
 
         if (!value) {
             throw new Error(`No value found in array storage with key \`${key}\``);
@@ -69,10 +69,10 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
     }
 
     /**
-     * @param {T} value
+     * @param {V} value
      * @returns {number}
      */
-    public getKeyOf (value: T): number | null {
+    public getKeyOf (value: V): number | null {
         const key: number = this.storage.indexOf(value);
 
         return key >= 0 ? key : null;
@@ -86,9 +86,9 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
     }
 
     /**
-     * @returns {T[]}
+     * @returns {V[]}
      */
-    public getStorage (): T[] {
+    public getStorage (): V[] {
         return this.storage;
     }
 
@@ -113,9 +113,9 @@ export abstract class ArrayStorage <T> implements IStorage <T> {
 
     /**
      * @param {number} key
-     * @param {T} value
+     * @param {V} value
      */
-    public set (key: number, value: T): void {
+    public set (key: number, value: V): void {
         if (key === this.storageLength) {
             this.storage.push(value);
         } else {

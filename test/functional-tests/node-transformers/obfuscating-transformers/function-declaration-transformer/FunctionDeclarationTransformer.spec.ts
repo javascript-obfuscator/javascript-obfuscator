@@ -151,30 +151,32 @@ describe('FunctionDeclarationTransformer', () => {
         });
 
         describe('Variant #5: already renamed identifiers shouldn\'t be renamed twice', () => {
-            const functionDeclarationRegExp: RegExp = /function *d\(\) *{/;
-            const variableDeclarationsRegExp: RegExp = /let *e, *f, *g, *h;/;
+            describe('Variant #1', () => {
+                const functionDeclarationRegExp: RegExp = /function *d\(\) *{/;
+                const variableDeclarationsRegExp: RegExp = /let *e, *f, *g, *h;/;
 
-            let obfuscatedCode: string;
+                let obfuscatedCode: string;
 
-            before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/prevent-renaming-of-renamed-identifiers.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-                    }
-                );
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/prevent-renaming-of-renamed-identifiers-1.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        }
+                    );
 
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
-            });
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
 
-            it('Match #1: shouldn\'t rename twice function declaration name', () => {
-                assert.match(obfuscatedCode, functionDeclarationRegExp);
-            });
+                it('Match #1: shouldn\'t rename twice function declaration name', () => {
+                    assert.match(obfuscatedCode, functionDeclarationRegExp);
+                });
 
-            it('Match #2: should correctly rename variable declarations', () => {
-                assert.match(obfuscatedCode, variableDeclarationsRegExp);
+                it('Match #2: should correctly rename variable declarations', () => {
+                    assert.match(obfuscatedCode, variableDeclarationsRegExp);
+                });
             });
         });
     });

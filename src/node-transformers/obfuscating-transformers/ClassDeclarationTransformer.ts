@@ -135,6 +135,7 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
                 .replace(replaceableIdentifier.name, nodeIdentifier);
 
             replaceableIdentifier.name = newReplaceableIdentifier.name;
+            NodeMetadata.set(replaceableIdentifier, { renamedIdentifier: true });
         });
     }
 

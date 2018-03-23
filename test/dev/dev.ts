@@ -8,8 +8,12 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
         `
         (function() {
             function test() {
-                class inner {}
-                let a, b, c, d;
+                var variable = 1;
+                function g () {}
+        
+                var func = function () {
+                    var e;
+                }
             }
         })();
         `,

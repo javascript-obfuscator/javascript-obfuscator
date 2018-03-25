@@ -154,6 +154,22 @@ export class NodeGuards {
 
     /**
      * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isImportDefaultSpecifierNode (node: ESTree.Node): node is ESTree.ImportDefaultSpecifier {
+        return node.type === NodeType.ImportDefaultSpecifier;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isImportNamespaceSpecifierNode (node: ESTree.Node): node is ESTree.ImportNamespaceSpecifier {
+        return node.type === NodeType.ImportNamespaceSpecifier;
+    }
+
+    /**
+     * @param {Node} node
      * @param {Node} parentNode
      * @returns {boolean}
      */

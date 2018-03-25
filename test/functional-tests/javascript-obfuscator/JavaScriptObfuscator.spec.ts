@@ -594,19 +594,43 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('parse module', () => {
-            const regExp: RegExp = /var *test *= *0x1/;
+            describe('Variant #1: import', () => {
+                const importRegExp: RegExp = /import *{foo} *from *'.\/foo';/;
+                const variableDeclarationRegExp: RegExp = /var *test *= *0x1/;
 
-            let obfuscatedCode: string;
+                let obfuscatedCode: string;
 
-            beforeEach(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/parse-module.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code);
+                beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/parse-module-1.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code);
 
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('Match #!: should correctly obfuscate a import', () => {
+                    assert.match(obfuscatedCode, importRegExp);
+                });
+
+                it('Match #2: should correctly obfuscate a module', () => {
+                    assert.match(obfuscatedCode, variableDeclarationRegExp);
+                });
             });
 
-            it('should correctly obfuscate a module', () => {
-                assert.match(obfuscatedCode, regExp);
+            describe('Variant #2: export', () => {
+                const regExp: RegExp = /export *const *foo *= *0x1;/;
+
+                let obfuscatedCode: string;
+
+                beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/parse-module-2.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code);
+
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('should correctly obfuscate a module', () => {
+                    assert.match(obfuscatedCode, regExp);
+                });
             });
         });
 

@@ -19,7 +19,6 @@ import { FunctionTransformer } from '../../../node-transformers/obfuscating-tran
 import { LabeledStatementTransformer } from '../../../node-transformers/obfuscating-transformers/LabeledStatementTransformer';
 import { LiteralTransformer } from '../../../node-transformers/obfuscating-transformers/LiteralTransformer';
 import { NumberLiteralObfuscatingReplacer } from '../../../node-transformers/obfuscating-transformers/obfuscating-replacers/literal-obfuscating-replacers/NumberLiteralObfuscatingReplacer';
-import { ObjectExpressionTransformer } from '../../../node-transformers/obfuscating-transformers/ObjectExpressionTransformer';
 import { StringLiteralObfuscatingReplacer } from '../../../node-transformers/obfuscating-transformers/obfuscating-replacers/literal-obfuscating-replacers/StringLiteralObfuscatingReplacer';
 import { VariableDeclarationTransformer } from '../../../node-transformers/obfuscating-transformers/VariableDeclarationTransformer';
 
@@ -48,10 +47,6 @@ export const obfuscatingTransformersModule: interfaces.ContainerModule = new Con
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(LiteralTransformer)
         .whenTargetNamed(NodeTransformer.LiteralTransformer);
-
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(ObjectExpressionTransformer)
-        .whenTargetNamed(NodeTransformer.ObjectExpressionTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(VariableDeclarationTransformer)

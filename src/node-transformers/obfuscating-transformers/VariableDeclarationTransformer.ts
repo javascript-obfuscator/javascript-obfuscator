@@ -72,7 +72,11 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
             case TransformationStage.Obfuscating:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                        if (parentNode && NodeGuards.isVariableDeclarationNode(node)) {
+                        if (
+                            parentNode
+                            && NodeGuards.isVariableDeclarationNode(node)
+                            && !NodeGuards.isExportNamedDeclarationNode(parentNode)
+                        ) {
                             return this.transformNode(node, parentNode);
                         }
                     }

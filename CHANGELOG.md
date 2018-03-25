@@ -2,10 +2,13 @@ Change Log
 ===
 v0.15.0
 ---
+* **Internal change:** switched AST parser from `esprima` on `espree`
 * **Breaking change:** dropped `node@4` and `node@5` support.
 * **Breaking change:** renamed `extension` value of `target` option on `browser-no-eval`.
 * **Breaking change:** disabled generation of identifiers, which being matched by `reservedName` option. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/216
 * **New CLI option:** `exclude` allows to exclude specific files or directories from obfuscation.
+* Correct obfuscation of `import` and `export` declarations.
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/231
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/217
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/210
 * Internal: refactoring of many things.

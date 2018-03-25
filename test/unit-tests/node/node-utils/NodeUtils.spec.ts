@@ -4,6 +4,8 @@ import { assert } from 'chai';
 
 import { TStatement } from '../../../../src/types/node/TStatement';
 
+import { removeRangesFromStructure } from '../../../helpers/removeRangesFromStructure';
+
 import { NodeFactory } from '../../../../src/node/NodeFactory';
 import { NodeUtils } from '../../../../src/node/NodeUtils';
 
@@ -145,7 +147,9 @@ describe('NodeUtils', () => {
             identifierNode.parentNode = variableDeclaratorNode;
             literalNode.parentNode = variableDeclaratorNode;
 
-            structure = NodeUtils.convertCodeToStructure(code);
+            structure = removeRangesFromStructure(
+                NodeUtils.convertCodeToStructure(code)
+            );
             expectedStructure = [variableDeclarationNode];
         });
 

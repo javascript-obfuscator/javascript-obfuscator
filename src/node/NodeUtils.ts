@@ -1,5 +1,5 @@
 import * as escodegen from 'escodegen-wallaby';
-import * as esprima from 'esprima';
+import * as espree from 'espree';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
@@ -44,7 +44,7 @@ export class NodeUtils {
      * @returns {Statement[]}
      */
     public static convertCodeToStructure (code: string): ESTree.Statement[] {
-        let structure: ESTree.Program = esprima.parseScript(code);
+        let structure: ESTree.Program = espree.parse(code, { sourceType: 'script' });
 
         structure = NodeUtils.addXVerbatimPropertyToLiterals(structure);
         structure = NodeUtils.parentize(structure);

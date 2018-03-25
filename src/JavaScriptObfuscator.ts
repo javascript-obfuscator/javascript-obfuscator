@@ -2,6 +2,7 @@ import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 
 import * as escodegen from 'escodegen-wallaby';
+import * as espree from 'espree';
 import * as ESTree from 'estree';
 import * as packageJson from 'pjson';
 
@@ -18,11 +19,25 @@ import { LoggingMessage } from './enums/logger/LoggingMessage';
 import { NodeTransformer } from './enums/node-transformers/NodeTransformer';
 import { TransformationStage } from './enums/node-transformers/TransformationStage';
 
-import { EsprimaFacade } from './EsprimaFacade';
+import { EspreeFacade } from './EspreeFacade';
 import { NodeGuards } from './node/NodeGuards';
 
 @injectable()
 export class JavaScriptObfuscator implements IJavaScriptObfuscator {
+    /**
+     * @type {Options}
+     */
+    private static readonly espreeParseOptions: espree.ParseOptions = {
+        attachComment: true,
+        comment: true,
+        ecmaFeatures: {
+            experimentalObjectRestSpread: true
+        },
+        ecmaVersion: 8,
+        loc: true,
+        range: true
+    };
+
     /**
      * @type {GenerateOptions}
      */
@@ -135,10 +150,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @returns {Program}
      */
     private parseCode (sourceCode: string): ESTree.Program {
-        return EsprimaFacade.parse(sourceCode, {
-            attachComment: true,
-            loc: this.options.sourceMap
-        });
+        return EspreeFacade.parse(sourceCode, JavaScriptObfuscator.espreeParseOptions);
     }
 
     /**
@@ -148,7 +160,8 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
     private transformAstTree (astTree: ESTree.Program): ESTree.Program {
         const isEmptyAstTree: boolean = NodeGuards.isProgramNode(astTree)
             && !astTree.body.length
-            && !astTree.leadingComments;
+            && !astTree.leadingComments
+            && !astTree.trailingComments;
 
         if (isEmptyAstTree) {
             this.logger.warn(LoggingMessage.EmptySourceCode);

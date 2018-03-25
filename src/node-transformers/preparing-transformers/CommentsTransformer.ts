@@ -17,7 +17,10 @@ export class CommentsTransformer extends AbstractNodeTransformer {
     /**
      * @type {string[]}
      */
-    private static readonly preservedWords: string[] = ['@license', '@preserve'];
+    private static readonly preservedWords: string[] = [
+        '@license',
+        '@preserve'
+    ];
 
     /**
      * @param {IRandomGenerator} randomGenerator
@@ -77,7 +80,7 @@ export class CommentsTransformer extends AbstractNodeTransformer {
     private transformComments (comments: ESTree.Comment[]): ESTree.Comment[] {
         return comments.filter((comment: ESTree.Comment) =>
             CommentsTransformer.preservedWords
-                .some((availableWord: string) => comment.value.includes(availableWord))
+                .some((preservedWord: string) => comment.value.includes(preservedWord))
         );
     }
 }

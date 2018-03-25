@@ -520,4 +520,55 @@ describe('VariableDeclarationTransformer', () => {
             });
         });
     });
+
+    describe('Variant #14: named export', () => {
+        const namedExportRegExp: RegExp = /export const foo *= *0x1;/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/named-export.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    renameGlobals: true
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('shouldn\'t transform identifiers in named export', () => {
+            assert.match(obfuscatedCode, namedExportRegExp);
+        });
+    });
+
+    describe('Variant #15: default export', () => {
+        const variableDeclarationRegExp: RegExp = /var _0x[a-f0-9]{4,6} *= *0x1;/;
+        const defaultExportRegExp: RegExp = /export default _0x[a-f0-9]{4,6};/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/default-export.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    renameGlobals: true
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('Match #1: should transform identifiers in variable declaration', () => {
+            assert.match(obfuscatedCode, variableDeclarationRegExp);
+        });
+
+        it('Match #2: should transform identifiers in default export', () => {
+            assert.match(obfuscatedCode, defaultExportRegExp);
+        });
+    });
 });

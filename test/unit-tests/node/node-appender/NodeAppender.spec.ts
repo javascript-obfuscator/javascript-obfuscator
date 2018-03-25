@@ -18,14 +18,17 @@ import { InversifyContainerFacade } from '../../../../src/container/InversifyCon
 import { NodeAppender } from '../../../../src/node/NodeAppender';
 import { NodeFactory } from '../../../../src/node/NodeFactory';
 import { NodeUtils } from '../../../../src/node/NodeUtils';
+import { removeRangesFromStructure } from '../../../helpers/removeRangesFromStructure';
 
 /**
  * @param fixturePath
  * @return {TStatement[]}
  */
 const convertCodeToStructure: (fixturePath: string) => TStatement[] = (fixturePath) => {
-    return NodeUtils.convertCodeToStructure(
-        readFileAsString(`${__dirname}${fixturePath}`)
+    return removeRangesFromStructure(
+        NodeUtils.convertCodeToStructure(
+            readFileAsString(`${__dirname}${fixturePath}`)
+        )
     );
 };
 

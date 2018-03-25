@@ -1,11 +1,7 @@
 import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
-
-import { TNodeWithScope } from '../../types/node/TNodeWithScope';
-import { TStatement } from '../../types/node/TStatement';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
@@ -16,7 +12,6 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
-import { NodeUtils } from '../../node/NodeUtils';
 
 /**
  * Transform ES2015 template literals to ES5
@@ -51,11 +46,6 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
         switch (transformationStage) {
             case TransformationStage.Converting:
                 return {
-                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                        if (parentNode && NodeGuards.isReturnStatementNode(node) && node.argument === null) {
-                            return this.fixEsprimaReturnStatementTemplateLiteralNode(node);
-                        }
-                    },
                     leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
                         if (parentNode && NodeGuards.isTemplateLiteralNode(node)) {
                             return this.transformNode(node, parentNode);
@@ -118,57 +108,5 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
         }
 
         return nodes[0];
-    }
-
-    /**
-     * @param {ReturnStatement} returnStatementNode
-     * @returns {Node | VisitorOption}
-     */
-    private fixEsprimaReturnStatementTemplateLiteralNode (returnStatementNode: ESTree.ReturnStatement): ESTree.Node | void {
-        const scopeNode: TNodeWithScope = NodeUtils.getScopeOfNode(returnStatementNode);
-        const scopeBody: TStatement[] = !NodeGuards.isSwitchCaseNode(scopeNode)
-            ? scopeNode.body
-            : scopeNode.consequent;
-        const indexInScope: number = scopeBody.indexOf(returnStatementNode);
-
-        // in incorrect AST-tree return statement node should be penultimate
-        if (indexInScope !== scopeBody.length - 2) {
-            return;
-        }
-
-        const nextSiblingStatementNode: TStatement | null = scopeBody[indexInScope + 1];
-
-        if (!nextSiblingStatementNode || !NodeGuards.isExpressionStatementNode(nextSiblingStatementNode)) {
-            return;
-        }
-
-        let isSiblingStatementHasTemplateLiteralNode: boolean = false;
-
-        estraverse.traverse(nextSiblingStatementNode, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void | estraverse.VisitorOption => {
-                if (!NodeGuards.isTemplateLiteralNode(node)) {
-                    return;
-                }
-
-                isSiblingStatementHasTemplateLiteralNode = true;
-
-                return estraverse.VisitorOption.Break;
-            }
-        });
-
-        if (!isSiblingStatementHasTemplateLiteralNode) {
-            return;
-        }
-
-        returnStatementNode.argument = nextSiblingStatementNode.expression;
-        scopeBody.pop();
-
-        if (!NodeGuards.isSwitchCaseNode(scopeNode)) {
-            scopeNode.body = [...scopeBody];
-        } else {
-            scopeNode.consequent = <ESTree.Statement[]>[...scopeBody];
-        }
-
-        return returnStatementNode;
     }
 }

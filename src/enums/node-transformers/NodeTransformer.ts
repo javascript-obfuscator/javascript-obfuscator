@@ -9,7 +9,7 @@ export enum NodeTransformer {
     CatchClauseTransformer = 'CatchClauseTransformer',
     FunctionDeclarationTransformer = 'FunctionDeclarationTransformer',
     FunctionTransformer = 'FunctionTransformer',
-    ImportSpecifierTransformer = 'ImportSpecifierTransformer',
+    ImportDeclarationTransformer = 'ImportDeclarationTransformer',
     LabeledStatementTransformer = 'LabeledStatementTransformer',
     LiteralTransformer = 'LiteralTransformer',
     MemberExpressionTransformer = 'MemberExpressionTransformer',

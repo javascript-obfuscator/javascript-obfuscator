@@ -170,6 +170,14 @@ export class NodeGuards {
 
     /**
      * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isImportSpecifierNode (node: ESTree.Node): node is ESTree.ImportSpecifier {
+        return node.type === NodeType.ImportSpecifier;
+    }
+
+    /**
+     * @param {Node} node
      * @param {Node} parentNode
      * @returns {boolean}
      */

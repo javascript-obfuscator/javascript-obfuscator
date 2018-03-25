@@ -21,6 +21,7 @@ export enum NodeType {
     ImportDeclaration = 'ImportDeclaration',
     ImportDefaultSpecifier = 'ImportDefaultSpecifier',
     ImportNamespaceSpecifier = 'ImportNamespaceSpecifier',
+    ImportSpecifier = 'ImportSpecifier',
     LabeledStatement = 'LabeledStatement',
     Literal = 'Literal',
     LogicalExpression = 'LogicalExpression',

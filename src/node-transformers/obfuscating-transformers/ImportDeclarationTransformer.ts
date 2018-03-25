@@ -5,6 +5,7 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TIdentifierObfuscatingReplacerFactory } from "../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory";
+import { TImportSpecifier } from '../../types/node/TimportSpecifier';
 import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
 
 import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
@@ -30,7 +31,7 @@ import { NodeUtils } from '../../node/NodeUtils';
  *     import * as _0x12d45f from './bar';
  */
 @injectable()
-export class ImportSpecifierTransformer extends AbstractNodeTransformer {
+export class ImportDeclarationTransformer extends AbstractNodeTransformer {
     /**
      * @type {IIdentifierObfuscatingReplacer}
      */
@@ -60,6 +61,15 @@ export class ImportSpecifierTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @param {TImportSpecifier} importSpecifierNode
+     * @returns {boolean}
+     */
+    private static isProhibitedImportSpecifierNode (importSpecifierNode: TImportSpecifier): boolean {
+        return NodeGuards.isImportSpecifierNode(importSpecifierNode)
+            && importSpecifierNode.imported.name === importSpecifierNode.local.name;
+    }
+
+    /**
      * @param {TransformationStage} transformationStage
      * @returns {IVisitor | null}
      */
@@ -68,13 +78,7 @@ export class ImportSpecifierTransformer extends AbstractNodeTransformer {
             case TransformationStage.Obfuscating:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                        if (
-                            parentNode
-                            && (
-                                NodeGuards.isImportDefaultSpecifierNode(node)
-                                || NodeGuards.isImportNamespaceSpecifierNode(node)
-                            )
-                        ) {
+                        if (parentNode && NodeGuards.isImportDeclarationNode(node)) {
                             return this.transformNode(node, parentNode);
                         }
                     }
@@ -86,18 +90,15 @@ export class ImportSpecifierTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {ImportDefaultSpecifier | ImportNamespaceSpecifier} importSpecifierNode
+     * @param {ImportDeclaration} importDeclarationNode
      * @param {Node} parentNode
      * @returns {Node}
      */
-    public transformNode (
-        importSpecifierNode: ESTree.ImportDefaultSpecifier | ESTree.ImportNamespaceSpecifier,
-        parentNode: ESTree.Node
-    ): ESTree.Node {
+    public transformNode (importDeclarationNode: ESTree.ImportDeclaration, parentNode: ESTree.Node): ESTree.Node {
         const nodeIdentifier: number = this.nodeIdentifier++;
-        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopesOfNode(importSpecifierNode)[0];
+        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopesOfNode(importDeclarationNode)[0];
 
-        this.storeImportSpecifierName(importSpecifierNode, nodeIdentifier);
+        this.storeImportSpecifierNames(importDeclarationNode, nodeIdentifier);
 
         // check for cached identifiers for current scope node. If exist - loop through them.
         if (this.replaceableIdentifiers.has(blockScopeNode)) {
@@ -106,18 +107,21 @@ export class ImportSpecifierTransformer extends AbstractNodeTransformer {
             this.replaceScopeIdentifiers(blockScopeNode, nodeIdentifier);
         }
 
-        return importSpecifierNode;
+        return importDeclarationNode;
     }
 
     /**
-     * @param {ImportDefaultSpecifier | ImportNamespaceSpecifier} importSpecifierNode
+     * @param {ImportDefaultSpecifier | ImportNamespaceSpecifier} importDeclarationNode
      * @param {number} nodeIdentifier
      */
-    private storeImportSpecifierName (
-        importSpecifierNode: ESTree.ImportDefaultSpecifier | ESTree.ImportNamespaceSpecifier,
-        nodeIdentifier: number
-    ): void {
-        this.identifierObfuscatingReplacer.storeGlobalName(importSpecifierNode.local.name, nodeIdentifier);
+    private storeImportSpecifierNames (importDeclarationNode: ESTree.ImportDeclaration, nodeIdentifier: number): void {
+        importDeclarationNode.specifiers.forEach((importSpecifierNode: TImportSpecifier) => {
+            if (ImportDeclarationTransformer.isProhibitedImportSpecifierNode(importSpecifierNode)) {
+                return;
+            }
+
+            this.identifierObfuscatingReplacer.storeGlobalName(importSpecifierNode.local.name, nodeIdentifier);
+        });
     }
 
     /**

@@ -71,7 +71,11 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
             case TransformationStage.Obfuscating:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                        if (parentNode && NodeGuards.isFunctionDeclarationNode(node)) {
+                        if (
+                            parentNode
+                            && NodeGuards.isFunctionDeclarationNode(node)
+                            && !NodeGuards.isExportNamedDeclarationNode(parentNode)
+                        ) {
                             return this.transformNode(node, parentNode);
                         }
                     }

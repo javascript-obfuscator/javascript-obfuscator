@@ -65,7 +65,7 @@ export class LiteralTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
-        if (parentNode && NodeGuards.isPropertyNode(parentNode) && parentNode.key === literalNode) {
+        if (this.isProhibitedNode(literalNode, parentNode)) {
             return literalNode;
         }
 
@@ -85,5 +85,22 @@ export class LiteralTransformer extends AbstractNodeTransformer {
             default:
                 return literalNode;
         }
+    }
+
+    /**
+     * @param {Literal} literalNode
+     * @param {Node} parentNode
+     * @returns {boolean}
+     */
+    private isProhibitedNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): boolean {
+        if (NodeGuards.isPropertyNode(parentNode) && parentNode.key === literalNode) {
+            return true;
+        }
+
+        if (NodeGuards.isImportDeclarationNode(parentNode)) {
+            return true;
+        }
+
+        return false;
     }
 }

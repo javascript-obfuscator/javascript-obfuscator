@@ -69,7 +69,11 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
             case TransformationStage.Obfuscating:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                        if (parentNode && NodeGuards.isClassDeclarationNode(node)) {
+                        if (
+                            parentNode
+                            && NodeGuards.isClassDeclarationNode(node)
+                            && !NodeGuards.isExportNamedDeclarationNode(parentNode)
+                        ) {
                             return this.transformNode(node, parentNode);
                         }
                     }

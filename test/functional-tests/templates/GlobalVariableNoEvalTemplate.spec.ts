@@ -68,6 +68,9 @@ describe('GlobalVariableNoEvalTemplate (): string', () => {
                 
                 return that;
             `)();
+
+            // for some reason it couldn't correctly compare global objects without JSON.stringify/JSON.parse
+            globalObject = JSON.parse(JSON.stringify(globalObject));
         });
 
         it('should correctly return `window` object', () => {

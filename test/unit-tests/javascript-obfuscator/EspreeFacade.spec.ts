@@ -1,9 +1,9 @@
 import { assert } from 'chai';
-import { EsprimaFacade } from '../../../src/EsprimaFacade';
+import { EspreeFacade } from '../../../src/EspreeFacade';
 
 
-describe('EsprimaFacade', () => {
-    describe(`parseScript (input: string, config: esprima.ParseOptions): ESTree.Program`, () => {
+describe('EspreeFacade', () => {
+    describe(`parse (input: string, config: espree.ParseOptions): ESTree.Program`, () => {
         describe(`\`Unexpected token\` error code preview`, () => {
             describe('Variant #1: 5 lines of code', () => {
                 const sourceCode: string = `` +
@@ -16,10 +16,10 @@ describe('EsprimaFacade', () => {
                 let testFunc: () => void;
 
                 before(() => {
-                    testFunc = () => EsprimaFacade.parse(sourceCode, {});
+                    testFunc = () => EspreeFacade.parse(sourceCode, {});
                 });
 
-                it('should output code preview when `esprima` throws a parse error', () => {
+                it('should output code preview when `espree` throws a parse error', () => {
                     assert.throws(testFunc, /Line 3: Unexpected token ,\n.*\.\.\.var baz = 3;,\.\.\./);
                 });
             });
@@ -45,16 +45,16 @@ describe('EsprimaFacade', () => {
                 let testFunc: () => void;
 
                 before(() => {
-                    testFunc = () => EsprimaFacade.parse(sourceCode, {});
+                    testFunc = () => EspreeFacade.parse(sourceCode, {});
                 });
 
-                it('should output code preview when `esprima` throws a parse error', () => {
+                it('should output code preview when `espree` throws a parse error', () => {
                     assert.throws(testFunc, /Line 13: Unexpected token ,\n.*\.\.\.var baz = 3;,\.\.\./);
                 });
             });
         });
 
-        describe(`\`Unexpected identifier\` error code preview`, () => {
+        describe(`\`Unexpected token\` error code preview`, () => {
             const sourceCode: string = `` +
                 `function bar () {
                     var a = 1;
@@ -69,11 +69,11 @@ describe('EsprimaFacade', () => {
             let testFunc: () => void;
 
             before(() => {
-                testFunc = () => EsprimaFacade.parse(sourceCode, {});
+                testFunc = () => EspreeFacade.parse(sourceCode, {});
             });
 
-            it('should output code preview when `esprima` throws a parse error', () => {
-                assert.throws(testFunc, /Line 4: Unexpected identifier\n.*\.\.\.functin baz \(\) {\.\.\./);
+            it('should output code preview when `espree` throws a parse error', () => {
+                assert.throws(testFunc, /Line 4: Unexpected token baz\n.*\.\.\.functin baz \(\) {\.\.\./);
             });
         });
     });

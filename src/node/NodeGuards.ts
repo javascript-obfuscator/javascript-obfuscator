@@ -100,6 +100,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isExportNamedDeclarationNode (node: ESTree.Node): node is ESTree.ExportNamedDeclaration {
+        return node.type === NodeType.ExportNamedDeclaration;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isExpressionStatementNode (node: ESTree.Node): node is ESTree.ExpressionStatement {
         return node.type === NodeType.ExpressionStatement;
     }
@@ -134,6 +142,14 @@ export class NodeGuards {
      */
     public static isIfStatementNode (node: ESTree.Node): node is ESTree.IfStatement {
         return node.type === NodeType.IfStatement;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isImportDeclarationNode (node: ESTree.Node): node is ESTree.ImportDeclaration {
+        return node.type === NodeType.ImportDeclaration;
     }
 
     /**

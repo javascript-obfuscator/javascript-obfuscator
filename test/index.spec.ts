@@ -62,6 +62,7 @@ import './functional-tests/node-transformers/obfuscating-transformers/catch-clau
 import './functional-tests/node-transformers/obfuscating-transformers/class-declaration-transformer/ClassDeclarationTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/function-declaration-transformer/FunctionDeclarationTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/function-transformer/FunctionTransformer.spec';
+import './functional-tests/node-transformers/obfuscating-transformers/impot-declaration-transformer/ImportDeclarationTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/labeled-statement-transformer/LabeledStatementTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/literal-transformer/LiteralTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/variable-declaration-transformer/VariableDeclarationTransformer.spec';

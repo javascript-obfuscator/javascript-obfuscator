@@ -855,7 +855,7 @@ Performance will slightly slower than without obfuscation
 
 ## Frequently Asked Questions
 
-### I want to use feature that described in `README.md` but it not working
+### I want to use feature that described in `README.md` but it's not working
 
 The README on the master branch might not match that of the latest stable release.
 
@@ -863,17 +863,16 @@ The README on the master branch might not match that of the latest stable releas
 
 Try to run `npm link javascript-obfuscator` command or install it globally with `npm i -g javascript-obfuscator`
 
-### Maximum call stack size exceeded
-
-With big change this is `seldDefending` mechanism. Something changing source code after obfuscation with `selfDefending` option.
+### `maximum call stack size exceeded`
+Likely this is `selfDefending` mechanism. Something is changing source code after obfuscation with `selfDefending` option.
 
 ### Web version
 
-No. Web version wont planned.
+No. Web version isn't planned.
 
 ### JSX support
 
-No. JSX support wont planned.
+No. JSX support isn't planned.
 
 ## Backers
 

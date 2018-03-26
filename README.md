@@ -10,14 +10,10 @@
 
 JavaScript obfuscator is a powerful free obfuscator for JavaScript and Node.js with a wide number of features which provides protection for your source code.
 
-* has no limits or restrictions
-* runs on your local machine - does not send data to a server;
-* compatible with `es2015`, `es2016` and `es2017`;
-* tested on Angular2 bundle.
-
-Online version: [javascriptobfuscator.herokuapp.com](https://javascriptobfuscator.herokuapp.com)
-
 Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/ffc2876123b52e6d11ce45369fd53acf)
+
+#### Online version
+[javascriptobfuscator.herokuapp.com](https://javascriptobfuscator.herokuapp.com)
 
 #### Plugins:
 * Webpack plugin: [webpack-obfuscator](https://github.com/javascript-obfuscator/webpack-obfuscator)
@@ -855,22 +851,26 @@ Performance will slightly slower than without obfuscation
 
 ## Frequently Asked Questions
 
-### I want to use feature that described in `README.md` but it's not working
+### What javascript versions are supported?
+
+`es3`, `es5`, `es2015`, `es2016` and `es2017`
+
+### I want to use feature that described in `README.md` but it's not working!
 
 The README on the master branch might not match that of the latest stable release.
 
-### CLI command not working
+### Why CLI command not working?
 
 Try to run `npm link javascript-obfuscator` command or install it globally with `npm i -g javascript-obfuscator`
 
-### `maximum call stack size exceeded`
+### Error `maximum call stack size exceeded`
 Likely this is `selfDefending` mechanism. Something is changing source code after obfuscation with `selfDefending` option.
 
-### Web version
+### Web version?
 
 No. Web version isn't planned.
 
-### JSX support
+### JSX support?
 
 No. JSX support isn't planned.
 

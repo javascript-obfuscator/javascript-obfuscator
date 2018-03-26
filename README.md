@@ -12,7 +12,7 @@ JavaScript obfuscator is a powerful free obfuscator for JavaScript and Node.js w
 
 * has no limits or restrictions
 * runs on your local machine - does not send data to a server;
-* compatible with `es2015`, `es2016` and partially `es2017`;
+* compatible with `es2015`, `es2016` and `es2017`;
 * tested on Angular2 bundle.
 
 Online version: [javascriptobfuscator.herokuapp.com](https://javascriptobfuscator.herokuapp.com)
@@ -49,6 +49,8 @@ Big thanks to all supporters!
 ##### Obfuscate only the code that belongs to you. 
 
 It is not recommended to obfuscate vendor scripts and polyfills, since the obfuscated code is 15-80% slower (depends on options) and the files are significantly larger.
+
+#### If you has a question - check this section first: [FAQ](#frequently-asked-questions)
 
 ## Installation
 
@@ -850,6 +852,28 @@ Performance will slightly slower than without obfuscation
     unicodeEscapeSequence: false
 }
 ```
+
+## Frequently Asked Questions
+
+### I want to use feature that described in `README.md` but it not working
+
+The README on the master branch might not match that of the latest stable release.
+
+### CLI command not working
+
+Try to run `npm link javascript-obfuscator` command or install it globally with `npm i -g javascript-obfuscator`
+
+### Maximum call stack size exceeded
+
+With big change this is `seldDefending` mechanism. Something changing source code after obfuscation with `selfDefending` option.
+
+### Web version
+
+No. Web version wont planned.
+
+### JSX support
+
+No. JSX support wont planned.
 
 ## Backers
 

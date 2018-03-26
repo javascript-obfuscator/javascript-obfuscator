@@ -41,7 +41,7 @@ Big thanks to all supporters!
 
 #### *NOTE! the README on the master branch might not match that of the latest stable release!*
 
-#### If you has a question - check this section first: [FAQ](#frequently-asked-questions)
+#### If you have a question - check this section first: [FAQ](#frequently-asked-questions)
 
 ## :warning: Important
 ##### Obfuscate only the code that belongs to you. 

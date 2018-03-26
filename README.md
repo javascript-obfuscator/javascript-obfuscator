@@ -45,12 +45,12 @@ Big thanks to all supporters!
 
 #### *NOTE! the README on the master branch might not match that of the latest stable release!*
 
+#### If you has a question - check this section first: [FAQ](#frequently-asked-questions)
+
 ## :warning: Important
 ##### Obfuscate only the code that belongs to you. 
 
 It is not recommended to obfuscate vendor scripts and polyfills, since the obfuscated code is 15-80% slower (depends on options) and the files are significantly larger.
-
-#### If you has a question - check this section first: [FAQ](#frequently-asked-questions)
 
 ## Installation
 

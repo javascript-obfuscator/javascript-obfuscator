@@ -66,10 +66,7 @@ export class EspreeFacade {
         inputConfig: espree.ParseOptions,
         sourceType: espree.SourceType
     ): ESTree.Program {
-        const config: espree.ParseOptions = {
-            ...inputConfig,
-            sourceType,
-        };
+        const config: espree.ParseOptions = { ...inputConfig, sourceType };
 
         return espree.parse(input, config);
     }

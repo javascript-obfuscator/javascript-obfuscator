@@ -99,6 +99,14 @@ export abstract class MapStorage <K, V> implements IMapStorage <K, V> {
     }
 
     /**
+     * @param {K} key
+     * @returns {boolean}
+     */
+    public has (key: K): boolean {
+        return this.storage.has(key);
+    }
+
+    /**
      * @param {this} storage
      * @param {boolean} mergeId
      */

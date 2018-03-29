@@ -20,7 +20,7 @@ describe('NodeUtils', () => {
 
             expectedLiteralNode = NodeFactory.literalNode('value');
 
-            NodeUtils.addXVerbatimPropertyToLiterals(literalNode);
+            NodeUtils.addXVerbatimPropertyToLiteralNode(literalNode);
         });
 
         it('should add `x-verbatim-property` to `Literal` node', () => {

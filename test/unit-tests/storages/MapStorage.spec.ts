@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { assert } from 'chai';
 
 import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
@@ -171,6 +173,41 @@ describe('MapStorage', () => {
 
             it('should return `null` if objects in `set` and `get` are two different objects', () => {
                 assert.equal(key, expectedKey);
+            });
+        });
+    });
+
+    describe('has (key: K): boolean', () => {
+        describe('Variant #1: item is presenting in storage', () => {
+            const expectedItemExistence: boolean = true;
+
+            let itemExistence: boolean;
+
+            before(() => {
+                storage = getStorageInstance<string>();
+                storage.set(storageKey, storageValue);
+
+                itemExistence = storage.has(storageKey);
+            });
+
+            it('should return `true` if item is presenting in storage', () => {
+                assert.equal(itemExistence, expectedItemExistence);
+            });
+        });
+
+        describe('Variant #2: item isn\'t presenting in storage', () => {
+            const expectedItemExistence: boolean = false;
+
+            let itemExistence: boolean;
+
+            before(() => {
+                storage = getStorageInstance<string>();
+
+                itemExistence = storage.has(storageKey);
+            });
+
+            it('should return `false` if item isn\'t presenting in storage', () => {
+                assert.equal(itemExistence, expectedItemExistence);
             });
         });
     });

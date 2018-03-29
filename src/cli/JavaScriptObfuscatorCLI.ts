@@ -84,13 +84,15 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     private static filterOptions (options: TInputCLIOptions): TInputOptions {
         const filteredOptions: TInputOptions = {};
 
-        for (const option in options) {
-            if (!options.hasOwnProperty(option) || options[option] === undefined) {
-                continue;
-            }
+        Object
+            .keys(options)
+            .forEach((option: keyof TInputCLIOptions) => {
+                if (options[option] === undefined) {
+                    return;
+                }
 
-            filteredOptions[option] = options[option];
-        }
+                filteredOptions[option] = options[option];
+            });
 
         return filteredOptions;
     }
@@ -153,7 +155,9 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         const canShowHelp: boolean = !this.arguments.length || this.arguments.includes('--help');
 
         if (canShowHelp) {
-            return this.commands.outputHelp();
+            this.commands.outputHelp();
+
+            return;
         }
 
         const sourceCodeData: TSourceCodeData = new SourceCodeReader(this.inputCLIOptions)

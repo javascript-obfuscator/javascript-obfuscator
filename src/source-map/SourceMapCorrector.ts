@@ -81,8 +81,6 @@ export class SourceMapCorrector implements ISourceMapCorrector {
                 }
 
                 sourceMappingUrl += sourceMapUrl;
-
-                break;
         }
 
         return `${obfuscatedCode}\n${sourceMappingUrl}`;

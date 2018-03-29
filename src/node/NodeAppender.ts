@@ -79,7 +79,7 @@ export class NodeAppender {
         const firstCall: IStackTraceData = blockScopeTraceData[index];
 
         if (deep <= 0) {
-            throw new Error(`Invalid \`deep\` argument value. Value should be bigger then 0.`);
+            throw new Error('Invalid `deep` argument value. Value should be bigger then 0.');
         }
 
         if (deep > 1 && firstCall.stackTrace.length) {

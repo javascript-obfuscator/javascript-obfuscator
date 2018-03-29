@@ -18,7 +18,7 @@ declare module 'estree' {
 
     interface BaseNode {
         metadata?: BaseNodeMetadata;
-        parentNode?: ESTree.Node;
+        parentNode?: Node;
     }
 
     interface Identifier extends BaseNode {

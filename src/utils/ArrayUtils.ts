@@ -53,8 +53,11 @@ export class ArrayUtils implements IArrayUtils {
         let temp: T | undefined;
 
         while (times--) {
-            temp = newArray.pop()!;
-            newArray.unshift(temp);
+            temp = newArray.pop();
+
+            if (temp) {
+                newArray.unshift(temp);
+            }
         }
 
         return newArray;

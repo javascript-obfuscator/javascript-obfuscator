@@ -24,13 +24,11 @@ export class ValidationErrorsFormatter {
 
         let errorString: string = `\`${validationError.property}\` errors:\n`;
 
-        for (const constraint in constraints) {
-            if (!constraints.hasOwnProperty(constraint)) {
-                continue;
-            }
-
-            errorString += `    - ${constraints[constraint]}\n`;
-        }
+        Object
+            .keys(constraints)
+            .forEach((constraint: string) => {
+                errorString += `    - ${constraints[constraint]}\n`;
+            });
 
         return errorString;
     }

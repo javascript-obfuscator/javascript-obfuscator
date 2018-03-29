@@ -5668,6 +5668,12 @@ tslint-language-service@0.9.9:
   dependencies:
     mock-require "^2.0.2"
 
+tslint-microsoft-contrib@^5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/tslint-microsoft-contrib/-/tslint-microsoft-contrib-5.0.3.tgz#6fc3e238179cd72045c2b422e4d655f4183a8d5c"
+  dependencies:
+    tsutils "^2.12.1"
+
 tslint-webpack-plugin@1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/tslint-webpack-plugin/-/tslint-webpack-plugin-1.2.2.tgz#364369d2842d5fc8115815e9fe92f0d4dc39b9b7"

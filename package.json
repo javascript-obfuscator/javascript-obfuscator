@@ -72,6 +72,7 @@
     "tslint": "5.9.1",
     "tslint-eslint-rules": "5.1.0",
     "tslint-language-service": "0.9.9",
+    "tslint-microsoft-contrib": "5.0.3",
     "tslint-webpack-plugin": "1.2.2",
     "typescript": "2.8.1",
     "webpack": "4.4.1",

@@ -153,8 +153,6 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
                         stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
                     }
                 );
-
-                break;
         }
 
         return decodeStringArrayTemplate;

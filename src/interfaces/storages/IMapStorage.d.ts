@@ -29,6 +29,12 @@ export interface IMapStorage <K, V> extends IInitializable {
     getStorageId (): string;
 
     /**
+     * @param {K} key
+     * @returns {boolean}
+     */
+    has (key: K): boolean;
+
+    /**
      * @param args
      */
     initialize (...args: any[]): void;

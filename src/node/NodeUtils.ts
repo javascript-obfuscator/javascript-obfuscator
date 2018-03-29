@@ -13,22 +13,18 @@ import { NodeMetadata } from './NodeMetadata';
 
 export class NodeUtils {
     /**
-     * @param {T} astTree
+     * @param {T} node
      * @returns {T}
      */
-    public static addXVerbatimPropertyToLiterals <T extends ESTree.Node = ESTree.Node> (astTree: T): T {
-        estraverse.replace(astTree, {
-            leave: (node: ESTree.Node) => {
-                if (NodeGuards.isLiteralNode(node)) {
-                    node['x-verbatim-property'] = {
-                        content: node.raw,
-                        precedence: escodegen.Precedence.Primary
-                    };
-                }
-            }
-        });
+    public static addXVerbatimPropertyToLiteralNode <T extends ESTree.Node = ESTree.Node> (node: T): T {
+        if (NodeGuards.isLiteralNode(node)) {
+            node['x-verbatim-property'] = {
+                content: node.raw,
+                precedence: escodegen.Precedence.Primary
+            };
+        }
 
-        return astTree;
+        return node;
     }
 
     /**
@@ -44,13 +40,12 @@ export class NodeUtils {
      * @returns {Statement[]}
      */
     public static convertCodeToStructure (code: string): ESTree.Statement[] {
-        let structure: ESTree.Program = espree.parse(code, { sourceType: 'script' });
-
-        structure = NodeUtils.addXVerbatimPropertyToLiterals(structure);
-        structure = NodeUtils.parentize(structure);
+        const structure: ESTree.Program = espree.parse(code, { sourceType: 'script' });
 
         estraverse.replace(structure, {
-            enter: (node: ESTree.Node): ESTree.Node => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node => {
+                NodeUtils.parentizeNode(node, parentNode);
+                NodeUtils.addXVerbatimPropertyToLiteralNode(node);
                 NodeMetadata.set(node, { ignoredNode: false });
 
                 return node;

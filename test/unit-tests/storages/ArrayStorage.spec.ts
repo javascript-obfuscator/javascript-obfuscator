@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { assert } from 'chai';
 
 import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';

@@ -101,7 +101,7 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
             );
 
             nodes.forEach((node: ESTree.Literal | ESTree.Expression) => {
-                root = NodeFactory.binaryExpressionNode('+', root, <ESTree.Literal | ESTree.Expression>node);
+                root = NodeFactory.binaryExpressionNode('+', root, node);
             });
 
             return root;

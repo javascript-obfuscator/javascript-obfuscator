@@ -2,7 +2,10 @@ import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
+
+// tslint:disable
 import { Expression } from 'estree';
+// tslint:enable
 
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../../types/node/TStatement';
@@ -65,7 +68,7 @@ export class CallExpressionControlFlowStorageCallNode extends AbstractCustomNode
     public initialize (
         controlFlowStorageName: string,
         controlFlowStorageKey: string,
-        callee: Expression,
+        callee: ESTree.Expression,
         expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[]
     ): void {
         this.controlFlowStorageName = controlFlowStorageName;

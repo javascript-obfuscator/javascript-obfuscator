@@ -13,7 +13,7 @@ JavaScript obfuscator is a powerful free obfuscator for JavaScript and Node.js w
 Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/ffc2876123b52e6d11ce45369fd53acf)
 
 #### Online version:
-[obfuscator.io](http://obfuscator.io)
+[obfuscator.io](https://www.obfuscator.io)
 
 #### Plugins:
 * Webpack plugin: [webpack-obfuscator](https://github.com/javascript-obfuscator/webpack-obfuscator)

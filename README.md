@@ -868,7 +868,7 @@ Likely this is `selfDefending` mechanism. Something is changing source code afte
 
 ### Web version?
 
-No. Web version isn't planned.
+[obfuscator.io](https://obfuscator.io)
 
 ### JSX support?
 

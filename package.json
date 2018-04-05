@@ -55,7 +55,7 @@
     "@types/multimatch": "2.1.2",
     "@types/node": "9.6.2",
     "@types/rimraf": "2.0.2",
-    "@types/sinon": "4.3.0",
+    "@types/sinon": "4.3.1",
     "@types/string-template": "1.0.2",
     "@types/webpack-env": "1.13.5",
     "awesome-typescript-loader": "5.0.0-0",
@@ -76,7 +76,7 @@
     "tslint-webpack-plugin": "1.2.2",
     "typescript": "2.8.1",
     "webpack": "4.5.0",
-    "webpack-cli": "2.0.13",
+    "webpack-cli": "2.0.14",
     "webpack-node-externals": "1.7.2"
   },
   "repository": {

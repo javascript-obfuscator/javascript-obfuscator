@@ -1,5 +1,9 @@
 Change Log
 ===
+v0.16.0
+---
+* Correct obfuscation of object rest and spread properties
+
 v0.15.0
 ---
 * **Internal change:** switched AST parser from `esprima` on `espree`

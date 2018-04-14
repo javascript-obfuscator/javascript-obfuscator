@@ -571,4 +571,31 @@ describe('VariableDeclarationTransformer', () => {
             assert.match(obfuscatedCode, defaultExportRegExp);
         });
     });
+
+    describe('Variant #16: object rest', () => {
+        const objectRegExp: RegExp = /var *_0x[a-f0-9]{4,6} *= *\{'foo': *0x1, *'bar': *0x2, *'baz': *0x3\};/;
+        const objectRestRegExp: RegExp = /var *\{foo, *\.\.\.*_0x[a-f0-9]{4,6}\} *= *_0x[a-f0-9]{4,6};/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/object-rest.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('Match #1: should transform object name', () => {
+            assert.match(obfuscatedCode, objectRegExp);
+        });
+
+        it('Match #2: should transform object rest construction', () => {
+            assert.match(obfuscatedCode, objectRestRegExp);
+        });
+    });
 });

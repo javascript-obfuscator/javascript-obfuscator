@@ -33,7 +33,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
         ecmaFeatures: {
             experimentalObjectRestSpread: true
         },
-        ecmaVersion: 8,
+        ecmaVersion: 9,
         loc: true,
         range: true
     };

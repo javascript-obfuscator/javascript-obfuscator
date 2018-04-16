@@ -68,6 +68,10 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
      * @returns {string | null}
      */
     private static getPropertyNodeKeyName (propertyNode: ESTree.Property): string | null {
+        if (!propertyNode.key) {
+            return null;
+        }
+
         const propertyKeyNode: ESTree.Expression = propertyNode.key;
 
         if (NodeGuards.isLiteralNode(propertyKeyNode) && typeof propertyKeyNode.value === 'string') {
@@ -189,7 +193,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
              * Stage 2: creating new expression statement node with member expression based on removed property
              */
             const shouldCreateLiteralNode: boolean = !property.computed
-                || (property.computed && NodeGuards.isLiteralNode(property.key));
+                || (property.computed && !!property.key && NodeGuards.isLiteralNode(property.key));
             const memberExpressionProperty: ESTree.Expression = shouldCreateLiteralNode
                 ? NodeFactory.literalNode(propertyKeyName)
                 : NodeFactory.identifierNode(propertyKeyName);

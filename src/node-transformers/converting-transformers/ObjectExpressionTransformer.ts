@@ -61,7 +61,7 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
     public transformNode (objectExpressionNode: ESTree.ObjectExpression, parentNode: ESTree.Node): ESTree.Node {
         objectExpressionNode.properties
             .forEach((property: ESTree.Property) => {
-                if (property.computed) {
+                if (property.computed || !property.key) {
                     return;
                 }
 

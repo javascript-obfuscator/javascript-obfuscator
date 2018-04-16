@@ -226,12 +226,12 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     ): void {
         variableDeclarationNode.declarations
             .forEach((declarationNode: ESTree.VariableDeclarator) => {
-                if (NodeGuards.isObjectPatternNode(declarationNode.id)) {
-                    return estraverse.VisitorOption.Skip;
-                }
-
                 estraverse.traverse(declarationNode.id, {
                     enter: (node: ESTree.Node) => {
+                        if (NodeGuards.isPropertyNode(node)) {
+                            return estraverse.VisitorOption.Skip;
+                        }
+
                         if (NodeGuards.isIdentifierNode(node)) {
                             callback(node);
                         }

@@ -3,6 +3,7 @@ Change Log
 v0.16.0
 ---
 * Correct obfuscation of object rest and spread properties
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/243
 
 v0.15.0
 ---

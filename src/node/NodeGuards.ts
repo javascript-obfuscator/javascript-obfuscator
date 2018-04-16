@@ -355,6 +355,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isTaggedTemplateExpressionNode (node: ESTree.Node): node is ESTree.TaggedTemplateExpression {
+        return node.type === NodeType.TaggedTemplateExpression;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isTemplateLiteralNode (node: ESTree.Node): node is ESTree.TemplateLiteral {
         return node.type === NodeType.TemplateLiteral;
     }

@@ -39,6 +39,15 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @param {Node} node
+     * @param {Node | null} parentNode
+     * @returns {boolean}
+     */
+    private static isValidTemplateLiteralNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.TemplateLiteral {
+        return NodeGuards.isTemplateLiteralNode(node) && !NodeGuards.isTaggedTemplateExpressionNode(parentNode);
+    }
+
+    /**
      * @param {TransformationStage} transformationStage
      * @returns {IVisitor | null}
      */
@@ -47,7 +56,7 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
             case TransformationStage.Converting:
                 return {
                     leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                        if (parentNode && NodeGuards.isTemplateLiteralNode(node)) {
+                        if (parentNode && TemplateLiteralTransformer.isValidTemplateLiteralNode(node, parentNode)) {
                             return this.transformNode(node, parentNode);
                         }
                     }

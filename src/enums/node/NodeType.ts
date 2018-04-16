@@ -36,6 +36,7 @@ export enum NodeType {
     Super = 'Super',
     SwitchCase = 'SwitchCase',
     SwitchStatement = 'SwitchStatement',
+    TaggedTemplateExpression = 'TaggedTemplateExpression',
     TemplateLiteral = 'TemplateLiteral',
     TryStatement = 'TryStatement',
     UnaryExpression = 'UnaryExpression',

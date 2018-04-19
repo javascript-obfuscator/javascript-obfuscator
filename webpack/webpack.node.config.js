@@ -23,6 +23,7 @@ module.exports = {
                 test: /\.ts(x?)$/,
                 loader: 'awesome-typescript-loader',
                 query: {
+                    configFileName: 'src/tsconfig.node.json',
                     useBabel: true,
                     babelCore: '@babel/core',
                     useCache: true,
@@ -51,7 +52,7 @@ module.exports = {
         new CheckerPlugin(),
         new TSLintPlugin({
             files: ['./src/**/*.ts'],
-            project: './tsconfig.json',
+            project: './src/tsconfig.node.json',
             exclude: []
         })
     ],

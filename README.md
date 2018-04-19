@@ -67,7 +67,7 @@ $ npm install --save-dev javascript-obfuscator
 Add `<script>` tag with package:
 
 ```html
-<script src="./node_modules/javascript-obfuscator/dist/index.web.js">
+<script src="./node_modules/javascript-obfuscator/dist/index.browser.js">
 ```
 
 or require package from CDN:

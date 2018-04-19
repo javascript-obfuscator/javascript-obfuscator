@@ -2,30 +2,20 @@
   "compilerOptions": {
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "importHelpers": true,
     "lib": [
       "es2017",
       "dom"
     ],
+    "target": "es2017",
     "module": "commonjs",
     "esModuleInterop": true,
-    "noEmitHelpers": true,
     "noImplicitThis": false,
     "noUnusedLocals": true,
     "removeComments": true,
-    "sourceMap": true,
-    "strict": true,
-    "target": "es2017",
-    "plugins": [
-      {
-        "name": "tslint-language-service",
-        "ignoreDefinitionFiles": true
-      }
-    ]
+    "strict": true
   },
   "exclude": [
-    "node_modules",
-    "test"
+    "node_modules"
   ],
   "compileOnSave": false,
   "buildOnSave": false

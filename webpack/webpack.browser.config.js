@@ -18,11 +18,11 @@ module.exports = {
                 test: /\.ts(x?)$/,
                 loader: 'awesome-typescript-loader',
                 query: {
+                    configFileName: 'src/tsconfig.browser.json',
                     useBabel: true,
                     babelCore: '@babel/core',
                     useCache: true,
-                    forceIsolatedModules: true,
-                    configFileName: 'tsconfig.web.json'
+                    forceIsolatedModules: true
                 }
             }
         ]
@@ -45,7 +45,7 @@ module.exports = {
     output: {
         libraryTarget: 'var',
         library: 'JavaScriptObfuscator',
-        filename: 'index.web.js'
+        filename: 'index.browser.js'
     },
     performance: {
         hints: false

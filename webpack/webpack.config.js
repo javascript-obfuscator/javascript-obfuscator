@@ -1,45 +1,19 @@
 'use strict';
 
-const fs = require("fs");
 const nodeExternals = require('webpack-node-externals');
 const webpack = require('webpack');
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 const TSLintPlugin = require('tslint-webpack-plugin');
+const packageJson = require('pjson');
 
-const copyright = 'Copyright (C) 2016-2018 Timofey Kachalov <sanex3339@yandex.ru>';
-
-/**
- * @return {string}
- */
-const getLicenseText = () => {
-    return `/*!\n${copyright}\n\n` +
-        fs.readFileSync('./LICENSE.BSD', 'utf8') + "\n*/";
-};
-
-/**
- * @return {string}
- */
-const getSourceMapSupportImport = () => {
-    return `require("source-map-support").install();`;
-};
-
-/**
- * @return {string}
- */
-const getBannerText = () => {
-    const lineSeparator = '\n\n';
-
-    return getLicenseText() +
-        lineSeparator +
-        getSourceMapSupportImport() +
-        lineSeparator;
-};
+const WebpackUtils = require('./utils/WebpackUtils').WebpackUtils;
 
 module.exports = {
-    entry: {
-        'index': './index.ts'
-    },
     devtool: 'source-map',
+    entry: {
+        'index': './index.ts',
+        'index.cli': './index.cli.ts'
+    },
     target: 'node',
     externals: [nodeExternals()],
     module: {
@@ -63,11 +37,17 @@ module.exports = {
     plugins: [
         new webpack.BannerPlugin(
             {
-                banner: getBannerText(),
+                banner: WebpackUtils.getBannerText(
+                    WebpackUtils.getLicenseText(),
+                    WebpackUtils.getSourceMapSupportImport()
+                ),
                 raw: true,
                 entryOnly: false
             }
         ),
+        new webpack.EnvironmentPlugin({
+            VERSION: packageJson.version
+        }),
         new CheckerPlugin(),
         new TSLintPlugin({
             files: ['./src/**/*.ts'],
@@ -76,8 +56,8 @@ module.exports = {
         })
     ],
     output: {
-        libraryTarget:  "commonjs2",
-        library: "JavaScriptObfuscator"
+        libraryTarget:  'commonjs2',
+        library: 'JavaScriptObfuscator'
     },
     stats: {
         maxModules: 0

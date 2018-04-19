@@ -43,7 +43,7 @@ module.exports = {
         })
     ],
     output: {
-        libraryTarget: 'var',
+        libraryTarget: 'umd',
         library: 'JavaScriptObfuscator',
         filename: 'index.browser.js'
     },

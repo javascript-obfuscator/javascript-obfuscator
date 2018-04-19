@@ -64,16 +64,16 @@ $ npm install --save-dev javascript-obfuscator
 
 #### In a Browser
 
-Add `<script>` tag with package:
-
-```html
-<script src="./node_modules/javascript-obfuscator/dist/index.browser.js"/>
-```
-
-or require package from CDN:
+From CDN:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator/dist/index.browser.js"/>
+```
+
+From `node_modules`:
+
+```html
+<script src="./node_modules/javascript-obfuscator/dist/index.browser.js"/>
 ```
 
 ## Usage

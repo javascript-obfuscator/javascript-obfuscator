@@ -247,7 +247,10 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 ArraySanitizer
             )
             .option(
-                '--identifier-names-generator <string> [hexadecimal, mangled]', 'Sets identifier names generator (Default: hexadecimal)',
+                '--identifier-names-generator <string>',
+                'Sets identifier names generator. ' +
+                'Values: hexadecimal, mangled. ' +
+                'Default: hexadecimal',
                 IdentifierNamesGeneratorSanitizer
             )
             .option(
@@ -295,8 +298,10 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 'Sets file name for output source map when `--source-map-mode=separate`'
             )
             .option(
-                '--source-map-mode <string> [inline, separate]',
-                'Specify source map output mode',
+                '--source-map-mode <string>',
+                'Specify source map output mode. ' +
+                'Values: inline, separate. ' +
+                'Default: separate',
                 SourceMapModeSanitizer
             )
             .option(
@@ -305,8 +310,10 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 BooleanSanitizer
             )
             .option(
-                '--string-array-encoding <string|boolean> [true, false, base64, rc4]',
-                'Encodes all strings in strings array using base64 or rc4 (this option can slow down your code speed',
+                '--string-array-encoding <string|boolean>',
+                'Encodes all strings in strings array using base64 or rc4 (this option can slow down your code speed. ' +
+                'Values: true, false, base64, rc4. ' +
+                'Default: false',
                 StringArrayEncodingSanitizer
             )
             .option(
@@ -316,7 +323,9 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             )
             .option(
                 '--target <string>',
-                'Allows to set target environment for obfuscated code.',
+                'Allows to set target environment for obfuscated code. ' +
+                'Values: browser, browser-no-eval, node. ' +
+                'Default: browser',
                 ObfuscationTargetSanitizer
             )
             .option(

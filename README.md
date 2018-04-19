@@ -4,11 +4,11 @@
   Author: Timofey Kachalov
   -->
 
-# JavaScript obfuscator for Node.js
+# JavaScript obfuscator
 
 ![logo](https://raw.githubusercontent.com/javascript-obfuscator/javascript-obfuscator/master/images/logo.png)
 
-JavaScript obfuscator is a powerful free obfuscator for JavaScript and Node.js with a wide number of features which provides protection for your source code.
+JavaScript obfuscator is a powerful free obfuscator for JavaScript with a wide number of features which provides protection for your source code.
 
 Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/ffc2876123b52e6d11ce45369fd53acf)
 
@@ -50,7 +50,9 @@ It is not recommended to obfuscate vendor scripts and polyfills, since the obfus
 
 ## Installation
 
-Install the package with Yarn or NPM and add it to your `devDependencies`:
+#### Using Yarn or NPM
+
+Install the package with Yarn or NPM and add it to your `dependencies` or `devDependencies`:
 
 ```sh
 $ yarn add --dev javascript-obfuscator
@@ -60,9 +62,21 @@ or
 $ npm install --save-dev javascript-obfuscator
 ```
 
-## Node.js usage
+#### In a Browser
 
-Here's an example of how to use it:
+From CDN:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator/dist/index.browser.js"/>
+```
+
+From `node_modules`:
+
+```html
+<script src="./node_modules/javascript-obfuscator/dist/index.browser.js"/>
+```
+
+## Usage
 
 ```javascript
 var JavaScriptObfuscator = require('javascript-obfuscator');
@@ -866,7 +880,7 @@ Try to run `npm link javascript-obfuscator` command or install it globally with 
 ### Error `maximum call stack size exceeded`
 Likely this is `selfDefending` mechanism. Something is changing source code after obfuscation with `selfDefending` option.
 
-### Web version?
+### Online version?
 
 [obfuscator.io](https://obfuscator.io)
 

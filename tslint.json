@@ -171,6 +171,7 @@
     "prefer-method-signature": true,
     "prefer-readonly": true,
     "prefer-template": true,
+    "prefer-while": true,
     "quotemark": false,
     "radix": true,
     "semicolon": [true, "always"],

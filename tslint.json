@@ -197,6 +197,8 @@
       }
     ],
     "ter-no-irregular-whitespace": [true],
+    "ter-no-proto": true,
+    "ter-no-self-compare": true,
     "ter-no-sparse-arrays": [true],
     "trailing-comma": false,
     "triple-equals": [

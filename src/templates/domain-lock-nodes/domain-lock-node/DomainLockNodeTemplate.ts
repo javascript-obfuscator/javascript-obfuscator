@@ -65,8 +65,6 @@ export function DomainLockNodeTemplate (): string {
                     if (currentDomain.length == domain.length || domain.indexOf(".") === 0) {
                         ok = true;
                     }
-                    
-                    break;
                 }
             }
                

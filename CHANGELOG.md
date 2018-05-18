@@ -3,6 +3,7 @@ Change Log
 v0.17.0
 ---
 * **Browser version**: Added browser version dist
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/260
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/252
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/247
 

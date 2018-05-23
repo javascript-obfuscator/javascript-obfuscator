@@ -36,6 +36,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isAssignmentExpressionNode (node: ESTree.Node): node is ESTree.AssignmentExpression {
+        return node.type === NodeType.AssignmentExpression;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isAssignmentPatternNode (node: ESTree.Node): node is ESTree.AssignmentPattern {
         return node.type === NodeType.AssignmentPattern;
     }

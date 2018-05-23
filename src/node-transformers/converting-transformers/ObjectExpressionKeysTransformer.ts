@@ -20,9 +20,9 @@ import { NodeUtils } from '../../node/NodeUtils';
 @injectable()
 export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
     /**
-     * @type {Map<VariableDeclarator, TNodeWithScope>}
+     * @type {Map<Node, TNodeWithScope>}
      */
-    private readonly cachedScopeNodesMap: Map <ESTree.VariableDeclarator, TNodeWithScope> = new Map();
+    private readonly cachedScopeNodesMap: Map <ESTree.Node, TNodeWithScope> = new Map();
 
     /**
      * @param {IRandomGenerator} randomGenerator
@@ -36,22 +36,23 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {TNodeWithScope} scopeNode
-     * @param {ExpressionStatement[]} expressionStatements
-     * @param {Node} variableDeclarator
+     * Returns host statement of object expression node
+     *
+     * @param {NodeGuards} node
+     * @returns {Node}
      */
-    private static appendExpressionStatements (
-        scopeNode: TNodeWithScope,
-        expressionStatements: ESTree.ExpressionStatement[],
-        variableDeclarator: ESTree.Node
-    ): void {
-        const variableDeclaration: ESTree.Node | undefined = variableDeclarator.parentNode;
+    public static getHostStatement (node: ESTree.Node): ESTree.Statement {
+        const parentNode: ESTree.Node | undefined = node.parentNode;
 
-        if (!variableDeclaration || !NodeGuards.isVariableDeclarationNode(variableDeclaration)) {
-            throw new Error('Cannot find variable declaration for variable declarator');
+        if (!parentNode) {
+            throw new ReferenceError('`parentNode` property of given node is `undefined`');
         }
 
-        NodeAppender.insertNodeAfter(scopeNode, expressionStatements, variableDeclaration);
+        if (!NodeGuards.isNodeHasScope(parentNode)) {
+            return ObjectExpressionKeysTransformer.getHostStatement(parentNode);
+        }
+
+        return <ESTree.Statement>node;
     }
 
     /**
@@ -61,6 +62,21 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
      */
     private static filterObjectExpressionProperties (properties: ESTree.Property[], removablePropertyIds: number[]): ESTree.Property[] {
         return properties.filter((property: ESTree.Property, index: number) => !removablePropertyIds.includes(index));
+    }
+
+    /**
+     * @param {TNodeWithScope} scopeNode
+     * @param {Node} hostNode
+     * @param {ExpressionStatement[]} expressionStatements
+     */
+    private static appendExpressionStatements (
+        scopeNode: TNodeWithScope,
+        hostNode: ESTree.Node,
+        expressionStatements: ESTree.ExpressionStatement[]
+    ): void {
+        const hostNodeScope: ESTree.Node = ObjectExpressionKeysTransformer.getHostStatement(hostNode);
+
+        NodeAppender.insertNodeAfter(scopeNode, expressionStatements, hostNodeScope);
     }
 
     /**
@@ -85,13 +101,13 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {Expression | Pattern} propertyValueNode
-     * @returns {boolean}
+     * @returns {propertyValueNode is Expression}
      */
-    private static isValidPropertyValueNode (propertyValueNode: ESTree.Expression | ESTree.Pattern): propertyValueNode is ESTree.Expression {
+    private static isValidExpressionNode (propertyValueNode: ESTree.Expression | ESTree.Pattern): propertyValueNode is ESTree.Expression {
         return !NodeGuards.isObjectPatternNode(propertyValueNode)
-        && !NodeGuards.isArrayPatternNode(propertyValueNode)
-        && !NodeGuards.isAssignmentPatternNode(propertyValueNode)
-        && !NodeGuards.isRestElementNode(propertyValueNode);
+            && !NodeGuards.isArrayPatternNode(propertyValueNode)
+            && !NodeGuards.isAssignmentPatternNode(propertyValueNode)
+            && !NodeGuards.isRestElementNode(propertyValueNode);
     }
 
     /**
@@ -107,7 +123,6 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
                             this.options.transformObjectKeys
                             && parentNode
                             && NodeGuards.isObjectExpressionNode(node)
-                            && NodeGuards.isVariableDeclaratorNode(parentNode)
                         ) {
                             return this.transformNode(node, parentNode);
                         }
@@ -132,40 +147,90 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
      *     object['bar'] = 2;
      *
      * @param {MemberExpression} objectExpressionNode
-     * @param {NodeGuards} variableDeclarator
+     * @param {Node} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode (objectExpressionNode: ESTree.ObjectExpression, variableDeclarator: ESTree.VariableDeclarator): ESTree.Node {
+    public transformNode (objectExpressionNode: ESTree.ObjectExpression, parentNode: ESTree.Node): ESTree.Node {
+        if (NodeGuards.isVariableDeclaratorNode(parentNode)) {
+            return this.transformVariableDeclaratorHostObjectExpression(objectExpressionNode, parentNode);
+        }
+
+        if (NodeGuards.isAssignmentExpressionNode(parentNode)) {
+            return this.transformAssignmentExpressionHostObjectExpression(objectExpressionNode, parentNode);
+        }
+
+        return objectExpressionNode;
+    }
+
+    /**
+     * @param {ObjectExpression} objectExpressionNode
+     * @param {VariableDeclarator} variableDeclaratorNode
+     * @returns {Node}
+     */
+    private transformVariableDeclaratorHostObjectExpression(
+        objectExpressionNode: ESTree.ObjectExpression,
+        variableDeclaratorNode: ESTree.VariableDeclarator
+    ): ESTree.Node {
         // should pass only Expression nodes as MemberExpression.object value
-        if (!NodeGuards.isIdentifierNode(variableDeclarator.id)) {
+        if (!NodeGuards.isIdentifierNode(variableDeclaratorNode.id)) {
             return objectExpressionNode;
         }
 
-        const scopeNode: TNodeWithScope | null = NodeUtils.getScopeOfNode(variableDeclarator);
+        const scopeNode: TNodeWithScope | null = NodeUtils.getScopeOfNode(variableDeclaratorNode);
 
         if (!scopeNode || !NodeGuards.isNodeHasScope(scopeNode)) {
             return objectExpressionNode;
         }
 
-        this.cachedScopeNodesMap.set(variableDeclarator, scopeNode);
+        this.cachedScopeNodesMap.set(variableDeclaratorNode, scopeNode);
 
         return this.transformObjectExpressionNode(
             objectExpressionNode,
-            variableDeclarator.id,
-            variableDeclarator
+            variableDeclaratorNode.id,
+            variableDeclaratorNode
+        );
+    }
+
+    /**
+     * @param {ObjectExpression} objectExpressionNode
+     * @param {AssignmentExpression} assignmentExpressionNode
+     * @returns {Node}
+     */
+    private transformAssignmentExpressionHostObjectExpression(
+        objectExpressionNode: ESTree.ObjectExpression,
+        assignmentExpressionNode: ESTree.AssignmentExpression
+    ): ESTree.Node {
+        const leftNode: ESTree.MemberExpression | ESTree.Pattern = assignmentExpressionNode.left;
+
+        if (!ObjectExpressionKeysTransformer.isValidExpressionNode(leftNode)) {
+            return objectExpressionNode;
+        }
+
+        const scopeNode: TNodeWithScope | null = NodeUtils.getScopeOfNode(assignmentExpressionNode);
+
+        if (!scopeNode || !NodeGuards.isNodeHasScope(scopeNode)) {
+            return objectExpressionNode;
+        }
+
+        this.cachedScopeNodesMap.set(assignmentExpressionNode, scopeNode);
+
+        return this.transformObjectExpressionNode(
+            objectExpressionNode,
+            leftNode,
+            assignmentExpressionNode
         );
     }
 
     /**
      * @param {Property[]} properties
      * @param {Expression} memberExpressionObject
-     * @param {VariableDeclarator} variableDeclarator
+     * @param {Node} hostNode
      * @returns {[ExpressionStatement[] , number[]]}
      */
     private extractPropertiesToExpressionStatements (
         properties: ESTree.Property[],
         memberExpressionObject: ESTree.Expression,
-        variableDeclarator: ESTree.VariableDeclarator
+        hostNode: ESTree.Node
     ): [ESTree.ExpressionStatement[], number[]] {
         const propertiesLength: number = properties.length;
         const expressionStatements: ESTree.ExpressionStatement[] = [];
@@ -176,7 +241,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
             const propertyValue: ESTree.Expression | ESTree.Pattern = property.value;
 
             // invalid property nodes
-            if (!ObjectExpressionKeysTransformer.isValidPropertyValueNode(propertyValue)) {
+            if (!ObjectExpressionKeysTransformer.isValidExpressionNode(propertyValue)) {
                 continue;
             }
 
@@ -207,7 +272,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
              * Stage 3: recursively processing nested object expressions
              */
             if (NodeGuards.isObjectExpressionNode(property.value)) {
-                this.transformObjectExpressionNode(property.value, memberExpressionNode, variableDeclarator);
+                this.transformObjectExpressionNode(property.value, memberExpressionNode, hostNode);
             }
 
             /**
@@ -223,13 +288,13 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
     /**
      * @param {ObjectExpression} objectExpressionNode
      * @param {Expression} memberExpressionObjectNode
-     * @param {VariableDeclarator} variableDeclarator
+     * @param {Node} hostNode
      * @returns {Node}
      */
     private transformObjectExpressionNode (
         objectExpressionNode: ESTree.ObjectExpression,
         memberExpressionObjectNode: ESTree.Expression,
-        variableDeclarator: ESTree.VariableDeclarator
+        hostNode: ESTree.Node
     ): ESTree.Node {
         const properties: ESTree.Property[] = objectExpressionNode.properties;
 
@@ -237,19 +302,19 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
             return objectExpressionNode;
         }
 
-        const scopeNode: TNodeWithScope | undefined = this.cachedScopeNodesMap.get(variableDeclarator);
+        const scopeNode: TNodeWithScope | undefined = this.cachedScopeNodesMap.get(hostNode);
 
         if (!scopeNode) {
             return objectExpressionNode;
         }
 
         const [expressionStatements, removablePropertyIds]: [ESTree.ExpressionStatement[], number[]] = this
-            .extractPropertiesToExpressionStatements(properties, memberExpressionObjectNode, variableDeclarator);
+            .extractPropertiesToExpressionStatements(properties, memberExpressionObjectNode, hostNode);
 
         objectExpressionNode.properties = ObjectExpressionKeysTransformer
             .filterObjectExpressionProperties(properties, removablePropertyIds);
         ObjectExpressionKeysTransformer
-            .appendExpressionStatements(scopeNode, expressionStatements, variableDeclarator);
+            .appendExpressionStatements(scopeNode, objectExpressionNode, expressionStatements);
 
         return objectExpressionNode;
     }

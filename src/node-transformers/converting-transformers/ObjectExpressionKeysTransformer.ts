@@ -36,35 +36,6 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * Returns host statement of object expression node
-     *
-     * @param {NodeGuards} node
-     * @returns {Node}
-     */
-    public static getHostStatement (node: ESTree.Node): ESTree.Statement {
-        const parentNode: ESTree.Node | undefined = node.parentNode;
-
-        if (!parentNode) {
-            throw new ReferenceError('`parentNode` property of given node is `undefined`');
-        }
-
-        if (!NodeGuards.isNodeHasScope(parentNode)) {
-            return ObjectExpressionKeysTransformer.getHostStatement(parentNode);
-        }
-
-        return <ESTree.Statement>node;
-    }
-
-    /**
-     * @param {Property[]} properties
-     * @param {number[]} removablePropertyIds
-     * @returns {Property[]}
-     */
-    private static filterObjectExpressionProperties (properties: ESTree.Property[], removablePropertyIds: number[]): ESTree.Property[] {
-        return properties.filter((property: ESTree.Property, index: number) => !removablePropertyIds.includes(index));
-    }
-
-    /**
      * @param {TNodeWithScope} scopeNode
      * @param {Node} hostNode
      * @param {ExpressionStatement[]} expressionStatements
@@ -77,6 +48,35 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
         const hostNodeScope: ESTree.Node = ObjectExpressionKeysTransformer.getHostStatement(hostNode);
 
         NodeAppender.insertNodeAfter(scopeNode, expressionStatements, hostNodeScope);
+    }
+
+    /**
+     * @param {Property[]} properties
+     * @param {number[]} removablePropertyIds
+     * @returns {Property[]}
+     */
+    private static filterObjectExpressionProperties (properties: ESTree.Property[], removablePropertyIds: number[]): ESTree.Property[] {
+        return properties.filter((property: ESTree.Property, index: number) => !removablePropertyIds.includes(index));
+    }
+
+    /**
+     * Returns host statement of object expression node
+     *
+     * @param {NodeGuards} node
+     * @returns {Node}
+     */
+    private static getHostStatement (node: ESTree.Node): ESTree.Statement {
+        const parentNode: ESTree.Node | undefined = node.parentNode;
+
+        if (!parentNode) {
+            throw new ReferenceError('`parentNode` property of given node is `undefined`');
+        }
+
+        if (!NodeGuards.isNodeHasScope(parentNode)) {
+            return ObjectExpressionKeysTransformer.getHostStatement(parentNode);
+        }
+
+        return <ESTree.Statement>node;
     }
 
     /**

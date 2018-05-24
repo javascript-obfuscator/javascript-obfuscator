@@ -16,7 +16,7 @@ import { getRegExpMatch } from '../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../helpers/readFileAsString';
 
 describe('JavaScriptObfuscator', () => {
-    describe('obfuscate (sourceCode: string, customOptions?: IObfuscatorOptions): IObfuscationResult', () => {
+    describe('obfuscate', () => {
         describe('correct source code', () => {
             let obfuscatedCode: string,
                 sourceMap: string;

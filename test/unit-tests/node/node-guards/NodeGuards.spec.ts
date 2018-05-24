@@ -7,7 +7,7 @@ import { NodeFactory } from '../../../../src/node/NodeFactory';
 import { NodeUtils } from '../../../../src/node/NodeUtils';
 
 describe('NodeGuards', () => {
-    describe('isNodeHasBlockScope (node: ESTree.Node): node is TNodeWithBlockScope', () => {
+    describe('isNodeHasBlockScope', () => {
         describe('truthful checks', () => {
             describe('Variant #1: block statement of function declaration', () => {
                 const expectedResult: boolean = true;
@@ -21,7 +21,7 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    NodeUtils.parentize(parentNode);
+                    NodeUtils.parentizeAst(parentNode);
                     result = NodeGuards.isNodeHasBlockScope(node, parentNode);
                 });
 
@@ -41,7 +41,7 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    NodeUtils.parentize(parentNode);
+                    NodeUtils.parentizeAst(parentNode);
                     result = NodeGuards.isNodeHasBlockScope(node, parentNode);
                 });
 
@@ -79,7 +79,7 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    NodeUtils.parentize(parentNode);
+                    NodeUtils.parentizeAst(parentNode);
                     result = NodeGuards.isNodeHasBlockScope(node, parentNode);
                 });
 
@@ -107,7 +107,7 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    NodeUtils.parentize(parentNode);
+                    NodeUtils.parentizeAst(parentNode);
                     result = NodeGuards.isNodeHasBlockScope(node, parentNode);
                 });
 
@@ -127,7 +127,7 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    NodeUtils.parentize(parentNode);
+                    NodeUtils.parentizeAst(parentNode);
                     result = NodeGuards.isNodeHasBlockScope(node, parentNode);
                 });
 
@@ -138,7 +138,7 @@ describe('NodeGuards', () => {
         });
     });
 
-    describe('isNodeHasScope (node: ESTree.Node): node is TNodeWithScope', () => {
+    describe('isNodeHasScope', () => {
         describe('truthful checks', () => {
             describe('Variant #1: program node', () => {
                 const expectedResult: boolean = true;
@@ -258,7 +258,7 @@ describe('NodeGuards', () => {
         });
     });
 
-    describe('isReplaceableIdentifierNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier', () => {
+    describe('isReplaceableIdentifierNode', () => {
         describe('truthful checks', () => {
             describe('Variant #1: parent node is function declaration node', () => {
                 const expectedResult: boolean = true;
@@ -272,7 +272,7 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    NodeUtils.parentize(parentNode);
+                    NodeUtils.parentizeAst(parentNode);
                     result = NodeGuards.isReplaceableIdentifierNode(identifier, parentNode);
                 });
 
@@ -293,7 +293,7 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    NodeUtils.parentize(parentNode);
+                    NodeUtils.parentizeAst(parentNode);
                     result = NodeGuards.isReplaceableIdentifierNode(identifier, parentNode);
                 });
 
@@ -314,7 +314,7 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    NodeUtils.parentize(parentNode);
+                    NodeUtils.parentizeAst(parentNode);
                     result = NodeGuards.isReplaceableIdentifierNode(identifier, parentNode);
                 });
 
@@ -336,7 +336,7 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    NodeUtils.parentize(parentNode);
+                    NodeUtils.parentizeAst(parentNode);
                     result = NodeGuards.isReplaceableIdentifierNode(identifier, parentNode);
                 });
 
@@ -360,7 +360,7 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    NodeUtils.parentize(parentNode);
+                    NodeUtils.parentizeAst(parentNode);
                     result = NodeGuards.isReplaceableIdentifierNode(literal, parentNode);
                 });
 
@@ -381,7 +381,7 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    NodeUtils.parentize(parentNode);
+                    NodeUtils.parentizeAst(parentNode);
                     result = NodeGuards.isReplaceableIdentifierNode(identifier, parentNode);
                 });
 
@@ -402,7 +402,7 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    NodeUtils.parentize(parentNode);
+                    NodeUtils.parentizeAst(parentNode);
                     result = NodeGuards.isReplaceableIdentifierNode(identifier, parentNode);
                 });
 
@@ -424,7 +424,7 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    NodeUtils.parentize(parentNode);
+                    NodeUtils.parentizeAst(parentNode);
                     result = NodeGuards.isReplaceableIdentifierNode(identifier, parentNode);
                 });
 

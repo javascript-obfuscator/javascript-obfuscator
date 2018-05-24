@@ -3,7 +3,7 @@ import { EspreeFacade } from '../../../src/EspreeFacade';
 
 
 describe('EspreeFacade', () => {
-    describe(`parse (input: string, config: espree.ParseOptions): ESTree.Program`, () => {
+    describe(`parse`, () => {
         describe(`\`Unexpected token\` error code preview`, () => {
             describe('Variant #1: 5 lines of code', () => {
                 const sourceCode: string = `` +

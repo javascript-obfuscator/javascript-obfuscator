@@ -19,7 +19,7 @@ import { StringArrayRc4DecodeNodeTemplate } from '../../../../src/templates/stri
 
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
 
-describe('StringArrayCallsWrapperNodeTemplate (): string', () => {
+describe('StringArrayCallsWrapperNodeTemplate', () => {
     const stringArrayName: string = 'stringArrayName';
     const stringArrayCallsWrapperName: string = 'stringArrayCallsWrapperName';
 

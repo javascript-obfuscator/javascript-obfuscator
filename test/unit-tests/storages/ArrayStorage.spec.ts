@@ -43,7 +43,7 @@ describe('ArrayStorage', () => {
 
     let storage: IArrayStorage <any>;
 
-    describe('initialize (...args: any[]): void', () => {
+    describe('initialize', () => {
         const expectedError: ErrorConstructor = Error;
 
         let testFunc: () => void;
@@ -58,7 +58,7 @@ describe('ArrayStorage', () => {
         });
     });
 
-    describe('getStorage (): T[]', () => {
+    describe('getStorage', () => {
         const expectedInstanceOf: ArrayConstructor = Array;
 
         let arrayStorage: string[];
@@ -74,7 +74,7 @@ describe('ArrayStorage', () => {
         });
     });
 
-    describe('get (key: number): T', () => {
+    describe('get', () => {
         describe('Variant #1: value exist', () => {
             const expectedValue: string = storageValue;
 
@@ -109,7 +109,7 @@ describe('ArrayStorage', () => {
         });
     });
 
-    describe('getLength (): number', () => {
+    describe('getLength', () => {
         const expectedStorageLength: number = 1;
 
         let storageLength: number;
@@ -126,7 +126,7 @@ describe('ArrayStorage', () => {
         });
     });
 
-    describe('getKeyOf (value: T): number | null', () => {
+    describe('getKeyOf', () => {
         let key: string | number | null;
 
         describe('Variant #1', () => {
@@ -178,7 +178,7 @@ describe('ArrayStorage', () => {
         });
     });
 
-    describe('set (key: number, value: T): void', () => {
+    describe('set', () => {
         let value: string;
 
         before(() => {
@@ -193,7 +193,7 @@ describe('ArrayStorage', () => {
         });
     });
 
-    describe('mergeWith (storage: this, mergeId: boolean = false): void', () => {
+    describe('mergeWith', () => {
         const secondStorageKey: number = 1;
         const secondStorageValue: string = 'bar';
 

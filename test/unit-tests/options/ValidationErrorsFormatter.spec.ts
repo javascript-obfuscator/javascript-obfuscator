@@ -5,7 +5,7 @@ import { ValidationError } from 'class-validator';
 import { ValidationErrorsFormatter } from '../../../src/options/ValidationErrorsFormatter';
 
 describe('ValidationErrorsFormatter', () => {
-    describe('format (validationErrors: ValidationError[]): string', () => {
+    describe('format', () => {
         describe('Variant #1: one constraint group with one constraint', () => {
             const constraintGroupRegExp: RegExp = /`foo` *errors:/;
             const constraintRegExp: RegExp = /(?: *-)+ *constraint *text/;

@@ -3,47 +3,45 @@ import { assert } from 'chai';
 import { ArraySanitizer } from '../../../../src/cli/sanitizers/ArraySanitizer';
 
 describe('ArraySanitizer', () => {
-    describe('ArraySanitizer: TCLISanitizer = (value: string): string[]', () => {
-        describe('Variant #1: input value `foo`', () => {
-            const inputValue: string = 'foo';
-            const expectedValue: string[] = ['foo'];
+    describe('Variant #1: input value `foo`', () => {
+        const inputValue: string = 'foo';
+        const expectedValue: string[] = ['foo'];
 
-            let value: string[];
+        let value: string[];
 
-            before(() => {
-                value = ArraySanitizer(inputValue);
-            });
-
-            it('should sanitize value', () => {
-                assert.deepEqual(value, expectedValue);
-            });
+        before(() => {
+            value = ArraySanitizer(inputValue);
         });
 
-        describe('Variant #2: input value `foo, bar`', () => {
-            const inputValue: string = 'foo, bar';
-            const expectedValue: string[] = ['foo', 'bar'];
+        it('should sanitize value', () => {
+            assert.deepEqual(value, expectedValue);
+        });
+    });
 
-            let value: string[];
+    describe('Variant #2: input value `foo, bar`', () => {
+        const inputValue: string = 'foo, bar';
+        const expectedValue: string[] = ['foo', 'bar'];
 
-            before(() => {
-                value = ArraySanitizer(inputValue);
-            });
+        let value: string[];
 
-            it('should sanitize value', () => {
-                assert.deepEqual(value, expectedValue);
-            });
+        before(() => {
+            value = ArraySanitizer(inputValue);
         });
 
-        describe('Variant #3: input value `foo,`', () => {
-            const inputValue: string = 'foo,';
+        it('should sanitize value', () => {
+            assert.deepEqual(value, expectedValue);
+        });
+    });
 
-            const testFunc: () => void = () => {
-                ArraySanitizer(inputValue);
-            };
+    describe('Variant #3: input value `foo,`', () => {
+        const inputValue: string = 'foo,';
 
-            it('should sanitize value', () => {
-                assert.throw(testFunc, SyntaxError);
-            });
+        const testFunc: () => void = () => {
+            ArraySanitizer(inputValue);
+        };
+
+        it('should sanitize value', () => {
+            assert.throw(testFunc, SyntaxError);
         });
     });
 });

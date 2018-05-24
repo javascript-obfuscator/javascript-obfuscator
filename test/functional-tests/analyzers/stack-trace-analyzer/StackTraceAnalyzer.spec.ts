@@ -149,7 +149,7 @@ function getObjectFunctionExpressionByName (astTree: ESTree.Node, objectName: st
 }
 
 describe('StackTraceAnalyzer', () => {
-    describe('extract (): IStackTraceData[]', () => {
+    describe('extract', () => {
         let stackTraceAnalyzer: IStackTraceAnalyzer,
             expectedStackTraceData: IStackTraceData[],
             stackTraceData: IStackTraceData[];

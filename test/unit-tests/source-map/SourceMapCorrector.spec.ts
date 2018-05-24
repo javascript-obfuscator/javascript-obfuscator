@@ -43,7 +43,7 @@ function getCorrectedObfuscationResult (
 }
 
 describe('SourceMapCorrector', () => {
-    describe('correct (): IObfuscationResult', () => {
+    describe('correct', () => {
         const expectedObfuscatedCode: string = 'var test = 1;';
         const sourceMap: string = 'test';
 

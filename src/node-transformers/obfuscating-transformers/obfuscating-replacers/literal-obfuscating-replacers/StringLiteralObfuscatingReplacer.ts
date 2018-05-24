@@ -17,6 +17,7 @@ import { StringArrayEncoding } from '../../../../enums/StringArrayEncoding';
 import { AbstractObfuscatingReplacer } from '../AbstractObfuscatingReplacer';
 import { NodeMetadata } from '../../../../node/NodeMetadata';
 import { NodeFactory } from '../../../../node/NodeFactory';
+import { NumberUtils } from '../../../../utils/NumberUtils';
 import { Utils } from '../../../../utils/Utils';
 
 @injectable()
@@ -174,7 +175,7 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
             };
         }
 
-        const hexadecimalRawIndex: string = Utils.decToHex(stringArrayStorageLength);
+        const hexadecimalRawIndex: string = NumberUtils.toHex(stringArrayStorageLength);
         const hexadecimalIndex: string = `${Utils.hexadecimalPrefix}${hexadecimalRawIndex}`;
 
         this.stringLiteralHexadecimalIndexCache.set(value, hexadecimalIndex);

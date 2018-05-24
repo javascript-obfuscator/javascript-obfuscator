@@ -47,7 +47,7 @@ describe('NodeMetadata', () => {
         });
     });
 
-    describe('isIgnoredNode (node: ESTree.Node): boolean', () => {
+    describe('isIgnoredNode', () => {
         const expectedValue: boolean = true;
 
         let node: ESTree.Identifier,
@@ -65,7 +65,7 @@ describe('NodeMetadata', () => {
         });
     });
 
-    describe('isRenamedIdentifier (identifierNode: ESTree.Identifier): boolean', () => {
+    describe('isRenamedIdentifier', () => {
         const expectedValue: boolean = true;
 
         let node: ESTree.Identifier,
@@ -83,7 +83,7 @@ describe('NodeMetadata', () => {
         });
     });
 
-    describe('isReplacedLiteral (literalNode: ESTree.Literal): boolean', () => {
+    describe('isReplacedLiteral', () => {
         const expectedValue: boolean = true;
 
         let node: ESTree.Literal,

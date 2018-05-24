@@ -6,7 +6,7 @@ import { assert } from 'chai';
 
 import { GlobalVariableNoEvalTemplate } from '../../../src/templates/GlobalVariableNoEvalTemplate';
 
-describe('GlobalVariableNoEvalTemplate (): string', () => {
+describe('GlobalVariableNoEvalTemplate', () => {
     describe('Variant #1: simple', () => {
         const expectedGlobalObject: NodeJS.Global = global;
 

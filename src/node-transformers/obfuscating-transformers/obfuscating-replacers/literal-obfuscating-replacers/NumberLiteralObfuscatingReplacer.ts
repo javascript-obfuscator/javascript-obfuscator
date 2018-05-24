@@ -7,6 +7,7 @@ import { IOptions } from '../../../../interfaces/options/IOptions';
 
 import { AbstractObfuscatingReplacer } from '../AbstractObfuscatingReplacer';
 import { NodeFactory } from '../../../../node/NodeFactory';
+import { NumberUtils } from '../../../../utils/NumberUtils';
 import { Utils } from '../../../../utils/Utils';
 
 @injectable()
@@ -35,10 +36,10 @@ export class NumberLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
         if (this.numberLiteralCache.has(nodeValue)) {
             rawValue = <string>this.numberLiteralCache.get(nodeValue);
         } else {
-            if (!Utils.isCeilNumber(nodeValue)) {
+            if (!NumberUtils.isCeil(nodeValue)) {
                 rawValue = String(nodeValue);
             } else {
-                rawValue = `${Utils.hexadecimalPrefix}${Utils.decToHex(nodeValue)}`;
+                rawValue = `${Utils.hexadecimalPrefix}${NumberUtils.toHex(nodeValue)}`;
             }
 
             this.numberLiteralCache.set(nodeValue, rawValue);

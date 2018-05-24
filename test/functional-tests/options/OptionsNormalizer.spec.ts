@@ -34,7 +34,7 @@ function getNormalizedOptions (optionsPreset: TInputOptions): TInputOptions {
 }
 
 describe('OptionsNormalizer', () => {
-    describe('normalize (options: IObfuscatorOptions): IObfuscatorOptions', () => {
+    describe('normalize', () => {
         let optionsPreset: TInputOptions,
             expectedOptionsPreset: TInputOptions;
 

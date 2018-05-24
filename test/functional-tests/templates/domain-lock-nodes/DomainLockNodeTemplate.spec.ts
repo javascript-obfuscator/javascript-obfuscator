@@ -40,7 +40,7 @@ function getFunctionFromTemplate (templateData: any, callsControllerFunctionName
     `)();
 }
 
-describe('DomainLockNodeTemplate (): string', () => {
+describe('DomainLockNodeTemplate', () => {
     const singleNodeCallControllerFunctionName: string = 'callsController';
 
     let cryptUtils: ICryptUtils;

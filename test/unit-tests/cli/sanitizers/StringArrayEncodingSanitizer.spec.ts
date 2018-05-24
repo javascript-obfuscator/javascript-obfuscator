@@ -7,80 +7,78 @@ import { StringArrayEncoding } from '../../../../src/enums/StringArrayEncoding';
 import { StringArrayEncodingSanitizer } from '../../../../src/cli/sanitizers/StringArrayEncodingSanitizer';
 
 describe('StringArrayEncodingSanitizer', () => {
-    describe('StringArrayEncodingSanitizer: TCLISanitizer = (value: string): TStringArrayEncoding', () => {
-        describe('Variant #1: string array encoding `base64`', () => {
-            const inputValue: string = 'base64';
-            const expectedValue: TStringArrayEncoding = true;
+    describe('Variant #1: string array encoding `base64`', () => {
+        const inputValue: string = 'base64';
+        const expectedValue: TStringArrayEncoding = true;
 
-            let value: TStringArrayEncoding;
+        let value: TStringArrayEncoding;
 
-            before(() => {
-                value = StringArrayEncodingSanitizer(inputValue);
-            });
-
-            it('should sanitize value', () => {
-                assert.equal(value, expectedValue);
-            });
+        before(() => {
+            value = StringArrayEncodingSanitizer(inputValue);
         });
 
-        describe('Variant #2: string array encoding `true`', () => {
-            const inputValue: string = 'true';
-            const expectedValue: TStringArrayEncoding = true;
+        it('should sanitize value', () => {
+            assert.equal(value, expectedValue);
+        });
+    });
 
-            let value: TStringArrayEncoding;
+    describe('Variant #2: string array encoding `true`', () => {
+        const inputValue: string = 'true';
+        const expectedValue: TStringArrayEncoding = true;
 
-            before(() => {
-                value = StringArrayEncodingSanitizer(inputValue);
-            });
+        let value: TStringArrayEncoding;
 
-            it('should sanitize value', () => {
-                assert.equal(value, expectedValue);
-            });
+        before(() => {
+            value = StringArrayEncodingSanitizer(inputValue);
         });
 
-        describe('Variant #3: string array encoding `1`', () => {
-            const inputValue: string = '1';
-            const expectedValue: TStringArrayEncoding = true;
+        it('should sanitize value', () => {
+            assert.equal(value, expectedValue);
+        });
+    });
 
-            let value: TStringArrayEncoding;
+    describe('Variant #3: string array encoding `1`', () => {
+        const inputValue: string = '1';
+        const expectedValue: TStringArrayEncoding = true;
 
-            before(() => {
-                value = StringArrayEncodingSanitizer(inputValue);
-            });
+        let value: TStringArrayEncoding;
 
-            it('should sanitize value', () => {
-                assert.equal(value, expectedValue);
-            });
+        before(() => {
+            value = StringArrayEncodingSanitizer(inputValue);
         });
 
-        describe('Variant #4: string array encoding `rc4`', () => {
-            const inputValue: string = 'rc4';
-            const expectedValue: TStringArrayEncoding = StringArrayEncoding.Rc4;
+        it('should sanitize value', () => {
+            assert.equal(value, expectedValue);
+        });
+    });
 
-            let value: TStringArrayEncoding;
+    describe('Variant #4: string array encoding `rc4`', () => {
+        const inputValue: string = 'rc4';
+        const expectedValue: TStringArrayEncoding = StringArrayEncoding.Rc4;
 
-            before(() => {
-                value = StringArrayEncodingSanitizer(inputValue);
-            });
+        let value: TStringArrayEncoding;
 
-            it('should sanitize value', () => {
-                assert.equal(value, expectedValue);
-            });
+        before(() => {
+            value = StringArrayEncodingSanitizer(inputValue);
         });
 
-        describe('Variant #5: string array encoding `foo`', () => {
-            const inputValue: string = 'foo';
-            const expectedValue: TStringArrayEncoding = false;
+        it('should sanitize value', () => {
+            assert.equal(value, expectedValue);
+        });
+    });
 
-            let value: TStringArrayEncoding;
+    describe('Variant #5: string array encoding `foo`', () => {
+        const inputValue: string = 'foo';
+        const expectedValue: TStringArrayEncoding = false;
 
-            before(() => {
-                value = StringArrayEncodingSanitizer(inputValue);
-            });
+        let value: TStringArrayEncoding;
 
-            it('should sanitize value', () => {
-                assert.equal(value, expectedValue);
-            });
+        before(() => {
+            value = StringArrayEncodingSanitizer(inputValue);
+        });
+
+        it('should sanitize value', () => {
+            assert.equal(value, expectedValue);
         });
     });
 });

@@ -66,7 +66,7 @@ export class BinaryExpressionFunctionNode extends AbstractCustomNode {
             )
         );
 
-        NodeUtils.parentize(structure);
+        NodeUtils.parentizeAst(structure);
 
         return [structure];
     }

@@ -5,7 +5,7 @@ import { TInputOptions } from '../../../../src/types/options/TInputOptions';
 import { CLIUtils } from '../../../../src/cli/utils/CLIUtils';
 
 describe('CLIUtils', () => {
-    describe('getOutputCodePath (inputPath: string): string', () => {
+    describe('getOutputCodePath', () => {
         describe('Variant #1: base input path', () => {
             let expectedOutputPath: string = 'test/input/test-obfuscated.js',
                 inputPath: string = 'test/input/test.js';
@@ -25,7 +25,7 @@ describe('CLIUtils', () => {
         });
     });
 
-    describe('getOutputSourceMapPath (outputCodePath: string): string', () => {
+    describe('getOutputSourceMapPath', () => {
         let expectedOutputSourceMapPath: string = 'test/output/test.js.map',
             outputCodePath: string = 'test/output/test.js';
 
@@ -34,7 +34,7 @@ describe('CLIUtils', () => {
         });
     });
 
-    describe('getUserConfig (configPath: string): Object', () => {
+    describe('getUserConfig', () => {
         describe('Variant #1: valid config file path', () => {
             describe('Variant #1: js file with config', () => {
                 const configDirName: string = 'test/fixtures';

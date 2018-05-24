@@ -40,13 +40,13 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     public abstract generateWithPrefix (): string;
 
     /**
-     * @param {string} identifierName
+     * @param {string} name
      * @returns {boolean}
      */
-    public isValidIdentifierName (identifierName: string): boolean {
+    public isValidIdentifierName (name: string): boolean {
         return this.options.reservedNames.length
             ? !this.options.reservedNames.some((reservedName: string) =>
-                new RegExp(reservedName, 'g').exec(identifierName) !== null
+                new RegExp(reservedName, 'g').exec(name) !== null
             )
             : true;
 

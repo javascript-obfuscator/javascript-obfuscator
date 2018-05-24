@@ -73,7 +73,7 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
             )
         ]);
 
-        structure = NodeUtils.parentize(structure);
+        structure = NodeUtils.parentizeAst(structure);
 
         return [structure];
     }

@@ -16,7 +16,7 @@ import { NodeUtils } from '../../../../src/node/NodeUtils';
 import { NodeMetadata } from '../../../../src/node/NodeMetadata';
 
 describe('ObfuscatingGuardsTransformer', () => {
-    describe('transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node', () => {
+    describe('transformNode', () => {
         let inversifyContainerFacade: IInversifyContainerFacade,
             obfuscatingGuardsTransformer: INodeTransformer;
 

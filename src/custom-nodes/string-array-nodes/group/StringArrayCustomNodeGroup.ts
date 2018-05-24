@@ -74,17 +74,17 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
 
         // stringArrayNode append
         this.appendCustomNodeIfExist(CustomNode.StringArrayNode, (customNode: ICustomNode) => {
-            NodeAppender.prependNode(blockScopeNode, customNode.getNode());
+            NodeAppender.prepend(blockScopeNode, customNode.getNode());
         });
 
         // stringArrayCallsWrapper append
         this.appendCustomNodeIfExist(CustomNode.StringArrayCallsWrapper, (customNode: ICustomNode) => {
-            NodeAppender.insertNodeAtIndex(blockScopeNode, customNode.getNode(), 1);
+            NodeAppender.insertAtIndex(blockScopeNode, customNode.getNode(), 1);
         });
 
         // stringArrayRotateFunctionNode append
         this.appendCustomNodeIfExist(CustomNode.StringArrayRotateFunctionNode, (customNode: ICustomNode) => {
-            NodeAppender.insertNodeAtIndex(blockScopeNode, customNode.getNode(), 1);
+            NodeAppender.insertAtIndex(blockScopeNode, customNode.getNode(), 1);
         });
     }
 

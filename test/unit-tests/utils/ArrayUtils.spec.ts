@@ -7,7 +7,7 @@ import { IInversifyContainerFacade } from '../../../src/interfaces/container/IIn
 
 import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
 
-describe('Utils', () => {
+describe('ArrayUtils', () => {
     let arrayUtils: IArrayUtils;
 
     before(() => {
@@ -17,7 +17,7 @@ describe('Utils', () => {
         arrayUtils = inversifyContainerFacade.get<IArrayUtils>(ServiceIdentifiers.IArrayUtils);
     });
 
-    describe('arrayRange (length: number): number[]', () => {
+    describe('createWithRange', () => {
         describe('range length more than 0', () => {
             const rangeLength: number = 5;
             const expectedArray: number[] = [0, 1, 2, 3, 4];
@@ -25,7 +25,7 @@ describe('Utils', () => {
             let array: number[];
 
             before(() => {
-                array = arrayUtils.arrayRange(rangeLength);
+                array = arrayUtils.createWithRange(rangeLength);
             });
 
             it('should return array with range of numbers', () => {
@@ -40,7 +40,7 @@ describe('Utils', () => {
             let array: number[];
 
             before(() => {
-                array = arrayUtils.arrayRange(rangeLength);
+                array = arrayUtils.createWithRange(rangeLength);
             });
 
             it('should return empty array', () => {
@@ -55,7 +55,7 @@ describe('Utils', () => {
             let array: number[];
 
             before(() => {
-                array = arrayUtils.arrayRange(rangeLength);
+                array = arrayUtils.createWithRange(rangeLength);
             });
 
             it('should return empty array', () => {
@@ -64,7 +64,7 @@ describe('Utils', () => {
         });
     });
 
-    describe('arrayRotate <T> (array: T[], times: number): T[]', () => {
+    describe('rotate', () => {
         let array: number[],
             rotatedArray: number[];
 
@@ -77,7 +77,7 @@ describe('Utils', () => {
             const expectedArray: number[] = [5, 6, 1, 2, 3, 4];
 
             beforeEach(() => {
-                rotatedArray = arrayUtils.arrayRotate(array, rotateValue);
+                rotatedArray = arrayUtils.rotate(array, rotateValue);
             });
 
             it('should rotate (shift) array by a given value', () => {
@@ -90,7 +90,7 @@ describe('Utils', () => {
             const expectedArray: number[] = [1, 2, 3, 4, 5, 6];
 
             beforeEach(() => {
-                rotatedArray = arrayUtils.arrayRotate(array, rotateValue);
+                rotatedArray = arrayUtils.rotate(array, rotateValue);
             });
 
             it('shouldn\'t rotate array', () => {
@@ -106,7 +106,7 @@ describe('Utils', () => {
             let testFunc: () => void;
 
             beforeEach(() => {
-                testFunc = () => arrayUtils.arrayRotate(emptyArray, rotateValue);
+                testFunc = () => arrayUtils.rotate(emptyArray, rotateValue);
             });
 
             it('should throw exception if array is empty', () => {

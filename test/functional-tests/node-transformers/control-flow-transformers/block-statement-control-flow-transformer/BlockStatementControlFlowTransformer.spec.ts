@@ -20,7 +20,7 @@ const getStatementRegExp: (hexNumber: string) => RegExp = (hexNumber) => {
 describe('BlockStatementControlFlowTransformer', function () {
     this.timeout(100000);
 
-    describe('transformNode (blockStatementNode: ESTree.BlockStatement): ESTree.Node', () => {
+    describe('transformNode', () => {
         describe('Variant #1: 5 simple statements', () => {
             let obfuscatedCode: string;
 

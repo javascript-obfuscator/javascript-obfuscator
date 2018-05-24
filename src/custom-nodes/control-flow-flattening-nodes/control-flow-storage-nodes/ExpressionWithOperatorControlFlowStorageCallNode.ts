@@ -87,7 +87,7 @@ export class ExpressionWithOperatorControlFlowStorageCallNode extends AbstractCu
             )
         );
 
-        NodeUtils.parentize(structure);
+        NodeUtils.parentizeAst(structure);
 
         return [structure];
     }

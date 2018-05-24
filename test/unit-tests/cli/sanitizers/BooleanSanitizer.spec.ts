@@ -4,65 +4,63 @@ import { BooleanSanitizer } from '../../../../src/cli/sanitizers/BooleanSanitize
 
 
 describe('BooleanSanitizer', () => {
-    describe('BooleanSanitizer: TCLISanitizer = (value: string): boolean', () => {
-        describe('Variant #1: input value `true`', () => {
-            const inputValue: string = 'true';
-            const expectedValue: boolean = true;
+    describe('Variant #1: input value `true`', () => {
+        const inputValue: string = 'true';
+        const expectedValue: boolean = true;
 
-            let value: boolean;
+        let value: boolean;
 
-            before(() => {
-                value = BooleanSanitizer(inputValue);
-            });
-
-            it('should sanitize value', () => {
-                assert.equal(value, expectedValue);
-            });
+        before(() => {
+            value = BooleanSanitizer(inputValue);
         });
 
-        describe('Variant #2: input value `1`', () => {
-            const inputValue: string = '1';
-            const expectedValue: boolean = true;
+        it('should sanitize value', () => {
+            assert.equal(value, expectedValue);
+        });
+    });
 
-            let value: boolean;
+    describe('Variant #2: input value `1`', () => {
+        const inputValue: string = '1';
+        const expectedValue: boolean = true;
 
-            before(() => {
-                value = BooleanSanitizer(inputValue);
-            });
+        let value: boolean;
 
-            it('should sanitize value', () => {
-                assert.equal(value, expectedValue);
-            });
+        before(() => {
+            value = BooleanSanitizer(inputValue);
         });
 
-        describe('Variant #3: input value `false`', () => {
-            const inputValue: string = 'false';
-            const expectedValue: boolean = false;
+        it('should sanitize value', () => {
+            assert.equal(value, expectedValue);
+        });
+    });
 
-            let value: boolean;
+    describe('Variant #3: input value `false`', () => {
+        const inputValue: string = 'false';
+        const expectedValue: boolean = false;
 
-            before(() => {
-                value = BooleanSanitizer(inputValue);
-            });
+        let value: boolean;
 
-            it('should sanitize value', () => {
-                assert.equal(value, expectedValue);
-            });
+        before(() => {
+            value = BooleanSanitizer(inputValue);
         });
 
-        describe('Variant #4: input value `foo`', () => {
-            const inputValue: string = 'foo';
-            const expectedValue: boolean = false;
+        it('should sanitize value', () => {
+            assert.equal(value, expectedValue);
+        });
+    });
 
-            let value: boolean;
+    describe('Variant #4: input value `foo`', () => {
+        const inputValue: string = 'foo';
+        const expectedValue: boolean = false;
 
-            before(() => {
-                value = BooleanSanitizer(inputValue);
-            });
+        let value: boolean;
 
-            it('should sanitize value', () => {
-                assert.equal(value, expectedValue);
-            });
+        before(() => {
+            value = BooleanSanitizer(inputValue);
+        });
+
+        it('should sanitize value', () => {
+            assert.equal(value, expectedValue);
         });
     });
 });

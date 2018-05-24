@@ -25,7 +25,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
     const configFilePath: string = `${configDirName}/${configFileName}`;
 
 
-    describe('run (): void', () => {
+    describe('run', () => {
         before(() => {
             mkdirp.sync(outputDirName);
         });

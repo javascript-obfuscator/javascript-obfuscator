@@ -30,7 +30,7 @@ function spawnThread(inputCallback: Function, threadCallback: Function, timeoutC
         });
 }
 
-describe('DebugProtectionFunctionCallTemplate (): string', () => {
+describe('DebugProtectionFunctionCallTemplate', () => {
     describe('Variant #1: correctly obfuscated code`', () => {
         const expectedEvaluationResult: number = 1;
 

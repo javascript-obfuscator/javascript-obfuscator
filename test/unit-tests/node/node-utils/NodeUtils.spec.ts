@@ -10,7 +10,7 @@ import { NodeFactory } from '../../../../src/node/NodeFactory';
 import { NodeUtils } from '../../../../src/node/NodeUtils';
 
 describe('NodeUtils', () => {
-    describe('addXVerbatimPropertyToLiterals (node: ESTree.Node): void', () => {
+    describe('addXVerbatimPropertyTo', () => {
         let literalNode: ESTree.Literal,
             expectedLiteralNode: ESTree.Literal;
 
@@ -20,7 +20,7 @@ describe('NodeUtils', () => {
 
             expectedLiteralNode = NodeFactory.literalNode('value');
 
-            NodeUtils.addXVerbatimPropertyToLiteralNode(literalNode);
+            NodeUtils.addXVerbatimPropertyTo(literalNode);
         });
 
         it('should add `x-verbatim-property` to `Literal` node', () => {
@@ -28,7 +28,7 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('clone <T extends ESTree.Node> (astTree: T): T', () => {
+    describe('clone', () => {
         describe('Variant #1: simple AST-tree', () => {
             let programNode: ESTree.Program,
                 expectedProgramNode: ESTree.Program;
@@ -67,7 +67,7 @@ describe('NodeUtils', () => {
                         ifStatementNode1
                     ])
                 );
-                expectedProgramNode = NodeUtils.parentize(
+                expectedProgramNode = NodeUtils.parentizeAst(
                     NodeFactory.programNode([
                         ifStatementNode2
                     ])
@@ -111,7 +111,7 @@ describe('NodeUtils', () => {
                         expressionStatementNode
                     ])
                 );
-                expectedProgramNode = NodeUtils.parentize(
+                expectedProgramNode = NodeUtils.parentizeAst(
                     NodeFactory.programNode([
                         expectedExpressionStatementNode
                     ])
@@ -124,7 +124,7 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('convertCodeToStructure (code: string): ESTree.Statement[]', () => {
+    describe('convertCodeToStructure', () => {
         let structure: TStatement[],
             expectedStructure: TStatement[];
 
@@ -158,7 +158,7 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('convertStructureToCode (structure: ESTree.Node[]): string', () => {
+    describe('convertStructureToCode', () => {
         let structure: ESTree.Node[],
             expectedCode: string;
 
@@ -181,7 +181,7 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('getBlockScopesOfNode (node: ESTree.Node, blockScopes: TNodeWithBlockScope[] = []): TNodeWithBlockScope[]', () => {
+    describe('getBlockScopesOfNode', () => {
         let functionDeclarationBlockStatementNode: ESTree.BlockStatement,
             ifStatementBlockStatementNode1: ESTree.BlockStatement,
             ifStatementBlockStatementNode2: ESTree.BlockStatement,
@@ -296,7 +296,7 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('getNextSiblingStatementNode (node: ESTree.Statement): TStatement | null', () => {
+    describe('getNextSiblingStatement', () => {
         describe('Variant #1: block statement node as scope node', () => {
                 let statementNode1: ESTree.Statement,
                 statementNode2: ESTree.Statement,
@@ -325,15 +325,15 @@ describe('NodeUtils', () => {
             });
 
             it('should return next sibling statement node', () => {
-                assert.deepEqual(NodeUtils.getNextSiblingStatementNode(statementNode1), statementNode2);
+                assert.deepEqual(NodeUtils.getNextSiblingStatement(statementNode1), statementNode2);
             });
 
             it('should return next sibling statement node', () => {
-                assert.deepEqual(NodeUtils.getNextSiblingStatementNode(statementNode2), statementNode3);
+                assert.deepEqual(NodeUtils.getNextSiblingStatement(statementNode2), statementNode3);
             });
 
             it('should return `null` if given statement node is last node in the scope', () => {
-                assert.deepEqual(NodeUtils.getNextSiblingStatementNode(statementNode3), null);
+                assert.deepEqual(NodeUtils.getNextSiblingStatement(statementNode3), null);
             });
         });
 
@@ -368,20 +368,20 @@ describe('NodeUtils', () => {
             });
 
             it('should return next sibling statement node', () => {
-                assert.deepEqual(NodeUtils.getNextSiblingStatementNode(statementNode1), statementNode2);
+                assert.deepEqual(NodeUtils.getNextSiblingStatement(statementNode1), statementNode2);
             });
 
             it('should return next sibling statement node', () => {
-                assert.deepEqual(NodeUtils.getNextSiblingStatementNode(statementNode2), statementNode3);
+                assert.deepEqual(NodeUtils.getNextSiblingStatement(statementNode2), statementNode3);
             });
 
             it('should return `null` if given statement node is last node in the scope', () => {
-                assert.deepEqual(NodeUtils.getNextSiblingStatementNode(statementNode3), null);
+                assert.deepEqual(NodeUtils.getNextSiblingStatement(statementNode3), null);
             });
         });
     });
 
-    describe('getPreviousSiblingStatementNode (node: ESTree.Statement): TStatement | null', () => {
+    describe('getPreviousSiblingStatement', () => {
         describe('Variant #1: block statement node as scope node', () => {
             let statementNode1: ESTree.Statement,
                 statementNode2: ESTree.Statement,
@@ -410,15 +410,15 @@ describe('NodeUtils', () => {
             });
 
             it('should return next sibling statement node', () => {
-                assert.deepEqual(NodeUtils.getPreviousSiblingStatementNode(statementNode1), null);
+                assert.deepEqual(NodeUtils.getPreviousSiblingStatement(statementNode1), null);
             });
 
             it('should return next sibling statement node', () => {
-                assert.deepEqual(NodeUtils.getPreviousSiblingStatementNode(statementNode2), statementNode1);
+                assert.deepEqual(NodeUtils.getPreviousSiblingStatement(statementNode2), statementNode1);
             });
 
             it('should return `null` if given statement node is last node in the scope', () => {
-                assert.deepEqual(NodeUtils.getPreviousSiblingStatementNode(statementNode3), statementNode2);
+                assert.deepEqual(NodeUtils.getPreviousSiblingStatement(statementNode3), statementNode2);
             });
         });
 
@@ -453,20 +453,20 @@ describe('NodeUtils', () => {
             });
 
             it('should return next sibling statement node', () => {
-                assert.deepEqual(NodeUtils.getPreviousSiblingStatementNode(statementNode1), null);
+                assert.deepEqual(NodeUtils.getPreviousSiblingStatement(statementNode1), null);
             });
 
             it('should return next sibling statement node', () => {
-                assert.deepEqual(NodeUtils.getPreviousSiblingStatementNode(statementNode2), statementNode1);
+                assert.deepEqual(NodeUtils.getPreviousSiblingStatement(statementNode2), statementNode1);
             });
 
             it('should return `null` if given statement node is last node in the scope', () => {
-                assert.deepEqual(NodeUtils.getPreviousSiblingStatementNode(statementNode3), statementNode2);
+                assert.deepEqual(NodeUtils.getPreviousSiblingStatement(statementNode3), statementNode2);
             });
         });
     });
 
-    describe('getScopeOfNode (node: ESTree.Node): TNodeWithScope | null', () => {
+    describe('getScopeOfNode', () => {
         let functionDeclarationBlockStatementNode: ESTree.BlockStatement,
             ifStatementBlockStatementNode1: ESTree.BlockStatement,
             ifStatementBlockStatementNode2: ESTree.BlockStatement,
@@ -607,7 +607,7 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('getUnaryExpressionArgumentNode (unaryExpressionNode: ESTree.UnaryExpression): ESTree.Node', () => {
+    describe('getUnaryExpressionArgumentNode', () => {
         let expectedNode: ESTree.Literal,
             unaryExpressionArgumentNode: ESTree.Node;
 
@@ -635,7 +635,7 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('parentize <T extends ESTree.Node> (astTree: T): T', () => {
+    describe('parentizeAst', () => {
         let ifStatementNode: ESTree.IfStatement,
             ifStatementBlockStatementNode: ESTree.BlockStatement,
             expressionStatementNode1: ESTree.ExpressionStatement,
@@ -663,7 +663,7 @@ describe('NodeUtils', () => {
                     ifStatementNode
                 ]);
 
-                programNode = NodeUtils.parentize(programNode);
+                programNode = NodeUtils.parentizeAst(programNode);
             });
 
             it('should parentize `program` node with `ProgramNode` as root node', () => {
@@ -689,7 +689,7 @@ describe('NodeUtils', () => {
 
         describe('Variant #2: parentize AST-tree', () => {
             beforeEach(() => {
-                ifStatementNode = NodeUtils.parentize(ifStatementNode);
+                ifStatementNode = NodeUtils.parentizeAst(ifStatementNode);
             });
 
             it('should parentize `ifStatement` node', () => {
@@ -710,7 +710,7 @@ describe('NodeUtils', () => {
         });
     });
 
-    describe('parentizeNode <T extends ESTree.Node = ESTree.Program> (node: T, parentNode: ESTree.Node): T', () => {
+    describe('parentizeNode', () => {
         describe('Variant #1: node with parent node', () => {
             const identifier: ESTree.Identifier = NodeFactory.identifierNode('foo');
             const breakStatement: ESTree.BreakStatement = NodeFactory.breakStatement(identifier);

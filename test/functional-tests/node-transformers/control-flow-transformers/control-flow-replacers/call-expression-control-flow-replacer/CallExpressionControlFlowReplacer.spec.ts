@@ -11,7 +11,7 @@ import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscator
 describe('CallExpressionControlFlowReplacer', function () {
     this.timeout(100000);
 
-    describe('replace (callExpressionNode, parentNode, controlFlowStorage)', () => {
+    describe('replace', () => {
         describe('Variant #1 - single call expression', () => {
             const controlFlowStorageCallRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{5}'\]\(_0x([a-f0-9]){4,6}, *0x1, *0x2\);/;
 

@@ -133,8 +133,8 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
         }
 
         const blockStatementBody: ESTree.Statement[] = blockStatementNode.body;
-        const originalKeys: number[] = this.arrayUtils.arrayRange(blockStatementBody.length);
-        const shuffledKeys: number[] = this.arrayUtils.arrayShuffle(originalKeys);
+        const originalKeys: number[] = this.arrayUtils.createWithRange(blockStatementBody.length);
+        const shuffledKeys: number[] = this.arrayUtils.shuffle(originalKeys);
         const originalKeysIndexesInShuffledArray: number[] = originalKeys.map((key: number) => shuffledKeys.indexOf(key));
         const blockStatementControlFlowFlatteningCustomNode: ICustomNode = this.controlFlowCustomNodeFactory(
             ControlFlowCustomNode.BlockStatementControlFlowFlatteningNode

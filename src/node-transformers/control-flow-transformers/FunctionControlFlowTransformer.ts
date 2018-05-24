@@ -155,7 +155,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         );
 
         controlFlowStorageCustomNode.initialize(controlFlowStorage);
-        NodeAppender.prependNode(hostNode, controlFlowStorageCustomNode.getNode());
+        NodeAppender.prepend(hostNode, controlFlowStorageCustomNode.getNode());
         this.hostNodesWithControlFlowNode.add(hostNode);
 
         return functionNode;

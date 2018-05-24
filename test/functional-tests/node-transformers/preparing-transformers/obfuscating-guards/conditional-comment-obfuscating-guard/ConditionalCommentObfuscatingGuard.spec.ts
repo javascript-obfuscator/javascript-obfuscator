@@ -9,7 +9,7 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/preset
 import { readFileAsString } from '../../../../../helpers/readFileAsString';
 
 describe('ConditionalCommentObfuscatingGuard', () => {
-    describe('check (node: ESTree.Node): boolean', () => {
+    describe('check', () => {
         describe('Variant #1: `disable` conditional comment', () => {
             const obfuscatedVariableDeclarationRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *0x1;/;
             const ignoredVariableDeclarationRegExp: RegExp = /var *bar *= *2;/;

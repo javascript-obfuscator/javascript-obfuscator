@@ -20,7 +20,7 @@ import { StringArrayRotateFunctionTemplate } from '../../templates/string-array-
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscatorFacade';
 import { NodeUtils } from '../../node/NodeUtils';
-import { Utils } from '../../utils/Utils';
+import { NumberUtils } from '../../utils/NumberUtils';
 
 @injectable()
 export class StringArrayRotateFunctionNode extends AbstractCustomNode {
@@ -101,7 +101,7 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
                 code,
                 timesName,
                 stringArrayName: this.stringArrayName,
-                stringArrayRotateValue: Utils.decToHex(this.stringArrayRotateValue),
+                stringArrayRotateValue: NumberUtils.toHex(this.stringArrayRotateValue),
                 whileFunctionName
             }),
             {

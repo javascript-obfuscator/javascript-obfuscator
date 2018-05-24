@@ -24,7 +24,7 @@ export class ArrayUtils implements IArrayUtils {
      * @param {number} length
      * @returns {number[]}
      */
-    public arrayRange (length: number): number[] {
+    public createWithRange (length: number): number[] {
         const range: number[] = [];
 
         for (let i: number = 0; i < length; i++) {
@@ -39,7 +39,7 @@ export class ArrayUtils implements IArrayUtils {
      * @param {number} times
      * @returns {T[]}
      */
-    public arrayRotate <T> (array: T[], times: number): T[] {
+    public rotate <T> (array: T[], times: number): T[] {
         if (!array.length) {
             throw new ReferenceError(`Cannot rotate empty array.`);
         }
@@ -67,7 +67,7 @@ export class ArrayUtils implements IArrayUtils {
      * @param {T[]} array
      * @returns {T[]}
      */
-    public arrayShuffle <T> (array: T[]): T[] {
+    public shuffle <T> (array: T[]): T[] {
         const shuffledArray: T[] = [...array];
 
         for (let i: number = shuffledArray.length; i; i--) {

@@ -17,7 +17,7 @@ describe('CryptUtils', () => {
         cryptUtils = inversifyContainerFacade.get<ICryptUtils>(ServiceIdentifiers.ICryptUtils);
     });
 
-    describe('btoa (string: string): string', () => {
+    describe('btoa', () => {
         const expectedString: string = 'c3RyaW5n';
 
         let string: string;
@@ -31,7 +31,7 @@ describe('CryptUtils', () => {
         });
     });
 
-    describe('hideString (str: string, length: number): [string, string]', () => {
+    describe('hideString', () => {
         const originalString: string = 'example.com';
         const hiddenStringLength: number = 30;
 
@@ -71,7 +71,7 @@ describe('CryptUtils', () => {
         });
     });
 
-    describe('rc4 (string: string, key: string): string', () => {
+    describe('rc4', () => {
         const string: string = 'test';
         const key: string = 'key';
 

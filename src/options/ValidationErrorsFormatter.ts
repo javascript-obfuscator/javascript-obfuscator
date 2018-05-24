@@ -1,35 +1,37 @@
 import { ValidationError } from 'class-validator';
 
+import { TObject } from '../types/TObject';
+
 export class ValidationErrorsFormatter {
     /**
-     * @param {ValidationError[]} validationErrors
+     * @param {ValidationError[]} errors
      * @returns {string}
      */
-    public static format (validationErrors: ValidationError[]): string {
-        const errorsArray: string[] = [];
-
-        for (const error of validationErrors) {
-            errorsArray.push(ValidationErrorsFormatter.formatError(error));
-        }
-
-        return errorsArray.join('\n');
+    public static format (errors: ValidationError[]): string {
+        return errors
+            .reduce(
+                (errorMessages: string[], error: ValidationError) => ([
+                    ...errorMessages,
+                    ValidationErrorsFormatter.formatWithNestedConstraints(error)
+                ]),
+                []
+            )
+            .join('\n');
     }
 
     /**
-     * @param {ValidationError} validationError
+     * @param {ValidationError} error
      * @returns {string}
      */
-    private static formatError (validationError: ValidationError): string {
-        const constraints: {[type: string]: string} = validationError.constraints;
+    private static formatWithNestedConstraints (error: ValidationError): string {
+        const constraints: TObject<string> = error.constraints;
 
-        let errorString: string = `\`${validationError.property}\` errors:\n`;
-
-        Object
+        const rootError: string = `\`${error.property}\` errors:\n`;
+        const nestedErrors: string = Object
             .keys(constraints)
-            .forEach((constraint: string) => {
-                errorString += `    - ${constraints[constraint]}\n`;
-            });
+            .map((constraint: string) => `    - ${constraints[constraint]}\n`)
+            .join();
 
-        return errorString;
+        return `${rootError}${nestedErrors}`;
     }
 }

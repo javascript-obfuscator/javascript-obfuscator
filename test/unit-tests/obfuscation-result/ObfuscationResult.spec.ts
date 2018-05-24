@@ -5,7 +5,7 @@ import { IObfuscationResult } from '../../../src/interfaces/IObfuscationResult';
 import { ObfuscationResult } from '../../../src/ObfuscationResult';
 
 describe('ObfuscationResult', () => {
-    describe('constructor (obfuscatedCode: string, sourceMap: string)', () => {
+    describe('constructor', () => {
         let obfuscatedCode: string = 'obfuscatedCode',
             obfuscationResult: IObfuscationResult,
             sourceMap: string = 'sourceMap';

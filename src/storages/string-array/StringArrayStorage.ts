@@ -66,7 +66,7 @@ export class StringArrayStorage extends ArrayStorage <string> {
      * @param {number} rotationValue
      */
     public rotateArray (rotationValue: number): void {
-        this.storage = this.arrayUtils.arrayRotate(this.storage, rotationValue);
+        this.storage = this.arrayUtils.rotate(this.storage, rotationValue);
     }
 
     /**

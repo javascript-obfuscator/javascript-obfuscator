@@ -18,7 +18,7 @@ describe('SourceCodeReader', () => {
         mkdirp.sync(tmpDirectoryPath);
     });
 
-    describe('readSourceCode (inputPath: string): TSourceCodeData', () => {
+    describe('readSourceCode', () => {
         describe('Variant #1: input path is a file path', () => {
             describe('Variant #1: `inputPath` is a valid path', () => {
                 const tmpFileName: string = 'test.js';

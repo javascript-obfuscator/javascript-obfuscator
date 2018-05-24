@@ -11,7 +11,7 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../../src/options/presets/NoCusto
 import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
 
 describe('JavaScriptObfuscator', () => {
-    describe(`obfuscate (sourceCode: string): IObfuscationResult`, () => {
+    describe(`obfuscate`, () => {
         describe(`source map`, () => {
             const code: string = 'var test = 1;';
             const sourceMapUrl: string = 'test.js.map';

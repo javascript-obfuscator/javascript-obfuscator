@@ -8,7 +8,7 @@ import { IEscapeSequenceEncoder } from '../../../src/interfaces/utils/IEscapeSeq
 
 
 describe('EscapeSequenceEncoder', () => {
-    describe('encode (string: string, encodeAllSymbols: boolean = false): string', () => {
+    describe('encode', () => {
         let escapeSequenceEncoder: IEscapeSequenceEncoder;
 
         before(() => {

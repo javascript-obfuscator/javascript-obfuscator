@@ -13,18 +13,16 @@ import { NodeMetadata } from './NodeMetadata';
 
 export class NodeUtils {
     /**
-     * @param {T} node
+     * @param {T} literalNode
      * @returns {T}
      */
-    public static addXVerbatimPropertyToLiteralNode <T extends ESTree.Node = ESTree.Node> (node: T): T {
-        if (NodeGuards.isLiteralNode(node)) {
-            node['x-verbatim-property'] = {
-                content: node.raw,
-                precedence: escodegen.Precedence.Primary
-            };
-        }
+    public static addXVerbatimPropertyTo (literalNode: ESTree.Literal): ESTree.Literal {
+        literalNode['x-verbatim-property'] = {
+            content: literalNode.raw,
+            precedence: escodegen.Precedence.Primary
+        };
 
-        return node;
+        return literalNode;
     }
 
     /**
@@ -32,7 +30,7 @@ export class NodeUtils {
      * @returns {T}
      */
     public static clone <T extends ESTree.Node = ESTree.Node> (astTree: T): T {
-        return NodeUtils.parentize(NodeUtils.cloneRecursive(astTree));
+        return NodeUtils.parentizeAst(NodeUtils.cloneRecursive(astTree));
     }
 
     /**
@@ -45,7 +43,11 @@ export class NodeUtils {
         estraverse.replace(structure, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node => {
                 NodeUtils.parentizeNode(node, parentNode);
-                NodeUtils.addXVerbatimPropertyToLiteralNode(node);
+
+                if (NodeGuards.isLiteralNode(node)) {
+                    NodeUtils.addXVerbatimPropertyTo(node);
+                }
+
                 NodeMetadata.set(node, { ignoredNode: false });
 
                 return node;
@@ -68,27 +70,27 @@ export class NodeUtils {
     }
 
     /**
-     * @param {Node} targetNode
+     * @param {Node} node
      * @returns {TNodeWithBlockScope[]}
      */
-    public static getBlockScopesOfNode (targetNode: ESTree.Node): TNodeWithBlockScope[] {
-        return NodeUtils.getBlockScopesOfNodeRecursive(targetNode);
+    public static getBlockScopesOfNode (node: ESTree.Node): TNodeWithBlockScope[] {
+        return NodeUtils.getBlockScopesOfNodeRecursive(node);
     }
 
     /**
-     * @param {Statement} node
+     * @param {Statement} statement
      * @returns {TStatement | null}
      */
-    public static getNextSiblingStatementNode (node: ESTree.Statement): TStatement | null {
-        return NodeUtils.getSiblingStatementNodeByOffset(node, 1);
+    public static getNextSiblingStatement (statement: ESTree.Statement): TStatement | null {
+        return NodeUtils.getSiblingStatementByOffset(statement, 1);
     }
 
     /**
-     * @param {Statement} node
+     * @param {Statement} statement
      * @returns {TStatement | null}
      */
-    public static getPreviousSiblingStatementNode (node: ESTree.Statement): TStatement | null {
-        return NodeUtils.getSiblingStatementNodeByOffset(node, -1);
+    public static getPreviousSiblingStatement (statement: ESTree.Statement): TStatement | null {
+        return NodeUtils.getSiblingStatementByOffset(statement, -1);
     }
 
     /**
@@ -125,7 +127,7 @@ export class NodeUtils {
      * @param {T} astTree
      * @returns {T}
      */
-    public static parentize <T extends ESTree.Node = ESTree.Node> (astTree: T): T {
+    public static parentizeAst <T extends ESTree.Node = ESTree.Node> (astTree: T): T {
         estraverse.replace(astTree, {
             enter: NodeUtils.parentizeNode
         });
@@ -231,16 +233,16 @@ export class NodeUtils {
     }
 
     /**
-     * @param {Statement} node
+     * @param {Statement} statement
      * @param {number} offset
      * @returns {TStatement | null}
      */
-    private static getSiblingStatementNodeByOffset (node: ESTree.Statement, offset: number): TStatement | null {
-        const scopeNode: TNodeWithScope = NodeUtils.getScopeOfNode(node);
+    private static getSiblingStatementByOffset (statement: ESTree.Statement, offset: number): TStatement | null {
+        const scopeNode: TNodeWithScope = NodeUtils.getScopeOfNode(statement);
         const scopeBody: TStatement[] = !NodeGuards.isSwitchCaseNode(scopeNode)
             ? scopeNode.body
             : scopeNode.consequent;
-        const indexInScope: number = scopeBody.indexOf(node);
+        const indexInScope: number = scopeBody.indexOf(statement);
 
         return scopeBody[indexInScope + offset] || null;
     }

@@ -63,7 +63,7 @@ export class ConsoleOutputCustomNodeGroup extends AbstractCustomNodeGroup {
 
         // consoleOutputDisableExpressionNode append
         this.appendCustomNodeIfExist(CustomNode.ConsoleOutputDisableExpressionNode, (customNode: ICustomNode) => {
-            NodeAppender.appendNodeToOptimalBlockScope(
+            NodeAppender.appendToOptimalBlockScope(
                 stackTraceData,
                 blockScopeNode,
                 customNode.getNode(),
@@ -81,7 +81,7 @@ export class ConsoleOutputCustomNodeGroup extends AbstractCustomNodeGroup {
                 targetBlockScope = blockScopeNode;
             }
 
-            NodeAppender.prependNode(targetBlockScope, customNode.getNode());
+            NodeAppender.prepend(targetBlockScope, customNode.getNode());
         });
     }
 

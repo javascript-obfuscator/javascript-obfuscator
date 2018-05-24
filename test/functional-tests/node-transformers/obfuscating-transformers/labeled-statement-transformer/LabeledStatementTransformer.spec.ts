@@ -10,7 +10,7 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
 describe('LabeledStatementTransformer', () => {
-    describe('changeControlFlow (labeledStatementNode: ESTree.LabeledStatement): void', () => {
+    describe('transformNode', () => {
         const labeledStatementRegExp: RegExp = /(_0x([a-f0-9]){4,6}): *for/;
         const continueStatementRegExp: RegExp = /continue *(_0x([a-f0-9]){4,6});/;
         const breakStatementRegExp: RegExp = /break *(_0x([a-f0-9]){4,6});/;

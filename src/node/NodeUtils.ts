@@ -94,6 +94,28 @@ export class NodeUtils {
     }
 
     /**
+     * @param {Node} node
+     * @returns {Statement}
+     */
+    public static getRootStatementOfNode (node: ESTree.Node): ESTree.Statement {
+        if (NodeGuards.isProgramNode(node)) {
+            throw new Error('Unable to find root statement for `Program` node');
+        }
+
+        const parentNode: ESTree.Node | undefined = node.parentNode;
+
+        if (!parentNode) {
+            throw new ReferenceError('`parentNode` property of given node is `undefined`');
+        }
+
+        if (!NodeGuards.isNodeHasScope(parentNode)) {
+            return NodeUtils.getRootStatementOfNode(parentNode);
+        }
+
+        return <ESTree.Statement>node;
+    }
+
+    /**
      * @param {NodeGuards} node
      * @returns {TNodeWithScope}
      */

@@ -56,6 +56,8 @@ export class CryptUtils implements ICryptUtils {
     // tslint:enable
 
     /**
+     * Hides string inside a other random string with larger length
+     *
      * @param {string} str
      * @param {number} length
      * @returns {[string , string]}
@@ -87,7 +89,8 @@ export class CryptUtils implements ICryptUtils {
 
         let randomStringDiff: string = randomString.replace(
             new RegExp(`[${escapeRegExp(str)}]`, 'g'),
-            '');
+            ''
+        );
 
         const randomStringDiffArray: string[] = randomStringDiff.split('');
 

@@ -157,7 +157,7 @@ function wrapInitializableProperty (target: IInitializable, propertyKey: string 
 
     initializablePropertiesSet.add(propertyKey);
 
-    const initializablePropertyMetadataKey: string = `_${propertyKey}`;
+    const initializablePropertyMetadataKey: string = `_${propertyKey.toString()}`;
     const propertyDescriptor: PropertyDescriptor = Object
             .getOwnPropertyDescriptor(target, initializablePropertyMetadataKey) || defaultDescriptor;
 
@@ -165,7 +165,7 @@ function wrapInitializableProperty (target: IInitializable, propertyKey: string 
         ...propertyDescriptor,
         get: function (): any {
             if (this[initializablePropertyMetadataKey] === undefined) {
-                throw new Error(`Property \`${propertyKey}\` is not initialized! Initialize it first!`);
+                throw new Error(`Property \`${propertyKey.toString()}\` is not initialized! Initialize it first!`);
             }
 
             return this[initializablePropertyMetadataKey];

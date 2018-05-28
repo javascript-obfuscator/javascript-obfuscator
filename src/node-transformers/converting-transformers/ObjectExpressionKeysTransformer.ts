@@ -22,7 +22,12 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
     /**
      * @type {Map<ESTree.ObjectExpression, TNodeWithScope>}
      */
-    private readonly cachedObjectExpressionScopesMap: Map <ESTree.ObjectExpression, TNodeWithScope> = new Map();
+    private readonly cachedHostScopesMap: Map <ESTree.ObjectExpression, TNodeWithScope> = new Map();
+
+    /**
+     * @type {Map<ESTree.ObjectExpression, ESTree.Statement>}
+     */
+    private readonly cachedHostStatementsMap: Map <ESTree.ObjectExpression, ESTree.Statement> = new Map();
 
     /**
      * @param {IRandomGenerator} randomGenerator
@@ -33,26 +38,6 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
-    }
-
-    /**
-     * Returns host statement of object expression node
-     *
-     * @param {NodeGuards} node
-     * @returns {Node}
-     */
-    private static getHostStatement (node: ESTree.Node): ESTree.Statement {
-        const parentNode: ESTree.Node | undefined = node.parentNode;
-
-        if (!parentNode) {
-            throw new ReferenceError('`parentNode` property of given node is `undefined`');
-        }
-
-        if (!NodeGuards.isNodeHasScope(parentNode)) {
-            return ObjectExpressionKeysTransformer.getHostStatement(parentNode);
-        }
-
-        return <ESTree.Statement>node;
     }
 
     /**
@@ -206,18 +191,40 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {ObjectExpression} objectExpressionNode
+     * @param {Statement} hostStatement
      * @returns {TNodeWithScope}
      */
-    private getScopeNode (objectExpressionNode: ESTree.ObjectExpression): TNodeWithScope {
-        if (this.cachedObjectExpressionScopesMap.has(objectExpressionNode)) {
-            return <TNodeWithScope>this.cachedObjectExpressionScopesMap.get(objectExpressionNode);
+    private getHostScopeNode (
+        objectExpressionNode: ESTree.ObjectExpression,
+        hostStatement: ESTree.Statement
+    ): TNodeWithScope {
+        if (this.cachedHostScopesMap.has(objectExpressionNode)) {
+            return <TNodeWithScope>this.cachedHostScopesMap.get(objectExpressionNode);
         }
 
-        const scopeNode: TNodeWithScope = NodeUtils.getScopeOfNode(objectExpressionNode);
+        const scopeNode: TNodeWithScope = NodeUtils.getScopeOfNode(hostStatement);
 
-        this.cachedObjectExpressionScopesMap.set(objectExpressionNode, scopeNode);
+        this.cachedHostScopesMap.set(objectExpressionNode, scopeNode);
 
         return scopeNode;
+    }
+
+    /**
+     * Returns host statement of object expression node
+     *
+     * @param {NodeGuards} objectExpressionNode
+     * @returns {Node}
+     */
+    private getHostStatement (objectExpressionNode: ESTree.ObjectExpression): ESTree.Statement {
+        if (this.cachedHostStatementsMap.has(objectExpressionNode)) {
+            return <ESTree.Statement>this.cachedHostStatementsMap.get(objectExpressionNode);
+        }
+
+        const hostStatement: ESTree.Statement = NodeUtils.getRootStatementOfNode(objectExpressionNode);
+
+        this.cachedHostStatementsMap.set(objectExpressionNode, hostStatement);
+
+        return hostStatement;
     }
 
     /**
@@ -274,8 +281,9 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
         const properties: ESTree.Property[] = objectExpressionNode.properties;
         const [expressionStatements, removablePropertyIds]: [ESTree.ExpressionStatement[], number[]] = this
             .extractPropertiesToExpressionStatements(properties, memberExpressionHostNode);
-        const hostStatement: ESTree.Statement = ObjectExpressionKeysTransformer.getHostStatement(objectExpressionNode);
-        const scopeNode: TNodeWithScope = this.getScopeNode(objectExpressionNode);
+
+        const hostStatement: ESTree.Statement = this.getHostStatement(objectExpressionNode);
+        const scopeNode: TNodeWithScope = this.getHostScopeNode(objectExpressionNode, hostStatement);
 
         objectExpressionNode.properties = properties.filter((property: ESTree.Property, index: number) =>
             !removablePropertyIds.includes(index)

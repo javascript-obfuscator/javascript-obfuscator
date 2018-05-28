@@ -466,6 +466,101 @@ describe('NodeUtils', () => {
         });
     });
 
+    describe('getRootStatementOfNode', () => {
+        let assignmentExpression: ESTree.AssignmentExpression,
+            expressionStatement: ESTree.ExpressionStatement,
+            identifierNode1: ESTree.Identifier,
+            identifierNode2: ESTree.Identifier,
+            identifierNode3: ESTree.Identifier,
+            identifierNode4: ESTree.Identifier,
+            identifierNode5: ESTree.Identifier,
+            functionDeclarationNode: ESTree.FunctionDeclaration,
+            functionDeclarationBlockStatementNode: ESTree.BlockStatement,
+            programNode: ESTree.Program,
+            variableDeclarationNode: ESTree.VariableDeclaration;
+
+        before(() => {
+            identifierNode1 = NodeFactory.identifierNode('identifier');
+            identifierNode2 = NodeFactory.identifierNode('identifier');
+            identifierNode3 = NodeFactory.identifierNode('identifier');
+            identifierNode4 = NodeFactory.identifierNode('foo');
+            identifierNode5 = NodeFactory.identifierNode('bar');
+
+            assignmentExpression = NodeFactory.assignmentExpressionNode(
+                '=',
+                identifierNode4,
+                identifierNode5
+            );
+
+            expressionStatement = NodeFactory.expressionStatementNode(
+                assignmentExpression
+            );
+
+            variableDeclarationNode = NodeFactory.variableDeclarationNode([
+                NodeFactory.variableDeclaratorNode(
+                    identifierNode1,
+                    NodeFactory.binaryExpressionNode(
+                        '+',
+                        identifierNode2,
+                        identifierNode3
+                    )
+                )
+            ]);
+
+            functionDeclarationBlockStatementNode = NodeFactory.blockStatementNode([
+                variableDeclarationNode
+            ]);
+
+            functionDeclarationNode = NodeFactory.functionDeclarationNode('test', [], functionDeclarationBlockStatementNode);
+
+            programNode = NodeFactory.programNode([
+                functionDeclarationNode,
+                NodeFactory.ifStatementNode(
+                    NodeFactory.literalNode(true),
+                    NodeFactory.blockStatementNode([
+                        expressionStatement
+                    ])
+                )
+            ]);
+
+            NodeUtils.parentizeAst(programNode);
+
+            identifierNode3.parentNode = undefined;
+        });
+
+        it('should return root statement in scope for `program` node child', () => {
+            assert.throws(() => NodeUtils.getRootStatementOfNode(programNode), Error);
+        });
+
+        it('should return root statement in scope for `functionDeclaration` node #1', () => {
+            assert.deepEqual(NodeUtils.getRootStatementOfNode(functionDeclarationNode), functionDeclarationNode);
+        });
+
+        it('should return root statement in scope for `functionDeclaration blockStatement` node #1', () => {
+            assert.deepEqual(NodeUtils.getRootStatementOfNode(functionDeclarationBlockStatementNode), functionDeclarationNode);
+        });
+
+        it('should return root statement in scope for `identifier` node #1', () => {
+            assert.deepEqual(NodeUtils.getRootStatementOfNode(identifierNode1), variableDeclarationNode);
+        });
+
+        it('should return root statement in scope for `identifier` node #2', () => {
+            assert.deepEqual(NodeUtils.getRootStatementOfNode(identifierNode2), variableDeclarationNode);
+        });
+
+        it('should return root statement in scope for `identifier` node #4', () => {
+            assert.deepEqual(NodeUtils.getRootStatementOfNode(identifierNode4), expressionStatement);
+        });
+
+        it('should return root statement in scope for `identifier` node #5', () => {
+            assert.deepEqual(NodeUtils.getRootStatementOfNode(identifierNode5), expressionStatement);
+        });
+
+        it('should throw a `ReferenceError` if node has no `parentNode` property', () => {
+            assert.throws(() => NodeUtils.getRootStatementOfNode(identifierNode3), ReferenceError);
+        });
+    });
+
     describe('getScopeOfNode', () => {
         let functionDeclarationBlockStatementNode: ESTree.BlockStatement,
             ifStatementBlockStatementNode1: ESTree.BlockStatement,

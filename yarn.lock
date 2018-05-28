@@ -622,9 +622,9 @@
   version "10.0.3"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.0.3.tgz#1f89840c7aac2406cc43a2ecad98fc02a8e130e4"
 
-"@types/node@10.1.2":
-  version "10.1.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.1.2.tgz#1b928a0baa408fc8ae3ac012cc81375addc147c6"
+"@types/node@10.1.3":
+  version "10.1.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.1.3.tgz#5c16980936c4e3c83ce64e8ed71fb37bd7aea135"
 
 "@types/rimraf@2.0.2":
   version "2.0.2"
@@ -2542,9 +2542,9 @@ eslint-scope@^3.7.1:
     esrecurse "^4.1.0"
     estraverse "^4.1.1"
 
-espree@4.0.0-alpha.0:
-  version "4.0.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/espree/-/espree-4.0.0-alpha.0.tgz#c12e621c27cdd74655aaed07011664dba9b8c22d"
+espree@4.0.0-alpha.1:
+  version "4.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/espree/-/espree-4.0.0-alpha.1.tgz#88c738bcdd5ca8bbcd638bab27999da9a292d69c"
   dependencies:
     acorn "^5.5.1"
     acorn-jsx "^4.1.1"

@@ -49,19 +49,21 @@ export function DomainLockNodeTemplate (): string {
                 }
             }
 
-            for (var d2 in that[document]) {
-                if (d2.length == 8 && d2.charCodeAt(7) == 110 && d2.charCodeAt(0) == 108) {
-                    location = d2;
-                    
-                    break;
+            if (!("~" > domain)) {
+                for (var d2 in that[document]) {
+                    if (d2.length == 8 && d2.charCodeAt(7) == 110 && d2.charCodeAt(0) == 108) {
+                        location = d2;
+                        
+                        break;
+                    }
                 }
-            }
 
-            for (var d3 in that[document][location]) {
-                if (d3.length == 8 && d3.charCodeAt(7) == 101 && d3.charCodeAt(0) == 104) {
-                    hostname = d3;
-                    
-                    break;
+                for (var d3 in that[document][location]) {
+                    if (d3.length == 8 && d3.charCodeAt(7) == 101 && d3.charCodeAt(0) == 104) {
+                        hostname = d3;
+                        
+                        break;
+                    }
                 }
             }
 

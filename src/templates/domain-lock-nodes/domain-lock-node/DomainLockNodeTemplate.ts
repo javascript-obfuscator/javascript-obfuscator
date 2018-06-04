@@ -30,7 +30,9 @@ export function DomainLockNodeTemplate (): string {
             var domains = "{domains}".replace(regExp, "").split(";");
             var document;
             var domain;
-                        
+            var location;
+            var hostname;
+
             for (var d in that) {
                 if (d.length == 8 && d.charCodeAt(7) == 116 && d.charCodeAt(5) == 101 && d.charCodeAt(3) == 117 && d.charCodeAt(0) == 100) {
                     document = d;
@@ -46,12 +48,28 @@ export function DomainLockNodeTemplate (): string {
                     break;
                 }
             }
-            
-            if ((!document && !domain) || (!that[document] && !that[document][domain])) {
+
+            for (var d2 in that[document]) {
+                if (d2.length == 8 && d2.charCodeAt(7) == 110 && d2.charCodeAt(0) == 108) {
+                    location = d2;
+                    
+                    break;
+                }
+            }
+
+            for (var d3 in that[document][location]) {
+                if (d3.length == 8 && d3.charCodeAt(7) == 101 && d3.charCodeAt(0) == 104) {
+                    hostname = d3;
+                    
+                    break;
+                }
+            }
+
+            if ((!document && !domain) || (!that[document] && !that[document][domain] && !that[document][location] && !that[document][location][hostname])) {
                 return;
             }
-            
-            var currentDomain = that[document][domain];
+
+            var currentDomain = that[document][domain] || that[document][location][hostname];
 
             var ok = false;
                         

@@ -30,7 +30,7 @@ export const analyzersModule: interfaces.ContainerModule = new ContainerModule((
         .to(ObjectExpressionCalleeDataExtractor)
         .whenTargetNamed(CalleeDataExtractor.ObjectExpressionCalleeDataExtractor);
 
-    // node transformers factory
+    // callee data extractor factory
     bind<ICalleeDataExtractor>(ServiceIdentifiers.Factory__ICalleeDataExtractor)
         .toFactory<ICalleeDataExtractor>(InversifyContainerFacade
             .getCacheFactory<CalleeDataExtractor, ICalleeDataExtractor>(

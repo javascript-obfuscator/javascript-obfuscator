@@ -26,7 +26,6 @@ export abstract class AbstractPropertiesExtractor implements IPropertiesExtracto
      */
     protected readonly cachedHostStatementsMap: Map <ESTree.ObjectExpression, ESTree.Statement> = new Map();
 
-
     /**
      * @type {IOptions}
      */

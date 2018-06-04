@@ -70,7 +70,7 @@
     "rimraf": "2.6.2",
     "sinon": "5.0.10",
     "threads": "0.11.0",
-    "ts-node": "6.0.5",
+    "ts-node": "6.1.0",
     "tslint": "5.10.0",
     "tslint-eslint-rules": "5.3.1",
     "tslint-language-service": "0.9.9",
@@ -78,7 +78,7 @@
     "tslint-webpack-plugin": "1.2.2",
     "typescript": "2.9.1",
     "webpack": "4.10.2",
-    "webpack-cli": "2.1.5",
+    "webpack-cli": "3.0.2",
     "webpack-node-externals": "1.7.2"
   },
   "repository": {

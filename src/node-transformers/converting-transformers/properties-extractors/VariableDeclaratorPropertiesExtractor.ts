@@ -112,6 +112,6 @@ export class VariableDeclaratorPropertiesExtractor extends AbstractPropertiesExt
             });
         });
 
-       return isProhibitedObjectExpressionNode;
+        return isProhibitedObjectExpressionNode;
     }
 }

@@ -400,6 +400,35 @@ describe('ObjectExpressionKeysTransformer', () => {
                     assert.match(obfuscatedCode,  regExp);
                 });
             });
+
+            describe('Variant #3: two objects', () => {
+                const match: string = `` +
+                    `const *${variableMatch} *= *{}, *` +
+                        `${variableMatch} *= *{'bar': *'bar'}, *` +
+                        `${variableMatch} *= *${variableMatch}\\['bar']; *` +
+                    `${variableMatch}\\['foo'] *= *'foo';` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-with-object-call-3.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    );
+
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('should correctly transform first object keys and ignore second object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
         });
     });
 

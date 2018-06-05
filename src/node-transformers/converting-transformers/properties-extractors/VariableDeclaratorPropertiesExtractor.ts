@@ -82,13 +82,14 @@ export class VariableDeclaratorPropertiesExtractor extends AbstractPropertiesExt
         const hostVariableDeclarator: ESTree.VariableDeclarator = this.getHostVariableDeclaratorNode(objectExpressionNode);
         const hostVariableDeclaration: ESTree.VariableDeclaration = this.getHostVariableDeclarationNode(hostVariableDeclarator);
         const { declarations } = hostVariableDeclaration;
+        const indexOfDeclarator: number = declarations.indexOf(hostVariableDeclarator);
+        const isLastDeclarator: boolean = indexOfDeclarator === (declarations.length - 1);
 
         // avoid unnecessary checks
-        if (declarations.length === 1) {
+        if (isLastDeclarator) {
             return false;
         }
 
-        const indexOfDeclarator: number = declarations.indexOf(hostVariableDeclarator);
         const declaratorsAfterCurrentDeclarator: ESTree.VariableDeclarator[] = declarations.slice(indexOfDeclarator);
 
         let isProhibitedObjectExpressionNode: boolean = false;

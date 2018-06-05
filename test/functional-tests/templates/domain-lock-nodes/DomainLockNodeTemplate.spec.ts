@@ -18,16 +18,18 @@ import { InversifyContainerFacade } from '../../../../src/container/InversifyCon
  * @param templateData
  * @param callsControllerFunctionName
  * @param currentDomain
+ * @param withoutDomain
  * @returns {Function}
  */
-function getFunctionFromTemplate (templateData: any, callsControllerFunctionName: string,  currentDomain: string, hostname = false) {
+function getFunctionFromTemplate (templateData: any, callsControllerFunctionName: string,  currentDomain: string, domainIsPresent = true) {
     const domainLockTemplate: string = format(DomainLockNodeTemplate(), templateData);
 
     return Function(`
         document = {
-            ${ !hostname ?
-            `domain: '${currentDomain}'` :
-            `location: { hostname: '${currentDomain}' }` }
+            ${ domainIsPresent ?`domain: '${currentDomain}',` : `` }
+            location: {
+                hostname: '${currentDomain}'
+            }
         };
 
         var ${callsControllerFunctionName} = (function(){            
@@ -318,7 +320,7 @@ describe('DomainLockNodeTemplate', () => {
         });
     });
 
-    describe('Variant #6: current hostname matches with `domainsString`', () => {
+    describe('Variant #5: current hostname matches with `domainsString`', () => {
         const domainsString: string = ['www.example.com'].join(';');
         const currentDomain: string = 'www.example.com';
 
@@ -336,7 +338,7 @@ describe('DomainLockNodeTemplate', () => {
                 domains: hiddenDomainsString,
                 globalVariableTemplate: GlobalVariableTemplate1(),
                 singleNodeCallControllerFunctionName
-            }, singleNodeCallControllerFunctionName, currentDomain, true);
+            }, singleNodeCallControllerFunctionName, currentDomain, false);
         });
 
         it('should correctly run code inside template', () => {
@@ -344,7 +346,7 @@ describe('DomainLockNodeTemplate', () => {
         });
     });
 
-    describe('Variant #5: current hostname doesn\'t match with `domainsString`', () => {
+    describe('Variant #6: current hostname doesn\'t match with `domainsString`', () => {
         describe('Variant #1', () => {
             const domainsString: string = ['www.example.com'].join(';');
             const currentDomain: string = 'www.test.com';
@@ -363,7 +365,7 @@ describe('DomainLockNodeTemplate', () => {
                     domains: hiddenDomainsString,
                     globalVariableTemplate: GlobalVariableTemplate1(),
                     singleNodeCallControllerFunctionName
-                }, singleNodeCallControllerFunctionName, currentDomain, true);
+                }, singleNodeCallControllerFunctionName, currentDomain, false);
             });
 
             it('should throw an error', () => {

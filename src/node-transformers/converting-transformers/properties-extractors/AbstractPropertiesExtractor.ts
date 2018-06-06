@@ -192,7 +192,7 @@ export abstract class AbstractPropertiesExtractor implements IPropertiesExtracto
      * @param {Statement} hostStatement
      * @returns {TNodeWithScope}
      */
-    private getHostScopeNode (
+    protected getHostScopeNode (
         objectExpressionNode: ESTree.ObjectExpression,
         hostStatement: ESTree.Statement
     ): TNodeWithScope {
@@ -213,7 +213,7 @@ export abstract class AbstractPropertiesExtractor implements IPropertiesExtracto
      * @param {NodeGuards} objectExpressionNode
      * @returns {Node}
      */
-    private getHostStatement (objectExpressionNode: ESTree.ObjectExpression): ESTree.Statement {
+    protected getHostStatement (objectExpressionNode: ESTree.ObjectExpression): ESTree.Statement {
         if (this.cachedHostStatementsMap.has(objectExpressionNode)) {
             return <ESTree.Statement>this.cachedHostStatementsMap.get(objectExpressionNode);
         }

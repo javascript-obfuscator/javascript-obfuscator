@@ -66,13 +66,19 @@ export function DomainLockNodeTemplate (): string {
                     }
                 }
             }
-
-            if ((!document && !domain) || (!that[document] && !that[document][domain] && !that[document][location] && !that[document][location][hostname])) {
+            
+            if (!document || !that[document]) {
                 return;
             }
-
-            var currentDomain = that[document][domain] || that[document][location][hostname];
-
+            
+            var documentDomain = that[document][domain];
+            var documentLocationHostName = !!that[document][location] && that[document][location][hostname];  
+            var currentDomain = documentDomain || documentLocationHostName;
+          
+            if (!currentDomain) {
+                return;
+            }
+          
             var ok = false;
                         
             for (var i = 0; i < domains.length; i++) {

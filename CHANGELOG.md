@@ -3,6 +3,9 @@ Change Log
 v0.17.0
 ---
 * **Browser version**: Added browser version dist
+* [#274](https://github.com/javascript-obfuscator/javascript-obfuscator/pull/274)`domainLock` now will work in SVG.
+  <br/>
+  Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/273
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/271
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/264
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/260

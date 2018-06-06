@@ -15,22 +15,61 @@ import { GlobalVariableTemplate1 } from '../../../../src/templates/GlobalVariabl
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
 
 /**
- * @param templateData
- * @param callsControllerFunctionName
- * @param currentDomain
- * @param withoutDomain
- * @returns {Function}
+ * @param {string} currentDomain
+ * @returns {string}
  */
-function getFunctionFromTemplate (templateData: any, callsControllerFunctionName: string,  currentDomain: string, domainIsPresent = true) {
-    const domainLockTemplate: string = format(DomainLockNodeTemplate(), templateData);
-
-    return Function(`
+function getDocumentDomainTemplate (currentDomain: string): string {
+    return `
         document = {
-            ${ domainIsPresent ?`domain: '${currentDomain}',` : `` }
+            domain: '${currentDomain}'
+        };
+    `
+}
+
+/**
+ * @param {string} currentDomain
+ * @returns {string}
+ */
+function getDocumentLocationTemplate (currentDomain: string): string {
+    return `
+        document = {
             location: {
                 hostname: '${currentDomain}'
             }
         };
+    `
+}
+
+/**
+ * @param {string} currentDomain
+ * @returns {string}
+ */
+function getDocumentDomainAndLocationTemplate (currentDomain: string): string {
+    return `
+        document = {
+            domain: '${currentDomain}',
+            location: {
+                hostname: '${currentDomain}'
+            }
+        };
+    `
+}
+
+/**
+ * @param templateData
+ * @param {string} callsControllerFunctionName
+ * @param {string} documentTemplate
+ * @returns {Function}
+ */
+function getFunctionFromTemplate (
+    templateData: any,
+    callsControllerFunctionName: string,
+    documentTemplate: string
+): Function {
+    const domainLockTemplate: string = format(DomainLockNodeTemplate(), templateData);
+
+    return Function(`
+        ${documentTemplate}
 
         var ${callsControllerFunctionName} = (function(){            
             return function (context, fn){	
@@ -68,13 +107,17 @@ describe('DomainLockNodeTemplate', () => {
                 diff
             ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
-            testFunc = () => getFunctionFromTemplate({
-                domainLockFunctionName: 'domainLockFunction',
-                diff: diff,
-                domains: hiddenDomainsString,
-                globalVariableTemplate: GlobalVariableTemplate1(),
-                singleNodeCallControllerFunctionName
-            }, singleNodeCallControllerFunctionName, currentDomain);
+            testFunc = () => getFunctionFromTemplate(
+                {
+                    domainLockFunctionName: 'domainLockFunction',
+                    diff: diff,
+                    domains: hiddenDomainsString,
+                    globalVariableTemplate: GlobalVariableTemplate1(),
+                    singleNodeCallControllerFunctionName
+                },
+                singleNodeCallControllerFunctionName,
+                getDocumentDomainTemplate(currentDomain)
+            );
         });
 
         it('should correctly run code inside template', () => {
@@ -94,13 +137,17 @@ describe('DomainLockNodeTemplate', () => {
                 diff
             ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
-            testFunc = () => getFunctionFromTemplate({
-                domainLockFunctionName: 'domainLockFunction',
-                diff: diff,
-                domains: hiddenDomainsString,
-                globalVariableTemplate: GlobalVariableTemplate1(),
-                singleNodeCallControllerFunctionName
-            }, singleNodeCallControllerFunctionName, currentDomain);
+            testFunc = () => getFunctionFromTemplate(
+                {
+                    domainLockFunctionName: 'domainLockFunction',
+                    diff: diff,
+                    domains: hiddenDomainsString,
+                    globalVariableTemplate: GlobalVariableTemplate1(),
+                    singleNodeCallControllerFunctionName
+                },
+                singleNodeCallControllerFunctionName,
+                getDocumentDomainTemplate(currentDomain)
+            );
         });
 
         it('should correctly run code inside template', () => {
@@ -121,13 +168,17 @@ describe('DomainLockNodeTemplate', () => {
                     diff
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
-                testFunc = () => getFunctionFromTemplate({
-                    domainLockFunctionName: 'domainLockFunction',
-                    diff: diff,
-                    domains: hiddenDomainsString,
-                    globalVariableTemplate: GlobalVariableTemplate1(),
-                    singleNodeCallControllerFunctionName
-                }, singleNodeCallControllerFunctionName, currentDomain);
+                testFunc = () => getFunctionFromTemplate(
+                    {
+                        domainLockFunctionName: 'domainLockFunction',
+                        diff: diff,
+                        domains: hiddenDomainsString,
+                        globalVariableTemplate: GlobalVariableTemplate1(),
+                        singleNodeCallControllerFunctionName
+                    },
+                    singleNodeCallControllerFunctionName,
+                    getDocumentDomainTemplate(currentDomain)
+                );
             });
 
             it('should correctly run code inside template', () => {
@@ -147,13 +198,17 @@ describe('DomainLockNodeTemplate', () => {
                     diff
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
-                testFunc = () => getFunctionFromTemplate({
-                    domainLockFunctionName: 'domainLockFunction',
-                    diff: diff,
-                    domains: hiddenDomainsString,
-                    globalVariableTemplate: GlobalVariableTemplate1(),
-                    singleNodeCallControllerFunctionName
-                }, singleNodeCallControllerFunctionName, currentDomain);
+                testFunc = () => getFunctionFromTemplate(
+                    {
+                        domainLockFunctionName: 'domainLockFunction',
+                        diff: diff,
+                        domains: hiddenDomainsString,
+                        globalVariableTemplate: GlobalVariableTemplate1(),
+                        singleNodeCallControllerFunctionName
+                    },
+                    singleNodeCallControllerFunctionName,
+                    getDocumentDomainTemplate(currentDomain)
+                );
             });
 
             it('should correctly run code inside template', () => {
@@ -173,13 +228,17 @@ describe('DomainLockNodeTemplate', () => {
                     diff
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
-                testFunc = () => getFunctionFromTemplate({
-                    domainLockFunctionName: 'domainLockFunction',
-                    diff: diff,
-                    domains: hiddenDomainsString,
-                    globalVariableTemplate: GlobalVariableTemplate1(),
-                    singleNodeCallControllerFunctionName
-                }, singleNodeCallControllerFunctionName, currentDomain);
+                testFunc = () => getFunctionFromTemplate(
+                    {
+                        domainLockFunctionName: 'domainLockFunction',
+                        diff: diff,
+                        domains: hiddenDomainsString,
+                        globalVariableTemplate: GlobalVariableTemplate1(),
+                        singleNodeCallControllerFunctionName
+                    },
+                    singleNodeCallControllerFunctionName,
+                    getDocumentDomainTemplate(currentDomain)
+                );
             });
 
             it('should correctly run code inside template', () => {
@@ -199,13 +258,17 @@ describe('DomainLockNodeTemplate', () => {
                     diff
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
-                testFunc = () => getFunctionFromTemplate({
-                    domainLockFunctionName: 'domainLockFunction',
-                    diff: diff,
-                    domains: hiddenDomainsString,
-                    globalVariableTemplate: GlobalVariableTemplate1(),
-                    singleNodeCallControllerFunctionName
-                }, singleNodeCallControllerFunctionName, currentDomain);
+                testFunc = () => getFunctionFromTemplate(
+                    {
+                        domainLockFunctionName: 'domainLockFunction',
+                        diff: diff,
+                        domains: hiddenDomainsString,
+                        globalVariableTemplate: GlobalVariableTemplate1(),
+                        singleNodeCallControllerFunctionName
+                    },
+                    singleNodeCallControllerFunctionName,
+                    getDocumentDomainTemplate(currentDomain)
+                );
             });
 
             it('should correctly run code inside template', () => {
@@ -226,13 +289,17 @@ describe('DomainLockNodeTemplate', () => {
                 diff
             ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
-            testFunc = () => getFunctionFromTemplate({
-                domainLockFunctionName: 'domainLockFunction',
-                diff: diff,
-                domains: hiddenDomainsString,
-                globalVariableTemplate: GlobalVariableTemplate1(),
-                singleNodeCallControllerFunctionName
-            }, singleNodeCallControllerFunctionName, currentDomain);
+            testFunc = () => getFunctionFromTemplate(
+                {
+                    domainLockFunctionName: 'domainLockFunction',
+                    diff: diff,
+                    domains: hiddenDomainsString,
+                    globalVariableTemplate: GlobalVariableTemplate1(),
+                    singleNodeCallControllerFunctionName
+                },
+                singleNodeCallControllerFunctionName,
+                getDocumentDomainTemplate(currentDomain)
+            );
         });
 
         it('should correctly run code inside template', () => {
@@ -253,13 +320,17 @@ describe('DomainLockNodeTemplate', () => {
                     diff
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
-                testFunc = () => getFunctionFromTemplate({
-                    domainLockFunctionName: 'domainLockFunction',
-                    diff: diff,
-                    domains: hiddenDomainsString,
-                    globalVariableTemplate: GlobalVariableTemplate1(),
-                    singleNodeCallControllerFunctionName
-                }, singleNodeCallControllerFunctionName, currentDomain);
+                testFunc = () => getFunctionFromTemplate(
+                    {
+                        domainLockFunctionName: 'domainLockFunction',
+                        diff: diff,
+                        domains: hiddenDomainsString,
+                        globalVariableTemplate: GlobalVariableTemplate1(),
+                        singleNodeCallControllerFunctionName
+                    },
+                    singleNodeCallControllerFunctionName,
+                    getDocumentDomainTemplate(currentDomain)
+                );
             });
 
             it('should throw an error', () => {
@@ -280,12 +351,15 @@ describe('DomainLockNodeTemplate', () => {
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
                 testFunc = () => getFunctionFromTemplate({
-                    domainLockFunctionName: 'domainLockFunction',
-                    diff: diff,
-                    domains: hiddenDomainsString,
-                    globalVariableTemplate: GlobalVariableTemplate1(),
-                    singleNodeCallControllerFunctionName
-                }, singleNodeCallControllerFunctionName, currentDomain);
+                        domainLockFunctionName: 'domainLockFunction',
+                        diff: diff,
+                        domains: hiddenDomainsString,
+                        globalVariableTemplate: GlobalVariableTemplate1(),
+                        singleNodeCallControllerFunctionName
+                    },
+                    singleNodeCallControllerFunctionName,
+                    getDocumentDomainTemplate(currentDomain)
+                );
             });
 
             it('should throw an error', () => {
@@ -305,13 +379,17 @@ describe('DomainLockNodeTemplate', () => {
                     diff
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
-                testFunc = () => getFunctionFromTemplate({
-                    domainLockFunctionName: 'domainLockFunction',
-                    diff: diff,
-                    domains: hiddenDomainsString,
-                    globalVariableTemplate: GlobalVariableTemplate1(),
-                    singleNodeCallControllerFunctionName
-                }, singleNodeCallControllerFunctionName, currentDomain);
+                testFunc = () => getFunctionFromTemplate(
+                    {
+                        domainLockFunctionName: 'domainLockFunction',
+                        diff: diff,
+                        domains: hiddenDomainsString,
+                        globalVariableTemplate: GlobalVariableTemplate1(),
+                        singleNodeCallControllerFunctionName
+                    },
+                    singleNodeCallControllerFunctionName,
+                    getDocumentDomainTemplate(currentDomain)
+                );
             });
 
             it('should throw an error', () => {
@@ -320,36 +398,10 @@ describe('DomainLockNodeTemplate', () => {
         });
     });
 
-    describe('Variant #5: current hostname matches with `domainsString`', () => {
-        const domainsString: string = ['www.example.com'].join(';');
-        const currentDomain: string = 'www.example.com';
-
-        let testFunc: () => void;
-
-        before(() => {
-            const [
-                hiddenDomainsString,
-                diff
-            ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
-
-            testFunc = () => getFunctionFromTemplate({
-                domainLockFunctionName: 'domainLockFunction',
-                diff: diff,
-                domains: hiddenDomainsString,
-                globalVariableTemplate: GlobalVariableTemplate1(),
-                singleNodeCallControllerFunctionName
-            }, singleNodeCallControllerFunctionName, currentDomain, false);
-        });
-
-        it('should correctly run code inside template', () => {
-            assert.doesNotThrow(testFunc);
-        });
-    });
-
-    describe('Variant #6: current hostname doesn\'t match with `domainsString`', () => {
-        describe('Variant #1', () => {
+    describe('Variant #6: location.hostname', () => {
+        describe('Variant #1: current location.hostname matches with `domainsString`', () => {
             const domainsString: string = ['www.example.com'].join(';');
-            const currentDomain: string = 'www.test.com';
+            const currentHostName: string = 'www.example.com';
 
             let testFunc: () => void;
 
@@ -359,13 +411,109 @@ describe('DomainLockNodeTemplate', () => {
                     diff
                 ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
 
-                testFunc = () => getFunctionFromTemplate({
-                    domainLockFunctionName: 'domainLockFunction',
-                    diff: diff,
-                    domains: hiddenDomainsString,
-                    globalVariableTemplate: GlobalVariableTemplate1(),
-                    singleNodeCallControllerFunctionName
-                }, singleNodeCallControllerFunctionName, currentDomain, false);
+                testFunc = () => getFunctionFromTemplate(
+                    {
+                        domainLockFunctionName: 'domainLockFunction',
+                        diff: diff,
+                        domains: hiddenDomainsString,
+                        globalVariableTemplate: GlobalVariableTemplate1(),
+                        singleNodeCallControllerFunctionName
+                    },
+                    singleNodeCallControllerFunctionName,
+                    getDocumentLocationTemplate(currentHostName)
+                );
+            });
+
+            it('should correctly run code inside template', () => {
+                assert.doesNotThrow(testFunc);
+            });
+        });
+
+        describe('Variant #2: current location.hostname doesn\'t match with `domainsString`', () => {
+            const domainsString: string = ['www.example.com'].join(';');
+            const currentHostName: string = 'www.test.com';
+
+            let testFunc: () => void;
+
+            before(() => {
+                const [
+                    hiddenDomainsString,
+                    diff
+                ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+
+                testFunc = () => getFunctionFromTemplate(
+                    {
+                        domainLockFunctionName: 'domainLockFunction',
+                        diff: diff,
+                        domains: hiddenDomainsString,
+                        globalVariableTemplate: GlobalVariableTemplate1(),
+                        singleNodeCallControllerFunctionName
+                    },
+                    singleNodeCallControllerFunctionName,
+                    getDocumentLocationTemplate(currentHostName)
+                );
+            });
+
+            it('should throw an error', () => {
+                assert.throws(testFunc);
+            });
+        });
+    });
+
+    describe('Variant #7: domain and location.hostname presented', () => {
+        describe('Variant #1: current domain matches with `domainsString`', () => {
+            const domainsString: string = ['www.example.com'].join(';');
+            const currentHostName: string = 'www.example.com';
+
+            let testFunc: () => void;
+
+            before(() => {
+                const [
+                    hiddenDomainsString,
+                    diff
+                ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+
+                testFunc = () => getFunctionFromTemplate(
+                    {
+                        domainLockFunctionName: 'domainLockFunction',
+                        diff: diff,
+                        domains: hiddenDomainsString,
+                        globalVariableTemplate: GlobalVariableTemplate1(),
+                        singleNodeCallControllerFunctionName
+                    },
+                    singleNodeCallControllerFunctionName,
+                    getDocumentDomainAndLocationTemplate(currentHostName)
+                );
+            });
+
+            it('should correctly run code inside template', () => {
+                assert.doesNotThrow(testFunc);
+            });
+        });
+
+        describe('Variant #2: current domain doesn\'t match with `domainsString`', () => {
+            const domainsString: string = ['www.example.com'].join(';');
+            const currentHostName: string = 'www.test.com';
+
+            let testFunc: () => void;
+
+            before(() => {
+                const [
+                    hiddenDomainsString,
+                    diff
+                ] = cryptUtils.hideString(domainsString, domainsString.length * 3);
+
+                testFunc = () => getFunctionFromTemplate(
+                    {
+                        domainLockFunctionName: 'domainLockFunction',
+                        diff: diff,
+                        domains: hiddenDomainsString,
+                        globalVariableTemplate: GlobalVariableTemplate1(),
+                        singleNodeCallControllerFunctionName
+                    },
+                    singleNodeCallControllerFunctionName,
+                    getDocumentDomainAndLocationTemplate(currentHostName)
+                );
             });
 
             it('should throw an error', () => {

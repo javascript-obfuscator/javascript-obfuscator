@@ -4002,9 +4002,9 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
-sinon@5.0.10:
-  version "5.0.10"
-  resolved "https://registry.yarnpkg.com/sinon/-/sinon-5.0.10.tgz#a282b36a7475664c9f98719108e5546907129023"
+sinon@5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/sinon/-/sinon-5.1.0.tgz#65f463422978638fadf750c026719697feb0dca5"
   dependencies:
     "@sinonjs/formatio" "^2.0.0"
     diff "^3.5.0"
@@ -4640,9 +4640,9 @@ webpack-sources@^1.0.1, webpack-sources@^1.1.0:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
 
-webpack@4.11.0:
-  version "4.11.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.11.0.tgz#b7b68b4fe8a8963a18370a05f84d38d59ada4fbf"
+webpack@4.11.1:
+  version "4.11.1"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.11.1.tgz#1aa0b936f7ae93a52cf38d2ad0d0f46dcf3c2723"
   dependencies:
     "@webassemblyjs/ast" "1.5.10"
     "@webassemblyjs/helper-module-context" "1.5.10"

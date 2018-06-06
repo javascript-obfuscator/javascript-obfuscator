@@ -100,18 +100,17 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
             return variableDeclarationNode;
         }
 
-        const nodeIdentifier: number = this.nodeIdentifier++;
         const scopeNode: ESTree.Node = variableDeclarationNode.kind === 'var'
             ? blockScopeNode
             : parentNode;
 
-        this.storeVariableNames(variableDeclarationNode, isGlobalDeclaration, nodeIdentifier);
+        this.storeVariableNames(variableDeclarationNode, blockScopeNode, isGlobalDeclaration);
 
         // check for cached identifiers for current scope node. If exist - loop through them.
         if (this.replaceableIdentifiers.has(scopeNode)) {
-            this.replaceScopeCachedIdentifiers(variableDeclarationNode, scopeNode, nodeIdentifier);
+            this.replaceScopeCachedIdentifiers(variableDeclarationNode, blockScopeNode, scopeNode);
         } else {
-            this.replaceScopeIdentifiers(scopeNode, nodeIdentifier);
+            this.replaceScopeIdentifiers(scopeNode, blockScopeNode);
         }
 
         return variableDeclarationNode;
@@ -119,34 +118,35 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {VariableDeclaration} variableDeclarationNode
+     * @param {TNodeWithBlockScope} blockScopeNode
      * @param {boolean} isGlobalDeclaration
-     * @param {number} nodeIdentifier
      */
     private storeVariableNames (
         variableDeclarationNode: ESTree.VariableDeclaration,
-        isGlobalDeclaration: boolean,
-        nodeIdentifier: number
+        blockScopeNode: TNodeWithBlockScope,
+        isGlobalDeclaration: boolean
     ): void {
         this.traverseDeclarationIdentifiers(variableDeclarationNode, (identifierNode: ESTree.Identifier) => {
             if (isGlobalDeclaration) {
-                this.identifierObfuscatingReplacer.storeGlobalName(identifierNode.name, nodeIdentifier);
+                this.identifierObfuscatingReplacer.storeGlobalName(identifierNode.name, blockScopeNode);
             } else {
-                this.identifierObfuscatingReplacer.storeLocalName(identifierNode.name, nodeIdentifier);
+                this.identifierObfuscatingReplacer.storeLocalName(identifierNode.name, blockScopeNode);
             }
         });
     }
 
     /**
      * @param {VariableDeclaration} variableDeclarationNode
+     * @param {TNodeWithBlockScope} blockScopeNode
      * @param {Node} scopeNode
-     * @param {number} nodeIdentifier
      */
     private replaceScopeCachedIdentifiers (
         variableDeclarationNode: ESTree.VariableDeclaration,
-        scopeNode: ESTree.Node,
-        nodeIdentifier: number
+        blockScopeNode: TNodeWithBlockScope,
+        scopeNode: ESTree.Node
     ): void {
-        const cachedReplaceableIdentifiersNamesMap: TReplaceableIdentifiersNames | undefined = this.replaceableIdentifiers.get(scopeNode);
+        const cachedReplaceableIdentifiersNamesMap: TReplaceableIdentifiersNames | undefined =
+            this.replaceableIdentifiers.get(scopeNode);
 
         if (!cachedReplaceableIdentifiersNamesMap) {
             return;
@@ -159,7 +159,8 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
         });
 
         identifierNames.forEach((identifierName: string) => {
-            const cachedReplaceableIdentifiers: ESTree.Identifier[] | undefined = cachedReplaceableIdentifiersNamesMap.get(identifierName);
+            const cachedReplaceableIdentifiers: ESTree.Identifier[] | undefined =
+                cachedReplaceableIdentifiersNamesMap.get(identifierName);
 
             if (!cachedReplaceableIdentifiers) {
                 return;
@@ -175,7 +176,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
                 }
 
                 const newReplaceableIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                    .replace(replaceableIdentifier.name, nodeIdentifier);
+                    .replace(replaceableIdentifier.name, blockScopeNode);
 
                 replaceableIdentifier.name = newReplaceableIdentifier.name;
                 NodeMetadata.set(replaceableIdentifier, { renamedIdentifier: true });
@@ -184,27 +185,29 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {NodeGuards} blockScopeNode
-     * @param {number} nodeIdentifier
+     * @param {Node} scopeNode
+     * @param {TNodeWithBlockScope} blockScopeNode
      */
-    private replaceScopeIdentifiers (blockScopeNode: ESTree.Node, nodeIdentifier: number): void {
+    private replaceScopeIdentifiers (scopeNode: ESTree.Node, blockScopeNode: TNodeWithBlockScope): void {
         const storedReplaceableIdentifiersNamesMap: TReplaceableIdentifiersNames = new Map();
 
-        estraverse.replace(blockScopeNode, {
+        estraverse.replace(scopeNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
                 if (
                     parentNode
                     && NodeGuards.isReplaceableIdentifierNode(node, parentNode)
                     && !NodeMetadata.isRenamedIdentifier(node)
                 ) {
-                    const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer.replace(node.name, nodeIdentifier);
+                    const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
+                        .replace(node.name, blockScopeNode);
                     const newIdentifierName: string = newIdentifier.name;
 
                     if (node.name !== newIdentifierName) {
                         node.name = newIdentifierName;
                         NodeMetadata.set(node, { renamedIdentifier: true });
                     } else {
-                        const storedReplaceableIdentifiers: ESTree.Identifier[] = storedReplaceableIdentifiersNamesMap.get(node.name) || [];
+                        const storedReplaceableIdentifiers: ESTree.Identifier[] =
+                            storedReplaceableIdentifiersNamesMap.get(node.name) || [];
 
                         storedReplaceableIdentifiers.push(node);
                         storedReplaceableIdentifiersNamesMap.set(node.name, storedReplaceableIdentifiers);
@@ -213,7 +216,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
             }
         });
 
-        this.replaceableIdentifiers.set(blockScopeNode, storedReplaceableIdentifiersNamesMap);
+        this.replaceableIdentifiers.set(scopeNode, storedReplaceableIdentifiersNamesMap);
     }
 
     /**

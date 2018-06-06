@@ -92,7 +92,6 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (functionDeclarationNode: ESTree.FunctionDeclaration, parentNode: ESTree.Node): ESTree.Node {
-        const nodeIdentifier: number = this.nodeIdentifier++;
         const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopesOfNode(functionDeclarationNode)[0];
         const isGlobalDeclaration: boolean = blockScopeNode.type === NodeType.Program;
 
@@ -100,13 +99,13 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
             return functionDeclarationNode;
         }
 
-        this.storeFunctionName(functionDeclarationNode, isGlobalDeclaration, nodeIdentifier);
+        this.storeFunctionName(functionDeclarationNode, blockScopeNode, isGlobalDeclaration);
 
         // check for cached identifiers for current scope node. If exist - loop through them.
         if (this.replaceableIdentifiers.has(blockScopeNode)) {
-            this.replaceScopeCachedIdentifiers(functionDeclarationNode, blockScopeNode, nodeIdentifier);
+            this.replaceScopeCachedIdentifiers(functionDeclarationNode, blockScopeNode);
         } else {
-            this.replaceScopeIdentifiers(blockScopeNode, nodeIdentifier);
+            this.replaceScopeIdentifiers(blockScopeNode);
         }
 
         return functionDeclarationNode;
@@ -114,32 +113,31 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {FunctionDeclaration} functionDeclarationNode
+     * @param {TNodeWithBlockScope} blockScopeNode
      * @param {boolean} isGlobalDeclaration
-     * @param {number} nodeIdentifier
      */
     private storeFunctionName (
         functionDeclarationNode: ESTree.FunctionDeclaration,
-        isGlobalDeclaration: boolean,
-        nodeIdentifier: number
+        blockScopeNode: TNodeWithBlockScope,
+        isGlobalDeclaration: boolean
     ): void {
         if (isGlobalDeclaration) {
-            this.identifierObfuscatingReplacer.storeGlobalName(functionDeclarationNode.id.name, nodeIdentifier);
+            this.identifierObfuscatingReplacer.storeGlobalName(functionDeclarationNode.id.name, blockScopeNode);
         } else {
-            this.identifierObfuscatingReplacer.storeLocalName(functionDeclarationNode.id.name, nodeIdentifier);
+            this.identifierObfuscatingReplacer.storeLocalName(functionDeclarationNode.id.name, blockScopeNode);
         }
     }
 
     /**
      * @param {FunctionDeclaration} functionDeclarationNode
      * @param {TNodeWithBlockScope} blockScopeNode
-     * @param {number} nodeIdentifier
      */
     private replaceScopeCachedIdentifiers (
         functionDeclarationNode: ESTree.FunctionDeclaration,
-        blockScopeNode: TNodeWithBlockScope,
-        nodeIdentifier: number
+        blockScopeNode: TNodeWithBlockScope
     ): void {
-        const cachedReplaceableIdentifiersNamesMap: TReplaceableIdentifiersNames | undefined = this.replaceableIdentifiers.get(blockScopeNode);
+        const cachedReplaceableIdentifiersNamesMap: TReplaceableIdentifiersNames | undefined =
+            this.replaceableIdentifiers.get(blockScopeNode);
 
         if (!cachedReplaceableIdentifiersNamesMap) {
             return;
@@ -157,7 +155,7 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
         for (let i: number = 0; i < cachedReplaceableIdentifierLength; i++) {
             const replaceableIdentifier: ESTree.Identifier = cachedReplaceableIdentifiers[i];
             const newReplaceableIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                .replace(replaceableIdentifier.name, nodeIdentifier);
+                .replace(replaceableIdentifier.name, blockScopeNode);
 
             replaceableIdentifier.name = newReplaceableIdentifier.name;
             NodeMetadata.set(replaceableIdentifier, { renamedIdentifier: true });
@@ -166,9 +164,8 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {TNodeWithBlockScope} blockScopeNode
-     * @param {number} nodeIdentifier
      */
-    private replaceScopeIdentifiers (blockScopeNode: TNodeWithBlockScope, nodeIdentifier: number): void {
+    private replaceScopeIdentifiers (blockScopeNode: TNodeWithBlockScope): void {
         const storedReplaceableIdentifiersNamesMap: TReplaceableIdentifiersNames = new Map();
 
         estraverse.replace(blockScopeNode, {
@@ -179,14 +176,15 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
                     && !NodeMetadata.isRenamedIdentifier(node)
                 ) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                        .replace(node.name, nodeIdentifier);
+                        .replace(node.name, blockScopeNode);
                     const newIdentifierName: string = newIdentifier.name;
 
                     if (node.name !== newIdentifierName) {
                         node.name = newIdentifierName;
                         NodeMetadata.set(node, { renamedIdentifier: true });
                     } else {
-                        const storedReplaceableIdentifiers: ESTree.Identifier[] = storedReplaceableIdentifiersNamesMap.get(node.name) || [];
+                        const storedReplaceableIdentifiers: ESTree.Identifier[] =
+                            storedReplaceableIdentifiersNamesMap.get(node.name) || [];
 
                         storedReplaceableIdentifiers.push(node);
                         storedReplaceableIdentifiersNamesMap.set(node.name, storedReplaceableIdentifiers);

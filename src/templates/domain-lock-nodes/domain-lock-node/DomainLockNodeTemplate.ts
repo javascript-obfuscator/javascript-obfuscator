@@ -72,7 +72,7 @@ export function DomainLockNodeTemplate (): string {
             }
             
             var documentDomain = that[document][domain];
-            var documentLocationHostName = !!that[document][location] && that[document][location][hostname];  
+            var documentLocationHostName = !!that[document][location] && that[document][location][hostname];
             var currentDomain = documentDomain || documentLocationHostName;
           
             if (!currentDomain) {

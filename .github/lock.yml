@@ -4,7 +4,7 @@
 daysUntilLock: 14
 
 # Issues and pull requests with these labels will not be locked. Set to `[]` to disable
-exemptLabels: [bug, enhancement, future, high priority, plans, waiting for release, ]
+exemptLabels: [bug, enhancement, future, high priority, plans, waiting for release]
 
 # Label to add before locking, such as `outdated`. Set to `false` to disable
 lockLabel: false

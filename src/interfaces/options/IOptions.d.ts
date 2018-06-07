@@ -16,6 +16,7 @@ export interface IOptions {
     readonly domainLock: string[];
     readonly identifierNamesGenerator: IdentifierNamesGenerator;
     readonly identifiersPrefix: string;
+    readonly inputFileName: string;
     readonly log: boolean;
     readonly renameGlobals: boolean;
     readonly reservedNames: string[];

@@ -197,7 +197,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
         };
 
         if (this.options.sourceMap) {
-            escodegenParams.sourceMap = 'sourceMap';
+            escodegenParams.sourceMap = this.options.inputFileName || 'sourceMap';
             escodegenParams.sourceContent = sourceCode;
         }
 

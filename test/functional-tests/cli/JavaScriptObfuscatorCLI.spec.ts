@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
+import * as path from 'path';
 import * as rimraf from 'rimraf';
 import * as sinon from 'sinon';
 
@@ -499,6 +500,8 @@ describe('JavaScriptObfuscatorCLI', function (): void {
 
             describe('Variant #1: `--sourceMapMode` option value is `separate`', () => {
                 describe('Variant #1: default behaviour', () => {
+                    const expectedSourceMapSourceName: string = path.basename(fixtureFileName);
+
                     let isFileExist: boolean,
                         sourceMapObject: any;
 
@@ -539,6 +542,10 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         assert.property(sourceMapObject, 'sources');
                     });
 
+                    it('source map source should has correct name', () => {
+                        assert.equal(sourceMapObject.sources[0], expectedSourceMapSourceName);
+                    });
+
                     it('source map from created file should contains property `names`', () => {
                         assert.property(sourceMapObject, 'names');
                     });
@@ -550,6 +557,8 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 });
 
                 describe('Variant #2: `sourceMapBaseUrl` option is set', () => {
+                    const expectedSourceMapSourceName: string = path.basename(fixtureFileName);
+
                     let isFileExist: boolean,
                         sourceMapObject: any;
 
@@ -592,6 +601,10 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         assert.property(sourceMapObject, 'sources');
                     });
 
+                    it('source map source should has correct name', () => {
+                        assert.equal(sourceMapObject.sources[0], expectedSourceMapSourceName);
+                    });
+
                     it('source map from created file should contains property `names`', () => {
                         assert.property(sourceMapObject, 'names');
                     });
@@ -603,6 +616,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 });
 
                 describe('Variant #3: `--sourceMapFileName` option is set', () => {
+                    const expectedSourceMapSourceName: string = path.basename(fixtureFileName);
                     const sourceMapFileName: string = 'test';
                     const sourceMapFilePath: string = `${sourceMapFileName}.js.map`;
                     const outputSourceMapFilePath: string = `${outputDirName}/${sourceMapFilePath}`;
@@ -647,6 +661,10 @@ describe('JavaScriptObfuscatorCLI', function (): void {
 
                     it('source map from created file should contains property `sources`', () => {
                         assert.property(sourceMapObject, 'sources');
+                    });
+
+                    it('source map source should has correct name', () => {
+                        assert.equal(sourceMapObject.sources[0], expectedSourceMapSourceName);
                     });
 
                     it('source map from created file should contains property `names`', () => {

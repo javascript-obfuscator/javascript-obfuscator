@@ -173,11 +173,13 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         const configFilePath: string | undefined = this.inputCLIOptions.config;
         const configFileLocation: string = configFilePath ? path.resolve(configFilePath, '.') : '';
         const configFileOptions: TInputOptions = configFileLocation ? CLIUtils.getUserConfig(configFileLocation) : {};
+        const inputFileName: string = path.basename(this.inputPath);
 
         return {
             ...DEFAULT_PRESET,
             ...configFileOptions,
-            ...inputCLIOptions
+            ...inputCLIOptions,
+            inputFileName
         };
     }
 

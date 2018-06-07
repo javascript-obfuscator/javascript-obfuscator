@@ -18,6 +18,7 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     exclude: [],
     identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
     identifiersPrefix: '',
+    inputFileName: '',
     log: false,
     renameGlobals: false,
     reservedNames: [],

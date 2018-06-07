@@ -79,7 +79,7 @@ export class CatchClauseTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (catchClauseNode: ESTree.CatchClause, parentNode: ESTree.Node): ESTree.Node {
-        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopesOfNode(catchClauseNode)[0];
+        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopeOfNode(catchClauseNode);
 
         this.storeCatchClauseParam(catchClauseNode, blockScopeNode);
         this.replaceCatchClauseParam(catchClauseNode, blockScopeNode);

@@ -289,7 +289,7 @@ function () {
     key: "obfuscate",
     value: function obfuscate(sourceCode) {
       var timeStart = Date.now();
-      this.logger.info(LoggingMessage_1.LoggingMessage.Version, '0.16.0');
+      this.logger.info(LoggingMessage_1.LoggingMessage.Version, "0.17.0-dev.1");
       this.logger.info(LoggingMessage_1.LoggingMessage.ObfuscationStarted);
       this.logger.info(LoggingMessage_1.LoggingMessage.RandomGeneratorSeed, this.randomGenerator.getSeed());
       var astTree = this.parseCode(sourceCode);
@@ -617,7 +617,7 @@ function () {
               return;
             }
 
-            if (blockScopeBodyNode.parentNode !== NodeUtils_1.NodeUtils.getBlockScopesOfNode(node)[0]) {
+            if (blockScopeBodyNode.parentNode !== NodeUtils_1.NodeUtils.getBlockScopeOfNode(node)) {
               return estraverse.VisitorOption.Skip;
             }
 
@@ -766,7 +766,7 @@ function (_AbstractCalleeDataEx) {
         return null;
       }
 
-      var calleeBlockStatement = this.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0], callee.name);
+      var calleeBlockStatement = this.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopeOfNode(blockScopeBody[0]), callee.name);
 
       if (!calleeBlockStatement) {
         return null;
@@ -854,7 +854,7 @@ function (_AbstractCalleeDataEx) {
       var calleeBlockStatement = null;
 
       if (NodeGuards_1.NodeGuards.isIdentifierNode(callee)) {
-        calleeBlockStatement = this.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0], callee.name);
+        calleeBlockStatement = this.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopeOfNode(blockScopeBody[0]), callee.name);
       }
 
       if (NodeGuards_1.NodeGuards.isFunctionExpressionNode(callee)) {
@@ -960,7 +960,7 @@ function (_AbstractCalleeDataEx) {
       }
 
       var functionExpressionName = objectMembersCallsChain[objectMembersCallsChain.length - 1];
-      var calleeBlockStatement = this.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0], objectMembersCallsChain);
+      var calleeBlockStatement = this.getCalleeBlockStatement(NodeUtils_1.NodeUtils.getBlockScopeOfNode(blockScopeBody[0]), objectMembersCallsChain);
 
       if (!calleeBlockStatement) {
         return null;
@@ -7672,7 +7672,7 @@ function (_AbstractNodeTransfor) {
         return false;
       }
 
-      var blockScopeOfBlockStatementNode = NodeUtils_1.NodeUtils.getBlockScopesOfNode(blockStatementNode)[0];
+      var blockScopeOfBlockStatementNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(blockStatementNode);
       return blockScopeOfBlockStatementNode.type !== NodeType_1.NodeType.Program;
     }
   }]);
@@ -7770,7 +7770,7 @@ function (_AbstractNodeTransfor) {
   }, {
     key: "transformNode",
     value: function transformNode(catchClauseNode, parentNode) {
-      var blockScopeNode = NodeUtils_1.NodeUtils.getBlockScopesOfNode(catchClauseNode)[0];
+      var blockScopeNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(catchClauseNode);
       this.storeCatchClauseParam(catchClauseNode, blockScopeNode);
       this.replaceCatchClauseParam(catchClauseNode, blockScopeNode);
       return catchClauseNode;
@@ -7900,7 +7900,7 @@ function (_AbstractNodeTransfor) {
   }, {
     key: "transformNode",
     value: function transformNode(classDeclarationNode, parentNode) {
-      var blockScopeNode = NodeUtils_1.NodeUtils.getBlockScopesOfNode(classDeclarationNode)[0];
+      var blockScopeNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(classDeclarationNode);
       var isGlobalDeclaration = blockScopeNode.type === NodeType_1.NodeType.Program;
 
       if (!this.options.renameGlobals && isGlobalDeclaration) {
@@ -8063,7 +8063,7 @@ function (_AbstractNodeTransfor) {
   }, {
     key: "transformNode",
     value: function transformNode(functionDeclarationNode, parentNode) {
-      var blockScopeNode = NodeUtils_1.NodeUtils.getBlockScopesOfNode(functionDeclarationNode)[0];
+      var blockScopeNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(functionDeclarationNode);
       var isGlobalDeclaration = blockScopeNode.type === NodeType_1.NodeType.Program;
 
       if (!this.options.renameGlobals && isGlobalDeclaration) {
@@ -8236,7 +8236,7 @@ function (_AbstractNodeTransfor) {
   }, {
     key: "transformNode",
     value: function transformNode(functionNode, parentNode) {
-      var blockScopeNode = NodeGuards_1.NodeGuards.isBlockStatementNode(functionNode.body) ? functionNode.body : NodeUtils_1.NodeUtils.getBlockScopesOfNode(functionNode.body)[0];
+      var blockScopeNode = NodeGuards_1.NodeGuards.isBlockStatementNode(functionNode.body) ? functionNode.body : NodeUtils_1.NodeUtils.getBlockScopeOfNode(functionNode.body);
       this.storeFunctionParams(functionNode, blockScopeNode);
       this.replaceFunctionParams(functionNode, blockScopeNode);
       return functionNode;
@@ -8405,7 +8405,7 @@ function (_AbstractNodeTransfor) {
   }, {
     key: "transformNode",
     value: function transformNode(importDeclarationNode, parentNode) {
-      var blockScopeNode = NodeUtils_1.NodeUtils.getBlockScopesOfNode(importDeclarationNode)[0];
+      var blockScopeNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(importDeclarationNode);
       this.storeImportSpecifierNames(importDeclarationNode, blockScopeNode);
 
       if (this.replaceableIdentifiers.has(blockScopeNode)) {
@@ -8564,7 +8564,7 @@ function (_AbstractNodeTransfor) {
   }, {
     key: "transformNode",
     value: function transformNode(labeledStatementNode, parentNode) {
-      var blockScopeNode = NodeUtils_1.NodeUtils.getBlockScopesOfNode(labeledStatementNode)[0];
+      var blockScopeNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(labeledStatementNode);
       this.storeLabeledStatementName(labeledStatementNode, blockScopeNode);
       this.replaceLabeledStatementName(labeledStatementNode, blockScopeNode);
       return labeledStatementNode;
@@ -8805,7 +8805,7 @@ function (_AbstractNodeTransfor) {
   }, {
     key: "transformNode",
     value: function transformNode(variableDeclarationNode, parentNode) {
-      var blockScopeNode = NodeUtils_1.NodeUtils.getBlockScopesOfNode(variableDeclarationNode)[0];
+      var blockScopeNode = NodeUtils_1.NodeUtils.getBlockScopeOfNode(variableDeclarationNode);
       var isGlobalDeclaration = blockScopeNode.type === NodeType_1.NodeType.Program;
 
       if (!this.options.renameGlobals && isGlobalDeclaration) {
@@ -11206,6 +11206,11 @@ function () {
       }, '');
     }
   }, {
+    key: "getBlockScopeOfNode",
+    value: function getBlockScopeOfNode(node) {
+      return NodeUtils.getBlockScopesOfNodeRecursive(node, 1)[0];
+    }
+  }, {
     key: "getBlockScopesOfNode",
     value: function getBlockScopesOfNode(node) {
       return NodeUtils.getBlockScopesOfNodeRecursive(node);
@@ -11310,8 +11315,14 @@ function () {
   }, {
     key: "getBlockScopesOfNodeRecursive",
     value: function getBlockScopesOfNodeRecursive(node) {
-      var blockScopes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-      var depth = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+      var maxSize = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : Infinity;
+      var blockScopes = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+      var depth = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+
+      if (blockScopes.length >= maxSize) {
+        return blockScopes;
+      }
+
       var parentNode = node.parentNode;
 
       if (!parentNode) {
@@ -11327,7 +11338,7 @@ function () {
       }
 
       if (node !== parentNode) {
-        return NodeUtils.getBlockScopesOfNodeRecursive(parentNode, blockScopes, ++depth);
+        return NodeUtils.getBlockScopesOfNodeRecursive(parentNode, maxSize, blockScopes, ++depth);
       }
 
       return blockScopes;

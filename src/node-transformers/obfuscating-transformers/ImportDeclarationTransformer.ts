@@ -95,7 +95,7 @@ export class ImportDeclarationTransformer extends AbstractNodeTransformer {
      * @returns {Node}
      */
     public transformNode (importDeclarationNode: ESTree.ImportDeclaration, parentNode: ESTree.Node): ESTree.Node {
-        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopesOfNode(importDeclarationNode)[0];
+        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopeOfNode(importDeclarationNode);
 
         this.storeImportSpecifierNames(importDeclarationNode, blockScopeNode);
 

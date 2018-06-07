@@ -90,7 +90,7 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (classDeclarationNode: ESTree.ClassDeclaration, parentNode: ESTree.Node): ESTree.Node {
-        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopesOfNode(classDeclarationNode)[0];
+        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopeOfNode(classDeclarationNode);
         const isGlobalDeclaration: boolean = blockScopeNode.type === NodeType.Program;
 
         if (!this.options.renameGlobals && isGlobalDeclaration) {

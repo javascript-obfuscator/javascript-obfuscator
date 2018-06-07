@@ -86,7 +86,7 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (labeledStatementNode: ESTree.LabeledStatement, parentNode: ESTree.Node): ESTree.Node {
-        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopesOfNode(labeledStatementNode)[0];
+        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopeOfNode(labeledStatementNode);
 
         this.storeLabeledStatementName(labeledStatementNode, blockScopeNode);
         this.replaceLabeledStatementName(labeledStatementNode, blockScopeNode);

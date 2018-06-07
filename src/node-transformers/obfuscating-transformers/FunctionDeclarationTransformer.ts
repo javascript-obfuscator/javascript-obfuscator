@@ -92,7 +92,7 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (functionDeclarationNode: ESTree.FunctionDeclaration, parentNode: ESTree.Node): ESTree.Node {
-        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopesOfNode(functionDeclarationNode)[0];
+        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopeOfNode(functionDeclarationNode);
         const isGlobalDeclaration: boolean = blockScopeNode.type === NodeType.Program;
 
         if (!this.options.renameGlobals && isGlobalDeclaration) {

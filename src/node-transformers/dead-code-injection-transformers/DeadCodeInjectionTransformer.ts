@@ -205,7 +205,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         }
 
         const blockScopeOfBlockStatementNode: TNodeWithBlockScope = NodeUtils
-            .getBlockScopesOfNode(blockStatementNode)[0];
+            .getBlockScopeOfNode(blockStatementNode);
 
         return blockScopeOfBlockStatementNode.type !== NodeType.Program;
     }

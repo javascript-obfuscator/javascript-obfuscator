@@ -21,7 +21,7 @@ export class FunctionExpressionCalleeDataExtractor extends AbstractCalleeDataExt
 
         if (NodeGuards.isIdentifierNode(callee)) {
             calleeBlockStatement = this.getCalleeBlockStatement(
-                NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0],
+                NodeUtils.getBlockScopeOfNode(blockScopeBody[0]),
                 callee.name
             );
         }

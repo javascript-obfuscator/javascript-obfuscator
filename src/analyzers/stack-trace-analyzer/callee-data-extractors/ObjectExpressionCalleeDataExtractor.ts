@@ -51,7 +51,7 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
 
         const functionExpressionName: string | number | null = objectMembersCallsChain[objectMembersCallsChain.length - 1];
         const calleeBlockStatement: ESTree.BlockStatement | null = this.getCalleeBlockStatement(
-            NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0],
+            NodeUtils.getBlockScopeOfNode(blockScopeBody[0]),
             objectMembersCallsChain
         );
 

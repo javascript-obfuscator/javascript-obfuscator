@@ -22,7 +22,7 @@ export class FunctionDeclarationCalleeDataExtractor extends AbstractCalleeDataEx
         }
 
         const calleeBlockStatement: ESTree.BlockStatement | null = this.getCalleeBlockStatement(
-            NodeUtils.getBlockScopesOfNode(blockScopeBody[0])[0],
+            NodeUtils.getBlockScopeOfNode(blockScopeBody[0]),
             callee.name
         );
 

@@ -71,6 +71,14 @@ export class NodeUtils {
 
     /**
      * @param {Node} node
+     * @returns {TNodeWithBlockScope}
+     */
+    public static getBlockScopeOfNode (node: ESTree.Node): TNodeWithBlockScope {
+        return NodeUtils.getBlockScopesOfNodeRecursive(node, 1)[0];
+    }
+
+    /**
+     * @param {Node} node
      * @returns {TNodeWithBlockScope[]}
      */
     public static getBlockScopesOfNode (node: ESTree.Node): TNodeWithBlockScope[] {
@@ -206,17 +214,23 @@ export class NodeUtils {
         return <T>copy;
     }
 
-    /**
+    /***
      * @param {Node} node
+     * @param {number} maxSize
      * @param {TNodeWithBlockScope[]} blockScopes
      * @param {number} depth
      * @returns {TNodeWithBlockScope[]}
      */
     private static getBlockScopesOfNodeRecursive (
         node: ESTree.Node,
+        maxSize: number = Infinity,
         blockScopes: TNodeWithBlockScope[] = [],
         depth: number = 0
     ): TNodeWithBlockScope[] {
+        if (blockScopes.length >= maxSize) {
+            return blockScopes;
+        }
+
         const parentNode: ESTree.Node | undefined = node.parentNode;
 
         if (!parentNode) {
@@ -248,7 +262,7 @@ export class NodeUtils {
         }
 
         if (node !== parentNode) {
-            return NodeUtils.getBlockScopesOfNodeRecursive(parentNode, blockScopes, ++depth);
+            return NodeUtils.getBlockScopesOfNodeRecursive(parentNode, maxSize, blockScopes, ++depth);
         }
 
         return blockScopes;

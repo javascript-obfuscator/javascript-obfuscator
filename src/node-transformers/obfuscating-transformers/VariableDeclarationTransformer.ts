@@ -72,7 +72,11 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
             case TransformationStage.Obfuscating:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                        if (parentNode && NodeGuards.isVariableDeclarationNode(node)) {
+                        if (
+                            parentNode
+                            && NodeGuards.isVariableDeclarationNode(node)
+                            && !NodeGuards.isExportNamedDeclarationNode(parentNode)
+                        ) {
                             return this.transformNode(node, parentNode);
                         }
                     }
@@ -174,6 +178,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
                     .replace(replaceableIdentifier.name, nodeIdentifier);
 
                 replaceableIdentifier.name = newReplaceableIdentifier.name;
+                NodeMetadata.set(replaceableIdentifier, { renamedIdentifier: true });
             }
         });
     }
@@ -221,12 +226,12 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     ): void {
         variableDeclarationNode.declarations
             .forEach((declarationNode: ESTree.VariableDeclarator) => {
-                if (NodeGuards.isObjectPatternNode(declarationNode.id)) {
-                    return estraverse.VisitorOption.Skip;
-                }
-
                 estraverse.traverse(declarationNode.id, {
                     enter: (node: ESTree.Node) => {
+                        if (NodeGuards.isPropertyNode(node)) {
+                            return estraverse.VisitorOption.Skip;
+                        }
+
                         if (NodeGuards.isIdentifierNode(node)) {
                             callback(node);
                         }

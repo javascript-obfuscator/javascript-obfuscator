@@ -39,7 +39,7 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (transformationStage: TransformationStage): IVisitor | null {
         switch (transformationStage) {
-            case TransformationStage.Obfuscating:
+            case TransformationStage.Converting:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
                         if (parentNode && NodeGuards.isObjectExpressionNode(node)) {
@@ -61,7 +61,7 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
     public transformNode (objectExpressionNode: ESTree.ObjectExpression, parentNode: ESTree.Node): ESTree.Node {
         objectExpressionNode.properties
             .forEach((property: ESTree.Property) => {
-                if (property.computed) {
+                if (property.computed || !property.key) {
                     return;
                 }
 

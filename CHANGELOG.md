@@ -1,11 +1,32 @@
 Change Log
 ===
+v0.17.0
+---
+* **Browser version**: Added browser version dist
+* **New Node API option:** `inputFileName` allows to set name of the input file with source code. This name will used internally, for example, for source map generation.
+* [#274](https://github.com/javascript-obfuscator/javascript-obfuscator/pull/274)`domainLock` now will work in SVG.
+  <br/>
+  Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/273
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/271
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/264
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/260
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/252
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/247
+
+v0.16.0
+---
+* Correct obfuscation of object rest and spread properties
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/243
+
 v0.15.0
 ---
+* **Internal change:** switched AST parser from `esprima` on `espree`
 * **Breaking change:** dropped `node@4` and `node@5` support.
 * **Breaking change:** renamed `extension` value of `target` option on `browser-no-eval`.
 * **Breaking change:** disabled generation of identifiers, which being matched by `reservedName` option. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/216
 * **New CLI option:** `exclude` allows to exclude specific files or directories from obfuscation.
+* Correct obfuscation of `import` and `export` declarations.
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/231
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/217
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/210
 * Internal: refactoring of many things.

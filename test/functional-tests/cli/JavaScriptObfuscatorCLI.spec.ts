@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
+import * as path from 'path';
 import * as rimraf from 'rimraf';
 import * as sinon from 'sinon';
 
@@ -7,7 +8,7 @@ import { assert } from 'chai';
 
 import { StdoutWriteMock } from '../../mocks/StdoutWriteMock';
 
-import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscatorFacade';
+import { JavaScriptObfuscatorCLI } from '../../../src/JavaScriptObfuscatorCLIFacade';
 
 describe('JavaScriptObfuscatorCLI', function (): void {
     this.timeout(100000);
@@ -25,7 +26,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
     const configFilePath: string = `${configDirName}/${configFileName}`;
 
 
-    describe('run (): void', () => {
+    describe('run', () => {
         before(() => {
             mkdirp.sync(outputDirName);
         });
@@ -35,7 +36,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 let isFileExist: boolean;
 
                 before(() => {
-                    JavaScriptObfuscator.runCLI([
+                    JavaScriptObfuscatorCLI.obfuscate([
                         'node',
                         'javascript-obfuscator',
                         fixtureFilePath,
@@ -67,7 +68,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     before(() => {
                         outputFixturesFilePath = `${fixturesDirName}/${outputFileName}`;
 
-                        JavaScriptObfuscator.runCLI([
+                        JavaScriptObfuscatorCLI.obfuscate([
                             'node',
                             'javascript-obfuscator',
                             fixtureFilePath
@@ -89,7 +90,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     let testFunc: () => void;
 
                     before(() => {
-                        testFunc = () => JavaScriptObfuscator.runCLI([
+                        testFunc = () => JavaScriptObfuscatorCLI.obfuscate([
                             'node',
                             'javascript-obfuscator',
                             'wrong/file/path'
@@ -111,7 +112,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     before(() => {
                         fs.writeFileSync(outputFilePath, 'data');
 
-                        testFunc = () => JavaScriptObfuscator.runCLI([
+                        testFunc = () => JavaScriptObfuscatorCLI.obfuscate([
                             'node',
                             'javascript-obfuscator',
                             outputFilePath
@@ -133,7 +134,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     let isFileExist: boolean;
 
                     before(() => {
-                        JavaScriptObfuscator.runCLI([
+                        JavaScriptObfuscatorCLI.obfuscate([
                             'node',
                             'javascript-obfuscator',
                             fixtureFilePath,
@@ -155,7 +156,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     let testFunc: () => void;
 
                     before(() => {
-                        testFunc = () => JavaScriptObfuscator.runCLI([
+                        testFunc = () => JavaScriptObfuscatorCLI.obfuscate([
                             'node',
                             'javascript-obfuscator',
                             fixtureFilePath,
@@ -201,7 +202,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     outputFixturesFilePath2 = `${directoryPath}/${outputFileName2}`;
                     outputFixturesFilePath3 = `${directoryPath}/${outputFileName3}`;
 
-                    JavaScriptObfuscator.runCLI([
+                    JavaScriptObfuscatorCLI.obfuscate([
                         'node',
                         'javascript-obfuscator',
                         directoryPath,
@@ -263,7 +264,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     outputFixturesFilePath1 = `${directoryPath}/${outputFileName1}`;
                     outputFixturesFilePath2 = `${directoryPath}/${outputFileName2}`;
 
-                    JavaScriptObfuscator.runCLI([
+                    JavaScriptObfuscatorCLI.obfuscate([
                         'node',
                         'javascript-obfuscator',
                         directoryPath,
@@ -322,7 +323,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                     outputFixturesFilePath2 = `${outputDirectoryPath}/${directoryPath}/${outputFileName2}`;
                     outputFixturesFilePath3 = `${outputDirectoryPath}/${directoryPath}/${outputFileName3}`;
 
-                    JavaScriptObfuscator.runCLI([
+                    JavaScriptObfuscatorCLI.obfuscate([
                         'node',
                         'javascript-obfuscator',
                         directoryPath,
@@ -388,7 +389,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         outputFixturesFilePath2 = `${directoryPath}/${outputFileName2}`;
                         outputFixturesFilePath3 = `${directoryPath}/${outputFileName3}`;
 
-                        JavaScriptObfuscator.runCLI([
+                        JavaScriptObfuscatorCLI.obfuscate([
                             'node',
                             'javascript-obfuscator',
                             directoryPath,
@@ -453,7 +454,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         outputFixturesFilePath2 = `${directoryPath}/${outputFileName2}`;
                         outputFixturesFilePath3 = `${directoryPath}/${outputFileName3}`;
 
-                        JavaScriptObfuscator.runCLI([
+                        JavaScriptObfuscatorCLI.obfuscate([
                             'node',
                             'javascript-obfuscator',
                             directoryPath,
@@ -499,11 +500,13 @@ describe('JavaScriptObfuscatorCLI', function (): void {
 
             describe('Variant #1: `--sourceMapMode` option value is `separate`', () => {
                 describe('Variant #1: default behaviour', () => {
+                    const expectedSourceMapSourceName: string = path.basename(fixtureFileName);
+
                     let isFileExist: boolean,
                         sourceMapObject: any;
 
                     before(() => {
-                        JavaScriptObfuscator.runCLI([
+                        JavaScriptObfuscatorCLI.obfuscate([
                             'node',
                             'javascript-obfuscator',
                             fixtureFilePath,
@@ -539,6 +542,10 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         assert.property(sourceMapObject, 'sources');
                     });
 
+                    it('source map source should has correct name', () => {
+                        assert.equal(sourceMapObject.sources[0], expectedSourceMapSourceName);
+                    });
+
                     it('source map from created file should contains property `names`', () => {
                         assert.property(sourceMapObject, 'names');
                     });
@@ -550,11 +557,13 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 });
 
                 describe('Variant #2: `sourceMapBaseUrl` option is set', () => {
+                    const expectedSourceMapSourceName: string = path.basename(fixtureFileName);
+
                     let isFileExist: boolean,
                         sourceMapObject: any;
 
                     before(() => {
-                        JavaScriptObfuscator.runCLI([
+                        JavaScriptObfuscatorCLI.obfuscate([
                             'node',
                             'javascript-obfuscator',
                             fixtureFilePath,
@@ -592,6 +601,10 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         assert.property(sourceMapObject, 'sources');
                     });
 
+                    it('source map source should has correct name', () => {
+                        assert.equal(sourceMapObject.sources[0], expectedSourceMapSourceName);
+                    });
+
                     it('source map from created file should contains property `names`', () => {
                         assert.property(sourceMapObject, 'names');
                     });
@@ -603,6 +616,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 });
 
                 describe('Variant #3: `--sourceMapFileName` option is set', () => {
+                    const expectedSourceMapSourceName: string = path.basename(fixtureFileName);
                     const sourceMapFileName: string = 'test';
                     const sourceMapFilePath: string = `${sourceMapFileName}.js.map`;
                     const outputSourceMapFilePath: string = `${outputDirName}/${sourceMapFilePath}`;
@@ -611,7 +625,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         sourceMapObject: any;
 
                     before(() => {
-                        JavaScriptObfuscator.runCLI([
+                        JavaScriptObfuscatorCLI.obfuscate([
                             'node',
                             'javascript-obfuscator',
                             fixtureFilePath,
@@ -649,6 +663,10 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                         assert.property(sourceMapObject, 'sources');
                     });
 
+                    it('source map source should has correct name', () => {
+                        assert.equal(sourceMapObject.sources[0], expectedSourceMapSourceName);
+                    });
+
                     it('source map from created file should contains property `names`', () => {
                         assert.property(sourceMapObject, 'names');
                     });
@@ -664,7 +682,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 let isFileExist: boolean;
 
                 before(() => {
-                    JavaScriptObfuscator.runCLI([
+                    JavaScriptObfuscatorCLI.obfuscate([
                         'node',
                         'javascript-obfuscator',
                         fixtureFilePath,
@@ -708,7 +726,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 beforeEach(() => {
                     stdoutWriteMock.mute();
 
-                    JavaScriptObfuscator.runCLI([
+                    JavaScriptObfuscatorCLI.obfuscate([
                         'node',
                         'javascript-obfuscator',
                         fixtureFilePath,
@@ -730,7 +748,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 beforeEach(() => {
                     stdoutWriteMock.mute();
 
-                    JavaScriptObfuscator.runCLI([
+                    JavaScriptObfuscatorCLI.obfuscate([
                         'node',
                         'javascript-obfuscator'
                     ]);
@@ -756,7 +774,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
                 sourceMapObject: any;
 
             before(() => {
-                JavaScriptObfuscator.runCLI([
+                JavaScriptObfuscatorCLI.obfuscate([
                     'node',
                     'javascript-obfuscator',
                     fixtureFilePath,
@@ -804,7 +822,7 @@ describe('JavaScriptObfuscatorCLI', function (): void {
             let isFileExist: boolean;
 
             before(() => {
-                JavaScriptObfuscator.runCLI([
+                JavaScriptObfuscatorCLI.obfuscate([
                     'node',
                     'javascript-obfuscator',
                     fixtureFilePath,

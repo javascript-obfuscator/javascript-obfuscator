@@ -3,34 +3,32 @@ import { assert } from 'chai';
 import { SourceMapModeSanitizer } from '../../../../src/cli/sanitizers/SourceMapModeSanitizer';
 
 describe('SourceMapModeSanitizer', () => {
-    describe('SourceMapModeSanitizer: TCLISanitizer = (value: string): string', () => {
-        describe('Variant #1: valid source map mode', () => {
-            const inputValue: string = 'inline';
-            const expectedValue: string = inputValue;
+    describe('Variant #1: valid source map mode', () => {
+        const inputValue: string = 'inline';
+        const expectedValue: string = inputValue;
 
-            let value: string;
+        let value: string;
 
-            before(() => {
-                value = SourceMapModeSanitizer(inputValue);
-            });
-
-            it('should sanitize value', () => {
-                assert.equal(value, expectedValue);
-            });
+        before(() => {
+            value = SourceMapModeSanitizer(inputValue);
         });
 
-        describe('Variant #2: invalid source map mode', () => {
-            const inputValue: string = 'foo';
+        it('should sanitize value', () => {
+            assert.equal(value, expectedValue);
+        });
+    });
 
-            let testFunc: () => void;
+    describe('Variant #2: invalid source map mode', () => {
+        const inputValue: string = 'foo';
 
-            before(() => {
-                testFunc = () => SourceMapModeSanitizer(inputValue);
-            });
+        let testFunc: () => void;
 
-            it('should throw error', () => {
-                assert.throw(testFunc, ReferenceError);
-            });
+        before(() => {
+            testFunc = () => SourceMapModeSanitizer(inputValue);
+        });
+
+        it('should throw error', () => {
+            assert.throw(testFunc, ReferenceError);
         });
     });
 });

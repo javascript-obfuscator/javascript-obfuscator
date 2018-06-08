@@ -15,7 +15,7 @@ describe('DeadCodeInjectionTransformer', () => {
     const variableMatch: string = '_0x([a-f0-9]){4,6}';
     const hexMatch: string = '0x[a-f0-9]';
 
-    describe('transformNode (programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node', function () {
+    describe('transformNode', function () {
         this.timeout(100000);
 
         describe('Variant #1 - 5 simple block statements', () => {

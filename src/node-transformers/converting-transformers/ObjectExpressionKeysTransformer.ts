@@ -3,91 +3,49 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { TNodeWithScope } from '../../types/node/TNodeWithScope';
+import { TPropertiesExtractorFactory } from '../../types/container/node-transformers/TPropertiesExtractorFactory';
 
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IPropertiesExtractor } from '../../interfaces/node-transformers/converting-transformers/properties-extractors/IPropertiesExtractor';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
+import { NodeType } from '../../enums/node/NodeType';
+import { PropertiesExtractor } from '../../enums/node-transformers/converting-transformers/properties-extractors/PropertiesExtractor';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
-import { NodeAppender } from '../../node/NodeAppender';
-import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
-import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
     /**
-     * @type {Map<VariableDeclarator, TNodeWithScope>}
+     * @type {Map<string, PropertiesExtractor>}
      */
-    private readonly cachedScopeNodesMap: Map <ESTree.VariableDeclarator, TNodeWithScope> = new Map();
+    private static readonly propertiesExtractorsMap: Map <string, PropertiesExtractor> = new Map([
+        [NodeType.AssignmentExpression, PropertiesExtractor.AssignmentExpressionPropertiesExtractor],
+        [NodeType.VariableDeclarator, PropertiesExtractor.VariableDeclaratorPropertiesExtractor]
+    ]);
 
     /**
+     * @type {TPropertiesExtractorFactory}
+     */
+    private readonly propertiesExtractorFactory: TPropertiesExtractorFactory;
+
+    /**
+     * @param {TPropertiesExtractorFactory} propertiesExtractorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
+        @inject(ServiceIdentifiers.Factory__IPropertiesExtractor)
+            propertiesExtractorFactory: TPropertiesExtractorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
-    }
 
-    /**
-     * @param {TNodeWithScope} scopeNode
-     * @param {ExpressionStatement[]} expressionStatements
-     * @param {Node} variableDeclarator
-     */
-    private static appendExpressionStatements (
-        scopeNode: TNodeWithScope,
-        expressionStatements: ESTree.ExpressionStatement[],
-        variableDeclarator: ESTree.Node
-    ): void {
-        const variableDeclaration: ESTree.Node | undefined = variableDeclarator.parentNode;
-
-        if (!variableDeclaration || !NodeGuards.isVariableDeclarationNode(variableDeclaration)) {
-            throw new Error('Cannot find variable declaration for variable declarator');
-        }
-
-        NodeAppender.insertNodeAfter(scopeNode, expressionStatements, variableDeclaration);
-    }
-
-    /**
-     * @param {Property[]} properties
-     * @param {number[]} removablePropertyIds
-     * @returns {Property[]}
-     */
-    private static filterObjectExpressionProperties (properties: ESTree.Property[], removablePropertyIds: number[]): ESTree.Property[] {
-        return properties.filter((property: ESTree.Property, index: number) => !removablePropertyIds.includes(index));
-    }
-
-    /**
-     * @param {Property} propertyNode
-     * @returns {string | null}
-     */
-    private static getPropertyNodeKeyName (propertyNode: ESTree.Property): string | null {
-        const propertyKeyNode: ESTree.Expression = propertyNode.key;
-
-        if (NodeGuards.isLiteralNode(propertyKeyNode) && typeof propertyKeyNode.value === 'string') {
-            return propertyKeyNode.value;
-        } else if (NodeGuards.isIdentifierNode(propertyKeyNode)) {
-            return propertyKeyNode.name;
-        }
-
-        return null;
-    }
-
-    /**
-     * @param {Expression | Pattern} propertyValueNode
-     * @returns {boolean}
-     */
-    private static isValidPropertyValueNode (propertyValueNode: ESTree.Expression | ESTree.Pattern): propertyValueNode is ESTree.Expression {
-        return !NodeGuards.isObjectPatternNode(propertyValueNode)
-        && !NodeGuards.isArrayPatternNode(propertyValueNode)
-        && !NodeGuards.isAssignmentPatternNode(propertyValueNode)
-        && !NodeGuards.isRestElementNode(propertyValueNode);
+        this.propertiesExtractorFactory = propertiesExtractorFactory;
     }
 
     /**
@@ -95,24 +53,21 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
      * @returns {IVisitor | null}
      */
     public getVisitor (transformationStage: TransformationStage): IVisitor | null {
-        switch (transformationStage) {
-            case TransformationStage.Converting:
-                return {
-                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                        if (
-                            this.options.transformObjectKeys
-                            && parentNode
-                            && NodeGuards.isObjectExpressionNode(node)
-                            && NodeGuards.isVariableDeclaratorNode(parentNode)
-                        ) {
-                            return this.transformNode(node, parentNode);
-                        }
-                    }
-                };
-
-            default:
-                return null;
+        if (transformationStage !== TransformationStage.Converting) {
+            return null;
         }
+
+        return {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                if (
+                    this.options.transformObjectKeys
+                    && parentNode
+                    && NodeGuards.isObjectExpressionNode(node)
+                ) {
+                    return this.transformNode(node, parentNode);
+                }
+            }
+        };
     }
 
     /**
@@ -128,125 +83,24 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
      *     object['bar'] = 2;
      *
      * @param {MemberExpression} objectExpressionNode
-     * @param {NodeGuards} variableDeclarator
+     * @param {Node} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode (objectExpressionNode: ESTree.ObjectExpression, variableDeclarator: ESTree.VariableDeclarator): ESTree.Node {
-        // should pass only Expression nodes as MemberExpression.object value
-        if (!NodeGuards.isIdentifierNode(variableDeclarator.id)) {
+    public transformNode (objectExpressionNode: ESTree.ObjectExpression, parentNode: ESTree.Node): ESTree.Node {
+        if (!objectExpressionNode.properties.length) {
             return objectExpressionNode;
         }
 
-        const scopeNode: TNodeWithScope | null = NodeUtils.getScopeOfNode(variableDeclarator);
+        const propertiesExtractorName: PropertiesExtractor | undefined = ObjectExpressionKeysTransformer
+            .propertiesExtractorsMap
+            .get(parentNode.type);
 
-        if (!scopeNode || !NodeGuards.isNodeHasScope(scopeNode)) {
+        if (!propertiesExtractorName) {
             return objectExpressionNode;
         }
 
-        this.cachedScopeNodesMap.set(variableDeclarator, scopeNode);
+        const propertiesExtractor: IPropertiesExtractor = this.propertiesExtractorFactory(propertiesExtractorName);
 
-        return this.transformObjectExpressionNode(
-            objectExpressionNode,
-            variableDeclarator.id,
-            variableDeclarator
-        );
-    }
-
-    /**
-     * @param {Property[]} properties
-     * @param {Expression} memberExpressionObject
-     * @param {VariableDeclarator} variableDeclarator
-     * @returns {[ExpressionStatement[] , number[]]}
-     */
-    private extractPropertiesToExpressionStatements (
-        properties: ESTree.Property[],
-        memberExpressionObject: ESTree.Expression,
-        variableDeclarator: ESTree.VariableDeclarator
-    ): [ESTree.ExpressionStatement[], number[]] {
-        const propertiesLength: number = properties.length;
-        const expressionStatements: ESTree.ExpressionStatement[] = [];
-        const removablePropertyIds: number[] = [];
-
-        for (let i: number = 0; i < propertiesLength; i++) {
-            const property: ESTree.Property = properties[i];
-            const propertyValue: ESTree.Expression | ESTree.Pattern = property.value;
-
-            // invalid property nodes
-            if (!ObjectExpressionKeysTransformer.isValidPropertyValueNode(propertyValue)) {
-                continue;
-            }
-
-            /**
-             * Stage 1: extract property node key names
-             */
-            const propertyKeyName: string | null = ObjectExpressionKeysTransformer.getPropertyNodeKeyName(property);
-
-            if (!propertyKeyName) {
-                continue;
-            }
-
-            /**
-             * Stage 2: creating new expression statement node with member expression based on removed property
-             */
-            const shouldCreateLiteralNode: boolean = !property.computed
-                || (property.computed && NodeGuards.isLiteralNode(property.key));
-            const memberExpressionProperty: ESTree.Expression = shouldCreateLiteralNode
-                ? NodeFactory.literalNode(propertyKeyName)
-                : NodeFactory.identifierNode(propertyKeyName);
-            const memberExpressionNode: ESTree.MemberExpression = NodeFactory
-                .memberExpressionNode(memberExpressionObject, memberExpressionProperty, true);
-            const expressionStatementNode: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(
-                NodeFactory.assignmentExpressionNode('=', memberExpressionNode, propertyValue)
-            );
-
-            /**
-             * Stage 3: recursively processing nested object expressions
-             */
-            if (NodeGuards.isObjectExpressionNode(property.value)) {
-                this.transformObjectExpressionNode(property.value, memberExpressionNode, variableDeclarator);
-            }
-
-            /**
-             * Stage 4: filling arrays
-             */
-            expressionStatements.push(expressionStatementNode);
-            removablePropertyIds.push(i);
-        }
-
-        return [expressionStatements, removablePropertyIds];
-    }
-
-    /**
-     * @param {ObjectExpression} objectExpressionNode
-     * @param {Expression} memberExpressionObjectNode
-     * @param {VariableDeclarator} variableDeclarator
-     * @returns {Node}
-     */
-    private transformObjectExpressionNode (
-        objectExpressionNode: ESTree.ObjectExpression,
-        memberExpressionObjectNode: ESTree.Expression,
-        variableDeclarator: ESTree.VariableDeclarator
-    ): ESTree.Node {
-        const properties: ESTree.Property[] = objectExpressionNode.properties;
-
-        if (!properties.length) {
-            return objectExpressionNode;
-        }
-
-        const scopeNode: TNodeWithScope | undefined = this.cachedScopeNodesMap.get(variableDeclarator);
-
-        if (!scopeNode) {
-            return objectExpressionNode;
-        }
-
-        const [expressionStatements, removablePropertyIds]: [ESTree.ExpressionStatement[], number[]] = this
-            .extractPropertiesToExpressionStatements(properties, memberExpressionObjectNode, variableDeclarator);
-
-        objectExpressionNode.properties = ObjectExpressionKeysTransformer
-            .filterObjectExpressionProperties(properties, removablePropertyIds);
-        ObjectExpressionKeysTransformer
-            .appendExpressionStatements(scopeNode, expressionStatements, variableDeclarator);
-
-        return objectExpressionNode;
+        return propertiesExtractor.extract(objectExpressionNode, parentNode);
     }
 }

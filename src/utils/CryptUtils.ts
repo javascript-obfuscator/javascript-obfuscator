@@ -23,7 +23,7 @@ export class CryptUtils implements ICryptUtils {
         this.randomGenerator = randomGenerator;
     }
 
-    /* tslint:disable */
+    // tslint:disable
     /**
      * @param {string} string
      * @returns {string}
@@ -53,9 +53,11 @@ export class CryptUtils implements ICryptUtils {
 
         return output;
     }
-    /* tslint:enable */
+    // tslint:enable
 
     /**
+     * Hides string inside a other random string with larger length
+     *
      * @param {string} str
      * @param {number} length
      * @returns {[string , string]}
@@ -87,7 +89,8 @@ export class CryptUtils implements ICryptUtils {
 
         let randomStringDiff: string = randomString.replace(
             new RegExp(`[${escapeRegExp(str)}]`, 'g'),
-            '');
+            ''
+        );
 
         const randomStringDiffArray: string[] = randomStringDiff.split('');
 
@@ -97,7 +100,7 @@ export class CryptUtils implements ICryptUtils {
         return [randomMerge(str, randomStringDiff), randomStringDiff];
     }
 
-    /* tslint:disable */
+    // tslint:disable
     /**
      * RC4 symmetric cipher encryption/decryption
      * https://gist.github.com/farhadi/2185197
@@ -137,5 +140,5 @@ export class CryptUtils implements ICryptUtils {
 
         return result;
     }
-    /* tslint:enable */
+    // tslint:enable
 }

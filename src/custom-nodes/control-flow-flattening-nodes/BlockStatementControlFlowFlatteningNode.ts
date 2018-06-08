@@ -127,7 +127,7 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
             )
         ]);
 
-        NodeUtils.parentize(structure);
+        NodeUtils.parentizeAst(structure);
 
         return [structure];
     }

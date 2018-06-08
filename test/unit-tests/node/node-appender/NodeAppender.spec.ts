@@ -18,14 +18,17 @@ import { InversifyContainerFacade } from '../../../../src/container/InversifyCon
 import { NodeAppender } from '../../../../src/node/NodeAppender';
 import { NodeFactory } from '../../../../src/node/NodeFactory';
 import { NodeUtils } from '../../../../src/node/NodeUtils';
+import { removeRangesFromStructure } from '../../../helpers/removeRangesFromStructure';
 
 /**
  * @param fixturePath
  * @return {TStatement[]}
  */
 const convertCodeToStructure: (fixturePath: string) => TStatement[] = (fixturePath) => {
-    return NodeUtils.convertCodeToStructure(
-        readFileAsString(`${__dirname}${fixturePath}`)
+    return removeRangesFromStructure(
+        NodeUtils.convertCodeToStructure(
+            readFileAsString(`${__dirname}${fixturePath}`)
+        )
     );
 };
 
@@ -38,7 +41,7 @@ const convertCodeToAst: (fixturePath: string) => ESTree.Program = (fixturePath) 
 };
 
 describe('NodeAppender', () => {
-    describe('appendNode (blockScopeNode: TNodeWithBlockScope[], nodeBodyStatements: TStatement[]): void', () => {
+    describe('append', () => {
         let astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
             node: TStatement[];
@@ -48,10 +51,10 @@ describe('NodeAppender', () => {
             astTree = convertCodeToAst('/fixtures/append-node.js');
             expectedAstTree = convertCodeToAst('/fixtures/append-node-expected.js');
 
-            astTree = NodeUtils.parentize(astTree);
-            expectedAstTree = NodeUtils.parentize(expectedAstTree);
+            astTree = NodeUtils.parentizeAst(astTree);
+            expectedAstTree = NodeUtils.parentizeAst(expectedAstTree);
 
-            NodeAppender.appendNode(astTree, node);
+            NodeAppender.append(astTree, node);
         });
 
         it('should append given node to a `BlockStatement` node body', () => {
@@ -59,7 +62,7 @@ describe('NodeAppender', () => {
         });
     });
 
-    describe('appendNodeToOptimalBlockScope (blockScopeStackTraceData: IStackTraceData[], blockScopeNode: TNodeWithBlockScope, nodeBodyStatements: TStatement[], index: number = 0): void', () => {
+    describe('appendToOptimalBlockScope', () => {
         let stackTraceAnalyzer: IStackTraceAnalyzer,
             astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
@@ -84,7 +87,7 @@ describe('NodeAppender', () => {
                 expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/variant-1-expected.js');
 
                 stackTraceData = stackTraceAnalyzer.analyze(astTree);
-                NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node);
+                NodeAppender.appendToOptimalBlockScope(stackTraceData, astTree, node);
             });
 
             it('should append node into first and deepest function call in nested function calls', () => {
@@ -98,7 +101,7 @@ describe('NodeAppender', () => {
                 expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/variant-2-expected.js');
 
                 stackTraceData = stackTraceAnalyzer.analyze(astTree);
-                NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node);
+                NodeAppender.appendToOptimalBlockScope(stackTraceData, astTree, node);
 
             });
 
@@ -119,7 +122,7 @@ describe('NodeAppender', () => {
                     expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index-variant-1-expected.js');
 
                     stackTraceData = stackTraceAnalyzer.analyze(astTree);
-                    NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node, 2);
+                    NodeAppender.appendToOptimalBlockScope(stackTraceData, astTree, node, 2);
 
                 });
 
@@ -133,7 +136,7 @@ describe('NodeAppender', () => {
                     expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index-variant-2-expected.js');
 
                     stackTraceData = stackTraceAnalyzer.analyze(astTree);
-                    NodeAppender.appendNodeToOptimalBlockScope(stackTraceData, astTree, node, 1);
+                    NodeAppender.appendToOptimalBlockScope(stackTraceData, astTree, node, 1);
 
                 });
 
@@ -148,7 +151,7 @@ describe('NodeAppender', () => {
                     expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index-variant-3-expected.js');
 
                     stackTraceData = stackTraceAnalyzer.analyze(astTree);
-                    NodeAppender.appendNodeToOptimalBlockScope(
+                    NodeAppender.appendToOptimalBlockScope(
                         stackTraceData,
                         astTree,
                         node,
@@ -164,7 +167,7 @@ describe('NodeAppender', () => {
         });
     });
 
-    describe('insertNodeAfter (scopeNode: TNodeWithScope, scopeStatements: TStatement[], targetStatement: ESTree.Statement): void', () => {
+    describe('insertAfter', () => {
         let astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
             node: TStatement[],
@@ -176,10 +179,10 @@ describe('NodeAppender', () => {
             expectedAstTree = convertCodeToAst('/fixtures/insert-node-after-expected.js');
             targetStatement = <ESTree.Statement>astTree.body[1];
 
-            astTree = NodeUtils.parentize(astTree);
-            expectedAstTree = NodeUtils.parentize(expectedAstTree);
+            astTree = NodeUtils.parentizeAst(astTree);
+            expectedAstTree = NodeUtils.parentizeAst(expectedAstTree);
 
-            NodeAppender.insertNodeAfter(astTree, node, targetStatement);
+            NodeAppender.insertAfter(astTree, node, targetStatement);
         });
 
         it('should insert given node in `BlockStatement` node body after target statement', () => {
@@ -187,7 +190,7 @@ describe('NodeAppender', () => {
         });
     });
 
-    describe('insertNodeAtIndex (blockScopeNode: TNodeWithBlockScope[], nodeBodyStatements: TStatement[], index: number): void', () => {
+    describe('insertAtIndex', () => {
         let astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
             node: TStatement[];
@@ -197,10 +200,10 @@ describe('NodeAppender', () => {
             astTree = convertCodeToAst('/fixtures/insert-node-at-index.js');
             expectedAstTree = convertCodeToAst('/fixtures/insert-node-at-index-expected.js');
 
-            astTree = NodeUtils.parentize(astTree);
-            expectedAstTree = NodeUtils.parentize(expectedAstTree);
+            astTree = NodeUtils.parentizeAst(astTree);
+            expectedAstTree = NodeUtils.parentizeAst(expectedAstTree);
 
-            NodeAppender.insertNodeAtIndex(astTree, node, 2);
+            NodeAppender.insertAtIndex(astTree, node, 2);
         });
 
         it('should insert given node in `BlockStatement` node body at index', () => {
@@ -208,7 +211,7 @@ describe('NodeAppender', () => {
         });
     });
 
-    describe('prependNode (blockScopeNode: TNodeWithBlockScope[], nodeBodyStatements: TStatement[]): void', () => {
+    describe('prepend', () => {
         let astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
             node: TStatement[];
@@ -218,10 +221,10 @@ describe('NodeAppender', () => {
             astTree = convertCodeToAst('/fixtures/prepend-node.js');
             expectedAstTree = convertCodeToAst('/fixtures/prepend-node-expected.js');
 
-            astTree = NodeUtils.parentize(astTree);
-            expectedAstTree = NodeUtils.parentize(expectedAstTree);
+            astTree = NodeUtils.parentizeAst(astTree);
+            expectedAstTree = NodeUtils.parentizeAst(expectedAstTree);
 
-            NodeAppender.prependNode(astTree, node);
+            NodeAppender.prepend(astTree, node);
         });
 
         it('should prepend given node to a `BlockStatement` node body', () => {

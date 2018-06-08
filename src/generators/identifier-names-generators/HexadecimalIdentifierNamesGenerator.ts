@@ -5,6 +5,7 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { AbstractIdentifierNamesGenerator } from './AbstractIdentifierNamesGenerator';
+import { NumberUtils } from '../../utils/NumberUtils';
 import { Utils } from '../../utils/Utils';
 
 @injectable()
@@ -37,7 +38,7 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
         const rangeMinInteger: number = 10000;
         const rangeMaxInteger: number = 99_999_999;
         const randomInteger: number = this.randomGenerator.getRandomInteger(rangeMinInteger, rangeMaxInteger);
-        const hexadecimalNumber: string = Utils.decToHex(randomInteger);
+        const hexadecimalNumber: string = NumberUtils.toHex(randomInteger);
         const baseIdentifierName: string = hexadecimalNumber.substr(0, HexadecimalIdentifierNamesGenerator.baseIdentifierNameLength);
         const identifierName: string = `_${Utils.hexadecimalPrefix}${baseIdentifierName}`;
 

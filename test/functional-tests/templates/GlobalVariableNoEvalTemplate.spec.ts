@@ -6,7 +6,7 @@ import { assert } from 'chai';
 
 import { GlobalVariableNoEvalTemplate } from '../../../src/templates/GlobalVariableNoEvalTemplate';
 
-describe('GlobalVariableNoEvalTemplate (): string', () => {
+describe('GlobalVariableNoEvalTemplate', () => {
     describe('Variant #1: simple', () => {
         const expectedGlobalObject: NodeJS.Global = global;
 
@@ -68,6 +68,9 @@ describe('GlobalVariableNoEvalTemplate (): string', () => {
                 
                 return that;
             `)();
+
+            // for some reason it couldn't correctly compare global objects without JSON.stringify/JSON.parse
+            globalObject = JSON.parse(JSON.stringify(globalObject));
         });
 
         it('should correctly return `window` object', () => {

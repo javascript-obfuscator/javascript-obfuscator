@@ -109,7 +109,7 @@ export class StringArrayTransformer extends AbstractNodeTransformer {
             statements.push(...stringArrayRotateFunctionNode.getNode());
         }
 
-        NodeAppender.prependNode(programNode, statements);
+        NodeAppender.prepend(programNode, statements);
 
         return programNode;
     }

@@ -439,45 +439,190 @@ describe('VariableDeclarationTransformer', () => {
     });
 
     describe('Variant #13: already renamed identifiers shouldn\'t be renamed twice', () => {
-        const variableDeclarationRegExp: RegExp = /var *d *= *0x1;/;
-        const functionDeclarationRegExp1: RegExp = /function *e *\(\) *{}/;
-        const functionDeclarationRegExp2: RegExp = /function *f *\(\) *{}/;
-        const functionDeclarationRegExp3: RegExp = /function *g *\(\) *{}/;
-        const functionDeclarationRegExp4: RegExp = /function *h *\(\) *{}/;
+        describe('Variant #1', () => {
+            const variableDeclarationRegExp: RegExp = /var *d *= *0x1;/;
+            const functionDeclarationRegExp1: RegExp = /function *e *\(\) *{}/;
+            const functionDeclarationRegExp2: RegExp = /function *f *\(\) *{}/;
+            const functionDeclarationRegExp3: RegExp = /function *g *\(\) *{}/;
+            const functionDeclarationRegExp4: RegExp = /function *h *\(\) *{}/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/prevent-renaming-of-renamed-identifiers-1.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('Match #1: shouldn\'t rename twice variable declaration name', () => {
+                assert.match(obfuscatedCode, variableDeclarationRegExp);
+            });
+
+            it('Match #2: should correctly rename function declaration name', () => {
+                assert.match(obfuscatedCode, functionDeclarationRegExp1);
+            });
+
+            it('Match #3: should correctly rename function declaration name', () => {
+                assert.match(obfuscatedCode, functionDeclarationRegExp2);
+            });
+
+            it('Match #4: should correctly rename function declaration name', () => {
+                assert.match(obfuscatedCode, functionDeclarationRegExp3);
+            });
+
+            it('Match #5: should correctly rename function declaration name', () => {
+                assert.match(obfuscatedCode, functionDeclarationRegExp4);
+            });
+        });
+
+        describe('Variant #2', () => {
+            const variableDeclarationRegExp1: RegExp = /var *d *= *0x1;/;
+            const variableDeclarationRegExp2: RegExp = /var *e;/;
+            const functionDeclarationRegExp: RegExp = /function *f *\(\) *{/;
+            const variableDeclarationRegExp3: RegExp = /var *f *= *function *\(\) *{}/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/prevent-renaming-of-renamed-identifiers-2.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('Match #1: shouldn\'t rename twice variable declaration name', () => {
+                assert.match(obfuscatedCode, variableDeclarationRegExp1);
+            });
+
+            it('Match #2: shouldn\'t rename twice variable declaration name', () => {
+                assert.match(obfuscatedCode, variableDeclarationRegExp2);
+            });
+
+            it('Match #3: should correctly rename function declaration name', () => {
+                assert.match(obfuscatedCode, functionDeclarationRegExp);
+            });
+
+            it('Match #4: should correctly rename variable declaration name', () => {
+                assert.match(obfuscatedCode, variableDeclarationRegExp3);
+            });
+        });
+    });
+
+    describe('Variant #14: named export', () => {
+        const namedExportRegExp: RegExp = /export const foo *= *0x1;/;
 
         let obfuscatedCode: string;
 
         before(() => {
-            const code: string = readFileAsString(__dirname + '/fixtures/prevent-renaming-of-renamed-identifiers.js');
+            const code: string = readFileAsString(__dirname + '/fixtures/named-export.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
-                    identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                    renameGlobals: true
                 }
             );
 
             obfuscatedCode = obfuscationResult.getObfuscatedCode();
         });
 
-        it('Match #1: shouldn\'t rename twice variable declaration name', () => {
+        it('shouldn\'t transform identifiers in named export', () => {
+            assert.match(obfuscatedCode, namedExportRegExp);
+        });
+    });
+
+    describe('Variant #15: default export', () => {
+        const variableDeclarationRegExp: RegExp = /var _0x[a-f0-9]{4,6} *= *0x1;/;
+        const defaultExportRegExp: RegExp = /export default _0x[a-f0-9]{4,6};/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/default-export.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    renameGlobals: true
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('Match #1: should transform identifiers in variable declaration', () => {
             assert.match(obfuscatedCode, variableDeclarationRegExp);
         });
 
-        it('Match #2: should correctly rename function declaration name', () => {
-            assert.match(obfuscatedCode, functionDeclarationRegExp1);
+        it('Match #2: should transform identifiers in default export', () => {
+            assert.match(obfuscatedCode, defaultExportRegExp);
+        });
+    });
+
+    describe('Variant #16: array rest', () => {
+        const objectRegExp: RegExp = /var *_0x[a-f0-9]{4,6} *= *\['foo', *'bar', *'baz'\];/;
+        const objectRestRegExp: RegExp = /var *\[_0x[a-f0-9]{4,6}, *\.\.\.*_0x[a-f0-9]{4,6}] *= *_0x[a-f0-9]{4,6};/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/array-rest.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
         });
 
-        it('Match #2: should correctly rename function declaration name', () => {
-            assert.match(obfuscatedCode, functionDeclarationRegExp2);
+        it('Match #1: should transform object name', () => {
+            assert.match(obfuscatedCode, objectRegExp);
         });
 
-        it('Match #2: should correctly rename function declaration name', () => {
-            assert.match(obfuscatedCode, functionDeclarationRegExp3);
+        it('Match #2: should transform object rest construction', () => {
+            assert.match(obfuscatedCode, objectRestRegExp);
+        });
+    });
+
+    describe('Variant #17: object rest', () => {
+        const objectRegExp: RegExp = /var *_0x[a-f0-9]{4,6} *= *\{'foo': *0x1, *'bar': *0x2, *'baz': *0x3\};/;
+        const objectRestRegExp: RegExp = /var *\{foo, *\.\.\.*_0x[a-f0-9]{4,6}\} *= *_0x[a-f0-9]{4,6};/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/object-rest.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
         });
 
-        it('Match #2: should correctly rename function declaration name', () => {
-            assert.match(obfuscatedCode, functionDeclarationRegExp4);
+        it('Match #1: should transform object name', () => {
+            assert.match(obfuscatedCode, objectRegExp);
+        });
+
+        it('Match #2: should transform object rest construction', () => {
+            assert.match(obfuscatedCode, objectRestRegExp);
         });
     });
 });

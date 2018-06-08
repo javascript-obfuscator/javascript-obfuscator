@@ -27,7 +27,7 @@ describe('FunctionControlFlowTransformer', function () {
         `\\};` +
     ``;
 
-    describe('transformNode (functionNode: ESTree.Function): ESTree.Node', () => {
+    describe('transformNode', () => {
         describe('Variant #1 - single `control flow storage` node with single item', () => {
             const regexp: RegExp = new RegExp(rootControlFlowStorageNodeMatch);
 

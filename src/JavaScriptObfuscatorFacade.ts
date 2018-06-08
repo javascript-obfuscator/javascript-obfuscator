@@ -9,9 +9,13 @@ import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
 
 import { InversifyContainerFacade } from './container/InversifyContainerFacade';
-import { JavaScriptObfuscatorCLI } from './cli/JavaScriptObfuscatorCLI';
 
 class JavaScriptObfuscatorFacade {
+    /**
+     * @type {string | undefined}
+     */
+    public static version: string = process.env.VERSION || 'unknown';
+
     /**
      * @param {string} sourceCode
      * @param {TInputOptions} inputOptions
@@ -29,16 +33,6 @@ class JavaScriptObfuscatorFacade {
         inversifyContainerFacade.unload();
 
         return obfuscationResult;
-    }
-
-    /**
-     * @param {string[]} argv
-     */
-    public static runCLI (argv: string[]): void {
-        const javaScriptObfuscatorCLI: JavaScriptObfuscatorCLI = new JavaScriptObfuscatorCLI(argv);
-
-        javaScriptObfuscatorCLI.initialize();
-        javaScriptObfuscatorCLI.run();
     }
 }
 

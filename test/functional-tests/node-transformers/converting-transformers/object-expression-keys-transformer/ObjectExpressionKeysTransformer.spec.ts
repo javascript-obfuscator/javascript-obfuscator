@@ -134,6 +134,93 @@ describe('ObjectExpressionKeysTransformer', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });
+
+        describe('Variant #5: variable declaration without initialization', () => {
+            const match: string = `` +
+                `var *${variableMatch};` +
+                `${variableMatch} *= *{};` +
+                `${variableMatch}\\['foo'] *= *'bar';` +
+                `${variableMatch}\\['baz'] *= *'bark';` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/variable-declaration-without-initialization.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('shouldn\'t transform object keys', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+    });
+
+    describe('member expression as host of object expression', () => {
+        describe('Variant #1: simple', () => {
+            const match: string = `` +
+                `this\\['state'] *= *{};` +
+                `this\\['state']\\['foo'] *= *'bar';` +
+                `this\\['state']\\['baz'] *= *'bark';` +
+                ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/member-expression-host-1.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('should correctly transform object keys', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        describe('Variant #2: long members chain', () => {
+            const match: string = `` +
+                `this\\['state']\\['foo'] *= *{};` +
+                `this\\['state']\\['foo']\\['foo'] *= *'bar';` +
+                `this\\['state']\\['foo']\\['baz'] *= *'bark';` +
+                ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/member-expression-host-2.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('should correctly transform object keys', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
     });
 
     describe('correct placement of expression statements', () => {
@@ -255,6 +342,94 @@ describe('ObjectExpressionKeysTransformer', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });
+
+        describe('Variant #5: variable declarator with object call', () => {
+            describe('Variant #1', () => {
+                const match: string = `` +
+                    `const *${variableMatch} *= *{}; *` +
+                    `${variableMatch}\\['foo'] *= *'foo'; *` +
+                    `const *${variableMatch} *= *${variableMatch}\\['foo'];` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-with-object-call-1.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    );
+
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('should correctly transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #2', () => {
+                const match: string = `` +
+                    `const *${variableMatch} *= *0x1, *` +
+                        `${variableMatch} *= *{}; *` +
+                    `${variableMatch}\\['foo'] *= *'foo'; *` +
+                    `const *${variableMatch} *= *${variableMatch}\\['foo'];` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-with-object-call-2.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    );
+
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('should correctly transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #3: two objects', () => {
+                const match: string = `` +
+                    `const *${variableMatch} *= *{}, *` +
+                        `${variableMatch} *= *{'bar': *'bar'}, *` +
+                        `${variableMatch} *= *${variableMatch}\\['bar']; *` +
+                    `${variableMatch}\\['foo'] *= *'foo';` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-with-object-call-3.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    );
+
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('should correctly transform first object keys and ignore second object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+        });
     });
 
     describe('Ignore transformation', () => {
@@ -286,25 +461,18 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
         });
 
-        describe('Variant #2: variable declaration without initialization', () => {
-            const match: string = `` +
-                `var *${variableMatch};` +
-                `${variableMatch} *= *{` +
-                    `'foo': *'bar',` +
-                    `'baz': *'bark'` +
-                `}` +
-            ``;
+        describe('Variant #2: empty object expression', () => {
+            const match: string = `var *${variableMatch} *= *{};`;
             const regExp: RegExp = new RegExp(match);
 
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/variable-declaration-without-initialization.js');
+                const code: string = readFileAsString(__dirname + '/fixtures/empty-object-expression.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        transformObjectKeys: true
+                        ...NO_ADDITIONAL_NODES_PRESET
                     }
                 );
 
@@ -313,6 +481,62 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             it('shouldn\'t transform object keys', () => {
                 assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        describe('Variant #3: variable declarator object call inside other variable declarator', () => {
+            describe('Variant #1', () => {
+                const match: string = `` +
+                    `const *${variableMatch} *= *{'foo': *'foo'}, *` +
+                        `${variableMatch} *= *${variableMatch}\\['foo'];` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-with-object-call-ignore-1.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    );
+
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('shouldn\'t transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #2', () => {
+                const match: string = `` +
+                    `const *${variableMatch} *= *{'foo': *'foo'}, *` +
+                        `${variableMatch} *= *\\[${variableMatch}\\['foo']];` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-with-object-call-ignore-2.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    );
+
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('shouldn\'t transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
             });
         });
     });

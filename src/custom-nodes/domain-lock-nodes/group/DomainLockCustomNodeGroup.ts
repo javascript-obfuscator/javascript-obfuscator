@@ -63,7 +63,7 @@ export class DomainLockCustomNodeGroup extends AbstractCustomNodeGroup {
 
         // domainLockNode append
         this.appendCustomNodeIfExist(CustomNode.DomainLockNode, (customNode: ICustomNode) => {
-            NodeAppender.appendNodeToOptimalBlockScope(
+            NodeAppender.appendToOptimalBlockScope(
                 stackTraceData,
                 blockScopeNode,
                 customNode.getNode(),
@@ -81,7 +81,7 @@ export class DomainLockCustomNodeGroup extends AbstractCustomNodeGroup {
                 targetBlockScope = blockScopeNode;
             }
 
-            NodeAppender.prependNode(targetBlockScope, customNode.getNode());
+            NodeAppender.prepend(targetBlockScope, customNode.getNode());
         });
     }
 

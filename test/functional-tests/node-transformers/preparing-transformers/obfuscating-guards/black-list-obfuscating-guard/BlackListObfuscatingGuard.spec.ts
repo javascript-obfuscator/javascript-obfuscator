@@ -9,7 +9,7 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/preset
 import { readFileAsString } from '../../../../../helpers/readFileAsString';
 
 describe('BlackListObfuscatingGuard', () => {
-    describe('check (node: ESTree.Node): boolean', () => {
+    describe('check', () => {
         describe('`\'use strict\';` operator', () => {
             const useStrictOperatorRegExp: RegExp = /'use *strict';/;
             const stringArrayLatinRegExp: RegExp = /var _0x(\w){4} *= *\['abc'\];/;

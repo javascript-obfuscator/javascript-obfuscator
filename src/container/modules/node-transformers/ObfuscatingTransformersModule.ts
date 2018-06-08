@@ -16,10 +16,10 @@ import { CatchClauseTransformer } from '../../../node-transformers/obfuscating-t
 import { ClassDeclarationTransformer } from '../../../node-transformers/obfuscating-transformers/ClassDeclarationTransformer';
 import { FunctionDeclarationTransformer } from '../../../node-transformers/obfuscating-transformers/FunctionDeclarationTransformer';
 import { FunctionTransformer } from '../../../node-transformers/obfuscating-transformers/FunctionTransformer';
+import { ImportDeclarationTransformer } from '../../../node-transformers/obfuscating-transformers/ImportDeclarationTransformer';
 import { LabeledStatementTransformer } from '../../../node-transformers/obfuscating-transformers/LabeledStatementTransformer';
 import { LiteralTransformer } from '../../../node-transformers/obfuscating-transformers/LiteralTransformer';
 import { NumberLiteralObfuscatingReplacer } from '../../../node-transformers/obfuscating-transformers/obfuscating-replacers/literal-obfuscating-replacers/NumberLiteralObfuscatingReplacer';
-import { ObjectExpressionTransformer } from '../../../node-transformers/obfuscating-transformers/ObjectExpressionTransformer';
 import { StringLiteralObfuscatingReplacer } from '../../../node-transformers/obfuscating-transformers/obfuscating-replacers/literal-obfuscating-replacers/StringLiteralObfuscatingReplacer';
 import { VariableDeclarationTransformer } from '../../../node-transformers/obfuscating-transformers/VariableDeclarationTransformer';
 
@@ -42,16 +42,16 @@ export const obfuscatingTransformersModule: interfaces.ContainerModule = new Con
         .whenTargetNamed(NodeTransformer.FunctionTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(ImportDeclarationTransformer)
+        .whenTargetNamed(NodeTransformer.ImportDeclarationTransformer);
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(LabeledStatementTransformer)
         .whenTargetNamed(NodeTransformer.LabeledStatementTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(LiteralTransformer)
         .whenTargetNamed(NodeTransformer.LiteralTransformer);
-
-    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
-        .to(ObjectExpressionTransformer)
-        .whenTargetNamed(NodeTransformer.ObjectExpressionTransformer);
 
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(VariableDeclarationTransformer)

@@ -17,7 +17,7 @@ import { Logger } from '../../../src/logger/Logger';
 import { LoggingMessage } from '../../../src/enums/logger/LoggingMessage';
 
 describe('Logger', () => {
-    describe('log (loggingLevelColor: Chalk, loggingPrefix: LoggingPrefix, loggingMessage: string, value?: string | number): void', () => {
+    describe('log', () => {
         const loggingMessage: string = '[javascript-obfuscator] foo';
         const expectedConsoleLogCallResult: boolean = true;
 
@@ -46,7 +46,7 @@ describe('Logger', () => {
         });
     });
 
-    describe('info (loggingMessage: LoggingMessage, value?: string | number): void', () => {
+    describe('info', () => {
         describe('`log` option is enabled', () => {
             const loggingMessage: string = '[javascript-obfuscator] Obfuscation started...';
             const expectedConsoleLogCallResult: boolean = true;
@@ -117,7 +117,7 @@ describe('Logger', () => {
         });
     });
 
-    describe('success (loggingMessage: LoggingMessage, value?: string | number): void', () => {
+    describe('success', () => {
         describe('`log` option is enabled', () => {
             const loggingMessage: string = '[javascript-obfuscator] Obfuscation started...';
             const expectedConsoleLogCallResult: boolean = true;
@@ -188,7 +188,7 @@ describe('Logger', () => {
         });
     });
 
-    describe('warn (loggingMessage: LoggingMessage, value?: string | number): void', () => {
+    describe('warn', () => {
         describe('`log` option is enabled', () => {
             const loggingMessage: string = '[javascript-obfuscator] Obfuscation started...';
             const expectedConsoleLogCallResult: boolean = true;

@@ -3,34 +3,32 @@ import { assert } from 'chai';
 import { IdentifierNamesGeneratorSanitizer } from '../../../../src/cli/sanitizers/IdentifierNamesGeneratorSanitizer';
 
 describe('IdentifierNamesGeneratorSanitizer', () => {
-    describe('IdentifierNamesGeneratorSanitizer: TCLISanitizer = (value: string): string', () => {
-        describe('Variant #1: valid identifier names generator', () => {
-            const inputValue: string = 'mangled';
-            const expectedValue: string = inputValue;
+    describe('Variant #1: valid identifier names generator', () => {
+        const inputValue: string = 'mangled';
+        const expectedValue: string = inputValue;
 
-            let value: string;
+        let value: string;
 
-            before(() => {
-                value = IdentifierNamesGeneratorSanitizer(inputValue);
-            });
-
-            it('should sanitize value', () => {
-                assert.equal(value, expectedValue);
-            });
+        before(() => {
+            value = IdentifierNamesGeneratorSanitizer(inputValue);
         });
 
-        describe('Variant #2: invalid identifier names generator', () => {
-            const inputValue: string = 'foo';
+        it('should sanitize value', () => {
+            assert.equal(value, expectedValue);
+        });
+    });
 
-            let testFunc: () => void;
+    describe('Variant #2: invalid identifier names generator', () => {
+        const inputValue: string = 'foo';
 
-            before(() => {
-                testFunc = () => IdentifierNamesGeneratorSanitizer(inputValue);
-            });
+        let testFunc: () => void;
 
-            it('should throw error', () => {
-                assert.throw(testFunc, ReferenceError);
-            });
+        before(() => {
+            testFunc = () => IdentifierNamesGeneratorSanitizer(inputValue);
+        });
+
+        it('should throw error', () => {
+            assert.throw(testFunc, ReferenceError);
         });
     });
 });

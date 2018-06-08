@@ -1,7 +1,6 @@
 /* tslint:disable:interface-name */
 
 import * as escodegen from 'escodegen-wallaby';
-import * as ESTree from 'estree';
 
 declare module 'estree' {
     export interface BaseNodeMetadata {
@@ -18,7 +17,7 @@ declare module 'estree' {
 
     interface BaseNode {
         metadata?: BaseNodeMetadata;
-        parentNode?: ESTree.Node;
+        parentNode?: Node;
     }
 
     interface Identifier extends BaseNode {

@@ -63,7 +63,7 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
 
         // debugProtectionFunctionCallNode append
         this.appendCustomNodeIfExist(CustomNode.DebugProtectionFunctionCallNode, (customNode: ICustomNode) => {
-            NodeAppender.appendNodeToOptimalBlockScope(
+            NodeAppender.appendToOptimalBlockScope(
                 stackTraceData,
                 blockScopeNode,
                 customNode.getNode(),
@@ -73,7 +73,7 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
 
         // debugProtectionFunctionNode append
         this.appendCustomNodeIfExist(CustomNode.DebugProtectionFunctionNode, (customNode: ICustomNode) => {
-            NodeAppender.appendNode(blockScopeNode, customNode.getNode());
+            NodeAppender.append(blockScopeNode, customNode.getNode());
         });
 
         // debugProtectionFunctionIntervalNode append
@@ -81,7 +81,7 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
             const programBodyLength: number = blockScopeNode.body.length;
             const randomIndex: number = this.randomGenerator.getRandomInteger(0, programBodyLength);
 
-            NodeAppender.insertNodeAtIndex(blockScopeNode, customNode.getNode(), randomIndex);
+            NodeAppender.insertAtIndex(blockScopeNode, customNode.getNode(), randomIndex);
         });
 
         // nodeCallsControllerFunctionNode append
@@ -94,7 +94,7 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
                 targetBlockScope = blockScopeNode;
             }
 
-            NodeAppender.prependNode(targetBlockScope, customNode.getNode());
+            NodeAppender.prepend(targetBlockScope, customNode.getNode());
         });
     }
 

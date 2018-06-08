@@ -34,7 +34,7 @@ function getNormalizedOptions (optionsPreset: TInputOptions): TInputOptions {
 }
 
 describe('OptionsNormalizer', () => {
-    describe('normalize (options: IObfuscatorOptions): IObfuscatorOptions', () => {
+    describe('normalize', () => {
         let optionsPreset: TInputOptions,
             expectedOptionsPreset: TInputOptions;
 
@@ -173,6 +173,80 @@ describe('OptionsNormalizer', () => {
 
             it('should normalize options preset', () => {
                 assert.deepEqual(optionsPreset, expectedOptionsPreset);
+            });
+        });
+
+        describe('inputFileNameRule', () => {
+            describe('Variant #1: extension isn\'t set', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...DEFAULT_PRESET,
+                        inputFileName: 'foo'
+                    });
+
+                    expectedOptionsPreset = {
+                        ...DEFAULT_PRESET,
+                        inputFileName: 'foo.js'
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+
+            describe('Variant #2: extension is set', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...DEFAULT_PRESET,
+                        inputFileName: 'foo.js'
+                    });
+
+                    expectedOptionsPreset = {
+                        ...DEFAULT_PRESET,
+                        inputFileName: 'foo.js'
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+
+            describe('Variant #3: extension in set with `.map` postfix', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...DEFAULT_PRESET,
+                        inputFileName: 'foo.map.js'
+                    });
+
+                    expectedOptionsPreset = {
+                        ...DEFAULT_PRESET,
+                        inputFileName: 'foo.map.js'
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+
+            describe('Variant #4: no file name', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...DEFAULT_PRESET,
+                        inputFileName: ''
+                    });
+
+                    expectedOptionsPreset = {
+                        ...DEFAULT_PRESET,
+                        inputFileName: ''
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
             });
         });
 

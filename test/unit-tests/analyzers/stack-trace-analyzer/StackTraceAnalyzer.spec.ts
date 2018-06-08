@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import { StackTraceAnalyzer } from '../../../../src/analyzers/stack-trace-analyzer/StackTraceAnalyzer';
 
 describe('StackTraceAnalyzer', () => {
-    describe('getLimitIndex (blockScopeBodyLength: number): number', () => {
+    describe('getLimitIndex', () => {
         let limitIndex: number;
 
         describe('Variant #1: length - 10000', () => {

@@ -17,7 +17,7 @@ import './unit-tests/cli/utils/SourceCodeReader.spec';
 import './unit-tests/decorators/initializable/Initializable.spec';
 import './unit-tests/generators/identifier-names-generators/HexadecimalIdentifierNamesGenerator.spec';
 import './unit-tests/generators/identifier-names-generators/MangledlIdentifierNamesGenerator.spec';
-import './unit-tests/javascript-obfuscator/EsprimaFacade.spec';
+import './unit-tests/javascript-obfuscator/EspreeFacade.spec';
 import './unit-tests/javascript-obfuscator/JavaScriptObfuscator.spec';
 import './unit-tests/logger/Logger.spec';
 import './unit-tests/node/node-appender/NodeAppender.spec';
@@ -33,6 +33,7 @@ import './unit-tests/storages/MapStorage.spec';
 import './unit-tests/utils/ArrayUtils.spec';
 import './unit-tests/utils/CryptUtils.spec';
 import './unit-tests/utils/EscapeSequenceEncoder.spec';
+import './unit-tests/utils/NumberUtils.spec';
 import './unit-tests/utils/Utils.spec';
 
 /**
@@ -55,15 +56,16 @@ import './functional-tests/node-transformers/control-flow-transformers/control-f
 import './functional-tests/node-transformers/converting-transformers/member-expression-transformer/MemberExpressionTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/method-definition-transformer/MethodDefinitionTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/object-expression-keys-transformer/ObjectExpressionKeysTransformer.spec';
+import './functional-tests/node-transformers/converting-transformers/object-expression-transformer/ObjectExpressionTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/template-literal-transformer/TemplateLiteralTransformer.spec';
 import './functional-tests/node-transformers/dead-code-injection-transformers/DeadCodeInjectionTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/catch-clause-transformer/CatchClauseTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/class-declaration-transformer/ClassDeclarationTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/function-declaration-transformer/FunctionDeclarationTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/function-transformer/FunctionTransformer.spec';
+import './functional-tests/node-transformers/obfuscating-transformers/impot-declaration-transformer/ImportDeclarationTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/labeled-statement-transformer/LabeledStatementTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/literal-transformer/LiteralTransformer.spec';
-import './functional-tests/node-transformers/obfuscating-transformers/object-expression-transformer/ObjectExpressionTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/variable-declaration-transformer/VariableDeclarationTransformer.spec';
 import './functional-tests/node-transformers/preparing-transformers/eval-call-expression-transformer/EvalCallExpressionTransformer.spec';
 import './functional-tests/node-transformers/preparing-transformers/comments-transformer/CommentsTransformer.spec';

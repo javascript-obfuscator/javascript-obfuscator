@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { assert } from 'chai';
 
 import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
@@ -40,7 +42,7 @@ describe('MapStorage', () => {
 
     let storage: IMapStorage <string, any>;
 
-    describe('initialize (...args: any[]): void', () => {
+    describe('initialize', () => {
         const expectedError: ErrorConstructor = Error;
 
         let testFunc: () => void;
@@ -55,7 +57,7 @@ describe('MapStorage', () => {
         });
     });
 
-    describe('getStorage (): Map <K, V>', () => {
+    describe('getStorage', () => {
         const expectedInstanceOf: MapConstructor = Map;
 
         let mapStorage: Map <string, string>;
@@ -71,7 +73,7 @@ describe('MapStorage', () => {
         });
     });
 
-    describe('get (key: K): V', () => {
+    describe('get', () => {
         describe('Variant #1: value exist', () => {
             const expectedValue: string = storageValue;
 
@@ -106,7 +108,7 @@ describe('MapStorage', () => {
         });
     });
 
-    describe('getLength (): number', () => {
+    describe('getLength', () => {
         const expectedStorageLength: number = 1;
 
         let storageLength: number;
@@ -123,7 +125,7 @@ describe('MapStorage', () => {
         });
     });
 
-    describe('getKeyOf (value: V): K | null', () => {
+    describe('getKeyOf', () => {
         let key: string | number | null;
 
         describe('Variant #1', () => {
@@ -175,7 +177,42 @@ describe('MapStorage', () => {
         });
     });
 
-    describe('set (key: K, value: V): void', () => {
+    describe('has', () => {
+        describe('Variant #1: item is presenting in storage', () => {
+            const expectedItemExistence: boolean = true;
+
+            let itemExistence: boolean;
+
+            before(() => {
+                storage = getStorageInstance<string>();
+                storage.set(storageKey, storageValue);
+
+                itemExistence = storage.has(storageKey);
+            });
+
+            it('should return `true` if item is presenting in storage', () => {
+                assert.equal(itemExistence, expectedItemExistence);
+            });
+        });
+
+        describe('Variant #2: item isn\'t presenting in storage', () => {
+            const expectedItemExistence: boolean = false;
+
+            let itemExistence: boolean;
+
+            before(() => {
+                storage = getStorageInstance<string>();
+
+                itemExistence = storage.has(storageKey);
+            });
+
+            it('should return `false` if item isn\'t presenting in storage', () => {
+                assert.equal(itemExistence, expectedItemExistence);
+            });
+        });
+    });
+
+    describe('set', () => {
         let value: string;
 
         before(() => {
@@ -190,7 +227,7 @@ describe('MapStorage', () => {
         });
     });
 
-    describe('mergeWith (storage: this, mergeId: boolean = false): void', () => {
+    describe('mergeWith', () => {
         const secondStorageKey: string = 'baz';
         const secondStorageValue: string = 'quux';
 

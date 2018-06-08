@@ -1,6 +1,5 @@
 /* tslint:disable:interface-name */
 
-import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
 import { IGeneratorOutput } from '../interfaces/IGeneratorOutput';
@@ -8,7 +7,7 @@ import { IGeneratorOutput } from '../interfaces/IGeneratorOutput';
 declare module 'escodegen' {
     export interface XVerbatimProperty {
         content?: string;
-        precedence: escodegen.Precedence;
+        precedence: Precedence;
     }
 
     /**
@@ -16,5 +15,5 @@ declare module 'escodegen' {
      * @param options
      * @returns IGeneratorOutput
      */
-    export function generate (ast: ESTree.Node, options?: escodegen.GenerateOptions): IGeneratorOutput;
+    export function generate (ast: ESTree.Node, options?: GenerateOptions): IGeneratorOutput;
 }

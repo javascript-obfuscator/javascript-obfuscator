@@ -98,12 +98,12 @@ export class FunctionTransformer extends AbstractNodeTransformer {
     private storeFunctionParams (functionNode: ESTree.Function, nodeIdentifier: number): void {
         functionNode.params
             .forEach((paramsNode: ESTree.Node) => {
-                if (NodeGuards.isObjectPatternNode(paramsNode)) {
-                    return estraverse.VisitorOption.Skip;
-                }
-
                 estraverse.traverse(paramsNode, {
                     enter: (node: ESTree.Node): estraverse.VisitorOption | void => {
+                        if (NodeGuards.isPropertyNode(paramsNode)) {
+                            return estraverse.VisitorOption.Skip;
+                        }
+
                         if (NodeGuards.isAssignmentPatternNode(node) && NodeGuards.isIdentifierNode(node.left)) {
                             this.identifierObfuscatingReplacer.storeLocalName(node.left.name, nodeIdentifier);
 
@@ -127,7 +127,7 @@ export class FunctionTransformer extends AbstractNodeTransformer {
         ignoredIdentifierNamesSet: Set<string>
     ): void {
         properties.forEach((property: ESTree.Property) => {
-            if (!NodeGuards.isIdentifierNode(property.key)) {
+            if (!property.key || !NodeGuards.isIdentifierNode(property.key)) {
                 return;
             }
 

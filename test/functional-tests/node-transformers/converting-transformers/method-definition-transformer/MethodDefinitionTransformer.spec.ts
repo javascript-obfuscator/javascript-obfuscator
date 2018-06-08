@@ -81,4 +81,31 @@ describe('MethodDefinitionTransformer', () => {
             assert.match(obfuscatedCode, regExp);
         });
     });
+
+    describe('Variant #4: async `get()` method', () => {
+        const classDeclarationRegExp: RegExp = /class *(_0x[a-f0-9]{4,6}) *{/;
+        const asyncMethodRegExp: RegExp = /static *async *\['get'] *\(\) *{}/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/async-get-method.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('Match #1: should rename class declaration name', () => {
+            assert.match(obfuscatedCode, classDeclarationRegExp);
+        });
+
+        it('Match #2: should correctly rename async method name', () => {
+            assert.match(obfuscatedCode, asyncMethodRegExp);
+        });
+    });
 });

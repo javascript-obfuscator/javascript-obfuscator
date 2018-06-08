@@ -4,20 +4,16 @@
   Author: Timofey Kachalov
   -->
 
-# JavaScript obfuscator for Node.js
+# JavaScript obfuscator
 
 ![logo](https://raw.githubusercontent.com/javascript-obfuscator/javascript-obfuscator/master/images/logo.png)
 
-JavaScript obfuscator is a powerful free obfuscator for JavaScript and Node.js with a wide number of features which provides protection for your source code.
-
-* has no limits or restrictions
-* runs on your local machine - does not send data to a server;
-* compatible with `es2015`, `es2016` and partially `es2017`;
-* tested on Angular2 bundle.
-
-Online version: [javascriptobfuscator.herokuapp.com](https://javascriptobfuscator.herokuapp.com)
+JavaScript obfuscator is a powerful free obfuscator for JavaScript with a wide number of features which provides protection for your source code.
 
 Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/ffc2876123b52e6d11ce45369fd53acf)
+
+#### Online version:
+[obfuscator.io](https://obfuscator.io)
 
 #### Plugins:
 * Webpack plugin: [webpack-obfuscator](https://github.com/javascript-obfuscator/webpack-obfuscator)
@@ -45,6 +41,8 @@ Big thanks to all supporters!
 
 #### *NOTE! the README on the master branch might not match that of the latest stable release!*
 
+#### If you have a question - check this section first: [FAQ](#frequently-asked-questions)
+
 ## :warning: Important
 ##### Obfuscate only the code that belongs to you. 
 
@@ -52,7 +50,9 @@ It is not recommended to obfuscate vendor scripts and polyfills, since the obfus
 
 ## Installation
 
-Install the package with Yarn or NPM and add it to your `devDependencies`:
+#### Using Yarn or NPM
+
+Install the package with Yarn or NPM and add it to your `dependencies` or `devDependencies`:
 
 ```sh
 $ yarn add --dev javascript-obfuscator
@@ -62,9 +62,21 @@ or
 $ npm install --save-dev javascript-obfuscator
 ```
 
-## Node.js usage
+#### In a Browser
 
-Here's an example of how to use it:
+From CDN:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator@dev/dist/index.browser.js"/>
+```
+
+From `node_modules`:
+
+```html
+<script src="./node_modules/javascript-obfuscator/dist/index.browser.js"/>
+```
+
+## Usage
 
 ```javascript
 var JavaScriptObfuscator = require('javascript-obfuscator');
@@ -281,6 +293,7 @@ Following options are available for the JS Obfuscator:
     domainLock: [],
     identifierNamesGenerator: 'hexadecimal',
     identifiersPrefix: '',
+    inputFileName: '',
     log: false,
     renameGlobals: false,
     reservedNames: [],
@@ -588,6 +601,11 @@ Sets prefix for all global identifiers.
 
 Use this option when you want to obfuscate multiple files. This option helps to avoid conflicts between global identifiers of these files. Prefix should be different for every file.
 
+### `inputFileName`
+Type: `string` Default: `''`
+
+Allows to set name of the input file with source code. This name will used internally for source map generation.
+
 ### `log`
 Type: `boolean` Default: `false`
 
@@ -850,6 +868,31 @@ Performance will slightly slower than without obfuscation
     unicodeEscapeSequence: false
 }
 ```
+
+## Frequently Asked Questions
+
+### What javascript versions are supported?
+
+`es3`, `es5`, `es2015`, `es2016` and `es2017`
+
+### I want to use feature that described in `README.md` but it's not working!
+
+The README on the master branch might not match that of the latest stable release.
+
+### Why CLI command not working?
+
+Try to run `npm link javascript-obfuscator` command or install it globally with `npm i -g javascript-obfuscator`
+
+### Error `maximum call stack size exceeded`
+Likely this is `selfDefending` mechanism. Something is changing source code after obfuscation with `selfDefending` option.
+
+### Online version?
+
+[obfuscator.io](https://obfuscator.io)
+
+### JSX support?
+
+No. JSX support isn't planned.
 
 ## Backers
 

@@ -12,7 +12,7 @@ import { IdentifierNamesGenerator } from '../../../../src/enums/generators/ident
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
 
 describe('MangledIdentifierNamesGenerator', () => {
-    describe('generate (): string', () => {
+    describe('generate', () => {
         let identifierNamesGenerator: IIdentifierNamesGenerator,
             mangledIdentifierName: string;
 

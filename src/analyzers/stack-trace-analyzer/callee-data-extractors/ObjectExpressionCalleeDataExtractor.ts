@@ -14,6 +14,26 @@ import { NodeUtils } from '../../../node/NodeUtils';
 @injectable()
 export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtractor {
     /**
+     * @param {Property} propertyNode
+     * @param {string | number} nextItemInCallsChain
+     * @returns {boolean}
+     */
+    private static isValidTargetPropertyNode (propertyNode: ESTree.Property, nextItemInCallsChain: string | number): boolean {
+        if (!propertyNode.key) {
+            return false;
+        }
+
+        const isTargetPropertyNodeWithIdentifierKey: boolean =
+            NodeGuards.isIdentifierNode(propertyNode.key) && propertyNode.key.name === nextItemInCallsChain;
+        const isTargetPropertyNodeWithLiteralKey: boolean =
+            NodeGuards.isLiteralNode(propertyNode.key) &&
+            Boolean(propertyNode.key.value) &&
+            propertyNode.key.value === nextItemInCallsChain;
+
+        return isTargetPropertyNodeWithIdentifierKey || isTargetPropertyNodeWithLiteralKey;
+    }
+
+    /**
      * @param {NodeGuards[]} blockScopeBody
      * @param {MemberExpression} callee
      * @returns {ICalleeData}
@@ -135,14 +155,7 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
         }
 
         for (const propertyNode of objectExpressionProperties) {
-            const isTargetPropertyNodeWithIdentifierKey: boolean =
-                NodeGuards.isIdentifierNode(propertyNode.key) && propertyNode.key.name === nextItemInCallsChain;
-            const isTargetPropertyNodeWithLiteralKey: boolean =
-                NodeGuards.isLiteralNode(propertyNode.key) &&
-                Boolean(propertyNode.key.value) &&
-                propertyNode.key.value === nextItemInCallsChain;
-
-            if (!isTargetPropertyNodeWithIdentifierKey && !isTargetPropertyNodeWithLiteralKey) {
+            if (!ObjectExpressionCalleeDataExtractor.isValidTargetPropertyNode(propertyNode, nextItemInCallsChain)) {
                 continue;
             }
 

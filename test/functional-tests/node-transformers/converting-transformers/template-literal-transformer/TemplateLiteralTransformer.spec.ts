@@ -132,7 +132,28 @@ describe('TemplateLiteralTransformer', () => {
                 }
             );
 
-            assert.match(obfuscationResult.getObfuscatedCode(),  /^var *test *= *0x1 *\+ *0x1 *\+ *'\\x20abc\\x20' *\+ *\(0x1 *\+ *0x1\);$/);
+            assert.match(
+                obfuscationResult.getObfuscatedCode(),
+                /^var *test *= *0x1 *\+ *0x1 *\+ *'\\x20abc\\x20' *\+ *\(0x1 *\+ *0x1\);$/
+            );
+        });
+    });
+
+    describe('Variant #6: tagged template literal', () => {
+        it('shouldn\'t transform es6 tagged template literal to es5', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/tagged-template-literal.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    unicodeEscapeSequence: false
+                }
+            );
+
+            assert.match(
+                obfuscationResult.getObfuscatedCode(),
+                /tag`foo *\${0x1 *\+ *0x1} *bar`;/
+            );
         });
     });
 });

@@ -1,0 +1,17 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "importHelpers": true,
+    "noEmitHelpers": true,
+    "sourceMap": true,
+    "plugins": [
+      {
+        "name": "tslint-language-service",
+        "ignoreDefinitionFiles": true
+      }
+    ]
+  },
+  "exclude": [
+    "../test"
+  ]
+}

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+$(yarn bin)/webpack --config webpack/webpack.node.config.js --config webpack/webpack.browser.config.js --mode production

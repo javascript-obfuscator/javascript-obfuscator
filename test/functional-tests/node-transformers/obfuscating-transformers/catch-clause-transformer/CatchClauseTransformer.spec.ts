@@ -12,7 +12,7 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFac
 describe('CatchClauseTransformer', () => {
     let obfuscatedCode: string;
 
-    describe('changeControlFlow (catchClauseNode: ESTree.CatchClause): void', () => {
+    describe('transformNode', () => {
         const paramNameRegExp: RegExp = /catch *\((_0x([a-f0-9]){4,6})\) *\{/;
         const bodyParamNameRegExp: RegExp = /console\['log'\]\((_0x([a-f0-9]){4,6})\);/;
 

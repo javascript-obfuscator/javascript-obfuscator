@@ -3,34 +3,32 @@ import { assert } from 'chai';
 import { ObfuscationTargetSanitizer } from '../../../../src/cli/sanitizers/ObfuscatingTargetSanitizer';
 
 describe('ObfuscationTargetSanitizer', () => {
-    describe('ObfuscationTargetSanitizer: TCLISanitizer = (value: string): string', () => {
-        describe('Variant #1: valid obfuscation target', () => {
-            const inputValue: string = 'browser';
-            const expectedValue: string = inputValue;
+    describe('Variant #1: valid obfuscation target', () => {
+        const inputValue: string = 'browser';
+        const expectedValue: string = inputValue;
 
-            let value: string;
+        let value: string;
 
-            before(() => {
-                value = ObfuscationTargetSanitizer(inputValue);
-            });
-
-            it('should sanitize value', () => {
-                assert.equal(value, expectedValue);
-            });
+        before(() => {
+            value = ObfuscationTargetSanitizer(inputValue);
         });
 
-        describe('Variant #2: invalid obfuscation target', () => {
-            const inputValue: string = 'foo';
+        it('should sanitize value', () => {
+            assert.equal(value, expectedValue);
+        });
+    });
 
-            let testFunc: () => void;
+    describe('Variant #2: invalid obfuscation target', () => {
+        const inputValue: string = 'foo';
 
-            before(() => {
-                testFunc = () => ObfuscationTargetSanitizer(inputValue);
-            });
+        let testFunc: () => void;
 
-            it('should throw error', () => {
-                assert.throw(testFunc, ReferenceError);
-            });
+        before(() => {
+            testFunc = () => ObfuscationTargetSanitizer(inputValue);
+        });
+
+        it('should throw error', () => {
+            assert.throw(testFunc, ReferenceError);
         });
     });
 });

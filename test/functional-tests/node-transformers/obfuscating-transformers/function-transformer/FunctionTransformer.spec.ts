@@ -284,4 +284,85 @@ describe('FunctionTransformer', () => {
             assert.equal(arrayPatternIdentifierName2, functionBodyIdentifierName2);
         });
     });
+
+    describe('rest parameters', () => {
+        const functionRegExp: RegExp = /function *func *\(_0x[a-f0-9]{4,6}, *..._0x[a-f0-9]{4,6}\) *\{/;
+        const returnRegExp: RegExp = /return *_0x[a-f0-9]{4,6} *\+ *_0x[a-f0-9]{4,6};/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/rest-parameter.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('Match #1: should transform function rest parameter', () => {
+            assert.match(obfuscatedCode, functionRegExp);
+        });
+
+        it('Match #2: should transform identifiers inside function body', () => {
+            assert.match(obfuscatedCode, returnRegExp);
+        });
+    });
+
+    describe('array rest parameter', () => {
+        const functionRegExp: RegExp = /function *func *\(\[_0x[a-f0-9]{4,6}, *..._0x[a-f0-9]{4,6}\]\) *\{/;
+        const returnRegExp: RegExp = /return *_0x[a-f0-9]{4,6} *\+ *_0x[a-f0-9]{4,6};/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/array-rest-parameter.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('Match #1: should transform function rest parameter', () => {
+            assert.match(obfuscatedCode, functionRegExp);
+        });
+
+        it('Match #2: should transform identifiers inside function body', () => {
+            assert.match(obfuscatedCode, returnRegExp);
+        });
+    });
+
+    describe('object rest parameter', () => {
+        const functionRegExp: RegExp = /function *func *\(\{foo, *..._0x[a-f0-9]{4,6}\}\) *\{/;
+        const returnRegExp: RegExp = /return *foo *\+ *_0x[a-f0-9]{4,6};/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/object-rest-parameter.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('Match #1: should transform function rest parameter', () => {
+            assert.match(obfuscatedCode, functionRegExp);
+        });
+
+        it('Match #2: should transform identifiers inside function body', () => {
+            assert.match(obfuscatedCode, returnRegExp);
+        });
+    });
 });

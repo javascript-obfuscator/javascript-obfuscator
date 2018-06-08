@@ -151,30 +151,83 @@ describe('FunctionDeclarationTransformer', () => {
         });
 
         describe('Variant #5: already renamed identifiers shouldn\'t be renamed twice', () => {
-            const functionDeclarationRegExp: RegExp = /function *d\(\) *{/;
-            const variableDeclarationsRegExp: RegExp = /let *e, *f, *g, *h;/;
+            describe('Variant #1', () => {
+                const functionDeclarationRegExp: RegExp = /function *d\(\) *{/;
+                const variableDeclarationsRegExp: RegExp = /let *e, *f, *g, *h;/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/prevent-renaming-of-renamed-identifiers-1.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        }
+                    );
+
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('Match #1: shouldn\'t rename twice function declaration name', () => {
+                    assert.match(obfuscatedCode, functionDeclarationRegExp);
+                });
+
+                it('Match #2: should correctly rename variable declarations', () => {
+                    assert.match(obfuscatedCode, variableDeclarationsRegExp);
+                });
+            });
+        });
+
+        describe('Variant #6: named export', () => {
+            const namedExportRegExp: RegExp = /export function foo *\(\) *{}/;
 
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/prevent-renaming-of-renamed-identifiers.js');
+                const code: string = readFileAsString(__dirname + '/fixtures/named-export.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
-                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        renameGlobals: true
                     }
                 );
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
 
-            it('Match #1: shouldn\'t rename twice function declaration name', () => {
+            it('shouldn\'t transform identifiers in named export', () => {
+                assert.match(obfuscatedCode, namedExportRegExp);
+            });
+        });
+
+        describe('Variant #7: default export', () => {
+            const functionDeclarationRegExp: RegExp = /function _0x[a-f0-9]{4,6} *\(\) *{}/;
+            const defaultExportRegExp: RegExp = /export default _0x[a-f0-9]{4,6};/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/default-export.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: true
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('Match #1: should transform identifiers in variable declaration', () => {
                 assert.match(obfuscatedCode, functionDeclarationRegExp);
             });
 
-            it('Match #2: should correctly rename variable declarations', () => {
-                assert.match(obfuscatedCode, variableDeclarationsRegExp);
+            it('Match #2: should transform identifiers in default export', () => {
+                assert.match(obfuscatedCode, defaultExportRegExp);
             });
         });
     });

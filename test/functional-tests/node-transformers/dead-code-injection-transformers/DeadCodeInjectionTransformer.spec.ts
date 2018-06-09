@@ -21,9 +21,9 @@ describe('DeadCodeInjectionTransformer', () => {
         describe('Variant #1 - 5 simple block statements', () => {
             const regExp: RegExp = new RegExp(
                 `if *\\(${variableMatch}\\('${hexMatch}'\\) *[=|!]== *${variableMatch}\\('${hexMatch}'\\)\\) *\\{`+
-                    `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
+                    `(?:console|${variableMatch})\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
                 `\\} *else *\\{`+
-                    `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
+                    `(?:console|${variableMatch})\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
                 `\\}`,
                 'g'
             );
@@ -441,44 +441,193 @@ describe('DeadCodeInjectionTransformer', () => {
         });
 
         describe('Variant #10 - unique names for dead code identifiers', () => {
-            const deadCodeMatch: string = `` +
-                `if *\\(.*?\\) *{` +
-                    `var *(\\w).*?;` +
-                `} *else *{` +
-                    `return *(\\w).*?;` +
-                `}` +
-            ``;
-            const deadCodeRegExp: RegExp = new RegExp(deadCodeMatch);
+            /**
+             * Code:
+             *
+             * (function(variable){
+             *   function foo () {
+             *      return variable.push(1);
+             *   }
+             *
+             *   function bar () {
+             *      var variable = 1;
+             *   }
+             *
+             *   function baz() {
+             *      var variable = 2;
+             *   }
+             *
+             *   function bark() {
+             *      var variable = 3;
+             *   }
+             *
+             *   function hawk() {
+             *      var variable = 4;
+             *   }
+             * })([]);
+             *
+             * With this code, dead code can be added to the first function `foo`
+             * If dead code won't be renamed before add - identifier name inside dead code block statement can be
+             * the same as identifier name inside transformed block statement:
+             *
+             * (function(variable){
+             *   function foo () {
+             *      if (1 !== 1) {
+             *          var variable = 1; // <- overwriting value of function parameter
+             *      } else {
+             *          return variable.push(1);
+             *      }
+             *   }
+             *
+             *   function bar () {
+             *      var variable = 1;
+             *   }
+             *
+             *   function baz() {
+             *      var variable = 2;
+             *   }
+             *
+             *   function bark() {
+             *      var variable = 3;
+             *   }
+             *
+             *   function hawk() {
+             *      var variable = 4;
+             *   }
+             * })([]);
+             *
+             * So, added dead code variable declaration will overwrite a value of function parameter.
+             * This should never happen.
+             */
+            describe('Variant #1', () => {
+                const functionParameterMatch: string = `` +
+                    `\\(function\\((\\w)\\){` +
+                ``;
+                const deadCodeMatch: string = `` +
+                    `function \\w *\\(\\w\\) *{` +
+                        `if *\\(.{0,30}\\) *{` +
+                            `var *(\\w).*?;` +
+                        `} *else *{` +
+                            `return *(\\w).*?;` +
+                        `}` +
+                    `}` +
+                ``;
+                const functionParameterRegExp: RegExp = new RegExp(functionParameterMatch);
+                const deadCodeRegExp: RegExp = new RegExp(deadCodeMatch);
 
-            let returnIdentifierName: string | null,
-                variableDeclarationIdentifierName: string | null,
-                obfuscatedCode: string;
+                let result: boolean = false,
+                    functionIdentifierName: string | null,
+                    returnIdentifierName: string | null,
+                    variableDeclarationIdentifierName: string | null,
+                    obfuscatedCode: string;
 
 
-            before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/unique-names-for-dead-code-identifiers.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        deadCodeInjection: true,
-                        deadCodeInjectionThreshold: 1,
-                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
-                        seed: 1
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/unique-names-for-dead-code-identifiers.js');
+
+                    for (let i: number = 0; i < 100; i++) {
+                        while (true) {
+                            try {
+                                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                                    code,
+                                    {
+                                        ...NO_ADDITIONAL_NODES_PRESET,
+                                        deadCodeInjection: true,
+                                        deadCodeInjectionThreshold: 1,
+                                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                                    }
+                                );
+
+                                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                                functionIdentifierName = getRegExpMatch(obfuscatedCode, functionParameterRegExp, 0);
+                                variableDeclarationIdentifierName = getRegExpMatch(obfuscatedCode, deadCodeRegExp, 0);
+                                returnIdentifierName = getRegExpMatch(obfuscatedCode, deadCodeRegExp, 1);
+                                break;
+                            } catch {}
+                        }
+
+                        if (
+                            // variable declaration from dead code is affects original code
+                            functionIdentifierName === variableDeclarationIdentifierName &&
+                            returnIdentifierName === variableDeclarationIdentifierName
+                        ) {
+                            result = false;
+                            break;
+                        }
+
+                        result = true;
                     }
-                );
+                });
 
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
-                variableDeclarationIdentifierName = getRegExpMatch(obfuscatedCode, deadCodeRegExp, 0);
-                returnIdentifierName = getRegExpMatch(obfuscatedCode, deadCodeRegExp, 1);
+                it('should generate separate identifiers for common AST and dead code', () => {
+                    assert.isOk(result, 'wrong identifier names');
+                });
             });
 
-            it('should correctly add dead code', () => {
-                assert.match(obfuscatedCode, deadCodeRegExp);
-            });
+            describe('Variant #2', () => {
+                const functionParameterMatch: string = `` +
+                    `\\(function\\((\\w)\\){` +
+                ``;
+                const deadCodeMatch: string = `` +
+                    `function \\w *\\(\\w\\) *{` +
+                        `if *\\(.{0,30}\\) *{` +
+                            `return *(\\w).{0,40};` +
+                        `} *else *{` +
+                            `var *(\\w).*?;` +
+                        `}` +
+                    `}` +
+                ``;
+                const functionParameterRegExp: RegExp = new RegExp(functionParameterMatch);
+                const deadCodeRegExp: RegExp = new RegExp(deadCodeMatch);
 
-            it('should generate separate identifiers for common AST and dead code', () => {
-                assert.notEqual(returnIdentifierName, variableDeclarationIdentifierName);
+                let result: boolean = false,
+                    functionIdentifierName: string | null,
+                    returnIdentifierName: string | null,
+                    variableDeclarationIdentifierName: string | null,
+                    obfuscatedCode: string;
+
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/unique-names-for-dead-code-identifiers.js');
+
+                    for (let i: number = 0; i < 100; i++) {
+                        while (true) {
+                            try {
+                                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                                    code,
+                                    {
+                                        ...NO_ADDITIONAL_NODES_PRESET,
+                                        deadCodeInjection: true,
+                                        deadCodeInjectionThreshold: 1,
+                                        identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                                    }
+                                );
+
+                                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                                functionIdentifierName = getRegExpMatch(obfuscatedCode, functionParameterRegExp, 0);
+                                returnIdentifierName = getRegExpMatch(obfuscatedCode, deadCodeRegExp, 0);
+                                variableDeclarationIdentifierName = getRegExpMatch(obfuscatedCode, deadCodeRegExp, 1);
+                                break;
+                            } catch {}
+                        }
+
+                        if (
+                            // variable declaration from dead code is affects original code
+                            functionIdentifierName === variableDeclarationIdentifierName &&
+                            returnIdentifierName === variableDeclarationIdentifierName
+                        ) {
+                            console.log(obfuscatedCode);
+                            result = false;
+                            break;
+                        }
+
+                        result = true;
+                    }
+                });
+
+                it('should generate separate identifiers for common AST and dead code', () => {
+                    assert.isOk(result, 'wrong identifier names');
+                });
             });
         });
 

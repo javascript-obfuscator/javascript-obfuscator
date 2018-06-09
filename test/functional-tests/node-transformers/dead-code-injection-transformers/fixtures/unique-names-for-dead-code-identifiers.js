@@ -1,5 +1,5 @@
 (function(variable){
-    function foo () {
+    function foo (param) {
         return variable.push(1);
     }
 

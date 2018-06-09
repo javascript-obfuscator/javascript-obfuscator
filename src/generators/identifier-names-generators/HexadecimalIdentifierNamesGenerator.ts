@@ -1,6 +1,8 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
+
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
@@ -58,5 +60,13 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
         const identifierName: string = this.generate();
 
         return `${this.options.identifiersPrefix}${identifierName}`.replace('__', '_');
+    }
+
+    /**
+     * @param {TNodeWithBlockScope} blockScopeNode
+     * @returns {string}
+     */
+    public generateForBlockScope (blockScopeNode: TNodeWithBlockScope): string {
+        return this.generate();
     }
 }

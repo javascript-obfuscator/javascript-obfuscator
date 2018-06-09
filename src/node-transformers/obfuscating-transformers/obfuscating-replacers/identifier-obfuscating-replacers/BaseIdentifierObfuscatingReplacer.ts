@@ -91,7 +91,7 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
             return;
         }
 
-        const identifierName: string = this.identifierNamesGenerator.generate();
+        const identifierName: string = this.identifierNamesGenerator.generateForBlockScope(blockScopeNode);
 
         if (!this.blockScopesMap.has(blockScopeNode)) {
             this.blockScopesMap.set(blockScopeNode, new Map());

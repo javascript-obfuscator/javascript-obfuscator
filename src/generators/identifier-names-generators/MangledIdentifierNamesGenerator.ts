@@ -1,6 +1,8 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
+
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
@@ -66,6 +68,14 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         const identifierName: string = this.generate();
 
         return `${prefix}${identifierName}`;
+    }
+
+    /**
+     * @param {TNodeWithBlockScope} blockScopeNode
+     * @returns {string}
+     */
+    public generateForBlockScope (blockScopeNode: TNodeWithBlockScope): string {
+        return this.generate();
     }
 
     /**

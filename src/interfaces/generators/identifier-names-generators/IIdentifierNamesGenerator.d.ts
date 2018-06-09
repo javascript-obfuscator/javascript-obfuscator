@@ -1,3 +1,5 @@
+import { TNodeWithBlockScope } from '../../../types/node/TNodeWithBlockScope';
+
 export interface IIdentifierNamesGenerator {
     /**
      * @returns {string}
@@ -8,6 +10,12 @@ export interface IIdentifierNamesGenerator {
      * @returns {string}
      */
     generateWithPrefix (): string;
+
+    /**
+     * @param {TNodeWithBlockScope} blockScopeNode
+     * @returns {string}
+     */
+    generateForBlockScope (blockScopeNode: TNodeWithBlockScope): string;
 
     /**
      * @param {string} identifierName

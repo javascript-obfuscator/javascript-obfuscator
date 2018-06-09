@@ -126,7 +126,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      */
     public obfuscate (sourceCode: string): IObfuscationResult {
         const timeStart: number = Date.now();
-        this.logger.info(LoggingMessage.Version, '0.16.0');
+        this.logger.info(LoggingMessage.Version, process.env.VERSION);
         this.logger.info(LoggingMessage.ObfuscationStarted);
         this.logger.info(LoggingMessage.RandomGeneratorSeed, this.randomGenerator.getSeed());
 

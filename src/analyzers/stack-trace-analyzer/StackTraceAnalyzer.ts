@@ -131,7 +131,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
                         return;
                     }
 
-                    if (blockScopeBodyNode.parentNode !== NodeUtils.getBlockScopesOfNode(node)[0]) {
+                    if (blockScopeBodyNode.parentNode !== NodeUtils.getBlockScopeOfNode(node)) {
                         return estraverse.VisitorOption.Skip;
                     }
 

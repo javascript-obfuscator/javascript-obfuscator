@@ -95,45 +95,47 @@ export class ImportDeclarationTransformer extends AbstractNodeTransformer {
      * @returns {Node}
      */
     public transformNode (importDeclarationNode: ESTree.ImportDeclaration, parentNode: ESTree.Node): ESTree.Node {
-        const nodeIdentifier: number = this.nodeIdentifier++;
-        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopesOfNode(importDeclarationNode)[0];
+        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopeOfNode(importDeclarationNode);
 
-        this.storeImportSpecifierNames(importDeclarationNode, nodeIdentifier);
+        this.storeImportSpecifierNames(importDeclarationNode, blockScopeNode);
 
         // check for cached identifiers for current scope node. If exist - loop through them.
         if (this.replaceableIdentifiers.has(blockScopeNode)) {
-            this.replaceScopeCachedIdentifiers(blockScopeNode, nodeIdentifier);
+            this.replaceScopeCachedIdentifiers(blockScopeNode);
         } else {
-            this.replaceScopeIdentifiers(blockScopeNode, nodeIdentifier);
+            this.replaceScopeIdentifiers(blockScopeNode);
         }
 
         return importDeclarationNode;
     }
 
     /**
-     * @param {ImportDefaultSpecifier | ImportNamespaceSpecifier} importDeclarationNode
-     * @param {number} nodeIdentifier
+     * @param {ImportDeclaration} importDeclarationNode
+     * @param {TNodeWithBlockScope} blockScopeNode
      */
-    private storeImportSpecifierNames (importDeclarationNode: ESTree.ImportDeclaration, nodeIdentifier: number): void {
+    private storeImportSpecifierNames (
+        importDeclarationNode: ESTree.ImportDeclaration,
+        blockScopeNode: TNodeWithBlockScope
+    ): void {
         importDeclarationNode.specifiers.forEach((importSpecifierNode: TImportSpecifier) => {
             if (ImportDeclarationTransformer.isProhibitedImportSpecifierNode(importSpecifierNode)) {
                 return;
             }
 
-            this.identifierObfuscatingReplacer.storeGlobalName(importSpecifierNode.local.name, nodeIdentifier);
+            this.identifierObfuscatingReplacer.storeGlobalName(importSpecifierNode.local.name, blockScopeNode);
         });
     }
 
     /**
      * @param {TNodeWithBlockScope} blockScopeNode
-     * @param {number} nodeIdentifier
      */
-    private replaceScopeCachedIdentifiers (blockScopeNode: TNodeWithBlockScope, nodeIdentifier: number): void {
-        const cachedReplaceableIdentifiers: ESTree.Identifier[] = <ESTree.Identifier[]>this.replaceableIdentifiers.get(blockScopeNode);
+    private replaceScopeCachedIdentifiers (blockScopeNode: TNodeWithBlockScope): void {
+        const cachedReplaceableIdentifiers: ESTree.Identifier[] =
+            <ESTree.Identifier[]>this.replaceableIdentifiers.get(blockScopeNode);
 
         cachedReplaceableIdentifiers.forEach((replaceableIdentifier: ESTree.Identifier) => {
             const newReplaceableIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                .replace(replaceableIdentifier.name, nodeIdentifier);
+                .replace(replaceableIdentifier.name, blockScopeNode);
 
             replaceableIdentifier.name = newReplaceableIdentifier.name;
             NodeMetadata.set(replaceableIdentifier, { renamedIdentifier: true });
@@ -142,9 +144,8 @@ export class ImportDeclarationTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {TNodeWithBlockScope} blockScopeNode
-     * @param {number} nodeIdentifier
      */
-    private replaceScopeIdentifiers (blockScopeNode: TNodeWithBlockScope, nodeIdentifier: number): void {
+    private replaceScopeIdentifiers (blockScopeNode: TNodeWithBlockScope): void {
         const storedReplaceableIdentifiers: ESTree.Identifier[] = [];
 
         estraverse.replace(blockScopeNode, {
@@ -155,7 +156,7 @@ export class ImportDeclarationTransformer extends AbstractNodeTransformer {
                     && !NodeMetadata.isRenamedIdentifier(node)
                 ) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                        .replace(node.name, nodeIdentifier);
+                        .replace(node.name, blockScopeNode);
                     const newIdentifierName: string = newIdentifier.name;
 
                     if (node.name !== newIdentifierName) {

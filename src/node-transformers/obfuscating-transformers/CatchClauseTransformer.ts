@@ -5,6 +5,7 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TIdentifierObfuscatingReplacerFactory } from '../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory';
+import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
 
 import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -17,6 +18,7 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeMetadata } from '../../node/NodeMetadata';
+import { NodeUtils } from '../../node/NodeUtils';
 
 /**
  * replaces:
@@ -77,34 +79,40 @@ export class CatchClauseTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (catchClauseNode: ESTree.CatchClause, parentNode: ESTree.Node): ESTree.Node {
-        const nodeIdentifier: number = this.nodeIdentifier++;
+        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopeOfNode(catchClauseNode);
 
-        this.storeCatchClauseParam(catchClauseNode, nodeIdentifier);
-        this.replaceCatchClauseParam(catchClauseNode, nodeIdentifier);
+        this.storeCatchClauseParam(catchClauseNode, blockScopeNode);
+        this.replaceCatchClauseParam(catchClauseNode, blockScopeNode);
 
         return catchClauseNode;
     }
 
     /**
      * @param {CatchClause} catchClauseNode
-     * @param {number} nodeIdentifier
+     * @param {TNodeWithBlockScope} blockScopeNode
      */
-    private storeCatchClauseParam (catchClauseNode: ESTree.CatchClause, nodeIdentifier: number): void {
+    private storeCatchClauseParam (
+        catchClauseNode: ESTree.CatchClause,
+        blockScopeNode: TNodeWithBlockScope
+    ): void {
         if (NodeGuards.isIdentifierNode(catchClauseNode.param)) {
-            this.identifierObfuscatingReplacer.storeLocalName(catchClauseNode.param.name, nodeIdentifier);
+            this.identifierObfuscatingReplacer.storeLocalName(catchClauseNode.param.name, blockScopeNode);
         }
     }
 
     /**
      * @param {CatchClause} catchClauseNode
-     * @param {number} nodeIdentifier
+     * @param {TNodeWithBlockScope} blockScopeNode
      */
-    private replaceCatchClauseParam (catchClauseNode: ESTree.CatchClause, nodeIdentifier: number): void {
+    private replaceCatchClauseParam (
+        catchClauseNode: ESTree.CatchClause,
+        blockScopeNode: TNodeWithBlockScope
+    ): void {
         estraverse.replace(catchClauseNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
                 if (parentNode && NodeGuards.isReplaceableIdentifierNode(node, parentNode)) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                        .replace(node.name, nodeIdentifier);
+                        .replace(node.name, blockScopeNode);
                     const newIdentifierName: string = newIdentifier.name;
 
                     if (node.name !== newIdentifierName) {

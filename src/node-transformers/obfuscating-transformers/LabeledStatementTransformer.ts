@@ -16,6 +16,8 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
+import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
+import { NodeUtils } from '../../node/NodeUtils';
 
 /**
  * replaces:
@@ -84,32 +86,38 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (labeledStatementNode: ESTree.LabeledStatement, parentNode: ESTree.Node): ESTree.Node {
-        const nodeIdentifier: number = this.nodeIdentifier++;
+        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopeOfNode(labeledStatementNode);
 
-        this.storeLabeledStatementName(labeledStatementNode, nodeIdentifier);
-        this.replaceLabeledStatementName(labeledStatementNode, nodeIdentifier);
+        this.storeLabeledStatementName(labeledStatementNode, blockScopeNode);
+        this.replaceLabeledStatementName(labeledStatementNode, blockScopeNode);
 
         return labeledStatementNode;
     }
 
     /**
      * @param {LabeledStatement} labeledStatementNode
-     * @param {number} nodeIdentifier
+     * @param {TNodeWithBlockScope} blockScopeNode
      */
-    private storeLabeledStatementName (labeledStatementNode: ESTree.LabeledStatement, nodeIdentifier: number): void {
-        this.identifierObfuscatingReplacer.storeLocalName(labeledStatementNode.label.name, nodeIdentifier);
+    private storeLabeledStatementName (
+        labeledStatementNode: ESTree.LabeledStatement,
+        blockScopeNode: TNodeWithBlockScope
+    ): void {
+        this.identifierObfuscatingReplacer.storeLocalName(labeledStatementNode.label.name, blockScopeNode);
     }
 
     /**
      * @param {LabeledStatement} labeledStatementNode
-     * @param {number} nodeIdentifier
+     * @param {TNodeWithBlockScope} blockScopeNode
      */
-    private replaceLabeledStatementName (labeledStatementNode: ESTree.LabeledStatement, nodeIdentifier: number): void {
+    private replaceLabeledStatementName (
+        labeledStatementNode: ESTree.LabeledStatement,
+        blockScopeNode: TNodeWithBlockScope
+    ): void {
         estraverse.replace(labeledStatementNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
                 if (parentNode && NodeGuards.isLabelIdentifierNode(node, parentNode)) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                        .replace(node.name, nodeIdentifier);
+                        .replace(node.name, blockScopeNode);
 
                     node.name = newIdentifier.name;
                 }

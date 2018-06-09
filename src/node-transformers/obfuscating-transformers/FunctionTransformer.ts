@@ -5,6 +5,7 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TIdentifierObfuscatingReplacerFactory } from '../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory';
+import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
 
 import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -17,6 +18,7 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeMetadata } from '../../node/NodeMetadata';
+import { NodeUtils } from '../../node/NodeUtils';
 
 /**
  * replaces:
@@ -83,19 +85,21 @@ export class FunctionTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (functionNode: ESTree.Function, parentNode: ESTree.Node): ESTree.Node {
-        const nodeIdentifier: number = this.nodeIdentifier++;
+        const blockScopeNode: TNodeWithBlockScope = NodeGuards.isBlockStatementNode(functionNode.body)
+            ? functionNode.body
+            : NodeUtils.getBlockScopeOfNode(functionNode.body);
 
-        this.storeFunctionParams(functionNode, nodeIdentifier);
-        this.replaceFunctionParams(functionNode, nodeIdentifier);
+        this.storeFunctionParams(functionNode, blockScopeNode);
+        this.replaceFunctionParams(functionNode, blockScopeNode);
 
         return functionNode;
     }
 
     /**
      * @param {Function} functionNode
-     * @param {number} nodeIdentifier
+     * @param {TNodeWithBlockScope} blockScopeNode
      */
-    private storeFunctionParams (functionNode: ESTree.Function, nodeIdentifier: number): void {
+    private storeFunctionParams (functionNode: ESTree.Function, blockScopeNode: TNodeWithBlockScope): void {
         functionNode.params
             .forEach((paramsNode: ESTree.Node) => {
                 estraverse.traverse(paramsNode, {
@@ -105,13 +109,13 @@ export class FunctionTransformer extends AbstractNodeTransformer {
                         }
 
                         if (NodeGuards.isAssignmentPatternNode(node) && NodeGuards.isIdentifierNode(node.left)) {
-                            this.identifierObfuscatingReplacer.storeLocalName(node.left.name, nodeIdentifier);
+                            this.identifierObfuscatingReplacer.storeLocalName(node.left.name, blockScopeNode);
 
                             return estraverse.VisitorOption.Skip;
                         }
 
                         if (NodeGuards.isIdentifierNode(node)) {
-                            this.identifierObfuscatingReplacer.storeLocalName(node.name, nodeIdentifier);
+                            this.identifierObfuscatingReplacer.storeLocalName(node.name, blockScopeNode);
                         }
                     }
                 });
@@ -137,9 +141,9 @@ export class FunctionTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {Function} functionNode
-     * @param {number} nodeIdentifier
+     * @param {TNodeWithBlockScope} blockScopeNode
      */
-    private replaceFunctionParams (functionNode: ESTree.Function, nodeIdentifier: number): void {
+    private replaceFunctionParams (functionNode: ESTree.Function, blockScopeNode: TNodeWithBlockScope): void {
         const ignoredIdentifierNamesSet: Set<string> = new Set();
 
         const replaceVisitor: estraverse.Visitor = {
@@ -153,7 +157,8 @@ export class FunctionTransformer extends AbstractNodeTransformer {
                     NodeGuards.isReplaceableIdentifierNode(node, parentNode) &&
                     !ignoredIdentifierNamesSet.has(node.name)
                 ) {
-                    const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer.replace(node.name, nodeIdentifier);
+                    const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
+                        .replace(node.name, blockScopeNode);
                     const newIdentifierName: string = newIdentifier.name;
 
                     if (node.name !== newIdentifierName) {

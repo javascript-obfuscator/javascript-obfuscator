@@ -205,7 +205,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         }
 
         const blockScopeOfBlockStatementNode: TNodeWithBlockScope = NodeUtils
-            .getBlockScopesOfNode(blockStatementNode)[0];
+            .getBlockScopeOfNode(blockStatementNode);
 
         return blockScopeOfBlockStatementNode.type !== NodeType.Program;
     }
@@ -345,7 +345,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      * @param {BlockStatement} clonedBlockStatementNode
      * @returns {BlockStatement}
      */
-    private makeClonedBlockStatementNodeUnique(clonedBlockStatementNode: ESTree.BlockStatement): ESTree.BlockStatement {
+    private makeClonedBlockStatementNodeUnique (clonedBlockStatementNode: ESTree.BlockStatement): ESTree.BlockStatement {
         return this.transformersRunner.transform(
             clonedBlockStatementNode,
             DeadCodeInjectionTransformer.transformersToRenameBlockScopeIdentifiers,

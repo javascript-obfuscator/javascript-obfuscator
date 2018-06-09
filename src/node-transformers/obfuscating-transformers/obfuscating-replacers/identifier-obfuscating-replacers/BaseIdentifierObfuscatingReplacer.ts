@@ -4,6 +4,7 @@ import { ServiceIdentifiers } from '../../../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 
 import { TIdentifierNamesGeneratorFactory } from '../../../../types/container/generators/TIdentifierNamesGeneratorFactory';
+import { TNodeWithBlockScope } from '../../../../types/node/TNodeWithBlockScope';
 
 import { IIdentifierNamesGenerator } from '../../../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IIdentifierObfuscatingReplacer } from '../../../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
@@ -20,9 +21,9 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
     private readonly identifierNamesGenerator: IIdentifierNamesGenerator;
 
     /**
-     * @type {Map<string, string>}
+     * @type {Map<TNodeWithBlockScope, Map<string, string>>}
      */
-    private readonly namesMap: Map<string, string> = new Map();
+    private readonly blockScopesMap: Map<TNodeWithBlockScope, Map<string, string>> = new Map();
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -40,14 +41,16 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
 
     /**
      * @param {string} nodeValue
-     * @param {number} nodeIdentifier
+     * @param {TNodeWithBlockScope} blockScopeNode
      * @returns {Identifier}
      */
-    public replace (nodeValue: string, nodeIdentifier: number): ESTree.Identifier {
-        const mapKey: string = `${nodeValue}-${String(nodeIdentifier)}`;
+    public replace (nodeValue: string, blockScopeNode: TNodeWithBlockScope): ESTree.Identifier {
+        if (this.blockScopesMap.has(blockScopeNode)) {
+            const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(blockScopeNode);
 
-        if (this.namesMap.has(mapKey)) {
-            nodeValue = <string>this.namesMap.get(mapKey);
+            if (namesMap.has(nodeValue)) {
+                nodeValue = <string>namesMap.get(nodeValue);
+            }
         }
 
         return NodeFactory.identifierNode(nodeValue);
@@ -58,16 +61,22 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
      * Reserved name will be ignored.
      *
      * @param {string} nodeName
-     * @param {number} nodeIdentifier
+     * @param {TNodeWithBlockScope} blockScopeNode
      */
-    public storeGlobalName (nodeName: string, nodeIdentifier: number): void {
+    public storeGlobalName (nodeName: string, blockScopeNode: TNodeWithBlockScope): void {
         if (this.isReservedName(nodeName)) {
             return;
         }
 
         const identifierName: string = this.identifierNamesGenerator.generateWithPrefix();
 
-        this.namesMap.set(`${nodeName}-${String(nodeIdentifier)}`, identifierName);
+        if (!this.blockScopesMap.has(blockScopeNode)) {
+            this.blockScopesMap.set(blockScopeNode, new Map());
+        }
+
+        const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(blockScopeNode);
+
+        namesMap.set(nodeName, identifierName);
     }
 
     /**
@@ -75,16 +84,22 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
      * Reserved name will be ignored.
      *
      * @param {string} nodeName
-     * @param {number} nodeIdentifier
+     * @param {TNodeWithBlockScope} blockScopeNode
      */
-    public storeLocalName (nodeName: string, nodeIdentifier: number): void {
+    public storeLocalName (nodeName: string, blockScopeNode: TNodeWithBlockScope): void {
         if (this.isReservedName(nodeName)) {
             return;
         }
 
         const identifierName: string = this.identifierNamesGenerator.generate();
 
-        this.namesMap.set(`${nodeName}-${String(nodeIdentifier)}`, identifierName);
+        if (!this.blockScopesMap.has(blockScopeNode)) {
+            this.blockScopesMap.set(blockScopeNode, new Map());
+        }
+
+        const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(blockScopeNode);
+
+        namesMap.set(nodeName, identifierName);
     }
 
     /**

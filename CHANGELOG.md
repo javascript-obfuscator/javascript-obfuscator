@@ -3,6 +3,7 @@ Change Log
 v0.17.0
 ---
 * **Browser version**: Added browser version dist
+* **New Node API option:** `inputFileName` allows to set name of the input file with source code. This name will used internally, for example, for source map generation.
 * [#274](https://github.com/javascript-obfuscator/javascript-obfuscator/pull/274)`domainLock` now will work in SVG.
   <br/>
   Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/273

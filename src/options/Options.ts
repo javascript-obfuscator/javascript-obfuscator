@@ -119,6 +119,12 @@ export class Options implements IOptions {
     public readonly identifiersPrefix!: string;
 
     /**
+     * @type {string}
+     */
+    @IsString()
+    public readonly inputFileName!: string;
+
+    /**
      * @type {boolean}
      */
     @IsBoolean()

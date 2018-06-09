@@ -293,6 +293,7 @@ Following options are available for the JS Obfuscator:
     domainLock: [],
     identifierNamesGenerator: 'hexadecimal',
     identifiersPrefix: '',
+    inputFileName: '',
     log: false,
     renameGlobals: false,
     reservedNames: [],
@@ -599,6 +600,11 @@ Type: `string` Default: `''`
 Sets prefix for all global identifiers.
 
 Use this option when you want to obfuscate multiple files. This option helps to avoid conflicts between global identifiers of these files. Prefix should be different for every file.
+
+### `inputFileName`
+Type: `string` Default: `''`
+
+Allows to set name of the input file with source code. This name will used internally for source map generation.
 
 ### `log`
 Type: `boolean` Default: `false`

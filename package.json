@@ -54,7 +54,7 @@
     "@types/mkdirp": "0.5.2",
     "@types/mocha": "5.2.1",
     "@types/multimatch": "2.1.2",
-    "@types/node": "10.3.1",
+    "@types/node": "10.3.2",
     "@types/rimraf": "2.0.2",
     "@types/sinon": "5.0.1",
     "@types/string-template": "1.0.2",
@@ -68,7 +68,7 @@
     "pjson": "1.0.9",
     "pre-commit": "1.2.2",
     "rimraf": "2.6.2",
-    "sinon": "5.1.0",
+    "sinon": "5.1.1",
     "threads": "0.11.0",
     "ts-node": "6.1.0",
     "tslint": "5.10.0",
@@ -77,8 +77,8 @@
     "tslint-microsoft-contrib": "5.0.3",
     "tslint-webpack-plugin": "1.2.2",
     "typescript": "2.9.1",
-    "webpack": "4.11.1",
-    "webpack-cli": "3.0.2",
+    "webpack": "4.12.0",
+    "webpack-cli": "3.0.3",
     "webpack-node-externals": "1.7.2"
   },
   "repository": {

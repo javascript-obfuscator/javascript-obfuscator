@@ -79,7 +79,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
     private readonly transformersRunner: ITransformersRunner;
 
     /**
-     * @param {TControlFlowCustomNodeFactory} deadCodeInjectionCustomNodeFactory
+     * @param {TDeadNodeInjectionCustomNodeFactory} deadCodeInjectionCustomNodeFactory
      * @param {ITransformersRunner} transformersRunner
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
@@ -271,11 +271,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                  * We should transform identifiers in the dead code block statement to avoid conflicts with original code
                  */
                 NodeUtils.parentizeNode(clonedBlockStatementNode, clonedBlockStatementNode);
-                clonedBlockStatementNode = this.transformersRunner.transform(
-                    clonedBlockStatementNode,
-                    DeadCodeInjectionTransformer.transformersToRenameBlockScopeIdentifiers,
-                    TransformationStage.Obfuscating
-                );
+                clonedBlockStatementNode = this.makeClonedBlockStatementNodeUnique(clonedBlockStatementNode);
 
                 this.collectedBlockStatements.push(clonedBlockStatementNode);
             }
@@ -341,6 +337,20 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      */
     private isDeadCodeInjectionRootAstHostNode (node: ESTree.Node): node is ESTree.BlockStatement {
         return NodeGuards.isBlockStatementNode(node) && this.deadCodeInjectionRootAstHostNodeSet.has(node);
+    }
+
+    /**
+     * Make all identifiers in cloned block statement unique
+     *
+     * @param {BlockStatement} clonedBlockStatementNode
+     * @returns {BlockStatement}
+     */
+    private makeClonedBlockStatementNodeUnique (clonedBlockStatementNode: ESTree.BlockStatement): ESTree.BlockStatement {
+        return this.transformersRunner.transform(
+            clonedBlockStatementNode,
+            DeadCodeInjectionTransformer.transformersToRenameBlockScopeIdentifiers,
+            TransformationStage.Obfuscating
+        );
     }
 
     /**

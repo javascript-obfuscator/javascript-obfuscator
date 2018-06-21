@@ -22,11 +22,13 @@
   "types": "index.d.ts",
   "dependencies": {
     "@babel/runtime": "7.0.0-beta.51",
+    "@types/eslint-scope": "^3.7.0",
     "chalk": "2.4.1",
     "chance": "1.0.16",
     "class-validator": "0.8.5",
     "commander": "2.15.1",
     "escodegen-wallaby": "1.6.18",
+    "eslint-scope": "4.0.0",
     "espree": "4.0.0-rc.0",
     "estraverse": "4.2.0",
     "inversify": "4.13.0",

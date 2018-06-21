@@ -122,6 +122,22 @@ describe('NodeUtils', () => {
                 assert.deepEqual(programNode, expectedProgramNode);
             });
         });
+
+        describe('Variant #3: prohibited properties', () => {
+            let programNode: ESTree.Program;
+
+            before(() => {
+                programNode = NodeFactory.programNode();
+
+                programNode.scope = null;
+
+                programNode = NodeUtils.clone(programNode);
+            });
+
+            it('should clone given AST-tree without `scope` property', () => {
+                assert.notProperty(programNode, 'scope');
+            });
+        });
     });
 
     describe('convertCodeToStructure', () => {

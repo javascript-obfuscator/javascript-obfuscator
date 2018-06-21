@@ -190,7 +190,7 @@ export class NodeUtils {
         Object
             .keys(node)
             .forEach((property: string) => {
-                if (property === 'parentNode') {
+                if (property === 'parentNode' || property === 'scope') {
                     return;
                 }
 

@@ -12,10 +12,11 @@ import { BlackListObfuscatingGuard } from '../../../node-transformers/preparing-
 import { CommentsTransformer } from '../../../node-transformers/preparing-transformers/CommentsTransformer';
 import { ConditionalCommentObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/ConditionalCommentObfuscatingGuard';
 import { CustomNodesTransformer } from '../../../node-transformers/preparing-transformers/CustomNodesTransformer';
-import { EvalCallExpressionTransformer } from '../../../node-transformers/preparing-transformers/EvaCallExpressionTransformer';
+import { EvalCallExpressionTransformer } from '../../../node-transformers/preparing-transformers/EvalCallExpressionTransformer';
 import { MetadataTransformer } from '../../../node-transformers/preparing-transformers/MetadataTransformer';
 import { ObfuscatingGuardsTransformer } from '../../../node-transformers/preparing-transformers/ObfuscatingGuardsTransformer';
 import { ParentificationTransformer } from '../../../node-transformers/preparing-transformers/ParentificationTransformer';
+import { ScopeTransformer } from '../../../node-transformers/preparing-transformers/ScopeTransformer';
 
 export const preparingTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // preparing transformers
@@ -42,6 +43,10 @@ export const preparingTransformersModule: interfaces.ContainerModule = new Conta
     bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
         .to(ParentificationTransformer)
         .whenTargetNamed(NodeTransformer.ParentificationTransformer);
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(ScopeTransformer)
+        .whenTargetNamed(NodeTransformer.ScopeTransformer);
 
     // obfuscating guards
     bind<IObfuscatingGuard>(ServiceIdentifiers.INodeGuard)

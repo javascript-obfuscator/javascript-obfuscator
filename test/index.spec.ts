@@ -25,6 +25,7 @@ import './unit-tests/node/node-guards/NodeGuards.spec';
 import './unit-tests/node/node-metadata/NodeMetadata.spec';
 import './unit-tests/node/node-utils/NodeUtils.spec';
 import './unit-tests/node-transformers/preparing-transformers/ObfuscatingGuardsTransformer.spec';
+import './unit-tests/node-transformers/preparing-transformers/ScopeTransformer.spec';
 import './unit-tests/obfuscation-result/ObfuscationResult.spec';
 import './unit-tests/options/ValidationErrorsFormatter.spec';
 import './unit-tests/source-map/SourceMapCorrector.spec';

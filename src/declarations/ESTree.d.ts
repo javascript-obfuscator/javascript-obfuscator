@@ -1,6 +1,7 @@
 /* tslint:disable:interface-name */
 
 import * as escodegen from 'escodegen-wallaby';
+import * as eslintScope from 'eslint-scope';
 
 declare module 'estree' {
     export interface BaseNodeMetadata {
@@ -18,6 +19,7 @@ declare module 'estree' {
     interface BaseNode {
         metadata?: BaseNodeMetadata;
         parentNode?: Node;
+        scope?: eslintScope.Scope | null;
     }
 
     interface Identifier extends BaseNode {

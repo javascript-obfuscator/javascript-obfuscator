@@ -53,19 +53,22 @@ export class ScopeTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * Port from eslint
+     * https://github.com/eslint/eslint/blob/41f0f6e3380b673edbb6c39d9d144c375ad2ebbc/lib/linter.js#L633
+     *
      * @param {eslintScope.ScopeManager} scopeManager
-     * @param {Node} currentNode
+     * @param {Node} targetNode
      * @returns {eslintScope.Scope}
      */
-    private static getScope (scopeManager: eslintScope.ScopeManager, currentNode: ESTree.Node): eslintScope.Scope {
-        const isInnerNode: boolean = NodeGuards.isProgramNode(currentNode);
+    private static getScope (scopeManager: eslintScope.ScopeManager, targetNode: ESTree.Node): eslintScope.Scope {
+        const isInnerNode: boolean = NodeGuards.isProgramNode(targetNode);
 
-        for (let _node: ESTree.Node | undefined = currentNode; _node; _node = _node!.parentNode) {
-            if (!_node.parentNode) {
+        for (let node: ESTree.Node | undefined = targetNode; node; node = (<ESTree.Node>node).parentNode) {
+            if (!node.parentNode) {
                 throw new Error('`parentNode` property of given node is `undefined`');
             }
 
-            const scope: eslintScope.Scope | null = scopeManager.acquire(_node, isInnerNode);
+            const scope: eslintScope.Scope | null = scopeManager.acquire(node, isInnerNode);
 
             if (!scope) {
                 continue;

@@ -29,7 +29,7 @@
     "commander": "2.15.1",
     "escodegen-wallaby": "1.6.18",
     "eslint-scope": "4.0.0",
-    "espree": "4.0.0-rc.0",
+    "espree": "4.0.0",
     "estraverse": "4.2.0",
     "inversify": "4.13.0",
     "js-string-escape": "1.0.1",
@@ -40,7 +40,7 @@
     "reflect-metadata": "0.1.12",
     "source-map-support": "0.5.6",
     "string-template": "1.0.0",
-    "tslib": "1.9.2"
+    "tslib": "1.9.3"
   },
   "devDependencies": {
     "@babel/cli": "7.0.0-beta.51",

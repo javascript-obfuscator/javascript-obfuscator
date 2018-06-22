@@ -115,5 +115,43 @@ describe('ScopeTransformer', () => {
                 });
             });
         });
+
+        describe('Variant #2: exception when no `parentNode` property', () => {
+            const identifierNode1: ESTree.Identifier = NodeFactory.identifierNode('foo');
+            const identifierNode2: ESTree.Identifier = NodeFactory.identifierNode('bar');
+            const expressionNode: ESTree.Expression = NodeFactory.binaryExpressionNode(
+                '+',
+                identifierNode1,
+                identifierNode2
+            );
+            const expressionStatementNode: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(
+                expressionNode
+            );
+            const functionBlockStatementNode: ESTree.BlockStatement = NodeFactory.blockStatementNode([
+                expressionStatementNode
+            ]);
+            const functionDeclarationNode: ESTree.FunctionDeclaration = NodeFactory.functionDeclarationNode(
+                'func',
+                [],
+                functionBlockStatementNode
+            );
+            const programNode: ESTree.Program = NodeFactory.programNode([
+                functionDeclarationNode
+            ]);
+
+            let testFunc: () => void;
+
+            before(() => {
+                scopeTransformer.analyzeNode!(programNode, programNode.parentNode || null);
+
+                testFunc = () => {
+                    estraverse.traverse(programNode, scopeTransformer.getVisitor(TransformationStage.Preparing)!)
+                };
+            });
+
+            it('Should throws an error when node hasn\'t parent node', () => {
+                assert.throw(testFunc, /parentNode/);
+            });
+        });
     });
 });

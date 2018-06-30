@@ -67,7 +67,7 @@ $ npm install --save-dev javascript-obfuscator
 From CDN:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator@dev/dist/index.browser.js"/>
+<script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator/dist/index.browser.js"/>
 ```
 
 From `node_modules`:

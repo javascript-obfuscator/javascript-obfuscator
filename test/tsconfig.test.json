@@ -6,7 +6,7 @@
     "importHelpers": true,
     "inlineSourceMap": true,
     "inlineSources": true,
-    "noImplicitAny": true,
+    "noImplicitAny": true
   },
   "include": [
     "../**/*"

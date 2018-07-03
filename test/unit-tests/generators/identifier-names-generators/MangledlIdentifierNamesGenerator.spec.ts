@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 
+import * as ESTree from 'estree';
 import { assert } from 'chai';
 
 import { ServiceIdentifiers } from '../../../../src/container/ServiceIdentifiers';
@@ -191,8 +192,9 @@ describe('MangledIdentifierNamesGenerator', () => {
             const expectedMangledIdentifierName: string = 'a';
 
             beforeEach(() => {
+                const identifierNode: ESTree.Identifier = NodeFactory.identifierNode('foo');
                 const blockScopeNode: TNodeWithBlockScope = NodeFactory.blockStatementNode([]);
-                mangledIdentifierName = identifierNamesGenerator.generateForBlockScope(blockScopeNode);
+                mangledIdentifierName = identifierNamesGenerator.generateForBlockScope(identifierNode, blockScopeNode);
             });
 
             it('should return mangled name', () => {
@@ -206,8 +208,9 @@ describe('MangledIdentifierNamesGenerator', () => {
 
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
+                    const identifierNode: ESTree.Identifier = NodeFactory.identifierNode('foo');
                     const blockScopeNode: TNodeWithBlockScope = NodeFactory.blockStatementNode([]);
-                    mangledIdentifierName = identifierNamesGenerator.generateForBlockScope(blockScopeNode);
+                    mangledIdentifierName = identifierNamesGenerator.generateForBlockScope(identifierNode, blockScopeNode);
                 }
             });
 
@@ -222,8 +225,9 @@ describe('MangledIdentifierNamesGenerator', () => {
 
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
+                    const identifierNode: ESTree.Identifier = NodeFactory.identifierNode('foo');
                     const blockScopeNode: TNodeWithBlockScope = NodeFactory.blockStatementNode([]);
-                    mangledIdentifierName = identifierNamesGenerator.generateForBlockScope(blockScopeNode);
+                    mangledIdentifierName = identifierNamesGenerator.generateForBlockScope(identifierNode, blockScopeNode);
                 }
             });
 
@@ -238,8 +242,10 @@ describe('MangledIdentifierNamesGenerator', () => {
 
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
+                    const identifierNode: ESTree.Identifier = NodeFactory.identifierNode('foo');
                     const blockScopeNode: TNodeWithBlockScope = NodeFactory.blockStatementNode([]);
-                    mangledIdentifierName = identifierNamesGenerator.generateForBlockScope(blockScopeNode);                }
+                    mangledIdentifierName = identifierNamesGenerator.generateForBlockScope(identifierNode, blockScopeNode);
+                }
             });
 
             it('should return mangled name', () => {
@@ -253,8 +259,10 @@ describe('MangledIdentifierNamesGenerator', () => {
 
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
+                    const identifierNode: ESTree.Identifier = NodeFactory.identifierNode('foo');
                     const blockScopeNode: TNodeWithBlockScope = NodeFactory.blockStatementNode([]);
-                    mangledIdentifierName = identifierNamesGenerator.generateForBlockScope(blockScopeNode);                }
+                    mangledIdentifierName = identifierNamesGenerator.generateForBlockScope(identifierNode, blockScopeNode);
+                }
             });
 
             it('should return mangled name', () => {
@@ -273,8 +281,9 @@ describe('MangledIdentifierNamesGenerator', () => {
 
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition2; i++) {
+                    const identifierNode: ESTree.Identifier = NodeFactory.identifierNode('foo');
                     const blockScopeNode: TNodeWithBlockScope = NodeFactory.blockStatementNode([]);
-                    mangledIdentifierName = identifierNamesGenerator.generateForBlockScope(blockScopeNode);
+                    mangledIdentifierName = identifierNamesGenerator.generateForBlockScope(identifierNode, blockScopeNode);
 
                     if (i === expectedMangledIdentifierPosition1) {
                         mangledIdentifierName1 = mangledIdentifierName;

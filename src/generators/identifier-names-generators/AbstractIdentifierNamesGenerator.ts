@@ -1,6 +1,8 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import * as ESTree from 'estree';
+
 import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
 
 import { IIdentifierNamesGenerator } from '../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
@@ -42,10 +44,11 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     public abstract generateWithPrefix (): string;
 
     /**
+     * @param {Identifier} identifierNode
      * @param {TNodeWithBlockScope} blockScopeNode
      * @returns {string}
      */
-    public abstract generateForBlockScope (blockScopeNode: TNodeWithBlockScope): string;
+    public abstract generateForBlockScope (identifierNode: ESTree.Identifier, blockScopeNode: TNodeWithBlockScope): string;
 
     /**
      * @param {string} name

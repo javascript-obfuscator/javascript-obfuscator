@@ -122,9 +122,9 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
         isGlobalDeclaration: boolean
     ): void {
         if (isGlobalDeclaration) {
-            this.identifierObfuscatingReplacer.storeGlobalName(functionDeclarationNode.id.name, blockScopeNode);
+            this.identifierObfuscatingReplacer.storeGlobalName(functionDeclarationNode.id, blockScopeNode);
         } else {
-            this.identifierObfuscatingReplacer.storeLocalName(functionDeclarationNode.id.name, blockScopeNode);
+            this.identifierObfuscatingReplacer.storeLocalName(functionDeclarationNode.id, blockScopeNode);
         }
     }
 
@@ -155,7 +155,7 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
         for (let i: number = 0; i < cachedReplaceableIdentifierLength; i++) {
             const replaceableIdentifier: ESTree.Identifier = cachedReplaceableIdentifiers[i];
             const newReplaceableIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                .replace(replaceableIdentifier.name, blockScopeNode);
+                .replace(replaceableIdentifier, blockScopeNode);
 
             replaceableIdentifier.name = newReplaceableIdentifier.name;
             NodeMetadata.set(replaceableIdentifier, { renamedIdentifier: true });
@@ -176,7 +176,7 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
                     && !NodeMetadata.isRenamedIdentifier(node)
                 ) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                        .replace(node.name, blockScopeNode);
+                        .replace(node, blockScopeNode);
                     const newIdentifierName: string = newIdentifier.name;
 
                     if (node.name !== newIdentifierName) {

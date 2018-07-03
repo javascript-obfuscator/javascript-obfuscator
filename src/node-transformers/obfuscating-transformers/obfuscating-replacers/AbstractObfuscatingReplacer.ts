@@ -25,9 +25,9 @@ export abstract class AbstractObfuscatingReplacer implements IObfuscatingReplace
     }
 
     /**
-     * @param {SimpleLiteral["value"]} nodeValue
+     * @param {Node} node
      * @param {TNodeWithBlockScope} blockScopeNode
      * @returns {Node}
      */
-    public abstract replace (nodeValue: ESTree.SimpleLiteral['value'], blockScopeNode?: TNodeWithBlockScope): ESTree.Node;
+    public abstract replace (node: ESTree.Node, blockScopeNode?: TNodeWithBlockScope): ESTree.Node;
 }

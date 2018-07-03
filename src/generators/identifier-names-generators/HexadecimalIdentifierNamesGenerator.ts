@@ -1,6 +1,8 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import * as ESTree from 'estree';
+
 import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -63,10 +65,11 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
     }
 
     /**
+     * @param {Identifier} identifierNode
      * @param {TNodeWithBlockScope} blockScopeNode
      * @returns {string}
      */
-    public generateForBlockScope (blockScopeNode: TNodeWithBlockScope): string {
+    public generateForBlockScope (identifierNode: ESTree.Identifier, blockScopeNode: TNodeWithBlockScope): string {
         return this.generate();
     }
 }

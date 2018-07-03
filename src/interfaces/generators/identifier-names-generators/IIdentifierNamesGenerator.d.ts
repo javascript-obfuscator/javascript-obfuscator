@@ -1,3 +1,5 @@
+import * as ESTree from 'estree';
+
 import { TNodeWithBlockScope } from '../../../types/node/TNodeWithBlockScope';
 
 export interface IIdentifierNamesGenerator {
@@ -12,10 +14,11 @@ export interface IIdentifierNamesGenerator {
     generateWithPrefix (): string;
 
     /**
+     * @param {Identifier} identifierNode
      * @param {TNodeWithBlockScope} blockScopeNode
      * @returns {string}
      */
-    generateForBlockScope (blockScopeNode: TNodeWithBlockScope): string;
+    generateForBlockScope (identifierNode: ESTree.Identifier, blockScopeNode: TNodeWithBlockScope): string;
 
     /**
      * @param {string} identifierName

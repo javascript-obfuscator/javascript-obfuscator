@@ -129,12 +129,18 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     }
 
     /**
-     * @param {string} nodeValue
+     * @param {SimpleLiteral} literalNode
      * @returns {Node}
      */
-    public replace (nodeValue: string): ESTree.Node {
-        const useStringArray: boolean = this.canUseStringArray(nodeValue);
-        const cacheKey: string = `${nodeValue}-${String(useStringArray)}`;
+    public replace (literalNode: ESTree.SimpleLiteral): ESTree.Node {
+        const literalValue: ESTree.SimpleLiteral['value'] = literalNode.value;
+
+        if (typeof literalValue !== 'string') {
+            throw new Error('`StringLiteralObfuscatingReplacer` should accept only literals with `string` value');
+        }
+
+        const useStringArray: boolean = this.canUseStringArray(literalValue);
+        const cacheKey: string = `${literalValue}-${String(useStringArray)}`;
         const useCacheValue: boolean = this.nodesCache.has(cacheKey) && this.options.stringArrayEncoding !== StringArrayEncoding.Rc4;
 
         if (useCacheValue) {
@@ -142,8 +148,8 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
         }
 
         const resultNode: ESTree.Node = useStringArray
-            ? this.replaceWithStringArrayCallNode(nodeValue)
-            : this.replaceWithLiteralNode(nodeValue);
+            ? this.replaceWithStringArrayCallNode(literalValue)
+            : this.replaceWithLiteralNode(literalValue);
 
         this.nodesCache.set(cacheKey, resultNode);
 

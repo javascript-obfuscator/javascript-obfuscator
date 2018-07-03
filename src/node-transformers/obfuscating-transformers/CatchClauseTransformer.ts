@@ -96,7 +96,7 @@ export class CatchClauseTransformer extends AbstractNodeTransformer {
         blockScopeNode: TNodeWithBlockScope
     ): void {
         if (NodeGuards.isIdentifierNode(catchClauseNode.param)) {
-            this.identifierObfuscatingReplacer.storeLocalName(catchClauseNode.param.name, blockScopeNode);
+            this.identifierObfuscatingReplacer.storeLocalName(catchClauseNode.param, blockScopeNode);
         }
     }
 
@@ -112,7 +112,7 @@ export class CatchClauseTransformer extends AbstractNodeTransformer {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
                 if (parentNode && NodeGuards.isReplaceableIdentifierNode(node, parentNode)) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                        .replace(node.name, blockScopeNode);
+                        .replace(node, blockScopeNode);
                     const newIdentifierName: string = newIdentifier.name;
 
                     if (node.name !== newIdentifierName) {

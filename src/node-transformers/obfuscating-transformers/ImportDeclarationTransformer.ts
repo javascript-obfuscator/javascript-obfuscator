@@ -122,7 +122,7 @@ export class ImportDeclarationTransformer extends AbstractNodeTransformer {
                 return;
             }
 
-            this.identifierObfuscatingReplacer.storeGlobalName(importSpecifierNode.local.name, blockScopeNode);
+            this.identifierObfuscatingReplacer.storeGlobalName(importSpecifierNode.local, blockScopeNode);
         });
     }
 
@@ -135,7 +135,7 @@ export class ImportDeclarationTransformer extends AbstractNodeTransformer {
 
         cachedReplaceableIdentifiers.forEach((replaceableIdentifier: ESTree.Identifier) => {
             const newReplaceableIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                .replace(replaceableIdentifier.name, blockScopeNode);
+                .replace(replaceableIdentifier, blockScopeNode);
 
             replaceableIdentifier.name = newReplaceableIdentifier.name;
             NodeMetadata.set(replaceableIdentifier, { renamedIdentifier: true });
@@ -156,7 +156,7 @@ export class ImportDeclarationTransformer extends AbstractNodeTransformer {
                     && !NodeMetadata.isRenamedIdentifier(node)
                 ) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                        .replace(node.name, blockScopeNode);
+                        .replace(node, blockScopeNode);
                     const newIdentifierName: string = newIdentifier.name;
 
                     if (node.name !== newIdentifierName) {

@@ -6,14 +6,14 @@ import { IObfuscatingReplacer } from './IObfuscatingReplacer';
 
 export interface IIdentifierObfuscatingReplacer extends IObfuscatingReplacer <ESTree.Identifier> {
     /**
-     * @param {string} nodeValue
+     * @param {Identifier} identifierNode
      * @param {TNodeWithBlockScope} blockScopeNode
      */
-    storeGlobalName (nodeValue: string, blockScopeNode: TNodeWithBlockScope): void;
+    storeGlobalName (identifierNode: ESTree.Identifier, blockScopeNode: TNodeWithBlockScope): void;
 
     /**
-     * @param {string} nodeValue
+     * @param {Identifier} identifierNode
      * @param {TNodeWithBlockScope} blockScopeNode
      */
-    storeLocalName (nodeValue: string, blockScopeNode: TNodeWithBlockScope): void;
+    storeLocalName (identifierNode: ESTree.Identifier, blockScopeNode: TNodeWithBlockScope): void;
 }

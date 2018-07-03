@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 
+import * as ESTree from 'estree';
 import { assert } from 'chai';
 
 import { ServiceIdentifiers } from '../../../../src/container/ServiceIdentifiers';
@@ -77,9 +78,10 @@ describe('HexadecimalIdentifierNamesGenerator', () => {
                 IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
             );
 
+            const identifierNode: ESTree.Identifier = NodeFactory.identifierNode('foo');
             const blockScopeNode: TNodeWithBlockScope = NodeFactory.blockStatementNode([]);
 
-            hexadecimalIdentifierName = identifierNamesGenerator.generateForBlockScope(blockScopeNode);
+            hexadecimalIdentifierName = identifierNamesGenerator.generateForBlockScope(identifierNode, blockScopeNode);
             regExp = /^_0x(\w){4,6}$/;
         });
 

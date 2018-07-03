@@ -4,10 +4,10 @@ import { TNodeWithBlockScope } from '../../../../types/node/TNodeWithBlockScope'
 
 export interface IObfuscatingReplacer <T = ESTree.Node> {
     /**
-     * @param {SimpleLiteral["value"]} nodeValue
+     * @param {Node} node
      * @param {TNodeWithBlockScope} blockScopeNode
      * @param {number} nodeIdentifier
      * @returns {T}
      */
-    replace (nodeValue: ESTree.SimpleLiteral['value'], blockScopeNode?: TNodeWithBlockScope, nodeIdentifier?: number): T;
+    replace (node: ESTree.Node, blockScopeNode?: TNodeWithBlockScope, nodeIdentifier?: number): T;
 }

@@ -128,9 +128,9 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     ): void {
         this.traverseDeclarationIdentifiers(variableDeclarationNode, (identifierNode: ESTree.Identifier) => {
             if (isGlobalDeclaration) {
-                this.identifierObfuscatingReplacer.storeGlobalName(identifierNode.name, blockScopeNode);
+                this.identifierObfuscatingReplacer.storeGlobalName(identifierNode, blockScopeNode);
             } else {
-                this.identifierObfuscatingReplacer.storeLocalName(identifierNode.name, blockScopeNode);
+                this.identifierObfuscatingReplacer.storeLocalName(identifierNode, blockScopeNode);
             }
         });
     }
@@ -176,7 +176,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
                 }
 
                 const newReplaceableIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                    .replace(replaceableIdentifier.name, blockScopeNode);
+                    .replace(replaceableIdentifier, blockScopeNode);
 
                 replaceableIdentifier.name = newReplaceableIdentifier.name;
                 NodeMetadata.set(replaceableIdentifier, { renamedIdentifier: true });
@@ -199,7 +199,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
                     && !NodeMetadata.isRenamedIdentifier(node)
                 ) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                        .replace(node.name, blockScopeNode);
+                        .replace(node, blockScopeNode);
                     const newIdentifierName: string = newIdentifier.name;
 
                     if (node.name !== newIdentifierName) {

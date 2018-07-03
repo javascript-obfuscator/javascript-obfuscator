@@ -102,7 +102,7 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
         labeledStatementNode: ESTree.LabeledStatement,
         blockScopeNode: TNodeWithBlockScope
     ): void {
-        this.identifierObfuscatingReplacer.storeLocalName(labeledStatementNode.label.name, blockScopeNode);
+        this.identifierObfuscatingReplacer.storeLocalName(labeledStatementNode.label, blockScopeNode);
     }
 
     /**
@@ -117,7 +117,7 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
                 if (parentNode && NodeGuards.isLabelIdentifierNode(node, parentNode)) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                        .replace(node.name, blockScopeNode);
+                        .replace(node, blockScopeNode);
 
                     node.name = newIdentifier.name;
                 }

@@ -85,7 +85,9 @@ export class FunctionTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (functionNode: ESTree.Function, parentNode: ESTree.Node): ESTree.Node {
-        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopeOfNode(functionNode.body);
+        const blockScopeNode: TNodeWithBlockScope = NodeGuards.isBlockStatementNode(functionNode.body)
+            ? functionNode.body
+            : NodeUtils.getBlockScopeOfNode(functionNode.body);
 
         this.storeFunctionParams(functionNode, blockScopeNode);
         this.replaceFunctionParams(functionNode, blockScopeNode);

@@ -7,13 +7,6 @@ export interface IRandomGenerator {
     getMathRandom (): number;
 
     /**
-     * @param min
-     * @param max
-     * @returns {number}
-     */
-    getRandomFloat (min: number, max: number): number;
-
-    /**
      * @returns {Chance.Chance}
      */
     getRandomGenerator (): Chance.Chance;

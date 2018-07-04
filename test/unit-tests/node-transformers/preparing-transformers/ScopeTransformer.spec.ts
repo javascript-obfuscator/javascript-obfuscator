@@ -12,16 +12,17 @@ import { IInversifyContainerFacade } from '../../../../src/interfaces/container/
 import { INodeTransformer } from '../../../../src/interfaces/node-transformers/INodeTransformer';
 
 import { NodeTransformer } from '../../../../src/enums/node-transformers/NodeTransformer';
+import { TransformationStage } from '../../../../src/enums/node-transformers/TransformationStage';
+
 import { NodeFactory } from '../../../../src/node/NodeFactory';
 import { NodeUtils } from '../../../../src/node/NodeUtils';
-import { TransformationStage } from '../../../../src/enums/node-transformers/TransformationStage';
 
 describe('ScopeTransformer', () => {
     describe('transformNode', () => {
         let inversifyContainerFacade: IInversifyContainerFacade,
             scopeTransformer: INodeTransformer;
 
-        before(() => {
+        beforeEach(() => {
             inversifyContainerFacade = new InversifyContainerFacade();
             inversifyContainerFacade.load('', {});
 
@@ -52,7 +53,7 @@ describe('ScopeTransformer', () => {
                 functionDeclarationNode
             ]);
 
-            before(() => {
+            beforeEach(() => {
                 NodeUtils.parentizeAst(programNode);
                 scopeTransformer.analyzeNode!(programNode, programNode.parentNode || null);
 
@@ -141,7 +142,7 @@ describe('ScopeTransformer', () => {
 
             let testFunc: () => void;
 
-            before(() => {
+            beforeEach(() => {
                 scopeTransformer.analyzeNode!(programNode, programNode.parentNode || null);
 
                 testFunc = () => {
@@ -151,6 +152,25 @@ describe('ScopeTransformer', () => {
 
             it('Should throws an error when node hasn\'t parent node', () => {
                 assert.throw(testFunc, /parentNode/);
+            });
+        });
+
+        describe('Variant #3: undefined `scopeManager`', () => {
+            let identifierNode: ESTree.Node,
+                transformedIdentifierNode: ESTree.Node | estraverse.VisitorOption;
+
+            beforeEach(() => {
+                identifierNode = NodeFactory.identifierNode('foo');
+                NodeUtils.parentizeAst(identifierNode);
+                transformedIdentifierNode = scopeTransformer.transformNode(identifierNode, identifierNode);
+            });
+
+            it('Should return untransformed node when `scopeManager` is not set', () => {
+                assert.equal(identifierNode, transformedIdentifierNode);
+            });
+
+            it('Shouldn\'t attach `scope` property', () => {
+                assert.notProperty(transformedIdentifierNode, 'scope');
             });
         });
     });

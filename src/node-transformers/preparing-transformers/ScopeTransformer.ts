@@ -61,17 +61,22 @@ export class ScopeTransformer extends AbstractNodeTransformer {
      * @returns {eslintScope.Scope}
      */
     private static getScope (scopeManager: eslintScope.ScopeManager, targetNode: ESTree.Node): eslintScope.Scope {
-        const isInnerNode: boolean = NodeGuards.isProgramNode(targetNode);
-
         for (let node: ESTree.Node | undefined = targetNode; node; node = (<ESTree.Node>node).parentNode) {
             if (!node.parentNode) {
                 throw new Error('`parentNode` property of given node is `undefined`');
             }
 
-            const scope: eslintScope.Scope | null = scopeManager.acquire(node, isInnerNode);
+            const scope: eslintScope.Scope | null = scopeManager.acquire(
+                node,
+                ScopeTransformer.isRootNode(targetNode)
+            );
 
             if (!scope) {
-                continue;
+                if (ScopeTransformer.isRootNode(node)) {
+                    break;
+                } else {
+                    continue;
+                }
             }
 
             if (scope.type === "function-expression-name") {
@@ -82,6 +87,14 @@ export class ScopeTransformer extends AbstractNodeTransformer {
         }
 
         return scopeManager.scopes[0];
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    private static isRootNode(node: ESTree.Node): boolean {
+        return NodeGuards.isProgramNode(node) || node.parentNode === node;
     }
 
     /**

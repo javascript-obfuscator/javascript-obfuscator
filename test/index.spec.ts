@@ -24,6 +24,10 @@ import './unit-tests/node/node-appender/NodeAppender.spec';
 import './unit-tests/node/node-guards/NodeGuards.spec';
 import './unit-tests/node/node-metadata/NodeMetadata.spec';
 import './unit-tests/node/node-utils/NodeUtils.spec';
+import './unit-tests/node-transformers/TransformersRunner.spec';
+import './unit-tests/node-transformers/obfuscating-transformers/obfuscating-replacers/literal-obfuscating-replacers/BooleanLiteralObfuscatingReplacer.spec';
+import './unit-tests/node-transformers/obfuscating-transformers/obfuscating-replacers/literal-obfuscating-replacers/NumberLiteralObfuscatingReplacer.spec';
+import './unit-tests/node-transformers/obfuscating-transformers/obfuscating-replacers/literal-obfuscating-replacers/StringLiteralObfuscatingReplacer.spec';
 import './unit-tests/node-transformers/preparing-transformers/ObfuscatingGuardsTransformer.spec';
 import './unit-tests/node-transformers/preparing-transformers/ScopeTransformer.spec';
 import './unit-tests/obfuscation-result/ObfuscationResult.spec';
@@ -74,6 +78,7 @@ import './functional-tests/node-transformers/preparing-transformers/obfuscating-
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/conditional-comment-obfuscating-guard/ConditionalCommentObfuscatingGuard.spec';
 import './functional-tests/options/OptionsNormalizer.spec';
 import './functional-tests/templates/debug-protection-nodes/DebugProtectionFunctionCallTemplate.spec';
+import './functional-tests/templates/debug-protection-nodes/DebugProtectionFunctionIntervalTemplate.spec';
 import './functional-tests/templates/domain-lock-nodes/DomainLockNodeTemplate.spec';
 import './functional-tests/templates/GlobalVariableNoEvalTemplate.spec';
 import './functional-tests/templates/string-array-nodes/StringArrayCallsWrapperNodeTemplate.spec';

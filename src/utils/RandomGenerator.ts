@@ -82,19 +82,6 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
     }
 
     /**
-     * @param {number} min
-     * @param {number} max
-     * @returns {number}
-     */
-    public getRandomFloat (min: number, max: number): number {
-        return this.getRandomGenerator().floating({
-            min: min,
-            max: max,
-            fixed: 7
-        });
-    }
-
-    /**
      * @returns {Chance.Chance}
      */
     public getRandomGenerator (): Chance.Chance {

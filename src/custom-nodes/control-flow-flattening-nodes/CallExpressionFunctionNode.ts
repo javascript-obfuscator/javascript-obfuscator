@@ -58,6 +58,7 @@ export class CallExpressionFunctionNode extends AbstractCustomNode {
 
         const structure: TStatement = NodeFactory.expressionStatementNode(
             NodeFactory.functionExpressionNode(
+                null,
                 [
                     calleeIdentifier,
                     ...params

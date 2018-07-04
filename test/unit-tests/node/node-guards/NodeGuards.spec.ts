@@ -34,6 +34,7 @@ describe('NodeGuards', () => {
                 const expectedResult: boolean = true;
                 const node: ESTree.Node = NodeFactory.blockStatementNode();
                 const parentNode: ESTree.FunctionExpression = NodeFactory.functionExpressionNode(
+                    null,
                     [],
                     node
                 );
@@ -328,7 +329,7 @@ describe('NodeGuards', () => {
                 const identifier: ESTree.Identifier = NodeFactory.identifierNode('foo');
                 const parentNode: ESTree.Node = NodeFactory.methodDefinitionNode(
                     identifier,
-                    NodeFactory.functionExpressionNode([], NodeFactory.blockStatementNode()),
+                    NodeFactory.functionExpressionNode(null, [], NodeFactory.blockStatementNode()),
                     'method',
                     true
                 );
@@ -416,7 +417,7 @@ describe('NodeGuards', () => {
                 const identifier: ESTree.Identifier = NodeFactory.identifierNode('foo');
                 const parentNode: ESTree.Node = NodeFactory.methodDefinitionNode(
                     identifier,
-                    NodeFactory.functionExpressionNode([], NodeFactory.blockStatementNode()),
+                    NodeFactory.functionExpressionNode(null, [], NodeFactory.blockStatementNode()),
                     'method',
                     false
                 );

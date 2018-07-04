@@ -145,7 +145,7 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
          * This function expression node will help to correctly transform AST-tree.
          */
         const evalRootAstHostNode: ESTree.FunctionExpression = NodeFactory
-            .functionExpressionNode([], NodeFactory.blockStatementNode(ast));
+            .functionExpressionNode(null, [], NodeFactory.blockStatementNode(ast));
 
         /**
          * we should store that host node and then extract AST-tree on the `finalizing` stage

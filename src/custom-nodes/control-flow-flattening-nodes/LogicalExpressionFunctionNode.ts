@@ -50,6 +50,7 @@ export class LogicalExpressionFunctionNode extends AbstractCustomNode {
     protected getNodeStructure (): TStatement[] {
         const structure: TStatement = NodeFactory.expressionStatementNode(
             NodeFactory.functionExpressionNode(
+                null,
                 [
                     NodeFactory.identifierNode('x'),
                     NodeFactory.identifierNode('y')

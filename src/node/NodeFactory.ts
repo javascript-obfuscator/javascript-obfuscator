@@ -174,14 +174,17 @@ export class NodeFactory {
     /**
      * @param {Identifier[]} params
      * @param {BlockStatement} body
+     * @param {Identifier} id
      * @returns {FunctionExpression}
      */
     public static functionExpressionNode (
+        id: ESTree.Identifier | null,
         params: ESTree.Identifier[],
         body: ESTree.BlockStatement
     ): ESTree.FunctionExpression {
         return {
             type: NodeType.FunctionExpression,
+            id: id !== null ? id : undefined,
             params,
             body,
             generator: false,

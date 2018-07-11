@@ -156,4 +156,19 @@ describe('TemplateLiteralTransformer', () => {
             );
         });
     });
+
+    describe('Variant #7: template literal parentize', () => {
+        it('should parentize transformed template literal node', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/template-literal-parentize.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    unicodeEscapeSequence: false
+                }
+            );
+
+            assert.match(obfuscationResult.getObfuscatedCode(),  /^\[]\['map']\(\(\) *=> *'foo'\);$/);
+        });
+    });
 });

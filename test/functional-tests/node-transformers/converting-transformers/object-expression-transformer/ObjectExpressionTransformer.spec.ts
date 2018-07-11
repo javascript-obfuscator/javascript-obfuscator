@@ -121,7 +121,7 @@ describe('ObjectExpressionTransformer', () => {
                     obfuscatedCode = obfuscationResult.getObfuscatedCode();
                 });
 
-                it('should ignore computed property identifier', () => {
+                it('should ignore computed property literal value', () => {
                     assert.match(obfuscatedCode, regExp);
                 });
             });
@@ -144,7 +144,7 @@ describe('ObjectExpressionTransformer', () => {
                     obfuscatedCode = obfuscationResult.getObfuscatedCode();
                 });
 
-                it('should ignore computed property identifier', () => {
+                it('should encode computed property literal value', () => {
                     assert.match(obfuscatedCode, regExp);
                 });
             });

@@ -88,7 +88,7 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
     /**
      * @param {Property} property
      */
-    private transformComputedProperty(property: ESTree.Property): void {
+    private transformComputedProperty (property: ESTree.Property): void {
         if (!NodeGuards.isLiteralNode(property.key) || !(typeof property.key.value === 'string')) {
             return;
         }
@@ -99,7 +99,7 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
     /**
      * @param {Property} property
      */
-    private transformBaseProperty(property: ESTree.Property): void {
+    private transformBaseProperty (property: ESTree.Property): void {
         if (property.shorthand) {
             property.shorthand = false;
         }
@@ -115,7 +115,7 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
      * @param {string} inputValue
      * @returns {string}
      */
-    private getPropertyKeyValue(inputValue: string): string {
+    private getPropertyKeyValue (inputValue: string): string {
         return this.options.unicodeEscapeSequence
             ? this.escapeSequenceEncoder.encode(inputValue, true)
             : inputValue;

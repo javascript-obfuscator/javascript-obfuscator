@@ -53,24 +53,28 @@ export class ScopeTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * Port from eslint
-     * https://github.com/eslint/eslint/blob/41f0f6e3380b673edbb6c39d9d144c375ad2ebbc/lib/linter.js#L633
-     *
      * @param {eslintScope.ScopeManager} scopeManager
-     * @param {Node} targetNode
+     * @param {Identifier} targetIdentifierNode
      * @returns {eslintScope.Scope}
      */
-    private static getScope (scopeManager: eslintScope.ScopeManager, targetNode: ESTree.Node): eslintScope.Scope {
-        for (let node: ESTree.Node | undefined = targetNode; node; node = (<ESTree.Node>node).parentNode) {
+    private static getScope (
+        scopeManager: eslintScope.ScopeManager,
+        targetIdentifierNode: ESTree.Identifier
+    ): eslintScope.Scope {
+        for (let node: ESTree.Node | undefined = targetIdentifierNode; node; node = (<ESTree.Node>node).parentNode) {
             if (!node.parentNode) {
                 throw new Error('`parentNode` property of given node is `undefined`');
             }
 
             const scope: eslintScope.Scope | null = scopeManager.acquire(
                 node,
-                ScopeTransformer.isRootNode(targetNode)
+                ScopeTransformer.isRootNode(targetIdentifierNode)
             );
 
+            /**
+             * Node without scope.
+             * Should look for upper node
+             */
             if (!scope) {
                 if (ScopeTransformer.isRootNode(node)) {
                     break;
@@ -79,11 +83,33 @@ export class ScopeTransformer extends AbstractNodeTransformer {
                 }
             }
 
-            if (scope.type === "function-expression-name") {
-                return scope.childScopes[0];
+            const isVariable: boolean = scope.variables.some((variable: eslintScope.Variable) =>
+                variable.name === targetIdentifierNode.name
+                    && variable.identifiers.includes(targetIdentifierNode)
+            );
+
+            /**
+             * Node with scope.
+             * Should look for `variables` field to check - this is scope of current variable or not
+             */
+            if (isVariable) {
+                return scope;
             }
 
-            return scope;
+            /**
+             * Node with scope.
+             * Should look for `references` field to find scope of declaration
+             */
+            const foundReference: eslintScope.Reference | undefined = scope.references
+                    .find((reference: eslintScope.Reference) => reference.identifier === targetIdentifierNode);
+
+            if (foundReference) {
+                return foundReference.from;
+            }
+
+            if (ScopeTransformer.isRootNode(node)) {
+                break;
+            }
         }
 
         return scopeManager.scopes[0];
@@ -93,7 +119,7 @@ export class ScopeTransformer extends AbstractNodeTransformer {
      * @param {Node} node
      * @returns {boolean}
      */
-    private static isRootNode(node: ESTree.Node): boolean {
+    private static isRootNode (node: ESTree.Node): boolean {
         return NodeGuards.isProgramNode(node) || node.parentNode === node;
     }
 
@@ -112,7 +138,9 @@ export class ScopeTransformer extends AbstractNodeTransformer {
                     this.analyzeNode(node, parentNode);
                 }
 
-                return this.transformNode(node, parentNode);
+                if (NodeGuards.isIdentifierNode(node)) {
+                    return this.transformNode(node, parentNode);
+                }
             }
         };
     }
@@ -147,17 +175,17 @@ export class ScopeTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {Node} node
+     * @param {identifier} identifierNode
      * @param {Node | null} parentNode
      * @returns {Node}
      */
-    public transformNode (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node {
+    public transformNode (identifierNode: ESTree.Identifier, parentNode: ESTree.Node | null): ESTree.Node {
         if (!this.scopeManager) {
-            return node;
+            return identifierNode;
         }
 
-        node.scope = ScopeTransformer.getScope(this.scopeManager, node);
+        identifierNode.scope = ScopeTransformer.getScope(this.scopeManager, identifierNode);
 
-        return node;
+        return identifierNode;
     }
 }

@@ -44,9 +44,10 @@ describe('ScopeTransformer', () => {
             const functionBlockStatementNode: ESTree.BlockStatement = NodeFactory.blockStatementNode([
                 expressionStatementNode
             ]);
+            const functionDeclarationIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode('param');
             const functionDeclarationNode: ESTree.FunctionDeclaration = NodeFactory.functionDeclarationNode(
                 'func',
-                [],
+                [functionDeclarationIdentifierNode],
                 functionBlockStatementNode
             );
             const programNode: ESTree.Program = NodeFactory.programNode([
@@ -60,17 +61,28 @@ describe('ScopeTransformer', () => {
                 estraverse.traverse(programNode, scopeTransformer.getVisitor(TransformationStage.Preparing)!);
             });
 
-            describe('`scope` property existence', () => {
+            describe('`scope` property existence on identifiers', () => {
                 it('Variant #1: should add `scope` property with current node scope', () => {
                     assert.property(identifierNode1, 'scope');
                 });
 
                 it('Variant #2: should add `scope` property with current node scope', () => {
-                    assert.property(functionBlockStatementNode, 'scope');
+                    assert.property(functionDeclarationNode.params[0], 'scope');
                 });
 
                 it('Variant #3: should add `scope` property with current node scope', () => {
-                    assert.property(functionDeclarationNode, 'scope');
+                    assert.property(functionDeclarationNode.id, 'scope');
+                });
+            });
+
+
+            describe('`scope` property existence on other nodes', () => {
+                it('Variant #1: should add `scope` property with current node scope', () => {
+                    assert.notProperty(functionBlockStatementNode, 'scope');
+                });
+
+                it('Variant #2: should add `scope` property with current node scope', () => {
+                    assert.notProperty(functionDeclarationNode, 'scope');
                 });
             });
 
@@ -80,11 +92,11 @@ describe('ScopeTransformer', () => {
                 });
 
                 it('Variant #2: `scope` property shouldn\'t be null', () => {
-                    assert.isNotNull(functionBlockStatementNode.scope);
+                    assert.isNotNull((<ESTree.Identifier>functionDeclarationNode.params[0]).scope);
                 });
 
                 it('Variant #3: `scope` property shouldn\'t be null', () => {
-                    assert.isNotNull(functionDeclarationNode.scope);
+                    assert.isNotNull(functionDeclarationNode.id.scope);
                 });
             });
 
@@ -94,11 +106,14 @@ describe('ScopeTransformer', () => {
                 });
 
                 it('Variant #2: `scope` property should contain current scope of the node', () => {
-                    assert.equal(functionBlockStatementNode.scope!.block, functionDeclarationNode);
+                    assert.equal(
+                        (<ESTree.Identifier>functionDeclarationNode.params[0]).scope!.block,
+                        functionDeclarationNode
+                    );
                 });
 
                 it('Variant #3: `scope` property should contain current scope of the node', () => {
-                    assert.equal(functionDeclarationNode.scope!.block, functionDeclarationNode);
+                    assert.equal(functionDeclarationNode.id.scope!.block, programNode);
                 });
             });
 
@@ -108,11 +123,14 @@ describe('ScopeTransformer', () => {
                 });
 
                 it('Variant #2: `scope` property should contain current scope of the node', () => {
-                    assert.equal(functionBlockStatementNode.scope!.upper!.block, programNode);
+                    assert.equal(
+                        (<ESTree.Identifier>functionDeclarationNode.params[0]).scope!.upper!.block,
+                        programNode
+                    );
                 });
 
                 it('Variant #3: `scope` property should contain current scope of the node', () => {
-                    assert.equal(functionDeclarationNode.scope!.upper!.block, programNode);
+                    assert.equal(functionDeclarationNode.id.scope!.upper, null);
                 });
             });
         });

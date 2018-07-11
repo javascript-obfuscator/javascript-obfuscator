@@ -11,7 +11,7 @@ import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-
         (function () {
             let a = 0;
             
-            function foo0 (param) {
+            var foo0 = function (param1, param2) {
                 var bar0 = 1;
                 var baz0 = 2;
                 
@@ -22,15 +22,17 @@ import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-
                 }
             }
             
-            function foo1 () {
+            var foo1 = function (param1, param2) {
                 var bar1 = 4;
-                var baz1 = 5;
+                var baz1 = '55555'
             }
         })();
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
+            stringArray: true,
+            stringArrayThreshold: 1,
             transformObjectKeys: true,
             identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
         }

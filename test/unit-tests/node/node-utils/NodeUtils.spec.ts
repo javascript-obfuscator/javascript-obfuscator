@@ -128,9 +128,6 @@ describe('NodeUtils', () => {
 
             before(() => {
                 programNode = NodeFactory.programNode();
-
-                programNode.scope = null;
-
                 programNode = NodeUtils.clone(programNode);
             });
 

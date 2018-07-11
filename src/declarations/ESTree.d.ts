@@ -19,11 +19,11 @@ declare module 'estree' {
     interface BaseNode {
         metadata?: BaseNodeMetadata;
         parentNode?: Node;
-        scope?: eslintScope.Scope | null;
     }
 
     interface Identifier extends BaseNode {
         metadata?: IdentifierNodeMetadata;
+        scope?: eslintScope.Scope | null;
     }
 
     interface SimpleLiteral extends BaseNode {

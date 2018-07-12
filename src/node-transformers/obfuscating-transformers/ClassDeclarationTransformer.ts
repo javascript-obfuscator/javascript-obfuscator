@@ -136,12 +136,8 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
         classDeclarationNode: ESTree.ClassDeclaration,
         blockScopeNode: TNodeWithBlockScope
     ): void {
-        const cachedReplaceableIdentifiersNamesMap: TReplaceableIdentifiersNames | undefined =
-            this.replaceableIdentifiers.get(blockScopeNode);
-
-        if (!cachedReplaceableIdentifiersNamesMap) {
-            return;
-        }
+        const cachedReplaceableIdentifiersNamesMap: TReplaceableIdentifiersNames =
+            this.replaceableIdentifiers.get(blockScopeNode)!;
 
         const cachedReplaceableIdentifiers: ESTree.Identifier[] | undefined = cachedReplaceableIdentifiersNamesMap
             .get(classDeclarationNode.id.name);

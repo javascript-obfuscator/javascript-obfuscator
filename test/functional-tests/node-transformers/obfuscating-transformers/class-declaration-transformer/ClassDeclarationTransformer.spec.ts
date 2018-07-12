@@ -68,30 +68,60 @@ describe('ClassDeclarationTransformer', () => {
             });
 
             describe('Variant #2: `renameGlobals` option is enabled', () => {
-                const classNameIdentifierRegExp: RegExp = /class *(_0x[a-f0-9]{4,6}) *\{/;
-                const classCallIdentifierRegExp: RegExp = /new *(_0x[a-f0-9]{4,6}) *\( *\);/;
+                describe('Variant #1: Base', () => {
+                    const classNameIdentifierRegExp: RegExp = /class *(_0x[a-f0-9]{4,6}) *\{/;
+                    const classCallIdentifierRegExp: RegExp = /new *(_0x[a-f0-9]{4,6}) *\( *\);/;
 
-                let obfuscatedCode: string;
+                    let obfuscatedCode: string;
 
-                before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            renameGlobals: true
-                        }
-                    );
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js');
+                        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                renameGlobals: true
+                            }
+                        );
 
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                        obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    });
+
+                    it('match #1: should transform class name', () => {
+                        assert.match(obfuscatedCode, classNameIdentifierRegExp);
+                    });
+
+                    it('match #2: should transform class name', () => {
+                        assert.match(obfuscatedCode, classCallIdentifierRegExp);
+                    });
                 });
 
-                it('match #1: should transform class name', () => {
-                    assert.match(obfuscatedCode, classNameIdentifierRegExp);
-                });
+                describe('Variant #2: Two classes. Transformation of identifier inside class method', () => {
+                    const identifierRegExp1: RegExp = /const (?:_0x[a-f0-9]{4,6}) *= *0x1;/;
+                    const identifierRegExp2: RegExp = /const (?:_0x[a-f0-9]{4,6}) *= *0x2;/;
 
-                it('match #2: should transform class name', () => {
-                    assert.match(obfuscatedCode, classCallIdentifierRegExp);
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/rename-globals-identifier-transformation.js');
+                        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                renameGlobals: true
+                            }
+                        );
+
+                        obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    });
+
+                    it('match #1: should transform identifier name inside class method', () => {
+                        assert.match(obfuscatedCode, identifierRegExp1);
+                    });
+
+                    it('match #2: should transform identifier name inside class method', () => {
+                        assert.match(obfuscatedCode, identifierRegExp2);
+                    });
                 });
             });
         });

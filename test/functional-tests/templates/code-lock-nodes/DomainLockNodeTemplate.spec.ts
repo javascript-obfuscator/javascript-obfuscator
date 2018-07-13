@@ -9,7 +9,7 @@ import { ServiceIdentifiers } from '../../../../src/container/ServiceIdentifiers
 import { ICryptUtils } from '../../../../src/interfaces/utils/ICryptUtils';
 import { IInversifyContainerFacade } from '../../../../src/interfaces/container/IInversifyContainerFacade';
 
-import { DomainLockNodeTemplate } from '../../../../src/templates/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
+import { DomainLockNodeTemplate } from '../../../../src/templates/code-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
 import { GlobalVariableTemplate1 } from '../../../../src/templates/GlobalVariableTemplate1';
 
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';

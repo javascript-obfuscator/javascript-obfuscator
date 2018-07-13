@@ -19,7 +19,7 @@ export class CustomNodeGroupStorage extends MapStorage <string, ICustomNodeGroup
     private static readonly customNodeGroupsList: CustomNodeGroup[] = [
         CustomNodeGroup.ConsoleOutputCustomNodeGroup,
         CustomNodeGroup.DebugProtectionCustomNodeGroup,
-        CustomNodeGroup.DomainLockCustomNodeGroup,
+        CustomNodeGroup.CodeLockCustomNodeGroup,
         CustomNodeGroup.SelfDefendingCustomNodeGroup,
         CustomNodeGroup.StringArrayCustomNodeGroup
     ];

@@ -19,7 +19,7 @@ import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
 
 @injectable()
-export class DomainLockCustomNodeGroup extends AbstractCustomNodeGroup {
+export class CodeLockCustomNodeGroup extends AbstractCustomNodeGroup {
     /**
      * @type {ObfuscationEvent}
      */

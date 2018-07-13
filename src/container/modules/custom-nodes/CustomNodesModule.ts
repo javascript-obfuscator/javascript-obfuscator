@@ -10,9 +10,9 @@ import { CustomNode } from '../../../enums/custom-nodes/CustomNode';
 import { CustomNodeGroup } from '../../../enums/custom-nodes/CustomNodeGroup';
 import { DeadCodeInjectionCustomNode } from '../../../enums/custom-nodes/DeadCodeInjectionCustomNode';
 
+import { CodeLockCustomNodeGroup } from '../../../custom-nodes/code-lock-nodes/group/CodeLockCustomNodeGroup';
 import { ConsoleOutputCustomNodeGroup } from '../../../custom-nodes/console-output-nodes/group/ConsoleOutputCustomNodeGroup';
 import { DebugProtectionCustomNodeGroup } from '../../../custom-nodes/debug-protection-nodes/group/DebugProtectionCustomNodeGroup';
-import { DomainLockCustomNodeGroup } from '../../../custom-nodes/domain-lock-nodes/group/DomainLockCustomNodeGroup';
 import { SelfDefendingCustomNodeGroup } from '../../../custom-nodes/self-defending-nodes/group/SelfDefendingCustomNodeGroup';
 import { StringArrayCustomNodeGroup } from '../../../custom-nodes/string-array-nodes/group/StringArrayCustomNodeGroup';
 
@@ -26,7 +26,7 @@ import { ConsoleOutputDisableExpressionNode } from '../../../custom-nodes/consol
 import { DebugProtectionFunctionCallNode } from '../../../custom-nodes/debug-protection-nodes/DebugProtectionFunctionCallNode';
 import { DebugProtectionFunctionIntervalNode } from '../../../custom-nodes/debug-protection-nodes/DebugProtectionFunctionIntervalNode';
 import { DebugProtectionFunctionNode } from '../../../custom-nodes/debug-protection-nodes/DebugProtectionFunctionNode';
-import { DomainLockNode } from '../../../custom-nodes/domain-lock-nodes/DomainLockNode';
+import { DomainLockNode } from '../../../custom-nodes/code-lock-nodes/DomainLockNode';
 import { ExpressionWithOperatorControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/ExpressionWithOperatorControlFlowStorageCallNode';
 import { LogicalExpressionFunctionNode } from '../../../custom-nodes/control-flow-flattening-nodes/LogicalExpressionFunctionNode';
 import { NodeCallsControllerFunctionNode } from '../../../custom-nodes/node-calls-controller-nodes/NodeCallsControllerFunctionNode';
@@ -123,16 +123,16 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
 
     // node groups
     bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
+        .to(CodeLockCustomNodeGroup)
+        .whenTargetNamed(CustomNodeGroup.CodeLockCustomNodeGroup);
+
+    bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
         .to(ConsoleOutputCustomNodeGroup)
         .whenTargetNamed(CustomNodeGroup.ConsoleOutputCustomNodeGroup);
 
     bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
         .to(DebugProtectionCustomNodeGroup)
         .whenTargetNamed(CustomNodeGroup.DebugProtectionCustomNodeGroup);
-
-    bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
-        .to(DomainLockCustomNodeGroup)
-        .whenTargetNamed(CustomNodeGroup.DomainLockCustomNodeGroup);
 
     bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
         .to(SelfDefendingCustomNodeGroup)

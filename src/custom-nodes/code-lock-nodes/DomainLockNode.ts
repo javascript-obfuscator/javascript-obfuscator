@@ -14,7 +14,7 @@ import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { DomainLockNodeTemplate } from '../../templates/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
+import { DomainLockNodeTemplate } from '../../templates/code-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
 import { GlobalVariableNoEvalTemplate } from '../../templates/GlobalVariableNoEvalTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';

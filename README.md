@@ -285,6 +285,7 @@ Following options are available for the JS Obfuscator:
     compact: true,
     controlFlowFlattening: false,
     controlFlowFlatteningThreshold: 0.75,
+    dateLock: null,
     deadCodeInjection: false,
     deadCodeInjectionThreshold: 0.4,
     debugProtection: false,
@@ -325,6 +326,7 @@ Following options are available for the JS Obfuscator:
     --config <string>
     --control-flow-flattening <boolean>
     --control-flow-flattening-threshold <number>
+    --date-lock '<string,string>' (comma separated)
     --dead-code-injection <boolean>
     --dead-code-injection-threshold <number>
     --debug-protection <boolean>
@@ -441,6 +443,21 @@ The probability that the [`controlFlowFlattening`](#controlflowflattening) trans
 This setting is especially useful for large code size because large amounts of control flow transformations can slow down your code and increase code size.
 
 `controlFlowFlatteningThreshold: 0` equals to `controlFlowFlattening: false`.
+
+### `dateLock`
+Type: `[string, string] | null` Default: `null`
+
+Locks the obfuscated source code so it only runs between specific dates.
+
+Example:
+```ts
+	{
+		dateLock: [
+		    '2018-01-01T00:00:00.000Z',
+		    '2018-12-31T23:59:59.999Z'
+		]
+	}
+```
 
 ### `deadCodeInjection`
 Type: `boolean` Default: `false`

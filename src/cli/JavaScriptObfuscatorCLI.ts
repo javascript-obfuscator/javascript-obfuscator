@@ -214,6 +214,11 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 parseFloat
             )
             .option(
+                '--date-lock <string,string> (comma separated, without whitespaces)',
+                'Blocks the execution of the code when current date do not match the passed `from` and `to` ISO date strings (comma separated)',
+                ArraySanitizer
+            )
+            .option(
                 '--dead-code-injection <boolean>',
                 'Enables dead code injection',
                 BooleanSanitizer

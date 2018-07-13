@@ -8,6 +8,7 @@ export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     compact: true,
     controlFlowFlattening: false,
     controlFlowFlatteningThreshold: 0,
+    dateLock: null,
     deadCodeInjection: false,
     deadCodeInjectionThreshold: 0,
     debugProtection: false,

@@ -1,3 +1,4 @@
+import { TDateLock } from '../../types/options/TDateLock';
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 
 import { IdentifierNamesGenerator } from '../../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
@@ -8,6 +9,7 @@ export interface IOptions {
     readonly compact: boolean;
     readonly controlFlowFlattening: boolean;
     readonly controlFlowFlatteningThreshold: number;
+    readonly dateLock: TDateLock;
     readonly deadCodeInjection: boolean;
     readonly deadCodeInjectionThreshold: number;
     readonly debugProtection: boolean;

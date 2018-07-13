@@ -2,11 +2,15 @@ import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
 import {
+    ArrayMaxSize,
+    ArrayMinSize,
     ArrayUnique,
     IsArray,
     IsBoolean,
+    IsDateString,
     IsIn,
     IsNumber,
+    IsOptional,
     IsString,
     IsUrl,
     Max,
@@ -17,6 +21,7 @@ import {
     ValidatorOptions
 } from 'class-validator';
 
+import { TDateLock } from '../types/options/TDateLock';
 import { TInputOptions } from '../types/options/TInputOptions';
 import { TStringArrayEncoding } from '../types/options/TStringArrayEncoding';
 
@@ -62,6 +67,18 @@ export class Options implements IOptions {
     @Min(0)
     @Max(1)
     public readonly controlFlowFlatteningThreshold!: number;
+
+    /**
+     * @type {string[]}
+     */
+    @IsOptional()
+    @IsArray()
+    @ArrayMinSize(2)
+    @ArrayMaxSize(2)
+    @IsDateString({
+        each: true
+    })
+    public readonly dateLock!: TDateLock;
 
     /**
      * @type {boolean}

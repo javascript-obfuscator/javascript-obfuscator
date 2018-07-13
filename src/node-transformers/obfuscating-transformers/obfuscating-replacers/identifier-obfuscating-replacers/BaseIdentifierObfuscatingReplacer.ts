@@ -107,6 +107,10 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
      * @returns {boolean}
      */
     private isReservedName (name: string): boolean {
+        if (!this.options.reservedStrings.length) {
+            return false;
+        }
+
         return this.options.reservedNames
             .some((reservedName: string) => {
                 return new RegExp(reservedName, 'g').exec(name) !== null;

@@ -269,6 +269,11 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 ArraySanitizer
             )
             .option(
+                '--reserved-strings <list> (comma separated, without whitespaces)',
+                'Disables transformation of string literals, which being matched by passed RegExp patterns (comma separated)',
+                ArraySanitizer
+            )
+            .option(
                 '--rename-globals <boolean>', 'Allows to enable obfuscation of global variable and function names with declaration.',
                 BooleanSanitizer
             )

@@ -315,6 +315,161 @@ describe('LiteralTransformer', () => {
                 assert.match(obfuscatedCode, regExp);
             });
         });
+
+        describe('Variant #12: `reservedNames` option is enabled', () => {
+            describe('Variant #1: base `reservedStrings` values', () => {
+                describe('Variant #1: single reserved string value', () => {
+                    const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
+                    const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\('0x0'\);/;
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option.js');
+                        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                stringArray: true,
+                                stringArrayThreshold: 1,
+                                reservedStrings: ['foo']
+                            }
+                        );
+
+                        obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    });
+
+                    it('match #1: should ignore reserved strings', () => {
+                        assert.match(obfuscatedCode, stringLiteralRegExp1);
+                    });
+
+                    it('match #2: should transform non-reserved strings', () => {
+                        assert.match(obfuscatedCode, stringLiteralRegExp2);
+                    });
+                });
+
+                describe('Variant #2: two reserved string values', () => {
+                    const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
+                    const stringLiteralRegExp2: RegExp = /const bar *= *'bar';/;
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option.js');
+                        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                stringArray: true,
+                                stringArrayThreshold: 1,
+                                reservedStrings: ['foo', 'bar']
+                            }
+                        );
+
+                        obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    });
+
+                    it('match #1: should ignore reserved strings', () => {
+                        assert.match(obfuscatedCode, stringLiteralRegExp1);
+                    });
+
+                    it('match #2: should ignore reserved strings', () => {
+                        assert.match(obfuscatedCode, stringLiteralRegExp2);
+                    });
+                });
+            });
+
+            describe('Variant #2: RegExp `reservedStrings` values', () => {
+                describe('Variant #1: single reserved string value', () => {
+                    const stringLiteralRegExp1: RegExp = /const foo *= *_0x([a-f0-9]){4}\('0x0'\);/;
+                    const stringLiteralRegExp2: RegExp = /const bar *= *'bar';/;
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option.js');
+                        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                stringArray: true,
+                                stringArrayThreshold: 1,
+                                reservedStrings: ['ar$']
+                            }
+                        );
+
+                        obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    });
+
+                    it('match #1: should transform non-reserved strings', () => {
+                        assert.match(obfuscatedCode, stringLiteralRegExp1);
+                    });
+
+                    it('match #2: should ignore reserved strings', () => {
+                        assert.match(obfuscatedCode, stringLiteralRegExp2);
+                    });
+                });
+
+                describe('Variant #2: two reserved string values', () => {
+                    const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
+                    const stringLiteralRegExp2: RegExp = /const bar *= *'bar';/;
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option.js');
+                        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                stringArray: true,
+                                stringArrayThreshold: 1,
+                                reservedStrings: ['^fo', '.ar']
+                            }
+                        );
+
+                        obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    });
+
+                    it('match #1: should ignore reserved strings', () => {
+                        assert.match(obfuscatedCode, stringLiteralRegExp1);
+                    });
+
+                    it('match #2: should ignore reserved strings', () => {
+                        assert.match(obfuscatedCode, stringLiteralRegExp2);
+                    });
+                });
+            });
+
+            describe('Variant #3: `unicodeEscapeSequence` option is enabled', () => {
+                const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
+                const stringLiteralRegExp2: RegExp = /const bar *= *'\\x62\\x61\\x72';/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            reservedStrings: ['foo'],
+                            unicodeEscapeSequence: true
+                        }
+                    );
+
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('match #1: should ignore reserved strings', () => {
+                    assert.match(obfuscatedCode, stringLiteralRegExp1);
+                });
+
+                it('match #2: should transform non-reserved strings', () => {
+                    assert.match(obfuscatedCode, stringLiteralRegExp2);
+                });
+            });
+        });
     });
 
     describe('transformation of literal node with boolean value', () => {

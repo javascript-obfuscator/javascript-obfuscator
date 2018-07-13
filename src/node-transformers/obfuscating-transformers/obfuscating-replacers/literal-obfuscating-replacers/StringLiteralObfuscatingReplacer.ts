@@ -133,6 +133,10 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
      * @returns {Node}
      */
     public replace (nodeValue: string): ESTree.Node {
+        if (this.isReservedString(nodeValue)) {
+            return NodeFactory.literalNode(nodeValue);
+        }
+
         const useStringArray: boolean = this.canUseStringArray(nodeValue);
         const cacheKey: string = `${nodeValue}-${String(useStringArray)}`;
         const useCacheValue: boolean = this.nodesCache.has(cacheKey) && this.options.stringArrayEncoding !== StringArrayEncoding.Rc4;
@@ -262,5 +266,20 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
             stringArrayIdentifierNode,
             callExpressionArgs
         );
+    }
+
+    /**
+     * @param {string} value
+     * @returns {boolean}
+     */
+    private isReservedString (value: string): boolean {
+        if (!this.options.reservedStrings.length) {
+            return false;
+        }
+
+        return this.options.reservedStrings
+            .some((reservedString: string) => {
+                return new RegExp(reservedString, 'g').exec(value) !== null;
+            });
     }
 }

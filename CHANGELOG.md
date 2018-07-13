@@ -1,5 +1,9 @@
 Change Log
 ===
+v0.18.0
+---
+* **New option:** `reservedStrings` disables transformation of string literals, which being matched by passed RegExp patterns
+
 v0.17.1
 ---
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/293

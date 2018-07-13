@@ -20,6 +20,7 @@ export interface IOptions {
     readonly log: boolean;
     readonly renameGlobals: boolean;
     readonly reservedNames: string[];
+    readonly reservedStrings: string[];
     readonly rotateStringArray: boolean;
     readonly seed: number;
     readonly selfDefending: boolean;

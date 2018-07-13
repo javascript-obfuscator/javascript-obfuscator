@@ -297,6 +297,7 @@ Following options are available for the JS Obfuscator:
     log: false,
     renameGlobals: false,
     reservedNames: [],
+    reservedStrings: [],
     rotateStringArray: true,
     seed: 0,
     selfDefending: false,
@@ -336,6 +337,7 @@ Following options are available for the JS Obfuscator:
     --log <boolean>
     --rename-globals <boolean>
     --reserved-names '<list>' (comma separated)
+    --reserved-strings '<list>' (comma separated)
     --rotate-string-array <boolean>
     --seed <number>
     --self-defending <boolean>
@@ -629,6 +631,22 @@ Example:
 		reservedNames: [
 			'^someVariable',
 			'functionParameter_\d'
+		]
+	}
+```
+
+### `reservedStrings`
+Type: `string[]` Default: `[]`
+
+Disables transformation of string literals, which being matched by passed RegExp patterns.
+
+Example:
+```ts
+	{
+		reservedStrings: [
+			'react-native',
+			'\.\/src\/test',
+			'some-string_\d'
 		]
 	}
 ```

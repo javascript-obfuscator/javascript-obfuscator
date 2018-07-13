@@ -15,6 +15,7 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeMetadata } from '../../node/NodeMetadata';
+import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class LiteralTransformer extends AbstractNodeTransformer {
@@ -69,22 +70,37 @@ export class LiteralTransformer extends AbstractNodeTransformer {
             return literalNode;
         }
 
+        let newLiteralNode: ESTree.Node;
+
         switch (typeof literalNode.value) {
             case 'boolean':
-                return this.literalObfuscatingReplacerFactory(LiteralObfuscatingReplacer.BooleanLiteralObfuscatingReplacer)
-                    .replace(<boolean>literalNode.value);
+                newLiteralNode = this.literalObfuscatingReplacerFactory(
+                    LiteralObfuscatingReplacer.BooleanLiteralObfuscatingReplacer
+                ).replace(<boolean>literalNode.value);
+
+                break;
 
             case 'number':
-                return this.literalObfuscatingReplacerFactory(LiteralObfuscatingReplacer.NumberLiteralObfuscatingReplacer)
-                    .replace(<number>literalNode.value);
+                newLiteralNode = this.literalObfuscatingReplacerFactory(
+                    LiteralObfuscatingReplacer.NumberLiteralObfuscatingReplacer
+                ).replace(<number>literalNode.value);
+
+                break;
 
             case 'string':
-                return this.literalObfuscatingReplacerFactory(LiteralObfuscatingReplacer.StringLiteralObfuscatingReplacer)
-                    .replace(<string>literalNode.value);
+                newLiteralNode = this.literalObfuscatingReplacerFactory(
+                    LiteralObfuscatingReplacer.StringLiteralObfuscatingReplacer
+                ).replace(<string>literalNode.value);
+
+                break;
 
             default:
-                return literalNode;
+                newLiteralNode = literalNode;
         }
+
+        NodeUtils.parentizeNode(newLiteralNode, parentNode);
+
+        return newLiteralNode;
     }
 
     /**

@@ -54,6 +54,16 @@ export class FunctionTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    private static isProhibitedPropertyNode(node: ESTree.Node): node is ESTree.Property & {key: ESTree.Identifier} {
+        return NodeGuards.isPropertyNode(node)
+            && node.shorthand
+            && NodeGuards.isIdentifierNode(node.key);
+    }
+
+    /**
      * @param {TransformationStage} transformationStage
      * @returns {IVisitor | null}
      */
@@ -98,11 +108,7 @@ export class FunctionTransformer extends AbstractNodeTransformer {
             .forEach((paramsNode: ESTree.Node) => {
                 estraverse.traverse(paramsNode, {
                     enter: (node: ESTree.Node): estraverse.VisitorOption | void => {
-                        if (
-                            NodeGuards.isPropertyNode(node)
-                            && node.shorthand
-                            && NodeGuards.isIdentifierNode(node.key)
-                        ) {
+                        if (FunctionTransformer.isProhibitedPropertyNode(node)) {
                             return estraverse.VisitorOption.Skip;
                         }
 
@@ -125,9 +131,25 @@ export class FunctionTransformer extends AbstractNodeTransformer {
      * @param {TNodeWithBlockScope} blockScopeNode
      */
     private replaceFunctionParams (functionNode: ESTree.Function, blockScopeNode: TNodeWithBlockScope): void {
+        const ignoredIdentifiersSet: Set <string> = new Set();
+
         const replaceVisitor: estraverse.Visitor = {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
-                if (parentNode && NodeGuards.isReplaceableIdentifierNode(node, parentNode)) {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void | estraverse.VisitorOption => {
+                if (NodeGuards.isFunctionNode(node)) {
+                    this.replaceFunctionParams(node, blockScopeNode);
+
+                    return estraverse.VisitorOption.Skip;
+                }
+
+                if (FunctionTransformer.isProhibitedPropertyNode(node)) {
+                    ignoredIdentifiersSet.add(node.key.name);
+                }
+
+                if (
+                    parentNode
+                    && NodeGuards.isReplaceableIdentifierNode(node, parentNode)
+                    && !ignoredIdentifiersSet.has(node.name)
+                ) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
                         .replace(node.name, blockScopeNode);
                     const newIdentifierName: string = newIdentifier.name;

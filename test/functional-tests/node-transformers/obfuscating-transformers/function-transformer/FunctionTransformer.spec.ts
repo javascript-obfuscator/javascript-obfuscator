@@ -77,8 +77,10 @@ describe('FunctionTransformer', () => {
         });
 
         describe('Variant #2: correct transformation when identifier with same name in parent scope exist', () => {
+            const functionParameterRegExp: RegExp = /^\(function *\(\) *{ *function *_0x[a-f0-9]{4,6} *\(_0x[a-f0-9]{4,6}\) *\{/;
             const callbackParameterRegExp: RegExp = /\['then'] *\(\({ *data *}\)/;
             const callbackBodyRegExp: RegExp = /console\['log']\(data\)/;
+            const returnRegExp: RegExp = /return _0x[a-f0-9]{4,6};/;
 
             let obfuscatedCode: string;
 
@@ -94,12 +96,52 @@ describe('FunctionTransformer', () => {
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
 
-            it('match #1: shouldn\'t transform callback parameter object pattern identifier', () => {
-                assert.match(obfuscatedCode, callbackParameterRegExp);
+            it('match #1: should transform function parameter identifier', () => {
+                assert.match(obfuscatedCode, functionParameterRegExp);
             });
 
             it('match #2: shouldn\'t transform callback parameter object pattern identifier', () => {
+                assert.match(obfuscatedCode, callbackParameterRegExp);
+            });
+
+            it('match #3: shouldn\'t transform callback body identifier', () => {
                 assert.match(obfuscatedCode, callbackBodyRegExp);
+            });
+
+            it('match #4: should transform identifier in `ReturnStatement`', () => {
+                assert.match(obfuscatedCode, returnRegExp);
+            });
+        });
+
+        describe('Variant #3: correct transformation when parent scope identifier conflicts with current scope object pattern identifier', () => {
+            const functionObjectPatternParameterRegExp: RegExp = /function _0x[a-f0-9]{4,6} *\({data, *\.\.\._0x[a-f0-9]{4,6}}\) *{/;
+            const returnRegExp1: RegExp = /return data *\+ *_0x[a-f0-9]{4,6};/;
+            const returnRegExp2: RegExp = /return _0x[a-f0-9]{4,6};/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter-3.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('match #1: should transform function parameter object pattern rest identifier', () => {
+                assert.match(obfuscatedCode, functionObjectPatternParameterRegExp);
+            });
+
+            it('match #2: should transform identifier in `ReturnStatement` of inner function', () => {
+                assert.match(obfuscatedCode, returnRegExp1);
+            });
+
+            it('match #2: should transform identifier in `ReturnStatement` of outer function', () => {
+                assert.match(obfuscatedCode, returnRegExp2);
             });
         });
     });
@@ -363,6 +405,30 @@ describe('FunctionTransformer', () => {
 
         it('Match #2: should transform identifiers inside function body', () => {
             assert.match(obfuscatedCode, returnRegExp);
+        });
+    });
+
+    describe('ignored identifier names set', () => {
+        describe('Variant #1: avoid to add `ObjectPattern` identifier to the set when same identifier exist in function parameter', () => {
+            const functionBodyRegExp: RegExp = /\[]\['find']\(\({bar: *_0x[a-f0-9]{4,6}}\) *=> *_0x[a-f0-9]{4,6}\);/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/identifier-names-set-object-pattern.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('should transform identifiers in function body', () => {
+                assert.match(obfuscatedCode, functionBodyRegExp);
+            });
         });
     });
 });

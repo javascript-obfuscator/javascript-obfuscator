@@ -124,6 +124,16 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isFunctionNode(node: ESTree.Node): node is ESTree.Function {
+        return NodeGuards.isFunctionDeclarationNode(node) ||
+            NodeGuards.isFunctionExpressionNode(node) ||
+            NodeGuards.isArrowFunctionExpressionNode(node);
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isFunctionDeclarationNode (node: ESTree.Node): node is ESTree.FunctionDeclaration {
         return node.type === NodeType.FunctionDeclaration;
     }

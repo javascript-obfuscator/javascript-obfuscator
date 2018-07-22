@@ -57,7 +57,7 @@ export class FunctionTransformer extends AbstractNodeTransformer {
      * @param {Node} node
      * @returns {boolean}
      */
-    private static isProhibitedPropertyNode(node: ESTree.Node): node is ESTree.Property & {key: ESTree.Identifier} {
+    private static isProhibitedPropertyNode (node: ESTree.Node): node is ESTree.Property & {key: ESTree.Identifier} {
         return NodeGuards.isPropertyNode(node)
             && node.shorthand
             && NodeGuards.isIdentifierNode(node.key);

@@ -704,7 +704,7 @@ Sets file name for output source map when `sourceMapMode: 'separate'`.
 
 CLI example:
 ```
-javascript-obfuscator input.js --output out.js --sourceMap true --sourceMapBaseUrl 'http://localhost:9000' --sourceMapFileName example
+javascript-obfuscator input.js --output out.js --source-map true --source-map-base-url 'http://localhost:9000' --source-map-file-name example
 ```
 
 Result: 

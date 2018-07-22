@@ -114,8 +114,9 @@ describe('FunctionTransformer', () => {
         });
 
         describe('Variant #3: correct transformation when parent scope identifier conflicts with current scope object pattern identifier', () => {
-            const functionObjectPatternParameterRegExp: RegExp = /function _0x[a-f0-9]{4,6} *\({data, *\.\.\._0x[a-f0-9]{4,6}}\) *{/;
-            const returnRegExp1: RegExp = /return data *\+ *_0x[a-f0-9]{4,6};/;
+            const functionObjectPatternParameterRegExp1: RegExp = /function _0x[a-f0-9]{4,6} *\({data, *\.\.\._0x[a-f0-9]{4,6}}\) *{/;
+            const functionObjectPatternParameterRegExp2: RegExp = /function _0x[a-f0-9]{4,6} *\({options}\) *{/;
+            const returnRegExp1: RegExp = /return data *\+ *options *\+ *_0x[a-f0-9]{4,6};/;
             const returnRegExp2: RegExp = /return _0x[a-f0-9]{4,6};/;
 
             let obfuscatedCode: string;
@@ -133,14 +134,18 @@ describe('FunctionTransformer', () => {
             });
 
             it('match #1: should transform function parameter object pattern rest identifier', () => {
-                assert.match(obfuscatedCode, functionObjectPatternParameterRegExp);
+                assert.match(obfuscatedCode, functionObjectPatternParameterRegExp1);
             });
 
-            it('match #2: should transform identifier in `ReturnStatement` of inner function', () => {
+            it('match #2: should transform function parameter object pattern rest identifier', () => {
+                assert.match(obfuscatedCode, functionObjectPatternParameterRegExp2);
+            });
+
+            it('match #3: should transform identifier in `ReturnStatement` of inner function', () => {
                 assert.match(obfuscatedCode, returnRegExp1);
             });
 
-            it('match #2: should transform identifier in `ReturnStatement` of outer function', () => {
+            it('match #4: should transform identifier in `ReturnStatement` of outer function', () => {
                 assert.match(obfuscatedCode, returnRegExp2);
             });
         });

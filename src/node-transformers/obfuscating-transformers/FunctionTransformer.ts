@@ -129,26 +129,35 @@ export class FunctionTransformer extends AbstractNodeTransformer {
     /**
      * @param {Function} functionNode
      * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {Set<string>} ignoredIdentifierNamesSet
      */
-    private replaceFunctionParams (functionNode: ESTree.Function, blockScopeNode: TNodeWithBlockScope): void {
-        const ignoredIdentifiersSet: Set <string> = new Set();
-
+    private replaceFunctionParams (
+        functionNode: ESTree.Function,
+        blockScopeNode: TNodeWithBlockScope,
+        ignoredIdentifierNamesSet: Set <string> = new Set()
+    ): void {
         const replaceVisitor: estraverse.Visitor = {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void | estraverse.VisitorOption => {
+                /**
+                 * Should to process nested functions in different traverse loop to avoid wrong code generation
+                 */
                 if (NodeGuards.isFunctionNode(node)) {
-                    this.replaceFunctionParams(node, blockScopeNode);
+                    this.replaceFunctionParams(node, blockScopeNode, new Set(ignoredIdentifierNamesSet));
 
                     return estraverse.VisitorOption.Skip;
                 }
 
+                /**
+                 * Should to ignore all identifiers that related to shorthand properties
+                 */
                 if (FunctionTransformer.isProhibitedPropertyNode(node)) {
-                    ignoredIdentifiersSet.add(node.key.name);
+                    ignoredIdentifierNamesSet.add(node.key.name);
                 }
 
                 if (
                     parentNode
                     && NodeGuards.isReplaceableIdentifierNode(node, parentNode)
-                    && !ignoredIdentifiersSet.has(node.name)
+                    && !ignoredIdentifierNamesSet.has(node.name)
                 ) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
                         .replace(node.name, blockScopeNode);

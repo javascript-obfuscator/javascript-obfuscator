@@ -1,7 +1,8 @@
 export interface IEscapeSequenceEncoder {
     /**
-     * @param string
-     * @param usingUnicodeEscapeSequence
+     * @param {string} string
+     * @param {boolean} encodeAllSymbols
+     * @returns {string}
      */
-    encode (string: string, usingUnicodeEscapeSequence: boolean): string;
+    encode (string: string, encodeAllSymbols: boolean): string;
 }

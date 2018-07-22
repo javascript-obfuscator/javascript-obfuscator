@@ -136,12 +136,8 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
         functionDeclarationNode: ESTree.FunctionDeclaration,
         blockScopeNode: TNodeWithBlockScope
     ): void {
-        const cachedReplaceableIdentifiersNamesMap: TReplaceableIdentifiersNames | undefined =
-            this.replaceableIdentifiers.get(blockScopeNode);
-
-        if (!cachedReplaceableIdentifiersNamesMap) {
-            return;
-        }
+        const cachedReplaceableIdentifiersNamesMap: TReplaceableIdentifiersNames =
+            <TReplaceableIdentifiersNames>this.replaceableIdentifiers.get(blockScopeNode);
 
         const cachedReplaceableIdentifiers: ESTree.Identifier[] | undefined = cachedReplaceableIdentifiersNamesMap
             .get(functionDeclarationNode.id.name);

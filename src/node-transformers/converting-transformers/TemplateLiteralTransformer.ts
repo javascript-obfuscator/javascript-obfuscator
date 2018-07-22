@@ -12,6 +12,7 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeUtils } from '../../node/NodeUtils';
 
 /**
  * Transform ES2015 template literals to ES5
@@ -102,6 +103,8 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
             nodes.unshift(NodeFactory.literalNode(''));
         }
 
+        let transformedNode: ESTree.Node;
+
         if (nodes.length > 1) {
             let root: ESTree.BinaryExpression = NodeFactory.binaryExpressionNode(
                 '+',
@@ -113,9 +116,13 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
                 root = NodeFactory.binaryExpressionNode('+', root, node);
             });
 
-            return root;
+            transformedNode = root;
+        } else {
+            transformedNode = nodes[0];
         }
 
-        return nodes[0];
+        NodeUtils.parentizeAst(transformedNode);
+
+        return transformedNode;
     }
 }

@@ -145,12 +145,8 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
         blockScopeNode: TNodeWithBlockScope,
         scopeNode: ESTree.Node
     ): void {
-        const cachedReplaceableIdentifiersNamesMap: TReplaceableIdentifiersNames | undefined =
-            this.replaceableIdentifiers.get(scopeNode);
-
-        if (!cachedReplaceableIdentifiersNamesMap) {
-            return;
-        }
+        const cachedReplaceableIdentifiersNamesMap: TReplaceableIdentifiersNames =
+            <TReplaceableIdentifiersNames>this.replaceableIdentifiers.get(scopeNode);
 
         const identifierNames: string[] = [];
 

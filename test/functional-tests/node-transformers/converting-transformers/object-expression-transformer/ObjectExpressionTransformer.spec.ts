@@ -10,24 +10,50 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFac
 
 describe('ObjectExpressionTransformer', () => {
     describe('default behaviour', () => {
-        const regExp: RegExp = /var *test *= *\{'foo':0x0\};/;
+        describe('Variant #1: `unicodeEscapeSequence` option is disabled\'', () => {
+            const regExp: RegExp = /var *test *= *\{'foo':0x0\};/;
 
-        let obfuscatedCode: string;
+            let obfuscatedCode: string;
 
-        before(() => {
-            const code: string = readFileAsString(__dirname + '/fixtures/property-with-identifier-value.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            );
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/property-with-identifier-value.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        unicodeEscapeSequence: false
+                    }
+                );
 
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
-       });
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
 
-        it('should replace object expression node `key` property with identifier value by property with literal value', () => {
-            assert.match(obfuscatedCode, regExp);
+            it('should replace object expression node `key` property with identifier value by property with literal value', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
+        describe('Variant #2: `unicodeEscapeSequence` option is enabled', () => {
+            const regExp: RegExp = /var *test *= *\{'\\x66\\x6f\\x6f':0x0\};/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/property-with-identifier-value.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        unicodeEscapeSequence: true
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('should replace object expression node `key` property with identifier value by property with encoded literal value', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
         });
     });
 
@@ -54,24 +80,74 @@ describe('ObjectExpressionTransformer', () => {
     });
 
     describe('computed property name', () => {
-        const regExp: RegExp = /var *_0x[a-f0-9]{4,6} *= *\{\[_0x[a-f0-9]{4,6}\]: *0x1\};/;
+        describe('Variant #1: computed property name with identifier', () => {
+            const regExp: RegExp = /var *_0x[a-f0-9]{4,6} *= *\{\[_0x[a-f0-9]{4,6}\]: *0x1\};/;
 
-        let obfuscatedCode: string;
+            let obfuscatedCode: string;
 
-        before(() => {
-            const code: string = readFileAsString(__dirname + '/fixtures/computed-property-name.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            );
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/computed-property-name-identifier.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                );
 
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('should ignore computed property identifier', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
         });
 
-        it('should ignore computed property identifier', () => {
-            assert.match(obfuscatedCode, regExp);
+        describe('Variant #2: computed property name with literal', () => {
+            describe('Variant #1: `unicodeEscapeSequence` option is disabled', () => {
+                const regExp: RegExp = /var *_0x[a-f0-9]{4,6} *= *\{\['foo'\]: *0x1\};/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/computed-property-name-literal.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            unicodeEscapeSequence: false
+                        }
+                    );
+
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('should ignore computed property literal value', () => {
+                    assert.match(obfuscatedCode, regExp);
+                });
+            });
+
+            describe('Variant #2: `unicodeEscapeSequence` option is enabled', () => {
+                const regExp: RegExp = /var *_0x[a-f0-9]{4,6} *= *\{\['\\x66\\x6f\\x6f'\]: *0x1\};/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/computed-property-name-literal.js');
+                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            unicodeEscapeSequence: true
+                        }
+                    );
+
+                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                });
+
+                it('should encode computed property literal value', () => {
+                    assert.match(obfuscatedCode, regExp);
+                });
+            });
         });
     });
 

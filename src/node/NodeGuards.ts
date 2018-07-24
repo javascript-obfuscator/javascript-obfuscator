@@ -253,10 +253,12 @@ export class NodeGuards {
      * @returns {boolean}
      */
     public static isNodeHasBlockScope (node: ESTree.Node, parentNode: ESTree.Node): node is TNodeWithBlockScope {
-        return NodeGuards.isProgramNode(node) || (
-            NodeGuards.isBlockStatementNode(node)
-            && NodeGuards.nodesWithBlockScope.includes(parentNode.type)
-        );
+        return NodeGuards.isProgramNode(node)
+            /**
+             * Should correctly check arrow functions with expression body
+             */
+            || (NodeGuards.isArrowFunctionExpressionNode(node) && !NodeGuards.isBlockStatementNode(node.body))
+            || (NodeGuards.isBlockStatementNode(node) && NodeGuards.nodesWithBlockScope.includes(parentNode.type));
     }
 
     /**
@@ -265,6 +267,10 @@ export class NodeGuards {
      */
     public static isNodeHasScope (node: ESTree.Node): node is TNodeWithScope {
         return NodeGuards.isProgramNode(node)
+            /**
+             * Should correctly check arrow functions with expression body
+             */
+            || (NodeGuards.isArrowFunctionExpressionNode(node) && !NodeGuards.isBlockStatementNode(node.body))
             || NodeGuards.isBlockStatementNode(node)
             || NodeGuards.isSwitchCaseNode(node);
     }

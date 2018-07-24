@@ -436,4 +436,60 @@ describe('FunctionTransformer', () => {
             });
         });
     });
+
+    describe('correct block scope detection of arrow function expression', () => {
+        describe('Variant #1: block statement body', () => {
+            const regExpMatch: string = `` +
+                `\\[]` +
+                `\\['map']\\(_0x[a-f0-9]{4,6} *=> *\\{ *return 0x1; *\\}\\)` +
+                `\\['map']\\(_0x[a-f0-9]{4,6} *=> *\\[foo]\\);` +
+            ``;
+            const regExp: RegExp = new RegExp(regExpMatch);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/arrow-function-with-expression-body-block-scope-detection-1.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('should transform identifiers in arrow function expression body', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
+        describe('Variant #1: expression statement body', () => {
+            const regExpMatch: string = `` +
+                `\\[]` +
+                `\\['map']\\(_0x[a-f0-9]{4,6} *=> *0x1\\)` +
+                `\\['map']\\(_0x[a-f0-9]{4,6} *=> *\\[foo]\\);` +
+            ``;
+            const regExp: RegExp = new RegExp(regExpMatch);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/arrow-function-with-expression-body-block-scope-detection-2.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('should transform identifiers in arrow function expression body', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+    });
 });

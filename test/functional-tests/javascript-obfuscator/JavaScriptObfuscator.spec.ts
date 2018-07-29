@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { IObfuscatedCode } from '../../../src/interfaces/source-code/IobfuscatedCode';
+import { IObfuscatedCode } from '../../../src/interfaces/source-code/IObfuscatedCode';
 
 import { SourceMapMode } from '../../../src/enums/source-map/SourceMapMode';
 import { StringArrayEncoding } from '../../../src/enums/StringArrayEncoding';

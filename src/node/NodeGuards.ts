@@ -36,14 +36,6 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isAssignmentExpressionNode (node: ESTree.Node): node is ESTree.AssignmentExpression {
-        return node.type === NodeType.AssignmentExpression;
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
     public static isAssignmentPatternNode (node: ESTree.Node): node is ESTree.AssignmentPattern {
         return node.type === NodeType.AssignmentPattern;
     }
@@ -158,32 +150,8 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isIfStatementNode (node: ESTree.Node): node is ESTree.IfStatement {
-        return node.type === NodeType.IfStatement;
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
     public static isImportDeclarationNode (node: ESTree.Node): node is ESTree.ImportDeclaration {
         return node.type === NodeType.ImportDeclaration;
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
-    public static isImportDefaultSpecifierNode (node: ESTree.Node): node is ESTree.ImportDefaultSpecifier {
-        return node.type === NodeType.ImportDefaultSpecifier;
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
-    public static isImportNamespaceSpecifierNode (node: ESTree.Node): node is ESTree.ImportNamespaceSpecifier {
-        return node.type === NodeType.ImportNamespaceSpecifier;
     }
 
     /**

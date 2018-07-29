@@ -3,10 +3,7 @@ import * as espree from 'espree';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockScope } from '../types/node/TNodeWithBlockScope';
-import { TNodeWithScope } from '../types/node/TNodeWithScope';
 import { TObject } from '../types/TObject';
-import { TStatement } from '../types/node/TStatement';
 
 import { NodeGuards } from './NodeGuards';
 import { NodeMetadata } from './NodeMetadata';
@@ -67,78 +64,6 @@ export class NodeUtils {
                 sourceMapWithCode: true
             }).code;
         }, '');
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {TNodeWithBlockScope}
-     */
-    public static getBlockScopeOfNode (node: ESTree.Node): TNodeWithBlockScope {
-        return NodeUtils.getBlockScopesOfNodeRecursive(node, 1)[0];
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {TNodeWithBlockScope[]}
-     */
-    public static getBlockScopesOfNode (node: ESTree.Node): TNodeWithBlockScope[] {
-        return NodeUtils.getBlockScopesOfNodeRecursive(node);
-    }
-
-    /**
-     * @param {Statement} statement
-     * @returns {TStatement | null}
-     */
-    public static getNextSiblingStatement (statement: ESTree.Statement): TStatement | null {
-        return NodeUtils.getSiblingStatementByOffset(statement, 1);
-    }
-
-    /**
-     * @param {Statement} statement
-     * @returns {TStatement | null}
-     */
-    public static getPreviousSiblingStatement (statement: ESTree.Statement): TStatement | null {
-        return NodeUtils.getSiblingStatementByOffset(statement, -1);
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {Statement}
-     */
-    public static getRootStatementOfNode (node: ESTree.Node): ESTree.Statement {
-        if (NodeGuards.isProgramNode(node)) {
-            throw new Error('Unable to find root statement for `Program` node');
-        }
-
-        const parentNode: ESTree.Node | undefined = node.parentNode;
-
-        if (!parentNode) {
-            throw new ReferenceError('`parentNode` property of given node is `undefined`');
-        }
-
-        if (!NodeGuards.isNodeHasScope(parentNode)) {
-            return NodeUtils.getRootStatementOfNode(parentNode);
-        }
-
-        return <ESTree.Statement>node;
-    }
-
-    /**
-     * @param {NodeGuards} node
-     * @returns {TNodeWithScope}
-     */
-    public static getScopeOfNode (node: ESTree.Node): TNodeWithScope {
-        const parentNode: ESTree.Node | undefined = node.parentNode;
-
-        if (!parentNode) {
-            throw new ReferenceError('`parentNode` property of given node is `undefined`');
-        }
-
-        if (!NodeGuards.isNodeHasScope(parentNode)) {
-            return NodeUtils.getScopeOfNode(parentNode);
-        }
-
-        return parentNode;
     }
 
     /**
@@ -212,74 +137,5 @@ export class NodeUtils {
             });
 
         return <T>copy;
-    }
-
-    /***
-     * @param {Node} node
-     * @param {number} maxSize
-     * @param {TNodeWithBlockScope[]} blockScopes
-     * @param {number} depth
-     * @returns {TNodeWithBlockScope[]}
-     */
-    private static getBlockScopesOfNodeRecursive (
-        node: ESTree.Node,
-        maxSize: number = Infinity,
-        blockScopes: TNodeWithBlockScope[] = [],
-        depth: number = 0
-    ): TNodeWithBlockScope[] {
-        if (blockScopes.length >= maxSize) {
-            return blockScopes;
-        }
-
-        const parentNode: ESTree.Node | undefined = node.parentNode;
-
-        if (!parentNode) {
-            throw new ReferenceError('`parentNode` property of given node is `undefined`');
-        }
-
-        /**
-         * Stage 1: process root block statement node of the slice of AST-tree
-         */
-        if (NodeGuards.isBlockStatementNode(node) && parentNode === node) {
-            blockScopes.push(node);
-        }
-
-        /**
-         * Stage 2: process any other nodes
-         */
-        if (
-            /**
-             * we can add program node instantly
-             */
-            NodeGuards.isProgramNode(node) ||
-            /**
-             * we shouldn't add to the array input node that is node with block scope itself
-             * so, on depth 0 we will skip push to the array of block scopes
-             */
-            (depth && NodeGuards.isNodeHasBlockScope(node, parentNode))
-        ) {
-            blockScopes.push(node);
-        }
-
-        if (node !== parentNode) {
-            return NodeUtils.getBlockScopesOfNodeRecursive(parentNode, maxSize, blockScopes, ++depth);
-        }
-
-        return blockScopes;
-    }
-
-    /**
-     * @param {Statement} statement
-     * @param {number} offset
-     * @returns {TStatement | null}
-     */
-    private static getSiblingStatementByOffset (statement: ESTree.Statement, offset: number): TStatement | null {
-        const scopeNode: TNodeWithScope = NodeUtils.getScopeOfNode(statement);
-        const scopeBody: TStatement[] = !NodeGuards.isSwitchCaseNode(scopeNode)
-            ? scopeNode.body
-            : scopeNode.consequent;
-        const indexInScope: number = scopeBody.indexOf(statement);
-
-        return scopeBody[indexInScope + offset] || null;
     }
 }

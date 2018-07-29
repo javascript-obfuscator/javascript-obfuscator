@@ -5,7 +5,7 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TIdentifierObfuscatingReplacerFactory } from '../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory';
-import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
+import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 
 import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -17,8 +17,8 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeLexicalScopeUtils } from '../../node/NodeLexicalScopeUtils';
 import { NodeMetadata } from '../../node/NodeMetadata';
-import { NodeUtils } from '../../node/NodeUtils';
 
 /**
  * replaces:
@@ -89,21 +89,23 @@ export class FunctionTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (functionNode: ESTree.Function, parentNode: ESTree.Node): ESTree.Node {
-        const blockScopeNode: TNodeWithBlockScope = NodeGuards.isBlockStatementNode(functionNode.body)
-            ? functionNode.body
-            : NodeUtils.getBlockScopeOfNode(functionNode.body);
+        const lexicalScopeNode: TNodeWithLexicalScope | undefined = NodeLexicalScopeUtils.getLexicalScope(functionNode);
 
-        this.storeFunctionParams(functionNode, blockScopeNode);
-        this.replaceFunctionParams(functionNode, blockScopeNode);
+        if (!lexicalScopeNode) {
+            return functionNode;
+        }
+
+        this.storeFunctionParams(functionNode, lexicalScopeNode);
+        this.replaceFunctionParams(functionNode, lexicalScopeNode);
 
         return functionNode;
     }
 
     /**
      * @param {Function} functionNode
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    private storeFunctionParams (functionNode: ESTree.Function, blockScopeNode: TNodeWithBlockScope): void {
+    private storeFunctionParams (functionNode: ESTree.Function, lexicalScopeNode: TNodeWithLexicalScope): void {
         functionNode.params
             .forEach((paramsNode: ESTree.Node) => {
                 estraverse.traverse(paramsNode, {
@@ -113,13 +115,13 @@ export class FunctionTransformer extends AbstractNodeTransformer {
                         }
 
                         if (NodeGuards.isAssignmentPatternNode(node) && NodeGuards.isIdentifierNode(node.left)) {
-                            this.identifierObfuscatingReplacer.storeLocalName(node.left.name, blockScopeNode);
+                            this.identifierObfuscatingReplacer.storeLocalName(node.left.name, lexicalScopeNode);
 
                             return estraverse.VisitorOption.Skip;
                         }
 
                         if (NodeGuards.isIdentifierNode(node)) {
-                            this.identifierObfuscatingReplacer.storeLocalName(node.name, blockScopeNode);
+                            this.identifierObfuscatingReplacer.storeLocalName(node.name, lexicalScopeNode);
                         }
                     }
                 });
@@ -128,12 +130,12 @@ export class FunctionTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {Function} functionNode
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @param {Set<string>} ignoredIdentifierNamesSet
      */
     private replaceFunctionParams (
         functionNode: ESTree.Function,
-        blockScopeNode: TNodeWithBlockScope,
+        lexicalScopeNode: TNodeWithLexicalScope,
         ignoredIdentifierNamesSet: Set <string> = new Set()
     ): void {
         const replaceVisitor: estraverse.Visitor = {
@@ -142,7 +144,7 @@ export class FunctionTransformer extends AbstractNodeTransformer {
                  * Should to process nested functions in different traverse loop to avoid wrong code generation
                  */
                 if (NodeGuards.isFunctionNode(node)) {
-                    this.replaceFunctionParams(node, blockScopeNode, new Set(ignoredIdentifierNamesSet));
+                    this.replaceFunctionParams(node, lexicalScopeNode, new Set(ignoredIdentifierNamesSet));
 
                     return estraverse.VisitorOption.Skip;
                 }
@@ -160,7 +162,7 @@ export class FunctionTransformer extends AbstractNodeTransformer {
                     && !ignoredIdentifierNamesSet.has(node.name)
                 ) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                        .replace(node.name, blockScopeNode);
+                        .replace(node.name, lexicalScopeNode);
                     const newIdentifierName: string = newIdentifier.name;
 
                     if (node.name !== newIdentifierName) {

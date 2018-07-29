@@ -5,8 +5,7 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TDeadNodeInjectionCustomNodeFactory } from '../../types/container/custom-nodes/TDeadNodeInjectionCustomNodeFactory';
-import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
-import { TNodeWithScope } from '../../types/node/TNodeWithScope';
+import { TNodeWithStatements } from '../../types/node/TNodeWithStatements';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -22,6 +21,7 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeStatementUtils } from '../../node/NodeStatementUtils';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
@@ -117,7 +117,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
             return false;
         }
 
-        const scopeNode: TNodeWithScope = NodeUtils.getScopeOfNode(targetNode);
+        const scopeNode: TNodeWithStatements = NodeStatementUtils.getScopeOfNode(targetNode);
         const scopeBody: ESTree.Statement[] = !NodeGuards.isSwitchCaseNode(scopeNode)
             ? <ESTree.Statement[]>scopeNode.body
             : scopeNode.consequent;
@@ -204,10 +204,10 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
             return false;
         }
 
-        const blockScopeOfBlockStatementNode: TNodeWithBlockScope = NodeUtils
-            .getBlockScopeOfNode(blockStatementNode);
+        const parentNodeWithStatements: TNodeWithStatements = NodeStatementUtils
+            .getParentNodeWithStatements(blockStatementNode);
 
-        return blockScopeOfBlockStatementNode.type !== NodeType.Program;
+        return parentNodeWithStatements.type !== NodeType.Program;
     }
 
     /**
@@ -261,7 +261,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                     return;
                 }
 
-                let clonedBlockStatementNode: ESTree.BlockStatement = NodeUtils.clone(node);
+                const clonedBlockStatementNode: ESTree.BlockStatement = NodeUtils.clone(node);
 
                 if (!DeadCodeInjectionTransformer.isValidCollectedBlockStatementNode(clonedBlockStatementNode)) {
                     return;
@@ -270,10 +270,10 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                 /**
                  * We should transform identifiers in the dead code block statement to avoid conflicts with original code
                  */
-                NodeUtils.parentizeNode(clonedBlockStatementNode, clonedBlockStatementNode);
-                clonedBlockStatementNode = this.makeClonedBlockStatementNodeUnique(clonedBlockStatementNode);
+                const transformedBlockStatementNode: ESTree.BlockStatement =
+                    this.makeClonedBlockStatementNodeUnique(clonedBlockStatementNode);
 
-                this.collectedBlockStatements.push(clonedBlockStatementNode);
+                this.collectedBlockStatements.push(transformedBlockStatementNode);
             }
         });
 
@@ -346,11 +346,18 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      * @returns {BlockStatement}
      */
     private makeClonedBlockStatementNodeUnique (clonedBlockStatementNode: ESTree.BlockStatement): ESTree.BlockStatement {
+        // should wrap cloned block statement node into function node for correct scope encapsulation
+        const hostNode: ESTree.FunctionExpression = NodeFactory
+            .functionExpressionNode([], clonedBlockStatementNode);
+
+        NodeUtils.parentizeNode(hostNode, hostNode);
+        NodeUtils.parentizeNode(clonedBlockStatementNode, hostNode);
+
         return this.transformersRunner.transform(
-            clonedBlockStatementNode,
+            hostNode,
             DeadCodeInjectionTransformer.transformersToRenameBlockScopeIdentifiers,
             TransformationStage.Obfuscating
-        );
+        ).body;
     }
 
     /**

@@ -5,7 +5,7 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TIdentifierObfuscatingReplacerFactory } from '../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory';
-import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
+import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 
 import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -17,8 +17,8 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeLexicalScopeUtils } from '../../node/NodeLexicalScopeUtils';
 import { NodeMetadata } from '../../node/NodeMetadata';
-import { NodeUtils } from '../../node/NodeUtils';
 
 /**
  * replaces:
@@ -79,40 +79,44 @@ export class CatchClauseTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (catchClauseNode: ESTree.CatchClause, parentNode: ESTree.Node): ESTree.Node {
-        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopeOfNode(catchClauseNode);
+        const lexicalScopeNode: TNodeWithLexicalScope | undefined = NodeLexicalScopeUtils.getLexicalScope(catchClauseNode);
 
-        this.storeCatchClauseParam(catchClauseNode, blockScopeNode);
-        this.replaceCatchClauseParam(catchClauseNode, blockScopeNode);
+        if (!lexicalScopeNode) {
+            return catchClauseNode;
+        }
+
+        this.storeCatchClauseParam(catchClauseNode, lexicalScopeNode);
+        this.replaceCatchClauseParam(catchClauseNode, lexicalScopeNode);
 
         return catchClauseNode;
     }
 
     /**
      * @param {CatchClause} catchClauseNode
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
     private storeCatchClauseParam (
         catchClauseNode: ESTree.CatchClause,
-        blockScopeNode: TNodeWithBlockScope
+        lexicalScopeNode: TNodeWithLexicalScope
     ): void {
         if (NodeGuards.isIdentifierNode(catchClauseNode.param)) {
-            this.identifierObfuscatingReplacer.storeLocalName(catchClauseNode.param.name, blockScopeNode);
+            this.identifierObfuscatingReplacer.storeLocalName(catchClauseNode.param.name, lexicalScopeNode);
         }
     }
 
     /**
      * @param {CatchClause} catchClauseNode
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
     private replaceCatchClauseParam (
         catchClauseNode: ESTree.CatchClause,
-        blockScopeNode: TNodeWithBlockScope
+        lexicalScopeNode: TNodeWithLexicalScope
     ): void {
         estraverse.replace(catchClauseNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
                 if (parentNode && NodeGuards.isReplaceableIdentifierNode(node, parentNode)) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                        .replace(node.name, blockScopeNode);
+                        .replace(node.name, lexicalScopeNode);
                     const newIdentifierName: string = newIdentifier.name;
 
                     if (node.name !== newIdentifierName) {

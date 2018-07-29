@@ -1,7 +1,7 @@
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockScope } from '../types/node/TNodeWithBlockScope';
-import { TNodeWithScope } from '../types/node/TNodeWithScope';
+import { TNodeWithLexicalScope } from '../types/node/TNodeWithLexicalScope';
+import { TNodeWithStatements } from '../types/node/TNodeWithStatements';
 
 import { NodeType } from '../enums/node/NodeType';
 
@@ -9,7 +9,7 @@ export class NodeGuards {
     /**
      * @type {string[]}
      */
-    private static readonly nodesWithBlockScope: string[] = [
+    private static readonly nodesWithLexicalStatements: string[] = [
         NodeType.ArrowFunctionExpression,
         NodeType.FunctionDeclaration,
         NodeType.FunctionExpression,
@@ -249,28 +249,31 @@ export class NodeGuards {
 
     /**
      * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isNodeWithLexicalScope (node: ESTree.Node): node is TNodeWithLexicalScope {
+        return NodeGuards.isProgramNode(node) || NodeGuards.isFunctionNode(node);
+    }
+
+    /**
+     * @param {Node} node
      * @param {Node} parentNode
      * @returns {boolean}
      */
-    public static isNodeHasBlockScope (node: ESTree.Node, parentNode: ESTree.Node): node is TNodeWithBlockScope {
+    public static isNodeWithLexicalScopeStatements (
+        node: ESTree.Node,
+        parentNode: ESTree.Node
+    ): node is TNodeWithStatements {
         return NodeGuards.isProgramNode(node)
-            /**
-             * Should correctly check arrow functions with expression body
-             */
-            || (NodeGuards.isArrowFunctionExpressionNode(node) && !NodeGuards.isBlockStatementNode(node.body))
-            || (NodeGuards.isBlockStatementNode(node) && NodeGuards.nodesWithBlockScope.includes(parentNode.type));
+            || (NodeGuards.isBlockStatementNode(node) && NodeGuards.nodesWithLexicalStatements.includes(parentNode.type));
     }
 
     /**
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isNodeHasScope (node: ESTree.Node): node is TNodeWithScope {
+    public static isNodeWithStatements (node: ESTree.Node): node is TNodeWithStatements {
         return NodeGuards.isProgramNode(node)
-            /**
-             * Should correctly check arrow functions with expression body
-             */
-            || (NodeGuards.isArrowFunctionExpressionNode(node) && !NodeGuards.isBlockStatementNode(node.body))
             || NodeGuards.isBlockStatementNode(node)
             || NodeGuards.isSwitchCaseNode(node);
     }

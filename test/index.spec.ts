@@ -23,6 +23,8 @@ import './unit-tests/logger/Logger.spec';
 import './unit-tests/node/node-appender/NodeAppender.spec';
 import './unit-tests/node/node-guards/NodeGuards.spec';
 import './unit-tests/node/node-metadata/NodeMetadata.spec';
+import './unit-tests/node/node-lexical-scope-utils/NodeLexicalScopeUtils.spec';
+import './unit-tests/node/node-statement-utils/NodeStatementUtils.spec';
 import './unit-tests/node/node-utils/NodeUtils.spec';
 import './unit-tests/node-transformers/preparing-transformers/ObfuscatingGuardsTransformer.spec';
 import './unit-tests/obfuscation-result/ObfuscationResult.spec';

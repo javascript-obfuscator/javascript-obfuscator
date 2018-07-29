@@ -465,7 +465,7 @@ describe('FunctionTransformer', () => {
             });
         });
 
-        describe('Variant #1: expression statement body', () => {
+        describe('Variant #2: expression statement body', () => {
             const regExpMatch: string = `` +
                 `\\[]` +
                 `\\['map']\\(_0x[a-f0-9]{4,6} *=> *0x1\\)` +

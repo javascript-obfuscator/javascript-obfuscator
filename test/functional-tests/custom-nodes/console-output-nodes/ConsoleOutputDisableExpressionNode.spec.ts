@@ -1,7 +1,5 @@
 import { assert } from 'chai';
 
-import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResult';
-
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../helpers/readFileAsString';
@@ -18,15 +16,14 @@ describe('ConsoleOutputDisableExpressionNode', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     disableConsoleOutput: true
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('match #1: should correctly append custom node into the obfuscated code', () => {
@@ -47,15 +44,14 @@ describe('ConsoleOutputDisableExpressionNode', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     disableConsoleOutput: false
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('match #1: shouldn\'t append custom node into the obfuscated code', () => {

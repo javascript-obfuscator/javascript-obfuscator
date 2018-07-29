@@ -1,7 +1,5 @@
 import { assert } from 'chai';
 
-import { IObfuscationResult } from '../../src/interfaces/IObfuscationResult';
-
 import { StringArrayEncoding } from '../../src/enums/StringArrayEncoding';
 
 import { readFileAsString } from '../helpers/readFileAsString';
@@ -15,7 +13,8 @@ describe('JavaScriptObfuscator runtime eval', function () {
 
     before(() => {
         const code: string = readFileAsString(__dirname + '/fixtures/sha256.js');
-        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+        obfuscatedCode = JavaScriptObfuscator.obfuscate(
             code,
             {
                 controlFlowFlattening: true,
@@ -25,9 +24,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
                 stringArrayEncoding: StringArrayEncoding.Rc4,
                 transformObjectKeys: true
             }
-        );
-
-        obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        ).getObfuscatedCode();
     });
 
     it('should obfuscate code without any runtime errors after obfuscation: Variant #1 sha256', () => {

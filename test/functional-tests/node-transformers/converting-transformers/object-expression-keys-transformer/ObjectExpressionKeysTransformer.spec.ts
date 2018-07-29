@@ -1,7 +1,5 @@
 import { assert } from 'chai';
 
-import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationResult';
-
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../../helpers/readFileAsString';
@@ -24,15 +22,14 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         transformObjectKeys: true
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should correctly transform object keys', () => {
@@ -54,15 +51,14 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/nested-objects-1.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         transformObjectKeys: true
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should correctly transform object keys', () => {
@@ -87,15 +83,14 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/nested-objects-2.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         transformObjectKeys: true
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should correctly transform object keys', () => {
@@ -117,7 +112,8 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/integration-with-control-flow-flattening.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -125,9 +121,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                         controlFlowFlatteningThreshold: 1,
                         transformObjectKeys: true
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should correctly transform object keys', () => {
@@ -148,15 +142,14 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/variable-declaration-without-initialization.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         transformObjectKeys: true
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t transform object keys', () => {
@@ -178,15 +171,14 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/member-expression-host-1.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         transformObjectKeys: true
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should correctly transform object keys', () => {
@@ -206,15 +198,14 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/member-expression-host-2.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         transformObjectKeys: true
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should correctly transform object keys', () => {
@@ -237,15 +228,14 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/placement-inside-if-statement.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         transformObjectKeys: true
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should correctly transform object keys', () => {
@@ -267,15 +257,14 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/placement-inside-try-statement.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         transformObjectKeys: true
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should correctly transform object keys', () => {
@@ -297,15 +286,14 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/placement-inside-catch-clause.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         transformObjectKeys: true
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should correctly transform object keys', () => {
@@ -327,15 +315,14 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/placement-inside-switch-case.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         transformObjectKeys: true
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should transform object keys', () => {
@@ -356,15 +343,14 @@ describe('ObjectExpressionKeysTransformer', () => {
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-with-object-call-1.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             transformObjectKeys: true
                         }
-                    );
-
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('should correctly transform object keys', () => {
@@ -385,15 +371,14 @@ describe('ObjectExpressionKeysTransformer', () => {
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-with-object-call-2.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             transformObjectKeys: true
                         }
-                    );
-
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('should correctly transform object keys', () => {
@@ -414,15 +399,14 @@ describe('ObjectExpressionKeysTransformer', () => {
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-with-object-call-3.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             transformObjectKeys: true
                         }
-                    );
-
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('should correctly transform first object keys and ignore second object keys', () => {
@@ -446,14 +430,13 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t transform object keys', () => {
@@ -469,14 +452,13 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/empty-object-expression.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t transform object keys', () => {
@@ -496,15 +478,14 @@ describe('ObjectExpressionKeysTransformer', () => {
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-with-object-call-ignore-1.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             transformObjectKeys: true
                         }
-                    );
-
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('shouldn\'t transform object keys', () => {
@@ -523,15 +504,14 @@ describe('ObjectExpressionKeysTransformer', () => {
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-with-object-call-ignore-2.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             transformObjectKeys: true
                         }
-                    );
-
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('shouldn\'t transform object keys', () => {

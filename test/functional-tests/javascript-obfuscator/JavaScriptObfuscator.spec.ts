@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { IObfuscationResult } from '../../../src/interfaces/IObfuscationResult';
+import { IObfuscatedCode } from '../../../src/interfaces/source-code/IobfuscatedCode';
 
 import { SourceMapMode } from '../../../src/enums/source-map/SourceMapMode';
 import { StringArrayEncoding } from '../../../src/enums/StringArrayEncoding';
@@ -23,15 +23,15 @@ describe('JavaScriptObfuscator', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET
                     }
                 );
 
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
-                sourceMap = obfuscationResult.getSourceMap();
+                obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+                sourceMap = obfuscatedCodeObject.getSourceMap();
             });
 
             it('should return correct obfuscated code', () => {
@@ -48,11 +48,10 @@ describe('JavaScriptObfuscator', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/empty-input.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    code,
-                );
 
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                ).getObfuscatedCode();
             });
 
             it('should return an empty obfuscated code', () => {
@@ -65,15 +64,14 @@ describe('JavaScriptObfuscator', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/comments-only.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         controlFlowFlattening: true,
                         deadCodeInjection: true
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should return an empty obfuscated code', () => {
@@ -88,7 +86,7 @@ describe('JavaScriptObfuscator', () => {
 
                 beforeEach(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
@@ -96,8 +94,8 @@ describe('JavaScriptObfuscator', () => {
                         }
                     );
 
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
-                    sourceMap = JSON.parse(obfuscationResult.getSourceMap()).mappings;
+                    obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+                    sourceMap = JSON.parse(obfuscatedCodeObject.getSourceMap()).mappings;
                 });
 
                 it('should return correct obfuscated code', () => {
@@ -117,7 +115,7 @@ describe('JavaScriptObfuscator', () => {
 
                 beforeEach(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
@@ -126,8 +124,8 @@ describe('JavaScriptObfuscator', () => {
                         }
                     );
 
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
-                    sourceMap = JSON.parse(obfuscationResult.getSourceMap()).mappings;
+                    obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+                    sourceMap = JSON.parse(obfuscatedCodeObject.getSourceMap()).mappings;
                 });
 
                 it('should return correct obfuscated code', () => {
@@ -151,16 +149,16 @@ describe('JavaScriptObfuscator', () => {
 
                 beforeEach(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/empty-input.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             sourceMap: true
                         }
                     );
 
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
 
-                    const sourceMapObject: any = JSON.parse(obfuscationResult.getSourceMap());
+                    const sourceMapObject: any = JSON.parse(obfuscatedCodeObject.getSourceMap());
 
                     sourceMapNames = sourceMapObject.names;
                     sourceMapSources = sourceMapObject.sources;
@@ -193,14 +191,13 @@ describe('JavaScriptObfuscator', () => {
 
                 beforeEach(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET
                         }
-                    );
-
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('should return correct obfuscated code', () => {
@@ -215,15 +212,14 @@ describe('JavaScriptObfuscator', () => {
 
                 beforeEach(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             renameGlobals: true
                         }
-                    );
-
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('should return correct obfuscated code', () => {
@@ -238,16 +234,15 @@ describe('JavaScriptObfuscator', () => {
 
                 beforeEach(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             renameGlobals: true,
                             identifiersPrefix: 'foo'
                         }
-                    );
-
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('should return correct obfuscated code', () => {
@@ -263,7 +258,8 @@ describe('JavaScriptObfuscator', () => {
 
                 beforeEach(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/simple-input-2.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
@@ -272,9 +268,7 @@ describe('JavaScriptObfuscator', () => {
                             stringArray: true,
                             stringArrayThreshold: 1
                         }
-                    );
-
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('match #1: should return correct obfuscated code', () => {
@@ -294,14 +288,13 @@ describe('JavaScriptObfuscator', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/block-scope.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should return correct obfuscated code', () => {
@@ -320,16 +313,15 @@ describe('JavaScriptObfuscator', () => {
 
                 beforeEach(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/identifiers-prefix.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             renameGlobals: true,
                             identifiersPrefix: 'foo'
                         }
-                    );
-
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('match #1: should return correct obfuscated code', () => {
@@ -358,16 +350,15 @@ describe('JavaScriptObfuscator', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input-2.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('match #1: should return correct obfuscated code', () => {
@@ -387,16 +378,15 @@ describe('JavaScriptObfuscator', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input-cyrillic.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('match #1: should return correct obfuscated code', () => {
@@ -426,21 +416,18 @@ describe('JavaScriptObfuscator', () => {
                             seed++;
                         }
 
-                        const obfuscationResult1: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        obfuscatedCode1 = JavaScriptObfuscator.obfuscate(
                             code,
                             {
                                 seed: seed
                             }
-                        );
-                        const obfuscationResult2: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                        ).getObfuscatedCode();
+                        obfuscatedCode2 = JavaScriptObfuscator.obfuscate(
                             code,
                             {
                                 seed: seed
                             }
-                        );
-
-                        obfuscatedCode1 = obfuscationResult1.getObfuscatedCode();
-                        obfuscatedCode2 = obfuscationResult2.getObfuscatedCode();
+                        ).getObfuscatedCode();
 
                         if (obfuscatedCode1 === obfuscatedCode2) {
                             equalsCount++;
@@ -460,21 +447,18 @@ describe('JavaScriptObfuscator', () => {
                     obfuscatedCode2: string;
 
                 beforeEach(() => {
-                    const obfuscationResult1: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    obfuscatedCode1 = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             seed: 12345
                         }
-                    );
-                    const obfuscationResult2: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    ).getObfuscatedCode();
+                    obfuscatedCode2 = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             seed: 12346
                         }
-                    );
-
-                    obfuscatedCode1 = obfuscationResult1.getObfuscatedCode();
-                    obfuscatedCode2 = obfuscationResult2.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('should return different obfuscated code with different `seed` option value', () => {
@@ -489,21 +473,18 @@ describe('JavaScriptObfuscator', () => {
                     obfuscatedCode2: string;
 
                 beforeEach(() => {
-                    const obfuscationResult1: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    obfuscatedCode1 = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             seed: 0
                         }
-                    );
-                    const obfuscationResult2: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    ).getObfuscatedCode();
+                    obfuscatedCode2 = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             seed: 0
                         }
-                    );
-
-                    obfuscatedCode1 = obfuscationResult1.getObfuscatedCode();
-                    obfuscatedCode2 = obfuscationResult2.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('should return different obfuscated code with different `seed` option value', () => {
@@ -521,23 +502,20 @@ describe('JavaScriptObfuscator', () => {
                     match2: string;
 
                 beforeEach(() => {
-                    const obfuscationResult1: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    const obfuscatedCode1: string = JavaScriptObfuscator.obfuscate(
                         code1,
                         {
                             seed: 123,
                             stringArrayThreshold: 1
                         }
-                    );
-                    const obfuscationResult2: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    ).getObfuscatedCode();
+                    const obfuscatedCode2: string = JavaScriptObfuscator.obfuscate(
                         code2,
                         {
                             seed: 123,
                             stringArrayThreshold: 1
                         }
-                    );
-
-                    const obfuscatedCode1: string = obfuscationResult1.getObfuscatedCode();
-                    const obfuscatedCode2: string = obfuscationResult2.getObfuscatedCode();
+                    ).getObfuscatedCode();
 
                     match1 = getRegExpMatch(obfuscatedCode1, regExp);
                     match2 = getRegExpMatch(obfuscatedCode2, regExp);
@@ -556,14 +534,13 @@ describe('JavaScriptObfuscator', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/new-target.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should keep new.target MetaProperty', () => {
@@ -578,14 +555,13 @@ describe('JavaScriptObfuscator', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/mangle.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should mangle obfuscated code', () => {
@@ -602,9 +578,8 @@ describe('JavaScriptObfuscator', () => {
 
                 beforeEach(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/parse-module-1.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code);
 
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code).getObfuscatedCode();
                 });
 
                 it('Match #!: should correctly obfuscate a import', () => {
@@ -623,9 +598,8 @@ describe('JavaScriptObfuscator', () => {
 
                 beforeEach(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/parse-module-2.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(code);
 
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(code).getObfuscatedCode();
                 });
 
                 it('should correctly obfuscate a module', () => {
@@ -643,7 +617,8 @@ describe('JavaScriptObfuscator', () => {
 
             beforeEach(() => {
                 const code: string = buildLargeCode(expectedValue);
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         compact: true,
@@ -659,9 +634,8 @@ describe('JavaScriptObfuscator', () => {
                         transformObjectKeys: true,
                         unicodeEscapeSequence: false
                     }
-                );
+                ).getObfuscatedCode();
 
-                const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
                 result = eval(obfuscatedCode);
             });
 

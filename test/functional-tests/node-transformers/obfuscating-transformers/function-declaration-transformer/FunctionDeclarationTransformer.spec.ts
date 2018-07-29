@@ -1,7 +1,5 @@
 import { assert } from 'chai';
 
-import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationResult';
-
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
@@ -22,14 +20,13 @@ describe('FunctionDeclarationTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
                 functionNameIdentifier = getRegExpMatch(obfuscatedCode, functionNameIdentifierRegExp);
                 functionCallIdentifier = getRegExpMatch(obfuscatedCode, functionCallIdentifierRegExp);
             });
@@ -48,14 +45,13 @@ describe('FunctionDeclarationTransformer', () => {
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET
                         }
-                    );
-
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('match #1: shouldn\'t transform function name', () => {
@@ -75,15 +71,14 @@ describe('FunctionDeclarationTransformer', () => {
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             renameGlobals: true
                         }
-                    );
-
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('match #1: should transform function name', () => {
@@ -106,14 +101,13 @@ describe('FunctionDeclarationTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/generator-function.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
                 functionNameIdentifier = getRegExpMatch(obfuscatedCode, functionNameIdentifierRegExp);
                 functionCallIdentifier = getRegExpMatch(obfuscatedCode, functionCallIdentifierRegExp);
             });
@@ -133,14 +127,13 @@ describe('FunctionDeclarationTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/async-function.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
                 functionNameIdentifier = getRegExpMatch(obfuscatedCode, functionNameIdentifierRegExp);
                 functionCallIdentifier = getRegExpMatch(obfuscatedCode, functionCallIdentifierRegExp);
             });
@@ -159,15 +152,14 @@ describe('FunctionDeclarationTransformer', () => {
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/prevent-renaming-of-renamed-identifiers-1.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                         }
-                    );
-
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('Match #1: shouldn\'t rename twice function declaration name', () => {
@@ -187,15 +179,14 @@ describe('FunctionDeclarationTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/named-export.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         renameGlobals: true
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t transform identifiers in named export', () => {
@@ -211,15 +202,14 @@ describe('FunctionDeclarationTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/default-export.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         renameGlobals: true
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('Match #1: should transform identifiers in variable declaration', () => {

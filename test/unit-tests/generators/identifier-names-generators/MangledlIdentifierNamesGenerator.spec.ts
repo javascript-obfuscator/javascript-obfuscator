@@ -19,7 +19,7 @@ describe('MangledIdentifierNamesGenerator', () => {
         beforeEach(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-            inversifyContainerFacade.load('', {});
+            inversifyContainerFacade.load('', '', {});
             identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
                 ServiceIdentifiers.IIdentifierNamesGenerator,
                 IdentifierNamesGenerator.MangledIdentifierNamesGenerator
@@ -136,7 +136,7 @@ describe('MangledIdentifierNamesGenerator', () => {
         before(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-            inversifyContainerFacade.load('', {
+            inversifyContainerFacade.load('', '', {
                 identifiersPrefix: 'foo'
             });
             identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
@@ -183,7 +183,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             beforeEach(() => {
                 const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-                inversifyContainerFacade.load('', { reservedNames });
+                inversifyContainerFacade.load('', '', { reservedNames });
                 identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
                     ServiceIdentifiers.IIdentifierNamesGenerator,
                     IdentifierNamesGenerator.MangledIdentifierNamesGenerator
@@ -214,7 +214,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             beforeEach(() => {
                 const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-                inversifyContainerFacade.load('', { reservedNames });
+                inversifyContainerFacade.load('', '', { reservedNames });
                 identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
                     ServiceIdentifiers.IIdentifierNamesGenerator,
                     IdentifierNamesGenerator.MangledIdentifierNamesGenerator

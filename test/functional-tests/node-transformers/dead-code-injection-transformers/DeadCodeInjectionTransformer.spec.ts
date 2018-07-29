@@ -1,7 +1,5 @@
 import { assert } from 'chai';
 
-import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResult';
-
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
 
 import { IdentifierNamesGenerator } from '../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
@@ -33,7 +31,8 @@ describe('DeadCodeInjectionTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -42,8 +41,7 @@ describe('DeadCodeInjectionTransformer', () => {
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
-                );
-                const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
                 const matches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(regExp);
 
                 if (matches) {
@@ -69,7 +67,8 @@ describe('DeadCodeInjectionTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/block-statements-min-count.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -78,8 +77,7 @@ describe('DeadCodeInjectionTransformer', () => {
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
-                );
-                const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
                 const matches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(regexp);
 
                 if (matches) {
@@ -105,7 +103,8 @@ describe('DeadCodeInjectionTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -114,8 +113,7 @@ describe('DeadCodeInjectionTransformer', () => {
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
-                );
-                const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
                 const matches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(regexp);
 
                 if (matches) {
@@ -149,7 +147,8 @@ describe('DeadCodeInjectionTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/break-continue-statement.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -158,8 +157,7 @@ describe('DeadCodeInjectionTransformer', () => {
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
-                );
-                const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
                 const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
                 const loopMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(loopRegExp);
 
@@ -200,7 +198,8 @@ describe('DeadCodeInjectionTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/await-expression.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -209,8 +208,7 @@ describe('DeadCodeInjectionTransformer', () => {
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
-                );
-                const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
                 const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
                 const awaitExpressionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(awaitExpressionRegExp);
 
@@ -251,7 +249,8 @@ describe('DeadCodeInjectionTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/super-expression.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -260,8 +259,7 @@ describe('DeadCodeInjectionTransformer', () => {
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
-                );
-                const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
                 const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
                 const superExpressionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(superExpressionRegExp);
 
@@ -339,7 +337,8 @@ describe('DeadCodeInjectionTransformer', () => {
                 let count4: number = 0;
 
                 for (let i = 0; i < samplesCount; i++) {
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
@@ -348,8 +347,7 @@ describe('DeadCodeInjectionTransformer', () => {
                             stringArray: true,
                             stringArrayThreshold: 1
                         }
-                    );
-                    const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
 
                     if (regExp1.test(obfuscatedCode)) {
                         count1++;
@@ -396,7 +394,8 @@ describe('DeadCodeInjectionTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/block-scope-is-program-node.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -405,9 +404,7 @@ describe('DeadCodeInjectionTransformer', () => {
                         deadCodeInjection: true,
                         deadCodeInjectionThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t add dead code in block statements with `ProgramNode` block scope', () => {
@@ -422,7 +419,8 @@ describe('DeadCodeInjectionTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/obfuscation-of-dead-code-block-statements.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -430,9 +428,7 @@ describe('DeadCodeInjectionTransformer', () => {
                         deadCodeInjectionThreshold: 1,
                         debugProtection: true
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should correctly obfuscate dead-code block statements and prevent any exposing of internal variable names', () => {
@@ -528,7 +524,8 @@ describe('DeadCodeInjectionTransformer', () => {
                     for (let i: number = 0; i < 100; i++) {
                         while (true) {
                             try {
-                                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                                     code,
                                     {
                                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -536,9 +533,7 @@ describe('DeadCodeInjectionTransformer', () => {
                                         deadCodeInjectionThreshold: 1,
                                         identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                                     }
-                                );
-
-                                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                                ).getObfuscatedCode();
                                 functionIdentifierName = getRegExpMatch(obfuscatedCode, functionParameterRegExp, 0);
                                 variableDeclarationIdentifierName = getRegExpMatch(obfuscatedCode, deadCodeRegExp, 0);
                                 returnIdentifierName = getRegExpMatch(obfuscatedCode, deadCodeRegExp, 1);
@@ -593,7 +588,8 @@ describe('DeadCodeInjectionTransformer', () => {
                     for (let i: number = 0; i < 100; i++) {
                         while (true) {
                             try {
-                                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                                     code,
                                     {
                                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -601,9 +597,7 @@ describe('DeadCodeInjectionTransformer', () => {
                                         deadCodeInjectionThreshold: 1,
                                         identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                                     }
-                                );
-
-                                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                                ).getObfuscatedCode();
                                 functionIdentifierName = getRegExpMatch(obfuscatedCode, functionParameterRegExp, 0);
                                 returnIdentifierName = getRegExpMatch(obfuscatedCode, deadCodeRegExp, 0);
                                 variableDeclarationIdentifierName = getRegExpMatch(obfuscatedCode, deadCodeRegExp, 1);
@@ -643,7 +637,8 @@ describe('DeadCodeInjectionTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/block-statement-empty-body.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -652,9 +647,8 @@ describe('DeadCodeInjectionTransformer', () => {
                         deadCodeInjection: true,
                         deadCodeInjectionThreshold: 1
                     }
-                );
+                ).getObfuscatedCode();
 
-                const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
                 const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(regExp);
 
                 if (functionMatches) {
@@ -681,7 +675,8 @@ describe('DeadCodeInjectionTransformer', () => {
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/block-statement-with-scope-hoisting-1.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
@@ -690,9 +685,8 @@ describe('DeadCodeInjectionTransformer', () => {
                             deadCodeInjection: true,
                             deadCodeInjectionThreshold: 1
                         }
-                    );
+                    ).getObfuscatedCode();
 
-                    const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
                     const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(regExp);
 
                     if (functionMatches) {
@@ -721,7 +715,8 @@ describe('DeadCodeInjectionTransformer', () => {
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/block-statement-with-scope-hoisting-2.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
@@ -730,9 +725,7 @@ describe('DeadCodeInjectionTransformer', () => {
                             deadCodeInjection: true,
                             deadCodeInjectionThreshold: 1
                         }
-                    );
-
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('shouldn\'t wrap block statements in dead code conditions', () => {

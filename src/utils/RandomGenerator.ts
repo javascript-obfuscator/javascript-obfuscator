@@ -7,7 +7,7 @@ import { Chance } from 'chance';
 import { IInitializable } from '../interfaces/IInitializable';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
-import { ISourceCode } from '../interfaces/ISourceCode';
+import { ISourceCode } from '../interfaces/source-code/ISourceCode';
 
 import { initializable } from '../decorators/Initializable';
 

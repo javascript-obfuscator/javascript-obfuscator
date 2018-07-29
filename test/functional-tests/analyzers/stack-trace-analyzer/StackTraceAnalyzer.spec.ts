@@ -157,7 +157,7 @@ describe('StackTraceAnalyzer', () => {
         before(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-            inversifyContainerFacade.load('', {});
+            inversifyContainerFacade.load('', '', {});
             stackTraceAnalyzer = inversifyContainerFacade
                 .get<IStackTraceAnalyzer>(ServiceIdentifiers.IStackTraceAnalyzer);
         });

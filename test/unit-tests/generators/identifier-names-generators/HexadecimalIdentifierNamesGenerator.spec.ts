@@ -20,7 +20,7 @@ describe('HexadecimalIdentifierNamesGenerator', () => {
         before(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-            inversifyContainerFacade.load('', {});
+            inversifyContainerFacade.load('', '', {});
             identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
                 ServiceIdentifiers.IIdentifierNamesGenerator,
                 IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
@@ -44,7 +44,7 @@ describe('HexadecimalIdentifierNamesGenerator', () => {
         before(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-            inversifyContainerFacade.load('', {
+            inversifyContainerFacade.load('', '', {
                 identifiersPrefix: 'foo'
             });
             identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(

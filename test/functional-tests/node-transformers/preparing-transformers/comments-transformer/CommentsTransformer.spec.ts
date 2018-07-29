@@ -1,7 +1,5 @@
 import { assert } from 'chai';
 
-import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationResult';
-
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../../helpers/readFileAsString';
@@ -16,14 +14,13 @@ describe('CommentsTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/no-preserved-words.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('should remove comments without preserved words', () => {
@@ -38,14 +35,13 @@ describe('CommentsTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/preserved-words.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('should keep comments with preserved words', () => {
@@ -60,14 +56,13 @@ describe('CommentsTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/combined-words-1.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('should keep comments with preserved words', () => {
@@ -89,14 +84,13 @@ describe('CommentsTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/combined-words-2.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('should keep comments with preserved words', () => {
@@ -109,14 +103,13 @@ describe('CommentsTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/comments-only-1.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('should remove comment without preserved words', () => {
@@ -131,14 +124,13 @@ describe('CommentsTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/comments-only-2.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('should keep comments with preserved words', () => {

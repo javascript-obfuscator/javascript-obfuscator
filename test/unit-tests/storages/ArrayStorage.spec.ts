@@ -17,7 +17,7 @@ class ConcreteStorage <V> extends ArrayStorage <V> {
     constructor () {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-        inversifyContainerFacade.load('', {});
+        inversifyContainerFacade.load('', '', {});
 
         super(
             inversifyContainerFacade.get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator),

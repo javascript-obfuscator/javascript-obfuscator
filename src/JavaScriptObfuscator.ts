@@ -5,13 +5,14 @@ import * as escodegen from 'escodegen-wallaby';
 import * as espree from 'espree';
 import * as ESTree from 'estree';
 
+import { TObfuscatedCodeFactory } from './types/container/source-code/TObfuscatedCodeFactory';
+
 import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
 import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
 import { ILogger } from './interfaces/logger/ILogger';
-import { IObfuscationResult } from './interfaces/IObfuscationResult';
+import { IObfuscatedCode } from './interfaces/source-code/IObfuscatedCode';
 import { IOptions } from './interfaces/options/IOptions';
 import { IRandomGenerator } from './interfaces/utils/IRandomGenerator';
-import { ISourceMapCorrector } from './interfaces/source-map/ISourceMapCorrector';
 import { ITransformersRunner } from './interfaces/node-transformers/ITransformersRunner';
 
 import { LoggingMessage } from './enums/logger/LoggingMessage';
@@ -80,6 +81,11 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
     private readonly logger: ILogger;
 
     /**
+     * @type {TObfuscatedCodeFactory}
+     */
+    private readonly obfuscatedCodeFactory: TObfuscatedCodeFactory;
+
+    /**
      * @type {IOptions}
      */
     private readonly options: IOptions;
@@ -90,41 +96,36 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
     private readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @type {ISourceMapCorrector}
-     */
-    private readonly sourceMapCorrector: ISourceMapCorrector;
-
-    /**
      * @type {ITransformersRunner}
      */
     private readonly transformersRunner: ITransformersRunner;
 
     /**
      * @param {ITransformersRunner} transformersRunner
-     * @param {ISourceMapCorrector} sourceMapCorrector
      * @param {IRandomGenerator} randomGenerator
+     * @param {TObfuscatedCodeFactory} obfuscatedCodeFactory
      * @param {ILogger} logger
      * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.ITransformersRunner) transformersRunner: ITransformersRunner,
-        @inject(ServiceIdentifiers.ISourceMapCorrector) sourceMapCorrector: ISourceMapCorrector,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
+        @inject(ServiceIdentifiers.Factory__IObfuscatedCode) obfuscatedCodeFactory: TObfuscatedCodeFactory,
         @inject(ServiceIdentifiers.ILogger) logger: ILogger,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.transformersRunner = transformersRunner;
-        this.sourceMapCorrector = sourceMapCorrector;
         this.randomGenerator = randomGenerator;
+        this.obfuscatedCodeFactory = obfuscatedCodeFactory;
         this.logger = logger;
         this.options = options;
     }
 
     /**
      * @param {string} sourceCode
-     * @returns {IObfuscationResult}
+     * @returns {IObfuscatedCode}
      */
-    public obfuscate (sourceCode: string): IObfuscationResult {
+    public obfuscate (sourceCode: string): IObfuscatedCode {
         const timeStart: number = Date.now();
         this.logger.info(LoggingMessage.Version, process.env.VERSION);
         this.logger.info(LoggingMessage.ObfuscationStarted);
@@ -142,7 +143,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
         const obfuscationTime: number = (Date.now() - timeStart) / 1000;
         this.logger.success(LoggingMessage.ObfuscationCompleted, obfuscationTime);
 
-        return this.getObfuscationResult(generatorOutput);
+        return this.getObfuscatedCode(generatorOutput);
     }
 
     /**
@@ -215,13 +216,10 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
 
     /**
      * @param {IGeneratorOutput} generatorOutput
-     * @returns {IObfuscationResult}
+     * @returns {IObfuscatedCode}
      */
-    private getObfuscationResult (generatorOutput: IGeneratorOutput): IObfuscationResult {
-        return this.sourceMapCorrector.correct(
-            generatorOutput.code,
-            generatorOutput.map
-        );
+    private getObfuscatedCode (generatorOutput: IGeneratorOutput): IObfuscatedCode {
+        return this.obfuscatedCodeFactory(generatorOutput.code, generatorOutput.map);
     }
 
     /**

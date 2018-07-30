@@ -4,7 +4,7 @@ import { ServiceIdentifiers } from '../../../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 
 import { TIdentifierNamesGeneratorFactory } from '../../../../types/container/generators/TIdentifierNamesGeneratorFactory';
-import { TNodeWithBlockScope } from '../../../../types/node/TNodeWithBlockScope';
+import { TNodeWithLexicalScope } from '../../../../types/node/TNodeWithLexicalScope';
 
 import { IIdentifierNamesGenerator } from '../../../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IIdentifierObfuscatingReplacer } from '../../../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
@@ -21,9 +21,9 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
     private readonly identifierNamesGenerator: IIdentifierNamesGenerator;
 
     /**
-     * @type {Map<TNodeWithBlockScope, Map<string, string>>}
+     * @type {Map<TNodeWithLexicalScope, Map<string, string>>}
      */
-    private readonly blockScopesMap: Map<TNodeWithBlockScope, Map<string, string>> = new Map();
+    private readonly blockScopesMap: Map<TNodeWithLexicalScope, Map<string, string>> = new Map();
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -41,12 +41,12 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
 
     /**
      * @param {string} nodeValue
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @returns {Identifier}
      */
-    public replace (nodeValue: string, blockScopeNode: TNodeWithBlockScope): ESTree.Identifier {
-        if (this.blockScopesMap.has(blockScopeNode)) {
-            const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(blockScopeNode);
+    public replace (nodeValue: string, lexicalScopeNode: TNodeWithLexicalScope): ESTree.Identifier {
+        if (this.blockScopesMap.has(lexicalScopeNode)) {
+            const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(lexicalScopeNode);
 
             if (namesMap.has(nodeValue)) {
                 nodeValue = <string>namesMap.get(nodeValue);
@@ -61,20 +61,20 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
      * Reserved name will be ignored.
      *
      * @param {string} nodeName
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    public storeGlobalName (nodeName: string, blockScopeNode: TNodeWithBlockScope): void {
+    public storeGlobalName (nodeName: string, lexicalScopeNode: TNodeWithLexicalScope): void {
         if (this.isReservedName(nodeName)) {
             return;
         }
 
         const identifierName: string = this.identifierNamesGenerator.generateWithPrefix();
 
-        if (!this.blockScopesMap.has(blockScopeNode)) {
-            this.blockScopesMap.set(blockScopeNode, new Map());
+        if (!this.blockScopesMap.has(lexicalScopeNode)) {
+            this.blockScopesMap.set(lexicalScopeNode, new Map());
         }
 
-        const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(blockScopeNode);
+        const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(lexicalScopeNode);
 
         namesMap.set(nodeName, identifierName);
     }
@@ -84,20 +84,20 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
      * Reserved name will be ignored.
      *
      * @param {string} nodeName
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    public storeLocalName (nodeName: string, blockScopeNode: TNodeWithBlockScope): void {
+    public storeLocalName (nodeName: string, lexicalScopeNode: TNodeWithLexicalScope): void {
         if (this.isReservedName(nodeName)) {
             return;
         }
 
         const identifierName: string = this.identifierNamesGenerator.generate();
 
-        if (!this.blockScopesMap.has(blockScopeNode)) {
-            this.blockScopesMap.set(blockScopeNode, new Map());
+        if (!this.blockScopesMap.has(lexicalScopeNode)) {
+            this.blockScopesMap.set(lexicalScopeNode, new Map());
         }
 
-        const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(blockScopeNode);
+        const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(lexicalScopeNode);
 
         namesMap.set(nodeName, identifierName);
     }

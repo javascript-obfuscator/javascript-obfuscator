@@ -29,11 +29,6 @@ export interface IArrayStorage <V> extends IInitializable {
     getStorageId (): string;
 
     /**
-     * @param args
-     */
-    initialize (...args: any[]): void;
-
-    /**
      * @param storage
      * @param mergeId
      */

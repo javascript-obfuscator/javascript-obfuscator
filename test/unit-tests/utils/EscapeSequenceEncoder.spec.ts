@@ -14,7 +14,7 @@ describe('EscapeSequenceEncoder', () => {
         before(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-            inversifyContainerFacade.load('', {});
+            inversifyContainerFacade.load('', '', {});
             escapeSequenceEncoder = inversifyContainerFacade
                 .get<IEscapeSequenceEncoder>(ServiceIdentifiers.IEscapeSequenceEncoder);
         });

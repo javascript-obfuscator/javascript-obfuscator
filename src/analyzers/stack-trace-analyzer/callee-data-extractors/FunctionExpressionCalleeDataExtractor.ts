@@ -7,7 +7,7 @@ import { ICalleeData } from '../../../interfaces/analyzers/stack-trace-analyzer/
 
 import { AbstractCalleeDataExtractor } from './AbstractCalleeDataExtractor';
 import { NodeGuards } from '../../../node/NodeGuards';
-import { NodeUtils } from '../../../node/NodeUtils';
+import { NodeStatementUtils } from '../../../node/NodeStatementUtils';
 
 @injectable()
 export class FunctionExpressionCalleeDataExtractor extends AbstractCalleeDataExtractor {
@@ -21,7 +21,7 @@ export class FunctionExpressionCalleeDataExtractor extends AbstractCalleeDataExt
 
         if (NodeGuards.isIdentifierNode(callee)) {
             calleeBlockStatement = this.getCalleeBlockStatement(
-                NodeUtils.getBlockScopeOfNode(blockScopeBody[0]),
+                NodeStatementUtils.getParentNodeWithStatements(blockScopeBody[0]),
                 callee.name
             );
         }

@@ -1,7 +1,5 @@
 import { assert } from 'chai';
 
-import { IObfuscationResult } from '../../../../../../src/interfaces/IObfuscationResult';
-
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../../../helpers/readFileAsString';
@@ -17,16 +15,15 @@ describe('StringLiteralControlFlowReplacer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     controlFlowFlattening: true,
                     controlFlowFlatteningThreshold: 1
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('should add string literal node as property of control flow storage node', () => {

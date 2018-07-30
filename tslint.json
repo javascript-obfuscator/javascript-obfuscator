@@ -135,7 +135,7 @@
     "no-unnecessary-class": [true, "allow-static-only"],
     "no-unnecessary-initializer": true,
     "no-unnecessary-field-initialization": true,
-    "no-unnecessary-local-variable": true,
+    "no-unnecessary-local-variable": false,
     "no-unexpected-multiline": true,
     "no-unsafe-any": false,
     "no-unsafe-finally": true,

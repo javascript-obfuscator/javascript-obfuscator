@@ -8,7 +8,7 @@ import { TControlFlowCustomNodeFactory } from '../../types/container/custom-node
 import { TControlFlowReplacerFactory } from '../../types/container/node-transformers/TControlFlowReplacerFactory';
 import { TControlFlowStorage } from '../../types/storages/TControlFlowStorage';
 import { TControlFlowStorageFactory } from '../../types/container/node-transformers/TControlFlowStorageFactory';
-import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
+import { TNodeWithStatements } from '../../types/node/TNodeWithStatements';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -24,7 +24,7 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeAppender } from '../../node/NodeAppender';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeMetadata } from '../../node/NodeMetadata';
-import { NodeUtils } from '../../node/NodeUtils';
+import { NodeStatementUtils } from '../../node/NodeStatementUtils';
 
 @injectable()
 export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
@@ -59,9 +59,9 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     private readonly visitedFunctionNodes: Set<ESTree.Function> = new Set();
 
     /**
-     * @type {Set<TNodeWithBlockScope>}
+     * @type {Set<TNodeWithStatements>}
      */
-    private readonly hostNodesWithControlFlowNode: Set<TNodeWithBlockScope> = new Set();
+    private readonly hostNodesWithControlFlowNode: Set<TNodeWithStatements> = new Set();
 
     /**
      * @type {TControlFlowReplacerFactory}
@@ -140,7 +140,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
             return functionNode;
         }
 
-        const hostNode: TNodeWithBlockScope = this.getHostNode(functionNode.body);
+        const hostNode: TNodeWithStatements = this.getHostNode(functionNode.body);
         const controlFlowStorage: TControlFlowStorage = this.getControlFlowStorage(hostNode);
 
         this.controlFlowData.set(hostNode, controlFlowStorage);
@@ -162,15 +162,19 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {TNodeWithBlockScope} hostNode
+     * @param {TNodeWithStatements} hostNode
      * @returns {TControlFlowStorage}
      */
-    private getControlFlowStorage (hostNode: TNodeWithBlockScope): TControlFlowStorage {
+    private getControlFlowStorage (hostNode: TNodeWithStatements): TControlFlowStorage {
         const controlFlowStorage: TControlFlowStorage = this.controlFlowStorageFactory();
 
         if (this.controlFlowData.has(hostNode)) {
             if (this.hostNodesWithControlFlowNode.has(hostNode)) {
-                hostNode.body.shift();
+                if (NodeGuards.isSwitchCaseNode(hostNode)) {
+                    hostNode.consequent.shift();
+                } else {
+                    hostNode.body.shift();
+                }
             }
 
             const hostControlFlowStorage: TControlFlowStorage = <TControlFlowStorage>this.controlFlowData.get(hostNode);
@@ -183,10 +187,10 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {BlockStatement} functionNodeBody
-     * @returns {TNodeWithBlockScope}
+     * @returns {TNodeWithStatements}
      */
-    private getHostNode (functionNodeBody: ESTree.BlockStatement): TNodeWithBlockScope {
-        const blockScopesOfNode: TNodeWithBlockScope[] = NodeUtils.getBlockScopesOfNode(functionNodeBody);
+    private getHostNode (functionNodeBody: ESTree.BlockStatement): TNodeWithStatements {
+        const blockScopesOfNode: TNodeWithStatements[] = NodeStatementUtils.getParentNodesWithStatements(functionNodeBody);
 
         if (blockScopesOfNode.length === 1) {
             return functionNodeBody;

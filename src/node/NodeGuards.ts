@@ -1,7 +1,7 @@
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockScope } from '../types/node/TNodeWithBlockScope';
-import { TNodeWithScope } from '../types/node/TNodeWithScope';
+import { TNodeWithLexicalScope } from '../types/node/TNodeWithLexicalScope';
+import { TNodeWithStatements } from '../types/node/TNodeWithStatements';
 
 import { NodeType } from '../enums/node/NodeType';
 
@@ -9,7 +9,7 @@ export class NodeGuards {
     /**
      * @type {string[]}
      */
-    private static readonly nodesWithBlockScope: string[] = [
+    private static readonly nodesWithLexicalStatements: string[] = [
         NodeType.ArrowFunctionExpression,
         NodeType.FunctionDeclaration,
         NodeType.FunctionExpression,
@@ -30,14 +30,6 @@ export class NodeGuards {
      */
     public static isArrowFunctionExpressionNode (node: ESTree.Node): node is ESTree.ArrowFunctionExpression {
         return node.type === NodeType.ArrowFunctionExpression;
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
-    public static isAssignmentExpressionNode (node: ESTree.Node): node is ESTree.AssignmentExpression {
-        return node.type === NodeType.AssignmentExpression;
     }
 
     /**
@@ -124,6 +116,16 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isFunctionNode (node: ESTree.Node): node is ESTree.Function {
+        return NodeGuards.isFunctionDeclarationNode(node) ||
+            NodeGuards.isFunctionExpressionNode(node) ||
+            NodeGuards.isArrowFunctionExpressionNode(node);
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isFunctionDeclarationNode (node: ESTree.Node): node is ESTree.FunctionDeclaration {
         return node.type === NodeType.FunctionDeclaration;
     }
@@ -148,32 +150,8 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isIfStatementNode (node: ESTree.Node): node is ESTree.IfStatement {
-        return node.type === NodeType.IfStatement;
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
     public static isImportDeclarationNode (node: ESTree.Node): node is ESTree.ImportDeclaration {
         return node.type === NodeType.ImportDeclaration;
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
-    public static isImportDefaultSpecifierNode (node: ESTree.Node): node is ESTree.ImportDefaultSpecifier {
-        return node.type === NodeType.ImportDefaultSpecifier;
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
-    public static isImportNamespaceSpecifierNode (node: ESTree.Node): node is ESTree.ImportNamespaceSpecifier {
-        return node.type === NodeType.ImportNamespaceSpecifier;
     }
 
     /**
@@ -239,21 +217,30 @@ export class NodeGuards {
 
     /**
      * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isNodeWithLexicalScope (node: ESTree.Node): node is TNodeWithLexicalScope {
+        return NodeGuards.isProgramNode(node) || NodeGuards.isFunctionNode(node);
+    }
+
+    /**
+     * @param {Node} node
      * @param {Node} parentNode
      * @returns {boolean}
      */
-    public static isNodeHasBlockScope (node: ESTree.Node, parentNode: ESTree.Node): node is TNodeWithBlockScope {
-        return NodeGuards.isProgramNode(node) || (
-            NodeGuards.isBlockStatementNode(node)
-            && NodeGuards.nodesWithBlockScope.includes(parentNode.type)
-        );
+    public static isNodeWithLexicalScopeStatements (
+        node: ESTree.Node,
+        parentNode: ESTree.Node
+    ): node is TNodeWithStatements {
+        return NodeGuards.isProgramNode(node)
+            || (NodeGuards.isBlockStatementNode(node) && NodeGuards.nodesWithLexicalStatements.includes(parentNode.type));
     }
 
     /**
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isNodeHasScope (node: ESTree.Node): node is TNodeWithScope {
+    public static isNodeWithStatements (node: ESTree.Node): node is TNodeWithStatements {
         return NodeGuards.isProgramNode(node)
             || NodeGuards.isBlockStatementNode(node)
             || NodeGuards.isSwitchCaseNode(node);

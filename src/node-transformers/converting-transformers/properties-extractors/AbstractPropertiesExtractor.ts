@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { TNodeWithScope } from '../../../types/node/TNodeWithScope';
+import { TNodeWithStatements } from '../../../types/node/TNodeWithStatements';
 
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IPropertiesExtractor } from '../../../interfaces/node-transformers/converting-transformers/properties-extractors/IPropertiesExtractor';
@@ -12,14 +12,14 @@ import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { NodeAppender } from '../../../node/NodeAppender';
 import { NodeFactory } from '../../../node/NodeFactory';
 import { NodeGuards } from '../../../node/NodeGuards';
-import { NodeUtils } from '../../../node/NodeUtils';
+import { NodeStatementUtils } from '../../../node/NodeStatementUtils';
 
 @injectable()
 export abstract class AbstractPropertiesExtractor implements IPropertiesExtractor {
     /**
-     * @type {Map<ESTree.ObjectExpression, TNodeWithScope>}
+     * @type {Map<ESTree.ObjectExpression, TNodeWithStatements>}
      */
-    protected readonly cachedHostScopesMap: Map <ESTree.ObjectExpression, TNodeWithScope> = new Map();
+    protected readonly cachedHostNodesWithStatementsMap: Map <ESTree.ObjectExpression, TNodeWithStatements> = new Map();
 
     /**
      * @type {Map<ESTree.ObjectExpression, ESTree.Statement>}
@@ -179,10 +179,13 @@ export abstract class AbstractPropertiesExtractor implements IPropertiesExtracto
             .extractPropertiesToExpressionStatements(properties, memberExpressionHostNode);
 
         const hostStatement: ESTree.Statement = this.getHostStatement(objectExpressionNode);
-        const scopeNode: TNodeWithScope = this.getHostScopeNode(objectExpressionNode, hostStatement);
+        const hostNodeWithStatements: TNodeWithStatements = this.getHostNodeWithStatements(
+            objectExpressionNode,
+            hostStatement
+        );
 
         this.filterExtractedObjectExpressionProperties(objectExpressionNode, removablePropertyIds);
-        NodeAppender.insertAfter(scopeNode, expressionStatements, hostStatement);
+        NodeAppender.insertAfter(hostNodeWithStatements, expressionStatements, hostStatement);
 
         return objectExpressionNode;
     }
@@ -190,21 +193,21 @@ export abstract class AbstractPropertiesExtractor implements IPropertiesExtracto
     /**
      * @param {ObjectExpression} objectExpressionNode
      * @param {Statement} hostStatement
-     * @returns {TNodeWithScope}
+     * @returns {TNodeWithStatements}
      */
-    protected getHostScopeNode (
+    protected getHostNodeWithStatements (
         objectExpressionNode: ESTree.ObjectExpression,
         hostStatement: ESTree.Statement
-    ): TNodeWithScope {
-        if (this.cachedHostScopesMap.has(objectExpressionNode)) {
-            return <TNodeWithScope>this.cachedHostScopesMap.get(objectExpressionNode);
+    ): TNodeWithStatements {
+        if (this.cachedHostNodesWithStatementsMap.has(objectExpressionNode)) {
+            return <TNodeWithStatements>this.cachedHostNodesWithStatementsMap.get(objectExpressionNode);
         }
 
-        const scopeNode: TNodeWithScope = NodeUtils.getScopeOfNode(hostStatement);
+        const nodeWithStatements: TNodeWithStatements = NodeStatementUtils.getScopeOfNode(hostStatement);
 
-        this.cachedHostScopesMap.set(objectExpressionNode, scopeNode);
+        this.cachedHostNodesWithStatementsMap.set(objectExpressionNode, nodeWithStatements);
 
-        return scopeNode;
+        return nodeWithStatements;
     }
 
     /**
@@ -218,7 +221,7 @@ export abstract class AbstractPropertiesExtractor implements IPropertiesExtracto
             return <ESTree.Statement>this.cachedHostStatementsMap.get(objectExpressionNode);
         }
 
-        const hostStatement: ESTree.Statement = NodeUtils.getRootStatementOfNode(objectExpressionNode);
+        const hostStatement: ESTree.Statement = NodeStatementUtils.getRootStatementOfNode(objectExpressionNode);
 
         this.cachedHostStatementsMap.set(objectExpressionNode, hostStatement);
 

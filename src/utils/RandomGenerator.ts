@@ -7,7 +7,7 @@ import { Chance } from 'chance';
 import { IInitializable } from '../interfaces/IInitializable';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
-import { ISourceCode } from '../interfaces/ISourceCode';
+import { ISourceCode } from '../interfaces/source-code/ISourceCode';
 
 import { initializable } from '../decorators/Initializable';
 
@@ -79,19 +79,6 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
      */
     public getMathRandom (): number {
         return this.getRandomInteger(0, 99999) / 100000;
-    }
-
-    /**
-     * @param {number} min
-     * @param {number} max
-     * @returns {number}
-     */
-    public getRandomFloat (min: number, max: number): number {
-        return this.getRandomGenerator().floating({
-            min: min,
-            max: max,
-            fixed: 7
-        });
     }
 
     /**

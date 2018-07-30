@@ -35,11 +35,6 @@ export interface IMapStorage <K, V> extends IInitializable {
     has (key: K): boolean;
 
     /**
-     * @param args
-     */
-    initialize (...args: any[]): void;
-
-    /**
      * @param storage
      * @param mergeId
      */

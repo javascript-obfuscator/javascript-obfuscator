@@ -7,7 +7,7 @@ import { ICalleeData } from '../../../interfaces/analyzers/stack-trace-analyzer/
 
 import { AbstractCalleeDataExtractor } from './AbstractCalleeDataExtractor';
 import { NodeGuards } from '../../../node/NodeGuards';
-import { NodeUtils } from '../../../node/NodeUtils';
+import { NodeStatementUtils } from '../../../node/NodeStatementUtils';
 
 @injectable()
 export class FunctionDeclarationCalleeDataExtractor extends AbstractCalleeDataExtractor {
@@ -22,7 +22,7 @@ export class FunctionDeclarationCalleeDataExtractor extends AbstractCalleeDataEx
         }
 
         const calleeBlockStatement: ESTree.BlockStatement | null = this.getCalleeBlockStatement(
-            NodeUtils.getBlockScopeOfNode(blockScopeBody[0]),
+            NodeStatementUtils.getParentNodeWithStatements(blockScopeBody[0]),
             callee.name
         );
 

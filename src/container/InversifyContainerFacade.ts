@@ -20,17 +20,15 @@ import { IInversifyContainerFacade } from '../interfaces/container/IInversifyCon
 import { IJavaScriptObfuscator } from '../interfaces/IJavaScriptObfsucator';
 import { ILogger } from '../interfaces/logger/ILogger';
 import { IObfuscationEventEmitter } from '../interfaces/event-emitters/IObfuscationEventEmitter';
-import { IObfuscationResult } from '../interfaces/IObfuscationResult';
-import { ISourceCode } from '../interfaces/ISourceCode';
-import { ISourceMapCorrector } from '../interfaces/source-map/ISourceMapCorrector';
+import { IObfuscatedCode } from '../interfaces/source-code/IObfuscatedCode';
+import { ISourceCode } from '../interfaces/source-code/ISourceCode';
 import { ITransformersRunner } from '../interfaces/node-transformers/ITransformersRunner';
 
 import { JavaScriptObfuscator } from '../JavaScriptObfuscator';
 import { Logger } from '../logger/Logger';
 import { ObfuscationEventEmitter } from '../event-emitters/ObfuscationEventEmitter';
-import { ObfuscationResult } from '../ObfuscationResult';
-import { SourceCode } from '../SourceCode';
-import { SourceMapCorrector } from '../source-map/SourceMapCorrector';
+import { ObfuscatedCode } from '../source-code/ObfuscatedCode';
+import { SourceCode } from '../source-code/SourceCode';
 import { TransformersRunner } from '../node-transformers/TransformersRunner';
 
 export class InversifyContainerFacade implements IInversifyContainerFacade {
@@ -140,12 +138,13 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
 
     /**
      * @param {string} sourceCode
+     * @param {string} sourceMap
      * @param {TInputOptions} options
      */
-    public load (sourceCode: string, options: TInputOptions): void {
+    public load (sourceCode: string, sourceMap: string, options: TInputOptions): void {
         this.container
             .bind<ISourceCode>(ServiceIdentifiers.ISourceCode)
-            .toDynamicValue(() => new SourceCode(sourceCode))
+            .toDynamicValue(() => new SourceCode(sourceCode, sourceMap))
             .inSingletonScope();
 
         this.container
@@ -169,27 +168,21 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
             .inSingletonScope();
 
         this.container
-            .bind<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult)
-            .to(ObfuscationResult)
-            .inSingletonScope();
+            .bind<IObfuscatedCode>(ServiceIdentifiers.IObfuscatedCode)
+            .to(ObfuscatedCode);
 
         this.container
-            .bind<IObfuscationResult>(ServiceIdentifiers.Factory__IObfuscationResult)
-            .toFactory<IObfuscationResult>((context: interfaces.Context) => {
-                return (obfuscatedCode: string, sourceMap: string) => {
-                    const obfuscationResult: IObfuscationResult = context.container
-                        .get<IObfuscationResult>(ServiceIdentifiers.IObfuscationResult);
+            .bind<IObfuscatedCode>(ServiceIdentifiers.Factory__IObfuscatedCode)
+            .toFactory<IObfuscatedCode>((context: interfaces.Context) => {
+                return (obfuscatedCodeAsString: string, sourceMapAsString: string) => {
+                    const obfuscatedCode: IObfuscatedCode = context.container
+                        .get<IObfuscatedCode>(ServiceIdentifiers.IObfuscatedCode);
 
-                    obfuscationResult.initialize(obfuscatedCode, sourceMap);
+                    obfuscatedCode.initialize(obfuscatedCodeAsString, sourceMapAsString);
 
-                    return obfuscationResult;
+                    return obfuscatedCode;
                 };
             });
-
-        this.container
-            .bind<ISourceMapCorrector>(ServiceIdentifiers.ISourceMapCorrector)
-            .to(SourceMapCorrector)
-            .inSingletonScope();
 
         this.container
             .bind<IObfuscationEventEmitter>(ServiceIdentifiers.IObfuscationEventEmitter)

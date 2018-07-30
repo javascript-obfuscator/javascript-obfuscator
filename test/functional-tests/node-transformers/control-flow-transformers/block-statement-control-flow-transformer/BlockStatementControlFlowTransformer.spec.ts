@@ -1,7 +1,5 @@
 import { assert } from 'chai';
 
-import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationResult';
-
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
@@ -26,16 +24,15 @@ describe('BlockStatementControlFlowTransformer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             describe('`console.log` statements', ()=> {
@@ -114,7 +111,8 @@ describe('BlockStatementControlFlowTransformer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input-2.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -122,9 +120,7 @@ describe('BlockStatementControlFlowTransformer', function () {
                         controlFlowFlatteningThreshold: 1,
                         unicodeEscapeSequence: false
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             describe('`console.log` statements', ()=> {
@@ -205,16 +201,15 @@ describe('BlockStatementControlFlowTransformer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/one-statement.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t transform block statement', () => {
@@ -229,16 +224,15 @@ describe('BlockStatementControlFlowTransformer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/const-declaration.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t transform block statement', () => {
@@ -253,16 +247,15 @@ describe('BlockStatementControlFlowTransformer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/let-declaration.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t transform block statement', () => {
@@ -277,16 +270,15 @@ describe('BlockStatementControlFlowTransformer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/break-statement-1.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t transform block statement', () => {
@@ -301,16 +293,15 @@ describe('BlockStatementControlFlowTransformer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/break-statement-2.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t transform block statement', () => {
@@ -328,16 +319,15 @@ describe('BlockStatementControlFlowTransformer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/break-statement-inside-while-statement.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
                 switchCaseLength = obfuscatedCode.match(switchCaseLengthRegExp)!.length;
             });
 
@@ -357,16 +347,15 @@ describe('BlockStatementControlFlowTransformer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/continue-statement-1.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t transform block statement', () => {
@@ -381,16 +370,15 @@ describe('BlockStatementControlFlowTransformer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/continue-statement-2.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t transform block statement', () => {
@@ -408,16 +396,15 @@ describe('BlockStatementControlFlowTransformer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/continue-statement-inside-while-statement.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
                 switchCaseLength = obfuscatedCode.match(switchCaseLengthRegExp)!.length;
             });
 
@@ -437,16 +424,15 @@ describe('BlockStatementControlFlowTransformer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/function-declaration.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t transform block statement', () => {
@@ -461,16 +447,15 @@ describe('BlockStatementControlFlowTransformer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/class-declaration.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t transform block statement', () => {
@@ -492,21 +477,20 @@ describe('BlockStatementControlFlowTransformer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                     code.repeat(samples),
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: controlFlowFlatteningThreshold,
                     }
-                );
+                ).getObfuscatedCode();
 
-                const transformedStatementMatchesLength: number = obfuscationResult
-                    .getObfuscatedCode()
+                const transformedStatementMatchesLength: number = obfuscatedCode
                     .match(regExp1)!
                     .length;
-                const untouchedStatementMatchesLength: number = obfuscationResult
-                    .getObfuscatedCode()
+                const untouchedStatementMatchesLength: number = obfuscatedCode
                     .match(regExp2)!
                     .length;
 
@@ -534,16 +518,15 @@ describe('BlockStatementControlFlowTransformer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/no-unreachable-code-warning.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
                 switchCaseLength = obfuscatedCode.match(switchCaseLengthRegExp)!.length;
             });
 

@@ -6,7 +6,7 @@ import { TInputOptions } from './types/options/TInputOptions';
 
 import { IInversifyContainerFacade } from './interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
-import { IObfuscationResult } from './interfaces/IObfuscationResult';
+import { IObfuscatedCode } from './interfaces/source-code/IObfuscatedCode';
 
 import { InversifyContainerFacade } from './container/InversifyContainerFacade';
 
@@ -19,20 +19,20 @@ class JavaScriptObfuscatorFacade {
     /**
      * @param {string} sourceCode
      * @param {TInputOptions} inputOptions
-     * @returns {IObfuscationResult}
+     * @returns {IObfuscatedCode}
      */
-    public static obfuscate (sourceCode: string, inputOptions: TInputOptions = {}): IObfuscationResult {
+    public static obfuscate (sourceCode: string, inputOptions: TInputOptions = {}): IObfuscatedCode {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-        inversifyContainerFacade.load(sourceCode, inputOptions);
+        inversifyContainerFacade.load(sourceCode, '', inputOptions);
 
         const javaScriptObfuscator: IJavaScriptObfuscator = inversifyContainerFacade
             .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);
-        const obfuscationResult: IObfuscationResult = javaScriptObfuscator.obfuscate(sourceCode);
+        const obfuscatedCode: IObfuscatedCode = javaScriptObfuscator.obfuscate(sourceCode);
 
         inversifyContainerFacade.unload();
 
-        return obfuscationResult;
+        return obfuscatedCode;
     }
 }
 

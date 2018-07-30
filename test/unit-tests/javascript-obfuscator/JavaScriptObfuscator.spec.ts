@@ -4,7 +4,7 @@ import { assert } from 'chai';
 
 import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
 import { IJavaScriptObfuscator } from '../../../src/interfaces/IJavaScriptObfsucator';
-import { IObfuscationResult } from '../../../src/interfaces/IObfuscationResult';
+import { IObfuscatedCode } from '../../../src/interfaces/source-code/IObfuscatedCode';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../src/options/presets/NoCustomNodes';
 
@@ -29,6 +29,7 @@ describe('JavaScriptObfuscator', () => {
 
                     inversifyContainerFacade.load(
                         '',
+                        '',
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             sourceMap: true,
@@ -38,10 +39,11 @@ describe('JavaScriptObfuscator', () => {
                     javaScriptObfuscator = inversifyContainerFacade
                         .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);
 
-                    const obfuscationResult: IObfuscationResult = javaScriptObfuscator.obfuscate(code);
 
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
-                    sourceMapObject = JSON.parse(obfuscationResult.getSourceMap());
+                    const obfuscatedCodeObject: IObfuscatedCode = javaScriptObfuscator.obfuscate(code);
+
+                    obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+                    sourceMapObject = JSON.parse(obfuscatedCodeObject.getSourceMap());
                 });
 
                 it('should link obfuscated code with source map', () => {
@@ -65,6 +67,7 @@ describe('JavaScriptObfuscator', () => {
 
                     inversifyContainerFacade.load(
                         '',
+                        '',
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             sourceMap: true,
@@ -75,10 +78,11 @@ describe('JavaScriptObfuscator', () => {
                     javaScriptObfuscator = inversifyContainerFacade
                         .get<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator);
 
-                    const obfuscationResult: IObfuscationResult = javaScriptObfuscator.obfuscate(code);
 
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
-                    sourceMapObject = JSON.parse(obfuscationResult.getSourceMap());
+                    const obfuscatedCodeObject: IObfuscatedCode = javaScriptObfuscator.obfuscate(code);
+
+                    obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+                    sourceMapObject = JSON.parse(obfuscatedCodeObject.getSourceMap());
                 });
 
                 it('should properly add base url to source map import inside obfuscated code', () => {

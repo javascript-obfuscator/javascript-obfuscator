@@ -1,8 +1,6 @@
 import { assert } from 'chai';
 import { spawn } from 'threads';
 
-import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResult';
-
 import { readFileAsString } from '../../../helpers/readFileAsString';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
@@ -39,15 +37,14 @@ describe('DebugProtectionFunctionCallTemplate', () => {
 
         beforeEach((done) => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     debugProtection: true
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
 
             spawnThread(
                 () => obfuscatedCode,
@@ -74,16 +71,15 @@ describe('DebugProtectionFunctionCallTemplate', () => {
 
         beforeEach((done) => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     debugProtection: true,
                     mangle: true
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
 
             spawnThread(
                 () => obfuscatedCode,
@@ -110,16 +106,15 @@ describe('DebugProtectionFunctionCallTemplate', () => {
 
         beforeEach((done) => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     debugProtection: true,
                     target: ObfuscationTarget.BrowserNoEval
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
 
             spawnThread(
                 () => obfuscatedCode,
@@ -146,15 +141,14 @@ describe('DebugProtectionFunctionCallTemplate', () => {
 
         beforeEach((done) => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     debugProtection: true
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
             obfuscatedCode = obfuscatedCode.replace(/\+\+ *_0x([a-f0-9]){4,6}/, '');
 
             spawnThread(
@@ -182,15 +176,14 @@ describe('DebugProtectionFunctionCallTemplate', () => {
 
         beforeEach((done) => {
             const code: string = readFileAsString(__dirname + '/fixtures/single-call.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     debugProtection: true
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
 
             spawnThread(
                 () => obfuscatedCode,

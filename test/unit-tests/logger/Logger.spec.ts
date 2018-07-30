@@ -58,7 +58,7 @@ describe('Logger', () => {
 
             before(() => {
                 inversifyContainerFacade = new InversifyContainerFacade();
-                inversifyContainerFacade.load('', {
+                inversifyContainerFacade.load('', '', {
                     log: true
                 });
 
@@ -94,7 +94,7 @@ describe('Logger', () => {
 
             before(() => {
                 inversifyContainerFacade = new InversifyContainerFacade();
-                inversifyContainerFacade.load('', {
+                inversifyContainerFacade.load('', '', {
                     log: false
                 });
 
@@ -129,7 +129,7 @@ describe('Logger', () => {
 
             before(() => {
                 inversifyContainerFacade = new InversifyContainerFacade();
-                inversifyContainerFacade.load('', {
+                inversifyContainerFacade.load('', '', {
                     log: true
                 });
 
@@ -165,7 +165,7 @@ describe('Logger', () => {
 
             before(() => {
                 inversifyContainerFacade = new InversifyContainerFacade();
-                inversifyContainerFacade.load('', {
+                inversifyContainerFacade.load('', '', {
                     log: false
                 });
 
@@ -200,7 +200,7 @@ describe('Logger', () => {
 
             before(() => {
                 inversifyContainerFacade = new InversifyContainerFacade();
-                inversifyContainerFacade.load('', {
+                inversifyContainerFacade.load('', '', {
                     log: true
                 });
 
@@ -236,7 +236,7 @@ describe('Logger', () => {
 
             before(() => {
                 inversifyContainerFacade = new InversifyContainerFacade();
-                inversifyContainerFacade.load('', {
+                inversifyContainerFacade.load('', '', {
                     log: false
                 });
 

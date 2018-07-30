@@ -23,7 +23,7 @@ import { InversifyContainerFacade } from '../../../src/container/InversifyContai
 function getNormalizedOptions (optionsPreset: TInputOptions): TInputOptions {
     const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-    inversifyContainerFacade.load('', optionsPreset);
+    inversifyContainerFacade.load('', '', optionsPreset);
 
     const options: IOptions = inversifyContainerFacade
         .get<IOptions>(ServiceIdentifiers.IOptions);

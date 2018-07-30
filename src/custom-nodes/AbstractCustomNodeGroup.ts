@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../types/container/generators/TIdentifierNamesGeneratorFactory';
-import { TNodeWithBlockScope } from '../types/node/TNodeWithBlockScope';
+import { TNodeWithStatements } from '../types/node/TNodeWithStatements';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { ICustomNodeGroup } from '../interfaces/custom-nodes/ICustomNodeGroup';
@@ -58,10 +58,10 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     }
 
     /**
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithStatements} nodeWithStatements
      * @param {IStackTraceData[]} stackTraceData
      */
-    public abstract appendCustomNodes (blockScopeNode: TNodeWithBlockScope, stackTraceData: IStackTraceData[]): void;
+    public abstract appendCustomNodes (nodeWithStatements: TNodeWithStatements, stackTraceData: IStackTraceData[]): void;
 
     /**
      * @returns {ObfuscationEvent}

@@ -29,7 +29,7 @@ describe('StringArrayCallsWrapperNodeTemplate', () => {
     before(() => {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-        inversifyContainerFacade.load('', {});
+        inversifyContainerFacade.load('', '', {});
         cryptUtils = inversifyContainerFacade.get<ICryptUtils>(ServiceIdentifiers.ICryptUtils);
         randomGenerator = inversifyContainerFacade.get<IRandomGenerator>(ServiceIdentifiers.IRandomGenerator);
     });

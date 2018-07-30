@@ -92,16 +92,11 @@ export class NodeFactory {
      * @returns {BreakStatement}
      */
     public static breakStatement (label?: ESTree.Identifier): ESTree.BreakStatement {
-        const breakStatementNode: ESTree.BreakStatement = {
+        return {
             type: NodeType.BreakStatement,
+            label,
             metadata: { ignoredNode: false }
         };
-
-        if (label) {
-            breakStatementNode.label = label;
-        }
-
-        return breakStatementNode;
     }
 
     /**
@@ -126,16 +121,11 @@ export class NodeFactory {
      * @returns {ContinueStatement}
      */
     public static continueStatement (label?: ESTree.Identifier): ESTree.ContinueStatement {
-        const continueStatementNode: ESTree.ContinueStatement = {
+        return {
             type: NodeType.ContinueStatement,
+            label,
             metadata: { ignoredNode: false }
         };
-
-        if (label) {
-            continueStatementNode.label = label;
-        }
-
-        return continueStatementNode;
     }
 
     /**

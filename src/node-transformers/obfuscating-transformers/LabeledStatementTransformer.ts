@@ -5,6 +5,7 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TIdentifierObfuscatingReplacerFactory } from '../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory';
+import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 
 import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -16,8 +17,7 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
-import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
-import { NodeUtils } from '../../node/NodeUtils';
+import { NodeLexicalScopeUtils } from '../../node/NodeLexicalScopeUtils';
 
 /**
  * replaces:
@@ -86,38 +86,42 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (labeledStatementNode: ESTree.LabeledStatement, parentNode: ESTree.Node): ESTree.Node {
-        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopeOfNode(labeledStatementNode);
+        const lexicalScopeNode: TNodeWithLexicalScope | undefined = NodeLexicalScopeUtils.getLexicalScope(labeledStatementNode);
 
-        this.storeLabeledStatementName(labeledStatementNode, blockScopeNode);
-        this.replaceLabeledStatementName(labeledStatementNode, blockScopeNode);
+        if (!lexicalScopeNode) {
+            return labeledStatementNode;
+        }
+
+        this.storeLabeledStatementName(labeledStatementNode, lexicalScopeNode);
+        this.replaceLabeledStatementName(labeledStatementNode, lexicalScopeNode);
 
         return labeledStatementNode;
     }
 
     /**
      * @param {LabeledStatement} labeledStatementNode
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
     private storeLabeledStatementName (
         labeledStatementNode: ESTree.LabeledStatement,
-        blockScopeNode: TNodeWithBlockScope
+        lexicalScopeNode: TNodeWithLexicalScope
     ): void {
-        this.identifierObfuscatingReplacer.storeLocalName(labeledStatementNode.label.name, blockScopeNode);
+        this.identifierObfuscatingReplacer.storeLocalName(labeledStatementNode.label.name, lexicalScopeNode);
     }
 
     /**
      * @param {LabeledStatement} labeledStatementNode
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
     private replaceLabeledStatementName (
         labeledStatementNode: ESTree.LabeledStatement,
-        blockScopeNode: TNodeWithBlockScope
+        lexicalScopeNode: TNodeWithLexicalScope
     ): void {
         estraverse.replace(labeledStatementNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
                 if (parentNode && NodeGuards.isLabelIdentifierNode(node, parentNode)) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                        .replace(node.name, blockScopeNode);
+                        .replace(node.name, lexicalScopeNode);
 
                     node.name = newIdentifier.name;
                 }

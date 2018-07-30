@@ -1,7 +1,5 @@
 import { assert } from 'chai';
 
-import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationResult';
-
 import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 import { StringArrayEncoding } from '../../../../../src/enums/StringArrayEncoding';
 
@@ -21,16 +19,15 @@ describe('LiteralTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('match #1: should replace literal node value with value from string array', () => {
@@ -49,14 +46,13 @@ describe('LiteralTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t replace literal node value with value from string array', () => {
@@ -93,16 +89,15 @@ describe('LiteralTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/same-literal-values.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('match #1: should create only one item in string array for same literal node values', () => {
@@ -121,16 +116,15 @@ describe('LiteralTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         unicodeEscapeSequence: true
 
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should replace literal node value with unicode escape sequence', () => {
@@ -146,7 +140,8 @@ describe('LiteralTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -154,9 +149,7 @@ describe('LiteralTransformer', () => {
                         stringArrayThreshold: 1,
                         unicodeEscapeSequence: true
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('match #1: should replace literal node value with unicode escape sequence from string array', () => {
@@ -175,16 +168,15 @@ describe('LiteralTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/short-literal-value.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t replace short literal node value with value from string array', () => {
@@ -200,7 +192,8 @@ describe('LiteralTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -208,9 +201,7 @@ describe('LiteralTransformer', () => {
                         stringArrayEncoding: StringArrayEncoding.Base64,
                         stringArrayThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('match #1: should replace literal node value with value from string array encoded using base64', () => {
@@ -229,7 +220,8 @@ describe('LiteralTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -237,9 +229,7 @@ describe('LiteralTransformer', () => {
                         stringArrayEncoding: StringArrayEncoding.Rc4,
                         stringArrayThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should replace literal node value with value from string array encoded using rc4', () => {
@@ -260,21 +250,20 @@ describe('LiteralTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                     `${code}\n`.repeat(samples),
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: stringArrayThreshold
                     }
-                );
+                ).getObfuscatedCode();
 
-                const stringArrayMatchesLength: number = obfuscationResult
-                    .getObfuscatedCode()
+                const stringArrayMatchesLength: number = obfuscatedCode
                     .match(regExp1)!
                     .length;
-                const noStringArrayMatchesLength: number = obfuscationResult
-                    .getObfuscatedCode()
+                const noStringArrayMatchesLength: number = obfuscatedCode
                     .match(regExp2)!
                     .length;
 
@@ -298,7 +287,8 @@ describe('LiteralTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/string-array-calls-wrapper-name.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
@@ -306,9 +296,7 @@ describe('LiteralTransformer', () => {
                         stringArrayThreshold: 1,
                         identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('match #1: should keep identifier with string array calls wrapper name untouched after obfuscation', () => {
@@ -326,7 +314,8 @@ describe('LiteralTransformer', () => {
 
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option.js');
-                        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
@@ -334,9 +323,7 @@ describe('LiteralTransformer', () => {
                                 stringArrayThreshold: 1,
                                 reservedStrings: ['foo']
                             }
-                        );
-
-                        obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                        ).getObfuscatedCode();
                     });
 
                     it('match #1: should ignore reserved strings', () => {
@@ -356,7 +343,8 @@ describe('LiteralTransformer', () => {
 
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option.js');
-                        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
@@ -364,9 +352,7 @@ describe('LiteralTransformer', () => {
                                 stringArrayThreshold: 1,
                                 reservedStrings: ['foo', 'bar']
                             }
-                        );
-
-                        obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                        ).getObfuscatedCode();
                     });
 
                     it('match #1: should ignore reserved strings', () => {
@@ -388,7 +374,8 @@ describe('LiteralTransformer', () => {
 
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option.js');
-                        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
@@ -396,9 +383,7 @@ describe('LiteralTransformer', () => {
                                 stringArrayThreshold: 1,
                                 reservedStrings: ['ar$']
                             }
-                        );
-
-                        obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                        ).getObfuscatedCode();
                     });
 
                     it('match #1: should transform non-reserved strings', () => {
@@ -418,7 +403,8 @@ describe('LiteralTransformer', () => {
 
                     before(() => {
                         const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option.js');
-                        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
                             code,
                             {
                                 ...NO_ADDITIONAL_NODES_PRESET,
@@ -426,9 +412,7 @@ describe('LiteralTransformer', () => {
                                 stringArrayThreshold: 1,
                                 reservedStrings: ['^fo', '.ar']
                             }
-                        );
-
-                        obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                        ).getObfuscatedCode();
                     });
 
                     it('match #1: should ignore reserved strings', () => {
@@ -449,16 +433,15 @@ describe('LiteralTransformer', () => {
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             reservedStrings: ['foo'],
                             unicodeEscapeSequence: true
                         }
-                    );
-
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('match #1: should ignore reserved strings', () => {
@@ -479,16 +462,15 @@ describe('LiteralTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/boolean-value.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     stringArray: true,
                     stringArrayThreshold: 1
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('should transform literal node', () => {
@@ -503,16 +485,15 @@ describe('LiteralTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/number-value.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     stringArray: true,
                     stringArrayThreshold: 1
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('should transform literal node', () => {
@@ -527,16 +508,15 @@ describe('LiteralTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/regexp-literal.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     stringArray: true,
                     stringArrayThreshold: 1
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('should keep safe value of RegExp literal', () => {

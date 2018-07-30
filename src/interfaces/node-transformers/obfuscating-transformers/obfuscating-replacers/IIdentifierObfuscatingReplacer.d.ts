@@ -1,19 +1,19 @@
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockScope } from '../../../../types/node/TNodeWithBlockScope';
+import { TNodeWithLexicalScope } from '../../../../types/node/TNodeWithLexicalScope';
 
 import { IObfuscatingReplacer } from './IObfuscatingReplacer';
 
 export interface IIdentifierObfuscatingReplacer extends IObfuscatingReplacer <ESTree.Identifier> {
     /**
      * @param {string} nodeValue
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    storeGlobalName (nodeValue: string, blockScopeNode: TNodeWithBlockScope): void;
+    storeGlobalName (nodeValue: string, lexicalScopeNode: TNodeWithLexicalScope): void;
 
     /**
      * @param {string} nodeValue
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    storeLocalName (nodeValue: string, blockScopeNode: TNodeWithBlockScope): void;
+    storeLocalName (nodeValue: string, lexicalScopeNode: TNodeWithLexicalScope): void;
 }

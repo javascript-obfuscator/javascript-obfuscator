@@ -76,7 +76,7 @@
     "tslint-language-service": "0.9.9",
     "tslint-microsoft-contrib": "5.1.0",
     "tslint-webpack-plugin": "1.2.2",
-    "typescript": "2.9.2",
+    "typescript": "3.0.1",
     "webpack": "4.16.3",
     "webpack-cli": "3.1.0",
     "webpack-node-externals": "1.7.2"

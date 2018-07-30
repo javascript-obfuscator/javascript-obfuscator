@@ -1,6 +1,6 @@
 import { IInitializable } from '../IInitializable';
 
-export interface IObfuscatedCode extends IInitializable {
+export interface IObfuscatedCode extends IInitializable <[string, string]> {
     /**
      * @return {string}
      */

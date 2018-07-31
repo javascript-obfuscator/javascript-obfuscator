@@ -52,22 +52,20 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
     }
 
     /**
-     * @param {BlockStatement} blockStatementNode
+     * @param {Node} node
      * @returns {boolean}
      */
-    private static blockStatementHasProhibitedStatements (blockStatementNode: ESTree.BlockStatement): boolean {
-        return blockStatementNode.body.some((statement: ESTree.Statement) => {
-            const isBreakOrContinueStatement: boolean = NodeGuards.isBreakStatementNode(statement)
-                || NodeGuards.isContinueStatementNode(statement);
-            const isVariableDeclarationWithLetOrConstKind: boolean = NodeGuards.isVariableDeclarationNode(statement)
-                && (statement.kind === 'const' || statement.kind === 'let');
-            const isClassDeclaration: boolean = NodeGuards.isClassDeclarationNode(statement);
+    private static isProhibitedStatementNode (node: ESTree.Node): boolean {
+        const isBreakOrContinueStatement: boolean = NodeGuards.isBreakStatementNode(node)
+            || NodeGuards.isContinueStatementNode(node);
+        const isVariableDeclarationWithLetOrConstKind: boolean = NodeGuards.isVariableDeclarationNode(node)
+            && (node.kind === 'const' || node.kind === 'let');
+        const isClassDeclaration: boolean = NodeGuards.isClassDeclarationNode(node);
 
-            return NodeGuards.isFunctionDeclarationNode(statement)
-                || isBreakOrContinueStatement
-                || isVariableDeclarationWithLetOrConstKind
-                || isClassDeclaration;
-        });
+        return NodeGuards.isFunctionDeclarationNode(node)
+            || isBreakOrContinueStatement
+            || isVariableDeclarationWithLetOrConstKind
+            || isClassDeclaration;
     }
 
     /**
@@ -83,10 +81,7 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
                     return estraverse.VisitorOption.Skip;
                 }
 
-                if (
-                    NodeGuards.isBlockStatementNode(node)
-                    && BlockStatementControlFlowTransformer.blockStatementHasProhibitedStatements(node)
-                ) {
+                if (BlockStatementControlFlowTransformer.isProhibitedStatementNode(node)) {
                     canTransform = false;
                 }
             }

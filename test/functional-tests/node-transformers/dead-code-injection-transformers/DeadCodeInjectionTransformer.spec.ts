@@ -127,55 +127,109 @@ describe('DeadCodeInjectionTransformer', () => {
         });
 
         describe('Variant #4 - break or continue statement in block statement', () => {
-            const functionRegExp: RegExp = new RegExp(
-                `var *${variableMatch} *= *function *\\(\\) *\\{` +
-                    `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
-                `\\};`,
-                'g'
-            );
-            const loopRegExp: RegExp = new RegExp(
-                `for *\\(var *${variableMatch} *= *${hexMatch}; *${variableMatch} *< *${hexMatch}; *${variableMatch}\\+\\+\\) *\\{` +
-                    `(?:continue|break);` +
-                `\\}`,
-                'g'
-            );
-            const expectedFunctionMatchesLength: number = 4;
-            const expectedLoopMatchesLength: number = 2;
+            describe('Variant #1', () => {
+                const functionRegExp: RegExp = new RegExp(
+                    `var *${variableMatch} *= *function *\\(\\) *\\{` +
+                        `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
+                    `\\};`,
+                    'g'
+                );
+                const loopRegExp: RegExp = new RegExp(
+                    `for *\\(var *${variableMatch} *= *${hexMatch}; *${variableMatch} *< *${hexMatch}; *${variableMatch}\\+\\+\\) *\\{` +
+                        `(?:continue|break);` +
+                    `\\}`,
+                    'g'
+                );
+                const expectedFunctionMatchesLength: number = 4;
+                const expectedLoopMatchesLength: number = 2;
 
-            let functionMatchesLength: number = 0,
-                loopMatchesLength: number = 0;
+                let functionMatchesLength: number = 0,
+                    loopMatchesLength: number = 0;
 
-            before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/break-continue-statement.js');
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/break-continue-statement-1.js');
 
-                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        deadCodeInjection: true,
-                        deadCodeInjectionThreshold: 1,
-                        stringArray: true,
-                        stringArrayThreshold: 1
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            deadCodeInjection: true,
+                            deadCodeInjectionThreshold: 1,
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                    const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
+                    const loopMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(loopRegExp);
+
+                    if (functionMatches) {
+                        functionMatchesLength = functionMatches.length;
                     }
-                ).getObfuscatedCode();
-                const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
-                const loopMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(loopRegExp);
 
-                if (functionMatches) {
-                    functionMatchesLength = functionMatches.length;
-                }
+                    if (loopMatches) {
+                        loopMatchesLength = loopMatches.length;
+                    }
+                });
 
-                if (loopMatches) {
-                    loopMatchesLength = loopMatches.length;
-                }
+                it('match #1: shouldn\'t add dead code', () => {
+                    assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
+                });
+
+                it('match #2: shouldn\'t add dead code', () => {
+                    assert.equal(loopMatchesLength, expectedLoopMatchesLength);
+                });
             });
 
-            it('match #1: shouldn\'t add dead code', () => {
-                assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
-            });
+            describe('Variant #2', () => {
+                const functionRegExp: RegExp = new RegExp(
+                    `var *${variableMatch} *= *function *\\(\\) *\\{` +
+                        `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
+                    `\\};`,
+                    'g'
+                );
+                const loopRegExp: RegExp = new RegExp(
+                    `for *\\(var *${variableMatch} *= *${hexMatch}; *${variableMatch} *< *${hexMatch}; *${variableMatch}\\+\\+\\) *` +
+                        `(?:continue|break);`,
+                    'g'
+                );
+                const expectedFunctionMatchesLength: number = 4;
+                const expectedLoopMatchesLength: number = 2;
 
-            it('match #2: shouldn\'t add dead code', () => {
-                assert.equal(loopMatchesLength, expectedLoopMatchesLength);
+                let functionMatchesLength: number = 0,
+                    loopMatchesLength: number = 0;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/break-continue-statement-2.js');
+
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            deadCodeInjection: true,
+                            deadCodeInjectionThreshold: 1,
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                    const functionMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(functionRegExp);
+                    const loopMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(loopRegExp);
+
+                    if (functionMatches) {
+                        functionMatchesLength = functionMatches.length;
+                    }
+
+                    if (loopMatches) {
+                        loopMatchesLength = loopMatches.length;
+                    }
+                });
+
+                it('match #1: shouldn\'t add dead code', () => {
+                    assert.equal(functionMatchesLength, expectedFunctionMatchesLength);
+                });
+
+                it('match #2: shouldn\'t add dead code', () => {
+                    assert.equal(loopMatchesLength, expectedLoopMatchesLength);
+                });
             });
         });
 

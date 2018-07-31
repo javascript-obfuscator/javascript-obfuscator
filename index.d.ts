@@ -1,9 +1,9 @@
 import { TInputOptions } from './src/types/options/TInputOptions';
 
-import { IObfuscationResult } from './src/interfaces/IObfuscationResult';
+import { IObfuscatedCode } from './src/interfaces/source-code/IObfuscatedCode';
 
 export type ObfuscatorOptions = TInputOptions;
 
-export interface ObfuscationResult extends IObfuscationResult {}
+export interface ObfuscatedCode extends IObfuscatedCode {}
 
-export function obfuscate (sourceCode: string, inputOptions?: ObfuscatorOptions): ObfuscationResult;
+export function obfuscate (sourceCode: string, inputOptions?: ObfuscatorOptions): ObfuscatedCode;

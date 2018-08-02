@@ -1,0 +1,6 @@
+{
+  "reject": [
+    "@types/estree",
+    "ts-node"
+  ]
+}

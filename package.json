@@ -54,7 +54,7 @@
     "@types/mkdirp": "0.5.2",
     "@types/mocha": "5.2.5",
     "@types/multimatch": "2.1.2",
-    "@types/node": "10.5.4",
+    "@types/node": "10.5.5",
     "@types/rimraf": "2.0.2",
     "@types/sinon": "5.0.1",
     "@types/string-template": "1.0.2",

@@ -55,9 +55,26 @@ export class FunctionTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {Node} node
+     * @param {Node} parentNode
      * @returns {boolean}
      */
-    private static isProhibitedPropertyNode (node: ESTree.Node): node is ESTree.Property & {key: ESTree.Identifier} {
+    private static isProhibitedIdentifierOfPropertyNode (
+        node: ESTree.Node,
+        parentNode: ESTree.Node | null
+    ): node is ESTree.Identifier {
+        return NodeGuards.isIdentifierNode(node)
+            && !!parentNode
+            && NodeGuards.isPropertyNode(parentNode)
+            && parentNode.key === node;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    private static isProhibitedIdentifierOfShorthandPropertyNode (
+        node: ESTree.Node,
+    ): node is ESTree.Property & {key: ESTree.Identifier} {
         return NodeGuards.isPropertyNode(node)
             && node.shorthand
             && NodeGuards.isIdentifierNode(node.key);
@@ -109,9 +126,11 @@ export class FunctionTransformer extends AbstractNodeTransformer {
         functionNode.params
             .forEach((paramsNode: ESTree.Node) => {
                 estraverse.traverse(paramsNode, {
-                    enter: (node: ESTree.Node): estraverse.VisitorOption | void => {
-                        if (FunctionTransformer.isProhibitedPropertyNode(node)) {
-                            return estraverse.VisitorOption.Skip;
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null): estraverse.VisitorOption | void => {
+                        // Should check with identifier as first argument,
+                        // because prohibited identifier can be easily ignored
+                        if (FunctionTransformer.isProhibitedIdentifierOfPropertyNode(node, parentNode)) {
+                            return;
                         }
 
                         if (NodeGuards.isAssignmentPatternNode(node) && NodeGuards.isIdentifierNode(node.left)) {
@@ -150,10 +169,12 @@ export class FunctionTransformer extends AbstractNodeTransformer {
                 }
 
                 /**
-                 * Should to ignore all identifiers that related to shorthand properties
+                 * Should ignore all shorthand `key` identifiers of the `PropertyNode`
                  */
-                if (FunctionTransformer.isProhibitedPropertyNode(node)) {
+                if (FunctionTransformer.isProhibitedIdentifierOfShorthandPropertyNode(node)) {
                     ignoredIdentifierNamesSet.add(node.key.name);
+
+                    return;
                 }
 
                 if (

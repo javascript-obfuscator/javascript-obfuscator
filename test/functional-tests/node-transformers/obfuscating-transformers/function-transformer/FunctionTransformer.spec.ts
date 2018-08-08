@@ -143,6 +143,42 @@ describe('FunctionTransformer', () => {
                 assert.match(obfuscatedCode, returnRegExp2);
             });
         });
+
+        describe('Variant #4: shorthand property node', () => {
+            const functionObjectPatternParameterRegExp1: RegExp = /function _0x[a-f0-9]{4,6} *\({id}\) *{/;
+            const functionObjectPatternParameterRegExp2: RegExp = /function _0x[a-f0-9]{4,6} *\({id: *_0x[a-f0-9]{4,6}}\) *{/;
+            const consoleLogRegExp: RegExp = /console\['log']\(id\);/;
+            const returnRegExp: RegExp = /return id *\+ *_0x[a-f0-9]{4,6};/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter-4.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('match #1: should transform function parameter object pattern rest identifier', () => {
+                assert.match(obfuscatedCode, functionObjectPatternParameterRegExp1);
+            });
+
+            it('match #2: should transform function parameter object pattern rest identifier', () => {
+                assert.match(obfuscatedCode, functionObjectPatternParameterRegExp2);
+            });
+
+            it('match #3: should transform identifier in `console.log` of outer function', () => {
+                assert.match(obfuscatedCode, consoleLogRegExp);
+            });
+
+            it('match #4: should transform identifier in `ReturnStatement` of inner function', () => {
+                assert.match(obfuscatedCode, returnRegExp);
+            });
+        });
     });
 
     describe('assignment pattern as parameter', () => {

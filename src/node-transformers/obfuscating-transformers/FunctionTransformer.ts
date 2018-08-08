@@ -160,7 +160,14 @@ export class FunctionTransformer extends AbstractNodeTransformer {
         const replaceVisitor: estraverse.Visitor = {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void | estraverse.VisitorOption => {
                 /**
-                 * Should to process nested functions in different traverse loop to avoid wrong code generation
+                 * Should skip function node itself
+                 */
+                if (node === functionNode) {
+                    return;
+                }
+
+                /**
+                 * Should process nested functions in different traverse loop to avoid wrong code generation
                  */
                 if (NodeGuards.isFunctionNode(node)) {
                     this.replaceFunctionParams(node, lexicalScopeNode, new Set(ignoredIdentifierNamesSet));
@@ -194,8 +201,6 @@ export class FunctionTransformer extends AbstractNodeTransformer {
             }
         };
 
-        functionNode.params.forEach((paramsNode: ESTree.Node) => estraverse.replace(paramsNode, replaceVisitor));
-
-        estraverse.replace(functionNode.body, replaceVisitor);
+        estraverse.replace(functionNode, replaceVisitor)
     }
 }

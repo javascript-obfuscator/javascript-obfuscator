@@ -46,59 +46,107 @@ describe('FunctionTransformer', () => {
     });
 
     describe('function id name obfuscation', () => {
-        const functionExpressionParamIdentifierRegExp: RegExp = /\(function *\((_0x[a-f0-9]{4,6})\) *\{/;
-        const functionParamIdentifierRegExp: RegExp = /function *(_0x[a-f0-9]{4,6}) *\(\) *\{/;
-        const functionObjectIdentifierRegExp: RegExp = /return new (_0x[a-f0-9]{4,6}) *\(\);/;
+        describe('Variant #1', () => {
+            const functionExpressionParamIdentifierRegExp: RegExp = /\(function *\((_0x[a-f0-9]{4,6})\) *\{/;
+            const functionParamIdentifierRegExp: RegExp = /function *(_0x[a-f0-9]{4,6}) *\(\) *\{/;
+            const functionObjectIdentifierRegExp: RegExp = /return new (_0x[a-f0-9]{4,6}) *\(\);/;
 
-        let obfuscatedCode: string,
-            functionExpressionParamIdentifierName: string,
-            functionParamIdentifierName: string,
-            functionObjectIdentifierName: string;
+            let obfuscatedCode: string,
+                functionExpressionParamIdentifierName: string,
+                functionParamIdentifierName: string,
+                functionObjectIdentifierName: string;
 
-        before(() => {
-            const code: string = readFileAsString(__dirname + '/fixtures/function-id-name.js');
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/function-id-name-1.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
 
-            const functionExpressionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(functionExpressionParamIdentifierRegExp);
-            const functionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(functionParamIdentifierRegExp);
-            const functionObjectIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(functionObjectIdentifierRegExp);
+                const functionExpressionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                    .match(functionExpressionParamIdentifierRegExp);
+                const functionParamIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                    .match(functionParamIdentifierRegExp);
+                const functionObjectIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                    .match(functionObjectIdentifierRegExp);
 
-            functionParamIdentifierName = (<RegExpMatchArray>functionParamIdentifierMatch)[1];
-            functionExpressionParamIdentifierName = (<RegExpMatchArray>functionExpressionParamIdentifierMatch)[1];
-            functionObjectIdentifierName = (<RegExpMatchArray>functionObjectIdentifierMatch)[1];
+                functionParamIdentifierName = (<RegExpMatchArray>functionParamIdentifierMatch)[1];
+                functionExpressionParamIdentifierName = (<RegExpMatchArray>functionExpressionParamIdentifierMatch)[1];
+                functionObjectIdentifierName = (<RegExpMatchArray>functionObjectIdentifierMatch)[1];
+            });
+
+            it('should correctly transform function expression parameter identifier', () => {
+                assert.match(obfuscatedCode, functionExpressionParamIdentifierRegExp);
+            });
+
+            it('should correctly transform function parameter identifier', () => {
+                assert.match(obfuscatedCode, functionParamIdentifierRegExp);
+            });
+
+            it('should correctly transform function object parameter identifier', () => {
+                assert.match(obfuscatedCode, functionObjectIdentifierRegExp);
+            });
+
+            it('should generate same names for function parameter and function object identifiers', () => {
+                assert.equal(functionParamIdentifierName, functionObjectIdentifierName);
+            });
+
+            it('should generate same names for function parameter identifiers', () => {
+                assert.equal(functionExpressionParamIdentifierName, functionParamIdentifierName);
+            });
+
+            it('should generate same names for function expression parameter and function object identifiers', () => {
+                assert.equal(functionExpressionParamIdentifierName, functionObjectIdentifierName);
+            });
         });
 
-        it('should correctly transform function expression parameter identifier', () => {
-            assert.match(obfuscatedCode, functionExpressionParamIdentifierRegExp);
-        });
+        describe('Variant #2', () => {
+            const functionIdentifiersRegExp: RegExp = /function *(_0x[a-f0-9]{4,6}) *\((_0x[a-f0-9]{4,6})\) *\{/;
+            const functionObjectIdentifierRegExp: RegExp = /return new (_0x[a-f0-9]{4,6}) *\(\);/;
 
-        it('should correctly transform function parameter identifier', () => {
-            assert.match(obfuscatedCode, functionParamIdentifierRegExp);
-        });
+            let obfuscatedCode: string,
+                functionIdentifierName: string,
+                functionParamIdentifierName: string,
+                functionObjectIdentifierName: string;
 
-        it('should correctly transform function object parameter identifier', () => {
-            assert.match(obfuscatedCode, functionObjectIdentifierRegExp);
-        });
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/function-id-name-2.js');
 
-        it('should generate same names for function parameter and function object identifiers', () => {
-            assert.equal(functionParamIdentifierName, functionObjectIdentifierName);
-        });
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
 
-        it('should generate same names for function parameter identifiers', () => {
-            assert.equal(functionExpressionParamIdentifierName, functionParamIdentifierName);
-        });
+                const functionIdentifiersMatch: RegExpMatchArray|null = obfuscatedCode
+                    .match(functionIdentifiersRegExp);
+                const functionObjectIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                    .match(functionObjectIdentifierRegExp);
 
-        it('should generate same names for function expression parameter and function object identifiers', () => {
-            assert.equal(functionExpressionParamIdentifierName, functionObjectIdentifierName);
+                functionIdentifierName = (<RegExpMatchArray>functionIdentifiersMatch)[1];
+                functionParamIdentifierName = (<RegExpMatchArray>functionIdentifiersMatch)[2];
+                functionObjectIdentifierName = (<RegExpMatchArray>functionObjectIdentifierMatch)[1];
+            });
+
+            it('should correctly transform function identifiers', () => {
+                assert.match(obfuscatedCode, functionIdentifiersRegExp);
+            });
+
+            it('should correctly transform function object parameter identifier', () => {
+                assert.match(obfuscatedCode, functionObjectIdentifierRegExp);
+            });
+
+            it('should generate same names for function parameter and function object identifiers', () => {
+                assert.equal(functionIdentifierName, functionObjectIdentifierName);
+            });
+
+            it('should generate same names for function id and parameter identifiers', () => {
+                assert.equal(functionIdentifierName, functionParamIdentifierName);
+            });
         });
     });
 
@@ -356,27 +404,27 @@ describe('FunctionTransformer', () => {
                 assert.match(obfuscatedCode, functionBodyRegExp);
             });
 
-            it('equal #1: shouldn\'t keep same names for variable declaration identifier and function parameters identifiers', () => {
-                assert.notEqual(variableDeclarationIdentifierName, functionParameterIdentifierName);
+            it('equal #1: should keep same names for variable declaration identifier and function parameters identifiers', () => {
+                assert.equal(variableDeclarationIdentifierName, functionParameterIdentifierName);
             });
 
             it('equal #2: shouldn\'t keep same names for variable declaration identifier and function parameters identifiers', () => {
                 assert.notEqual(variableDeclarationIdentifierName, functionDefaultParameterIdentifierName1);
             });
 
-            it('equal #3: shouldn\'t keep same names for variable declaration identifier and function parameters identifiers', () => {
-                assert.notEqual(variableDeclarationIdentifierName, functionDefaultParameterIdentifierName2);
+            it('equal #3: should keep same names for variable declaration identifier and function parameters identifiers', () => {
+                assert.equal(variableDeclarationIdentifierName, functionDefaultParameterIdentifierName2);
             });
 
-            it('should keep same names for identifier in first function parameter and default value identifier of second function parameter', () => {
+            it('equal #4: should keep same names for identifier in first function parameter and default value identifier of second function parameter', () => {
                 assert.equal(functionParameterIdentifierName, functionDefaultParameterIdentifierName2);
             });
 
-            it('equal #1: should keep same names for identifiers in function params and function body', () => {
+            it('equal #5: should keep same names for identifiers in function params and function body', () => {
                 assert.equal(functionParameterIdentifierName, functionBodyIdentifierName1);
             });
 
-            it('equal #2: should keep same names for identifiers in function params and function body', () => {
+            it('equal #6: should keep same names for identifiers in function params and function body', () => {
                 assert.equal(functionDefaultParameterIdentifierName1, functionBodyIdentifierName2);
             });
         });

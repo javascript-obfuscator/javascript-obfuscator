@@ -123,28 +123,27 @@ export class FunctionTransformer extends AbstractNodeTransformer {
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
     private storeFunctionParams (functionNode: ESTree.Function, lexicalScopeNode: TNodeWithLexicalScope): void {
-        functionNode.params
-            .forEach((paramsNode: ESTree.Node) => {
-                estraverse.traverse(paramsNode, {
-                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null): estraverse.VisitorOption | void => {
-                        // Should check with identifier as first argument,
-                        // because prohibited identifier can be easily ignored
-                        if (FunctionTransformer.isProhibitedIdentifierOfPropertyNode(node, parentNode)) {
-                            return;
-                        }
+        const visitor: estraverse.Visitor = {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): estraverse.VisitorOption | void => {
+                // Should check with identifier as first argument,
+                // because prohibited identifier can be easily ignored
+                if (FunctionTransformer.isProhibitedIdentifierOfPropertyNode(node, parentNode)) {
+                    return;
+                }
 
-                        if (NodeGuards.isAssignmentPatternNode(node) && NodeGuards.isIdentifierNode(node.left)) {
-                            this.identifierObfuscatingReplacer.storeLocalName(node.left.name, lexicalScopeNode);
+                if (NodeGuards.isAssignmentPatternNode(node) && NodeGuards.isIdentifierNode(node.left)) {
+                    this.identifierObfuscatingReplacer.storeLocalName(node.left.name, lexicalScopeNode);
 
-                            return estraverse.VisitorOption.Skip;
-                        }
+                    return estraverse.VisitorOption.Skip;
+                }
 
-                        if (NodeGuards.isIdentifierNode(node)) {
-                            this.identifierObfuscatingReplacer.storeLocalName(node.name, lexicalScopeNode);
-                        }
-                    }
-                });
-            });
+                if (NodeGuards.isIdentifierNode(node)) {
+                    this.identifierObfuscatingReplacer.storeLocalName(node.name, lexicalScopeNode);
+                }
+            }
+        };
+
+        functionNode.params.forEach((paramsNode: ESTree.Node) => estraverse.traverse(paramsNode, visitor));
     }
 
     /**
@@ -157,19 +156,12 @@ export class FunctionTransformer extends AbstractNodeTransformer {
         lexicalScopeNode: TNodeWithLexicalScope,
         ignoredIdentifierNamesSet: Set <string> = new Set()
     ): void {
-        const replaceVisitor: estraverse.Visitor = {
+        const visitor: estraverse.Visitor = {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void | estraverse.VisitorOption => {
-                /**
-                 * Should skip function node itself
-                 */
-                if (node === functionNode) {
-                    return;
-                }
-
                 /**
                  * Should process nested functions in different traverse loop to avoid wrong code generation
                  */
-                if (NodeGuards.isFunctionNode(node)) {
+                if (NodeGuards.isFunctionNode(node) && node !== functionNode) {
                     this.replaceFunctionParams(node, lexicalScopeNode, new Set(ignoredIdentifierNamesSet));
 
                     return estraverse.VisitorOption.Skip;
@@ -187,6 +179,7 @@ export class FunctionTransformer extends AbstractNodeTransformer {
                 if (
                     parentNode
                     && NodeGuards.isReplaceableIdentifierNode(node, parentNode)
+                    && !NodeMetadata.isRenamedIdentifier(node)
                     && !ignoredIdentifierNamesSet.has(node.name)
                 ) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
@@ -201,6 +194,6 @@ export class FunctionTransformer extends AbstractNodeTransformer {
             }
         };
 
-        estraverse.replace(functionNode, replaceVisitor)
+        estraverse.replace(functionNode, visitor)
     }
 }

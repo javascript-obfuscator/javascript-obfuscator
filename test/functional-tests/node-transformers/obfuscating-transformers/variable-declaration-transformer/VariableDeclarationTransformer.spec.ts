@@ -162,13 +162,13 @@ describe('VariableDeclarationTransformer', () => {
     describe(`Variant #6: variable calls before variable declaration when function param has the same name as variables name`, () => {
         const functionParamIdentifierRegExp: RegExp = /function *_0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\,(_0x[a-f0-9]{4,6})\) *\{/;
         const innerFunctionParamIdentifierRegExp: RegExp = /function _0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\) *\{/;
-        const constructorIdentifierRegExp: RegExp = /console\['log'\]\((_0x[a-f0-9]{4,6})\)/;
+        const consoleLogIdentifierRegExp: RegExp = /console\['log'\]\((_0x[a-f0-9]{4,6})\)/;
         const objectIdentifierRegExp: RegExp = /return\{'t':(_0x[a-f0-9]{4,6})\}/;
         const variableDeclarationIdentifierRegExp: RegExp = /var *(_0x[a-f0-9]{4,6});/;
 
         let outerFunctionParamIdentifierName: string|null,
             innerFunctionParamIdentifierName: string|null,
-            constructorIdentifierName: string|null,
+            consoleLogIdentifierName: string|null,
             objectIdentifierName: string|null,
             variableDeclarationIdentifierName: string|null;
 
@@ -184,29 +184,29 @@ describe('VariableDeclarationTransformer', () => {
 
             outerFunctionParamIdentifierName = getRegExpMatch(obfuscatedCode, functionParamIdentifierRegExp);
             innerFunctionParamIdentifierName = getRegExpMatch(obfuscatedCode, innerFunctionParamIdentifierRegExp);
-            constructorIdentifierName = getRegExpMatch(obfuscatedCode, constructorIdentifierRegExp);
+            consoleLogIdentifierName = getRegExpMatch(obfuscatedCode, consoleLogIdentifierRegExp);
             objectIdentifierName = getRegExpMatch(obfuscatedCode, objectIdentifierRegExp);
             variableDeclarationIdentifierName = getRegExpMatch(obfuscatedCode, variableDeclarationIdentifierRegExp);
         });
 
-        it('match #1: should\'t name variables inside inner function with names from outer function params', () => {
-            assert.notEqual(outerFunctionParamIdentifierName, constructorIdentifierName);
+        it('equal #1: should generate same names for identifiers inside inner function and outer function params', () => {
+            assert.equal(outerFunctionParamIdentifierName, consoleLogIdentifierName);
         });
 
-        it('match #2: should\'t name variables inside inner function with names from outer function params', () => {
-            assert.notEqual(outerFunctionParamIdentifierName, innerFunctionParamIdentifierName);
+        it('equal #2: should generate same names for identifiers inside inner function and inner function params', () => {
+            assert.equal(outerFunctionParamIdentifierName, innerFunctionParamIdentifierName);
         });
 
-        it('match #1: should correct transform variables inside outer function body', () => {
+        it('equal #1: should correct transform variables inside outer function body', () => {
             assert.equal(outerFunctionParamIdentifierName, objectIdentifierName);
         });
 
-        it('match #2: should correct transform variables inside outer function body', () => {
+        it('equal #2: should correct transform variables inside outer function body', () => {
             assert.equal(outerFunctionParamIdentifierName, variableDeclarationIdentifierName);
         });
 
         it('should correct transform variables inside inner function body', () => {
-            assert.equal(innerFunctionParamIdentifierName, constructorIdentifierName);
+            assert.equal(innerFunctionParamIdentifierName, consoleLogIdentifierName);
         });
 
         it('should keep equal names after transformation for variables with same names', () => {
@@ -217,13 +217,13 @@ describe('VariableDeclarationTransformer', () => {
     describe(`Variant #7: variable calls before variable declaration when catch clause param has the same name as variables name`, () => {
         const catchClauseParamIdentifierRegExp: RegExp = /catch *\((_0x[a-f0-9]{4,6})\) *\{/;
         const innerFunctionParamIdentifierRegExp: RegExp = /function _0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\) *\{/;
-        const constructorIdentifierRegExp: RegExp = /console\['log'\]\((_0x[a-f0-9]{4,6})\)/;
+        const consoleLogIdentifierRegExp: RegExp = /console\['log'\]\((_0x[a-f0-9]{4,6})\)/;
         const objectIdentifierRegExp: RegExp = /return\{'t':(_0x[a-f0-9]{4,6})\}/;
         const variableDeclarationIdentifierRegExp: RegExp = /var *(_0x[a-f0-9]{4,6});/;
 
         let catchClauseParamIdentifierName: string|null,
             innerFunctionParamIdentifierName: string|null,
-            constructorIdentifierName: string|null,
+            consoleLogIdentifierName: string|null,
             objectIdentifierName: string|null,
             variableDeclarationIdentifierName: string|null;
 
@@ -239,17 +239,17 @@ describe('VariableDeclarationTransformer', () => {
 
             catchClauseParamIdentifierName = getRegExpMatch(obfuscatedCode, catchClauseParamIdentifierRegExp);
             innerFunctionParamIdentifierName = getRegExpMatch(obfuscatedCode, innerFunctionParamIdentifierRegExp);
-            constructorIdentifierName = getRegExpMatch(obfuscatedCode, constructorIdentifierRegExp);
+            consoleLogIdentifierName = getRegExpMatch(obfuscatedCode, consoleLogIdentifierRegExp);
             objectIdentifierName = getRegExpMatch(obfuscatedCode, objectIdentifierRegExp);
             variableDeclarationIdentifierName = getRegExpMatch(obfuscatedCode, variableDeclarationIdentifierRegExp);
         });
 
-        it('match #1: should\'t name variables inside inner function with names from catch clause param', () => {
-            assert.notEqual(catchClauseParamIdentifierName, constructorIdentifierName);
+        it('match #1: should generate same names for identifiers inside inner function and catch clause param', () => {
+            assert.equal(catchClauseParamIdentifierName, consoleLogIdentifierName);
         });
 
-        it('match #2: should\'t name variables inside inner function with names from catch clause param', () => {
-            assert.notEqual(catchClauseParamIdentifierName, innerFunctionParamIdentifierName);
+        it('match #2: should generate same names for identifiers inside inner function and catch clause param', () => {
+            assert.equal(catchClauseParamIdentifierName, innerFunctionParamIdentifierName);
         });
 
         it('equal #1: should correct transform variables inside catch clause body', () => {
@@ -261,7 +261,7 @@ describe('VariableDeclarationTransformer', () => {
         });
 
         it('should correct transform variables inside inner function body', () => {
-            assert.equal(innerFunctionParamIdentifierName, constructorIdentifierName);
+            assert.equal(innerFunctionParamIdentifierName, consoleLogIdentifierName);
         });
 
         it('should keep equal names after transformation for variables with same names', () => {

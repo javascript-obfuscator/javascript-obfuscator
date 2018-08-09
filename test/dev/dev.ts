@@ -8,16 +8,18 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
         `
         (function(foo){
             function foo () {
-            
+        
             }
-  
+        
             return new foo();
         })();
+
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
-            transformObjectKeys: true
+            transformObjectKeys: true,
+            seed: 1
         }
     ).getObfuscatedCode();
 

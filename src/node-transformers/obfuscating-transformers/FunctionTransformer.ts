@@ -125,7 +125,7 @@ export class FunctionTransformer extends AbstractNodeTransformer {
     private storeFunctionParams (functionNode: ESTree.Function, lexicalScopeNode: TNodeWithLexicalScope): void {
         const visitor: estraverse.Visitor = {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): estraverse.VisitorOption | void => {
-                // Should check with identifier as first argument,
+                // should check with identifier as first argument,
                 // because prohibited identifier can be easily ignored
                 if (FunctionTransformer.isProhibitedIdentifierOfPropertyNode(node, parentNode)) {
                     return;
@@ -143,7 +143,9 @@ export class FunctionTransformer extends AbstractNodeTransformer {
             }
         };
 
-        functionNode.params.forEach((paramsNode: ESTree.Node) => estraverse.traverse(paramsNode, visitor));
+        functionNode.params.forEach((paramsNode: ESTree.Node) => {
+            estraverse.traverse(paramsNode, visitor);
+        });
     }
 
     /**
@@ -159,7 +161,7 @@ export class FunctionTransformer extends AbstractNodeTransformer {
         const visitor: estraverse.Visitor = {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void | estraverse.VisitorOption => {
                 /**
-                 * Should process nested functions in different traverse loop to avoid wrong code generation
+                 * should process nested functions in different traverse loop to avoid wrong code generation
                  */
                 if (NodeGuards.isFunctionNode(node) && node !== functionNode) {
                     this.replaceFunctionParams(node, lexicalScopeNode, new Set(ignoredIdentifierNamesSet));
@@ -168,7 +170,7 @@ export class FunctionTransformer extends AbstractNodeTransformer {
                 }
 
                 /**
-                 * Should ignore all shorthand `key` identifiers of the `PropertyNode`
+                 * should ignore all shorthand `key` identifiers of the `PropertyNode`
                  */
                 if (FunctionTransformer.isProhibitedIdentifierOfShorthandPropertyNode(node)) {
                     ignoredIdentifierNamesSet.add(node.key.name);
@@ -194,6 +196,6 @@ export class FunctionTransformer extends AbstractNodeTransformer {
             }
         };
 
-        estraverse.replace(functionNode, visitor)
+        estraverse.replace(functionNode, visitor);
     }
 }

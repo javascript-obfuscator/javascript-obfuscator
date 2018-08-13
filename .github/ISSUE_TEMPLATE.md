@@ -21,7 +21,8 @@
 
 ## Your Environment
 <!--- Include as many relevant details about the environment you experienced the bug in -->
-* Version used:
+* Obfuscator version used:
+* Node version used:
 
 # Stack trace
 <!--- Include stack trace -->

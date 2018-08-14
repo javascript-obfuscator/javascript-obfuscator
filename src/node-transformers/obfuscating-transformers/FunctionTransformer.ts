@@ -19,6 +19,7 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeLexicalScopeUtils } from '../../node/NodeLexicalScopeUtils';
 import { NodeMetadata } from '../../node/NodeMetadata';
+import { NodeType } from '../../enums/node/NodeType';
 
 /**
  * replaces:
@@ -119,6 +120,27 @@ export class FunctionTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @param {Identifier} node
+     * @param {Node} parentNode
+     * @returns {boolean}
+     */
+    private isGlobalFunctionDeclarationIdentifier (node: ESTree.Identifier, parentNode: ESTree.Node): boolean {
+        if (!NodeGuards.isFunctionDeclarationNode(parentNode) || parentNode.id !== node) {
+            return false
+        }
+
+        const lexicalScopeNode: TNodeWithLexicalScope | undefined = NodeLexicalScopeUtils.getLexicalScopes(parentNode)[1];
+
+        if (!lexicalScopeNode) {
+            return false;
+        }
+
+        const isGlobalDeclaration: boolean = lexicalScopeNode.type === NodeType.Program;
+
+        return !this.options.renameGlobals && isGlobalDeclaration;
+    }
+
+    /**
      * @param {Function} functionNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
@@ -184,6 +206,11 @@ export class FunctionTransformer extends AbstractNodeTransformer {
                     && !NodeMetadata.isRenamedIdentifier(node)
                     && !ignoredIdentifierNamesSet.has(node.name)
                 ) {
+                    // should ignore identifiers of global function declarations
+                    if (this.isGlobalFunctionDeclarationIdentifier(node, parentNode)) {
+                        return;
+                    }
+
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
                         .replace(node.name, lexicalScopeNode);
                     const newIdentifierName: string = newIdentifier.name;

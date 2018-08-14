@@ -140,12 +140,116 @@ describe('FunctionTransformer', () => {
                 assert.match(obfuscatedCode, functionObjectIdentifierRegExp);
             });
 
-            it('should generate same names for function parameter and function object identifiers', () => {
+            it('should generate same names for function id and function object identifiers', () => {
                 assert.equal(functionIdentifierName, functionObjectIdentifierName);
             });
 
             it('should generate same names for function id and parameter identifiers', () => {
                 assert.equal(functionIdentifierName, functionParamIdentifierName);
+            });
+        });
+
+        describe('Variant #3: global function declaration identifier', () => {
+            describe('Variant #1: `renameGlobals` option is disabled', () => {
+                const functionIdentifiersRegExp: RegExp = /function *(foo) *\((_0x[a-f0-9]{4,6})\) *\{/;
+                const functionObjectIdentifierRegExp: RegExp = /new (foo) *\(\);/;
+
+                let obfuscatedCode: string,
+                    functionIdentifierName: string,
+                    functionParamIdentifierName: string,
+                    functionObjectIdentifierName: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/function-id-name-3.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameGlobals: false
+                        }
+                    ).getObfuscatedCode();
+
+                    const functionIdentifiersMatch: RegExpMatchArray|null = obfuscatedCode
+                        .match(functionIdentifiersRegExp);
+                    const functionObjectIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                        .match(functionObjectIdentifierRegExp);
+
+                    functionIdentifierName = (<RegExpMatchArray>functionIdentifiersMatch)[1];
+                    functionParamIdentifierName = (<RegExpMatchArray>functionIdentifiersMatch)[2];
+                    functionObjectIdentifierName = (<RegExpMatchArray>functionObjectIdentifierMatch)[1];
+                });
+
+                it('should correctly transform function identifiers', () => {
+                    assert.match(obfuscatedCode, functionIdentifiersRegExp);
+                });
+
+                it('should correctly transform function object parameter identifier', () => {
+                    assert.match(obfuscatedCode, functionObjectIdentifierRegExp);
+                });
+
+                it('should generate same names for function id and function object identifiers', () => {
+                    assert.equal(functionIdentifierName, functionObjectIdentifierName);
+                });
+
+                it('should generate different names for function parameter and function object identifiers', () => {
+                    assert.notEqual(functionParamIdentifierName, functionObjectIdentifierName);
+                });
+
+                it('should generate different names for function id and parameter identifiers', () => {
+                    assert.notEqual(functionIdentifierName, functionParamIdentifierName);
+                });
+            });
+
+            describe('Variant #2: `renameGlobals` option is enabled', () => {
+                const functionIdentifiersRegExp: RegExp = /function *(_0x[a-f0-9]{4,6}) *\((_0x[a-f0-9]{4,6})\) *\{/;
+                const functionObjectIdentifierRegExp: RegExp = /new (_0x[a-f0-9]{4,6}) *\(\);/;
+
+                let obfuscatedCode: string,
+                    functionIdentifierName: string,
+                    functionParamIdentifierName: string,
+                    functionObjectIdentifierName: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/function-id-name-3.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            renameGlobals: true
+                        }
+                    ).getObfuscatedCode();
+
+                    const functionIdentifiersMatch: RegExpMatchArray|null = obfuscatedCode
+                        .match(functionIdentifiersRegExp);
+                    const functionObjectIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                        .match(functionObjectIdentifierRegExp);
+
+                    functionIdentifierName = (<RegExpMatchArray>functionIdentifiersMatch)[1];
+                    functionParamIdentifierName = (<RegExpMatchArray>functionIdentifiersMatch)[2];
+                    functionObjectIdentifierName = (<RegExpMatchArray>functionObjectIdentifierMatch)[1];
+                });
+
+                it('should correctly transform function identifiers', () => {
+                    assert.match(obfuscatedCode, functionIdentifiersRegExp);
+                });
+
+                it('should correctly transform function object parameter identifier', () => {
+                    assert.match(obfuscatedCode, functionObjectIdentifierRegExp);
+                });
+
+                it('should generate same names for function id and function object identifiers', () => {
+                    assert.equal(functionIdentifierName, functionObjectIdentifierName);
+                });
+
+                it('should generate same names for function parameter and function object identifiers', () => {
+                    assert.equal(functionParamIdentifierName, functionObjectIdentifierName);
+                });
+
+                it('should generate same names for function id and parameter identifiers', () => {
+                    assert.equal(functionIdentifierName, functionParamIdentifierName);
+                });
             });
         });
     });

@@ -313,7 +313,7 @@ describe('LiteralTransformer', () => {
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option.js');
+                        const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option-1.js');
 
                         obfuscatedCode = JavaScriptObfuscator.obfuscate(
                             code,
@@ -342,7 +342,7 @@ describe('LiteralTransformer', () => {
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option.js');
+                        const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option-1.js');
 
                         obfuscatedCode = JavaScriptObfuscator.obfuscate(
                             code,
@@ -373,7 +373,7 @@ describe('LiteralTransformer', () => {
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option.js');
+                        const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option-1.js');
 
                         obfuscatedCode = JavaScriptObfuscator.obfuscate(
                             code,
@@ -402,7 +402,7 @@ describe('LiteralTransformer', () => {
                     let obfuscatedCode: string;
 
                     before(() => {
-                        const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option.js');
+                        const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option-1.js');
 
                         obfuscatedCode = JavaScriptObfuscator.obfuscate(
                             code,
@@ -432,7 +432,7 @@ describe('LiteralTransformer', () => {
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option.js');
+                    const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option-1.js');
 
                     obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
@@ -450,6 +450,28 @@ describe('LiteralTransformer', () => {
 
                 it('match #2: should transform non-reserved strings', () => {
                     assert.match(obfuscatedCode, stringLiteralRegExp2);
+                });
+            });
+
+            describe('Variant #4: correct escape of special characters', () => {
+                const stringLiteralRegExp: RegExp = /var baz *= *'Cannot\\x20find\\x20module\\x20\\x27' *\+ *foo *\+ *'\\x27';/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option-2.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            reservedStrings: ['a']
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('match #1: should ignore reserved strings', () => {
+                    assert.match(obfuscatedCode, stringLiteralRegExp);
                 });
             });
         });

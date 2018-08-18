@@ -134,7 +134,7 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
      */
     public replace (nodeValue: string): ESTree.Node {
         if (this.isReservedString(nodeValue)) {
-            return NodeFactory.literalNode(nodeValue);
+            return this.replaceWithReservedLiteralNode(nodeValue);
         }
 
         const useStringArray: boolean = this.canUseStringArray(nodeValue);
@@ -224,6 +224,16 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     private replaceWithLiteralNode (value: string): ESTree.Node {
         return NodeFactory.literalNode(
             this.escapeSequenceEncoder.encode(value, this.options.unicodeEscapeSequence)
+        );
+    }
+
+    /**
+     * @param {string} value
+     * @returns {Node}
+     */
+    private replaceWithReservedLiteralNode (value: string): ESTree.Node {
+        return NodeFactory.literalNode(
+            this.escapeSequenceEncoder.encode(value, false)
         );
     }
 

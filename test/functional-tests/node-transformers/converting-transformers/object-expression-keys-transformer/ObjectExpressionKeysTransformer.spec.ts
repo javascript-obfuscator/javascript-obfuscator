@@ -519,5 +519,31 @@ describe('ObjectExpressionKeysTransformer', () => {
                 });
             });
         });
+
+        describe('Variant #4: assignment expression and member expression', () => {
+            const match: string = `` +
+                `var ${variableMatch}; *` +
+                `\\(${variableMatch} *= *{'foo': *'bar'}\\)\\['baz'] *= *${variableMatch}\\['foo'];` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/assignment-expression-and-member-expression.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn\'t transform object keys', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
     });
 });

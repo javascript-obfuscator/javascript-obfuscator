@@ -126,7 +126,7 @@ export class FunctionTransformer extends AbstractNodeTransformer {
      */
     private isGlobalFunctionDeclarationIdentifier (node: ESTree.Identifier, parentNode: ESTree.Node): boolean {
         if (!NodeGuards.isFunctionDeclarationNode(parentNode) || parentNode.id !== node) {
-            return false
+            return false;
         }
 
         const lexicalScopeNode: TNodeWithLexicalScope | undefined = NodeLexicalScopeUtils.getLexicalScopes(parentNode)[1];

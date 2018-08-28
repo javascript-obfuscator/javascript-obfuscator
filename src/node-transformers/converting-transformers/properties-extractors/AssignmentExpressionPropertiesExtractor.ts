@@ -30,10 +30,16 @@ export class AssignmentExpressionPropertiesExtractor extends AbstractPropertiesE
         objectExpressionNode: ESTree.ObjectExpression,
         hostNode: ESTree.AssignmentExpression
     ): ESTree.Node {
+        const hostParentNode: ESTree.Node | undefined = hostNode.parentNode;
         const leftNode: ESTree.MemberExpression | ESTree.Pattern = hostNode.left;
 
         // left node shouldn't be as Pattern node
         if (AbstractPropertiesExtractor.isProhibitedPattern(leftNode)) {
+            return objectExpressionNode;
+        }
+
+        // left node shouldn't be as Pattern node
+        if (hostParentNode && AbstractPropertiesExtractor.isProhibitedHostParent(hostParentNode)) {
             return objectExpressionNode;
         }
 

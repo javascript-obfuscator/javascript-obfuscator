@@ -74,6 +74,14 @@ export abstract class AbstractPropertiesExtractor implements IPropertiesExtracto
      * @param {Node} node
      * @returns {propertyValueNode is Pattern}
      */
+    protected static isProhibitedHostParent (node: ESTree.Node): node is ESTree.Pattern {
+        return NodeGuards.isMemberExpressionNode(node);
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {propertyValueNode is Pattern}
+     */
     protected static isProhibitedPattern (node: ESTree.Node): node is ESTree.Pattern {
         return NodeGuards.isObjectPatternNode(node)
             || NodeGuards.isArrayPatternNode(node)

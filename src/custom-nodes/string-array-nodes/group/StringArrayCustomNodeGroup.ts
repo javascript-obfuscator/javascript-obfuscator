@@ -81,7 +81,7 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
         });
         // stringArrayCallsWrapper append
         this.appendCustomNodeIfExist(CustomNode.StringArrayCallsWrapper, (customNode: ICustomNode) => {
-            NodeAppender.insertAtIndex(nodeWithStatements, customNode.getNode(), 2);
+            NodeAppender.insertAtIndex(nodeWithStatements, customNode.getNode(), 1);
         });
     }
 

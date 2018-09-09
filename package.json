@@ -38,7 +38,8 @@
     "reflect-metadata": "0.1.12",
     "source-map-support": "0.5.8",
     "string-template": "1.0.0",
-    "tslib": "1.9.3"
+    "tslib": "1.9.3",
+    "yarn": "^1.9.4"
   },
   "devDependencies": {
     "@babel/cli": "7.0.0-rc.1",

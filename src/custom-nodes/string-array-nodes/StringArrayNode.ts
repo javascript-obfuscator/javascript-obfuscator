@@ -17,6 +17,7 @@ import { StringArrayTemplate } from '../../templates/string-array-nodes/string-a
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeUtils } from '../../node/NodeUtils';
 import { StringArrayStorage } from '../../storages/string-array/StringArrayStorage';
+import { SelfDefendStringArrayTemplate } from '../../templates/string-array-nodes/string-array-node/selfdefendstringarray';
 
 @injectable()
 export class StringArrayNode extends AbstractCustomNode {
@@ -87,9 +88,20 @@ export class StringArrayNode extends AbstractCustomNode {
      * @returns {string}
      */
     protected getTemplate (): string {
+        let selfDefendingCode: string = '';
+        if (this.options.selfDefending) {
+            selfDefendingCode = format(SelfDefendStringArrayTemplate(
+                this.randomGenerator,
+                this.stringArrayStorage.hash()
+            ), {
+                stringArrayName: this.stringArrayName
+            });
+        }
+
         return format(StringArrayTemplate(), {
             stringArrayName: this.stringArrayName,
-            stringArray: this.stringArrayStorage.toString()
+            stringArray: this.stringArrayStorage.toString(),
+            selfDefendingCode: selfDefendingCode
         });
     }
 }

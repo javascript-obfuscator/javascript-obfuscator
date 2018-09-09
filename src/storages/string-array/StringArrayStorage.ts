@@ -68,6 +68,18 @@ export class StringArrayStorage extends ArrayStorage <string> {
     public rotateArray (rotationValue: number): void {
         this.storage = this.arrayUtils.rotate(this.storage, rotationValue);
     }
+    
+    public hash (): number {
+        const toHash: string = this.storage.join(",");
+        let hash: number = 0;
+        for (let i: number = 0; i < toHash.length; i++) { // hash function from here: https://stackoverflow.com/questions/6122571/simple-non-secure-hash-function-for-javascript
+            const c: number = toHash.charCodeAt(i);
+            hash = ((hash << 5) - hash) + c;
+            hash = hash & hash; // convert to 32bit integer
+        }
+        
+        return hash;
+    }
 
     /**
      * @returns {string}

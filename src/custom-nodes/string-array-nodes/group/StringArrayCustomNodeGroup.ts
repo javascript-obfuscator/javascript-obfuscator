@@ -5,7 +5,6 @@ import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCusto
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TNodeWithStatements } from '../../../types/node/TNodeWithStatements';
 import { TStringArrayStorage } from '../../../types/storages/TStringArrayStorage';
-
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
@@ -76,15 +75,13 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
         this.appendCustomNodeIfExist(CustomNode.StringArrayNode, (customNode: ICustomNode) => {
             NodeAppender.prepend(nodeWithStatements, customNode.getNode());
         });
-
-        // stringArrayCallsWrapper append
-        this.appendCustomNodeIfExist(CustomNode.StringArrayCallsWrapper, (customNode: ICustomNode) => {
-            NodeAppender.insertAtIndex(nodeWithStatements, customNode.getNode(), 1);
-        });
-
         // stringArrayRotateFunctionNode append
         this.appendCustomNodeIfExist(CustomNode.StringArrayRotateFunctionNode, (customNode: ICustomNode) => {
-            NodeAppender.insertAtIndex(nodeWithStatements, customNode.getNode(), 1);
+            NodeAppender.insertAtIndex(nodeWithStatements, customNode.getNode(), 3);
+        });
+        // stringArrayCallsWrapper append
+        this.appendCustomNodeIfExist(CustomNode.StringArrayCallsWrapper, (customNode: ICustomNode) => {
+            NodeAppender.insertAtIndex(nodeWithStatements, customNode.getNode(), 2);
         });
     }
 

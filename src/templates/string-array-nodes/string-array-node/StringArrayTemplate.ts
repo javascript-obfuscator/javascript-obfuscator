@@ -3,6 +3,10 @@
  */
 export function StringArrayTemplate (): string {
     return `
-        var {stringArrayName} = [{stringArray}];
+        function {stringArrayName} () {
+            return [{stringArray}];
+        }
+        {selfDefendingCode}
+        {stringArrayName} = {stringArrayName}();
     `;
 }

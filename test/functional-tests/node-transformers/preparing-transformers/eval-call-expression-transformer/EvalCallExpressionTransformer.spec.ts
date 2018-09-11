@@ -92,7 +92,7 @@ describe('EvalCallExpressionTransformer', () => {
     });
 
     describe('Variant #4: string array calls wrapper call', () => {
-        const stringArrayRegExp: RegExp = /var *_0x([a-f0-9]){4} *= *\['log', *'bar'];/;
+        const stringArrayRegExp: RegExp = /^function _0x([a-f0-9]){4}\(\){return\['log','bar'\];}/;
         const stringArrayCallsWrapperRegExp: RegExp = /eval *\('console\[_0x([a-f0-9]){4,6}\(\\'0x0\\'\)]\(_0x([a-f0-9]){4,6}\(\\'0x1\\'\)\);'\);/;
 
         let obfuscatedCode: string;

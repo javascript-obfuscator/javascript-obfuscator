@@ -251,7 +251,7 @@ describe('JavaScriptObfuscator', () => {
             });
 
             describe('Variant #4: with `stringArray`, `renameGlobals` and `identifiersPrefix` options', () => {
-                const stringArrayRegExp: RegExp = /^var foo_0x(\w){4} *= *\['abc'\];/;
+                const stringArrayRegExp: RegExp = /^function foo_0x(\w){4}\(\){return\['abc'\];}/;
                 const stringArrayCallRegExp: RegExp = /var *foo_0x(\w){4,6} *= *foo_0x(\w){4}\('0x0'\);$/;
 
                 let obfuscatedCode: string;
@@ -343,7 +343,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('latin literal variable value', () => {
-            const stringArrayLatinRegExp: RegExp = /^var _0x(\w){4} *= *\['abc'\];/;
+            const stringArrayLatinRegExp: RegExp = /^function _0x(\w){4}\(\){return\['abc'\];}/;
             const stringArrayCallRegExp: RegExp = /var *test *= *_0x(\w){4}\('0x0'\);$/;
 
             let obfuscatedCode: string;
@@ -371,7 +371,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('cyrillic literal variable value', () => {
-            const stringArrayCyrillicRegExp: RegExp = /^var _0x(\w){4} *= *\['абц'\];/;
+            const stringArrayCyrillicRegExp: RegExp = /^function _0x(\w){4}\(\){return\['абц'\];}/;
             const stringArrayCallRegExp: RegExp = /var *test *= *_0x(\w){4}\('0x0'\);$/;
 
             let obfuscatedCode: string;
@@ -496,7 +496,7 @@ describe('JavaScriptObfuscator', () => {
                 const code1: string = readFileAsString(__dirname + '/fixtures/simple-input-cyrillic.js');
                 const code2: string = readFileAsString(__dirname + '/fixtures/simple-input-2.js');
 
-                const regExp: RegExp = /var (_0x(\w){4}) *= *\['.*'\];/;
+                const regExp: RegExp = /^function _0x(\w){4}\(\){return\['.*'\];}/;
 
                 let match1: string,
                     match2: string;

@@ -104,7 +104,7 @@ describe('ConditionalCommentObfuscatingGuard', () => {
             const ignoredFunctionExpression2RegExp: RegExp = /var *baz *= *function *\(a, *b, *c\) *{/;
 
             const obfuscatedFunctionCallRegExp: RegExp = /_0x([a-f0-9]){4,6}\( *\);/g;
-            const expectedObfuscatedFunctionCallsLength: number = 3;
+            const expectedObfuscatedFunctionCallsLength: number = 4;
 
             const ignoredFunctionCall1RegExp: RegExp = /bar\( *\);/;
             const ignoredFunctionCall2RegExp: RegExp = /baz\( *\);/;
@@ -161,7 +161,7 @@ describe('ConditionalCommentObfuscatingGuard', () => {
                 assert.equal(obfuscatedFunctionExpressionMatchesLength, expectedObfuscatedFunctionExpressionLength);
             });
 
-            it('should obfuscate 3 function expression calls', () => {
+            it('should obfuscate 4 function expression calls', () => {
                 assert.equal(obfuscatedFunctionCallMatchesLength, expectedObfuscatedFunctionCallsLength);
             });
         });

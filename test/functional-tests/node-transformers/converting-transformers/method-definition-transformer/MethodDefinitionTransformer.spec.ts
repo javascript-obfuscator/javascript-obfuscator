@@ -29,7 +29,7 @@ describe('MethodDefinitionTransformer', () => {
     });
 
     describe('Variant #2: `stringArray` option is enabled', () => {
-        const stringArrayRegExp: RegExp = /var *_0x([a-f0-9]){4} *= *\['bar'\];/;
+        const stringArrayRegExp: RegExp = /^function _0x([a-f0-9]){4}\(\){return\['bar'\];}/;
         const stringArrayCallRegExp: RegExp = /\[_0x([a-f0-9]){4}\('0x0'\)\]\(\)\{\}/;
 
         let obfuscatedCode: string;

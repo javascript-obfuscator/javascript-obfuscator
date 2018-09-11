@@ -107,10 +107,9 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
         let rotateValue: string = `0x${NumberUtils.toHex(this.stringArrayRotateValue)}`;
         if (this.options.selfDefending) {
             const hash: number = this.stringArrayStorage.hash();
-            const random1:number = this.randomGenerator.getRandomInteger(0,1000000);
-            const random2:number = this.randomGenerator.getRandomInteger(0,1000000);
-            const val: number = (((hash^random1) << 5) - hash^random2) | 0;
-         
+            const random1: number = this.randomGenerator.getRandomInteger(0, 1000000);
+            const random2: number = this.randomGenerator.getRandomInteger(0, 1000000);
+            const val: number = (((hash ^ random1) << 5) - hash ^ random2) | 0;
             const diff: number = this.stringArrayRotateValue - val;
 
             rotateValue = `((((${this.stringHashName}^${random1}) << 5) - ${this.stringHashName}^${random2})|0)`;

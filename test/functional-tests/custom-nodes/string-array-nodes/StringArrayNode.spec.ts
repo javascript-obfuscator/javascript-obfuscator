@@ -7,7 +7,7 @@ import { readFileAsString } from '../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade';
 
 describe('StringArrayNode', () => {
-    const regExp: RegExp = /^var _0x([a-f0-9]){4} *= *\[/;
+    const regExp: RegExp = /^function _0x([a-f0-9]){4}\(\){return\[/;
 
     describe('`stringArray` option is set', () => {
         let obfuscatedCode: string;

@@ -75,10 +75,12 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
         this.appendCustomNodeIfExist(CustomNode.StringArrayNode, (customNode: ICustomNode) => {
             NodeAppender.prepend(nodeWithStatements, customNode.getNode());
         });
+
         // stringArrayRotateFunctionNode append
         this.appendCustomNodeIfExist(CustomNode.StringArrayRotateFunctionNode, (customNode: ICustomNode) => {
             NodeAppender.insertAtIndex(nodeWithStatements, customNode.getNode(), 3);
         });
+
         // stringArrayCallsWrapper append
         this.appendCustomNodeIfExist(CustomNode.StringArrayCallsWrapper, (customNode: ICustomNode) => {
             NodeAppender.insertAtIndex(nodeWithStatements, customNode.getNode(), 1);
@@ -109,9 +111,9 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
             stringArrayRotateValue = 0;
         }
 
-        stringArrayNode.initialize(this.stringArrayStorage, stringArrayName, stringArrayRotateValue, stringHashName);
+        stringArrayNode.initialize(this.stringArrayStorage, stringArrayName, stringHashName, stringArrayRotateValue);
         stringArrayCallsWrapper.initialize(stringArrayName, stringArrayCallsWrapperName);
-        stringArrayRotateFunctionNode.initialize(this.stringArrayStorage, stringArrayName, stringArrayRotateValue, stringHashName);
+        stringArrayRotateFunctionNode.initialize(this.stringArrayStorage, stringArrayName, stringHashName, stringArrayRotateValue);
 
         this.customNodes.set(CustomNode.StringArrayNode, stringArrayNode);
         this.customNodes.set(CustomNode.StringArrayCallsWrapper, stringArrayCallsWrapper);

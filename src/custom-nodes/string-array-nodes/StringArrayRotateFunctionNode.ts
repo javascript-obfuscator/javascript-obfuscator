@@ -79,13 +79,13 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     public initialize (
         stringArrayStorage: TStringArrayStorage,
         stringArrayName: string,
-        stringArrayRotateValue: number,
-        stringHashName: string
+        stringHashName: string,
+        stringArrayRotateValue: number
     ): void {
         this.stringArrayStorage = stringArrayStorage;
         this.stringArrayName = stringArrayName;
-        this.stringArrayRotateValue = stringArrayRotateValue;
         this.stringHashName = stringHashName;
+        this.stringArrayRotateValue = stringArrayRotateValue;
     }
 
     /**
@@ -109,8 +109,8 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
             const hash: number = this.stringArrayStorage.hash();
             const random1: number = this.randomGenerator.getRandomInteger(0, 1000000);
             const random2: number = this.randomGenerator.getRandomInteger(0, 1000000);
-            const val: number = (((hash ^ random1) << 5) - hash ^ random2) | 0;
-            const diff: number = this.stringArrayRotateValue - val;
+            const calculated: number = (((hash ^ random1) << 5) - hash ^ random2) | 0;
+            const diff: number = this.stringArrayRotateValue - calculated;
 
             rotateValue = `((((${this.stringHashName}^${random1}) << 5) - ${this.stringHashName}^${random2})|0)`;
             rotateValue += `${(Math.sign(diff) === -1 ? "-" : "+")}0x${NumberUtils.toHex(Math.abs(diff))}`;
@@ -119,7 +119,6 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
                 timesName,
                 whileFunctionName
             });
-
         } else {
             code = `${whileFunctionName}(++${timesName})`;
         }

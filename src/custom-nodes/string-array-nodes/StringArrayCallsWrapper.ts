@@ -21,7 +21,6 @@ import { AtobTemplate } from '../../templates/AtobTemplate';
 import { GlobalVariableNoEvalTemplate } from '../../templates/GlobalVariableNoEvalTemplate';
 import { Rc4Template } from '../../templates/Rc4Template';
 import { SelfDefendingTemplate } from '../../templates/string-array-nodes/string-array-calls-wrapper/SelfDefendingTemplate';
-
 import { StringArrayBase64DecodeNodeTemplate } from '../../templates/string-array-nodes/string-array-calls-wrapper/StringArrayBase64DecodeNodeTemplate';
 import { StringArrayCallsWrapperTemplate } from '../../templates/string-array-nodes/string-array-calls-wrapper/StringArrayCallsWrapperTemplate';
 import { StringArrayRc4DecodeNodeTemplate } from '../../templates/string-array-nodes/string-array-calls-wrapper/StringArrayRC4DecodeNodeTemplate';

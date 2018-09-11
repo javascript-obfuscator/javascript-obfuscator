@@ -17,7 +17,7 @@ import { StringArrayTemplate } from '../../templates/string-array-nodes/string-a
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeUtils } from '../../node/NodeUtils';
 import { StringArrayStorage } from '../../storages/string-array/StringArrayStorage';
-import { SelfDefendStringArrayTemplate } from '../../templates/string-array-nodes/string-array-node/selfdefendstringarray';
+import { SelfDefendStringArrayTemplate } from '../../templates/string-array-nodes/string-array-node/SelfDefendStringArray';
 
 @injectable()
 export class StringArrayNode extends AbstractCustomNode {
@@ -67,13 +67,13 @@ export class StringArrayNode extends AbstractCustomNode {
     public initialize (
         stringArrayStorage: TStringArrayStorage,
         stringArrayName: string,
+        stringHashName: string,
         stringArrayRotateValue: number,
-        stringHashName: string
     ): void {
         this.stringArrayStorage = stringArrayStorage;
         this.stringArrayName = stringArrayName;
-        this.stringArrayRotateValue = stringArrayRotateValue;
         this.stringHashName = stringHashName;
+        this.stringArrayRotateValue = stringArrayRotateValue;
     }
 
     /**

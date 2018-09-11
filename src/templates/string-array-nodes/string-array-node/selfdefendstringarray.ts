@@ -19,14 +19,14 @@ export function SelfDefendStringArrayTemplate (
 
     return `
     var {stringHashName} = (function(${toHashVar}) {
-    for (var ${iterVar} = 0,${hashVar} = 0;${hashVar} ${hash ? `!` : `=`}== ${hash};) {
-        for (${iterVar} = 0,${hashVar} = 0;${iterVar} < ${toHashVar}.length; ${iterVar}++) {
-            var ${charVar} = ${toHashVar}['charCodeAt'](${iterVar});
-            ${hashVar} = ((${hashVar}<<5)-${hashVar})+${charVar};
-            ${hashVar} = ${hashVar} & ${hashVar};
+        for (var ${iterVar} = 0,${hashVar} = 0;${hashVar} ${hash ? `!` : `=`}== ${hash};) {
+            for (${iterVar} = 0,${hashVar} = 0;${iterVar} < ${toHashVar}.length; ${iterVar}++) {
+                var ${charVar} = ${toHashVar}['charCodeAt'](${iterVar});
+                ${hashVar} = ((${hashVar}<<5)-${hashVar})+${charVar};
+                ${hashVar} = ${hashVar} & ${hashVar};
+            }
         }
-    }
-    return ${hashVar};
+        return ${hashVar};
     })(
         (function(${strVar}) {
             ${strVar} = ${strVar}['replace'](new RegExp('[\\\\s\\'"]','g'),'');

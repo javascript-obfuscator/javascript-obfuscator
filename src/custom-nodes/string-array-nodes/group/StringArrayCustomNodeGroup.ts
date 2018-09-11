@@ -91,6 +91,7 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
         if (!this.options.stringArray) {
             return;
         }
+        const stringHashName: string = this.randomGenerator.getRandomString(6);
 
         const stringArrayNode: ICustomNode = this.customNodeFactory(CustomNode.StringArrayNode);
         const stringArrayCallsWrapper: ICustomNode = this.customNodeFactory(CustomNode.StringArrayCallsWrapper);
@@ -108,9 +109,9 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
             stringArrayRotateValue = 0;
         }
 
-        stringArrayNode.initialize(this.stringArrayStorage, stringArrayName, stringArrayRotateValue);
+        stringArrayNode.initialize(this.stringArrayStorage, stringArrayName, stringArrayRotateValue, stringHashName);
         stringArrayCallsWrapper.initialize(stringArrayName, stringArrayCallsWrapperName);
-        stringArrayRotateFunctionNode.initialize(stringArrayName, stringArrayRotateValue);
+        stringArrayRotateFunctionNode.initialize(this.stringArrayStorage, stringArrayName, stringArrayRotateValue, stringHashName);
 
         this.customNodes.set(CustomNode.StringArrayNode, stringArrayNode);
         this.customNodes.set(CustomNode.StringArrayCallsWrapper, stringArrayCallsWrapper);

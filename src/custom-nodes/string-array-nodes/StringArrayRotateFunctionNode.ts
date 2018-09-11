@@ -5,6 +5,7 @@ import format from 'string-template';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../types/node/TStatement';
+import { TStringArrayStorage } from '../../types/storages/TStringArrayStorage';
 
 import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -25,6 +26,12 @@ import { NumberUtils } from '../../utils/NumberUtils';
 @injectable()
 export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     /**
+     * @type {TStringArrayStorage}
+     */
+    @initializable()
+    private stringArrayStorage!: TStringArrayStorage;
+
+    /**
      * @type {IEscapeSequenceEncoder}
      */
     private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
@@ -34,6 +41,12 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
      */
     @initializable()
     private stringArrayName!: string;
+
+    /**
+     * @type {string}
+     */
+    @initializable()
+    private stringHashName!: string;
 
     /**
      * @param {number}
@@ -64,11 +77,32 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
      * @param {number} stringArrayRotateValue
      */
     public initialize (
+        stringArrayStorage: TStringArrayStorage,
         stringArrayName: string,
-        stringArrayRotateValue: number
+        stringArrayRotateValue: number,
+        stringHashName: string
     ): void {
+        this.stringArrayStorage = stringArrayStorage;
         this.stringArrayName = stringArrayName;
         this.stringArrayRotateValue = stringArrayRotateValue;
+        this.stringHashName = stringHashName;
+    }
+
+    /**
+     * @param {number} number
+     * @param {number} length
+     * 
+     * note: This might also belong in the string utils class.
+     */
+    protected generateNumberShortener (number: number, length: number): number[] {
+        const randoms: number[] = [];
+        while (Math.abs(number).toString().length > length) {
+            const random: number = Math.floor(Math.random() * Math.pow(10, Math.abs(number).toString().length - 1));
+            number = number % random;
+            randoms.push(random);
+        }
+
+        return randoms;
     }
 
     /**
@@ -87,11 +121,23 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
 
         let code: string = '';
 
+        let rotateValue: string = `0x${NumberUtils.toHex(this.stringArrayRotateValue)}`;
         if (this.options.selfDefending) {
+            let hash: number = this.stringArrayStorage.hash();
+            const shortener: number[] = this.generateNumberShortener(hash, 3);
+            rotateValue = this.stringHashName;
+            for (const value of shortener) {
+                rotateValue += `%0x${NumberUtils.toHex(value)}`;
+                hash = hash % value;
+            }
+            const diff: number = this.stringArrayRotateValue - hash;
+            rotateValue += `${(Math.sign(diff) === -1 ? "-" : "+")}0x${NumberUtils.toHex(Math.abs(diff))}`;
+            
             code = format(SelfDefendingTemplate(this.escapeSequenceEncoder), {
                 timesName,
                 whileFunctionName
             });
+
         } else {
             code = `${whileFunctionName}(++${timesName})`;
         }
@@ -101,7 +147,7 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
                 code,
                 timesName,
                 stringArrayName: this.stringArrayName,
-                stringArrayRotateValue: NumberUtils.toHex(this.stringArrayRotateValue),
+                stringArrayRotateValue: rotateValue,
                 whileFunctionName
             }),
             {

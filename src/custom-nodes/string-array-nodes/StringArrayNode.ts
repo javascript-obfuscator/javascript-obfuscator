@@ -34,6 +34,12 @@ export class StringArrayNode extends AbstractCustomNode {
     private stringArrayName!: string;
 
     /**
+     * @type {string}
+     */
+    @initializable()
+    private stringHashName!: string;
+
+    /**
      * @type {number}
      */
     @initializable()
@@ -61,11 +67,13 @@ export class StringArrayNode extends AbstractCustomNode {
     public initialize (
         stringArrayStorage: TStringArrayStorage,
         stringArrayName: string,
-        stringArrayRotateValue: number
+        stringArrayRotateValue: number,
+        stringHashName: string
     ): void {
         this.stringArrayStorage = stringArrayStorage;
         this.stringArrayName = stringArrayName;
         this.stringArrayRotateValue = stringArrayRotateValue;
+        this.stringHashName = stringHashName;
     }
 
     /**
@@ -92,9 +100,10 @@ export class StringArrayNode extends AbstractCustomNode {
         if (this.options.selfDefending) {
             selfDefendingCode = format(SelfDefendStringArrayTemplate(
                 this.randomGenerator,
-                this.stringArrayStorage.hash()
+                this.options.rotateStringArray ? 0 : this.stringArrayStorage.hash()
             ), {
-                stringArrayName: this.stringArrayName
+                stringArrayName: this.stringArrayName,
+                stringHashName: this.stringHashName
             });
         }
 

@@ -4,6 +4,7 @@
 export function StringArrayRotateFunctionTemplate (): string {
     return `
         (function (array, {timesName}) {
+            
             var {whileFunctionName} = function (times) {
                 while (--times) {
                     array['push'](array['shift']());
@@ -11,6 +12,6 @@ export function StringArrayRotateFunctionTemplate (): string {
             };
             
             {code}
-        })({stringArrayName}, 0x{stringArrayRotateValue});
+        })({stringArrayName}, {stringArrayRotateValue});
     `;
 }

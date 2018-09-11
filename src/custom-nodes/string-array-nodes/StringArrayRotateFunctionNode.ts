@@ -89,23 +89,6 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     }
 
     /**
-     * @param {number} number
-     * @param {number} length
-     * 
-     * note: This might also belong in the string utils class.
-     */
-    protected generateNumberShortener (number: number, length: number): number[] {
-        const randoms: number[] = [];
-        while (Math.abs(number).toString().length > length) {
-            const random: number = Math.floor(Math.random() * Math.pow(10, Math.abs(number).toString().length - 1));
-            number = number % random;
-            randoms.push(random);
-        }
-
-        return randoms;
-    }
-
-    /**
      * @returns {TStatement[]}
      */
     protected getNodeStructure (): TStatement[] {
@@ -123,16 +106,16 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
 
         let rotateValue: string = `0x${NumberUtils.toHex(this.stringArrayRotateValue)}`;
         if (this.options.selfDefending) {
-            let hash: number = this.stringArrayStorage.hash();
-            const shortener: number[] = this.generateNumberShortener(hash, 5);
-            rotateValue = this.stringHashName;
-            for (const value of shortener) {
-                rotateValue += `%0x${NumberUtils.toHex(value)}`;
-                hash = hash % value;
-            }
-            const diff: number = this.stringArrayRotateValue - hash;
+            const hash: number = this.stringArrayStorage.hash();
+            const random1:number = this.randomGenerator.getRandomInteger(0,1000000);
+            const random2:number = this.randomGenerator.getRandomInteger(0,1000000);
+            const val: number = (((hash^random1) << 5) - hash^random2) | 0;
+         
+            const diff: number = this.stringArrayRotateValue - val;
+
+            rotateValue = `((((${this.stringHashName}^${random1}) << 5) - ${this.stringHashName}^${random2})|0)`;
             rotateValue += `${(Math.sign(diff) === -1 ? "-" : "+")}0x${NumberUtils.toHex(Math.abs(diff))}`;
-            
+
             code = format(SelfDefendingTemplate(this.escapeSequenceEncoder), {
                 timesName,
                 whileFunctionName

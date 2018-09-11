@@ -124,7 +124,7 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
         let rotateValue: string = `0x${NumberUtils.toHex(this.stringArrayRotateValue)}`;
         if (this.options.selfDefending) {
             let hash: number = this.stringArrayStorage.hash();
-            const shortener: number[] = this.generateNumberShortener(hash, 3);
+            const shortener: number[] = this.generateNumberShortener(hash, 5);
             rotateValue = this.stringHashName;
             for (const value of shortener) {
                 rotateValue += `%0x${NumberUtils.toHex(value)}`;

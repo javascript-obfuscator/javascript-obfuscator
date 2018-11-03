@@ -77,7 +77,7 @@ export class DictionaryNamesGenerator extends AbstractIdentifierNamesGenerator {
 
     public generate (): string {
         if (this.identifiers.length === 0) {
-            throw new Error("identifiersDictionary is empty");
+            throw new Error("identifiersDictionary is empty. Add more words to identifiersDictionary");
         }
         let itResult: IteratorResult<string> = this.it.next();
         if (itResult.done) {
@@ -87,7 +87,7 @@ export class DictionaryNamesGenerator extends AbstractIdentifierNamesGenerator {
             itResult = this.it.next();
         }
         if (itResult.done) {
-            throw new Error("Too many identifiers, try add more words to identifiersDictionary");
+            throw new Error("Too many identifiers in JS code, add more words to identifiersDictionary");
         }
         const identifierName: string = itResult.value;
 

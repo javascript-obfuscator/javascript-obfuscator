@@ -77,6 +77,7 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
             {
                 ...NO_ADDITIONAL_NODES_PRESET,
                 identifierNamesGenerator: this.options.identifierNamesGenerator,
+                identifiersDictionary: this.options.identifiersDictionary,
                 seed: this.options.seed,
                 unicodeEscapeSequence: true
             }

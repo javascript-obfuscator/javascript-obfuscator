@@ -251,13 +251,18 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             .option(
                 '--identifier-names-generator <string>',
                 'Sets identifier names generator. ' +
-                'Values: hexadecimal, mangled. ' +
+                'Values: hexadecimal, mangled, dictionary. ' +
                 'Default: hexadecimal',
                 IdentifierNamesGeneratorSanitizer
             )
             .option(
                 '--identifiers-prefix <string>',
                 'Sets prefix for all global identifiers.'
+            )
+            .option(
+                '--identifiers-dictionary <list> (comma separated, without whitespaces)',
+                'Identifiers dictionary (comma separated)',
+                ArraySanitizer
             )
             .option(
                 '--log <boolean>', 'Enables logging of the information to the console',

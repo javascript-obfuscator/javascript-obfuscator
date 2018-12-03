@@ -11,7 +11,12 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { ArrayStorage } from '../ArrayStorage';
 
 @injectable()
-export class StringArrayStorage extends ArrayStorage<string> {
+export class StringArrayStorage extends ArrayStorage <string> {
+    /**
+     * @type {number}
+     */
+    public hashEntropy: number = 0;
+
     /**
      * @type {number}
      */
@@ -28,18 +33,12 @@ export class StringArrayStorage extends ArrayStorage<string> {
     private readonly identifierNamesGenerator: IIdentifierNamesGenerator;
 
     /**
-     * @type {number}
-     */
-    public hashEntropy: number = 0;
-
-    /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IArrayUtils} arrayUtils
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    
-    constructor(
+    constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
         identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,

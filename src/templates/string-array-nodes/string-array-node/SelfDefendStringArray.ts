@@ -16,16 +16,18 @@ export function SelfDefendStringArrayTemplate (
     const toHashVar: string = randomGenerator.getRandomString(identifierLength);
     const charVar: string = randomGenerator.getRandomString(identifierLength);
     const iterVar: string = randomGenerator.getRandomString(identifierLength);
+    const iterVar2: string = randomGenerator.getRandomString(identifierLength);
     const strVar: string = randomGenerator.getRandomString(identifierLength);
-    const hashFuncName: string = randomGenerator.getRandomString(identifierLength)
-    const funcToString: string = randomGenerator.getRandomString(identifierLength)
+    const hashFuncName: string = randomGenerator.getRandomString(identifierLength);
+    const funcToString: string = randomGenerator.getRandomString(identifierLength);
+
     return `
     var {stringHashName} = (function() {
         function ${hashFuncName}(${toHashVar}) {
-            for (var ${iterVar} = 0,${hashVar} = 0;${hashVar} ${hash ? `!` : `=`}== ${hash};) {
+            for (var ${iterVar} = 0,${hashVar} = 0,${iterVar2} = 5;${hashVar} ${hash ? `!` : `=`}== ${hash}; ${iterVar2}++) {
                 for (${hashVar} = ${toHashVar}["split"]("\\n").length-1,${iterVar} = 0, ${toHashVar}=${funcToString}();${iterVar} < ${toHashVar}.length; ${iterVar}++) {
                     var ${charVar} = ${toHashVar}['charCodeAt'](${iterVar}) ^ ${hashEntropy};
-                    ${hashVar} = ((${hashVar}<<5)-${hashVar})+${charVar};
+                    ${hashVar} = ((${hashVar}<<${iterVar2})-${hashVar})+${charVar};
                     ${hashVar} = ${hashVar} & ${hashVar};
                 }
             }

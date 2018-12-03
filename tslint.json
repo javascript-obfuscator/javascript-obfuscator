@@ -73,7 +73,7 @@
     "no-any": false,
     "no-arg": true,
     "no-banned-terms": false,
-    "no-bitwise": true,
+    "no-bitwise": false,
     "no-conditional-assignment": true,
     "no-consecutive-blank-lines": true,
     "no-console": [

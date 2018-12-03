@@ -15,12 +15,12 @@ export class StringArrayStorage extends ArrayStorage <string> {
     /**
      * @type {number}
      */
-    public hashEntropy: number = 0;
+    private static readonly stringArrayNameLength: number = 7;
 
     /**
      * @type {number}
      */
-    private static readonly stringArrayNameLength: number = 7;
+    public hashEntropy: number = 0;
 
     /**
      * @type {IArrayUtils}

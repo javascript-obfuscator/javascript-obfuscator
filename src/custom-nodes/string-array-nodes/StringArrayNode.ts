@@ -100,7 +100,8 @@ export class StringArrayNode extends AbstractCustomNode {
         if (this.options.selfDefending) {
             selfDefendingCode = format(SelfDefendStringArrayTemplate(
                 this.randomGenerator,
-                this.options.rotateStringArray ? 0 : this.stringArrayStorage.hash()
+                this.options.rotateStringArray ? 0 : this.stringArrayStorage.hash(),
+                this.stringArrayStorage.hashEntropy
             ), {
                 stringArrayName: this.stringArrayName,
                 stringHashName: this.stringHashName

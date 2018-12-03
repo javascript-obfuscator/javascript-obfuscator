@@ -11,7 +11,7 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { ArrayStorage } from '../ArrayStorage';
 
 @injectable()
-export class StringArrayStorage extends ArrayStorage <string> {
+export class StringArrayStorage extends ArrayStorage<string> {
     /**
      * @type {number}
      */
@@ -28,14 +28,20 @@ export class StringArrayStorage extends ArrayStorage <string> {
     private readonly identifierNamesGenerator: IIdentifierNamesGenerator;
 
     /**
+     * @type {number}
+     */
+    public hashEntropy: number = 0;
+
+    /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IArrayUtils} arrayUtils
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    constructor (
+    
+    constructor(
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-            identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
@@ -60,6 +66,8 @@ export class StringArrayStorage extends ArrayStorage <string> {
         const stringArrayCallsWrapperName: string = `${this.options.identifiersPrefix}${baseStringArrayCallsWrapperName}`;
 
         this.storageId = `${stringArrayName}|${stringArrayCallsWrapperName}`;
+
+        this.hashEntropy = Math.floor(Math.random() * 255);
     }
 
     /**
@@ -68,16 +76,16 @@ export class StringArrayStorage extends ArrayStorage <string> {
     public rotateArray (rotationValue: number): void {
         this.storage = this.arrayUtils.rotate(this.storage, rotationValue);
     }
-    
+
     public hash (): number {
         const toHash: string = this.storage.join(",");
         let hash: number = 0;
         for (let i: number = 0; i < toHash.length; i++) { // hash function from here: https://stackoverflow.com/questions/6122571/simple-non-secure-hash-function-for-javascript
-            const c: number = toHash.charCodeAt(i);
+            const c: number = toHash.charCodeAt(i) ^ this.hashEntropy;
             hash = ((hash << 5) - hash) + c;
             hash = hash & hash; // convert to 32bit integer
         }
-        
+
         return hash;
     }
 

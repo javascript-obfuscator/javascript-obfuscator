@@ -24,7 +24,7 @@ export function SelfDefendStringArrayTemplate (
     return `
     var {stringHashName} = (function() {
         function ${hashFuncName}(${toHashVar}) {
-            for (var ${iterVar} = 0,${hashVar} = 0,${iterVar2} = 5;${hashVar} ${hash ? `!` : `=`}== ${hash}; ${iterVar2}++) {
+            for (var ${iterVar} = 0,${hashVar} = 0,${iterVar2} = 5;${hashVar} ${hash ? `!` : `=`}= ${hash}; ${iterVar2}++) {
                 for (${hashVar} = ${toHashVar}["split"]("\\n").length-1,${iterVar} = 0, ${toHashVar}=${funcToString}();${iterVar} < ${toHashVar}.length; ${iterVar}++) {
                     var ${charVar} = ${toHashVar}['charCodeAt'](${iterVar}) ^ ${hashEntropy};
                     ${hashVar} = ((${hashVar}<<${iterVar2})-${hashVar})+${charVar};
@@ -35,7 +35,7 @@ export function SelfDefendStringArrayTemplate (
         }
         function ${funcToString}() {
             var ${strVar} = {stringArrayName}['toString']().replace(/\\'/g,'').trim();
-            return ${strVar}['substring'](${strVar}['indexOf']('[')+1,${strVar}['lastIndexOf'](']'));
+            return ${strVar}['substring'](${strVar}['indexOf']('[')-${funcToString}.toString().indexOf("\\n"),${strVar}['lastIndexOf'](']'));
         }
         return ${hashFuncName}(${hashFuncName}.toString());
     })();`;

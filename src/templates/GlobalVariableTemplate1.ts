@@ -10,7 +10,7 @@ export function GlobalVariableTemplate1 (): string {
             
             that = getGlobal();
         } catch (e) {
-            that = window;
+            that = this.window;
         }
     `;
 }

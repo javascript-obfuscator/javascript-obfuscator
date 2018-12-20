@@ -9,7 +9,7 @@ export function GlobalVariableTemplate2 (): string {
             try {
                 globalObject = Function('return (function() ' + '{}.constructor("return this")( )' + ');')();
             } catch (e) {
-                globalObject = window;
+                globalObject = this.window;
             }
             
             return globalObject;

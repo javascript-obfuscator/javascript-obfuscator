@@ -6,6 +6,8 @@
 
 # JavaScript obfuscator
 
+#### Right now i haven't time to maintain this project and i looking for for maintainers! Create issue if you want to maintain this project.
+
 ![logo](https://raw.githubusercontent.com/javascript-obfuscator/javascript-obfuscator/master/images/logo.png)
 
 JavaScript obfuscator is a powerful free obfuscator for JavaScript with a wide number of features which provides protection for your source code.

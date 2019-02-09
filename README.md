@@ -324,6 +324,7 @@ Following options are available for the JS Obfuscator:
     -o, --output
 
     --compact <boolean>
+    --compressStringArray <boolean>
     --config <string>
     --control-flow-flattening <boolean>
     --control-flow-flattening-threshold <number>
@@ -359,6 +360,11 @@ Following options are available for the JS Obfuscator:
 Type: `boolean` Default: `true`
 
 Compact code output on one line.
+
+### `compressStringArray`
+Type: `boolean` Default: `false`
+
+LZW Compresses the string array. Must have `stringArray` enabled.
 
 ### `config`
 Type: `string` Default: ``

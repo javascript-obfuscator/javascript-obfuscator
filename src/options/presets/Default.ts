@@ -6,6 +6,7 @@ import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
 
 export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     compact: true,
+    compressStringArray: false,
     config: '',
     controlFlowFlattening: false,
     controlFlowFlatteningThreshold: 0.75,

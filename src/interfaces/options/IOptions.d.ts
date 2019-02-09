@@ -6,6 +6,7 @@ import { SourceMapMode } from '../../enums/source-map/SourceMapMode';
 
 export interface IOptions {
     readonly compact: boolean;
+    readonly compressStringArray: boolean;
     readonly controlFlowFlattening: boolean;
     readonly controlFlowFlatteningThreshold: number;
     readonly deadCodeInjection: boolean;

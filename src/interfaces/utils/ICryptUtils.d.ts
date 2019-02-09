@@ -18,4 +18,10 @@ export interface ICryptUtils {
      */
     /* tslint:disable */
     rc4 (string: string, key: string): string;
+    
+    /**
+     * @param s
+     * @returns {string}
+     */
+    lzw_encode(s: string): string;
 }

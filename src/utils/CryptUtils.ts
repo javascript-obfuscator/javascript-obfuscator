@@ -141,4 +141,41 @@ export class CryptUtils implements ICryptUtils {
         return result;
     }
     // tslint:enable
+
+    // tslint:disable
+    /**
+     * LZW Encoding/decoding
+     * https://gist.github.com/revolunet/843889#gistcomment-2795911
+     *
+     * @param {string} s
+     * @returns {string}
+     */
+    public lzw_encode(s: string): string {
+        if (!s) return s;
+        const dict: Map<string,number> = new Map();
+        const data: string[] = s.toString().split("");
+        const out: number[] = [];
+        let phrase: string = data[0];
+        let charCode: number = 256;
+        for (let i: number = 1; i < data.length; i++) {
+            const currChar: string = data[i];
+            if (dict.has(phrase + currChar)) {
+                phrase += currChar;
+            } else {
+                out.push(phrase.length > 1 ? (dict.get(phrase) as number) : phrase.charCodeAt(0));
+                dict.set(phrase + currChar, charCode);
+                charCode++;
+                phrase = currChar;
+            }
+        }
+        out.push(phrase.length > 1 ? (dict.get(phrase) as number) : phrase.charCodeAt(0));
+        s = out.map((code: number)=>{
+            return String.fromCharCode(code);
+        }).join("");
+        return encodeURIComponent(s).replace(/%([0-9A-F]{2})/g,
+            function toSolidBytes(match: string, p1: string) {
+                return String.fromCharCode(('0x' + p1) as unknown as number);
+            });
+    }
+    // tslint:enable
 }

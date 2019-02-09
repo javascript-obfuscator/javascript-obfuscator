@@ -9,6 +9,7 @@ import { TStringArrayStorage } from '../../types/storages/TStringArrayStorage';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { ICryptUtils } from '../../interfaces/utils/ICryptUtils';
 
 import { initializable } from '../../decorators/Initializable';
 
@@ -21,6 +22,11 @@ import { SelfDefendStringArrayTemplate } from '../../templates/string-array-node
 
 @injectable()
 export class StringArrayNode extends AbstractCustomNode {
+    /**
+     * @type {ICryptUtils}
+     */
+    private readonly cryptUtils: ICryptUtils;
+
     /**
      * @type {TStringArrayStorage}
      */
@@ -48,15 +54,19 @@ export class StringArrayNode extends AbstractCustomNode {
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
+     * @param {ICryptUtils} cryptUtils
      * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
+        @inject(ServiceIdentifiers.ICryptUtils) cryptUtils: ICryptUtils,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(identifierNamesGeneratorFactory, randomGenerator, options);
+
+        this.cryptUtils = cryptUtils;
     }
 
     /**
@@ -108,9 +118,14 @@ export class StringArrayNode extends AbstractCustomNode {
             });
         }
 
-        return format(StringArrayTemplate(), {
+        let stringArray: string = this.stringArrayStorage.toString();
+        if (this.options.compressStringArray) {
+            stringArray = this.cryptUtils.lzw_encode(`return [${stringArray}];`).replace(/\\/g, "\\\\").replace(/"/g, "\\\"");
+        }
+
+        return format(StringArrayTemplate(this.options.compressStringArray), {
             stringArrayName: this.stringArrayName,
-            stringArray: this.stringArrayStorage.toString(),
+            stringArray: stringArray,
             selfDefendingCode: selfDefendingCode
         });
     }

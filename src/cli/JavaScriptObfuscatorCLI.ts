@@ -200,7 +200,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 BooleanSanitizer
             )
             .option(
-                '--compressStringArrat <boolean>',
+                '--compressStringArray <boolean>',
                 'Compresses the string array with LZW compression',
                 BooleanSanitizer
             )

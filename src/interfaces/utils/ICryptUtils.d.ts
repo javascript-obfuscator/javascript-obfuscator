@@ -18,7 +18,13 @@ export interface ICryptUtils {
      */
     /* tslint:disable */
     rc4 (string: string, key: string): string;
-    
+
+    /**
+     * @param s
+     * @returns {string}
+     */
+    encode_utf8(s: string): string;
+
     /**
      * @param s
      * @returns {string}

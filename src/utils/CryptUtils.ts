@@ -144,6 +144,22 @@ export class CryptUtils implements ICryptUtils {
 
     // tslint:disable
     /**
+     * Encode utf8 multibyte characters
+     * https://gist.github.com/revolunet/843889#gistcomment-2795911
+     *
+     * @param {string} s
+     * @returns {string}
+     */
+    public encode_utf8(s: string) {
+        return encodeURIComponent(s).replace(/%([0-9A-F]{2})/g,
+            function toSolidBytes(match: string, p1: string) {
+                return String.fromCharCode(('0x' + p1) as unknown as number);
+            });
+    }
+    // tslint:enable
+
+    // tslint:disable
+    /**
      * LZW Encoding/decoding
      * https://gist.github.com/revolunet/843889#gistcomment-2795911
      *
@@ -169,13 +185,9 @@ export class CryptUtils implements ICryptUtils {
             }
         }
         out.push(phrase.length > 1 ? (dict.get(phrase) as number) : phrase.charCodeAt(0));
-        s = out.map((code: number)=>{
+        return out.map((code: number)=>{
             return String.fromCharCode(code);
         }).join("");
-        return encodeURIComponent(s).replace(/%([0-9A-F]{2})/g,
-            function toSolidBytes(match: string, p1: string) {
-                return String.fromCharCode(('0x' + p1) as unknown as number);
-            });
     }
     // tslint:enable
 }

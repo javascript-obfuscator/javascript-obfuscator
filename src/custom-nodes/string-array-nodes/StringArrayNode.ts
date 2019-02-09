@@ -120,7 +120,7 @@ export class StringArrayNode extends AbstractCustomNode {
 
         let stringArray: string = this.stringArrayStorage.toString();
         if (this.options.compressStringArray) {
-            stringArray = this.cryptUtils.lzw_encode(`return [${stringArray}];`).replace(/\\/g, "\\\\").replace(/"/g, "\\\"");
+            stringArray = this.cryptUtils.encode_utf8(this.cryptUtils.lzw_encode(this.cryptUtils.encode_utf8(`return [${stringArray}];`))).replace(/\\/g, "\\\\").replace(/"/g, "\\\"");
         }
 
         return format(StringArrayTemplate(this.options.compressStringArray), {

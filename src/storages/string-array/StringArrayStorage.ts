@@ -66,7 +66,7 @@ export class StringArrayStorage extends ArrayStorage <string> {
 
         this.storageId = `${stringArrayName}|${stringArrayCallsWrapperName}`;
 
-        this.hashEntropy = Math.floor(Math.random() * 255);
+        this.hashEntropy = this.randomGenerator.getRandomInteger(0, 255);
     }
 
     /**

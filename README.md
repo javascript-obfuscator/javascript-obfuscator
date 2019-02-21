@@ -691,7 +691,7 @@ Sets base url to the source map import url when [`sourceMapMode: 'separate'`](#s
  
 CLI example:
 ```
-javascript-obfuscator input.js --output out.js --sourceMap true --sourceMapBaseUrl 'http://localhost:9000'
+javascript-obfuscator input.js --output out.js --source-map true --source-map-base-url 'http://localhost:9000'
 ```
 
 Result: 

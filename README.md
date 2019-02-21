@@ -309,7 +309,7 @@ Following options are available for the JS Obfuscator:
     sourceMapMode: 'separate',
     stringArray: true,
     stringArrayEncoding: false,
-    stringArraySelfDefending: true,
+    stringArraySelfDefending: false,
     stringArrayThreshold: 0.75,
     target: 'browser',
     transformObjectKeys: false,
@@ -744,7 +744,7 @@ Available values:
 * `'rc4'` (`string`): encode `stringArray` values using `rc4`. **About 30-50% slower than `base64`, but more harder to get initial values.** It is recommended to disable [`unicodeEscapeSequence`](#unicodeescapesequence) option with `rc4` encoding to prevent very large size of obfuscated code.
 
 ### `stringArraySelfDefending`
-Type `boolean` Default: `true`
+Type `boolean` Default: `false`
 
 Hashes the string array to prevent it from being modified.
 

@@ -32,7 +32,7 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     sourceMapMode: SourceMapMode.Separate,
     stringArray: true,
     stringArrayEncoding: false,
-    stringArraySelfDefending: true,
+    stringArraySelfDefending: false,
     stringArrayThreshold: 0.75,
     target: ObfuscationTarget.Browser,
     transformObjectKeys: false,

@@ -324,6 +324,11 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 StringArrayEncodingSanitizer
             )
             .option(
+                '--string-array-self-defending <boolean>',
+                'Enables string array self-defense',
+                BooleanSanitizer
+            )
+            .option(
                 '--string-array-threshold <number>',
                 'The probability that the literal string will be inserted into stringArray (Default: 0.8, Min: 0, Max: 1)',
                 parseFloat

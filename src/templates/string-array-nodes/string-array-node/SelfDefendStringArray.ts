@@ -28,7 +28,7 @@ export function SelfDefendStringArrayTemplate (
             for (var ${hashVar} = 0,${iteratorVar2} = 0x${NumberUtils.toHex(hashEntropy)};${hashVar} ${hash ? `!` : `=`}= ${hash}; ${iteratorVar2}++) {
                 for (${hashVar} = ${toHashVar}['split']('\\n')['length']-1,${iteratorVar} = 0, ${toHashVar}=${funcToString}();${iteratorVar} < ${toHashVar}['length']; ${iteratorVar}++) {
                     var ${charVar} = ${toHashVar}['charCodeAt'](${iteratorVar}) ^ ${iteratorVar2};
-                    ${hashVar} = ((${hashVar}<<(${iteratorVar2} ^ 0x${NumberUtils.toHex(5 ^ hashEntropy)}))-${hashVar})+${charVar};
+                    ${hashVar} = ((${hashVar}<<(${iteratorVar2} ^ 0x${NumberUtils.toHex(hashEntropy ^ 5)}))-${hashVar})+${charVar};
                     ${hashVar} = ${hashVar} & ${hashVar};
                 }
             }

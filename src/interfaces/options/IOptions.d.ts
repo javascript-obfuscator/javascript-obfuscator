@@ -30,6 +30,7 @@ export interface IOptions {
     readonly sourceMapMode: SourceMapMode;
     readonly stringArray: boolean;
     readonly stringArrayEncoding: TStringArrayEncoding;
+    readonly stringArraySelfDefending: boolean;
     readonly stringArrayThreshold: number;
     readonly target: ObfuscationTarget;
     readonly transformObjectKeys: boolean;

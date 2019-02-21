@@ -13,6 +13,7 @@ export const StringArrayRule: TOptionsNormalizerRule = (options: IOptions): IOpt
             rotateStringArray: false,
             stringArray: false,
             stringArrayEncoding: false,
+            stringArraySelfDefending: true,
             stringArrayThreshold: 0
         };
     }

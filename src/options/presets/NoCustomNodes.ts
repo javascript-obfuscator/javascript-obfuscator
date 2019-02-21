@@ -31,6 +31,7 @@ export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     sourceMapMode: SourceMapMode.Separate,
     stringArray: false,
     stringArrayEncoding: false,
+    stringArraySelfDefending: true,
     stringArrayThreshold: 0,
     target: ObfuscationTarget.Browser,
     transformObjectKeys: false,

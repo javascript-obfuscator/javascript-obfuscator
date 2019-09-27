@@ -119,7 +119,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1,
-                        transformObjectKeys: true
+                        transformObjectKeys: true                        
                     }
                 ).getObfuscatedCode();
             });

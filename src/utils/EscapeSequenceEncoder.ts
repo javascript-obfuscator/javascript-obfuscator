@@ -23,7 +23,7 @@ export class EscapeSequenceEncoder implements IEscapeSequenceEncoder {
 
         const radix: number = 16;
         const replaceRegExp: RegExp = new RegExp('[\\s\\S]', 'g');
-        const escapeSequenceRegExp: RegExp = new RegExp('[\'\"\\\\\\s]');
+        const escapeSequenceRegExp: RegExp = new RegExp('[ \'\"\\\\\\s]');
         const regExp: RegExp = new RegExp('[\\x00-\\x7F]');
 
         let prefix: string;

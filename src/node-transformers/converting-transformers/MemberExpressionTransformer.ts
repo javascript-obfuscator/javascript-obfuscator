@@ -35,7 +35,9 @@ export class MemberExpressionTransformer extends AbstractNodeTransformer {
             case TransformationStage.Converting:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                        if (parentNode && NodeGuards.isMemberExpressionNode(node)) {
+                        if (this.options.transformObjectMembers &&
+                            parentNode &&
+                            NodeGuards.isMemberExpressionNode(node)) {
                             return this.transformNode(node, parentNode);
                         }
                     }

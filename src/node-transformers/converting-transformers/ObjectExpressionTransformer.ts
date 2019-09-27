@@ -108,6 +108,10 @@ export class ObjectExpressionTransformer extends AbstractNodeTransformer {
             return;
         }
 
+        if (!this.options.quoteObjectKeys) {
+            return;
+        }
+
         property.key = NodeFactory.literalNode(this.getPropertyKeyValue(property.key.name));
     }
 

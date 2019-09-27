@@ -18,6 +18,7 @@ export interface IOptions {
     readonly identifiersPrefix: string;
     readonly inputFileName: string;
     readonly log: boolean;
+    readonly numericObfuscation: boolean;
     readonly renameGlobals: boolean;
     readonly reservedNames: string[];
     readonly reservedStrings: string[];
@@ -33,5 +34,7 @@ export interface IOptions {
     readonly stringArrayThreshold: number;
     readonly target: ObfuscationTarget;
     readonly transformObjectKeys: boolean;
+    readonly transformObjectMembers: boolean;
+    readonly quoteObjectKeys: boolean;
     readonly unicodeEscapeSequence: boolean;
 }

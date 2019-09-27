@@ -13,7 +13,7 @@ describe('LiteralTransformer', () => {
     describe('transformation of literal node with string value', () => {
         describe('Variant #1: default behaviour', () => {
             const stringArrayRegExp: RegExp = /^var *_0x([a-f0-9]){4} *= *\['test'\];/;
-            const stringArrayCallRegExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/;
+            const stringArrayCallRegExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\(0x0\);/;
 
             let obfuscatedCode: string;
 
@@ -83,7 +83,7 @@ describe('LiteralTransformer', () => {
 
         describe('Variant #4: same literal node values', () => {
             const stringArrayRegExp: RegExp = /^var *_0x([a-f0-9]){4} *= *\['test'\];/;
-            const stringArrayCallRegExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/;
+            const stringArrayCallRegExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\(0x0\);/;
 
             let obfuscatedCode: string;
 
@@ -134,7 +134,7 @@ describe('LiteralTransformer', () => {
 
         describe('Variant #6: `unicodeEscapeSequence` and `stringArray` options are enabled', () => {
             const stringArrayRegExp: RegExp = /^var *_0x([a-f0-9]){4} *= *\['\\x74\\x65\\x73\\x74'\];/;
-            const stringArrayCallRegExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/;
+            const stringArrayCallRegExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\(0x0\);/;
 
             let obfuscatedCode: string;
 
@@ -186,7 +186,7 @@ describe('LiteralTransformer', () => {
 
         describe('Variant #8: base64 encoding', () => {
             const stringArrayRegExp: RegExp = /^var *_0x([a-f0-9]){4} *= *\['dGVzdA=='\];/;
-            const stringArrayCallRegExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/;
+            const stringArrayCallRegExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\(0x0\);/;
 
             let obfuscatedCode: string;
 
@@ -214,7 +214,7 @@ describe('LiteralTransformer', () => {
         });
 
         describe('Variant #9: rc4 encoding', () => {
-            const regExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0', *'.{4}'\);/;
+            const regExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\(0x0, *'.{4}'\);/;
 
             let obfuscatedCode: string;
 
@@ -242,7 +242,7 @@ describe('LiteralTransformer', () => {
             const stringArrayThreshold: number = 0.5;
             const delta: number = 0.1;
 
-            const regExp1: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/g;
+            const regExp1: RegExp = /var *test *= *_0x([a-f0-9]){4}\(0x0\);/g;
             const regExp2: RegExp = /var *test *= *'test';/g;
 
             let stringArrayProbability: number,
@@ -281,7 +281,7 @@ describe('LiteralTransformer', () => {
         });
 
         describe('Variant #11: string array calls wrapper name', () => {
-            const regExp: RegExp = /console\[b\('0x0'\)]\('a'\);/;
+            const regExp: RegExp = /console\[b\(0x0\)]\('a'\);/;
 
             let obfuscatedCode: string;
 
@@ -308,7 +308,7 @@ describe('LiteralTransformer', () => {
             describe('Variant #1: base `reservedStrings` values', () => {
                 describe('Variant #1: single reserved string value', () => {
                     const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
-                    const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\('0x0'\);/;
+                    const stringLiteralRegExp2: RegExp = /const bar *= *_0x([a-f0-9]){4}\(0x0\);/;
 
                     let obfuscatedCode: string;
 
@@ -367,7 +367,7 @@ describe('LiteralTransformer', () => {
 
             describe('Variant #2: RegExp `reservedStrings` values', () => {
                 describe('Variant #1: single reserved string value', () => {
-                    const stringLiteralRegExp1: RegExp = /const foo *= *_0x([a-f0-9]){4}\('0x0'\);/;
+                    const stringLiteralRegExp1: RegExp = /const foo *= *_0x([a-f0-9]){4}\(0x0\);/;
                     const stringLiteralRegExp2: RegExp = /const bar *= *'bar';/;
 
                     let obfuscatedCode: string;

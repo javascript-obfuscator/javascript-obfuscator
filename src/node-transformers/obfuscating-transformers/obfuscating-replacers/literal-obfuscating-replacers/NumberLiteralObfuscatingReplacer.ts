@@ -39,7 +39,7 @@ export class NumberLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
             if (!NumberUtils.isCeil(nodeValue)) {
                 rawValue = String(nodeValue);
             } else {
-                rawValue = `${Utils.hexadecimalPrefix}${NumberUtils.toHex(nodeValue)}`;
+                rawValue = this.options.numericObfuscation ? `${Utils.hexadecimalPrefix}${NumberUtils.toHex(nodeValue)}` : `${nodeValue}`;
             }
 
             this.numberLiteralCache.set(nodeValue, rawValue);

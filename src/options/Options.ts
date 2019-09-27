@@ -134,6 +134,12 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
+    public readonly numericObfuscation!: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
     public readonly renameGlobals!: boolean;
 
     /**
@@ -240,7 +246,19 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
+    public readonly transformObjectMembers!: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
     public readonly unicodeEscapeSequence!: boolean;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
+    public readonly quoteObjectKeys!: boolean;
 
     /**
      * @param {TInputOptions} inputOptions

@@ -252,7 +252,7 @@ describe('JavaScriptObfuscator', () => {
 
             describe('Variant #4: with `stringArray`, `renameGlobals` and `identifiersPrefix` options', () => {
                 const stringArrayRegExp: RegExp = /^var foo_0x(\w){4} *= *\['abc'\];/;
-                const stringArrayCallRegExp: RegExp = /var *foo_0x(\w){4,6} *= *foo_0x(\w){4}\('0x0'\);$/;
+                const stringArrayCallRegExp: RegExp = /var *foo_0x(\w){4,6} *= *foo_0x(\w){4}\(0x0\);$/;
 
                 let obfuscatedCode: string;
 
@@ -344,7 +344,7 @@ describe('JavaScriptObfuscator', () => {
 
         describe('latin literal variable value', () => {
             const stringArrayLatinRegExp: RegExp = /^var _0x(\w){4} *= *\['abc'\];/;
-            const stringArrayCallRegExp: RegExp = /var *test *= *_0x(\w){4}\('0x0'\);$/;
+            const stringArrayCallRegExp: RegExp = /var *test *= *_0x(\w){4}\(0x0\);$/;
 
             let obfuscatedCode: string;
 
@@ -372,7 +372,7 @@ describe('JavaScriptObfuscator', () => {
 
         describe('cyrillic literal variable value', () => {
             const stringArrayCyrillicRegExp: RegExp = /^var _0x(\w){4} *= *\['абц'\];/;
-            const stringArrayCallRegExp: RegExp = /var *test *= *_0x(\w){4}\('0x0'\);$/;
+            const stringArrayCallRegExp: RegExp = /var *test *= *_0x(\w){4}\(0x0\);$/;
 
             let obfuscatedCode: string;
 

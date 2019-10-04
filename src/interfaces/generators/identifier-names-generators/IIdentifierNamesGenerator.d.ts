@@ -1,13 +1,15 @@
 export interface IIdentifierNamesGenerator {
     /**
+     * @param {number} nameLength
      * @returns {string}
      */
-    generate (): string;
+    generate (nameLength?: number): string;
 
     /**
+     * @param {number} nameLength
      * @returns {string}
      */
-    generateWithPrefix (): string;
+    generateWithPrefix (nameLength?: number): string;
 
     /**
      * @param {string} identifierName

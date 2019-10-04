@@ -46,9 +46,11 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     }
 
     /**
+     * We can only ignore limited nameLength, it has no sense here
+     * @param {number} nameLength
      * @returns {string}
      */
-    public generate (): string {
+    public generate (nameLength?: number): string {
         const identifierName: string = this.generateNewMangledName(this.previousMangledName);
 
         this.previousMangledName = identifierName;
@@ -57,13 +59,14 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     }
 
     /**
+     * @param {number} nameLength
      * @returns {string}
      */
-    public generateWithPrefix (): string {
+    public generateWithPrefix (nameLength?: number): string {
         const prefix: string = this.options.identifiersPrefix ?
             `${this.options.identifiersPrefix}_`
             : '';
-        const identifierName: string = this.generate();
+        const identifierName: string = this.generate(nameLength);
 
         return `${prefix}${identifierName}`;
     }

@@ -32,18 +32,23 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
     }
 
     /**
+     * @param {number} nameLength
      * @returns {string}
      */
-    public generate (): string {
+    public generate (nameLength?: number): string {
         const rangeMinInteger: number = 10000;
         const rangeMaxInteger: number = 99_999_999;
         const randomInteger: number = this.randomGenerator.getRandomInteger(rangeMinInteger, rangeMaxInteger);
         const hexadecimalNumber: string = NumberUtils.toHex(randomInteger);
-        const baseIdentifierName: string = hexadecimalNumber.substr(0, HexadecimalIdentifierNamesGenerator.baseIdentifierNameLength);
+        const prefixLength: number = Utils.hexadecimalPrefix.length + 1;
+        const baseNameLength: number = nameLength
+            ? nameLength - prefixLength
+            : HexadecimalIdentifierNamesGenerator.baseIdentifierNameLength;
+        const baseIdentifierName: string = hexadecimalNumber.substr(0, baseNameLength);
         const identifierName: string = `_${Utils.hexadecimalPrefix}${baseIdentifierName}`;
 
         if (this.randomVariableNameSet.has(identifierName)) {
-            return this.generate();
+            return this.generate(nameLength);
         }
 
         this.randomVariableNameSet.add(identifierName);
@@ -52,10 +57,11 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
     }
 
     /**
+     * @param {number} nameLength
      * @returns {string}
      */
-    public generateWithPrefix (): string {
-        const identifierName: string = this.generate();
+    public generateWithPrefix (nameLength?: number): string {
+        const identifierName: string = this.generate(nameLength);
 
         return `${this.options.identifiersPrefix}${identifierName}`.replace('__', '_');
     }

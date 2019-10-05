@@ -30,14 +30,16 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     }
 
     /**
+     * @param {number} nameLength
      * @returns {string}
      */
-    public abstract generate (): string;
+    public abstract generate (nameLength?: number): string;
 
     /**
+     * @param {number} nameLength
      * @returns {string}
      */
-    public abstract generateWithPrefix (): string;
+    public abstract generateWithPrefix (nameLength?: number): string;
 
     /**
      * @param {string} name

@@ -21,6 +21,7 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeLexicalScopeUtils } from '../../node/NodeLexicalScopeUtils';
+import { NodeBlockLexicalScopeUtils } from '../../node/NodeBlockLexicalScopeUtils';
 import { NodeMetadata } from '../../node/NodeMetadata';
 
 /**
@@ -93,7 +94,9 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (variableDeclarationNode: ESTree.VariableDeclaration, parentNode: ESTree.Node): ESTree.Node {
-        const lexicalScopeNode: TNodeWithLexicalScope | undefined = NodeLexicalScopeUtils.getLexicalScope(variableDeclarationNode);
+        const lexicalScopeNode: TNodeWithLexicalScope | undefined = variableDeclarationNode.kind === 'var'
+            ? NodeLexicalScopeUtils.getLexicalScope(variableDeclarationNode)
+            : NodeBlockLexicalScopeUtils.getLexicalScope(variableDeclarationNode);
 
         if (!lexicalScopeNode) {
             return variableDeclarationNode;

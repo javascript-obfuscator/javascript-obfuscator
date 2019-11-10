@@ -225,6 +225,14 @@ export class NodeGuards {
 
     /**
      * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isNodeWithBlockLexicalScope (node: ESTree.Node): node is TNodeWithLexicalScope {
+        return NodeGuards.isNodeWithLexicalScope(node) || NodeGuards.isBlockStatementNode(node);
+    }
+
+    /**
+     * @param {Node} node
      * @param {Node} parentNode
      * @returns {boolean}
      */

@@ -173,6 +173,7 @@ export class FunctionDeclarationTransformer extends AbstractNodeTransformer {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
                 if (
                     parentNode
+                    && (parentNode !== lexicalScopeNode)
                     && NodeGuards.isReplaceableIdentifierNode(node, parentNode)
                     && !NodeMetadata.isRenamedIdentifier(node)
                 ) {

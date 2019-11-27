@@ -7,7 +7,6 @@ import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscatorFacade';
 // https://github.com/javascript-obfuscator/javascript-obfuscator/issues/321
 //
 describe('Issue #321', () => {
-
     describe('Fixture code should nor break', () => {
         let obfuscatedCode: string;
 
@@ -19,7 +18,6 @@ describe('Issue #321', () => {
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     stringArray: false,
-                    renameGlobals: true
                 }
             ).getObfuscatedCode();
 

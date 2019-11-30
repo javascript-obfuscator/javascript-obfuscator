@@ -518,7 +518,7 @@ describe('SourceCodeReader', () => {
             const expectedConsoleLogCallResult: boolean = true;
             const expectedLoggingMessage: string = `[javascript-obfuscator-cli] Obfuscating file: ${inputPath}...`;
 
-            let consoleLogSpy: sinon.SinonSpy,
+            let consoleLogSpy: sinon.SinonSpy<any, void>,
                 consoleLogCallResult: boolean,
                 loggingMessageResult: string;
 

@@ -76,21 +76,21 @@ export class LiteralTransformer extends AbstractNodeTransformer {
             case 'boolean':
                 newLiteralNode = this.literalObfuscatingReplacerFactory(
                     LiteralObfuscatingReplacer.BooleanLiteralObfuscatingReplacer
-                ).replace(<boolean>literalNode.value);
+                ).replace(literalNode.value);
 
                 break;
 
             case 'number':
                 newLiteralNode = this.literalObfuscatingReplacerFactory(
                     LiteralObfuscatingReplacer.NumberLiteralObfuscatingReplacer
-                ).replace(<number>literalNode.value);
+                ).replace(literalNode.value);
 
                 break;
 
             case 'string':
                 newLiteralNode = this.literalObfuscatingReplacerFactory(
                     LiteralObfuscatingReplacer.StringLiteralObfuscatingReplacer
-                ).replace(<string>literalNode.value);
+                ).replace(literalNode.value);
 
                 break;
 

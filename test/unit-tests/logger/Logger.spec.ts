@@ -21,7 +21,7 @@ describe('Logger', () => {
         const loggingMessage: string = '[javascript-obfuscator] foo';
         const expectedConsoleLogCallResult: boolean = true;
 
-        let consoleLogSpy: sinon.SinonSpy,
+        let consoleLogSpy: sinon.SinonSpy<any, void>,
             consoleLogCallResult: boolean,
             loggingMessageResult: string;
 
@@ -51,7 +51,7 @@ describe('Logger', () => {
             const loggingMessage: string = '[javascript-obfuscator] Obfuscation started...';
             const expectedConsoleLogCallResult: boolean = true;
 
-            let consoleLogSpy: sinon.SinonSpy,
+            let consoleLogSpy: sinon.SinonSpy<any, void>,
                 consoleLogCallResult: boolean,
                 inversifyContainerFacade: IInversifyContainerFacade,
                 loggingMessageResult: string;
@@ -88,7 +88,7 @@ describe('Logger', () => {
         describe('`log` option is disabled', () => {
             const expectedConsoleLogCallResult: boolean = false;
 
-            let consoleLogSpy: sinon.SinonSpy,
+            let consoleLogSpy: sinon.SinonSpy<any, void>,
                 consoleLogCallResult: boolean,
                 inversifyContainerFacade: IInversifyContainerFacade;
 
@@ -122,7 +122,7 @@ describe('Logger', () => {
             const loggingMessage: string = '[javascript-obfuscator] Obfuscation started...';
             const expectedConsoleLogCallResult: boolean = true;
 
-            let consoleLogSpy: sinon.SinonSpy,
+            let consoleLogSpy: sinon.SinonSpy<any, void>,
                 consoleLogCallResult: boolean,
                 inversifyContainerFacade: IInversifyContainerFacade,
                 loggingMessageResult: string;
@@ -159,7 +159,7 @@ describe('Logger', () => {
         describe('`log` option is disabled', () => {
             const expectedConsoleLogCallResult: boolean = false;
 
-            let consoleLogSpy: sinon.SinonSpy,
+            let consoleLogSpy: sinon.SinonSpy<any, void>,
                 consoleLogCallResult: boolean,
                 inversifyContainerFacade: IInversifyContainerFacade;
 
@@ -193,7 +193,7 @@ describe('Logger', () => {
             const loggingMessage: string = '[javascript-obfuscator] Obfuscation started...';
             const expectedConsoleLogCallResult: boolean = true;
 
-            let consoleLogSpy: sinon.SinonSpy,
+            let consoleLogSpy: sinon.SinonSpy<any, void>,
                 consoleLogCallResult: boolean,
                 inversifyContainerFacade: IInversifyContainerFacade,
                 loggingMessageResult: string;
@@ -230,7 +230,7 @@ describe('Logger', () => {
         describe('`log` option is disabled', () => {
             const expectedConsoleLogCallResult: boolean = false;
 
-            let consoleLogSpy: sinon.SinonSpy,
+            let consoleLogSpy: sinon.SinonSpy<any, void>,
                 consoleLogCallResult: boolean,
                 inversifyContainerFacade: IInversifyContainerFacade;
 

@@ -3,8 +3,6 @@ import * as espree from 'espree';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TObject } from '../types/TObject';
-
 import { NodeGuards } from './NodeGuards';
 import { NodeMetadata } from './NodeMetadata';
 
@@ -110,16 +108,16 @@ export class NodeUtils {
             return node;
         }
 
-        const copy: TObject = {};
+        const copy: Partial<T> = {};
+        const nodeKeys: (keyof T)[] = <(keyof T)[]>Object.keys(node);
 
-        Object
-            .keys(node)
-            .forEach((property: string) => {
+        nodeKeys
+            .forEach((property: keyof T) => {
                 if (property === 'parentNode') {
                     return;
                 }
 
-                const value: T[keyof T] = node[<keyof T>property];
+                const value: T[keyof T] = node[property];
 
                 let clonedValue: T[keyof T] | T[keyof T][] | null;
 
@@ -133,7 +131,7 @@ export class NodeUtils {
                     clonedValue = value;
                 }
 
-                copy[property] = clonedValue;
+                copy[property] = <T[keyof T]>clonedValue;
             });
 
         return <T>copy;

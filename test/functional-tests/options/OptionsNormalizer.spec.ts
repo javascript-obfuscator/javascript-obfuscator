@@ -30,7 +30,7 @@ function getNormalizedOptions (optionsPreset: TInputOptions): TInputOptions {
     const optionsNormalizer: IOptionsNormalizer = inversifyContainerFacade
         .get<IOptionsNormalizer>(ServiceIdentifiers.IOptionsNormalizer);
 
-    return optionsNormalizer.normalize(options);
+    return <TInputOptions>optionsNormalizer.normalize(options);
 }
 
 describe('OptionsNormalizer', () => {

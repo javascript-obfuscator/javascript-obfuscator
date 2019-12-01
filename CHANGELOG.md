@@ -2,19 +2,31 @@ Change Log
 ===
 v0.18.6
 ---
-* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/355
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/355 
+
+Thanks to our contributors!
+ * [Zamotkin](https://github.com/zamotkin)
 
 v0.18.5
 ---
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/321
 
+Thanks to our contributors!
+ * [Zamotkin](https://github.com/zamotkin)
+
 v0.18.4
 ---
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/437
 
+Thanks to our contributors!
+ * [Zamotkin](https://github.com/zamotkin)
+
 v0.18.3
 ---
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/424
+
+Thanks to our contributors!
+ * [Zamotkin](https://github.com/zamotkin)
 
 v0.18.2
 ---

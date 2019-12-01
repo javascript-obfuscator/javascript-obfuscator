@@ -17,5 +17,8 @@ export interface IIdentifierObfuscatingReplacer extends IObfuscatingReplacer <ES
      */
     storeLocalName (nodeValue: string, lexicalScopeNode: TNodeWithLexicalScope): void;
 
-    preserveName (name: any): void;
+    /**
+     * @param {string} name
+     */
+    preserveName (name: string): void;
 }

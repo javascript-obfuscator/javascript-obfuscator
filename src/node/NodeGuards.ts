@@ -300,9 +300,9 @@ export class NodeGuards {
      * @returns {boolean}
      */
     public static parentNodeIsPropertyNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
-        return NodeGuards.isPropertyNode(parentNode) &&
-            !parentNode.computed &&
-            parentNode.key === node;
+        return NodeGuards.isPropertyNode(parentNode)
+            && !parentNode.computed
+            && parentNode.key === node;
     }
 
     /**
@@ -312,9 +312,9 @@ export class NodeGuards {
      */
     public static parentNodeIsMemberExpressionNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
         return (
-            NodeGuards.isMemberExpressionNode(parentNode) &&
-            !parentNode.computed &&
-            parentNode.property === node
+            NodeGuards.isMemberExpressionNode(parentNode)
+            && !parentNode.computed
+            && parentNode.property === node
         );
     }
 
@@ -324,8 +324,8 @@ export class NodeGuards {
      * @returns {boolean}
      */
     public static parentNodeIsMethodDefinitionNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
-        return NodeGuards.isMethodDefinitionNode(parentNode) &&
-            !parentNode.computed;
+        return NodeGuards.isMethodDefinitionNode(parentNode)
+            && !parentNode.computed;
     }
 
     /**
@@ -334,11 +334,11 @@ export class NodeGuards {
      * @returns {boolean}
      */
     public static isReplaceableIdentifierNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
-        return NodeGuards.isIdentifierNode(node) &&
-            !NodeGuards.parentNodeIsPropertyNode(node, parentNode) &&
-            !NodeGuards.parentNodeIsMemberExpressionNode(node, parentNode) &&
-            !NodeGuards.parentNodeIsMethodDefinitionNode(node, parentNode) &&
-            !NodeGuards.isLabelIdentifierNode(node, parentNode);
+        return NodeGuards.isIdentifierNode(node)
+            && !NodeGuards.parentNodeIsPropertyNode(node, parentNode)
+            && !NodeGuards.parentNodeIsMemberExpressionNode(node, parentNode)
+            && !NodeGuards.parentNodeIsMethodDefinitionNode(node, parentNode)
+            && !NodeGuards.isLabelIdentifierNode(node, parentNode);
     }
 
     /**

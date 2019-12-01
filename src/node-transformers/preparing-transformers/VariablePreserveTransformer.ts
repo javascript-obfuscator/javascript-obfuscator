@@ -1,13 +1,17 @@
 import { inject, injectable, } from 'inversify';
-import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
+
 import { TIdentifierObfuscatingReplacerFactory } from '../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory';
+
 import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 import { IdentifierObfuscatingReplacer } from "../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/IdentifierObfuscatingReplacer";
+
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
+
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 
@@ -48,13 +52,14 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
             case TransformationStage.Preparing:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                        if (parentNode &&
-                            NodeGuards.isIdentifierNode(node) &&
-                            (
-                                NodeGuards.parentNodeIsPropertyNode(node, parentNode) ||
-                                NodeGuards.parentNodeIsMemberExpressionNode(node, parentNode) ||
-                                NodeGuards.parentNodeIsMethodDefinitionNode(node, parentNode) ||
-                                NodeGuards.isLabelIdentifierNode(node, parentNode)
+                        if (
+                            NodeGuards.isIdentifierNode(node)
+                            && parentNode
+                            && (
+                                NodeGuards.parentNodeIsPropertyNode(node, parentNode)
+                                || NodeGuards.parentNodeIsMemberExpressionNode(node, parentNode)
+                                || NodeGuards.parentNodeIsMethodDefinitionNode(node, parentNode)
+                                || NodeGuards.isLabelIdentifierNode(node, parentNode)
                             )
                         ) {
                             return this.transformNode(node, parentNode);

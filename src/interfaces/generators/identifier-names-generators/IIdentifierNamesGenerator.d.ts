@@ -17,5 +17,8 @@ export interface IIdentifierNamesGenerator {
      */
     isValidIdentifierName (identifierName: string): boolean;
 
+    /**
+     * @param {string} name
+     */
     preserveName (name: string): void;
 }

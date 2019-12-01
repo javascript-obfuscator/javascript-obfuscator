@@ -103,6 +103,15 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
     }
 
     /**
+     * Preserve `name` to protect it from further using.
+     *
+     * @param {string} name
+     */
+    public preserveName (name: string): void {
+        this.identifierNamesGenerator.preserveName(name);
+    }
+
+    /**
      * @param {string} name
      * @returns {boolean}
      */

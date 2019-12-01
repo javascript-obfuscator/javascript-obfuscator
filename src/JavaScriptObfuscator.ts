@@ -1,26 +1,26 @@
-import {inject, injectable,} from 'inversify';
-import {ServiceIdentifiers} from './container/ServiceIdentifiers';
+import { inject, injectable, } from 'inversify';
+import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 
 import * as escodegen from 'escodegen-wallaby';
 import * as espree from 'espree';
 import * as ESTree from 'estree';
 
-import {TObfuscatedCodeFactory} from './types/container/source-code/TObfuscatedCodeFactory';
+import { TObfuscatedCodeFactory } from './types/container/source-code/TObfuscatedCodeFactory';
 
-import {IGeneratorOutput} from './interfaces/IGeneratorOutput';
-import {IJavaScriptObfuscator} from './interfaces/IJavaScriptObfsucator';
-import {ILogger} from './interfaces/logger/ILogger';
-import {IObfuscatedCode} from './interfaces/source-code/IObfuscatedCode';
-import {IOptions} from './interfaces/options/IOptions';
-import {IRandomGenerator} from './interfaces/utils/IRandomGenerator';
-import {ITransformersRunner} from './interfaces/node-transformers/ITransformersRunner';
+import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
+import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
+import { ILogger } from './interfaces/logger/ILogger';
+import { IObfuscatedCode } from './interfaces/source-code/IObfuscatedCode';
+import { IOptions } from './interfaces/options/IOptions';
+import { IRandomGenerator } from './interfaces/utils/IRandomGenerator';
+import { ITransformersRunner } from './interfaces/node-transformers/ITransformersRunner';
 
-import {LoggingMessage} from './enums/logger/LoggingMessage';
-import {NodeTransformer} from './enums/node-transformers/NodeTransformer';
-import {TransformationStage} from './enums/node-transformers/TransformationStage';
+import { LoggingMessage } from './enums/logger/LoggingMessage';
+import { NodeTransformer } from './enums/node-transformers/NodeTransformer';
+import { TransformationStage } from './enums/node-transformers/TransformationStage';
 
-import {EspreeFacade} from './EspreeFacade';
-import {NodeGuards} from './node/NodeGuards';
+import { EspreeFacade } from './EspreeFacade';
+import { NodeGuards } from './node/NodeGuards';
 
 @injectable()
 export class JavaScriptObfuscator implements IJavaScriptObfuscator {

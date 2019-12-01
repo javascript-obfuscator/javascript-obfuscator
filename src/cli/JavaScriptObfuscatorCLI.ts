@@ -7,7 +7,7 @@ import { TSourceCodeData } from '../types/cli/TSourceCodeData';
 
 import { IFileData } from '../interfaces/cli/IFileData';
 import { IInitializable } from '../interfaces/IInitializable';
-import { IObfuscationResult } from '../interfaces/IObfuscationResult';
+import { IObfuscatedCode } from '../interfaces/source-code/IObfuscatedCode';
 
 import { initializable } from '../decorators/Initializable';
 
@@ -131,12 +131,12 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             sourceMapFileName: path.basename(outputSourceMapPath)
         };
 
-        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(sourceCode, options);
+        const obfuscatedCode: IObfuscatedCode = JavaScriptObfuscator.obfuscate(sourceCode, options);
 
-        CLIUtils.writeFile(outputCodePath, obfuscationResult.getObfuscatedCode());
+        CLIUtils.writeFile(outputCodePath, obfuscatedCode.getObfuscatedCode());
 
-        if (options.sourceMapMode === 'separate' && obfuscationResult.getSourceMap()) {
-            CLIUtils.writeFile(outputSourceMapPath, obfuscationResult.getSourceMap());
+        if (options.sourceMapMode === 'separate' && obfuscatedCode.getSourceMap()) {
+            CLIUtils.writeFile(outputSourceMapPath, obfuscatedCode.getSourceMap());
         }
     }
 
@@ -266,6 +266,11 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             .option(
                 '--reserved-names <list> (comma separated, without whitespaces)',
                 'Disables obfuscation and generation of identifiers, which being matched by passed RegExp patterns (comma separated)',
+                ArraySanitizer
+            )
+            .option(
+                '--reserved-strings <list> (comma separated, without whitespaces)',
+                'Disables transformation of string literals, which being matched by passed RegExp patterns (comma separated)',
                 ArraySanitizer
             )
             .option(

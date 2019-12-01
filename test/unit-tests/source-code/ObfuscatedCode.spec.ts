@@ -1,32 +1,34 @@
+import 'reflect-metadata';
+
 import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
 
 import { assert } from 'chai';
 
 import { IInversifyContainerFacade } from '../../../src/interfaces/container/IInversifyContainerFacade';
-import { IObfuscationResult } from '../../../src/interfaces/IObfuscationResult';
-import { ISourceMapCorrector } from '../../../src/interfaces/source-map/ISourceMapCorrector';
+import { IObfuscatedCode } from '../../../src/interfaces/source-code/IObfuscatedCode';
 
 import { SourceMapMode } from '../../../src/enums/source-map/SourceMapMode';
 
 import { InversifyContainerFacade } from '../../../src/container/InversifyContainerFacade';
 
 /**
- * @param obfuscatedCode
+ * @param rawObfuscatedCode
  * @param sourceMap
  * @param sourceMapBaseUrl
  * @param sourceMapFileName
  * @param sourceMapMode
  */
-function getCorrectedObfuscationResult (
-    obfuscatedCode: string,
+function getObfuscatedCode (
+    rawObfuscatedCode: string,
     sourceMap: string,
     sourceMapBaseUrl: string,
     sourceMapFileName: string,
     sourceMapMode: SourceMapMode
-): IObfuscationResult {
+): IObfuscatedCode {
     const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
     inversifyContainerFacade.load(
+        '',
         '',
         {
             sourceMap: true,
@@ -36,30 +38,48 @@ function getCorrectedObfuscationResult (
         }
     );
 
-    const sourceMapCorrector: ISourceMapCorrector = inversifyContainerFacade
-        .get<ISourceMapCorrector>(ServiceIdentifiers.ISourceMapCorrector);
+    const obfuscatedCode: IObfuscatedCode = inversifyContainerFacade
+        .get<IObfuscatedCode>(ServiceIdentifiers.IObfuscatedCode);
 
-    return sourceMapCorrector.correct(obfuscatedCode, sourceMap);
+    obfuscatedCode.initialize(rawObfuscatedCode, sourceMap);
+
+    return obfuscatedCode;
 }
 
-describe('SourceMapCorrector', () => {
-    describe('correct', () => {
-        const expectedObfuscatedCode: string = 'var test = 1;';
-        const sourceMap: string = 'test';
+describe('ObfuscatedCode', () => {
+    const expectedObfuscatedCode: string = 'var test = 1;';
+    const sourceMap: string = 'test';
 
-        let obfuscationResult: IObfuscationResult,
-            obfuscatedCode: string;
+    describe('constructor', () => {
+        let obfuscatedCode: IObfuscatedCode;
+
+        before(() => {
+            obfuscatedCode = getObfuscatedCode(
+                expectedObfuscatedCode,
+                sourceMap,
+                '',
+                '',
+                SourceMapMode.Separate
+            );
+        });
+
+        it('should return obfuscated code if `.toString()` was called on `ObfuscatedCode` object', () => {
+            assert.equal(obfuscatedCode.toString(), expectedObfuscatedCode);
+        });
+    });
+
+    describe('getObfuscatedCode', () => {
+        let obfuscatedCode: string;
 
         describe('source map doest\'t exist', () => {
             before(() => {
-                obfuscationResult = getCorrectedObfuscationResult(
+                obfuscatedCode = getObfuscatedCode(
                     expectedObfuscatedCode,
                     '',
                     '',
                     '',
                     SourceMapMode.Separate
-                );
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should return untouched obfuscated code', () => {
@@ -71,14 +91,13 @@ describe('SourceMapCorrector', () => {
             const regExp: RegExp = /data:application\/json;base64/;
 
             before(() => {
-                obfuscationResult = getCorrectedObfuscationResult(
+                obfuscatedCode = getObfuscatedCode(
                     expectedObfuscatedCode,
                     sourceMap,
                     '',
                     '',
                     SourceMapMode.Inline
-                );
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should add source map to obfuscated code as base64 encoded string', () => {
@@ -90,14 +109,13 @@ describe('SourceMapCorrector', () => {
             const regExp: RegExp = /sourceMappingURL=http:\/\/example\.com\/output\.js\.map/;
 
             before(() => {
-                obfuscationResult = getCorrectedObfuscationResult(
+                obfuscatedCode = getObfuscatedCode(
                     expectedObfuscatedCode,
                     sourceMap,
                     'http://example.com',
                     'output.js.map',
                     SourceMapMode.Separate
-                );
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should add source map import to obfuscated code', () => {
@@ -107,14 +125,13 @@ describe('SourceMapCorrector', () => {
 
         describe('source map mode is `separate`, `sourceMapUrl` is not set', () => {
             before(() => {
-                obfuscationResult = getCorrectedObfuscationResult(
+                obfuscatedCode = getObfuscatedCode(
                     expectedObfuscatedCode,
                     sourceMap,
                     '',
                     '',
                     SourceMapMode.Separate
-                );
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should not touch obfuscated code', () => {

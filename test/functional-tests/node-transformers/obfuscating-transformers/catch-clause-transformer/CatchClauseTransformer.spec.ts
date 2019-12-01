@@ -1,7 +1,5 @@
 import { assert } from 'chai';
 
-import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationResult';
-
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
@@ -21,14 +19,13 @@ describe('CatchClauseTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
             firstMatch = getRegExpMatch(obfuscatedCode, paramNameRegExp);
             secondMatch = getRegExpMatch(obfuscatedCode, bodyParamNameRegExp);
         });
@@ -52,14 +49,13 @@ describe('CatchClauseTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('match #1: shouldn\'t transform function parameter object pattern identifier', () => {

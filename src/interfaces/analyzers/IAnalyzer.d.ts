@@ -1,10 +1,9 @@
 import * as ESTree from 'estree';
-import { TObject } from '../../types/TObject';
 
-export interface IAnalyzer {
+export interface IAnalyzer <T> {
     /**
      * @param {Program} astTree
-     * @returns {TObject[]}
+     * @returns {T[]}
      */
-    analyze (astTree: ESTree.Program): TObject[];
+    analyze (astTree: ESTree.Program): T[];
 }

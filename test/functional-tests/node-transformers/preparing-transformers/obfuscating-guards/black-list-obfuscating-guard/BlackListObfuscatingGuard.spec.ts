@@ -1,7 +1,5 @@
 import { assert } from 'chai';
 
-import { IObfuscationResult } from '../../../../../../src/interfaces/IObfuscationResult';
-
 import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscatorFacade';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/presets/NoCustomNodes';
@@ -19,16 +17,15 @@ describe('BlackListObfuscatingGuard', () => {
 
             beforeEach(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/use-strict-operator.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         stringArray: true,
                         stringArrayThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('match #1: shouldn\'t obfuscate `use strict` operator', () => {

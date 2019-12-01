@@ -147,6 +147,16 @@ export class Options implements IOptions {
     public readonly reservedNames!: string[];
 
     /**
+     * @type {string[]}
+     */
+    @IsArray()
+    @ArrayUnique()
+    @IsString({
+        each: true
+    })
+    public readonly reservedStrings!: string[];
+
+    /**
      * @type {boolean}
      */
     @IsBoolean()

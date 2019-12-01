@@ -21,7 +21,7 @@ describe('TransformersRunner', () => {
 
         before(() => {
             inversifyContainerFacade = new InversifyContainerFacade();
-            inversifyContainerFacade.load('', {});
+            inversifyContainerFacade.load('', '', {});
 
             transformersRunner = inversifyContainerFacade.get(ServiceIdentifiers.ITransformersRunner);
         });

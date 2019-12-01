@@ -1,7 +1,5 @@
 import { assert } from 'chai';
 
-import { IObfuscationResult } from '../../../../../../src/interfaces/IObfuscationResult';
-
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../../../helpers/readFileAsString';
@@ -19,16 +17,15 @@ describe('CallExpressionControlFlowReplacer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should replace call expression node with call to control flow storage node', () => {
@@ -52,8 +49,7 @@ describe('CallExpressionControlFlowReplacer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input-2.js');
 
-                let obfuscationResult: IObfuscationResult,
-                    obfuscatedCode: string,
+                let obfuscatedCode: string,
                     firstMatchArray: RegExpMatchArray | null,
                     secondMatchArray: RegExpMatchArray | null,
                     firstMatch: string | undefined,
@@ -61,16 +57,14 @@ describe('CallExpressionControlFlowReplacer', function () {
                     equalsValue: number = 0;
 
                 for (let i = 0; i < samplesCount; i++) {
-                    obfuscationResult = JavaScriptObfuscator.obfuscate(
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             controlFlowFlattening: true,
                             controlFlowFlatteningThreshold: 1
                         }
-                    );
-
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
 
                     firstMatchArray = obfuscatedCode.match(controlFlowStorageCallRegExp1);
                     secondMatchArray = obfuscatedCode.match(controlFlowStorageCallRegExp2);
@@ -108,16 +102,15 @@ describe('CallExpressionControlFlowReplacer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input-3.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t replace call expression node with call to control flow storage node', () => {

@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
-import { TNodeWithBlockScope } from '../../../types/node/TNodeWithBlockScope';
+import { TNodeWithStatements } from '../../../types/node/TNodeWithStatements';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -55,17 +55,17 @@ export class ConsoleOutputCustomNodeGroup extends AbstractCustomNodeGroup {
     }
 
     /**
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithStatements} nodeWithStatements
      * @param {IStackTraceData[]} stackTraceData
      */
-    public appendCustomNodes (blockScopeNode: TNodeWithBlockScope, stackTraceData: IStackTraceData[]): void {
+    public appendCustomNodes (nodeWithStatements: TNodeWithStatements, stackTraceData: IStackTraceData[]): void {
         const randomStackTraceIndex: number = this.getRandomStackTraceIndex(stackTraceData.length);
 
         // consoleOutputDisableExpressionNode append
         this.appendCustomNodeIfExist(CustomNode.ConsoleOutputDisableExpressionNode, (customNode: ICustomNode) => {
             NodeAppender.appendToOptimalBlockScope(
                 stackTraceData,
-                blockScopeNode,
+                nodeWithStatements,
                 customNode.getNode(),
                 randomStackTraceIndex
             );
@@ -73,15 +73,11 @@ export class ConsoleOutputCustomNodeGroup extends AbstractCustomNodeGroup {
 
         // nodeCallsControllerFunctionNode append
         this.appendCustomNodeIfExist(CustomNode.NodeCallsControllerFunctionNode, (customNode: ICustomNode) => {
-            let targetBlockScope: TNodeWithBlockScope;
+            const targetNodeWithStatements: TNodeWithStatements = stackTraceData.length
+                ? NodeAppender.getOptimalBlockScope(stackTraceData, randomStackTraceIndex, 1)
+                : nodeWithStatements;
 
-            if (stackTraceData.length) {
-                targetBlockScope = NodeAppender.getOptimalBlockScope(stackTraceData, randomStackTraceIndex, 1);
-            } else {
-                targetBlockScope = blockScopeNode;
-            }
-
-            NodeAppender.prepend(targetBlockScope, customNode.getNode());
+            NodeAppender.prepend(targetNodeWithStatements, customNode.getNode());
         });
     }
 

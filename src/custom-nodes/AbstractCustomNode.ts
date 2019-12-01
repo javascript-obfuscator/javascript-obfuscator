@@ -59,9 +59,9 @@ export abstract class AbstractCustomNode implements ICustomNode {
     }
 
     /**
-     * @param {any[]} args
+     * @param {unknown[]} args
      */
-    public abstract initialize (...args: any[]): void;
+    public abstract initialize (...args: unknown[]): void;
 
     /**
      * @returns {TStatement[]}

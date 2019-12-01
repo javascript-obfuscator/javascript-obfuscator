@@ -1,24 +1,26 @@
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockScope } from '../../../types/node/TNodeWithBlockScope';
+import { TNodeWithLexicalScope } from '../../../types/node/TNodeWithLexicalScope';
 
 export interface IIdentifierNamesGenerator {
     /**
+     * @param {number} nameLength
      * @returns {string}
      */
-    generate (): string;
+    generate (nameLength?: number): string;
 
     /**
+     * @param {number} nameLength
      * @returns {string}
      */
-    generateWithPrefix (): string;
+    generateWithPrefix (nameLength?: number): string;
 
     /**
      * @param {Identifier} identifierNode
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithLexicalScope} blockScopeNode
      * @returns {string}
      */
-    generateForBlockScope (identifierNode: ESTree.Identifier, blockScopeNode: TNodeWithBlockScope): string;
+    generateForBlockScope (identifierNode: ESTree.Identifier, blockScopeNode: TNodeWithLexicalScope): string;
 
     /**
      * @param {string} identifierName

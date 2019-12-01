@@ -5,7 +5,7 @@ import { assert } from 'chai';
 
 import { ServiceIdentifiers } from '../../../../src/container/ServiceIdentifiers';
 
-import { TNodeWithBlockScope } from '../../../../src/types/node/TNodeWithBlockScope';
+import { TNodeWithLexicalScope } from '../../../../src/types/node/TNodeWithLexicalScope';
 
 import { IIdentifierNamesGenerator } from '../../../../src/interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IInversifyContainerFacade } from '../../../../src/interfaces/container/IInversifyContainerFacade';
@@ -24,7 +24,7 @@ describe('HexadecimalIdentifierNamesGenerator', () => {
         before(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-            inversifyContainerFacade.load('', {});
+            inversifyContainerFacade.load('', '', {});
             identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
                 ServiceIdentifiers.IIdentifierNamesGenerator,
                 IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
@@ -48,7 +48,7 @@ describe('HexadecimalIdentifierNamesGenerator', () => {
         before(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-            inversifyContainerFacade.load('', {
+            inversifyContainerFacade.load('', '', {
                 identifiersPrefix: 'foo'
             });
             identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
@@ -72,14 +72,18 @@ describe('HexadecimalIdentifierNamesGenerator', () => {
         before(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-            inversifyContainerFacade.load('', {});
+            inversifyContainerFacade.load('', '', {});
             identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
                 ServiceIdentifiers.IIdentifierNamesGenerator,
                 IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
             );
 
             const identifierNode: ESTree.Identifier = NodeFactory.identifierNode('foo');
-            const blockScopeNode: TNodeWithBlockScope = NodeFactory.blockStatementNode([]);
+            const blockScopeNode: TNodeWithLexicalScope = NodeFactory.functionDeclarationNode(
+                '',
+                [],
+                NodeFactory.blockStatementNode([])
+            );
 
             hexadecimalIdentifierName = identifierNamesGenerator.generateForBlockScope(identifierNode, blockScopeNode);
             regExp = /^_0x(\w){4,6}$/;

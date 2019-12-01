@@ -9,7 +9,7 @@ import { ICalleeData } from '../../../interfaces/analyzers/stack-trace-analyzer/
 
 import { AbstractCalleeDataExtractor } from './AbstractCalleeDataExtractor';
 import { NodeGuards } from '../../../node/NodeGuards';
-import { NodeUtils } from '../../../node/NodeUtils';
+import { NodeStatementUtils } from '../../../node/NodeStatementUtils';
 
 @injectable()
 export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtractor {
@@ -51,7 +51,7 @@ export class ObjectExpressionCalleeDataExtractor extends AbstractCalleeDataExtra
 
         const functionExpressionName: string | number | null = objectMembersCallsChain[objectMembersCallsChain.length - 1];
         const calleeBlockStatement: ESTree.BlockStatement | null = this.getCalleeBlockStatement(
-            NodeUtils.getBlockScopeOfNode(blockScopeBody[0]),
+            NodeStatementUtils.getParentNodeWithStatements(blockScopeBody[0]),
             objectMembersCallsChain
         );
 

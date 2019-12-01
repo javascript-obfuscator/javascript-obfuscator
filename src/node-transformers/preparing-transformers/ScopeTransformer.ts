@@ -61,7 +61,7 @@ export class ScopeTransformer extends AbstractNodeTransformer {
         scopeManager: eslintScope.ScopeManager,
         targetIdentifierNode: ESTree.Identifier
     ): eslintScope.Scope {
-        for (let node: ESTree.Node | undefined = targetIdentifierNode; node; node = (<ESTree.Node>node).parentNode) {
+        for (let node: ESTree.Node | undefined = targetIdentifierNode; node; node = node.parentNode) {
             if (!node.parentNode) {
                 throw new Error('`parentNode` property of given node is `undefined`');
             }

@@ -1,7 +1,5 @@
 import { assert } from 'chai';
 
-import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationResult';
-
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../../helpers/readFileAsString';
@@ -35,16 +33,15 @@ describe('FunctionControlFlowTransformer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should add `control flow storage` node to the obfuscated code', () => {
@@ -72,20 +69,18 @@ describe('FunctionControlFlowTransformer', function () {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input-2.js');
 
-                let obfuscationResult: IObfuscationResult,
-                    obfuscatedCode: string,
+                let obfuscatedCode: string,
                     totalValue: number = 0;
 
                 for (let i = 0; i < samplesCount; i++) {
-                    obfuscationResult = JavaScriptObfuscator.obfuscate(
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             controlFlowFlattening: true,
                             controlFlowFlatteningThreshold: 1
                         }
-                    );
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
 
                     if (regExp1.test(obfuscatedCode)) {
                         totalValue += obfuscatedCode.match(regExp1)!.length;
@@ -120,16 +115,15 @@ describe('FunctionControlFlowTransformer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/multiple-items.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should add `control flow storage` node with multiple items to the obfuscated code', () => {
@@ -144,16 +138,15 @@ describe('FunctionControlFlowTransformer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/root-block-scope-1.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 1
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('should\'t add control flow storage node', () => {
@@ -179,15 +172,15 @@ describe('FunctionControlFlowTransformer', function () {
 
             before(() => {
                 for (let i = 0; i < samplesCount; i++) {
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             controlFlowFlattening: true,
                             controlFlowFlatteningThreshold: 1
                         }
-                    );
-                    const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
 
                     if (regExp.test(obfuscatedCode)) {
                         totalValue++;
@@ -208,16 +201,15 @@ describe('FunctionControlFlowTransformer', function () {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/zero-threshold.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         controlFlowFlattening: true,
                         controlFlowFlatteningThreshold: 0
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t add call to control flow storage node to the obfuscated code', () => {
@@ -237,16 +229,15 @@ describe('FunctionControlFlowTransformer', function () {
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/arrow-function-expression-with-body.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             controlFlowFlattening: true,
                             controlFlowFlatteningThreshold: 1
                         }
-                    );
-
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('should add `control flow storage` node to the obfuscated code', () => {
@@ -261,16 +252,15 @@ describe('FunctionControlFlowTransformer', function () {
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/arrow-function-expression-without-body.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
                             controlFlowFlattening: true,
                             controlFlowFlatteningThreshold: 1
                         }
-                    );
-
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('shouldn\'t add `control flow storage` node to the obfuscated code', () => {

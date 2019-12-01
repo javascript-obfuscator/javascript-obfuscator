@@ -7,7 +7,7 @@ import { NodeFactory } from '../../../../src/node/NodeFactory';
 import { NodeUtils } from '../../../../src/node/NodeUtils';
 
 describe('NodeGuards', () => {
-    describe('isNodeHasBlockScope', () => {
+    describe('isNodeWithLexicalScopeStatements', () => {
         describe('truthful checks', () => {
             describe('Variant #1: block statement of function declaration', () => {
                 const expectedResult: boolean = true;
@@ -22,10 +22,10 @@ describe('NodeGuards', () => {
 
                 before(() => {
                     NodeUtils.parentizeAst(parentNode);
-                    result = NodeGuards.isNodeHasBlockScope(node, parentNode);
+                    result = NodeGuards.isNodeWithLexicalScopeStatements(node, parentNode);
                 });
 
-                it('should check if node has block scope', () => {
+                it('should check if node has statements', () => {
                     assert.equal(result, expectedResult);
                 });
             });
@@ -43,10 +43,10 @@ describe('NodeGuards', () => {
 
                 before(() => {
                     NodeUtils.parentizeAst(parentNode);
-                    result = NodeGuards.isNodeHasBlockScope(node, parentNode);
+                    result = NodeGuards.isNodeWithLexicalScopeStatements(node, parentNode);
                 });
 
-                it('should check if node has block scope', () => {
+                it('should check if node has statements', () => {
                     assert.equal(result, expectedResult);
                 });
             });
@@ -81,10 +81,10 @@ describe('NodeGuards', () => {
 
                 before(() => {
                     NodeUtils.parentizeAst(parentNode);
-                    result = NodeGuards.isNodeHasBlockScope(node, parentNode);
+                    result = NodeGuards.isNodeWithLexicalScopeStatements(node, parentNode);
                 });
 
-                it('should check if node has block scope', () => {
+                it('should check if node has statements', () => {
                     assert.equal(result, expectedResult);
                 });
             });
@@ -109,10 +109,10 @@ describe('NodeGuards', () => {
 
                 before(() => {
                     NodeUtils.parentizeAst(parentNode);
-                    result = NodeGuards.isNodeHasBlockScope(node, parentNode);
+                    result = NodeGuards.isNodeWithLexicalScopeStatements(node, parentNode);
                 });
 
-                it('should check if node has block scope', () => {
+                it('should check if node has statements', () => {
                     assert.equal(result, expectedResult);
                 });
             });
@@ -129,17 +129,17 @@ describe('NodeGuards', () => {
 
                 before(() => {
                     NodeUtils.parentizeAst(parentNode);
-                    result = NodeGuards.isNodeHasBlockScope(node, parentNode);
+                    result = NodeGuards.isNodeWithLexicalScopeStatements(node, parentNode);
                 });
 
-                it('should check if node has block scope', () => {
+                it('should check if node has statements', () => {
                     assert.equal(result, expectedResult);
                 });
             });
         });
     });
 
-    describe('isNodeHasScope', () => {
+    describe('isNodeWithStatements', () => {
         describe('truthful checks', () => {
             describe('Variant #1: program node', () => {
                 const expectedResult: boolean = true;
@@ -148,10 +148,10 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    result = NodeGuards.isNodeHasScope(node);
+                    result = NodeGuards.isNodeWithStatements(node);
                 });
 
-                it('should check if node has scope', () => {
+                it('should check if node has statements', () => {
                     assert.equal(result, expectedResult);
                 });
             });
@@ -163,10 +163,10 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    result = NodeGuards.isNodeHasScope(node);
+                    result = NodeGuards.isNodeWithStatements(node);
                 });
 
-                it('should check if node has scope', () => {
+                it('should check if node has statements', () => {
                     assert.equal(result, expectedResult);
                 });
             });
@@ -181,10 +181,10 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    result = NodeGuards.isNodeHasScope(node);
+                    result = NodeGuards.isNodeWithStatements(node);
                 });
 
-                it('should check if node has scope', () => {
+                it('should check if node has statements', () => {
                     assert.equal(result, expectedResult);
                 });
             });
@@ -198,10 +198,10 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    result = NodeGuards.isNodeHasScope(node);
+                    result = NodeGuards.isNodeWithStatements(node);
                 });
 
-                it('should check if node has scope', () => {
+                it('should check if node has statements', () => {
                     assert.equal(result, expectedResult);
                 });
             });
@@ -213,10 +213,10 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    result = NodeGuards.isNodeHasScope(node);
+                    result = NodeGuards.isNodeWithStatements(node);
                 });
 
-                it('should check if node has scope', () => {
+                it('should check if node has statements', () => {
                     assert.equal(result, expectedResult);
                 });
             });
@@ -231,10 +231,10 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    result = NodeGuards.isNodeHasScope(node);
+                    result = NodeGuards.isNodeWithStatements(node);
                 });
 
-                it('should check if node has scope', () => {
+                it('should check if node has statements', () => {
                     assert.equal(result, expectedResult);
                 });
             });
@@ -249,10 +249,10 @@ describe('NodeGuards', () => {
                 let result: boolean;
 
                 before(() => {
-                    result = NodeGuards.isNodeHasScope(node);
+                    result = NodeGuards.isNodeWithStatements(node);
                 });
 
-                it('should check if node has scope', () => {
+                it('should check if node has statements', () => {
                     assert.equal(result, expectedResult);
                 });
             });

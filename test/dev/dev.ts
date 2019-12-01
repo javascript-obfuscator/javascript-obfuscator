@@ -34,7 +34,8 @@ import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-
             stringArray: true,
             stringArrayThreshold: 1,
             transformObjectKeys: true,
-            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+            seed: 1
         }
     ).getObfuscatedCode();
 

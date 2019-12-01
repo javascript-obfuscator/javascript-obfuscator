@@ -13,7 +13,7 @@ describe('ArrayUtils', () => {
     before(() => {
         const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-        inversifyContainerFacade.load('', {});
+        inversifyContainerFacade.load('', '', {});
         arrayUtils = inversifyContainerFacade.get<IArrayUtils>(ServiceIdentifiers.IArrayUtils);
     });
 

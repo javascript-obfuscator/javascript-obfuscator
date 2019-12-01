@@ -1,5 +1,48 @@
 Change Log
 ===
+v0.18.5
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/321
+
+v0.18.4
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/437
+
+v0.18.3
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/424
+
+v0.18.2
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/320
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/319
+
+v0.18.1
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/317
+
+v0.18.0
+---
+* **New option:** `reservedStrings` disables transformation of string literals, which being matched by passed RegExp patterns
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/313
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/309
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/307
+
+v0.17.3
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/303
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/302
+
+v0.17.2
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/297
+
+v0.17.1
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/293
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/289
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/288
+
 v0.17.0
 ---
 * **Browser version**: Added browser version dist

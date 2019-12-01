@@ -1,7 +1,5 @@
 import { assert } from 'chai';
 
-import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationResult';
-
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
@@ -22,14 +20,13 @@ describe('ClassDeclarationTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/input.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
                 classNameIdentifier = getRegExpMatch(obfuscatedCode, classNameIdentifierRegExp);
                 classCallIdentifier = getRegExpMatch(obfuscatedCode, classCallIdentifierRegExp);
             });
@@ -48,14 +45,13 @@ describe('ClassDeclarationTransformer', () => {
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET
                         }
-                    );
-
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                    ).getObfuscatedCode();
                 });
 
                 it('match #1: shouldn\'t transform class name', () => {
@@ -68,30 +64,58 @@ describe('ClassDeclarationTransformer', () => {
             });
 
             describe('Variant #2: `renameGlobals` option is enabled', () => {
-                const classNameIdentifierRegExp: RegExp = /class *(_0x[a-f0-9]{4,6}) *\{/;
-                const classCallIdentifierRegExp: RegExp = /new *(_0x[a-f0-9]{4,6}) *\( *\);/;
+                describe('Variant #1: Base', () => {
+                    const classNameIdentifierRegExp: RegExp = /class *(_0x[a-f0-9]{4,6}) *\{/;
+                    const classCallIdentifierRegExp: RegExp = /new *(_0x[a-f0-9]{4,6}) *\( *\);/;
 
-                let obfuscatedCode: string;
+                    let obfuscatedCode: string;
 
-                before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js');
-                    const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            renameGlobals: true
-                        }
-                    );
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js');
 
-                    obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                renameGlobals: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('match #1: should transform class name', () => {
+                        assert.match(obfuscatedCode, classNameIdentifierRegExp);
+                    });
+
+                    it('match #2: should transform class name', () => {
+                        assert.match(obfuscatedCode, classCallIdentifierRegExp);
+                    });
                 });
 
-                it('match #1: should transform class name', () => {
-                    assert.match(obfuscatedCode, classNameIdentifierRegExp);
-                });
+                describe('Variant #2: Two classes. Transformation of identifier inside class method', () => {
+                    const identifierRegExp1: RegExp = /const (?:_0x[a-f0-9]{4,6}) *= *0x1;/;
+                    const identifierRegExp2: RegExp = /const (?:_0x[a-f0-9]{4,6}) *= *0x2;/;
 
-                it('match #2: should transform class name', () => {
-                    assert.match(obfuscatedCode, classCallIdentifierRegExp);
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/rename-globals-identifier-transformation.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                renameGlobals: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('match #1: should transform identifier name inside class method', () => {
+                        assert.match(obfuscatedCode, identifierRegExp1);
+                    });
+
+                    it('match #2: should transform identifier name inside class method', () => {
+                        assert.match(obfuscatedCode, identifierRegExp2);
+                    });
                 });
             });
         });
@@ -104,15 +128,14 @@ describe('ClassDeclarationTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevent-renaming-of-renamed-identifiers.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('Match #1: shouldn\'t rename twice class declaration name', () => {
@@ -131,15 +154,14 @@ describe('ClassDeclarationTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/named-export.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         renameGlobals: true
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t transform identifiers in named export', () => {
@@ -155,15 +177,14 @@ describe('ClassDeclarationTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/default-export.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         renameGlobals: true
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('Match #1: should transform identifiers in variable declaration', () => {

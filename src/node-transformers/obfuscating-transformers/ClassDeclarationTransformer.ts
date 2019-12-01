@@ -5,7 +5,9 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TIdentifierObfuscatingReplacerFactory } from "../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory";
-import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
+import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
+import { TReplaceableIdentifiers } from '../../types/node-transformers/TReplaceableIdentifiers';
+import { TReplaceableIdentifiersNames } from '../../types/node-transformers/TReplaceableIdentifiersNames';
 
 import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -18,8 +20,8 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeLexicalScopeUtils } from '../../node/NodeLexicalScopeUtils';
 import { NodeMetadata } from '../../node/NodeMetadata';
-import { NodeUtils } from '../../node/NodeUtils';
 
 /**
  * replaces:
@@ -40,7 +42,7 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
     /**
      * @type {Map<ESTree.Node, ESTree.Identifier[]>}
      */
-    private readonly replaceableIdentifiers: Map <ESTree.Node, ESTree.Identifier[]> = new Map();
+    private readonly replaceableIdentifiers: TReplaceableIdentifiers = new Map();
 
     /**
      * @param {TIdentifierObfuscatingReplacerFactory} identifierObfuscatingReplacerFactory
@@ -90,20 +92,25 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (classDeclarationNode: ESTree.ClassDeclaration, parentNode: ESTree.Node): ESTree.Node {
-        const blockScopeNode: TNodeWithBlockScope = NodeUtils.getBlockScopeOfNode(classDeclarationNode);
-        const isGlobalDeclaration: boolean = blockScopeNode.type === NodeType.Program;
+        const lexicalScopeNode: TNodeWithLexicalScope | undefined = NodeLexicalScopeUtils.getLexicalScope(classDeclarationNode);
+
+        if (!lexicalScopeNode) {
+            return classDeclarationNode;
+        }
+
+        const isGlobalDeclaration: boolean = lexicalScopeNode.type === NodeType.Program;
 
         if (!this.options.renameGlobals && isGlobalDeclaration) {
             return classDeclarationNode;
         }
 
-        this.storeClassName(classDeclarationNode, blockScopeNode, isGlobalDeclaration);
+        this.storeClassName(classDeclarationNode, lexicalScopeNode, isGlobalDeclaration);
 
         // check for cached identifiers for current scope node. If exist - loop through them.
-        if (this.replaceableIdentifiers.has(blockScopeNode)) {
-            this.replaceScopeCachedIdentifiers(blockScopeNode);
+        if (this.replaceableIdentifiers.has(lexicalScopeNode)) {
+            this.replaceScopeCachedIdentifiers(classDeclarationNode, lexicalScopeNode);
         } else {
-            this.replaceScopeIdentifiers(blockScopeNode);
+            this.replaceScopeIdentifiers(lexicalScopeNode);
         }
 
         return classDeclarationNode;
@@ -111,44 +118,58 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {ClassDeclaration} classDeclarationNode
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @param {boolean} isGlobalDeclaration
      */
     private storeClassName (
         classDeclarationNode: ESTree.ClassDeclaration,
-        blockScopeNode: TNodeWithBlockScope,
+        lexicalScopeNode: TNodeWithLexicalScope,
         isGlobalDeclaration: boolean
     ): void {
         if (isGlobalDeclaration) {
-            this.identifierObfuscatingReplacer.storeGlobalName(classDeclarationNode.id, blockScopeNode);
+            this.identifierObfuscatingReplacer.storeGlobalName(classDeclarationNode.id, lexicalScopeNode);
         } else {
-            this.identifierObfuscatingReplacer.storeLocalName(classDeclarationNode.id, blockScopeNode);
+            this.identifierObfuscatingReplacer.storeLocalName(classDeclarationNode.id, lexicalScopeNode);
         }
     }
 
     /**
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {ClassDeclaration} classDeclarationNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    private replaceScopeCachedIdentifiers (blockScopeNode: TNodeWithBlockScope): void {
-        const cachedReplaceableIdentifiers: ESTree.Identifier[] =
-            <ESTree.Identifier[]>this.replaceableIdentifiers.get(blockScopeNode);
+    private replaceScopeCachedIdentifiers (
+        classDeclarationNode: ESTree.ClassDeclaration,
+        lexicalScopeNode: TNodeWithLexicalScope
+    ): void {
+        const cachedReplaceableIdentifiersNamesMap: TReplaceableIdentifiersNames =
+            <TReplaceableIdentifiersNames>this.replaceableIdentifiers.get(lexicalScopeNode);
 
-        cachedReplaceableIdentifiers.forEach((replaceableIdentifier: ESTree.Identifier) => {
+        const cachedReplaceableIdentifiers: ESTree.Identifier[] | undefined = cachedReplaceableIdentifiersNamesMap
+            .get(classDeclarationNode.id.name);
+
+        if (!cachedReplaceableIdentifiers) {
+            return;
+        }
+
+        const cachedReplaceableIdentifierLength: number = cachedReplaceableIdentifiers.length;
+
+        for (let i: number = 0; i < cachedReplaceableIdentifierLength; i++) {
+            const replaceableIdentifier: ESTree.Identifier = cachedReplaceableIdentifiers[i];
             const newReplaceableIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                .replace(replaceableIdentifier, blockScopeNode);
+                .replace(replaceableIdentifier, lexicalScopeNode);
 
             replaceableIdentifier.name = newReplaceableIdentifier.name;
             NodeMetadata.set(replaceableIdentifier, { renamedIdentifier: true });
-        });
+        }
     }
 
     /**
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    private replaceScopeIdentifiers (blockScopeNode: TNodeWithBlockScope): void {
-        const storedReplaceableIdentifiers: ESTree.Identifier[] = [];
+    private replaceScopeIdentifiers (lexicalScopeNode: TNodeWithLexicalScope): void {
+        const storedReplaceableIdentifiersNamesMap: TReplaceableIdentifiersNames = new Map();
 
-        estraverse.replace(blockScopeNode, {
+        estraverse.replace(lexicalScopeNode, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
                 if (
                     parentNode
@@ -156,19 +177,23 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
                     && !NodeMetadata.isRenamedIdentifier(node)
                 ) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                        .replace(node, blockScopeNode);
+                        .replace(node, lexicalScopeNode);
                     const newIdentifierName: string = newIdentifier.name;
 
                     if (node.name !== newIdentifierName) {
                         node.name = newIdentifierName;
                         NodeMetadata.set(node, { renamedIdentifier: true });
                     } else {
+                        const storedReplaceableIdentifiers: ESTree.Identifier[] =
+                            storedReplaceableIdentifiersNamesMap.get(node.name) || [];
+
                         storedReplaceableIdentifiers.push(node);
+                        storedReplaceableIdentifiersNamesMap.set(node.name, storedReplaceableIdentifiers);
                     }
                 }
             }
         });
 
-        this.replaceableIdentifiers.set(blockScopeNode, storedReplaceableIdentifiers);
+        this.replaceableIdentifiers.set(lexicalScopeNode, storedReplaceableIdentifiersNamesMap);
     }
 }

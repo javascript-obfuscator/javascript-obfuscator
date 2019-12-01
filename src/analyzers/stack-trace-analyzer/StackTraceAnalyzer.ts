@@ -13,7 +13,7 @@ import { IStackTraceData } from '../../interfaces/analyzers/stack-trace-analyzer
 import { CalleeDataExtractor } from '../../enums/analyzers/stack-trace-analyzer/CalleeDataExtractor';
 
 import { NodeGuards } from '../../node/NodeGuards';
-import { NodeUtils } from '../../node/NodeUtils';
+import { NodeStatementUtils } from '../../node/NodeStatementUtils';
 
 /**
  * This class generates a data with a stack trace of functions calls
@@ -131,7 +131,7 @@ export class StackTraceAnalyzer implements IStackTraceAnalyzer {
                         return;
                     }
 
-                    if (blockScopeBodyNode.parentNode !== NodeUtils.getBlockScopeOfNode(node)) {
+                    if (blockScopeBodyNode.parentNode !== NodeStatementUtils.getParentNodeWithStatements(node)) {
                         return estraverse.VisitorOption.Skip;
                     }
 

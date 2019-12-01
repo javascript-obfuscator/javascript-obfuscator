@@ -24,7 +24,7 @@ describe('ScopeTransformer', () => {
 
         beforeEach(() => {
             inversifyContainerFacade = new InversifyContainerFacade();
-            inversifyContainerFacade.load('', {});
+            inversifyContainerFacade.load('', '', {});
 
             scopeTransformer = inversifyContainerFacade
                 .getNamed(ServiceIdentifiers.INodeTransformer, NodeTransformer.ScopeTransformer);

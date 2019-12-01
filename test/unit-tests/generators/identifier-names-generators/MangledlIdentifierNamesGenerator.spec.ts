@@ -5,7 +5,7 @@ import { assert } from 'chai';
 
 import { ServiceIdentifiers } from '../../../../src/container/ServiceIdentifiers';
 
-import { TNodeWithBlockScope } from '../../../../src/types/node/TNodeWithBlockScope';
+import { TNodeWithLexicalScope } from '../../../../src/types/node/TNodeWithLexicalScope';
 
 import { IIdentifierNamesGenerator } from '../../../../src/interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IInversifyContainerFacade } from '../../../../src/interfaces/container/IInversifyContainerFacade';
@@ -23,7 +23,7 @@ describe('MangledIdentifierNamesGenerator', () => {
         beforeEach(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-            inversifyContainerFacade.load('', {});
+            inversifyContainerFacade.load('', '', {});
             identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
                 ServiceIdentifiers.IIdentifierNamesGenerator,
                 IdentifierNamesGenerator.MangledIdentifierNamesGenerator
@@ -140,7 +140,7 @@ describe('MangledIdentifierNamesGenerator', () => {
         before(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-            inversifyContainerFacade.load('', {
+            inversifyContainerFacade.load('', '', {
                 identifiersPrefix: 'foo'
             });
             identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
@@ -181,7 +181,7 @@ describe('MangledIdentifierNamesGenerator', () => {
         beforeEach(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-            inversifyContainerFacade.load('', {});
+            inversifyContainerFacade.load('', '', {});
             identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
                 ServiceIdentifiers.IIdentifierNamesGenerator,
                 IdentifierNamesGenerator.MangledIdentifierNamesGenerator
@@ -193,7 +193,11 @@ describe('MangledIdentifierNamesGenerator', () => {
 
             beforeEach(() => {
                 const identifierNode: ESTree.Identifier = NodeFactory.identifierNode('foo');
-                const blockScopeNode: TNodeWithBlockScope = NodeFactory.blockStatementNode([]);
+                const blockScopeNode: TNodeWithLexicalScope = NodeFactory.functionDeclarationNode(
+                    '',
+                    [],
+                    NodeFactory.blockStatementNode([])
+                );
                 mangledIdentifierName = identifierNamesGenerator.generateForBlockScope(identifierNode, blockScopeNode);
             });
 
@@ -209,7 +213,11 @@ describe('MangledIdentifierNamesGenerator', () => {
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
                     const identifierNode: ESTree.Identifier = NodeFactory.identifierNode('foo');
-                    const blockScopeNode: TNodeWithBlockScope = NodeFactory.blockStatementNode([]);
+                    const blockScopeNode: TNodeWithLexicalScope = NodeFactory.functionDeclarationNode(
+                        '',
+                        [],
+                        NodeFactory.blockStatementNode([])
+                    );
                     mangledIdentifierName = identifierNamesGenerator.generateForBlockScope(identifierNode, blockScopeNode);
                 }
             });
@@ -226,7 +234,11 @@ describe('MangledIdentifierNamesGenerator', () => {
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
                     const identifierNode: ESTree.Identifier = NodeFactory.identifierNode('foo');
-                    const blockScopeNode: TNodeWithBlockScope = NodeFactory.blockStatementNode([]);
+                    const blockScopeNode: TNodeWithLexicalScope = NodeFactory.functionDeclarationNode(
+                        '',
+                        [],
+                        NodeFactory.blockStatementNode([])
+                    );
                     mangledIdentifierName = identifierNamesGenerator.generateForBlockScope(identifierNode, blockScopeNode);
                 }
             });
@@ -243,7 +255,11 @@ describe('MangledIdentifierNamesGenerator', () => {
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
                     const identifierNode: ESTree.Identifier = NodeFactory.identifierNode('foo');
-                    const blockScopeNode: TNodeWithBlockScope = NodeFactory.blockStatementNode([]);
+                    const blockScopeNode: TNodeWithLexicalScope = NodeFactory.functionDeclarationNode(
+                        '',
+                        [],
+                        NodeFactory.blockStatementNode([])
+                    );
                     mangledIdentifierName = identifierNamesGenerator.generateForBlockScope(identifierNode, blockScopeNode);
                 }
             });
@@ -260,7 +276,11 @@ describe('MangledIdentifierNamesGenerator', () => {
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
                     const identifierNode: ESTree.Identifier = NodeFactory.identifierNode('foo');
-                    const blockScopeNode: TNodeWithBlockScope = NodeFactory.blockStatementNode([]);
+                    const blockScopeNode: TNodeWithLexicalScope = NodeFactory.functionDeclarationNode(
+                        '',
+                        [],
+                        NodeFactory.blockStatementNode([])
+                    );
                     mangledIdentifierName = identifierNamesGenerator.generateForBlockScope(identifierNode, blockScopeNode);
                 }
             });
@@ -282,7 +302,11 @@ describe('MangledIdentifierNamesGenerator', () => {
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition2; i++) {
                     const identifierNode: ESTree.Identifier = NodeFactory.identifierNode('foo');
-                    const blockScopeNode: TNodeWithBlockScope = NodeFactory.blockStatementNode([]);
+                    const blockScopeNode: TNodeWithLexicalScope = NodeFactory.functionDeclarationNode(
+                        '',
+                        [],
+                        NodeFactory.blockStatementNode([])
+                    );
                     mangledIdentifierName = identifierNamesGenerator.generateForBlockScope(identifierNode, blockScopeNode);
 
                     if (i === expectedMangledIdentifierPosition1) {
@@ -316,7 +340,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             beforeEach(() => {
                 const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-                inversifyContainerFacade.load('', { reservedNames });
+                inversifyContainerFacade.load('', '', { reservedNames });
                 identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
                     ServiceIdentifiers.IIdentifierNamesGenerator,
                     IdentifierNamesGenerator.MangledIdentifierNamesGenerator
@@ -347,7 +371,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             beforeEach(() => {
                 const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
-                inversifyContainerFacade.load('', { reservedNames });
+                inversifyContainerFacade.load('', '', { reservedNames });
                 identifierNamesGenerator = inversifyContainerFacade.getNamed<IIdentifierNamesGenerator>(
                     ServiceIdentifiers.IIdentifierNamesGenerator,
                     IdentifierNamesGenerator.MangledIdentifierNamesGenerator

@@ -1,7 +1,5 @@
 import { assert } from 'chai';
 
-import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationResult';
-
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../../helpers/readFileAsString';
@@ -16,14 +14,13 @@ describe('MethodDefinitionTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/sample-input.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('should replace method definition node `key` property with square brackets literal', () => {
@@ -39,16 +36,15 @@ describe('MethodDefinitionTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/sample-input.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     stringArray: true,
                     stringArrayThreshold: 1
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('should add method definition node `key` property to string array', () => {
@@ -67,14 +63,13 @@ describe('MethodDefinitionTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/sample-input.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('shouldn\'t transform method definition node with `constructor` key', () => {
@@ -90,14 +85,13 @@ describe('MethodDefinitionTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/async-get-method.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('Match #1: should rename class declaration name', () => {

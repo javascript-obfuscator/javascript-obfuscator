@@ -1,7 +1,5 @@
 import { assert } from 'chai';
 
-import { IObfuscationResult } from '../../../../../src/interfaces/IObfuscationResult';
-
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
@@ -20,14 +18,13 @@ describe('VariableDeclarationTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/simple-declaration.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('match #1: should transform `variableDeclaration` node', () => {
@@ -48,14 +45,13 @@ describe('VariableDeclarationTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('match #1: shouldn\'t transform `variableDeclaration` node', () => {
@@ -75,15 +71,14 @@ describe('VariableDeclarationTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         renameGlobals: true
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('match #1: should transform `variableDeclaration` node', () => {
@@ -103,14 +98,13 @@ describe('VariableDeclarationTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/var-kind.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('should transform variable call (`identifier` node) outside of block scope of node in which this variable was declared with `var` kind', () => {
@@ -125,14 +119,13 @@ describe('VariableDeclarationTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/let-kind.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('shouldn\'t transform variable call (`identifier` node) outside of block scope of node in which this variable was declared with `let` kind', () => {
@@ -148,14 +141,13 @@ describe('VariableDeclarationTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/variable-call-before-variable-declaration-1.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('should transform variable call (`identifier` node name) before variable declaration if this call is inside function body', () => {
@@ -170,51 +162,51 @@ describe('VariableDeclarationTransformer', () => {
     describe(`Variant #6: variable calls before variable declaration when function param has the same name as variables name`, () => {
         const functionParamIdentifierRegExp: RegExp = /function *_0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\,(_0x[a-f0-9]{4,6})\) *\{/;
         const innerFunctionParamIdentifierRegExp: RegExp = /function _0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\) *\{/;
-        const constructorIdentifierRegExp: RegExp = /console\['log'\]\((_0x[a-f0-9]{4,6})\)/;
+        const consoleLogIdentifierRegExp: RegExp = /console\['log'\]\((_0x[a-f0-9]{4,6})\)/;
         const objectIdentifierRegExp: RegExp = /return\{'t':(_0x[a-f0-9]{4,6})\}/;
         const variableDeclarationIdentifierRegExp: RegExp = /var *(_0x[a-f0-9]{4,6});/;
 
         let outerFunctionParamIdentifierName: string|null,
             innerFunctionParamIdentifierName: string|null,
-            constructorIdentifierName: string|null,
+            consoleLogIdentifierName: string|null,
             objectIdentifierName: string|null,
             variableDeclarationIdentifierName: string|null;
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/variable-call-before-variable-declaration-2.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-            const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
 
             outerFunctionParamIdentifierName = getRegExpMatch(obfuscatedCode, functionParamIdentifierRegExp);
             innerFunctionParamIdentifierName = getRegExpMatch(obfuscatedCode, innerFunctionParamIdentifierRegExp);
-            constructorIdentifierName = getRegExpMatch(obfuscatedCode, constructorIdentifierRegExp);
+            consoleLogIdentifierName = getRegExpMatch(obfuscatedCode, consoleLogIdentifierRegExp);
             objectIdentifierName = getRegExpMatch(obfuscatedCode, objectIdentifierRegExp);
             variableDeclarationIdentifierName = getRegExpMatch(obfuscatedCode, variableDeclarationIdentifierRegExp);
         });
 
-        it('match #1: should\'t name variables inside inner function with names from outer function params', () => {
-            assert.notEqual(outerFunctionParamIdentifierName, constructorIdentifierName);
+        it('equal #1: should generate same names for identifiers inside inner function and outer function params', () => {
+            assert.equal(outerFunctionParamIdentifierName, consoleLogIdentifierName);
         });
 
-        it('match #2: should\'t name variables inside inner function with names from outer function params', () => {
-            assert.notEqual(outerFunctionParamIdentifierName, innerFunctionParamIdentifierName);
+        it('equal #2: should generate same names for identifiers inside inner function and inner function params', () => {
+            assert.equal(outerFunctionParamIdentifierName, innerFunctionParamIdentifierName);
         });
 
-        it('match #1: should correct transform variables inside outer function body', () => {
+        it('equal #1: should correct transform variables inside outer function body', () => {
             assert.equal(outerFunctionParamIdentifierName, objectIdentifierName);
         });
 
-        it('match #2: should correct transform variables inside outer function body', () => {
+        it('equal #2: should correct transform variables inside outer function body', () => {
             assert.equal(outerFunctionParamIdentifierName, variableDeclarationIdentifierName);
         });
 
         it('should correct transform variables inside inner function body', () => {
-            assert.equal(innerFunctionParamIdentifierName, constructorIdentifierName);
+            assert.equal(innerFunctionParamIdentifierName, consoleLogIdentifierName);
         });
 
         it('should keep equal names after transformation for variables with same names', () => {
@@ -225,39 +217,39 @@ describe('VariableDeclarationTransformer', () => {
     describe(`Variant #7: variable calls before variable declaration when catch clause param has the same name as variables name`, () => {
         const catchClauseParamIdentifierRegExp: RegExp = /catch *\((_0x[a-f0-9]{4,6})\) *\{/;
         const innerFunctionParamIdentifierRegExp: RegExp = /function _0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\) *\{/;
-        const constructorIdentifierRegExp: RegExp = /console\['log'\]\((_0x[a-f0-9]{4,6})\)/;
+        const consoleLogIdentifierRegExp: RegExp = /console\['log'\]\((_0x[a-f0-9]{4,6})\)/;
         const objectIdentifierRegExp: RegExp = /return\{'t':(_0x[a-f0-9]{4,6})\}/;
         const variableDeclarationIdentifierRegExp: RegExp = /var *(_0x[a-f0-9]{4,6});/;
 
         let catchClauseParamIdentifierName: string|null,
             innerFunctionParamIdentifierName: string|null,
-            constructorIdentifierName: string|null,
+            consoleLogIdentifierName: string|null,
             objectIdentifierName: string|null,
             variableDeclarationIdentifierName: string|null;
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/variable-call-before-variable-declaration-3.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-            const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
 
             catchClauseParamIdentifierName = getRegExpMatch(obfuscatedCode, catchClauseParamIdentifierRegExp);
             innerFunctionParamIdentifierName = getRegExpMatch(obfuscatedCode, innerFunctionParamIdentifierRegExp);
-            constructorIdentifierName = getRegExpMatch(obfuscatedCode, constructorIdentifierRegExp);
+            consoleLogIdentifierName = getRegExpMatch(obfuscatedCode, consoleLogIdentifierRegExp);
             objectIdentifierName = getRegExpMatch(obfuscatedCode, objectIdentifierRegExp);
             variableDeclarationIdentifierName = getRegExpMatch(obfuscatedCode, variableDeclarationIdentifierRegExp);
         });
 
-        it('match #1: should\'t name variables inside inner function with names from catch clause param', () => {
-            assert.notEqual(catchClauseParamIdentifierName, constructorIdentifierName);
+        it('match #1: should generate same names for identifiers inside inner function and catch clause param', () => {
+            assert.equal(catchClauseParamIdentifierName, consoleLogIdentifierName);
         });
 
-        it('match #2: should\'t name variables inside inner function with names from catch clause param', () => {
-            assert.notEqual(catchClauseParamIdentifierName, innerFunctionParamIdentifierName);
+        it('match #2: should generate same names for identifiers inside inner function and catch clause param', () => {
+            assert.equal(catchClauseParamIdentifierName, innerFunctionParamIdentifierName);
         });
 
         it('equal #1: should correct transform variables inside catch clause body', () => {
@@ -269,7 +261,7 @@ describe('VariableDeclarationTransformer', () => {
         });
 
         it('should correct transform variables inside inner function body', () => {
-            assert.equal(innerFunctionParamIdentifierName, constructorIdentifierName);
+            assert.equal(innerFunctionParamIdentifierName, consoleLogIdentifierName);
         });
 
         it('should keep equal names after transformation for variables with same names', () => {
@@ -285,14 +277,13 @@ describe('VariableDeclarationTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/property-identifier.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t replace property node identifier', () => {
@@ -307,14 +298,13 @@ describe('VariableDeclarationTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/member-expression-identifier.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('shouldn\'t replace computed member expression identifier', () => {
@@ -331,14 +321,13 @@ describe('VariableDeclarationTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/object-pattern.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('match #1: shouldn\'t transform object pattern variable declarator', () => {
@@ -362,14 +351,13 @@ describe('VariableDeclarationTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/array-pattern.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
 
             objectPatternIdentifierName1 = getRegExpMatch(obfuscatedCode, objectPatternVariableDeclaratorRegExp);
             objectPatternIdentifierName2 = getRegExpMatch(obfuscatedCode, objectPatternVariableDeclaratorRegExp, 1);
@@ -401,14 +389,13 @@ describe('VariableDeclarationTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/computed-object-expression-identifier.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('should transform computed object expression identifier', () => {
@@ -423,14 +410,13 @@ describe('VariableDeclarationTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/method-definition-identifier.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('shouldn\'t transform method definition node key identifier', () => {
@@ -450,15 +436,14 @@ describe('VariableDeclarationTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevent-renaming-of-renamed-identifiers-1.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('Match #1: shouldn\'t rename twice variable declaration name', () => {
@@ -492,15 +477,14 @@ describe('VariableDeclarationTransformer', () => {
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/prevent-renaming-of-renamed-identifiers-2.js');
-                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                     }
-                );
-
-                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+                ).getObfuscatedCode();
             });
 
             it('Match #1: shouldn\'t rename twice variable declaration name', () => {
@@ -528,15 +512,14 @@ describe('VariableDeclarationTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/named-export.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     renameGlobals: true
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('shouldn\'t transform identifiers in named export', () => {
@@ -552,15 +535,14 @@ describe('VariableDeclarationTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/default-export.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
                     renameGlobals: true
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('Match #1: should transform identifiers in variable declaration', () => {
@@ -580,14 +562,13 @@ describe('VariableDeclarationTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/array-rest.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('Match #1: should transform object name', () => {
@@ -607,14 +588,13 @@ describe('VariableDeclarationTransformer', () => {
 
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/object-rest.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET
                 }
-            );
-
-            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            ).getObfuscatedCode();
         });
 
         it('Match #1: should transform object name', () => {

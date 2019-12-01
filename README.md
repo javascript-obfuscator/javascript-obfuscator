@@ -6,6 +6,8 @@
 
 # JavaScript obfuscator
 
+#### Right now i haven't time to maintain this project and i looking for for maintainers! Create issue if you want to maintain this project.
+
 ![logo](https://raw.githubusercontent.com/javascript-obfuscator/javascript-obfuscator/master/images/logo.png)
 
 JavaScript obfuscator is a powerful free obfuscator for JavaScript with a wide number of features which provides protection for your source code.
@@ -27,7 +29,7 @@ Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/
 [![Join the chat at Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/javascript-obfuscator/General-chat)
 [![npm version](https://badge.fury.io/js/javascript-obfuscator.svg)](https://badge.fury.io/js/javascript-obfuscator)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjavascript-obfuscator%2Fjavascript-obfuscator.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjavascript-obfuscator%2Fjavascript-obfuscator?ref=badge_shield)
-[![Build Status](https://travis-ci.org/javascript-obfuscator/javascript-obfuscator.svg?branch=master)](https://travis-ci.org/javascript-obfuscator/javascript-obfuscator)
+[![Build Status](https://travis-ci.com/javascript-obfuscator/javascript-obfuscator.svg?branch=master)](https://travis-ci.com/javascript-obfuscator/javascript-obfuscator)
 [![Coverage Status](https://coveralls.io/repos/github/javascript-obfuscator/javascript-obfuscator/badge.svg?branch=master)](https://coveralls.io/github/javascript-obfuscator/javascript-obfuscator?branch=master)
 [![Backers on Open Collective](https://opencollective.com/javascript-obfuscator/backers/badge.svg)](#backers) 
 [![Sponsors on Open Collective](https://opencollective.com/javascript-obfuscator/sponsors/badge.svg)](#sponsors)
@@ -297,6 +299,7 @@ Following options are available for the JS Obfuscator:
     log: false,
     renameGlobals: false,
     reservedNames: [],
+    reservedStrings: [],
     rotateStringArray: true,
     seed: 0,
     selfDefending: false,
@@ -336,6 +339,7 @@ Following options are available for the JS Obfuscator:
     --log <boolean>
     --rename-globals <boolean>
     --reserved-names '<list>' (comma separated)
+    --reserved-strings '<list>' (comma separated)
     --rotate-string-array <boolean>
     --seed <number>
     --self-defending <boolean>
@@ -633,6 +637,22 @@ Example:
 	}
 ```
 
+### `reservedStrings`
+Type: `string[]` Default: `[]`
+
+Disables transformation of string literals, which being matched by passed RegExp patterns.
+
+Example:
+```ts
+	{
+		reservedStrings: [
+			'react-native',
+			'\.\/src\/test',
+			'some-string_\d'
+		]
+	}
+```
+
 ### `rotateStringArray`
 Type: `boolean` Default: `true`
 
@@ -671,7 +691,7 @@ Sets base url to the source map import url when [`sourceMapMode: 'separate'`](#s
  
 CLI example:
 ```
-javascript-obfuscator input.js --output out.js --sourceMap true --sourceMapBaseUrl 'http://localhost:9000'
+javascript-obfuscator input.js --output out.js --source-map true --source-map-base-url 'http://localhost:9000'
 ```
 
 Result: 
@@ -686,7 +706,7 @@ Sets file name for output source map when `sourceMapMode: 'separate'`.
 
 CLI example:
 ```
-javascript-obfuscator input.js --output out.js --sourceMap true --sourceMapBaseUrl 'http://localhost:9000' --sourceMapFileName example
+javascript-obfuscator input.js --output out.js --source-map true --source-map-base-url 'http://localhost:9000' --source-map-file-name example
 ```
 
 Result: 

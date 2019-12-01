@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockScope } from '../../../types/node/TNodeWithBlockScope';
+import { TNodeWithLexicalScope } from '../../../types/node/TNodeWithLexicalScope';
 
 import { IObfuscatingReplacer } from '../../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IObfuscatingReplacer';
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -26,8 +26,8 @@ export abstract class AbstractObfuscatingReplacer implements IObfuscatingReplace
 
     /**
      * @param {Node} node
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @returns {Node}
      */
-    public abstract replace (node: ESTree.Node, blockScopeNode?: TNodeWithBlockScope): ESTree.Node;
+    public abstract replace (node: ESTree.Node, lexicalScopeNode?: TNodeWithLexicalScope): ESTree.Node;
 }

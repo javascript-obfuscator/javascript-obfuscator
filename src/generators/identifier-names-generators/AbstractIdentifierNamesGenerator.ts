@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
+import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 
 import { IIdentifierNamesGenerator } from '../../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -34,21 +34,23 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     }
 
     /**
+     * @param {number} nameLength
      * @returns {string}
      */
-    public abstract generate (): string;
+    public abstract generate (nameLength?: number): string;
 
     /**
+     * @param {number} nameLength
      * @returns {string}
      */
-    public abstract generateWithPrefix (): string;
+    public abstract generateWithPrefix (nameLength?: number): string;
 
     /**
      * @param {Identifier} identifierNode
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithLexicalScope} blockScopeNode
      * @returns {string}
      */
-    public abstract generateForBlockScope (identifierNode: ESTree.Identifier, blockScopeNode: TNodeWithBlockScope): string;
+    public abstract generateForBlockScope (identifierNode: ESTree.Identifier, blockScopeNode: TNodeWithLexicalScope): string;
 
     /**
      * @param {string} name

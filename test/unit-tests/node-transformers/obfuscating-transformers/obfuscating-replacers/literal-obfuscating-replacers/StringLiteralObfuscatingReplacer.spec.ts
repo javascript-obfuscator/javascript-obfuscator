@@ -21,7 +21,7 @@ describe('StringLiteralObfuscatingReplacer', () => {
 
         before(() => {
             inversifyContainerFacade = new InversifyContainerFacade();
-            inversifyContainerFacade.load('', {});
+            inversifyContainerFacade.load('', '', {});
 
             stringLiteralObfuscatingReplacer = inversifyContainerFacade.getNamed(
                 ServiceIdentifiers.IObfuscatingReplacer,

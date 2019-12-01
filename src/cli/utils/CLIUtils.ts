@@ -47,7 +47,7 @@ export class CLIUtils {
      * @returns {TObject}
      */
     public static getUserConfig (configPath: string): TObject {
-        let config: Object;
+        let config: TObject;
 
         try {
             config = require(configPath);

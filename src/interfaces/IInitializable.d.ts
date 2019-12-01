@@ -1,8 +1,8 @@
-export interface IInitializable {
+export interface IInitializable <T extends any[] = never[]> {
     [key: string]: any;
 
     /**
      * @param args
      */
-    initialize (...args: any[]): void;
+    initialize (...args: T): void;
 }

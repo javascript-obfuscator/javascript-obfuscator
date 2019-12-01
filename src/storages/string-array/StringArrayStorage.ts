@@ -51,11 +51,9 @@ export class StringArrayStorage extends ArrayStorage <string> {
         super.initialize();
 
         const baseStringArrayName: string = this.identifierNamesGenerator
-            .generate()
-            .slice(0, StringArrayStorage.stringArrayNameLength);
+            .generate(StringArrayStorage.stringArrayNameLength);
         const baseStringArrayCallsWrapperName: string = this.identifierNamesGenerator
-            .generate()
-            .slice(0, StringArrayStorage.stringArrayNameLength);
+            .generate(StringArrayStorage.stringArrayNameLength);
         const stringArrayName: string = `${this.options.identifiersPrefix}${baseStringArrayName}`;
         const stringArrayCallsWrapperName: string = `${this.options.identifiersPrefix}${baseStringArrayCallsWrapperName}`;
 

@@ -3,7 +3,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
-import { TNodeWithBlockScope } from '../../../types/node/TNodeWithBlockScope';
+import { TNodeWithStatements } from '../../../types/node/TNodeWithStatements';
 import { TStringArrayStorage } from '../../../types/storages/TStringArrayStorage';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
@@ -64,27 +64,27 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
     }
 
     /**
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithStatements} nodeWithStatements
      * @param {IStackTraceData[]} stackTraceData
      */
-    public appendCustomNodes (blockScopeNode: TNodeWithBlockScope, stackTraceData: IStackTraceData[]): void {
+    public appendCustomNodes (nodeWithStatements: TNodeWithStatements, stackTraceData: IStackTraceData[]): void {
         if (!this.stringArrayStorage.getLength()) {
             return;
         }
 
         // stringArrayNode append
         this.appendCustomNodeIfExist(CustomNode.StringArrayNode, (customNode: ICustomNode) => {
-            NodeAppender.prepend(blockScopeNode, customNode.getNode());
+            NodeAppender.prepend(nodeWithStatements, customNode.getNode());
         });
 
         // stringArrayCallsWrapper append
         this.appendCustomNodeIfExist(CustomNode.StringArrayCallsWrapper, (customNode: ICustomNode) => {
-            NodeAppender.insertAtIndex(blockScopeNode, customNode.getNode(), 1);
+            NodeAppender.insertAtIndex(nodeWithStatements, customNode.getNode(), 1);
         });
 
         // stringArrayRotateFunctionNode append
         this.appendCustomNodeIfExist(CustomNode.StringArrayRotateFunctionNode, (customNode: ICustomNode) => {
-            NodeAppender.insertAtIndex(blockScopeNode, customNode.getNode(), 1);
+            NodeAppender.insertAtIndex(nodeWithStatements, customNode.getNode(), 1);
         });
     }
 

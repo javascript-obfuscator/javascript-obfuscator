@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { IObfuscationResult } from '../../../../src/interfaces/IObfuscationResult';
+import { IObfuscatedCode } from '../../../../src/interfaces/source-code/IObfuscatedCode';
 
 import { readFileAsString } from '../../../helpers/readFileAsString';
 
@@ -16,7 +16,7 @@ describe('DebugProtectionFunctionIntervalTemplate', () => {
 
         beforeEach(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
-            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+            const obfuscationResult: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,

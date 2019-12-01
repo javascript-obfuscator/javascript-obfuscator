@@ -22,7 +22,7 @@ describe('ObfuscatingGuardsTransformer', () => {
 
         before(() => {
             inversifyContainerFacade = new InversifyContainerFacade();
-            inversifyContainerFacade.load('', {});
+            inversifyContainerFacade.load('', '', {});
 
             obfuscatingGuardsTransformer = inversifyContainerFacade
                 .getNamed(ServiceIdentifiers.INodeTransformer, NodeTransformer.ObfuscatingGuardsTransformer);

@@ -4,7 +4,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as eslintScope from 'eslint-scope';
 import * as ESTree from 'estree';
 
-import { TNodeWithBlockScope } from '../../types/node/TNodeWithBlockScope';
+import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
@@ -57,9 +57,11 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     }
 
     /**
+     * We can only ignore limited nameLength, it has no sense here
+     * @param {number} nameLength
      * @returns {string}
      */
-    public generate (): string {
+    public generate (nameLength?: number): string {
         const identifierName: string = this.generateNewMangledName(this.previousMangledName);
 
         this.previousMangledName = identifierName;
@@ -68,23 +70,24 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     }
 
     /**
+     * @param {number} nameLength
      * @returns {string}
      */
-    public generateWithPrefix (): string {
+    public generateWithPrefix (nameLength?: number): string {
         const prefix: string = this.options.identifiersPrefix ?
             `${this.options.identifiersPrefix}_`
             : '';
-        const identifierName: string = this.generate();
+        const identifierName: string = this.generate(nameLength);
 
         return `${prefix}${identifierName}`;
     }
 
     /**
      * @param {Identifier} identifierNode
-     * @param {TNodeWithBlockScope} blockScopeNode
+     * @param {TNodeWithLexicalScope} blockScopeNode
      * @returns {string}
      */
-    public generateForBlockScope (identifierNode: ESTree.Identifier, blockScopeNode: TNodeWithBlockScope): string {
+    public generateForBlockScope (identifierNode: ESTree.Identifier, blockScopeNode: TNodeWithLexicalScope): string {
         return this.generateForBlockScopeRecursive(identifierNode);
     }
 
@@ -102,12 +105,12 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @param {Scope} scope
      * @returns {boolean}
      */
-    private isUniqueIdentifierNameInScope(identifierName: string, scope: eslintScope.Scope): boolean {
+    private isUniqueIdentifierNameInScope (identifierName: string, scope: eslintScope.Scope): boolean {
         if ((<any>scope).taints.has(identifierName)) {
             return false;
         }
 
-        for (let through of scope.through) {
+        for (const through of scope.through) {
             if (through.identifier.name === identifierName) {
                 return false;
             }
@@ -120,7 +123,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @param {Identifier} identifierNode
      * @returns {string}
      */
-    private generateForBlockScopeRecursive(identifierNode: ESTree.Identifier): string {
+    private generateForBlockScopeRecursive (identifierNode: ESTree.Identifier): string {
         const scope: eslintScope.Scope | null | undefined = identifierNode.scope;
 
         if (!scope) {
@@ -128,7 +131,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         }
 
         const lastMangledNameInScope: string = this.getLastMangledNameForScope(scope);
-        let newIdentifierName: string = this.generateNewMangledName(lastMangledNameInScope);
+        const newIdentifierName: string = this.generateNewMangledName(lastMangledNameInScope);
 
         MangledIdentifierNamesGenerator.lastMangledNameInScopeMap.set(scope, newIdentifierName);
 

@@ -16,6 +16,7 @@ import { EvalCallExpressionTransformer } from '../../../node-transformers/prepar
 import { MetadataTransformer } from '../../../node-transformers/preparing-transformers/MetadataTransformer';
 import { ObfuscatingGuardsTransformer } from '../../../node-transformers/preparing-transformers/ObfuscatingGuardsTransformer';
 import { ParentificationTransformer } from '../../../node-transformers/preparing-transformers/ParentificationTransformer';
+import { VariablePreserveTransformer } from "../../../node-transformers/preparing-transformers/VariablePreserveTransformer";
 
 export const preparingTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // preparing transformers
@@ -60,4 +61,8 @@ export const preparingTransformersModule: interfaces.ContainerModule = new Conta
             .getCacheFactory<ObfuscatingGuard, IObfuscatingGuard>(
                 ServiceIdentifiers.INodeGuard
             ));
+
+    bind<INodeTransformer>(ServiceIdentifiers.INodeTransformer)
+        .to(VariablePreserveTransformer)
+        .whenTargetNamed(NodeTransformer.VariablePreserveTransformer);
 });

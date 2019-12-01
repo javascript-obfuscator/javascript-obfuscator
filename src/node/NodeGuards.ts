@@ -299,27 +299,46 @@ export class NodeGuards {
      * @param {Node} parentNode
      * @returns {boolean}
      */
-    public static isReplaceableIdentifierNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
-        if (!NodeGuards.isIdentifierNode(node)) {
-            return false;
-        }
-
-        const parentNodeIsPropertyNode: boolean = NodeGuards.isPropertyNode(parentNode) &&
+    public static parentNodeIsPropertyNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
+        return NodeGuards.isPropertyNode(parentNode) &&
             !parentNode.computed &&
             parentNode.key === node;
-        const parentNodeIsMemberExpressionNode: boolean = (
+    }
+
+    /**
+     * @param {Node} node
+     * @param {Node} parentNode
+     * @returns {boolean}
+     */
+    public static parentNodeIsMemberExpressionNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
+        return (
             NodeGuards.isMemberExpressionNode(parentNode) &&
             !parentNode.computed &&
             parentNode.property === node
         );
-        const parentNodeIsMethodDefinitionNode: boolean = NodeGuards.isMethodDefinitionNode(parentNode) &&
-            !parentNode.computed;
-        const isLabelIdentifierNode: boolean = NodeGuards.isLabelIdentifierNode(node, parentNode);
+    }
 
-        return !parentNodeIsPropertyNode &&
-            !parentNodeIsMemberExpressionNode &&
-            !parentNodeIsMethodDefinitionNode &&
-            !isLabelIdentifierNode;
+    /**
+     * @param {Node} node
+     * @param {Node} parentNode
+     * @returns {boolean}
+     */
+    public static parentNodeIsMethodDefinitionNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
+        return NodeGuards.isMethodDefinitionNode(parentNode) &&
+            !parentNode.computed;
+    }
+
+    /**
+     * @param {Node} node
+     * @param {Node} parentNode
+     * @returns {boolean}
+     */
+    public static isReplaceableIdentifierNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
+        return NodeGuards.isIdentifierNode(node) &&
+            !NodeGuards.parentNodeIsPropertyNode(node, parentNode) &&
+            !NodeGuards.parentNodeIsMemberExpressionNode(node, parentNode) &&
+            !NodeGuards.parentNodeIsMethodDefinitionNode(node, parentNode) &&
+            !NodeGuards.isLabelIdentifierNode(node, parentNode);
     }
 
     /**

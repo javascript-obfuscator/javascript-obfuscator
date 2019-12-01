@@ -18,6 +18,11 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     protected readonly randomGenerator: IRandomGenerator;
 
     /**
+     * @type {Array}
+     */
+    protected readonly preservedNames: string[] = [];
+
+    /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
@@ -43,9 +48,25 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
 
     /**
      * @param {string} name
+     * @returns {void}
+     */
+    public preserveName (name: string): void {
+        this.preservedNames.push(name);
+    }
+
+    /**
+     * @param {string} name
      * @returns {boolean}
      */
     public isValidIdentifierName (name: string): boolean {
+        return this.notReservedName(name) && !this.preservedNames.includes(name);
+    }
+
+    /**
+     * @param {string} name
+     * @returns {boolean}
+     */
+    private notReservedName (name: string): boolean {
         return this.options.reservedNames.length
             ? !this.options.reservedNames.some((reservedName: string) =>
                 new RegExp(reservedName, 'g').exec(name) !== null

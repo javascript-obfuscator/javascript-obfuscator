@@ -16,6 +16,7 @@ import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeMetadata } from '../../node/NodeMetadata';
 import { NodeUtils } from '../../node/NodeUtils';
+import { StringLiteralObfuscatingReplacer } from './obfuscating-replacers/literal-obfuscating-replacers/StringLiteralObfuscatingReplacer';
 
 @injectable()
 export class LiteralTransformer extends AbstractNodeTransformer {
@@ -88,9 +89,13 @@ export class LiteralTransformer extends AbstractNodeTransformer {
                 break;
 
             case 'string':
-                newLiteralNode = this.literalObfuscatingReplacerFactory(
+                const replacer: StringLiteralObfuscatingReplacer = this.literalObfuscatingReplacerFactory(
                     LiteralObfuscatingReplacer.StringLiteralObfuscatingReplacer
-                ).replace(literalNode.value);
+                ) as StringLiteralObfuscatingReplacer
+
+                if (replacer.isReservedString(literalNode.value)) return literalNode;
+
+                newLiteralNode = replacer.replace(literalNode.value);
 
                 break;
 

@@ -29,6 +29,15 @@ export class ConditionalCommentObfuscatingGuard implements IObfuscatingGuard {
     private obfuscationAllowedForNextNode: boolean | null = null;
 
     /**
+     * @param {Comment} comment
+     * @returns {boolean}
+     */
+    public static isConditionalComment (comment: ESTree.Comment): boolean {
+        return ConditionalCommentObfuscatingGuard.obfuscationEnableCommentRegExp.test(comment.value) ||
+            ConditionalCommentObfuscatingGuard.obfuscationDisableCommentRegExp.test(comment.value);
+    }
+
+    /**
      * @returns {boolean}
      * @param node
      */

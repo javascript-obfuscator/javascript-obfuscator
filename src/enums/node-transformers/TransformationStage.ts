@@ -1,4 +1,5 @@
 export enum TransformationStage {
+    Initializing = 'Initializing',
     Preparing = 'Preparing',
     DeadCodeInjection = 'DeadCodeInjection',
     ControlFlowFlattening = 'ControlFlowFlattening',

@@ -28,12 +28,8 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @type {Options}
      */
     private static readonly espreeParseOptions: espree.ParseOptions = {
-        attachComment: true,
         comment: true,
-        ecmaFeatures: {
-            experimentalObjectRestSpread: true
-        },
-        ecmaVersion: 9,
+        ecmaVersion: 10,
         loc: true,
         range: true
     };
@@ -160,6 +156,8 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @returns {Program}
      */
     private transformAstTree (astTree: ESTree.Program): ESTree.Program {
+        astTree = this.runTransformationStage(astTree, TransformationStage.Initializing);
+
         const isEmptyAstTree: boolean = NodeGuards.isProgramNode(astTree)
             && !astTree.body.length
             && !astTree.leadingComments

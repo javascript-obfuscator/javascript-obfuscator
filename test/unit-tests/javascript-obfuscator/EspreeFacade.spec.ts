@@ -1,7 +1,6 @@
 import { assert } from 'chai';
 import { EspreeFacade } from '../../../src/EspreeFacade';
 
-
 describe('EspreeFacade', () => {
     describe(`parse`, () => {
         describe(`\`Unexpected token\` error code preview`, () => {
@@ -16,7 +15,7 @@ describe('EspreeFacade', () => {
                 let testFunc: () => void;
 
                 before(() => {
-                    testFunc = () => EspreeFacade.parse(sourceCode, {});
+                    testFunc = () => EspreeFacade.parse(sourceCode, { ecmaVersion: 9 });
                 });
 
                 it('should output code preview when `espree` throws a parse error', () => {
@@ -45,7 +44,7 @@ describe('EspreeFacade', () => {
                 let testFunc: () => void;
 
                 before(() => {
-                    testFunc = () => EspreeFacade.parse(sourceCode, {});
+                    testFunc = () => EspreeFacade.parse(sourceCode, { ecmaVersion: 9 });
                 });
 
                 it('should output code preview when `espree` throws a parse error', () => {
@@ -69,7 +68,7 @@ describe('EspreeFacade', () => {
             let testFunc: () => void;
 
             before(() => {
-                testFunc = () => EspreeFacade.parse(sourceCode, {});
+                testFunc = () => EspreeFacade.parse(sourceCode, { ecmaVersion: 9 });
             });
 
             it('should output code preview when `espree` throws a parse error', () => {

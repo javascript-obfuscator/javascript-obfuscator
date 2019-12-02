@@ -27,7 +27,7 @@
     "class-validator": "0.11.0",
     "commander": "4.0.1",
     "escodegen-wallaby": "1.6.27",
-    "espree": "4.0.0",
+    "espree": "^6.1.2",
     "estraverse": "4.3.0",
     "inversify": "5.0.1",
     "js-string-escape": "1.0.1",

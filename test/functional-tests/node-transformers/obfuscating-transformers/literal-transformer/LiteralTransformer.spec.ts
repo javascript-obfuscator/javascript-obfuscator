@@ -395,6 +395,30 @@ describe('LiteralTransformer', () => {
                     });
                 });
 
+                describe('Variant #1: single reserved string value', () => {
+                    const stringLiteralRegExp: RegExp = /const foo *= *'foo baz';/;
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/reserved-strings-option-3.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                stringArray: true,
+                                stringArrayThreshold: 1,
+                                reservedStrings: ['foo baz']
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('match #2: should not touch reserved strings', () => {
+                      assert.match(obfuscatedCode, stringLiteralRegExp);
+                    });
+                });
+
                 describe('Variant #2: two reserved string values', () => {
                     const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;
                     const stringLiteralRegExp2: RegExp = /const bar *= *'bar';/;

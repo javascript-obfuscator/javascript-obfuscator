@@ -89,11 +89,13 @@ export class LiteralTransformer extends AbstractNodeTransformer {
                 break;
 
             case 'string':
-                const replacer: StringLiteralObfuscatingReplacer = this.literalObfuscatingReplacerFactory(
+                const replacer: StringLiteralObfuscatingReplacer = <StringLiteralObfuscatingReplacer> this.literalObfuscatingReplacerFactory(
                     LiteralObfuscatingReplacer.StringLiteralObfuscatingReplacer
-                ) as StringLiteralObfuscatingReplacer
+                );
 
-                if (replacer.isReservedString(literalNode.value)) return literalNode;
+                if (replacer.isReservedString(literalNode.value)) {
+                    return literalNode;
+                }
 
                 newLiteralNode = replacer.replace(literalNode.value);
 

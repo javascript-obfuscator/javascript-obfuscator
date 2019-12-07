@@ -2,6 +2,7 @@ import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
+import * as estraverse from "estraverse";
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
@@ -11,6 +12,7 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
+import { ConditionalCommentObfuscatingGuard } from "./obfuscating-guards/ConditionalCommentObfuscatingGuard";
 
 @injectable()
 export class CommentsTransformer extends AbstractNodeTransformer {
@@ -39,11 +41,11 @@ export class CommentsTransformer extends AbstractNodeTransformer {
      */
     public getVisitor (transformationStage: TransformationStage): IVisitor | null {
         switch (transformationStage) {
-            case TransformationStage.Preparing:
+            case TransformationStage.Initializing:
                 return {
-                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                        if (parentNode && NodeGuards.isNodeWithComments(node)) {
-                            return this.transformNode(node, parentNode);
+                    leave: (node: ESTree.Node) => {
+                        if (NodeGuards.isProgramNode(node)) {
+                            return this.transformNode(node);
                         }
                     }
                 };
@@ -56,21 +58,37 @@ export class CommentsTransformer extends AbstractNodeTransformer {
     /**
      * Removes all comments from node except comments that contain
      * `@license`, `@preserve` or `javascript-obfuscator` words
+     * Move comments to their nodes
      *
-     * @param {Node} node
-     * @param {Node} parentNode
+     * @param {Node} programNode
      * @returns {NodeGuards}
      */
-    public transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node {
-        if (node.leadingComments) {
-            node.leadingComments = this.transformComments(node.leadingComments);
+    public transformNode (programNode: ESTree.Program): ESTree.Node {
+        if (programNode.comments) {
+            const comments: ESTree.Comment[] = this.transformComments(programNode.comments);
+            estraverse.traverse(programNode, {
+                enter: (node: ESTree.Node): void => {
+                    if (comments.length === 0) {
+                        return;
+                    }
+
+                    const commentIdx: number = comments.findIndex((comment: ESTree.Comment) =>
+                        comment.range && node.range && comment.range[0] < node.range[0]
+                    );
+
+                    if (commentIdx === -1) {
+                        return;
+                    }
+
+                    node.leadingComments = comments.splice(commentIdx, comments.length - commentIdx).reverse();
+                }
+            });
+            if (comments.length > 0) {
+                programNode.trailingComments = comments.reverse();
+            }
         }
 
-        if (node.trailingComments) {
-            node.trailingComments = this.transformComments(node.trailingComments);
-        }
-
-        return node;
+        return programNode;
     }
 
     /**
@@ -80,7 +98,8 @@ export class CommentsTransformer extends AbstractNodeTransformer {
     private transformComments (comments: ESTree.Comment[]): ESTree.Comment[] {
         return comments.filter((comment: ESTree.Comment) =>
             CommentsTransformer.preservedWords
-                .some((preservedWord: string) => comment.value.includes(preservedWord))
-        );
+                .some((preservedWord: string) => comment.value.includes(preservedWord)) ||
+            ConditionalCommentObfuscatingGuard.isConditionalComment(comment)
+        ).reverse();
     }
 }

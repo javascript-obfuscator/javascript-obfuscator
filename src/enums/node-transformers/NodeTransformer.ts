@@ -21,5 +21,6 @@ export enum NodeTransformer {
     ParentificationTransformer = 'ParentificationTransformer',
     ScopeTransformer = 'ScopeTransformer',
     TemplateLiteralTransformer = 'TemplateLiteralTransformer',
-    VariableDeclarationTransformer = 'VariableDeclarationTransformer'
+    VariableDeclarationTransformer = 'VariableDeclarationTransformer',
+    VariablePreserveTransformer = 'VariablePreserveTransformer',
 }

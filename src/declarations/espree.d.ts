@@ -10,15 +10,13 @@ declare module 'espree' {
     export type SourceType = 'script' | 'module';
 
     export interface ParseOptions {
-        attachComment?: boolean;
         comment?: boolean;
         ecmaFeatures?: {
-            experimentalObjectRestSpread?: boolean;
             globalReturn?: boolean;
             impliedStrict?: boolean;
             jsx?: boolean;
         };
-        ecmaVersion?: 3 | 5 | 6 | 7 | 8 | 9 | 2015 | 2016 | 2017 | 2018;
+        ecmaVersion?: 3 | 5 | 6 | 7 | 8 | 9 | 10 | 2015 | 2016 | 2017 | 2018 | 2019;
         loc?: boolean;
         range?: boolean;
         sourceType?: SourceType;

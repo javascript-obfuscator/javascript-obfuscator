@@ -1,13 +1,11 @@
-import { InversifyContainerFacade } from '../../InversifyContainerFacade';
 import { ContainerModule, interfaces } from 'inversify';
-import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
+import { InversifyContainerFacade } from '../../InversifyContainerFacade';
+import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 import { INodeTransformer } from '../../../interfaces/node-transformers/INodeTransformer';
 import { IObfuscatingGuard } from '../../../interfaces/node-transformers/preparing-transformers/obfuscating-guards/IObfuscatingGuard';
-
 import { NodeTransformer } from '../../../enums/node-transformers/NodeTransformer';
 import { ObfuscatingGuard } from '../../../enums/node-transformers/preparing-transformers/obfuscating-guards/ObfuscatingGuard';
-
 import { BlackListObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/BlackListObfuscatingGuard';
 import { CommentsTransformer } from '../../../node-transformers/preparing-transformers/CommentsTransformer';
 import { ConditionalCommentObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/ConditionalCommentObfuscatingGuard';

@@ -1,13 +1,13 @@
 import { inject, injectable } from 'inversify';
-import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
-
 import * as eslintScope from 'eslint-scope';
 import * as ESTree from 'estree';
+import * as estraverse from "estraverse";
 
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
-
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { NodeGuards } from "../../node/NodeGuards";
 
 import { AbstractIdentifierNamesGenerator } from './AbstractIdentifierNamesGenerator';
 
@@ -88,7 +88,36 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @returns {string}
      */
     public generateForBlockScope (identifierNode: ESTree.Identifier, blockScopeNode: TNodeWithLexicalScope): string {
-        return this.generateForBlockScopeRecursive(identifierNode);
+        const scope: eslintScope.Scope | null | undefined = identifierNode.scope;
+
+        if (!scope) {
+            return this.generate();
+        }
+
+        const previousIdentifierName: string = identifierNode.name;
+
+        let newIdentifierName: string = this.getLastMangledNameForScope(scope);
+        do {
+            newIdentifierName = this.generateNewMangledName(newIdentifierName);
+        } while (!this.isUniqueIdentifierNameInScope(newIdentifierName, scope));
+
+        MangledIdentifierNamesGenerator.lastMangledNameInScopeMap.set(scope, newIdentifierName);
+
+        estraverse.traverse(blockScopeNode, {
+            enter: (node: ESTree.Node): void => {
+                if (NodeGuards.isIdentifierNode(node) && node.scope) {
+                    const nodeScope: eslintScope.Scope | null | undefined = node.scope;
+                    const scopeVariable: ESTree.Variable | undefined = scope.set.get(previousIdentifierName);
+                    nodeScope.set.delete(previousIdentifierName);
+                    if (scopeVariable) {
+                        scopeVariable.name = newIdentifierName;
+                        scopeVariable.isRenamed = true;
+                        nodeScope.set.set(newIdentifierName, scopeVariable);
+                    }
+                }
+            }});
+
+        return newIdentifierName;
     }
 
     /**
@@ -98,6 +127,21 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     public isValidIdentifierName (mangledName: string): boolean {
         return super.isValidIdentifierName(mangledName)
             && !MangledIdentifierNamesGenerator.reservedNames.includes(mangledName);
+    }
+
+    /**
+     * @param {string} identifierName
+     * @param {Scope} scope
+     * @returns {boolean}
+     */
+    private isDeclaredInParentScope (identifierName: string, scope: eslintScope.Scope): boolean {
+        const upperScope: eslintScope.Scope | null = scope.upper;
+        if (!upperScope) {
+            return false;
+        }
+        const exitingVariable: ESTree.Variable | undefined = upperScope.set.get(identifierName);
+
+        return (exitingVariable && exitingVariable.isRenamed) || this.isDeclaredInParentScope(identifierName, upperScope);
     }
 
     /**
@@ -116,40 +160,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
             }
         }
 
-        return true;
-    }
-
-    /**
-     * @param {Identifier} identifierNode
-     * @returns {string}
-     */
-    private generateForBlockScopeRecursive (identifierNode: ESTree.Identifier): string {
-        const scope: eslintScope.Scope | null | undefined = identifierNode.scope;
-
-        if (!scope) {
-            return this.generate();
-        }
-
-        const lastMangledNameInScope: string = this.getLastMangledNameForScope(scope);
-        const newIdentifierName: string = this.generateNewMangledName(lastMangledNameInScope);
-
-        MangledIdentifierNamesGenerator.lastMangledNameInScopeMap.set(scope, newIdentifierName);
-
-        for (const variable of scope.variables) {
-            if (variable.name !== identifierNode.name) {
-                continue;
-            }
-
-            for (const reference of variable.references) {
-                if (reference.from === identifierNode.scope) {
-                    continue;
-                }
-
-                return this.generateForBlockScopeRecursive(reference.identifier);
-            }
-        }
-
-        return newIdentifierName;
+        return !this.isDeclaredInParentScope(identifierName, scope);
     }
 
     /**
@@ -201,14 +212,8 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @returns {string}
      */
     private getLastMangledNameForScope (scope: eslintScope.Scope): string {
-        let lastMangledNameForScope: string = MangledIdentifierNamesGenerator.lastMangledNameInScopeMap.has(scope)
+        return MangledIdentifierNamesGenerator.lastMangledNameInScopeMap.has(scope)
             ? <string>MangledIdentifierNamesGenerator.lastMangledNameInScopeMap.get(scope)
             : this.previousMangledName;
-
-        while (!this.isUniqueIdentifierNameInScope(lastMangledNameForScope, scope)) {
-            lastMangledNameForScope = this.generateNewMangledName(lastMangledNameForScope);
-        }
-
-        return lastMangledNameForScope;
     }
 }

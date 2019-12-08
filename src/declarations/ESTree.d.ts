@@ -26,6 +26,10 @@ declare module 'estree' {
         scope?: eslintScope.Scope | null;
     }
 
+    export class Variable extends eslintScope.Variable {
+        public isRenamed?: boolean;
+    }
+
     interface SimpleLiteral extends BaseNode {
         metadata?: LiteralNodeMetadata;
     }

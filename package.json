@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "0.18.6",
+  "version": "0.18.7",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -12,7 +12,7 @@
     "js obfuscator"
   ],
   "engines": {
-    "node": ">=6.11.5"
+    "node": ">=8"
   },
   "main": "dist/index.js",
   "browser": "dist/index.browser.js",
@@ -115,7 +115,7 @@
   },
   "contributors": [
     "Timofey Kachalov (https://github.com/sanex3339)",
-    "Zamotkin (https://github.com/zamotkin)"
+    "Dmitry Zamotkin (https://github.com/zamotkin)"
   ],
   "license": "BSD-2-Clause",
   "collective": {

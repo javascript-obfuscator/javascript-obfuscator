@@ -1,4 +1,10 @@
 Change Log
+
+===
+v0.18.7
+---
+* Fixed https://github.com/javascript-obfuscator/gulp-javascript-obfuscator/issues/22 
+
 ===
 v0.18.6
 ---

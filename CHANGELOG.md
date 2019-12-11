@@ -15,6 +15,7 @@ Thanks to our contributors!
 
 v0.18.5
 ---
+* Breaking: require Node.js 8 after dependencies update
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/321
 
 Thanks to our contributors!

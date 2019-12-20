@@ -1,8 +1,13 @@
-import EventEmitter = NodeJS.EventEmitter;
-
 import { ObfuscationEvent } from '../../enums/event-emitters/ObfuscationEvent';
 
-export interface IObfuscationEventEmitter extends EventEmitter {
+export interface IObfuscationEventEmitter {
+    /**
+     * @param {ObfuscationEvent} event
+     * @param args
+     * @returns {boolean}
+     */
+    emit (event: ObfuscationEvent, ...args: any[]): boolean;
+
     /**
      * @param event
      * @param listener

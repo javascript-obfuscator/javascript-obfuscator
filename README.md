@@ -6,11 +6,11 @@
 
 # JavaScript obfuscator
 
-#### Right now i haven't time to maintain this project and i looking for for maintainers! Create issue if you want to maintain this project.
+#### Right now, I don't have time to maintain this project and am looking for new maintainers! Create an issue if you want to help maintain this project.
 
 ![logo](https://raw.githubusercontent.com/javascript-obfuscator/javascript-obfuscator/master/images/logo.png)
 
-JavaScript obfuscator is a powerful free obfuscator for JavaScript with a wide number of features which provides protection for your source code.
+JavaScript Obfuscator is a powerful free obfuscator for JavaScript, containing a variety of features which provide protection for your source code.
 
 Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/ffc2876123b52e6d11ce45369fd53acf)
 
@@ -39,14 +39,14 @@ Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/
 * (Ether) 0x5Df9eBcFB2D0f3315d03Ac112104b9023C409dc1
 * (OpenCollective) https://opencollective.com/javascript-obfuscator
 
-Big thanks to all supporters!
+Huge thanks to all supporters!
 
 #### *NOTE! the README on the master branch might not match that of the latest stable release!*
 
-#### If you have a question - check this section first: [FAQ](#frequently-asked-questions)
+#### If you have a question, check this section first: [FAQ](#frequently-asked-questions)
 
 ## :warning: Important
-##### Obfuscate only the code that belongs to you. 
+##### Only obfuscate the code that belongs to you. 
 
 It is not recommended to obfuscate vendor scripts and polyfills, since the obfuscated code is 15-80% slower (depends on options) and the files are significantly larger.
 
@@ -201,7 +201,7 @@ Method takes two parameters, `sourceCode` and `options` – the source code and 
 * `sourceCode` (`string`, default: `null`) – any valid source code, passed as a string;
 * `options` (`Object`, default: `null`) – an object with options.
 
-For available options see [options](#options).
+For available options, see [options](#options).
 
 ## CLI usage
 
@@ -217,9 +217,9 @@ javascript-obfuscator input_file_name.js --output output_file_name.js [options]
 
 Obfuscation of single input file with `.js` extension.
 
-If the destination path is not specified with the `--output` option, obfuscated file will saved into the input file directory with `INPUT_FILE_NAME-obfuscated.js` name.
+If the destination path is not specified with the `--output` option, the obfuscated file will be saved into the input file directory, with `INPUT_FILE_NAME-obfuscated.js` name.
 
-Examples:
+Spme examples:
 ```sh
 javascript-obfuscator samples/sample.js --compact true --self-defending false
 // creates a new file samples/sample-obfuscated.js

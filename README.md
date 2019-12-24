@@ -219,7 +219,7 @@ Obfuscation of single input file with `.js` extension.
 
 If the destination path is not specified with the `--output` option, the obfuscated file will be saved into the input file directory, with `INPUT_FILE_NAME-obfuscated.js` name.
 
-Spme examples:
+Some examples:
 ```sh
 javascript-obfuscator samples/sample.js --compact true --self-defending false
 // creates a new file samples/sample-obfuscated.js

@@ -330,6 +330,28 @@ describe('OptionsNormalizer', () => {
             });
         });
 
+        describe('splitStringsChunkLengthRule', () => {
+            describe('`splitStringsChunkLengthRule` value is float number', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...DEFAULT_PRESET,
+                        splitStrings: true,
+                        splitStringsChunkLength: 5.6
+                    });
+
+                    expectedOptionsPreset = {
+                        ...DEFAULT_PRESET,
+                        splitStrings: true,
+                        splitStringsChunkLength: 5
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+        });
+
         describe('stringArrayRule', () => {
             before(() => {
                 optionsPreset = getNormalizedOptions({

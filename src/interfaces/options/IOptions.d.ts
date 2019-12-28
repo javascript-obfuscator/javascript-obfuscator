@@ -28,6 +28,8 @@ export interface IOptions {
     readonly sourceMapBaseUrl: string;
     readonly sourceMapFileName: string;
     readonly sourceMapMode: SourceMapMode;
+    readonly splitStrings: boolean;
+    readonly splitStringsChunkLength: number;
     readonly stringArray: boolean;
     readonly stringArrayEncoding: TStringArrayEncoding;
     readonly stringArrayThreshold: number;

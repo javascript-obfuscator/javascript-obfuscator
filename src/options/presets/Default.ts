@@ -30,6 +30,8 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     sourceMapBaseUrl: '',
     sourceMapFileName: '',
     sourceMapMode: SourceMapMode.Separate,
+    splitStrings: false,
+    splitStringsChunkLength: 10,
     stringArray: true,
     stringArrayEncoding: false,
     stringArrayThreshold: 0.75,

@@ -13,6 +13,7 @@ import { InputFileNameRule } from './normalizer-rules/InputFileNameRule';
 import { SelfDefendingRule } from './normalizer-rules/SelfDefendingRule';
 import { SourceMapBaseUrlRule } from './normalizer-rules/SourceMapBaseUrlRule';
 import { SourceMapFileNameRule } from './normalizer-rules/SourceMapFileNameRule';
+import { SplitStringsChunkLengthRule } from './normalizer-rules/SplitStringsChunkLengthRule';
 import { StringArrayRule } from './normalizer-rules/StringArrayRule';
 import { StringArrayEncodingRule } from './normalizer-rules/StringArrayEncodingRule';
 import { StringArrayThresholdRule } from './normalizer-rules/StringArrayThresholdRule';
@@ -31,6 +32,7 @@ export class OptionsNormalizer implements IOptionsNormalizer {
         SelfDefendingRule,
         SourceMapBaseUrlRule,
         SourceMapFileNameRule,
+        SplitStringsChunkLengthRule,
         StringArrayRule,
         StringArrayEncodingRule,
         StringArrayThresholdRule,

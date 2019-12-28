@@ -29,6 +29,8 @@ export const NO_ADDITIONAL_NODES_PRESET: TInputOptions = Object.freeze({
     sourceMapBaseUrl: '',
     sourceMapFileName: '',
     sourceMapMode: SourceMapMode.Separate,
+    splitStrings: false,
+    splitStringsChunkLength: 0,
     stringArray: false,
     stringArrayEncoding: false,
     stringArrayThreshold: 0,

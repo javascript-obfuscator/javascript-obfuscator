@@ -1,5 +1,10 @@
 Change Log
 
+v0.19.0
+---
+* **New option:** `splitStrings` splits literal strings into chunks with length of `splitStringsChunkLength` option value
+* **New option:** `splitStringsChunkLength` sets chunk length of `splitStrings` option
+
 v0.18.8
 ---
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/452

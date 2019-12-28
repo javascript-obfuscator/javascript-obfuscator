@@ -307,6 +307,8 @@ Following options are available for the JS Obfuscator:
     sourceMapBaseUrl: '',
     sourceMapFileName: '',
     sourceMapMode: 'separate',
+    splitStrings: false,
+    splitStringsChunkLength: 10,
     stringArray: true,
     stringArrayEncoding: false,
     stringArrayThreshold: 0.75,
@@ -347,6 +349,8 @@ Following options are available for the JS Obfuscator:
     --source-map-base-url <string>
     --source-map-file-name <string>
     --source-map-mode <string> [inline, separate]
+    --split-strings <boolean>
+    --split-strings-chunk-length <number>
     --string-array <boolean>
     --string-array-encoding <boolean|string> [true, false, base64, rc4]
     --string-array-threshold <number>
@@ -721,6 +725,29 @@ Specifies source map generation mode:
 * `inline` - emit a single file with source maps instead of having a separate file;
 * `separate` - generates corresponding '.map' file with source map. In case you run obfuscator through CLI - adds link to source map file to the end of file with obfuscated code `//# sourceMappingUrl=file.js.map`.
 
+### `splitStrings`
+Type: `boolean` Default: `false`
+
+Splits literal strings into chunks with length of [`splitStringsChunkLength`](#splitStringsChunkLength) option value.
+
+Example:
+```ts
+// input
+(function(){
+    var test = 'abcdefg';
+})();
+
+// output
+(function(){
+    var _0x5a21 = 'ab' + 'cd' + 'ef' + 'g';
+})();
+```
+
+### `splitStringsChunkLength`
+Type: `number` Default: `10`
+
+Sets chunk length of [`splitStrings`](#splitStrings) option.
+
 ### `stringArray`
 Type: `boolean` Default: `true`
 
@@ -830,6 +857,8 @@ Performance will 50-100% slower than without obfuscation
     renameGlobals: false,
     rotateStringArray: true,
     selfDefending: true,
+    splitStrings: true,
+    splitStringsChunkLength: '5',
     stringArray: true,
     stringArrayEncoding: 'rc4',
     stringArrayThreshold: 1,
@@ -857,6 +886,8 @@ Performance will 30-35% slower than without obfuscation
     renameGlobals: false,
     rotateStringArray: true,
     selfDefending: true,
+    splitStrings: true,
+    splitStringsChunkLength: '10',
     stringArray: true,
     stringArrayEncoding: 'base64',
     stringArrayThreshold: 0.75,
@@ -882,6 +913,7 @@ Performance will slightly slower than without obfuscation
     renameGlobals: false,
     rotateStringArray: true,
     selfDefending: true,
+    splitStrings: false,
     stringArray: true,
     stringArrayEncoding: false,
     stringArrayThreshold: 0.75,

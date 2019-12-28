@@ -312,6 +312,16 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 SourceMapModeSanitizer
             )
             .option(
+                '--split-strings <boolean>',
+                'Splits literal strings into chunks with length of `splitStringsChunkLength` option value',
+                BooleanSanitizer
+            )
+            .option(
+                '--split-strings-chunk-length <number>',
+                'Sets chunk length of `splitStrings` option',
+                parseFloat
+            )
+            .option(
                 '--string-array <boolean>',
                 'Disables gathering of all literal strings into an array and replacing every literal string with an array call',
                 BooleanSanitizer

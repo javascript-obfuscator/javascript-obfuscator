@@ -58,6 +58,7 @@ import './functional-tests/node-transformers/converting-transformers/member-expr
 import './functional-tests/node-transformers/converting-transformers/method-definition-transformer/MethodDefinitionTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/object-expression-keys-transformer/ObjectExpressionKeysTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/object-expression-transformer/ObjectExpressionTransformer.spec';
+import './functional-tests/node-transformers/converting-transformers/split-string-transformer/SplitStringTransformer.spec';
 import './functional-tests/node-transformers/converting-transformers/template-literal-transformer/TemplateLiteralTransformer.spec';
 import './functional-tests/node-transformers/dead-code-injection-transformers/DeadCodeInjectionTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/catch-clause-transformer/CatchClauseTransformer.spec';

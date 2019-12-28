@@ -208,6 +208,20 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
+    public readonly splitStrings!: boolean;
+
+    /**
+     * @type {number}
+     */
+    @IsNumber()
+    @ValidateIf((options: IOptions) => Boolean(options.splitStrings))
+    @Min(1)
+    public readonly splitStringsChunkLength!: number;
+
+    /**
+     * @type {boolean}
+     */
+    @IsBoolean()
     public readonly stringArray!: boolean;
 
     /**

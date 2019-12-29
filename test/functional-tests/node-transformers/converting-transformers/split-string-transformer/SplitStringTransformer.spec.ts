@@ -94,7 +94,42 @@ describe('SplitStringTransformer', () => {
         });
     });
 
-    describe('Variant #6: object key string literal', () => {
+    describe('Variant #6: unicode escape sequence', () => {
+        it('should convert strings to unicode escape sequence view', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    splitStrings: true,
+                    splitStringsChunkLength: 2,
+                    unicodeEscapeSequence: true
+                }
+            ).getObfuscatedCode();
+
+            assert.match(obfuscatedCode,  /^var *test *= *'\\x61\\x62' *\+ *'\\x63\\x64' *\+ *'\\x65\\x66' *\+ *'\\x67';$/);
+        });
+    });
+
+    describe('Variant #7: template literal string', () => {
+        it('should apply string splitting on template literal strings', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/template-literal-string.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    splitStrings: true,
+                    splitStringsChunkLength: 2
+                }
+            ).getObfuscatedCode();
+
+            assert.match(obfuscatedCode,  /^var *test *= *'ab' *\+ *'cd' *\+ *'ef' *\+ *'g';$/);
+        });
+    });
+
+    describe('Variant #8: object key string literal', () => {
         it('should keep original string literal', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/object-key-string-literal.js');
 
@@ -111,7 +146,7 @@ describe('SplitStringTransformer', () => {
         });
     });
 
-    describe('Variant #7: object computed key string literal', () => {
+    describe('Variant #9: object computed key string literal', () => {
         it('should transform string literal to binary expression', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/object-computed-key-string-literal.js');
 

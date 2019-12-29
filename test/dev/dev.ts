@@ -6,16 +6,18 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-        var n = 'abcefgi';
+        function hi() {
+          console.log("Hello World!");
+        }
+        hi();
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
             splitStrings: true,
             splitStringsChunkLength: 4,
-            stringArray: true,
-            stringArrayThreshold: 1,
-            seed: 1
+            controlFlowFlattening: true,
+            controlFlowFlatteningThreshold: 1
         }
     ).getObfuscatedCode();
 

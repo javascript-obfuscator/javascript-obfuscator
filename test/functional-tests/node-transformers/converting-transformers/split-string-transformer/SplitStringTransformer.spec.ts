@@ -129,9 +129,9 @@ describe('SplitStringTransformer', () => {
         });
     });
 
-    describe('Variant #8: object key string literal', () => {
-        it('should keep original string literal', () => {
-            const code: string = readFileAsString(__dirname + '/fixtures/object-key-string-literal.js');
+    describe('Variant #8: object string literal', () => {
+        it('should keep original key string literal and transform value string literal', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/object-string-literal.js');
 
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
                 code,
@@ -142,7 +142,7 @@ describe('SplitStringTransformer', () => {
                 }
             ).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var *test *= *{'abcdefg' *: *0x1};$/);
+            assert.match(obfuscatedCode,  /^var *test *= *{'abcdefg' *: *'ab' *\+ *'cd' *\+ *'ef' *\+ *'g'};$/);
         });
     });
 

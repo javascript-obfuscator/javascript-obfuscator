@@ -1,0 +1,3 @@
+var test = {
+    'abcdefg': 'abcdefg'
+};

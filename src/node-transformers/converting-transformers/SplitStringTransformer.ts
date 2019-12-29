@@ -85,7 +85,7 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
             return literalNode;
         }
 
-        if (NodeGuards.isPropertyNode(parentNode) && !parentNode.computed) {
+        if (NodeGuards.isPropertyNode(parentNode) && !parentNode.computed && parentNode.key === literalNode) {
             return literalNode;
         }
 

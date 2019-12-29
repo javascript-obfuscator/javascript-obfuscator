@@ -1,9 +1,12 @@
 Change Log
 
+v0.19.2
+---
+* The `splitStrings` option now correctly splits strings inside objects
+
 v0.19.1
 ---
 * The `splitStrings` option now affects template literal strings
-
 
 v0.19.0
 ---

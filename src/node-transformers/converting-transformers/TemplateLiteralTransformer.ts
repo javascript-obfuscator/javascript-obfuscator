@@ -56,7 +56,7 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
         switch (transformationStage) {
             case TransformationStage.Converting:
                 return {
-                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
                         if (parentNode && TemplateLiteralTransformer.isValidTemplateLiteralNode(node, parentNode)) {
                             return this.transformNode(node, parentNode);
                         }

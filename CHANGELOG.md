@@ -1,5 +1,10 @@
 Change Log
 
+v0.19.1
+---
+* The `splitStrings` option now affects template literal strings
+
+
 v0.19.0
 ---
 * **New option:** `splitStrings` splits literal strings into chunks with length of `splitStringsChunkLength` option value

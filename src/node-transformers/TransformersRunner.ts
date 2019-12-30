@@ -1,14 +1,19 @@
 import { inject, injectable } from 'inversify';
+
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TNodeTransformerFactory } from '../types/container/node-transformers/TNodeTransformerFactory';
+import { TNormalizedNodeTransformers } from '../types/node-transformers/TNormalizedNodeTransformers';
+import { TTransformersRunnerData } from '../types/node-transformers/TTransformersRunnerData';
 import { TVisitorDirection } from '../types/node-transformers/TVisitorDirection';
 import { TVisitorFunction } from '../types/node-transformers/TVisitorFunction';
 import { TVisitorResult } from '../types/node-transformers/TVisitorResult';
 
+import { INodeTransformer } from '../interfaces/node-transformers/INodeTransformer';
+import { INodeTransformerNamesGroupsBuilder } from '../interfaces/utils/INodeTransformerNamesGroupsBuilder';
 import { ITransformersRunner } from '../interfaces/node-transformers/ITransformersRunner';
 import { IVisitor } from '../interfaces/node-transformers/IVisitor';
 
@@ -22,66 +27,110 @@ import { NodeMetadata } from '../node/NodeMetadata';
 @injectable()
 export class TransformersRunner implements ITransformersRunner {
     /**
+     * @type {Map<NodeTransformer[], TTransformersRunnerData>}
+     */
+    private readonly cachedNodeTransformersData: Map<NodeTransformer[], TTransformersRunnerData> = new Map();
+
+    /**
      * @type {TNodeTransformerFactory}
      */
     private readonly nodeTransformerFactory: TNodeTransformerFactory;
 
     /**
+     * @type {INodeTransformerNamesGroupsBuilder}
+     */
+    private readonly nodeTransformerNamesGroupsBuilder: INodeTransformerNamesGroupsBuilder;
+
+    /**
      * @param {TNodeTransformerFactory} nodeTransformerFactory
+     * @param {INodeTransformerNamesGroupsBuilder} nodeTransformerNamesGroupsBuilder
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__INodeTransformer) nodeTransformerFactory: TNodeTransformerFactory,
+        @inject(ServiceIdentifiers.Factory__INodeTransformer)
+            nodeTransformerFactory: TNodeTransformerFactory,
+        @inject(ServiceIdentifiers.INodeTransformerNamesGroupsBuilder)
+            nodeTransformerNamesGroupsBuilder: INodeTransformerNamesGroupsBuilder,
     ) {
         this.nodeTransformerFactory = nodeTransformerFactory;
+        this.nodeTransformerNamesGroupsBuilder = nodeTransformerNamesGroupsBuilder;
     }
 
     /**
      * @param {T} astTree
-     * @param {NodeTransformer[]} nodeTransformers
+     * @param {NodeTransformer[]} nodeTransformerNames
      * @param {TransformationStage} transformationStage
      * @returns {T}
      */
     public transform <T extends ESTree.Node = ESTree.Program> (
         astTree: T,
-        nodeTransformers: NodeTransformer[],
+        nodeTransformerNames: NodeTransformer[],
         transformationStage: TransformationStage
     ): T {
-        if (!nodeTransformers.length) {
+        if (!nodeTransformerNames.length) {
             return astTree;
         }
 
-        const enterVisitors: IVisitor[] = [];
-        const leaveVisitors: IVisitor[] = [];
-        const nodeTransformersLength: number = nodeTransformers.length;
+        let normalizedNodeTransformers: TNormalizedNodeTransformers;
+        let nodeTransformerNamesGroups: NodeTransformer[][];
 
-        let visitor: IVisitor | null;
+        if (!this.cachedNodeTransformersData.has(nodeTransformerNames)) {
+            normalizedNodeTransformers = this.buildNormalizedNodeTransformers(nodeTransformerNames);
+            nodeTransformerNamesGroups = this.nodeTransformerNamesGroupsBuilder.build(normalizedNodeTransformers);
+            this.cachedNodeTransformersData.set(nodeTransformerNames, [normalizedNodeTransformers, nodeTransformerNamesGroups]);
+        } else {
+            [
+                normalizedNodeTransformers,
+                nodeTransformerNamesGroups
+            ] = <TTransformersRunnerData>this.cachedNodeTransformersData.get(nodeTransformerNames);
+        }
 
-        for (let i: number = 0; i < nodeTransformersLength; i++) {
-            visitor = this.nodeTransformerFactory(nodeTransformers[i]).getVisitor(transformationStage);
+        for (const nodeTransformerNamesGroup of nodeTransformerNamesGroups) {
+            const enterVisitors: IVisitor[] = [];
+            const leaveVisitors: IVisitor[] = [];
 
-            if (!visitor) {
+            for (const nodeTransformerName of nodeTransformerNamesGroup) {
+                const nodeTransformer: INodeTransformer = normalizedNodeTransformers[nodeTransformerName];
+                const visitor: IVisitor | null = nodeTransformer.getVisitor(transformationStage);
+
+                if (!visitor) {
+                    continue;
+                }
+
+                if (visitor.enter) {
+                    enterVisitors.push({ enter: visitor.enter });
+                }
+
+                if (visitor.leave) {
+                    leaveVisitors.push({ leave: visitor.leave });
+                }
+            }
+
+            if (!enterVisitors.length && !leaveVisitors.length) {
                 continue;
             }
 
-            if (visitor.enter) {
-                enterVisitors.push({ enter: visitor.enter });
-            }
-
-            if (visitor.leave) {
-                leaveVisitors.push({ leave: visitor.leave });
-            }
+            estraverse.replace(astTree, {
+                enter: this.mergeVisitorsForDirection(enterVisitors, VisitorDirection.Enter),
+                leave: this.mergeVisitorsForDirection(leaveVisitors, VisitorDirection.Leave)
+            });
         }
-
-        if (!enterVisitors.length && !leaveVisitors.length) {
-            return astTree;
-        }
-
-        estraverse.replace(astTree, {
-            enter: this.mergeVisitorsForDirection(enterVisitors, VisitorDirection.Enter),
-            leave: this.mergeVisitorsForDirection(leaveVisitors, VisitorDirection.Leave)
-        });
 
         return astTree;
+    }
+
+    /**
+     * @param {NodeTransformer[]} nodeTransformerNames
+     * @returns {TNormalizedNodeTransformers}
+     */
+    private buildNormalizedNodeTransformers (nodeTransformerNames: NodeTransformer[]): TNormalizedNodeTransformers {
+        return nodeTransformerNames
+            .reduce<TNormalizedNodeTransformers>(
+                (acc: TNormalizedNodeTransformers, nodeTransformerName: NodeTransformer) => ({
+                    ...acc,
+                    [nodeTransformerName]: this.nodeTransformerFactory(nodeTransformerName)
+                }),
+                {}
+            );
     }
 
     /**

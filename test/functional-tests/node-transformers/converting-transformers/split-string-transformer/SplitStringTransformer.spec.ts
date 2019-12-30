@@ -162,4 +162,25 @@ describe('SplitStringTransformer', () => {
             assert.match(obfuscatedCode,  /^var *test *= *{\['ab' *\+ *'cd' *\+ *'ef' *\+ *'g'] *: *0x1};$/);
         });
     });
+
+    describe('Variant #10: Integration with `transformObjectKeys` option', () => {
+        it('should correctly transform string when `transformObjectKeys` option is enabled', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/object-string-literal.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    splitStrings: true,
+                    splitStringsChunkLength: 2,
+                    transformObjectKeys: true
+                }
+            ).getObfuscatedCode();
+
+            assert.match(
+                obfuscatedCode,
+                /^var *test *= *{}; *test\['ab' *\+ *'cd' *\+ *'ef' *\+ *'g'] *= *'ab' *\+ *'cd' *\+ *'ef' *\+ *'g';$/
+            );
+        });
+    });
 });

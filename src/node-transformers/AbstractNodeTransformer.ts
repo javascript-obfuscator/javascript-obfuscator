@@ -9,10 +9,16 @@ import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../interfaces/node-transformers/IVisitor';
 
+import { NodeTransformer } from '../enums/node-transformers/NodeTransformer';
 import { TransformationStage } from '../enums/node-transformers/TransformationStage';
 
 @injectable()
 export abstract class AbstractNodeTransformer implements INodeTransformer {
+    /**
+     * @type {NodeTransformer[] | undefined}
+     */
+    public readonly runAfter: NodeTransformer[] | undefined;
+
     /**
      * @type {IOptions}
      */

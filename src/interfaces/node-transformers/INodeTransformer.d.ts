@@ -3,9 +3,15 @@ import * as ESTree from 'estree';
 
 import { IVisitor } from './IVisitor';
 
+import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 export interface INodeTransformer {
+    /**
+     * @type {NodeTransformer[] | undefined}
+     */
+    runAfter?: NodeTransformer[];
+
     /**
      * @param {TransformationStage} transformationStage
      * @returns {IVisitor | null}

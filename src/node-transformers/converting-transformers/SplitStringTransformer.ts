@@ -7,6 +7,7 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
+import { NodeTransformer } from '../../enums/node-transformers/NodeTransformer';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
@@ -18,6 +19,14 @@ import { NodeGuards } from '../../node/NodeGuards';
  */
 @injectable()
 export class SplitStringTransformer extends AbstractNodeTransformer {
+    /**
+     * @type {NodeTransformer[]}
+     */
+    public runAfter: NodeTransformer[] = [
+        NodeTransformer.ObjectExpressionKeysTransformer,
+        NodeTransformer.TemplateLiteralTransformer
+    ];
+
     /**
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
@@ -59,7 +68,7 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
         switch (transformationStage) {
             case TransformationStage.Converting:
                 return {
-                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
                         if (!this.options.splitStrings) {
                             return;
                         }

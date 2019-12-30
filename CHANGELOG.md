@@ -1,5 +1,10 @@
 Change Log
 
+v0.19.3
+---
+* The `splitStrings` option now correctly works with `transformObjectKeys` option
+* Internal `TransformersRunner` rework to support topological sort of node transformers
+
 v0.19.2
 ---
 * The `splitStrings` option now correctly splits strings inside objects

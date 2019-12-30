@@ -34,6 +34,7 @@ import './unit-tests/storages/MapStorage.spec';
 import './unit-tests/utils/ArrayUtils.spec';
 import './unit-tests/utils/CryptUtils.spec';
 import './unit-tests/utils/EscapeSequenceEncoder.spec';
+import './unit-tests/utils/LevelledTopologicalSorter.spec';
 import './unit-tests/utils/NumberUtils.spec';
 import './unit-tests/utils/Utils.spec';
 

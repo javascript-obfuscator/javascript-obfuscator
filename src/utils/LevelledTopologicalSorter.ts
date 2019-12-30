@@ -16,7 +16,7 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
     /**
      * @type {Map<TValue, TValue[]}
      */
-    private readonly precedents: Map<TValue, TValue[]> = new Map();
+    private readonly graph: Map<TValue, TValue[]> = new Map();
 
     /**
      * @param {TValue} precedent
@@ -40,7 +40,7 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
      * @returns {TValue[]}
      */
     public sort (): TValue[] {
-        const consequents: TValue[] = Array.from(this.precedents.keys());
+        const consequents: TValue[] = Array.from(this.graph.keys());
 
         const results: TValue[] = [];
         const marks: IVisitMarks<TValue> = {};
@@ -78,24 +78,24 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
     }
 
     /**
-     * @param {TValue} name
+     * @param {TValue} consequent
      */
-    private delete (name: TValue): void {
-        const precedents: TValue[] = this.getPrecedents(name);
+    private delete (consequent: TValue): void {
+        const precedents: TValue[] = this.getPrecedents(consequent);
 
         if (precedents.length) {
-            throw new Error(`Unable to remove non-root node: ${name}`);
+            throw new Error(`Unable to remove non-root node: ${consequent}`);
         }
 
-        this.precedents.delete(name);
+        this.graph.delete(consequent);
 
-        const precedentsGroups: string[][] = Array.from(this.precedents.values());
+        const precedentsGroups: string[][] = Array.from(this.graph.values());
 
         for (const precedentsGroup of precedentsGroups) {
             const precedentsCount: number = precedentsGroup.length - 1;
 
             for (let index: number = precedentsCount; index >= 0; index = index - 1) {
-                if (precedentsGroup[index] !== name) {
+                if (precedentsGroup[index] !== consequent) {
                     continue;
                 }
 
@@ -108,12 +108,12 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
      * @returns {TValue[]}
      */
     private findRootNodes (): TValue[] {
-        const precedents: TValue[] = Array.from(this.precedents.keys());
+        const consequents: TValue[] = Array.from(this.graph.keys());
         const rootNodes: TValue[] = [];
 
-        for (const name of precedents) {
-            if (!this.hasPrecedents(name)) {
-                rootNodes.push(name);
+        for (const consequent of consequents) {
+            if (!this.hasPrecedents(consequent)) {
+                rootNodes.push(consequent);
             }
         }
 
@@ -121,14 +121,14 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
     }
 
     /**
-     * @param {TValue} name
+     * @param {TValue} consequent
      * @returns {TValue[]}
      */
-    private getPrecedents (name: TValue): TValue[] {
-        const precedents: TValue[] | undefined = this.precedents.get(name);
+    private getPrecedents (consequent: TValue): TValue[] {
+        const precedents: TValue[] | undefined = this.graph.get(consequent);
 
         if (!precedents) {
-            throw new Error(`Unknown node: ${name}`);
+            throw new Error(`Unknown node: ${consequent}`);
         }
 
         return precedents;
@@ -138,15 +138,15 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
      * @returns {boolean}
      */
     private hasNodes (): boolean {
-        return this.precedents.size > 0;
+        return this.graph.size > 0;
     }
 
     /**
-     * @param {TValue} name
+     * @param {TValue} consequent
      * @returns {boolean}
      */
-    private hasPrecedents (name: TValue): boolean {
-        return this.getPrecedents(name).length > 0;
+    private hasPrecedents (consequent: TValue): boolean {
+        return this.getPrecedents(consequent).length > 0;
     }
 
     /**
@@ -158,7 +158,7 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
         this.register(precedent);
         this.register(consequent);
 
-        const target: TValue[] | undefined = this.precedents.get(consequent);
+        const target: TValue[] | undefined = this.graph.get(consequent);
 
         if (target && !target.includes(precedent)) {
             target.push(precedent);
@@ -172,8 +172,8 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
      * @returns {this}
      */
     private register (name: TValue): this {
-        if (!this.precedents.has(name)) {
-            this.precedents.set(name, []);
+        if (!this.graph.has(name)) {
+            this.graph.set(name, []);
         }
 
         return this;
@@ -202,9 +202,9 @@ export class LevelledTopologicalSorter <TValue extends string = string> implemen
 
         marks[name] = 'visiting';
 
-        const references: TValue[] = this.getPrecedents(name);
+        const precedents: TValue[] = this.getPrecedents(name);
 
-        for (const precedent of references) {
+        for (const precedent of precedents) {
             this.visit(results, marks, precedent);
         }
 

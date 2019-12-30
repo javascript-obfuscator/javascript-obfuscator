@@ -27,6 +27,23 @@ export class NodeTransformerNamesGroupsBuilder implements INodeTransformerNamesG
     /**
      * Builds sorted NodeTransformer names by topological sort with levels
      *
+     * For example, if SplitString transformer has following dependencies inside `runAfter` property:
+     *  - NodeTransformer.ObjectExpressionKeysTransformer,
+     *  - NodeTransformer.TemplateLiteralTransformer
+     *
+     *  Than result node transformer names groups will be like:
+     *  [
+     *      [
+     *          SomeTransformerA,
+     *          ObjectExpressionKeysTransformer,
+     *          TemplateLiteralTransformer,
+     *          SomeTransformerB
+     *      ],
+     *      [
+     *          SplitStringTransformer
+     *      ]
+     *  ]
+     *
      * @param {TNormalizedNodeTransformers} normalizedNodeTransformers
      * @returns {NodeTransformer[][]}
      */

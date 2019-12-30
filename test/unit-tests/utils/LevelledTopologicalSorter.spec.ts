@@ -119,5 +119,20 @@ describe('EscapeSequenceEncoder', () => {
                 });
             });
         });
+
+        describe('Circular relations', () => {
+            let testFunc: () => void;
+
+            beforeEach(() => {
+                levelledTopologicalSorter.add('A', 'B');
+                levelledTopologicalSorter.add('B', 'A');
+
+                testFunc = () => levelledTopologicalSorter.sort();
+            });
+
+            it('should topologically linear sort items', () => {
+                assert.throws(testFunc, Error);
+            });
+        });
     });
 });

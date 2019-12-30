@@ -1,5 +1,12 @@
 Change Log
 
+v0.19.4
+---
+* Fixed `reservedNames` option
+
+Thanks to our contributors!
+ * [kida7](https://github.com/kida7)
+ 
 v0.19.3
 ---
 * The `splitStrings` option now correctly works with `transformObjectKeys` option

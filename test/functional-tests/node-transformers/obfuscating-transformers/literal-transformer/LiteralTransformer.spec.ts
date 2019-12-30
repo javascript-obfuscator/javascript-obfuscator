@@ -304,7 +304,7 @@ describe('LiteralTransformer', () => {
             });
         });
 
-        describe('Variant #12: `reservedNames` option is enabled', () => {
+        describe('Variant #12: `reservedStrings` option is enabled', () => {
             describe('Variant #1: base `reservedStrings` values', () => {
                 describe('Variant #1: single reserved string value', () => {
                     const stringLiteralRegExp1: RegExp = /const foo *= *'foo';/;

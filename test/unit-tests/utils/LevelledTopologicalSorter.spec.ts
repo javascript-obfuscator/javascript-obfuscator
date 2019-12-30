@@ -53,11 +53,59 @@ describe('EscapeSequenceEncoder', () => {
                 });
             });
 
-            describe('Variant #1: Base sort with grouping', () => {
+            describe('Variant #2: Base sort with grouping', () => {
                 const expectedSortedItems: string[][] = [
                     ['C', 'D', 'F'],
                     ['A', 'E'],
                     ['B']
+                ];
+
+                let sortedItems: string[][];
+
+                beforeEach(() => {
+                    sortedItems = levelledTopologicalSorter.sortByGroups();
+                });
+
+                it('should topologically linear sort items', () => {
+                    assert.deepEqual(sortedItems, expectedSortedItems);
+                });
+            });
+        });
+
+        describe('Sort without relations', () => {
+            beforeEach(() => {
+                levelledTopologicalSorter.add('A');
+                levelledTopologicalSorter.add('B');
+                levelledTopologicalSorter.add('C');
+                levelledTopologicalSorter.add('D');
+                levelledTopologicalSorter.add('E');
+                levelledTopologicalSorter.add('F');
+            });
+
+            describe('Variant #1: Should sort items without relations', () => {
+                const expectedSortedItems: string[] = [
+                    'A',
+                    'B',
+                    'C',
+                    'D',
+                    'E',
+                    'F'
+                ];
+
+                let sortedItems: string[];
+
+                beforeEach(() => {
+                    sortedItems = levelledTopologicalSorter.sort();
+                });
+
+                it('should topologically linear sort items', () => {
+                    assert.deepEqual(sortedItems, expectedSortedItems);
+                });
+            });
+
+            describe('Variant #2: Should sort items without relations with grouping', () => {
+                const expectedSortedItems: string[][] = [
+                    ['A', 'B', 'C', 'D', 'E', 'F']
                 ];
 
                 let sortedItems: string[][];

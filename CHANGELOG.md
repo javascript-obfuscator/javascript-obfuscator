@@ -2,7 +2,8 @@ Change Log
 
 v0.20.0
 ---
-* **New option value:** `identifierNamesGenerator` now allows to set new `dictionary` identifier names generator.
+* **Breaking:** dropped support of Node 8 because of end of maintenance support
+* **New option value:** `identifierNamesGenerator` now allows to set new `dictionary` identifier names generator
 * **New option:** `identifiersDictionary` sets identifiers dictionary for `identifierNamesGenerator: dictionary` option
 
 Thanks to our contributors!

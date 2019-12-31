@@ -570,7 +570,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('dictionary identifier names generator', () => {
-            const regExp: RegExp = /var *[ab] *= *0x1; *var *[ab] *= *0x2; *var *[A|B] *= *0x3;/;
+            const regExp: RegExp = /var *[ab] *= *0x1; *var *[ab] *= *0x2; *var *[AB] *= *0x3;/;
 
             let obfuscatedCode: string;
 

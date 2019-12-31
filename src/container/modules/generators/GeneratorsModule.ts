@@ -8,6 +8,7 @@ import { IdentifierNamesGenerator } from '../../../enums/generators/identifier-n
 
 import { HexadecimalIdentifierNamesGenerator } from '../../../generators/identifier-names-generators/HexadecimalIdentifierNamesGenerator';
 import { MangledIdentifierNamesGenerator } from '../../../generators/identifier-names-generators/MangledIdentifierNamesGenerator';
+import { DictionaryNamesGenerator } from '../../../generators/identifier-names-generators/DictionaryNamesGenerator';
 
 export const generatorsModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // identifier name generators
@@ -20,6 +21,11 @@ export const generatorsModule: interfaces.ContainerModule = new ContainerModule(
         .to(MangledIdentifierNamesGenerator)
         .inSingletonScope()
         .whenTargetNamed(IdentifierNamesGenerator.MangledIdentifierNamesGenerator);
+
+    bind<IIdentifierNamesGenerator>(ServiceIdentifiers.IIdentifierNamesGenerator)
+        .to(DictionaryNamesGenerator)
+        .inSingletonScope()
+        .whenTargetNamed(IdentifierNamesGenerator.DictionaryNamesGenerator);
 
     // identifier name generator factory
     bind<IIdentifierNamesGenerator>(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
@@ -38,6 +44,14 @@ export const generatorsModule: interfaces.ContainerModule = new ContainerModule(
                         identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
                             ServiceIdentifiers.IIdentifierNamesGenerator,
                             IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                        );
+
+                        break;
+                    
+                    case IdentifierNamesGenerator.DictionaryNamesGenerator:
+                        identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
+                            ServiceIdentifiers.IIdentifierNamesGenerator,
+                            IdentifierNamesGenerator.DictionaryNamesGenerator
                         );
 
                         break;

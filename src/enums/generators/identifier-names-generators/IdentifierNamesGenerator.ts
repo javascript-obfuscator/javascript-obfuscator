@@ -1,4 +1,5 @@
 export enum IdentifierNamesGenerator {
     HexadecimalIdentifierNamesGenerator = 'hexadecimal',
-    MangledIdentifierNamesGenerator = 'mangled'
+    MangledIdentifierNamesGenerator = 'mangled',
+    DictionaryNamesGenerator = 'dictionary'
 }

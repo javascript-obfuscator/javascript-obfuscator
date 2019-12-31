@@ -18,6 +18,7 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     exclude: [],
     identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
     identifiersPrefix: '',
+    identifiersDictionary: ["qwertyuiop", "asdfghjkl", "zxcvbnm"],
     inputFileName: '',
     log: false,
     renameGlobals: false,

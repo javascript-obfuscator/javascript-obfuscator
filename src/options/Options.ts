@@ -108,7 +108,8 @@ export class Options implements IOptions {
      */
     @IsIn([
         IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
-        IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+        IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+        IdentifierNamesGenerator.DictionaryNamesGenerator
     ])
     public readonly identifierNamesGenerator!: IdentifierNamesGenerator;
 
@@ -117,6 +118,13 @@ export class Options implements IOptions {
      */
     @IsString()
     public readonly identifiersPrefix!: string;
+
+    @IsArray()
+    @ArrayUnique()
+    @IsString({
+        each: true
+    })
+    public readonly identifiersDictionary!: string[];
 
     /**
      * @type {string}

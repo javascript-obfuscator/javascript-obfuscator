@@ -69,6 +69,7 @@ import './functional-tests/node-transformers/obfuscating-transformers/function-t
 import './functional-tests/node-transformers/obfuscating-transformers/impot-declaration-transformer/ImportDeclarationTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/labeled-statement-transformer/LabeledStatementTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/literal-transformer/LiteralTransformer.spec';
+import './functional-tests/node-transformers/obfuscating-transformers/literal-transformer/obfuscating-replacers/identifier-obfuscating-replacers/BaseIdentifierObfuscatingReplacer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/variable-declaration-transformer/VariableDeclarationTransformer.spec';
 import './functional-tests/node-transformers/preparing-transformers/eval-call-expression-transformer/EvalCallExpressionTransformer.spec';
 import './functional-tests/node-transformers/preparing-transformers/comments-transformer/CommentsTransformer.spec';

@@ -6,11 +6,17 @@ import { IOptions } from '../../../interfaces/options/IOptions';
 
 import { IdentifierNamesGenerator } from '../../../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
+import { DictionaryIdentifierNamesGenerator } from '../../../generators/identifier-names-generators/DictionaryIdentifierNamesGenerator';
 import { HexadecimalIdentifierNamesGenerator } from '../../../generators/identifier-names-generators/HexadecimalIdentifierNamesGenerator';
 import { MangledIdentifierNamesGenerator } from '../../../generators/identifier-names-generators/MangledIdentifierNamesGenerator';
 
 export const generatorsModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // identifier name generators
+    bind<IIdentifierNamesGenerator>(ServiceIdentifiers.IIdentifierNamesGenerator)
+        .to(DictionaryIdentifierNamesGenerator)
+        .inSingletonScope()
+        .whenTargetNamed(IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator);
+
     bind<IIdentifierNamesGenerator>(ServiceIdentifiers.IIdentifierNamesGenerator)
         .to(HexadecimalIdentifierNamesGenerator)
         .inSingletonScope()
@@ -34,6 +40,14 @@ export const generatorsModule: interfaces.ContainerModule = new ContainerModule(
                 let identifierNamesGenerator: IIdentifierNamesGenerator;
 
                 switch (options.identifierNamesGenerator) {
+                    case IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator:
+                        identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
+                            ServiceIdentifiers.IIdentifierNamesGenerator,
+                            IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator
+                        );
+
+                        break;
+
                     case IdentifierNamesGenerator.MangledIdentifierNamesGenerator:
                         identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
                             ServiceIdentifiers.IIdentifierNamesGenerator,

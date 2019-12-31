@@ -50,6 +50,10 @@ export class StringArrayStorage extends ArrayStorage <string> {
     public initialize (): void {
         super.initialize();
 
+        if (!this.options.stringArray) {
+            return;
+        }
+
         const baseStringArrayName: string = this.identifierNamesGenerator
             .generate(StringArrayStorage.stringArrayNameLength);
         const baseStringArrayCallsWrapperName: string = this.identifierNamesGenerator

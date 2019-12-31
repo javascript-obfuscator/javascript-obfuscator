@@ -2,6 +2,7 @@ import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
 import {
+    ArrayNotEmpty,
     ArrayUnique,
     IsArray,
     IsBoolean,
@@ -107,6 +108,7 @@ export class Options implements IOptions {
      * @type {IdentifierNamesGenerator}
      */
     @IsIn([
+        IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
         IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
         IdentifierNamesGenerator.MangledIdentifierNamesGenerator
     ])
@@ -117,6 +119,17 @@ export class Options implements IOptions {
      */
     @IsString()
     public readonly identifiersPrefix!: string;
+
+    @IsArray()
+    @ArrayUnique()
+    @IsString({
+        each: true
+    })
+    @ValidateIf((options: IOptions) =>
+        options.identifierNamesGenerator === IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator
+    )
+    @ArrayNotEmpty()
+    public readonly identifiersDictionary!: string[];
 
     /**
      * @type {string}

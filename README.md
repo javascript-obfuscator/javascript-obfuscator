@@ -292,6 +292,7 @@ Following options are available for the JS Obfuscator:
     disableConsoleOutput: false,
     domainLock: [],
     identifierNamesGenerator: 'hexadecimal',
+    identifiersDictionary: [],
     identifiersPrefix: '',
     inputFileName: '',
     log: false,
@@ -334,7 +335,8 @@ Following options are available for the JS Obfuscator:
     --disable-console-output <boolean>
     --domain-lock '<list>' (comma separated)
     --exclude '<list>' (comma separated)
-    --identifier-names-generator <string> [hexadecimal, mangled]
+    --identifier-names-generator <string> [dictionary, hexadecimal, mangled]
+    --identifiers-dictionary '<list>' (comma separated)
     --identifiers-prefix <string>
     --log <boolean>
     --rename-globals <boolean>
@@ -597,8 +599,14 @@ Type: `string` Default: `hexadecimal`
 Sets identifier names generator.
 
 Available values:
+* `dictionary`: identifier names from [`identifiersDictionary`](#identifiersDictionary) list
 * `hexadecimal`: identifier names like `_0xabc123`
 * `mangled`: short identifier names like `a`, `b`, `c`
+
+### `identifiersDictionary`
+Type: `string[]` Default: `[]`
+
+Sets identifiers dictionary  for [`identifierNamesGenerator`](#identifierNamesGenerator): `dictionary` option
 
 ### `identifiersPrefix`
 Type: `string` Default: `''`

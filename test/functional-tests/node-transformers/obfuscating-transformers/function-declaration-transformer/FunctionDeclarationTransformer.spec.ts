@@ -145,8 +145,8 @@ describe('FunctionDeclarationTransformer', () => {
 
         describe('Variant #5: already renamed identifiers shouldn\'t be renamed twice', () => {
             describe('Variant #1', () => {
-                const functionDeclarationRegExp: RegExp = /function *d\(\) *{/;
-                const variableDeclarationsRegExp: RegExp = /let *e, *f, *g, *h;/;
+                const functionDeclarationRegExp: RegExp = /function *b\(\) *{/;
+                const variableDeclarationsRegExp: RegExp = /let *c, *d, *e, *f;/;
 
                 let obfuscatedCode: string;
 

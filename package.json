@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "0.19.4",
+  "version": "0.20.0",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -12,7 +12,7 @@
     "js obfuscator"
   ],
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   },
   "main": "dist/index.js",
   "browser": "dist/index.browser.js",

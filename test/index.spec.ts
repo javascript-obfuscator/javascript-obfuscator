@@ -15,6 +15,7 @@ import './unit-tests/cli/sanitizers/StringArrayEncodingSanitizer.spec';
 import './unit-tests/cli/utils/CLIUtils.spec';
 import './unit-tests/cli/utils/SourceCodeReader.spec';
 import './unit-tests/decorators/initializable/Initializable.spec';
+import './unit-tests/generators/identifier-names-generators/DictionarylIdentifierNamesGenerator.spec';
 import './unit-tests/generators/identifier-names-generators/HexadecimalIdentifierNamesGenerator.spec';
 import './unit-tests/generators/identifier-names-generators/MangledlIdentifierNamesGenerator.spec';
 import './unit-tests/javascript-obfuscator/EspreeFacade.spec';

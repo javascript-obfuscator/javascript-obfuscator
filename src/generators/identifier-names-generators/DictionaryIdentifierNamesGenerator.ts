@@ -102,6 +102,7 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
      */
     private getInitialIdentifierNames (identifierNames: string[]): string[] {
         const formattedIdentifierNames: string[] = identifierNames
+            .filter(Boolean)
             .map((identifierName: string) => identifierName.toLowerCase());
 
         return this.arrayUtils.shuffle(formattedIdentifierNames);

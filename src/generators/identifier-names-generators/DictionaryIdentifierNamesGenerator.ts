@@ -15,9 +15,9 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
     private readonly arrayUtils: IArrayUtils;
 
     /**
-     * @type {string[]}
+     * @type {Set<string>}
      */
-    private identifierNames: string[] = [];
+    private identifierNamesSet: Set<string>;
     
     /**
      * @type {IterableIterator<string>}
@@ -37,8 +37,8 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
         super(randomGenerator, options);
 
         this.arrayUtils = arrayUtils;
-        this.identifierNames = this.getInitialIdentifierNames(this.options.identifiersDictionary);
-        this.identifiersIterator = this.identifierNames.values();
+        this.identifierNamesSet = new Set(this.getInitialIdentifierNames(this.options.identifiersDictionary));
+        this.identifiersIterator = this.identifierNamesSet.values();
     }
 
     /**
@@ -68,7 +68,7 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
     }
 
     public generate (): string {
-        if (!this.identifierNames.length) {
+        if (!this.identifierNamesSet.size) {
             throw new Error('Too many identifiers in the code, add more words to identifiers dictionary');
         }
 
@@ -78,8 +78,8 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
             return iteratorResult.value;
         }
 
-        this.identifierNames = this.getIncrementedIdentifierNames(this.identifierNames);
-        this.identifiersIterator = this.identifierNames.values();
+        this.identifierNamesSet = new Set(this.getIncrementedIdentifierNames([...this.identifierNamesSet]));
+        this.identifiersIterator = this.identifierNamesSet.values();
 
         return this.generate();
     }

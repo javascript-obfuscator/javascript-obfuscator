@@ -24,8 +24,6 @@ module.exports = {
                 loader: 'awesome-typescript-loader',
                 query: {
                     configFileName: 'src/tsconfig.node.json',
-                    useBabel: true,
-                    babelCore: '@babel/core',
                     useCache: true,
                     forceIsolatedModules: true
                 }

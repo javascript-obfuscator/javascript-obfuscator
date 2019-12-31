@@ -569,6 +569,29 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
+        describe('dictionary identifier names generator', () => {
+            const regExp: RegExp = /var *[ab] *= *0x1; *var *[ab] *= *0x2; *var *A *= *0x3;/;
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/dictionary-identifiers.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
+                        identifiersDictionary: ['a', 'b']
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should generate identifier based on the dictionary', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
         describe('parse module', () => {
             describe('Variant #1: import', () => {
                 const importRegExp: RegExp = /import *{foo} *from *'.\/foo';/;

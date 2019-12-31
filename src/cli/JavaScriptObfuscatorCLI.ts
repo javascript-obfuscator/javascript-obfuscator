@@ -261,7 +261,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             )
             .option(
                 '--identifiers-dictionary <list> (comma separated, without whitespaces)',
-                'Identifiers dictionary (comma separated)',
+                'Identifiers dictionary (comma separated) for `--identifier-names-generator dictionary` option',
                 ArraySanitizer
             )
             .option(

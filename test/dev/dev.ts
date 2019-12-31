@@ -6,16 +6,15 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-        var s = {
-            'abcdefg': 'abcdefg'
-        };
+            var abc = 1;
+            var cde = 1;
+            var fg = 1;
+            var sss = 1;
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
-            splitStrings: true,
-            splitStringsChunkLength: 4,
-            transformObjectKeys: true
+            renameGlobals: true
         }
     ).getObfuscatedCode();
 

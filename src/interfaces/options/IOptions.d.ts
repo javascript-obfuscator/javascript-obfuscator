@@ -15,8 +15,8 @@ export interface IOptions {
     readonly disableConsoleOutput: boolean;
     readonly domainLock: string[];
     readonly identifierNamesGenerator: IdentifierNamesGenerator;
-    readonly identifiersPrefix: string;
     readonly identifiersDictionary: string[];
+    readonly identifiersPrefix: string;
     readonly inputFileName: string;
     readonly log: boolean;
     readonly renameGlobals: boolean;

@@ -121,8 +121,8 @@ describe('ClassDeclarationTransformer', () => {
         });
 
         describe('Variant #3: already renamed identifiers shouldn\'t be renamed twice', () => {
-            const classDeclarationRegExp: RegExp = /class *d *{/;
-            const variableDeclarationsRegExp: RegExp = /let *e, *f, *g, *h;/;
+            const classDeclarationRegExp: RegExp = /class *b *{/;
+            const variableDeclarationsRegExp: RegExp = /let *c, *d, *e, *f;/;
 
             let obfuscatedCode: string;
 

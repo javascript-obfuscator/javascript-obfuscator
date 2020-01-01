@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { spawn } from 'threads';
+import { spawn, Thread, Worker } from 'threads/dist';
 
 import { readFileAsString } from '../../../helpers/readFileAsString';
 
@@ -10,26 +10,26 @@ import { ObfuscationTarget } from '../../../../src/enums/ObfuscationTarget';
 
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade';
 
-function spawnThread(inputCallback: Function, threadCallback: Function, timeoutCallback: Function): void {
-    const thread = spawn<string, number>((input: string, postMessage: Function) => {
-        postMessage(eval(input));
-    });
+
+
+async function spawnThread(obfuscatedCode: string, threadCallback: Function, timeoutCallback: Function): Promise<void> {
+    const evaluationWorker = await spawn(new Worker('./workers/evaluation-worker'));
 
     const timeout = setTimeout(() => {
-        thread.kill();
+        Thread.terminate(evaluationWorker);
         timeoutCallback();
     }, 1500);
 
-    thread
-        .send(inputCallback())
-        .on('message', (response: number) => {
-            clearTimeout(timeout);
-            thread.kill();
-            threadCallback(response);
-        });
+    const result: string = await evaluationWorker.evaluate(obfuscatedCode);
+
+    clearTimeout(timeout);
+    Thread.terminate(evaluationWorker);
+    threadCallback(result);
 }
 
-describe('DebugProtectionFunctionCallTemplate', () => {
+describe('DebugProtectionFunctionCallTemplate', function () {
+    this.timeout(5000);
+
     describe('Variant #1: correctly obfuscate code with `HexadecimalIdentifierNamesGenerator``', () => {
         const expectedEvaluationResult: number = 1;
 
@@ -49,7 +49,7 @@ describe('DebugProtectionFunctionCallTemplate', () => {
             ).getObfuscatedCode();
 
             spawnThread(
-                () => obfuscatedCode,
+                obfuscatedCode,
                 (response: number) => {
                     evaluationResult = response;
                     done();
@@ -84,7 +84,7 @@ describe('DebugProtectionFunctionCallTemplate', () => {
             ).getObfuscatedCode();
 
             spawnThread(
-                () => obfuscatedCode,
+                obfuscatedCode,
                 (response: number) => {
                     evaluationResult = response;
                     done();
@@ -120,7 +120,7 @@ describe('DebugProtectionFunctionCallTemplate', () => {
             ).getObfuscatedCode();
 
             spawnThread(
-                () => obfuscatedCode,
+                obfuscatedCode,
                 (response: number) => {
                     evaluationResult = response;
                     done();
@@ -155,7 +155,7 @@ describe('DebugProtectionFunctionCallTemplate', () => {
             ).getObfuscatedCode();
 
             spawnThread(
-                () => obfuscatedCode,
+                obfuscatedCode,
                 (response: number) => {
                     evaluationResult = response;
                     done();
@@ -190,7 +190,7 @@ describe('DebugProtectionFunctionCallTemplate', () => {
             obfuscatedCode = obfuscatedCode.replace(/\+\+ *_0x([a-f0-9]){4,6}/, '');
 
             spawnThread(
-                () => obfuscatedCode,
+                obfuscatedCode,
                 (response: number) => {
                     evaluationResult = response;
                     done();
@@ -224,7 +224,7 @@ describe('DebugProtectionFunctionCallTemplate', () => {
             ).getObfuscatedCode();
 
             spawnThread(
-                () => obfuscatedCode,
+                obfuscatedCode,
                 (response: number) => {
                     evaluationResult = response;
                     done();

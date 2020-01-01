@@ -287,7 +287,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 BooleanSanitizer
             )
             .option(
-                '--seed <number>',
+                '--seed <string|number>',
                 'Sets seed for random generator. This is useful for creating repeatable results.',
                 parseFloat
             )

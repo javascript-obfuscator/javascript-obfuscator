@@ -343,7 +343,7 @@ Following options are available for the JS Obfuscator:
     --reserved-names '<list>' (comma separated)
     --reserved-strings '<list>' (comma separated)
     --rotate-string-array <boolean>
-    --seed <number>
+    --seed <string|number>
     --self-defending <boolean>
     --source-map <boolean>
     --source-map-base-url <string>
@@ -673,7 +673,7 @@ Shift the `stringArray` array by a fixed and random (generated at the code obfus
 This option is recommended if your original source code isn't small, as the helper function can attract attention.
 
 ### `seed`
-Type: `number` Default: `0`
+Type: `string|number` Default: `0`
 
 This option sets seed for random generator. This is useful for creating repeatable results.
 

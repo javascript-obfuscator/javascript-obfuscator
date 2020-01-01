@@ -1,5 +1,11 @@
 Change Log
 
+v0.20.1
+---
+* Fixed identifier names generations for `mangled` and `dictionary` identifier names generators
+* Fixed combination of `identifierNamesGenerator: dictionary` and `debugProtection` options
+* `seed` option now accepts `string` and `number` values
+
 v0.20.0
 ---
 * **Breaking:** dropped support of Node 8 because of end of maintenance support

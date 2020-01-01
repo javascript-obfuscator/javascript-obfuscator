@@ -28,7 +28,7 @@ export const generatorsModule: interfaces.ContainerModule = new ContainerModule(
         .whenTargetNamed(IdentifierNamesGenerator.MangledIdentifierNamesGenerator);
 
     // identifier name generator factory
-    function identifierNameGeneratorFactory () {
+    function identifierNameGeneratorFactory (): (context: interfaces.Context) => (options: IOptions) => IIdentifierNamesGenerator {
         let cachedIdentifierNamesGenerator: IIdentifierNamesGenerator | null = null;
 
         return (context: interfaces.Context): (options: IOptions) => IIdentifierNamesGenerator => (options: IOptions) => {
@@ -66,7 +66,7 @@ export const generatorsModule: interfaces.ContainerModule = new ContainerModule(
             cachedIdentifierNamesGenerator = identifierNamesGenerator;
 
             return identifierNamesGenerator;
-        }
+        };
     }
     bind<IIdentifierNamesGenerator>(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
         .toFactory<IIdentifierNamesGenerator>(identifierNameGeneratorFactory());

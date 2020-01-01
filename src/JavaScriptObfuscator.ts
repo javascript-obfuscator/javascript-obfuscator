@@ -127,7 +127,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
         const timeStart: number = Date.now();
         this.logger.info(LoggingMessage.Version, process.env.VERSION);
         this.logger.info(LoggingMessage.ObfuscationStarted);
-        this.logger.info(LoggingMessage.RandomGeneratorSeed, this.randomGenerator.getSeed());
+        this.logger.info(LoggingMessage.RandomGeneratorSeed, this.randomGenerator.getInputSeed());
 
         // parse AST tree
         const astTree: ESTree.Program = this.parseCode(sourceCode);

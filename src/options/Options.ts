@@ -176,10 +176,9 @@ export class Options implements IOptions {
     public readonly rotateStringArray!: boolean;
 
     /**
-     * @type {number}
+     * @type {string | number}
      */
-    @IsNumber()
-    public readonly seed!: number;
+    public readonly seed!: string | number;
 
     /**
      * @type {boolean}

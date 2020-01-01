@@ -23,7 +23,7 @@ export interface IOptions {
     readonly reservedNames: string[];
     readonly reservedStrings: string[];
     readonly rotateStringArray: boolean;
-    readonly seed: number;
+    readonly seed: string | number;
     readonly selfDefending: boolean;
     readonly sourceMap: boolean;
     readonly sourceMapBaseUrl: string;

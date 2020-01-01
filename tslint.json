@@ -43,6 +43,9 @@
       "static-method-regex": "^[a-z][\\w\\d]+$",
       "function-regex": "^[a-zA-Z][\\w\\d]+$"
     }],
+    "no-function-constructor-with-string-args": false,
+    "no-use-before-declare": false,
+    "no-unnecessary-bind": false,
     "indent": [
       true,
       "spaces"
@@ -140,11 +143,11 @@
     "no-unsafe-any": false,
     "no-unsafe-finally": true,
     "no-unused-expression": true,
-    "no-use-before-declare": true,
     "no-useless-files": true,
     "no-var-keyword": true,
     "no-var-requires": true,
     "non-literal-require": false,
+    "non-literal-fs-path": false,
     "max-file-line-count": [true, 500],
     "object-curly-spacing": [true, "always"],
     "object-literal-sort-keys": false,
@@ -162,7 +165,7 @@
       true,
       {
         "import-sources-order": "any",
-        "grouped-imports": true,
+        "grouped-imports": false,
         "named-imports-order": "case-insensitive"
       }
     ],
@@ -233,6 +236,7 @@
       }
     ],
     "unified-signatures": true,
+    "unnecessary-bind": true,
     "use-isnan": true,
     "valid-jsdoc": [false, {
       "requireReturn": false,

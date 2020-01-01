@@ -30,12 +30,6 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
     private randomGenerator!: Chance.Chance;
 
     /**
-     * @type {number}
-     */
-    @initializable()
-    private seed!: number;
-
-    /**
      * @type {ISourceCode}
      */
     private readonly sourceCode: ISourceCode;
@@ -54,24 +48,7 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
 
     @postConstruct()
     public initialize (): void {
-        const getRandomInteger: (min: number, max: number) => number = (min: number, max: number) => {
-            return Math.floor(Math.random() * (max - min + 1) + min);
-        };
-
-        /**
-         * We need to add numbers from md5 hash of source code to input seed to prevent same String Array name
-         * for different bundles with same seed
-         *
-         * @returns {number}
-         */
-        const getSeed: () => number = (): number => {
-            const md5Hash: string = md5(this.sourceCode.getSourceCode());
-
-            return this.seed + Number(md5Hash.replace(/\D/g, ''));
-        };
-
-        this.seed = this.options.seed !== 0 ? this.options.seed : getRandomInteger(0, 999_999_999);
-        this.randomGenerator = new Chance(getSeed());
+        this.randomGenerator = new Chance(this.getRawSeed());
     }
 
     /**
@@ -110,9 +87,28 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
     }
 
     /**
+     * @returns {string}
+     */
+    public getInputSeed (): string {
+        return this.options.seed.toString();
+    }
+
+    /**
+     * We need to add numbers from md5 hash of source code to input seed to prevent same String Array name
+     * for different bundles with same seed
+     *
      * @returns {number}
      */
-    public getSeed (): number {
-        return this.seed;
+    public getRawSeed (): string {
+        const inputSeed: string = this.getInputSeed();
+        const inputSeedParts: string[] = `${inputSeed}`.split('|');
+
+        if (inputSeedParts.length > 1) {
+            return inputSeed;
+        }
+
+        const sourceCodeMD5Hash: string = md5(this.sourceCode.getSourceCode());
+
+        return `${inputSeed}|${sourceCodeMD5Hash}`;
     }
 }

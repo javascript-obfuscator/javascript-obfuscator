@@ -6,7 +6,7 @@ export function DebugProtectionFunctionCallTemplate (): string {
         (function () {
             {singleNodeCallControllerFunctionName}(this, function () {
                 var regExp1 = new RegExp('function *\\\\( *\\\\)');
-                var regExp2 = new RegExp('\\\\+\\\\+ *\\(?:_0x(?:[a-f0-9]){4,6}|(?:\\\\b|\\\\d)[a-z0-9]{1,4}(?:\\\\b|\\\\d)\\)', 'i');
+                var regExp2 = new RegExp('\\\\+\\\\+ *\\(?:[a-zA-Z_$][0-9a-zA-Z_$]*\\)', 'i');
        
                 var result = {debugProtectionFunctionName}('init');
                 

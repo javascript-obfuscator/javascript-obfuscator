@@ -570,7 +570,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('dictionary identifier names generator', () => {
-            const regExp: RegExp = /var *[ab] *= *0x1; *var *[ab] *= *0x2; *var *[AB] *= *0x3;/;
+            const regExp: RegExp = /var *[abc] *= *0x1; *var *[ABC] *= *0x2; *var *[ABC] *= *0x3;/;
 
             let obfuscatedCode: string;
 
@@ -582,7 +582,7 @@ describe('JavaScriptObfuscator', () => {
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
                         identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
-                        identifiersDictionary: ['a', 'b']
+                        identifiersDictionary: ['a', 'b', 'c']
                     }
                 ).getObfuscatedCode();
             });
@@ -664,6 +664,47 @@ describe('JavaScriptObfuscator', () => {
 
             it('should correctly obfuscate 3.5k variables', () => {
                 assert.equal(result, expectedValue);
+            });
+        });
+
+        describe('Identifier names collision between base code and appended string array nodes', () => {
+            const samplesCount: number = 30;
+
+            let areCollisionsExists: boolean = false;
+            let obfuscateFunc: (identifierNamesGenerator: IdentifierNamesGenerator) => string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/custom-nodes-identifier-names-collision.js');
+
+                obfuscateFunc = (identifierNamesGenerator: IdentifierNamesGenerator) => JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        identifierNamesGenerator,
+                        compact: false,
+                        renameGlobals: true,
+                        identifiersDictionary: ['foo', 'bar', 'baz', 'bark', 'hawk', 'foozmos', 'cow', 'chikago'],
+                        stringArray: true
+                    }
+                ).getObfuscatedCode();
+
+
+                [
+                    IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
+                    IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                ].forEach((identifierNamesGenerator: IdentifierNamesGenerator) => {
+                    for (let i = 0; i < samplesCount; i++) {
+                        try {
+                            eval(obfuscateFunc(identifierNamesGenerator));
+                        } catch {
+                            areCollisionsExists = true;
+                            break;
+                        }
+                    }
+                });
+            });
+
+            it('It does not create identifier names collision', () => {
+                assert.equal(areCollisionsExists, false);
             });
         });
     });

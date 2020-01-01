@@ -1,20 +1,51 @@
 'use strict';
-import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
+import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            var abc = 1;
-            var cde = 1;
-            var fg = 1;
-            var sss = 1;
+            // Paste your JavaScript code here
+            function hi() {
+              console.log("Hello World!");
+            }
+            hi();
         `,
         {
-            ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
-            renameGlobals: true
+            selfDefending: false,
+            disableConsoleOutput: false,
+            debugProtection: false,
+            debugProtectionInterval: false,
+            splitStrings: true,
+            splitStringsChunkLength: 5,
+            splitStringsChunkLengthEnabled: true,
+            stringArray: true,
+            rotateStringArray: false,
+            rotateStringArrayEnabled: true,
+            stringArrayThreshold: 1,
+            stringArrayThresholdEnabled: true,
+            stringArrayEncoding: false,
+            stringArrayEncodingEnabled: true,
+            sourceMap: false,
+            sourceMapBaseUrl: "",
+            sourceMapFileName: "",
+            sourceMapSeparate: false,
+            domainLock: [],
+            reservedNames: [],
+            reservedStrings: [],
+            seed: 0,
+            controlFlowFlatteningThreshold: 1,
+            controlFlowFlattening: true,
+            deadCodeInjectionThreshold: 1,
+            deadCodeInjection: true,
+            unicodeEscapeSequence: false,
+            renameGlobals: true,
+            identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
+            identifiersDictionary: ["foo", "bar", "baz", "bark", "hawk", "fooz", "moscow", "chikago"],
+            identifiersPrefix: "",
+            transformObjectKeys: true
         }
     ).getObfuscatedCode();
 

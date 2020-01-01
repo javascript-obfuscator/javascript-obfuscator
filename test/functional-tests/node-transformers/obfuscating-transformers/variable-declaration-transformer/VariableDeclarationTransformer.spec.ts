@@ -426,11 +426,11 @@ describe('VariableDeclarationTransformer', () => {
 
     describe('Variant #13: already renamed identifiers shouldn\'t be renamed twice', () => {
         describe('Variant #1', () => {
-            const variableDeclarationRegExp: RegExp = /var *b *= *0x1;/;
-            const functionDeclarationRegExp1: RegExp = /function *c *\(\) *{}/;
-            const functionDeclarationRegExp2: RegExp = /function *d *\(\) *{}/;
-            const functionDeclarationRegExp3: RegExp = /function *e *\(\) *{}/;
-            const functionDeclarationRegExp4: RegExp = /function *f *\(\) *{}/;
+            const variableDeclarationRegExp: RegExp = /var *d *= *0x1;/;
+            const functionDeclarationRegExp1: RegExp = /function *e *\(\) *{}/;
+            const functionDeclarationRegExp2: RegExp = /function *f *\(\) *{}/;
+            const functionDeclarationRegExp3: RegExp = /function *g *\(\) *{}/;
+            const functionDeclarationRegExp4: RegExp = /function *h *\(\) *{}/;
 
             let obfuscatedCode: string;
 
@@ -468,10 +468,10 @@ describe('VariableDeclarationTransformer', () => {
         });
 
         describe('Variant #2', () => {
-            const variableDeclarationRegExp1: RegExp = /var *b *= *0x1;/;
-            const variableDeclarationRegExp2: RegExp = /var *c;/;
-            const functionDeclarationRegExp: RegExp = /function *d *\(\) *{/;
-            const variableDeclarationRegExp3: RegExp = /var *d *= *function *\(\) *{}/;
+            const variableDeclarationRegExp1: RegExp = /var *d *= *0x1;/;
+            const variableDeclarationRegExp2: RegExp = /var *e;/;
+            const functionDeclarationRegExp: RegExp = /function *f *\(\) *{/;
+            const variableDeclarationRegExp3: RegExp = /var *f *= *function *\(\) *{}/;
 
             let obfuscatedCode: string;
 

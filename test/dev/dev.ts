@@ -1,20 +1,23 @@
 'use strict';
-import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
+import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            var abc = 1;
-            var cde = 1;
-            var fg = 1;
-            var sss = 1;
+            // Paste your JavaScript code here
+            function hi() {
+              console.log("Hello World!");
+            }
+            hi();
         `,
         {
-            ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
-            renameGlobals: true
+            renameGlobals: true,
+            identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
+            stringArray: true,
+            rotateStringArray: false
         }
     ).getObfuscatedCode();
 

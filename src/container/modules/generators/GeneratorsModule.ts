@@ -28,45 +28,46 @@ export const generatorsModule: interfaces.ContainerModule = new ContainerModule(
         .whenTargetNamed(IdentifierNamesGenerator.MangledIdentifierNamesGenerator);
 
     // identifier name generator factory
+    function identifierNameGeneratorFactory () {
+        let cachedIdentifierNamesGenerator: IIdentifierNamesGenerator | null = null;
+
+        return (context: interfaces.Context): (options: IOptions) => IIdentifierNamesGenerator => (options: IOptions) => {
+            if (cachedIdentifierNamesGenerator) {
+                return cachedIdentifierNamesGenerator;
+            }
+
+            let identifierNamesGenerator: IIdentifierNamesGenerator;
+
+            switch (options.identifierNamesGenerator) {
+                case IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator:
+                    identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
+                        ServiceIdentifiers.IIdentifierNamesGenerator,
+                        IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator
+                    );
+
+                    break;
+
+                case IdentifierNamesGenerator.MangledIdentifierNamesGenerator:
+                    identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
+                        ServiceIdentifiers.IIdentifierNamesGenerator,
+                        IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                    );
+
+                    break;
+
+                case IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator:
+                default:
+                    identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
+                        ServiceIdentifiers.IIdentifierNamesGenerator,
+                        IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
+                    );
+            }
+
+            cachedIdentifierNamesGenerator = identifierNamesGenerator;
+
+            return identifierNamesGenerator;
+        }
+    }
     bind<IIdentifierNamesGenerator>(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
-        .toFactory<IIdentifierNamesGenerator>((context: interfaces.Context): (options: IOptions) => IIdentifierNamesGenerator => {
-            let cachedIdentifierNamesGenerator: IIdentifierNamesGenerator | null = null;
-
-            return (options: IOptions) => {
-                if (cachedIdentifierNamesGenerator) {
-                    return cachedIdentifierNamesGenerator;
-                }
-
-                let identifierNamesGenerator: IIdentifierNamesGenerator;
-
-                switch (options.identifierNamesGenerator) {
-                    case IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator:
-                        identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
-                            ServiceIdentifiers.IIdentifierNamesGenerator,
-                            IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator
-                        );
-
-                        break;
-
-                    case IdentifierNamesGenerator.MangledIdentifierNamesGenerator:
-                        identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
-                            ServiceIdentifiers.IIdentifierNamesGenerator,
-                            IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-                        );
-
-                        break;
-
-                    case IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator:
-                    default:
-                        identifierNamesGenerator = context.container.getNamed<IIdentifierNamesGenerator>(
-                            ServiceIdentifiers.IIdentifierNamesGenerator,
-                            IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
-                        );
-                }
-
-                cachedIdentifierNamesGenerator = identifierNamesGenerator;
-
-                return identifierNamesGenerator;
-            };
-        });
+        .toFactory<IIdentifierNamesGenerator>(identifierNameGeneratorFactory());
 });

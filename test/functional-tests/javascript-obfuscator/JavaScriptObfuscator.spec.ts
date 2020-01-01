@@ -666,5 +666,46 @@ describe('JavaScriptObfuscator', () => {
                 assert.equal(result, expectedValue);
             });
         });
+
+        describe('Identifier names collision between base code and appended custom nodes', () => {
+            const samplesCount: number = 30;
+
+            let areCollisionsExists: boolean = false;
+            let obfuscateFunc: (identifierNamesGenerator: IdentifierNamesGenerator) => string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/custom-nodes-identifier-names-collision.js');
+
+                obfuscateFunc = (identifierNamesGenerator: IdentifierNamesGenerator) => JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        identifierNamesGenerator,
+                        compact: false,
+                        renameGlobals: true,
+                        identifiersDictionary: ['foo', 'bar', 'baz', 'bark', 'hawk', 'foozmos', 'cow', 'chikago'],
+                        stringArray: true
+                    }
+                ).getObfuscatedCode();
+
+
+                [
+                    IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
+                    IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+                ].forEach((identifierNamesGenerator: IdentifierNamesGenerator) => {
+                    for (let i = 0; i < samplesCount; i++) {
+                        try {
+                            eval(obfuscateFunc(identifierNamesGenerator));
+                        } catch {
+                            areCollisionsExists = true;
+                            break;
+                        }
+                    }
+                });
+            });
+
+            it('It does not create identifier names collision', () => {
+                assert.equal(areCollisionsExists, false);
+            });
+        });
     });
 });

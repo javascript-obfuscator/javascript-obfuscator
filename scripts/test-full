@@ -3,5 +3,5 @@
 yarn run test:removeTmpDir &&
 yarn run test:compile &&
 node test-tmp/test/dev/dev.js &&
-$(yarn bin)/nyc --reporter text-summary $(yarn bin)/mocha -- test-tmp/test/index.spec.js &&
+$(yarn bin)/nyc --reporter text-summary $(yarn bin)/mocha -- test-tmp/test/index.spec.js --exit &&
 yarn run test:removeTmpDir

@@ -91,7 +91,10 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
-    public transformNode (classDeclarationNode: ESTree.ClassDeclaration, parentNode: ESTree.Node): ESTree.Node {
+    public transformNode (
+        classDeclarationNode: ESTree.ClassDeclaration & { id: ESTree.Identifier },
+        parentNode: ESTree.Node
+    ): ESTree.Node {
         const lexicalScopeNode: TNodeWithLexicalScope | undefined = NodeLexicalScopeUtils.getLexicalScope(classDeclarationNode);
 
         if (!lexicalScopeNode) {
@@ -122,7 +125,7 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
      * @param {boolean} isGlobalDeclaration
      */
     private storeClassName (
-        classDeclarationNode: ESTree.ClassDeclaration,
+        classDeclarationNode: ESTree.ClassDeclaration & { id: ESTree.Identifier },
         lexicalScopeNode: TNodeWithLexicalScope,
         isGlobalDeclaration: boolean
     ): void {
@@ -138,7 +141,7 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
     private replaceScopeCachedIdentifiers (
-        classDeclarationNode: ESTree.ClassDeclaration,
+        classDeclarationNode: ESTree.ClassDeclaration & { id: ESTree.Identifier },
         lexicalScopeNode: TNodeWithLexicalScope
     ): void {
         const cachedReplaceableIdentifiersNamesMap: TReplaceableIdentifiersNames =

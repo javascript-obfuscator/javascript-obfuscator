@@ -32,10 +32,6 @@ declare module 'estree' {
         metadata?: LiteralNodeMetadata;
     }
 
-    interface ExpressionStatement extends BaseNode {
-        directive?: 'use strict';
-    }
-
     interface SimpleLiteral extends BaseNode {
         'x-verbatim-property'?: escodegen.XVerbatimProperty;
     }

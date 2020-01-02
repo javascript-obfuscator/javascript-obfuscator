@@ -8,7 +8,7 @@ import { readFileAsString } from '../../../../../helpers/readFileAsString';
 
 describe('ReservedStringObfuscatingGuard', () => {
     describe('check', () => {
-        describe('`reservedString` option is enabled', () => {
+        describe('`reservedStrings` option is enabled', () => {
             const obfuscatingGuardRegExp: RegExp = /var test1 *= *'foo' *\+ *'foo'; *var test2 *= *'barbar'; *var test3 *= *'baz' *\+ *'baz';/;
 
             let obfuscatedCode: string;
@@ -32,7 +32,7 @@ describe('ReservedStringObfuscatingGuard', () => {
             });
         });
 
-        describe('`reservedString` option is disabled', () => {
+        describe('`reservedStrings` option is disabled', () => {
             const obfuscatingGuardRegExp: RegExp = /var test1 *= *'foo' *\+ *'foo'; *var test2 *= *'bar' *\+ *'bar'; *var test3 *= *'baz' *\+ *'baz';/;
 
             let obfuscatedCode: string;

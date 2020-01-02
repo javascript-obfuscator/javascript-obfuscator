@@ -133,10 +133,6 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
      * @returns {Node}
      */
     public replace (nodeValue: string): ESTree.Node {
-        if (this.isReservedString(nodeValue)) {
-            return this.replaceWithReservedLiteralNode(nodeValue);
-        }
-
         const useStringArray: boolean = this.canUseStringArray(nodeValue);
         const cacheKey: string = `${nodeValue}-${String(useStringArray)}`;
         const useCacheValue: boolean = this.nodesCache.has(cacheKey) && this.options.stringArrayEncoding !== StringArrayEncoding.Rc4;
@@ -231,16 +227,6 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
      * @param {string} value
      * @returns {Node}
      */
-    private replaceWithReservedLiteralNode (value: string): ESTree.Node {
-        return NodeFactory.literalNode(
-            this.escapeSequenceEncoder.encode(value, false)
-        );
-    }
-
-    /**
-     * @param {string} value
-     * @returns {Node}
-     */
     private replaceWithStringArrayCallNode (value: string): ESTree.Node {
         const { encodedValue, key }: IEncodedValue = this.getEncodedValue(value);
         const escapedValue: string = this.escapeSequenceEncoder.encode(encodedValue, this.options.unicodeEscapeSequence);
@@ -276,20 +262,5 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
             stringArrayIdentifierNode,
             callExpressionArgs
         );
-    }
-
-    /**
-     * @param {string} value
-     * @returns {boolean}
-     */
-    private isReservedString (value: string): boolean {
-        if (!this.options.reservedStrings.length) {
-            return false;
-        }
-
-        return this.options.reservedStrings
-            .some((reservedString: string) => {
-                return new RegExp(reservedString, 'g').exec(value) !== null;
-            });
     }
 }

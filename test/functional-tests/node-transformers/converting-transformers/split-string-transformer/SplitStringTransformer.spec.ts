@@ -183,4 +183,25 @@ describe('SplitStringTransformer', () => {
             );
         });
     });
+
+    describe('Variant #10: Integration with `reservedStrings` option', () => {
+        it('should correctly ignore strings from `reservedStrings` option', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/ignore-reserved-strings.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    splitStrings: true,
+                    splitStringsChunkLength: 3,
+                    reservedStrings: ['bar']
+                }
+            ).getObfuscatedCode();
+
+            assert.match(
+                obfuscatedCode,
+                /^var *foo *= *'foo' *\+ *'foo'; *var *bar *= *'barbar'; *var *baz *= *'baz' *\+ *'baz';$/
+            );
+        });
+    });
 });

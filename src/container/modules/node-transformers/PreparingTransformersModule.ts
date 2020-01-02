@@ -16,6 +16,7 @@ import { EvalCallExpressionTransformer } from '../../../node-transformers/prepar
 import { MetadataTransformer } from '../../../node-transformers/preparing-transformers/MetadataTransformer';
 import { ObfuscatingGuardsTransformer } from '../../../node-transformers/preparing-transformers/ObfuscatingGuardsTransformer';
 import { ParentificationTransformer } from '../../../node-transformers/preparing-transformers/ParentificationTransformer';
+import { ReservedStringObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/ReservedStringObfuscatingGuard';
 import { VariablePreserveTransformer } from "../../../node-transformers/preparing-transformers/VariablePreserveTransformer";
 
 export const preparingTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
@@ -48,12 +49,17 @@ export const preparingTransformersModule: interfaces.ContainerModule = new Conta
     bind<IObfuscatingGuard>(ServiceIdentifiers.INodeGuard)
         .to(BlackListObfuscatingGuard)
         .inSingletonScope()
-        .whenTargetNamed(ObfuscatingGuard.BlackListNodeGuard);
+        .whenTargetNamed(ObfuscatingGuard.BlackListObfuscatingGuard);
 
     bind<IObfuscatingGuard>(ServiceIdentifiers.INodeGuard)
         .to(ConditionalCommentObfuscatingGuard)
         .inSingletonScope()
-        .whenTargetNamed(ObfuscatingGuard.ConditionalCommentNodeGuard);
+        .whenTargetNamed(ObfuscatingGuard.ConditionalCommentObfuscatingGuard);
+
+    bind<IObfuscatingGuard>(ServiceIdentifiers.INodeGuard)
+        .to(ReservedStringObfuscatingGuard)
+        .inSingletonScope()
+        .whenTargetNamed(ObfuscatingGuard.ReservedStringObfuscatingGuard);
 
     // obfuscating guards factory
     bind<IObfuscatingGuard>(ServiceIdentifiers.Factory__INodeGuard)

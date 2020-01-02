@@ -76,6 +76,7 @@ import './functional-tests/node-transformers/preparing-transformers/eval-call-ex
 import './functional-tests/node-transformers/preparing-transformers/comments-transformer/CommentsTransformer.spec';
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/black-list-obfuscating-guard/BlackListObfuscatingGuard.spec';
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/conditional-comment-obfuscating-guard/ConditionalCommentObfuscatingGuard.spec';
+import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/reserved-string-obfuscating-guard/ReservedStringObfuscatingGuard.spec';
 import './functional-tests/options/OptionsNormalizer.spec';
 import './functional-tests/templates/debug-protection-nodes/DebugProtectionFunctionCallTemplate.spec';
 import './functional-tests/templates/domain-lock-nodes/DomainLockNodeTemplate.spec';

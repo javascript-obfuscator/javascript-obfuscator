@@ -2,6 +2,8 @@ Change Log
 
 v0.20.2
 ---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/pull/442
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/468
 * Added funding button
 * Internal dependencies update, Happy New Year 2020!
 

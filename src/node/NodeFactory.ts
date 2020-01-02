@@ -129,6 +129,23 @@ export class NodeFactory {
     }
 
     /**
+     * @param {Literal} expression
+     * @param {string} directive
+     * @returns {Directive}
+     */
+    public static directiveNode (
+        expression: ESTree.Literal,
+        directive: string
+    ): ESTree.Directive {
+        return {
+            type: NodeType.ExpressionStatement,
+            expression,
+            directive,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
      * @param {Expression} expression
      * @returns {ExpressionStatement}
      */

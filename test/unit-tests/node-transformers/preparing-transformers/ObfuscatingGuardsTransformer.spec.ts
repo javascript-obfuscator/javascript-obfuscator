@@ -49,8 +49,9 @@ describe('ObfuscatingGuardsTransformer', () => {
         });
 
         describe('Variant #2: invalid node', () => {
-            const expressionStatement: ESTree.ExpressionStatement = NodeFactory.expressionStatementNode(
-                NodeFactory.identifierNode('foo')
+            const expressionStatement: ESTree.ExpressionStatement = NodeFactory.directiveNode(
+                NodeFactory.literalNode('use strict'),
+                'use strict'
             );
 
             const expectedResult: ESTree.ExpressionStatement = NodeUtils.clone(expressionStatement);
@@ -58,11 +59,9 @@ describe('ObfuscatingGuardsTransformer', () => {
             let result: ESTree.ExpressionStatement;
 
             before(() => {
-                expressionStatement.directive = 'use strict';
                 expressionStatement.parentNode = expressionStatement;
                 expressionStatement.expression.parentNode = expressionStatement;
 
-                expectedResult.directive = 'use strict';
                 expectedResult.parentNode = expectedResult;
                 NodeMetadata.set(expectedResult, { ignoredNode: true });
 

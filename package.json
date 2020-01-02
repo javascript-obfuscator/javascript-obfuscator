@@ -45,7 +45,7 @@
     "@types/chance": "1.0.8",
     "@types/escodegen": "0.0.6",
     "@types/estraverse": "0.0.6",
-    "@types/estree": "0.0.38",
+    "@types/estree": "0.0.41",
     "@types/md5": "2.1.33",
     "@types/mkdirp": "0.5.2",
     "@types/mocha": "5.2.7",

@@ -84,8 +84,10 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isClassDeclarationNode (node: ESTree.Node): node is ESTree.ClassDeclaration {
-        return node.type === NodeType.ClassDeclaration;
+    public static isClassDeclarationNode (
+        node: ESTree.Node
+    ): node is ESTree.ClassDeclaration & { id: ESTree.Identifier } {
+        return node.type === NodeType.ClassDeclaration && node.id !== null;
     }
 
     /**
@@ -94,6 +96,15 @@ export class NodeGuards {
      */
     public static isContinueStatementNode (node: ESTree.Node): node is ESTree.ContinueStatement {
         return node.type === NodeType.ContinueStatement;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    public static isDirectiveNode (node: ESTree.Node): node is ESTree.Directive {
+        return node.type === NodeType.ExpressionStatement
+            && 'directive' in node;
     }
 
     /**
@@ -109,7 +120,8 @@ export class NodeGuards {
      * @returns {boolean}
      */
     public static isExpressionStatementNode (node: ESTree.Node): node is ESTree.ExpressionStatement {
-        return node.type === NodeType.ExpressionStatement;
+        return node.type === NodeType.ExpressionStatement
+            && !('directive' in node);
     }
 
     /**
@@ -126,8 +138,10 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isFunctionDeclarationNode (node: ESTree.Node): node is ESTree.FunctionDeclaration {
-        return node.type === NodeType.FunctionDeclaration;
+    public static isFunctionDeclarationNode (
+        node: ESTree.Node
+    ): node is ESTree.FunctionDeclaration & { id: ESTree.Identifier } {
+        return node.type === NodeType.FunctionDeclaration && node.id !== null;
     }
 
     /**
@@ -401,8 +415,9 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isUseStrictOperator (node: ESTree.Node): node is ESTree.ExpressionStatement {
-        return node.type === NodeType.ExpressionStatement && node.directive === 'use strict';
+    public static isUseStrictOperator (node: ESTree.Node): node is ESTree.Directive {
+        return NodeGuards.isDirectiveNode(node)
+            && node.directive === 'use strict';
     }
 
     /**

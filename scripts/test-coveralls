@@ -2,6 +2,6 @@
 
 yarn run test:removeTmpDir &&
 yarn run test:compile &&
-$(yarn bin)/istanbul cover $(yarn bin)/_mocha -- test-tmp/test/index.spec.js --report lcovonly &&
-cat ./coverage/lcov.info | $(yarn bin)/coveralls &&
+$(yarn bin)/nyc $(yarn bin)/mocha -- test-tmp/test/index.spec.js --exit &&
+$(yarn bin)/nyc report --reporter=text-lcov | $(yarn bin)/coveralls &&
 yarn run test:removeTmpDir

@@ -1,6 +1,7 @@
 .awcache
 .DS_Store
 .idea
+.nyc_output
 npm-debug.log
 *.js.map
 /coverage

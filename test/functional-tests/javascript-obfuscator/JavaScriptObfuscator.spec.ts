@@ -667,7 +667,9 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
-        describe('Identifier names collision between base code and appended string array nodes', () => {
+        describe('Identifier names collision between base code and appended string array nodes', function () {
+            this.timeout(10000);
+
             const samplesCount: number = 30;
 
             let areCollisionsExists: boolean = false;

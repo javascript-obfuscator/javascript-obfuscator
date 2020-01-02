@@ -1,5 +1,10 @@
 Change Log
 
+v0.20.2
+---
+* Added funding button
+* Internal dependencies update, Happy New Year 2020!
+
 v0.20.1
 ---
 * Fixed identifier names generations for `mangled` and `dictionary` identifier names generators

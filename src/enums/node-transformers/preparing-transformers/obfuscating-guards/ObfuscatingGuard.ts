@@ -1,4 +1,5 @@
 export enum ObfuscatingGuard {
-    BlackListNodeGuard = 'BlackListNodeGuard',
-    ConditionalCommentNodeGuard = 'ConditionalCommentNodeGuard'
+    BlackListObfuscatingGuard = 'BlackListObfuscatingGuard',
+    ConditionalCommentObfuscatingGuard = 'ConditionalCommentObfuscatingGuard',
+    ReservedStringObfuscatingGuard = 'ReservedStringObfuscatingGuard'
 }

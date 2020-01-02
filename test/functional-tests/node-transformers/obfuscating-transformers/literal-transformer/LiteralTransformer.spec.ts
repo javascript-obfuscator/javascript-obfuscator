@@ -454,7 +454,7 @@ describe('LiteralTransformer', () => {
             });
 
             describe('Variant #4: correct escape of special characters', () => {
-                const stringLiteralRegExp: RegExp = /var baz *= *'Cannot\\x20find\\x20module\\x20\\x27' *\+ *foo *\+ *'\\x27';/;
+                const stringLiteralRegExp: RegExp = /var baz *= *'Cannot find module \\'' *\+ *foo *\+ *'\\x27';/;
 
                 let obfuscatedCode: string;
 

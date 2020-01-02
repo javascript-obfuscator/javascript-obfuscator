@@ -25,8 +25,9 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
      * @type {ObfuscatingGuard[]}
      */
     private static readonly obfuscatingGuardsList: ObfuscatingGuard[] = [
-        ObfuscatingGuard.BlackListNodeGuard,
-        ObfuscatingGuard.ConditionalCommentNodeGuard
+        ObfuscatingGuard.BlackListObfuscatingGuard,
+        ObfuscatingGuard.ConditionalCommentObfuscatingGuard,
+        ObfuscatingGuard.ReservedStringObfuscatingGuard
     ];
 
     /**

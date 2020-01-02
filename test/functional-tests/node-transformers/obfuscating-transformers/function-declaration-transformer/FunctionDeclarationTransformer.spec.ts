@@ -220,5 +220,27 @@ describe('FunctionDeclarationTransformer', () => {
                 assert.match(obfuscatedCode, defaultExportRegExp);
             });
         });
+
+        describe('Variant #8: default export inline', () => {
+            const defaultExportRegExp: RegExp = /export default function *\(\) *{}/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/default-export-inline.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('Match #1: should produce correct code', () => {
+                assert.match(obfuscatedCode, defaultExportRegExp);
+            });
+        });
     });
 });

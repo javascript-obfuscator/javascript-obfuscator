@@ -21,6 +21,7 @@
   },
   "types": "index.d.ts",
   "dependencies": {
+    "@gradecam/tsenum": "^1.2.0",
     "@nuxtjs/opencollective": "0.2.2",
     "chalk": "3.0.0",
     "chance": "1.1.4",

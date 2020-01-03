@@ -3,6 +3,7 @@ Change Log
 v0.20.3
 ---
 * Fixed `for-await-of` statement: https://github.com/javascript-obfuscator/javascript-obfuscator/issues/419
+* Fixed typings. Now string values correctly assignable to enum-like options
 
 v0.20.2
 ---

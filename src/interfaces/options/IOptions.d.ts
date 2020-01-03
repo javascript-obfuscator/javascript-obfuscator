@@ -1,3 +1,5 @@
+import { TypeFromEnum } from '@gradecam/tsenum';
+
 import { TStringArrayEncoding } from '../../types/options/TStringArrayEncoding';
 
 import { IdentifierNamesGenerator } from '../../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
@@ -14,7 +16,7 @@ export interface IOptions {
     readonly debugProtectionInterval: boolean;
     readonly disableConsoleOutput: boolean;
     readonly domainLock: string[];
-    readonly identifierNamesGenerator: IdentifierNamesGenerator;
+    readonly identifierNamesGenerator: TypeFromEnum<typeof IdentifierNamesGenerator>;
     readonly identifiersDictionary: string[];
     readonly identifiersPrefix: string;
     readonly inputFileName: string;
@@ -28,13 +30,13 @@ export interface IOptions {
     readonly sourceMap: boolean;
     readonly sourceMapBaseUrl: string;
     readonly sourceMapFileName: string;
-    readonly sourceMapMode: SourceMapMode;
+    readonly sourceMapMode: TypeFromEnum<typeof SourceMapMode>;
     readonly splitStrings: boolean;
     readonly splitStringsChunkLength: number;
     readonly stringArray: boolean;
     readonly stringArrayEncoding: TStringArrayEncoding;
     readonly stringArrayThreshold: number;
-    readonly target: ObfuscationTarget;
+    readonly target: TypeFromEnum<typeof ObfuscationTarget>;
     readonly transformObjectKeys: boolean;
     readonly unicodeEscapeSequence: boolean;
 }

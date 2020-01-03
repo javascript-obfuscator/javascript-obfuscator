@@ -1,8 +1,8 @@
 import { MakeEnum } from '@gradecam/tsenum';
 
 export const SourceMapMode: Readonly<{
-    Separate: string;
-    Inline: string;
+    Inline: 'inline';
+    Separate: 'separate';
 }> = MakeEnum({
     Inline: 'inline',
     Separate: 'separate'

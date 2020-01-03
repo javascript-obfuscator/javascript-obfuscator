@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { TypeFromEnum } from '@gradecam/tsenum';
 
 import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
 
@@ -23,7 +24,7 @@ function getObfuscatedCode (
     sourceMap: string,
     sourceMapBaseUrl: string,
     sourceMapFileName: string,
-    sourceMapMode: SourceMapMode
+    sourceMapMode: TypeFromEnum<typeof SourceMapMode>
 ): IObfuscatedCode {
     const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 

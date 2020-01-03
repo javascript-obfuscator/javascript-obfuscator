@@ -1,4 +1,5 @@
 import { assert } from 'chai';
+import { TypeFromEnum } from '@gradecam/tsenum';
 
 import { IObfuscatedCode } from '../../../src/interfaces/source-code/IObfuscatedCode';
 
@@ -673,12 +674,12 @@ describe('JavaScriptObfuscator', () => {
             const samplesCount: number = 30;
 
             let areCollisionsExists: boolean = false;
-            let obfuscateFunc: (identifierNamesGenerator: IdentifierNamesGenerator) => string;
+            let obfuscateFunc: (identifierNamesGenerator: TypeFromEnum<typeof IdentifierNamesGenerator>) => string;
 
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/custom-nodes-identifier-names-collision.js');
 
-                obfuscateFunc = (identifierNamesGenerator: IdentifierNamesGenerator) => JavaScriptObfuscator.obfuscate(
+                obfuscateFunc = (identifierNamesGenerator: TypeFromEnum<typeof IdentifierNamesGenerator>) => JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         identifierNamesGenerator,
@@ -693,7 +694,7 @@ describe('JavaScriptObfuscator', () => {
                 [
                     IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
                     IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-                ].forEach((identifierNamesGenerator: IdentifierNamesGenerator) => {
+                ].forEach((identifierNamesGenerator: TypeFromEnum<typeof IdentifierNamesGenerator>) => {
                     for (let i = 0; i < samplesCount; i++) {
                         try {
                             eval(obfuscateFunc(identifierNamesGenerator));

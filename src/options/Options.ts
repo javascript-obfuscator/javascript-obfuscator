@@ -1,3 +1,5 @@
+import { TypeFromEnum } from '@gradecam/tsenum';
+
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
@@ -112,7 +114,7 @@ export class Options implements IOptions {
         IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
         IdentifierNamesGenerator.MangledIdentifierNamesGenerator
     ])
-    public readonly identifierNamesGenerator!: IdentifierNamesGenerator;
+    public readonly identifierNamesGenerator!: TypeFromEnum<typeof IdentifierNamesGenerator>;
 
     /**
      * @type {string}
@@ -214,7 +216,7 @@ export class Options implements IOptions {
      * @type {SourceMapMode}
      */
     @IsIn([SourceMapMode.Inline, SourceMapMode.Separate])
-    public readonly sourceMapMode!: SourceMapMode;
+    public readonly sourceMapMode!: TypeFromEnum<typeof SourceMapMode>;
 
     /**
      * @type {boolean}
@@ -254,7 +256,7 @@ export class Options implements IOptions {
      * @type {ObfuscationTarget}
      */
     @IsIn([ObfuscationTarget.Browser, ObfuscationTarget.BrowserNoEval, ObfuscationTarget.Node])
-    public readonly target!: ObfuscationTarget;
+    public readonly target!: TypeFromEnum<typeof ObfuscationTarget>;
 
     /**
      * @type {boolean}

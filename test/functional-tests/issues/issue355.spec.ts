@@ -8,7 +8,7 @@ import { IdentifierNamesGenerator } from "../../../src/enums/generators/identifi
 // https://github.com/javascript-obfuscator/javascript-obfuscator/issues/355
 //
 describe('Issue #355', () => {
-    describe('Fixture code should nor break', () => {
+    describe('Fixture code should not break', () => {
         let obfuscatedCode: string;
 
         before(() => {

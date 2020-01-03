@@ -7,7 +7,6 @@ import { JavaScriptObfuscator } from '../../../src/JavaScriptObfuscatorFacade';
 // https://github.com/javascript-obfuscator/javascript-obfuscator/issues/437
 //
 describe('Issue #437', () => {
-
     describe('Fixture code should not break on obfuscating', () => {
         let doObfuscate: Function;
 

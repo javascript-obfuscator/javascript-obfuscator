@@ -1,5 +1,9 @@
 Change Log
 
+v0.20.3
+---
+* Fixed `for-await-of` statement: https://github.com/javascript-obfuscator/javascript-obfuscator/issues/419
+
 v0.20.2
 ---
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/pull/442

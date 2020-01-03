@@ -1,6 +1,6 @@
 /* tslint:disable:max-file-line-count */
 
-import * as escodegen from 'escodegen-wallaby';
+import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
 import { TStatement } from '../types/node/TStatement';

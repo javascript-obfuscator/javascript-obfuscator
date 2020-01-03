@@ -1,6 +1,6 @@
 /* tslint:disable:interface-name */
 
-import * as escodegen from 'escodegen-wallaby';
+import * as escodegen from 'escodegen';
 
 declare module 'estree' {
     export interface BaseNodeMetadata {

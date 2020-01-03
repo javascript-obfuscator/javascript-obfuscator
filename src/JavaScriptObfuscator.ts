@@ -1,7 +1,7 @@
 import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 
-import * as escodegen from 'escodegen-wallaby';
+import * as escodegen from 'escodegen';
 import * as espree from 'espree';
 import * as ESTree from 'estree';
 

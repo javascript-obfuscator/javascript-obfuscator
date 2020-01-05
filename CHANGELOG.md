@@ -1,5 +1,9 @@
 Change Log
 
+v0.21.0
+---
+* Improved `transformObjectKeys` transformation to cover more cases
+
 v0.20.4
 ---
 * Fixed typings. Now string values correctly assignable to enum-like options

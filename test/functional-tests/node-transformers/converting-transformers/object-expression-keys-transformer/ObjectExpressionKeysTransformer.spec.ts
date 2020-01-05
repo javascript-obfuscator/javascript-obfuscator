@@ -43,7 +43,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                 `${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
                 `${variableMatch}\\['baz'] *= *'bark';` +
-                ``;
+            ``;
             const regExp: RegExp = new RegExp(match);
 
             let obfuscatedCode: string;
@@ -71,7 +71,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                 `${variableMatch}\\['foo'] *= *'bar';` +
                 `${variableMatch}\\['baz'] *= *'bark';` +
                 `return *${variableMatch};` +
-                ``;
+            ``;
             const regExp: RegExp = new RegExp(match);
 
             let obfuscatedCode: string;
@@ -127,7 +127,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                 `${variableMatch}\\['foo'] *= *'bar';` +
                 `${variableMatch}\\['baz'] *= *'bark';` +
                 `console\\['log']\\(${variableMatch}\\);` +
-                ``;
+            ``;
             const regExp: RegExp = new RegExp(match);
 
             let obfuscatedCode: string;

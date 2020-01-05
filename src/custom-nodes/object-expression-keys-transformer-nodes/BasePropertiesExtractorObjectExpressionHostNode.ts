@@ -1,14 +1,14 @@
 import { inject, injectable, } from 'inversify';
-import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
+import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
-import { TStatement } from '../../../types/node/TStatement';
+import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
+import { TStatement } from '../../types/node/TStatement';
 
-import { IOptions } from '../../../interfaces/options/IOptions';
-import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
+import { IOptions } from '../../interfaces/options/IOptions';
+import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
-import { AbstractCustomNode } from '../../AbstractCustomNode';
-import { NodeFactory } from '../../../node/NodeFactory';
+import { AbstractCustomNode } from '../AbstractCustomNode';
+import { NodeFactory } from '../../node/NodeFactory';
 
 @injectable()
 export class BasePropertiesExtractorObjectExpressionHostNode extends AbstractCustomNode {

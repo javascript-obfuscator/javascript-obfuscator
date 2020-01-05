@@ -7,6 +7,7 @@ import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 
 import { AbstractPropertiesExtractor } from './AbstractPropertiesExtractor';
+import { NodeGuards } from '../../../node/NodeGuards';
 
 @injectable()
 export class AssignmentExpressionPropertiesExtractor extends AbstractPropertiesExtractor {
@@ -19,6 +20,35 @@ export class AssignmentExpressionPropertiesExtractor extends AbstractPropertiesE
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {propertyValueNode is Pattern}
+     */
+    private static isProhibitedHostParent (node: ESTree.Node): node is ESTree.Pattern {
+        if (NodeGuards.isMemberExpressionNode(node)) {
+            return true;
+        }
+
+        if (AssignmentExpressionPropertiesExtractor.isProhibitedStatementNode(node)) {
+            return true;
+        }
+
+        // statements without block statement
+        return NodeGuards.isExpressionStatementNode(node)
+            && !!node.parentNode
+            && AssignmentExpressionPropertiesExtractor.isProhibitedStatementNode(node.parentNode);
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    private static isProhibitedStatementNode (node: ESTree.Node): boolean {
+        return NodeGuards.isIfStatementNode(node)
+            || NodeGuards.isForStatementTypeNode(node)
+            || NodeGuards.isWhileStatementNode(node);
     }
 
     /**
@@ -38,8 +68,8 @@ export class AssignmentExpressionPropertiesExtractor extends AbstractPropertiesE
             return objectExpressionNode;
         }
 
-        // left node shouldn't be as Pattern node
-        if (hostParentNode && AbstractPropertiesExtractor.isProhibitedHostParent(hostParentNode)) {
+        // left node shouldn't be as prohibited node
+        if (hostParentNode && AssignmentExpressionPropertiesExtractor.isProhibitedHostParent(hostParentNode)) {
             return objectExpressionNode;
         }
 

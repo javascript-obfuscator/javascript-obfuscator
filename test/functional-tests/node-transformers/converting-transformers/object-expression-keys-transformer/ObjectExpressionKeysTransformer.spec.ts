@@ -456,34 +456,363 @@ describe('ObjectExpressionKeysTransformer', () => {
 
     describe('correct placement of expression statements', () => {
         describe('Variant #1: if statement', () => {
-            const match: string = `` +
-                `if *\\(!!\\[]\\) *{` +
+            describe('Variant #1: with block statement', () => {
+                const match: string = `` +
+                    `if *\\(!!\\[]\\) *{` +
                     `var *${variableMatch} *= *{};` +
                     `${variableMatch}\\['foo'] *= *'bar';` +
-                `}` +
-            ``;
-            const regExp: RegExp = new RegExp(match);
+                    `}` +
+                    ``;
+                const regExp: RegExp = new RegExp(match);
 
-            let obfuscatedCode: string;
+                let obfuscatedCode: string;
 
-            before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/placement-inside-if-statement.js');
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/placement-inside-if-statement.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        transformObjectKeys: true
-                    }
-                ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should correctly transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
             });
 
-            it('should correctly transform object keys', () => {
-                assert.match(obfuscatedCode,  regExp);
+            describe('Variant #2: without block statement', () => {
+                const match: string = `` +
+                    `var ${variableMatch};` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['bar'] *= *'bar';` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['baz'] *= *'baz';` +
+                    `if *\\(!!\\[]\\)` +
+                        `${variableMatch} *= *${variableMatch};` +
+                    `else *` +
+                        `${variableMatch} *= *${variableMatch};` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/placement-inside-if-statement-without-block-statement.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should correctly transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #3: inside condition', () => {
+                const match: string = `` +
+                    `var ${variableMatch};` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['bar'] *= *'bar';` +
+                    `if *\\(${variableMatch} *= *${variableMatch}\\) *{}` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/placement-inside-if-statement-condition.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should correctly transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
             });
         });
 
-        describe('Variant #2: try statement', () => {
+        describe('Variant #2: for statement', () => {
+            describe('Variant #1: with block statement', () => {
+                const match: string = `` +
+                    `for *\\(var *${variableMatch} *= *0x0; *${variableMatch} *< *0xa; *${variableMatch}\\+\\+\\) *{` +
+                        `var *${variableMatch} *= *{};` +
+                        `${variableMatch}\\['foo'] *= *'bar';` +
+                    `}` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/placement-inside-for-statement.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should correctly transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #2: without block statement', () => {
+                const match: string = `` +
+                    `var ${variableMatch};` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['bar'] *= *'bar';` +
+                    `for *\\(var *${variableMatch} *= *0x0; *${variableMatch} *< *0xa; *${variableMatch}\\+\\+\\) *` +
+                        `${variableMatch} *= *${variableMatch};` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/placement-inside-for-statement-without-block-statement.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should correctly transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+        });
+
+        describe('Variant #3: for in statement', () => {
+            describe('Variant #1: with block statement', () => {
+                const match: string = `` +
+                    `var ${variableMatch} *= *{};` +
+                    `for *\\(var *${variableMatch} in *${variableMatch}\\) *{` +
+                        `${variableMatch} *= *{};` +
+                        `${variableMatch}\\['bar'] *= *'bar';` +
+                    `}` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/placement-inside-for-in-statement.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should correctly transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #2: without block statement', () => {
+                const match: string = `` +
+                    `var ${variableMatch} *= *{};` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['bar'] *= *'bar';` +
+                    `for *\\(var *${variableMatch} in *${variableMatch}\\) *` +
+                        `${variableMatch} *= *${variableMatch};` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/placement-inside-for-in-statement-without-block-statement.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should correctly transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+        });
+
+        describe('Variant #4: for of statement', () => {
+            describe('Variant #1: with block statement', () => {
+                const match: string = `` +
+                    `var ${variableMatch} *= *\\[];` +
+                    `for *\\(var *${variableMatch} of *${variableMatch}\\) *{` +
+                        `${variableMatch} *= *{};` +
+                        `${variableMatch}\\['bar'] *= *'bar';` +
+                    `}` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/placement-inside-for-of-statement.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should correctly transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #2: without block statement', () => {
+                const match: string = `` +
+                    `var ${variableMatch} *= *\\[];` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['bar'] *= *'bar';` +
+                    `for *\\(var *${variableMatch} of *${variableMatch}\\) *` +
+                        `${variableMatch} *= *${variableMatch};` +
+                    ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/placement-inside-for-of-statement-without-block-statement.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should correctly transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+        });
+
+        describe('Variant #5: while statement', () => {
+            describe('Variant #1: with block statement', () => {
+                const match: string = `` +
+                    `while *\\(!!\\[]\\) *{` +
+                        `var *${variableMatch} *= *{};` +
+                        `${variableMatch}\\['foo'] *= *'bar';` +
+                    `}` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/placement-inside-while-statement.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should correctly transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #2: without block statement', () => {
+                const match: string = `` +
+                    `var ${variableMatch};` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['bar'] *= *'bar';` +
+                    `while *\\(!!\\[]\\)` +
+                        `${variableMatch} *= *${variableMatch};` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/placement-inside-while-statement-without-block-statement.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should correctly transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #3: inside condition', () => {
+                const match: string = `` +
+                    `var ${variableMatch};` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['bar'] *= *'bar';` +
+                    `while *\\(${variableMatch} *= *${variableMatch}\\) *{}` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/placement-inside-while-statement-condition.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should correctly transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+        });
+
+        describe('Variant #6: try statement', () => {
             const match: string = `` +
                 `try *{` +
                     `var *${variableMatch} *= *{};` +
@@ -512,7 +841,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
         });
 
-        describe('Variant #3: catch clause statement', () => {
+        describe('Variant #7: catch clause statement', () => {
             const match: string = `` +
                 `try *{` +
                 `} *catch *\\(${variableMatch}\\) *{` +
@@ -541,7 +870,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
         });
 
-        describe('Variant #4: switch catch statement', () => {
+        describe('Variant #8: switch catch statement', () => {
             const match: string = `` +
                 `switch *\\(!!\\[]\\) *{` +
                     `case *!!\\[]:` +
@@ -570,7 +899,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
         });
 
-        describe('Variant #5: variable declarator with object call', () => {
+        describe('Variant #9: variable declarator with object call', () => {
             describe('Variant #1', () => {
                 const match: string = `` +
                     `const *${variableMatch} *= *{}; *` +

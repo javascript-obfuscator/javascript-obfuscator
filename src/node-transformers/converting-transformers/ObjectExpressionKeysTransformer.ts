@@ -137,12 +137,6 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
             return objectExpressionNode;
         }
 
-        const isNodeWithConcreteExtractor: boolean = ObjectExpressionKeysTransformer.propertiesExtractorsMap.has(parentNode.type);
-
-        if (isNodeWithConcreteExtractor) {
-            return objectExpressionNode;
-        }
-
         const propertiesExtractor: IPropertiesExtractor = this.propertiesExtractorFactory(PropertiesExtractor.BasePropertiesExtractor);
 
         return propertiesExtractor.extract(objectExpressionNode, parentNode);

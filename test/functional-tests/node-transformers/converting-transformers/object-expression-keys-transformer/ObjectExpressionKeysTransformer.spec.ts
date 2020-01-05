@@ -310,6 +310,92 @@ describe('ObjectExpressionKeysTransformer', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });
+
+        describe('Variant #11: variable declarator object call inside other variable declarator', () => {
+            describe('Variant #1', () => {
+                const match: string = `` +
+                    `var *${variableMatch} *= *{};` +
+                    `${variableMatch}\\['foo'] *= *'foo';` +
+                    `const *${variableMatch} *= *${variableMatch}, *` +
+                    `${variableMatch} *= *${variableMatch}\\['foo'];` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-with-object-call-4.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #2', () => {
+                const match: string = `` +
+                    `var *${variableMatch} *= *{};` +
+                    `${variableMatch}\\['foo'] *= *'foo';` +
+                    `const *${variableMatch} *= *${variableMatch}, *` +
+                    `${variableMatch} *= *\\[${variableMatch}\\['foo']];` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-with-object-call-5.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+        });
+
+        describe('Variant #12: assignment expression and member expression', () => {
+            const match: string = `` +
+                `var ${variableMatch}; *` +
+                `var ${variableMatch} *= *{}; *` +
+                `${variableMatch}\\['foo'] *= *'bar';` +
+                `\\(${variableMatch} *= *${variableMatch}\\)\\['baz'] *= *${variableMatch}\\['foo'];` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/assignment-expression-and-member-expression.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should transform object keys', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
     });
 
     describe('member expression as host of object expression', () => {
@@ -542,10 +628,13 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             describe('Variant #3: two objects', () => {
                 const match: string = `` +
+                    `var *${variableMatch} *= *{};` +
+                    `${variableMatch}\\['bar'] *= *'bar';` +
                     `const *${variableMatch} *= *{}, *` +
-                        `${variableMatch} *= *{'bar': *'bar'}, *` +
+                        `${variableMatch} *= *${variableMatch}, *` +
                         `${variableMatch} *= *${variableMatch}\\['bar']; *` +
                     `${variableMatch}\\['foo'] *= *'foo';` +
+                    `console\\['log']\\(${variableMatch}\\);` +
                 ``;
                 const regExp: RegExp = new RegExp(match);
 
@@ -563,7 +652,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                     ).getObfuscatedCode();
                 });
 
-                it('should correctly transform first object keys and ignore second object keys', () => {
+                it('should correctly transform objects keys', () => {
                     assert.match(obfuscatedCode,  regExp);
                 });
             });
@@ -611,86 +700,6 @@ describe('ObjectExpressionKeysTransformer', () => {
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET
-                    }
-                ).getObfuscatedCode();
-            });
-
-            it('shouldn\'t transform object keys', () => {
-                assert.match(obfuscatedCode,  regExp);
-            });
-        });
-
-        describe('Variant #3: variable declarator object call inside other variable declarator', () => {
-            describe('Variant #1', () => {
-                const match: string = `` +
-                    `const *${variableMatch} *= *{'foo': *'foo'}, *` +
-                        `${variableMatch} *= *${variableMatch}\\['foo'];` +
-                ``;
-                const regExp: RegExp = new RegExp(match);
-
-                let obfuscatedCode: string;
-
-                before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-with-object-call-ignore-1.js');
-
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            transformObjectKeys: true
-                        }
-                    ).getObfuscatedCode();
-                });
-
-                it('shouldn\'t transform object keys', () => {
-                    assert.match(obfuscatedCode,  regExp);
-                });
-            });
-
-            describe('Variant #2', () => {
-                const match: string = `` +
-                    `const *${variableMatch} *= *{'foo': *'foo'}, *` +
-                        `${variableMatch} *= *\\[${variableMatch}\\['foo']];` +
-                ``;
-                const regExp: RegExp = new RegExp(match);
-
-                let obfuscatedCode: string;
-
-                before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-with-object-call-ignore-2.js');
-
-                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                        code,
-                        {
-                            ...NO_ADDITIONAL_NODES_PRESET,
-                            transformObjectKeys: true
-                        }
-                    ).getObfuscatedCode();
-                });
-
-                it('shouldn\'t transform object keys', () => {
-                    assert.match(obfuscatedCode,  regExp);
-                });
-            });
-        });
-
-        describe('Variant #4: assignment expression and member expression', () => {
-            const match: string = `` +
-                `var ${variableMatch}; *` +
-                `\\(${variableMatch} *= *{'foo': *'bar'}\\)\\['baz'] *= *${variableMatch}\\['foo'];` +
-            ``;
-            const regExp: RegExp = new RegExp(match);
-
-            let obfuscatedCode: string;
-
-            before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/assignment-expression-and-member-expression.js');
-
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        transformObjectKeys: true
                     }
                 ).getObfuscatedCode();
             });

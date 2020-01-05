@@ -374,22 +374,144 @@ describe('OptionsNormalizer', () => {
         });
 
         describe('sourceMapFileNameRule', () => {
-            before(() => {
-                optionsPreset = getNormalizedOptions({
-                    ...getDefaultOptions(),
-                    sourceMapBaseUrl: 'http://localhost:9000',
-                    sourceMapFileName: '//outputSourceMapName'
+            describe('Base filename without extension', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...getDefaultOptions(),
+                        sourceMapBaseUrl: 'http://localhost:9000',
+                        sourceMapFileName: 'outputSourceMapName'
+                    });
+
+                    expectedOptionsPreset = {
+                        ...getDefaultOptions(),
+                        sourceMapBaseUrl: 'http://localhost:9000/',
+                        sourceMapFileName: 'outputSourceMapName.js.map'
+                    };
                 });
 
-                expectedOptionsPreset = {
-                    ...getDefaultOptions(),
-                    sourceMapBaseUrl: 'http://localhost:9000/',
-                    sourceMapFileName: 'outputSourceMapName.js.map'
-                };
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
             });
 
-            it('should normalize options preset', () => {
-                assert.deepEqual(optionsPreset, expectedOptionsPreset);
+            describe('Slashes in file name', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...getDefaultOptions(),
+                        sourceMapBaseUrl: 'http://localhost:9000',
+                        sourceMapFileName: '//outputSourceMapName'
+                    });
+
+                    expectedOptionsPreset = {
+                        ...getDefaultOptions(),
+                        sourceMapBaseUrl: 'http://localhost:9000/',
+                        sourceMapFileName: 'outputSourceMapName.js.map'
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+
+            describe('`js` file extension in file name', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...getDefaultOptions(),
+                        sourceMapBaseUrl: 'http://localhost:9000',
+                        sourceMapFileName: 'outputSourceMapName.js'
+                    });
+
+                    expectedOptionsPreset = {
+                        ...getDefaultOptions(),
+                        sourceMapBaseUrl: 'http://localhost:9000/',
+                        sourceMapFileName: 'outputSourceMapName.js.map'
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+
+            describe('Non `js` file extension in file name', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...getDefaultOptions(),
+                        sourceMapBaseUrl: 'http://localhost:9000',
+                        sourceMapFileName: 'outputSourceMapName.exe'
+                    });
+
+                    expectedOptionsPreset = {
+                        ...getDefaultOptions(),
+                        sourceMapBaseUrl: 'http://localhost:9000/',
+                        sourceMapFileName: 'outputSourceMapName.js.map'
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+
+            describe('File hash in file name', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...getDefaultOptions(),
+                        sourceMapBaseUrl: 'http://localhost:9000',
+                        sourceMapFileName: 'outputSourceMapName.7e2c49a622975ebd9b7e'
+                    });
+
+                    expectedOptionsPreset = {
+                        ...getDefaultOptions(),
+                        sourceMapBaseUrl: 'http://localhost:9000/',
+                        sourceMapFileName: 'outputSourceMapName.7e2c49a622975ebd9b7e.js.map'
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+
+            describe('File hash and `js` file extension in file name #1', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...getDefaultOptions(),
+                        sourceMapBaseUrl: 'http://localhost:9000',
+                        sourceMapFileName: 'outputSourceMapName.7e2c49a622975ebd9b7e.js'
+                    });
+
+                    expectedOptionsPreset = {
+                        ...getDefaultOptions(),
+                        sourceMapBaseUrl: 'http://localhost:9000/',
+                        sourceMapFileName: 'outputSourceMapName.7e2c49a622975ebd9b7e.js.map'
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
+            });
+
+            describe('File hash and non `js` file extension in file name', () => {
+                before(() => {
+                    optionsPreset = getNormalizedOptions({
+                        ...getDefaultOptions(),
+                        sourceMapBaseUrl: 'http://localhost:9000',
+                        sourceMapFileName: 'outputSourceMapName.7e2c49a622975ebd9b7e.exe'
+                    });
+
+                    expectedOptionsPreset = {
+                        ...getDefaultOptions(),
+                        sourceMapBaseUrl: 'http://localhost:9000/',
+                        sourceMapFileName: 'outputSourceMapName.7e2c49a622975ebd9b7e.js.map'
+                    };
+                });
+
+                it('should normalize options preset', () => {
+                    assert.deepEqual(optionsPreset, expectedOptionsPreset);
+                });
             });
         });
 

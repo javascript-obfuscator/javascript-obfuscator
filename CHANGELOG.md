@@ -3,6 +3,7 @@ Change Log
 v0.21.0
 ---
 * Improved `transformObjectKeys` transformation to cover more cases
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/406
 
 v0.20.4
 ---

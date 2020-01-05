@@ -4,6 +4,8 @@ import * as path from 'path';
 
 import { TObject } from '../../types/TObject';
 
+import { StringSeparator } from '../../enums/StringSeparator';
+
 import { JavaScriptObfuscatorCLI } from '../JavaScriptObfuscatorCLI';
 
 export class CLIUtils {
@@ -14,11 +16,11 @@ export class CLIUtils {
     public static getOutputCodePath (inputPath: string): string {
         return path
             .normalize(inputPath)
-            .split('.')
+            .split(StringSeparator.Dot)
             .map((value: string, index: number) => {
                 return index === 0 ? `${value}${JavaScriptObfuscatorCLI.obfuscatedFilePrefix}` : value;
             })
-            .join('.');
+            .join(StringSeparator.Dot);
     }
 
     /**
@@ -34,7 +36,7 @@ export class CLIUtils {
         }
 
         if (!/\.js\.map$/.test(outputCodePath)) {
-            outputCodePath = `${outputCodePath.split('.')[0]}.js.map`;
+            outputCodePath = `${outputCodePath.split(StringSeparator.Dot)[0]}.js.map`;
         } else if (/\.js$/.test(outputCodePath)) {
             outputCodePath += '.map';
         }

@@ -11,6 +11,7 @@ export enum ServiceIdentifiers {
     Factory__INodeTransformer = 'Factory<INodeTransformer[]>',
     Factory__IObfuscatedCode = 'Factory<IObfuscatedCode>',
     Factory__IObfuscatingReplacer = 'Factory<IObfuscatingReplacer>',
+    Factory__IObjectExpressionKeysTransformerCustomNode = 'Factory<IObjectExpressionKeysTransformerCustomNode>',
     Factory__IPropertiesExtractor = 'Factory<IPropertiesExtractor>',
     Factory__TControlFlowStorage = 'Factory<TControlFlowStorage>',
     IArrayUtils = 'IArrayUtils',

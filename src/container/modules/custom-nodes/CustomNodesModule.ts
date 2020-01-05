@@ -9,6 +9,7 @@ import { ControlFlowCustomNode } from "../../../enums/custom-nodes/ControlFlowCu
 import { CustomNode } from '../../../enums/custom-nodes/CustomNode';
 import { CustomNodeGroup } from '../../../enums/custom-nodes/CustomNodeGroup';
 import { DeadCodeInjectionCustomNode } from '../../../enums/custom-nodes/DeadCodeInjectionCustomNode';
+import { ObjectExpressionKeysTransformerCustomNode } from '../../../enums/custom-nodes/ObjectExpressionKeysTransformerCustomNode';
 
 import { ConsoleOutputCustomNodeGroup } from '../../../custom-nodes/console-output-nodes/group/ConsoleOutputCustomNodeGroup';
 import { DebugProtectionCustomNodeGroup } from '../../../custom-nodes/debug-protection-nodes/group/DebugProtectionCustomNodeGroup';
@@ -16,6 +17,7 @@ import { DomainLockCustomNodeGroup } from '../../../custom-nodes/domain-lock-nod
 import { SelfDefendingCustomNodeGroup } from '../../../custom-nodes/self-defending-nodes/group/SelfDefendingCustomNodeGroup';
 import { StringArrayCustomNodeGroup } from '../../../custom-nodes/string-array-nodes/group/StringArrayCustomNodeGroup';
 
+import { BasePropertiesExtractorObjectExpressionHostNode } from '../../../custom-nodes/object-expression-keys-transformer-nodes/BasePropertiesExtractorObjectExpressionHostNode';
 import { BinaryExpressionFunctionNode } from '../../../custom-nodes/control-flow-flattening-nodes/BinaryExpressionFunctionNode';
 import { BlockStatementControlFlowFlatteningNode } from '../../../custom-nodes/control-flow-flattening-nodes/BlockStatementControlFlowFlatteningNode';
 import { BlockStatementDeadCodeInjectionNode } from '../../../custom-nodes/dead-code-injection-nodes/BlockStatementDeadCodeInjectionNode';
@@ -121,6 +123,11 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
         .toConstructor(BlockStatementDeadCodeInjectionNode)
         .whenTargetNamed(DeadCodeInjectionCustomNode.BlockStatementDeadCodeInjectionNode);
 
+    // object expression keys transformer nodes
+    bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
+        .toConstructor(BasePropertiesExtractorObjectExpressionHostNode)
+        .whenTargetNamed(ObjectExpressionKeysTransformerCustomNode.BasePropertiesExtractorObjectExpressionHostNode);
+
     // node groups
     bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)
         .to(ConsoleOutputCustomNodeGroup)
@@ -161,6 +168,16 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
     bind<ICustomNode>(ServiceIdentifiers.Factory__IDeadCodeInjectionCustomNode)
         .toFactory<ICustomNode>(InversifyContainerFacade
             .getConstructorFactory<DeadCodeInjectionCustomNode, ICustomNode>(
+                ServiceIdentifiers.Newable__ICustomNode,
+                ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
+                ServiceIdentifiers.IRandomGenerator,
+                ServiceIdentifiers.IOptions
+            ));
+
+    // object expression keys transformer customNode constructor factory
+    bind<ICustomNode>(ServiceIdentifiers.Factory__IObjectExpressionKeysTransformerCustomNode)
+        .toFactory<ICustomNode>(InversifyContainerFacade
+            .getConstructorFactory<ObjectExpressionKeysTransformerCustomNode, ICustomNode>(
                 ServiceIdentifiers.Newable__ICustomNode,
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
                 ServiceIdentifiers.IRandomGenerator,

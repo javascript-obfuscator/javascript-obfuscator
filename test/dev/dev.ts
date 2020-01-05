@@ -7,15 +7,21 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            async function testFunc(params) {
-                for await (let param of params) {
-                  
+            function foo () {
+                function foo () {
+                    return {
+                        bar: {
+                            foo: 1
+                        }
+                    };
                 }
             }
-            testFunc(['foo']);
         `,
         {
-            ...NO_ADDITIONAL_NODES_PRESET
+            ...NO_ADDITIONAL_NODES_PRESET,
+            transformObjectKeys: true,
+            controlFlowFlattening: true,
+            controlFlowFlatteningThreshold: 1
         }
     ).getObfuscatedCode();
 

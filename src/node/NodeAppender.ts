@@ -87,6 +87,23 @@ export class NodeAppender {
      * @param {TStatement[]} statements
      * @param {Node} target
      */
+    public static insertBefore (
+        nodeWithStatements: TNodeWithStatements,
+        statements: TStatement[],
+        target: ESTree.Statement
+    ): void {
+        const indexInScopeStatement: number = NodeAppender
+            .getScopeStatements(nodeWithStatements)
+            .indexOf(target);
+
+        NodeAppender.insertAtIndex(nodeWithStatements, statements, indexInScopeStatement);
+    }
+
+    /**
+     * @param {TNodeWithStatements} nodeWithStatements
+     * @param {TStatement[]} statements
+     * @param {Node} target
+     */
     public static insertAfter (
         nodeWithStatements: TNodeWithStatements,
         statements: TStatement[],

@@ -9,6 +9,7 @@ import { NodeTransformer } from '../../../enums/node-transformers/NodeTransforme
 import { PropertiesExtractor } from '../../../enums/node-transformers/converting-transformers/properties-extractors/PropertiesExtractor';
 
 import { AssignmentExpressionPropertiesExtractor } from '../../../node-transformers/converting-transformers/properties-extractors/AssignmentExpressionPropertiesExtractor';
+import { BasePropertiesExtractor } from '../../../node-transformers/converting-transformers/properties-extractors/BasePropertiesExtractor';
 import { MemberExpressionTransformer } from '../../../node-transformers/converting-transformers/MemberExpressionTransformer';
 import { MethodDefinitionTransformer } from '../../../node-transformers/converting-transformers/MethodDefinitionTransformer';
 import { ObjectExpressionKeysTransformer } from '../../../node-transformers/converting-transformers/ObjectExpressionKeysTransformer';
@@ -47,6 +48,10 @@ export const convertingTransformersModule: interfaces.ContainerModule = new Cont
     bind<IPropertiesExtractor>(ServiceIdentifiers.IPropertiesExtractor)
         .to(AssignmentExpressionPropertiesExtractor)
         .whenTargetNamed(PropertiesExtractor.AssignmentExpressionPropertiesExtractor);
+
+    bind<IPropertiesExtractor>(ServiceIdentifiers.IPropertiesExtractor)
+        .to(BasePropertiesExtractor)
+        .whenTargetNamed(PropertiesExtractor.BasePropertiesExtractor);
 
     bind<IPropertiesExtractor>(ServiceIdentifiers.IPropertiesExtractor)
         .to(VariableDeclaratorPropertiesExtractor)

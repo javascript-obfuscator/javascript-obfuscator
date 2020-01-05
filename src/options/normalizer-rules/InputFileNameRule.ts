@@ -2,6 +2,8 @@ import { TOptionsNormalizerRule } from '../../types/options/TOptionsNormalizerRu
 
 import { IOptions } from '../../interfaces/options/IOptions';
 
+import { StringSeparator } from '../../enums/StringSeparator';
+
 /**
  * @param {IOptions} options
  * @returns {IOptions}
@@ -12,9 +14,9 @@ export const InputFileNameRule: TOptionsNormalizerRule = (options: IOptions): IO
     if (inputFileName) {
         inputFileName = inputFileName
             .replace(/^\/+/, '')
-            .split('.')
+            .split(StringSeparator.Dot)
             .slice(0, -1)
-            .join('.') || inputFileName;
+            .join(StringSeparator.Dot) || inputFileName;
 
         options = {
             ...options,

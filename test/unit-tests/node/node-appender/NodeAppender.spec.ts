@@ -167,6 +167,29 @@ describe('NodeAppender', () => {
         });
     });
 
+    describe('insertBefore', () => {
+        let astTree: ESTree.Program,
+            expectedAstTree: ESTree.Program,
+            node: TStatement[],
+            targetStatement: ESTree.Statement;
+
+        before(() => {
+            node = convertCodeToStructure('/fixtures/simple-input.js');
+            astTree = convertCodeToAst('/fixtures/insert-node-before.js');
+            expectedAstTree = convertCodeToAst('/fixtures/insert-node-before-expected.js');
+            targetStatement = <ESTree.Statement>astTree.body[1];
+
+            astTree = NodeUtils.parentizeAst(astTree);
+            expectedAstTree = NodeUtils.parentizeAst(expectedAstTree);
+
+            NodeAppender.insertBefore(astTree, node, targetStatement);
+        });
+
+        it('should insert given node in `BlockStatement` node body before target statement', () => {
+            assert.deepEqual(astTree, expectedAstTree);
+        });
+    });
+
     describe('insertAfter', () => {
         let astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,

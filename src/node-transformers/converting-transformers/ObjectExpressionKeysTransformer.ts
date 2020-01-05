@@ -53,6 +53,10 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
      * @returns {IVisitor | null}
      */
     public getVisitor (transformationStage: TransformationStage): IVisitor | null {
+        if (!this.options.transformObjectKeys) {
+            return null;
+        }
+
         if (transformationStage !== TransformationStage.Converting) {
             return null;
         }
@@ -60,11 +64,18 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
         return {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
                 if (
-                    this.options.transformObjectKeys
-                    && parentNode
+                    parentNode
                     && NodeGuards.isObjectExpressionNode(node)
                 ) {
                     return this.transformNode(node, parentNode);
+                }
+            },
+            leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                if (
+                    parentNode
+                    && NodeGuards.isObjectExpressionNode(node)
+                ) {
+                    return this.transformNodeWithBaseExtractor(node, parentNode);
                 }
             }
         };
@@ -82,7 +93,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
      *     object['foo'] = 1;
      *     object['bar'] = 2;
      *
-     * @param {MemberExpression} objectExpressionNode
+     * @param {ObjectExpression} objectExpressionNode
      * @param {Node} parentNode
      * @returns {NodeGuards}
      */
@@ -100,6 +111,39 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
         }
 
         const propertiesExtractor: IPropertiesExtractor = this.propertiesExtractorFactory(propertiesExtractorName);
+
+        return propertiesExtractor.extract(objectExpressionNode, parentNode);
+    }
+
+    /**
+     * replaces:
+     *     return {
+     *          foo: 1,
+     *          bar: 2
+     *     };
+     *
+     * on:
+     *     var object = {};
+     *     object['foo'] = 1;
+     *     object['bar'] = 2;
+     *     return object;
+     *
+     * @param {ObjectExpression} objectExpressionNode
+     * @param {Node} parentNode
+     * @returns {NodeGuards}
+     */
+    public transformNodeWithBaseExtractor (objectExpressionNode: ESTree.ObjectExpression, parentNode: ESTree.Node): ESTree.Node {
+        if (!objectExpressionNode.properties.length) {
+            return objectExpressionNode;
+        }
+
+        const isNodeWithConcreteExtractor: boolean = ObjectExpressionKeysTransformer.propertiesExtractorsMap.has(parentNode.type);
+
+        if (isNodeWithConcreteExtractor) {
+            return objectExpressionNode;
+        }
+
+        const propertiesExtractor: IPropertiesExtractor = this.propertiesExtractorFactory(PropertiesExtractor.BasePropertiesExtractor);
 
         return propertiesExtractor.extract(objectExpressionNode, parentNode);
     }

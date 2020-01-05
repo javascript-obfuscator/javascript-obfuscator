@@ -37,7 +37,119 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
         });
 
-        describe('Variant #2: nested objects #1', () => {
+        describe('Variant #2: variable declaration without initialization', () => {
+            const match: string = `` +
+                `var *${variableMatch};` +
+                `${variableMatch} *= *{};` +
+                `${variableMatch}\\['foo'] *= *'bar';` +
+                `${variableMatch}\\['baz'] *= *'bark';` +
+                ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/variable-declaration-without-initialization.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should transform object keys', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        describe('Variant #3: return statement', () => {
+            const match: string = `` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['foo'] *= *'bar';` +
+                `${variableMatch}\\['baz'] *= *'bark';` +
+                `return *${variableMatch};` +
+                ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/return-statement.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn transform object keys', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        describe('Variant #4: object expression inside array expression', () => {
+            const match: string = `` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['foo'] *= *'bar';` +
+                `${variableMatch}\\['baz'] *= *'bark';` +
+                `var *${variableMatch} *= *\\[${variableMatch}];` +
+                ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/object-expression-inside-array-expression.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn transform object keys', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        describe('Variant #5: object expression inside call expression', () => {
+            const match: string = `` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['foo'] *= *'bar';` +
+                `${variableMatch}\\['baz'] *= *'bark';` +
+                `console\\['log']\\(${variableMatch}\\);` +
+                ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/object-expression-inside-call-expression.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn transform object keys', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        describe('Variant #6: nested objects #1', () => {
             const match: string = `` +
                 `var *${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
@@ -66,7 +178,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
         });
 
-        describe('Variant #3: nested objects #2', () => {
+        describe('Variant #7: nested objects #2', () => {
             const match: string = `` +
                 `var *${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
@@ -98,7 +210,42 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
         });
 
-        describe('Variant #4: correct integration with control flow flattening object', () => {
+        describe('Variant #8: nested objects #3', () => {
+            const match: string = `` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['hawk'] *= *'geek';` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['baz'] *= *'bark';` +
+                `${variableMatch}\\['inner1'] *= *${variableMatch};` +
+                `${variableMatch}\\['cow'] *= *'bear';` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['foo'] *= *'bar';` +
+                `${variableMatch}\\['inner'] *= *${variableMatch};` +
+                `${variableMatch}\\['ball'] *= *'door';` +
+                `return ${variableMatch};` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/nested-objects-3.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should correctly transform object keys', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        describe('Variant #9: correct integration with control flow flattening object #1', () => {
             const match: string = `` +
                 `var *${variableMatch} *= *{};` +
                 `${variableMatch}\\['\\w{5}'] *= *function *\\(${variableMatch}, *${variableMatch}\\) *{` +
@@ -111,7 +258,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/integration-with-control-flow-flattening.js');
+                const code: string = readFileAsString(__dirname + '/fixtures/integration-with-control-flow-flattening-1.js');
 
                 obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
@@ -129,30 +276,37 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
         });
 
-        describe('Variant #5: variable declaration without initialization', () => {
+        describe('Variant #10: correct integration with control flow flattening object #2', () => {
             const match: string = `` +
-                `var *${variableMatch};` +
-                `${variableMatch} *= *{};` +
-                `${variableMatch}\\['foo'] *= *'bar';` +
-                `${variableMatch}\\['baz'] *= *'bark';` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['\\w{5}'] *= *function *\\(${variableMatch}, *${variableMatch}\\) *{` +
+                    `return *${variableMatch} *\\+ *${variableMatch};` +
+                `};` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['foo'] *= *0x1;` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['bar'] *= *0x2;` +
+                `var *${variableMatch} *= *${variableMatch}\\['\\w{5}']\\(${variableMatch}\\['foo'], *${variableMatch}\\['bar']\\);` +
             ``;
             const regExp: RegExp = new RegExp(match);
 
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/variable-declaration-without-initialization.js');
+                const code: string = readFileAsString(__dirname + '/fixtures/integration-with-control-flow-flattening-2.js');
 
                 obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
                     {
                         ...NO_ADDITIONAL_NODES_PRESET,
+                        controlFlowFlattening: true,
+                        controlFlowFlatteningThreshold: 1,
                         transformObjectKeys: true
                     }
                 ).getObfuscatedCode();
             });
 
-            it('shouldn\'t transform object keys', () => {
+            it('should correctly transform object keys', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });

@@ -25,6 +25,7 @@ import { NodeAppender } from '../../node/NodeAppender';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeMetadata } from '../../node/NodeMetadata';
 import { NodeStatementUtils } from '../../node/NodeStatementUtils';
+import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
@@ -157,6 +158,8 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         controlFlowStorageCustomNode.initialize(controlFlowStorage);
         NodeAppender.prepend(hostNode, controlFlowStorageCustomNode.getNode());
         this.hostNodesWithControlFlowNode.add(hostNode);
+
+        NodeUtils.parentizeAst(functionNode);
 
         return functionNode;
     }

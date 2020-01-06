@@ -222,7 +222,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
                     const properties: ESTree.Property[] = node.properties;
 
                     for (const property of properties) {
-                        if (property.computed) {
+                        if (property.computed || !property.shorthand) {
                             continue;
                         }
 

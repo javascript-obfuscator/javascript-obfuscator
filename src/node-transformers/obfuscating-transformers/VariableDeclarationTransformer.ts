@@ -42,6 +42,11 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     private readonly identifierObfuscatingReplacer: IIdentifierObfuscatingReplacer;
 
     /**
+     * @type {Map<TNodeWithLexicalScope, Set<string>>}
+     */
+    private readonly lexicalScopeProhibitedIdentifierNames: Map<TNodeWithLexicalScope, Set<string>> = new Map();
+
+    /**
      * @type {TReplaceableIdentifiers}
      */
     private readonly replaceableIdentifiers: TReplaceableIdentifiers = new Map();
@@ -135,12 +140,98 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
         isGlobalDeclaration: boolean
     ): void {
         this.traverseDeclarationIdentifiers(variableDeclarationNode, (identifierNode: ESTree.Identifier) => {
+            if (this.isProhibitedVariableName(identifierNode, lexicalScopeNode)) {
+                return;
+            }
+
             if (isGlobalDeclaration) {
                 this.identifierObfuscatingReplacer.storeGlobalName(identifierNode.name, lexicalScopeNode);
             } else {
                 this.identifierObfuscatingReplacer.storeLocalName(identifierNode.name, lexicalScopeNode);
             }
         });
+    }
+
+    /**
+     * @param {Identifier} identifierNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     */
+    private isProhibitedVariableName (
+        identifierNode: ESTree.Identifier,
+        lexicalScopeNode: TNodeWithLexicalScope
+    ): boolean {
+        let cachedLexicalScopeProhibitedIdentifierNames: Set<string> | undefined = this.lexicalScopeProhibitedIdentifierNames
+            .get(lexicalScopeNode);
+
+        if (cachedLexicalScopeProhibitedIdentifierNames?.has(identifierNode.name)) {
+            return true;
+        }
+
+        const isProhibitedVariableName: boolean = this.isProhibitedVariableNameUsingInObjectPatternNode(
+            identifierNode,
+            lexicalScopeNode
+        );
+
+        if (!isProhibitedVariableName) {
+            return false;
+        }
+
+        if (cachedLexicalScopeProhibitedIdentifierNames) {
+            cachedLexicalScopeProhibitedIdentifierNames.add(identifierNode.name);
+        } else {
+            cachedLexicalScopeProhibitedIdentifierNames = new Set([identifierNode.name]);
+            this.lexicalScopeProhibitedIdentifierNames.set(lexicalScopeNode, cachedLexicalScopeProhibitedIdentifierNames);
+        }
+
+        return true;
+    }
+
+    /**
+     * Should not rename identifiers that used inside destructing assignment without declaration
+     *
+     * var a, b; // should not be renamed
+     * ({a, b} = {a: 1, b: 2});
+     *
+     * @param {VariableDeclaration} identifierNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     */
+    private isProhibitedVariableNameUsingInObjectPatternNode (
+        identifierNode: ESTree.Identifier,
+        lexicalScopeNode: TNodeWithLexicalScope
+    ): boolean {
+        let isProhibitedVariableDeclaration: boolean = false;
+
+        estraverse.traverse(lexicalScopeNode, {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): void | estraverse.VisitorOption => {
+                if (
+                    NodeGuards.isObjectPatternNode(node)
+                    && parentNode
+                    && NodeGuards.isAssignmentExpressionNode(parentNode)
+                ) {
+                    const properties: ESTree.Property[] = node.properties;
+
+                    for (const property of properties) {
+                        if (property.computed) {
+                            continue;
+                        }
+
+                        if (!NodeGuards.isIdentifierNode(property.key)) {
+                            continue;
+                        }
+
+                        if (identifierNode.name !== property.key.name) {
+                            continue;
+                        }
+
+                        isProhibitedVariableDeclaration = true;
+
+                        return estraverse.VisitorOption.Break;
+                    }
+                }
+            }
+        });
+
+        return isProhibitedVariableDeclaration;
     }
 
     /**

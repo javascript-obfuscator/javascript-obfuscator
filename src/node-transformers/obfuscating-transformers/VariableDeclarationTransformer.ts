@@ -172,7 +172,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
         lexicalScopeNode: TNodeWithLexicalScope,
         hostVariableDeclarationNode: ESTree.VariableDeclaration
     ): boolean {
-        return this.isProhibitedVariableNameUsingInObjectPatternNode(
+        return this.isProhibitedVariableNameUsedInObjectPatternNode(
             identifierNode,
             lexicalScopeNode,
             hostVariableDeclarationNode
@@ -190,7 +190,7 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
      * @param {VariableDeclaration} hostVariableDeclarationNode
      * @returns {boolean}
      */
-    private isProhibitedVariableNameUsingInObjectPatternNode (
+    private isProhibitedVariableNameUsedInObjectPatternNode (
         identifierNode: ESTree.Identifier,
         lexicalScopeNode: TNodeWithLexicalScope,
         hostVariableDeclarationNode: ESTree.VariableDeclaration

@@ -118,7 +118,7 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@gradecam/tsenum@^1.2.0":
+"@gradecam/tsenum@1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@gradecam/tsenum/-/tsenum-1.2.0.tgz#0c7c7c86e00e2d9ab8f242c695bec66b26b79319"
   integrity sha512-61kSGjcgHBncY1WJ1Fc6VwMgHyMWMQ9A8oconZ3iYizWDKKV64JVYDFTRH/vGmaKlTQb0PXAhRzY7qnIBvYikw==

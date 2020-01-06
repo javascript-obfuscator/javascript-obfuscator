@@ -6,6 +6,7 @@ v0.21.0
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/406
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/387
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/333
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/328
 
 v0.20.4
 ---

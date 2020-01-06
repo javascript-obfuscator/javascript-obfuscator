@@ -7,11 +7,12 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            function foo () {
-                var bar;
-                if (false)
-                    bar = {baz: 1};
-            }
+            (function () {
+                var a = 'a', b = 'b';
+                ({[a]: a, [b]: b} = {a: 1, b: 2});
+            
+                console.log(a, b);
+            })();
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,

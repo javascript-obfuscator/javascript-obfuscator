@@ -605,4 +605,76 @@ describe('VariableDeclarationTransformer', () => {
             assert.match(obfuscatedCode, objectRestRegExp);
         });
     });
+
+    describe('Variant #18: destructing assignment without declaration #1', () => {
+        const variablesDeclaration: RegExp = /var *a, *b, *_0x[a-f0-9]{4,6};/;
+        const destructingAssignmentRegExp: RegExp = /\({ *a, *b *} *= *{ *'a' *: *0x1, *'b' *: *0x2 *}\);/;
+        const identifierAssignmentRegExp: RegExp = /_0x[a-f0-9]{4,6} *= *0x3;/;
+        const variablesUsageRegExp: RegExp = /console\['log']\(a, *b, *_0x[a-f0-9]{4,6}\);/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/destructing-assignment-without-declaration-1.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }
+            ).getObfuscatedCode();
+        });
+
+        it('match #1: should transform variables declaration', () => {
+            assert.match(obfuscatedCode, variablesDeclaration);
+        });
+
+        it('match #2: should transform destructing assignment without declaration', () => {
+            assert.match(obfuscatedCode, destructingAssignmentRegExp);
+        });
+
+        it('match #3: should transform identifier assignment', () => {
+            assert.match(obfuscatedCode, identifierAssignmentRegExp);
+        });
+
+        it('match #4: should transform variables usage', () => {
+            assert.match(obfuscatedCode, variablesUsageRegExp);
+        });
+    });
+
+    describe('Variant #19: destructing assignment without declaration #2', () => {
+        const variablesDeclaration: RegExp = /var *_0x[a-f0-9]{4,6} *= *'a', *_0x[a-f0-9]{4,6} *= *'b', *_0x[a-f0-9]{4,6};/;
+        const destructingAssignmentRegExp: RegExp = /\({ *\[_0x[a-f0-9]{4,6}]: *_0x[a-f0-9]{4,6}, *\[_0x[a-f0-9]{4,6}]: *_0x[a-f0-9]{4,6} *} *= *{ *'a' *: *0x1, *'b' *: *0x2 *}\);/;
+        const identifierAssignmentRegExp: RegExp = /_0x[a-f0-9]{4,6} *= *0x3;/;
+        const variablesUsageRegExp: RegExp = /console\['log']\(_0x[a-f0-9]{4,6}, *_0x[a-f0-9]{4,6}, *_0x[a-f0-9]{4,6}\);/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/destructing-assignment-without-declaration-2.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }
+            ).getObfuscatedCode();
+        });
+
+        it('match #1: should transform variables declaration', () => {
+            assert.match(obfuscatedCode, variablesDeclaration);
+        });
+
+        it('match #2: should transform destructing assignment without declaration', () => {
+            assert.match(obfuscatedCode, destructingAssignmentRegExp);
+        });
+
+        it('match #3: should transform identifier assignment', () => {
+            assert.match(obfuscatedCode, identifierAssignmentRegExp);
+        });
+
+        it('match #4: should transform variables usage', () => {
+            assert.match(obfuscatedCode, variablesUsageRegExp);
+        });
+    });
 });

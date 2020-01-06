@@ -10,6 +10,7 @@ describe('ConsoleOutputDisableExpressionNode', () => {
     const consoleLogRegExp: RegExp = /_0x([a-f0-9]){4,6}\['console'\]\['log'\] *= *_0x([a-f0-9]){4,6};/u;
     const consoleErrorRegExp: RegExp = /_0x([a-f0-9]){4,6}\['console'\]\['error'\] *= *_0x([a-f0-9]){4,6};/u;
     const consoleWarnRegExp: RegExp = /_0x([a-f0-9]){4,6}\['console'\]\['warn'\] *= *_0x([a-f0-9]){4,6};/u;
+    const consoleTableRegExp: RegExp = /_0x([a-f0-9]){4,6}\['console'\]\['table'\] *= *_0x([a-f0-9]){4,6};/u;
 
     describe('`disableConsoleOutput` option is set', () => {
         let obfuscatedCode: string;
@@ -36,6 +37,10 @@ describe('ConsoleOutputDisableExpressionNode', () => {
 
         it('match #3: should correctly append custom node into the obfuscated code', () => {
             assert.match(obfuscatedCode, consoleWarnRegExp);
+        });
+
+        it('match #4: should correctly append custom node into the obfuscated code', () => {
+            assert.match(obfuscatedCode, consoleTableRegExp);
         });
     });
 

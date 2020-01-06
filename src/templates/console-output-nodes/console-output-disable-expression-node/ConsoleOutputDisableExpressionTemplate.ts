@@ -18,6 +18,7 @@ export function ConsoleOutputDisableExpressionTemplate (): string {
                     c.info = func;
                     c.error = func;
                     c.exception = func;
+                    c.table = func;
                     c.trace = func;
                     
                     return c;
@@ -29,6 +30,7 @@ export function ConsoleOutputDisableExpressionTemplate (): string {
                 that.console.info = func;
                 that.console.error = func;
                 that.console.exception = func;
+                that.console.table = func;
                 that.console.trace = func;
             }
         });

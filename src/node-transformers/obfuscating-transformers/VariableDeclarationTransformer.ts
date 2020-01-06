@@ -42,9 +42,9 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
     private readonly identifierObfuscatingReplacer: IIdentifierObfuscatingReplacer;
 
     /**
-     * @type {Map<TNodeWithLexicalScope, Set<string>>}
+     * @type {Map<TNodeWithLexicalScope, boolean>}
      */
-    private readonly lexicalScopeProhibitedIdentifierNames: Map<TNodeWithLexicalScope, Set<string>> = new Map();
+    private readonly lexicalScopesWithObjectPatternWithoutDeclarationMap: Map<TNodeWithLexicalScope, boolean> = new Map();
 
     /**
      * @type {TReplaceableIdentifiers}
@@ -139,51 +139,44 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
         lexicalScopeNode: TNodeWithLexicalScope,
         isGlobalDeclaration: boolean
     ): void {
-        this.traverseDeclarationIdentifiers(variableDeclarationNode, (identifierNode: ESTree.Identifier) => {
-            if (this.isProhibitedVariableName(identifierNode, lexicalScopeNode)) {
-                return;
-            }
+        this.traverseDeclarationIdentifiers(
+            variableDeclarationNode,
+            (identifierNode: ESTree.Identifier) => {
+                if (
+                    this.isProhibitedVariableName(
+                        identifierNode,
+                        lexicalScopeNode,
+                        variableDeclarationNode
+                    )
+                ) {
+                    return;
+                }
 
-            if (isGlobalDeclaration) {
-                this.identifierObfuscatingReplacer.storeGlobalName(identifierNode.name, lexicalScopeNode);
-            } else {
-                this.identifierObfuscatingReplacer.storeLocalName(identifierNode.name, lexicalScopeNode);
+                if (isGlobalDeclaration) {
+                    this.identifierObfuscatingReplacer.storeGlobalName(identifierNode.name, lexicalScopeNode);
+                } else {
+                    this.identifierObfuscatingReplacer.storeLocalName(identifierNode.name, lexicalScopeNode);
+                }
             }
-        });
+        );
     }
 
     /**
      * @param {Identifier} identifierNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
+     * @param {VariableDeclaration} hostVariableDeclarationNode
+     * @returns {boolean}
      */
     private isProhibitedVariableName (
         identifierNode: ESTree.Identifier,
-        lexicalScopeNode: TNodeWithLexicalScope
+        lexicalScopeNode: TNodeWithLexicalScope,
+        hostVariableDeclarationNode: ESTree.VariableDeclaration
     ): boolean {
-        let cachedLexicalScopeProhibitedIdentifierNames: Set<string> | undefined = this.lexicalScopeProhibitedIdentifierNames
-            .get(lexicalScopeNode);
-
-        if (cachedLexicalScopeProhibitedIdentifierNames?.has(identifierNode.name)) {
-            return true;
-        }
-
-        const isProhibitedVariableName: boolean = this.isProhibitedVariableNameUsingInObjectPatternNode(
+        return this.isProhibitedVariableNameUsingInObjectPatternNode(
             identifierNode,
-            lexicalScopeNode
+            lexicalScopeNode,
+            hostVariableDeclarationNode
         );
-
-        if (!isProhibitedVariableName) {
-            return false;
-        }
-
-        if (cachedLexicalScopeProhibitedIdentifierNames) {
-            cachedLexicalScopeProhibitedIdentifierNames.add(identifierNode.name);
-        } else {
-            cachedLexicalScopeProhibitedIdentifierNames = new Set([identifierNode.name]);
-            this.lexicalScopeProhibitedIdentifierNames.set(lexicalScopeNode, cachedLexicalScopeProhibitedIdentifierNames);
-        }
-
-        return true;
     }
 
     /**
@@ -192,13 +185,29 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
      * var a, b; // should not be renamed
      * ({a, b} = {a: 1, b: 2});
      *
-     * @param {VariableDeclaration} identifierNode
+     * @param {Identifier} identifierNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
+     * @param {VariableDeclaration} hostVariableDeclarationNode
+     * @returns {boolean}
      */
     private isProhibitedVariableNameUsingInObjectPatternNode (
         identifierNode: ESTree.Identifier,
-        lexicalScopeNode: TNodeWithLexicalScope
+        lexicalScopeNode: TNodeWithLexicalScope,
+        hostVariableDeclarationNode: ESTree.VariableDeclaration
     ): boolean {
+        // should transform variable declarations that cannot be reassigned
+        if (hostVariableDeclarationNode.kind === 'const') {
+            return false;
+        }
+
+        let isLexicalScopeHasObjectPatternWithoutDeclaration: boolean | undefined =
+            this.lexicalScopesWithObjectPatternWithoutDeclarationMap.get(lexicalScopeNode);
+
+        // lexical scope was traversed before and object pattern without declaration was not found
+        if (isLexicalScopeHasObjectPatternWithoutDeclaration === false) {
+            return false;
+        }
+
         let isProhibitedVariableDeclaration: boolean = false;
 
         estraverse.traverse(lexicalScopeNode, {
@@ -208,6 +217,8 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
                     && parentNode
                     && NodeGuards.isAssignmentExpressionNode(parentNode)
                 ) {
+                    isLexicalScopeHasObjectPatternWithoutDeclaration = true;
+
                     const properties: ESTree.Property[] = node.properties;
 
                     for (const property of properties) {
@@ -230,6 +241,11 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
                 }
             }
         });
+
+        this.lexicalScopesWithObjectPatternWithoutDeclarationMap.set(
+            lexicalScopeNode,
+            isLexicalScopeHasObjectPatternWithoutDeclaration ?? false
+        );
 
         return isProhibitedVariableDeclaration;
     }
@@ -320,18 +336,21 @@ export class VariableDeclarationTransformer extends AbstractNodeTransformer {
      */
     private traverseDeclarationIdentifiers (
         variableDeclarationNode: ESTree.VariableDeclaration,
-        callback: (identifier: ESTree.Identifier) => void
+        callback: (
+            identifier: ESTree.Identifier,
+            variableDeclarator: ESTree.VariableDeclarator
+        ) => void
     ): void {
         variableDeclarationNode.declarations
-            .forEach((declarationNode: ESTree.VariableDeclarator) => {
-                estraverse.traverse(declarationNode.id, {
+            .forEach((variableDeclaratorNode: ESTree.VariableDeclarator) => {
+                estraverse.traverse(variableDeclaratorNode.id, {
                     enter: (node: ESTree.Node) => {
                         if (NodeGuards.isPropertyNode(node)) {
                             return estraverse.VisitorOption.Skip;
                         }
 
                         if (NodeGuards.isIdentifierNode(node)) {
-                            callback(node);
+                            callback(node, variableDeclaratorNode);
                         }
                     }
                 });

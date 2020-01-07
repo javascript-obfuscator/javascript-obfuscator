@@ -10,8 +10,8 @@ import { assert } from 'chai';
 import { TNodeWithStatements } from '../../../../src/types/node/TNodeWithStatements';
 
 import { IInversifyContainerFacade } from '../../../../src/interfaces/container/IInversifyContainerFacade';
-import { IStackTraceAnalyzer } from '../../../../src/interfaces/analyzers/stack-trace-analyzer/IStackTraceAnalyzer';
-import { IStackTraceData } from '../../../../src/interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
+import { ICallsGraphAnalyzer } from '../../../../src/interfaces/analyzers/calls-graph-analyzer/ICallsGraphAnalyzer';
+import { ICallsGraphData } from '../../../../src/interfaces/analyzers/calls-graph-analyzer/ICallsGraphData';
 
 import { readFileAsString } from '../../../helpers/readFileAsString';
 
@@ -148,18 +148,18 @@ function getObjectFunctionExpressionByName (astTree: ESTree.Node, objectName: st
     return functionExpressionNode;
 }
 
-describe('StackTraceAnalyzer', () => {
+describe('CallsGraphAnalyzer', () => {
     describe('extract', () => {
-        let stackTraceAnalyzer: IStackTraceAnalyzer,
-            expectedStackTraceData: IStackTraceData[],
-            stackTraceData: IStackTraceData[];
+        let callsGraphAnalyzer: ICallsGraphAnalyzer,
+            expectedCallsGraphData: ICallsGraphData[],
+            callsGraphData: ICallsGraphData[];
 
         before(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
             inversifyContainerFacade.load('', '', {});
-            stackTraceAnalyzer = inversifyContainerFacade
-                .get<IStackTraceAnalyzer>(ServiceIdentifiers.IStackTraceAnalyzer);
+            callsGraphAnalyzer = inversifyContainerFacade
+                .get<ICallsGraphAnalyzer>(ServiceIdentifiers.ICallsGraphAnalyzer);
         });
 
         describe('Variant #1: basic-1', () => {
@@ -169,46 +169,46 @@ describe('StackTraceAnalyzer', () => {
                     NodeUtils.convertCodeToStructure(code)
                 );
 
-                expectedStackTraceData = [
+                expectedCallsGraphData = [
                     {
                         name: 'baz',
                         callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'baz')).body,
-                        stackTrace: []
+                        callsGraph: []
                     },
                     {
                         name: 'foo',
                         callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'foo')).body,
-                        stackTrace: []
+                        callsGraph: []
                     },
                     {
                         name: 'bar',
                         callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'bar')).body,
-                        stackTrace: [
+                        callsGraph: [
                             {
                                 name: 'inner2',
                                 callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner2')).body,
-                                stackTrace: [
+                                callsGraph: [
                                     {
                                         name: 'inner3',
                                         callee: (<ESTree.FunctionExpression>getFunctionExpressionByName(astTree, 'inner3')).body,
-                                        stackTrace: []
+                                        callsGraph: []
                                     },
                                 ]
                             },
                             {
                                 name: 'inner1',
                                 callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1')).body,
-                                stackTrace: []
+                                callsGraph: []
                             },
                         ]
                     }
                 ];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree);
+                callsGraphData = callsGraphAnalyzer.analyze(astTree);
             });
 
-            it('should return correct stack trace data', () => {
-                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            it('should return correct calls graph data', () => {
+                assert.deepEqual(callsGraphData, expectedCallsGraphData);
             });
         });
 
@@ -219,35 +219,35 @@ describe('StackTraceAnalyzer', () => {
                     NodeUtils.convertCodeToStructure(code)
                 );
 
-                expectedStackTraceData = [
+                expectedCallsGraphData = [
                     {
                         name: 'bar',
                         callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'bar')).body,
-                        stackTrace: []
+                        callsGraph: []
                     },
                     {
                         name: 'baz',
                         callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'baz')).body,
-                        stackTrace: [
+                        callsGraph: [
                             {
                                 name: 'inner1',
                                 callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1')).body,
-                                stackTrace: []
+                                callsGraph: []
                             },
                         ]
                     },
                     {
                         name: 'foo',
                         callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'foo')).body,
-                        stackTrace: []
+                        callsGraph: []
                     }
                 ];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree);
+                callsGraphData = callsGraphAnalyzer.analyze(astTree);
             });
 
-            it('should return correct stack trace data', () => {
-                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            it('should return correct calls graph data', () => {
+                assert.deepEqual(callsGraphData, expectedCallsGraphData);
             });
         });
 
@@ -258,35 +258,35 @@ describe('StackTraceAnalyzer', () => {
                     NodeUtils.convertCodeToStructure(code)
                 );
 
-                expectedStackTraceData = [
+                expectedCallsGraphData = [
                     {
                         name: 'bar',
                         callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'bar')).body,
-                        stackTrace: []
+                        callsGraph: []
                     },
                     {
                         name: 'baz',
                         callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'baz')).body,
-                        stackTrace: [
+                        callsGraph: [
                             {
                                 name: 'inner1',
                                 callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1')).body,
-                                stackTrace: []
+                                callsGraph: []
                             },
                         ]
                     },
                     {
                         name: 'foo',
                         callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'foo')).body,
-                        stackTrace: []
+                        callsGraph: []
                     }
                 ];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree);
+                callsGraphData = callsGraphAnalyzer.analyze(astTree);
             });
 
-            it('should return correct stack trace data', () => {
-                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            it('should return correct calls graph data', () => {
+                assert.deepEqual(callsGraphData, expectedCallsGraphData);
             });
         });
 
@@ -297,19 +297,19 @@ describe('StackTraceAnalyzer', () => {
                     NodeUtils.convertCodeToStructure(code)
                 );
 
-                expectedStackTraceData = [
+                expectedCallsGraphData = [
                     {
                         name: 'bar',
                         callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'bar')).body,
-                        stackTrace: []
+                        callsGraph: []
                     }
                 ];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree);
+                callsGraphData = callsGraphAnalyzer.analyze(astTree);
             });
 
-            it('should return correct stack trace data', () => {
-                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            it('should return correct calls graph data', () => {
+                assert.deepEqual(callsGraphData, expectedCallsGraphData);
             });
         });
 
@@ -320,30 +320,30 @@ describe('StackTraceAnalyzer', () => {
                     NodeUtils.convertCodeToStructure(code)
                 );
 
-                expectedStackTraceData = [
+                expectedCallsGraphData = [
                     {
                         name: 'baz',
                         callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'baz')).body,
-                        stackTrace: []
+                        callsGraph: []
                     },
                     {
                         name: 'baz',
                         callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'baz')).body,
-                        stackTrace: []
+                        callsGraph: []
                     },
                     {
                         name: 'func',
                         callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'func')).body,
-                        stackTrace: []
+                        callsGraph: []
                     },
                     {
                         name: 'bar',
                         callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 'bar')).body,
-                        stackTrace: [
+                        callsGraph: [
                             {
                                 name: 'inner1',
                                 callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner1')).body,
-                                stackTrace: [
+                                callsGraph: [
 
                                 ]
                             },
@@ -352,11 +352,11 @@ describe('StackTraceAnalyzer', () => {
                     {
                         name: 'bar',
                         callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object', 'bar')).body,
-                        stackTrace: [
+                        callsGraph: [
                             {
                                 name: 'inner',
                                 callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner')).body,
-                                stackTrace: [
+                                callsGraph: [
 
                                 ]
                             },
@@ -364,11 +364,11 @@ describe('StackTraceAnalyzer', () => {
                     }
                 ];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree);
+                callsGraphData = callsGraphAnalyzer.analyze(astTree);
             });
 
-            it('should return correct stack trace data', () => {
-                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            it('should return correct calls graph data', () => {
+                assert.deepEqual(callsGraphData, expectedCallsGraphData);
             });
         });
 
@@ -379,24 +379,24 @@ describe('StackTraceAnalyzer', () => {
                     NodeUtils.convertCodeToStructure(code)
                 );
 
-                expectedStackTraceData = [
+                expectedCallsGraphData = [
                     {
                         name: 'baz',
                         callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object', 'baz')).body,
-                        stackTrace: []
+                        callsGraph: []
                     },
                     {
                         name: 1,
                         callee: (<ESTree.FunctionExpression>getObjectFunctionExpressionByName(astTree, 'object1', 1)).body,
-                        stackTrace: []
+                        callsGraph: []
                     },
                 ];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree);
+                callsGraphData = callsGraphAnalyzer.analyze(astTree);
             });
 
-            it('should return correct stack trace data', () => {
-                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            it('should return correct calls graph data', () => {
+                assert.deepEqual(callsGraphData, expectedCallsGraphData);
             });
         });
 
@@ -407,13 +407,13 @@ describe('StackTraceAnalyzer', () => {
                     NodeUtils.convertCodeToStructure(code)
                 );
 
-                expectedStackTraceData = [];
+                expectedCallsGraphData = [];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree);
+                callsGraphData = callsGraphAnalyzer.analyze(astTree);
             });
 
-            it('should return correct stack trace data', () => {
-                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            it('should return correct calls graph data', () => {
+                assert.deepEqual(callsGraphData, expectedCallsGraphData);
             });
         });
 
@@ -424,13 +424,13 @@ describe('StackTraceAnalyzer', () => {
                     NodeUtils.convertCodeToStructure(code)
                 );
 
-                expectedStackTraceData = [];
+                expectedCallsGraphData = [];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree);
+                callsGraphData = callsGraphAnalyzer.analyze(astTree);
             });
 
-            it('should return correct stack trace data', () => {
-                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            it('should return correct calls graph data', () => {
+                assert.deepEqual(callsGraphData, expectedCallsGraphData);
             });
         });
 
@@ -441,31 +441,31 @@ describe('StackTraceAnalyzer', () => {
                     NodeUtils.convertCodeToStructure(code)
                 );
 
-                expectedStackTraceData = [
+                expectedCallsGraphData = [
                     {
                         name: null,
                         callee: (<ESTree.FunctionExpression>getFunctionExpressionById(astTree, 'foo')).body,
-                        stackTrace: [{
+                        callsGraph: [{
                             name: null,
                             callee: (<ESTree.FunctionExpression>getFunctionExpressionById(astTree, 'bar')).body,
-                            stackTrace: [{
+                            callsGraph: [{
                                 name: null,
                                 callee: (<ESTree.FunctionExpression>getFunctionExpressionById(astTree, 'baz')).body,
-                                stackTrace: [{
+                                callsGraph: [{
                                     name: 'inner',
                                     callee: (<ESTree.FunctionDeclaration>getFunctionDeclarationByName(astTree, 'inner')).body,
-                                    stackTrace: []
+                                    callsGraph: []
                                 }]
                             }]
                         }]
                     }
                 ];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree);
+                callsGraphData = callsGraphAnalyzer.analyze(astTree);
             });
 
-            it('should return correct stack trace data', () => {
-                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            it('should return correct calls graph data', () => {
+                assert.deepEqual(callsGraphData, expectedCallsGraphData);
             });
         });
 
@@ -476,19 +476,19 @@ describe('StackTraceAnalyzer', () => {
                     NodeUtils.convertCodeToStructure(code)
                 );
 
-                expectedStackTraceData = [
+                expectedCallsGraphData = [
                     {
                         name: 'bar',
                         callee: (<ESTree.FunctionExpression>getFunctionExpressionByName(astTree, 'bar')).body,
-                        stackTrace: []
+                        callsGraph: []
                     }
                 ];
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree);
+                callsGraphData = callsGraphAnalyzer.analyze(astTree);
             });
 
-            it('should return correct stack trace data', () => {
-                assert.deepEqual(stackTraceData, expectedStackTraceData);
+            it('should return correct calls graph data', () => {
+                assert.deepEqual(callsGraphData, expectedCallsGraphData);
             });
         });
     });

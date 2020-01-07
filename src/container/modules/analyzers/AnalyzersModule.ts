@@ -2,19 +2,19 @@ import { InversifyContainerFacade } from '../../InversifyContainerFacade';
 import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
-import { ICalleeDataExtractor } from '../../../interfaces/analyzers/stack-trace-analyzer/ICalleeDataExtractor';
-import { IStackTraceAnalyzer } from '../../../interfaces/analyzers/stack-trace-analyzer/IStackTraceAnalyzer';
+import { ICalleeDataExtractor } from '../../../interfaces/analyzers/calls-graph-analyzer/ICalleeDataExtractor';
+import { ICallsGraphAnalyzer } from '../../../interfaces/analyzers/calls-graph-analyzer/ICallsGraphAnalyzer';
 
-import { CalleeDataExtractor } from '../../../enums/analyzers/stack-trace-analyzer/CalleeDataExtractor';
-import { FunctionDeclarationCalleeDataExtractor } from '../../../analyzers/stack-trace-analyzer/callee-data-extractors/FunctionDeclarationCalleeDataExtractor';
-import { FunctionExpressionCalleeDataExtractor } from '../../../analyzers/stack-trace-analyzer/callee-data-extractors/FunctionExpressionCalleeDataExtractor';
-import { ObjectExpressionCalleeDataExtractor } from '../../../analyzers/stack-trace-analyzer/callee-data-extractors/ObjectExpressionCalleeDataExtractor';
-import { StackTraceAnalyzer } from '../../../analyzers/stack-trace-analyzer/StackTraceAnalyzer';
+import { CalleeDataExtractor } from '../../../enums/analyzers/calls-graph-analyzer/CalleeDataExtractor';
+import { CallsGraphAnalyzer } from '../../../analyzers/calls-graph-analyzer/CallsGraphAnalyzer';
+import { FunctionDeclarationCalleeDataExtractor } from '../../../analyzers/calls-graph-analyzer/callee-data-extractors/FunctionDeclarationCalleeDataExtractor';
+import { FunctionExpressionCalleeDataExtractor } from '../../../analyzers/calls-graph-analyzer/callee-data-extractors/FunctionExpressionCalleeDataExtractor';
+import { ObjectExpressionCalleeDataExtractor } from '../../../analyzers/calls-graph-analyzer/callee-data-extractors/ObjectExpressionCalleeDataExtractor';
 
 export const analyzersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
-    // stack trace analyzer
-    bind<IStackTraceAnalyzer>(ServiceIdentifiers.IStackTraceAnalyzer)
-        .to(StackTraceAnalyzer)
+    // calls graph analyzer
+    bind<ICallsGraphAnalyzer>(ServiceIdentifiers.ICallsGraphAnalyzer)
+        .to(CallsGraphAnalyzer)
         .inSingletonScope();
 
     // callee data extractors

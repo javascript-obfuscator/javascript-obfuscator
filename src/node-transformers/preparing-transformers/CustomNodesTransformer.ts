@@ -9,8 +9,8 @@ import { ICustomNodeGroup } from '../../interfaces/custom-nodes/ICustomNodeGroup
 import { IObfuscationEventEmitter } from '../../interfaces/event-emitters/IObfuscationEventEmitter';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IStackTraceAnalyzer } from '../../interfaces/analyzers/stack-trace-analyzer/IStackTraceAnalyzer';
-import { IStackTraceData } from '../../interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
+import { ICallsGraphAnalyzer } from '../../interfaces/analyzers/calls-graph-analyzer/ICallsGraphAnalyzer';
+import { ICallsGraphData } from '../../interfaces/analyzers/calls-graph-analyzer/ICallsGraphData';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { ObfuscationEvent } from '../../enums/event-emitters/ObfuscationEvent';
@@ -35,24 +35,24 @@ export class CustomNodesTransformer extends AbstractNodeTransformer {
     private readonly obfuscationEventEmitter: IObfuscationEventEmitter;
 
     /**
-     * @type {IStackTraceAnalyzer}
+     * @type {ICallsGraphAnalyzer}
      */
-    private readonly stackTraceAnalyzer: IStackTraceAnalyzer;
+    private readonly callsGraphAnalyzer: ICallsGraphAnalyzer;
 
     /**
-     * @type {IStackTraceData[]}
+     * @type {ICallsGraphData[]}
      */
-    private stackTraceData: IStackTraceData[] = [];
+    private callsGraphData: ICallsGraphData[] = [];
 
     /**
-     * @param {IStackTraceAnalyzer} stackTraceAnalyzer
+     * @param {ICallsGraphAnalyzer} callsGraphAnalyzer
      * @param {IObfuscationEventEmitter} obfuscationEventEmitter
      * @param {TCustomNodeGroupStorage} customNodeGroupStorage
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
-        @inject(ServiceIdentifiers.IStackTraceAnalyzer) stackTraceAnalyzer: IStackTraceAnalyzer,
+        @inject(ServiceIdentifiers.ICallsGraphAnalyzer) callsGraphAnalyzer: ICallsGraphAnalyzer,
         @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
         @inject(ServiceIdentifiers.TCustomNodeGroupStorage) customNodeGroupStorage: TCustomNodeGroupStorage,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -60,7 +60,7 @@ export class CustomNodesTransformer extends AbstractNodeTransformer {
     ) {
         super(randomGenerator, options);
 
-        this.stackTraceAnalyzer = stackTraceAnalyzer;
+        this.callsGraphAnalyzer = callsGraphAnalyzer;
         this.obfuscationEventEmitter = obfuscationEventEmitter;
         this.customNodeGroupStorage = customNodeGroupStorage;
     }
@@ -102,7 +102,7 @@ export class CustomNodesTransformer extends AbstractNodeTransformer {
      * @param {Node | null} parentNode
      */
     public analyzeNode (node: ESTree.Program, parentNode: ESTree.Node | null): void {
-        this.stackTraceData = this.stackTraceAnalyzer.analyze(node);
+        this.callsGraphData = this.callsGraphAnalyzer.analyze(node);
     }
 
     /**
@@ -130,7 +130,7 @@ export class CustomNodesTransformer extends AbstractNodeTransformer {
                 );
             });
 
-        this.obfuscationEventEmitter.emit(ObfuscationEvent.BeforeObfuscation, node, this.stackTraceData);
+        this.obfuscationEventEmitter.emit(ObfuscationEvent.BeforeObfuscation, node, this.callsGraphData);
     }
 
     /**
@@ -138,6 +138,6 @@ export class CustomNodesTransformer extends AbstractNodeTransformer {
      * @param {Node | null} parentNode
      */
     private appendCustomNodesAfterObfuscation (node: ESTree.Program, parentNode: ESTree.Node | null): void {
-        this.obfuscationEventEmitter.emit(ObfuscationEvent.AfterObfuscation, node, this.stackTraceData);
+        this.obfuscationEventEmitter.emit(ObfuscationEvent.AfterObfuscation, node, this.callsGraphData);
     }
 }

@@ -3,7 +3,7 @@ import * as ESTree from 'estree';
 import { TNodeWithStatements } from '../types/node/TNodeWithStatements';
 import { TStatement } from '../types/node/TStatement';
 
-import { IStackTraceData } from '../interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
+import { ICallsGraphData } from '../interfaces/analyzers/calls-graph-analyzer/ICallsGraphData';
 
 import { NodeGuards } from './NodeGuards';
 
@@ -38,19 +38,19 @@ export class NodeAppender {
      *
      * Appends node into block statement of `baz` function expression
      *
-     * @param {IStackTraceData[]} stackTraceData
+     * @param {ICallsGraphData[]} callsGraphData
      * @param {TNodeWithStatements} nodeWithStatements
      * @param {TStatement[]} bodyStatements
      * @param {number} index
      */
     public static appendToOptimalBlockScope (
-        stackTraceData: IStackTraceData[],
+        callsGraphData: ICallsGraphData[],
         nodeWithStatements: TNodeWithStatements,
         bodyStatements: TStatement[],
         index: number = 0
     ): void {
-        const targetBlockScope: TNodeWithStatements = stackTraceData.length
-            ? NodeAppender.getOptimalBlockScope(stackTraceData, index)
+        const targetBlockScope: TNodeWithStatements = callsGraphData.length
+            ? NodeAppender.getOptimalBlockScope(callsGraphData, index)
             : nodeWithStatements;
 
         NodeAppender.prepend(targetBlockScope, bodyStatements);
@@ -59,24 +59,24 @@ export class NodeAppender {
     /**
      * Returns deepest block scope node at given deep.
      *
-     * @param {IStackTraceData[]} stackTraceData
+     * @param {ICallsGraphData[]} callsGraphData
      * @param {number} index
      * @param {number} deep
      * @returns {BlockStatement}
      */
     public static getOptimalBlockScope (
-        stackTraceData: IStackTraceData[],
+        callsGraphData: ICallsGraphData[],
         index: number,
         deep: number = Infinity
     ): ESTree.BlockStatement {
-        const firstCall: IStackTraceData = stackTraceData[index];
+        const firstCall: ICallsGraphData = callsGraphData[index];
 
         if (deep <= 0) {
             throw new Error('Invalid `deep` argument value. Value should be bigger then 0.');
         }
 
-        if (deep > 1 && firstCall.stackTrace.length) {
-            return NodeAppender.getOptimalBlockScope(firstCall.stackTrace, 0, --deep);
+        if (deep > 1 && firstCall.callsGraph.length) {
+            return NodeAppender.getOptimalBlockScope(firstCall.callsGraph, 0, --deep);
         } else {
             return firstCall.callee;
         }

@@ -5,7 +5,7 @@ require('source-map-support').install();
 /**
  * Unit tests
  */
-import './unit-tests/analyzers/stack-trace-analyzer/StackTraceAnalyzer.spec';
+import './unit-tests/analyzers/calls-graph-analyzer/CallsGraphAnalyzer.spec';
 import './unit-tests/cli/sanitizers/ArraySanitizer.spec';
 import './unit-tests/cli/sanitizers/BooleanSanitizer.spec';
 import './unit-tests/cli/sanitizers/IdentifierNamesGeneratorSanitizer.spec';
@@ -42,7 +42,7 @@ import './unit-tests/utils/Utils.spec';
 /**
  * Functional tests
  */
-import './functional-tests/analyzers/stack-trace-analyzer/StackTraceAnalyzer.spec';
+import './functional-tests/analyzers/calls-graph-analyzer/CallsGraphAnalyzer.spec';
 import './functional-tests/cli/JavaScriptObfuscatorCLI.spec';
 import './functional-tests/custom-nodes/console-output-nodes/ConsoleOutputDisableExpressionNode.spec';
 import './functional-tests/custom-nodes/domain-lock-nodes/DomainLockNode.spec';

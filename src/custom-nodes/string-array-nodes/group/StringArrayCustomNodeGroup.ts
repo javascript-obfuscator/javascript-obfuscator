@@ -9,7 +9,7 @@ import { TStringArrayStorage } from '../../../types/storages/TStringArrayStorage
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
-import { IStackTraceData } from '../../../interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
+import { ICallsGraphData } from '../../../interfaces/analyzers/calls-graph-analyzer/ICallsGraphData';
 
 import { initializable } from '../../../decorators/Initializable';
 
@@ -65,9 +65,9 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
 
     /**
      * @param {TNodeWithStatements} nodeWithStatements
-     * @param {IStackTraceData[]} stackTraceData
+     * @param {ICallsGraphData[]} callsGraphData
      */
-    public appendCustomNodes (nodeWithStatements: TNodeWithStatements, stackTraceData: IStackTraceData[]): void {
+    public appendCustomNodes (nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void {
         if (!this.stringArrayStorage.getLength()) {
             return;
         }

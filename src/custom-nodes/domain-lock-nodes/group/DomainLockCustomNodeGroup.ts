@@ -8,7 +8,7 @@ import { TNodeWithStatements } from '../../../types/node/TNodeWithStatements';
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
-import { IStackTraceData } from '../../../interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
+import { ICallsGraphData } from '../../../interfaces/analyzers/calls-graph-analyzer/ICallsGraphData';
 
 import { initializable } from '../../../decorators/Initializable';
 
@@ -56,25 +56,25 @@ export class DomainLockCustomNodeGroup extends AbstractCustomNodeGroup {
 
     /**
      * @param {TNodeWithStatements} nodeWithStatements
-     * @param {IStackTraceData[]} stackTraceData
+     * @param {ICallsGraphData[]} callsGraphData
      */
-    public appendCustomNodes (nodeWithStatements: TNodeWithStatements, stackTraceData: IStackTraceData[]): void {
-        const randomStackTraceIndex: number = this.getRandomStackTraceIndex(stackTraceData.length);
+    public appendCustomNodes (nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void {
+        const randomCallsGraphIndex: number = this.getRandomCallsGraphIndex(callsGraphData.length);
 
         // domainLockNode append
         this.appendCustomNodeIfExist(CustomNode.DomainLockNode, (customNode: ICustomNode) => {
             NodeAppender.appendToOptimalBlockScope(
-                stackTraceData,
+                callsGraphData,
                 nodeWithStatements,
                 customNode.getNode(),
-                randomStackTraceIndex
+                randomCallsGraphIndex
             );
         });
 
         // nodeCallsControllerFunctionNode append
         this.appendCustomNodeIfExist(CustomNode.NodeCallsControllerFunctionNode, (customNode: ICustomNode) => {
-            const targetNodeWithStatements: TNodeWithStatements = stackTraceData.length
-                ? NodeAppender.getOptimalBlockScope(stackTraceData, randomStackTraceIndex, 1)
+            const targetNodeWithStatements: TNodeWithStatements = callsGraphData.length
+                ? NodeAppender.getOptimalBlockScope(callsGraphData, randomCallsGraphIndex, 1)
                 : nodeWithStatements;
 
             NodeAppender.prepend(targetNodeWithStatements, customNode.getNode());

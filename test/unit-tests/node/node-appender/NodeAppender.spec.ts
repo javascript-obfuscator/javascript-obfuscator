@@ -9,8 +9,8 @@ import { assert } from 'chai';
 import { TStatement } from '../../../../src/types/node/TStatement';
 
 import { IInversifyContainerFacade } from '../../../../src/interfaces/container/IInversifyContainerFacade';
-import { IStackTraceAnalyzer } from '../../../../src/interfaces/analyzers/stack-trace-analyzer/IStackTraceAnalyzer';
-import { IStackTraceData } from '../../../../src/interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
+import { ICallsGraphAnalyzer } from '../../../../src/interfaces/analyzers/calls-graph-analyzer/ICallsGraphAnalyzer';
+import { ICallsGraphData } from '../../../../src/interfaces/analyzers/calls-graph-analyzer/ICallsGraphData';
 
 import { readFileAsString } from '../../../helpers/readFileAsString';
 
@@ -63,18 +63,18 @@ describe('NodeAppender', () => {
     });
 
     describe('appendToOptimalBlockScope', () => {
-        let stackTraceAnalyzer: IStackTraceAnalyzer,
+        let callsGraphAnalyzer: ICallsGraphAnalyzer,
             astTree: ESTree.Program,
             expectedAstTree: ESTree.Program,
             node: TStatement[],
-            stackTraceData: IStackTraceData[];
+            callsGraphData: ICallsGraphData[];
 
         before(() => {
             const inversifyContainerFacade: IInversifyContainerFacade = new InversifyContainerFacade();
 
             inversifyContainerFacade.load('', '', {});
-            stackTraceAnalyzer = inversifyContainerFacade
-                .get<IStackTraceAnalyzer>(ServiceIdentifiers.IStackTraceAnalyzer);
+            callsGraphAnalyzer = inversifyContainerFacade
+                .get<ICallsGraphAnalyzer>(ServiceIdentifiers.ICallsGraphAnalyzer);
         });
 
         beforeEach(() => {
@@ -86,8 +86,8 @@ describe('NodeAppender', () => {
                 astTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/variant-1.js');
                 expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/variant-1-expected.js');
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree);
-                NodeAppender.appendToOptimalBlockScope(stackTraceData, astTree, node);
+                callsGraphData = callsGraphAnalyzer.analyze(astTree);
+                NodeAppender.appendToOptimalBlockScope(callsGraphData, astTree, node);
             });
 
             it('should append node into first and deepest function call in nested function calls', () => {
@@ -100,8 +100,8 @@ describe('NodeAppender', () => {
                 astTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/variant-2.js');
                 expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/variant-2-expected.js');
 
-                stackTraceData = stackTraceAnalyzer.analyze(astTree);
-                NodeAppender.appendToOptimalBlockScope(stackTraceData, astTree, node);
+                callsGraphData = callsGraphAnalyzer.analyze(astTree);
+                NodeAppender.appendToOptimalBlockScope(callsGraphData, astTree, node);
 
             });
 
@@ -121,8 +121,8 @@ describe('NodeAppender', () => {
                 beforeEach(() => {
                     expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index-variant-1-expected.js');
 
-                    stackTraceData = stackTraceAnalyzer.analyze(astTree);
-                    NodeAppender.appendToOptimalBlockScope(stackTraceData, astTree, node, 2);
+                    callsGraphData = callsGraphAnalyzer.analyze(astTree);
+                    NodeAppender.appendToOptimalBlockScope(callsGraphData, astTree, node, 2);
 
                 });
 
@@ -135,8 +135,8 @@ describe('NodeAppender', () => {
                 beforeEach(() => {
                     expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index-variant-2-expected.js');
 
-                    stackTraceData = stackTraceAnalyzer.analyze(astTree);
-                    NodeAppender.appendToOptimalBlockScope(stackTraceData, astTree, node, 1);
+                    callsGraphData = callsGraphAnalyzer.analyze(astTree);
+                    NodeAppender.appendToOptimalBlockScope(callsGraphData, astTree, node, 1);
 
                 });
 
@@ -150,12 +150,12 @@ describe('NodeAppender', () => {
                     astTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index-variant-3.js');
                     expectedAstTree = convertCodeToAst('/fixtures/append-node-to-optimal-block-scope/by-index-variant-3-expected.js');
 
-                    stackTraceData = stackTraceAnalyzer.analyze(astTree);
+                    callsGraphData = callsGraphAnalyzer.analyze(astTree);
                     NodeAppender.appendToOptimalBlockScope(
-                        stackTraceData,
+                        callsGraphData,
                         astTree,
                         node,
-                        stackTraceData.length - 1
+                        callsGraphData.length - 1
                     );
 
                 });

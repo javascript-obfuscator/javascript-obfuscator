@@ -3,9 +3,9 @@ import { injectable } from 'inversify';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TObjectMembersCallsChain } from '../../../types/analyzers/stack-trace-analyzer/TObjectMembersCallsChain';
+import { TObjectMembersCallsChain } from '../../../types/analyzers/calls-graph-analyzer/TObjectMembersCallsChain';
 
-import { ICalleeData } from '../../../interfaces/analyzers/stack-trace-analyzer/ICalleeData';
+import { ICalleeData } from '../../../interfaces/analyzers/calls-graph-analyzer/ICalleeData';
 
 import { AbstractCalleeDataExtractor } from './AbstractCalleeDataExtractor';
 import { NodeGuards } from '../../../node/NodeGuards';

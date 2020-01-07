@@ -1,8 +1,8 @@
 import { assert } from 'chai';
 
-import { StackTraceAnalyzer } from '../../../../src/analyzers/stack-trace-analyzer/StackTraceAnalyzer';
+import { CallsGraphAnalyzer } from '../../../../src/analyzers/calls-graph-analyzer/CallsGraphAnalyzer';
 
-describe('StackTraceAnalyzer', () => {
+describe('CallsGraphAnalyzer', () => {
     describe('getLimitIndex', () => {
         let limitIndex: number;
 
@@ -11,7 +11,7 @@ describe('StackTraceAnalyzer', () => {
             const expectedLimitIndex: number = 44;
 
             before(() => {
-                limitIndex = StackTraceAnalyzer.getLimitIndex(blockScopeBodyLength);
+                limitIndex = CallsGraphAnalyzer.getLimitIndex(blockScopeBodyLength);
             });
 
             it('should return correct limit index based on block scope body length', () => {
@@ -24,7 +24,7 @@ describe('StackTraceAnalyzer', () => {
             const expectedLimitIndex: number = 26;
 
             before(() => {
-                limitIndex = StackTraceAnalyzer.getLimitIndex(blockScopeBodyLength);
+                limitIndex = CallsGraphAnalyzer.getLimitIndex(blockScopeBodyLength);
             });
 
             it('should return correct limit index based on block scope body length', () => {
@@ -37,7 +37,7 @@ describe('StackTraceAnalyzer', () => {
             const expectedLimitIndex: number = 24;
 
             before(() => {
-                limitIndex = StackTraceAnalyzer.getLimitIndex(blockScopeBodyLength);
+                limitIndex = CallsGraphAnalyzer.getLimitIndex(blockScopeBodyLength);
             });
 
             it('should return correct limit index based on block scope body length', () => {
@@ -50,7 +50,7 @@ describe('StackTraceAnalyzer', () => {
             const expectedLimitIndex: number = 4;
 
             before(() => {
-                limitIndex = StackTraceAnalyzer.getLimitIndex(blockScopeBodyLength);
+                limitIndex = CallsGraphAnalyzer.getLimitIndex(blockScopeBodyLength);
             });
 
             it('should return correct limit index based on block scope body length', () => {

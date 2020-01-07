@@ -9,7 +9,7 @@ import { ICustomNodeGroup } from '../interfaces/custom-nodes/ICustomNodeGroup';
 import { IIdentifierNamesGenerator } from '../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
-import { IStackTraceData } from '../interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
+import { ICallsGraphData } from '../interfaces/analyzers/calls-graph-analyzer/ICallsGraphData';
 
 import { CustomNode } from '../enums/custom-nodes/CustomNode';
 import { ObfuscationEvent } from '../enums/event-emitters/ObfuscationEvent';
@@ -59,9 +59,9 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
 
     /**
      * @param {TNodeWithStatements} nodeWithStatements
-     * @param {IStackTraceData[]} stackTraceData
+     * @param {ICallsGraphData[]} callsGraphData
      */
-    public abstract appendCustomNodes (nodeWithStatements: TNodeWithStatements, stackTraceData: IStackTraceData[]): void;
+    public abstract appendCustomNodes (nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void;
 
     /**
      * @returns {ObfuscationEvent}
@@ -94,10 +94,10 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     }
 
     /**
-     * @param {number} stackTraceLength
+     * @param {number} callsGraphLength
      * @returns {number}
      */
-    protected getRandomStackTraceIndex (stackTraceLength: number): number {
-        return this.randomGenerator.getRandomInteger(0, Math.max(0, Math.round(stackTraceLength - 1)));
+    protected getRandomCallsGraphIndex (callsGraphLength: number): number {
+        return this.randomGenerator.getRandomInteger(0, Math.max(0, Math.round(callsGraphLength - 1)));
     }
 }

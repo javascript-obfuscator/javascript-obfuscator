@@ -2,7 +2,7 @@ import { TNodeWithStatements } from '../../types/node/TNodeWithStatements';
 
 import { ICustomNode } from './ICustomNode';
 import { IInitializable } from '../IInitializable';
-import { IStackTraceData } from '../analyzers/stack-trace-analyzer/IStackTraceData';
+import { ICallsGraphData } from '../analyzers/calls-graph-analyzer/ICallsGraphData';
 
 import { CustomNode } from '../../enums/custom-nodes/CustomNode';
 import { ObfuscationEvent } from '../../enums/event-emitters/ObfuscationEvent';
@@ -10,9 +10,9 @@ import { ObfuscationEvent } from '../../enums/event-emitters/ObfuscationEvent';
 export interface ICustomNodeGroup extends IInitializable {
     /**
      * @param nodeWithStatements
-     * @param stackTraceData
+     * @param callsGraphData
      */
-    appendCustomNodes (nodeWithStatements: TNodeWithStatements, stackTraceData: IStackTraceData[]): void;
+    appendCustomNodes (nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void;
 
     /**
      * @returns {ObfuscationEvent}

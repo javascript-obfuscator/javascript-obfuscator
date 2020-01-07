@@ -60,35 +60,49 @@ export class CommentsTransformer extends AbstractNodeTransformer {
      * `@license`, `@preserve` or `javascript-obfuscator` words
      * Move comments to their nodes
      *
-     * @param {Node} programNode
+     * @param {Node} rootNode
      * @returns {NodeGuards}
      */
-    public transformNode (programNode: ESTree.Program): ESTree.Node {
-        if (programNode.comments) {
-            const comments: ESTree.Comment[] = this.transformComments(programNode.comments);
-            estraverse.traverse(programNode, {
-                enter: (node: ESTree.Node): void => {
-                    if (comments.length === 0) {
-                        return;
-                    }
-
-                    const commentIdx: number = comments.findIndex((comment: ESTree.Comment) =>
-                        comment.range && node.range && comment.range[0] < node.range[0]
-                    );
-
-                    if (commentIdx === -1) {
-                        return;
-                    }
-
-                    node.leadingComments = comments.splice(commentIdx, comments.length - commentIdx).reverse();
-                }
-            });
-            if (comments.length > 0) {
-                programNode.trailingComments = comments.reverse();
-            }
+    public transformNode (rootNode: ESTree.Program): ESTree.Node {
+        if (!rootNode.comments || !rootNode.comments.length) {
+            return rootNode;
         }
 
-        return programNode;
+        const comments: ESTree.Comment[] = this.transformComments(rootNode.comments);
+
+        if (comments.length === 0) {
+            return rootNode;
+        }
+
+        if (!rootNode.body.length) {
+            rootNode.leadingComments = comments;
+
+            return rootNode;
+        }
+
+        estraverse.traverse(rootNode, {
+            enter: (node: ESTree.Node): void => {
+                if (node === rootNode) {
+                    return;
+                }
+
+                const commentIdx: number = comments.findIndex((comment: ESTree.Comment) =>
+                    comment.range && node.range && comment.range[0] < node.range[0]
+                );
+
+                if (commentIdx === -1) {
+                    return;
+                }
+
+                node.leadingComments = comments.splice(commentIdx, comments.length - commentIdx).reverse();
+            }
+        });
+
+        if (comments.length > 0) {
+            rootNode.trailingComments = comments.reverse();
+        }
+
+        return rootNode;
     }
 
     /**

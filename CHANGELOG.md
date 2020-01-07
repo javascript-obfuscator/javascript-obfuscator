@@ -1,5 +1,10 @@
 Change Log
 
+v0.21.1
+---
+* Fixed conditional comments in some rare cases
+
+
 v0.21.0
 ---
 * Improved `transformObjectKeys` transformation to cover more cases

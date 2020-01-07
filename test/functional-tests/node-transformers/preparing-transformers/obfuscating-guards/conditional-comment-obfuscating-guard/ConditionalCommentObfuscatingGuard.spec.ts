@@ -39,7 +39,7 @@ describe('ConditionalCommentObfuscatingGuard', () => {
             });
         });
 
-        describe('Variant #2: `disable` and `enable` conditional comments', () => {
+        describe('Variant #2: `disable` and `enable` conditional comments #1', () => {
             const obfuscatedVariableDeclaration1RegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *0x1;/;
             const obfuscatedVariableDeclaration2RegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *0x3;/;
             const ignoredVariableDeclarationRegExp: RegExp = /var *bar *= *2;/;
@@ -47,7 +47,7 @@ describe('ConditionalCommentObfuscatingGuard', () => {
             let obfuscatedCode: string;
 
             beforeEach(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/disable-and-enable-comments.js');
+                const code: string = readFileAsString(__dirname + '/fixtures/disable-and-enable-comments-1.js');
 
                 obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,
@@ -70,7 +70,34 @@ describe('ConditionalCommentObfuscatingGuard', () => {
             });
         });
 
-        describe('Variant #3: `disable` conditional comment from beginning of the code', () => {
+        describe('Variant #3: `disable` and `enable` conditional comments #2', () => {
+            const ignoredVariableDeclarationRegExp: RegExp = /var *foo *= *1;/;
+            const obfuscatedVariableDeclarationRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *0x2;/;
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/disable-and-enable-comments-2.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('match #1: should ignore variable declaration after `disable` conditional comment', () => {
+                assert.match(obfuscatedCode, ignoredVariableDeclarationRegExp);
+            });
+
+            it('match #2: should obfuscate variable declaration before `disable` conditional comment', () => {
+                assert.match(obfuscatedCode, obfuscatedVariableDeclarationRegExp);
+            });
+        });
+
+        describe('Variant #4: `disable` conditional comment from beginning of the code', () => {
             const ignoredVariableDeclaration1RegExp: RegExp = /var *foo *= *1;/;
             const ignoredVariableDeclaration2RegExp: RegExp = /var *bar *= *2;/;
 
@@ -96,7 +123,7 @@ describe('ConditionalCommentObfuscatingGuard', () => {
             });
         });
 
-        describe('Variant #4: `disable` and `enable` conditional comments with dead code injection', () => {
+        describe('Variant #5: `disable` and `enable` conditional comments with dead code injection', () => {
             const obfuscatedFunctionExpressionRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *function *\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\) *{/g;
             const expectedObfuscatedFunctionExpressionLength: number = 3;
 
@@ -166,7 +193,7 @@ describe('ConditionalCommentObfuscatingGuard', () => {
             });
         });
 
-        describe('Variant #5: `disable` and `enable` conditional comments with control flow flattening', () => {
+        describe('Variant #6: `disable` and `enable` conditional comments with control flow flattening', () => {
             const obfuscatedVariableDeclarationRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['[a-zA-Z0-9]{1,5}'];/;
             const ignoredVariableDeclarationRegExp: RegExp = /var *bar *= *'bar';/;
 

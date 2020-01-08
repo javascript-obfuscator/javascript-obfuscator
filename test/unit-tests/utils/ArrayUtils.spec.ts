@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { assert } from 'chai';
 
 import { ServiceIdentifiers } from '../../../src/container/ServiceIdentifiers';
@@ -60,6 +62,53 @@ describe('ArrayUtils', () => {
 
             it('should return empty array', () => {
                 assert.deepEqual(array, expectedArray);
+            });
+        });
+    });
+
+    describe('findMostOccurringElement', () => {
+        describe('empty array', () => {
+            const array: string[] = [];
+            const expectedMostOccurringElement: null = null;
+
+            let mostOccurringElement: string | null;
+
+            before(() => {
+                mostOccurringElement = arrayUtils.findMostOccurringElement(array);
+            });
+
+            it('should return null if array is empty', () => {
+                assert.equal(mostOccurringElement, expectedMostOccurringElement);
+            });
+        });
+
+        describe('one elements is most occurring', () => {
+            const array: string[] = ['foo', 'bar', 'bar', 'baz', 'bar', 'foo'];
+            const expectedMostOccurringElement: string = 'bar';
+
+            let mostOccurringElement: string | null;
+
+            before(() => {
+                mostOccurringElement = arrayUtils.findMostOccurringElement(array);
+            });
+
+            it('should return most occurring element', () => {
+                assert.equal(mostOccurringElement, expectedMostOccurringElement);
+            });
+        });
+
+        describe('few elements are most occurring', () => {
+            const array: string[] = ['foo', 'bar', 'bar', 'baz', 'bar'];
+            const expectedMostOccurringElement: string = 'bar';
+
+            let mostOccurringElement: string | null;
+
+            before(() => {
+                mostOccurringElement = arrayUtils.findMostOccurringElement(array);
+            });
+
+            it('should return first most occurring element', () => {
+                assert.equal(mostOccurringElement, expectedMostOccurringElement);
             });
         });
     });

@@ -8,8 +8,8 @@ import { IEscapeSequenceEncoder } from '../../../interfaces/utils/IEscapeSequenc
  */
 export function SelfDefendingTemplate (escapeSequenceEncoder: IEscapeSequenceEncoder): string {
     return `
-        var selfDefendingFunc = function () {
-            var object = {
+        const selfDefendingFunc = function () {
+            const object = {
                 data: {
                     key: 'cookie',
                     value: 'timeout'
@@ -17,16 +17,15 @@ export function SelfDefendingTemplate (escapeSequenceEncoder: IEscapeSequenceEnc
                 setCookie: function (options, name, value, document) {
                     document = document || {};
                     
-                    var updatedCookie = name + "=" + value;
-
-                    var i = 0;
+                    let updatedCookie = name + "=" + value;
+                    let i = 0;
                                                             
-                    for (var i = 0, len = options.length; i < len; i++) {
-                        var propName = options[i];
+                    for (let i = 0, len = options.length; i < len; i++) {
+                        const propName = options[i];
                                      
                         updatedCookie += "; " + propName;
                         
-                        var propValue = options[propName];
+                        const propValue = options[propName];
                         
                         options.push(propValue);
                         len = options.length;
@@ -41,11 +40,11 @@ export function SelfDefendingTemplate (escapeSequenceEncoder: IEscapeSequenceEnc
                 removeCookie: function(){return 'dev';},
                 getCookie: function (document, name) {
                     document = document || function (value) { return value };
-                    var matches = document(new RegExp(
+                    const matches = document(new RegExp(
                         "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
                     ));
                     
-                    var func = function (param1, param2) {
+                    const func = function (param1, param2) {
                         param1(++param2);
                     };
                     
@@ -55,8 +54,8 @@ export function SelfDefendingTemplate (escapeSequenceEncoder: IEscapeSequenceEnc
                 }
             };
             
-            var test1 = function () {
-                var regExp = new RegExp('${
+            const test1 = function () {
+                const regExp = new RegExp('${
                     escapeSequenceEncoder.encode(`\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}`, true)
                 }');
                 
@@ -65,8 +64,8 @@ export function SelfDefendingTemplate (escapeSequenceEncoder: IEscapeSequenceEnc
             
             object['updateCookie'] = test1;
             
-            var cookie = '';
-            var result = object['updateCookie']();
+            let cookie = '';
+            const result = object['updateCookie']();
                                     
             if (!result) {
                 object['setCookie'](['*'], 'counter', 1);

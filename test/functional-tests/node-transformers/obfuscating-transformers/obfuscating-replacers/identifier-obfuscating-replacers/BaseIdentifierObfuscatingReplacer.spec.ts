@@ -1,10 +1,10 @@
 import { assert } from 'chai';
 
-import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/presets/NoCustomNodes';
 
-import { readFileAsString } from '../../../../../../helpers/readFileAsString';
+import { readFileAsString } from '../../../../../helpers/readFileAsString';
 
-import { JavaScriptObfuscator } from '../../../../../../../src/JavaScriptObfuscatorFacade';
+import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscatorFacade';
 
 describe('BaseIdentifierObfuscatingReplacer', () => {
     describe('Base rule', () => {

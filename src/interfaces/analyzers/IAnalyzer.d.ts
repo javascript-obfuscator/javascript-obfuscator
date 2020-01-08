@@ -3,7 +3,7 @@ import * as ESTree from 'estree';
 export interface IAnalyzer <T> {
     /**
      * @param {Program} astTree
-     * @returns {T[]}
+     * @returns {T}
      */
-    analyze (astTree: ESTree.Program): T[];
+    analyze (astTree: ESTree.Program): T;
 }

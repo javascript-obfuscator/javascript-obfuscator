@@ -3,14 +3,14 @@
  */
 export function ConsoleOutputDisableExpressionTemplate (): string {
     return `
-        var {consoleLogDisableFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {
-            var func = function () {};
+        const {consoleLogDisableFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {
+            const func = function () {};
             
             {globalVariableTemplate}
                         
             if (!that.console) {
                 that.console = (function (func){
-                    var c = {};
+                    const c = {};
                     
                     c.log = func;
                     c.warn = func;

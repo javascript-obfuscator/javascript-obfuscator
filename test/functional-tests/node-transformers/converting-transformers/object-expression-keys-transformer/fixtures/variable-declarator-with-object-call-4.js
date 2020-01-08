@@ -1,4 +1,4 @@
 (function () {
-    const object = {foo: 'foo'},
+    var object = {foo: 'foo'},
         variable = object.foo;
 })();

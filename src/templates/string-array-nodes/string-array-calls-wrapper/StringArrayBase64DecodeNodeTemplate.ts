@@ -18,10 +18,10 @@ export function StringArrayBase64DecodeNodeTemplate (
             {atobPolyfill}
             
             {stringArrayCallsWrapperName}.${base64DecodeFunctionIdentifier} = function (str) {
-                var string = atob(str);
-                var newStringChars = [];
+                const string = atob(str);
+                let newStringChars = [];
                 
-                for (var i = 0, length = string.length; i < length; i++) {
+                for (let i = 0, length = string.length; i < length; i++) {
                     newStringChars += '%' + ('00' + string.charCodeAt(i).toString(16)).slice(-2);
                 }
                 
@@ -33,7 +33,7 @@ export function StringArrayBase64DecodeNodeTemplate (
             {stringArrayCallsWrapperName}.${initializedIdentifier} = true;
         }
                   
-        var cachedValue = {stringArrayCallsWrapperName}.${dataIdentifier}[index];
+        const cachedValue = {stringArrayCallsWrapperName}.${dataIdentifier}[index];
                         
         if (cachedValue === undefined) {
             {selfDefendingCode}

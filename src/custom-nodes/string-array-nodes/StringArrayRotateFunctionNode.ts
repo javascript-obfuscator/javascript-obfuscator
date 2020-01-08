@@ -1,14 +1,13 @@
 import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import format from 'string-template';
-
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../types/node/TStatement';
 
 import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { ITemplateFormatter } from '../../interfaces/utils/ITemplateFormatter';
 
 import { initializable } from '../../decorators/Initializable';
 
@@ -43,6 +42,7 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
+     * @param {ITemplateFormatter} templateFormatter
      * @param {IRandomGenerator} randomGenerator
      * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      * @param {IOptions} options
@@ -50,11 +50,12 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        @inject(ServiceIdentifiers.ITemplateFormatter) templateFormatter: ITemplateFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(identifierNamesGeneratorFactory, randomGenerator, options);
+        super(identifierNamesGeneratorFactory, templateFormatter, randomGenerator, options);
 
         this.escapeSequenceEncoder = escapeSequenceEncoder;
     }
@@ -88,7 +89,7 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
         let code: string = '';
 
         if (this.options.selfDefending) {
-            code = format(SelfDefendingTemplate(this.escapeSequenceEncoder), {
+            code = this.templateFormatter.format(SelfDefendingTemplate(this.escapeSequenceEncoder), {
                 timesName,
                 whileFunctionName
             });
@@ -97,7 +98,7 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
         }
 
         return JavaScriptObfuscator.obfuscate(
-            format(StringArrayRotateFunctionTemplate(), {
+            this.templateFormatter.format(StringArrayRotateFunctionTemplate(), {
                 code,
                 timesName,
                 stringArrayName: this.stringArrayName,

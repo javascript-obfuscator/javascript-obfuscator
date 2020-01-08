@@ -3,8 +3,8 @@
  */
 export function GlobalVariableTemplate2 (): string {
     return `
-        var getGlobal = function () {
-            var globalObject;
+        const getGlobal = function () {
+            let globalObject;
         
             try {
                 globalObject = Function('return (function() ' + '{}.constructor("return this")( )' + ');')();
@@ -14,6 +14,6 @@ export function GlobalVariableTemplate2 (): string {
             
             return globalObject;
         };
-        var that = getGlobal();
+        const that = getGlobal();
     `;
 }

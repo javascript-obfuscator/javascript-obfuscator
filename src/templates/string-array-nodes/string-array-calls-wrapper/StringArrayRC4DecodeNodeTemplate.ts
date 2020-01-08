@@ -26,7 +26,7 @@ export function StringArrayRc4DecodeNodeTemplate (
             {stringArrayCallsWrapperName}.${initializedIdentifier} = true;
         }
   
-        var cachedValue = {stringArrayCallsWrapperName}.${dataIdentifier}[index];
+        const cachedValue = {stringArrayCallsWrapperName}.${dataIdentifier}[index];
 
         if (cachedValue === undefined) {
             if ({stringArrayCallsWrapperName}.${onceIdentifier} === undefined) {

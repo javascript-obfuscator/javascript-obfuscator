@@ -160,7 +160,9 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
             .getConstructorFactory<ControlFlowCustomNode, ICustomNode>(
                 ServiceIdentifiers.Newable__ICustomNode,
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
+                ServiceIdentifiers.ITemplateFormatter,
                 ServiceIdentifiers.IRandomGenerator,
+                ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer,
                 ServiceIdentifiers.IOptions
             ));
 
@@ -170,6 +172,7 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
             .getConstructorFactory<DeadCodeInjectionCustomNode, ICustomNode>(
                 ServiceIdentifiers.Newable__ICustomNode,
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
+                ServiceIdentifiers.ITemplateFormatter,
                 ServiceIdentifiers.IRandomGenerator,
                 ServiceIdentifiers.IOptions
             ));
@@ -180,7 +183,9 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
             .getConstructorFactory<ObjectExpressionKeysTransformerCustomNode, ICustomNode>(
                 ServiceIdentifiers.Newable__ICustomNode,
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
+                ServiceIdentifiers.ITemplateFormatter,
                 ServiceIdentifiers.IRandomGenerator,
+                ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer,
                 ServiceIdentifiers.IOptions
             ));
 

@@ -8,6 +8,7 @@ import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { IIdentifierNamesGenerator } from '../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
+import { ITemplateFormatter } from '../interfaces/utils/ITemplateFormatter';
 
 import { GlobalVariableTemplate1 } from '../templates/GlobalVariableTemplate1';
 import { GlobalVariableTemplate2 } from '../templates/GlobalVariableTemplate2';
@@ -43,17 +44,25 @@ export abstract class AbstractCustomNode implements ICustomNode {
     protected readonly randomGenerator: IRandomGenerator;
 
     /**
+     * @type {ITemplateFormatter}
+     */
+    protected readonly templateFormatter: ITemplateFormatter;
+
+    /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
+     * @param {ITemplateFormatter} templateFormatter
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    constructor (
+    protected constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        @inject(ServiceIdentifiers.ITemplateFormatter) templateFormatter: ITemplateFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
+        this.templateFormatter = templateFormatter;
         this.randomGenerator = randomGenerator;
         this.options = options;
     }

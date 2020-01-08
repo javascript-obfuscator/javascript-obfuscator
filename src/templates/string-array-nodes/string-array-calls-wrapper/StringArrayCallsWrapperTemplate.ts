@@ -3,10 +3,10 @@
  */
 export function StringArrayCallsWrapperTemplate (): string {
     return `
-        var {stringArrayCallsWrapperName} = function (index, key) {
+        const {stringArrayCallsWrapperName} = function (index, key) {
             index = index - 0;
             
-            var value = {stringArrayName}[index];
+            let value = {stringArrayName}[index];
             
             {decodeNodeTemplate}
         

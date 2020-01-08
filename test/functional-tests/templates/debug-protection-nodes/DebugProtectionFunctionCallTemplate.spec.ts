@@ -10,8 +10,6 @@ import { ObfuscationTarget } from '../../../../src/enums/ObfuscationTarget';
 
 import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade';
 
-
-
 async function spawnThread(obfuscatedCode: string, threadCallback: Function, timeoutCallback: Function): Promise<void> {
     const evaluationWorker = await spawn(new Worker('./workers/evaluation-worker'));
 

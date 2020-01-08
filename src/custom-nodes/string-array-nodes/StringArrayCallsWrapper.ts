@@ -1,14 +1,13 @@
 import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import format from 'string-template';
-
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../types/node/TStatement';
 
 import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { ITemplateFormatter } from '../../interfaces/utils/ITemplateFormatter';
 
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
@@ -50,6 +49,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
+     * @param {ITemplateFormatter} templateFormatter
      * @param {IRandomGenerator} randomGenerator
      * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      * @param {IOptions} options
@@ -57,11 +57,12 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
     constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        @inject(ServiceIdentifiers.ITemplateFormatter) templateFormatter: ITemplateFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(identifierNamesGeneratorFactory, randomGenerator, options);
+        super(identifierNamesGeneratorFactory, templateFormatter, randomGenerator, options);
 
         this.escapeSequenceEncoder = escapeSequenceEncoder;
     }
@@ -92,7 +93,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
         const decodeNodeTemplate: string = this.getDecodeStringArrayTemplate();
 
         return JavaScriptObfuscator.obfuscate(
-            format(StringArrayCallsWrapperTemplate(), {
+            this.templateFormatter.format(StringArrayCallsWrapperTemplate(), {
                 decodeNodeTemplate,
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
                 stringArrayName: this.stringArrayName
@@ -113,13 +114,13 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
         const globalVariableTemplate: string = this.options.target !== ObfuscationTarget.BrowserNoEval
             ? this.getGlobalVariableTemplate()
             : GlobalVariableNoEvalTemplate();
-        const atobPolyfill: string = format(AtobTemplate(), { globalVariableTemplate });
+        const atobPolyfill: string = this.templateFormatter.format(AtobTemplate(), { globalVariableTemplate });
 
         let decodeStringArrayTemplate: string = '';
         let selfDefendingCode: string = '';
 
         if (this.options.selfDefending) {
-            selfDefendingCode = format(
+            selfDefendingCode = this.templateFormatter.format(
                 SelfDefendingTemplate(
                     this.randomGenerator,
                     this.escapeSequenceEncoder
@@ -133,7 +134,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
 
         switch (this.options.stringArrayEncoding) {
             case StringArrayEncoding.Rc4:
-                decodeStringArrayTemplate = format(
+                decodeStringArrayTemplate = this.templateFormatter.format(
                     StringArrayRc4DecodeNodeTemplate(this.randomGenerator),
                     {
                         atobPolyfill,
@@ -146,7 +147,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
                 break;
 
             case StringArrayEncoding.Base64:
-                decodeStringArrayTemplate = format(
+                decodeStringArrayTemplate = this.templateFormatter.format(
                     StringArrayBase64DecodeNodeTemplate(this.randomGenerator),
                     {
                         atobPolyfill,

@@ -3,13 +3,13 @@
  */
 export function SingleNodeCallControllerTemplate (): string {
     return `
-        var {singleNodeCallControllerFunctionName} = (function(){
-            var firstCall = true;
+        const {singleNodeCallControllerFunctionName} = (function(){
+            let firstCall = true;
             
             return function (context, fn){
-                var rfn = firstCall ? function(){
+                const rfn = firstCall ? function(){
                     if(fn){
-                        var res = fn.apply(context, arguments);
+                        const res = fn.apply(context, arguments);
                         fn = null;
                         return res;
                     }

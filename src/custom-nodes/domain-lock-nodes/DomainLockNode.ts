@@ -1,14 +1,13 @@
 import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import format from 'string-template';
-
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../types/node/TStatement';
 
 import { ICryptUtils } from '../../interfaces/utils/ICryptUtils';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { ITemplateFormatter } from '../../interfaces/utils/ITemplateFormatter';
 
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 
@@ -35,6 +34,7 @@ export class DomainLockNode extends AbstractCustomNode {
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
+     * @param {ITemplateFormatter} templateFormatter
      * @param {IRandomGenerator} randomGenerator
      * @param {ICryptUtils} cryptUtils
      * @param {IOptions} options
@@ -42,11 +42,12 @@ export class DomainLockNode extends AbstractCustomNode {
     constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        @inject(ServiceIdentifiers.ITemplateFormatter) templateFormatter: ITemplateFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.ICryptUtils) cryptUtils: ICryptUtils,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(identifierNamesGeneratorFactory, randomGenerator, options);
+        super(identifierNamesGeneratorFactory, templateFormatter, randomGenerator, options);
 
         this.cryptUtils = cryptUtils;
     }
@@ -78,7 +79,7 @@ export class DomainLockNode extends AbstractCustomNode {
             ? this.getGlobalVariableTemplate()
             : GlobalVariableNoEvalTemplate();
 
-        return format(DomainLockNodeTemplate(), {
+        return this.templateFormatter.format(DomainLockNodeTemplate(), {
             domainLockFunctionName: this.identifierNamesGenerator.generate(),
             diff: diff,
             domains: hiddenDomainsString,

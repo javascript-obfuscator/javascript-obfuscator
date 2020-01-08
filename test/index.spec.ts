@@ -6,6 +6,7 @@ require('source-map-support').install();
  * Unit tests
  */
 import './unit-tests/analyzers/calls-graph-analyzer/CallsGraphAnalyzer.spec';
+import './unit-tests/analyzers/prevailing-kind-of-variables-analyzer/PrevailingKindOfVariablesAnalyzer.spec';
 import './unit-tests/cli/sanitizers/ArraySanitizer.spec';
 import './unit-tests/cli/sanitizers/BooleanSanitizer.spec';
 import './unit-tests/cli/sanitizers/IdentifierNamesGeneratorSanitizer.spec';
@@ -75,7 +76,7 @@ import './functional-tests/node-transformers/obfuscating-transformers/function-t
 import './functional-tests/node-transformers/obfuscating-transformers/impot-declaration-transformer/ImportDeclarationTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/labeled-statement-transformer/LabeledStatementTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/literal-transformer/LiteralTransformer.spec';
-import './functional-tests/node-transformers/obfuscating-transformers/literal-transformer/obfuscating-replacers/identifier-obfuscating-replacers/BaseIdentifierObfuscatingReplacer.spec';
+import './functional-tests/node-transformers/obfuscating-transformers/obfuscating-replacers/identifier-obfuscating-replacers/BaseIdentifierObfuscatingReplacer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/variable-declaration-transformer/VariableDeclarationTransformer.spec';
 import './functional-tests/node-transformers/preparing-transformers/eval-call-expression-transformer/EvalCallExpressionTransformer.spec';
 import './functional-tests/node-transformers/preparing-transformers/comments-transformer/CommentsTransformer.spec';
@@ -86,7 +87,9 @@ import './functional-tests/options/OptionsNormalizer.spec';
 import './functional-tests/templates/debug-protection-nodes/DebugProtectionFunctionCallTemplate.spec';
 import './functional-tests/templates/domain-lock-nodes/DomainLockNodeTemplate.spec';
 import './functional-tests/templates/GlobalVariableNoEvalTemplate.spec';
-import './functional-tests/templates/string-array-nodes/StringArrayCallsWrapperNodeTemplate.spec';
+import './functional-tests/templates/string-array-nodes/string-array-template/StringArrayTemplate.spec';
+import './functional-tests/templates/string-array-nodes/string-array-calls-wrapper-node-template/StringArrayCallsWrapperNodeTemplate.spec';
+import './functional-tests/templates/string-array-nodes/string-array-rotate-function-template/StringArrayRotateFunctionTemplate.spec';
 
 /**
  * Performance tests

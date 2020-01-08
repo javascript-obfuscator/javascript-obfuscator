@@ -15,6 +15,7 @@ import { IdentifierNamesGenerator } from '../../../src/enums/generators/identifi
 import { buildLargeCode } from '../../helpers/buildLargeCode';
 import { getRegExpMatch } from '../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../helpers/readFileAsString';
+import { TInputOptions } from '../../../src/types/options/TInputOptions';
 
 describe('JavaScriptObfuscator', () => {
     describe('obfuscate', () => {
@@ -708,6 +709,93 @@ describe('JavaScriptObfuscator', () => {
 
             it('It does not create identifier names collision', () => {
                 assert.equal(areCollisionsExists, false);
+            });
+        });
+
+        describe('Prevailing kind of variables', () => {
+            const baseParams: TInputOptions = {
+                compact: true,
+                controlFlowFlattening: true,
+                controlFlowFlatteningThreshold: 1,
+                deadCodeInjection: true,
+                deadCodeInjectionThreshold: 1,
+                debugProtection: true,
+                debugProtectionInterval: true,
+                disableConsoleOutput: false,
+                rotateStringArray: true,
+                selfDefending: true,
+                stringArray: true,
+                stringArrayThreshold: 1,
+                transformObjectKeys: true,
+                unicodeEscapeSequence: false
+            };
+
+            describe('`var` kind', function () {
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-var.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            ...baseParams,
+                            stringArrayEncoding: StringArrayEncoding.Rc4
+                        }
+                    ).getObfuscatedCode();
+
+                });
+
+                it('does not break on run', () => {
+                    assert.doesNotThrow(() => eval(obfuscatedCode));
+                });
+            });
+
+            describe('`const` kind', function () {
+                describe('Variant #1: StringArrayEncoding: rc4', () => {
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-const.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                ...baseParams,
+                                stringArrayEncoding: StringArrayEncoding.Rc4
+                            }
+                        ).getObfuscatedCode();
+
+                    });
+
+                    it('does not break on run', () => {
+                        assert.doesNotThrow(() => eval(obfuscatedCode));
+                    });
+                });
+
+                describe('Variant #2: StringArrayEncoding: base64', () => {
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-const.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                ...baseParams,
+                                stringArrayEncoding: StringArrayEncoding.Rc4
+                            }
+                        ).getObfuscatedCode();
+
+                    });
+
+                    it('does not break on run', () => {
+                        assert.doesNotThrow(() => eval(obfuscatedCode));
+                    });
+                });
             });
         });
     });

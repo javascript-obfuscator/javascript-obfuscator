@@ -268,5 +268,53 @@ describe('FunctionControlFlowTransformer', function () {
                 });
             });
         });
+
+        describe('prevailing kind of variables', () => {
+            describe('Variant #1 - `var` kind', () => {
+                const regexp: RegExp = new RegExp(`var *${variableMatch} *= *\\{`);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-1.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            controlFlowFlattening: true,
+                            controlFlowFlatteningThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should add `control flow storage` node to the obfuscated code', () => {
+                    assert.match(obfuscatedCode, regexp);
+                });
+            });
+
+            describe('Variant #2 - `const` kind', () => {
+                const regexp: RegExp = new RegExp(`const *${variableMatch} *= *\\{`);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-2.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            controlFlowFlattening: true,
+                            controlFlowFlatteningThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should add `control flow storage` node to the obfuscated code', () => {
+                    assert.match(obfuscatedCode, regexp);
+                });
+            });
+        });
     });
 });

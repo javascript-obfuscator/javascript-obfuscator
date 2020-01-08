@@ -4,20 +4,25 @@ import format from 'string-template';
 
 import { assert } from 'chai';
 
-import { ServiceIdentifiers } from '../../../../src/container/ServiceIdentifiers';
+import { ServiceIdentifiers } from '../../../../../src/container/ServiceIdentifiers';
 
-import { ICryptUtils } from '../../../../src/interfaces/utils/ICryptUtils';
-import { IInversifyContainerFacade } from '../../../../src/interfaces/container/IInversifyContainerFacade';
-import { IRandomGenerator } from '../../../../src/interfaces/utils/IRandomGenerator';
+import { ICryptUtils } from '../../../../../src/interfaces/utils/ICryptUtils';
+import { IInversifyContainerFacade } from '../../../../../src/interfaces/container/IInversifyContainerFacade';
+import { IObfuscatedCode } from '../../../../../src/interfaces/source-code/IObfuscatedCode';
+import { IRandomGenerator } from '../../../../../src/interfaces/utils/IRandomGenerator';
 
-import { AtobTemplate } from '../../../../src/templates/AtobTemplate';
-import { GlobalVariableTemplate1 } from '../../../../src/templates/GlobalVariableTemplate1';
-import { Rc4Template } from '../../../../src/templates/Rc4Template';
-import { StringArrayBase64DecodeNodeTemplate } from '../../../../src/templates/string-array-nodes/string-array-calls-wrapper/StringArrayBase64DecodeNodeTemplate';
-import { StringArrayCallsWrapperTemplate } from '../../../../src/templates/string-array-nodes/string-array-calls-wrapper/StringArrayCallsWrapperTemplate';
-import { StringArrayRc4DecodeNodeTemplate } from '../../../../src/templates/string-array-nodes/string-array-calls-wrapper/StringArrayRC4DecodeNodeTemplate';
+import { AtobTemplate } from '../../../../../src/templates/AtobTemplate';
+import { GlobalVariableTemplate1 } from '../../../../../src/templates/GlobalVariableTemplate1';
+import { Rc4Template } from '../../../../../src/templates/Rc4Template';
+import { StringArrayBase64DecodeNodeTemplate } from '../../../../../src/templates/string-array-nodes/string-array-calls-wrapper/StringArrayBase64DecodeNodeTemplate';
+import { StringArrayCallsWrapperTemplate } from '../../../../../src/templates/string-array-nodes/string-array-calls-wrapper/StringArrayCallsWrapperTemplate';
+import { StringArrayRc4DecodeNodeTemplate } from '../../../../../src/templates/string-array-nodes/string-array-calls-wrapper/StringArrayRC4DecodeNodeTemplate';
 
-import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
+
+import { InversifyContainerFacade } from '../../../../../src/container/InversifyContainerFacade';
+import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
+import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 describe('StringArrayCallsWrapperNodeTemplate', () => {
     const stringArrayName: string = 'stringArrayName';
@@ -109,6 +114,54 @@ describe('StringArrayCallsWrapperNodeTemplate', () => {
 
         it('should correctly return decoded value', () => {
             assert.deepEqual(decodedValue, expectedDecodedValue);
+        });
+    });
+
+    describe('Prevailing kind of variables', () => {
+        describe('`var` kind', () => {
+            let obfuscatedCode: string,
+                stringArrayCallsWrapperRegExp: RegExp = /var (_0x(\w){4}) *= *function/;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-var.js');
+                const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }
+                );
+
+                obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+            });
+
+            it('Should return correct variable kind for string array calls wrapper', () => {
+                assert.match(obfuscatedCode, stringArrayCallsWrapperRegExp);
+            });
+        });
+
+        describe('`const` kind', () => {
+            let obfuscatedCode: string,
+                stringArrayCallsWrapperRegExp: RegExp = /const (_0x(\w){4}) *= *function/;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-const.js');
+                const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }
+                );
+
+                obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+            });
+
+            it('Should return correct variable kind for string array calls wrapper', () => {
+                assert.match(obfuscatedCode, stringArrayCallsWrapperRegExp);
+            });
         });
     });
 });

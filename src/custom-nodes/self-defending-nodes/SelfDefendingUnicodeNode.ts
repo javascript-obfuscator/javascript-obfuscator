@@ -36,16 +36,16 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {ITemplateFormatter} templateFormatter
      * @param {IRandomGenerator} randomGenerator
-     * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      * @param {IOptions} options
+     * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ITemplateFormatter) templateFormatter: ITemplateFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
-        @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
-        @inject(ServiceIdentifiers.IOptions) options: IOptions
+        @inject(ServiceIdentifiers.IOptions) options: IOptions,
+        @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder
     ) {
         super(identifierNamesGeneratorFactory, templateFormatter, randomGenerator, options);
 

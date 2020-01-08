@@ -36,16 +36,16 @@ export class DomainLockNode extends AbstractCustomNode {
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {ITemplateFormatter} templateFormatter
      * @param {IRandomGenerator} randomGenerator
-     * @param {ICryptUtils} cryptUtils
      * @param {IOptions} options
+     * @param {ICryptUtils} cryptUtils
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ITemplateFormatter) templateFormatter: ITemplateFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
-        @inject(ServiceIdentifiers.ICryptUtils) cryptUtils: ICryptUtils,
-        @inject(ServiceIdentifiers.IOptions) options: IOptions
+        @inject(ServiceIdentifiers.IOptions) options: IOptions,
+        @inject(ServiceIdentifiers.ICryptUtils) cryptUtils: ICryptUtils
     ) {
         super(identifierNamesGeneratorFactory, templateFormatter, randomGenerator, options);
 

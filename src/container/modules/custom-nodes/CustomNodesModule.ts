@@ -162,8 +162,8 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
                 ServiceIdentifiers.ITemplateFormatter,
                 ServiceIdentifiers.IRandomGenerator,
-                ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer,
-                ServiceIdentifiers.IOptions
+                ServiceIdentifiers.IOptions,
+                ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer
             ));
 
     // dead code injection customNode constructor factory
@@ -185,8 +185,8 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
                 ServiceIdentifiers.ITemplateFormatter,
                 ServiceIdentifiers.IRandomGenerator,
-                ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer,
-                ServiceIdentifiers.IOptions
+                ServiceIdentifiers.IOptions,
+                ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer
             ));
 
     // customNodeGroup factory

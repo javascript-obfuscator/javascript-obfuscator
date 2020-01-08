@@ -5,6 +5,7 @@ import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TDeadNodeInjectionCustomNodeFactory } from '../../types/container/custom-nodes/TDeadNodeInjectionCustomNodeFactory';
+import { TInitialData } from '../../types/TInitialData';
 import { TNodeWithStatements } from '../../types/node/TNodeWithStatements';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
@@ -19,6 +20,7 @@ import { NodeType } from '../../enums/node/NodeType';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
+import { BlockStatementDeadCodeInjectionNode } from '../../custom-nodes/dead-code-injection-nodes/BlockStatementDeadCodeInjectionNode';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeStatementUtils } from '../../node/NodeStatementUtils';
@@ -389,9 +391,8 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
          */
         this.deadCodeInjectionRootAstHostNodeSet.add(deadCodeInjectionRootAstHostNode);
 
-        const blockStatementDeadCodeInjectionCustomNode: ICustomNode = this.deadCodeInjectionCustomNodeFactory(
-            DeadCodeInjectionCustomNode.BlockStatementDeadCodeInjectionNode
-        );
+        const blockStatementDeadCodeInjectionCustomNode: ICustomNode<TInitialData<BlockStatementDeadCodeInjectionNode>> =
+            this.deadCodeInjectionCustomNodeFactory(DeadCodeInjectionCustomNode.BlockStatementDeadCodeInjectionNode);
 
         blockStatementDeadCodeInjectionCustomNode.initialize(blockStatementNode, deadCodeInjectionRootAstHostNode);
 

@@ -5,6 +5,7 @@ import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
+import { TInitialData } from '../../../types/TInitialData';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -12,6 +13,7 @@ import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 
 import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCustomNode';
 
+import { BinaryExpressionFunctionNode } from '../../../custom-nodes/control-flow-flattening-nodes/BinaryExpressionFunctionNode';
 import { ExpressionWithOperatorControlFlowReplacer } from './ExpressionWithOperatorControlFlowReplacer';
 
 @injectable()
@@ -46,17 +48,16 @@ export class BinaryExpressionControlFlowReplacer extends ExpressionWithOperatorC
         parentNode: ESTree.Node,
         controlFlowStorage: TControlFlowStorage
     ): ESTree.Node {
-        const replacerId: string = binaryExpressionNode.operator;
-        const binaryExpressionFunctionCustomNode: ICustomNode = this.controlFlowCustomNodeFactory(
-            ControlFlowCustomNode.BinaryExpressionFunctionNode
-        );
+        const operator: ESTree.BinaryOperator = binaryExpressionNode.operator;
+        const binaryExpressionFunctionCustomNode: ICustomNode<TInitialData<BinaryExpressionFunctionNode>> =
+            this.controlFlowCustomNodeFactory(ControlFlowCustomNode.BinaryExpressionFunctionNode);
 
-        binaryExpressionFunctionCustomNode.initialize(replacerId);
+        binaryExpressionFunctionCustomNode.initialize(operator);
 
         const storageKey: string = this.insertCustomNodeToControlFlowStorage(
             binaryExpressionFunctionCustomNode,
             controlFlowStorage,
-            replacerId,
+            operator,
             BinaryExpressionControlFlowReplacer.usingExistingIdentifierChance
         );
 

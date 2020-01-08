@@ -3,6 +3,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
+import { TInitialData } from '../../../types/TInitialData';
 import { TNodeWithStatements } from '../../../types/node/TNodeWithStatements';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
@@ -17,6 +18,8 @@ import { ObfuscationEvent } from '../../../enums/event-emitters/ObfuscationEvent
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
+import { NodeCallsControllerFunctionNode } from '../../node-calls-controller-nodes/NodeCallsControllerFunctionNode';
+import { SelfDefendingUnicodeNode } from '../SelfDefendingUnicodeNode';
 
 @injectable()
 export class SelfDefendingCustomNodeGroup extends AbstractCustomNodeGroup {
@@ -90,8 +93,10 @@ export class SelfDefendingCustomNodeGroup extends AbstractCustomNodeGroup {
 
         const callsControllerFunctionName: string = this.identifierNamesGenerator.generate();
 
-        const selfDefendingUnicodeNode: ICustomNode = this.customNodeFactory(CustomNode.SelfDefendingUnicodeNode);
-        const nodeCallsControllerFunctionNode: ICustomNode = this.customNodeFactory(CustomNode.NodeCallsControllerFunctionNode);
+        const selfDefendingUnicodeNode: ICustomNode<TInitialData<SelfDefendingUnicodeNode>> =
+            this.customNodeFactory(CustomNode.SelfDefendingUnicodeNode);
+        const nodeCallsControllerFunctionNode: ICustomNode<TInitialData<NodeCallsControllerFunctionNode>> =
+            this.customNodeFactory(CustomNode.NodeCallsControllerFunctionNode);
 
         selfDefendingUnicodeNode.initialize(callsControllerFunctionName);
         nodeCallsControllerFunctionNode.initialize(this.appendEvent, callsControllerFunctionName);

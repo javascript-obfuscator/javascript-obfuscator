@@ -14,7 +14,9 @@ import { GlobalVariableTemplate1 } from '../templates/GlobalVariableTemplate1';
 import { GlobalVariableTemplate2 } from '../templates/GlobalVariableTemplate2';
 
 @injectable()
-export abstract class AbstractCustomNode implements ICustomNode {
+export abstract class AbstractCustomNode <
+    TInitialData extends any[] = any[]
+> implements ICustomNode <TInitialData> {
     /**
      * @type {string[]}
      */
@@ -68,9 +70,9 @@ export abstract class AbstractCustomNode implements ICustomNode {
     }
 
     /**
-     * @param {unknown[]} args
+     * @param {TInitialData} args
      */
-    public abstract initialize (...args: unknown[]): void;
+    public abstract initialize (...args: TInitialData): void;
 
     /**
      * @returns {TStatement[]}

@@ -5,6 +5,7 @@ import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
+import { TInitialData } from '../../../types/TInitialData';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
@@ -13,6 +14,7 @@ import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCustomNode';
 
 import { ExpressionWithOperatorControlFlowReplacer } from './ExpressionWithOperatorControlFlowReplacer';
+import { LogicalExpressionFunctionNode } from '../../../custom-nodes/control-flow-flattening-nodes/LogicalExpressionFunctionNode';
 import { NodeGuards } from '../../../node/NodeGuards';
 import { NodeUtils } from '../../../node/NodeUtils';
 
@@ -52,17 +54,16 @@ export class LogicalExpressionControlFlowReplacer extends ExpressionWithOperator
             return logicalExpressionNode;
         }
 
-        const replacerId: string = logicalExpressionNode.operator;
-        const logicalExpressionFunctionCustomNode: ICustomNode = this.controlFlowCustomNodeFactory(
-            ControlFlowCustomNode.LogicalExpressionFunctionNode
-        );
+        const operator: ESTree.LogicalOperator = logicalExpressionNode.operator;
+        const logicalExpressionFunctionCustomNode: ICustomNode<TInitialData<LogicalExpressionFunctionNode>> =
+            this.controlFlowCustomNodeFactory(ControlFlowCustomNode.LogicalExpressionFunctionNode);
 
-        logicalExpressionFunctionCustomNode.initialize(replacerId);
+        logicalExpressionFunctionCustomNode.initialize(operator);
 
         const storageKey: string = this.insertCustomNodeToControlFlowStorage(
             logicalExpressionFunctionCustomNode,
             controlFlowStorage,
-            replacerId,
+            operator,
             LogicalExpressionControlFlowReplacer.usingExistingIdentifierChance
         );
 

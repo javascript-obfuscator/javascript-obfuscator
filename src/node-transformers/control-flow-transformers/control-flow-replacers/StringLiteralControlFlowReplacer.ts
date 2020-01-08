@@ -5,6 +5,7 @@ import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
+import { TInitialData } from '../../../types/TInitialData';
 import { TStatement } from '../../../types/node/TStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
@@ -15,6 +16,8 @@ import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCu
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
 import { NodeGuards } from '../../../node/NodeGuards';
+import { StringLiteralControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/StringLiteralControlFlowStorageCallNode';
+import { StringLiteralNode } from '../../../custom-nodes/control-flow-flattening-nodes/StringLiteralNode';
 
 @injectable()
 export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplacer {
@@ -57,9 +60,8 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
         }
 
         const replacerId: string = String(literalNode.value);
-        const literalFunctionCustomNode: ICustomNode = this.controlFlowCustomNodeFactory(
-            ControlFlowCustomNode.StringLiteralNode
-        );
+        const literalFunctionCustomNode: ICustomNode<TInitialData<StringLiteralNode>> =
+            this.controlFlowCustomNodeFactory(ControlFlowCustomNode.StringLiteralNode);
 
         literalFunctionCustomNode.initialize(literalNode.value);
 
@@ -82,9 +84,8 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
         controlFlowStorageId: string,
         storageKey: string
     ): ESTree.Node {
-        const controlFlowStorageCallCustomNode: ICustomNode = this.controlFlowCustomNodeFactory(
-            ControlFlowCustomNode.StringLiteralControlFlowStorageCallNode
-        );
+        const controlFlowStorageCallCustomNode: ICustomNode<TInitialData<StringLiteralControlFlowStorageCallNode>> =
+            this.controlFlowCustomNodeFactory(ControlFlowCustomNode.StringLiteralControlFlowStorageCallNode);
 
         controlFlowStorageCallCustomNode.initialize(controlFlowStorageId, storageKey);
 

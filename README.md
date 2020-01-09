@@ -185,10 +185,6 @@ var _0x8221 = function (_0xcac13e, _0x3627d7) {
 */
 ```
 
-## Kind of variables
-
-Kind of variables of inserted nodes will auto-detected, based on most prevailing kind of variables of source code.
-
 ### `obfuscate(sourceCode, options)`
 
 Returns `ObfuscationResult` object which contains two public methods:
@@ -266,6 +262,10 @@ Conditional comments affect only direct transformations of AST-tree nodes. All c
 For example:
 * Obfuscation of the variable's name at its declaration is called direct transformation;
 * Obfuscation of the variable's name beyond its declaration is called child transformation.
+
+## Kind of variables
+
+Kind of variables of inserted nodes will auto-detected, based on most prevailing kind of variables of source code.
 
 ## Antiviruses false positive virus alerts
 

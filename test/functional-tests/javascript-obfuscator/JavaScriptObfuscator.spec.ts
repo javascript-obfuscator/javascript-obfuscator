@@ -797,6 +797,52 @@ describe('JavaScriptObfuscator', () => {
                     });
                 });
             });
+
+            describe('`let` kind', function () {
+                describe('Variant #1: StringArrayEncoding: rc4', () => {
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-let.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                ...baseParams,
+                                stringArrayEncoding: StringArrayEncoding.Rc4
+                            }
+                        ).getObfuscatedCode();
+
+                    });
+
+                    it('does not break on run', () => {
+                        assert.doesNotThrow(() => eval(obfuscatedCode));
+                    });
+                });
+
+                describe('Variant #2: StringArrayEncoding: base64', () => {
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-let.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                ...baseParams,
+                                stringArrayEncoding: StringArrayEncoding.Rc4
+                            }
+                        ).getObfuscatedCode();
+
+                    });
+
+                    it('does not break on run', () => {
+                        assert.doesNotThrow(() => eval(obfuscatedCode));
+                    });
+                });
+            });
         });
     });
 });

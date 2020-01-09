@@ -136,7 +136,7 @@ describe('StringArrayCallsWrapperNodeTemplate', () => {
                 obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
             });
 
-            it('Should return correct variable kind for string array calls wrapper', () => {
+            it('Should return correct kind of variables for string array calls wrapper', () => {
                 assert.match(obfuscatedCode, stringArrayCallsWrapperRegExp);
             });
         });
@@ -159,7 +159,30 @@ describe('StringArrayCallsWrapperNodeTemplate', () => {
                 obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
             });
 
-            it('Should return correct variable kind for string array calls wrapper', () => {
+            it('Should return correct kind of variables for string array calls wrapper', () => {
+                assert.match(obfuscatedCode, stringArrayCallsWrapperRegExp);
+            });
+        });
+
+        describe('`let` kind', () => {
+            let obfuscatedCode: string,
+                stringArrayCallsWrapperRegExp: RegExp = /const (_0x(\w){4}) *= *function/;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-let.js');
+                const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }
+                );
+
+                obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+            });
+
+            it('Should return correct kind of variables for string array calls wrapper', () => {
                 assert.match(obfuscatedCode, stringArrayCallsWrapperRegExp);
             });
         });

@@ -276,7 +276,7 @@ describe('FunctionControlFlowTransformer', function () {
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-1.js');
+                    const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-var.js');
 
                     obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
@@ -288,7 +288,7 @@ describe('FunctionControlFlowTransformer', function () {
                     ).getObfuscatedCode();
                 });
 
-                it('should add `control flow storage` node to the obfuscated code', () => {
+                it('should use correct kind of variables for `control flow storage`', () => {
                     assert.match(obfuscatedCode, regexp);
                 });
             });
@@ -299,7 +299,7 @@ describe('FunctionControlFlowTransformer', function () {
                 let obfuscatedCode: string;
 
                 before(() => {
-                    const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-2.js');
+                    const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-const.js');
 
                     obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
@@ -311,7 +311,30 @@ describe('FunctionControlFlowTransformer', function () {
                     ).getObfuscatedCode();
                 });
 
-                it('should add `control flow storage` node to the obfuscated code', () => {
+                it('should use correct kind of variables for `control flow storage`', () => {
+                    assert.match(obfuscatedCode, regexp);
+                });
+            });
+
+            describe('Variant #3 - `let` kind', () => {
+                const regexp: RegExp = new RegExp(`let *${variableMatch} *= *\\{`);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-let.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            controlFlowFlattening: true,
+                            controlFlowFlatteningThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should use correct kind of variables for `control flow storage`', () => {
                     assert.match(obfuscatedCode, regexp);
                 });
             });

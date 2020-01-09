@@ -30,7 +30,7 @@ describe('StringArrayRotateFunctionTemplate', () => {
                 obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
             });
 
-            it('Should return correct variable kind for string array rotate function', () => {
+            it('Should return correct kind of variables for string array rotate function', () => {
                 assert.match(obfuscatedCode, stringArrayRotateFunctionRegExp);
             });
         });
@@ -54,7 +54,31 @@ describe('StringArrayRotateFunctionTemplate', () => {
                 obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
             });
 
-            it('Should return correct variable kind for string array rotate function', () => {
+            it('Should return correct kind of variables for string array rotate function', () => {
+                assert.match(obfuscatedCode, stringArrayRotateFunctionRegExp);
+            });
+        });
+
+        describe('`let` kind', () => {
+            let obfuscatedCode: string,
+                stringArrayRotateFunctionRegExp: RegExp = /function\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\){const _0x([a-f0-9]){4,6} *= *function/;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-let.js');
+                const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        rotateStringArray: true
+                    }
+                );
+
+                obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+            });
+
+            it('Should return correct kind of variables for string array rotate function', () => {
                 assert.match(obfuscatedCode, stringArrayRotateFunctionRegExp);
             });
         });

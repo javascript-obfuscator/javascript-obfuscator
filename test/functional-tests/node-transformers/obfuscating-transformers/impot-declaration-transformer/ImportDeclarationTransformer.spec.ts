@@ -141,5 +141,37 @@ describe('ImportDeclarationTransformer', () => {
                 assert.equal(importSpecifierIdentifier, consoleLogIdentifier);
             });
         });
+
+        describe('Variant #5: Issue-360, prevent of set `renamedIdentifier` metadata property of all traversed identifiers', () => {
+            const importSpecifierRegExp1: RegExp = /import _0x[a-f0-9]{4,6} *from *'foo';/;
+            const importSpecifierRegExp2: RegExp = /import _0x[a-f0-9]{4,6} *from *'bar';/;
+            const variableDeclarationIdentifierRegExp: RegExp = /const _0x[a-f0-9]{4,6} *= *0x1;/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/no-invalid-mark-as-renamed-identifier.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('Match 1: should transform first import specifier identifier name', () => {
+                assert.match(obfuscatedCode, importSpecifierRegExp1);
+            });
+
+            it('Match 2: should transform second import specifier identifier name', () => {
+                assert.match(obfuscatedCode, importSpecifierRegExp2);
+            });
+
+            it('Match 3: should transform variable declaration identifier name', () => {
+                assert.match(obfuscatedCode, variableDeclarationIdentifierRegExp);
+            });
+        });
     });
 });

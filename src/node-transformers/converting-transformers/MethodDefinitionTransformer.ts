@@ -17,6 +17,9 @@ import { NodeGuards } from '../../node/NodeGuards';
  * replaces:
  *     foo () { //... };
  *
+ * or
+ *     'foo' () { //... };
+ *
  * on:
  *     ['foo'] { //... };
  *
@@ -76,13 +79,52 @@ export class MethodDefinitionTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (methodDefinitionNode: ESTree.MethodDefinition, parentNode: ESTree.Node): ESTree.Node {
+        if (NodeGuards.isIdentifierNode(methodDefinitionNode.key)) {
+            return this.replaceIdentifierKey(methodDefinitionNode, methodDefinitionNode.key);
+        }
+
+        if (NodeGuards.isLiteralNode(methodDefinitionNode.key)) {
+            return this.replaceLiteralKey(methodDefinitionNode, methodDefinitionNode.key);
+        }
+
+        return methodDefinitionNode;
+    }
+
+    /**
+     * @param {MethodDefinition} methodDefinitionNode
+     * @param {Identifier} keyNode
+     * @returns {MethodDefinition}
+     */
+    private replaceIdentifierKey (
+        methodDefinitionNode: ESTree.MethodDefinition,
+        keyNode: ESTree.Identifier
+    ): ESTree.MethodDefinition {
         if (
-            NodeGuards.isIdentifierNode(methodDefinitionNode.key) &&
-            !MethodDefinitionTransformer.ignoredNames.includes(methodDefinitionNode.key.name) &&
-            methodDefinitionNode.computed === false
+            !MethodDefinitionTransformer.ignoredNames.includes(keyNode.name)
+            && !methodDefinitionNode.computed
         ) {
             methodDefinitionNode.computed = true;
-            methodDefinitionNode.key = NodeFactory.literalNode(methodDefinitionNode.key.name);
+            methodDefinitionNode.key = NodeFactory.literalNode(keyNode.name);
+        }
+
+        return methodDefinitionNode;
+    }
+
+    /**
+     * @param {MethodDefinition} methodDefinitionNode
+     * @param {Literal} keyNode
+     * @returns {MethodDefinition}
+     */
+    private replaceLiteralKey (
+        methodDefinitionNode: ESTree.MethodDefinition,
+        keyNode: ESTree.Literal
+    ): ESTree.MethodDefinition {
+        if (
+            typeof keyNode.value === 'string'
+            && !MethodDefinitionTransformer.ignoredNames.includes(keyNode.value)
+            && !methodDefinitionNode.computed
+        ) {
+            methodDefinitionNode.computed = true;
         }
 
         return methodDefinitionNode;

@@ -150,7 +150,7 @@ describe('ImportDeclarationTransformer', () => {
             let obfuscatedCode: string;
 
             before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/issue-360.js');
+                const code: string = readFileAsString(__dirname + '/fixtures/no-invalid-mark-as-renamed-identifier.js');
 
                 obfuscatedCode = JavaScriptObfuscator.obfuscate(
                     code,

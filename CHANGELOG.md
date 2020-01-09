@@ -3,6 +3,7 @@ Change Log
 v0.22.0
 ---
 * **Breaking:** auto-detection of kind of variables of inserted nodes, based on most prevailing kind of variables of source code
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/486
 
 v0.21.1
 ---

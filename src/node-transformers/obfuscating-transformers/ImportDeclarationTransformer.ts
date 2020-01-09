@@ -142,7 +142,6 @@ export class ImportDeclarationTransformer extends AbstractNodeTransformer {
                 .replace(replaceableIdentifier.name, lexicalScopeNode);
 
             replaceableIdentifier.name = newReplaceableIdentifier.name;
-            NodeMetadata.set(replaceableIdentifier, { renamedIdentifier: true });
         });
     }
 

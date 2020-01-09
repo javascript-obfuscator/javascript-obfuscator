@@ -7,7 +7,9 @@ import { TIdentifierNamesGeneratorFactory } from '../../types/container/generato
 import { TStatement } from '../../types/node/TStatement';
 
 import { IOptions } from '../../interfaces/options/IOptions';
+import { IPrevailingKindOfVariablesAnalyzer } from '../../interfaces/analyzers/calls-graph-analyzer/IPrevailingKindOfVariablesAnalyzer';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { ITemplateFormatter } from '../../interfaces/utils/ITemplateFormatter';
 
 import { initializable } from '../../decorators/Initializable';
 
@@ -31,6 +33,11 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
     private originalKeysIndexesInShuffledArray!: number[];
 
     /**
+     * @type {ESTree.VariableDeclaration['kind']}
+     */
+    private readonly prevailingKindOfVariables: ESTree.VariableDeclaration['kind'];
+
+    /**
      * @type {number[]}
      */
     @initializable()
@@ -38,16 +45,23 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
+     * @param {ITemplateFormatter} templateFormatter
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
+     * @param {IPrevailingKindOfVariablesAnalyzer} prevailingKindOfVariablesAnalyzer
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        @inject(ServiceIdentifiers.ITemplateFormatter) templateFormatter: ITemplateFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
-        @inject(ServiceIdentifiers.IOptions) options: IOptions
+        @inject(ServiceIdentifiers.IOptions) options: IOptions,
+        @inject(ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer)
+            prevailingKindOfVariablesAnalyzer: IPrevailingKindOfVariablesAnalyzer,
     ) {
-        super(identifierNamesGeneratorFactory, randomGenerator, options);
+        super(identifierNamesGeneratorFactory, templateFormatter, randomGenerator, options);
+
+        this.prevailingKindOfVariables = prevailingKindOfVariablesAnalyzer.getPrevailingKind();
     }
 
     /**
@@ -72,26 +86,29 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
         const controllerIdentifierName: string = this.randomGenerator.getRandomString(6);
         const indexIdentifierName: string = this.randomGenerator.getRandomString(6);
         const structure: ESTree.BlockStatement = NodeFactory.blockStatementNode([
-            NodeFactory.variableDeclarationNode([
-                NodeFactory.variableDeclaratorNode(
-                    NodeFactory.identifierNode(controllerIdentifierName),
-                    NodeFactory.callExpressionNode(
-                        NodeFactory.memberExpressionNode(
-                            NodeFactory.literalNode(
-                                this.originalKeysIndexesInShuffledArray.join('|')
+            NodeFactory.variableDeclarationNode(
+                [
+                    NodeFactory.variableDeclaratorNode(
+                        NodeFactory.identifierNode(controllerIdentifierName),
+                        NodeFactory.callExpressionNode(
+                            NodeFactory.memberExpressionNode(
+                                NodeFactory.literalNode(
+                                    this.originalKeysIndexesInShuffledArray.join('|')
+                                ),
+                                NodeFactory.identifierNode('split')
                             ),
-                            NodeFactory.identifierNode('split')
-                        ),
-                        [
-                            NodeFactory.literalNode('|')
-                        ]
+                            [
+                                NodeFactory.literalNode('|')
+                            ]
+                        )
+                    ),
+                    NodeFactory.variableDeclaratorNode(
+                        NodeFactory.identifierNode(indexIdentifierName),
+                        NodeFactory.literalNode(0)
                     )
-                ),
-                NodeFactory.variableDeclaratorNode(
-                    NodeFactory.identifierNode(indexIdentifierName),
-                    NodeFactory.literalNode(0)
-                )
-            ]),
+                ],
+                this.prevailingKindOfVariables
+            ),
             NodeFactory.whileStatementNode(
                 NodeFactory.literalNode(true),
                 NodeFactory.blockStatementNode([

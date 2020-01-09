@@ -3,18 +3,20 @@
  */
 export function Rc4Template (): string {
     return `
-        var rc4 = function (str, key) {
-            var s = [], j = 0, x, res = '', newStr = '';
+        const rc4 = function (str, key) {
+            let s = [], j = 0, x, res = '', newStr = '';
            
             str = atob(str);
                 
-            for (var k = 0, length = str.length; k < length; k++) {
+            for (let k = 0, length = str.length; k < length; k++) {
                 newStr += '%' + ('00' + str.charCodeAt(k).toString(16)).slice(-2);
             }
         
             str = decodeURIComponent(newStr);
+                    	     
+            let i;
                     	        
-	        for (var i = 0; i < 256; i++) {
+	        for (i = 0; i < 256; i++) {
                 s[i] = i;
             }
  
@@ -28,7 +30,7 @@ export function Rc4Template (): string {
             i = 0;
             j = 0;
             
-            for (var y = 0; y < str.length; y++) {
+            for (let y = 0; y < str.length; y++) {
                 i = (i + 1) % 256;
                 j = (j + s[i]) % 256;
                 x = s[i];

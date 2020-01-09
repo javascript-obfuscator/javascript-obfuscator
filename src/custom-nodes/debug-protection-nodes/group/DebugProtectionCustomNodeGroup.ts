@@ -3,6 +3,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
+import { TInitialData } from '../../../types/TInitialData';
 import { TNodeWithStatements } from '../../../types/node/TNodeWithStatements';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
@@ -16,7 +17,11 @@ import { CustomNode } from '../../../enums/custom-nodes/CustomNode';
 import { ObfuscationEvent } from '../../../enums/event-emitters/ObfuscationEvent';
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
+import { DebugProtectionFunctionNode } from '../DebugProtectionFunctionNode';
+import { DebugProtectionFunctionCallNode } from '../DebugProtectionFunctionCallNode';
+import { DebugProtectionFunctionIntervalNode } from '../DebugProtectionFunctionIntervalNode';
 import { NodeAppender } from '../../../node/NodeAppender';
+import { NodeCallsControllerFunctionNode } from '../../node-calls-controller-nodes/NodeCallsControllerFunctionNode';
 import { NodeGuards } from '../../../node/NodeGuards';
 
 @injectable()
@@ -107,10 +112,14 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
         const debugProtectionFunctionName: string = this.identifierNamesGenerator.generate();
         const callsControllerFunctionName: string = this.identifierNamesGenerator.generate();
 
-        const debugProtectionFunctionNode: ICustomNode = this.customNodeFactory(CustomNode.DebugProtectionFunctionNode);
-        const debugProtectionFunctionCallNode: ICustomNode = this.customNodeFactory(CustomNode.DebugProtectionFunctionCallNode);
-        const debugProtectionFunctionIntervalNode: ICustomNode = this.customNodeFactory(CustomNode.DebugProtectionFunctionIntervalNode);
-        const nodeCallsControllerFunctionNode: ICustomNode = this.customNodeFactory(CustomNode.NodeCallsControllerFunctionNode);
+        const debugProtectionFunctionNode: ICustomNode<TInitialData<DebugProtectionFunctionNode>> =
+            this.customNodeFactory(CustomNode.DebugProtectionFunctionNode);
+        const debugProtectionFunctionCallNode: ICustomNode<TInitialData<DebugProtectionFunctionCallNode>> =
+            this.customNodeFactory(CustomNode.DebugProtectionFunctionCallNode);
+        const debugProtectionFunctionIntervalNode: ICustomNode<TInitialData<DebugProtectionFunctionIntervalNode>> =
+            this.customNodeFactory(CustomNode.DebugProtectionFunctionIntervalNode);
+        const nodeCallsControllerFunctionNode: ICustomNode<TInitialData<NodeCallsControllerFunctionNode>> =
+            this.customNodeFactory(CustomNode.NodeCallsControllerFunctionNode);
 
         debugProtectionFunctionNode.initialize(debugProtectionFunctionName);
         debugProtectionFunctionCallNode.initialize(debugProtectionFunctionName, callsControllerFunctionName);

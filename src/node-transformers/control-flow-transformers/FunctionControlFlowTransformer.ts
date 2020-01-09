@@ -8,6 +8,7 @@ import { TControlFlowCustomNodeFactory } from '../../types/container/custom-node
 import { TControlFlowReplacerFactory } from '../../types/container/node-transformers/TControlFlowReplacerFactory';
 import { TControlFlowStorage } from '../../types/storages/TControlFlowStorage';
 import { TControlFlowStorageFactory } from '../../types/container/node-transformers/TControlFlowStorageFactory';
+import { TInitialData } from '../../types/TInitialData';
 import { TNodeWithStatements } from '../../types/node/TNodeWithStatements';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
@@ -21,6 +22,7 @@ import { NodeType } from '../../enums/node/NodeType';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
+import { ControlFlowStorageNode } from '../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/ControlFlowStorageNode';
 import { NodeAppender } from '../../node/NodeAppender';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeMetadata } from '../../node/NodeMetadata';
@@ -151,9 +153,8 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
             return functionNode;
         }
 
-        const controlFlowStorageCustomNode: ICustomNode = this.controlFlowCustomNodeFactory(
-            ControlFlowCustomNode.ControlFlowStorageNode
-        );
+        const controlFlowStorageCustomNode: ICustomNode<TInitialData<ControlFlowStorageNode>> =
+            this.controlFlowCustomNodeFactory(ControlFlowCustomNode.ControlFlowStorageNode);
 
         controlFlowStorageCustomNode.initialize(controlFlowStorage);
         NodeAppender.prepend(hostNode, controlFlowStorageCustomNode.getNode());

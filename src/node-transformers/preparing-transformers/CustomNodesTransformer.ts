@@ -11,6 +11,7 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { ICallsGraphAnalyzer } from '../../interfaces/analyzers/calls-graph-analyzer/ICallsGraphAnalyzer';
 import { ICallsGraphData } from '../../interfaces/analyzers/calls-graph-analyzer/ICallsGraphData';
+import { IPrevailingKindOfVariablesAnalyzer } from '../../interfaces/analyzers/calls-graph-analyzer/IPrevailingKindOfVariablesAnalyzer';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { ObfuscationEvent } from '../../enums/event-emitters/ObfuscationEvent';
@@ -45,7 +46,13 @@ export class CustomNodesTransformer extends AbstractNodeTransformer {
     private callsGraphData: ICallsGraphData[] = [];
 
     /**
+     * @type {IPrevailingKindOfVariablesAnalyzer}
+     */
+    private readonly prevailingKindOfVariablesAnalyzer: IPrevailingKindOfVariablesAnalyzer;
+
+    /**
      * @param {ICallsGraphAnalyzer} callsGraphAnalyzer
+     * @param {IPrevailingKindOfVariablesAnalyzer} prevailingKindOfVariablesAnalyzer
      * @param {IObfuscationEventEmitter} obfuscationEventEmitter
      * @param {TCustomNodeGroupStorage} customNodeGroupStorage
      * @param {IRandomGenerator} randomGenerator
@@ -53,6 +60,8 @@ export class CustomNodesTransformer extends AbstractNodeTransformer {
      */
     constructor (
         @inject(ServiceIdentifiers.ICallsGraphAnalyzer) callsGraphAnalyzer: ICallsGraphAnalyzer,
+        @inject(ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer)
+            prevailingKindOfVariablesAnalyzer: IPrevailingKindOfVariablesAnalyzer,
         @inject(ServiceIdentifiers.IObfuscationEventEmitter) obfuscationEventEmitter: IObfuscationEventEmitter,
         @inject(ServiceIdentifiers.TCustomNodeGroupStorage) customNodeGroupStorage: TCustomNodeGroupStorage,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -61,6 +70,7 @@ export class CustomNodesTransformer extends AbstractNodeTransformer {
         super(randomGenerator, options);
 
         this.callsGraphAnalyzer = callsGraphAnalyzer;
+        this.prevailingKindOfVariablesAnalyzer = prevailingKindOfVariablesAnalyzer;
         this.obfuscationEventEmitter = obfuscationEventEmitter;
         this.customNodeGroupStorage = customNodeGroupStorage;
     }
@@ -103,6 +113,7 @@ export class CustomNodesTransformer extends AbstractNodeTransformer {
      */
     public analyzeNode (node: ESTree.Program, parentNode: ESTree.Node | null): void {
         this.callsGraphData = this.callsGraphAnalyzer.analyze(node);
+        this.prevailingKindOfVariablesAnalyzer.analyze(node);
     }
 
     /**

@@ -3,17 +3,17 @@
  */
 export function DomainLockNodeTemplate (): string {
     return `
-        var {domainLockFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {
+        const {domainLockFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {
             
             {globalVariableTemplate}
             
-            var func = function () {
+            const func = function () {
                 return {
                     key: 'item',
                     value: 'attribute',
                     getAttribute: function () {
-                        for (var i = 0; i < 1000; i--) {
-                            var isPositive = i > 0;
+                        for (let i = 0; i < 1000; i--) {
+                            const isPositive = i > 0;
                             
                             switch (isPositive) {
                                 case true:
@@ -26,14 +26,14 @@ export function DomainLockNodeTemplate (): string {
                 };
             };
                         
-            var regExp = new RegExp("[{diff}]", "g");
-            var domains = "{domains}".replace(regExp, "").split(";");
-            var document;
-            var domain;
-            var location;
-            var hostname;
+            const regExp = new RegExp("[{diff}]", "g");
+            const domains = "{domains}".replace(regExp, "").split(";");
+            let document;
+            let domain;
+            let location;
+            let hostname;
 
-            for (var d in that) {
+            for (let d in that) {
                 if (d.length == 8 && d.charCodeAt(7) == 116 && d.charCodeAt(5) == 101 && d.charCodeAt(3) == 117 && d.charCodeAt(0) == 100) {
                     document = d;
                 
@@ -41,7 +41,7 @@ export function DomainLockNodeTemplate (): string {
                 }
             }
 
-            for (var d1 in that[document]) {
+            for (let d1 in that[document]) {
                 if (d1.length == 6 && d1.charCodeAt(5) == 110 && d1.charCodeAt(0) == 100) {
                     domain = d1;
                     
@@ -50,7 +50,7 @@ export function DomainLockNodeTemplate (): string {
             }
 
             if (!("~" > domain)) {
-                for (var d2 in that[document]) {
+                for (let d2 in that[document]) {
                     if (d2.length == 8 && d2.charCodeAt(7) == 110 && d2.charCodeAt(0) == 108) {
                         location = d2;
                         
@@ -58,7 +58,7 @@ export function DomainLockNodeTemplate (): string {
                     }
                 }
 
-                for (var d3 in that[document][location]) {
+                for (let d3 in that[document][location]) {
                     if (d3.length == 8 && d3.charCodeAt(7) == 101 && d3.charCodeAt(0) == 104) {
                         hostname = d3;
                         
@@ -71,21 +71,21 @@ export function DomainLockNodeTemplate (): string {
                 return;
             }
             
-            var documentDomain = that[document][domain];
-            var documentLocationHostName = !!that[document][location] && that[document][location][hostname];
-            var currentDomain = documentDomain || documentLocationHostName;
+            const documentDomain = that[document][domain];
+            const documentLocationHostName = !!that[document][location] && that[document][location][hostname];
+            const currentDomain = documentDomain || documentLocationHostName;
           
             if (!currentDomain) {
                 return;
             }
           
-            var ok = false;
+            let ok = false;
                         
-            for (var i = 0; i < domains.length; i++) {
-                var domain = domains[i];
-                var position = currentDomain.length - domain.length;
-                var lastIndex = currentDomain.indexOf(domain, position);
-                var endsWith = lastIndex !== -1 && lastIndex === position;
+            for (let i = 0; i < domains.length; i++) {
+                const domain = domains[i];
+                const position = currentDomain.length - domain.length;
+                const lastIndex = currentDomain.indexOf(domain, position);
+                const endsWith = lastIndex !== -1 && lastIndex === position;
                 
                 if (endsWith) {
                     if (currentDomain.length == domain.length || domain.indexOf(".") === 0) {

@@ -268,5 +268,76 @@ describe('FunctionControlFlowTransformer', function () {
                 });
             });
         });
+
+        describe('prevailing kind of variables', () => {
+            describe('Variant #1 - `var` kind', () => {
+                const regexp: RegExp = new RegExp(`var *${variableMatch} *= *\\{`);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-var.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            controlFlowFlattening: true,
+                            controlFlowFlatteningThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should use correct kind of variables for `control flow storage`', () => {
+                    assert.match(obfuscatedCode, regexp);
+                });
+            });
+
+            describe('Variant #2 - `const` kind', () => {
+                const regexp: RegExp = new RegExp(`const *${variableMatch} *= *\\{`);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-const.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            controlFlowFlattening: true,
+                            controlFlowFlatteningThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should use correct kind of variables for `control flow storage`', () => {
+                    assert.match(obfuscatedCode, regexp);
+                });
+            });
+
+            describe('Variant #3 - `let` kind', () => {
+                const regexp: RegExp = new RegExp(`let *${variableMatch} *= *\\{`);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-let.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            controlFlowFlattening: true,
+                            controlFlowFlatteningThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should use correct kind of variables for `control flow storage`', () => {
+                    assert.match(obfuscatedCode, regexp);
+                });
+            });
+        });
     });
 });

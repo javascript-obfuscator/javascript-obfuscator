@@ -9,7 +9,9 @@ import { TStatement } from '../../../types/node/TStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../../interfaces/options/IOptions';
+import { IPrevailingKindOfVariablesAnalyzer } from '../../../interfaces/analyzers/calls-graph-analyzer/IPrevailingKindOfVariablesAnalyzer';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
+import { ITemplateFormatter } from '../../../interfaces/utils/ITemplateFormatter';
 
 import { initializable } from '../../../decorators/Initializable';
 
@@ -27,17 +29,29 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
     private controlFlowStorage!: TControlFlowStorage;
 
     /**
+     * @type {ESTree.VariableDeclaration['kind']}
+     */
+    private readonly prevailingKindOfVariables: ESTree.VariableDeclaration['kind'];
+
+    /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
+     * @param {ITemplateFormatter} templateFormatter
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
+     * @param {IPrevailingKindOfVariablesAnalyzer} prevailingKindOfVariablesAnalyzer
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
+        @inject(ServiceIdentifiers.ITemplateFormatter) templateFormatter: ITemplateFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
-        @inject(ServiceIdentifiers.IOptions) options: IOptions
+        @inject(ServiceIdentifiers.IOptions) options: IOptions,
+        @inject(ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer)
+            prevailingKindOfVariablesAnalyzer: IPrevailingKindOfVariablesAnalyzer
     ) {
-        super(identifierNamesGeneratorFactory, randomGenerator, options);
+        super(identifierNamesGeneratorFactory, templateFormatter, randomGenerator, options);
+
+        this.prevailingKindOfVariables = prevailingKindOfVariablesAnalyzer.getPrevailingKind();
     }
 
     /**
@@ -66,12 +80,15 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
                 );
             });
 
-        let structure: ESTree.Node = NodeFactory.variableDeclarationNode([
-            NodeFactory.variableDeclaratorNode(
-                NodeFactory.identifierNode(this.controlFlowStorage.getStorageId()),
-                NodeFactory.objectExpressionNode(propertyNodes)
-            )
-        ]);
+        let structure: ESTree.Node = NodeFactory.variableDeclarationNode(
+            [
+                NodeFactory.variableDeclaratorNode(
+                    NodeFactory.identifierNode(this.controlFlowStorage.getStorageId()),
+                    NodeFactory.objectExpressionNode(propertyNodes)
+                )
+            ],
+            this.prevailingKindOfVariables
+        );
 
         structure = NodeUtils.parentizeAst(structure);
 

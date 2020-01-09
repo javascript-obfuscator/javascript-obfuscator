@@ -3,6 +3,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
+import { TInitialData } from '../../../types/TInitialData';
 import { TNodeWithStatements } from '../../../types/node/TNodeWithStatements';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
@@ -16,7 +17,9 @@ import { CustomNode } from '../../../enums/custom-nodes/CustomNode';
 import { ObfuscationEvent } from '../../../enums/event-emitters/ObfuscationEvent';
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
+import { ConsoleOutputDisableExpressionNode } from '../ConsoleOutputDisableExpressionNode';
 import { NodeAppender } from '../../../node/NodeAppender';
+import { NodeCallsControllerFunctionNode } from '../../node-calls-controller-nodes/NodeCallsControllerFunctionNode';
 
 @injectable()
 export class ConsoleOutputCustomNodeGroup extends AbstractCustomNodeGroup {
@@ -90,8 +93,10 @@ export class ConsoleOutputCustomNodeGroup extends AbstractCustomNodeGroup {
 
         const callsControllerFunctionName: string = this.identifierNamesGenerator.generate();
 
-        const consoleOutputDisableExpressionNode: ICustomNode = this.customNodeFactory(CustomNode.ConsoleOutputDisableExpressionNode);
-        const nodeCallsControllerFunctionNode: ICustomNode = this.customNodeFactory(CustomNode.NodeCallsControllerFunctionNode);
+        const consoleOutputDisableExpressionNode: ICustomNode<TInitialData<ConsoleOutputDisableExpressionNode>> =
+            this.customNodeFactory(CustomNode.ConsoleOutputDisableExpressionNode);
+        const nodeCallsControllerFunctionNode: ICustomNode<TInitialData<NodeCallsControllerFunctionNode>> =
+            this.customNodeFactory(CustomNode.NodeCallsControllerFunctionNode);
 
         consoleOutputDisableExpressionNode.initialize(callsControllerFunctionName);
         nodeCallsControllerFunctionNode.initialize(this.appendEvent, callsControllerFunctionName);

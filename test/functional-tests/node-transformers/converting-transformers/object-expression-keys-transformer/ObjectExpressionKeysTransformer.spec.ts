@@ -316,7 +316,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                 const match: string = `` +
                     `var *${variableMatch} *= *{};` +
                     `${variableMatch}\\['foo'] *= *'foo';` +
-                    `const *${variableMatch} *= *${variableMatch}, *` +
+                    `var *${variableMatch} *= *${variableMatch}, *` +
                     `${variableMatch} *= *${variableMatch}\\['foo'];` +
                 ``;
                 const regExp: RegExp = new RegExp(match);
@@ -344,7 +344,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                 const match: string = `` +
                     `var *${variableMatch} *= *{};` +
                     `${variableMatch}\\['foo'] *= *'foo';` +
-                    `const *${variableMatch} *= *${variableMatch}, *` +
+                    `var *${variableMatch} *= *${variableMatch}, *` +
                     `${variableMatch} *= *\\[${variableMatch}\\['foo']];` +
                 ``;
                 const regExp: RegExp = new RegExp(match);
@@ -959,7 +959,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                 const match: string = `` +
                     `var *${variableMatch} *= *{};` +
                     `${variableMatch}\\['bar'] *= *'bar';` +
-                    `const *${variableMatch} *= *{}, *` +
+                    `var *${variableMatch} *= *{}, *` +
                         `${variableMatch} *= *${variableMatch}, *` +
                         `${variableMatch} *= *${variableMatch}\\['bar']; *` +
                     `${variableMatch}\\['foo'] *= *'foo';` +
@@ -984,6 +984,89 @@ describe('ObjectExpressionKeysTransformer', () => {
                 it('should correctly transform objects keys', () => {
                     assert.match(obfuscatedCode,  regExp);
                 });
+            });
+        });
+    });
+
+    describe('prevailing kind of variables', () => {
+        describe('Variant #1: `var` kind`', () => {
+            const match: string = `` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['foo'] *= *'bar';` +
+                `${variableMatch}\\['baz'] *= *'bark';` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-var.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should use correct kind of variables', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        describe('Variant #2: `const` kind`', () => {
+            const match: string = `` +
+                `const *${variableMatch} *= *{};` +
+                `${variableMatch}\\['foo'] *= *'bar';` +
+                `${variableMatch}\\['baz'] *= *'bark';` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-const.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should use correct kind of variables', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        describe('Variant #3: `let` kind`', () => {
+            const match: string = `` +
+                `let *${variableMatch} *= *{};` +
+                `${variableMatch}\\['foo'] *= *'bar';` +
+                `${variableMatch}\\['baz'] *= *'bark';` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-let.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should use correct kind of variables', () => {
+                assert.match(obfuscatedCode,  regExp);
             });
         });
     });

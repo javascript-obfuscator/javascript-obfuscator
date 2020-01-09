@@ -4,7 +4,7 @@
 export function DebuggerTemplateNoEval (): string {
     return `
         if (typeof counter === 'string') {
-            var func = function () {
+            const func = function () {
                 while (true) {}
             };
             

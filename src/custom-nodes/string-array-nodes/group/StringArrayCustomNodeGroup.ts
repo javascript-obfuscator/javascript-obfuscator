@@ -3,6 +3,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import { TCustomNodeFactory } from '../../../types/container/custom-nodes/TCustomNodeFactory';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
+import { TInitialData } from '../../../types/TInitialData';
 import { TNodeWithStatements } from '../../../types/node/TNodeWithStatements';
 import { TStringArrayStorage } from '../../../types/storages/TStringArrayStorage';
 
@@ -18,6 +19,9 @@ import { ObfuscationEvent } from '../../../enums/event-emitters/ObfuscationEvent
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
 import { NodeAppender } from '../../../node/NodeAppender';
+import { StringArrayNode } from '../StringArrayNode';
+import { StringArrayCallsWrapper } from '../StringArrayCallsWrapper';
+import { StringArrayRotateFunctionNode } from '../StringArrayRotateFunctionNode';
 
 @injectable()
 export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
@@ -95,9 +99,12 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
             return;
         }
 
-        const stringArrayNode: ICustomNode = this.customNodeFactory(CustomNode.StringArrayNode);
-        const stringArrayCallsWrapper: ICustomNode = this.customNodeFactory(CustomNode.StringArrayCallsWrapper);
-        const stringArrayRotateFunctionNode: ICustomNode = this.customNodeFactory(CustomNode.StringArrayRotateFunctionNode);
+        const stringArrayNode: ICustomNode<TInitialData<StringArrayNode>> =
+            this.customNodeFactory(CustomNode.StringArrayNode);
+        const stringArrayCallsWrapper: ICustomNode<TInitialData<StringArrayCallsWrapper>> =
+            this.customNodeFactory(CustomNode.StringArrayCallsWrapper);
+        const stringArrayRotateFunctionNode: ICustomNode<TInitialData<StringArrayRotateFunctionNode>> =
+            this.customNodeFactory(CustomNode.StringArrayRotateFunctionNode);
 
         const stringArrayStorageId: string = this.stringArrayStorage.getStorageId();
 

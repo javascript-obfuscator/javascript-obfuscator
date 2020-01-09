@@ -6,6 +6,12 @@ export interface IArrayUtils {
     createWithRange (length: number): number[];
 
     /**
+     * @param {T[]} array
+     * @returns {T | null}
+     */
+    findMostOccurringElement <T extends string | number> (array: T[]): T | null;
+
+    /**
      * @param array
      * @param times
      * @returns {T[]}

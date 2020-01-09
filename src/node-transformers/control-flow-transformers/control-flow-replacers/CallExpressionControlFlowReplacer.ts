@@ -5,6 +5,7 @@ import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
 import { TControlFlowStorage } from '../../../types/storages/TControlFlowStorage';
+import { TInitialData } from '../../../types/TInitialData';
 import { TStatement } from '../../../types/node/TStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
@@ -14,6 +15,8 @@ import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCustomNode';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
+import { CallExpressionFunctionNode } from '../../../custom-nodes/control-flow-flattening-nodes/CallExpressionFunctionNode';
+import { CallExpressionControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/CallExpressionControlFlowStorageCallNode';
 import { NodeGuards } from '../../../node/NodeGuards';
 
 @injectable()
@@ -55,9 +58,8 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
         }
 
         const replacerId: string = String(callExpressionNode.arguments.length);
-        const callExpressionFunctionCustomNode: ICustomNode = this.controlFlowCustomNodeFactory(
-            ControlFlowCustomNode.CallExpressionFunctionNode
-        );
+        const callExpressionFunctionCustomNode: ICustomNode<TInitialData<CallExpressionFunctionNode>> =
+            this.controlFlowCustomNodeFactory(ControlFlowCustomNode.CallExpressionFunctionNode);
         const expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[] = callExpressionNode.arguments;
 
         callExpressionFunctionCustomNode.initialize(expressionArguments);
@@ -90,9 +92,8 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
         callee: ESTree.Expression,
         expressionArguments: (ESTree.Expression | ESTree.SpreadElement)[]
     ): ESTree.Node {
-        const controlFlowStorageCallCustomNode: ICustomNode = this.controlFlowCustomNodeFactory(
-            ControlFlowCustomNode.CallExpressionControlFlowStorageCallNode
-        );
+        const controlFlowStorageCallCustomNode: ICustomNode<TInitialData<CallExpressionControlFlowStorageCallNode>> =
+            this.controlFlowCustomNodeFactory(ControlFlowCustomNode.CallExpressionControlFlowStorageCallNode);
 
         controlFlowStorageCallCustomNode.initialize(controlFlowStorageId, storageKey, callee, expressionArguments);
 

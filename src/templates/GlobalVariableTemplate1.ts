@@ -3,10 +3,10 @@
  */
 export function GlobalVariableTemplate1 (): string {
     return `
-        var that;
+        let that;
         
         try {
-            var getGlobal = Function('return (function() ' + '{}.constructor("return this")( )' + ');');
+            const getGlobal = Function('return (function() ' + '{}.constructor("return this")( )' + ');');
             
             that = getGlobal();
         } catch (e) {

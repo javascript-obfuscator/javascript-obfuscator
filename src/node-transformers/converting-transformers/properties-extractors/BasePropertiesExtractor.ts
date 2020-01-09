@@ -8,12 +8,14 @@ import { TObjectExpressionKeysTransformerCustomNodeFactory } from '../../../type
 import { TStatement } from '../../../types/node/TStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { TInitialData } from '../../../types/TInitialData';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 
 import { ObjectExpressionKeysTransformerCustomNode } from '../../../enums/custom-nodes/ObjectExpressionKeysTransformerCustomNode';
 
 import { AbstractPropertiesExtractor } from './AbstractPropertiesExtractor';
+import { BasePropertiesExtractorObjectExpressionHostNode } from '../../../custom-nodes/object-expression-keys-transformer-nodes/BasePropertiesExtractorObjectExpressionHostNode';
 import { NodeAppender } from '../../../node/NodeAppender';
 import { NodeGuards } from '../../../node/NodeGuards';
 
@@ -92,9 +94,10 @@ export class BasePropertiesExtractor extends AbstractPropertiesExtractor {
      * @returns {VariableDeclaration}
      */
     private getObjectExpressionHostNode (): ESTree.VariableDeclaration {
-        const objectExpressionHostCustomNode: ICustomNode = this.objectExpressionKeysTransformerCustomNodeFactory(
-            ObjectExpressionKeysTransformerCustomNode.BasePropertiesExtractorObjectExpressionHostNode
-        );
+        const objectExpressionHostCustomNode: ICustomNode<TInitialData<BasePropertiesExtractorObjectExpressionHostNode>> =
+            this.objectExpressionKeysTransformerCustomNodeFactory(
+                ObjectExpressionKeysTransformerCustomNode.BasePropertiesExtractorObjectExpressionHostNode
+            );
 
         objectExpressionHostCustomNode.initialize();
 

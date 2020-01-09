@@ -23,7 +23,7 @@ export function SelfDefendingTemplate (
     const stateResultIdentifier: string = randomGenerator.getRandomString(identifierLength);
     
     return `
-        var StatesClass = function (${rc4BytesIdentifier}) {
+        const StatesClass = function (${rc4BytesIdentifier}) {
             this.${rc4BytesIdentifier} = ${rc4BytesIdentifier};
             this.${statesIdentifier} = [1, 0, 0];
             this.${newStateIdentifier} = function(){return 'newState';};
@@ -36,8 +36,8 @@ export function SelfDefendingTemplate (
         };
         
         StatesClass.prototype.${checkStateIdentifier} = function () {
-            var regExp = new RegExp(this.${firstStateIdentifier} + this.${secondStateIdentifier});
-            var expression = regExp.test(this.${newStateIdentifier}.toString())
+            const regExp = new RegExp(this.${firstStateIdentifier} + this.${secondStateIdentifier});
+            const expression = regExp.test(this.${newStateIdentifier}.toString())
                 ? --this.${statesIdentifier}[1]
                 : --this.${statesIdentifier}[0];
             
@@ -53,7 +53,7 @@ export function SelfDefendingTemplate (
         };
 
         StatesClass.prototype.${getStateIdentifier} = function (${rc4BytesIdentifier}) {
-            for (var i = 0, len = this.${statesIdentifier}.length; i < len; i++) {
+            for (let i = 0, len = this.${statesIdentifier}.length; i < len; i++) {
                 this.${statesIdentifier}.push(Math.round(Math.random()));
                 len = this.${statesIdentifier}.length;
             }

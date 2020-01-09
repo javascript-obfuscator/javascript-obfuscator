@@ -4,17 +4,24 @@ import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { ICalleeDataExtractor } from '../../../interfaces/analyzers/calls-graph-analyzer/ICalleeDataExtractor';
 import { ICallsGraphAnalyzer } from '../../../interfaces/analyzers/calls-graph-analyzer/ICallsGraphAnalyzer';
+import { IPrevailingKindOfVariablesAnalyzer } from '../../../interfaces/analyzers/calls-graph-analyzer/IPrevailingKindOfVariablesAnalyzer';
 
 import { CalleeDataExtractor } from '../../../enums/analyzers/calls-graph-analyzer/CalleeDataExtractor';
 import { CallsGraphAnalyzer } from '../../../analyzers/calls-graph-analyzer/CallsGraphAnalyzer';
 import { FunctionDeclarationCalleeDataExtractor } from '../../../analyzers/calls-graph-analyzer/callee-data-extractors/FunctionDeclarationCalleeDataExtractor';
 import { FunctionExpressionCalleeDataExtractor } from '../../../analyzers/calls-graph-analyzer/callee-data-extractors/FunctionExpressionCalleeDataExtractor';
 import { ObjectExpressionCalleeDataExtractor } from '../../../analyzers/calls-graph-analyzer/callee-data-extractors/ObjectExpressionCalleeDataExtractor';
+import { PrevailingKindOfVariablesAnalyzer } from '../../../analyzers/prevailing-kind-of-variables-analyzer/PrevailingKindOfVariablesAnalyzer';
 
 export const analyzersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // calls graph analyzer
     bind<ICallsGraphAnalyzer>(ServiceIdentifiers.ICallsGraphAnalyzer)
         .to(CallsGraphAnalyzer)
+        .inSingletonScope();
+
+    // prevailing kind of variables analyzer
+    bind<IPrevailingKindOfVariablesAnalyzer>(ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer)
+        .to(PrevailingKindOfVariablesAnalyzer)
         .inSingletonScope();
 
     // callee data extractors

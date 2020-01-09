@@ -263,6 +263,10 @@ For example:
 * Obfuscation of the variable's name at its declaration is called direct transformation;
 * Obfuscation of the variable's name beyond its declaration is called child transformation.
 
+## Kind of variables
+
+Kind of variables of inserted nodes will auto-detected, based on most prevailing kind of variables of source code.
+
 ## Antiviruses false positive virus alerts
 
 Some input source code that will obfuscated with some obfuscation options can trigger false positive alerts in a few antiviruses. If you will get this false positive triggers, try to play with obfuscation options.
@@ -951,6 +955,10 @@ Likely this is `selfDefending` mechanism. Something is changing source code afte
 ### JSX support?
 
 No. JSX support isn't planned.
+
+### How to change kind of variables of inserted nodes (`var`, `let` or `const`)?
+
+See: [`Kind of variables`](#kind-of-variables)
 
 ## Backers
 

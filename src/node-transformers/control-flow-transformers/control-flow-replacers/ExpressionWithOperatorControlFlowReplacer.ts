@@ -4,6 +4,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 
 import { TControlFlowCustomNodeFactory } from '../../../types/container/custom-nodes/TControlFlowCustomNodeFactory';
+import { TInitialData } from '../../../types/TInitialData';
 import { TStatement } from '../../../types/node/TStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
@@ -13,6 +14,7 @@ import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCustomNode';
 
 import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
+import { ExpressionWithOperatorControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/ExpressionWithOperatorControlFlowStorageCallNode';
 import { NodeGuards } from '../../../node/NodeGuards';
 
 @injectable()
@@ -44,9 +46,8 @@ export abstract class ExpressionWithOperatorControlFlowReplacer extends Abstract
         leftExpression: ESTree.Expression,
         rightExpression: ESTree.Expression
     ): ESTree.Node {
-        const controlFlowStorageCallCustomNode: ICustomNode = this.controlFlowCustomNodeFactory(
-            ControlFlowCustomNode.ExpressionWithOperatorControlFlowStorageCallNode
-        );
+        const controlFlowStorageCallCustomNode: ICustomNode<TInitialData<ExpressionWithOperatorControlFlowStorageCallNode>> =
+            this.controlFlowCustomNodeFactory(ControlFlowCustomNode.ExpressionWithOperatorControlFlowStorageCallNode);
 
         controlFlowStorageCallCustomNode.initialize(controlFlowStorageId, storageKey, leftExpression, rightExpression);
 

@@ -185,6 +185,10 @@ var _0x8221 = function (_0xcac13e, _0x3627d7) {
 */
 ```
 
+## Kind of variables
+
+Kind of variables of inserted nodes will auto-detected, based on most prevailing kind of variables of source code.
+
 ### `obfuscate(sourceCode, options)`
 
 Returns `ObfuscationResult` object which contains two public methods:
@@ -951,6 +955,10 @@ Likely this is `selfDefending` mechanism. Something is changing source code afte
 ### JSX support?
 
 No. JSX support isn't planned.
+
+### How to change kind of variables of inserted nodes (`var`, `let` or `const`)?
+
+See: [`Kind of variables`](#kind-of-variables)
 
 ## Backers
 

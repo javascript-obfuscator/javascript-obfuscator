@@ -141,7 +141,10 @@ export class ImportDeclarationTransformer extends AbstractNodeTransformer {
             const newReplaceableIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
                 .replace(replaceableIdentifier.name, lexicalScopeNode);
 
-            replaceableIdentifier.name = newReplaceableIdentifier.name;
+            if (replaceableIdentifier.name !== newReplaceableIdentifier.name) {
+                replaceableIdentifier.name = newReplaceableIdentifier.name;
+                NodeMetadata.set(replaceableIdentifier, { renamedIdentifier: true });
+            }
         });
     }
 

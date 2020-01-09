@@ -51,7 +51,6 @@ import './functional-tests/custom-nodes/string-array-nodes/StringArrayRotateFunc
 import './functional-tests/custom-nodes/string-array-nodes/StringArrayNode.spec';
 import './functional-tests/issues/issue321.spec';
 import './functional-tests/issues/issue355.spec';
-import './functional-tests/issues/issue360.spec';
 import './functional-tests/issues/issue419.spec';
 import './functional-tests/issues/issue424.spec';
 import './functional-tests/issues/issue437.spec';

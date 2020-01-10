@@ -29241,7 +29241,7 @@
         var NumberFormatter = (function () {
             function NumberFormatter() {
             }
-            NumberFormatter.format = function (num, locale, style, _a) {
+            NumberFormatter.sanitizeTemplate = function (num, locale, style, _a) {
                 var _b = _a === void 0 ? {} : _a, minimumIntegerDigits = _b.minimumIntegerDigits, minimumFractionDigits = _b.minimumFractionDigits, maximumFractionDigits = _b.maximumFractionDigits, currency = _b.currency, _c = _b.currencyAsSymbol, currencyAsSymbol = _c === void 0 ? false : _c;
                 var options = {
                     minimumIntegerDigits: minimumIntegerDigits,
@@ -29415,7 +29415,7 @@
         var DateFormatter = (function () {
             function DateFormatter() {
             }
-            DateFormatter.format = function (date, locale, pattern) {
+            DateFormatter.sanitizeTemplate = function (date, locale, pattern) {
                 return dateFormatter(pattern, date, locale);
             };
             return DateFormatter;

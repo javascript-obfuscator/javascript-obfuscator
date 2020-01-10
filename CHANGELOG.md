@@ -1,5 +1,9 @@
 Change Log
 
+v0.22.1
+---
+* Fixed `TypeError: Assignment to constant variable` when auto-detection of kind of variables is inserted `const` variables for `controlFlowStorage` nodes
+
 v0.22.0
 ---
 * **Breaking:** auto-detection of kind of variables of inserted nodes, based on most prevailing kind of variables of source code

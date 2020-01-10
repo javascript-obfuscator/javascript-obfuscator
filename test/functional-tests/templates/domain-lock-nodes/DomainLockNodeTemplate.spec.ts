@@ -8,11 +8,16 @@ import { ServiceIdentifiers } from '../../../../src/container/ServiceIdentifiers
 
 import { ICryptUtils } from '../../../../src/interfaces/utils/ICryptUtils';
 import { IInversifyContainerFacade } from '../../../../src/interfaces/container/IInversifyContainerFacade';
+import { IObfuscatedCode } from '../../../../src/interfaces/source-code/IObfuscatedCode';
+
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
 
 import { DomainLockNodeTemplate } from '../../../../src/templates/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
 import { GlobalVariableTemplate1 } from '../../../../src/templates/GlobalVariableTemplate1';
 
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
+import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade';
+import { readFileAsString } from '../../../helpers/readFileAsString';
 
 /**
  * @param {string} currentDomain
@@ -518,6 +523,99 @@ describe('DomainLockNodeTemplate', () => {
 
             it('should throw an error', () => {
                 assert.throws(testFunc);
+            });
+        });
+    });
+
+    describe('Prevailing kind of variables', () => {
+        const getCodeTemplate = (obfuscatedCode: string) => `
+            global.document = {
+                domain: 'obfuscator.io'
+            };
+            ${obfuscatedCode}
+        `;
+
+        describe('`var` kind', () => {
+            let obfuscatedCode: string,
+                domainLockVariableRegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *new *RegExp/;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-var.js');
+                const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        domainLock: ['obfuscator.io'],
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }
+                );
+
+                obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+            });
+
+            it('Should return correct kind of variables for domain lock code', () => {
+                assert.match(obfuscatedCode, domainLockVariableRegExp);
+            });
+
+            it('Should does not break on obfuscating', () => {
+                assert.doesNotThrow(() => eval(getCodeTemplate(obfuscatedCode)));
+            });
+        });
+
+        describe('`const` kind', () => {
+            let obfuscatedCode: string,
+                domainLockVariableRegExp: RegExp = /const _0x([a-f0-9]){4,6} *= *new *RegExp/;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-const.js');
+                const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        domainLock: ['obfuscator.io'],
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }
+                );
+
+                obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+            });
+
+            it('Should return correct kind of variables for domain lock code', () => {
+                assert.match(obfuscatedCode, domainLockVariableRegExp);
+            });
+
+            it('Should does not break on obfuscating', () => {
+                assert.doesNotThrow(() => eval(getCodeTemplate(obfuscatedCode)));
+            });
+        });
+
+        describe('`let` kind', () => {
+            let obfuscatedCode: string,
+                domainLockVariableRegExp: RegExp = /const _0x([a-f0-9]){4,6} *= *new *RegExp/;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/prevailing-kind-of-variables-let.js');
+                const obfuscatedCodeObject: IObfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        domainLock: ['obfuscator.io'],
+                        stringArray: true,
+                        stringArrayThreshold: 1
+                    }
+                );
+
+                obfuscatedCode = obfuscatedCodeObject.getObfuscatedCode();
+            });
+
+            it('Should return correct kind of variables for domain lock code', () => {
+                assert.match(obfuscatedCode, domainLockVariableRegExp);
+            });
+
+            it('Should does not break on obfuscating', () => {
+                assert.doesNotThrow(() => eval(getCodeTemplate(obfuscatedCode)));
             });
         });
     });

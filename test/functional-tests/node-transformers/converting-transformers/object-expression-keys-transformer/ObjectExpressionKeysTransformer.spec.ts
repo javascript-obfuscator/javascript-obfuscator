@@ -1045,7 +1045,7 @@ describe('ObjectExpressionKeysTransformer', () => {
 
         describe('Variant #3: `let` kind`', () => {
             const match: string = `` +
-                `let *${variableMatch} *= *{};` +
+                `const *${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
                 `${variableMatch}\\['baz'] *= *'bark';` +
             ``;

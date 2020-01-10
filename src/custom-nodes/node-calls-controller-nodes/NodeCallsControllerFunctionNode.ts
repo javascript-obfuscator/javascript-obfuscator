@@ -18,7 +18,7 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../options/presets/NoCustomNodes'
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { JavaScriptObfuscator } from '../../JavaScriptObfuscatorFacade';
 import { NodeUtils } from '../../node/NodeUtils';
-import { ITemplateFormatter } from '../../interfaces/utils/ITemplateFormatter';
+import { ICustomNodeFormatter } from '../../interfaces/custom-nodes/ICustomNodeFormatter';
 
 @injectable()
 export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
@@ -36,18 +36,18 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
-     * @param {ITemplateFormatter} templateFormatter
+     * @param {ICustomNodeFormatter} customNodeFormatter
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
-        @inject(ServiceIdentifiers.ITemplateFormatter) templateFormatter: ITemplateFormatter,
+        @inject(ServiceIdentifiers.ICustomNodeFormatter) customNodeFormatter: ICustomNodeFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(identifierNamesGeneratorFactory, templateFormatter, randomGenerator, options);
+        super(identifierNamesGeneratorFactory, customNodeFormatter, randomGenerator, options);
     }
 
     /**
@@ -72,7 +72,7 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     protected getTemplate (): string {
         if (this.appendEvent === ObfuscationEvent.AfterObfuscation) {
             return JavaScriptObfuscator.obfuscate(
-                this.templateFormatter.format(SingleNodeCallControllerTemplate(), {
+                this.customNodeFormatter.formatTemplate(SingleNodeCallControllerTemplate(), {
                     singleNodeCallControllerFunctionName: this.callsControllerFunctionName
                 }),
                 {
@@ -84,7 +84,7 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
             ).getObfuscatedCode();
         }
 
-        return this.templateFormatter.format(SingleNodeCallControllerTemplate(), {
+        return this.customNodeFormatter.formatTemplate(SingleNodeCallControllerTemplate(), {
             singleNodeCallControllerFunctionName: this.callsControllerFunctionName
         });
     }

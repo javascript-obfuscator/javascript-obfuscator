@@ -1,6 +1,6 @@
 {
   "name": "javascript-obfuscator",
-  "version": "0.22.1",
+  "version": "0.23.0",
   "description": "JavaScript obfuscator",
   "keywords": [
     "obfuscator",
@@ -23,12 +23,12 @@
   "dependencies": {
     "@gradecam/tsenum": "1.2.0",
     "@nuxtjs/opencollective": "0.2.2",
+    "acorn": "^7.1.0",
     "chalk": "3.0.0",
     "chance": "1.1.4",
     "class-validator": "0.11.0",
     "commander": "4.1.0",
     "escodegen": "1.12.1",
-    "espree": "6.1.2",
     "estraverse": "4.3.0",
     "eventemitter3": "4.0.0",
     "inversify": "5.0.1",

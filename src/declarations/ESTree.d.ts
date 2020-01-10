@@ -1,10 +1,17 @@
 /* tslint:disable:interface-name */
 
+import * as acorn from 'acorn';
 import * as escodegen from 'escodegen';
 
 declare module 'estree' {
     export interface BaseNodeMetadata {
         ignoredNode?: boolean;
+    }
+
+    export interface Comment {
+        start: number;
+        end: number;
+        loc?: acorn.SourceLocation;
     }
 
     export interface IdentifierNodeMetadata extends BaseNodeMetadata {

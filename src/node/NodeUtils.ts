@@ -1,8 +1,8 @@
 import * as escodegen from 'escodegen';
-import * as espree from 'espree';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
+import { ASTParserFacade } from '../ASTParserFacade';
 import { NodeGuards } from './NodeGuards';
 import { NodeMetadata } from './NodeMetadata';
 
@@ -33,7 +33,7 @@ export class NodeUtils {
      * @returns {Statement[]}
      */
     public static convertCodeToStructure (code: string): ESTree.Statement[] {
-        const structure: ESTree.Program = espree.parse(code, {
+        const structure: ESTree.Program = ASTParserFacade.parse(code, {
             ecmaVersion: 10,
             sourceType: 'script'
         });

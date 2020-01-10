@@ -1,8 +1,8 @@
 import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from './container/ServiceIdentifiers';
 
+import * as acorn from 'acorn';
 import * as escodegen from 'escodegen';
-import * as espree from 'espree';
 import * as ESTree from 'estree';
 
 import { TObfuscatedCodeFactory } from './types/container/source-code/TObfuscatedCodeFactory';
@@ -19,7 +19,7 @@ import { LoggingMessage } from './enums/logger/LoggingMessage';
 import { NodeTransformer } from './enums/node-transformers/NodeTransformer';
 import { TransformationStage } from './enums/node-transformers/TransformationStage';
 
-import { EspreeFacade } from './EspreeFacade';
+import { ASTParserFacade } from './ASTParserFacade';
 import { NodeGuards } from './node/NodeGuards';
 
 @injectable()
@@ -27,11 +27,13 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
     /**
      * @type {Options}
      */
-    private static readonly espreeParseOptions: espree.ParseOptions = {
-        comment: true,
+    private static readonly parseOptions: acorn.Options = {
+        allowHashBang: true,
+        allowImportExportEverywhere: true,
+        allowReturnOutsideFunction: true,
         ecmaVersion: 10,
-        loc: true,
-        range: true
+        locations: true,
+        ranges: true
     };
 
     /**
@@ -149,7 +151,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @returns {Program}
      */
     private parseCode (sourceCode: string): ESTree.Program {
-        return EspreeFacade.parse(sourceCode, JavaScriptObfuscator.espreeParseOptions);
+        return ASTParserFacade.parse(sourceCode, JavaScriptObfuscator.parseOptions);
     }
 
     /**

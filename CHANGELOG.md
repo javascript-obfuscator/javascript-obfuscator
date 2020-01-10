@@ -1,5 +1,9 @@
 Change Log
 
+v0.23.0
+---
+* **Internal change:** switched AST parser from `espree` on `acorn`
+
 v0.22.1
 ---
 * Fixed `TypeError: Assignment to constant variable` when auto-detection of kind of variables is inserted `const` variables for `controlFlowStorage` nodes

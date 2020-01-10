@@ -1,7 +1,7 @@
 import { assert } from 'chai';
-import { EspreeFacade } from '../../../src/EspreeFacade';
+import { ASTParserFacade } from '../../../src/ASTParserFacade';
 
-describe('EspreeFacade', () => {
+describe('ASTParserFacade', () => {
     describe(`parse`, () => {
         describe(`\`Unexpected token\` error code preview`, () => {
             describe('Variant #1: 5 lines of code', () => {
@@ -15,11 +15,11 @@ describe('EspreeFacade', () => {
                 let testFunc: () => void;
 
                 before(() => {
-                    testFunc = () => EspreeFacade.parse(sourceCode, { ecmaVersion: 9 });
+                    testFunc = () => ASTParserFacade.parse(sourceCode, { ecmaVersion: 9 });
                 });
 
-                it('should output code preview when `espree` throws a parse error', () => {
-                    assert.throws(testFunc, /Line 3: Unexpected token ,\n.*\.\.\.var baz = 3;,\.\.\./);
+                it('should output code preview when AST parser throws a parse error', () => {
+                    assert.throws(testFunc, /Line 3: Unexpected token \(3:28\)\n.*\.\.\.var baz = 3;,\.\.\./);
                 });
             });
 
@@ -44,11 +44,11 @@ describe('EspreeFacade', () => {
                 let testFunc: () => void;
 
                 before(() => {
-                    testFunc = () => EspreeFacade.parse(sourceCode, { ecmaVersion: 9 });
+                    testFunc = () => ASTParserFacade.parse(sourceCode, { ecmaVersion: 9 });
                 });
 
-                it('should output code preview when `espree` throws a parse error', () => {
-                    assert.throws(testFunc, /Line 13: Unexpected token ,\n.*\.\.\.var baz = 3;,\.\.\./);
+                it('should output code preview when AST parser throws a parse error', () => {
+                    assert.throws(testFunc, /Line 13: Unexpected token \(13:28\)\n.*\.\.\.var baz = 3;,\.\.\./);
                 });
             });
         });
@@ -68,11 +68,11 @@ describe('EspreeFacade', () => {
             let testFunc: () => void;
 
             before(() => {
-                testFunc = () => EspreeFacade.parse(sourceCode, { ecmaVersion: 9 });
+                testFunc = () => ASTParserFacade.parse(sourceCode, { ecmaVersion: 9 });
             });
 
-            it('should output code preview when `espree` throws a parse error', () => {
-                assert.throws(testFunc, /Line 4: Unexpected token baz\n.*\.\.\.functin baz \(\) {\.\.\./);
+            it('should output code preview when AST parser throws a parse error', () => {
+                assert.throws(testFunc, /Line 4: Unexpected token \(4:24\)\n.*\.\.\.functin baz \(\) {\.\.\./);
             });
         });
     });

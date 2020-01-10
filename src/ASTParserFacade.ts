@@ -1,12 +1,12 @@
-import * as espree from 'espree';
+import * as acorn from 'acorn';
 import * as ESTree from 'estree';
 
 import chalk, { Chalk } from 'chalk';
 
 /**
- * Facade over `espree`
+ * Facade over AST parser `acorn`
  */
-export class EspreeFacade {
+export class ASTParserFacade {
     /**
      * @type {Chalk}
      */
@@ -18,9 +18,9 @@ export class EspreeFacade {
     private static readonly nearestSymbolsCount: number = 15;
 
     /**
-     * @type {SourceType[]}
+     * @type {acorn.Options['sourceType'][]}
      */
-    private static readonly sourceTypes: espree.SourceType[] = [
+    private static readonly sourceTypes: acorn.Options['sourceType'][] = [
         'script',
         'module'
     ];
@@ -30,45 +30,53 @@ export class EspreeFacade {
      * @param {Options} config
      * @returns {Program}
      */
-    public static parse (input: string, config: espree.ParseOptions): ESTree.Program | never {
-        const sourceTypeLength: number = EspreeFacade.sourceTypes.length;
+    public static parse (input: string, config: acorn.Options): ESTree.Program | never {
+        const sourceTypeLength: number = ASTParserFacade.sourceTypes.length;
 
         for (let i: number = 0; i < sourceTypeLength; i++) {
             try {
-                return EspreeFacade.parseType(input, config, EspreeFacade.sourceTypes[i]);
+                return ASTParserFacade.parseType(input, config, ASTParserFacade.sourceTypes[i]);
             } catch (error) {
                 if (i < sourceTypeLength - 1) {
                     continue;
                 }
 
-                throw new Error(EspreeFacade.processParsingError(
+                throw new Error(ASTParserFacade.processParsingError(
                     input,
                     error.message,
-                    {
-                        line: error.lineNumber,
-                        column: error.column,
-                    }
+                    error.loc
                 ));
             }
         }
 
-        throw new Error(`Espree parsing error`);
+        throw new Error(`Acorn parsing error`);
     }
 
     /**
      * @param {string} input
-     * @param {ParseOptions} inputConfig
-     * @param {SourceType} sourceType
+     * @param {acorn.Options} inputConfig
+     * @param {acorn.Options["sourceType"]} sourceType
      * @returns {Program}
      */
     private static parseType (
         input: string,
-        inputConfig: espree.ParseOptions,
-        sourceType: espree.SourceType
+        inputConfig: acorn.Options,
+        sourceType: acorn.Options['sourceType']
     ): ESTree.Program {
-        const config: espree.ParseOptions = { ...inputConfig, sourceType };
+        const comments: ESTree.Comment[] = [];
+        const config: acorn.Options = {
+            ...inputConfig,
+            onComment: comments,
+            sourceType
+        };
 
-        return espree.parse(input, config);
+        const program: ESTree.Program = <any>acorn.parse(input, config);
+
+        if (comments.length) {
+            program.comments = comments;
+        }
+
+        return program;
     }
 
     /**
@@ -89,10 +97,10 @@ export class EspreeFacade {
             throw new Error(errorMessage);
         }
 
-        const startErrorIndex: number = Math.max(0, position.column - EspreeFacade.nearestSymbolsCount);
-        const endErrorIndex: number = Math.min(errorLine.length, position.column + EspreeFacade.nearestSymbolsCount);
+        const startErrorIndex: number = Math.max(0, position.column - ASTParserFacade.nearestSymbolsCount);
+        const endErrorIndex: number = Math.min(errorLine.length, position.column + ASTParserFacade.nearestSymbolsCount);
 
-        const formattedPointer: string = EspreeFacade.colorError('>');
+        const formattedPointer: string = ASTParserFacade.colorError('>');
         const formattedCodeSlice: string = `...${
             errorLine.substring(startErrorIndex, endErrorIndex).replace(/^\s+/, '')
         }...`;

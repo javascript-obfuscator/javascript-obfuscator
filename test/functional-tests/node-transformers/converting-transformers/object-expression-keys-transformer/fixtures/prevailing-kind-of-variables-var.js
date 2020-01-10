@@ -1,5 +1,7 @@
+var test = 1;
+
 (function(){
-    var object = {
+    return {
         foo: 'bar',
         baz: 'bark'
     };

@@ -8,7 +8,7 @@ import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { IIdentifierNamesGenerator } from '../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
-import { ITemplateFormatter } from '../interfaces/utils/ITemplateFormatter';
+import { ICustomNodeFormatter } from '../interfaces/custom-nodes/ICustomNodeFormatter';
 
 import { GlobalVariableTemplate1 } from '../templates/GlobalVariableTemplate1';
 import { GlobalVariableTemplate2 } from '../templates/GlobalVariableTemplate2';
@@ -46,25 +46,25 @@ export abstract class AbstractCustomNode <
     protected readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @type {ITemplateFormatter}
+     * @type {ICustomNodeFormatter}
      */
-    protected readonly templateFormatter: ITemplateFormatter;
+    protected readonly customNodeFormatter: ICustomNodeFormatter;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
-     * @param {ITemplateFormatter} templateFormatter
+     * @param {ICustomNodeFormatter} customNodeFormatter
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     protected constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
-        @inject(ServiceIdentifiers.ITemplateFormatter) templateFormatter: ITemplateFormatter,
+        @inject(ServiceIdentifiers.ICustomNodeFormatter) customNodeFormatter: ICustomNodeFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
-        this.templateFormatter = templateFormatter;
+        this.customNodeFormatter = customNodeFormatter;
         this.randomGenerator = randomGenerator;
         this.options = options;
     }
@@ -79,7 +79,11 @@ export abstract class AbstractCustomNode <
      */
     public getNode (): TStatement[] {
         if (!this.cachedNode) {
-            this.cachedNode = this.getNodeStructure();
+            const nodeTemplate: string = this.getNodeTemplate();
+
+            this.cachedNode = this.customNodeFormatter.formatStructure(
+                this.getNodeStructure(nodeTemplate)
+            );
         }
 
         return this.cachedNode;
@@ -97,5 +101,12 @@ export abstract class AbstractCustomNode <
     /**
      * @returns {TStatement[]}
      */
-    protected abstract getNodeStructure (): TStatement[];
+    protected abstract getNodeStructure (nodeTemplate: string): TStatement[];
+
+    /**
+     * @returns {string}
+     */
+    protected getNodeTemplate (): string {
+        return '';
+    }
 }

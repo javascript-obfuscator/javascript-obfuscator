@@ -33,6 +33,10 @@ describe('StringArrayRotateFunctionTemplate', () => {
             it('Should return correct kind of variables for string array rotate function', () => {
                 assert.match(obfuscatedCode, stringArrayRotateFunctionRegExp);
             });
+
+            it('Should does not break on obfuscating', () => {
+                assert.doesNotThrow(() => obfuscatedCode);
+            });
         });
 
         describe('`const` kind', () => {
@@ -57,6 +61,10 @@ describe('StringArrayRotateFunctionTemplate', () => {
             it('Should return correct kind of variables for string array rotate function', () => {
                 assert.match(obfuscatedCode, stringArrayRotateFunctionRegExp);
             });
+
+            it('Should does not break on obfuscating', () => {
+                assert.doesNotThrow(() => obfuscatedCode);
+            });
         });
 
         describe('`let` kind', () => {
@@ -80,6 +88,10 @@ describe('StringArrayRotateFunctionTemplate', () => {
 
             it('Should return correct kind of variables for string array rotate function', () => {
                 assert.match(obfuscatedCode, stringArrayRotateFunctionRegExp);
+            });
+
+            it('Should does not break on obfuscating', () => {
+                assert.doesNotThrow(() => obfuscatedCode);
             });
         });
     });

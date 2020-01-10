@@ -7,7 +7,7 @@ import { TStatement } from '../../types/node/TStatement';
 import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { ITemplateFormatter } from '../../interfaces/utils/ITemplateFormatter';
+import { ICustomNodeFormatter } from '../../interfaces/custom-nodes/ICustomNodeFormatter';
 
 import { initializable } from '../../decorators/Initializable';
 
@@ -42,7 +42,7 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
-     * @param {ITemplateFormatter} templateFormatter
+     * @param {ICustomNodeFormatter} customNodeFormatter
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
@@ -50,12 +50,12 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
-        @inject(ServiceIdentifiers.ITemplateFormatter) templateFormatter: ITemplateFormatter,
+        @inject(ServiceIdentifiers.ICustomNodeFormatter) customNodeFormatter: ICustomNodeFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
         @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder
     ) {
-        super(identifierNamesGeneratorFactory, templateFormatter, randomGenerator, options);
+        super(identifierNamesGeneratorFactory, customNodeFormatter, randomGenerator, options);
 
         this.escapeSequenceEncoder = escapeSequenceEncoder;
     }
@@ -73,23 +73,24 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     }
 
     /**
+     * @param {string} nodeTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
-        return NodeUtils.convertCodeToStructure(this.getTemplate());
+    protected getNodeStructure (nodeTemplate: string): TStatement[] {
+        return NodeUtils.convertCodeToStructure(nodeTemplate);
     }
 
     /**
      * @returns {string}
      */
-    protected getTemplate (): string {
+    protected getNodeTemplate (): string {
         const timesName: string = this.identifierNamesGenerator.generate();
         const whileFunctionName: string = this.identifierNamesGenerator.generate();
 
         let code: string = '';
 
         if (this.options.selfDefending) {
-            code = this.templateFormatter.format(SelfDefendingTemplate(this.escapeSequenceEncoder), {
+            code = this.customNodeFormatter.formatTemplate(SelfDefendingTemplate(this.escapeSequenceEncoder), {
                 timesName,
                 whileFunctionName
             });
@@ -98,7 +99,7 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
         }
 
         return JavaScriptObfuscator.obfuscate(
-            this.templateFormatter.format(StringArrayRotateFunctionTemplate(), {
+            this.customNodeFormatter.formatTemplate(StringArrayRotateFunctionTemplate(), {
                 code,
                 timesName,
                 stringArrayName: this.stringArrayName,

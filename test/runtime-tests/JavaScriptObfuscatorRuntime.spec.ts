@@ -8,6 +8,12 @@ import { readFileAsString } from '../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscatorFacade';
 
+const getEnvironmentCode = () => `
+    global.document = {
+        domain: 'obfuscator.io'
+    };
+`;
+
 describe('JavaScriptObfuscator runtime eval', function () {
     const options: TInputOptions = {
         controlFlowFlattening: true,
@@ -15,12 +21,15 @@ describe('JavaScriptObfuscator runtime eval', function () {
         deadCodeInjection: true,
         deadCodeInjectionThreshold: 1,
         debugProtection: true,
+        disableConsoleOutput: true,
+        domainLock: ['obfuscator.io'],
+        rotateStringArray: true,
         selfDefending: true,
         splitStrings: true,
         splitStringsChunkLength: 5,
         stringArray: true,
-        rotateStringArray: true,
         stringArrayEncoding: StringArrayEncoding.Rc4,
+        stringArrayThreshold: 1,
         transformObjectKeys: true,
         unicodeEscapeSequence: true
     };
@@ -42,6 +51,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
         it('should obfuscate code without any runtime errors after obfuscation: Variant #1 astring', () => {
             assert.equal(
                 eval(`
+                    ${getEnvironmentCode()}
                     ${obfuscatedCode}
                     const code = generate({
                         "type": "Program",
@@ -120,7 +130,11 @@ describe('JavaScriptObfuscator runtime eval', function () {
 
         it('should obfuscate code without any runtime errors after obfuscation: Variant #2 sha256', () => {
             assert.equal(
-                eval(`${obfuscatedCode} sha256('test');`),
+                eval(`
+                    ${getEnvironmentCode()}
+                    ${obfuscatedCode}
+                    sha256('test');
+                `),
                 '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08'
             );
         });

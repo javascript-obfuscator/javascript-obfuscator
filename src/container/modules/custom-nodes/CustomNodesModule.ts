@@ -3,6 +3,7 @@ import { ContainerModule, interfaces } from 'inversify';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
+import { ICustomNodeFormatter } from '../../../interfaces/custom-nodes/ICustomNodeFormatter';
 import { ICustomNodeGroup } from '../../../interfaces/custom-nodes/ICustomNodeGroup';
 
 import { ControlFlowCustomNode } from "../../../enums/custom-nodes/ControlFlowCustomNode";
@@ -25,6 +26,7 @@ import { CallExpressionControlFlowStorageCallNode } from '../../../custom-nodes/
 import { CallExpressionFunctionNode } from '../../../custom-nodes/control-flow-flattening-nodes/CallExpressionFunctionNode';
 import { ControlFlowStorageNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/ControlFlowStorageNode';
 import { ConsoleOutputDisableExpressionNode } from '../../../custom-nodes/console-output-nodes/ConsoleOutputDisableExpressionNode';
+import { CustomNodeFormatter } from '../../../custom-nodes/CustomNodeFormatter';
 import { DebugProtectionFunctionCallNode } from '../../../custom-nodes/debug-protection-nodes/DebugProtectionFunctionCallNode';
 import { DebugProtectionFunctionIntervalNode } from '../../../custom-nodes/debug-protection-nodes/DebugProtectionFunctionIntervalNode';
 import { DebugProtectionFunctionNode } from '../../../custom-nodes/debug-protection-nodes/DebugProtectionFunctionNode';
@@ -160,7 +162,7 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
             .getConstructorFactory<ControlFlowCustomNode, ICustomNode>(
                 ServiceIdentifiers.Newable__ICustomNode,
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
-                ServiceIdentifiers.ITemplateFormatter,
+                ServiceIdentifiers.ICustomNodeFormatter,
                 ServiceIdentifiers.IRandomGenerator,
                 ServiceIdentifiers.IOptions,
                 ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer
@@ -172,7 +174,7 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
             .getConstructorFactory<DeadCodeInjectionCustomNode, ICustomNode>(
                 ServiceIdentifiers.Newable__ICustomNode,
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
-                ServiceIdentifiers.ITemplateFormatter,
+                ServiceIdentifiers.ICustomNodeFormatter,
                 ServiceIdentifiers.IRandomGenerator,
                 ServiceIdentifiers.IOptions
             ));
@@ -183,7 +185,7 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
             .getConstructorFactory<ObjectExpressionKeysTransformerCustomNode, ICustomNode>(
                 ServiceIdentifiers.Newable__ICustomNode,
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
-                ServiceIdentifiers.ITemplateFormatter,
+                ServiceIdentifiers.ICustomNodeFormatter,
                 ServiceIdentifiers.IRandomGenerator,
                 ServiceIdentifiers.IOptions,
                 ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer
@@ -193,4 +195,9 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
     bind<ICustomNodeGroup>(ServiceIdentifiers.Factory__ICustomNodeGroup)
         .toFactory<ICustomNodeGroup>(InversifyContainerFacade
             .getFactory<CustomNodeGroup, ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup));
+
+    // custom node formatter
+    bind<ICustomNodeFormatter>(ServiceIdentifiers.ICustomNodeFormatter)
+        .to(CustomNodeFormatter)
+        .inSingletonScope();
 });

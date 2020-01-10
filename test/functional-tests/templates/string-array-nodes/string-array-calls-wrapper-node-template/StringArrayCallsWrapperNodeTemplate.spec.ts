@@ -139,6 +139,10 @@ describe('StringArrayCallsWrapperNodeTemplate', () => {
             it('Should return correct kind of variables for string array calls wrapper', () => {
                 assert.match(obfuscatedCode, stringArrayCallsWrapperRegExp);
             });
+
+            it('Should does not break on obfuscating', () => {
+                assert.doesNotThrow(() => obfuscatedCode);
+            });
         });
 
         describe('`const` kind', () => {
@@ -162,6 +166,10 @@ describe('StringArrayCallsWrapperNodeTemplate', () => {
             it('Should return correct kind of variables for string array calls wrapper', () => {
                 assert.match(obfuscatedCode, stringArrayCallsWrapperRegExp);
             });
+
+            it('Should does not break on obfuscating', () => {
+                assert.doesNotThrow(() => obfuscatedCode);
+            });
         });
 
         describe('`let` kind', () => {
@@ -184,6 +192,10 @@ describe('StringArrayCallsWrapperNodeTemplate', () => {
 
             it('Should return correct kind of variables for string array calls wrapper', () => {
                 assert.match(obfuscatedCode, stringArrayCallsWrapperRegExp);
+            });
+
+            it('Should does not break on obfuscating', () => {
+                assert.doesNotThrow(() => obfuscatedCode);
             });
         });
     });

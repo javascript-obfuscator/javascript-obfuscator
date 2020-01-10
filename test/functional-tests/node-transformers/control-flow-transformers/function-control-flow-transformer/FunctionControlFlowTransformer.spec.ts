@@ -317,7 +317,7 @@ describe('FunctionControlFlowTransformer', function () {
             });
 
             describe('Variant #3 - `let` kind', () => {
-                const regexp: RegExp = new RegExp(`let *${variableMatch} *= *\\{`);
+                const regexp: RegExp = new RegExp(`const *${variableMatch} *= *\\{`);
 
                 let obfuscatedCode: string;
 

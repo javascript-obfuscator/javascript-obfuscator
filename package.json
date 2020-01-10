@@ -23,7 +23,7 @@
   "dependencies": {
     "@gradecam/tsenum": "1.2.0",
     "@nuxtjs/opencollective": "0.2.2",
-    "acorn": "^7.1.0",
+    "acorn": "7.1.0",
     "chalk": "3.0.0",
     "chance": "1.1.4",
     "class-validator": "0.11.0",

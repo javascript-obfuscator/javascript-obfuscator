@@ -69,9 +69,10 @@ export class BlockStatementControlFlowFlatteningNode extends AbstractCustomNode 
     }
 
     /**
+     * @param {string} nodeTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
+    protected getNodeStructure (nodeTemplate: string): TStatement[] {
         const controllerIdentifierName: string = this.randomGenerator.getRandomString(6);
         const indexIdentifierName: string = this.randomGenerator.getRandomString(6);
         const structure: ESTree.BlockStatement = NodeFactory.blockStatementNode([

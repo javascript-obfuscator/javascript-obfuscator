@@ -80,16 +80,17 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
     }
 
     /**
+     * @param {string} nodeTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
-        return NodeUtils.convertCodeToStructure(this.getTemplate());
+    protected getNodeStructure (nodeTemplate: string): TStatement[] {
+        return NodeUtils.convertCodeToStructure(nodeTemplate);
     }
 
     /**
      * @returns {string}
      */
-    protected getTemplate (): string {
+    protected getNodeTemplate (): string {
         const decodeNodeTemplate: string = this.getDecodeStringArrayTemplate();
 
         return JavaScriptObfuscator.obfuscate(

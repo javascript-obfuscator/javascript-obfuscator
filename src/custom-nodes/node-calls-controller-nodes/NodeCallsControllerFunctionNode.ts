@@ -60,16 +60,17 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     }
 
     /**
+     * @param {string} nodeTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
-        return NodeUtils.convertCodeToStructure(this.getTemplate());
+    protected getNodeStructure (nodeTemplate: string): TStatement[] {
+        return NodeUtils.convertCodeToStructure(nodeTemplate);
     }
 
     /**
      * @returns {string}
      */
-    protected getTemplate (): string {
+    protected getNodeTemplate (): string {
         if (this.appendEvent === ObfuscationEvent.AfterObfuscation) {
             return JavaScriptObfuscator.obfuscate(
                 this.customNodeFormatter.formatTemplate(SingleNodeCallControllerTemplate(), {

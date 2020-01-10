@@ -32,9 +32,10 @@ export class BasePropertiesExtractorObjectExpressionHostNode extends AbstractCus
     public initialize (): void {}
 
     /**
+     * @param {string} nodeTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
+    protected getNodeStructure (nodeTemplate: string): TStatement[] {
         const structure: TStatement = NodeFactory.variableDeclarationNode(
             [
                 NodeFactory.variableDeclaratorNode(

@@ -59,9 +59,10 @@ export class BlockStatementDeadCodeInjectionNode extends AbstractCustomNode {
     }
 
     /**
+     * @param {string} nodeTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
+    protected getNodeStructure (nodeTemplate: string): TStatement[] {
         const random1: boolean = this.randomGenerator.getMathRandom() > 0.5;
         const random2: boolean = this.randomGenerator.getMathRandom() > 0.5;
 

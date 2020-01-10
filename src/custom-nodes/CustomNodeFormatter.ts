@@ -10,20 +10,21 @@ import { TStatement } from '../types/node/TStatement';
 
 import { ICustomNodeFormatter } from '../interfaces/custom-nodes/ICustomNodeFormatter';
 import { IPrevailingKindOfVariablesAnalyzer } from '../interfaces/analyzers/calls-graph-analyzer/IPrevailingKindOfVariablesAnalyzer';
+
 import { NodeGuards } from '../node/NodeGuards';
 
 @injectable()
 export class CustomNodeFormatter implements ICustomNodeFormatter {
     /**
-     * @type {IPrevailingKindOfVariablesAnalyzer}
+     * @type {ESTree.VariableDeclaration['kind']}
      */
-    private readonly prevailingKindOfVariablesAnalyzer: IPrevailingKindOfVariablesAnalyzer;
+    private readonly prevailingKindOfVariables: ESTree.VariableDeclaration['kind'];
 
     constructor (
         @inject(ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer)
             prevailingKindOfVariablesAnalyzer: IPrevailingKindOfVariablesAnalyzer
     ) {
-        this.prevailingKindOfVariablesAnalyzer = prevailingKindOfVariablesAnalyzer;
+        this.prevailingKindOfVariables = prevailingKindOfVariablesAnalyzer.getPrevailingKind();
     }
 
     /**
@@ -43,19 +44,18 @@ export class CustomNodeFormatter implements ICustomNodeFormatter {
      * @returns {TStatement[]}
      */
     public formatStructure (statements: TStatement[]): TStatement[] {
-        const prevailingKindOfVariables: ESTree.VariableDeclaration['kind'] =
-            this.prevailingKindOfVariablesAnalyzer.getPrevailingKind();
-
         for (const statement of statements) {
-            estraverse.traverse(statement, {
-                enter: (node: ESTree.Node): estraverse.VisitorOption | void => {
+            estraverse.replace(statement, {
+                enter: (node: ESTree.Node): ESTree.Node | void => {
                     if (!NodeGuards.isVariableDeclarationNode(node)) {
                         return;
                     }
 
-                    if (prevailingKindOfVariables === 'var') {
+                    if (this.prevailingKindOfVariables === 'var') {
                         node.kind = 'var';
                     }
+
+                    return node;
                 }
             });
         }

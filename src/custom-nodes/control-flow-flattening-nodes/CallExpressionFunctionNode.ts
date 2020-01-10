@@ -48,9 +48,10 @@ export class CallExpressionFunctionNode extends AbstractCustomNode {
     }
 
     /**
+     * @param {string} nodeTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
+    protected getNodeStructure (nodeTemplate: string): TStatement[] {
         const calleeIdentifier: ESTree.Identifier = NodeFactory.identifierNode('callee');
         const params: ESTree.Identifier[] = [];
         const argumentsLength: number = this.expressionArguments.length;

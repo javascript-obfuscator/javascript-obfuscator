@@ -47,16 +47,17 @@ export class DebugProtectionFunctionIntervalNode extends AbstractCustomNode {
     }
 
     /**
+     * @param {string} nodeTemplate
      * @returns {TStatement[]}
      */
-    protected getNodeStructure (): TStatement[] {
-        return NodeUtils.convertCodeToStructure(this.getTemplate());
+    protected getNodeStructure (nodeTemplate: string): TStatement[] {
+        return NodeUtils.convertCodeToStructure(nodeTemplate);
     }
 
     /**
      * @returns {string}
      */
-    protected getTemplate (): string {
+    protected getNodeTemplate (): string {
         return this.customNodeFormatter.formatTemplate(DebugProtectionFunctionIntervalTemplate(), {
             debugProtectionFunctionName: this.debugProtectionFunctionName
         });

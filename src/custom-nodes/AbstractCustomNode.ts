@@ -79,7 +79,11 @@ export abstract class AbstractCustomNode <
      */
     public getNode (): TStatement[] {
         if (!this.cachedNode) {
-            this.cachedNode = this.customNodeFormatter.formatStructure(this.getNodeStructure());
+            const nodeTemplate: string = this.getNodeTemplate();
+
+            this.cachedNode = this.customNodeFormatter.formatStructure(
+                this.getNodeStructure(nodeTemplate)
+            );
         }
 
         return this.cachedNode;
@@ -97,5 +101,12 @@ export abstract class AbstractCustomNode <
     /**
      * @returns {TStatement[]}
      */
-    protected abstract getNodeStructure (): TStatement[];
+    protected abstract getNodeStructure (nodeTemplate: string): TStatement[];
+
+    /**
+     * @returns {string}
+     */
+    protected getNodeTemplate (): string {
+        return '';
+    }
 }

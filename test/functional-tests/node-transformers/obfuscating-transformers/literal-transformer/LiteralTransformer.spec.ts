@@ -587,4 +587,404 @@ describe('LiteralTransformer', () => {
             assert.match(obfuscatedCode, regExp);
         });
     });
+
+    describe('Rotate string array', function () {
+        this.timeout(100000);
+
+        describe('Variant #1: single string array value', () => {
+            const samples: number = 1000;
+            const delta: number = 0.1;
+            const expectedVariantProbability: number = 1;
+
+            const stringArrayVariant1RegExp1: RegExp = /var *_0x([a-f0-9]){4} *= *\['test'];/g;
+            const literalNodeVariant1RegExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/g;
+
+            let stringArrayVariant1Probability: number,
+                literalNodeVariant1Probability: number;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+
+                let stringArrayVariant1MatchesLength: number = 0;
+                let literalNodeVariant1MatchesLength: number = 0;
+
+               for (let i = 0; i < samples; i++) {
+                   const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                       code,
+                       {
+                           ...NO_ADDITIONAL_NODES_PRESET,
+                           rotateStringArray: true,
+                           stringArray: true,
+                           stringArrayThreshold: 1
+                       }
+                   ).getObfuscatedCode();
+
+                   if (obfuscatedCode.match(stringArrayVariant1RegExp1)) {
+                       stringArrayVariant1MatchesLength++;
+                   }
+
+                   if (obfuscatedCode.match(literalNodeVariant1RegExp)) {
+                       literalNodeVariant1MatchesLength++;
+                   }
+               }
+
+                stringArrayVariant1Probability = stringArrayVariant1MatchesLength / samples;
+                literalNodeVariant1Probability = literalNodeVariant1MatchesLength / samples;
+            });
+
+            describe('String array probability', () => {
+                it('Variant #1: should create single string array variant', () => {
+                    assert.closeTo(stringArrayVariant1Probability, expectedVariantProbability, delta);
+                });
+            });
+
+            describe('Literal node probability', () => {
+                it('Variant #1: should replace literal node with call to string array variant', () => {
+                    assert.closeTo(literalNodeVariant1Probability, expectedVariantProbability, delta);
+                });
+            });
+        });
+
+        describe('Variant #2: Three string array values', () => {
+            const samples: number = 1000;
+            const delta: number = 0.1;
+            const expectedStringArrayVariantProbability: number = 0.33;
+            const expectedLiteralNodeVariantProbability: number = 1;
+
+            const stringArrayVariantRegExp1: RegExp = /var *_0x([a-f0-9]){4} *= *\['foo', *'bar', *'baz'];/g;
+            const stringArrayVariantRegExp2: RegExp = /var *_0x([a-f0-9]){4} *= *\['bar', *'baz', *'foo'];/g;
+            const stringArrayVariantRegExp3: RegExp = /var *_0x([a-f0-9]){4} *= *\['baz', *'foo', *'bar'];/g;
+
+            const literalNodeVariant1RegExp: RegExp = new RegExp(
+                `var *foo *= *_0x([a-f0-9]){4}\\('0x0'\\); *` +
+                `var *bar *= *_0x([a-f0-9]){4}\\('0x1'\\); *` +
+                `var *baz *= *_0x([a-f0-9]){4}\\('0x2'\\);`
+            );
+
+            let stringArrayVariant1Probability: number,
+                stringArrayVariant2Probability: number,
+                stringArrayVariant3Probability: number,
+                literalNodeVariant1Probability: number;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/three-strings.js');
+
+                let stringArrayVariant1MatchesLength: number = 0;
+                let stringArrayVariant2MatchesLength: number = 0;
+                let stringArrayVariant3MatchesLength: number = 0;
+                let literalNodeVariant1MatchesLength: number = 0;
+
+                for (let i = 0; i < samples; i++) {
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            rotateStringArray: true,
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+
+                    if (obfuscatedCode.match(stringArrayVariantRegExp1)) {
+                        stringArrayVariant1MatchesLength++;
+                    }
+
+                    if (obfuscatedCode.match(stringArrayVariantRegExp2)) {
+                        stringArrayVariant2MatchesLength++;
+                    }
+
+                    if (obfuscatedCode.match(stringArrayVariantRegExp3)) {
+                        stringArrayVariant3MatchesLength++;
+                    }
+
+                    if (obfuscatedCode.match(literalNodeVariant1RegExp)) {
+                        literalNodeVariant1MatchesLength++;
+                    }
+                }
+
+                stringArrayVariant1Probability = stringArrayVariant1MatchesLength / samples;
+                stringArrayVariant2Probability = stringArrayVariant2MatchesLength / samples;
+                stringArrayVariant3Probability = stringArrayVariant3MatchesLength / samples;
+                literalNodeVariant1Probability = literalNodeVariant1MatchesLength / samples;
+            });
+
+            describe('String array probability', () => {
+                it('Variant #1: should create string array variant', () => {
+                    assert.closeTo(stringArrayVariant1Probability, expectedStringArrayVariantProbability, delta);
+                });
+
+                it('Variant #2: should create string array variant', () => {
+                    assert.closeTo(stringArrayVariant2Probability, expectedStringArrayVariantProbability, delta);
+                });
+
+                it('Variant #3: should create string array variant', () => {
+                    assert.closeTo(stringArrayVariant3Probability, expectedStringArrayVariantProbability, delta);
+                });
+            });
+
+            describe('Literal node probability', () => {
+                it('Variant #1: should replace literal node with call to string array variant', () => {
+                    assert.closeTo(literalNodeVariant1Probability, expectedLiteralNodeVariantProbability, delta);
+                });
+            });
+        });
+    });
+
+    describe('Shuffle string array', function () {
+        this.timeout(100000);
+
+        describe('Variant #1: single string array value', () => {
+            const samples: number = 1000;
+            const delta: number = 0.1;
+            const expectedVariantProbability: number = 1;
+
+            const stringArrayVariantRegExp1: RegExp = /var *_0x([a-f0-9]){4} *= *\['test'];/g;
+            const literalNodeVariant1RegExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/g;
+
+            let stringArrayVariant1Probability: number,
+                literalNodeVariant1Probability: number;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+
+                let stringArrayVariant1MatchesLength: number = 0;
+                let literalNodeVariant1MatchesLength: number = 0;
+
+                for (let i = 0; i < samples; i++) {
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            shuffleStringArray: true,
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+
+                    if (obfuscatedCode.match(stringArrayVariantRegExp1)) {
+                        stringArrayVariant1MatchesLength++;
+                    }
+
+                    if (obfuscatedCode.match(literalNodeVariant1RegExp)) {
+                        literalNodeVariant1MatchesLength++;
+                    }
+                }
+
+                stringArrayVariant1Probability = stringArrayVariant1MatchesLength / samples;
+                literalNodeVariant1Probability = literalNodeVariant1MatchesLength / samples;
+            });
+
+            describe('String array probability', () => {
+                it('Variant #1: should create string array variant', () => {
+                    assert.closeTo(stringArrayVariant1Probability, expectedVariantProbability, delta);
+                });
+            });
+
+            describe('Literal node probability', () => {
+                it('Variant #1: should replace literal node with call to string array variant', () => {
+                    assert.closeTo(literalNodeVariant1Probability, expectedVariantProbability, delta);
+                });
+            });
+        });
+
+        describe('Variant #2: Three string array values', () => {
+            const samples: number = 1000;
+            const delta: number = 0.1;
+            const expectedVariantProbability: number = 0.166;
+
+            const stringArrayVariantRegExp1: RegExp = /var *_0x([a-f0-9]){4} *= *\['foo', *'bar', *'baz'];/g;
+            const stringArrayVariantRegExp2: RegExp = /var *_0x([a-f0-9]){4} *= *\['foo', *'baz', *'bar'];/g;
+            const stringArrayVariantRegExp3: RegExp = /var *_0x([a-f0-9]){4} *= *\['bar', *'foo', *'baz'];/g;
+            const stringArrayVariantRegExp4: RegExp = /var *_0x([a-f0-9]){4} *= *\['bar', *'baz', *'foo'];/g;
+            const stringArrayVariantRegExp5: RegExp = /var *_0x([a-f0-9]){4} *= *\['baz', *'foo', *'bar'];/g;
+            const stringArrayVariantRegExp6: RegExp = /var *_0x([a-f0-9]){4} *= *\['baz', *'bar', *'foo'];/g;
+
+            const literalNodeVariant1RegExp: RegExp = new RegExp(
+                `var *foo *= *_0x([a-f0-9]){4}\\('0x0'\\); *` +
+                `var *bar *= *_0x([a-f0-9]){4}\\('0x1'\\); *` +
+                `var *baz *= *_0x([a-f0-9]){4}\\('0x2'\\);`
+            );
+            const literalNodeVariant2RegExp: RegExp = new RegExp(
+                `var *foo *= *_0x([a-f0-9]){4}\\('0x0'\\); *` +
+                `var *bar *= *_0x([a-f0-9]){4}\\('0x2'\\); *` +
+                `var *baz *= *_0x([a-f0-9]){4}\\('0x1'\\);`
+            );
+            const literalNodeVariant3RegExp: RegExp = new RegExp(
+                `var *foo *= *_0x([a-f0-9]){4}\\('0x1'\\); *` +
+                `var *bar *= *_0x([a-f0-9]){4}\\('0x0'\\); *` +
+                `var *baz *= *_0x([a-f0-9]){4}\\('0x2'\\);`
+            );
+            const literalNodeVariant4RegExp: RegExp = new RegExp(
+                `var *foo *= *_0x([a-f0-9]){4}\\('0x1'\\); *` +
+                `var *bar *= *_0x([a-f0-9]){4}\\('0x2'\\); *` +
+                `var *baz *= *_0x([a-f0-9]){4}\\('0x0'\\);`
+            );
+            const literalNodeVariant5RegExp: RegExp = new RegExp(
+                `var *foo *= *_0x([a-f0-9]){4}\\('0x2'\\); *` +
+                `var *bar *= *_0x([a-f0-9]){4}\\('0x0'\\); *` +
+                `var *baz *= *_0x([a-f0-9]){4}\\('0x1'\\);`
+            );
+            const literalNodeVariant6RegExp: RegExp = new RegExp(
+                `var *foo *= *_0x([a-f0-9]){4}\\('0x2'\\); *` +
+                `var *bar *= *_0x([a-f0-9]){4}\\('0x1'\\); *` +
+                `var *baz *= *_0x([a-f0-9]){4}\\('0x0'\\);`
+            );
+
+            let stringArrayVariant1Probability: number,
+                stringArrayVariant2Probability: number,
+                stringArrayVariant3Probability: number,
+                stringArrayVariant4Probability: number,
+                stringArrayVariant5Probability: number,
+                stringArrayVariant6Probability: number,
+                literalNodeVariant1Probability: number,
+                literalNodeVariant2Probability: number,
+                literalNodeVariant3Probability: number,
+                literalNodeVariant4Probability: number,
+                literalNodeVariant5Probability: number,
+                literalNodeVariant6Probability: number;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/three-strings.js');
+
+                let stringArrayVariant1MatchesLength: number = 0;
+                let stringArrayVariant2MatchesLength: number = 0;
+                let stringArrayVariant3MatchesLength: number = 0;
+                let stringArrayVariant4MatchesLength: number = 0;
+                let stringArrayVariant5MatchesLength: number = 0;
+                let stringArrayVariant6MatchesLength: number = 0;
+                let literalNodeVariant1MatchesLength: number = 0;
+                let literalNodeVariant2MatchesLength: number = 0;
+                let literalNodeVariant3MatchesLength: number = 0;
+                let literalNodeVariant4MatchesLength: number = 0;
+                let literalNodeVariant5MatchesLength: number = 0;
+                let literalNodeVariant6MatchesLength: number = 0;
+
+                for (let i = 0; i < samples; i++) {
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            shuffleStringArray: true,
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+
+                    if (obfuscatedCode.match(stringArrayVariantRegExp1)) {
+                        stringArrayVariant1MatchesLength++;
+                    }
+
+                    if (obfuscatedCode.match(stringArrayVariantRegExp2)) {
+                        stringArrayVariant2MatchesLength++;
+                    }
+
+                    if (obfuscatedCode.match(stringArrayVariantRegExp3)) {
+                        stringArrayVariant3MatchesLength++;
+                    }
+
+                    if (obfuscatedCode.match(stringArrayVariantRegExp4)) {
+                        stringArrayVariant4MatchesLength++;
+                    }
+
+                    if (obfuscatedCode.match(stringArrayVariantRegExp5)) {
+                        stringArrayVariant5MatchesLength++;
+                    }
+
+                    if (obfuscatedCode.match(stringArrayVariantRegExp6)) {
+                        stringArrayVariant6MatchesLength++;
+                    }
+
+                    if (obfuscatedCode.match(literalNodeVariant1RegExp)) {
+                        literalNodeVariant1MatchesLength++;
+                    }
+
+                    if (obfuscatedCode.match(literalNodeVariant2RegExp)) {
+                        literalNodeVariant2MatchesLength++;
+                    }
+
+                    if (obfuscatedCode.match(literalNodeVariant3RegExp)) {
+                        literalNodeVariant3MatchesLength++;
+                    }
+
+                    if (obfuscatedCode.match(literalNodeVariant4RegExp)) {
+                        literalNodeVariant4MatchesLength++;
+                    }
+
+                    if (obfuscatedCode.match(literalNodeVariant5RegExp)) {
+                        literalNodeVariant5MatchesLength++;
+                    }
+
+                    if (obfuscatedCode.match(literalNodeVariant6RegExp)) {
+                        literalNodeVariant6MatchesLength++;
+                    }
+                }
+
+                stringArrayVariant1Probability = stringArrayVariant1MatchesLength / samples;
+                stringArrayVariant2Probability = stringArrayVariant2MatchesLength / samples;
+                stringArrayVariant3Probability = stringArrayVariant3MatchesLength / samples;
+                stringArrayVariant4Probability = stringArrayVariant4MatchesLength / samples;
+                stringArrayVariant5Probability = stringArrayVariant5MatchesLength / samples;
+                stringArrayVariant6Probability = stringArrayVariant6MatchesLength / samples;
+                literalNodeVariant1Probability = literalNodeVariant1MatchesLength / samples;
+                literalNodeVariant2Probability = literalNodeVariant2MatchesLength / samples;
+                literalNodeVariant3Probability = literalNodeVariant3MatchesLength / samples;
+                literalNodeVariant4Probability = literalNodeVariant4MatchesLength / samples;
+                literalNodeVariant5Probability = literalNodeVariant5MatchesLength / samples;
+                literalNodeVariant6Probability = literalNodeVariant6MatchesLength / samples;
+
+            });
+
+            describe('String array probability', () => {
+                it('Variant #1: should create string array variant', () => {
+                    assert.closeTo(stringArrayVariant1Probability, expectedVariantProbability, delta);
+                });
+
+                it('Variant #2: should create string array variant', () => {
+                    assert.closeTo(stringArrayVariant2Probability, expectedVariantProbability, delta);
+                });
+
+                it('Variant #3: should create string array variant', () => {
+                    assert.closeTo(stringArrayVariant3Probability, expectedVariantProbability, delta);
+                });
+
+                it('Variant #4: should create string array variant', () => {
+                    assert.closeTo(stringArrayVariant4Probability, expectedVariantProbability, delta);
+                });
+
+                it('Variant #5: should create string array variant', () => {
+                    assert.closeTo(stringArrayVariant5Probability, expectedVariantProbability, delta);
+                });
+
+                it('Variant #6: should create string array variant', () => {
+                    assert.closeTo(stringArrayVariant6Probability, expectedVariantProbability, delta);
+                });
+            });
+
+            describe('Literal node probability', () => {
+                it('Variant #1: should replace literal node with call to string array variant', () => {
+                    assert.closeTo(literalNodeVariant1Probability, expectedVariantProbability, delta);
+                });
+
+                it('Variant #2: should replace literal node with call to string array variant', () => {
+                    assert.closeTo(literalNodeVariant2Probability, expectedVariantProbability, delta);
+                });
+
+                it('Variant #3: should replace literal node with call to string array variant', () => {
+                    assert.closeTo(literalNodeVariant3Probability, expectedVariantProbability, delta);
+                });
+
+                it('Variant #4: should replace literal node with call to string array variant', () => {
+                    assert.closeTo(literalNodeVariant4Probability, expectedVariantProbability, delta);
+                });
+
+                it('Variant #5: should replace literal node with call to string array variant', () => {
+                    assert.closeTo(literalNodeVariant5Probability, expectedVariantProbability, delta);
+                });
+
+                it('Variant #6: should replace literal node with call to string array variant', () => {
+                    assert.closeTo(literalNodeVariant6Probability, expectedVariantProbability, delta);
+                });
+            });
+        });
+    });
 });

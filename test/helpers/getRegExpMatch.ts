@@ -8,7 +8,7 @@ export function getRegExpMatch (str: string, regExp: RegExp, matchIndex: number 
     const match: RegExpMatchArray | null = str.match(regExp);
 
     if (!match) {
-        throw new Error(`No matches were found for regular expression \`${regExp.toString()}\``);
+        throw new Error(`No matches were found. String: \`${str}\`, regular expression: \`${regExp.toString()}\``);
     }
 
     return (<RegExpMatchArray>match)[matchIndex + 1];

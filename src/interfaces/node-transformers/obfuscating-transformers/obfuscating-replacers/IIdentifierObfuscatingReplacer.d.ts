@@ -6,16 +6,16 @@ import { IObfuscatingReplacer } from './IObfuscatingReplacer';
 
 export interface IIdentifierObfuscatingReplacer extends IObfuscatingReplacer <ESTree.Identifier> {
     /**
-     * @param {string} nodeValue
+     * @param {Identifier} identifierNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    storeGlobalName (nodeValue: string, lexicalScopeNode: TNodeWithLexicalScope): void;
+    storeGlobalName (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void;
 
     /**
-     * @param {string} nodeValue
+     * @param {Identifier} identifierNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    storeLocalName (nodeValue: string, lexicalScopeNode: TNodeWithLexicalScope): void;
+    storeLocalName (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void;
 
     /**
      * @param {string} name

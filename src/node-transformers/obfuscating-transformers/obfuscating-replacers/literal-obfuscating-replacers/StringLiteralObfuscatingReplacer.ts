@@ -5,12 +5,10 @@ import * as ESTree from 'estree';
 
 import { TStringArrayStorage } from '../../../../types/storages/TStringArrayStorage';
 
-import { ICryptUtils } from '../../../../interfaces/utils/ICryptUtils';
-import { IEncodedValue } from '../../../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/literal-obfuscating-replacers/IEncodedValue';
 import { IEscapeSequenceEncoder } from '../../../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../../../interfaces/options/IOptions';
-import { IRandomGenerator } from '../../../../interfaces/utils/IRandomGenerator';
-import { IStringArrayIndexData } from '../../../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/literal-obfuscating-replacers/IStringArrayIndexData';
+import { IStringArrayStorageAnalyzer } from '../../../../interfaces/analyzers/string-array-storage-analyzer/IStringArrayStorageAnalyzer';
+import { IStringArrayStorageItemData } from '../../../../interfaces/storages/string-array-storage/IStringArrayStorageItem';
 
 import { StringArrayEncoding } from '../../../../enums/StringArrayEncoding';
 
@@ -23,26 +21,6 @@ import { Utils } from '../../../../utils/Utils';
 @injectable()
 export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplacer {
     /**
-     * @type {number}
-     */
-    private static readonly minimumLengthForStringArray: number = 3;
-
-    /**
-     * @type {number}
-     */
-    private static readonly rc4KeyLength: number = 4;
-
-    /**
-     * @type {number}
-     */
-    private static readonly rc4KeysCount: number = 50;
-
-    /**
-     * @type {ICryptUtils}
-     */
-    private readonly cryptUtils: ICryptUtils;
-
-    /**
      * @type {IEscapeSequenceEncoder}
      */
     private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
@@ -53,55 +31,33 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     private readonly nodesCache: Map <string, ESTree.Node> = new Map();
 
     /**
-     * @type {IRandomGenerator}
+     * @type {IStringArrayStorageAnalyzer}
      */
-    private readonly randomGenerator: IRandomGenerator;
+    private readonly stringArrayStorageAnalyzer: IStringArrayStorageAnalyzer;
 
     /**
-     * @type {string[]}
+     * @type {string}
      */
-    private readonly rc4Keys: string[];
-
-    /**
-     * @type {Map<string, string>}
-     */
-    private readonly stringLiteralHexadecimalIndexCache: Map <string, string> = new Map();
-
-    /**
-     * @type {TStringArrayStorage}
-     */
-    private readonly stringArrayStorage: TStringArrayStorage;
+    private readonly stringArrayStorageCallsWrapperName: string;
 
     /**
      * @param {TStringArrayStorage} stringArrayStorage
+     * @param {IStringArrayStorageAnalyzer} stringArrayStorageAnalyzer
      * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
-     * @param {IRandomGenerator} randomGenerator
-     * @param {ICryptUtils} cryptUtils
      * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: TStringArrayStorage,
+        @inject(ServiceIdentifiers.IStringArrayStorageAnalyzer) stringArrayStorageAnalyzer: IStringArrayStorageAnalyzer,
         @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
-        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
-        @inject(ServiceIdentifiers.ICryptUtils) cryptUtils: ICryptUtils,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(
-            options
-        );
+        super(options);
 
-        this.stringArrayStorage = stringArrayStorage;
+        this.stringArrayStorageAnalyzer = stringArrayStorageAnalyzer;
         this.escapeSequenceEncoder = escapeSequenceEncoder;
-        this.randomGenerator = randomGenerator;
-        this.cryptUtils = cryptUtils;
 
-        this.rc4Keys = this.randomGenerator.getRandomGenerator()
-            .n(
-                () => this.randomGenerator.getRandomGenerator().string({
-                    length: StringLiteralObfuscatingReplacer.rc4KeyLength
-                }),
-                StringLiteralObfuscatingReplacer.rc4KeysCount
-            );
+        this.stringArrayStorageCallsWrapperName = stringArrayStorage.getStorageId().split('|')[1];
     }
 
     /**
@@ -129,88 +85,32 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     }
 
     /**
-     * @param {string} nodeValue
+     * @param {SimpleLiteral} literalNode
      * @returns {Node}
      */
-    public replace (nodeValue: string): ESTree.Node {
-        const useStringArray: boolean = this.canUseStringArray(nodeValue);
-        const cacheKey: string = `${nodeValue}-${String(useStringArray)}`;
-        const useCacheValue: boolean = this.nodesCache.has(cacheKey) && this.options.stringArrayEncoding !== StringArrayEncoding.Rc4;
+    public replace (literalNode: ESTree.SimpleLiteral): ESTree.Node {
+        const literalValue: ESTree.SimpleLiteral['value'] = literalNode.value;
 
-        if (useCacheValue) {
+        if (typeof literalValue !== 'string') {
+            throw new Error('`StringLiteralObfuscatingReplacer` should accept only literals with `string` value');
+        }
+
+        const stringArrayStorageItemData: IStringArrayStorageItemData | undefined = this.stringArrayStorageAnalyzer
+            .getItemDataForLiteralNode(literalNode);
+        const cacheKey: string = `${literalValue}-${Boolean(stringArrayStorageItemData)}`;
+        const useCachedValue: boolean = this.nodesCache.has(cacheKey) && this.options.stringArrayEncoding !== StringArrayEncoding.Rc4;
+
+        if (useCachedValue) {
             return <ESTree.Node>this.nodesCache.get(cacheKey);
         }
 
-        const resultNode: ESTree.Node = useStringArray
-            ? this.replaceWithStringArrayCallNode(nodeValue)
-            : this.replaceWithLiteralNode(nodeValue);
+        const resultNode: ESTree.Node = stringArrayStorageItemData
+            ? this.replaceWithStringArrayCallNode(stringArrayStorageItemData)
+            : this.replaceWithLiteralNode(literalValue);
 
         this.nodesCache.set(cacheKey, resultNode);
 
         return resultNode;
-    }
-
-    /**
-     * @param {string} nodeValue
-     * @returns {boolean}
-     */
-    private canUseStringArray (nodeValue: string): boolean {
-        return (
-            this.options.stringArray &&
-            nodeValue.length >= StringLiteralObfuscatingReplacer.minimumLengthForStringArray &&
-            this.randomGenerator.getMathRandom() <= this.options.stringArrayThreshold
-        );
-    }
-
-    /**
-     * @param {string} value
-     * @param {number} stringArrayStorageLength
-     * @returns {IStringArrayIndexData}
-     */
-    private getStringArrayHexadecimalIndex (value: string, stringArrayStorageLength: number): IStringArrayIndexData {
-        if (this.stringLiteralHexadecimalIndexCache.has(value)) {
-            return {
-                fromCache: true,
-                index: <string>this.stringLiteralHexadecimalIndexCache.get(value)
-            };
-        }
-
-        const hexadecimalRawIndex: string = NumberUtils.toHex(stringArrayStorageLength);
-        const hexadecimalIndex: string = `${Utils.hexadecimalPrefix}${hexadecimalRawIndex}`;
-
-        this.stringLiteralHexadecimalIndexCache.set(value, hexadecimalIndex);
-
-        return {
-            fromCache: false,
-            index: hexadecimalIndex
-        };
-    }
-
-    /**
-     * @param {string} value
-     * @returns {IEncodedValue}
-     */
-    private getEncodedValue (value: string): IEncodedValue {
-        let encodedValue: string;
-        let key: string | null = null;
-
-        switch (this.options.stringArrayEncoding) {
-            case StringArrayEncoding.Rc4:
-                key = this.randomGenerator.getRandomGenerator().pickone(this.rc4Keys);
-                encodedValue = this.cryptUtils.btoa(this.cryptUtils.rc4(value, key));
-
-                break;
-
-            case StringArrayEncoding.Base64:
-                encodedValue = this.cryptUtils.btoa(value);
-
-                break;
-
-            default:
-                encodedValue = value;
-        }
-
-        return { encodedValue, key };
     }
 
     /**
@@ -224,36 +124,24 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     }
 
     /**
-     * @param {string} value
+     * @param {IStringArrayStorageItemData} stringArrayStorageItemData
      * @returns {Node}
      */
-    private replaceWithStringArrayCallNode (value: string): ESTree.Node {
-        const { encodedValue, key }: IEncodedValue = this.getEncodedValue(value);
-        const escapedValue: string = this.escapeSequenceEncoder.encode(encodedValue, this.options.unicodeEscapeSequence);
+    private replaceWithStringArrayCallNode (stringArrayStorageItemData: IStringArrayStorageItemData): ESTree.Node {
+        const { index, decodeKey } = stringArrayStorageItemData;
 
-        const stringArrayStorageLength: number = this.stringArrayStorage.getLength();
-        const stringArrayStorageCallsWrapperName: string = this.stringArrayStorage.getStorageId().split('|')[1];
-
-        const { fromCache, index }: IStringArrayIndexData = this.getStringArrayHexadecimalIndex(
-            escapedValue,
-            stringArrayStorageLength
-        );
-
-        if (!fromCache) {
-            this.stringArrayStorage.set(stringArrayStorageLength, escapedValue);
-        }
-
+        const hexadecimalIndex: string = `${Utils.hexadecimalPrefix}${NumberUtils.toHex(index)}`;
         const callExpressionArgs: (ESTree.Expression | ESTree.SpreadElement)[] = [
-            StringLiteralObfuscatingReplacer.getHexadecimalLiteralNode(index)
+            StringLiteralObfuscatingReplacer.getHexadecimalLiteralNode(hexadecimalIndex)
         ];
 
-        if (key) {
+        if (decodeKey) {
             callExpressionArgs.push(StringLiteralObfuscatingReplacer.getRc4KeyLiteralNode(
-                this.escapeSequenceEncoder.encode(key, this.options.unicodeEscapeSequence)
+                this.escapeSequenceEncoder.encode(decodeKey, this.options.unicodeEscapeSequence)
             ));
         }
 
-        const stringArrayIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(stringArrayStorageCallsWrapperName);
+        const stringArrayIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(this.stringArrayStorageCallsWrapperName);
 
         // prevent obfuscation of this identifier
         NodeMetadata.set(stringArrayIdentifierNode, { renamedIdentifier: true });

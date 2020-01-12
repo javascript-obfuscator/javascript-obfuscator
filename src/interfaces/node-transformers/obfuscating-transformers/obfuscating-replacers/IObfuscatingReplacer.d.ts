@@ -4,10 +4,14 @@ import { TNodeWithLexicalScope } from '../../../../types/node/TNodeWithLexicalSc
 
 export interface IObfuscatingReplacer <T = ESTree.Node> {
     /**
-     * @param {SimpleLiteral["value"]} nodeValue
+     * @param {Node} node
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @param {number} nodeIdentifier
      * @returns {T}
      */
-    replace (nodeValue: ESTree.SimpleLiteral['value'], lexicalScopeNode?: TNodeWithLexicalScope, nodeIdentifier?: number): T;
+    replace (
+        node: ESTree.Node,
+        lexicalScopeNode?: TNodeWithLexicalScope,
+        nodeIdentifier?: number
+    ): T;
 }

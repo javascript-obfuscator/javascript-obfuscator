@@ -1,3 +1,5 @@
-import { IArrayStorage } from '../../interfaces/storages/IArrayStorage';
+import { IStringArrayStorageItemData } from '../../interfaces/storages/string-array-storage/IStringArrayStorageItem';
 
-export type TStringArrayStorage = IArrayStorage <string>;
+import { IMapStorage } from '../../interfaces/storages/IMapStorage';
+
+export type TStringArrayStorage = IMapStorage <string, IStringArrayStorageItemData>;

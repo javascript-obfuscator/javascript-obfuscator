@@ -6,6 +6,7 @@ import { StringArrayEncoding } from '../../../../../src/enums/StringArrayEncodin
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { readFileAsString } from '../../../../helpers/readFileAsString';
+import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
@@ -214,26 +215,67 @@ describe('LiteralTransformer', () => {
         });
 
         describe('Variant #9: rc4 encoding', () => {
-            const regExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0', *'.{4}'\);/;
+            describe('Variant #1: single string literal', () => {
+                const regExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0', *'.{4}'\);/;
 
-            let obfuscatedCode: string;
+                let obfuscatedCode: string;
 
-            before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        stringArray: true,
-                        stringArrayEncoding: StringArrayEncoding.Rc4,
-                        stringArrayThreshold: 1
-                    }
-                ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            stringArray: true,
+                            stringArrayEncoding: StringArrayEncoding.Rc4,
+                            stringArrayThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should replace literal node value with value from string array encoded using rc4', () => {
+                    assert.match(obfuscatedCode, regExp);
+                });
             });
 
-            it('should replace literal node value with value from string array encoded using rc4', () => {
-                assert.match(obfuscatedCode, regExp);
+            describe('Variant #2: multiple string literals', () => {
+                const variableRegExp1: RegExp = /var *test *= *_0x(?:[a-f0-9]){4}\('0x0', *'(.{4})'\);/;
+                const variableRegExp2: RegExp = /var *test *= *_0x(?:[a-f0-9]){4}\('0x1', *'(.{4})'\);/;
+
+                let encodedLiteralValue1: string;
+                let encodedLiteralValue2: string;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/same-literal-values.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            stringArray: true,
+                            stringArrayEncoding: StringArrayEncoding.Rc4,
+                            stringArrayThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+
+                    encodedLiteralValue1 = getRegExpMatch(obfuscatedCode, variableRegExp1);
+                    encodedLiteralValue2 = getRegExpMatch(obfuscatedCode, variableRegExp2);
+                });
+
+                it('Match #1: should replace literal node value with value from string array encoded using rc4', () => {
+                    assert.match(obfuscatedCode, variableRegExp1);
+                });
+
+                it('Match #2: should replace literal node value with value from string array encoded using rc4', () => {
+                    assert.match(obfuscatedCode, variableRegExp2);
+                });
+
+                it('Should encode same values as two different encoded string array items', () => {
+                    assert.notEqual(encodedLiteralValue1, encodedLiteralValue2);
+                });
             });
         });
 

@@ -130,9 +130,9 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
         isGlobalDeclaration: boolean
     ): void {
         if (isGlobalDeclaration) {
-            this.identifierObfuscatingReplacer.storeGlobalName(classDeclarationNode.id.name, lexicalScopeNode);
+            this.identifierObfuscatingReplacer.storeGlobalName(classDeclarationNode.id, lexicalScopeNode);
         } else {
-            this.identifierObfuscatingReplacer.storeLocalName(classDeclarationNode.id.name, lexicalScopeNode);
+            this.identifierObfuscatingReplacer.storeLocalName(classDeclarationNode.id, lexicalScopeNode);
         }
     }
 
@@ -159,7 +159,7 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
         for (let i: number = 0; i < cachedReplaceableIdentifierLength; i++) {
             const replaceableIdentifier: ESTree.Identifier = cachedReplaceableIdentifiers[i];
             const newReplaceableIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                .replace(replaceableIdentifier.name, lexicalScopeNode);
+                .replace(replaceableIdentifier, lexicalScopeNode);
 
             replaceableIdentifier.name = newReplaceableIdentifier.name;
             NodeMetadata.set(replaceableIdentifier, { renamedIdentifier: true });
@@ -180,7 +180,7 @@ export class ClassDeclarationTransformer extends AbstractNodeTransformer {
                     && !NodeMetadata.isRenamedIdentifier(node)
                 ) {
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                        .replace(node.name, lexicalScopeNode);
+                        .replace(node, lexicalScopeNode);
                     const newIdentifierName: string = newIdentifier.name;
 
                     if (node.name !== newIdentifierName) {

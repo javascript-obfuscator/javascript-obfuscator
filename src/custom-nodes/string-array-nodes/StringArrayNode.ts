@@ -72,7 +72,7 @@ export class StringArrayNode extends AbstractCustomNode {
      * @returns {TStatement[]}
      */
     public getNode (): TStatement[] {
-        (<StringArrayStorage>this.stringArrayStorage).rotateArray(this.stringArrayRotateValue);
+        (<StringArrayStorage>this.stringArrayStorage).rotateStorage(this.stringArrayRotateValue);
 
         return super.getNode();
     }

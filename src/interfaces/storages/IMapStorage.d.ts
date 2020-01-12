@@ -3,9 +3,15 @@ import { IInitializable } from '../IInitializable';
 export interface IMapStorage <K, V> extends IInitializable {
     /**
      * @param {K} key
+     * @returns {V | undefined}
+     */
+    get (key: K): V | undefined;
+
+    /**
+     * @param {K} key
      * @returns {V}
      */
-    get (key: K): V;
+    getOrThrow (key: K): V;
 
     /**
      * @param {V} value

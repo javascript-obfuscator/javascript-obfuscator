@@ -154,13 +154,13 @@ export class FunctionTransformer extends AbstractNodeTransformer {
                 }
 
                 if (NodeGuards.isAssignmentPatternNode(node) && NodeGuards.isIdentifierNode(node.left)) {
-                    this.identifierObfuscatingReplacer.storeLocalName(node.left.name, lexicalScopeNode);
+                    this.identifierObfuscatingReplacer.storeLocalName(node.left, lexicalScopeNode);
 
                     return estraverse.VisitorOption.Skip;
                 }
 
                 if (NodeGuards.isIdentifierNode(node)) {
-                    this.identifierObfuscatingReplacer.storeLocalName(node.name, lexicalScopeNode);
+                    this.identifierObfuscatingReplacer.storeLocalName(node, lexicalScopeNode);
                 }
             }
         };
@@ -212,7 +212,7 @@ export class FunctionTransformer extends AbstractNodeTransformer {
                     }
 
                     const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
-                        .replace(node.name, lexicalScopeNode);
+                        .replace(node, lexicalScopeNode);
                     const newIdentifierName: string = newIdentifier.name;
 
                     if (node.name !== newIdentifierName) {

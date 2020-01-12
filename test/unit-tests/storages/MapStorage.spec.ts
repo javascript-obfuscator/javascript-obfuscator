@@ -92,6 +92,41 @@ describe('MapStorage', () => {
         });
 
         describe('Variant #2: value isn\'t exist', () => {
+            const expectedValue: undefined = undefined;
+
+            let value: string;
+
+            before(() => {
+                storage = getStorageInstance<string>();
+
+                value = storage.get(storageKey);
+            });
+
+            it('should return undefined', () => {
+                assert.equal(value, expectedValue);
+            });
+        });
+    });
+
+    describe('getOrThrow', () => {
+        describe('Variant #1: value exist', () => {
+            const expectedValue: string = storageValue;
+
+            let value: string;
+
+            before(() => {
+                storage = getStorageInstance<string>();
+                storage.set(storageKey, storageValue);
+
+                value = storage.getOrThrow(storageKey);
+            });
+
+            it('should return value from storage by key', () => {
+                assert.equal(value, expectedValue);
+            });
+        });
+
+        describe('Variant #2: value isn\'t exist', () => {
             const expectedError: ErrorConstructor = Error;
 
             let testFunc: () => void;
@@ -99,7 +134,7 @@ describe('MapStorage', () => {
             before(() => {
                 storage = getStorageInstance<string>();
 
-                testFunc = () => storage.get(storageKey);
+                testFunc = () => storage.getOrThrow(storageKey);
             });
 
             it('should throw an error', () => {
@@ -219,7 +254,7 @@ describe('MapStorage', () => {
             storage = getStorageInstance<string>();
             storage.set(storageKey, storageValue);
 
-            value = storage.get(storageKey);
+            value = storage.getOrThrow(storageKey);
         });
 
         it('should set value to the storage', () => {

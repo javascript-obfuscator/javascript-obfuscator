@@ -2,7 +2,9 @@ Change Log
 
 v0.23.0
 ---
+* **New option:** `shuffleStringArray` randomly shuffles string array items
 * **Internal change:** switched AST parser from `espree` on `acorn`
+* **Internal refactoring:** refactoring of string array storage and related things
 
 v0.22.1
 ---

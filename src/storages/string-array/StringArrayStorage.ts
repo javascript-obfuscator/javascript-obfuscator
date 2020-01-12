@@ -10,14 +10,17 @@ import { IEncodedValue } from '../../interfaces/IEncodedValue';
 import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { IStringArrayStorage } from '../../interfaces/storages/string-array-storage/IStringArrayStorage';
 import { IStringArrayStorageItemData } from '../../interfaces/storages/string-array-storage/IStringArrayStorageItem';
+
+import { initializable } from '../../decorators/Initializable';
 
 import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
 
 import { MapStorage } from '../MapStorage';
 
 @injectable()
-export class StringArrayStorage extends MapStorage <string, IStringArrayStorageItemData> {
+export class StringArrayStorage extends MapStorage <string, IStringArrayStorageItemData> implements IStringArrayStorage {
     /**
      * @type {number}
      */
@@ -57,6 +60,23 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
      * @type {string[]}
      */
     private readonly rc4Keys: string[];
+
+    /**
+     * @type {number}
+     */
+    private rotationAmount: number = 0;
+
+    /**
+     * @type {string}
+     */
+    @initializable()
+    private stringArrayStorageName!: string;
+
+    /**
+     * @type {string}
+     */
+    @initializable()
+    private stringArrayStorageCallsWrapperName!: string;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -99,10 +119,13 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
             .generate(StringArrayStorage.stringArrayNameLength);
         const baseStringArrayCallsWrapperName: string = this.identifierNamesGenerator
             .generate(StringArrayStorage.stringArrayNameLength);
-        const stringArrayName: string = `${this.options.identifiersPrefix}${baseStringArrayName}`;
-        const stringArrayCallsWrapperName: string = `${this.options.identifiersPrefix}${baseStringArrayCallsWrapperName}`;
 
-        this.storageId = `${stringArrayName}|${stringArrayCallsWrapperName}`;
+        this.stringArrayStorageName = `${this.options.identifiersPrefix}${baseStringArrayName}`;
+        this.stringArrayStorageCallsWrapperName = `${this.options.identifiersPrefix}${baseStringArrayCallsWrapperName}`;
+
+        this.rotationAmount = this.options.rotateStringArray
+            ? this.randomGenerator.getRandomInteger(100, 500)
+            : 0;
     }
 
     /**
@@ -114,14 +137,64 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
     }
 
     /**
-     * @param {number} rotationAmount
+     * @returns {number}
      */
-    public rotateStorage (rotationAmount: number): void {
+    public getRotationAmount (): number {
+        return this.rotationAmount;
+    }
+
+    /**
+     * @returns {string}
+     */
+    public getStorageId (): string {
+        return this.stringArrayStorageName;
+    }
+
+    /**
+     * @returns {string}
+     */
+    public getStorageName (): string {
+        return this.getStorageId();
+    }
+
+    /**
+     * @returns {string}
+     */
+    public getStorageCallsWrapperName (): string {
+        return this.stringArrayStorageCallsWrapperName;
+    }
+
+    public rotateStorage (): void {
+        if (!this.getLength()) {
+            return;
+        }
+
         this.storage = new Map(
             this.arrayUtils.rotate(
                 Array.from(this.storage.entries()),
-                rotationAmount
+                this.rotationAmount
             )
+        );
+    }
+
+    public shuffleStorage (): void {
+        this.storage = new Map(
+            this.arrayUtils
+                .shuffle(Array.from(this.storage.entries()))
+                .map<[string, IStringArrayStorageItemData]>(
+                    (
+                        [value, stringArrayStorageItemData]: [string, IStringArrayStorageItemData],
+                        index: number
+                    ) => {
+                        stringArrayStorageItemData.index = index;
+
+                        return [value, stringArrayStorageItemData];
+                    }
+                )
+                .sort((
+                    [, stringArrayStorageItemDataA]: [string, IStringArrayStorageItemData],
+                    [, stringArrayStorageItemDataB]: [string, IStringArrayStorageItemData]
+                ) => stringArrayStorageItemDataA.index - stringArrayStorageItemDataB.index)
         );
     }
 
@@ -131,9 +204,9 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
     public toString (): string {
         return Array
             .from(this.storage.values())
-            .map((item: IStringArrayStorageItemData) => {
+            .map((stringArrayStorageItemData: IStringArrayStorageItemData) => {
                 return `'${this.escapeSequenceEncoder.encode(
-                    item.encodedValue,
+                    stringArrayStorageItemData.encodedValue,
                     this.options.unicodeEscapeSequence
                 )}'`;
             }).toString();

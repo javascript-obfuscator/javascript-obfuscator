@@ -11,6 +11,7 @@ export const StringArrayRule: TOptionsNormalizerRule = (options: IOptions): IOpt
         options = {
             ...options,
             rotateStringArray: false,
+            shuffleStringArray: false,
             stringArray: false,
             stringArrayEncoding: false,
             stringArrayThreshold: 0

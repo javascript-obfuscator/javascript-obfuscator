@@ -1,6 +1,8 @@
 import { assert } from 'chai';
 import { TypeFromEnum } from '@gradecam/tsenum';
 
+import { TInputOptions } from '../../../src/types/options/TInputOptions';
+
 import { IObfuscatedCode } from '../../../src/interfaces/source-code/IObfuscatedCode';
 
 import { SourceMapMode } from '../../../src/enums/source-map/SourceMapMode';
@@ -15,7 +17,6 @@ import { IdentifierNamesGenerator } from '../../../src/enums/generators/identifi
 import { buildLargeCode } from '../../helpers/buildLargeCode';
 import { getRegExpMatch } from '../../helpers/getRegExpMatch';
 import { readFileAsString } from '../../helpers/readFileAsString';
-import { TInputOptions } from '../../../src/types/options/TInputOptions';
 
 describe('JavaScriptObfuscator', () => {
     describe('obfuscate', () => {

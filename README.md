@@ -306,6 +306,7 @@ Following options are available for the JS Obfuscator:
     rotateStringArray: true,
     seed: 0,
     selfDefending: false,
+    shuffleStringArray: true,
     sourceMap: false,
     sourceMapBaseUrl: '',
     sourceMapFileName: '',
@@ -349,6 +350,7 @@ Following options are available for the JS Obfuscator:
     --rotate-string-array <boolean>
     --seed <string|number>
     --self-defending <boolean>
+    --shuffle-string-array <boolean>
     --source-map <boolean>
     --source-map-base-url <string>
     --source-map-file-name <string>
@@ -691,6 +693,13 @@ Type: `boolean` Default: `false`
 
 This option makes the output code resilient against formatting and variable renaming. If one tries to use a JavaScript beautifier on the obfuscated code, the code won't work anymore, making it harder to understand and modify it.
 
+### `shuffleStringArray`
+Type: `boolean` Default: `true`
+
+##### :warning: [`stringArray`](#stringarray) must be enabled
+
+Randomly shuffles the `stringArray` array items.
+
 ### `sourceMap`
 Type: `boolean` Default: `false`
 
@@ -867,6 +876,7 @@ Performance will 50-100% slower than without obfuscation
     renameGlobals: false,
     rotateStringArray: true,
     selfDefending: true,
+    shuffleStringArray: true,
     splitStrings: true,
     splitStringsChunkLength: '5',
     stringArray: true,
@@ -896,6 +906,7 @@ Performance will 30-35% slower than without obfuscation
     renameGlobals: false,
     rotateStringArray: true,
     selfDefending: true,
+    shuffleStringArray: true,
     splitStrings: true,
     splitStringsChunkLength: '10',
     stringArray: true,
@@ -923,6 +934,7 @@ Performance will slightly slower than without obfuscation
     renameGlobals: false,
     rotateStringArray: true,
     selfDefending: true,
+    shuffleStringArray: true,
     splitStrings: false,
     stringArray: true,
     stringArrayEncoding: false,

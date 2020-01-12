@@ -283,7 +283,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
                 BooleanSanitizer
             )
             .option(
-                '--rotate-string-array <boolean>', 'Disable rotation of unicode array values during obfuscation',
+                '--rotate-string-array <boolean>', 'Enable rotation of string array values during obfuscation',
                 BooleanSanitizer
             )
             .option(
@@ -294,6 +294,10 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
             .option(
                 '--self-defending <boolean>',
                 'Disables self-defending for obfuscated code',
+                BooleanSanitizer
+            )
+            .option(
+                '--shuffle-string-array <boolean>', 'Randomly shuffles string array items',
                 BooleanSanitizer
             )
             .option(

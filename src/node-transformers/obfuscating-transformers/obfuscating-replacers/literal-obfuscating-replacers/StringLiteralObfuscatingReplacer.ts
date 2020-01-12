@@ -1,14 +1,16 @@
-import { inject, injectable, } from 'inversify';
+import { inject, injectable, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { TStringArrayStorage } from '../../../../types/storages/TStringArrayStorage';
-
 import { IEscapeSequenceEncoder } from '../../../../interfaces/utils/IEscapeSequenceEncoder';
+import { IInitializable } from '../../../../interfaces/IInitializable';
 import { IOptions } from '../../../../interfaces/options/IOptions';
+import { IStringArrayStorage } from '../../../../interfaces/storages/string-array-storage/IStringArrayStorage';
 import { IStringArrayStorageAnalyzer } from '../../../../interfaces/analyzers/string-array-storage-analyzer/IStringArrayStorageAnalyzer';
 import { IStringArrayStorageItemData } from '../../../../interfaces/storages/string-array-storage/IStringArrayStorageItem';
+
+import { initializable } from '../../../../decorators/Initializable';
 
 import { StringArrayEncoding } from '../../../../enums/StringArrayEncoding';
 
@@ -19,7 +21,7 @@ import { NumberUtils } from '../../../../utils/NumberUtils';
 import { Utils } from '../../../../utils/Utils';
 
 @injectable()
-export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplacer {
+export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplacer implements IInitializable {
     /**
      * @type {IEscapeSequenceEncoder}
      */
@@ -31,6 +33,11 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     private readonly nodesCache: Map <string, ESTree.Node> = new Map();
 
     /**
+     * @type {IStringArrayStorage}
+     */
+    private readonly stringArrayStorage: IStringArrayStorage;
+
+    /**
      * @type {IStringArrayStorageAnalyzer}
      */
     private readonly stringArrayStorageAnalyzer: IStringArrayStorageAnalyzer;
@@ -38,26 +45,26 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     /**
      * @type {string}
      */
-    private readonly stringArrayStorageCallsWrapperName: string;
+    @initializable()
+    private stringArrayStorageCallsWrapperName!: string;
 
     /**
-     * @param {TStringArrayStorage} stringArrayStorage
+     * @param {IStringArrayStorage} stringArrayStorage
      * @param {IStringArrayStorageAnalyzer} stringArrayStorageAnalyzer
      * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      * @param {IOptions} options
      */
     constructor (
-        @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: TStringArrayStorage,
+        @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: IStringArrayStorage,
         @inject(ServiceIdentifiers.IStringArrayStorageAnalyzer) stringArrayStorageAnalyzer: IStringArrayStorageAnalyzer,
         @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
+        this.stringArrayStorage = stringArrayStorage;
         this.stringArrayStorageAnalyzer = stringArrayStorageAnalyzer;
         this.escapeSequenceEncoder = escapeSequenceEncoder;
-
-        this.stringArrayStorageCallsWrapperName = stringArrayStorage.getStorageId().split('|')[1];
     }
 
     /**
@@ -82,6 +89,19 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
         NodeMetadata.set(rc4KeyLiteralNode, { replacedLiteral: true });
 
         return rc4KeyLiteralNode;
+    }
+
+    @postConstruct()
+    public initialize (): void {
+        this.stringArrayStorageCallsWrapperName = this.stringArrayStorage.getStorageCallsWrapperName();
+
+        if (this.options.shuffleStringArray) {
+            this.stringArrayStorage.shuffleStorage();
+        }
+
+        if (this.options.rotateStringArray) {
+            this.stringArrayStorage.rotateStorage();
+        }
     }
 
     /**

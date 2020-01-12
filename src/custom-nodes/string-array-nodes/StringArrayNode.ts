@@ -3,11 +3,11 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../types/node/TStatement';
-import { TStringArrayStorage } from '../../types/storages/TStringArrayStorage';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { ICustomNodeFormatter } from '../../interfaces/custom-nodes/ICustomNodeFormatter';
+import { IStringArrayStorage } from '../../interfaces/storages/string-array-storage/IStringArrayStorage';
 
 import { initializable } from '../../decorators/Initializable';
 
@@ -15,27 +15,20 @@ import { StringArrayTemplate } from '../../templates/string-array-nodes/string-a
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeUtils } from '../../node/NodeUtils';
-import { StringArrayStorage } from '../../storages/string-array/StringArrayStorage';
 
 @injectable()
 export class StringArrayNode extends AbstractCustomNode {
     /**
-     * @type {TStringArrayStorage}
+     * @type {IStringArrayStorage}
      */
     @initializable()
-    private stringArrayStorage!: TStringArrayStorage;
+    private stringArrayStorage!: IStringArrayStorage;
 
     /**
      * @type {string}
      */
     @initializable()
     private stringArrayName!: string;
-
-    /**
-     * @type {number}
-     */
-    @initializable()
-    private stringArrayRotateValue!: number;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -54,27 +47,15 @@ export class StringArrayNode extends AbstractCustomNode {
     }
 
     /**
-     * @param {TStringArrayStorage} stringArrayStorage
+     * @param {IStringArrayStorage} stringArrayStorage
      * @param {string} stringArrayName
-     * @param {number} stringArrayRotateValue
      */
     public initialize (
-        stringArrayStorage: TStringArrayStorage,
-        stringArrayName: string,
-        stringArrayRotateValue: number
+        stringArrayStorage: IStringArrayStorage,
+        stringArrayName: string
     ): void {
         this.stringArrayStorage = stringArrayStorage;
         this.stringArrayName = stringArrayName;
-        this.stringArrayRotateValue = stringArrayRotateValue;
-    }
-
-    /**
-     * @returns {TStatement[]}
-     */
-    public getNode (): TStatement[] {
-        (<StringArrayStorage>this.stringArrayStorage).rotateStorage(this.stringArrayRotateValue);
-
-        return super.getNode();
     }
 
     /**

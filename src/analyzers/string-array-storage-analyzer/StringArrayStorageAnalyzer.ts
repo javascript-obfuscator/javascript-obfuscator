@@ -4,10 +4,9 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TStringArrayStorage } from '../../types/storages/TStringArrayStorage';
-
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
+import { IStringArrayStorage } from '../../interfaces/storages/string-array-storage/IStringArrayStorage';
 import { IStringArrayStorageAnalyzer } from '../../interfaces/analyzers/string-array-storage-analyzer/IStringArrayStorageAnalyzer';
 import { IStringArrayStorageItemData } from '../../interfaces/storages/string-array-storage/IStringArrayStorageItem';
 
@@ -35,9 +34,9 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
     private readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @type {TStringArrayStorage}
+     * @type {IStringArrayStorage}
      */
-    private readonly stringArrayStorage: TStringArrayStorage;
+    private readonly stringArrayStorage: IStringArrayStorage;
 
     /**
      * @type {Map<ESTree.Literal, IStringArrayStorageItemData>}
@@ -45,12 +44,12 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
     private readonly stringArrayStorageData: Map<ESTree.Literal, IStringArrayStorageItemData> = new Map();
 
     /**
-     * @param {TStringArrayStorage} stringArrayStorage
+     * @param {IStringArrayStorage} stringArrayStorage
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
-        @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: TStringArrayStorage,
+        @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: IStringArrayStorage,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
     ) {

@@ -249,7 +249,8 @@ describe('StringArrayStorageAnalyzer', () => {
 
                 before(() => {
                     stringArrayStorageAnalyzer = getStringArrayStorageAnalyzer({
-                        stringArrayThreshold: 0.5
+                        stringArrayThreshold: 0.5,
+                        seed: 1
                     });
 
                     const astTree: ESTree.Program = NodeFactory.programNode([
@@ -266,7 +267,7 @@ describe('StringArrayStorageAnalyzer', () => {
                     assert.deepEqual(stringArrayStorageItemData1, expectedStringArrayStorageItemData1);
                 });
 
-                it('Variant #2: should return correct string array storage item data for literal node #1', () => {
+                it('Variant #2: should return correct string array storage item data for literal node #2', () => {
                     assert.deepEqual(stringArrayStorageItemData2, expectedStringArrayStorageItemData2);
                 });
             });

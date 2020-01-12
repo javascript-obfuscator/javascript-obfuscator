@@ -255,6 +255,7 @@ describe('LiteralTransformer', () => {
                         code,
                         {
                             ...NO_ADDITIONAL_NODES_PRESET,
+                            seed: 1, // set seed to prevent rare case when all encoded values are the same
                             stringArray: true,
                             stringArrayEncoding: StringArrayEncoding.Rc4,
                             stringArrayThreshold: 1

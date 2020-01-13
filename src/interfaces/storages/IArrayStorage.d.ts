@@ -3,9 +3,15 @@ import { IInitializable } from '../IInitializable';
 export interface IArrayStorage <V> extends IInitializable {
     /**
      * @param {number} key
+     * @returns {V | undefined}
+     */
+    get (key: number): V | undefined;
+
+    /**
+     * @param {number} key
      * @returns {V}
      */
-    get (key: number): V;
+    getOrThrow (key: number): V;
 
     /**
      * @param value

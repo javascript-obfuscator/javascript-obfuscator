@@ -24,6 +24,16 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
     /**
      * @type {number}
      */
+    private static readonly minimumRotationAmount: number = 100;
+
+    /**
+     * @type {number}
+     */
+    private static readonly maximumRotationAmount: number = 500;
+
+    /**
+     * @type {number}
+     */
     private static readonly rc4KeyLength: number = 4;
 
     /**
@@ -124,7 +134,10 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
         this.stringArrayStorageCallsWrapperName = `${this.options.identifiersPrefix}${baseStringArrayCallsWrapperName}`;
 
         this.rotationAmount = this.options.rotateStringArray
-            ? this.randomGenerator.getRandomInteger(100, 500)
+            ? this.randomGenerator.getRandomInteger(
+                StringArrayStorage.minimumRotationAmount,
+                StringArrayStorage.maximumRotationAmount
+            )
             : 0;
     }
 

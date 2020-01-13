@@ -18,7 +18,6 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
             ...NO_ADDITIONAL_NODES_PRESET,
             stringArray: true,
             stringArrayThreshold: 1,
-            rotateStringArray: true,
             shuffleStringArray: true
         }
     ).getObfuscatedCode();

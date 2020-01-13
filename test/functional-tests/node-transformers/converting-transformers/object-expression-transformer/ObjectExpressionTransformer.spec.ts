@@ -199,4 +199,37 @@ describe('ObjectExpressionTransformer', () => {
             assert.match(obfuscatedCode, objectSpreadRegExp);
         });
     });
+
+    describe('object spread: unicode escape sequence', () => {
+        const object1RegExp: RegExp = /const *_0x[a-f0-9]{4,6} *= *\{\};/;
+        const object2RegExp: RegExp = /_0x[a-f0-9]{4,6}\['\\x61'\] *= *0x1;/;
+        const object3RegExp: RegExp = /const *\{a\} *= *_0x[a-f0-9]{4,6};/;
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/object-spread-unicode-escape-sequence.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    transformObjectKeys: true,
+                    unicodeEscapeSequence: true
+                }
+            ).getObfuscatedCode();
+        });
+
+        it('Match #1: should transform object declaration', () => {
+            assert.match(obfuscatedCode, object1RegExp);
+        });
+
+        it('Match #2: should transform object name once', () => {
+            assert.match(obfuscatedCode, object2RegExp);
+        });
+
+        it('Match #3: do not transform object name in spread assignment', () => {
+            assert.match(obfuscatedCode, object3RegExp);
+        });
+    });
 });

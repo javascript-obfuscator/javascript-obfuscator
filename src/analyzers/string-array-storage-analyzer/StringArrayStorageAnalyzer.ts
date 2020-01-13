@@ -62,6 +62,10 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
      * @param {Program} astTree
      */
     public analyze (astTree: ESTree.Program): void {
+        if (!this.options.stringArray) {
+            return;
+        }
+
         estraverse.traverse(astTree, {
             enter: (node: ESTree.Node): estraverse.VisitorOption | void => {
                 if (NodeMetadata.isIgnoredNode(node)) {

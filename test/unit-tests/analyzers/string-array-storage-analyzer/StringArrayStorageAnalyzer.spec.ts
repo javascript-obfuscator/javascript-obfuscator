@@ -197,7 +197,49 @@ describe('StringArrayStorageAnalyzer', () => {
             });
         });
 
-        describe('Analyzes of the AST tree string array threshold', () => {
+        /**
+         * This test covers rare case when with random value inside `shouldAddValueToStringArray` was `0`
+         * that trigger positive check for method.
+         *
+         * As fix i added check of `this.options.stringArray` option value
+         */
+        describe('Analyzes of the AST tree with disabled string array', () => {
+            const literalNode1: ESTree.Literal = NodeFactory.literalNode('foo');
+            const literalNode2: ESTree.Literal = NodeFactory.literalNode('bar');
+
+            const expectedStringArrayStorageItemData1: undefined = undefined;
+            const expectedStringArrayStorageItemData2: undefined = undefined;
+
+            let stringArrayStorageItemData1: IStringArrayStorageItemData | undefined;
+            let stringArrayStorageItemData2: IStringArrayStorageItemData | undefined;
+
+            before(() => {
+                stringArrayStorageAnalyzer = getStringArrayStorageAnalyzer({
+                    stringArray: false,
+                    stringArrayThreshold: 1
+                });
+                (<any>stringArrayStorageAnalyzer).options.stringArrayThreshold = 1;
+
+                const astTree: ESTree.Program = NodeFactory.programNode([
+                    NodeFactory.expressionStatementNode(literalNode1),
+                    NodeFactory.expressionStatementNode(literalNode2)
+                ]);
+
+                stringArrayStorageAnalyzer.analyze(astTree);
+                stringArrayStorageItemData1 = stringArrayStorageAnalyzer.getItemDataForLiteralNode(literalNode1);
+                stringArrayStorageItemData2 = stringArrayStorageAnalyzer.getItemDataForLiteralNode(literalNode2);
+            });
+
+            it('Variant #1: should return correct string array storage item data for literal node #1', () => {
+                assert.deepEqual(stringArrayStorageItemData1, expectedStringArrayStorageItemData1);
+            });
+
+            it('Variant #2: should return correct string array storage item data for literal node #1', () => {
+                assert.deepEqual(stringArrayStorageItemData2, expectedStringArrayStorageItemData2);
+            });
+        });
+
+        describe('Analyzes of the AST tree with string array threshold', () => {
             describe('Threshold value: 0', () => {
                 const literalNode1: ESTree.Literal = NodeFactory.literalNode('foo');
                 const literalNode2: ESTree.Literal = NodeFactory.literalNode('bar');

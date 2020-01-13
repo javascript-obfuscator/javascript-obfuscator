@@ -2,6 +2,7 @@ Change Log
 
 v0.23.0
 ---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/494
 * **Internal change:** switched AST parser from `espree` on `acorn`
 
 v0.22.1

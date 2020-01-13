@@ -7,6 +7,7 @@ require('source-map-support').install();
  */
 import './unit-tests/analyzers/calls-graph-analyzer/CallsGraphAnalyzer.spec';
 import './unit-tests/analyzers/prevailing-kind-of-variables-analyzer/PrevailingKindOfVariablesAnalyzer.spec';
+import './unit-tests/analyzers/string-array-storage-analyzer/StringArrayStorageAnalyzer.spec';
 import './unit-tests/cli/sanitizers/ArraySanitizer.spec';
 import './unit-tests/cli/sanitizers/BooleanSanitizer.spec';
 import './unit-tests/cli/sanitizers/IdentifierNamesGeneratorSanitizer.spec';
@@ -29,6 +30,9 @@ import './unit-tests/node/node-lexical-scope-utils/NodeLexicalScopeUtils.spec';
 import './unit-tests/node/node-statement-utils/NodeStatementUtils.spec';
 import './unit-tests/node/node-utils/NodeUtils.spec';
 import './unit-tests/node-transformers/preparing-transformers/ObfuscatingGuardsTransformer.spec';
+import './unit-tests/node-transformers/obfuscating-transformers/obfuscating-replacers/literal-obfuscating-replacers/BooleanLiteralObfuscatingReplacer.spec';
+import './unit-tests/node-transformers/obfuscating-transformers/obfuscating-replacers/literal-obfuscating-replacers/NumberLiteralObfuscatingReplacer.spec';
+import './unit-tests/node-transformers/obfuscating-transformers/obfuscating-replacers/literal-obfuscating-replacers/StringLiteralObfuscatingReplacer.spec';
 import './unit-tests/options/ValidationErrorsFormatter.spec';
 import './unit-tests/source-code/ObfuscatedCode.spec';
 import './unit-tests/storages/ArrayStorage.spec';
@@ -84,6 +88,7 @@ import './functional-tests/node-transformers/preparing-transformers/obfuscating-
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/conditional-comment-obfuscating-guard/ConditionalCommentObfuscatingGuard.spec';
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/reserved-string-obfuscating-guard/ReservedStringObfuscatingGuard.spec';
 import './functional-tests/options/OptionsNormalizer.spec';
+import './functional-tests/storages/string-array-storage/StringArrayStorage.spec';
 import './functional-tests/templates/debug-protection-nodes/DebugProtectionFunctionCallTemplate.spec';
 import './functional-tests/templates/domain-lock-nodes/DomainLockNodeTemplate.spec';
 import './functional-tests/templates/GlobalVariableNoEvalTemplate.spec';

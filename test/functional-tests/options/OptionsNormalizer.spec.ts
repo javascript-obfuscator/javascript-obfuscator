@@ -541,6 +541,7 @@ describe('OptionsNormalizer', () => {
             before(() => {
                 optionsPreset = getNormalizedOptions({
                     ...getDefaultOptions(),
+                    shuffleStringArray: true,
                     stringArray: false,
                     stringArrayEncoding: StringArrayEncoding.Rc4,
                     stringArrayThreshold: 0.5,
@@ -549,6 +550,7 @@ describe('OptionsNormalizer', () => {
 
                 expectedOptionsPreset = {
                     ...getDefaultOptions(),
+                    shuffleStringArray: false,
                     stringArray: false,
                     stringArrayEncoding: false,
                     stringArrayThreshold: 0,
@@ -584,6 +586,7 @@ describe('OptionsNormalizer', () => {
                 optionsPreset = getNormalizedOptions({
                     ...getDefaultOptions(),
                     rotateStringArray: true,
+                    shuffleStringArray: true,
                     stringArray: true,
                     stringArrayThreshold: 0
                 });
@@ -591,6 +594,7 @@ describe('OptionsNormalizer', () => {
                 expectedOptionsPreset = {
                     ...getDefaultOptions(),
                     rotateStringArray: false,
+                    shuffleStringArray: false,
                     stringArray: false,
                     stringArrayThreshold: 0
                 };

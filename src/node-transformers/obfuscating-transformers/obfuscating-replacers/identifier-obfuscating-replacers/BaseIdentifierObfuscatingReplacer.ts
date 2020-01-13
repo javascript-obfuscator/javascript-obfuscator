@@ -40,35 +40,39 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
     }
 
     /**
-     * @param {string} nodeValue
+     * @param {Identifier} identifierNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @returns {Identifier}
      */
-    public replace (nodeValue: string, lexicalScopeNode: TNodeWithLexicalScope): ESTree.Identifier {
+    public replace (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): ESTree.Identifier {
+        let identifierName: string = identifierNode.name;
+
         if (this.blockScopesMap.has(lexicalScopeNode)) {
             const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(lexicalScopeNode);
 
-            if (namesMap.has(nodeValue)) {
-                nodeValue = <string>namesMap.get(nodeValue);
+            if (namesMap.has(identifierName)) {
+                identifierName = <string>namesMap.get(identifierName);
             }
         }
 
-        return NodeFactory.identifierNode(nodeValue);
+        return NodeFactory.identifierNode(identifierName);
     }
 
     /**
      * Store `nodeName` of global identifiers as key in map with random name as value.
      * Reserved name will be ignored.
      *
-     * @param {string} nodeName
+     * @param {Node} identifierNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    public storeGlobalName (nodeName: string, lexicalScopeNode: TNodeWithLexicalScope): void {
-        if (this.isReservedName(nodeName)) {
+    public storeGlobalName (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void {
+        const identifierName: string = identifierNode.name;
+
+        if (this.isReservedName(identifierName)) {
             return;
         }
 
-        const identifierName: string = this.identifierNamesGenerator.generateWithPrefix();
+        const newIdentifierName: string = this.identifierNamesGenerator.generateWithPrefix();
 
         if (!this.blockScopesMap.has(lexicalScopeNode)) {
             this.blockScopesMap.set(lexicalScopeNode, new Map());
@@ -76,22 +80,24 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
 
         const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(lexicalScopeNode);
 
-        namesMap.set(nodeName, identifierName);
+        namesMap.set(identifierName, newIdentifierName);
     }
 
     /**
      * Store `nodeName` of local identifier as key in map with random name as value.
      * Reserved name will be ignored.
      *
-     * @param {string} nodeName
+     * @param {Identifier} identifierNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    public storeLocalName (nodeName: string, lexicalScopeNode: TNodeWithLexicalScope): void {
-        if (this.isReservedName(nodeName)) {
+    public storeLocalName (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void {
+        const identifierName: string = identifierNode.name;
+
+        if (this.isReservedName(identifierName)) {
             return;
         }
 
-        const identifierName: string = this.identifierNamesGenerator.generate();
+        const newIdentifierName: string = this.identifierNamesGenerator.generate();
 
         if (!this.blockScopesMap.has(lexicalScopeNode)) {
             this.blockScopesMap.set(lexicalScopeNode, new Map());
@@ -99,7 +105,7 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
 
         const namesMap: Map<string, string> = <Map<string, string>>this.blockScopesMap.get(lexicalScopeNode);
 
-        namesMap.set(nodeName, identifierName);
+        namesMap.set(identifierName, newIdentifierName);
     }
 
     /**

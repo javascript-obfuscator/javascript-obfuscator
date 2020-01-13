@@ -27,6 +27,7 @@ export interface IOptions {
     readonly rotateStringArray: boolean;
     readonly seed: string | number;
     readonly selfDefending: boolean;
+    readonly shuffleStringArray: boolean;
     readonly sourceMap: boolean;
     readonly sourceMapBaseUrl: string;
     readonly sourceMapFileName: string;

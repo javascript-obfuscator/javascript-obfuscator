@@ -27,6 +27,7 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     rotateStringArray: true,
     seed: 0,
     selfDefending: false,
+    shuffleStringArray: true,
     sourceMap: false,
     sourceMapBaseUrl: '',
     sourceMapFileName: '',

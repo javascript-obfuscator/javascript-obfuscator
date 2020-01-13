@@ -38,7 +38,7 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
      * @param {number}
      */
     @initializable()
-    private stringArrayRotateValue!: number;
+    private stringArrayRotationAmount!: number;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -62,14 +62,14 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
 
     /**
      * @param {string} stringArrayName
-     * @param {number} stringArrayRotateValue
+     * @param {number} stringArrayRotationAmount
      */
     public initialize (
         stringArrayName: string,
-        stringArrayRotateValue: number
+        stringArrayRotationAmount: number
     ): void {
         this.stringArrayName = stringArrayName;
-        this.stringArrayRotateValue = stringArrayRotateValue;
+        this.stringArrayRotationAmount = stringArrayRotationAmount;
     }
 
     /**
@@ -103,7 +103,7 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
                 code,
                 timesName,
                 stringArrayName: this.stringArrayName,
-                stringArrayRotateValue: NumberUtils.toHex(this.stringArrayRotateValue),
+                stringArrayRotationAmount: NumberUtils.toHex(this.stringArrayRotationAmount),
                 whileFunctionName
             }),
             {

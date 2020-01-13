@@ -41,6 +41,7 @@ export enum ServiceIdentifiers {
     IRandomGenerator = 'IRandomGenerator',
     ISourceCode = 'ISourceCode',
     ISourceMapCorrector = 'ISourceMapCorrector',
+    IStringArrayStorageAnalyzer = 'IStringArrayStorageAnalyzer',
     ITransformersRunner = 'ITransformersRunner',
     Newable__ICustomNode = 'Newable<ICustomNode>',
     Newable__TControlFlowStorage = 'Newable<TControlFlowStorage>',

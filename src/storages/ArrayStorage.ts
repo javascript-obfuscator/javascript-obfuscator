@@ -56,10 +56,18 @@ export abstract class ArrayStorage <V> implements IArrayStorage <V> {
 
     /**
      * @param {number} key
+     * @returns {V | undefined}
+     */
+    public get (key: number): V | undefined {
+        return this.storage[key];
+    }
+
+    /**
+     * @param {number} key
      * @returns {V}
      */
-    public get (key: number): V {
-        const value: V | undefined = this.storage[key];
+    public getOrThrow (key: number): V {
+        const value: V | undefined = this.get(key);
 
         if (!value) {
             throw new Error(`No value found in array storage with key \`${key}\``);

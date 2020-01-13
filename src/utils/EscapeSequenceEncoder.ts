@@ -46,6 +46,7 @@ export class EscapeSequenceEncoder implements IEscapeSequenceEncoder {
         });
 
         this.stringsCache.set(cacheKey, result);
+        this.stringsCache.set(`${result}-${String(encodeAllSymbols)}`, result);
 
         return result;
     }

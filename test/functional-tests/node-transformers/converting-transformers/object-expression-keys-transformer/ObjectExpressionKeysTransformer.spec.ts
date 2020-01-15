@@ -99,7 +99,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                 `${variableMatch}\\['foo'] *= *'bar';` +
                 `${variableMatch}\\['baz'] *= *'bark';` +
                 `var *${variableMatch} *= *\\[${variableMatch}];` +
-                ``;
+            ``;
             const regExp: RegExp = new RegExp(match);
 
             let obfuscatedCode: string;

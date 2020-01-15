@@ -189,28 +189,28 @@ describe('VariableDeclarationTransformer', () => {
             variableDeclarationIdentifierName = getRegExpMatch(obfuscatedCode, variableDeclarationIdentifierRegExp);
         });
 
-        it('equal #1: should generate same names for identifiers inside inner function and outer function params', () => {
-            assert.equal(outerFunctionParamIdentifierName, consoleLogIdentifierName);
+        it('equal #1: should generate different names for identifiers inside inner function and outer function params', () => {
+            assert.notEqual(outerFunctionParamIdentifierName, consoleLogIdentifierName);
         });
 
-        it('equal #2: should generate same names for identifiers inside inner function and inner function params', () => {
-            assert.equal(outerFunctionParamIdentifierName, innerFunctionParamIdentifierName);
+        it('equal #2: should generate same names for identifiers of outer function params and inner function params', () => {
+            assert.notEqual(outerFunctionParamIdentifierName, innerFunctionParamIdentifierName);
         });
 
         it('equal #1: should correct transform variables inside outer function body', () => {
-            assert.equal(outerFunctionParamIdentifierName, objectIdentifierName);
+            assert.notEqual(outerFunctionParamIdentifierName, objectIdentifierName);
         });
 
         it('equal #2: should correct transform variables inside outer function body', () => {
-            assert.equal(outerFunctionParamIdentifierName, variableDeclarationIdentifierName);
+            assert.notEqual(outerFunctionParamIdentifierName, variableDeclarationIdentifierName);
+        });
+
+        it('equal #3: should correct transform variables inside outer function body', () => {
+            assert.equal(variableDeclarationIdentifierName, objectIdentifierName);
         });
 
         it('should correct transform variables inside inner function body', () => {
             assert.equal(innerFunctionParamIdentifierName, consoleLogIdentifierName);
-        });
-
-        it('should keep equal names after transformation for variables with same names', () => {
-            assert.equal(variableDeclarationIdentifierName, objectIdentifierName);
         });
     });
 
@@ -244,20 +244,20 @@ describe('VariableDeclarationTransformer', () => {
             variableDeclarationIdentifierName = getRegExpMatch(obfuscatedCode, variableDeclarationIdentifierRegExp);
         });
 
-        it('match #1: should generate same names for identifiers inside inner function and catch clause param', () => {
-            assert.equal(catchClauseParamIdentifierName, consoleLogIdentifierName);
+        it('match #1: should generate different names for identifiers inside inner function and catch clause param', () => {
+            assert.notEqual(catchClauseParamIdentifierName, consoleLogIdentifierName);
         });
 
-        it('match #2: should generate same names for identifiers inside inner function and catch clause param', () => {
-            assert.equal(catchClauseParamIdentifierName, innerFunctionParamIdentifierName);
+        it('match #2: should generate different names for identifiers inside inner function and catch clause param', () => {
+            assert.notEqual(catchClauseParamIdentifierName, innerFunctionParamIdentifierName);
         });
 
         it('equal #1: should correct transform variables inside catch clause body', () => {
-            assert.equal(catchClauseParamIdentifierName, objectIdentifierName);
+            assert.notEqual(catchClauseParamIdentifierName, objectIdentifierName);
         });
 
         it('equal #2: should correct transform variables inside catch clause body', () => {
-            assert.equal(catchClauseParamIdentifierName, variableDeclarationIdentifierName);
+            assert.notEqual(catchClauseParamIdentifierName, variableDeclarationIdentifierName);
         });
 
         it('should correct transform variables inside inner function body', () => {
@@ -471,7 +471,7 @@ describe('VariableDeclarationTransformer', () => {
             const variableDeclarationRegExp1: RegExp = /var *d *= *0x1;/;
             const variableDeclarationRegExp2: RegExp = /var *e;/;
             const functionDeclarationRegExp: RegExp = /function *f *\(\) *{/;
-            const variableDeclarationRegExp3: RegExp = /var *f *= *function *\(\) *{}/;
+            const variableDeclarationRegExp3: RegExp = /var *g *= *function *\(\) *{}/;
 
             let obfuscatedCode: string;
 

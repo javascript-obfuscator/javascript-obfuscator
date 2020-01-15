@@ -59,8 +59,14 @@ export abstract class AbstractPropertiesExtractor implements IPropertiesExtracto
 
         const propertyKeyNode: ESTree.Expression = propertyNode.key;
 
-        if (NodeGuards.isLiteralNode(propertyKeyNode) && typeof propertyKeyNode.value === 'string') {
-            return propertyKeyNode.value;
+        if (
+            NodeGuards.isLiteralNode(propertyKeyNode)
+            && (
+                typeof propertyKeyNode.value === 'string'
+                || typeof propertyKeyNode.value === 'number'
+            )
+        ) {
+            return propertyKeyNode.value.toString();
         }
 
         if (NodeGuards.isIdentifierNode(propertyKeyNode)) {

@@ -396,6 +396,34 @@ describe('ObjectExpressionKeysTransformer', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });
+
+        describe('Variant #13: should keep numeric object keys', () => {
+            const match: string = `` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['0'] *= *'foo';` +
+                `${variableMatch}\\['bar'] *= *'bar';` +
+                `${variableMatch}\\['2'] *= *'baz';` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/numeric-keys.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should correctly transform object keys', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
     });
 
     describe('member expression as host of object expression', () => {

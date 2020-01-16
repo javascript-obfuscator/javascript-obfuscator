@@ -1,14 +1,14 @@
 import { assert } from 'chai';
 
-import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/presets/NoCustomNodes';
 
-import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
-import { readFileAsString } from '../../../../helpers/readFileAsString';
+import { getRegExpMatch } from '../../../../../helpers/getRegExpMatch';
+import { readFileAsString } from '../../../../../helpers/readFileAsString';
 
-import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
-import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
+import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscatorFacade';
+import { IdentifierNamesGenerator } from '../../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
-describe('ClassDeclarationTransformer', () => {
+describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
     describe('transformation of `classDeclaration` node names', () => {
         describe('Variant #1: `classDeclaration` parent block scope is not a `ProgramNode`', () => {
             const classNameIdentifierRegExp: RegExp = /class *(_0x[a-f0-9]{4,6}) *\{/;

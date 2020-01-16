@@ -5,6 +5,7 @@ import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 import { ICalleeDataExtractor } from '../../../interfaces/analyzers/calls-graph-analyzer/ICalleeDataExtractor';
 import { ICallsGraphAnalyzer } from '../../../interfaces/analyzers/calls-graph-analyzer/ICallsGraphAnalyzer';
 import { IPrevailingKindOfVariablesAnalyzer } from '../../../interfaces/analyzers/calls-graph-analyzer/IPrevailingKindOfVariablesAnalyzer';
+import { IScopeAnalyzer } from '../../../interfaces/analyzers/scope-analyzer/IScopeAnalyzer';
 import { IStringArrayStorageAnalyzer } from '../../../interfaces/analyzers/string-array-storage-analyzer/IStringArrayStorageAnalyzer';
 
 import { CalleeDataExtractor } from '../../../enums/analyzers/calls-graph-analyzer/CalleeDataExtractor';
@@ -13,6 +14,7 @@ import { FunctionDeclarationCalleeDataExtractor } from '../../../analyzers/calls
 import { FunctionExpressionCalleeDataExtractor } from '../../../analyzers/calls-graph-analyzer/callee-data-extractors/FunctionExpressionCalleeDataExtractor';
 import { ObjectExpressionCalleeDataExtractor } from '../../../analyzers/calls-graph-analyzer/callee-data-extractors/ObjectExpressionCalleeDataExtractor';
 import { PrevailingKindOfVariablesAnalyzer } from '../../../analyzers/prevailing-kind-of-variables-analyzer/PrevailingKindOfVariablesAnalyzer';
+import { ScopeAnalyzer } from '../../../analyzers/scope-analyzer/ScopeAnalyzer';
 import { StringArrayStorageAnalyzer } from '../../../analyzers/string-array-storage-analyzer/StringArrayStorageAnalyzer';
 
 export const analyzersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
@@ -24,6 +26,11 @@ export const analyzersModule: interfaces.ContainerModule = new ContainerModule((
     // prevailing kind of variables analyzer
     bind<IPrevailingKindOfVariablesAnalyzer>(ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer)
         .to(PrevailingKindOfVariablesAnalyzer)
+        .inSingletonScope();
+
+    // scope analyzer
+    bind<IScopeAnalyzer>(ServiceIdentifiers.IScopeAnalyzer)
+        .to(ScopeAnalyzer)
         .inSingletonScope();
 
     // string array storage analyzer

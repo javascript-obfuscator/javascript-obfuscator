@@ -124,53 +124,6 @@ export class NodeGuards {
     }
 
     /**
-     * @param {Identifier} identifierNode
-     * @param {Node} parentNode
-     * @returns {identifierNode is Identifier}
-     */
-    public static isExportNamedClassDeclarationIdentifierNode (
-        identifierNode: ESTree.Identifier,
-        parentNode: ESTree.Node
-    ): identifierNode is ESTree.Identifier {
-        return NodeGuards.isClassDeclarationNode(parentNode)
-            && parentNode.id === identifierNode
-            && !!parentNode.parentNode
-            && NodeGuards.isExportNamedDeclarationNode(parentNode.parentNode);
-    }
-
-    /**
-     * @param {Identifier} identifierNode
-     * @param {Node} parentNode
-     * @returns {identifierNode is Identifier}
-     */
-    public static isExportNamedFunctionDeclarationIdentifierNode (
-        identifierNode: ESTree.Identifier,
-        parentNode: ESTree.Node
-    ): identifierNode is ESTree.Identifier {
-        return NodeGuards.isFunctionDeclarationNode(parentNode)
-            && parentNode.id === identifierNode
-            && !!parentNode.parentNode
-            && NodeGuards.isExportNamedDeclarationNode(parentNode.parentNode);
-    }
-
-    /**
-     * @param {Identifier} identifierNode
-     * @param {Node} parentNode
-     * @returns {identifierNode is Identifier}
-     */
-    public static isExportNamedVariableDeclarationIdentifierNode (
-        identifierNode: ESTree.Identifier,
-        parentNode: ESTree.Node
-    ): identifierNode is ESTree.Identifier {
-        return NodeGuards.isVariableDeclaratorNode(parentNode)
-            && parentNode.id === identifierNode
-            && !!parentNode.parentNode
-            && NodeGuards.isVariableDeclarationNode(parentNode.parentNode)
-            && !!parentNode.parentNode.parentNode
-            && NodeGuards.isExportNamedDeclarationNode(parentNode.parentNode.parentNode);
-    }
-
-    /**
      * @param {Node} node
      * @returns {boolean}
      */
@@ -439,22 +392,6 @@ export class NodeGuards {
     public static parentNodeIsMethodDefinitionNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
         return NodeGuards.isMethodDefinitionNode(parentNode)
             && !parentNode.computed;
-    }
-
-    /**
-     * @param {Node} node
-     * @param {Node} parentNode
-     * @returns {boolean}
-     */
-    public static isReplaceableIdentifierNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
-        return NodeGuards.isIdentifierNode(node)
-            && !NodeGuards.parentNodeIsPropertyNode(node, parentNode)
-            && !NodeGuards.parentNodeIsMemberExpressionNode(node, parentNode)
-            && !NodeGuards.parentNodeIsMethodDefinitionNode(node, parentNode)
-            && !NodeGuards.isLabelIdentifierNode(node, parentNode)
-            && !NodeGuards.isExportNamedClassDeclarationIdentifierNode(node, parentNode)
-            && !NodeGuards.isExportNamedFunctionDeclarationIdentifierNode(node, parentNode)
-            && !NodeGuards.isExportNamedVariableDeclarationIdentifierNode(node, parentNode);
     }
 
     /**

@@ -15,10 +15,6 @@ declare module 'estree' {
         loc?: acorn.SourceLocation;
     }
 
-    export interface IdentifierNodeMetadata extends BaseNodeMetadata {
-        renamedIdentifier?: boolean;
-    }
-
     export interface LiteralNodeMetadata extends BaseNodeMetadata {
         replacedLiteral?: boolean;
     }
@@ -26,10 +22,6 @@ declare module 'estree' {
     interface BaseNode {
         metadata?: BaseNodeMetadata;
         parentNode?: Node;
-    }
-
-    interface Identifier extends BaseNode {
-        metadata?: IdentifierNodeMetadata;
     }
 
     interface Program extends BaseNode {

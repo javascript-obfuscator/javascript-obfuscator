@@ -1,13 +1,13 @@
 import { assert } from 'chai';
 
-import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/presets/NoCustomNodes';
 
-import { readFileAsString } from '../../../../helpers/readFileAsString';
+import { readFileAsString } from '../../../../../helpers/readFileAsString';
 
-import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
-import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
+import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscatorFacade';
+import { getRegExpMatch } from '../../../../../helpers/getRegExpMatch';
 
-describe('FunctionTransformer', () => {
+describe('ScopeIdentifiersTransformer Function identifiers', () => {
     describe('identifiers transformation inside `FunctionDeclaration` and `FunctionExpression` node body', () => {
         const functionParamIdentifierRegExp: RegExp = /var _0x[a-f0-9]{4,6} *= *function *\((_0x[a-f0-9]{4,6})\) *\{/;
         const functionBodyIdentifierRegExp: RegExp = /console\['log'\]\((_0x[a-f0-9]{4,6})\)/;
@@ -404,6 +404,26 @@ describe('FunctionTransformer', () => {
 
             it('match #4: should transform identifier in `ReturnStatement` of inner function', () => {
                 assert.match(obfuscatedCode, returnRegExp);
+            });
+        });
+
+        describe('Variant #5: skip rename of object pattern referenced identifier', () => {
+            const objectPatternRegExp: RegExp = /const _0x[a-f0-9]{4,6} *= *\[]\['map']\(\({ *foo *}\) *=> *foo\);/;
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter-5.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('match #1: shouldn\'t transform function parameter identifier and reference identifier', () => {
+                assert.match(obfuscatedCode, objectPatternRegExp);
             });
         });
     });

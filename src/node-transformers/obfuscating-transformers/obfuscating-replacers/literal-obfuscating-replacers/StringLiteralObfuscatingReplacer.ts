@@ -163,9 +163,6 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
 
         const stringArrayIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(this.stringArrayStorageCallsWrapperName);
 
-        // prevent obfuscation of this identifier
-        NodeMetadata.set(stringArrayIdentifierNode, { renamedIdentifier: true });
-
         return NodeFactory.callExpressionNode(
             stringArrayIdentifierNode,
             callExpressionArgs

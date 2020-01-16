@@ -9,18 +9,18 @@ import { NodeFactory } from '../../../../src/node/NodeFactory';
 
 describe('NodeMetadata', () => {
     describe('set', () => {
-        const expectedMetadata: ESTree.IdentifierNodeMetadata = {
+        const expectedMetadata: ESTree.LiteralNodeMetadata = {
             ignoredNode: true,
-            renamedIdentifier: true
+            replacedLiteral: true
         };
 
-        let node: ESTree.Identifier;
+        let node: ESTree.Literal;
 
         before(() => {
-            node = NodeFactory.identifierNode('foo');
+            node = NodeFactory.literalNode('foo');
             NodeMetadata.set(node, {
                 ignoredNode: true,
-                renamedIdentifier: true
+                replacedLiteral: true
             })
         });
 
@@ -32,14 +32,14 @@ describe('NodeMetadata', () => {
     describe('get', () => {
         const expectedValue: boolean = true;
 
-        let node: ESTree.Identifier,
+        let node: ESTree.Literal,
             value: boolean | undefined;
 
         before(() => {
-            node = NodeFactory.identifierNode('foo');
+            node = NodeFactory.literalNode('foo');
             node.metadata = {};
-            node.metadata.renamedIdentifier = true;
-            value = NodeMetadata.get<ESTree.IdentifierNodeMetadata>(node, 'renamedIdentifier');
+            node.metadata.replacedLiteral = true;
+            value = NodeMetadata.get<ESTree.LiteralNodeMetadata>(node, 'replacedLiteral');
         });
 
         it('should get metadata value of the node', () => {
@@ -58,24 +58,6 @@ describe('NodeMetadata', () => {
             node.metadata = {};
             node.metadata.ignoredNode = true;
             value = NodeMetadata.isIgnoredNode(node);
-        });
-
-        it('should return metadata value', () => {
-            assert.equal(value, expectedValue);
-        });
-    });
-
-    describe('isRenamedIdentifier', () => {
-        const expectedValue: boolean = true;
-
-        let node: ESTree.Identifier,
-            value: boolean | undefined;
-
-        before(() => {
-            node = NodeFactory.identifierNode('foo');
-            node.metadata = {};
-            node.metadata.renamedIdentifier = true;
-            value = NodeMetadata.isRenamedIdentifier(node);
         });
 
         it('should return metadata value', () => {

@@ -6,6 +6,7 @@ import * as ESTree from 'estree';
 import * as estraverse from 'estraverse';
 
 import { TIdentifierObfuscatingReplacerFactory } from '../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory';
+import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 
 import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -44,9 +45,9 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
     private readonly identifierObfuscatingReplacer: IIdentifierObfuscatingReplacer;
 
     /**
-     * @type {Map<eslintScope.Scope['block'], boolean>}
+     * @type {Map<TNodeWithLexicalScope, boolean>}
      */
-    private readonly lexicalScopesWithObjectPatternWithoutDeclarationMap: Map<eslintScope.Scope['block'], boolean> = new Map();
+    private readonly lexicalScopesWithObjectPatternWithoutDeclarationMap: Map<TNodeWithLexicalScope, boolean> = new Map();
 
     /**
      * @type {IScopeAnalyzer}
@@ -122,12 +123,36 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
      * @param {Scope} scope
      */
     private traverseScopeVariables (scope: eslintScope.Scope): void {
-        const variableScope: eslintScope.Scope = scope.variableScope;
-        const isGlobalVariableScope: boolean = ScopeIdentifiersTransformer.globalScopeNames.includes(variableScope.type);
+        const lexicalScope: eslintScope.Scope = scope.variableScope;
+        const nodeWithLexicalScope: TNodeWithLexicalScope | null = NodeGuards.isNodeWithBlockLexicalScope(lexicalScope.block)
+            ? lexicalScope.block
+            : null;
+        const isGlobalDeclaration: boolean = ScopeIdentifiersTransformer.globalScopeNames.includes(lexicalScope.type);
 
-        scope.variables.forEach((variable: eslintScope.Variable) => {
-            this.processScopeVariableIdentifiers(variable, scope, variableScope, isGlobalVariableScope);
-        });
+        if (!nodeWithLexicalScope) {
+            return;
+        }
+
+        for (const variable of scope.variables) {
+            if (variable.name === ScopeIdentifiersTransformer.argumentsVariableName) {
+                continue;
+            }
+
+            if (!this.options.renameGlobals && isGlobalDeclaration) {
+                const isImportBindingOrCatchClauseIdentifier: boolean = variable.defs
+                    .every((definition: eslintScope.Definition) =>
+                        definition.type === 'ImportBinding'
+                        || definition.type === 'CatchClause'
+                    );
+
+                // skip all global identifiers except import statement and catch clause parameter identifiers
+                if (!isImportBindingOrCatchClauseIdentifier) {
+                    continue;
+                }
+            }
+
+            this.transformScopeVariableIdentifiers(variable, nodeWithLexicalScope, isGlobalDeclaration);
+        }
 
         for (const childScope of scope.childScopes) {
             this.traverseScopeVariables(childScope);
@@ -136,123 +161,108 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {Variable} variable
-     * @param {Scope} scope
-     * @param {Scope} variableScope
-     * @param {boolean} isGlobalVariableScope
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     * @param {boolean} isGlobalDeclaration
      */
-    private processScopeVariableIdentifiers (
+    private transformScopeVariableIdentifiers (
         variable: eslintScope.Variable,
-        scope: eslintScope.Scope,
-        variableScope: eslintScope.Scope,
-        isGlobalVariableScope: boolean
+        lexicalScopeNode: TNodeWithLexicalScope,
+        isGlobalDeclaration: boolean
     ): void {
-        if (variable.name === ScopeIdentifiersTransformer.argumentsVariableName) {
-            return;
-        }
-
-        if (!this.options.renameGlobals && isGlobalVariableScope) {
-            const isImportBindingOrCatchClauseIdentifier: boolean = variable.defs
-                .every((definition: eslintScope.Definition) =>
-                    definition.type === 'ImportBinding'
-                    || definition.type === 'CatchClause'
-                );
-
-            // skip all global identifiers except import statement and catch clause identifiers
-            if (!isImportBindingOrCatchClauseIdentifier) {
-                return;
-            }
-        }
-
         for (const identifier of variable.identifiers) {
-            if (!this.isReplaceableIdentifierNode(variable, identifier, variableScope.block)) {
+            if (!this.isReplaceableIdentifierNode(identifier, lexicalScopeNode, variable)) {
                 continue;
             }
 
-            identifier.name = this.getNewIdentifierName(
-                identifier,
-                scope,
-                variableScope,
-                isGlobalVariableScope
-            );
-
-            // rename of references
-            variable.references.forEach((reference: eslintScope.Reference) => {
-                reference.identifier.name = identifier.name;
-            });
-
-            // rename of function default parameter identifiers if exists
-            (<any>variable.scope.block).defaults?.forEach((node: ESTree.Node) => {
-                if (NodeGuards.isIdentifierNode(node) && node.name === variable.name) {
-                    node.name = identifier.name;
-                }
-            });
+            this.storeIdentifierName(identifier, lexicalScopeNode, isGlobalDeclaration);
+            this.replaceIdentifierName(identifier, lexicalScopeNode, variable);
         }
     }
 
     /**
      * @param {Identifier} identifierNode
-     * @param {Scope} scope
-     * @param {Scope} variableScope
-     * @param {boolean} isGlobalVariableScope
-     * @returns {string}
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     * @param {boolean} isGlobalDeclaration
      */
-    private getNewIdentifierName (
+    private storeIdentifierName (
         identifierNode: ESTree.Identifier,
-        scope: eslintScope.Scope,
-        variableScope: eslintScope.Scope,
-        isGlobalVariableScope: boolean
-    ): string {
-        if (!identifierNode.parentNode || !NodeGuards.isNodeWithBlockLexicalScope(variableScope.block)) {
-            return identifierNode.name;
+        lexicalScopeNode: TNodeWithLexicalScope,
+        isGlobalDeclaration: boolean
+    ): void {
+        if (isGlobalDeclaration) {
+            this.identifierObfuscatingReplacer.storeGlobalName(identifierNode, lexicalScopeNode);
+        } else {
+            this.identifierObfuscatingReplacer.storeLocalName(identifierNode, lexicalScopeNode);
         }
-
-        // prevent class name renaming twice for outer scope and for class scope
-        if (scope.type === 'class' && this.isClassDeclarationNameIdentifierNode(identifierNode, identifierNode.parentNode)) {
-            return identifierNode.name;
-        }
-
-        isGlobalVariableScope
-            ? this.identifierObfuscatingReplacer.storeGlobalName(identifierNode, variableScope.block)
-            : this.identifierObfuscatingReplacer.storeLocalName(identifierNode, variableScope.block);
-
-        return this.identifierObfuscatingReplacer.replace(identifierNode, variableScope.block).name;
     }
 
     /**
      * @param {Identifier} identifierNode
-     * @param {Node} parentNode
-     * @returns {identifierNode is Identifier}
-     */
-    private isClassDeclarationNameIdentifierNode (
-        identifierNode: ESTree.Identifier,
-        parentNode: ESTree.Node
-    ): identifierNode is ESTree.Identifier {
-        return NodeGuards.isClassDeclarationNode(parentNode)
-            && parentNode.id === identifierNode;
-    }
-
-    /**
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @param {Variable} variable
+     */
+    private replaceIdentifierName (
+        identifierNode: ESTree.Identifier,
+        lexicalScopeNode: TNodeWithLexicalScope,
+        variable: eslintScope.Variable
+    ): void {
+        const newIdentifier: ESTree.Identifier = this.identifierObfuscatingReplacer
+            .replace(identifierNode, lexicalScopeNode);
+
+        identifierNode.name = newIdentifier.name;
+
+        // rename of references
+        variable.references.forEach((reference: eslintScope.Reference) => {
+            reference.identifier.name = identifierNode.name;
+        });
+
+        // rename of function default parameter identifiers if exists
+        (<any>variable.scope.block).defaults?.forEach((node: ESTree.Node) => {
+            if (NodeGuards.isIdentifierNode(node) && node.name === variable.name) {
+                node.name = identifierNode.name;
+            }
+        });
+    }
+
+    /**
      * @param {Identifier} identifierNode
-     * @param {Scope["block"]} lexicalScopeNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     * @param {Variable} variable
      * @returns {boolean}
      */
     private isReplaceableIdentifierNode (
-        variable: eslintScope.Variable,
         identifierNode: ESTree.Identifier,
-        lexicalScopeNode: eslintScope.Scope['block']
-    ): boolean {
+        lexicalScopeNode: TNodeWithLexicalScope,
+        variable: eslintScope.Variable
+    ): identifierNode is ESTree.Identifier & { parentNode: ESTree.Node } {
         const parentNode: ESTree.Node | undefined = identifierNode.parentNode;
 
         return !!parentNode
             && !NodeMetadata.isIgnoredNode(identifierNode)
             && !this.isProhibitedPropertyNode(identifierNode, parentNode)
+            && !this.isProhibitedClassDeclarationNameIdentifierNode(variable, identifierNode, parentNode)
             && !this.isProhibitedExportNamedClassDeclarationIdentifierNode(identifierNode, parentNode)
             && !this.isProhibitedExportNamedFunctionDeclarationIdentifierNode(identifierNode, parentNode)
             && !this.isProhibitedExportNamedVariableDeclarationIdentifierNode(identifierNode, parentNode)
             && !this.isProhibitedImportSpecifierNode(identifierNode, parentNode)
             && !this.isProhibitedVariableNameUsedInObjectPatternNode(variable, identifierNode, lexicalScopeNode)
             && !NodeGuards.isLabelIdentifierNode(identifierNode, parentNode);
+    }
+
+    /**
+     * @param {Variable} variable
+     * @param {Identifier} identifierNode
+     * @param {Node} parentNode
+     * @returns {identifierNode is Identifier}
+     */
+    private isProhibitedClassDeclarationNameIdentifierNode (
+        variable: eslintScope.Variable,
+        identifierNode: ESTree.Identifier,
+        parentNode: ESTree.Node
+    ): identifierNode is ESTree.Identifier {
+        return NodeGuards.isClassDeclarationNode(variable.scope.block)
+            && NodeGuards.isClassDeclarationNode(parentNode)
+            && parentNode.id === identifierNode;
     }
 
     /**
@@ -331,13 +341,13 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
      *
      * @param {Variable} variable
      * @param {Identifier} identifierNode
-     * @param {eslintScope.Scope['block']} lexicalScopeNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @returns {boolean}
      */
     private isProhibitedVariableNameUsedInObjectPatternNode (
         variable: eslintScope.Variable,
         identifierNode: ESTree.Identifier,
-        lexicalScopeNode: eslintScope.Scope['block']
+        lexicalScopeNode: TNodeWithLexicalScope
     ): boolean {
         let isLexicalScopeHasObjectPatternWithoutDeclaration: boolean | undefined =
             this.lexicalScopesWithObjectPatternWithoutDeclarationMap.get(lexicalScopeNode);

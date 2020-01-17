@@ -1,5 +1,10 @@
 Change Log
 
+v0.24.0
+---
+* **Internal refactoring:** completely new mechanism to rename variable names
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/496
+
 v0.23.0
 ---
 * **New option:** `shuffleStringArray` randomly shuffles string array items

@@ -215,13 +215,6 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
         variable.references.forEach((reference: eslintScope.Reference) => {
             reference.identifier.name = identifierNode.name;
         });
-
-        // rename of function default parameter identifiers if exists
-        (<any>variable.scope.block).defaults?.forEach((node: ESTree.Node) => {
-            if (NodeGuards.isIdentifierNode(node) && node.name === variable.name) {
-                node.name = identifierNode.name;
-            }
-        });
     }
 
     /**

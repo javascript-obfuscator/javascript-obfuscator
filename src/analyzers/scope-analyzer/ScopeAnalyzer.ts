@@ -31,6 +31,11 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
     ];
 
     /**
+     * @type {number}
+     */
+    private static readonly emptyRangeValue: number = 0;
+
+    /**
      * @type {IOptions}
      */
     private readonly options: IOptions;
@@ -59,7 +64,10 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
         estraverse.replace(astTree, {
             enter: (node: ESTree.Node): ESTree.Node => {
                 if (!node.range) {
-                    node.range = [0, 0];
+                    node.range = [
+                        ScopeAnalyzer.emptyRangeValue,
+                        ScopeAnalyzer.emptyRangeValue
+                    ];
                 }
 
                 return node;

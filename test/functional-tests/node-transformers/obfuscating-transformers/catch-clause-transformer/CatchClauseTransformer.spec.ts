@@ -10,7 +10,7 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFac
 describe('CatchClauseTransformer', () => {
     let obfuscatedCode: string;
 
-    describe('transformNode', () => {
+    describe('Variant #1: base transform of catch clause parameter', () => {
         const paramNameRegExp: RegExp = /catch *\((_0x([a-f0-9]){4,6})\) *\{/;
         const bodyParamNameRegExp: RegExp = /console\['log'\]\((_0x([a-f0-9]){4,6})\);/;
 
@@ -43,7 +43,7 @@ describe('CatchClauseTransformer', () => {
         });
     });
 
-    describe('object pattern as parameter', () => {
+    describe('Variant #2: object pattern as parameter', () => {
         const functionParameterMatch: RegExp = /\} *catch *\(\{ *name *\}\) *\{/;
         const functionBodyMatch: RegExp = /return *name;/;
 
@@ -64,6 +64,30 @@ describe('CatchClauseTransformer', () => {
 
         it('match #2: shouldn\'t transform function parameter object pattern identifier', () => {
             assert.match(obfuscatedCode, functionBodyMatch);
+        });
+    });
+
+    describe('Variant #3: optional catch binding support', () => {
+        const optionalCatchClauseRegExp: RegExp = /} *catch *\{/;
+        const bodyParamNameRegExp: RegExp = /console\['log'\]\(0x1\);/;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/optional-catch-binding.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }
+            ).getObfuscatedCode();
+        });
+
+        it('match #1: should transform catch clause node', () => {
+            assert.match(obfuscatedCode, optionalCatchClauseRegExp);
+        });
+
+        it('match #2: should transform catch clause node', () => {
+            assert.match(obfuscatedCode, bodyParamNameRegExp);
         });
     });
 });

@@ -10,6 +10,8 @@ import { IScopeAnalyzer } from '../../interfaces/analyzers/scope-analyzer/IScope
 
 import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 
+import { ecmaVersion } from '../../constants/EcmaVersion';
+
 import { NodeGuards } from '../../node/NodeGuards';
 
 @injectable()
@@ -18,7 +20,7 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
      * @type {eslintScope.AnalysisOptions}
      */
     private static readonly eslintScopeOptions: eslintScope.AnalysisOptions = {
-        ecmaVersion: 10,
+        ecmaVersion,
         optimistic: true
     };
 

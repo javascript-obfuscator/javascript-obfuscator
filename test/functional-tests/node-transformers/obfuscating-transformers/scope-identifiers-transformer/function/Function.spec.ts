@@ -684,6 +684,41 @@ describe('ScopeIdentifiersTransformer Function identifiers', () => {
         });
     });
 
+    describe('parameter default value', () => {
+        describe('Variant #1: default parameter as identifier', () => {
+            const variableDeclarationRegExp: RegExp = /var bar *= *0x1;/;
+            const functionParameterRegExp: RegExp = /function func *\(_0x[a-f0-9]{4,6} *= *bar\) *\{/;
+            const functionBodyRegExp: RegExp = /return *_0x[a-f0-9]{4,6} *\+ *bar;/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/default-parameter-as-identifier.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('match #1: shouldn transform variable declaration', () => {
+                assert.match(obfuscatedCode, variableDeclarationRegExp);
+            });
+
+            it('match #2: shouldn transform function parameters', () => {
+                assert.match(obfuscatedCode, functionParameterRegExp);
+            });
+
+            it('match #3: shouldn transform function body', () => {
+                assert.match(obfuscatedCode, functionBodyRegExp);
+            });
+        });
+
+
+    });
+
     describe('ignored identifier names set', () => {
         describe('Variant #1: avoid to add `ObjectPattern` identifier to the set when same identifier exist in function parameter', () => {
             const functionBodyRegExp: RegExp = /\[]\['find']\(\({bar: *_0x[a-f0-9]{4,6}}\) *=> *_0x[a-f0-9]{4,6}\);/;

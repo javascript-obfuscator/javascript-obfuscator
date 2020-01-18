@@ -1,9 +1,12 @@
 Change Log
 
+v0.23.1
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/498
+
 v0.23.0
 ---
 * **New option:** `shuffleStringArray` randomly shuffles string array items
-* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/498
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/494
 * **Internal change:** switched AST parser from `espree` on `acorn`
 * **Internal refactoring:** refactoring of string array storage and related things

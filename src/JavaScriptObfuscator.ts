@@ -19,6 +19,8 @@ import { LoggingMessage } from './enums/logger/LoggingMessage';
 import { NodeTransformer } from './enums/node-transformers/NodeTransformer';
 import { TransformationStage } from './enums/node-transformers/TransformationStage';
 
+import { ecmaVersion } from './constants/EcmaVersion';
+
 import { ASTParserFacade } from './ASTParserFacade';
 import { NodeGuards } from './node/NodeGuards';
 
@@ -28,10 +30,10 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @type {Options}
      */
     private static readonly parseOptions: acorn.Options = {
+        ecmaVersion,
         allowHashBang: true,
         allowImportExportEverywhere: true,
         allowReturnOutsideFunction: true,
-        ecmaVersion: 10,
         locations: true,
         ranges: true
     };

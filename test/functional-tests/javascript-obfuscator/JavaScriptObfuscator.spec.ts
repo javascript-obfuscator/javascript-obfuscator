@@ -551,6 +551,27 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
+        describe('import.meta support', () => {
+            const regExp: RegExp = /console\['log']\(import\.meta\['url']\);/;
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/import-meta.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should support `import.meta`', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
         describe('mangled identifier names generator', () => {
             const regExp: RegExp = /var *c *= *0x1/;
 

@@ -1,13 +1,13 @@
 import { assert } from 'chai';
 
-import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/presets/NoCustomNodes';
 
-import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
-import { readFileAsString } from '../../../../helpers/readFileAsString';
+import { getRegExpMatch } from '../../../../../helpers/getRegExpMatch';
+import { readFileAsString } from '../../../../../helpers/readFileAsString';
 
-import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
+import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscatorFacade';
 
-describe('CatchClauseTransformer', () => {
+describe('ScopeIdentifiersTransformer CatchClause identifiers', () => {
     let obfuscatedCode: string;
 
     describe('Variant #1: base transform of catch clause parameter', () => {
@@ -88,6 +88,47 @@ describe('CatchClauseTransformer', () => {
 
         it('match #2: should transform catch clause node', () => {
             assert.match(obfuscatedCode, bodyParamNameRegExp);
+        });
+    });
+
+    describe('Variant #4: global variable scope', () => {
+        describe('Variant #1: `renameGlobals` is disabled', () => {
+            const globalVariableRegExp: RegExp = /var test *= *0x1;/;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/global-variable-scope.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('match #1: shouldn\'t transform variable identifier if `renameGlobals` option is disabled', () => {
+                assert.match(obfuscatedCode, globalVariableRegExp);
+            });
+        });
+
+        describe('Variant #2: `renameGlobals` is enabled', () => {
+            const globalVariableRegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *0x1;/;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/global-variable-scope.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('match #1: should transform variable identifier if `renameGlobals` option is enabled', () => {
+                assert.match(obfuscatedCode, globalVariableRegExp);
+            });
         });
     });
 });

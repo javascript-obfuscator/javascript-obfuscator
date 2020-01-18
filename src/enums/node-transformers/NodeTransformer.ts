@@ -1,15 +1,10 @@
 export enum NodeTransformer {
     BlockStatementControlFlowTransformer = 'BlockStatementControlFlowTransformer',
-    ClassDeclarationTransformer = 'ClassDeclarationTransformer',
     CommentsTransformer = 'CommentsTransformer',
     CustomNodesTransformer = 'CustomNodesTransformer',
     DeadCodeInjectionTransformer = 'DeadCodeInjectionTransformer',
     EvalCallExpressionTransformer = 'EvalCallExpressionTransformer',
     FunctionControlFlowTransformer = 'FunctionControlFlowTransformer',
-    CatchClauseTransformer = 'CatchClauseTransformer',
-    FunctionDeclarationTransformer = 'FunctionDeclarationTransformer',
-    FunctionTransformer = 'FunctionTransformer',
-    ImportDeclarationTransformer = 'ImportDeclarationTransformer',
     LabeledStatementTransformer = 'LabeledStatementTransformer',
     LiteralTransformer = 'LiteralTransformer',
     MemberExpressionTransformer = 'MemberExpressionTransformer',
@@ -19,8 +14,8 @@ export enum NodeTransformer {
     ObjectExpressionKeysTransformer = 'ObjectExpressionKeysTransformer',
     ObjectExpressionTransformer = 'ObjectExpressionTransformer',
     ParentificationTransformer = 'ParentificationTransformer',
+    ScopeIdentifiersTransformer = 'ScopeIdentifiersTransformer',
     SplitStringTransformer = 'SplitStringTransformer',
     TemplateLiteralTransformer = 'TemplateLiteralTransformer',
-    VariableDeclarationTransformer = 'VariableDeclarationTransformer',
-    VariablePreserveTransformer = 'VariablePreserveTransformer',
+    VariablePreserveTransformer = 'VariablePreserveTransformer'
 }

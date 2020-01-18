@@ -47,12 +47,8 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      * @type {NodeTransformer[]}
      */
     private static readonly transformersToRenameBlockScopeIdentifiers: NodeTransformer[] = [
-        NodeTransformer.CatchClauseTransformer,
-        NodeTransformer.ClassDeclarationTransformer,
-        NodeTransformer.FunctionDeclarationTransformer,
-        NodeTransformer.FunctionTransformer,
         NodeTransformer.LabeledStatementTransformer,
-        NodeTransformer.VariableDeclarationTransformer
+        NodeTransformer.ScopeIdentifiersTransformer
     ];
 
     /**

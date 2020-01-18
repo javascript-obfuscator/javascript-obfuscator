@@ -1,14 +1,14 @@
 import { assert } from 'chai';
 
-import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../../src/options/presets/NoCustomNodes';
 
-import { getRegExpMatch } from '../../../../helpers/getRegExpMatch';
-import { readFileAsString } from '../../../../helpers/readFileAsString';
+import { getRegExpMatch } from '../../../../../helpers/getRegExpMatch';
+import { readFileAsString } from '../../../../../helpers/readFileAsString';
 
-import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
-import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
+import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscatorFacade';
+import { IdentifierNamesGenerator } from '../../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
-describe('ClassDeclarationTransformer', () => {
+describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
     describe('transformation of `classDeclaration` node names', () => {
         describe('Variant #1: `classDeclaration` parent block scope is not a `ProgramNode`', () => {
             const classNameIdentifierRegExp: RegExp = /class *(_0x[a-f0-9]{4,6}) *\{/;
@@ -123,6 +123,7 @@ describe('ClassDeclarationTransformer', () => {
         describe('Variant #3: already renamed identifiers shouldn\'t be renamed twice', () => {
             const classDeclarationRegExp: RegExp = /class *d *{/;
             const variableDeclarationsRegExp: RegExp = /let *e, *f, *g, *h;/;
+            const classReferenceRegExp: RegExp = /new d\(\);/;
 
             let obfuscatedCode: string;
 
@@ -144,6 +145,10 @@ describe('ClassDeclarationTransformer', () => {
 
             it('Match #2: should correctly rename variable declarations', () => {
                 assert.match(obfuscatedCode, variableDeclarationsRegExp);
+            });
+
+            it('Match #3: should correctly rename class reference identifier', () => {
+                assert.match(obfuscatedCode, classReferenceRegExp);
             });
         });
 

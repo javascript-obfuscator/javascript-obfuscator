@@ -1,24 +1,22 @@
 'use strict';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
+import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            var foo = 'foo';
-            var bar = 'bar';
-            var baz = 'baz';
-            var bark = 'bark';
-            
-            console.log(foo, bar, baz, bark);
+            function f(obj) {
+                const {c} = obj;
+            }
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
-            stringArray: true,
-            stringArrayThreshold: 1,
-            shuffleStringArray: true
+            compact: false,
+            renameGlobals: true,
+            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
         }
     ).getObfuscatedCode();
 

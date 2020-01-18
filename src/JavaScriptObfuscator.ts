@@ -50,16 +50,11 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      */
     private static readonly transformersList: NodeTransformer[] = [
         NodeTransformer.BlockStatementControlFlowTransformer,
-        NodeTransformer.ClassDeclarationTransformer,
         NodeTransformer.CommentsTransformer,
         NodeTransformer.CustomNodesTransformer,
         NodeTransformer.DeadCodeInjectionTransformer,
         NodeTransformer.EvalCallExpressionTransformer,
         NodeTransformer.FunctionControlFlowTransformer,
-        NodeTransformer.CatchClauseTransformer,
-        NodeTransformer.FunctionDeclarationTransformer,
-        NodeTransformer.FunctionTransformer,
-        NodeTransformer.ImportDeclarationTransformer,
         NodeTransformer.LabeledStatementTransformer,
         NodeTransformer.LiteralTransformer,
         NodeTransformer.MemberExpressionTransformer,
@@ -69,9 +64,9 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
         NodeTransformer.ObjectExpressionKeysTransformer,
         NodeTransformer.ObjectExpressionTransformer,
         NodeTransformer.ParentificationTransformer,
+        NodeTransformer.ScopeIdentifiersTransformer,
         NodeTransformer.SplitStringTransformer,
         NodeTransformer.TemplateLiteralTransformer,
-        NodeTransformer.VariableDeclarationTransformer,
         NodeTransformer.VariablePreserveTransformer
     ];
 

@@ -2,6 +2,7 @@
 
 import * as acorn from 'acorn';
 import * as escodegen from 'escodegen';
+import * as eslintScope from 'eslint-scope';
 
 declare module 'estree' {
     export interface BaseNodeMetadata {
@@ -14,10 +15,6 @@ declare module 'estree' {
         loc?: acorn.SourceLocation;
     }
 
-    export interface IdentifierNodeMetadata extends BaseNodeMetadata {
-        renamedIdentifier?: boolean;
-    }
-
     export interface LiteralNodeMetadata extends BaseNodeMetadata {
         replacedLiteral?: boolean;
     }
@@ -27,8 +24,8 @@ declare module 'estree' {
         parentNode?: Node;
     }
 
-    interface Identifier extends BaseNode {
-        metadata?: IdentifierNodeMetadata;
+    interface Program extends BaseNode {
+        scope?: eslintScope.Scope | null;
     }
 
     interface SimpleLiteral extends BaseNode {

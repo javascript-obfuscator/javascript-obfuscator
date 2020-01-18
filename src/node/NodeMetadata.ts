@@ -29,14 +29,6 @@ export class NodeMetadata {
     }
 
     /**
-     * @param {Node} identifierNode
-     * @returns {boolean}
-     */
-    public static isRenamedIdentifier (identifierNode: ESTree.Identifier): boolean {
-        return NodeMetadata.get<ESTree.IdentifierNodeMetadata>(identifierNode, 'renamedIdentifier') === true;
-    }
-
-    /**
      * @param {Node} literalNode
      * @returns {boolean}
      */

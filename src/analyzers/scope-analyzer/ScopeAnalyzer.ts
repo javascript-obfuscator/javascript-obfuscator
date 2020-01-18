@@ -78,7 +78,7 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
     /**
      * @param {Program} astTree
      */
-    public analyze (astTree: ESTree.Program): void {
+    public analyze (astTree: ESTree.Node): void {
         const sourceTypeLength: number = ScopeAnalyzer.sourceTypes.length;
 
         ScopeAnalyzer.attachMissingRanges(astTree);

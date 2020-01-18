@@ -7,6 +7,7 @@ require('source-map-support').install();
  */
 import './unit-tests/analyzers/calls-graph-analyzer/CallsGraphAnalyzer.spec';
 import './unit-tests/analyzers/prevailing-kind-of-variables-analyzer/PrevailingKindOfVariablesAnalyzer.spec';
+import './unit-tests/analyzers/scope-analyzer/ScopeAnalyzer.spec';
 import './unit-tests/analyzers/string-array-storage-analyzer/StringArrayStorageAnalyzer.spec';
 import './unit-tests/cli/sanitizers/ArraySanitizer.spec';
 import './unit-tests/cli/sanitizers/BooleanSanitizer.spec';

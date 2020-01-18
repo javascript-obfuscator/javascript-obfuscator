@@ -7,7 +7,7 @@ export interface IScopeAnalyzer extends IAnalyzer<void> {
     /**
      * @param {Program} astTree
      */
-    analyze (astTree: ESTree.Program): void;
+    analyze (astTree: ESTree.Node): void;
 
     /**
      * @param {Node} node

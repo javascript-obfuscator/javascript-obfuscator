@@ -10,7 +10,7 @@ import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscator
 describe('ScopeIdentifiersTransformer CatchClause identifiers', () => {
     let obfuscatedCode: string;
 
-    describe('transform identifiers', () => {
+    describe('Variant #1: base transform of catch clause parameter', () => {
         const paramNameRegExp: RegExp = /catch *\((_0x([a-f0-9]){4,6})\) *\{/;
         const bodyParamNameRegExp: RegExp = /console\['log'\]\((_0x([a-f0-9]){4,6})\);/;
 
@@ -43,7 +43,7 @@ describe('ScopeIdentifiersTransformer CatchClause identifiers', () => {
         });
     });
 
-    describe('object pattern as parameter', () => {
+    describe('Variant #2: object pattern as parameter', () => {
         const functionParameterMatch: RegExp = /\} *catch *\(\{ *name *\}\) *\{/;
         const functionBodyMatch: RegExp = /return *name;/;
 
@@ -67,8 +67,32 @@ describe('ScopeIdentifiersTransformer CatchClause identifiers', () => {
         });
     });
 
-    describe('Global variable scope', () => {
-        describe('`renameGlobals` is disabled', () => {
+    describe('Variant #3: optional catch binding support', () => {
+        const optionalCatchClauseRegExp: RegExp = /} *catch *\{/;
+        const bodyParamNameRegExp: RegExp = /console\['log'\]\(0x1\);/;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/optional-catch-binding.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET
+                }
+            ).getObfuscatedCode();
+        });
+
+        it('match #1: should transform catch clause node', () => {
+            assert.match(obfuscatedCode, optionalCatchClauseRegExp);
+        });
+
+        it('match #2: should transform catch clause node', () => {
+            assert.match(obfuscatedCode, bodyParamNameRegExp);
+        });
+    });
+
+    describe('Variant #4: global variable scope', () => {
+        describe('Variant #1: `renameGlobals` is disabled', () => {
             const globalVariableRegExp: RegExp = /var test *= *0x1;/;
 
             before(() => {
@@ -87,7 +111,7 @@ describe('ScopeIdentifiersTransformer CatchClause identifiers', () => {
             });
         });
 
-        describe('`renameGlobals` is enabled', () => {
+        describe('Variant #2: `renameGlobals` is enabled', () => {
             const globalVariableRegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *0x1;/;
 
             before(() => {

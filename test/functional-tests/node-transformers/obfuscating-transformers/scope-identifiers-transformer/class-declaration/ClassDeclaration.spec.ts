@@ -222,5 +222,26 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
                 assert.match(obfuscatedCode, defaultExportRegExp);
             });
         });
+
+        describe('Variant #8: super class expression parenthesis', () => {
+            const defaultExportRegExp: RegExp = /class Baz extends *\(Foo *\|| *Bar\) *{}/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/super-class-expression-parenthesis.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('Match #1: should keep super class expression parenthesis', () => {
+                assert.match(obfuscatedCode, defaultExportRegExp);
+            });
+        });
     });
 });

@@ -1,4 +1,4 @@
-import type { Chance } from 'chance';
+import type * as Chance from 'chance';
 
 export interface IRandomGenerator {
     /**

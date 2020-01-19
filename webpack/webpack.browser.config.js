@@ -15,13 +15,8 @@ module.exports = {
         exprContextCritical: false,
         rules: [
             {
-                test: /\.ts(x?)$/,
-                loader: 'awesome-typescript-loader',
-                query: {
-                    configFileName: 'src/tsconfig.browser.json',
-                    useCache: true,
-                    forceIsolatedModules: true
-                }
+                test: /\.ts$/,
+                loader: 'ts-loader'
             }
         ]
     },

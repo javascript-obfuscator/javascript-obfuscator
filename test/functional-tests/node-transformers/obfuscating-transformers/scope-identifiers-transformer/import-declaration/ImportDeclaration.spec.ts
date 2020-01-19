@@ -173,5 +173,27 @@ describe('ScopeIdentifiersTransformer ImportDeclaration identifiers', () => {
                 assert.match(obfuscatedCode, variableDeclarationIdentifierRegExp);
             });
         });
+
+        describe('Variant #6: dynamic import support', () => {
+            const dynamicImportRegExp: RegExp = /import\(_0x[a-f0-9]{4,6}\);/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/dynamic-import.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should support dynamic import', () => {
+                assert.match(obfuscatedCode, dynamicImportRegExp);
+            });
+        });
     });
 });

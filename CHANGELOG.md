@@ -3,6 +3,7 @@ Change Log
 v0.24.0
 ---
 * **Internal refactoring:** completely new mechanism to rename variable names
+* Dynamic import and `import.meta` support. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/505
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/496
 
 v0.23.2

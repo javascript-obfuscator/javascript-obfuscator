@@ -34,6 +34,7 @@ import { StringArrayEncoding } from '../enums/StringArrayEncoding';
 import { DEFAULT_PRESET } from './presets/Default';
 
 import { ValidationErrorsFormatter } from './ValidationErrorsFormatter';
+import { IsAllowedForObfuscationTargets } from './validators/IsAllowedForObfuscationTargets';
 
 @injectable()
 export class Options implements IOptions {
@@ -104,6 +105,10 @@ export class Options implements IOptions {
     @IsString({
         each: true
     })
+    @IsAllowedForObfuscationTargets([
+        ObfuscationTarget.Browser,
+        ObfuscationTarget.BrowserNoEval,
+    ])
     public readonly domainLock!: string[];
 
     /**
@@ -198,6 +203,10 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
+    @IsAllowedForObfuscationTargets([
+        ObfuscationTarget.Browser,
+        ObfuscationTarget.BrowserNoEval,
+    ])
     public readonly sourceMap!: boolean;
 
     /**
@@ -210,18 +219,30 @@ export class Options implements IOptions {
         require_tld: false,
         require_valid_protocol: true
     })
+    @IsAllowedForObfuscationTargets([
+        ObfuscationTarget.Browser,
+        ObfuscationTarget.BrowserNoEval,
+    ])
     public readonly sourceMapBaseUrl!: string;
 
     /**
      * @type {string}
      */
     @IsString()
+    @IsAllowedForObfuscationTargets([
+        ObfuscationTarget.Browser,
+        ObfuscationTarget.BrowserNoEval,
+    ])
     public readonly sourceMapFileName!: string;
 
     /**
      * @type {SourceMapMode}
      */
     @IsIn([SourceMapMode.Inline, SourceMapMode.Separate])
+    @IsAllowedForObfuscationTargets([
+        ObfuscationTarget.Browser,
+        ObfuscationTarget.BrowserNoEval,
+    ])
     public readonly sourceMapMode!: TypeFromEnum<typeof SourceMapMode>;
 
     /**

@@ -1,7 +1,7 @@
 'use strict';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
-import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
+import { ObfuscationTarget } from '../../src/enums/ObfuscationTarget';
 
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
@@ -14,9 +14,8 @@ import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
-            compact: false,
-            renameGlobals: true,
-            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
+            sourceMap: true,
+            target: ObfuscationTarget.Browser
         }
     ).getObfuscatedCode();
 

@@ -1,7 +1,7 @@
 import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
-import { BinaryOperator, BlockStatement } from 'estree';
+import type { BinaryOperator, BlockStatement } from 'estree';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../types/node/TStatement';

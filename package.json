@@ -33,6 +33,7 @@
     "eslint-scope": "5.0.0",
     "estraverse": "4.3.0",
     "eventemitter3": "4.0.0",
+    "fast-deep-equal": "^3.1.1",
     "inversify": "5.0.1",
     "js-string-escape": "1.0.1",
     "md5": "2.2.1",

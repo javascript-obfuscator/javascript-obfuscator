@@ -1,8 +1,9 @@
 import * as acorn from 'acorn';
 import acornImportMeta from 'acorn-import-meta';
 import * as ESTree from 'estree';
-
 import chalk, { Chalk } from 'chalk';
+
+import { IASTParserFacadeInputData } from './interfaces/IASTParserFacadeInputData';
 
 /**
  * Facade over AST parser `acorn`
@@ -27,23 +28,23 @@ export class ASTParserFacade {
     ];
 
     /**
-     * @param {string} input
+     * @param {string} inputData
      * @param {Options} config
      * @returns {Program}
      */
-    public static parse (input: string, config: acorn.Options): ESTree.Program | never {
+    public static parse (inputData: IASTParserFacadeInputData, config: acorn.Options): ESTree.Program | never {
         const sourceTypeLength: number = ASTParserFacade.sourceTypes.length;
 
         for (let i: number = 0; i < sourceTypeLength; i++) {
             try {
-                return ASTParserFacade.parseType(input, config, ASTParserFacade.sourceTypes[i]);
+                return ASTParserFacade.parseType(inputData, config, ASTParserFacade.sourceTypes[i]);
             } catch (error) {
                 if (i < sourceTypeLength - 1) {
                     continue;
                 }
 
                 throw new Error(ASTParserFacade.processParsingError(
-                    input,
+                    inputData,
                     error.message,
                     error.loc
                 ));
@@ -54,16 +55,17 @@ export class ASTParserFacade {
     }
 
     /**
-     * @param {string} input
+     * @param {IASTParserFacadeInputData} inputData
      * @param {acorn.Options} inputConfig
      * @param {acorn.Options["sourceType"]} sourceType
      * @returns {Program}
      */
     private static parseType (
-        input: string,
+        inputData: IASTParserFacadeInputData,
         inputConfig: acorn.Options,
         sourceType: acorn.Options['sourceType']
     ): ESTree.Program {
+        const { sourceCode } = inputData;
         const comments: ESTree.Comment[] = [];
         const config: acorn.Options = {
             ...inputConfig,
@@ -74,7 +76,7 @@ export class ASTParserFacade {
         const program: ESTree.Program = (
             <any>acorn
                 .Parser.extend(acornImportMeta)
-                .parse(input, config)
+                .parse(sourceCode, config)
         );
 
         if (comments.length) {
@@ -85,15 +87,21 @@ export class ASTParserFacade {
     }
 
     /**
-     * @param {string} sourceCode
+     * @param {IASTParserFacadeInputData} inputData
      * @param {string} errorMessage
-     * @param {Position} position
+     * @param {Position | null} position
      * @returns {never}
      */
-    private static processParsingError (sourceCode: string, errorMessage: string, position: ESTree.Position | null): never {
+    private static processParsingError (
+        inputData: IASTParserFacadeInputData,
+        errorMessage: string,
+        position: ESTree.Position | null
+    ): never {
         if (!position || !position.line || !position.column) {
             throw new Error(errorMessage);
         }
+
+        const { sourceCode, inputFilePath } = inputData;
 
         const sourceCodeLines: string[] = sourceCode.split(/\r?\n/);
         const errorLine: string | undefined = sourceCodeLines[position.line - 1];
@@ -101,6 +109,10 @@ export class ASTParserFacade {
         if (!errorLine) {
             throw new Error(errorMessage);
         }
+
+        const formattedInputFilePath: string = inputFilePath
+            ? `${inputFilePath}, `
+            : '';
 
         const startErrorIndex: number = Math.max(0, position.column - ASTParserFacade.nearestSymbolsCount);
         const endErrorIndex: number = Math.min(errorLine.length, position.column + ASTParserFacade.nearestSymbolsCount);
@@ -110,6 +122,8 @@ export class ASTParserFacade {
             errorLine.substring(startErrorIndex, endErrorIndex).replace(/^\s+/, '')
         }...`;
 
-        throw new Error(`Line ${position.line}: ${errorMessage}\n${formattedPointer} ${formattedCodeSlice}`);
+        throw new Error(
+            `ERROR in ${formattedInputFilePath}line ${position.line}: ${errorMessage}\n${formattedPointer} ${formattedCodeSlice}`
+        );
     }
 }

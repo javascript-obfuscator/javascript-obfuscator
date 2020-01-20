@@ -10,8 +10,6 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { ICustomNodeFormatter } from '../../interfaces/custom-nodes/ICustomNodeFormatter';
 
-import { initializable } from '../../decorators/Initializable';
-
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeUtils } from '../../node/NodeUtils';
@@ -21,7 +19,6 @@ export class LogicalExpressionFunctionNode extends AbstractCustomNode {
     /**
      * @type {LogicalOperator}
      */
-    @initializable()
     private operator!: LogicalOperator;
 
     /**

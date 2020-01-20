@@ -20,6 +20,7 @@ export const DEFAULT_PRESET: TInputOptions = Object.freeze({
     identifiersPrefix: '',
     identifiersDictionary: [],
     inputFileName: '',
+    inputFilePath: '',
     log: false,
     renameGlobals: false,
     reservedNames: [],

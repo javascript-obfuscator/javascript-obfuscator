@@ -7,6 +7,7 @@ import * as ESTree from 'estree';
 
 import { TObfuscatedCodeFactory } from './types/container/source-code/TObfuscatedCodeFactory';
 
+import { IASTParserFacadeInputData } from './interfaces/IASTParserFacadeInputData';
 import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
 import { IJavaScriptObfuscator } from './interfaces/IJavaScriptObfsucator';
 import { ILogger } from './interfaces/logger/ILogger';
@@ -148,7 +149,12 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      * @returns {Program}
      */
     private parseCode (sourceCode: string): ESTree.Program {
-        return ASTParserFacade.parse(sourceCode, JavaScriptObfuscator.parseOptions);
+        const inputData: IASTParserFacadeInputData = {
+            sourceCode,
+            inputFilePath: this.options.inputFilePath
+        };
+
+        return ASTParserFacade.parse(inputData, JavaScriptObfuscator.parseOptions);
     }
 
     /**

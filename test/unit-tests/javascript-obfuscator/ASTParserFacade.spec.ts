@@ -1,4 +1,9 @@
 import { assert } from 'chai';
+
+import { IASTParserFacadeInputData } from '../../../src/interfaces/IASTParserFacadeInputData';
+
+import { ecmaVersion } from '../../../src/constants/EcmaVersion';
+
 import { ASTParserFacade } from '../../../src/ASTParserFacade';
 
 describe('ASTParserFacade', () => {
@@ -15,11 +20,13 @@ describe('ASTParserFacade', () => {
                 let testFunc: () => void;
 
                 before(() => {
-                    testFunc = () => ASTParserFacade.parse(sourceCode, { ecmaVersion: 9 });
+                    const inputData: IASTParserFacadeInputData = {sourceCode};
+
+                    testFunc = () => ASTParserFacade.parse(inputData, { ecmaVersion });
                 });
 
                 it('should output code preview when AST parser throws a parse error', () => {
-                    assert.throws(testFunc, /Line 3: Unexpected token \(3:28\)\n.*\.\.\.var baz = 3;,\.\.\./);
+                    assert.throws(testFunc, /ERROR in line 3: Unexpected token \(3:28\)\n.*\.\.\.var baz = 3;,\.\.\./);
                 });
             });
 
@@ -44,35 +51,63 @@ describe('ASTParserFacade', () => {
                 let testFunc: () => void;
 
                 before(() => {
-                    testFunc = () => ASTParserFacade.parse(sourceCode, { ecmaVersion: 9 });
+                    const inputData: IASTParserFacadeInputData = {sourceCode};
+
+                    testFunc = () => ASTParserFacade.parse(inputData, { ecmaVersion });
                 });
 
                 it('should output code preview when AST parser throws a parse error', () => {
-                    assert.throws(testFunc, /Line 13: Unexpected token \(13:28\)\n.*\.\.\.var baz = 3;,\.\.\./);
+                    assert.throws(testFunc, /ERROR in line 13: Unexpected token \(13:28\)\n.*\.\.\.var baz = 3;,\.\.\./);
                 });
             });
-        });
 
-        describe(`\`Unexpected token\` error code preview`, () => {
-            const sourceCode: string = `` +
-                `function bar () {
-                    var a = 1;
-                }
-                functin baz () {
-                    var a = 1;
-                }
-                function bark () {
-                    var a = 1;
-                }`;
+            describe('Variant #3: code with functions', () => {
+                const sourceCode: string = `` +
+                    `function bar () {
+                        var a = 1;
+                    }
+                    functin baz () {
+                        var a = 1;
+                    }
+                    function bark () {
+                        var a = 1;
+                    }`;
 
-            let testFunc: () => void;
+                let testFunc: () => void;
 
-            before(() => {
-                testFunc = () => ASTParserFacade.parse(sourceCode, { ecmaVersion: 9 });
+                before(() => {
+                    const inputData: IASTParserFacadeInputData = {sourceCode};
+
+                    testFunc = () => ASTParserFacade.parse(inputData, { ecmaVersion });
+                });
+
+                it('should output code preview when AST parser throws a parse error', () => {
+                    assert.throws(testFunc, /ERROR in line 4: Unexpected token \(4:28\)\n.*\.\.\.functin baz \(\) {\.\.\./);
+                });
             });
 
-            it('should output code preview when AST parser throws a parse error', () => {
-                assert.throws(testFunc, /Line 4: Unexpected token \(4:24\)\n.*\.\.\.functin baz \(\) {\.\.\./);
+            describe('Variant #4: input file path is set', () => {
+                const sourceCode: string = `` +
+                    `var foo = 1;
+                    var bar = 2;
+                    var baz = 3;,
+                    var bark = 4;
+                    var hawk = 5;`;
+
+                let testFunc: () => void;
+
+                before(() => {
+                    const inputData: IASTParserFacadeInputData = {
+                        sourceCode,
+                        inputFilePath: '/src/foo.js'
+                    };
+
+                    testFunc = () => ASTParserFacade.parse(inputData, { ecmaVersion });
+                });
+
+                it('should output code preview when AST parser throws a parse error', () => {
+                    assert.throws(testFunc, /ERROR in \/src\/foo\.js, line 3: Unexpected token \(3:32\)\n.*\.\.\.var baz = 3;,\.\.\./);
+                });
             });
         });
     });

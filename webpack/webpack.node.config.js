@@ -1,14 +1,16 @@
 'use strict';
 
+const path = require('path');
+
 const nodeExternals = require('webpack-node-externals');
 const webpack = require('webpack');
-const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
-const TSLintPlugin = require('tslint-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const packageJson = require('pjson');
 
 const WebpackUtils = require('./utils/WebpackUtils').WebpackUtils;
 
 module.exports = {
+    context: path.resolve(__dirname, '..'),
     devtool: 'source-map',
     entry: {
         'index': './index.ts',
@@ -20,12 +22,10 @@ module.exports = {
         exprContextCritical: false,
         rules: [
             {
-                test: /\.ts(x?)$/,
-                loader: 'awesome-typescript-loader',
-                query: {
-                    configFileName: 'src/tsconfig.node.json',
-                    useCache: true,
-                    forceIsolatedModules: true
+                test: /\.ts$/,
+                loader: 'ts-loader',
+                options: {
+                    transpileOnly: true
                 }
             }
         ]
@@ -47,11 +47,9 @@ module.exports = {
         new webpack.EnvironmentPlugin({
             VERSION: packageJson.version
         }),
-        new CheckerPlugin(),
-        new TSLintPlugin({
-            files: ['./src/**/*.ts'],
-            project: './src/tsconfig.node.json',
-            exclude: []
+        new ForkTsCheckerWebpackPlugin({
+            tsconfig: 'src/tsconfig.node.json',
+            tslint: './tslint.json'
         })
     ],
     output: {

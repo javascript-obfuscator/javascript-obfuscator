@@ -254,25 +254,27 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
      * @returns {IEncodedValue}
      */
     private getEncodedValue (value: string): IEncodedValue {
-        let encodedValue: string;
-        let decodeKey: string | null = null;
-
         switch (this.options.stringArrayEncoding) {
-            case StringArrayEncoding.Rc4:
-                decodeKey = this.randomGenerator.getRandomGenerator().pickone(this.rc4Keys);
-                encodedValue = this.cryptUtils.btoa(this.cryptUtils.rc4(value, decodeKey));
+            case StringArrayEncoding.Rc4: {
+                const decodeKey: string = this.randomGenerator.getRandomGenerator().pickone(this.rc4Keys);
+                const encodedValue: string = this.cryptUtils.btoa(this.cryptUtils.rc4(value, decodeKey));
 
-                break;
+                return { encodedValue, decodeKey };
+            }
 
-            case StringArrayEncoding.Base64:
-                encodedValue = this.cryptUtils.btoa(value);
+            case StringArrayEncoding.Base64: {
+                const decodeKey: null = null;
+                const encodedValue: string = this.cryptUtils.btoa(value);
 
-                break;
+                return { encodedValue, decodeKey };
+            }
 
-            default:
-                encodedValue = value;
+            default: {
+                const decodeKey: null = null;
+                const encodedValue: string = value;
+
+                return { encodedValue, decodeKey };
+            }
         }
-
-        return { encodedValue, decodeKey };
     }
 }

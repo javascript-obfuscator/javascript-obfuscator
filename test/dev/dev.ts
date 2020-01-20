@@ -1,21 +1,21 @@
 'use strict';
 
 import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNodes';
-import { ObfuscationTarget } from '../../src/enums/ObfuscationTarget';
 
 (function () {
     const JavaScriptObfuscator: any = require('../../index');
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            function f(obj) {
-                const {c} = obj;
-            }
+            const foo = \`\${{
+                foo: 'bar',
+                baz: 'bark'
+            }.baz}\`;
+            console.log(foo);
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
-            sourceMap: true,
-            target: ObfuscationTarget.Browser
+            transformObjectKeys: true
         }
     ).getObfuscatedCode();
 

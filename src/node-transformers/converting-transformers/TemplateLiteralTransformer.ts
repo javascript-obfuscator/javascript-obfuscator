@@ -122,6 +122,7 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
         }
 
         NodeUtils.parentizeAst(transformedNode);
+        NodeUtils.parentizeNode(transformedNode, parentNode);
 
         return transformedNode;
     }

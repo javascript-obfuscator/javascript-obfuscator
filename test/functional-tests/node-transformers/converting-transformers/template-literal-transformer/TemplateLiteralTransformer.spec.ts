@@ -182,4 +182,31 @@ describe('TemplateLiteralTransformer', () => {
             assert.match(obfuscatedCode,  /^\[]\['map']\(\(\) *=> *'foo'\);$/);
         });
     });
+
+    describe('Variant #8: parentize node', () => {
+        const match: string = `` +
+            `var *_0x[a-f0-9]{4,6} *= *{};` +
+            `_0x[a-f0-9]{4,6}\\['foo'] *= *'bar';` +
+            `var *foo *= *'' *\\+ *_0x[a-f0-9]{4,6};` +
+        ``;
+        const regExp: RegExp = new RegExp(match);
+
+        let obfuscatedCode: string;
+
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/parentize-node.js');
+
+            obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    transformObjectKeys: true
+                }
+            ).getObfuscatedCode();
+        });
+
+        it('should correctly obfuscate code without maximum call stack error', () => {
+            assert.match(obfuscatedCode,  regExp);
+        });
+    });
 });

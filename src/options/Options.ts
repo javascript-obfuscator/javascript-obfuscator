@@ -145,6 +145,12 @@ export class Options implements IOptions {
     public readonly inputFileName!: string;
 
     /**
+     * @type {string}
+     */
+    @IsString()
+    public readonly inputFilePath!: string;
+
+    /**
      * @type {boolean}
      */
     @IsBoolean()

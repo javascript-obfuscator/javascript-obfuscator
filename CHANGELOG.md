@@ -5,6 +5,7 @@ v0.24.0
 * **Internal refactoring:** completely new mechanism to rename variable names
 * Dynamic import and `import.meta` support. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/505
 * Now usage of some browser-related options with `target: 'node'` will cause a validation error
+* **CLI:** a file path will be displayed on obfuscation error. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/513
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/512
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/496
 * **Internal:** switched from `awesome-typescript-loader` on `ts-loader`

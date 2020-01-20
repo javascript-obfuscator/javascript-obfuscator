@@ -35,10 +35,13 @@ export class NodeUtils {
      * @returns {Statement[]}
      */
     public static convertCodeToStructure (code: string): ESTree.Statement[] {
-        const structure: ESTree.Program = ASTParserFacade.parse(code, {
-            ecmaVersion,
-            sourceType: 'script'
-        });
+        const structure: ESTree.Program = ASTParserFacade.parse(
+            { sourceCode: code },
+            {
+                ecmaVersion,
+                sourceType: 'script'
+            }
+        );
 
         estraverse.replace(structure, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node => {

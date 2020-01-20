@@ -33,13 +33,11 @@ export class ExpressionWithOperatorControlFlowStorageCallNode extends AbstractCu
     /**
      * @type {Expression}
      */
-    @initializable()
     private leftValue!: Expression;
 
     /**
      * @type {ESTree.Expression}
      */
-    @initializable()
     private rightValue!: Expression;
 
     /**

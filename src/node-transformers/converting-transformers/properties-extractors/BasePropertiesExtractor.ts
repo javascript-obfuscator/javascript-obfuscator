@@ -5,6 +5,7 @@ import * as ESTree from 'estree';
 
 import { TNodeWithStatements } from '../../../types/node/TNodeWithStatements';
 import { TObjectExpressionKeysTransformerCustomNodeFactory } from '../../../types/container/custom-nodes/TObjectExpressionKeysTransformerCustomNodeFactory';
+import { TPropertiesExtractorResult } from '../../../types/node-transformers/TPropertiesExtractorResult';
 import { TStatement } from '../../../types/node/TStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
@@ -45,12 +46,12 @@ export class BasePropertiesExtractor extends AbstractPropertiesExtractor {
     /**
      * @param {ObjectExpression} objectExpressionNode
      * @param {Node} parentNode
-     * @returns {Node}
+     * @returns {TPropertiesExtractorResult}
      */
     public extract (
         objectExpressionNode: ESTree.ObjectExpression,
         parentNode: ESTree.Node
-    ): ESTree.Node {
+    ): TPropertiesExtractorResult {
         return this.transformObjectExpressionNode(
             objectExpressionNode,
             parentNode

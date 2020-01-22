@@ -4,6 +4,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 
 import { TPropertiesExtractorFactory } from '../../types/container/node-transformers/TPropertiesExtractorFactory';
+import { TPropertiesExtractorResult } from '../../types/node-transformers/TPropertiesExtractorResult';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IPropertiesExtractor } from '../../interfaces/node-transformers/converting-transformers/properties-extractors/IPropertiesExtractor';
@@ -12,6 +13,7 @@ import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { NodeType } from '../../enums/node/NodeType';
 import { PropertiesExtractor } from '../../enums/node-transformers/converting-transformers/properties-extractors/PropertiesExtractor';
+import { PropertiesExtractorFlag } from '../../enums/node-transformers/converting-transformers/properties-extractors/PropertiesExtractorResult';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
@@ -20,10 +22,16 @@ import { NodeGuards } from '../../node/NodeGuards';
 @injectable()
 export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
     /**
+     * @type {Set<ESTree.Node>}
+     */
+    private static readonly objectExpressionNodesToSkipSet: Set<ESTree.Node> = new Set();
+
+    /**
      * @type {Map<string, PropertiesExtractor>}
      */
     private static readonly propertiesExtractorsMap: Map <string, PropertiesExtractor> = new Map([
         [NodeType.AssignmentExpression, PropertiesExtractor.AssignmentExpressionPropertiesExtractor],
+        [NodeType.AssignmentPattern, PropertiesExtractor.AssignmentPatternPropertiesExtractor],
         [NodeType.VariableDeclarator, PropertiesExtractor.VariableDeclaratorPropertiesExtractor]
     ]);
 
@@ -110,9 +118,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
             return objectExpressionNode;
         }
 
-        const propertiesExtractor: IPropertiesExtractor = this.propertiesExtractorFactory(propertiesExtractorName);
-
-        return propertiesExtractor.extract(objectExpressionNode, parentNode);
+        return this.transformNodeWithExtractor(objectExpressionNode, parentNode, propertiesExtractorName);
     }
 
     /**
@@ -137,8 +143,36 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
             return objectExpressionNode;
         }
 
-        const propertiesExtractor: IPropertiesExtractor = this.propertiesExtractorFactory(PropertiesExtractor.BasePropertiesExtractor);
+        if (ObjectExpressionKeysTransformer.objectExpressionNodesToSkipSet.has(objectExpressionNode)) {
+            return objectExpressionNode;
+        }
 
-        return propertiesExtractor.extract(objectExpressionNode, parentNode);
+        return this.transformNodeWithExtractor(objectExpressionNode, parentNode, PropertiesExtractor.BasePropertiesExtractor);
+    }
+
+    /**
+     * @param {ObjectExpression} objectExpressionNode
+     * @param {Node} parentNode
+     * @param {PropertiesExtractor} propertiesExtractorName
+     * @returns {Node}
+     */
+    private transformNodeWithExtractor (
+        objectExpressionNode: ESTree.ObjectExpression,
+        parentNode: ESTree.Node,
+        propertiesExtractorName: PropertiesExtractor
+    ): ESTree.Node {
+        const propertiesExtractor: IPropertiesExtractor = this.propertiesExtractorFactory(propertiesExtractorName);
+        const extractedResult: TPropertiesExtractorResult =
+            propertiesExtractor.extract(objectExpressionNode, parentNode);
+
+        switch (extractedResult) {
+            case PropertiesExtractorFlag.Skip:
+                ObjectExpressionKeysTransformer.objectExpressionNodesToSkipSet.add(objectExpressionNode);
+
+                return objectExpressionNode;
+
+            default:
+                return extractedResult;
+        }
     }
 }

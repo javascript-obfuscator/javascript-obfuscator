@@ -4,6 +4,8 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
+import { TPropertiesExtractorResult } from '../../../types/node-transformers/TPropertiesExtractorResult';
+
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 
@@ -26,12 +28,12 @@ export class VariableDeclaratorPropertiesExtractor extends AbstractPropertiesExt
     /**
      * @param {ObjectExpression} objectExpressionNode
      * @param {VariableDeclarator} hostNode
-     * @returns {Node}
+     * @returns {TPropertiesExtractorResult}
      */
     public extract (
         objectExpressionNode: ESTree.ObjectExpression,
         hostNode: ESTree.VariableDeclarator
-    ): ESTree.Node {
+    ): TPropertiesExtractorResult {
         if (
             !NodeGuards.isIdentifierNode(hostNode.id)
             || this.isProhibitedObjectExpressionNode(objectExpressionNode, hostNode.id)

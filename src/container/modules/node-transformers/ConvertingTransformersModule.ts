@@ -17,6 +17,7 @@ import { ObjectExpressionTransformer } from '../../../node-transformers/converti
 import { SplitStringTransformer } from '../../../node-transformers/converting-transformers/SplitStringTransformer';
 import { TemplateLiteralTransformer } from '../../../node-transformers/converting-transformers/TemplateLiteralTransformer';
 import { VariableDeclaratorPropertiesExtractor } from '../../../node-transformers/converting-transformers/properties-extractors/VariableDeclaratorPropertiesExtractor';
+import { AssignmentPatternPropertiesExtractor } from '../../../node-transformers/converting-transformers/properties-extractors/AssignmentPatternPropertiesExtractor';
 
 export const convertingTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // converting transformers
@@ -48,6 +49,10 @@ export const convertingTransformersModule: interfaces.ContainerModule = new Cont
     bind<IPropertiesExtractor>(ServiceIdentifiers.IPropertiesExtractor)
         .to(AssignmentExpressionPropertiesExtractor)
         .whenTargetNamed(PropertiesExtractor.AssignmentExpressionPropertiesExtractor);
+
+    bind<IPropertiesExtractor>(ServiceIdentifiers.IPropertiesExtractor)
+        .to(AssignmentPatternPropertiesExtractor)
+        .whenTargetNamed(PropertiesExtractor.AssignmentPatternPropertiesExtractor);
 
     bind<IPropertiesExtractor>(ServiceIdentifiers.IPropertiesExtractor)
         .to(BasePropertiesExtractor)

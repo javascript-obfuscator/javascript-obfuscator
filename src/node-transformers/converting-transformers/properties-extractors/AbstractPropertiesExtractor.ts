@@ -4,6 +4,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 
 import { TNodeWithStatements } from '../../../types/node/TNodeWithStatements';
+import { TPropertiesExtractorResult } from '../../../types/node-transformers/TPropertiesExtractorResult';
 
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IPropertiesExtractor } from '../../../interfaces/node-transformers/converting-transformers/properties-extractors/IPropertiesExtractor';
@@ -91,12 +92,12 @@ export abstract class AbstractPropertiesExtractor implements IPropertiesExtracto
     /**
      * @param {ObjectExpression} objectExpressionNode
      * @param {Node} hostNode
-     * @returns {Node}
+     * @returns {TPropertiesExtractorResult}
      */
     public abstract extract (
         objectExpressionNode: ESTree.ObjectExpression,
         hostNode: ESTree.Node
-    ): ESTree.Node;
+    ): TPropertiesExtractorResult;
 
     /**
      * @param {Property[]} properties

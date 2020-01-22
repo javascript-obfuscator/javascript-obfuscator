@@ -3,6 +3,8 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
+import { TPropertiesExtractorResult } from '../../../types/node-transformers/TPropertiesExtractorResult';
+
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 
@@ -54,12 +56,12 @@ export class AssignmentExpressionPropertiesExtractor extends AbstractPropertiesE
     /**
      * @param {ObjectExpression} objectExpressionNode
      * @param {AssignmentExpression} hostNode
-     * @returns {Node}
+     * @returns {TPropertiesExtractorResult}
      */
     public extract (
         objectExpressionNode: ESTree.ObjectExpression,
         hostNode: ESTree.AssignmentExpression
-    ): ESTree.Node {
+    ): TPropertiesExtractorResult {
         const hostParentNode: ESTree.Node | undefined = hostNode.parentNode;
         const leftNode: ESTree.MemberExpression | ESTree.Pattern = hostNode.left;
 

@@ -367,6 +367,32 @@ describe('ObjectExpressionKeysTransformer', () => {
                     assert.match(obfuscatedCode,  regExp);
                 });
             });
+
+            describe('Variant #3', () => {
+                const match: string = `` +
+                    `var *${variableMatch} *= *0x1, *${variableMatch} *= *{};` +
+                    `${variableMatch}\\['foo'] *= *${variableMatch};` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-with-object-call-6.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
         });
 
         describe('Variant #12: assignment expression and member expression', () => {
@@ -452,6 +478,33 @@ describe('ObjectExpressionKeysTransformer', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });
+
+        describe('Variant #15: function default values', () => {
+            const match: string = `` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['value'] *= *0x1;` +
+                `function test *\\(${variableMatch} *= *0x1, *${variableMatch} *= *${variableMatch}\\) *{ *}` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/function-default-values.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn ignore default parameter object if it references other parameter', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
     });
 
     describe('member expression as host of object expression', () => {
@@ -460,7 +513,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                 `this\\['state'] *= *{};` +
                 `this\\['state']\\['foo'] *= *'bar';` +
                 `this\\['state']\\['baz'] *= *'bark';` +
-                ``;
+            ``;
             const regExp: RegExp = new RegExp(match);
 
             let obfuscatedCode: string;
@@ -487,7 +540,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                 `this\\['state']\\['foo'] *= *{};` +
                 `this\\['state']\\['foo']\\['foo'] *= *'bar';` +
                 `this\\['state']\\['foo']\\['baz'] *= *'bark';` +
-                ``;
+            ``;
             const regExp: RegExp = new RegExp(match);
 
             let obfuscatedCode: string;
@@ -518,7 +571,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                     `var *${variableMatch} *= *{};` +
                     `${variableMatch}\\['foo'] *= *'bar';` +
                     `}` +
-                    ``;
+                ``;
                 const regExp: RegExp = new RegExp(match);
 
                 let obfuscatedCode: string;
@@ -1173,6 +1226,31 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
 
             it('shouldn\'t transform object keys', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        describe('Variant #3: function default value reference', () => {
+            const match: string = `` +
+                `function test *\\(${variableMatch} *= *0x1, *${variableMatch} *= *{'value' *: *${variableMatch}}\\) *{ *}` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/function-default-value-reference.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn ignore default parameter object if it references other parameter', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });

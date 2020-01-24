@@ -1388,5 +1388,35 @@ describe('ObjectExpressionKeysTransformer', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });
+
+        describe('Variant #4: member expression node as property key', () => {
+            const match: string = `` +
+                `var ${variableMatch} *= *{};` +
+                `${variableMatch}\\['foo'] *= *'test';` +
+                `var foo *= *${variableMatch};` +
+                `var ${variableMatch} *= *{\\[foo.foo] *: *'1'};` +
+                `${variableMatch}\\['bar'] *= *'2';` +
+                `var bar *= *${variableMatch};` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/computed-key-member-expression.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn ignore extraction of property with member expression key', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
     });
 });

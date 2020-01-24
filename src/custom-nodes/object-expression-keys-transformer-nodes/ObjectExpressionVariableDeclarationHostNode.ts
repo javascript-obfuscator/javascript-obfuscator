@@ -14,7 +14,7 @@ import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeFactory } from '../../node/NodeFactory';
 
 @injectable()
-export class BasePropertiesExtractorObjectExpressionHostNode extends AbstractCustomNode {
+export class ObjectExpressionVariableDeclarationHostNode extends AbstractCustomNode {
     /**
      * @ type {Property}
      */

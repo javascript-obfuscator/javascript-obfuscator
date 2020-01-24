@@ -3,9 +3,9 @@ import { injectable } from 'inversify';
 import * as ESTree from 'estree';
 
 import { TNodeWithStatements } from '../../../types/node/TNodeWithStatements';
-import { TPropertiesExtractorResult } from '../../../types/node-transformers/TPropertiesExtractorResult';
+import { IObjectExpressionExtractorResult } from '../../../interfaces/node-transformers/converting-transformers/object-expression-extractors/IObjectExpressionExtractorResult';
 
-import { IPropertiesExtractor } from '../../../interfaces/node-transformers/converting-transformers/properties-extractors/IPropertiesExtractor';
+import { IObjectExpressionExtractor } from '../../../interfaces/node-transformers/converting-transformers/object-expression-extractors/IObjectExpressionExtractor';
 
 import { NodeAppender } from '../../../node/NodeAppender';
 import { NodeFactory } from '../../../node/NodeFactory';
@@ -13,7 +13,7 @@ import { NodeGuards } from '../../../node/NodeGuards';
 import { NodeStatementUtils } from '../../../node/NodeStatementUtils';
 
 @injectable()
-export class BasePropertiesExtractor implements IPropertiesExtractor {
+export class BasePropertiesExtractor implements IObjectExpressionExtractor {
     /**
      * @param {Property} propertyNode
      * @returns {string | null}
@@ -64,12 +64,12 @@ export class BasePropertiesExtractor implements IPropertiesExtractor {
      *
      * @param {ObjectExpression} objectExpressionNode
      * @param {Statement} hostStatement
-     * @returns {TPropertiesExtractorResult}
+     * @returns {IObjectExpressionExtractorResult}
      */
     public extract (
         objectExpressionNode: ESTree.ObjectExpression,
         hostStatement: ESTree.Statement
-    ): TPropertiesExtractorResult {
+    ): IObjectExpressionExtractorResult {
         const hostNode: ESTree.Node | undefined = objectExpressionNode.parentNode;
 
         if (
@@ -91,13 +91,13 @@ export class BasePropertiesExtractor implements IPropertiesExtractor {
      * @param {ObjectExpression} objectExpressionNode
      * @param {Statement} hostStatement
      * @param {Expression} memberExpressionHostNode
-     * @returns {TPropertiesExtractorResult}
+     * @returns {IObjectExpressionExtractorResult}
      */
     private transformObjectExpressionNode (
         objectExpressionNode: ESTree.ObjectExpression,
         hostStatement: ESTree.Statement,
         memberExpressionHostNode: ESTree.Expression
-    ): TPropertiesExtractorResult {
+    ): IObjectExpressionExtractorResult {
         const properties: ESTree.Property[] = objectExpressionNode.properties;
         const [expressionStatements, removablePropertyIds]: [ESTree.ExpressionStatement[], number[]] = this
             .extractPropertiesToExpressionStatements(

@@ -5,23 +5,23 @@ import * as ESTree from 'estree';
 
 import { TNodeWithStatements } from '../../../types/node/TNodeWithStatements';
 import { TObjectExpressionKeysTransformerCustomNodeFactory } from '../../../types/container/custom-nodes/TObjectExpressionKeysTransformerCustomNodeFactory';
-import { TPropertiesExtractorResult } from '../../../types/node-transformers/TPropertiesExtractorResult';
+import { IObjectExpressionExtractorResult } from '../../../interfaces/node-transformers/converting-transformers/object-expression-extractors/IObjectExpressionExtractorResult';
 import { TStatement } from '../../../types/node/TStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { TInitialData } from '../../../types/TInitialData';
-import { IPropertiesExtractor } from '../../../interfaces/node-transformers/converting-transformers/properties-extractors/IPropertiesExtractor';
+import { IObjectExpressionExtractor } from '../../../interfaces/node-transformers/converting-transformers/object-expression-extractors/IObjectExpressionExtractor';
 
 import { ObjectExpressionKeysTransformerCustomNode } from '../../../enums/custom-nodes/ObjectExpressionKeysTransformerCustomNode';
 
-import { BasePropertiesExtractorObjectExpressionHostNode } from '../../../custom-nodes/object-expression-keys-transformer-nodes/BasePropertiesExtractorObjectExpressionHostNode';
+import { ObjectExpressionVariableDeclarationHostNode } from '../../../custom-nodes/object-expression-keys-transformer-nodes/ObjectExpressionVariableDeclarationHostNode';
 import { NodeAppender } from '../../../node/NodeAppender';
 import { NodeGuards } from '../../../node/NodeGuards';
 import { NodeStatementUtils } from '../../../node/NodeStatementUtils';
 import { NodeUtils } from '../../../node/NodeUtils';
 
 @injectable()
-export class ObjectExpressionToVariableDeclarationExtractor implements IPropertiesExtractor {
+export class ObjectExpressionToVariableDeclarationExtractor implements IObjectExpressionExtractor {
     /**
      * @type {TObjectExpressionKeysTransformerCustomNodeFactory}
      */
@@ -53,12 +53,12 @@ export class ObjectExpressionToVariableDeclarationExtractor implements IProperti
      *
      * @param {ObjectExpression} objectExpressionNode
      * @param {Statement} hostStatement
-     * @returns {TPropertiesExtractorResult}
+     * @returns {IObjectExpressionExtractorResult}
      */
     public extract (
         objectExpressionNode: ESTree.ObjectExpression,
         hostStatement: ESTree.Statement
-    ): TPropertiesExtractorResult {
+    ): IObjectExpressionExtractorResult {
         return this.transformObjectExpressionToVariableDeclaration(
             objectExpressionNode,
             hostStatement
@@ -73,7 +73,7 @@ export class ObjectExpressionToVariableDeclarationExtractor implements IProperti
     private transformObjectExpressionToVariableDeclaration (
         objectExpressionNode: ESTree.ObjectExpression,
         hostStatement: ESTree.Statement
-    ): TPropertiesExtractorResult {
+    ): IObjectExpressionExtractorResult {
         const properties: ESTree.Property[] = objectExpressionNode.properties;
 
         const newObjectExpressionHostStatement: ESTree.VariableDeclaration = this.getObjectExpressionHostNode(properties);
@@ -99,14 +99,14 @@ export class ObjectExpressionToVariableDeclarationExtractor implements IProperti
      * @returns {VariableDeclaration}
      */
     private getObjectExpressionHostNode (properties: ESTree.Property[]): ESTree.VariableDeclaration {
-        const objectExpressionHostCustomNode: ICustomNode<TInitialData<BasePropertiesExtractorObjectExpressionHostNode>> =
+        const variableDeclarationHostNodeCustomNode: ICustomNode<TInitialData<ObjectExpressionVariableDeclarationHostNode>> =
             this.objectExpressionKeysTransformerCustomNodeFactory(
-                ObjectExpressionKeysTransformerCustomNode.BasePropertiesExtractorObjectExpressionHostNode
+                ObjectExpressionKeysTransformerCustomNode.ObjectExpressionVariableDeclarationHostNode
             );
 
-        objectExpressionHostCustomNode.initialize(properties);
+        variableDeclarationHostNodeCustomNode.initialize(properties);
 
-        const statementNode: TStatement = objectExpressionHostCustomNode.getNode()[0];
+        const statementNode: TStatement = variableDeclarationHostNodeCustomNode.getNode()[0];
 
         if (
             !statementNode

@@ -18,7 +18,7 @@ import { DomainLockCustomNodeGroup } from '../../../custom-nodes/domain-lock-nod
 import { SelfDefendingCustomNodeGroup } from '../../../custom-nodes/self-defending-nodes/group/SelfDefendingCustomNodeGroup';
 import { StringArrayCustomNodeGroup } from '../../../custom-nodes/string-array-nodes/group/StringArrayCustomNodeGroup';
 
-import { BasePropertiesExtractorObjectExpressionHostNode } from '../../../custom-nodes/object-expression-keys-transformer-nodes/BasePropertiesExtractorObjectExpressionHostNode';
+import { ObjectExpressionVariableDeclarationHostNode } from '../../../custom-nodes/object-expression-keys-transformer-nodes/ObjectExpressionVariableDeclarationHostNode';
 import { BinaryExpressionFunctionNode } from '../../../custom-nodes/control-flow-flattening-nodes/BinaryExpressionFunctionNode';
 import { BlockStatementControlFlowFlatteningNode } from '../../../custom-nodes/control-flow-flattening-nodes/BlockStatementControlFlowFlatteningNode';
 import { BlockStatementDeadCodeInjectionNode } from '../../../custom-nodes/dead-code-injection-nodes/BlockStatementDeadCodeInjectionNode';
@@ -127,8 +127,8 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
 
     // object expression keys transformer nodes
     bind<interfaces.Newable<ICustomNode>>(ServiceIdentifiers.Newable__ICustomNode)
-        .toConstructor(BasePropertiesExtractorObjectExpressionHostNode)
-        .whenTargetNamed(ObjectExpressionKeysTransformerCustomNode.BasePropertiesExtractorObjectExpressionHostNode);
+        .toConstructor(ObjectExpressionVariableDeclarationHostNode)
+        .whenTargetNamed(ObjectExpressionKeysTransformerCustomNode.ObjectExpressionVariableDeclarationHostNode);
 
     // node groups
     bind<ICustomNodeGroup>(ServiceIdentifiers.ICustomNodeGroup)

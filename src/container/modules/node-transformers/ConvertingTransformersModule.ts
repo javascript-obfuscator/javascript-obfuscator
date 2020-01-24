@@ -3,10 +3,10 @@ import { InversifyContainerFacade } from '../../InversifyContainerFacade';
 import { ServiceIdentifiers } from '../../ServiceIdentifiers';
 
 import { INodeTransformer } from '../../../interfaces/node-transformers/INodeTransformer';
-import { IPropertiesExtractor } from '../../../interfaces/node-transformers/converting-transformers/properties-extractors/IPropertiesExtractor';
+import { IObjectExpressionExtractor } from '../../../interfaces/node-transformers/converting-transformers/object-expression-extractors/IObjectExpressionExtractor';
 
 import { NodeTransformer } from '../../../enums/node-transformers/NodeTransformer';
-import { PropertiesExtractor } from '../../../enums/node-transformers/converting-transformers/properties-extractors/PropertiesExtractor';
+import { ObjectExpressionExtractor } from '../../../enums/node-transformers/converting-transformers/properties-extractors/ObjectExpressionExtractor';
 
 import { ObjectExpressionToVariableDeclarationExtractor } from '../../../node-transformers/converting-transformers/object-expression-extractors/ObjectExpressionToVariableDeclarationExtractor';
 import { MemberExpressionTransformer } from '../../../node-transformers/converting-transformers/MemberExpressionTransformer';
@@ -43,19 +43,19 @@ export const convertingTransformersModule: interfaces.ContainerModule = new Cont
         .to(TemplateLiteralTransformer)
         .whenTargetNamed(NodeTransformer.TemplateLiteralTransformer);
 
-    // properties extractors
-    bind<IPropertiesExtractor>(ServiceIdentifiers.IPropertiesExtractor)
+    // object expression extractors
+    bind<IObjectExpressionExtractor>(ServiceIdentifiers.IObjectExpressionExtractor)
         .to(ObjectExpressionToVariableDeclarationExtractor)
-        .whenTargetNamed(PropertiesExtractor.ObjectExpressionToVariableDeclarationExtractor);
+        .whenTargetNamed(ObjectExpressionExtractor.ObjectExpressionToVariableDeclarationExtractor);
 
-    bind<IPropertiesExtractor>(ServiceIdentifiers.IPropertiesExtractor)
+    bind<IObjectExpressionExtractor>(ServiceIdentifiers.IObjectExpressionExtractor)
         .to(BasePropertiesExtractor)
-        .whenTargetNamed(PropertiesExtractor.BasePropertiesExtractor);
+        .whenTargetNamed(ObjectExpressionExtractor.BasePropertiesExtractor);
 
-    // properties extractor factory
-    bind<IPropertiesExtractor>(ServiceIdentifiers.Factory__IPropertiesExtractor)
-        .toFactory<IPropertiesExtractor>(InversifyContainerFacade
-            .getCacheFactory<PropertiesExtractor, IPropertiesExtractor>(
-                ServiceIdentifiers.IPropertiesExtractor
+    // object expression extractor factory
+    bind<IObjectExpressionExtractor>(ServiceIdentifiers.Factory__IObjectExpressionExtractor)
+        .toFactory<IObjectExpressionExtractor>(InversifyContainerFacade
+            .getCacheFactory<ObjectExpressionExtractor, IObjectExpressionExtractor>(
+                ServiceIdentifiers.IObjectExpressionExtractor
             ));
 });

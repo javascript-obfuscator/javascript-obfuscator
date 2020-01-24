@@ -4,7 +4,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { TPropertiesExtractorFactory } from '../../types/container/node-transformers/TPropertiesExtractorFactory';
+import { TObjectExpressionExtractorFactory } from '../../types/container/node-transformers/TObjectExpressionExtractorFactory';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
@@ -15,29 +15,29 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeStatementUtils } from '../../node/NodeStatementUtils';
-import { PropertiesExtractor } from '../../enums/node-transformers/converting-transformers/properties-extractors/PropertiesExtractor';
+import { ObjectExpressionExtractor } from '../../enums/node-transformers/converting-transformers/properties-extractors/ObjectExpressionExtractor';
 
 @injectable()
 export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
     /**
-     * @type {TPropertiesExtractorFactory}
+     * @type {TObjectExpressionExtractorFactory}
      */
-    private readonly propertiesExtractorFactory: TPropertiesExtractorFactory;
+    private readonly objectExpressionExtractorFactory: TObjectExpressionExtractorFactory;
 
     /**
-     * @param {TPropertiesExtractorFactory} propertiesExtractorFactory
+     * @param {TObjectExpressionExtractorFactory} objectExpressionExtractorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     constructor (
-        @inject(ServiceIdentifiers.Factory__IPropertiesExtractor)
-            propertiesExtractorFactory: TPropertiesExtractorFactory,
+        @inject(ServiceIdentifiers.Factory__IObjectExpressionExtractor)
+            objectExpressionExtractorFactory: TObjectExpressionExtractorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(randomGenerator, options);
 
-        this.propertiesExtractorFactory = propertiesExtractorFactory;
+        this.objectExpressionExtractorFactory = objectExpressionExtractorFactory;
     }
 
     /**
@@ -213,11 +213,11 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
             objectExpressionHostStatement: newObjectExpressionHostStatement,
             objectExpressionNode: newObjectExpressionNode
         } = this
-            .propertiesExtractorFactory(PropertiesExtractor.ObjectExpressionToVariableDeclarationExtractor)
+            .objectExpressionExtractorFactory(ObjectExpressionExtractor.ObjectExpressionToVariableDeclarationExtractor)
             .extract(objectExpressionNode, hostStatement);
 
         this
-            .propertiesExtractorFactory(PropertiesExtractor.BasePropertiesExtractor)
+            .objectExpressionExtractorFactory(ObjectExpressionExtractor.BasePropertiesExtractor)
             .extract(newObjectExpressionNode, newObjectExpressionHostStatement);
 
         return newObjectExpressionIdentifierReference;

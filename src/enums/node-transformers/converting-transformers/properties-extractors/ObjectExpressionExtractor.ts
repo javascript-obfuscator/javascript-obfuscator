@@ -1,4 +1,4 @@
-export enum PropertiesExtractor {
+export enum ObjectExpressionExtractor {
     BasePropertiesExtractor = 'BasePropertiesExtractor',
     ObjectExpressionToVariableDeclarationExtractor = 'ObjectExpressionToVariableDeclarationExtractor'
 }

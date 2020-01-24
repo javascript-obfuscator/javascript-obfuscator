@@ -1,15 +1,15 @@
 import * as ESTree from 'estree';
 
-import { TPropertiesExtractorResult } from '../../../../types/node-transformers/TPropertiesExtractorResult';
+import { IObjectExpressionExtractorResult } from './IObjectExpressionExtractorResult';
 
-export interface IPropertiesExtractor {
+export interface IObjectExpressionExtractor {
     /**
      * @param {ObjectExpression} objectExpressionNode
      * @param {Statement} hostStatement
-     * @returns {TPropertiesExtractorResult}
+     * @returns {IObjectExpressionExtractorResult}
      */
     extract (
         objectExpressionNode: ESTree.ObjectExpression,
         hostStatement: ESTree.Statement
-    ): TPropertiesExtractorResult;
+    ): IObjectExpressionExtractorResult;
 }

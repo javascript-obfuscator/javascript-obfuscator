@@ -10,102 +10,101 @@ import { TStatement } from '../../../types/node/TStatement';
 
 import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { TInitialData } from '../../../types/TInitialData';
-import { IOptions } from '../../../interfaces/options/IOptions';
-import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
+import { IPropertiesExtractor } from '../../../interfaces/node-transformers/converting-transformers/properties-extractors/IPropertiesExtractor';
 
 import { ObjectExpressionKeysTransformerCustomNode } from '../../../enums/custom-nodes/ObjectExpressionKeysTransformerCustomNode';
 
-import { AbstractPropertiesExtractor } from './AbstractPropertiesExtractor';
 import { BasePropertiesExtractorObjectExpressionHostNode } from '../../../custom-nodes/object-expression-keys-transformer-nodes/BasePropertiesExtractorObjectExpressionHostNode';
 import { NodeAppender } from '../../../node/NodeAppender';
 import { NodeGuards } from '../../../node/NodeGuards';
+import { NodeStatementUtils } from '../../../node/NodeStatementUtils';
+import { NodeUtils } from '../../../node/NodeUtils';
 
 @injectable()
-export class BasePropertiesExtractor extends AbstractPropertiesExtractor {
+export class ObjectExpressionToVariableDeclarationExtractor implements IPropertiesExtractor {
     /**
      * @type {TObjectExpressionKeysTransformerCustomNodeFactory}
      */
     private readonly objectExpressionKeysTransformerCustomNodeFactory: TObjectExpressionKeysTransformerCustomNodeFactory;
 
     /**
-     * @param {IRandomGenerator} randomGenerator
-     * @param {IOptions} options
      * @param {TObjectExpressionKeysTransformerCustomNodeFactory} objectExpressionKeysTransformerCustomNodeFactory
      */
     constructor (
-        @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
-        @inject(ServiceIdentifiers.IOptions) options: IOptions,
         @inject(ServiceIdentifiers.Factory__IObjectExpressionKeysTransformerCustomNode)
             objectExpressionKeysTransformerCustomNodeFactory: TObjectExpressionKeysTransformerCustomNodeFactory,
     ) {
-        super(randomGenerator, options);
-
         this.objectExpressionKeysTransformerCustomNodeFactory = objectExpressionKeysTransformerCustomNodeFactory;
     }
 
     /**
+     * extracts object expression:
+     *     var object = {
+     *          foo: 1,
+     *          bar: 2
+     *     };
+     *
+     * to:
+     *     var _0xabc123 = {
+     *          foo: 1,
+     *          bar: 2
+     *     };
+     *     var object = _0xabc123;
+     *
      * @param {ObjectExpression} objectExpressionNode
-     * @param {Node} parentNode
+     * @param {Statement} hostStatement
      * @returns {TPropertiesExtractorResult}
      */
     public extract (
         objectExpressionNode: ESTree.ObjectExpression,
-        parentNode: ESTree.Node
+        hostStatement: ESTree.Statement
     ): TPropertiesExtractorResult {
-        return this.transformObjectExpressionNode(
+        return this.transformObjectExpressionToVariableDeclaration(
             objectExpressionNode,
-            parentNode
+            hostStatement
         );
     }
 
     /**
      * @param {ObjectExpression} objectExpressionNode
-     * @param {Node} parentNode
+     * @param {Statement} hostStatement
      * @returns {Node}
      */
-    protected transformObjectExpressionNode (
+    private transformObjectExpressionToVariableDeclaration (
         objectExpressionNode: ESTree.ObjectExpression,
-        parentNode: ESTree.Node
-    ): ESTree.Node {
-        const hostStatement: ESTree.Statement = this.getHostStatement(objectExpressionNode);
-
-        if (AbstractPropertiesExtractor.isProhibitedHostStatement(objectExpressionNode, hostStatement)) {
-            return objectExpressionNode;
-        }
-
-        const newObjectExpressionHostNode: ESTree.VariableDeclaration = this.getObjectExpressionHostNode();
-        const newObjectExpressionIdentifier: ESTree.Identifier = this.getObjectExpressionIdentifierNode(newObjectExpressionHostNode);
-
+        hostStatement: ESTree.Statement
+    ): TPropertiesExtractorResult {
         const properties: ESTree.Property[] = objectExpressionNode.properties;
 
-        const [expressionStatements, removablePropertyIds]: [ESTree.ExpressionStatement[], number[]] = this
-            .extractPropertiesToExpressionStatements(properties, newObjectExpressionIdentifier);
-        const statementsToInsert: TStatement[] = [
-            newObjectExpressionHostNode,
-            ...expressionStatements
-        ];
+        const newObjectExpressionHostStatement: ESTree.VariableDeclaration = this.getObjectExpressionHostNode(properties);
+        const newObjectExpressionIdentifier: ESTree.Identifier = this.getObjectExpressionIdentifierNode(newObjectExpressionHostStatement);
+        const newObjectExpressionNode: ESTree.ObjectExpression = this.getObjectExpressionNode(newObjectExpressionHostStatement);
 
-        const hostNodeWithStatements: TNodeWithStatements = this.getHostNodeWithStatements(
-            objectExpressionNode,
-            hostStatement
-        );
+        const statementsToInsert: TStatement[] = [newObjectExpressionHostStatement];
+        const hostNodeWithStatements: TNodeWithStatements = NodeStatementUtils.getScopeOfNode(hostStatement);
 
-        this.filterExtractedObjectExpressionProperties(objectExpressionNode, removablePropertyIds);
         NodeAppender.insertBefore(hostNodeWithStatements, statementsToInsert, hostStatement);
+        NodeUtils.parentizeAst(newObjectExpressionHostStatement);
+        NodeUtils.parentizeNode(newObjectExpressionHostStatement, hostNodeWithStatements);
 
-        return newObjectExpressionIdentifier;
+        return {
+            nodeToReplace: newObjectExpressionIdentifier,
+            objectExpressionHostStatement: newObjectExpressionHostStatement,
+            objectExpressionNode: newObjectExpressionNode
+        };
     }
 
     /**
+     * @param {Property[]} properties
      * @returns {VariableDeclaration}
      */
-    private getObjectExpressionHostNode (): ESTree.VariableDeclaration {
+    private getObjectExpressionHostNode (properties: ESTree.Property[]): ESTree.VariableDeclaration {
         const objectExpressionHostCustomNode: ICustomNode<TInitialData<BasePropertiesExtractorObjectExpressionHostNode>> =
             this.objectExpressionKeysTransformerCustomNodeFactory(
                 ObjectExpressionKeysTransformerCustomNode.BasePropertiesExtractorObjectExpressionHostNode
             );
 
-        objectExpressionHostCustomNode.initialize();
+        objectExpressionHostCustomNode.initialize(properties);
 
         const statementNode: TStatement = objectExpressionHostCustomNode.getNode()[0];
 
@@ -131,5 +130,19 @@ export class BasePropertiesExtractor extends AbstractPropertiesExtractor {
         }
 
         return newObjectExpressionIdentifierNode;
+    }
+
+    /**
+     * @param {VariableDeclaration} objectExpressionHostNode
+     * @returns {Identifier}
+     */
+    private getObjectExpressionNode (objectExpressionHostNode: ESTree.VariableDeclaration): ESTree.ObjectExpression {
+        const newObjectExpressionNode: ESTree.Expression | null = objectExpressionHostNode.declarations[0].init ?? null;
+
+        if (!newObjectExpressionNode || !NodeGuards.isObjectExpressionNode(newObjectExpressionNode)) {
+            throw new Error(`\`objectExpressionHostNode\` should contain \`VariableDeclarator\` node with \`ObjectExpression\` init property`);
+        }
+
+        return newObjectExpressionNode;
     }
 }

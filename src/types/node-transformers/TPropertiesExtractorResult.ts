@@ -1,5 +1,7 @@
 import * as ESTree from 'estree';
 
-import { PropertiesExtractorFlag } from '../../enums/node-transformers/converting-transformers/properties-extractors/PropertiesExtractorResult';
-
-export type TPropertiesExtractorResult = ESTree.Node | PropertiesExtractorFlag;
+export type TPropertiesExtractorResult = {
+    nodeToReplace: ESTree.Node;
+    objectExpressionHostStatement: ESTree.Statement;
+    objectExpressionNode: ESTree.ObjectExpression;
+};

@@ -8,16 +8,14 @@ import { IPropertiesExtractor } from '../../../interfaces/node-transformers/conv
 import { NodeTransformer } from '../../../enums/node-transformers/NodeTransformer';
 import { PropertiesExtractor } from '../../../enums/node-transformers/converting-transformers/properties-extractors/PropertiesExtractor';
 
-import { AssignmentExpressionPropertiesExtractor } from '../../../node-transformers/converting-transformers/properties-extractors/AssignmentExpressionPropertiesExtractor';
-import { BasePropertiesExtractor } from '../../../node-transformers/converting-transformers/properties-extractors/BasePropertiesExtractor';
+import { ObjectExpressionToVariableDeclarationExtractor } from '../../../node-transformers/converting-transformers/object-expression-extractors/ObjectExpressionToVariableDeclarationExtractor';
 import { MemberExpressionTransformer } from '../../../node-transformers/converting-transformers/MemberExpressionTransformer';
 import { MethodDefinitionTransformer } from '../../../node-transformers/converting-transformers/MethodDefinitionTransformer';
 import { ObjectExpressionKeysTransformer } from '../../../node-transformers/converting-transformers/ObjectExpressionKeysTransformer';
 import { ObjectExpressionTransformer } from '../../../node-transformers/converting-transformers/ObjectExpressionTransformer';
 import { SplitStringTransformer } from '../../../node-transformers/converting-transformers/SplitStringTransformer';
 import { TemplateLiteralTransformer } from '../../../node-transformers/converting-transformers/TemplateLiteralTransformer';
-import { VariableDeclaratorPropertiesExtractor } from '../../../node-transformers/converting-transformers/properties-extractors/VariableDeclaratorPropertiesExtractor';
-import { AssignmentPatternPropertiesExtractor } from '../../../node-transformers/converting-transformers/properties-extractors/AssignmentPatternPropertiesExtractor';
+import { BasePropertiesExtractor } from '../../../node-transformers/converting-transformers/object-expression-extractors/BasePropertiesExtractor';
 
 export const convertingTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // converting transformers
@@ -47,20 +45,12 @@ export const convertingTransformersModule: interfaces.ContainerModule = new Cont
 
     // properties extractors
     bind<IPropertiesExtractor>(ServiceIdentifiers.IPropertiesExtractor)
-        .to(AssignmentExpressionPropertiesExtractor)
-        .whenTargetNamed(PropertiesExtractor.AssignmentExpressionPropertiesExtractor);
-
-    bind<IPropertiesExtractor>(ServiceIdentifiers.IPropertiesExtractor)
-        .to(AssignmentPatternPropertiesExtractor)
-        .whenTargetNamed(PropertiesExtractor.AssignmentPatternPropertiesExtractor);
+        .to(ObjectExpressionToVariableDeclarationExtractor)
+        .whenTargetNamed(PropertiesExtractor.ObjectExpressionToVariableDeclarationExtractor);
 
     bind<IPropertiesExtractor>(ServiceIdentifiers.IPropertiesExtractor)
         .to(BasePropertiesExtractor)
         .whenTargetNamed(PropertiesExtractor.BasePropertiesExtractor);
-
-    bind<IPropertiesExtractor>(ServiceIdentifiers.IPropertiesExtractor)
-        .to(VariableDeclaratorPropertiesExtractor)
-        .whenTargetNamed(PropertiesExtractor.VariableDeclaratorPropertiesExtractor);
 
     // properties extractor factory
     bind<IPropertiesExtractor>(ServiceIdentifiers.Factory__IPropertiesExtractor)

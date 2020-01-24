@@ -1,40 +1,24 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { TPropertiesExtractorFactory } from '../../types/container/node-transformers/TPropertiesExtractorFactory';
-import { TPropertiesExtractorResult } from '../../types/node-transformers/TPropertiesExtractorResult';
 
 import { IOptions } from '../../interfaces/options/IOptions';
-import { IPropertiesExtractor } from '../../interfaces/node-transformers/converting-transformers/properties-extractors/IPropertiesExtractor';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
-import { NodeType } from '../../enums/node/NodeType';
-import { PropertiesExtractor } from '../../enums/node-transformers/converting-transformers/properties-extractors/PropertiesExtractor';
-import { PropertiesExtractorFlag } from '../../enums/node-transformers/converting-transformers/properties-extractors/PropertiesExtractorResult';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeStatementUtils } from '../../node/NodeStatementUtils';
+import { PropertiesExtractor } from '../../enums/node-transformers/converting-transformers/properties-extractors/PropertiesExtractor';
 
 @injectable()
 export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
-    /**
-     * @type {Set<ESTree.Node>}
-     */
-    private static readonly objectExpressionNodesToSkipSet: Set<ESTree.Node> = new Set();
-
-    /**
-     * @type {Map<string, PropertiesExtractor>}
-     */
-    private static readonly propertiesExtractorsMap: Map <string, PropertiesExtractor> = new Map([
-        [NodeType.AssignmentExpression, PropertiesExtractor.AssignmentExpressionPropertiesExtractor],
-        [NodeType.AssignmentPattern, PropertiesExtractor.AssignmentPatternPropertiesExtractor],
-        [NodeType.VariableDeclarator, PropertiesExtractor.VariableDeclaratorPropertiesExtractor]
-    ]);
-
     /**
      * @type {TPropertiesExtractorFactory}
      */
@@ -57,6 +41,119 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * @param {ObjectExpression} objectExpressionNode
+     * @param {Statement} hostStatement
+     * @returns {boolean}
+     */
+    private static isProhibitedHostStatement (
+        objectExpressionNode: ESTree.ObjectExpression,
+        hostStatement: ESTree.Statement
+    ): boolean {
+        return ObjectExpressionKeysTransformer.isProhibitedVariableDeclarationHostStatement(objectExpressionNode, hostStatement)
+            || ObjectExpressionKeysTransformer.isProhibitedFunctionHostStatement(objectExpressionNode, hostStatement);
+    }
+
+    /**
+     * Fix of https://github.com/javascript-obfuscator/javascript-obfuscator/issues/516
+     * If object expression is placed inside any expression inside variable declaration with 2+ declarators
+     * - should mark host node as prohibited
+     *
+     * @param {ObjectExpression} objectExpressionNode
+     * @param {Statement} hostStatement
+     * @returns {boolean}
+     */
+    private static isProhibitedVariableDeclarationHostStatement (
+        objectExpressionNode: ESTree.ObjectExpression,
+        hostStatement: ESTree.Statement
+    ): boolean {
+        if (!NodeGuards.isVariableDeclarationNode(hostStatement) || !hostStatement.declarations.length) {
+            return false;
+        }
+
+        return ObjectExpressionKeysTransformer.isReferencedIdentifierName(
+            objectExpressionNode,
+            hostStatement.declarations
+        );
+    }
+
+    /**
+     * @param {ObjectExpression} objectExpressionNode
+     * @param {Statement} hostStatement
+     * @returns {boolean}
+     */
+    private static isProhibitedFunctionHostStatement (
+        objectExpressionNode: ESTree.ObjectExpression,
+        hostStatement: ESTree.Statement
+    ): boolean {
+        if (!NodeGuards.isFunctionNode(hostStatement) || !hostStatement.params.length) {
+            return false;
+        }
+
+        const hostNode: ESTree.Node | undefined = objectExpressionNode.parentNode;
+
+        if (!hostNode || !NodeGuards.isAssignmentPatternNode(hostNode)) {
+            return false;
+        }
+
+        return ObjectExpressionKeysTransformer.isReferencedIdentifierName(
+            objectExpressionNode,
+            hostStatement.params
+        );
+    }
+
+    /**
+     * @param {ObjectExpression} objectExpressionNode
+     * @param {Node[]} nodesToSearch
+     * @returns {boolean}
+     */
+    private static isReferencedIdentifierName (
+        objectExpressionNode: ESTree.ObjectExpression,
+        nodesToSearch: ESTree.Node[],
+    ): boolean {
+        if (nodesToSearch.length === 1) {
+            return false;
+        }
+
+        const identifierNamesSet: string[] = [];
+
+        let isReferencedIdentifierName: boolean = false;
+        let isCurrentNode: boolean = false;
+
+        // should mark node as prohibited if identifier of node is referenced somewhere inside other nodes
+        for (const nodeToSearch of nodesToSearch) {
+            const identifierNamesSetForCurrentNode: string[] = [];
+
+            estraverse.traverse(nodeToSearch, {
+                enter: (node: ESTree.Node): void | estraverse.VisitorOption => {
+                    if (node === objectExpressionNode) {
+                        isCurrentNode = true;
+                    }
+
+                    if (!NodeGuards.isIdentifierNode(node)) {
+                        return;
+                    }
+
+                    if (!isCurrentNode) {
+                        identifierNamesSetForCurrentNode.push(node.name);
+                    } else if (identifierNamesSet.includes(node.name)) {
+                        isReferencedIdentifierName = true;
+
+                        return estraverse.VisitorOption.Break;
+                    }
+                }
+            });
+
+            if (isCurrentNode || isReferencedIdentifierName) {
+                break;
+            } else {
+                identifierNamesSet.push(...identifierNamesSetForCurrentNode);
+            }
+        }
+
+        return isReferencedIdentifierName;
+    }
+
+    /**
      * @param {TransformationStage} transformationStage
      * @returns {IVisitor | null}
      */
@@ -65,28 +162,22 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
             return null;
         }
 
-        if (transformationStage !== TransformationStage.Converting) {
-            return null;
-        }
+        switch (transformationStage) {
+            case TransformationStage.Converting:
+                return {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                        if (
+                            parentNode
+                            && NodeGuards.isObjectExpressionNode(node)
+                        ) {
+                            return this.transformNode(node, parentNode);
+                        }
+                    }
+                };
 
-        return {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                if (
-                    parentNode
-                    && NodeGuards.isObjectExpressionNode(node)
-                ) {
-                    return this.transformNode(node, parentNode);
-                }
-            },
-            leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
-                if (
-                    parentNode
-                    && NodeGuards.isObjectExpressionNode(node)
-                ) {
-                    return this.transformNodeWithBaseExtractor(node, parentNode);
-                }
-            }
-        };
+            default:
+                return null;
+        }
     }
 
     /**
@@ -97,9 +188,10 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
      *     };
      *
      * on:
-     *     var object = {};
-     *     object['foo'] = 1;
-     *     object['bar'] = 2;
+     *     var _0xabc123 = {};
+     *     _0xabc123['foo'] = 1;
+     *     _0xabc123['bar'] = 2;
+     *     var object = _0xabc123;
      *
      * @param {ObjectExpression} objectExpressionNode
      * @param {Node} parentNode
@@ -110,69 +202,24 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
             return objectExpressionNode;
         }
 
-        const propertiesExtractorName: PropertiesExtractor | undefined = ObjectExpressionKeysTransformer
-            .propertiesExtractorsMap
-            .get(parentNode.type);
+        const hostStatement: ESTree.Statement = NodeStatementUtils.getRootStatementOfNode(objectExpressionNode);
 
-        if (!propertiesExtractorName) {
+        if (ObjectExpressionKeysTransformer.isProhibitedHostStatement(objectExpressionNode, hostStatement)) {
             return objectExpressionNode;
         }
 
-        return this.transformNodeWithExtractor(objectExpressionNode, parentNode, propertiesExtractorName);
-    }
+        const {
+            nodeToReplace: newObjectExpressionIdentifierReference,
+            objectExpressionHostStatement: newObjectExpressionHostStatement,
+            objectExpressionNode: newObjectExpressionNode
+        } = this
+            .propertiesExtractorFactory(PropertiesExtractor.ObjectExpressionToVariableDeclarationExtractor)
+            .extract(objectExpressionNode, hostStatement);
 
-    /**
-     * replaces:
-     *     return {
-     *          foo: 1,
-     *          bar: 2
-     *     };
-     *
-     * on:
-     *     var object = {};
-     *     object['foo'] = 1;
-     *     object['bar'] = 2;
-     *     return object;
-     *
-     * @param {ObjectExpression} objectExpressionNode
-     * @param {Node} parentNode
-     * @returns {NodeGuards}
-     */
-    public transformNodeWithBaseExtractor (objectExpressionNode: ESTree.ObjectExpression, parentNode: ESTree.Node): ESTree.Node {
-        if (!objectExpressionNode.properties.length) {
-            return objectExpressionNode;
-        }
+        this
+            .propertiesExtractorFactory(PropertiesExtractor.BasePropertiesExtractor)
+            .extract(newObjectExpressionNode, newObjectExpressionHostStatement);
 
-        if (ObjectExpressionKeysTransformer.objectExpressionNodesToSkipSet.has(objectExpressionNode)) {
-            return objectExpressionNode;
-        }
-
-        return this.transformNodeWithExtractor(objectExpressionNode, parentNode, PropertiesExtractor.BasePropertiesExtractor);
-    }
-
-    /**
-     * @param {ObjectExpression} objectExpressionNode
-     * @param {Node} parentNode
-     * @param {PropertiesExtractor} propertiesExtractorName
-     * @returns {Node}
-     */
-    private transformNodeWithExtractor (
-        objectExpressionNode: ESTree.ObjectExpression,
-        parentNode: ESTree.Node,
-        propertiesExtractorName: PropertiesExtractor
-    ): ESTree.Node {
-        const propertiesExtractor: IPropertiesExtractor = this.propertiesExtractorFactory(propertiesExtractorName);
-        const extractedResult: TPropertiesExtractorResult =
-            propertiesExtractor.extract(objectExpressionNode, parentNode);
-
-        switch (extractedResult) {
-            case PropertiesExtractorFlag.Skip:
-                ObjectExpressionKeysTransformer.objectExpressionNodesToSkipSet.add(objectExpressionNode);
-
-                return objectExpressionNode;
-
-            default:
-                return extractedResult;
-        }
+        return newObjectExpressionIdentifierReference;
     }
 }

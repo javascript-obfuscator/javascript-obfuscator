@@ -5,11 +5,11 @@ import { TPropertiesExtractorResult } from '../../../../types/node-transformers/
 export interface IPropertiesExtractor {
     /**
      * @param {ObjectExpression} objectExpressionNode
-     * @param {Node} hostNode
+     * @param {Statement} hostStatement
      * @returns {TPropertiesExtractorResult}
      */
     extract (
         objectExpressionNode: ESTree.ObjectExpression,
-        hostNode: ESTree.Node
+        hostStatement: ESTree.Statement
     ): TPropertiesExtractorResult;
 }

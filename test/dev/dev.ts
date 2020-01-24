@@ -7,10 +7,7 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            var passthrough = (object) => object;
-            var foo = {foo: 1},\t
-                bar = passthrough({bar: foo.foo});
-            console.log(bar.bar);
+            var foo = {foo: 1};
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,

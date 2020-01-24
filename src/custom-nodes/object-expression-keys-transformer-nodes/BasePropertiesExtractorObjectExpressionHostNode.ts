@@ -1,6 +1,8 @@
 import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import * as ESTree from 'estree';
+
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../types/node/TStatement';
 
@@ -13,6 +15,11 @@ import { NodeFactory } from '../../node/NodeFactory';
 
 @injectable()
 export class BasePropertiesExtractorObjectExpressionHostNode extends AbstractCustomNode {
+    /**
+     * @ type {Property}
+     */
+    private properties!: ESTree.Property[];
+
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {ICustomNodeFormatter} customNodeFormatter
@@ -29,7 +36,9 @@ export class BasePropertiesExtractorObjectExpressionHostNode extends AbstractCus
         super(identifierNamesGeneratorFactory, customNodeFormatter, randomGenerator, options);
     }
 
-    public initialize (): void {}
+    public initialize (properties: ESTree.Property[]): void {
+        this.properties = properties;
+    }
 
     /**
      * @param {string} nodeTemplate
@@ -42,7 +51,7 @@ export class BasePropertiesExtractorObjectExpressionHostNode extends AbstractCus
                     NodeFactory.identifierNode(
                         this.identifierNamesGenerator.generate()
                     ),
-                    NodeFactory.objectExpressionNode([])
+                    NodeFactory.objectExpressionNode(this.properties)
                 )
             ],
             'const'

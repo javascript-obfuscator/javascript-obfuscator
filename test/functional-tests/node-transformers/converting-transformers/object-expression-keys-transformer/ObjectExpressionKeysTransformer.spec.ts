@@ -479,6 +479,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
         });
 
+        // issue https://github.com/javascript-obfuscator/javascript-obfuscator/issues/516
         describe('Variant #15: function default values', () => {
             const match: string = `` +
                 `var *${variableMatch} *= *{};` +
@@ -503,6 +504,125 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             it('shouldn ignore default parameter object if it references other parameter', () => {
                 assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        // issue https://github.com/javascript-obfuscator/javascript-obfuscator/issues/516
+        describe('Variant #16: object expression inside inside variable declaration', () => {
+            describe('Without reference on other property', () => {
+                describe('Variant #1: Single variable declarator and object expression parent node is expression node', () => {
+                    const match: string = `` +
+                        `var *passthrough *= *${variableMatch} *=> *${variableMatch};` +
+                        `var *${variableMatch} *= *{};` +
+                        `${variableMatch}\\['foo'] *= *0x1;` +
+                        `var foo *= *passthrough *\\(${variableMatch}\\);` +
+                    ``;
+                    const regExp: RegExp = new RegExp(match);
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/object-expression-inside-variable-declaration-1.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                transformObjectKeys: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should transform object expression keys', () => {
+                        assert.match(obfuscatedCode,  regExp);
+                    });
+                });
+
+                describe('Variant #2: Multiple variable declarators and object expression parent node is variable declarator node', () => {
+                    const match: string = `` +
+                        `var foo *= *{}, *bar *= *{};` +
+                        `bar\\['bar'] *= *0x2;` +
+                        `foo\\['foo'] *= *0x1;` +
+                    ``;
+                    const regExp: RegExp = new RegExp(match);
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/object-expression-inside-variable-declaration-2.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                transformObjectKeys: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should transform object expressions keys', () => {
+                        assert.match(obfuscatedCode,  regExp);
+                    });
+                });
+            });
+
+            describe('With reference on other property', () => {
+                describe('Variant #1: Object expression parent node is variable declarator node', () => {
+                    const match: string = `` +
+                        `var *passthrough *= *${variableMatch} *=> *${variableMatch};` +
+                        `var *${variableMatch} *= *{};` +
+                        `${variableMatch}\\['foo'] *= *0x1;` +
+                        `var foo *= *${variableMatch}, *bar *= *{};` +
+                        `bar\\['bar'] *= *foo.foo;` +
+                    ``;
+                    const regExp: RegExp = new RegExp(match);
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/object-expression-inside-variable-declaration-3.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                transformObjectKeys: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should transform first object expression keys and ignore second object expression keys', () => {
+                        assert.match(obfuscatedCode,  regExp);
+                    });
+                });
+
+                describe('Variant #2: Object expression parent node is any expression node', () => {
+                    const match: string = `` +
+                        `var *passthrough *= *${variableMatch} *=> *${variableMatch};` +
+                        `var *${variableMatch} *= *{};` +
+                        `${variableMatch}\\['foo'] *= *0x1;` +
+                        `var foo *= *${variableMatch}, *bar *= *passthrough *\\({ *'bar' *: *foo\\['foo'] *}\\);` +
+                    ``;
+                    const regExp: RegExp = new RegExp(match);
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/object-expression-inside-variable-declaration-4.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                transformObjectKeys: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should transform first object expression keys and ignore second object expression keys', () => {
+                        assert.match(obfuscatedCode,  regExp);
+                    });
+                });
             });
         });
     });

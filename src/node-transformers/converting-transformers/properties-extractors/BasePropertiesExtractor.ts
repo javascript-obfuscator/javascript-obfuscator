@@ -67,6 +67,12 @@ export class BasePropertiesExtractor extends AbstractPropertiesExtractor {
         objectExpressionNode: ESTree.ObjectExpression,
         parentNode: ESTree.Node
     ): ESTree.Node {
+        const hostStatement: ESTree.Statement = this.getHostStatement(objectExpressionNode);
+
+        if (AbstractPropertiesExtractor.isProhibitedHostStatement(objectExpressionNode, hostStatement)) {
+            return objectExpressionNode;
+        }
+
         const newObjectExpressionHostNode: ESTree.VariableDeclaration = this.getObjectExpressionHostNode();
         const newObjectExpressionIdentifier: ESTree.Identifier = this.getObjectExpressionIdentifierNode(newObjectExpressionHostNode);
 
@@ -79,7 +85,6 @@ export class BasePropertiesExtractor extends AbstractPropertiesExtractor {
             ...expressionStatements
         ];
 
-        const hostStatement: ESTree.Statement = this.getHostStatement(objectExpressionNode);
         const hostNodeWithStatements: TNodeWithStatements = this.getHostNodeWithStatements(
             objectExpressionNode,
             hostStatement

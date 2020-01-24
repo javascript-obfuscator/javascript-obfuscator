@@ -91,6 +91,50 @@ export abstract class AbstractPropertiesExtractor implements IPropertiesExtracto
 
     /**
      * @param {ObjectExpression} objectExpressionNode
+     * @param {Statement} hostStatement
+     * @returns {boolean}
+     */
+    protected static isProhibitedHostStatement (
+        objectExpressionNode: ESTree.ObjectExpression,
+        hostStatement: ESTree.Statement
+    ): boolean {
+        if (AbstractPropertiesExtractor.isProhibitedVariableDeclarationHostStatement(objectExpressionNode, hostStatement)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Fix of https://github.com/javascript-obfuscator/javascript-obfuscator/issues/516
+     * If object expression is placed inside any expression inside variable declaration with 2+ declarators
+     * - should mark host node as prohibited
+     *
+     * @param {ObjectExpression} objectExpressionNode
+     * @param {Statement} hostStatement
+     * @returns {boolean}
+     */
+    protected static isProhibitedVariableDeclarationHostStatement (
+        objectExpressionNode: ESTree.ObjectExpression,
+        hostStatement: ESTree.Statement
+    ): boolean {
+        if (!NodeGuards.isVariableDeclarationNode(hostStatement)) {
+            return false;
+        }
+
+        if (objectExpressionNode.parentNode && NodeGuards.isVariableDeclaratorNode(objectExpressionNode.parentNode)) {
+            return false;
+        }
+
+        if (hostStatement.declarations.length <= 1) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param {ObjectExpression} objectExpressionNode
      * @param {Node} hostNode
      * @returns {TPropertiesExtractorResult}
      */
@@ -182,11 +226,16 @@ export abstract class AbstractPropertiesExtractor implements IPropertiesExtracto
         objectExpressionNode: ESTree.ObjectExpression,
         memberExpressionHostNode: ESTree.Expression
     ): ESTree.Node {
+        const hostStatement: ESTree.Statement = this.getHostStatement(objectExpressionNode);
+
+        if (AbstractPropertiesExtractor.isProhibitedHostStatement(objectExpressionNode, hostStatement)) {
+            return objectExpressionNode;
+        }
+
         const properties: ESTree.Property[] = objectExpressionNode.properties;
         const [expressionStatements, removablePropertyIds]: [ESTree.ExpressionStatement[], number[]] = this
             .extractPropertiesToExpressionStatements(properties, memberExpressionHostNode);
 
-        const hostStatement: ESTree.Statement = this.getHostStatement(objectExpressionNode);
         const hostNodeWithStatements: TNodeWithStatements = this.getHostNodeWithStatements(
             objectExpressionNode,
             hostStatement

@@ -13,6 +13,7 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeUtils } from '../../node/NodeUtils';
 
 /**
  * Splits strings into parts
@@ -107,30 +108,44 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
             this.options.splitStringsChunkLength
         );
 
-        return this.transformStringChunksToBinaryExpressionNode(stringChunks);
+        const binaryExpressionNode: ESTree.BinaryExpression =
+            this.transformStringChunksToBinaryExpressionNode(stringChunks);
+
+        NodeUtils.parentizeAst(binaryExpressionNode);
+        NodeUtils.parentizeNode(binaryExpressionNode, parentNode);
+
+        return binaryExpressionNode;
     }
 
     /**
      * @param {string[]} chunks
      * @returns {BinaryExpression}
      */
-    private transformStringChunksToBinaryExpressionNode (chunks: string[]): ESTree.BinaryExpression | ESTree.Literal {
-        const lastChunk: string | undefined = chunks.pop();
+    private transformStringChunksToBinaryExpressionNode (chunks: string[]): ESTree.BinaryExpression {
+        const firstChunk: string | undefined = chunks.shift();
+        const secondChunk: string | undefined = chunks.shift();
 
-        if (lastChunk === undefined) {
-            throw new Error('Last chunk value should not be empty');
+        if (!firstChunk || !secondChunk) {
+            throw new Error('First and second chunks values should not be empty');
         }
 
-        const lastChunkLiteralNode: ESTree.Literal = NodeFactory.literalNode(lastChunk);
-
-        if (chunks.length === 0) {
-            return lastChunkLiteralNode;
-        }
-
-        return NodeFactory.binaryExpressionNode(
+        const initialBinaryExpressionNode: ESTree.BinaryExpression = NodeFactory.binaryExpressionNode(
             '+',
-            this.transformStringChunksToBinaryExpressionNode(chunks),
-            lastChunkLiteralNode
+            NodeFactory.literalNode(firstChunk),
+            NodeFactory.literalNode(secondChunk)
+        );
+
+        return chunks.reduce<ESTree.BinaryExpression>(
+            (binaryExpressionNode: ESTree.BinaryExpression, chunk: string) => {
+                const chunkLiteralNode: ESTree.Literal = NodeFactory.literalNode(chunk);
+
+                return NodeFactory.binaryExpressionNode(
+                    '+',
+                    binaryExpressionNode,
+                    chunkLiteralNode
+                );
+            },
+            initialBinaryExpressionNode
         );
     }
 }

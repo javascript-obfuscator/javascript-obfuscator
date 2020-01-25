@@ -135,7 +135,7 @@ describe('LiteralTransformer', () => {
 
         describe('Variant #6: `unicodeEscapeSequence` and `stringArray` options are enabled', () => {
             const stringArrayRegExp: RegExp = /^var *_0x([a-f0-9]){4} *= *\['\\x74\\x65\\x73\\x74'\];/;
-            const stringArrayCallRegExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/;
+            const stringArrayCallRegExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\('\\x30\\x78\\x30'\);/;
 
             let obfuscatedCode: string;
 
@@ -157,7 +157,7 @@ describe('LiteralTransformer', () => {
                 assert.match(obfuscatedCode, stringArrayRegExp);
             });
 
-            it('match #1: should replace literal node value with unicode escape sequence from string array', () => {
+            it('match #2: should replace literal node value with unicode escape sequence from string array', () => {
                 assert.match(obfuscatedCode, stringArrayCallRegExp);
             });
         });
@@ -515,6 +515,64 @@ describe('LiteralTransformer', () => {
 
                 it('match #1: should ignore reserved strings', () => {
                     assert.match(obfuscatedCode, stringLiteralRegExp);
+                });
+            });
+        });
+
+        describe('Variant #13: object expression key literal', () => {
+            describe('Variant #1: base key literal', () => {
+                const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['bar'];/;
+                const objectExpressionRegExp: RegExp = /var test *= *{'foo' *: *_0x([a-f0-9]){4}\('0x0'\)};/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/object-expression-key-literal.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('match #1: should not add object expression key literal to the string array', () => {
+                    assert.match(obfuscatedCode, stringArrayRegExp);
+                });
+
+                it('match #2: should keep object expression key literal', () => {
+                    assert.match(obfuscatedCode, objectExpressionRegExp);
+                });
+            });
+
+            describe('Variant #2: computed key literal', () => {
+                const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['foo', *'bar'];/;
+                const objectExpressionRegExp: RegExp = /var test *= *{\[_0x([a-f0-9]){4}\('0x0'\)] *: *_0x([a-f0-9]){4}\('0x1'\)};/;
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/object-expression-computed-key-literal.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            stringArray: true,
+                            stringArrayThreshold: 1
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('match #1: should add object expression computed key literal to the string array', () => {
+                    assert.match(obfuscatedCode, stringArrayRegExp);
+                });
+
+                it('match #2: should replace object expression computed key literal on call to the string array', () => {
+                    assert.match(obfuscatedCode, objectExpressionRegExp);
                 });
             });
         });

@@ -1,10 +1,8 @@
-(function(){
-    var object = {
-        foo: 'bar',
-        inner: {
-            inner1: {
-                baz: 'bark'
-            }
+var object = {
+    foo: 'bar',
+    inner: {
+        inner1: {
+            baz: 'bark'
         }
-    };
-})();
+    }
+};

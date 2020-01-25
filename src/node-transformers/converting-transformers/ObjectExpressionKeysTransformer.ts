@@ -165,7 +165,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
         switch (transformationStage) {
             case TransformationStage.Converting:
                 return {
-                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
                         if (
                             parentNode
                             && NodeGuards.isObjectExpressionNode(node)

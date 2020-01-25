@@ -12,6 +12,7 @@ import { IStringArrayStorageItemData } from '../../interfaces/storages/string-ar
 
 import { NodeGuards } from '../../node/NodeGuards';
 import { NodeMetadata } from '../../node/NodeMetadata';
+import { NodeLiteralUtils } from '../../node/NodeLiteralUtils';
 
 /**
  * Adds values of literal nodes to the string array storage
@@ -67,7 +68,11 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
         }
 
         estraverse.traverse(astTree, {
-            enter: (node: ESTree.Node): estraverse.VisitorOption | void => {
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null): estraverse.VisitorOption | void => {
+                if (!parentNode) {
+                    return;
+                }
+
                 if (NodeMetadata.isIgnoredNode(node)) {
                     return estraverse.VisitorOption.Skip;
                 }
@@ -76,7 +81,7 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
                     return;
                 }
 
-                this.analyzeLiteralNode(node);
+                this.analyzeLiteralNode(node, parentNode);
             }
         });
     }
@@ -91,9 +96,14 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
 
     /**
      * @param {Literal} literalNode
+     * @param {Node} parentNode
      */
-    private analyzeLiteralNode (literalNode: ESTree.Literal): void {
+    private analyzeLiteralNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): void {
         if (typeof literalNode.value !== 'string') {
+            return;
+        }
+
+        if (NodeLiteralUtils.isProhibitedLiteralNode(literalNode, parentNode)) {
             return;
         }
 

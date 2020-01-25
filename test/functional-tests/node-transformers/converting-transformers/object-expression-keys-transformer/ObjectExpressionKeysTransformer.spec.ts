@@ -153,10 +153,13 @@ describe('ObjectExpressionKeysTransformer', () => {
         describe('Variant #6: nested objects #1', () => {
             const match: string = `` +
                 `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['baz'] *= *'bark';` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['inner1'] *= *${variableMatch};` +
+                `var *${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
-                `${variableMatch}\\['inner'] *= *{};` +
-                `${variableMatch}\\['inner']\\['inner1'] *= *{};` +
-                `${variableMatch}\\['inner']\\['inner1']\\['baz'] *= *'bark';` +
+                `${variableMatch}\\['inner'] *= *${variableMatch};` +
+                `var object *= *${variableMatch};` +
             ``;
             const regExp: RegExp = new RegExp(match);
 
@@ -182,13 +185,16 @@ describe('ObjectExpressionKeysTransformer', () => {
         describe('Variant #7: nested objects #2', () => {
             const match: string = `` +
                 `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['hawk'] *= *'geek';` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['baz'] *= *'bark';` +
+                `${variableMatch}\\['inner1'] *= *${variableMatch};` +
+                `${variableMatch}\\['cow'] *= *'bear';` +
+                `var *${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
-                `${variableMatch}\\['inner'] *= *{};` +
+                `${variableMatch}\\['inner'] *= *${variableMatch};` +
                 `${variableMatch}\\['ball'] *= *'door';` +
-                `${variableMatch}\\['inner']\\['baz'] *= *'bark';` +
-                `${variableMatch}\\['inner']\\['inner1'] *= *{};` +
-                `${variableMatch}\\['inner']\\['cow'] *= *'bear';` +
-                `${variableMatch}\\['inner']\\['inner1']\\['hawk'] *= *'geek';` +
+                `var *object *= *${variableMatch};` +
             ``;
             const regExp: RegExp = new RegExp(match);
 
@@ -214,13 +220,15 @@ describe('ObjectExpressionKeysTransformer', () => {
         describe('Variant #8: nested objects #3', () => {
             const match: string = `` +
                 `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['hawk'] *= *'geek';` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['baz'] *= *'bark';` +
+                `${variableMatch}\\['inner1'] *= *${variableMatch};` +
+                `${variableMatch}\\['cow'] *= *'bear';` +
+                `var *${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
-                `${variableMatch}\\['inner'] *= *{};` +
+                `${variableMatch}\\['inner'] *= *${variableMatch};` +
                 `${variableMatch}\\['ball'] *= *'door';` +
-                `${variableMatch}\\['inner']\\['baz'] *= *'bark';` +
-                `${variableMatch}\\['inner']\\['inner1'] *= *{};` +
-                `${variableMatch}\\['inner']\\['cow'] *= *'bear';` +
-                `${variableMatch}\\['inner']\\['inner1']\\['hawk'] *= *'geek';` +
                 `return ${variableMatch};` +
             ``;
             const regExp: RegExp = new RegExp(match);
@@ -1394,7 +1402,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                 `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'test';` +
                 `var foo *= *${variableMatch};` +
-                `var ${variableMatch} *= *{\\[foo.foo] *: *'1'};` +
+                `var ${variableMatch} *= *{\\[foo\\['foo']] *: *'1'};` +
                 `${variableMatch}\\['bar'] *= *'2';` +
                 `var bar *= *${variableMatch};` +
             ``;

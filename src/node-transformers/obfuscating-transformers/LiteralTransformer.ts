@@ -5,6 +5,7 @@ import * as ESTree from 'estree';
 
 import { TLiteralObfuscatingReplacerFactory } from '../../types/container/node-transformers/TLiteralObfuscatingReplacerFactory';
 
+import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IStringArrayStorageAnalyzer } from '../../interfaces/analyzers/string-array-storage-analyzer/IStringArrayStorageAnalyzer';
@@ -14,12 +15,19 @@ import { LiteralObfuscatingReplacer } from '../../enums/node-transformers/obfusc
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
+import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeLiteralUtils } from '../../node/NodeLiteralUtils';
 import { NodeMetadata } from '../../node/NodeMetadata';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
 export class LiteralTransformer extends AbstractNodeTransformer {
+    /**
+     * @type {IEscapeSequenceEncoder}
+     */
+    private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
+
     /**
      * @type {TLiteralObfuscatingReplacerFactory}
      */
@@ -35,18 +43,21 @@ export class LiteralTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      * @param {IStringArrayStorageAnalyzer} stringArrayStorageAnalyzer
+     * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      */
     constructor (
         @inject(ServiceIdentifiers.Factory__IObfuscatingReplacer)
             literalObfuscatingReplacerFactory: TLiteralObfuscatingReplacerFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
-        @inject(ServiceIdentifiers.IStringArrayStorageAnalyzer) stringArrayStorageAnalyzer: IStringArrayStorageAnalyzer
+        @inject(ServiceIdentifiers.IStringArrayStorageAnalyzer) stringArrayStorageAnalyzer: IStringArrayStorageAnalyzer,
+        @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder
     ) {
         super(randomGenerator, options);
 
         this.literalObfuscatingReplacerFactory = literalObfuscatingReplacerFactory;
         this.stringArrayStorageAnalyzer = stringArrayStorageAnalyzer;
+        this.escapeSequenceEncoder = escapeSequenceEncoder;
     }
 
     /**
@@ -68,6 +79,15 @@ export class LiteralTransformer extends AbstractNodeTransformer {
                     }
                 };
 
+            case TransformationStage.Finalizing:
+                return {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                        if (parentNode && NodeGuards.isLiteralNode(node)) {
+                            return this.encodeLiteralNodeToEscapeSequence(node, parentNode);
+                        }
+                    }
+                };
+
             default:
                 return null;
         }
@@ -83,7 +103,7 @@ export class LiteralTransformer extends AbstractNodeTransformer {
      * @returns {NodeGuards}
      */
     public transformNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
-        if (this.isProhibitedNode(literalNode, parentNode)) {
+        if (NodeLiteralUtils.isProhibitedLiteralNode(literalNode, parentNode)) {
             return literalNode;
         }
 
@@ -123,17 +143,18 @@ export class LiteralTransformer extends AbstractNodeTransformer {
     /**
      * @param {Literal} literalNode
      * @param {Node} parentNode
-     * @returns {boolean}
+     * @returns {Literal}
      */
-    private isProhibitedNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): boolean {
-        if (NodeGuards.isPropertyNode(parentNode) && parentNode.key === literalNode) {
-            return true;
+    private encodeLiteralNodeToEscapeSequence (
+        literalNode: ESTree.Literal,
+        parentNode: ESTree.Node
+    ): ESTree.Literal {
+        if (typeof literalNode.value !== 'string') {
+            return literalNode;
         }
 
-        if (NodeGuards.isImportDeclarationNode(parentNode)) {
-            return true;
-        }
-
-        return false;
+        return NodeFactory.literalNode(
+            this.escapeSequenceEncoder.encode(literalNode.value, this.options.unicodeEscapeSequence)
+        );
     }
 }

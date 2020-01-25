@@ -165,6 +165,11 @@ describe('SplitStringTransformer', () => {
 
     describe('Variant #10: Integration with `transformObjectKeys` option', () => {
         it('should correctly transform string when `transformObjectKeys` option is enabled', () => {
+            const regExp: RegExp = new RegExp(`` +
+                `var _0x[a-f0-9]{4,6} *= *{};` +
+                `*_0x[a-f0-9]{4,6}\\['ab' *\\+ *'cd' *\\+ *'ef' *\\+ *'g'] *= *'ab' *\\+ *'cd' *\\+ *'ef' *\\+ *'g';` +
+                `var test *= *_0x[a-f0-9]{4,6};` +
+            ``);
             const code: string = readFileAsString(__dirname + '/fixtures/object-string-literal.js');
 
             obfuscatedCode = JavaScriptObfuscator.obfuscate(
@@ -179,7 +184,7 @@ describe('SplitStringTransformer', () => {
 
             assert.match(
                 obfuscatedCode,
-                /^var *test *= *{}; *test\['ab' *\+ *'cd' *\+ *'ef' *\+ *'g'] *= *'ab' *\+ *'cd' *\+ *'ef' *\+ *'g';$/
+                regExp
             );
         });
     });

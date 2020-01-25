@@ -39,10 +39,11 @@ describe('ObjectExpressionKeysTransformer', () => {
 
         describe('Variant #2: variable declaration without initialization', () => {
             const match: string = `` +
-                `var *${variableMatch};` +
-                `${variableMatch} *= *{};` +
+                `var ${variableMatch};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
                 `${variableMatch}\\['baz'] *= *'bark';` +
+                `${variableMatch} *= *${variableMatch};` +
             ``;
             const regExp: RegExp = new RegExp(match);
 
@@ -152,10 +153,13 @@ describe('ObjectExpressionKeysTransformer', () => {
         describe('Variant #6: nested objects #1', () => {
             const match: string = `` +
                 `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['baz'] *= *'bark';` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['inner1'] *= *${variableMatch};` +
+                `var *${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
-                `${variableMatch}\\['inner'] *= *{};` +
-                `${variableMatch}\\['inner']\\['inner1'] *= *{};` +
-                `${variableMatch}\\['inner']\\['inner1']\\['baz'] *= *'bark';` +
+                `${variableMatch}\\['inner'] *= *${variableMatch};` +
+                `var object *= *${variableMatch};` +
             ``;
             const regExp: RegExp = new RegExp(match);
 
@@ -181,13 +185,16 @@ describe('ObjectExpressionKeysTransformer', () => {
         describe('Variant #7: nested objects #2', () => {
             const match: string = `` +
                 `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['hawk'] *= *'geek';` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['baz'] *= *'bark';` +
+                `${variableMatch}\\['inner1'] *= *${variableMatch};` +
+                `${variableMatch}\\['cow'] *= *'bear';` +
+                `var *${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
-                `${variableMatch}\\['inner'] *= *{};` +
+                `${variableMatch}\\['inner'] *= *${variableMatch};` +
                 `${variableMatch}\\['ball'] *= *'door';` +
-                `${variableMatch}\\['inner']\\['baz'] *= *'bark';` +
-                `${variableMatch}\\['inner']\\['inner1'] *= *{};` +
-                `${variableMatch}\\['inner']\\['cow'] *= *'bear';` +
-                `${variableMatch}\\['inner']\\['inner1']\\['hawk'] *= *'geek';` +
+                `var *object *= *${variableMatch};` +
             ``;
             const regExp: RegExp = new RegExp(match);
 
@@ -251,6 +258,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                 `${variableMatch}\\['\\w{5}'] *= *function *\\(${variableMatch}, *${variableMatch}\\) *{` +
                     `return *${variableMatch} *\\+ *${variableMatch};` +
                 `};` +
+                `var *${variableMatch} *= *${variableMatch};` +
                 `var *${variableMatch} *= *${variableMatch}\\['\\w{5}']\\(0x1, *0x2\\);` +
             ``;
             const regExp: RegExp = new RegExp(match);
@@ -282,6 +290,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                 `${variableMatch}\\['\\w{5}'] *= *function *\\(${variableMatch}, *${variableMatch}\\) *{` +
                     `return *${variableMatch} *\\+ *${variableMatch};` +
                 `};` +
+                `var *${variableMatch} *= *${variableMatch};` +
                 `var *${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *0x1;` +
                 `var *${variableMatch} *= *{};` +
@@ -353,6 +362,31 @@ describe('ObjectExpressionKeysTransformer', () => {
 
                 before(() => {
                     const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-with-object-call-5.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('should transform object keys', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #3', () => {
+                const match: string = `` +
+                    `var *${variableMatch} *= *0x1, *${variableMatch} *= *{'foo' *: *${variableMatch}};` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-with-object-call-6.js');
 
                     obfuscatedCode = JavaScriptObfuscator.obfuscate(
                         code,
@@ -452,15 +486,164 @@ describe('ObjectExpressionKeysTransformer', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });
+
+        // issue https://github.com/javascript-obfuscator/javascript-obfuscator/issues/516
+        describe('Variant #15: function default values', () => {
+            const match: string = `` +
+                `var *${variableMatch} *= *{};` +
+                `${variableMatch}\\['value'] *= *0x1;` +
+                `function test *\\(${variableMatch} *= *0x1, *${variableMatch} *= *${variableMatch}\\) *{ *}` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/function-default-values.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn ignore default parameter object if it references other parameter', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        // issue https://github.com/javascript-obfuscator/javascript-obfuscator/issues/516
+        describe('Variant #16: object expression inside inside variable declaration', () => {
+            describe('Without reference on other property', () => {
+                describe('Variant #1: Single variable declarator and object expression parent node is expression node', () => {
+                    const match: string = `` +
+                        `var *passthrough *= *${variableMatch} *=> *${variableMatch};` +
+                        `var *${variableMatch} *= *{};` +
+                        `${variableMatch}\\['foo'] *= *0x1;` +
+                        `var foo *= *passthrough *\\(${variableMatch}\\);` +
+                    ``;
+                    const regExp: RegExp = new RegExp(match);
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/object-expression-inside-variable-declaration-1.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                transformObjectKeys: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should transform object expression keys', () => {
+                        assert.match(obfuscatedCode,  regExp);
+                    });
+                });
+
+                describe('Variant #2: Multiple variable declarators and object expression parent node is variable declarator node', () => {
+                    const match: string = `` +
+                        `var ${variableMatch} *= *{};` +
+                        `${variableMatch}\\['foo'] *= *0x1;` +
+                        `var ${variableMatch} *= *{};` +
+                        `${variableMatch}\\['bar'] *= *0x2;` +
+                        `var foo *= *${variableMatch}, *bar *= *${variableMatch};` +
+                    ``;
+                    const regExp: RegExp = new RegExp(match);
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/object-expression-inside-variable-declaration-2.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                transformObjectKeys: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should transform object expressions keys', () => {
+                        assert.match(obfuscatedCode,  regExp);
+                    });
+                });
+            });
+
+            describe('With reference on other property', () => {
+                describe('Variant #1: Object expression parent node is variable declarator node', () => {
+                    const match: string = `` +
+                        `var *passthrough *= *${variableMatch} *=> *${variableMatch};` +
+                        `var *${variableMatch} *= *{};` +
+                        `${variableMatch}\\['foo'] *= *0x1;` +
+                        `var foo *= *${variableMatch}, *bar *= *{'bar': *foo\\['foo']};` +
+                    ``;
+                    const regExp: RegExp = new RegExp(match);
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/object-expression-inside-variable-declaration-3.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                transformObjectKeys: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should transform first object expression keys and ignore second object expression keys', () => {
+                        assert.match(obfuscatedCode,  regExp);
+                    });
+                });
+
+                describe('Variant #2: Object expression parent node is any expression node', () => {
+                    const match: string = `` +
+                        `var *passthrough *= *${variableMatch} *=> *${variableMatch};` +
+                        `var *${variableMatch} *= *{};` +
+                        `${variableMatch}\\['foo'] *= *0x1;` +
+                        `var foo *= *${variableMatch}, *bar *= *passthrough *\\({ *'bar' *: *foo\\['foo'] *}\\);` +
+                    ``;
+                    const regExp: RegExp = new RegExp(match);
+
+                    let obfuscatedCode: string;
+
+                    before(() => {
+                        const code: string = readFileAsString(__dirname + '/fixtures/object-expression-inside-variable-declaration-4.js');
+
+                        obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                            code,
+                            {
+                                ...NO_ADDITIONAL_NODES_PRESET,
+                                transformObjectKeys: true
+                            }
+                        ).getObfuscatedCode();
+                    });
+
+                    it('should transform first object expression keys and ignore second object expression keys', () => {
+                        assert.match(obfuscatedCode,  regExp);
+                    });
+                });
+            });
+        });
     });
 
     describe('member expression as host of object expression', () => {
         describe('Variant #1: simple', () => {
             const match: string = `` +
-                `this\\['state'] *= *{};` +
-                `this\\['state']\\['foo'] *= *'bar';` +
-                `this\\['state']\\['baz'] *= *'bark';` +
-                ``;
+                `var ${variableMatch} *= *{};` +
+                `${variableMatch}\\['foo'] *= *'bar';` +
+                `${variableMatch}\\['baz'] *= *'bark';` +
+                `this\\['state'] *= *${variableMatch};` +
+            ``;
             const regExp: RegExp = new RegExp(match);
 
             let obfuscatedCode: string;
@@ -484,10 +667,11 @@ describe('ObjectExpressionKeysTransformer', () => {
 
         describe('Variant #2: long members chain', () => {
             const match: string = `` +
-                `this\\['state']\\['foo'] *= *{};` +
-                `this\\['state']\\['foo']\\['foo'] *= *'bar';` +
-                `this\\['state']\\['foo']\\['baz'] *= *'bark';` +
-                ``;
+                `var ${variableMatch} *= *{};` +
+                `${variableMatch}\\['foo'] *= *'bar';` +
+                `${variableMatch}\\['baz'] *= *'bark';` +
+                `this\\['state']\\['foo'] *= *${variableMatch};` +
+            ``;
             const regExp: RegExp = new RegExp(match);
 
             let obfuscatedCode: string;
@@ -515,10 +699,11 @@ describe('ObjectExpressionKeysTransformer', () => {
             describe('Variant #1: with block statement', () => {
                 const match: string = `` +
                     `if *\\(!!\\[]\\) *{` +
-                    `var *${variableMatch} *= *{};` +
-                    `${variableMatch}\\['foo'] *= *'bar';` +
+                        `var ${variableMatch} *= *{};` +
+                        `${variableMatch}\\['foo'] *= *'bar';` +
+                        `var ${variableMatch} *= *${variableMatch};` +
                     `}` +
-                    ``;
+                ``;
                 const regExp: RegExp = new RegExp(match);
 
                 let obfuscatedCode: string;
@@ -606,8 +791,9 @@ describe('ObjectExpressionKeysTransformer', () => {
             describe('Variant #1: with block statement', () => {
                 const match: string = `` +
                     `for *\\(var *${variableMatch} *= *0x0; *${variableMatch} *< *0xa; *${variableMatch}\\+\\+\\) *{` +
-                        `var *${variableMatch} *= *{};` +
+                        `var ${variableMatch} *= *{};` +
                         `${variableMatch}\\['foo'] *= *'bar';` +
+                        `var ${variableMatch} *= *${variableMatch};` +
                     `}` +
                 ``;
                 const regExp: RegExp = new RegExp(match);
@@ -666,8 +852,9 @@ describe('ObjectExpressionKeysTransformer', () => {
                 const match: string = `` +
                     `var ${variableMatch} *= *{};` +
                     `for *\\(var *${variableMatch} in *${variableMatch}\\) *{` +
-                        `${variableMatch} *= *{};` +
+                        `var ${variableMatch} *= *{};` +
                         `${variableMatch}\\['bar'] *= *'bar';` +
+                        `${variableMatch} *= *${variableMatch};` +
                     `}` +
                 ``;
                 const regExp: RegExp = new RegExp(match);
@@ -726,8 +913,9 @@ describe('ObjectExpressionKeysTransformer', () => {
                 const match: string = `` +
                     `var ${variableMatch} *= *\\[];` +
                     `for *\\(var *${variableMatch} of *${variableMatch}\\) *{` +
-                        `${variableMatch} *= *{};` +
+                        `var ${variableMatch} *= *{};` +
                         `${variableMatch}\\['bar'] *= *'bar';` +
+                        `${variableMatch} *= *${variableMatch};` +
                     `}` +
                 ``;
                 const regExp: RegExp = new RegExp(match);
@@ -787,6 +975,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                     `while *\\(!!\\[]\\) *{` +
                         `var *${variableMatch} *= *{};` +
                         `${variableMatch}\\['foo'] *= *'bar';` +
+                        `var ${variableMatch} *= *${variableMatch};` +
                     `}` +
                 ``;
                 const regExp: RegExp = new RegExp(match);
@@ -873,6 +1062,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                 `try *{` +
                     `var *${variableMatch} *= *{};` +
                     `${variableMatch}\\['foo'] *= *'bar';` +
+                    `var ${variableMatch} *= *${variableMatch};` +
                 `} *catch *\\(${variableMatch}\\) *{` +
                 `}` +
             ``;
@@ -903,6 +1093,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                 `} *catch *\\(${variableMatch}\\) *{` +
                     `var *${variableMatch} *= *{};` +
                     `${variableMatch}\\['foo'] *= *'bar';` +
+                    `var ${variableMatch} *= *${variableMatch};` +
                 `}` +
             ``;
             const regExp: RegExp = new RegExp(match);
@@ -932,6 +1123,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                     `case *!!\\[]:` +
                         `var *${variableMatch} *= *{};` +
                         `${variableMatch}\\['foo'] *= *'bar';` +
+                    `var ${variableMatch} *= *${variableMatch};` +
                 `}` +
             ``;
             const regExp: RegExp = new RegExp(match);
@@ -960,6 +1152,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                 const match: string = `` +
                     `const *${variableMatch} *= *{}; *` +
                     `${variableMatch}\\['foo'] *= *'foo'; *` +
+                    `const ${variableMatch} *= *${variableMatch};` +
                     `const *${variableMatch} *= *${variableMatch}\\['foo'];` +
                 ``;
                 const regExp: RegExp = new RegExp(match);
@@ -985,10 +1178,11 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             describe('Variant #2', () => {
                 const match: string = `` +
-                    `const *${variableMatch} *= *0x1, *` +
-                        `${variableMatch} *= *{}; *` +
+                    `const ${variableMatch} *= *{}; *` +
                     `${variableMatch}\\['foo'] *= *'foo'; *` +
-                    `const *${variableMatch} *= *${variableMatch}\\['foo'];` +
+                    `const ${variableMatch} *= *0x1, *` +
+                        `${variableMatch} *= *${variableMatch}; *` +
+                    `const ${variableMatch} *= *${variableMatch}\\['foo'];` +
                 ``;
                 const regExp: RegExp = new RegExp(match);
 
@@ -1014,11 +1208,12 @@ describe('ObjectExpressionKeysTransformer', () => {
             describe('Variant #3: two objects', () => {
                 const match: string = `` +
                     `var *${variableMatch} *= *{};` +
+                    `${variableMatch}\\['foo'] *= *'foo';` +
+                    `var *${variableMatch} *= *{};` +
                     `${variableMatch}\\['bar'] *= *'bar';` +
-                    `var *${variableMatch} *= *{}, *` +
+                    `var *${variableMatch} *= *${variableMatch}, *` +
                         `${variableMatch} *= *${variableMatch}, *` +
                         `${variableMatch} *= *${variableMatch}\\['bar']; *` +
-                    `${variableMatch}\\['foo'] *= *'foo';` +
                     `console\\['log']\\(${variableMatch}\\);` +
                 ``;
                 const regExp: RegExp = new RegExp(match);
@@ -1173,6 +1368,61 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
 
             it('shouldn\'t transform object keys', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        describe('Variant #3: function default value reference', () => {
+            const match: string = `` +
+                `function test *\\(${variableMatch} *= *0x1, *${variableMatch} *= *{'value' *: *${variableMatch}}\\) *{ *}` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/function-default-value-reference.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn ignore default parameter object if it references other parameter', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        describe('Variant #4: member expression node as property key', () => {
+            const match: string = `` +
+                `var ${variableMatch} *= *{};` +
+                `${variableMatch}\\['foo'] *= *'test';` +
+                `var foo *= *${variableMatch};` +
+                `var ${variableMatch} *= *{\\[foo\\['foo']] *: *'1'};` +
+                `${variableMatch}\\['bar'] *= *'2';` +
+                `var bar *= *${variableMatch};` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/computed-key-member-expression.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn ignore extraction of property with member expression key', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });

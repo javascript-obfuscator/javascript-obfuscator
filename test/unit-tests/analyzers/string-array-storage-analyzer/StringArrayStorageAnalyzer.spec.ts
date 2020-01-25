@@ -157,6 +157,55 @@ describe('StringArrayStorageAnalyzer', () => {
             });
         });
 
+        describe('Analyzes of the AST tree with prohibited string literal nodes', () => {
+            const literalNode1: ESTree.Literal = NodeFactory.literalNode('foo');
+            const literalNode2: ESTree.Literal = NodeFactory.literalNode('bar');
+
+            const expectedStringArrayStorageItemData1: IStringArrayStorageItemData = {
+                encodedValue: 'foo',
+                decodeKey: null,
+                index: 0,
+                value: 'foo'
+            };
+            const expectedStringArrayStorageItemData2: undefined = undefined;
+
+            let stringArrayStorageItemData1: IStringArrayStorageItemData | undefined;
+            let stringArrayStorageItemData2: IStringArrayStorageItemData | undefined;
+
+            before(() => {
+                stringArrayStorageAnalyzer = getStringArrayStorageAnalyzer({
+                    stringArrayThreshold: 1
+                });
+
+                const astTree: ESTree.Program = NodeFactory.programNode([
+                    NodeFactory.expressionStatementNode(literalNode1),
+                    NodeFactory.variableDeclarationNode([
+                        NodeFactory.variableDeclaratorNode(
+                            NodeFactory.identifierNode('bar'),
+                            NodeFactory.objectExpressionNode([
+                                NodeFactory.propertyNode(
+                                    literalNode2,
+                                    NodeFactory.literalNode(1)
+                                )
+                            ])
+                        )
+                    ])
+                ]);
+
+                stringArrayStorageAnalyzer.analyze(astTree);
+                stringArrayStorageItemData1 = stringArrayStorageAnalyzer.getItemDataForLiteralNode(literalNode1);
+                stringArrayStorageItemData2 = stringArrayStorageAnalyzer.getItemDataForLiteralNode(literalNode2);
+            });
+
+            it('Variant #1: should return correct string array storage item data for literal node #1', () => {
+                assert.deepEqual(stringArrayStorageItemData1, expectedStringArrayStorageItemData1);
+            });
+
+            it('Variant #2: should return correct string array storage item data for literal node #1', () => {
+                assert.deepEqual(stringArrayStorageItemData2, expectedStringArrayStorageItemData2);
+            });
+        });
+
         describe('Analyzes of the AST tree with ignored nodes', () => {
             const literalNode1: ESTree.Literal = NodeFactory.literalNode('foo');
             const literalNode2: ESTree.Literal = NodeFactory.literalNode('bar');

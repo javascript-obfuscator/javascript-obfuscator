@@ -218,6 +218,7 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
         return Array
             .from(this.storage.values())
             .map((stringArrayStorageItemData: IStringArrayStorageItemData) => {
+                // we have to encode here, because of possible errors during `parse` of StringArrayCustomNode
                 return `'${this.escapeSequenceEncoder.encode(
                     stringArrayStorageItemData.encodedValue,
                     this.options.unicodeEscapeSequence

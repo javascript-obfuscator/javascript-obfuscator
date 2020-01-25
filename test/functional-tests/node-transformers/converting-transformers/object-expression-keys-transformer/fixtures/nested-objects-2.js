@@ -1,14 +1,12 @@
-(function(){
-    var object = {
-        foo: 'bar',
-        inner: {
-            baz: 'bark',
-            inner1: {
-                hawk: 'geek'
-            },
-            cow: 'bear',
-
+var object = {
+    foo: 'bar',
+    inner: {
+        baz: 'bark',
+        inner1: {
+            hawk: 'geek'
         },
-        ball: 'door',
-    };
-})();
+        cow: 'bear',
+
+    },
+    ball: 'door',
+};

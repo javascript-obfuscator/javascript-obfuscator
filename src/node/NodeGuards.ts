@@ -84,14 +84,6 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isCatchClauseNode (node: ESTree.Node): node is ESTree.CatchClause {
-        return node.type === NodeType.CatchClause;
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
     public static isClassDeclarationNode (
         node: ESTree.Node
     ): node is ESTree.ClassDeclaration & { id: ESTree.Identifier } {
@@ -136,42 +128,6 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isForStatementTypeNode (
-        node: ESTree.Node
-    ): node is ESTree.ForStatement | ESTree.ForInStatement | ESTree.ForOfStatement {
-        return NodeGuards.isForStatementNode(node)
-            || NodeGuards.isForInStatementNode(node)
-            || NodeGuards.isForOfStatementNode(node);
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
-    public static isForStatementNode (node: ESTree.Node): node is ESTree.ForStatement {
-        return node.type === NodeType.ForStatement;
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
-    public static isForInStatementNode (node: ESTree.Node): node is ESTree.ForInStatement {
-        return node.type === NodeType.ForInStatement;
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
-    public static isForOfStatementNode (node: ESTree.Node): node is ESTree.ForOfStatement {
-        return node.type === NodeType.ForOfStatement;
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
     public static isFunctionNode (node: ESTree.Node): node is ESTree.Function {
         return NodeGuards.isFunctionDeclarationNode(node) ||
             NodeGuards.isFunctionExpressionNode(node) ||
@@ -202,14 +158,6 @@ export class NodeGuards {
      */
     public static isIdentifierNode (node: ESTree.Node): node is ESTree.Identifier {
         return node.type === NodeType.Identifier;
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
-    public static isIfStatementNode (node: ESTree.Node): node is ESTree.IfStatement {
-        return node.type === NodeType.IfStatement;
     }
 
     /**

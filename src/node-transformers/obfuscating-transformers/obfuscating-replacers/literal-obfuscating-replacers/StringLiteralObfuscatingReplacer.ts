@@ -3,7 +3,6 @@ import { ServiceIdentifiers } from '../../../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
 
-import { IEscapeSequenceEncoder } from '../../../../interfaces/utils/IEscapeSequenceEncoder';
 import { IInitializable } from '../../../../interfaces/IInitializable';
 import { IOptions } from '../../../../interfaces/options/IOptions';
 import { IStringArrayStorage } from '../../../../interfaces/storages/string-array-storage/IStringArrayStorage';
@@ -22,11 +21,6 @@ import { Utils } from '../../../../utils/Utils';
 
 @injectable()
 export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplacer implements IInitializable {
-    /**
-     * @type {IEscapeSequenceEncoder}
-     */
-    private readonly escapeSequenceEncoder: IEscapeSequenceEncoder;
-
     /**
      * @type {Map<string, ESTree.Node>}
      */
@@ -51,20 +45,17 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     /**
      * @param {IStringArrayStorage} stringArrayStorage
      * @param {IStringArrayStorageAnalyzer} stringArrayStorageAnalyzer
-     * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      * @param {IOptions} options
      */
     constructor (
         @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: IStringArrayStorage,
         @inject(ServiceIdentifiers.IStringArrayStorageAnalyzer) stringArrayStorageAnalyzer: IStringArrayStorageAnalyzer,
-        @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);
 
         this.stringArrayStorage = stringArrayStorage;
         this.stringArrayStorageAnalyzer = stringArrayStorageAnalyzer;
-        this.escapeSequenceEncoder = escapeSequenceEncoder;
     }
 
     /**
@@ -138,9 +129,7 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
      * @returns {Node}
      */
     private replaceWithLiteralNode (value: string): ESTree.Node {
-        return NodeFactory.literalNode(
-            this.escapeSequenceEncoder.encode(value, this.options.unicodeEscapeSequence)
-        );
+        return NodeFactory.literalNode(value);
     }
 
     /**
@@ -156,9 +145,7 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
         ];
 
         if (decodeKey) {
-            callExpressionArgs.push(StringLiteralObfuscatingReplacer.getRc4KeyLiteralNode(
-                this.escapeSequenceEncoder.encode(decodeKey, this.options.unicodeEscapeSequence)
-            ));
+            callExpressionArgs.push(StringLiteralObfuscatingReplacer.getRc4KeyLiteralNode(decodeKey));
         }
 
         const stringArrayIdentifierNode: ESTree.Identifier = NodeFactory.identifierNode(this.stringArrayStorageCallsWrapperName);

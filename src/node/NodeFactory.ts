@@ -229,6 +229,23 @@ export class NodeFactory {
     }
 
     /**
+     * @param {(ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier)[]} specifiers
+     * @param {Literal} source
+     * @returns {ImportDeclaration}
+     */
+    public static importDeclarationNode (
+        specifiers: (ESTree.ImportSpecifier | ESTree.ImportDefaultSpecifier | ESTree.ImportNamespaceSpecifier)[],
+        source: ESTree.Literal
+    ): ESTree.ImportDeclaration {
+        return {
+            type: NodeType.ImportDeclaration,
+            specifiers,
+            source,
+            metadata: { ignoredNode: false }
+        };
+    }
+
+    /**
      * @param {boolean | number | string} value
      * @param {string} raw
      * @returns {Literal}

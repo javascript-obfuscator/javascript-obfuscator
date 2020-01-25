@@ -1,0 +1,1 @@
+function test (param1 = 1, param2 = {value: param1}) {}

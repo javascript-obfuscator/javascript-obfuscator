@@ -20,6 +20,14 @@ import { ObjectExpressionExtractor } from '../../enums/node-transformers/convert
 @injectable()
 export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
     /**
+     * @type {ObjectExpressionExtractor[]}
+     */
+    private static readonly objectExpressionExtractorNames: ObjectExpressionExtractor[] = [
+        ObjectExpressionExtractor.ObjectExpressionToVariableDeclarationExtractor,
+        ObjectExpressionExtractor.BasePropertiesExtractor
+    ];
+
+    /**
      * @type {TObjectExpressionExtractorFactory}
      */
     private readonly objectExpressionExtractorFactory: TObjectExpressionExtractorFactory;
@@ -208,18 +216,45 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
             return objectExpressionNode;
         }
 
+        return this.applyObjectExpressionKeysExtractorsRecursive(
+            ObjectExpressionKeysTransformer.objectExpressionExtractorNames,
+            objectExpressionNode,
+            hostStatement
+        );
+    }
+
+    /**
+     * @param {ObjectExpressionExtractor[]} objectExpressionExtractorNames
+     * @param {ObjectExpression} objectExpressionNode
+     * @param {Statement} hostStatement
+     * @returns {Node}
+     */
+    private applyObjectExpressionKeysExtractorsRecursive (
+        objectExpressionExtractorNames: ObjectExpressionExtractor[],
+        objectExpressionNode: ESTree.ObjectExpression,
+        hostStatement: ESTree.Statement
+    ): ESTree.Node {
+        const newObjectExpressionExtractorNames: ObjectExpressionExtractor[] = [...objectExpressionExtractorNames];
+        const objectExpressionExtractor: ObjectExpressionExtractor | undefined =
+            newObjectExpressionExtractorNames.shift();
+
+        if (!objectExpressionExtractor) {
+            return objectExpressionNode;
+        }
+
         const {
-            nodeToReplace: newObjectExpressionIdentifierReference,
+            nodeToReplace,
             objectExpressionHostStatement: newObjectExpressionHostStatement,
             objectExpressionNode: newObjectExpressionNode
-        } = this
-            .objectExpressionExtractorFactory(ObjectExpressionExtractor.ObjectExpressionToVariableDeclarationExtractor)
+        } = this.objectExpressionExtractorFactory(objectExpressionExtractor)
             .extract(objectExpressionNode, hostStatement);
 
-        this
-            .objectExpressionExtractorFactory(ObjectExpressionExtractor.BasePropertiesExtractor)
-            .extract(newObjectExpressionNode, newObjectExpressionHostStatement);
+        this.applyObjectExpressionKeysExtractorsRecursive(
+            newObjectExpressionExtractorNames,
+            newObjectExpressionNode,
+            newObjectExpressionHostStatement
+        );
 
-        return newObjectExpressionIdentifierReference;
+        return nodeToReplace;
     }
 }

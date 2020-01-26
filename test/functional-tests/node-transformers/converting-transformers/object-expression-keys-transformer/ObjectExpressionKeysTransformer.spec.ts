@@ -634,6 +634,71 @@ describe('ObjectExpressionKeysTransformer', () => {
                 });
             });
         });
+
+        describe('Variant #17: sequence expression object expressions', () => {
+            const match: string = `` +
+                `var ${variableMatch};` +
+                `var ${variableMatch};` +
+                `var ${variableMatch} *= *{};` +
+                `${variableMatch}\\['foo'] *= *0x1;` +
+                `var ${variableMatch} *= *{};` +
+                `${variableMatch}\\['bar'] *= *0x2;` +
+                `${variableMatch} *= *${variableMatch}, *` +
+                `${variableMatch} *= *${variableMatch};` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/sequence-expression-object-expressions.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn transform sequence expression object expressions keys', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        describe('Variant #18: return statement sequence expression object expressions', () => {
+            const match: string = `` +
+                `var ${variableMatch};` +
+                `var ${variableMatch};` +
+                `var ${variableMatch} *= *{};` +
+                `${variableMatch}\\['foo'] *= *0x1;` +
+                `var ${variableMatch} *= *{};` +
+                `${variableMatch}\\['bar'] *= *0x2;` +
+                `return ${variableMatch} *= *${variableMatch}, *` +
+                `${variableMatch} *= *${variableMatch}, *` +
+                `${variableMatch}\\['bar'];` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/return-statement-sequence-expression-object-expressions.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn transform sequence expression object expressions keys', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
     });
 
     describe('member expression as host of object expression', () => {
@@ -1423,6 +1488,67 @@ describe('ObjectExpressionKeysTransformer', () => {
             });
 
             it('shouldn ignore extraction of property with member expression key', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        describe('Variant #5: sequence expression identifier reference', () => {
+            const match: string = `` +
+                `var ${variableMatch};` +
+                `var ${variableMatch};` +
+                `var ${variableMatch} *= *{};` +
+                `${variableMatch}\\['foo'] *= *0x1;` +
+                `${variableMatch} *= *${variableMatch}, *` +
+                `${variableMatch} *= *{'bar' *: *${variableMatch}\\['foo']};` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/sequence-expression-identifier-reference.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn ignore sequence expression object expression if it references other sequence expression identifier', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
+
+        describe('Variant #6: return statement sequence expression identifier reference', () => {
+            const match: string = `` +
+                `var ${variableMatch};` +
+                `var ${variableMatch};` +
+                `var ${variableMatch} *= *{};` +
+                `${variableMatch}\\['foo'] *= *0x1;` +
+                `return ${variableMatch} *= *${variableMatch}, *` +
+                `${variableMatch} *= *{'bar' *: *${variableMatch}\\['foo']}, *` +
+                `${variableMatch}\\['bar'];` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/return-statement-sequence-expression-identifier-reference.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn ignore sequence expression object expression if it references other sequence expression identifier', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });

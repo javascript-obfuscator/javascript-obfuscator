@@ -93,7 +93,7 @@ describe('ScopeIdentifiersTransformer FunctionDeclaration identifiers', () => {
 
         describe('Variant #3: generator `functionDeclaration`', () => {
             const functionNameIdentifierRegExp: RegExp = /function *\* *(_0x[a-f0-9]{4,6}) *\(\) *\{/;
-            const functionCallIdentifierRegExp: RegExp = /let *_0x[a-f0-9]{4,6} *= *(_0x[a-f0-9]{4,6}) *\( *\);/;
+            const functionCallIdentifierRegExp: RegExp = /let _0x[a-f0-9]{4,6} *= *(_0x[a-f0-9]{4,6}) *\( *\);/;
 
             let obfuscatedCode: string,
                 functionNameIdentifier: string,
@@ -146,7 +146,7 @@ describe('ScopeIdentifiersTransformer FunctionDeclaration identifiers', () => {
         describe('Variant #5: already renamed identifiers shouldn\'t be renamed twice', () => {
             describe('Variant #1', () => {
                 const functionDeclarationRegExp: RegExp = /function *d\(\) *{/;
-                const variableDeclarationsRegExp: RegExp = /let *e, *f, *g, *h;/;
+                const variableDeclarationsRegExp: RegExp = /let e, *f, *g, *h;/;
 
                 let obfuscatedCode: string;
 

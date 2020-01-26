@@ -26,7 +26,7 @@ describe('BaseIdentifierObfuscatingReplacer', () => {
             it('Should keep reserved names without transformations when `reservedNames` option is enabled', () => {
                 assert.match(
                     obfuscatedCode,
-                    /var *abc *= *0x1; *var *_0x([a-f0-9]){4,6} *= *0x2; *var *ghi *= *0x3;/
+                    /var abc *= *0x1; *var _0x([a-f0-9]){4,6} *= *0x2; *var ghi *= *0x3;/
                 );
             });
         });
@@ -50,7 +50,7 @@ describe('BaseIdentifierObfuscatingReplacer', () => {
             it('Should keep reserved names without transformations when `reservedNames` option is enabled', () => {
                 assert.match(
                     obfuscatedCode,
-                    /var *abc *= *0x1; *var *_0x([a-f0-9]){4,6} *= *0x2; *var *ghi *= *0x3;/
+                    /var abc *= *0x1; *var _0x([a-f0-9]){4,6} *= *0x2; *var ghi *= *0x3;/
                 );
             });
         });

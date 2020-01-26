@@ -92,7 +92,7 @@ describe('EvalCallExpressionTransformer', () => {
     });
 
     describe('Variant #4: string array calls wrapper call', () => {
-        const stringArrayRegExp: RegExp = /var *_0x([a-f0-9]){4} *= *\['log', *'bar'];/;
+        const stringArrayRegExp: RegExp = /var _0x([a-f0-9]){4} *= *\['log', *'bar'];/;
         const stringArrayCallsWrapperRegExp: RegExp = /eval *\('console\[_0x([a-f0-9]){4,6}\(\\'0x0\\'\)]\(_0x([a-f0-9]){4,6}\(\\'0x1\\'\)\);'\);/;
 
         let obfuscatedCode: string;
@@ -154,7 +154,7 @@ describe('EvalCallExpressionTransformer', () => {
         const functionIdentifierRegExp: RegExp = /function *_0x(?:[a-f0-9]){4,6} *\((_0x(?:[a-f0-9]){4,6}), *(_0x(?:[a-f0-9]){4,6})\)/;
         const evalExpressionMatch: string = `` +
             `eval *\\('` +
-                `var *(_0x(?:[a-f0-9]){4,6}) *= *(_0x(?:[a-f0-9]){4,6}) *\\+ *(_0x(?:[a-f0-9]){4,6});` +
+                `var (_0x(?:[a-f0-9]){4,6}) *= *(_0x(?:[a-f0-9]){4,6}) *\\+ *(_0x(?:[a-f0-9]){4,6});` +
                 `eval\\(\\\\'` +
                     `(_0x(?:[a-f0-9]){4,6}) *\\+ *(_0x(?:[a-f0-9]){4,6});` +
                 `\\\\'\\);` +
@@ -280,7 +280,7 @@ describe('EvalCallExpressionTransformer', () => {
     describe('Variant #9: integration with control flow flattening', () => {
         const variableMatch: string = '_0x([a-f0-9]){4,6}';
         const controlFlowStorageNodeMatch: string = `` +
-            `var *${variableMatch} *= *\\{` +
+            `var ${variableMatch} *= *\\{` +
                 `'\\w{5}' *: *function *\\(${variableMatch}, *${variableMatch}\\) *\\{` +
                     `return *${variableMatch} *\\+ *${variableMatch};` +
                 `\\}` +

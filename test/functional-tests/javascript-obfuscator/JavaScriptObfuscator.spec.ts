@@ -188,7 +188,7 @@ describe('JavaScriptObfuscator', () => {
 
         describe('variable inside global scope', () => {
             describe('Variant #1: without `renameGlobals` option', () => {
-                const regExp: RegExp = /^var *test *= *0x\d+;$/;
+                const regExp: RegExp = /^var test *= *0x\d+;$/;
 
                 let obfuscatedCode: string;
 
@@ -209,7 +209,7 @@ describe('JavaScriptObfuscator', () => {
             });
 
             describe('Variant #2: with `renameGlobals` option', () => {
-                const regExp: RegExp = /^var *_0x(\w){4,6} *= *0x\d+;$/;
+                const regExp: RegExp = /^var _0x(\w){4,6} *= *0x\d+;$/;
 
                 let obfuscatedCode: string;
 
@@ -231,7 +231,7 @@ describe('JavaScriptObfuscator', () => {
             });
 
             describe('Variant #3: with `renameGlobals` and `identifiersPrefix` options', () => {
-                const regExp: RegExp = /^var *foo_0x(\w){4,6} *= *0x\d+;$/;
+                const regExp: RegExp = /^var foo_0x(\w){4,6} *= *0x\d+;$/;
 
                 let obfuscatedCode: string;
 
@@ -255,7 +255,7 @@ describe('JavaScriptObfuscator', () => {
 
             describe('Variant #4: with `stringArray`, `renameGlobals` and `identifiersPrefix` options', () => {
                 const stringArrayRegExp: RegExp = /^var foo_0x(\w){4} *= *\['abc'\];/;
-                const stringArrayCallRegExp: RegExp = /var *foo_0x(\w){4,6} *= *foo_0x(\w){4}\('0x0'\);$/;
+                const stringArrayCallRegExp: RegExp = /var foo_0x(\w){4,6} *= *foo_0x(\w){4}\('0x0'\);$/;
 
                 let obfuscatedCode: string;
 
@@ -285,7 +285,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('variable inside block scope', () => {
-            const regExp: RegExp = /^\(function *\(\) *\{ *var *_0x[\w]+ *= *0x\d+; *\}(\(\)\)|\)\(\));?$/;
+            const regExp: RegExp = /^\(function *\(\) *\{ *var _0x[\w]+ *= *0x\d+; *\}(\(\)\)|\)\(\));?$/;
 
             let obfuscatedCode: string;
 
@@ -347,7 +347,7 @@ describe('JavaScriptObfuscator', () => {
 
         describe('latin literal variable value', () => {
             const stringArrayLatinRegExp: RegExp = /^var _0x(\w){4} *= *\['abc'\];/;
-            const stringArrayCallRegExp: RegExp = /var *test *= *_0x(\w){4}\('0x0'\);$/;
+            const stringArrayCallRegExp: RegExp = /var test *= *_0x(\w){4}\('0x0'\);$/;
 
             let obfuscatedCode: string;
 
@@ -375,7 +375,7 @@ describe('JavaScriptObfuscator', () => {
 
         describe('cyrillic literal variable value', () => {
             const stringArrayCyrillicRegExp: RegExp = /^var _0x(\w){4} *= *\['абц'\];/;
-            const stringArrayCallRegExp: RegExp = /var *test *= *_0x(\w){4}\('0x0'\);$/;
+            const stringArrayCallRegExp: RegExp = /var test *= *_0x(\w){4}\('0x0'\);$/;
 
             let obfuscatedCode: string;
 
@@ -573,7 +573,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('mangled identifier names generator', () => {
-            const regExp: RegExp = /var *c *= *0x1/;
+            const regExp: RegExp = /var c *= *0x1/;
 
             let obfuscatedCode: string;
 
@@ -594,7 +594,7 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('dictionary identifier names generator', () => {
-            const regExp: RegExp = /var *[abc] *= *0x1; *var *[ABC] *= *0x2; *var *[ABC] *= *0x3;/;
+            const regExp: RegExp = /var [abc] *= *0x1; *var [ABC] *= *0x2; *var [ABC] *= *0x3;/;
 
             let obfuscatedCode: string;
 
@@ -619,7 +619,7 @@ describe('JavaScriptObfuscator', () => {
         describe('parse module', () => {
             describe('Variant #1: import', () => {
                 const importRegExp: RegExp = /import *{foo} *from *'.\/foo';/;
-                const variableDeclarationRegExp: RegExp = /var *test *= *0x1/;
+                const variableDeclarationRegExp: RegExp = /var test *= *0x1/;
 
                 let obfuscatedCode: string;
 
@@ -639,7 +639,7 @@ describe('JavaScriptObfuscator', () => {
             });
 
             describe('Variant #2: export', () => {
-                const regExp: RegExp = /export *const *foo *= *0x1;/;
+                const regExp: RegExp = /export *const foo *= *0x1;/;
 
                 let obfuscatedCode: string;
 

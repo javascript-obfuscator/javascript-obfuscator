@@ -84,9 +84,9 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
 
             describe('switch-case map', () => {
-                const switchCaseMapVariableRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\|'\)/;
-                const switchCaseMapIndexVariableRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *0x0;/;
-                const switchCaseMapStringRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *\{'.*' *: *'(.*)'\};/;
+                const switchCaseMapVariableRegExp: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\|'\)/;
+                const switchCaseMapIndexVariableRegExp: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *0x0;/;
+                const switchCaseMapStringRegExp: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *\{'.*' *: *'(.*)'\};/;
                 const expectedSwitchCasesSequence: string[] = ['0', '1', '2', '3', '4'];
 
                 let switchCaseMap: string[];
@@ -177,8 +177,8 @@ describe('BlockStatementControlFlowTransformer', function () {
             });
 
             describe('switch-case map', () => {
-                const switchCaseMapVariableRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\|'\)/;
-                const switchCaseMapStringRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *\{'.*' *: *'(.*)'\};/;
+                const switchCaseMapVariableRegExp: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\|'\)/;
+                const switchCaseMapStringRegExp: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *\{'.*' *: *'(.*)'\};/;
                 const expectedSwitchCasesSequence: string[] = ['0', '1', '2', '3', '4'];
 
                 let switchCaseMap: string[];
@@ -223,7 +223,7 @@ describe('BlockStatementControlFlowTransformer', function () {
         });
 
         describe('Variant #4: block statement contain variable declaration with `const` kind', () => {
-            const statementRegExp: RegExp = /^\(function *\( *\) *\{ *const *_0x([a-f0-9]){4,6} *= *0x1; *console\['log'\]\(0x1\);/;
+            const statementRegExp: RegExp = /^\(function *\( *\) *\{ *const _0x([a-f0-9]){4,6} *= *0x1; *console\['log'\]\(0x1\);/;
 
             let obfuscatedCode: string;
 
@@ -246,7 +246,7 @@ describe('BlockStatementControlFlowTransformer', function () {
         });
 
         describe('Variant #5: block statement contain variable declaration with `let` kind', () => {
-            const statementRegExp: RegExp = /^\(function *\( *\) *\{ *let *_0x([a-f0-9]){4,6} *= *0x1; *console\['log'\]\(0x1\);/;
+            const statementRegExp: RegExp = /^\(function *\( *\) *\{ *let _0x([a-f0-9]){4,6} *= *0x1; *console\['log'\]\(0x1\);/;
 
             let obfuscatedCode: string;
 
@@ -674,9 +674,9 @@ describe('BlockStatementControlFlowTransformer', function () {
                 });
 
                 describe('switch-case map', () => {
-                    const switchCaseMapVariableRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\|'\);/;
-                    const switchCaseMapIndexVariableRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *0x0;/;
-                    const switchCaseMapStringRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *\{'.*' *: *'(.*)'\};/;
+                    const switchCaseMapVariableRegExp: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\|'\);/;
+                    const switchCaseMapIndexVariableRegExp: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *0x0;/;
+                    const switchCaseMapStringRegExp: RegExp = /var _0x(?:[a-f0-9]){4,6} *= *\{'.*' *: *'(.*)'\};/;
                     const expectedSwitchCasesSequence: string[] = ['0', '1', '2', '3', '4'];
 
                     let switchCaseMap: string[];
@@ -718,9 +718,9 @@ describe('BlockStatementControlFlowTransformer', function () {
                 });
 
                 describe('switch-case map', () => {
-                    const switchCaseMapVariableRegExp: RegExp = /const *_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\|'\);/;
-                    const switchCaseMapIndexVariableRegExp: RegExp = /let *_0x(?:[a-f0-9]){4,6} *= *0x0;/;
-                    const switchCaseMapStringRegExp: RegExp = /const *_0x(?:[a-f0-9]){4,6} *= *\{'.*' *: *'(.*)'\};/;
+                    const switchCaseMapVariableRegExp: RegExp = /const _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\|'\);/;
+                    const switchCaseMapIndexVariableRegExp: RegExp = /let _0x(?:[a-f0-9]){4,6} *= *0x0;/;
+                    const switchCaseMapStringRegExp: RegExp = /const _0x(?:[a-f0-9]){4,6} *= *\{'.*' *: *'(.*)'\};/;
                     const expectedSwitchCasesSequence: string[] = ['0', '1', '2', '3', '4'];
 
                     let switchCaseMap: string[];
@@ -762,9 +762,9 @@ describe('BlockStatementControlFlowTransformer', function () {
                 });
 
                 describe('switch-case map', () => {
-                    const switchCaseMapVariableRegExp: RegExp = /const *_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\|'\)/;
-                    const switchCaseMapIndexVariableRegExp: RegExp = /let *_0x(?:[a-f0-9]){4,6} *= *0x0;/;
-                    const switchCaseMapStringRegExp: RegExp = /const *_0x(?:[a-f0-9]){4,6} *= *\{'.*' *: *'(.*)'\};/;
+                    const switchCaseMapVariableRegExp: RegExp = /const _0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\|'\)/;
+                    const switchCaseMapIndexVariableRegExp: RegExp = /let _0x(?:[a-f0-9]){4,6} *= *0x0;/;
+                    const switchCaseMapStringRegExp: RegExp = /const _0x(?:[a-f0-9]){4,6} *= *\{'.*' *: *'(.*)'\};/;
                     const expectedSwitchCasesSequence: string[] = ['0', '1', '2', '3', '4'];
 
                     let switchCaseMap: string[];

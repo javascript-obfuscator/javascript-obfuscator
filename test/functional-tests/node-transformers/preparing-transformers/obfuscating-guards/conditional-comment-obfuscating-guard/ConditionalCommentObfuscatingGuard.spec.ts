@@ -9,8 +9,8 @@ import { readFileAsString } from '../../../../../helpers/readFileAsString';
 describe('ConditionalCommentObfuscatingGuard', () => {
     describe('check', () => {
         describe('Variant #1: `disable` conditional comment', () => {
-            const obfuscatedVariableDeclarationRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *0x1;/;
-            const ignoredVariableDeclarationRegExp: RegExp = /var *bar *= *2;/;
+            const obfuscatedVariableDeclarationRegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *0x1;/;
+            const ignoredVariableDeclarationRegExp: RegExp = /var bar *= *2;/;
             const consoleLogRegExp: RegExp = /console.log\(_0x([a-f0-9]){4,6}\);/;
 
             let obfuscatedCode: string;
@@ -40,9 +40,9 @@ describe('ConditionalCommentObfuscatingGuard', () => {
         });
 
         describe('Variant #2: `disable` and `enable` conditional comments #1', () => {
-            const obfuscatedVariableDeclaration1RegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *0x1;/;
-            const obfuscatedVariableDeclaration2RegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *0x3;/;
-            const ignoredVariableDeclarationRegExp: RegExp = /var *bar *= *2;/;
+            const obfuscatedVariableDeclaration1RegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *0x1;/;
+            const obfuscatedVariableDeclaration2RegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *0x3;/;
+            const ignoredVariableDeclarationRegExp: RegExp = /var bar *= *2;/;
 
             let obfuscatedCode: string;
 
@@ -71,8 +71,8 @@ describe('ConditionalCommentObfuscatingGuard', () => {
         });
 
         describe('Variant #3: `disable` and `enable` conditional comments #2', () => {
-            const ignoredVariableDeclarationRegExp: RegExp = /var *foo *= *1;/;
-            const obfuscatedVariableDeclarationRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *0x2;/;
+            const ignoredVariableDeclarationRegExp: RegExp = /var foo *= *1;/;
+            const obfuscatedVariableDeclarationRegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *0x2;/;
 
             let obfuscatedCode: string;
 
@@ -98,8 +98,8 @@ describe('ConditionalCommentObfuscatingGuard', () => {
         });
 
         describe('Variant #4: `disable` conditional comment from beginning of the code', () => {
-            const ignoredVariableDeclaration1RegExp: RegExp = /var *foo *= *1;/;
-            const ignoredVariableDeclaration2RegExp: RegExp = /var *bar *= *2;/;
+            const ignoredVariableDeclaration1RegExp: RegExp = /var foo *= *1;/;
+            const ignoredVariableDeclaration2RegExp: RegExp = /var bar *= *2;/;
 
             let obfuscatedCode: string;
 
@@ -124,11 +124,11 @@ describe('ConditionalCommentObfuscatingGuard', () => {
         });
 
         describe('Variant #5: `disable` and `enable` conditional comments with dead code injection', () => {
-            const obfuscatedFunctionExpressionRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *function *\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\) *{/g;
+            const obfuscatedFunctionExpressionRegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *function *\(_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}, *_0x([a-f0-9]){4,6}\) *{/g;
             const expectedObfuscatedFunctionExpressionLength: number = 3;
 
-            const ignoredFunctionExpression1RegExp: RegExp = /var *bar *= *function *\(a, *b, *c\) *{/;
-            const ignoredFunctionExpression2RegExp: RegExp = /var *baz *= *function *\(a, *b, *c\) *{/;
+            const ignoredFunctionExpression1RegExp: RegExp = /var bar *= *function *\(a, *b, *c\) *{/;
+            const ignoredFunctionExpression2RegExp: RegExp = /var baz *= *function *\(a, *b, *c\) *{/;
 
             const obfuscatedFunctionCallRegExp: RegExp = /_0x([a-f0-9]){4,6}\( *\);/g;
             const expectedObfuscatedFunctionCallsLength: number = 3;
@@ -194,8 +194,8 @@ describe('ConditionalCommentObfuscatingGuard', () => {
         });
 
         describe('Variant #6: `disable` and `enable` conditional comments with control flow flattening', () => {
-            const obfuscatedVariableDeclarationRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['[a-zA-Z0-9]{1,5}'];/;
-            const ignoredVariableDeclarationRegExp: RegExp = /var *bar *= *'bar';/;
+            const obfuscatedVariableDeclarationRegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['[a-zA-Z0-9]{1,5}'];/;
+            const ignoredVariableDeclarationRegExp: RegExp = /var bar *= *'bar';/;
 
             let obfuscatedCode: string;
 

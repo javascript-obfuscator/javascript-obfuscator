@@ -8,7 +8,7 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFac
 
 describe('CommentsTransformer', () => {
     describe('Variant #1: simple comment without preserved words', () => {
-        const regExp: RegExp = /^var *test *= *0x1;$/;
+        const regExp: RegExp = /^var test *= *0x1;$/;
 
         let obfuscatedCode: string;
 
@@ -29,7 +29,7 @@ describe('CommentsTransformer', () => {
     });
 
     describe('Variant #2: simple comment with preserved words', () => {
-        const regExp: RegExp = /^\/\/ *@license *test *comment *\n*var *test *= *0x1;$/;
+        const regExp: RegExp = /^\/\/ *@license *test *comment *\n*var test *= *0x1;$/;
 
         let obfuscatedCode: string;
 
@@ -50,7 +50,7 @@ describe('CommentsTransformer', () => {
     });
 
     describe('Variant #3: comment with preserved and non-preserved words', () => {
-        const regExp: RegExp = /^\/\/ *@license *test *comment *\n*var *test *= *0x1;$/;
+        const regExp: RegExp = /^\/\/ *@license *test *comment *\n*var test *= *0x1;$/;
 
         let obfuscatedCode: string;
 
@@ -76,7 +76,7 @@ describe('CommentsTransformer', () => {
             ` *\\* *@license *\\n` +
             ` *\\* *test\\n` +
             ` *\\*\\/\\n` +
-            `var *test *= *0x1;` +
+            `var test *= *0x1;` +
             ` *\\/\\*\\* *@preserved *\\*\\/$` +
         ``);
 

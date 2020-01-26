@@ -11,7 +11,7 @@ describe('BlackListObfuscatingGuard', () => {
         describe('`\'use strict\';` operator', () => {
             const useStrictOperatorRegExp: RegExp = /'use *strict';/;
             const stringArrayLatinRegExp: RegExp = /var _0x(\w){4} *= *\['abc'\];/;
-            const stringArrayCallRegExp: RegExp = /var *test *= *_0x(\w){4}\('0x0'\);$/;
+            const stringArrayCallRegExp: RegExp = /var test *= *_0x(\w){4}\('0x0'\);$/;
 
             let obfuscatedCode: string;
 

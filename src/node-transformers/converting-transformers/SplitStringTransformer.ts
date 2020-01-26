@@ -1,6 +1,7 @@
 import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -13,6 +14,7 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeFactory } from '../../node/NodeFactory';
 import { NodeGuards } from '../../node/NodeGuards';
+import { NodeLiteralUtils } from '../../node/NodeLiteralUtils';
 import { NodeUtils } from '../../node/NodeUtils';
 
 /**
@@ -20,6 +22,11 @@ import { NodeUtils } from '../../node/NodeUtils';
  */
 @injectable()
 export class SplitStringTransformer extends AbstractNodeTransformer {
+    /**
+     * @type {number}
+     */
+    private static readonly firstPassChunkLength: number = 1000;
+
     /**
      * @type {NodeTransformer[]}
      */
@@ -86,26 +93,64 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
     }
 
     /**
+     * Needs to split string on chunks of length `splitStringsChunkLength` in two pass, because of
+     * `Maximum call stack size exceeded` error in `esrecurse` package
+     *
      * @param {Literal} literalNode
      * @param {Node} parentNode
      * @returns {Node}
      */
     public transformNode (literalNode: ESTree.Literal, parentNode: ESTree.Node): ESTree.Node {
+        if (NodeLiteralUtils.isProhibitedLiteralNode(literalNode, parentNode)) {
+            return literalNode;
+        }
+
+        // pass #1: split string on a large chunks with length of `firstPassChunkLength`
+        const firstPassChunksNode: ESTree.Node = this.transformLiteralNodeByChunkLength(
+            literalNode,
+            parentNode,
+            SplitStringTransformer.firstPassChunkLength
+        );
+
+        // pass #2: split large chunks on a chunks with length of `splitStringsChunkLength`
+        const secondPassChunksNode: ESTree.Node = estraverse.replace(firstPassChunksNode, {
+            /* tslint:disable:no-shadowed-variable */
+            enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                if (parentNode && NodeGuards.isLiteralNode(node)) {
+                    return this.transformLiteralNodeByChunkLength(
+                        node,
+                        parentNode,
+                        this.options.splitStringsChunkLength
+                    );
+                }
+            }
+        });
+
+        return secondPassChunksNode;
+    }
+
+    /**
+     * @param {Literal} literalNode
+     * @param {Node} parentNode
+     * @param {number} chunkLength
+     * @returns {Node}
+     */
+    private transformLiteralNodeByChunkLength (
+        literalNode: ESTree.Literal,
+        parentNode: ESTree.Node,
+        chunkLength: number
+    ): ESTree.Node {
         if (typeof literalNode.value !== 'string') {
             return literalNode;
         }
 
-        if (NodeGuards.isPropertyNode(parentNode) && !parentNode.computed && parentNode.key === literalNode) {
-            return literalNode;
-        }
-
-        if (this.options.splitStringsChunkLength >= literalNode.value.length) {
+        if (chunkLength >= literalNode.value.length) {
             return literalNode;
         }
 
         const stringChunks: string[] = SplitStringTransformer.chunkString(
             literalNode.value,
-            this.options.splitStringsChunkLength
+            chunkLength
         );
 
         const binaryExpressionNode: ESTree.BinaryExpression =

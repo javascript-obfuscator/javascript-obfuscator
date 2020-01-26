@@ -362,6 +362,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isSequenceExpressionNode (node: ESTree.Node): node is ESTree.SequenceExpression {
+        return node.type === NodeType.SequenceExpression;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isSuperNode (node: ESTree.Node): node is ESTree.Super {
         return node.type === NodeType.Super;
     }

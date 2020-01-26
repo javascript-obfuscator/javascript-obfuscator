@@ -58,7 +58,9 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
         hostStatement: ESTree.Statement
     ): boolean {
         return ObjectExpressionKeysTransformer.isProhibitedVariableDeclarationHostStatement(objectExpressionNode, hostStatement)
-            || ObjectExpressionKeysTransformer.isProhibitedFunctionHostStatement(objectExpressionNode, hostStatement);
+            || ObjectExpressionKeysTransformer.isProhibitedFunctionHostStatement(objectExpressionNode, hostStatement)
+            || ObjectExpressionKeysTransformer.isProhibitedExpressionHostStatement(objectExpressionNode, hostStatement)
+            || ObjectExpressionKeysTransformer.isProhibitedReturnHostStatement(objectExpressionNode, hostStatement);
     }
 
     /**
@@ -106,6 +108,63 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
         return ObjectExpressionKeysTransformer.isReferencedIdentifierName(
             objectExpressionNode,
             hostStatement.params
+        );
+    }
+
+    /**
+     * @param {ObjectExpression} objectExpressionNode
+     * @param {Statement} hostStatement
+     * @returns {boolean}
+     */
+    private static isProhibitedReturnHostStatement (
+        objectExpressionNode: ESTree.ObjectExpression,
+        hostStatement: ESTree.Statement
+    ): boolean {
+        if (!NodeGuards.isReturnStatementNode(hostStatement) || !hostStatement.argument) {
+            return false;
+        }
+
+        return ObjectExpressionKeysTransformer.isProhibitedSequenceExpressionNode(
+            objectExpressionNode,
+            hostStatement.argument
+        );
+    }
+
+    /**
+     * @param {ObjectExpression} objectExpressionNode
+     * @param {Statement} hostStatement
+     * @returns {boolean}
+     */
+    private static isProhibitedExpressionHostStatement (
+        objectExpressionNode: ESTree.ObjectExpression,
+        hostStatement: ESTree.Statement
+    ): boolean {
+        if (!NodeGuards.isExpressionStatementNode(hostStatement)) {
+            return false;
+        }
+
+        return ObjectExpressionKeysTransformer.isProhibitedSequenceExpressionNode(
+            objectExpressionNode,
+            hostStatement.expression
+        );
+    }
+
+    /**
+     * @param {ObjectExpression} objectExpressionNode
+     * @param {Statement} node
+     * @returns {boolean}
+     */
+    private static isProhibitedSequenceExpressionNode (
+        objectExpressionNode: ESTree.ObjectExpression,
+        node: ESTree.Node
+    ): boolean {
+        if (!NodeGuards.isSequenceExpressionNode(node) || !node.expressions.length) {
+            return false;
+        }
+
+        return ObjectExpressionKeysTransformer.isReferencedIdentifierName(
+            objectExpressionNode,
+            node.expressions
         );
     }
 

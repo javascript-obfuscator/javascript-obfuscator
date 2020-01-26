@@ -36,6 +36,7 @@ export enum NodeType {
     Property = 'Property',
     RestElement = 'RestElement',
     ReturnStatement = 'ReturnStatement',
+    SequenceExpression = 'SequenceExpression',
     Super = 'Super',
     SwitchCase = 'SwitchCase',
     SwitchStatement = 'SwitchStatement',

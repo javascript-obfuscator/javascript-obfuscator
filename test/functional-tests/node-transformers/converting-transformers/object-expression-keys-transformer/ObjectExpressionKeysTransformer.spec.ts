@@ -1549,7 +1549,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                     ).getObfuscatedCode();
                 });
 
-                it('shouldn ignore sequence expression object expression if it references other sequence expression identifier', () => {
+                it('shouldn ignore sequence expression object expression if it references same sequence expression identifier', () => {
                     assert.match(obfuscatedCode,  regExp);
                 });
             });
@@ -1576,7 +1576,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                     ).getObfuscatedCode();
                 });
 
-                it('shouldn ignore sequence expression object expression if it references other sequence expression identifier', () => {
+                it('shouldn ignore sequence expression object expression if it references same sequence expression identifier', () => {
                     assert.match(obfuscatedCode,  regExp);
                 });
             });

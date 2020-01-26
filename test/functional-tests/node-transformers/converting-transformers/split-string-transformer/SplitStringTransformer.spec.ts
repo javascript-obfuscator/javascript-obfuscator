@@ -189,7 +189,7 @@ describe('SplitStringTransformer', () => {
         });
     });
 
-    describe('Variant #10: Integration with `reservedStrings` option', () => {
+    describe('Variant #11: Integration with `reservedStrings` option', () => {
         it('should correctly ignore strings from `reservedStrings` option', () => {
             const code: string = readFileAsString(__dirname + '/fixtures/ignore-reserved-strings.js');
 
@@ -206,6 +206,26 @@ describe('SplitStringTransformer', () => {
             assert.match(
                 obfuscatedCode,
                 /^var *foo *= *'foo' *\+ *'foo'; *var *bar *= *'barbar'; *var *baz *= *'baz' *\+ *'baz';$/
+            );
+        });
+    });
+
+    describe('Variant #12: Large string', () => {
+        it('Should does not throw `Maximum call stack size exceeded` error on a large string', () => {
+            const code: string = `var foo = '${'a'.repeat(10000)}';`;
+
+            const testFunc = () => JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_ADDITIONAL_NODES_PRESET,
+                    splitStrings: true,
+                    splitStringsChunkLength: 2
+                }
+            );
+
+            assert.doesNotThrow(
+                testFunc,
+                Error
             );
         });
     });

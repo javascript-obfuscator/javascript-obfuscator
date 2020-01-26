@@ -94,6 +94,14 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
+    public static isConditionalExpressionNode (node: ESTree.Node): node is ESTree.ConditionalExpression {
+        return node.type === NodeType.ConditionalExpression;
+    }
+
+    /**
+     * @param {Node} node
+     * @returns {boolean}
+     */
     public static isContinueStatementNode (node: ESTree.Node): node is ESTree.ContinueStatement {
         return node.type === NodeType.ContinueStatement;
     }

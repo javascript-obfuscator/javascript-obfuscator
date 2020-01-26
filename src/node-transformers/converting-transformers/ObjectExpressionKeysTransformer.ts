@@ -57,161 +57,55 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
         objectExpressionNode: ESTree.ObjectExpression,
         hostStatement: ESTree.Statement
     ): boolean {
-        return ObjectExpressionKeysTransformer.isProhibitedVariableDeclarationHostStatement(objectExpressionNode, hostStatement)
-            || ObjectExpressionKeysTransformer.isProhibitedFunctionHostStatement(objectExpressionNode, hostStatement)
-            || ObjectExpressionKeysTransformer.isProhibitedExpressionHostStatement(objectExpressionNode, hostStatement)
-            || ObjectExpressionKeysTransformer.isProhibitedReturnHostStatement(objectExpressionNode, hostStatement);
-    }
-
-    /**
-     * Fix of https://github.com/javascript-obfuscator/javascript-obfuscator/issues/516
-     * If object expression is placed inside any expression inside variable declaration with 2+ declarators
-     * - should mark host node as prohibited
-     *
-     * @param {ObjectExpression} objectExpressionNode
-     * @param {Statement} hostStatement
-     * @returns {boolean}
-     */
-    private static isProhibitedVariableDeclarationHostStatement (
-        objectExpressionNode: ESTree.ObjectExpression,
-        hostStatement: ESTree.Statement
-    ): boolean {
-        if (!NodeGuards.isVariableDeclarationNode(hostStatement) || !hostStatement.declarations.length) {
-            return false;
-        }
-
         return ObjectExpressionKeysTransformer.isReferencedIdentifierName(
             objectExpressionNode,
-            hostStatement.declarations
+            hostStatement
         );
     }
 
     /**
      * @param {ObjectExpression} objectExpressionNode
-     * @param {Statement} hostStatement
-     * @returns {boolean}
-     */
-    private static isProhibitedFunctionHostStatement (
-        objectExpressionNode: ESTree.ObjectExpression,
-        hostStatement: ESTree.Statement
-    ): boolean {
-        if (!NodeGuards.isFunctionNode(hostStatement) || !hostStatement.params.length) {
-            return false;
-        }
-
-        const hostNode: ESTree.Node | undefined = objectExpressionNode.parentNode;
-
-        if (!hostNode || !NodeGuards.isAssignmentPatternNode(hostNode)) {
-            return false;
-        }
-
-        return ObjectExpressionKeysTransformer.isReferencedIdentifierName(
-            objectExpressionNode,
-            hostStatement.params
-        );
-    }
-
-    /**
-     * @param {ObjectExpression} objectExpressionNode
-     * @param {Statement} hostStatement
-     * @returns {boolean}
-     */
-    private static isProhibitedReturnHostStatement (
-        objectExpressionNode: ESTree.ObjectExpression,
-        hostStatement: ESTree.Statement
-    ): boolean {
-        if (!NodeGuards.isReturnStatementNode(hostStatement) || !hostStatement.argument) {
-            return false;
-        }
-
-        return ObjectExpressionKeysTransformer.isProhibitedSequenceExpressionNode(
-            objectExpressionNode,
-            hostStatement.argument
-        );
-    }
-
-    /**
-     * @param {ObjectExpression} objectExpressionNode
-     * @param {Statement} hostStatement
-     * @returns {boolean}
-     */
-    private static isProhibitedExpressionHostStatement (
-        objectExpressionNode: ESTree.ObjectExpression,
-        hostStatement: ESTree.Statement
-    ): boolean {
-        if (!NodeGuards.isExpressionStatementNode(hostStatement)) {
-            return false;
-        }
-
-        return ObjectExpressionKeysTransformer.isProhibitedSequenceExpressionNode(
-            objectExpressionNode,
-            hostStatement.expression
-        );
-    }
-
-    /**
-     * @param {ObjectExpression} objectExpressionNode
-     * @param {Statement} node
-     * @returns {boolean}
-     */
-    private static isProhibitedSequenceExpressionNode (
-        objectExpressionNode: ESTree.ObjectExpression,
-        node: ESTree.Node
-    ): boolean {
-        if (!NodeGuards.isSequenceExpressionNode(node) || !node.expressions.length) {
-            return false;
-        }
-
-        return ObjectExpressionKeysTransformer.isReferencedIdentifierName(
-            objectExpressionNode,
-            node.expressions
-        );
-    }
-
-    /**
-     * @param {ObjectExpression} objectExpressionNode
-     * @param {Node[]} nodesToSearch
+     * @param {Node} hostNode
      * @returns {boolean}
      */
     private static isReferencedIdentifierName (
         objectExpressionNode: ESTree.ObjectExpression,
-        nodesToSearch: ESTree.Node[],
+        hostNode: ESTree.Node,
     ): boolean {
-        if (nodesToSearch.length === 1) {
-            return false;
-        }
-
         const identifierNamesSet: string[] = [];
 
         let isReferencedIdentifierName: boolean = false;
         let isCurrentNode: boolean = false;
 
         // should mark node as prohibited if identifier of node is referenced somewhere inside other nodes
-        for (const nodeToSearch of nodesToSearch) {
-            estraverse.traverse(nodeToSearch, {
-                enter: (node: ESTree.Node): void | estraverse.VisitorOption => {
-                    if (node === objectExpressionNode) {
-                        isCurrentNode = true;
-                    }
-
-                    if (!NodeGuards.isIdentifierNode(node)) {
-                        return;
-                    }
-
-                    if (!isCurrentNode) {
-                        identifierNamesSet.push(node.name);
-                    } else if (identifierNamesSet.includes(node.name)) {
-                        isReferencedIdentifierName = true;
-
-                        return estraverse.VisitorOption.Break;
-                    }
+        estraverse.traverse(hostNode, {
+            enter: (node: ESTree.Node): void | estraverse.VisitorOption => {
+                if (node === objectExpressionNode) {
+                    isCurrentNode = true;
                 }
-            });
 
-            if (isCurrentNode || isReferencedIdentifierName) {
-                break;
+                if (!NodeGuards.isIdentifierNode(node)) {
+                    return;
+                }
+
+                if (!isCurrentNode) {
+                    identifierNamesSet.push(node.name);
+
+                    return;
+                }
+
+                if (identifierNamesSet.includes(node.name)) {
+                    isReferencedIdentifierName = true;
+                }
+
+                return estraverse.VisitorOption.Break;
+            },
+            leave: (node: ESTree.Node): void | estraverse.VisitorOption => {
+                if (node === objectExpressionNode) {
+                    isCurrentNode = false;
+                }
             }
-        }
+        });
 
         return isReferencedIdentifierName;
     }

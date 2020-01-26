@@ -188,8 +188,6 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
 
         // should mark node as prohibited if identifier of node is referenced somewhere inside other nodes
         for (const nodeToSearch of nodesToSearch) {
-            const identifierNamesSetForCurrentNode: string[] = [];
-
             estraverse.traverse(nodeToSearch, {
                 enter: (node: ESTree.Node): void | estraverse.VisitorOption => {
                     if (node === objectExpressionNode) {
@@ -201,7 +199,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
                     }
 
                     if (!isCurrentNode) {
-                        identifierNamesSetForCurrentNode.push(node.name);
+                        identifierNamesSet.push(node.name);
                     } else if (identifierNamesSet.includes(node.name)) {
                         isReferencedIdentifierName = true;
 
@@ -212,8 +210,6 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
 
             if (isCurrentNode || isReferencedIdentifierName) {
                 break;
-            } else {
-                identifierNamesSet.push(...identifierNamesSetForCurrentNode);
             }
         }
 

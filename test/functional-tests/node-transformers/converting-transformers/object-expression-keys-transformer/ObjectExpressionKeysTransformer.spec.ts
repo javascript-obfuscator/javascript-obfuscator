@@ -1523,33 +1523,62 @@ describe('ObjectExpressionKeysTransformer', () => {
         });
 
         describe('Variant #6: return statement sequence expression identifier reference', () => {
-            const match: string = `` +
-                `var ${variableMatch};` +
-                `var ${variableMatch};` +
-                `var ${variableMatch} *= *{};` +
-                `${variableMatch}\\['foo'] *= *0x1;` +
-                `return ${variableMatch} *= *${variableMatch}, *` +
-                `${variableMatch} *= *{'bar' *: *${variableMatch}\\['foo']}, *` +
-                `${variableMatch}\\['bar'];` +
-            ``;
-            const regExp: RegExp = new RegExp(match);
+            describe('Variant #1: reference on other sequence expression identifier', () => {
+                const match: string = `` +
+                    `var ${variableMatch};` +
+                    `var ${variableMatch};` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['foo'] *= *0x1;` +
+                    `return ${variableMatch} *= *${variableMatch}, *` +
+                    `${variableMatch} *= *{'bar' *: *${variableMatch}\\['foo']}, *` +
+                    `${variableMatch}\\['bar'];` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
 
-            let obfuscatedCode: string;
+                let obfuscatedCode: string;
 
-            before(() => {
-                const code: string = readFileAsString(__dirname + '/fixtures/return-statement-sequence-expression-identifier-reference.js');
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/return-statement-sequence-expression-identifier-reference-1.js');
 
-                obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        ...NO_ADDITIONAL_NODES_PRESET,
-                        transformObjectKeys: true
-                    }
-                ).getObfuscatedCode();
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('shouldn ignore sequence expression object expression if it references other sequence expression identifier', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
             });
 
-            it('shouldn ignore sequence expression object expression if it references other sequence expression identifier', () => {
-                assert.match(obfuscatedCode,  regExp);
+            describe('Variant #2: reference on same sequence expression identifier', () => {
+                const match: string = `` +
+                    `var ${variableMatch};` +
+                    `return *\\(${variableMatch} *= *{'props' *: *0x1}\\)\\['state'] *= *{'expanded' *: *${variableMatch}\\['props']}, *` +
+                    `${variableMatch}\\['state']\\['expanded'];` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/return-statement-sequence-expression-identifier-reference-2.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('shouldn ignore sequence expression object expression if it references other sequence expression identifier', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
             });
         });
     });

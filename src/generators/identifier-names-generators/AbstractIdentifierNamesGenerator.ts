@@ -18,9 +18,9 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     protected readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @type {Array}
+     * @type {Set<string>}
      */
-    protected readonly preservedNames: string[] = [];
+    protected readonly preservedNamesSet: Set<string> = new Set();
 
     /**
      * @param {IRandomGenerator} randomGenerator
@@ -51,7 +51,7 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
      * @returns {void}
      */
     public preserveName (name: string): void {
-        this.preservedNames.push(name);
+        this.preservedNamesSet.add(name);
     }
 
     /**
@@ -59,7 +59,7 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
      * @returns {boolean}
      */
     public isValidIdentifierName (name: string): boolean {
-        return this.notReservedName(name) && !this.preservedNames.includes(name);
+        return this.notReservedName(name) && !this.preservedNamesSet.has(name);
     }
 
     /**

@@ -21,13 +21,13 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     /**
      * Reserved JS words with length of 2-4 symbols that can be possible generated with this replacer
      *
-     * @type {string[]}
+     * @type {Set<string>}
      */
-    private static readonly reservedNames: string[] = [
+    private static readonly reservedNamesSet: Set<string> = new Set([
         'byte', 'case', 'char', 'do', 'else', 'enum', 'eval', 'for', 'goto',
         'if', 'in', 'int', 'let', 'long', 'new', 'null', 'this', 'true', 'try',
         'var', 'void', 'with'
-    ];
+    ]);
 
     /**
      * @type {string}
@@ -77,7 +77,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      */
     public isValidIdentifierName (mangledName: string): boolean {
         return super.isValidIdentifierName(mangledName)
-            && !MangledIdentifierNamesGenerator.reservedNames.includes(mangledName);
+            && !MangledIdentifierNamesGenerator.reservedNamesSet.has(mangledName);
     }
 
     /**
@@ -87,6 +87,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
     private generateNewMangledName (previousMangledName: string): string {
         const generateNewMangledName: (name: string) => string = (name: string): string => {
             const nameSequence: string[] = MangledIdentifierNamesGenerator.nameSequence;
+            const nameSequenceLength: number = nameSequence.length;
             const nameLength: number = name.length;
 
             const zeroSequence: (num: number) => string = (num: number): string => {
@@ -96,9 +97,9 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
             let index: number = nameLength - 1;
 
             do {
-                const character: string = name.charAt(index);
+                const character: string = name[index];
                 const indexInSequence: number = nameSequence.indexOf(character);
-                const lastNameSequenceIndex: number = nameSequence.length - 1;
+                const lastNameSequenceIndex: number = nameSequenceLength - 1;
 
                 if (indexInSequence !== lastNameSequenceIndex) {
                     const previousNamePart: string = name.substring(0, index);

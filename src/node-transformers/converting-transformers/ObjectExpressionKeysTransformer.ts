@@ -97,12 +97,12 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
                 if (identifierNamesSet.includes(node.name)) {
                     isReferencedIdentifierName = true;
                 }
-
-                return estraverse.VisitorOption.Break;
             },
             leave: (node: ESTree.Node): void | estraverse.VisitorOption => {
                 if (node === objectExpressionNode) {
                     isCurrentNode = false;
+
+                    return estraverse.VisitorOption.Break;
                 }
             }
         });

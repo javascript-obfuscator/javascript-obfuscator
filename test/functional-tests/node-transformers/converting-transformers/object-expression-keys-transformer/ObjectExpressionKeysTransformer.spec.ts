@@ -1698,5 +1698,31 @@ describe('ObjectExpressionKeysTransformer', () => {
                 });
             });
         });
+
+        describe('Variant #8: variable declarator identifier reference', () => {
+            const match: string = `` +
+                `var *passthrough *= *${variableMatch} *=> *${variableMatch};` +
+                `var foo *= *0x1, *bar *= *{'baz' *: *passthrough\\(foo\\)};` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-identifier-reference.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn ignore variable declarator object expression if it references other variable declarator identifier', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
     });
 });

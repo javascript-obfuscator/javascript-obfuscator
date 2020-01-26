@@ -1549,7 +1549,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                     ).getObfuscatedCode();
                 });
 
-                it('shouldn ignore sequence expression object expression if it references same sequence expression identifier', () => {
+                it('shouldn ignore sequence expression object expression if it references other sequence expression identifier', () => {
                     assert.match(obfuscatedCode,  regExp);
                 });
             });
@@ -1557,7 +1557,9 @@ describe('ObjectExpressionKeysTransformer', () => {
             describe('Variant #2: reference on same sequence expression identifier', () => {
                 const match: string = `` +
                     `var ${variableMatch};` +
-                    `return *\\(${variableMatch} *= *{'props' *: *0x1}\\)\\['state'] *= *{'expanded' *: *${variableMatch}\\['props']}, *` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['props'] *= *0x1;` +
+                    `return *\\(${variableMatch} *= *${variableMatch}\\)\\['state'] *= *{'expanded' *: *${variableMatch}\\['props']}, *` +
                     `${variableMatch}\\['state']\\['expanded'];` +
                 ``;
                 const regExp: RegExp = new RegExp(match);
@@ -1576,7 +1578,122 @@ describe('ObjectExpressionKeysTransformer', () => {
                     ).getObfuscatedCode();
                 });
 
-                it('shouldn ignore sequence expression object expression if it references same sequence expression identifier', () => {
+                it('shouldn ignore sequence expression object expression if it references other sequence expression identifier', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+        });
+
+        describe('Variant #7: conditional expression identifier reference', () => {
+            describe('Variant #1: conditional expression identifier reference', () => {
+                const match: string = `` +
+                    `var ${variableMatch};` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['bar'] *= *0x1;` +
+                    `${variableMatch} *\\? *{'bar' *: *${variableMatch}\\['foo']} *: *${variableMatch};` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/conditional-expression-identifier-reference.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('shouldn ignore conditional expression object expression if it references other conditional expression identifier', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #2: return statement conditional expression identifier reference', () => {
+                const match: string = `` +
+                    `var ${variableMatch};` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['bar'] *= *0x1;` +
+                    `return ${variableMatch} *\\? *{'bar' *: *${variableMatch}\\['foo']} *: *${variableMatch};` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/return-statement-conditional-expression-identifier-reference.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('shouldn ignore conditional expression object expression if it references other conditional expression identifier', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #3: assignment expression conditional expression identifier reference', () => {
+                const match: string = `` +
+                    `var ${variableMatch};` +
+                    `var ${variableMatch};` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['bar'] *= *0x1;` +
+                    `${variableMatch} *= *${variableMatch} *\\? *{'bar' *: *${variableMatch}\\['foo']} *: *${variableMatch};` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/assignment-expression-conditional-expression-identifier-reference.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('shouldn ignore conditional expression object expression if it references other conditional expression identifier', () => {
+                    assert.match(obfuscatedCode,  regExp);
+                });
+            });
+
+            describe('Variant #4: variable declarator conditional expression identifier reference', () => {
+                const match: string = `` +
+                    `var ${variableMatch};` +
+                    `var ${variableMatch} *= *{};` +
+                    `${variableMatch}\\['bar'] *= *0x1;` +
+                    `var ${variableMatch} *= *${variableMatch} *\\? *{'bar' *: *${variableMatch}\\['foo']} *: *${variableMatch};` +
+                ``;
+                const regExp: RegExp = new RegExp(match);
+
+                let obfuscatedCode: string;
+
+                before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/variable-declarator-conditional-expression-identifier-reference.js');
+
+                    obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...NO_ADDITIONAL_NODES_PRESET,
+                            transformObjectKeys: true
+                        }
+                    ).getObfuscatedCode();
+                });
+
+                it('shouldn ignore conditional expression object expression if it references other conditional expression identifier', () => {
                     assert.match(obfuscatedCode,  regExp);
                 });
             });

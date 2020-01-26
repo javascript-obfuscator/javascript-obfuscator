@@ -9,10 +9,12 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
         `
             function test() {
                 var foo;
-                return (foo = {props: 1})['state'] = {
-                    expanded: foo.props
-                },
-                foo.state.expanded;
+                
+                return foo
+                    ? {
+                        bar: foo.foo
+                    }
+                    : 1;
             }
             
             console.log(test());

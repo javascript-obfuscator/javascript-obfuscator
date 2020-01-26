@@ -13,8 +13,8 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFac
 describe('LiteralTransformer', () => {
     describe('transformation of literal node with string value', () => {
         describe('Variant #1: default behaviour', () => {
-            const stringArrayRegExp: RegExp = /^var *_0x([a-f0-9]){4} *= *\['test'\];/;
-            const stringArrayCallRegExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/;
+            const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['test'\];/;
+            const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0'\);/;
 
             let obfuscatedCode: string;
 
@@ -41,7 +41,7 @@ describe('LiteralTransformer', () => {
         });
 
         describe('Variant #2: `stringArray` option is disabled', () => {
-            const regExp: RegExp = /^var *test *= *'test';/;
+            const regExp: RegExp = /^var test *= *'test';/;
 
             let obfuscatedCode: string;
 
@@ -83,8 +83,8 @@ describe('LiteralTransformer', () => {
         });
 
         describe('Variant #4: same literal node values', () => {
-            const stringArrayRegExp: RegExp = /^var *_0x([a-f0-9]){4} *= *\['test'\];/;
-            const stringArrayCallRegExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/;
+            const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['test'\];/;
+            const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0'\);/;
 
             let obfuscatedCode: string;
 
@@ -111,7 +111,7 @@ describe('LiteralTransformer', () => {
         });
 
         describe('Variant #5: `unicodeEscapeSequence` option is enabled', () => {
-            const regExp: RegExp = /^var *test *= *'\\x74\\x65\\x73\\x74';$/;
+            const regExp: RegExp = /^var test *= *'\\x74\\x65\\x73\\x74';$/;
 
             let obfuscatedCode: string;
 
@@ -134,8 +134,8 @@ describe('LiteralTransformer', () => {
         });
 
         describe('Variant #6: `unicodeEscapeSequence` and `stringArray` options are enabled', () => {
-            const stringArrayRegExp: RegExp = /^var *_0x([a-f0-9]){4} *= *\['\\x74\\x65\\x73\\x74'\];/;
-            const stringArrayCallRegExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\('\\x30\\x78\\x30'\);/;
+            const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['\\x74\\x65\\x73\\x74'\];/;
+            const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('\\x30\\x78\\x30'\);/;
 
             let obfuscatedCode: string;
 
@@ -163,7 +163,7 @@ describe('LiteralTransformer', () => {
         });
 
         describe('Variant #7: short literal node value', () => {
-            const regExp: RegExp = /var *test *= *'te';/;
+            const regExp: RegExp = /var test *= *'te';/;
 
             let obfuscatedCode: string;
 
@@ -186,8 +186,8 @@ describe('LiteralTransformer', () => {
         });
 
         describe('Variant #8: base64 encoding', () => {
-            const stringArrayRegExp: RegExp = /^var *_0x([a-f0-9]){4} *= *\['dGVzdA=='\];/;
-            const stringArrayCallRegExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/;
+            const stringArrayRegExp: RegExp = /^var _0x([a-f0-9]){4} *= *\['dGVzdA=='\];/;
+            const stringArrayCallRegExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0'\);/;
 
             let obfuscatedCode: string;
 
@@ -216,7 +216,7 @@ describe('LiteralTransformer', () => {
 
         describe('Variant #9: rc4 encoding', () => {
             describe('Variant #1: single string literal', () => {
-                const regExp: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0', *'.{4}'\);/;
+                const regExp: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0', *'.{4}'\);/;
 
                 let obfuscatedCode: string;
 
@@ -240,8 +240,8 @@ describe('LiteralTransformer', () => {
             });
 
             describe('Variant #2: multiple string literals', () => {
-                const variableRegExp1: RegExp = /var *test *= *_0x(?:[a-f0-9]){4}\('0x0', *'(.{4})'\);/;
-                const variableRegExp2: RegExp = /var *test *= *_0x(?:[a-f0-9]){4}\('0x1', *'(.{4})'\);/;
+                const variableRegExp1: RegExp = /var test *= *_0x(?:[a-f0-9]){4}\('0x0', *'(.{4})'\);/;
+                const variableRegExp2: RegExp = /var test *= *_0x(?:[a-f0-9]){4}\('0x1', *'(.{4})'\);/;
 
                 let encodedLiteralValue1: string;
                 let encodedLiteralValue2: string;
@@ -285,8 +285,8 @@ describe('LiteralTransformer', () => {
             const stringArrayThreshold: number = 0.5;
             const delta: number = 0.1;
 
-            const regExp1: RegExp = /var *test *= *_0x([a-f0-9]){4}\('0x0'\);/g;
-            const regExp2: RegExp = /var *test *= *'test';/g;
+            const regExp1: RegExp = /var test *= *_0x([a-f0-9]){4}\('0x0'\);/g;
+            const regExp2: RegExp = /var test *= *'test';/g;
 
             let stringArrayProbability: number,
                 noStringArrayProbability: number;
@@ -579,7 +579,7 @@ describe('LiteralTransformer', () => {
     });
 
     describe('transformation of literal node with boolean value', () => {
-        const regExp: RegExp = /^var *test *= *!!\[\];$/;
+        const regExp: RegExp = /^var test *= *!!\[\];$/;
 
         let obfuscatedCode: string;
 
@@ -602,7 +602,7 @@ describe('LiteralTransformer', () => {
     });
 
     describe('transformation of literal node with number value', () => {
-        const regExp: RegExp = /^var *test *= *0x0;$/;
+        const regExp: RegExp = /^var test *= *0x0;$/;
 
         let obfuscatedCode: string;
 
@@ -625,7 +625,7 @@ describe('LiteralTransformer', () => {
     });
 
     describe('RegExp literal', () => {
-        const regExp: RegExp = /^var *regExp *= *\/\(\\d\+\)\/;$/;
+        const regExp: RegExp = /^var regExp *= *\/\(\\d\+\)\/;$/;
 
         let obfuscatedCode: string;
 

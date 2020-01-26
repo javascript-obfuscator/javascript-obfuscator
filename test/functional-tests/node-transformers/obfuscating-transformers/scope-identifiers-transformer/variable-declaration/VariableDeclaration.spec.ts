@@ -11,7 +11,7 @@ import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscator
 
 describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
     describe('Variant #1: default behaviour', () => {
-        const variableDeclarationRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *'abc';/;
+        const variableDeclarationRegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *'abc';/;
         const variableCallRegExp: RegExp = /console\['log'\]\(_0x([a-f0-9]){4,6}\);/;
 
         let obfuscatedCode: string;
@@ -38,7 +38,7 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
 
     describe('Variant #2: parent block scope node is `Program` node', () => {
         describe('Variant #1: `renameGlobals` option is disabled', () => {
-            const variableDeclarationRegExp: RegExp = /var *test *= *0xa;/;
+            const variableDeclarationRegExp: RegExp = /var test *= *0xa;/;
             const variableCallRegExp: RegExp = /console\['log'\]\(test\);/;
 
             let obfuscatedCode: string;
@@ -64,7 +64,7 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
         });
 
         describe('Variant #2: `renameGlobals` option is enabled', () => {
-            const variableDeclarationRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *0xa;/;
+            const variableDeclarationRegExp: RegExp = /var _0x([a-f0-9]){4,6} *= *0xa;/;
             const variableCallRegExp: RegExp = /console\['log'\]\(_0x([a-f0-9]){4,6}\);/;
 
             let obfuscatedCode: string;
@@ -164,7 +164,7 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
         const innerFunctionParamIdentifierRegExp: RegExp = /function _0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\) *\{/;
         const consoleLogIdentifierRegExp: RegExp = /console\['log'\]\((_0x[a-f0-9]{4,6})\)/;
         const objectIdentifierRegExp: RegExp = /return\{'t':(_0x[a-f0-9]{4,6})\}/;
-        const variableDeclarationIdentifierRegExp: RegExp = /var *(_0x[a-f0-9]{4,6});/;
+        const variableDeclarationIdentifierRegExp: RegExp = /var (_0x[a-f0-9]{4,6});/;
 
         let outerFunctionParamIdentifierName: string|null,
             innerFunctionParamIdentifierName: string|null,
@@ -219,7 +219,7 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
         const innerFunctionParamIdentifierRegExp: RegExp = /function _0x[a-f0-9]{4,6} *\((_0x[a-f0-9]{4,6})\) *\{/;
         const consoleLogIdentifierRegExp: RegExp = /console\['log'\]\((_0x[a-f0-9]{4,6})\)/;
         const objectIdentifierRegExp: RegExp = /return\{'t':(_0x[a-f0-9]{4,6})\}/;
-        const variableDeclarationIdentifierRegExp: RegExp = /var *(_0x[a-f0-9]{4,6});/;
+        const variableDeclarationIdentifierRegExp: RegExp = /var (_0x[a-f0-9]{4,6});/;
 
         let catchClauseParamIdentifierName: string|null,
             innerFunctionParamIdentifierName: string|null,
@@ -314,7 +314,7 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
     });
 
     describe('Variant #9: object pattern as variable declarator', () => {
-        const objectPatternVariableDeclaratorRegExp: RegExp = /var *\{ *bar *\} *= *\{ *'bar' *: *'foo' *\};/;
+        const objectPatternVariableDeclaratorRegExp: RegExp = /var \{ *bar *\} *= *\{ *'bar' *: *'foo' *\};/;
         const variableUsageRegExp: RegExp = /console\['log'\]\(bar\);/;
 
         let obfuscatedCode: string;
@@ -340,7 +340,7 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
     });
 
     describe('Variant #10: array pattern as variable declarator', () => {
-        const objectPatternVariableDeclaratorRegExp: RegExp = /var *\[ *(_0x([a-f0-9]){4,6}), *(_0x([a-f0-9]){4,6}) *\] *= *\[0x1, *0x2\];/;
+        const objectPatternVariableDeclaratorRegExp: RegExp = /var \[ *(_0x([a-f0-9]){4,6}), *(_0x([a-f0-9]){4,6}) *\] *= *\[0x1, *0x2\];/;
         const variableUsageRegExp: RegExp = /console\['log'\]\((_0x([a-f0-9]){4,6}), *(_0x([a-f0-9]){4,6})\);/;
 
         let obfuscatedCode: string,
@@ -383,7 +383,7 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
     });
 
     describe('Variant #11: computed object expression identifier', () => {
-        const computedObjectExpressionRegExp: RegExp = /var *_0x[a-f0-9]{4,6} *= *\{\[_0x[a-f0-9]{4,6}\]: *0x1\};/;
+        const computedObjectExpressionRegExp: RegExp = /var _0x[a-f0-9]{4,6} *= *\{\[_0x[a-f0-9]{4,6}\]: *0x1\};/;
 
         let obfuscatedCode: string;
 
@@ -426,7 +426,7 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
 
     describe('Variant #13: already renamed identifiers shouldn\'t be renamed twice', () => {
         describe('Variant #1', () => {
-            const variableDeclarationRegExp: RegExp = /var *d *= *0x1;/;
+            const variableDeclarationRegExp: RegExp = /var d *= *0x1;/;
             const functionDeclarationRegExp1: RegExp = /function *e *\(\) *{}/;
             const functionDeclarationRegExp2: RegExp = /function *f *\(\) *{}/;
             const functionDeclarationRegExp3: RegExp = /function *g *\(\) *{}/;
@@ -468,10 +468,10 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
         });
 
         describe('Variant #2', () => {
-            const variableDeclarationRegExp1: RegExp = /var *d *= *0x1;/;
-            const variableDeclarationRegExp2: RegExp = /var *e;/;
+            const variableDeclarationRegExp1: RegExp = /var d *= *0x1;/;
+            const variableDeclarationRegExp2: RegExp = /var e;/;
             const functionDeclarationRegExp: RegExp = /function *f *\(\) *{/;
-            const variableDeclarationRegExp3: RegExp = /var *g *= *function *\(\) *{}/;
+            const variableDeclarationRegExp3: RegExp = /var g *= *function *\(\) *{}/;
 
             let obfuscatedCode: string;
 
@@ -555,8 +555,8 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
     });
 
     describe('Variant #16: array rest', () => {
-        const objectRegExp: RegExp = /var *_0x[a-f0-9]{4,6} *= *\['foo', *'bar', *'baz'\];/;
-        const objectRestRegExp: RegExp = /var *\[_0x[a-f0-9]{4,6}, *\.\.\.*_0x[a-f0-9]{4,6}] *= *_0x[a-f0-9]{4,6};/;
+        const objectRegExp: RegExp = /var _0x[a-f0-9]{4,6} *= *\['foo', *'bar', *'baz'\];/;
+        const objectRestRegExp: RegExp = /var \[_0x[a-f0-9]{4,6}, *\.\.\.*_0x[a-f0-9]{4,6}] *= *_0x[a-f0-9]{4,6};/;
 
         let obfuscatedCode: string;
 
@@ -581,8 +581,8 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
     });
 
     describe('Variant #17: object rest', () => {
-        const objectRegExp: RegExp = /var *_0x[a-f0-9]{4,6} *= *\{'foo': *0x1, *'bar': *0x2, *'baz': *0x3\};/;
-        const objectRestRegExp: RegExp = /var *\{foo, *\.\.\.*_0x[a-f0-9]{4,6}\} *= *_0x[a-f0-9]{4,6};/;
+        const objectRegExp: RegExp = /var _0x[a-f0-9]{4,6} *= *\{'foo': *0x1, *'bar': *0x2, *'baz': *0x3\};/;
+        const objectRestRegExp: RegExp = /var \{foo, *\.\.\.*_0x[a-f0-9]{4,6}\} *= *_0x[a-f0-9]{4,6};/;
 
         let obfuscatedCode: string;
 
@@ -607,7 +607,7 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
     });
 
     describe('Variant #18: destructing assignment without declaration #1', () => {
-        const variablesDeclaration: RegExp = /var *a, *b, *_0x[a-f0-9]{4,6};/;
+        const variablesDeclaration: RegExp = /var a, *b, *_0x[a-f0-9]{4,6};/;
         const destructingAssignmentRegExp: RegExp = /\({ *a, *b *} *= *{ *'a' *: *0x1, *'b' *: *0x2 *}\);/;
         const identifierAssignmentRegExp: RegExp = /_0x[a-f0-9]{4,6} *= *0x3;/;
         const variablesUsageRegExp: RegExp = /console\['log']\(a, *b, *_0x[a-f0-9]{4,6}\);/;
@@ -643,7 +643,7 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
     });
 
     describe('Variant #19: destructing assignment without declaration #2', () => {
-        const variablesDeclaration: RegExp = /var *_0x[a-f0-9]{4,6} *= *'a', *_0x[a-f0-9]{4,6} *= *'b', *_0x[a-f0-9]{4,6};/;
+        const variablesDeclaration: RegExp = /var _0x[a-f0-9]{4,6} *= *'a', *_0x[a-f0-9]{4,6} *= *'b', *_0x[a-f0-9]{4,6};/;
         const destructingAssignmentRegExp: RegExp = /\({ *\[_0x[a-f0-9]{4,6}]: *_0x[a-f0-9]{4,6}, *\[_0x[a-f0-9]{4,6}]: *_0x[a-f0-9]{4,6} *} *= *{ *'a' *: *0x1, *'b' *: *0x2 *}\);/;
         const identifierAssignmentRegExp: RegExp = /_0x[a-f0-9]{4,6} *= *0x3;/;
         const variablesUsageRegExp: RegExp = /console\['log']\(_0x[a-f0-9]{4,6}, *_0x[a-f0-9]{4,6}, *_0x[a-f0-9]{4,6}\);/;

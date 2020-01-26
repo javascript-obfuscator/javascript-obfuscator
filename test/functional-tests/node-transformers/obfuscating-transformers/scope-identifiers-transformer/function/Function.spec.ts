@@ -456,7 +456,7 @@ describe('ScopeIdentifiersTransformer Function identifiers', () => {
         });
 
         describe('Variant #2: identifier as right value', () => {
-            const variableDeclarationRegExp: RegExp = /var *(_0x[a-f0-9]{4,6}) *= *0x1;/;
+            const variableDeclarationRegExp: RegExp = /var (_0x[a-f0-9]{4,6}) *= *0x1;/;
             const functionParameterRegExp: RegExp = /function *\((_0x[a-f0-9]{4,6}) *= *(_0x[a-f0-9]{4,6})\) *\{/;
             const functionBodyRegExp: RegExp = /return *(_0x[a-f0-9]{4,6});/;
 
@@ -503,7 +503,7 @@ describe('ScopeIdentifiersTransformer Function identifiers', () => {
         });
 
         describe('Variant #3: identifier as right value', () => {
-            const variableDeclarationRegExp: RegExp = /var *(_0x[a-f0-9]{4,6}) *= *0x1;/;
+            const variableDeclarationRegExp: RegExp = /var (_0x[a-f0-9]{4,6}) *= *0x1;/;
             const functionParameterRegExp: RegExp = /function *\((_0x[a-f0-9]{4,6}), *(_0x[a-f0-9]{4,6}) *= *(_0x[a-f0-9]{4,6})\) *\{/;
             const functionBodyRegExp: RegExp = /return *(_0x[a-f0-9]{4,6}) *\+ *(_0x[a-f0-9]{4,6});/;
 

@@ -22,7 +22,7 @@ describe('SplitStringTransformer', () => {
                 }
             ).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var *test *= *'ab' *\+ *'cd' *\+ *'ef' *\+ *'g';$/);
+            assert.match(obfuscatedCode,  /^var test *= *'ab' *\+ *'cd' *\+ *'ef' *\+ *'g';$/);
         });
     });
 
@@ -39,7 +39,7 @@ describe('SplitStringTransformer', () => {
                 }
             ).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var *test *= *'abcdefg';$/);
+            assert.match(obfuscatedCode,  /^var test *= *'abcdefg';$/);
         });
     });
 
@@ -56,7 +56,7 @@ describe('SplitStringTransformer', () => {
                 }
             ).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var *test *= *'abcdefg';$/);
+            assert.match(obfuscatedCode,  /^var test *= *'abcdefg';$/);
         });
     });
 
@@ -90,7 +90,7 @@ describe('SplitStringTransformer', () => {
                 }
             ).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var *test *= *'ab' *\+ *'cd' *\+ *\( *'ef' *\+ *'g' *\);$/);
+            assert.match(obfuscatedCode,  /^var test *= *'ab' *\+ *'cd' *\+ *\( *'ef' *\+ *'g' *\);$/);
         });
     });
 
@@ -108,7 +108,7 @@ describe('SplitStringTransformer', () => {
                 }
             ).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var *test *= *'\\x61\\x62' *\+ *'\\x63\\x64' *\+ *'\\x65\\x66' *\+ *'\\x67';$/);
+            assert.match(obfuscatedCode,  /^var test *= *'\\x61\\x62' *\+ *'\\x63\\x64' *\+ *'\\x65\\x66' *\+ *'\\x67';$/);
         });
     });
 
@@ -125,7 +125,7 @@ describe('SplitStringTransformer', () => {
                 }
             ).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var *test *= *'ab' *\+ *'cd' *\+ *'ef' *\+ *'g';$/);
+            assert.match(obfuscatedCode,  /^var test *= *'ab' *\+ *'cd' *\+ *'ef' *\+ *'g';$/);
         });
     });
 
@@ -142,7 +142,7 @@ describe('SplitStringTransformer', () => {
                 }
             ).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var *test *= *{'abcdefg' *: *'ab' *\+ *'cd' *\+ *'ef' *\+ *'g'};$/);
+            assert.match(obfuscatedCode,  /^var test *= *{'abcdefg' *: *'ab' *\+ *'cd' *\+ *'ef' *\+ *'g'};$/);
         });
     });
 
@@ -159,7 +159,7 @@ describe('SplitStringTransformer', () => {
                 }
             ).getObfuscatedCode();
 
-            assert.match(obfuscatedCode,  /^var *test *= *{\['ab' *\+ *'cd' *\+ *'ef' *\+ *'g'] *: *0x1};$/);
+            assert.match(obfuscatedCode,  /^var test *= *{\['ab' *\+ *'cd' *\+ *'ef' *\+ *'g'] *: *0x1};$/);
         });
     });
 
@@ -205,7 +205,7 @@ describe('SplitStringTransformer', () => {
 
             assert.match(
                 obfuscatedCode,
-                /^var *foo *= *'foo' *\+ *'foo'; *var *bar *= *'barbar'; *var *baz *= *'baz' *\+ *'baz';$/
+                /^var foo *= *'foo' *\+ *'foo'; *var bar *= *'barbar'; *var baz *= *'baz' *\+ *'baz';$/
             );
         });
     });

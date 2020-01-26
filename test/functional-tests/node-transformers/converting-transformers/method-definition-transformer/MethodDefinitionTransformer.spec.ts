@@ -30,7 +30,7 @@ describe('MethodDefinitionTransformer', () => {
         });
 
         describe('Variant #2: `stringArray` option is enabled', () => {
-            const stringArrayRegExp: RegExp = /var *_0x([a-f0-9]){4} *= *\['bar'\];/;
+            const stringArrayRegExp: RegExp = /var _0x([a-f0-9]){4} *= *\['bar'\];/;
             const stringArrayCallRegExp: RegExp = /\[_0x([a-f0-9]){4}\('0x0'\)\]\(\)\{\}/;
 
             let obfuscatedCode: string;
@@ -102,7 +102,7 @@ describe('MethodDefinitionTransformer', () => {
         });
 
         describe('Variant #2: `stringArray` option is enabled', () => {
-            const stringArrayRegExp: RegExp = /var *_0x([a-f0-9]){4} *= *\['constructor', *'bar'];/;
+            const stringArrayRegExp: RegExp = /var _0x([a-f0-9]){4} *= *\['constructor', *'bar'];/;
             const stringArrayCallRegExp: RegExp = /\[_0x([a-f0-9]){4}\('0x1'\)\]\(\)\{\}/;
 
             let obfuscatedCode: string;

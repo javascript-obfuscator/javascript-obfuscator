@@ -56,7 +56,7 @@ describe('DeadCodeInjectionTransformer', () => {
 
         describe('Variant #2 - block statements count is less than `5`', () => {
             const regexp: RegExp = new RegExp(
-                `var *${variableMatch} *= *function *\\(\\) *\\{` +
+                `var ${variableMatch} *= *function *\\(\\) *\\{` +
                     `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
                 `\\};`,
                 'g'
@@ -92,7 +92,7 @@ describe('DeadCodeInjectionTransformer', () => {
 
         describe('Variant #3 - deadCodeInjectionThreshold: 0', () => {
             const regexp: RegExp = new RegExp(
-                `var *${variableMatch} *= *function *\\(\\) *\\{` +
+                `var ${variableMatch} *= *function *\\(\\) *\\{` +
                     `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
                 `\\};`,
                 'g'
@@ -129,13 +129,13 @@ describe('DeadCodeInjectionTransformer', () => {
         describe('Variant #4 - break or continue statement in block statement', () => {
             describe('Variant #1', () => {
                 const functionRegExp: RegExp = new RegExp(
-                    `var *${variableMatch} *= *function *\\(\\) *\\{` +
+                    `var ${variableMatch} *= *function *\\(\\) *\\{` +
                         `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
                     `\\};`,
                     'g'
                 );
                 const loopRegExp: RegExp = new RegExp(
-                    `for *\\(var *${variableMatch} *= *${hexMatch}; *${variableMatch} *< *${hexMatch}; *${variableMatch}\\+\\+\\) *\\{` +
+                    `for *\\(var ${variableMatch} *= *${hexMatch}; *${variableMatch} *< *${hexMatch}; *${variableMatch}\\+\\+\\) *\\{` +
                         `(?:continue|break);` +
                     `\\}`,
                     'g'
@@ -182,13 +182,13 @@ describe('DeadCodeInjectionTransformer', () => {
 
             describe('Variant #2', () => {
                 const functionRegExp: RegExp = new RegExp(
-                    `var *${variableMatch} *= *function *\\(\\) *\\{` +
+                    `var ${variableMatch} *= *function *\\(\\) *\\{` +
                         `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
                     `\\};`,
                     'g'
                 );
                 const loopRegExp: RegExp = new RegExp(
-                    `for *\\(var *${variableMatch} *= *${hexMatch}; *${variableMatch} *< *${hexMatch}; *${variableMatch}\\+\\+\\) *` +
+                    `for *\\(var ${variableMatch} *= *${hexMatch}; *${variableMatch} *< *${hexMatch}; *${variableMatch}\\+\\+\\) *` +
                         `(?:continue|break);`,
                     'g'
                 );
@@ -235,7 +235,7 @@ describe('DeadCodeInjectionTransformer', () => {
 
         describe('Variant #5 - await expression in block statement', () => {
             const functionRegExp: RegExp = new RegExp(
-                `var *${variableMatch} *= *function *\\(\\) *\\{` +
+                `var ${variableMatch} *= *function *\\(\\) *\\{` +
                     `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
                 `\\};`,
                 'g'
@@ -286,7 +286,7 @@ describe('DeadCodeInjectionTransformer', () => {
 
         describe('Variant #6 - super expression in block statement', () => {
             const functionRegExp: RegExp = new RegExp(
-                `var *${variableMatch} *= *function *\\(\\) *\\{` +
+                `var ${variableMatch} *= *function *\\(\\) *\\{` +
                     `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
                 `\\};`,
                 'g'
@@ -341,7 +341,7 @@ describe('DeadCodeInjectionTransformer', () => {
             const expectedDistribution: number = 0.25;
 
             const ifMatch: string = `if *\\(!!\\[\\]\\) *\\{`;
-            const functionMatch: string = `var *${variableMatch} *= *function *\\(\\) *\\{`;
+            const functionMatch: string = `var ${variableMatch} *= *function *\\(\\) *\\{`;
 
             const match1: string = `` +
                 `if *\\(${variableMatch}\\('${hexMatch}'\\) *=== *${variableMatch}\\('${hexMatch}'\\)\\) *\\{` +
@@ -556,7 +556,7 @@ describe('DeadCodeInjectionTransformer', () => {
                 const deadCodeMatch: string = `` +
                     `function \\w *\\(\\w\\) *{` +
                         `if *\\(.{0,30}\\) *{` +
-                            `var *(\\w).*?;` +
+                            `var (\\w).*?;` +
                         `} *else *{` +
                             `return *(\\w).*?;` +
                         `}` +
@@ -622,7 +622,7 @@ describe('DeadCodeInjectionTransformer', () => {
                         `if *\\(.{0,30}\\) *{` +
                             `return *(\\w).{0,40};` +
                         `} *else *{` +
-                            `var *(\\w).*?;` +
+                            `var (\\w).*?;` +
                         `}` +
                     `}` +
                 ``;
@@ -719,7 +719,7 @@ describe('DeadCodeInjectionTransformer', () => {
             describe('Variant #1: collecting of block statements', () => {
                 const regExp: RegExp = new RegExp(
                     `${variableMatch} *\\(\\); *` +
-                    `var *${variableMatch} *= *0x2; *` +
+                    `var ${variableMatch} *= *0x2; *` +
                     `function *${variableMatch} *\\(\\) *{ *} *`,
                     'g'
                 );
@@ -756,11 +756,11 @@ describe('DeadCodeInjectionTransformer', () => {
             describe('Variant #2: wrapping of block statements in dead code conditions', () => {
                 const regExp: RegExp = new RegExp(
                     `function *${variableMatch} *\\(\\) *{ *` +
-                        `var *${variableMatch} *= *0x1; *` +
+                        `var ${variableMatch} *= *0x1; *` +
                         `${variableMatch} *\\(\\); *` +
-                        `var *${variableMatch} *= *0x2; *` +
+                        `var ${variableMatch} *= *0x2; *` +
                         `function *${variableMatch} *\\(\\) *{ *} *` +
-                        `var *${variableMatch} *= *0x3; *` +
+                        `var ${variableMatch} *= *0x3; *` +
                     `}`,
                     'g'
                 );

@@ -122,7 +122,7 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
 
         describe('Variant #3: already renamed identifiers shouldn\'t be renamed twice', () => {
             const classDeclarationRegExp: RegExp = /class *d *{/;
-            const variableDeclarationsRegExp: RegExp = /let *e, *f, *g, *h;/;
+            const variableDeclarationsRegExp: RegExp = /let e, *f, *g, *h;/;
             const classReferenceRegExp: RegExp = /new d\(\);/;
 
             let obfuscatedCode: string;

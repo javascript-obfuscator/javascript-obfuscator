@@ -12,7 +12,7 @@ describe('ObjectExpressionKeysTransformer', () => {
     describe('transformation of object keys', () => {
         describe('Variant #1: simple', () => {
             const match: string = `` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
                 `${variableMatch}\\['baz'] *= *'bark';` +
             ``;
@@ -68,7 +68,7 @@ describe('ObjectExpressionKeysTransformer', () => {
 
         describe('Variant #3: return statement', () => {
             const match: string = `` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
                 `${variableMatch}\\['baz'] *= *'bark';` +
                 `return *${variableMatch};` +
@@ -96,10 +96,10 @@ describe('ObjectExpressionKeysTransformer', () => {
 
         describe('Variant #4: object expression inside array expression', () => {
             const match: string = `` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
                 `${variableMatch}\\['baz'] *= *'bark';` +
-                `var *${variableMatch} *= *\\[${variableMatch}];` +
+                `var ${variableMatch} *= *\\[${variableMatch}];` +
             ``;
             const regExp: RegExp = new RegExp(match);
 
@@ -124,7 +124,7 @@ describe('ObjectExpressionKeysTransformer', () => {
 
         describe('Variant #5: object expression inside call expression', () => {
             const match: string = `` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
                 `${variableMatch}\\['baz'] *= *'bark';` +
                 `console\\['log']\\(${variableMatch}\\);` +
@@ -152,11 +152,11 @@ describe('ObjectExpressionKeysTransformer', () => {
 
         describe('Variant #6: nested objects #1', () => {
             const match: string = `` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['baz'] *= *'bark';` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['inner1'] *= *${variableMatch};` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
                 `${variableMatch}\\['inner'] *= *${variableMatch};` +
                 `var object *= *${variableMatch};` +
@@ -184,17 +184,17 @@ describe('ObjectExpressionKeysTransformer', () => {
 
         describe('Variant #7: nested objects #2', () => {
             const match: string = `` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['hawk'] *= *'geek';` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['baz'] *= *'bark';` +
                 `${variableMatch}\\['inner1'] *= *${variableMatch};` +
                 `${variableMatch}\\['cow'] *= *'bear';` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
                 `${variableMatch}\\['inner'] *= *${variableMatch};` +
                 `${variableMatch}\\['ball'] *= *'door';` +
-                `var *object *= *${variableMatch};` +
+                `var object *= *${variableMatch};` +
             ``;
             const regExp: RegExp = new RegExp(match);
 
@@ -219,13 +219,13 @@ describe('ObjectExpressionKeysTransformer', () => {
 
         describe('Variant #8: nested objects #3', () => {
             const match: string = `` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['hawk'] *= *'geek';` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['baz'] *= *'bark';` +
                 `${variableMatch}\\['inner1'] *= *${variableMatch};` +
                 `${variableMatch}\\['cow'] *= *'bear';` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
                 `${variableMatch}\\['inner'] *= *${variableMatch};` +
                 `${variableMatch}\\['ball'] *= *'door';` +
@@ -254,12 +254,12 @@ describe('ObjectExpressionKeysTransformer', () => {
 
         describe('Variant #9: correct integration with control flow flattening object #1', () => {
             const match: string = `` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['\\w{5}'] *= *function *\\(${variableMatch}, *${variableMatch}\\) *{` +
                     `return *${variableMatch} *\\+ *${variableMatch};` +
                 `};` +
-                `var *${variableMatch} *= *${variableMatch};` +
-                `var *${variableMatch} *= *${variableMatch}\\['\\w{5}']\\(0x1, *0x2\\);` +
+                `var ${variableMatch} *= *${variableMatch};` +
+                `var ${variableMatch} *= *${variableMatch}\\['\\w{5}']\\(0x1, *0x2\\);` +
             ``;
             const regExp: RegExp = new RegExp(match);
 
@@ -286,16 +286,16 @@ describe('ObjectExpressionKeysTransformer', () => {
 
         describe('Variant #10: correct integration with control flow flattening object #2', () => {
             const match: string = `` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['\\w{5}'] *= *function *\\(${variableMatch}, *${variableMatch}\\) *{` +
                     `return *${variableMatch} *\\+ *${variableMatch};` +
                 `};` +
-                `var *${variableMatch} *= *${variableMatch};` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *${variableMatch};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *0x1;` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['bar'] *= *0x2;` +
-                `var *${variableMatch} *= *${variableMatch}\\['\\w{5}']\\(${variableMatch}\\['foo'], *${variableMatch}\\['bar']\\);` +
+                `var ${variableMatch} *= *${variableMatch}\\['\\w{5}']\\(${variableMatch}\\['foo'], *${variableMatch}\\['bar']\\);` +
             ``;
             const regExp: RegExp = new RegExp(match);
 
@@ -323,9 +323,9 @@ describe('ObjectExpressionKeysTransformer', () => {
         describe('Variant #11: variable declarator object call inside other variable declarator', () => {
             describe('Variant #1', () => {
                 const match: string = `` +
-                    `var *${variableMatch} *= *{};` +
+                    `var ${variableMatch} *= *{};` +
                     `${variableMatch}\\['foo'] *= *'foo';` +
-                    `var *${variableMatch} *= *${variableMatch}, *` +
+                    `var ${variableMatch} *= *${variableMatch}, *` +
                     `${variableMatch} *= *${variableMatch}\\['foo'];` +
                 ``;
                 const regExp: RegExp = new RegExp(match);
@@ -351,9 +351,9 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             describe('Variant #2', () => {
                 const match: string = `` +
-                    `var *${variableMatch} *= *{};` +
+                    `var ${variableMatch} *= *{};` +
                     `${variableMatch}\\['foo'] *= *'foo';` +
-                    `var *${variableMatch} *= *${variableMatch}, *` +
+                    `var ${variableMatch} *= *${variableMatch}, *` +
                     `${variableMatch} *= *\\[${variableMatch}\\['foo']];` +
                 ``;
                 const regExp: RegExp = new RegExp(match);
@@ -379,7 +379,7 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             describe('Variant #3', () => {
                 const match: string = `` +
-                    `var *${variableMatch} *= *0x1, *${variableMatch} *= *{'foo' *: *${variableMatch}};` +
+                    `var ${variableMatch} *= *0x1, *${variableMatch} *= *{'foo' *: *${variableMatch}};` +
                 ``;
                 const regExp: RegExp = new RegExp(match);
 
@@ -433,7 +433,7 @@ describe('ObjectExpressionKeysTransformer', () => {
 
         describe('Variant #13: should keep numeric object keys', () => {
             const match: string = `` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['0'] *= *'foo';` +
                 `${variableMatch}\\['bar'] *= *'bar';` +
                 `${variableMatch}\\['2'] *= *'baz';` +
@@ -461,10 +461,10 @@ describe('ObjectExpressionKeysTransformer', () => {
 
         describe('Variant #14: template literal', () => {
             const match: string = `` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
                 `${variableMatch}\\['baz'] *= *'bark';` +
-                `var *foo *= *'' *\\+ *_0x[a-f0-9]{4,6};` +
+                `var foo *= *'' *\\+ *_0x[a-f0-9]{4,6};` +
             ``;
             const regExp: RegExp = new RegExp(match);
 
@@ -490,7 +490,7 @@ describe('ObjectExpressionKeysTransformer', () => {
         // issue https://github.com/javascript-obfuscator/javascript-obfuscator/issues/516
         describe('Variant #15: function default values', () => {
             const match: string = `` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['value'] *= *0x1;` +
                 `function test *\\(${variableMatch} *= *0x1, *${variableMatch} *= *${variableMatch}\\) *{ *}` +
             ``;
@@ -520,8 +520,8 @@ describe('ObjectExpressionKeysTransformer', () => {
             describe('Without reference on other property', () => {
                 describe('Variant #1: Single variable declarator and object expression parent node is expression node', () => {
                     const match: string = `` +
-                        `var *passthrough *= *${variableMatch} *=> *${variableMatch};` +
-                        `var *${variableMatch} *= *{};` +
+                        `var passthrough *= *${variableMatch} *=> *${variableMatch};` +
+                        `var ${variableMatch} *= *{};` +
                         `${variableMatch}\\['foo'] *= *0x1;` +
                         `var foo *= *passthrough *\\(${variableMatch}\\);` +
                     ``;
@@ -579,8 +579,8 @@ describe('ObjectExpressionKeysTransformer', () => {
             describe('With reference on other property', () => {
                 describe('Variant #1: Object expression parent node is variable declarator node', () => {
                     const match: string = `` +
-                        `var *passthrough *= *${variableMatch} *=> *${variableMatch};` +
-                        `var *${variableMatch} *= *{};` +
+                        `var passthrough *= *${variableMatch} *=> *${variableMatch};` +
+                        `var ${variableMatch} *= *{};` +
                         `${variableMatch}\\['foo'] *= *0x1;` +
                         `var foo *= *${variableMatch}, *bar *= *{'bar': *foo\\['foo']};` +
                     ``;
@@ -607,8 +607,8 @@ describe('ObjectExpressionKeysTransformer', () => {
 
                 describe('Variant #2: Object expression parent node is any expression node', () => {
                     const match: string = `` +
-                        `var *passthrough *= *${variableMatch} *=> *${variableMatch};` +
-                        `var *${variableMatch} *= *{};` +
+                        `var passthrough *= *${variableMatch} *=> *${variableMatch};` +
+                        `var ${variableMatch} *= *{};` +
                         `${variableMatch}\\['foo'] *= *0x1;` +
                         `var foo *= *${variableMatch}, *bar *= *passthrough *\\({ *'bar' *: *foo\\['foo'] *}\\);` +
                     ``;
@@ -855,7 +855,7 @@ describe('ObjectExpressionKeysTransformer', () => {
         describe('Variant #2: for statement', () => {
             describe('Variant #1: with block statement', () => {
                 const match: string = `` +
-                    `for *\\(var *${variableMatch} *= *0x0; *${variableMatch} *< *0xa; *${variableMatch}\\+\\+\\) *{` +
+                    `for *\\(var ${variableMatch} *= *0x0; *${variableMatch} *< *0xa; *${variableMatch}\\+\\+\\) *{` +
                         `var ${variableMatch} *= *{};` +
                         `${variableMatch}\\['foo'] *= *'bar';` +
                         `var ${variableMatch} *= *${variableMatch};` +
@@ -887,7 +887,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                     `var ${variableMatch};` +
                     `var ${variableMatch} *= *{};` +
                     `${variableMatch}\\['bar'] *= *'bar';` +
-                    `for *\\(var *${variableMatch} *= *0x0; *${variableMatch} *< *0xa; *${variableMatch}\\+\\+\\) *` +
+                    `for *\\(var ${variableMatch} *= *0x0; *${variableMatch} *< *0xa; *${variableMatch}\\+\\+\\) *` +
                         `${variableMatch} *= *${variableMatch};` +
                 ``;
                 const regExp: RegExp = new RegExp(match);
@@ -916,7 +916,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             describe('Variant #1: with block statement', () => {
                 const match: string = `` +
                     `var ${variableMatch} *= *{};` +
-                    `for *\\(var *${variableMatch} in *${variableMatch}\\) *{` +
+                    `for *\\(var ${variableMatch} in *${variableMatch}\\) *{` +
                         `var ${variableMatch} *= *{};` +
                         `${variableMatch}\\['bar'] *= *'bar';` +
                         `${variableMatch} *= *${variableMatch};` +
@@ -948,7 +948,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                     `var ${variableMatch} *= *{};` +
                     `var ${variableMatch} *= *{};` +
                     `${variableMatch}\\['bar'] *= *'bar';` +
-                    `for *\\(var *${variableMatch} in *${variableMatch}\\) *` +
+                    `for *\\(var ${variableMatch} in *${variableMatch}\\) *` +
                         `${variableMatch} *= *${variableMatch};` +
                 ``;
                 const regExp: RegExp = new RegExp(match);
@@ -977,7 +977,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             describe('Variant #1: with block statement', () => {
                 const match: string = `` +
                     `var ${variableMatch} *= *\\[];` +
-                    `for *\\(var *${variableMatch} of *${variableMatch}\\) *{` +
+                    `for *\\(var ${variableMatch} of *${variableMatch}\\) *{` +
                         `var ${variableMatch} *= *{};` +
                         `${variableMatch}\\['bar'] *= *'bar';` +
                         `${variableMatch} *= *${variableMatch};` +
@@ -1009,7 +1009,7 @@ describe('ObjectExpressionKeysTransformer', () => {
                     `var ${variableMatch} *= *\\[];` +
                     `var ${variableMatch} *= *{};` +
                     `${variableMatch}\\['bar'] *= *'bar';` +
-                    `for *\\(var *${variableMatch} of *${variableMatch}\\) *` +
+                    `for *\\(var ${variableMatch} of *${variableMatch}\\) *` +
                         `${variableMatch} *= *${variableMatch};` +
                     ``;
                 const regExp: RegExp = new RegExp(match);
@@ -1038,7 +1038,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             describe('Variant #1: with block statement', () => {
                 const match: string = `` +
                     `while *\\(!!\\[]\\) *{` +
-                        `var *${variableMatch} *= *{};` +
+                        `var ${variableMatch} *= *{};` +
                         `${variableMatch}\\['foo'] *= *'bar';` +
                         `var ${variableMatch} *= *${variableMatch};` +
                     `}` +
@@ -1125,7 +1125,7 @@ describe('ObjectExpressionKeysTransformer', () => {
         describe('Variant #6: try statement', () => {
             const match: string = `` +
                 `try *{` +
-                    `var *${variableMatch} *= *{};` +
+                    `var ${variableMatch} *= *{};` +
                     `${variableMatch}\\['foo'] *= *'bar';` +
                     `var ${variableMatch} *= *${variableMatch};` +
                 `} *catch *\\(${variableMatch}\\) *{` +
@@ -1156,7 +1156,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             const match: string = `` +
                 `try *{` +
                 `} *catch *\\(${variableMatch}\\) *{` +
-                    `var *${variableMatch} *= *{};` +
+                    `var ${variableMatch} *= *{};` +
                     `${variableMatch}\\['foo'] *= *'bar';` +
                     `var ${variableMatch} *= *${variableMatch};` +
                 `}` +
@@ -1186,7 +1186,7 @@ describe('ObjectExpressionKeysTransformer', () => {
             const match: string = `` +
                 `switch *\\(!!\\[]\\) *{` +
                     `case *!!\\[]:` +
-                        `var *${variableMatch} *= *{};` +
+                        `var ${variableMatch} *= *{};` +
                         `${variableMatch}\\['foo'] *= *'bar';` +
                     `var ${variableMatch} *= *${variableMatch};` +
                 `}` +
@@ -1215,10 +1215,10 @@ describe('ObjectExpressionKeysTransformer', () => {
         describe('Variant #9: variable declarator with object call', () => {
             describe('Variant #1', () => {
                 const match: string = `` +
-                    `const *${variableMatch} *= *{}; *` +
+                    `const ${variableMatch} *= *{}; *` +
                     `${variableMatch}\\['foo'] *= *'foo'; *` +
                     `const ${variableMatch} *= *${variableMatch};` +
-                    `const *${variableMatch} *= *${variableMatch}\\['foo'];` +
+                    `const ${variableMatch} *= *${variableMatch}\\['foo'];` +
                 ``;
                 const regExp: RegExp = new RegExp(match);
 
@@ -1272,11 +1272,11 @@ describe('ObjectExpressionKeysTransformer', () => {
 
             describe('Variant #3: two objects', () => {
                 const match: string = `` +
-                    `var *${variableMatch} *= *{};` +
+                    `var ${variableMatch} *= *{};` +
                     `${variableMatch}\\['foo'] *= *'foo';` +
-                    `var *${variableMatch} *= *{};` +
+                    `var ${variableMatch} *= *{};` +
                     `${variableMatch}\\['bar'] *= *'bar';` +
-                    `var *${variableMatch} *= *${variableMatch}, *` +
+                    `var ${variableMatch} *= *${variableMatch}, *` +
                         `${variableMatch} *= *${variableMatch}, *` +
                         `${variableMatch} *= *${variableMatch}\\['bar']; *` +
                     `console\\['log']\\(${variableMatch}\\);` +
@@ -1307,7 +1307,7 @@ describe('ObjectExpressionKeysTransformer', () => {
     describe('prevailing kind of variables', () => {
         describe('Variant #1: `var` kind`', () => {
             const match: string = `` +
-                `var *${variableMatch} *= *{};` +
+                `var ${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
                 `${variableMatch}\\['baz'] *= *'bark';` +
             ``;
@@ -1334,7 +1334,7 @@ describe('ObjectExpressionKeysTransformer', () => {
 
         describe('Variant #2: `const` kind`', () => {
             const match: string = `` +
-                `const *${variableMatch} *= *{};` +
+                `const ${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
                 `${variableMatch}\\['baz'] *= *'bark';` +
             ``;
@@ -1361,7 +1361,7 @@ describe('ObjectExpressionKeysTransformer', () => {
 
         describe('Variant #3: `let` kind`', () => {
             const match: string = `` +
-                `const *${variableMatch} *= *{};` +
+                `const ${variableMatch} *= *{};` +
                 `${variableMatch}\\['foo'] *= *'bar';` +
                 `${variableMatch}\\['baz'] *= *'bark';` +
             ``;
@@ -1390,7 +1390,7 @@ describe('ObjectExpressionKeysTransformer', () => {
     describe('Ignore transformation', () => {
         describe('Variant #1: disabled option', () => {
             const match: string = `` +
-                `var *${variableMatch} *= *{` +
+                `var ${variableMatch} *= *{` +
                     `'foo': *'bar',` +
                     `'baz': *'bark'` +
                 `}` +
@@ -1416,7 +1416,7 @@ describe('ObjectExpressionKeysTransformer', () => {
         });
 
         describe('Variant #2: empty object expression', () => {
-            const match: string = `var *${variableMatch} *= *{};`;
+            const match: string = `var ${variableMatch} *= *{};`;
             const regExp: RegExp = new RegExp(match);
 
             let obfuscatedCode: string;
@@ -1701,7 +1701,7 @@ describe('ObjectExpressionKeysTransformer', () => {
 
         describe('Variant #8: variable declarator identifier reference', () => {
             const match: string = `` +
-                `var *passthrough *= *${variableMatch} *=> *${variableMatch};` +
+                `var passthrough *= *${variableMatch} *=> *${variableMatch};` +
                 `var foo *= *0x1, *bar *= *{'baz' *: *passthrough\\(foo\\)};` +
             ``;
             const regExp: RegExp = new RegExp(match);

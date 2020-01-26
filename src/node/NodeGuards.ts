@@ -94,14 +94,6 @@ export class NodeGuards {
      * @param {Node} node
      * @returns {boolean}
      */
-    public static isConditionalExpressionNode (node: ESTree.Node): node is ESTree.ConditionalExpression {
-        return node.type === NodeType.ConditionalExpression;
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
     public static isContinueStatementNode (node: ESTree.Node): node is ESTree.ContinueStatement {
         return node.type === NodeType.ContinueStatement;
     }
@@ -364,14 +356,6 @@ export class NodeGuards {
      */
     public static isReturnStatementNode (node: ESTree.Node): node is ESTree.ReturnStatement {
         return node.type === NodeType.ReturnStatement;
-    }
-
-    /**
-     * @param {Node} node
-     * @returns {boolean}
-     */
-    public static isSequenceExpressionNode (node: ESTree.Node): node is ESTree.SequenceExpression {
-        return node.type === NodeType.SequenceExpression;
     }
 
     /**

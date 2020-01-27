@@ -1,14 +1,10 @@
-import { inject, injectable, } from 'inversify';
-import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+import { injectable, } from 'inversify';
 
 import * as eslintScope from 'eslint-scope';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { IOptions } from '../../interfaces/options/IOptions';
 import { IScopeAnalyzer } from '../../interfaces/analyzers/scope-analyzer/IScopeAnalyzer';
-
-import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 
 import { ecmaVersion } from '../../constants/EcmaVersion';
 
@@ -38,23 +34,9 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
     private static readonly emptyRangeValue: number = 0;
 
     /**
-     * @type {IOptions}
-     */
-    private readonly options: IOptions;
-
-    /**
      * @type {eslintScope.ScopeManager | null}
      */
     private scopeManager: eslintScope.ScopeManager | null = null;
-
-    /**
-     * @param {IOptions} options
-     */
-    constructor (
-        @inject(ServiceIdentifiers.IOptions) options: IOptions
-    ) {
-        this.options = options;
-    }
 
     /**
      * `eslint-scope` reads `ranges` property of a nodes
@@ -97,7 +79,6 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
             try {
                 this.scopeManager = eslintScope.analyze(astTree, {
                     ...ScopeAnalyzer.eslintScopeOptions,
-                    nodejsScope: this.options.target === ObfuscationTarget.Node,
                     sourceType: ScopeAnalyzer.sourceTypes[i]
                 });
 

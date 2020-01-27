@@ -1,5 +1,9 @@
 Change Log
 
+v0.24.1
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/531
+
 v0.24.0
 ---
 * **Internal refactoring:** completely new mechanism to rename variable names

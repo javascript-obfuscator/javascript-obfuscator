@@ -1,14 +1,10 @@
-import { inject, injectable, } from 'inversify';
-import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
+import { injectable, } from 'inversify';
 
 import * as eslintScope from 'eslint-scope';
 import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
-import { IOptions } from '../../interfaces/options/IOptions';
 import { IScopeAnalyzer } from '../../interfaces/analyzers/scope-analyzer/IScopeAnalyzer';
-
-import { ObfuscationTarget } from '../../enums/ObfuscationTarget';
 
 import { ecmaVersion } from '../../constants/EcmaVersion';
 
@@ -38,23 +34,9 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
     private static readonly emptyRangeValue: number = 0;
 
     /**
-     * @type {IOptions}
-     */
-    private readonly options: IOptions;
-
-    /**
      * @type {eslintScope.ScopeManager | null}
      */
     private scopeManager: eslintScope.ScopeManager | null = null;
-
-    /**
-     * @param {IOptions} options
-     */
-    constructor (
-        @inject(ServiceIdentifiers.IOptions) options: IOptions
-    ) {
-        this.options = options;
-    }
 
     /**
      * `eslint-scope` reads `ranges` property of a nodes
@@ -97,7 +79,6 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
             try {
                 this.scopeManager = eslintScope.analyze(astTree, {
                     ...ScopeAnalyzer.eslintScopeOptions,
-                    nodejsScope: this.options.target === ObfuscationTarget.Node,
                     sourceType: ScopeAnalyzer.sourceTypes[i]
                 });
 
@@ -132,6 +113,35 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
             throw new Error('Cannot acquire scope for node');
         }
 
+        this.sanitizeScopes(scope);
+
         return scope;
+    }
+
+    /**
+     * @param {Scope} scope
+     */
+    private sanitizeScopes (scope: eslintScope.Scope): void {
+        scope.childScopes.forEach((childScope: eslintScope.Scope) => {
+            // fix of class scopes
+            // trying to move class scope references to the parent scope
+            if (childScope.type === 'class' && childScope.upper) {
+                const upperVariable: eslintScope.Variable | undefined = childScope.upper.variables
+                    .find((variable: eslintScope.Variable) => {
+                        // class name variable is always first
+                        const classNameVariable: eslintScope.Variable = childScope.variables[0];
+                        const isValidClassNameVariable: boolean = classNameVariable.defs
+                            .some((definition: eslintScope.Definition) => definition.type === 'ClassName');
+
+                        return isValidClassNameVariable && variable.name === classNameVariable.name;
+                    });
+
+                upperVariable?.references.push(...childScope.variables[0].references);
+            }
+        });
+
+        for (const childScope of scope.childScopes) {
+            this.sanitizeScopes(childScope);
+        }
     }
 }

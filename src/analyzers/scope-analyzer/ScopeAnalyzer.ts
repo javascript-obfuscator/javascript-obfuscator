@@ -132,6 +132,35 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
             throw new Error('Cannot acquire scope for node');
         }
 
+        this.sanitizeScopes(scope);
+
         return scope;
+    }
+
+    /**
+     * @param {Scope} scope
+     */
+    private sanitizeScopes (scope: eslintScope.Scope): void {
+        scope.childScopes.forEach((childScope: eslintScope.Scope) => {
+            // fix of class scopes
+            // trying to move class scope references to the parent scope
+            if (childScope.type === 'class' && childScope.upper) {
+                const upperVariable: eslintScope.Variable | undefined = childScope.upper.variables
+                    .find((variable: eslintScope.Variable) => {
+                        // class name variable is always first
+                        const classNameVariable: eslintScope.Variable = childScope.variables[0];
+                        const isValidClassNameVariable: boolean = classNameVariable.defs
+                            .some((definition: eslintScope.Definition) => definition.type === 'ClassName');
+
+                        return isValidClassNameVariable && variable.name === classNameVariable.name;
+                    });
+
+                upperVariable?.references.push(...childScope.variables[0].references);
+            }
+        });
+
+        for (const childScope of scope.childScopes) {
+            this.sanitizeScopes(childScope);
+        }
     }
 }

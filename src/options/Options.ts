@@ -209,10 +209,6 @@ export class Options implements IOptions {
      * @type {boolean}
      */
     @IsBoolean()
-    @IsAllowedForObfuscationTargets([
-        ObfuscationTarget.Browser,
-        ObfuscationTarget.BrowserNoEval,
-    ])
     public readonly sourceMap!: boolean;
 
     /**
@@ -225,30 +221,18 @@ export class Options implements IOptions {
         require_tld: false,
         require_valid_protocol: true
     })
-    @IsAllowedForObfuscationTargets([
-        ObfuscationTarget.Browser,
-        ObfuscationTarget.BrowserNoEval,
-    ])
     public readonly sourceMapBaseUrl!: string;
 
     /**
      * @type {string}
      */
     @IsString()
-    @IsAllowedForObfuscationTargets([
-        ObfuscationTarget.Browser,
-        ObfuscationTarget.BrowserNoEval,
-    ])
     public readonly sourceMapFileName!: string;
 
     /**
      * @type {SourceMapMode}
      */
     @IsIn([SourceMapMode.Inline, SourceMapMode.Separate])
-    @IsAllowedForObfuscationTargets([
-        ObfuscationTarget.Browser,
-        ObfuscationTarget.BrowserNoEval,
-    ])
     public readonly sourceMapMode!: TypeFromEnum<typeof SourceMapMode>;
 
     /**

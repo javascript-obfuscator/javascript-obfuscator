@@ -91,10 +91,6 @@ import './functional-tests/node-transformers/preparing-transformers/obfuscating-
 import './functional-tests/node-transformers/preparing-transformers/obfuscating-guards/reserved-string-obfuscating-guard/ReservedStringObfuscatingGuard.spec';
 import './functional-tests/options/OptionsNormalizer.spec';
 import './functional-tests/options/domain-lock/Validation.spec';
-import './functional-tests/options/source-map/Validation.spec';
-import './functional-tests/options/source-map-base-url/Validation.spec';
-import './functional-tests/options/source-map-file-name/Validation.spec';
-import './functional-tests/options/source-map-mode/Validation.spec';
 import './functional-tests/storages/string-array-storage/StringArrayStorage.spec';
 import './functional-tests/templates/debug-protection-nodes/DebugProtectionFunctionCallTemplate.spec';
 import './functional-tests/templates/domain-lock-nodes/DomainLockNodeTemplate.spec';

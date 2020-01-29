@@ -79,6 +79,7 @@ import './functional-tests/node-transformers/obfuscating-transformers/labeled-st
 import './functional-tests/node-transformers/obfuscating-transformers/literal-transformer/LiteralTransformer.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/scope-identifiers-transformer/catch-clause/CatchClause.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/scope-identifiers-transformer/class-declaration/ClassDeclaration.spec';
+import './functional-tests/node-transformers/obfuscating-transformers/scope-identifiers-transformer/class-expression/ClassExpression.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/scope-identifiers-transformer/function-declaration/FunctionDeclaration.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/scope-identifiers-transformer/function/Function.spec';
 import './functional-tests/node-transformers/obfuscating-transformers/scope-identifiers-transformer/import-declaration/ImportDeclaration.spec';

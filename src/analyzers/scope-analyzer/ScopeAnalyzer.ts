@@ -126,10 +126,15 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
             // fix of class scopes
             // trying to move class scope references to the parent scope
             if (childScope.type === 'class' && childScope.upper) {
+                if (!childScope.variables.length) {
+                    return;
+                }
+
+                // class name variable is always first
+                const classNameVariable: eslintScope.Variable = childScope.variables[0];
+
                 const upperVariable: eslintScope.Variable | undefined = childScope.upper.variables
                     .find((variable: eslintScope.Variable) => {
-                        // class name variable is always first
-                        const classNameVariable: eslintScope.Variable = childScope.variables[0];
                         const isValidClassNameVariable: boolean = classNameVariable.defs
                             .some((definition: eslintScope.Definition) => definition.type === 'ClassName');
 

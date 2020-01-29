@@ -1,5 +1,5 @@
 /*!
-Copyright (C) 2016-2018 Timofey Kachalov <sanex3339@yandex.ru>
+Copyright (C) 2016-2020 Timofey Kachalov <sanex3339@yandex.ru>
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:

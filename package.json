@@ -85,6 +85,7 @@
     "type": "git",
     "url": "git+https://github.com/javascript-obfuscator/javascript-obfuscator.git"
   },
+  "homepage": "https://obfuscator.io/",
   "scripts": {
     "start": "scripts/start",
     "webpack:prod": "scripts/webpack-prod",

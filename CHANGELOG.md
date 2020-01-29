@@ -1,5 +1,9 @@
 Change Log
 
+v0.24.3
+---
+* Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/535
+
 v0.24.2
 ---
 * Reverted validation errors under `node` target for `sourceMap*` options

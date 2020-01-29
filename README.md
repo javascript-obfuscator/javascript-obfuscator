@@ -705,16 +705,12 @@ Randomly shuffles the `stringArray` array items.
 ### `sourceMap`
 Type: `boolean` Default: `false`
 
-##### :warning: This option does not allowed to use with `target: 'node'`
-
 Enables source map generation for obfuscated code.
 
 Source maps can be useful to help you debug your obfuscated JavaScript source code. If you want or need to debug in production, you can upload the separate source map file to a secret location and then point your browser there. 
 
 ### `sourceMapBaseUrl`
 Type: `string` Default: ``
-
-##### :warning: This option does not allowed to use with `target: 'node'`
 
 Sets base url to the source map import url when [`sourceMapMode: 'separate'`](#sourcemapmode).
  
@@ -731,8 +727,6 @@ Result:
 ### `sourceMapFileName`
 Type: `string` Default: ``
 
-##### :warning: This option does not allowed to use with `target: 'node'`
-
 Sets file name for output source map when `sourceMapMode: 'separate'`.
 
 CLI example:
@@ -747,8 +741,6 @@ Result:
 
 ### `sourceMapMode`
 Type: `string` Default: `separate`
-
-##### :warning: This option does not allowed to use with `target: 'node'`
 
 Specifies source map generation mode:
 * `inline` - emit a single file with source maps instead of having a separate file;

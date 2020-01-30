@@ -45,7 +45,7 @@ export class TransformersRunner implements ITransformersRunner {
      * @param {TNodeTransformerFactory} nodeTransformerFactory
      * @param {INodeTransformerNamesGroupsBuilder} nodeTransformerNamesGroupsBuilder
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__INodeTransformer)
             nodeTransformerFactory: TNodeTransformerFactory,
         @inject(ServiceIdentifiers.INodeTransformerNamesGroupsBuilder)

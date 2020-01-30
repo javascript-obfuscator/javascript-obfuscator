@@ -17,7 +17,7 @@ export class NodeTransformerNamesGroupsBuilder implements INodeTransformerNamesG
      */
     private readonly levelledTopologicalSorter: ILevelledTopologicalSorter<NodeTransformer>;
 
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.ILevelledTopologicalSorter)
             levelledTopologicalSorter: ILevelledTopologicalSorter<NodeTransformer>
     ) {

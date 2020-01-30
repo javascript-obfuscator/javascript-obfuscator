@@ -39,7 +39,7 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -114,7 +114,7 @@ export class SplitStringTransformer extends AbstractNodeTransformer {
 
         // pass #2: split large chunks on a chunks with length of `splitStringsChunkLength`
         const secondPassChunksNode: ESTree.Node = estraverse.replace(firstPassChunksNode, {
-            /* tslint:disable:no-shadowed-variable */
+            // eslint-disable-next-line no-shadow
             enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
                 if (parentNode && NodeGuards.isLiteralNode(node)) {
                     return this.transformLiteralNodeByChunkLength(

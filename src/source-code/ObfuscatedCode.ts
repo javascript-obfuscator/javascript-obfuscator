@@ -32,7 +32,7 @@ export class ObfuscatedCode implements IObfuscatedCode {
     @initializable()
     private sourceMap!: string;
 
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.ICryptUtils) cryptUtils: ICryptUtils,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {

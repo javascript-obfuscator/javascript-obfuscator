@@ -1,5 +1,3 @@
-/* tslint:disable:no-invalid-this */
-
 import { IInitializable } from '../interfaces/IInitializable';
 
 const defaultDescriptor: PropertyDescriptor = {

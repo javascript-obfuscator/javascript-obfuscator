@@ -21,7 +21,7 @@ export class NodeLexicalScopeUtils {
         return NodeLexicalScopeUtils.getLexicalScopesRecursive(node);
     }
 
-    /***
+    /**
      * @param {Node} node
      * @param {number} maxSize
      * @param {TNodeWithLexicalScope[]} nodesWithLexicalScope

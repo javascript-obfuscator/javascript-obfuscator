@@ -47,7 +47,7 @@ export class StringLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
      * @param {IStringArrayStorageAnalyzer} stringArrayStorageAnalyzer
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: IStringArrayStorage,
         @inject(ServiceIdentifiers.IStringArrayStorageAnalyzer) stringArrayStorageAnalyzer: IStringArrayStorageAnalyzer,
         @inject(ServiceIdentifiers.IOptions) options: IOptions

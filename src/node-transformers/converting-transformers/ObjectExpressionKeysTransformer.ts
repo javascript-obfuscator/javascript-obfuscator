@@ -37,7 +37,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__IObjectExpressionExtractor)
             objectExpressionExtractorFactory: TObjectExpressionExtractorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,

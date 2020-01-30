@@ -71,7 +71,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     /**
      * @param {string[]} argv
      */
-    constructor (argv: string[]) {
+    public constructor (argv: string[]) {
         this.rawArguments = argv;
         this.arguments = argv.slice(2);
     }

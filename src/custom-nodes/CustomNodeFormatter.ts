@@ -20,7 +20,7 @@ export class CustomNodeFormatter implements ICustomNodeFormatter {
      */
     private readonly prevailingKindOfVariables: ESTree.VariableDeclaration['kind'];
 
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer)
             prevailingKindOfVariablesAnalyzer: IPrevailingKindOfVariablesAnalyzer
     ) {

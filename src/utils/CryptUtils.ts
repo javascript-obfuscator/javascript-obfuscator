@@ -17,13 +17,12 @@ export class CryptUtils implements ICryptUtils {
     /**
      * @param {IRandomGenerator} randomGenerator
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator
     ) {
         this.randomGenerator = randomGenerator;
     }
 
-    // tslint:disable
     /**
      * @param {string} string
      * @returns {string}
@@ -34,7 +33,7 @@ export class CryptUtils implements ICryptUtils {
         let output: string = '';
 
         string = encodeURIComponent(string).replace(/%([0-9A-F]{2})/g, (match, p1) => {
-            return String.fromCharCode(parseInt(`${Utils.hexadecimalPrefix}${p1}`));
+            return String.fromCharCode(parseInt(`${Utils.hexadecimalPrefix}${p1}`, 16));
         });
 
         for (
@@ -53,7 +52,6 @@ export class CryptUtils implements ICryptUtils {
 
         return output;
     }
-    // tslint:enable
 
     /**
      * Hides string inside a other random string with larger length
@@ -100,7 +98,6 @@ export class CryptUtils implements ICryptUtils {
         return [randomMerge(str, randomStringDiff), randomStringDiff];
     }
 
-    // tslint:disable
     /**
      * RC4 symmetric cipher encryption/decryption
      * https://gist.github.com/farhadi/2185197
@@ -110,11 +107,13 @@ export class CryptUtils implements ICryptUtils {
      * @returns {string}
      */
     public rc4 (string: string, key: string): string {
-        let s: number[] = [],
-            j: number = 0,
-            x: number,
-            result: string = '';
+        const s: number[] = [];
 
+        let j: number = 0;
+        let x: number;
+        let result: string = '';
+
+        // eslint-disable-next-line no-var
         for (var i = 0; i < 256; i++) {
             s[i] = i;
         }
@@ -140,5 +139,4 @@ export class CryptUtils implements ICryptUtils {
 
         return result;
     }
-    // tslint:enable
 }

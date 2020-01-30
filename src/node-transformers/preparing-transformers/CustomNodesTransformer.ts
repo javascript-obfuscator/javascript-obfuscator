@@ -58,7 +58,7 @@ export class CustomNodesTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.ICallsGraphAnalyzer) callsGraphAnalyzer: ICallsGraphAnalyzer,
         @inject(ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer)
             prevailingKindOfVariablesAnalyzer: IPrevailingKindOfVariablesAnalyzer,

@@ -29,7 +29,7 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
      * @param {IOptions} options
      * @param {IArrayUtils} arrayUtils
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,

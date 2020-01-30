@@ -18,7 +18,7 @@ export abstract class AbstractObfuscatingReplacer implements IObfuscatingReplace
     /**
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.options = options;

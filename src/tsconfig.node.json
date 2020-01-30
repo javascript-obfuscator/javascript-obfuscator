@@ -3,14 +3,11 @@
   "compilerOptions": {
     "importHelpers": true,
     "noEmitHelpers": true,
-    "sourceMap": true,
-    "plugins": [
-      {
-        "name": "tslint-language-service",
-        "ignoreDefinitionFiles": true
-      }
-    ]
+    "sourceMap": true
   },
+  "include": [
+    "../src"
+  ],
   "exclude": [
     "../test"
   ]

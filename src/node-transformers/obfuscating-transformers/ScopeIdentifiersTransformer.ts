@@ -60,7 +60,7 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
      * @param {IOptions} options
      * @param {IScopeAnalyzer} scopeAnalyzer
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierObfuscatingReplacer)
             identifierObfuscatingReplacerFactory: TIdentifierObfuscatingReplacerFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,

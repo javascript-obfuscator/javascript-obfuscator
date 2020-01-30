@@ -30,7 +30,7 @@ export class ObjectExpressionToVariableDeclarationExtractor implements IObjectEx
     /**
      * @param {TObjectExpressionKeysTransformerCustomNodeFactory} objectExpressionKeysTransformerCustomNodeFactory
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__IObjectExpressionKeysTransformerCustomNode)
             objectExpressionKeysTransformerCustomNodeFactory: TObjectExpressionKeysTransformerCustomNodeFactory,
     ) {

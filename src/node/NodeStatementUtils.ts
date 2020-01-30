@@ -78,7 +78,7 @@ export class NodeStatementUtils {
         return parentNode;
     }
 
-    /***
+    /**
      * @param {Node} node
      * @param {number} maxSize
      * @param {TNodeWithStatements[]} nodesWithStatements

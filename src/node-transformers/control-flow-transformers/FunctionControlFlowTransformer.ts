@@ -88,7 +88,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__TControlFlowStorage)
             controlFlowStorageFactory: TControlFlowStorageFactory,
         @inject(ServiceIdentifiers.Factory__IControlFlowReplacer)

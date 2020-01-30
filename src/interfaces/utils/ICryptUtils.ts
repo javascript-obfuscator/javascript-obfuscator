@@ -16,6 +16,5 @@ export interface ICryptUtils {
      * @param string
      * @returns {string}
      */
-    /* tslint:disable */
     rc4 (string: string, key: string): string;
 }

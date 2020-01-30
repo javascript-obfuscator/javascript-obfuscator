@@ -26,7 +26,7 @@ export class PrevailingKindOfVariablesAnalyzer implements IPrevailingKindOfVaria
      */
     private prevailingKindOfVariables: ESTree.VariableDeclaration['kind'] = PrevailingKindOfVariablesAnalyzer.defaultKindOfVariables;
 
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils
     ) {
         this.arrayUtils = arrayUtils;

@@ -45,7 +45,7 @@ export class LiteralTransformer extends AbstractNodeTransformer {
      * @param {IStringArrayStorageAnalyzer} stringArrayStorageAnalyzer
      * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__IObfuscatingReplacer)
             literalObfuscatingReplacerFactory: TLiteralObfuscatingReplacerFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,

@@ -19,7 +19,7 @@ export class ReservedStringObfuscatingGuard implements IObfuscatingGuard {
     /**
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.options = options;

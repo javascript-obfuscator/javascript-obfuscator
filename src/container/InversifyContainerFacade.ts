@@ -37,7 +37,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      */
     private readonly container: interfaces.Container;
 
-    constructor () {
+    public constructor () {
         this.container = new Container();
     }
 
@@ -86,15 +86,15 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
      */
     public static getConstructorFactory <T extends string, U> (
         serviceIdentifier: interfaces.ServiceIdentifier<interfaces.Newable<U>>,
-        ...dependencies: interfaces.ServiceIdentifier<interfaces.Newable<Object>>[]
+        ...dependencies: interfaces.ServiceIdentifier<interfaces.Newable<Record<string, any>>>[]
     ): (context: interfaces.Context) => (bindingName: T) => U {
         return (context: interfaces.Context): (bindingName: T) => U => {
             const cache: Map<T, interfaces.Newable<U>> = new Map();
-            const cachedDependencies: Object[] = [];
+            const cachedDependencies: Record<string, any>[] = [];
 
             return (bindingName: T) => {
                 dependencies.forEach((
-                    dependency: interfaces.ServiceIdentifier<interfaces.Newable<Object>>,
+                    dependency: interfaces.ServiceIdentifier<interfaces.Newable<Record<string, any>>>,
                     index: number
                 ) => {
                     if (!cachedDependencies[index]) {

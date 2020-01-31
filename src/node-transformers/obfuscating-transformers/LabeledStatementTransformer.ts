@@ -68,7 +68,7 @@ export class LabeledStatementTransformer extends AbstractNodeTransformer {
         switch (transformationStage) {
             case TransformationStage.Obfuscating:
                 return {
-                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (parentNode && NodeGuards.isLabeledStatementNode(node)) {
                             return this.transformNode(node, parentNode);
                         }

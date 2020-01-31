@@ -82,7 +82,7 @@ export class NodeTransformerNamesGroupsBuilder implements INodeTransformerNamesG
             }
 
             for (const runAfterRelation of runAfterRelations) {
-                const isUnknownRelation: boolean = !normalizedNodeTransformers[runAfterRelation];
+                const isUnknownRelation: boolean = normalizedNodeTransformers[runAfterRelation] === undefined;
 
                 if (isUnknownRelation) {
                     relationEdges.push([nodeTransformerName, null]);

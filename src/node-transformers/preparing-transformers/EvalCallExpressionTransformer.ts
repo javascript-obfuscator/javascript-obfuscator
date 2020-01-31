@@ -82,7 +82,7 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
         switch (transformationStage) {
             case TransformationStage.Preparing:
                 return {
-                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (
                             parentNode
                             && NodeGuards.isCallExpressionNode(node)
@@ -100,7 +100,7 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
                 }
 
                 return {
-                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (parentNode && this.isEvalRootAstHostNode(node)) {
                             return this.restoreNode(node, parentNode);
                         }
@@ -118,7 +118,7 @@ export class EvalCallExpressionTransformer extends AbstractNodeTransformer {
      * @returns {Node}
      */
     public transformNode (callExpressionNode: ESTree.CallExpression, parentNode: ESTree.Node): ESTree.Node {
-        const callExpressionFirstArgument: ESTree.Expression | ESTree.SpreadElement = callExpressionNode.arguments[0];
+        const callExpressionFirstArgument: ESTree.Expression | ESTree.SpreadElement | undefined = callExpressionNode.arguments[0];
 
         if (!callExpressionFirstArgument) {
             return callExpressionNode;

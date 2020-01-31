@@ -113,7 +113,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         switch (transformationStage) {
             case TransformationStage.ControlFlowFlattening:
                 return {
-                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (
                             parentNode && (
                                 NodeGuards.isFunctionDeclarationNode(node) ||

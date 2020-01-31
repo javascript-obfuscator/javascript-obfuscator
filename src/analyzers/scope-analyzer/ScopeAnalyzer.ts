@@ -92,7 +92,7 @@ export class ScopeAnalyzer implements IScopeAnalyzer {
             }
         }
 
-        throw new Error(`Scope analyzing error`);
+        throw new Error('Scope analyzing error');
     }
 
     /**

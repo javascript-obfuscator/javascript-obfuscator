@@ -36,7 +36,7 @@ export class FunctionExpressionCalleeDataExtractor extends AbstractCalleeDataExt
 
         return {
             callee: calleeBlockStatement,
-            name: callee.name || null
+            name: callee.name ?? null
         };
     }
 

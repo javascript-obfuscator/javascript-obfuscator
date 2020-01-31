@@ -49,7 +49,7 @@ export class PrevailingKindOfVariablesAnalyzer implements IPrevailingKindOfVaria
         });
 
         this.prevailingKindOfVariables = this.arrayUtils.findMostOccurringElement(variableKinds)
-            || PrevailingKindOfVariablesAnalyzer.defaultKindOfVariables;
+            ?? PrevailingKindOfVariablesAnalyzer.defaultKindOfVariables;
     }
 
     /**

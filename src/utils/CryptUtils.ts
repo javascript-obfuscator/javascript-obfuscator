@@ -32,7 +32,7 @@ export class CryptUtils implements ICryptUtils {
 
         let output: string = '';
 
-        string = encodeURIComponent(string).replace(/%([0-9A-F]{2})/g, (match, p1) => {
+        string = encodeURIComponent(string).replace(/%([0-9A-F]{2})/g, (match: string, p1: string) => {
             return String.fromCharCode(parseInt(`${Utils.hexadecimalPrefix}${p1}`, 16));
         });
 
@@ -44,7 +44,7 @@ export class CryptUtils implements ICryptUtils {
             charCode = string.charCodeAt(idx += 3/4);
 
             if (charCode > 0xFF) {
-                throw new Error("'btoa' failed: The string to be encoded contains characters outside of the Latin1 range.");
+                throw new Error('\'btoa\' failed: The string to be encoded contains characters outside of the Latin1 range.');
             }
 
             block = <number>block << 8 | charCode;

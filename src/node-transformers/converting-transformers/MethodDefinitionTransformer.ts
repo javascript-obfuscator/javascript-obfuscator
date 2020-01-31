@@ -51,7 +51,7 @@ export class MethodDefinitionTransformer extends AbstractNodeTransformer {
         switch (transformationStage) {
             case TransformationStage.Converting:
                 return {
-                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (parentNode && NodeGuards.isMethodDefinitionNode(node)) {
                             return this.transformNode(node, parentNode);
                         }

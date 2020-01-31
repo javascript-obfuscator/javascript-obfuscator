@@ -7,7 +7,7 @@ import { TIdentifierNamesGeneratorFactory } from '../../../types/container/gener
 import { TStatement } from '../../../types/node/TStatement';
 
 import { IOptions } from '../../../interfaces/options/IOptions';
-import { IRandomGenerator } from "../../../interfaces/utils/IRandomGenerator";
+import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { ICustomNodeFormatter } from '../../../interfaces/custom-nodes/ICustomNodeFormatter';
 
 import { initializable } from '../../../decorators/Initializable';

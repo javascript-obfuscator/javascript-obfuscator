@@ -54,7 +54,7 @@ export class Logger implements ILogger {
     ): void {
         const processedMessage: string = loggingLevelColor(`\n${loggingPrefix} ${loggingMessage}`);
 
-        console.log(processedMessage, value || '');
+        console.log(processedMessage, value ?? '');
     }
 
     /**

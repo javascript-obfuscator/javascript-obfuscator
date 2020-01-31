@@ -123,7 +123,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
     ): void {
         const outputSourceMapPath: string = CLIUtils.getOutputSourceMapPath(
             outputCodePath,
-            options.sourceMapFileName || ''
+            options.sourceMapFileName ?? ''
         );
 
         options = {
@@ -189,7 +189,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         this.commands
             .usage('<inputPath> [options]')
             .version(
-                process.env.VERSION || 'unknown',
+                process.env.VERSION ?? 'unknown',
                 '-v, --version'
             )
             .option(
@@ -416,7 +416,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
 
         if (sourceCodeIndex !== null) {
             const baseIdentifiersPrefix: string = this.inputCLIOptions.identifiersPrefix
-                || JavaScriptObfuscatorCLI.baseIdentifiersPrefix;
+                ?? JavaScriptObfuscatorCLI.baseIdentifiersPrefix;
             const identifiersPrefix: string = `${baseIdentifiersPrefix}${sourceCodeIndex}`;
 
             options = {

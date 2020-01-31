@@ -18,7 +18,7 @@ export function IsAllowedForObfuscationTargets (
     obfuscationTargets: TypeFromEnum<typeof ObfuscationTarget>[],
     validationOptions?: ValidationOptions
 ): (options: IOptions, propertyName: keyof IOptions) => void {
-    return (optionsObject: IOptions, propertyName: keyof IOptions) => {
+    return (optionsObject: IOptions, propertyName: keyof IOptions): void => {
         registerDecorator({
             propertyName,
             constraints: [obfuscationTargets],

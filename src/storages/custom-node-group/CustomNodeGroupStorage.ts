@@ -49,13 +49,7 @@ export class CustomNodeGroupStorage extends MapStorage <string, ICustomNodeGroup
         super.initialize();
 
         CustomNodeGroupStorage.customNodeGroupsList.forEach((customNodeGroupName: CustomNodeGroup) => {
-            const customNodeGroup: ICustomNodeGroup = this.customNodeGroupFactory(
-                customNodeGroupName
-            );
-
-            if (!customNodeGroup) {
-                return;
-            }
+            const customNodeGroup: ICustomNodeGroup = this.customNodeGroupFactory(customNodeGroupName);
 
             this.storage.set(customNodeGroupName, customNodeGroup);
         });

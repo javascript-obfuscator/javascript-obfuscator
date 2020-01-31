@@ -7,7 +7,7 @@ import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transforme
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
-import { IdentifierObfuscatingReplacer } from "../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/IdentifierObfuscatingReplacer";
+import { IdentifierObfuscatingReplacer } from '../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/IdentifierObfuscatingReplacer';
 
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import { TransformationStage } from '../../enums/node-transformers/TransformationStage';
@@ -51,7 +51,7 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
         switch (transformationStage) {
             case TransformationStage.Preparing:
                 return {
-                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (
                             NodeGuards.isIdentifierNode(node)
                             && parentNode

@@ -142,10 +142,10 @@ export class TransformersRunner implements ITransformersRunner {
         const visitorsLength: number = visitors.length;
 
         if (!visitorsLength) {
-            return (node: ESTree.Node, parentNode: ESTree.Node | null) => node;
+            return (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node => node;
         }
 
-        return (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+        return (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | estraverse.VisitorOption => {
             if (NodeMetadata.isIgnoredNode(node)) {
                 return estraverse.VisitorOption.Skip;
             }

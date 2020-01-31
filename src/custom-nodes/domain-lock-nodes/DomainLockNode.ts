@@ -82,7 +82,7 @@ export class DomainLockNode extends AbstractCustomNode {
 
         return this.customNodeFormatter.formatTemplate(DomainLockNodeTemplate(), {
             domainLockFunctionName: this.identifierNamesGenerator.generate(),
-            diff: diff,
+            diff,
             domains: hiddenDomainsString,
             globalVariableTemplate,
             singleNodeCallControllerFunctionName: this.callsControllerFunctionName

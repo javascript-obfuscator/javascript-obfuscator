@@ -37,7 +37,7 @@ export class MetadataTransformer extends AbstractNodeTransformer {
         switch (transformationStage) {
             case TransformationStage.Preparing:
                 return {
-                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         return this.transformNode(node, parentNode);
                     }
                 };

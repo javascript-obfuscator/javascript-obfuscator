@@ -6,7 +6,7 @@ export class NodeMetadata {
      * @param {Partial<T["metadata"]>} metadata
      */
     public static set <T extends ESTree.Node = ESTree.Node> (node: T, metadata: Partial<T['metadata']>): void {
-        node.metadata = Object.assign(node.metadata || {}, metadata);
+        node.metadata = Object.assign(node.metadata ?? {}, metadata);
     }
 
     /**

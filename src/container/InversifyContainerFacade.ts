@@ -49,7 +49,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         serviceIdentifier: interfaces.ServiceIdentifier<U>
     ): (context: interfaces.Context) => (bindingName: T) => U {
         return (context: interfaces.Context): (bindingName: T) => U => {
-            return (bindingName: T) => {
+            return (bindingName: T): U => {
                 return context.container.getNamed<U>(serviceIdentifier, bindingName);
             };
         };
@@ -65,7 +65,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         return (context: interfaces.Context): (bindingName: T) => U => {
             const cache: Map <T, U> = new Map();
 
-            return (bindingName: T) => {
+            return (bindingName: T): U => {
                 if (cache.has(bindingName)) {
                     return <U>cache.get(bindingName);
                 }
@@ -92,7 +92,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
             const cache: Map<T, interfaces.Newable<U>> = new Map();
             const cachedDependencies: Record<string, any>[] = [];
 
-            return (bindingName: T) => {
+            return (bindingName: T): U => {
                 dependencies.forEach((
                     dependency: interfaces.ServiceIdentifier<interfaces.Newable<Record<string, any>>>,
                     index: number
@@ -174,7 +174,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         this.container
             .bind<IObfuscatedCode>(ServiceIdentifiers.Factory__IObfuscatedCode)
             .toFactory<IObfuscatedCode>((context: interfaces.Context) => {
-                return (obfuscatedCodeAsString: string, sourceMapAsString: string) => {
+                return (obfuscatedCodeAsString: string, sourceMapAsString: string): IObfuscatedCode => {
                     const obfuscatedCode: IObfuscatedCode = context.container
                         .get<IObfuscatedCode>(ServiceIdentifiers.IObfuscatedCode);
 

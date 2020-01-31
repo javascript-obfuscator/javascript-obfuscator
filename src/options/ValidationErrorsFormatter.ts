@@ -10,10 +10,10 @@ export class ValidationErrorsFormatter {
     public static format (errors: ValidationError[]): string {
         return errors
             .reduce(
-                (errorMessages: string[], error: ValidationError) => ([
+                (errorMessages: string[], error: ValidationError) => [
                     ...errorMessages,
                     ValidationErrorsFormatter.formatWithNestedConstraints(error)
-                ]),
+                ],
                 []
             )
             .join('\n');

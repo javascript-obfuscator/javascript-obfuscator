@@ -28,7 +28,7 @@ export const storagesModule: interfaces.ContainerModule = new ContainerModule((b
     // controlFlowStorage factory
     bind<TControlFlowStorage>(ServiceIdentifiers.Factory__TControlFlowStorage)
         .toFactory<TControlFlowStorage>((context: interfaces.Context) => {
-            return () => {
+            return (): TControlFlowStorage => {
                 const constructor: interfaces.Newable<TControlFlowStorage> = context.container
                     .get<interfaces.Newable<TControlFlowStorage>>(ServiceIdentifiers.Newable__TControlFlowStorage);
                 const randomGenerator: IRandomGenerator = context.container

@@ -70,14 +70,6 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
     }
 
     /**
-     * @param {Node} node
-     * @param {Node} parentNode
-     * @param {TControlFlowStorage} controlFlowStorage
-     * @returns {Node}
-     */
-    public abstract replace (node: ESTree.Node, parentNode: ESTree.Node, controlFlowStorage: TControlFlowStorage): ESTree.Node;
-
-    /**
      * @param {ICustomNode} customNode
      * @param {TControlFlowStorage} controlFlowStorage
      * @param {string} replacerId
@@ -120,4 +112,12 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
 
         return storageKey;
     }
+
+    /**
+     * @param {Node} node
+     * @param {Node} parentNode
+     * @param {TControlFlowStorage} controlFlowStorage
+     * @returns {Node}
+     */
+    public abstract replace (node: ESTree.Node, parentNode: ESTree.Node, controlFlowStorage: TControlFlowStorage): ESTree.Node;
 }

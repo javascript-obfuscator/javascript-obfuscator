@@ -449,7 +449,7 @@ Example:
 ### `controlFlowFlatteningThreshold`
 Type: `number` Default: `0.75` Min: `0` Max: `1`
 
-The probability that the [`controlFlowFlattening`](#controlflowflattening) transformation will be applied to the node.
+The probability that the [`controlFlowFlattening`](#controlflowflattening) transformation will be applied to any given node.
 
 This setting is especially useful for large code size because large amounts of control flow transformations can slow down your code and increase code size.
 
@@ -461,7 +461,7 @@ Type: `boolean` Default: `false`
 ##### :warning: Dramatically increases size of obfuscated code (up to 200%), use only if size of obfuscated code doesn't matter. Use [`deadCodeInjectionThreshold`](#deadcodeinjectionthreshold) to set percentage of nodes that will affected by dead code injection.
 ##### :warning: This option forcibly enables `stringArray` option.
 
-With this option random blocks of dead code will add to the obfuscated code. 
+With this option, random blocks of dead code will be added to the obfuscated code. 
 
 Example:
 ```ts
@@ -590,12 +590,12 @@ Disables the use of `console.log`, `console.info`, `console.error`, `console.war
 ### `domainLock`
 Type: `string[]` Default: `[]`
 
-##### :warning: This option does not allowed to use with `target: 'node'`
+##### :warning: This option does not work with `target: 'node'`
 
-Locks the obfuscated source code so it only runs on specific domains and/or sub-domains. This makes really hard for someone just copy and paste your source code and run elsewhere.
+Locks the obfuscated source code so it only runs on specific domains and/or sub-domains. This makes really hard for someone to just copy and paste your source code and run it elsewhere.
 
 ##### Multiple domains and sub-domains
-It's possible to lock your code to more than one domain or sub-domain. For instance, to lock it so the code only runs on **www.example.com** add `www.example.com`, to make it work on any sub-domain from example.com, use `.example.com`.
+It's possible to lock your code to more than one domain or sub-domain. For instance, to lock it so the code only runs on **www.example.com** add `www.example.com`. To make it work on any sub-domain from example.com, use `.example.com`.
 
 ### `exclude`
 Type: `string[]` Default: `[]`

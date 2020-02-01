@@ -72,6 +72,11 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
     private readonly rc4Keys: string[];
 
     /**
+     * @type {Map<string, string[]>}
+     */
+    private readonly rc4EncodedValuesSourcesCache: Map<string, string[]> = new Map();
+
+    /**
      * @type {number}
      */
     private rotationAmount: number = 0;
@@ -256,9 +261,39 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
      */
     private getEncodedValue (value: string): IEncodedValue {
         switch (this.options.stringArrayEncoding) {
+            /**
+             * For rc4 there is a possible chance of a collision between encoded values that were received from
+             * different source values with different keys
+             *
+             * For example:
+             * source value | key  | encoded value
+             * _15          | CRDL | w74TGA==
+             * _12          | q9mB | w74TGA==
+             *
+             * Issue: https://github.com/javascript-obfuscator/javascript-obfuscator/issues/538
+             *
+             * As a fix that keeps key size of 4 character, the simple brute-force solution is using:
+             * if collision will happen, just try to encode value again
+             */
             case StringArrayEncoding.Rc4: {
                 const decodeKey: string = this.randomGenerator.getRandomGenerator().pickone(this.rc4Keys);
                 const encodedValue: string = this.cryptUtils.btoa(this.cryptUtils.rc4(value, decodeKey));
+
+                const encodedValueSources: string[] = this.rc4EncodedValuesSourcesCache.get(encodedValue) ?? [];
+                let encodedValueSourcesLength: number = encodedValueSources.length;
+
+                const shouldAddValueToSourcesCache: boolean = !encodedValueSourcesLength || !encodedValueSources.includes(value);
+
+                if (shouldAddValueToSourcesCache) {
+                    encodedValueSources.push(value);
+                    encodedValueSourcesLength++;
+                }
+
+                this.rc4EncodedValuesSourcesCache.set(encodedValue, encodedValueSources);
+
+                if (encodedValueSourcesLength > 1) {
+                    return this.getEncodedValue(value);
+                }
 
                 return { encodedValue, decodeKey };
             }

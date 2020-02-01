@@ -42,11 +42,11 @@ export enum ServiceIdentifiers {
     ISourceCode = 'ISourceCode',
     ISourceMapCorrector = 'ISourceMapCorrector',
     IScopeAnalyzer = 'IScopeAnalyzer',
+    IStringArrayStorage = 'IStringArrayStorage',
     IStringArrayStorageAnalyzer = 'IStringArrayStorageAnalyzer',
     ITransformersRunner = 'ITransformersRunner',
     Newable__ICustomNode = 'Newable<ICustomNode>',
     Newable__TControlFlowStorage = 'Newable<TControlFlowStorage>',
     TCustomNodeGroupStorage = 'TCustomNodeGroupStorage',
-    TInputOptions = 'TInputOptions',
-    TStringArrayStorage = 'TStringArrayStorage'
+    TInputOptions = 'TInputOptions'
 }

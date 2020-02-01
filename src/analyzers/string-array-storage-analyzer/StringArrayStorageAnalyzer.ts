@@ -50,7 +50,7 @@ export class StringArrayStorageAnalyzer implements IStringArrayStorageAnalyzer {
      * @param {IOptions} options
      */
     public constructor (
-        @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: IStringArrayStorage,
+        @inject(ServiceIdentifiers.IStringArrayStorage) stringArrayStorage: IStringArrayStorage,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
     ) {

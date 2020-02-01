@@ -55,7 +55,7 @@ export class StringArrayCustomNodeGroup extends AbstractCustomNodeGroup {
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__ICustomNode) customNodeFactory: TCustomNodeFactory,
-        @inject(ServiceIdentifiers.TStringArrayStorage) stringArrayStorage: IStringArrayStorage,
+        @inject(ServiceIdentifiers.IStringArrayStorage) stringArrayStorage: IStringArrayStorage,
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,

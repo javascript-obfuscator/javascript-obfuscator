@@ -615,7 +615,7 @@ Available values:
 ### `identifiersDictionary`
 Type: `string[]` Default: `[]`
 
-Sets identifiers dictionary  for [`identifierNamesGenerator`](#identifierNamesGenerator): `dictionary` option
+Sets identifiers dictionary for [`identifierNamesGenerator`](#identifierNamesGenerator): `dictionary` option. Each identifier from the dictionary will be used in a few variants with a different casing of each character. Thus, the number of identifiers in the dictionary should depend on the identifiers amount at original source code.
 
 ### `identifiersPrefix`
 Type: `string` Default: `''`

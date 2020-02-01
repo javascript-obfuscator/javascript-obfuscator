@@ -26,7 +26,7 @@ async function spawnThread(obfuscatedCode: string, threadCallback: Function, tim
 }
 
 describe('DebugProtectionFunctionCallTemplate', function () {
-    this.timeout(5000);
+    this.timeout(10000);
 
     describe('Variant #1: correctly obfuscate code with `HexadecimalIdentifierNamesGenerator``', () => {
         const expectedEvaluationResult: number = 1;

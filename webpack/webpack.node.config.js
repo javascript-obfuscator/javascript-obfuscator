@@ -5,6 +5,7 @@ const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 const webpack = require('webpack');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
 const packageJson = require('pjson');
 
 const WebpackUtils = require('./utils/WebpackUtils').WebpackUtils;
@@ -50,6 +51,9 @@ module.exports = {
         new ForkTsCheckerWebpackPlugin({
             tsconfig: 'src/tsconfig.node.json',
             eslint: true
+        }),
+        new ForkTsCheckerNotifierWebpackPlugin({
+            skipFirstNotification: true
         })
     ],
     output: {

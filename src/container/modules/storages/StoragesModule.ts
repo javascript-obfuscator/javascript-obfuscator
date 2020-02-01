@@ -18,7 +18,7 @@ export const storagesModule: interfaces.ContainerModule = new ContainerModule((b
         .to(CustomNodeGroupStorage)
         .inSingletonScope();
 
-    bind<IStringArrayStorage>(ServiceIdentifiers.TStringArrayStorage)
+    bind<IStringArrayStorage>(ServiceIdentifiers.IStringArrayStorage)
         .to(StringArrayStorage)
         .inSingletonScope();
 

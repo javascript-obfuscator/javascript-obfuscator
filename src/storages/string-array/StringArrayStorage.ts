@@ -262,7 +262,7 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
     private getEncodedValue (value: string): IEncodedValue {
         switch (this.options.stringArrayEncoding) {
             /**
-             * For rc4 there is a possible collision between encoded values that were received from
+             * For rc4 there is a possible chance of a collision between encoded values that were received from
              * different source values with different keys
              *
              * For example:

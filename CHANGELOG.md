@@ -1,5 +1,9 @@
 Change Log
 
+v0.24.4
+---
+* Fixed rc4 encoded value collision: https://github.com/javascript-obfuscator/javascript-obfuscator/issues/538
+
 v0.24.3
 ---
 * Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/535

@@ -82,7 +82,7 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__IDeadCodeInjectionCustomNode)
             deadCodeInjectionCustomNodeFactory: TDeadNodeInjectionCustomNodeFactory,
         @inject(ServiceIdentifiers.ITransformersRunner) transformersRunner: ITransformersRunner,
@@ -216,14 +216,17 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
         switch (transformationStage) {
             case TransformationStage.DeadCodeInjection:
                 return {
-                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (parentNode && NodeGuards.isProgramNode(node)) {
                             this.analyzeNode(node, parentNode);
 
                             return node;
                         }
                     },
-                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    leave: (
+                        node: ESTree.Node,
+                        parentNode: ESTree.Node | null
+                    ): ESTree.Node | estraverse.VisitorOption | undefined => {
                         if (parentNode && NodeGuards.isBlockStatementNode(node)) {
                             return this.transformNode(node, parentNode);
                         }
@@ -236,7 +239,10 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
                 }
 
                 return {
-                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    enter: (
+                        node: ESTree.Node,
+                        parentNode: ESTree.Node | null
+                    ): ESTree.Node | estraverse.VisitorOption |undefined => {
                         if (parentNode && this.isDeadCodeInjectionRootAstHostNode(node)) {
                             return this.restoreNode(node, parentNode);
                         }

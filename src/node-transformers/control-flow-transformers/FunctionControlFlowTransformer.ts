@@ -88,7 +88,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__TControlFlowStorage)
             controlFlowStorageFactory: TControlFlowStorageFactory,
         @inject(ServiceIdentifiers.Factory__IControlFlowReplacer)
@@ -113,7 +113,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeTransformer {
         switch (transformationStage) {
             case TransformationStage.ControlFlowFlattening:
                 return {
-                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (
                             parentNode && (
                                 NodeGuards.isFunctionDeclarationNode(node) ||

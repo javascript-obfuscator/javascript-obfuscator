@@ -38,7 +38,7 @@ export class RandomGenerator implements IRandomGenerator, IInitializable {
      * @param {ISourceCode} sourceCode
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.ISourceCode) sourceCode: ISourceCode,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {

@@ -37,7 +37,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__IObjectExpressionExtractor)
             objectExpressionExtractorFactory: TObjectExpressionExtractorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -122,7 +122,7 @@ export class ObjectExpressionKeysTransformer extends AbstractNodeTransformer {
         switch (transformationStage) {
             case TransformationStage.Converting:
                 return {
-                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (
                             parentNode
                             && NodeGuards.isObjectExpressionNode(node)

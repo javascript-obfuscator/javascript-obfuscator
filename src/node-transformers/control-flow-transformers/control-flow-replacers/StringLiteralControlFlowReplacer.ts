@@ -31,7 +31,7 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
             controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -92,7 +92,7 @@ export class StringLiteralControlFlowReplacer extends AbstractControlFlowReplace
         const statementNode: TStatement = controlFlowStorageCallCustomNode.getNode()[0];
 
         if (!statementNode || !NodeGuards.isExpressionStatementNode(statementNode)) {
-            throw new Error(`\`controlFlowStorageCallCustomNode.getNode()[0]\` should returns array with \`ExpressionStatement\` node`);
+            throw new Error('`controlFlowStorageCallCustomNode.getNode()[0]` should returns array with `ExpressionStatement` node');
         }
 
         return statementNode.expression;

@@ -40,7 +40,7 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
             controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,
@@ -104,7 +104,7 @@ export class BlockStatementControlFlowTransformer extends AbstractNodeTransforme
         switch (transformationStage) {
             case TransformationStage.ControlFlowFlattening:
                 return {
-                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (parentNode && NodeGuards.isBlockStatementNode(node)) {
                             return this.transformNode(node, parentNode);
                         }

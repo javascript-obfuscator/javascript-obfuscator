@@ -14,7 +14,7 @@ export class ArrayUtils implements IArrayUtils {
     /**
      * @param {IRandomGenerator} randomGenerator
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator
     ) {
         this.randomGenerator = randomGenerator;
@@ -72,7 +72,7 @@ export class ArrayUtils implements IArrayUtils {
      */
     public rotate <T> (array: T[], times: number): T[] {
         if (!array.length) {
-            throw new ReferenceError(`Cannot rotate empty array.`);
+            throw new ReferenceError('Cannot rotate empty array.');
         }
 
         if (times <= 0) {

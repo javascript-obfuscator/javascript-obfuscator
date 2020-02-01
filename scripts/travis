@@ -1,4 +1,4 @@
 #!/bin/bash
 
-yarn run tslint &&
+yarn run eslint &&
 yarn test

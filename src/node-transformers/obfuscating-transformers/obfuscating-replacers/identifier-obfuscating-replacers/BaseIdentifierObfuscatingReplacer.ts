@@ -29,7 +29,7 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IOptions) options: IOptions

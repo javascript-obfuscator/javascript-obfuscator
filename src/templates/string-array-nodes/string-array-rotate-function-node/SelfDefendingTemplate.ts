@@ -56,7 +56,7 @@ export function SelfDefendingTemplate (escapeSequenceEncoder: IEscapeSequenceEnc
             
             const test1 = function () {
                 const regExp = new RegExp('${
-                    escapeSequenceEncoder.encode(`\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}`, true)
+                    escapeSequenceEncoder.encode('\\w+ *\\(\\) *{\\w+ *[\'|"].+[\'|"];? *}', true)
                 }');
                 
                 return regExp.test(object.removeCookie.toString());

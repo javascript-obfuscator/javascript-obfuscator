@@ -20,7 +20,7 @@ export class NumberLiteralObfuscatingReplacer extends AbstractObfuscatingReplace
     /**
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);

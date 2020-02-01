@@ -28,7 +28,7 @@ export class SourceCodeReader {
     /**
      * @param {TInputCLIOptions} options
      */
-    constructor (options: TInputCLIOptions) {
+    public constructor (options: TInputCLIOptions) {
         this.options = options;
     }
 

@@ -17,7 +17,7 @@ import { MetadataTransformer } from '../../../node-transformers/preparing-transf
 import { ObfuscatingGuardsTransformer } from '../../../node-transformers/preparing-transformers/ObfuscatingGuardsTransformer';
 import { ParentificationTransformer } from '../../../node-transformers/preparing-transformers/ParentificationTransformer';
 import { ReservedStringObfuscatingGuard } from '../../../node-transformers/preparing-transformers/obfuscating-guards/ReservedStringObfuscatingGuard';
-import { VariablePreserveTransformer } from "../../../node-transformers/preparing-transformers/VariablePreserveTransformer";
+import { VariablePreserveTransformer } from '../../../node-transformers/preparing-transformers/VariablePreserveTransformer';
 
 export const preparingTransformersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // preparing transformers

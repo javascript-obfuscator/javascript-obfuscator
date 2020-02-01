@@ -1,5 +1,4 @@
-/* tslint:disable:interface-name */
-/* tslint:disable:no-empty-interface */
+/* eslint-disable */
 
 import * as eslint from 'eslint';
 import * as eslintScope from 'eslint-scope';

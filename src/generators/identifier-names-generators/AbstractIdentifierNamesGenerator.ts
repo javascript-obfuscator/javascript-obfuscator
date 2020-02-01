@@ -26,25 +26,13 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.randomGenerator = randomGenerator;
         this.options = options;
     }
-
-    /**
-     * @param {number} nameLength
-     * @returns {string}
-     */
-    public abstract generate (nameLength?: number): string;
-
-    /**
-     * @param {number} nameLength
-     * @returns {string}
-     */
-    public abstract generateWithPrefix (nameLength?: number): string;
 
     /**
      * @param {string} name
@@ -74,4 +62,16 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
             : true;
 
     }
+
+    /**
+     * @param {number} nameLength
+     * @returns {string}
+     */
+    public abstract generate (nameLength?: number): string;
+
+    /**
+     * @param {number} nameLength
+     * @returns {string}
+     */
+    public abstract generateWithPrefix (nameLength?: number): string;
 }

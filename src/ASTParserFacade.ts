@@ -51,7 +51,7 @@ export class ASTParserFacade {
             }
         }
 
-        throw new Error(`Acorn parsing error`);
+        throw new Error('Acorn parsing error');
     }
 
     /**
@@ -73,11 +73,9 @@ export class ASTParserFacade {
             sourceType
         };
 
-        const program: ESTree.Program = (
-            <any>acorn
-                .Parser.extend(acornImportMeta)
-                .parse(sourceCode, config)
-        );
+        const program: ESTree.Program = <any>acorn
+            .Parser.extend(acornImportMeta)
+            .parse(sourceCode, config);
 
         if (comments.length) {
             program.comments = comments;

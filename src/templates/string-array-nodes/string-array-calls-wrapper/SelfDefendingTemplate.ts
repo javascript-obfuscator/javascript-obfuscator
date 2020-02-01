@@ -28,10 +28,10 @@ export function SelfDefendingTemplate (
             this.${statesIdentifier} = [1, 0, 0];
             this.${newStateIdentifier} = function(){return 'newState';};
             this.${firstStateIdentifier} = '${
-                escapeSequenceEncoder.encode(`\\w+ *\\(\\) *{\\w+ *`, true)
+                escapeSequenceEncoder.encode('\\w+ *\\(\\) *{\\w+ *', true)
             }';
             this.${secondStateIdentifier} = '${
-                escapeSequenceEncoder.encode(`['|"].+['|"];? *}`, true)
+                escapeSequenceEncoder.encode('[\'|"].+[\'|"];? *}', true)
             }';
         };
         

@@ -26,7 +26,7 @@ export class PrevailingKindOfVariablesAnalyzer implements IPrevailingKindOfVaria
      */
     private prevailingKindOfVariables: ESTree.VariableDeclaration['kind'] = PrevailingKindOfVariablesAnalyzer.defaultKindOfVariables;
 
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils
     ) {
         this.arrayUtils = arrayUtils;
@@ -49,7 +49,7 @@ export class PrevailingKindOfVariablesAnalyzer implements IPrevailingKindOfVaria
         });
 
         this.prevailingKindOfVariables = this.arrayUtils.findMostOccurringElement(variableKinds)
-            || PrevailingKindOfVariablesAnalyzer.defaultKindOfVariables;
+            ?? PrevailingKindOfVariablesAnalyzer.defaultKindOfVariables;
     }
 
     /**

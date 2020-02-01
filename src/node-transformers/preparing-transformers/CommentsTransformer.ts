@@ -2,7 +2,7 @@ import { inject, injectable, } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
 import * as ESTree from 'estree';
-import * as estraverse from "estraverse";
+import * as estraverse from 'estraverse';
 
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
@@ -12,7 +12,7 @@ import { TransformationStage } from '../../enums/node-transformers/Transformatio
 
 import { AbstractNodeTransformer } from '../AbstractNodeTransformer';
 import { NodeGuards } from '../../node/NodeGuards';
-import { ConditionalCommentObfuscatingGuard } from "./obfuscating-guards/ConditionalCommentObfuscatingGuard";
+import { ConditionalCommentObfuscatingGuard } from './obfuscating-guards/ConditionalCommentObfuscatingGuard';
 
 @injectable()
 export class CommentsTransformer extends AbstractNodeTransformer {
@@ -28,7 +28,7 @@ export class CommentsTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -43,7 +43,7 @@ export class CommentsTransformer extends AbstractNodeTransformer {
         switch (transformationStage) {
             case TransformationStage.Initializing:
                 return {
-                    leave: (node: ESTree.Node) => {
+                    leave: (node: ESTree.Node): ESTree.Node | undefined => {
                         if (NodeGuards.isProgramNode(node)) {
                             return this.transformNode(node);
                         }

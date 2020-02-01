@@ -30,7 +30,7 @@ export class ObjectExpressionToVariableDeclarationExtractor implements IObjectEx
     /**
      * @param {TObjectExpressionKeysTransformerCustomNodeFactory} objectExpressionKeysTransformerCustomNodeFactory
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__IObjectExpressionKeysTransformerCustomNode)
             objectExpressionKeysTransformerCustomNodeFactory: TObjectExpressionKeysTransformerCustomNodeFactory,
     ) {
@@ -112,7 +112,7 @@ export class ObjectExpressionToVariableDeclarationExtractor implements IObjectEx
             !statementNode
             || !NodeGuards.isVariableDeclarationNode(statementNode)
         ) {
-            throw new Error(`\`objectExpressionHostCustomNode.getNode()[0]\` should returns array with \`VariableDeclaration\` node`);
+            throw new Error('`objectExpressionHostCustomNode.getNode()[0]` should returns array with `VariableDeclaration` node');
         }
 
         return statementNode;
@@ -126,7 +126,7 @@ export class ObjectExpressionToVariableDeclarationExtractor implements IObjectEx
         const newObjectExpressionIdentifierNode: ESTree.Pattern = objectExpressionHostNode.declarations[0].id;
 
         if (!NodeGuards.isIdentifierNode(newObjectExpressionIdentifierNode)) {
-            throw new Error(`\`objectExpressionHostNode\` should contain \`VariableDeclarator\` node with \`Identifier\` id property`);
+            throw new Error('`objectExpressionHostNode` should contain `VariableDeclarator` node with `Identifier` id property');
         }
 
         return newObjectExpressionIdentifierNode;
@@ -140,7 +140,7 @@ export class ObjectExpressionToVariableDeclarationExtractor implements IObjectEx
         const newObjectExpressionNode: ESTree.Expression | null = objectExpressionHostNode.declarations[0].init ?? null;
 
         if (!newObjectExpressionNode || !NodeGuards.isObjectExpressionNode(newObjectExpressionNode)) {
-            throw new Error(`\`objectExpressionHostNode\` should contain \`VariableDeclarator\` node with \`ObjectExpression\` init property`);
+            throw new Error('`objectExpressionHostNode` should contain `VariableDeclarator` node with `ObjectExpression` init property');
         }
 
         return newObjectExpressionNode;

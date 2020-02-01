@@ -102,7 +102,7 @@ export class NodeUtils {
      * @returns {T}
      */
     public static parentizeNode <T extends ESTree.Node = ESTree.Node> (node: T, parentNode: ESTree.Node | null): T {
-        node.parentNode = parentNode || node;
+        node.parentNode = parentNode ?? node;
 
         return node;
     }

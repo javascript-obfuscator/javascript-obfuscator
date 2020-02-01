@@ -54,7 +54,7 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
      * @param {IOptions} options
      * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomNodeFormatter) customNodeFormatter: ICustomNodeFormatter,

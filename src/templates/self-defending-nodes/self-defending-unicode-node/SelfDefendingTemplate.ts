@@ -17,7 +17,7 @@ export function SelfDefendingTemplate (escapeSequenceEncoder: IEscapeSequenceEnc
                 
             const test1 = function () {
                 const regExp = new RegExp('${
-                    escapeSequenceEncoder.encode(`\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}`, true)
+                    escapeSequenceEncoder.encode('\\w+ *\\(\\) *{\\w+ *[\'|"].+[\'|"];? *}', true)
                 }');
                 
                 return !regExp.test(func1.toString());
@@ -25,7 +25,7 @@ export function SelfDefendingTemplate (escapeSequenceEncoder: IEscapeSequenceEnc
             
             const test2 = function () {
                 const regExp = new RegExp('${
-                    escapeSequenceEncoder.encode(`(\\\\[x|u](\\w){2,4})+`, true)
+                    escapeSequenceEncoder.encode('(\\\\[x|u](\\w){2,4})+', true)
                 }');
                 
                 return regExp.test(func2.toString());

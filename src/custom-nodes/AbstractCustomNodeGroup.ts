@@ -17,16 +17,6 @@ import { ObfuscationEvent } from '../enums/event-emitters/ObfuscationEvent';
 @injectable()
 export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     /**
-     * @type {ObfuscationEvent}
-     */
-    protected abstract readonly appendEvent: ObfuscationEvent;
-
-    /**
-     * @type {Map<CustomNode, ICustomNode>}
-     */
-    protected abstract customNodes: Map <CustomNode, ICustomNode>;
-
-    /**
      * @type {IIdentifierNamesGenerator}
      */
     protected readonly identifierNamesGenerator: IIdentifierNamesGenerator;
@@ -42,11 +32,21 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     protected readonly randomGenerator: IRandomGenerator;
 
     /**
+     * @type {ObfuscationEvent}
+     */
+    protected abstract readonly appendEvent: ObfuscationEvent;
+
+    /**
+     * @type {Map<CustomNode, ICustomNode>}
+     */
+    protected abstract customNodes: Map <CustomNode, ICustomNode>;
+
+    /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -56,12 +56,6 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
         this.randomGenerator = randomGenerator;
         this.options = options;
     }
-
-    /**
-     * @param {TNodeWithStatements} nodeWithStatements
-     * @param {ICallsGraphData[]} callsGraphData
-     */
-    public abstract appendCustomNodes (nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void;
 
     /**
      * @returns {ObfuscationEvent}
@@ -76,8 +70,6 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     public getCustomNodes (): Map <CustomNode, ICustomNode> {
         return this.customNodes;
     }
-
-    public abstract initialize (): void;
 
     /**
      * @param {CustomNode} customNodeName
@@ -100,4 +92,12 @@ export abstract class AbstractCustomNodeGroup implements ICustomNodeGroup {
     protected getRandomCallsGraphIndex (callsGraphLength: number): number {
         return this.randomGenerator.getRandomInteger(0, Math.max(0, Math.round(callsGraphLength - 1)));
     }
+
+    /**
+     * @param {TNodeWithStatements} nodeWithStatements
+     * @param {ICallsGraphData[]} callsGraphData
+     */
+    public abstract appendCustomNodes (nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void;
+
+    public abstract initialize (): void;
 }

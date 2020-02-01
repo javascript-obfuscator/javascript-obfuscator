@@ -1,5 +1,3 @@
-/* tslint:disable:no-invalid-this */
-
 import { IInitializable } from '../interfaces/IInitializable';
 
 const defaultDescriptor: PropertyDescriptor = {
@@ -92,12 +90,12 @@ function wrapTargetMethodsInInitializedCheck (target: IInitializable, initialize
         }
 
         const methodDescriptor: PropertyDescriptor = Object
-            .getOwnPropertyDescriptor(target, propertyName) || defaultDescriptor;
+            .getOwnPropertyDescriptor(target, propertyName) ?? defaultDescriptor;
         const originalMethod: Function = methodDescriptor.value;
 
         Object.defineProperty(target, propertyName, {
             ...methodDescriptor,
-            value: function (): void {
+            value (): void {
                 if (!Reflect.getMetadata(initializedTargetMetadataKey, this)) {
                     throw new Error(`Class should be initialized with \`${initializeMethodName}()\` method`);
                 }
@@ -123,7 +121,7 @@ function wrapInitializeMethodInInitializeCheck (
     propertyKey: string | symbol
 ): void {
     const methodDescriptor: PropertyDescriptor = Object
-        .getOwnPropertyDescriptor(target, initializeMethodName) || defaultDescriptor;
+        .getOwnPropertyDescriptor(target, initializeMethodName) ?? defaultDescriptor;
     const originalMethod: Function = methodDescriptor.value;
 
     Object.defineProperty(target, initializeMethodName, {
@@ -159,7 +157,7 @@ function wrapInitializableProperty (target: IInitializable, propertyKey: string 
 
     const initializablePropertyMetadataKey: string = `_${propertyKey.toString()}`;
     const propertyDescriptor: PropertyDescriptor = Object
-            .getOwnPropertyDescriptor(target, initializablePropertyMetadataKey) || defaultDescriptor;
+            .getOwnPropertyDescriptor(target, initializablePropertyMetadataKey) ?? defaultDescriptor;
 
     Object.defineProperty(target, propertyKey, {
         ...propertyDescriptor,

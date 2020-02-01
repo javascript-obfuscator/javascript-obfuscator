@@ -34,7 +34,7 @@ export class Logger implements ILogger {
     /**
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.options = options;
@@ -54,7 +54,7 @@ export class Logger implements ILogger {
     ): void {
         const processedMessage: string = loggingLevelColor(`\n${loggingPrefix} ${loggingMessage}`);
 
-        console.log(processedMessage, value || '');
+        console.log(processedMessage, value ?? '');
     }
 
     /**

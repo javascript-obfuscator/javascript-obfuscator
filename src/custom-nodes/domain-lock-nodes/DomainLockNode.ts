@@ -39,7 +39,7 @@ export class DomainLockNode extends AbstractCustomNode {
      * @param {IOptions} options
      * @param {ICryptUtils} cryptUtils
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomNodeFormatter) customNodeFormatter: ICustomNodeFormatter,
@@ -82,7 +82,7 @@ export class DomainLockNode extends AbstractCustomNode {
 
         return this.customNodeFormatter.formatTemplate(DomainLockNodeTemplate(), {
             domainLockFunctionName: this.identifierNamesGenerator.generate(),
-            diff: diff,
+            diff,
             domains: hiddenDomainsString,
             globalVariableTemplate,
             singleNodeCallControllerFunctionName: this.callsControllerFunctionName

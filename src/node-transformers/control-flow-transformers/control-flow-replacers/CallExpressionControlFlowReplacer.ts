@@ -31,7 +31,7 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
             controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -100,7 +100,7 @@ export class CallExpressionControlFlowReplacer extends AbstractControlFlowReplac
         const statementNode: TStatement = controlFlowStorageCallCustomNode.getNode()[0];
 
         if (!statementNode || !NodeGuards.isExpressionStatementNode(statementNode)) {
-            throw new Error(`\`controlFlowStorageCallCustomNode.getNode()[0]\` should returns array with \`ExpressionStatement\` node`);
+            throw new Error('`controlFlowStorageCallCustomNode.getNode()[0]` should returns array with `ExpressionStatement` node');
         }
 
         return statementNode.expression;

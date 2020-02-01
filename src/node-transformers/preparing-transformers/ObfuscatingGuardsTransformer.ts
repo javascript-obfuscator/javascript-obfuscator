@@ -40,7 +40,7 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__INodeGuard) obfuscatingGuardFactory: TObfuscatingGuardFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
@@ -58,7 +58,7 @@ export class ObfuscatingGuardsTransformer extends AbstractNodeTransformer {
         switch (transformationStage) {
             case TransformationStage.Preparing:
                 return {
-                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         return this.transformNode(node, parentNode);
                     }
                 };

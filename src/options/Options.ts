@@ -291,7 +291,7 @@ export class Options implements IOptions {
      * @param {TInputOptions} inputOptions
      * @param {IOptionsNormalizer} optionsNormalizer
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.TInputOptions) inputOptions: TInputOptions,
         @inject(ServiceIdentifiers.IOptionsNormalizer) optionsNormalizer: IOptionsNormalizer
     ) {

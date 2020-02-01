@@ -13,7 +13,7 @@ export class BooleanLiteralObfuscatingReplacer extends AbstractObfuscatingReplac
     /**
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         super(options);

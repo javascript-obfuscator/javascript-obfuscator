@@ -14,7 +14,7 @@ class JavaScriptObfuscatorFacade {
     /**
      * @type {string | undefined}
      */
-    public static version: string = process.env.VERSION || 'unknown';
+    public static version: string = process.env.VERSION ?? 'unknown';
 
     /**
      * @param {string} sourceCode

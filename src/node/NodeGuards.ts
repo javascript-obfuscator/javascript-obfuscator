@@ -225,6 +225,7 @@ export class NodeGuards {
      * @param {Object} object
      * @returns {boolean}
      */
+    // eslint-disable-next-line @typescript-eslint/ban-types
     public static isNode (object: Object & { type?: string }): object is ESTree.Node {
         return object && !object.type !== undefined;
     }

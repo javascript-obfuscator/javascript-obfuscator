@@ -38,7 +38,7 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__IControlFlowCustomNode)
             controlFlowCustomNodeFactory: TControlFlowCustomNodeFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
@@ -68,14 +68,6 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
 
         return storageKeysById;
     }
-
-    /**
-     * @param {Node} node
-     * @param {Node} parentNode
-     * @param {TControlFlowStorage} controlFlowStorage
-     * @returns {Node}
-     */
-    public abstract replace (node: ESTree.Node, parentNode: ESTree.Node, controlFlowStorage: TControlFlowStorage): ESTree.Node;
 
     /**
      * @param {ICustomNode} customNode
@@ -120,4 +112,12 @@ export abstract class AbstractControlFlowReplacer implements IControlFlowReplace
 
         return storageKey;
     }
+
+    /**
+     * @param {Node} node
+     * @param {Node} parentNode
+     * @param {TControlFlowStorage} controlFlowStorage
+     * @returns {Node}
+     */
+    public abstract replace (node: ESTree.Node, parentNode: ESTree.Node, controlFlowStorage: TControlFlowStorage): ESTree.Node;
 }

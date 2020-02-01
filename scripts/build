@@ -2,5 +2,5 @@
 
 yarn run removeCacheDir &&
 yarn run webpack:prod &&
-yarn run tslint &&
+yarn run eslint &&
 yarn test

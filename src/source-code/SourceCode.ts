@@ -15,7 +15,7 @@ export class SourceCode implements ISourceCode {
      * @param {string} sourceCode
      * @param {string} sourceMap
      */
-    constructor (sourceCode: string, sourceMap: string) {
+    public constructor (sourceCode: string, sourceMap: string) {
         this.sourceCode = sourceCode;
         this.sourceMap = sourceMap;
     }

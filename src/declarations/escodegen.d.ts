@@ -1,4 +1,4 @@
-/* tslint:disable:interface-name */
+/* eslint-disable */
 
 import * as ESTree from 'estree';
 

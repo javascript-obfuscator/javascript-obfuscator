@@ -31,7 +31,7 @@ export const generatorsModule: interfaces.ContainerModule = new ContainerModule(
     function identifierNameGeneratorFactory (): (context: interfaces.Context) => (options: IOptions) => IIdentifierNamesGenerator {
         let cachedIdentifierNamesGenerator: IIdentifierNamesGenerator | null = null;
 
-        return (context: interfaces.Context): (options: IOptions) => IIdentifierNamesGenerator => (options: IOptions) => {
+        return (context: interfaces.Context): (options: IOptions) => IIdentifierNamesGenerator => (options: IOptions): IIdentifierNamesGenerator => {
             if (cachedIdentifierNamesGenerator) {
                 return cachedIdentifierNamesGenerator;
             }

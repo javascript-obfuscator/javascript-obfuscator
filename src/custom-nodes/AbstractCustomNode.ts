@@ -70,11 +70,6 @@ export abstract class AbstractCustomNode <
     }
 
     /**
-     * @param {TInitialData} args
-     */
-    public abstract initialize (...args: TInitialData): void;
-
-    /**
      * @returns {TStatement[]}
      */
     public getNode (): TStatement[] {
@@ -99,14 +94,19 @@ export abstract class AbstractCustomNode <
     }
 
     /**
-     * @returns {TStatement[]}
-     */
-    protected abstract getNodeStructure (nodeTemplate: string): TStatement[];
-
-    /**
      * @returns {string}
      */
     protected getNodeTemplate (): string {
         return '';
     }
+
+    /**
+     * @param {TInitialData} args
+     */
+    public abstract initialize (...args: TInitialData): void;
+
+    /**
+     * @returns {TStatement[]}
+     */
+    protected abstract getNodeStructure (nodeTemplate: string): TStatement[];
 }

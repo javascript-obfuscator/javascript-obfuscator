@@ -72,7 +72,7 @@ export class CallsGraphAnalyzer implements ICallsGraphAnalyzer {
      */
     private readonly calleeDataExtractorFactory: TCalleeDataExtractorFactory;
 
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__ICalleeDataExtractor) calleeDataExtractorFactory: TCalleeDataExtractorFactory
     ) {
         this.calleeDataExtractorFactory = calleeDataExtractorFactory;

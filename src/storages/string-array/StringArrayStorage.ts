@@ -96,7 +96,7 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
      * @param {ICryptUtils} cryptUtils
      * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.IArrayUtils) arrayUtils: IArrayUtils,

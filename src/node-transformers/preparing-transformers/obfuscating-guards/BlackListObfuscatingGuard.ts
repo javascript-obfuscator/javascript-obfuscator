@@ -22,7 +22,7 @@ export class BlackListObfuscatingGuard implements IObfuscatingGuard {
      */
     private readonly blackListGuardsLength: number;
 
-    constructor () {
+    public constructor () {
         this.blackListGuardsLength = BlackListObfuscatingGuard.blackListGuards.length;
     }
 

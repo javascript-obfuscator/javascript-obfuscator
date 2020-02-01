@@ -58,7 +58,7 @@ export class CustomNodesTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.ICallsGraphAnalyzer) callsGraphAnalyzer: ICallsGraphAnalyzer,
         @inject(ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer)
             prevailingKindOfVariablesAnalyzer: IPrevailingKindOfVariablesAnalyzer,
@@ -83,7 +83,7 @@ export class CustomNodesTransformer extends AbstractNodeTransformer {
         switch (transformationStage) {
             case TransformationStage.Preparing:
                 return {
-                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (NodeGuards.isProgramNode(node)) {
                             this.analyzeNode(node, parentNode);
                             this.appendCustomNodesBeforeObfuscation(node, parentNode);
@@ -95,7 +95,7 @@ export class CustomNodesTransformer extends AbstractNodeTransformer {
 
             case TransformationStage.Finalizing:
                 return {
-                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    leave: (node: ESTree.Node, parentNode: ESTree.Node | null): void => {
                         if (NodeGuards.isProgramNode(node)) {
                             this.appendCustomNodesAfterObfuscation(node, parentNode);
                         }

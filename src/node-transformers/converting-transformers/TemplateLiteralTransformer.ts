@@ -24,7 +24,7 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
-    constructor (
+    public constructor (
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
@@ -35,8 +35,8 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
      * @param {NodeGuards} node
      * @returns {boolean}
      */
-    private static isLiteralNodeWithStringValue (node: ESTree.Node): boolean {
-        return node && NodeGuards.isLiteralNode(node) && typeof node.value === 'string';
+    private static isLiteralNodeWithStringValue (node: ESTree.Node | undefined): boolean {
+        return !!node && NodeGuards.isLiteralNode(node) && typeof node.value === 'string';
     }
 
     /**
@@ -56,7 +56,7 @@ export class TemplateLiteralTransformer extends AbstractNodeTransformer {
         switch (transformationStage) {
             case TransformationStage.Converting:
                 return {
-                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null) => {
+                    enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (parentNode && TemplateLiteralTransformer.isValidTemplateLiteralNode(node, parentNode)) {
                             return this.transformNode(node, parentNode);
                         }

@@ -6,7 +6,7 @@ import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { ICustomNodeFormatter } from '../../../interfaces/custom-nodes/ICustomNodeFormatter';
 import { ICustomNodeGroup } from '../../../interfaces/custom-nodes/ICustomNodeGroup';
 
-import { ControlFlowCustomNode } from "../../../enums/custom-nodes/ControlFlowCustomNode";
+import { ControlFlowCustomNode } from '../../../enums/custom-nodes/ControlFlowCustomNode';
 import { CustomNode } from '../../../enums/custom-nodes/CustomNode';
 import { CustomNodeGroup } from '../../../enums/custom-nodes/CustomNodeGroup';
 import { DeadCodeInjectionCustomNode } from '../../../enums/custom-nodes/DeadCodeInjectionCustomNode';

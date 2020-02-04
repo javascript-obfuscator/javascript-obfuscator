@@ -314,28 +314,58 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
     });
 
     describe('Variant #9: object pattern as variable declarator', () => {
-        const objectPatternVariableDeclaratorRegExp: RegExp = /var \{ *bar *\} *= *\{ *'bar' *: *'foo' *\};/;
-        const variableUsageRegExp: RegExp = /console\['log'\]\(bar\);/;
+        describe('Variant #1: single level object pattern', () => {
+            const objectPatternVariableDeclaratorRegExp: RegExp = /var \{ *bar *\} *= *\{ *'bar' *: *'foo' *\};/;
+            const variableUsageRegExp: RegExp = /console\['log'\]\(bar\);/;
 
-        let obfuscatedCode: string;
+            let obfuscatedCode: string;
 
-        before(() => {
-            const code: string = readFileAsString(__dirname + '/fixtures/object-pattern.js');
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/object-pattern-1.js');
 
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET
-                }
-            ).getObfuscatedCode();
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('match #1: shouldn\'t transform object pattern variable declarator', () => {
+                assert.match(obfuscatedCode, objectPatternVariableDeclaratorRegExp);
+            });
+
+            it('match #2: shouldn\'t transform object pattern variable declarator', () => {
+                assert.match(obfuscatedCode, variableUsageRegExp);
+            });
         });
 
-        it('match #1: shouldn\'t transform object pattern variable declarator', () => {
-            assert.match(obfuscatedCode, objectPatternVariableDeclaratorRegExp);
-        });
+        describe('Variant #2: nested object pattern with property alias', () => {
+            const objectPatternVariableDeclaratorRegExp: RegExp = /var \{ *bar *: *{ *baz *: *_0x([a-f0-9]){4,6} *= *0x1 *\} *\} *= *\{ *'bar' *: *\{ *'baz' *: *0x2 *\} *\};/;
+            const variableUsageRegExp: RegExp = /console\['log'\]\(bar, *baz, *_0x([a-f0-9]){4,6}\);/;
 
-        it('match #2: shouldn\'t transform object pattern variable declarator', () => {
-            assert.match(obfuscatedCode, variableUsageRegExp);
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/object-pattern-2.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        renameGlobals: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('match #1: shouldn\'t transform object pattern variable declarator', () => {
+                assert.match(obfuscatedCode, objectPatternVariableDeclaratorRegExp);
+            });
+
+            it('match #2: shouldn\'t transform object pattern variable declarator', () => {
+                assert.match(obfuscatedCode, variableUsageRegExp);
+            });
         });
     });
 

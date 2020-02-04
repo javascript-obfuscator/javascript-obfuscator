@@ -11,16 +11,29 @@ import { JavaScriptObfuscatorCLI } from '../JavaScriptObfuscatorCLI';
 export class CLIUtils {
     /**
      * @param {string} inputPath
+     * @param {string | null} baseOutputPath
      * @returns {string}
      */
-    public static getOutputCodePath (inputPath: string): string {
-        return path
-            .normalize(inputPath)
-            .split(StringSeparator.Dot)
-            .map((value: string, index: number) => {
-                return index === 0 ? `${value}${JavaScriptObfuscatorCLI.obfuscatedFilePrefix}` : value;
-            })
-            .join(StringSeparator.Dot);
+    public static getOutputCodePath (inputPath: string, baseOutputPath?: string | null): string {
+        const normalizedBaseOutputPath: string | null = baseOutputPath
+            ? path.normalize(baseOutputPath)
+            : null;
+
+        if (!normalizedBaseOutputPath) {
+            return path
+                .normalize(inputPath)
+                .split(StringSeparator.Dot)
+                .map((value: string, index: number) => {
+                    return index === 0 ? `${value}${JavaScriptObfuscatorCLI.obfuscatedFilePrefix}` : value;
+                })
+                .join(StringSeparator.Dot);
+        }
+
+        const isDirectoryPath: boolean = path.extname(normalizedBaseOutputPath) === '';
+
+        return isDirectoryPath
+            ? path.join(normalizedBaseOutputPath, inputPath)
+            : normalizedBaseOutputPath;
     }
 
     /**

@@ -3,7 +3,6 @@ import * as path from 'path';
 import multimatch from 'multimatch';
 
 import { TInputCLIOptions } from '../../types/options/TInputCLIOptions';
-import { TSourceCodeData } from '../../types/cli/TSourceCodeData';
 
 import { IFileData } from '../../interfaces/cli/IFileData';
 
@@ -90,11 +89,11 @@ export class SourceCodeReader {
 
     /**
      * @param {string} inputPath
-     * @returns {TSourceCodeData}
+     * @returns {IFileData[]}
      */
-    public readSourceCode (inputPath: string): TSourceCodeData {
+    public readSourceCode (inputPath: string): IFileData[] {
         if (SourceCodeReader.isFilePath(inputPath) && this.isValidFile(inputPath)) {
-            return this.readFile(inputPath);
+            return [this.readFile(inputPath)];
         }
 
         if (SourceCodeReader.isDirectoryPath(inputPath) && this.isValidDirectory(inputPath)) {
@@ -111,34 +110,37 @@ export class SourceCodeReader {
 
     /**
      * @param {string} directoryPath
-     * @param {IFileData[]} fileData
+     * @param {IFileData[]} filesData
      * @returns {IFileData[]}
      */
-    private readDirectoryRecursive (directoryPath: string, fileData: IFileData[] = []): IFileData[] {
+    private readDirectoryRecursive (directoryPath: string, filesData: IFileData[] = []): IFileData[] {
         fs.readdirSync(directoryPath, JavaScriptObfuscatorCLI.encoding)
             .forEach((fileName: string) => {
                 const filePath: string = `${directoryPath}/${fileName}`;
 
                 if (SourceCodeReader.isDirectoryPath(filePath) && this.isValidDirectory(filePath)) {
-                    fileData.push(...this.readDirectoryRecursive(filePath));
+                    filesData.push(...this.readDirectoryRecursive(filePath));
                 } else if (SourceCodeReader.isFilePath(filePath) && this.isValidFile(filePath)) {
-                    const content: string = this.readFile(filePath);
+                    const fileData: IFileData = this.readFile(filePath);
 
-                    fileData.push({ filePath, content });
+                    filesData.push(fileData);
                 }
             });
 
-        return fileData;
+        return filesData;
     }
 
     /**
      * @param {string} filePath
      * @returns {string}
      */
-    private readFile (filePath: string): string {
+    private readFile (filePath: string): IFileData {
         SourceCodeReader.logFilePath(filePath);
 
-        return fs.readFileSync(filePath, JavaScriptObfuscatorCLI.encoding);
+        return {
+            filePath,
+            content: fs.readFileSync(filePath, JavaScriptObfuscatorCLI.encoding)
+        };
     }
 
     /**

@@ -23,16 +23,20 @@ describe('SourceCodeReader', () => {
             describe('Variant #1: `inputPath` is a valid path', () => {
                 const tmpFileName: string = 'test.js';
                 const inputPath: string = `${tmpDirectoryPath}/${tmpFileName}`;
+                const expectedFilesData: IFileData[] = [{
+                    content: fileContent,
+                    filePath: inputPath
+                }];
 
-                let result: string | IFileData[];
+                let filesData: IFileData[];
 
                 before(() => {
                     fs.writeFileSync(inputPath, fileContent);
-                    result = new SourceCodeReader({}).readSourceCode(inputPath);
+                    filesData = new SourceCodeReader({}).readSourceCode(inputPath);
                 });
 
-                it('should return content of file', () => {
-                    assert.equal(result, fileContent);
+                it('should return valid files data', () => {
+                    assert.deepEqual(filesData, expectedFilesData);
                 });
 
                 after(() => {
@@ -79,17 +83,22 @@ describe('SourceCodeReader', () => {
                 describe('Variant #1: `inputPath` isn\'t excluded path', () => {
                     const tmpFileName: string = 'test.js';
                     const inputPath: string = `${tmpDirectoryPath}/${tmpFileName}`;
+                    const expectedFilesData: IFileData[] = [{
+                        content: fileContent,
+                        filePath: inputPath
+                    }];
 
-                    let result: string | IFileData[];
+                    let filesData: IFileData[];
 
                     before(() => {
                         fs.writeFileSync(inputPath, fileContent);
-                        result = new SourceCodeReader({
+                        filesData = new SourceCodeReader({
                             exclude: ['**/foo.js']
-                        }).readSourceCode(inputPath);                });
+                        }).readSourceCode(inputPath);
+                    });
 
-                    it('should return content of file', () => {
-                        assert.equal(result, fileContent);
+                    it('should return valid files data', () => {
+                        assert.deepEqual(filesData, expectedFilesData);
                     });
 
                     after(() => {
@@ -189,7 +198,7 @@ describe('SourceCodeReader', () => {
                     }
                 ];
 
-                let result: string | IFileData[];
+                let result: IFileData[];
 
                 before(() => {
                     fs.writeFileSync(filePath1, fileContent);
@@ -258,7 +267,7 @@ describe('SourceCodeReader', () => {
                     }
                 ];
 
-                let result: string | IFileData[];
+                let result: IFileData[];
 
                 before(() => {
                     mkdirp.sync(parentDirectoryPath1);
@@ -306,7 +315,7 @@ describe('SourceCodeReader', () => {
                         }
                     ];
 
-                    let result: string | IFileData[];
+                    let result: IFileData[];
 
                     before(() => {
                         fs.writeFileSync(filePath1, fileContent);
@@ -352,7 +361,7 @@ describe('SourceCodeReader', () => {
                             }
                         ];
 
-                        let result: string | IFileData[];
+                        let result: IFileData[];
 
                         before(() => {
                             fs.writeFileSync(filePath1, fileContent);
@@ -400,7 +409,7 @@ describe('SourceCodeReader', () => {
                             }
                         ];
 
-                        let result: string | IFileData[];
+                        let result: IFileData[];
 
                         before(() => {
                             fs.writeFileSync(filePath1, fileContent);
@@ -448,7 +457,7 @@ describe('SourceCodeReader', () => {
                             }
                         ];
 
-                        let result: string | IFileData[];
+                        let result: IFileData[];
 
                         before(() => {
                             fs.writeFileSync(filePath1, fileContent);

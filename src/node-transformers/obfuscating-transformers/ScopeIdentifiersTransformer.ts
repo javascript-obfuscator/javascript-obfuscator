@@ -321,9 +321,17 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
      * @returns {boolean}
      */
     private isProhibitedPropertyNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
-        return NodeGuards.isPropertyNode(parentNode)
+        const isProhibitedPropertyIdentifier = NodeGuards.isPropertyNode(parentNode)
             && !parentNode.computed
             && parentNode.key === node;
+        const isProhibitedPropertyAssignmentPatternIdentifier = NodeGuards.isAssignmentPatternNode(parentNode)
+            && parentNode.left === node
+            && !!parentNode.parentNode
+            && NodeGuards.isPropertyNode(parentNode.parentNode)
+            && parentNode.left === parentNode.parentNode.key;
+
+        return isProhibitedPropertyIdentifier
+            || isProhibitedPropertyAssignmentPatternIdentifier;
     }
 
     /**

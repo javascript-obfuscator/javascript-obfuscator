@@ -426,6 +426,58 @@ describe('ScopeIdentifiersTransformer Function identifiers', () => {
                 assert.match(obfuscatedCode, objectPatternRegExp);
             });
         });
+
+        describe('Variant #6: skip rename of object pattern property identifier with default value', () => {
+            const functionParameterRegExp: RegExp = /function *\(\{ *bar *= *'' *\}\) *\{/;
+            const functionBodyRegExp: RegExp = /return *bar;/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter-6.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('match #1: shouldn\'t transform function parameter object pattern property identifier', () => {
+                assert.match(obfuscatedCode, functionParameterRegExp);
+            });
+
+            it('match #2: shouldn\'t transform function body identifier', () => {
+                assert.match(obfuscatedCode, functionBodyRegExp);
+            });
+        });
+
+        describe('Variant #7: skip rename of object pattern property identifier with default value and property alias', () => {
+            const functionParameterRegExp: RegExp = /function *\(\{ *bar *: *_0x[a-f0-9]{4,6} *= *'' *\}\) *\{/;
+            const functionBodyRegExp: RegExp = /return *bar *\+ *_0x[a-f0-9]{4,6};/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter-7.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('match #1: should correctly transform function parameter identifiers', () => {
+                assert.match(obfuscatedCode, functionParameterRegExp);
+            });
+
+            it('match #2:should correctly transform function body identifiers', () => {
+                assert.match(obfuscatedCode, functionBodyRegExp);
+            });
+        });
     });
 
     describe('assignment pattern as parameter', () => {

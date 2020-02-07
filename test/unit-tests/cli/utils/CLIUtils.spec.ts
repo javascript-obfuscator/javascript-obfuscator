@@ -5,35 +5,6 @@ import { TInputOptions } from '../../../../src/types/options/TInputOptions';
 import { CLIUtils } from '../../../../src/cli/utils/CLIUtils';
 
 describe('CLIUtils', () => {
-    describe('getOutputCodePath', () => {
-        describe('Variant #1: base input path', () => {
-            let expectedOutputPath: string = 'test/input/test-obfuscated.js',
-                inputPath: string = 'test/input/test.js';
-
-            it('should output path based on `inputPath`', () => {
-                assert.equal(CLIUtils.getOutputCodePath(inputPath), expectedOutputPath);
-            });
-        });
-
-        describe('Variant #2: relative input path with dot', () => {
-            let expectedOutputPath: string = 'input-obfuscated.js',
-                inputPath: string = './input.js';
-
-            it('should output path based on `inputPath`', () => {
-                assert.equal(CLIUtils.getOutputCodePath(inputPath), expectedOutputPath);
-            });
-        });
-    });
-
-    describe('getOutputSourceMapPath', () => {
-        let expectedOutputSourceMapPath: string = 'test/output/test.js.map',
-            outputCodePath: string = 'test/output/test.js';
-
-        it('should return output path for source map', () => {
-            assert.equal(CLIUtils.getOutputSourceMapPath(outputCodePath), expectedOutputSourceMapPath);
-        });
-    });
-
     describe('getUserConfig', () => {
         describe('Variant #1: valid config file path', () => {
             describe('Variant #1: js file with config', () => {

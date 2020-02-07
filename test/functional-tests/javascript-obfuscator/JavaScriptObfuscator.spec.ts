@@ -572,6 +572,30 @@ describe('JavaScriptObfuscator', () => {
             });
         });
 
+        /**
+         * https://github.com/estools/escodegen/pull/407
+         */
+        describe('valid exponentiation operator precedence', () => {
+            const regExp: RegExp = /var foo *= *\( *0x1 *- *0x2 *\) *\*\* *0x2;/;
+
+            let obfuscatedCode: string;
+
+            beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/exponentiation-operator-precedence.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should support exponentiation operator', () => {
+                assert.match(obfuscatedCode, regExp);
+            });
+        });
+
         describe('mangled identifier names generator', () => {
             const regExp: RegExp = /var c *= *0x1/;
 

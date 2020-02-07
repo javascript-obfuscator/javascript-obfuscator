@@ -2,6 +2,7 @@ Change Log
 
 v0.24.6
 ---
+* Fixed support of exponentiation operator. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/534
 * Added file path to the error message during directory obfuscation. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/513
 
 v0.24.5

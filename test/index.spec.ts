@@ -16,6 +16,7 @@ import './unit-tests/cli/sanitizers/ObfuscationTargetSanitizer.spec';
 import './unit-tests/cli/sanitizers/SourceMapModeSanitizer.spec';
 import './unit-tests/cli/sanitizers/StringArrayEncodingSanitizer.spec';
 import './unit-tests/cli/utils/CLIUtils.spec';
+import './unit-tests/cli/utils/ObfuscatedCodeWriter.spec';
 import './unit-tests/cli/utils/SourceCodeReader.spec';
 import './unit-tests/decorators/initializable/Initializable.spec';
 import './unit-tests/generators/identifier-names-generators/DictionarylIdentifierNamesGenerator.spec';

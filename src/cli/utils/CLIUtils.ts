@@ -1,62 +1,6 @@
-import * as fs from 'fs';
-import * as mkdirp from 'mkdirp';
-import * as path from 'path';
-
 import { TObject } from '../../types/TObject';
 
-import { StringSeparator } from '../../enums/StringSeparator';
-
-import { JavaScriptObfuscatorCLI } from '../JavaScriptObfuscatorCLI';
-
 export class CLIUtils {
-    /**
-     * @param {string} inputPath
-     * @param {string | null} baseOutputPath
-     * @returns {string}
-     */
-    public static getOutputCodePath (inputPath: string, baseOutputPath?: string | null): string {
-        const normalizedBaseOutputPath: string | null = baseOutputPath
-            ? path.normalize(baseOutputPath)
-            : null;
-
-        if (!normalizedBaseOutputPath) {
-            return path
-                .normalize(inputPath)
-                .split(StringSeparator.Dot)
-                .map((value: string, index: number) => {
-                    return index === 0 ? `${value}${JavaScriptObfuscatorCLI.obfuscatedFilePrefix}` : value;
-                })
-                .join(StringSeparator.Dot);
-        }
-
-        const isDirectoryPath: boolean = path.extname(normalizedBaseOutputPath) === '';
-
-        return isDirectoryPath
-            ? path.join(normalizedBaseOutputPath, inputPath)
-            : normalizedBaseOutputPath;
-    }
-
-    /**
-     * @param {string} outputCodePath
-     * @param {string} sourceMapFileName
-     * @returns {string}
-     */
-    public static getOutputSourceMapPath (outputCodePath: string, sourceMapFileName: string = ''): string {
-        if (sourceMapFileName) {
-            outputCodePath = `${outputCodePath.substring(
-                0, outputCodePath.lastIndexOf('/')
-            )}/${sourceMapFileName}`;
-        }
-
-        if (!/\.js\.map$/.test(outputCodePath)) {
-            outputCodePath = `${outputCodePath.split(StringSeparator.Dot)[0]}.js.map`;
-        } else if (/\.js$/.test(outputCodePath)) {
-            outputCodePath += '.map';
-        }
-
-        return outputCodePath;
-    }
-
     /**
      * @param {string} configPath
      * @returns {TObject}
@@ -75,17 +19,5 @@ export class CLIUtils {
         }
 
         return config;
-    }
-
-    /**
-     * @param {string} outputPath
-     * @param {string} data
-     */
-    public static writeFile (outputPath: string, data: string): void {
-        mkdirp.sync(path.dirname(outputPath));
-
-        fs.writeFileSync(outputPath, data, {
-            encoding: JavaScriptObfuscatorCLI.encoding
-        });
     }
 }

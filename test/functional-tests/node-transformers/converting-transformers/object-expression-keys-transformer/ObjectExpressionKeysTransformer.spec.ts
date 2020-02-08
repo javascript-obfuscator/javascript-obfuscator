@@ -1724,5 +1724,31 @@ describe('ObjectExpressionKeysTransformer', () => {
                 assert.match(obfuscatedCode,  regExp);
             });
         });
+
+        describe('Variant #9: sequence expression super call expression', () => {
+            const match: string = `` +
+                `super\\(\\), *` +
+                `this\\['state'] *= *{ *'foo': *0x1 *};` +
+            ``;
+            const regExp: RegExp = new RegExp(match);
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/sequence-expression-super-call-expression.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        transformObjectKeys: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('shouldn\'t ignore sequence expression object expression if this sequence expression contains super call expression', () => {
+                assert.match(obfuscatedCode,  regExp);
+            });
+        });
     });
 });

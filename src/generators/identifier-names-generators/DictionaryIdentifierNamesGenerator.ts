@@ -6,6 +6,7 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { AbstractIdentifierNamesGenerator } from './AbstractIdentifierNamesGenerator';
+import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 
 @injectable()
 export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesGenerator {
@@ -75,6 +76,12 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
         const iteratorResult: IteratorResult<string> = this.identifiersIterator.next();
 
         if (!iteratorResult.done) {
+            const identifierName: string =iteratorResult.value;
+
+            if (!this.isValidIdentifierName(identifierName)) {
+                return this.generate();
+            }
+
             return iteratorResult.value;
         }
 
@@ -82,6 +89,20 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
         this.identifiersIterator = this.identifierNamesSet.values();
 
         return this.generate();
+    }
+
+    /**
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     * @returns {string}
+     */
+    public generateForLexicalScope (lexicalScopeNode: TNodeWithLexicalScope): string {
+        const identifierName: string = this.generate();
+
+        if (!this.isValidIdentifierNameInLexicalScope(identifierName, lexicalScopeNode)) {
+            return this.generateForLexicalScope(lexicalScopeNode);
+        }
+
+        return identifierName;
     }
 
     /**

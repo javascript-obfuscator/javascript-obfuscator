@@ -324,7 +324,7 @@ describe('LiteralTransformer', () => {
         });
 
         describe('Variant #11: string array calls wrapper name', () => {
-            const regExp: RegExp = /console\[b\('0x0'\)]\('a'\);/;
+            const regExp: RegExp = /console\[c\('0x0'\)]\('a'\);/;
 
             let obfuscatedCode: string;
 

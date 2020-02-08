@@ -618,7 +618,8 @@ describe('JavaScriptObfuscator', () => {
         });
 
         describe('dictionary identifier names generator', () => {
-            const regExp: RegExp = /var [abc] *= *0x1; *var [ABC] *= *0x2; *var [ABC] *= *0x3;/;
+            const regExp1: RegExp = /var [abc] *= *0x1; *var [abc] *= *0x2; *var [abc] *= *0x3;/;
+            const regExp2: RegExp = /var [ABC] *= *0x4; *var [ABC] *= *0x5; *var [ABC] *= *0x6;/;
 
             let obfuscatedCode: string;
 
@@ -635,8 +636,12 @@ describe('JavaScriptObfuscator', () => {
                 ).getObfuscatedCode();
             });
 
-            it('should generate identifier based on the dictionary', () => {
-                assert.match(obfuscatedCode, regExp);
+            it('Match #1: should generate identifier based on the dictionary', () => {
+                assert.match(obfuscatedCode, regExp1);
+            });
+
+            it('Match #2: should generate identifier based on the dictionary', () => {
+                assert.match(obfuscatedCode, regExp2);
             });
         });
 
@@ -726,16 +731,20 @@ describe('JavaScriptObfuscator', () => {
             before(() => {
                 const code: string = readFileAsString(__dirname + '/fixtures/custom-nodes-identifier-names-collision.js');
 
-                obfuscateFunc = (identifierNamesGenerator: TypeFromEnum<typeof IdentifierNamesGenerator>) => JavaScriptObfuscator.obfuscate(
-                    code,
-                    {
-                        identifierNamesGenerator,
-                        compact: false,
-                        renameGlobals: true,
-                        identifiersDictionary: ['foo', 'bar', 'baz', 'bark', 'hawk', 'foozmos', 'cow', 'chikago'],
-                        stringArray: true
-                    }
-                ).getObfuscatedCode();
+                obfuscateFunc = (identifierNamesGenerator: TypeFromEnum<typeof IdentifierNamesGenerator>) => {
+                    const obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            identifierNamesGenerator,
+                            compact: false,
+                            renameGlobals: true,
+                            identifiersDictionary: ['foo', 'bar', 'baz', 'bark', 'hawk', 'foozmos', 'cow', 'chikago'],
+                            stringArray: true
+                        }
+                    ).getObfuscatedCode();
+
+                    return obfuscatedCode;
+                };
 
 
                 [

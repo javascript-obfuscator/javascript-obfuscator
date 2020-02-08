@@ -1,6 +1,8 @@
 import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 
+import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
+
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
@@ -52,6 +54,23 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      */
     public generate (nameLength?: number): string {
         const identifierName: string = this.generateNewMangledName(this.previousMangledName);
+
+        this.previousMangledName = identifierName;
+
+        return identifierName;
+    }
+
+    /**
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     * @param {number} nameLength
+     * @returns {string}
+     */
+    public generateForLexicalScope (lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string {
+        const identifierName: string = this.generateNewMangledName(this.previousMangledName);
+
+        if (!this.isValidIdentifierNameInLexicalScope(identifierName, lexicalScopeNode)) {
+            return this.generateForLexicalScope(lexicalScopeNode, nameLength);
+        }
 
         this.previousMangledName = identifierName;
 

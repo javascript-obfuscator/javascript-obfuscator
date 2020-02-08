@@ -2,6 +2,7 @@ import { inject, injectable, } from 'inversify';
 import * as ESTree from 'estree';
 
 import { TIdentifierObfuscatingReplacerFactory } from '../../types/container/node-transformers/TIdentifierObfuscatingReplacerFactory';
+import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 
 import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -20,6 +21,11 @@ import { NodeGuards } from '../../node/NodeGuards';
  */
 @injectable()
 export class VariablePreserveTransformer extends AbstractNodeTransformer {
+    /**
+     * @type {TNodeWithLexicalScope[]}
+     */
+    private readonly enteredLexicalScopesStack: TNodeWithLexicalScope[] = [];
+
     /**
      * @type {IIdentifierObfuscatingReplacer}
      */
@@ -52,17 +58,22 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
             case TransformationStage.Preparing:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
+                        if (NodeGuards.isNodeWithLexicalScope(node)) {
+                            this.addLexicalScopeToEnteredLexicalScopesStack(node);
+                        }
+
                         if (
                             NodeGuards.isIdentifierNode(node)
                             && parentNode
-                            && (
-                                NodeGuards.parentNodeIsPropertyNode(node, parentNode)
-                                || NodeGuards.parentNodeIsMemberExpressionNode(node, parentNode)
-                                || NodeGuards.parentNodeIsMethodDefinitionNode(node, parentNode)
-                                || NodeGuards.isLabelIdentifierNode(node, parentNode)
-                            )
                         ) {
+                            this.preserveIdentifierNameForLexicalScope(node);
+
                             return this.transformNode(node, parentNode);
+                        }
+                    },
+                    leave: (node: ESTree.Node): void => {
+                        if (NodeGuards.isNodeWithLexicalScope(node)) {
+                            this.removeLexicalScopeFromEnteredLexicalScopesStack(node);
                         }
                     }
                 };
@@ -73,14 +84,34 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {Identifier} node
-     * @param {NodeGuards} parentNode
-     * @returns {NodeGuards}
+     * @param {Identifier} identifierNode
+     * @param {Node} parentNode
+     * @returns {Node}
      */
-    public transformNode (node: ESTree.Identifier, parentNode: ESTree.Node): ESTree.Node {
-        this.identifierObfuscatingReplacer.preserveName(node.name);
-
-        return node;
+    public transformNode (identifierNode: ESTree.Identifier, parentNode: ESTree.Node): ESTree.Node {
+        return identifierNode;
     }
 
+    /**
+     * @param {Identifier} identifierNode
+     */
+    private preserveIdentifierNameForLexicalScope (identifierNode: ESTree.Identifier): void {
+        for (const lexicalScope of this.enteredLexicalScopesStack) {
+            this.identifierObfuscatingReplacer.preserveName(identifierNode, lexicalScope);
+        }
+    }
+
+    /**
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     */
+    private addLexicalScopeToEnteredLexicalScopesStack (lexicalScopeNode: TNodeWithLexicalScope): void {
+        this.enteredLexicalScopesStack.push(lexicalScopeNode);
+    }
+
+    /**
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     */
+    private removeLexicalScopeFromEnteredLexicalScopesStack (lexicalScopeNode: TNodeWithLexicalScope): void {
+        this.enteredLexicalScopesStack.pop();
+    }
 }

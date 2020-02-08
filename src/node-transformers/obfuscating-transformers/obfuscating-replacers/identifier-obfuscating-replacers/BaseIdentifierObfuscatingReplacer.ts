@@ -97,7 +97,7 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
             return;
         }
 
-        const newIdentifierName: string = this.identifierNamesGenerator.generate();
+        const newIdentifierName: string = this.identifierNamesGenerator.generateForLexicalScope(lexicalScopeNode);
 
         if (!this.blockScopesMap.has(lexicalScopeNode)) {
             this.blockScopesMap.set(lexicalScopeNode, new Map());
@@ -109,12 +109,13 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
     }
 
     /**
-     * Preserve `name` to protect it from further using.
+     * Preserve `name` to protect it from further using
      *
-     * @param {string} name
+     * @param {Identifier} identifierNode
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    public preserveName (name: string): void {
-        this.identifierNamesGenerator.preserveName(name);
+    public preserveName (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void {
+        this.identifierNamesGenerator.preserveName(identifierNode.name, lexicalScopeNode);
     }
 
     /**

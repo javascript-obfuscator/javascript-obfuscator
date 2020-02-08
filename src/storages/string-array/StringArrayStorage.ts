@@ -13,8 +13,6 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 import { IStringArrayStorage } from '../../interfaces/storages/string-array-storage/IStringArrayStorage';
 import { IStringArrayStorageItemData } from '../../interfaces/storages/string-array-storage/IStringArrayStorageItem';
 
-import { initializable } from '../../decorators/Initializable';
-
 import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
 
 import { MapStorage } from '../MapStorage';
@@ -84,13 +82,11 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
     /**
      * @type {string}
      */
-    @initializable()
     private stringArrayStorageName!: string;
 
     /**
      * @type {string}
      */
-    @initializable()
     private stringArrayStorageCallsWrapperName!: string;
 
     /**
@@ -130,14 +126,6 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
     public initialize (): void {
         super.initialize();
 
-        const baseStringArrayName: string = this.identifierNamesGenerator
-            .generate(StringArrayStorage.stringArrayNameLength);
-        const baseStringArrayCallsWrapperName: string = this.identifierNamesGenerator
-            .generate(StringArrayStorage.stringArrayNameLength);
-
-        this.stringArrayStorageName = `${this.options.identifiersPrefix}${baseStringArrayName}`;
-        this.stringArrayStorageCallsWrapperName = `${this.options.identifiersPrefix}${baseStringArrayCallsWrapperName}`;
-
         this.rotationAmount = this.options.rotateStringArray
             ? this.randomGenerator.getRandomInteger(
                 StringArrayStorage.minimumRotationAmount,
@@ -165,6 +153,13 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
      * @returns {string}
      */
     public getStorageId (): string {
+        if (!this.stringArrayStorageName) {
+            const baseStringArrayName: string = this.identifierNamesGenerator
+                .generate(StringArrayStorage.stringArrayNameLength);
+
+            this.stringArrayStorageName = `${this.options.identifiersPrefix}${baseStringArrayName}`;
+        }
+
         return this.stringArrayStorageName;
     }
 
@@ -179,6 +174,13 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
      * @returns {string}
      */
     public getStorageCallsWrapperName (): string {
+        if (!this.stringArrayStorageCallsWrapperName) {
+            const baseStringArrayCallsWrapperName: string = this.identifierNamesGenerator
+                .generate(StringArrayStorage.stringArrayNameLength);
+
+            this.stringArrayStorageCallsWrapperName = `${this.options.identifiersPrefix}${baseStringArrayCallsWrapperName}`;
+        }
+
         return this.stringArrayStorageCallsWrapperName;
     }
 

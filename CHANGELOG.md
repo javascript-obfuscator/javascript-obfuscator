@@ -1,5 +1,10 @@
 Change Log
 
+v0.25.0
+---
+* Fixed conflicts between generated names and names from untouched identifiers from source code. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/550. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/549
+
+
 v0.24.6
 ---
 * Fixed support of exponentiation operator. Fixed https://github.com/javascript-obfuscator/javascript-obfuscator/issues/534

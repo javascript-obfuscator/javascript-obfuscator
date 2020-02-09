@@ -7,15 +7,19 @@ import { NO_ADDITIONAL_NODES_PRESET } from '../../src/options/presets/NoCustomNo
 
     let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
         `
-            const ab = 'abc';
+            function foo () {
+                const testA = 'abc';
+                const testB = 'abc';
+                const testC = 'abc';
+                const testD = 'abc';
+            }
         `,
         {
             ...NO_ADDITIONAL_NODES_PRESET,
             compact: false,
             identifierNamesGenerator: 'dictionary',
-            identifiersDictionary: ['a', 'b'],
+            identifiersDictionary: ['a', 'b', 'aa'],
             identifiersPrefix: 'a',
-            transformObjectKeys: true,
             stringArray: true,
             stringArrayThreshold: 1
         }

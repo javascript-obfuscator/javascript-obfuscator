@@ -101,6 +101,18 @@ export abstract class AbstractCustomNode <
     }
 
     /**
+     * @param {string[]} additionalNames
+     * @returns {string[]}
+     */
+    protected getPreservedNames (additionalNames: string[]): string[] {
+        return Array.from(new Set([
+            ...Array.from(this.identifierNamesGenerator.getPreservedNames().values()),
+            ...additionalNames
+        ]).values())
+        .map((preservedName: string) => `^${preservedName}$`);
+    }
+
+    /**
      * @param {TInitialData} args
      */
     public abstract initialize (...args: TInitialData): void;

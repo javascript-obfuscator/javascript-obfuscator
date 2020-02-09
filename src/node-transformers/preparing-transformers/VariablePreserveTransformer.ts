@@ -66,7 +66,13 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
                             NodeGuards.isIdentifierNode(node)
                             && parentNode
                         ) {
-                            this.preserveIdentifierNameForLexicalScope(node);
+                            const isOnTheRootLexicalScope: boolean = this.enteredLexicalScopesStack.length === 1;
+
+                            if (isOnTheRootLexicalScope) {
+                                this.preserveIdentifierNameForRootLexicalScope(node, parentNode);
+                            } else {
+                                this.preserveIdentifierNameForLexicalScope(node, parentNode);
+                            }
 
                             return this.transformNode(node, parentNode);
                         }
@@ -94,10 +100,34 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
 
     /**
      * @param {Identifier} identifierNode
+     * @param {Node} parentNode
      */
-    private preserveIdentifierNameForLexicalScope (identifierNode: ESTree.Identifier): void {
+    private preserveIdentifierNameForRootLexicalScope (
+        identifierNode: ESTree.Identifier,
+        parentNode: ESTree.Node
+    ): void {
+        this.identifierObfuscatingReplacer.preserveName(identifierNode);
+    }
+
+    /**
+     * @param {Identifier} identifierNode
+     * @param {Node} parentNode
+     */
+    private preserveIdentifierNameForLexicalScope (
+        identifierNode: ESTree.Identifier,
+        parentNode: ESTree.Node
+    ): void {
+        if (
+            !NodeGuards.parentNodeIsPropertyNode(identifierNode, parentNode)
+            && !NodeGuards.parentNodeIsMemberExpressionNode(identifierNode, parentNode)
+            && !NodeGuards.parentNodeIsMethodDefinitionNode(identifierNode, parentNode)
+            && !NodeGuards.isLabelIdentifierNode(identifierNode, parentNode)
+        ) {
+            return;
+        }
+
         for (const lexicalScope of this.enteredLexicalScopesStack) {
-            this.identifierObfuscatingReplacer.preserveName(identifierNode, lexicalScope);
+            this.identifierObfuscatingReplacer.preserveNameForLexicalScope(identifierNode, lexicalScope);
         }
     }
 

@@ -112,10 +112,19 @@ export class BaseIdentifierObfuscatingReplacer extends AbstractObfuscatingReplac
      * Preserve `name` to protect it from further using
      *
      * @param {Identifier} identifierNode
+     */
+    public preserveName (identifierNode: ESTree.Identifier): void {
+        this.identifierNamesGenerator.preserveName(identifierNode.name);
+    }
+
+    /**
+     * Preserve `name` to protect it from further using
+     *
+     * @param {Identifier} identifierNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    public preserveName (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void {
-        this.identifierNamesGenerator.preserveName(identifierNode.name, lexicalScopeNode);
+    public preserveNameForLexicalScope (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void {
+        this.identifierNamesGenerator.preserveNameForLexicalScope(identifierNode.name, lexicalScopeNode);
     }
 
     /**

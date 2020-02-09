@@ -22,6 +22,11 @@ export interface IIdentifierNamesGenerator {
     generateWithPrefix (nameLength?: number): string;
 
     /**
+     * @returns {Set<string>}
+     */
+    getPreservedNames (): Set<string>;
+
+    /**
      * @param {string} identifierName
      * @returns {boolean}
      */
@@ -36,7 +41,12 @@ export interface IIdentifierNamesGenerator {
 
     /**
      * @param {string} identifierName
+     */
+    preserveName (identifierName: string): void;
+
+    /**
+     * @param {string} identifierName
      * @param {TNodeWithLexicalScope} lexicalScope
      */
-    preserveName (identifierName: string, lexicalScope: TNodeWithLexicalScope): void;
+    preserveNameForLexicalScope (identifierName: string, lexicalScope: TNodeWithLexicalScope): void;
 }

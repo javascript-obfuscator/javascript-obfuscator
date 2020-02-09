@@ -19,7 +19,12 @@ export interface IIdentifierObfuscatingReplacer extends IObfuscatingReplacer <ES
 
     /**
      * @param {Identifier} identifierNode
+     */
+    preserveName (identifierNode: ESTree.Identifier): void;
+
+    /**
+     * @param {Identifier} identifierNode
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    preserveName (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void;
+    preserveNameForLexicalScope (identifierNode: ESTree.Identifier, lexicalScopeNode: TNodeWithLexicalScope): void;
 }

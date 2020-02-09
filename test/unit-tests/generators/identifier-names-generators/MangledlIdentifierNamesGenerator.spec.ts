@@ -146,7 +146,7 @@ describe('MangledIdentifierNamesGenerator', () => {
         });
 
         describe('Variant #1: initial mangled name', () => {
-            const expectedMangledIdentifierName: string = 'foo_a';
+            const expectedMangledIdentifierName: string = 'fooa';
 
             beforeEach(() => {
                 mangledIdentifierName = identifierNamesGenerator.generateWithPrefix();
@@ -158,7 +158,7 @@ describe('MangledIdentifierNamesGenerator', () => {
         });
 
         describe('Variant #2: second mangled name', () => {
-            const expectedMangledIdentifierName: string = 'foo_b';
+            const expectedMangledIdentifierName: string = 'foob';
 
             beforeEach(() => {
                 mangledIdentifierName = identifierNamesGenerator.generateWithPrefix();

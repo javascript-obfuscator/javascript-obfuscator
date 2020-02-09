@@ -93,6 +93,8 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
     protected getNodeTemplate (): string {
         const decodeNodeTemplate: string = this.getDecodeStringArrayTemplate();
 
+        const preservedNames: string[] = this.getPreservedNames([this.stringArrayName]);
+
         return JavaScriptObfuscator.obfuscate(
             this.customNodeFormatter.formatTemplate(StringArrayCallsWrapperTemplate(), {
                 decodeNodeTemplate,
@@ -103,6 +105,9 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
                 ...NO_ADDITIONAL_NODES_PRESET,
                 identifierNamesGenerator: this.options.identifierNamesGenerator,
                 identifiersDictionary: this.options.identifiersDictionary,
+                reservedNames: [
+                    ...preservedNames
+                ],
                 seed: this.randomGenerator.getRawSeed()
             }
         ).getObfuscatedCode();
@@ -139,8 +144,8 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
                     StringArrayRc4DecodeNodeTemplate(this.randomGenerator),
                     {
                         atobPolyfill,
-                        rc4Polyfill: Rc4Template(),
                         selfDefendingCode,
+                        rc4Polyfill: Rc4Template(),
                         stringArrayCallsWrapperName: this.stringArrayCallsWrapperName
                     }
                 );

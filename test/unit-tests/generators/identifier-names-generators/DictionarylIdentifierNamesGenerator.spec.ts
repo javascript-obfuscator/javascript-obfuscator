@@ -148,7 +148,7 @@ describe('DictionaryIdentifierNamesGenerator', () => {
             });
 
             describe('Variant #1: Should generate identifier names with prefix', () => {
-                const expectedDictionaryIdentifierNameRegExp: RegExp = /foo_[a|A]/;
+                const expectedDictionaryIdentifierNameRegExp: RegExp = /foo[a|A]/;
 
                 beforeEach(() => {
                     dictionaryIdentifierName = identifierNamesGenerator.generateWithPrefix();

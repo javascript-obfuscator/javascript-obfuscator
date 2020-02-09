@@ -110,11 +110,14 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
      */
     public generateWithPrefix (): string {
         const prefix: string = this.options.identifiersPrefix ?
-            `${this.options.identifiersPrefix}_`
+            `${this.options.identifiersPrefix}`
             : '';
         const identifierName: string = this.generate();
+        const identifierNameWithPrefix: string = `${prefix}${identifierName}`;
 
-        return `${prefix}${identifierName}`.replace('__', '_');
+        this.preserveName(identifierNameWithPrefix);
+
+        return identifierNameWithPrefix;
     }
 
     /**

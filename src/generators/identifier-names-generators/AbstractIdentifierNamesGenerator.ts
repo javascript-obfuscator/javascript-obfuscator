@@ -42,10 +42,24 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     }
 
     /**
+     * @returns {Set<string>}
+     */
+    public getPreservedNames (): Set<string> {
+        return this.preservedNamesSet;
+    }
+
+    /**
+     * @param {string} name
+     */
+    public preserveName (name: string): void {
+        this.preservedNamesSet.add(name);
+    }
+
+    /**
      * @param {string} name
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
-    public preserveName (name: string, lexicalScopeNode: TNodeWithLexicalScope): void {
+    public preserveNameForLexicalScope (name: string, lexicalScopeNode: TNodeWithLexicalScope): void {
         this.preservedNamesSet.add(name);
 
         const preservedNamesForLexicalScopeSet: Set<string> =

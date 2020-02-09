@@ -58,6 +58,8 @@ import './functional-tests/custom-nodes/domain-lock-nodes/DomainLockNode.spec';
 import './functional-tests/custom-nodes/string-array-nodes/StringArrayCallsWrapper.spec';
 import './functional-tests/custom-nodes/string-array-nodes/StringArrayRotateFunctionNode.spec';
 import './functional-tests/custom-nodes/string-array-nodes/StringArrayNode.spec';
+import './functional-tests/generators/identifier-names-generators/dictionary-identifier-names-generator/DictionaryIdentifierNamesGenerator.spec';
+import './functional-tests/generators/identifier-names-generators/mangled-identifier-names-generator/MangledIdentifierNamesGenerator.spec';
 import './functional-tests/issues/issue321.spec';
 import './functional-tests/issues/issue355.spec';
 import './functional-tests/issues/issue419.spec';

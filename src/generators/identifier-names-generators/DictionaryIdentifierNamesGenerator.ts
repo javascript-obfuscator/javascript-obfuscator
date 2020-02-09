@@ -115,6 +115,10 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
         const identifierName: string = this.generate();
         const identifierNameWithPrefix: string = `${prefix}${identifierName}`;
 
+        if (!this.isValidIdentifierName(identifierNameWithPrefix)) {
+            return this.generateWithPrefix();
+        }
+
         this.preserveName(identifierNameWithPrefix);
 
         return identifierNameWithPrefix;

@@ -88,6 +88,10 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         const identifierName: string = this.generate(nameLength);
         const identifierNameWithPrefix: string = `${prefix}${identifierName}`;
 
+        if (!this.isValidIdentifierName(identifierNameWithPrefix)) {
+            return this.generateWithPrefix(nameLength);
+        }
+
         this.preserveName(identifierNameWithPrefix);
 
         return identifierNameWithPrefix;

@@ -311,40 +311,6 @@ export class NodeGuards {
 
     /**
      * @param {Node} node
-     * @param {Node} parentNode
-     * @returns {boolean}
-     */
-    public static parentNodeIsPropertyNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
-        return NodeGuards.isPropertyNode(parentNode)
-            && !parentNode.computed
-            && parentNode.key === node;
-    }
-
-    /**
-     * @param {Node} node
-     * @param {Node} parentNode
-     * @returns {boolean}
-     */
-    public static parentNodeIsMemberExpressionNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
-        return (
-            NodeGuards.isMemberExpressionNode(parentNode)
-            && !parentNode.computed
-            && parentNode.property === node
-        );
-    }
-
-    /**
-     * @param {Node} node
-     * @param {Node} parentNode
-     * @returns {boolean}
-     */
-    public static parentNodeIsMethodDefinitionNode (node: ESTree.Node, parentNode: ESTree.Node): node is ESTree.Identifier {
-        return NodeGuards.isMethodDefinitionNode(parentNode)
-            && !parentNode.computed;
-    }
-
-    /**
-     * @param {Node} node
      * @returns {boolean}
      */
     public static isRestElementNode (node: ESTree.Node): node is ESTree.RestElement {

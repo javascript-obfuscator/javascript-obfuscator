@@ -7,6 +7,7 @@ import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { AbstractIdentifierNamesGenerator } from './AbstractIdentifierNamesGenerator';
+import { NodeLexicalScopeUtils } from '../../node/NodeLexicalScopeUtils';
 
 @injectable()
 export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGenerator {
@@ -14,6 +15,11 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @type {string}
      */
     private static readonly initMangledNameCharacter: string = '9';
+
+    /**
+     * @type {Map<TNodeWithLexicalScope, string>}
+     */
+    private static readonly lastMangledNameInScopeMap: Map <TNodeWithLexicalScope, string> = new Map();
 
     /**
      * @type {string[]}
@@ -56,6 +62,7 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         const identifierName: string = this.generateNewMangledName(this.previousMangledName);
 
         this.previousMangledName = identifierName;
+        this.preserveName(identifierName);
 
         return identifierName;
     }
@@ -66,13 +73,22 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
      * @returns {string}
      */
     public generateForLexicalScope (lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string {
-        const identifierName: string = this.generateNewMangledName(this.previousMangledName);
+        const lexicalScopes: TNodeWithLexicalScope[] = [
+            lexicalScopeNode,
+            ...NodeLexicalScopeUtils.getLexicalScopes(lexicalScopeNode)
+        ];
 
-        if (!this.isValidIdentifierNameInLexicalScope(identifierName, lexicalScopeNode)) {
-            return this.generateForLexicalScope(lexicalScopeNode, nameLength);
-        }
+        const lastMangledNameForScope: string = this.getLastMangledNameForScopes(lexicalScopes);
 
-        this.previousMangledName = identifierName;
+        let identifierName: string = lastMangledNameForScope;
+
+        do {
+            identifierName = this.generateNewMangledName(identifierName);
+        } while (!this.isValidIdentifierNameInLexicalScopes(identifierName, lexicalScopes));
+
+        MangledIdentifierNamesGenerator.lastMangledNameInScopeMap.set(lexicalScopeNode, identifierName);
+
+        this.preserveNameForLexicalScope(identifierName, lexicalScopeNode);
 
         return identifierName;
     }
@@ -85,8 +101,10 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         const prefix: string = this.options.identifiersPrefix ?
             `${this.options.identifiersPrefix}`
             : '';
-        const identifierName: string = this.generate(nameLength);
+        const identifierName: string = this.generateNewMangledName(this.previousMangledName);
         const identifierNameWithPrefix: string = `${prefix}${identifierName}`;
+
+        this.previousMangledName = identifierName;
 
         if (!this.isValidIdentifierName(identifierNameWithPrefix)) {
             return this.generateWithPrefix(nameLength);
@@ -149,5 +167,24 @@ export class MangledIdentifierNamesGenerator extends AbstractIdentifierNamesGene
         }
 
         return newMangledName;
+    }
+
+    /**
+     * @param {TNodeWithLexicalScope[]} lexicalScopeNodes
+     * @returns {string}
+     */
+    private getLastMangledNameForScopes (lexicalScopeNodes: TNodeWithLexicalScope[]): string {
+        for (const lexicalScope of lexicalScopeNodes) {
+            const lastMangledName: string | null = MangledIdentifierNamesGenerator.lastMangledNameInScopeMap
+                .get(lexicalScope) ?? null;
+
+            if (!lastMangledName) {
+                continue;
+            }
+
+            return lastMangledName;
+        }
+
+        return MangledIdentifierNamesGenerator.initMangledNameCharacter;
     }
 }

@@ -4,6 +4,7 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import * as ESTree from 'estree';
 
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
+import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 import { TStatement } from '../../types/node/TStatement';
 
 import { IOptions } from '../../interfaces/options/IOptions';
@@ -15,6 +16,10 @@ import { NodeFactory } from '../../node/NodeFactory';
 
 @injectable()
 export class ObjectExpressionVariableDeclarationHostNode extends AbstractCustomNode {
+    /**
+     * @type {TNodeWithLexicalScope}
+     */
+    private lexicalScopeNode!: TNodeWithLexicalScope;
     /**
      * @ type {Property}
      */
@@ -36,7 +41,8 @@ export class ObjectExpressionVariableDeclarationHostNode extends AbstractCustomN
         super(identifierNamesGeneratorFactory, customNodeFormatter, randomGenerator, options);
     }
 
-    public initialize (properties: ESTree.Property[]): void {
+    public initialize (lexicalScopeNode: TNodeWithLexicalScope, properties: ESTree.Property[]): void {
+        this.lexicalScopeNode = lexicalScopeNode;
         this.properties = properties;
     }
 
@@ -49,7 +55,7 @@ export class ObjectExpressionVariableDeclarationHostNode extends AbstractCustomN
             [
                 NodeFactory.variableDeclaratorNode(
                     NodeFactory.identifierNode(
-                        this.identifierNamesGenerator.generate()
+                        this.identifierNamesGenerator.generateForLexicalScope(this.lexicalScopeNode)
                     ),
                     NodeFactory.objectExpressionNode(this.properties)
                 )

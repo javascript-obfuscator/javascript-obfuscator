@@ -2,6 +2,7 @@ import { inject, injectable } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
 import { TIdentifierNamesGeneratorFactory } from '../types/container/generators/TIdentifierNamesGeneratorFactory';
+import { TInputOptions } from '../types/options/TInputOptions';
 import { TStatement } from '../types/node/TStatement';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
@@ -12,6 +13,10 @@ import { ICustomNodeFormatter } from '../interfaces/custom-nodes/ICustomNodeForm
 
 import { GlobalVariableTemplate1 } from '../templates/GlobalVariableTemplate1';
 import { GlobalVariableTemplate2 } from '../templates/GlobalVariableTemplate2';
+
+import { NO_ADDITIONAL_NODES_PRESET } from '../options/presets/NoCustomNodes';
+
+import { JavaScriptObfuscator } from '../JavaScriptObfuscatorFacade';
 
 @injectable()
 export abstract class AbstractCustomNode <
@@ -101,15 +106,38 @@ export abstract class AbstractCustomNode <
     }
 
     /**
+     * @param {string} template
+     * @param {TInputOptions} options
+     * @returns {string}
+     */
+    protected obfuscateTemplate (template: string, options: TInputOptions = {}): string {
+        const reservedNames: string[] = this.getPreservedNames(options.reservedNames);
+
+        return JavaScriptObfuscator.obfuscate(
+            template,
+            {
+                ...NO_ADDITIONAL_NODES_PRESET,
+                identifierNamesGenerator: this.options.identifierNamesGenerator,
+                identifiersDictionary: this.options.identifiersDictionary,
+                seed: this.randomGenerator.getRawSeed(),
+                ...options,
+                reservedNames
+            }
+        ).getObfuscatedCode();
+    }
+
+    /**
      * @param {string[]} additionalNames
      * @returns {string[]}
      */
-    protected getPreservedNames (additionalNames: string[]): string[] {
-        return Array.from(new Set([
-            ...Array.from(this.identifierNamesGenerator.getPreservedNames().values()),
-            ...additionalNames
-        ]).values())
-        .map((preservedName: string) => `^${preservedName}$`);
+    private getPreservedNames (additionalNames: string[] = []): string[] {
+        return Array
+            .from(new Set([
+                ...Array.from(this.identifierNamesGenerator.getPreservedNames().values()),
+                ...additionalNames
+            ])
+            .values())
+            .map((preservedName: string) => `^${preservedName}$`);
     }
 
     /**

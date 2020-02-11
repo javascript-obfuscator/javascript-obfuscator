@@ -11,13 +11,10 @@ import { ICustomNodeFormatter } from '../../interfaces/custom-nodes/ICustomNodeF
 
 import { initializable } from '../../decorators/Initializable';
 
-import { NO_ADDITIONAL_NODES_PRESET } from '../../options/presets/NoCustomNodes';
-
 import { SelfDefendingTemplate } from '../../templates/string-array-nodes/string-array-rotate-function-node/SelfDefendingTemplate';
 import { StringArrayRotateFunctionTemplate } from '../../templates/string-array-nodes/string-array-rotate-function-node/StringArrayRotateFunctionTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { JavaScriptObfuscator } from '../../JavaScriptObfuscatorFacade';
 import { NodeUtils } from '../../node/NodeUtils';
 import { NumberUtils } from '../../utils/NumberUtils';
 
@@ -86,6 +83,7 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
     protected getNodeTemplate (): string {
         const timesName: string = this.identifierNamesGenerator.generate();
         const whileFunctionName: string = this.identifierNamesGenerator.generate();
+        const preservedNames: string[] = [this.stringArrayName];
 
         let code: string = '';
 
@@ -98,20 +96,17 @@ export class StringArrayRotateFunctionNode extends AbstractCustomNode {
             code = `${whileFunctionName}(++${timesName})`;
         }
 
-        return JavaScriptObfuscator.obfuscate(
+        return this.obfuscateTemplate(
             this.customNodeFormatter.formatTemplate(StringArrayRotateFunctionTemplate(), {
                 code,
                 timesName,
+                whileFunctionName,
                 stringArrayName: this.stringArrayName,
-                stringArrayRotationAmount: NumberUtils.toHex(this.stringArrayRotationAmount),
-                whileFunctionName
+                stringArrayRotationAmount: NumberUtils.toHex(this.stringArrayRotationAmount)
             }),
             {
-                ...NO_ADDITIONAL_NODES_PRESET,
-                identifierNamesGenerator: this.options.identifierNamesGenerator,
-                identifiersDictionary: this.options.identifiersDictionary,
-                seed: this.randomGenerator.getRawSeed()
+                reservedNames: preservedNames
             }
-        ).getObfuscatedCode();
+        );
     }
 }

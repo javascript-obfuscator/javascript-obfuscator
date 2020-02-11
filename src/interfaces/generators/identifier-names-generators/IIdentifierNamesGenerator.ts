@@ -34,10 +34,10 @@ export interface IIdentifierNamesGenerator {
 
     /**
      * @param {string} identifierName
-     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     * @param {TNodeWithLexicalScope[]} lexicalScopeNodes
      * @returns {boolean}
      */
-    isValidIdentifierNameInLexicalScope (identifierName: string, lexicalScopeNode: TNodeWithLexicalScope): boolean;
+    isValidIdentifierNameInLexicalScopes (identifierName: string, lexicalScopeNodes: TNodeWithLexicalScope[]): boolean;
 
     /**
      * @param {string} identifierName

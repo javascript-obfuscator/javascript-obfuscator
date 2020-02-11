@@ -11,12 +11,9 @@ import { ICustomNodeFormatter } from '../../interfaces/custom-nodes/ICustomNodeF
 
 import { initializable } from '../../decorators/Initializable';
 
-import { NO_ADDITIONAL_NODES_PRESET } from '../../options/presets/NoCustomNodes';
-
 import { SelfDefendingTemplate } from '../../templates/self-defending-nodes/self-defending-unicode-node/SelfDefendingTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { JavaScriptObfuscator } from '../../JavaScriptObfuscatorFacade';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
@@ -71,18 +68,14 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
      * @returns {string}
      */
     protected getNodeTemplate (): string {
-        return JavaScriptObfuscator.obfuscate(
+        return this.obfuscateTemplate(
             this.customNodeFormatter.formatTemplate(SelfDefendingTemplate(this.escapeSequenceEncoder), {
                 selfDefendingFunctionName: this.identifierNamesGenerator.generate(),
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
             }),
             {
-                ...NO_ADDITIONAL_NODES_PRESET,
-                identifierNamesGenerator: this.options.identifierNamesGenerator,
-                identifiersDictionary: this.options.identifiersDictionary,
-                seed: this.options.seed,
                 unicodeEscapeSequence: true
             }
-        ).getObfuscatedCode();
+        );
     }
 }

@@ -117,15 +117,6 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
         identifierNode: ESTree.Identifier,
         parentNode: ESTree.Node
     ): void {
-        if (
-            !NodeGuards.parentNodeIsPropertyNode(identifierNode, parentNode)
-            && !NodeGuards.parentNodeIsMemberExpressionNode(identifierNode, parentNode)
-            && !NodeGuards.parentNodeIsMethodDefinitionNode(identifierNode, parentNode)
-            && !NodeGuards.isLabelIdentifierNode(identifierNode, parentNode)
-        ) {
-            return;
-        }
-
         for (const lexicalScope of this.enteredLexicalScopesStack) {
             this.identifierObfuscatingReplacer.preserveNameForLexicalScope(identifierNode, lexicalScope);
         }

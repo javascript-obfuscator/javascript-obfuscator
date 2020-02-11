@@ -14,8 +14,6 @@ import { StringArrayEncoding } from '../../enums/StringArrayEncoding';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { NO_ADDITIONAL_NODES_PRESET } from '../../options/presets/NoCustomNodes';
-
 import { AtobTemplate } from '../../templates/AtobTemplate';
 import { GlobalVariableNoEvalTemplate } from '../../templates/GlobalVariableNoEvalTemplate';
 import { Rc4Template } from '../../templates/Rc4Template';
@@ -25,7 +23,6 @@ import { StringArrayCallsWrapperTemplate } from '../../templates/string-array-no
 import { StringArrayRc4DecodeNodeTemplate } from '../../templates/string-array-nodes/string-array-calls-wrapper/StringArrayRC4DecodeNodeTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { JavaScriptObfuscator } from '../../JavaScriptObfuscatorFacade';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
@@ -93,24 +90,18 @@ export class StringArrayCallsWrapper extends AbstractCustomNode {
     protected getNodeTemplate (): string {
         const decodeNodeTemplate: string = this.getDecodeStringArrayTemplate();
 
-        const preservedNames: string[] = this.getPreservedNames([this.stringArrayName]);
+        const preservedNames: string[] = [this.stringArrayName];
 
-        return JavaScriptObfuscator.obfuscate(
+        return this.obfuscateTemplate(
             this.customNodeFormatter.formatTemplate(StringArrayCallsWrapperTemplate(), {
                 decodeNodeTemplate,
                 stringArrayCallsWrapperName: this.stringArrayCallsWrapperName,
                 stringArrayName: this.stringArrayName
             }),
             {
-                ...NO_ADDITIONAL_NODES_PRESET,
-                identifierNamesGenerator: this.options.identifierNamesGenerator,
-                identifiersDictionary: this.options.identifiersDictionary,
-                reservedNames: [
-                    ...preservedNames
-                ],
-                seed: this.randomGenerator.getRawSeed()
+                reservedNames: preservedNames
             }
-        ).getObfuscatedCode();
+        );
     }
 
     /**

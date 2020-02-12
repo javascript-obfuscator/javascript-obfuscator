@@ -39,6 +39,7 @@ export enum ServiceIdentifiers {
     IPrevailingKindOfVariablesAnalyzer = 'IPrevailingKindOfVariablesAnalyzer',
     IObjectExpressionExtractor = 'IObjectExpressionExtractor',
     IRandomGenerator = 'IRandomGenerator',
+    IScopeIdentifiersTraverser = 'IScopeIdentifiersTraverser',
     ISourceCode = 'ISourceCode',
     ISourceMapCorrector = 'ISourceMapCorrector',
     IScopeAnalyzer = 'IScopeAnalyzer',

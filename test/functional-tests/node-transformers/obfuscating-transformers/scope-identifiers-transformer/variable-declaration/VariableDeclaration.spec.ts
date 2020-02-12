@@ -456,11 +456,11 @@ describe('ScopeIdentifiersTransformer VariableDeclaration identifiers', () => {
 
     describe('Variant #13: preserved identifier names shouldn\'t be used as identifier names', () => {
         describe('Variant #1', () => {
-            const variableDeclarationRegExp: RegExp = /var f *= *0x1;/;
-            const functionDeclarationRegExp1: RegExp = /function *g *\(\) *{}/;
-            const functionDeclarationRegExp2: RegExp = /function *h *\(\) *{}/;
-            const functionDeclarationRegExp3: RegExp = /function *i *\(\) *{}/;
-            const functionDeclarationRegExp4: RegExp = /function *j *\(\) *{}/;
+            const variableDeclarationRegExp: RegExp = /var e *= *0x1;/;
+            const functionDeclarationRegExp1: RegExp = /function *f *\(\) *{}/;
+            const functionDeclarationRegExp2: RegExp = /function *g *\(\) *{}/;
+            const functionDeclarationRegExp3: RegExp = /function *h *\(\) *{}/;
+            const functionDeclarationRegExp4: RegExp = /function *i *\(\) *{}/;
 
             let obfuscatedCode: string;
 

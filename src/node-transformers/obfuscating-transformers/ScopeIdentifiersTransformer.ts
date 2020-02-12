@@ -11,7 +11,8 @@ import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
 import { IIdentifierObfuscatingReplacer } from '../../interfaces/node-transformers/obfuscating-transformers/obfuscating-replacers/IIdentifierObfuscatingReplacer';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { IScopeAnalyzer } from '../../interfaces/analyzers/scope-analyzer/IScopeAnalyzer';
+import { IScopeIdentifiersTraverser } from '../../interfaces/node/IScopeIdentifiersTraverser';
+import { IScopeIdentifiersTraverserCallbackData } from '../../interfaces/node/IScopeIdentifiersTraverserCallbackData';
 import { IVisitor } from '../../interfaces/node-transformers/IVisitor';
 
 import { IdentifierObfuscatingReplacer } from '../../enums/node-transformers/obfuscating-transformers/obfuscating-replacers/IdentifierObfuscatingReplacer';
@@ -27,19 +28,6 @@ import { NodeMetadata } from '../../node/NodeMetadata';
 @injectable()
 export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
     /**
-     * @type {string}
-     */
-    private static readonly argumentsVariableName: string = 'arguments';
-
-    /**
-     * @type {string[]}
-     */
-    private static readonly globalScopeNames: string[] = [
-        'global',
-        'module'
-    ];
-
-    /**
      * @type {IIdentifierObfuscatingReplacer}
      */
     private readonly identifierObfuscatingReplacer: IIdentifierObfuscatingReplacer;
@@ -50,29 +38,29 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
     private readonly lexicalScopesWithObjectPatternWithoutDeclarationMap: Map<TNodeWithLexicalScope, boolean> = new Map();
 
     /**
-     * @type {IScopeAnalyzer}
+     * @type {IScopeIdentifiersTraverser}
      */
-    private readonly scopeAnalyzer: IScopeAnalyzer;
+    private readonly scopeIdentifiersTraverser: IScopeIdentifiersTraverser;
 
     /**
      * @param {TIdentifierObfuscatingReplacerFactory} identifierObfuscatingReplacerFactory
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
-     * @param {IScopeAnalyzer} scopeAnalyzer
+     * @param {IScopeIdentifiersTraverser} scopeIdentifiersTraverser
      */
     public constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierObfuscatingReplacer)
             identifierObfuscatingReplacerFactory: TIdentifierObfuscatingReplacerFactory,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
-        @inject(ServiceIdentifiers.IScopeAnalyzer) scopeAnalyzer: IScopeAnalyzer
+        @inject(ServiceIdentifiers.IScopeIdentifiersTraverser) scopeIdentifiersTraverser: IScopeIdentifiersTraverser
     ) {
         super(randomGenerator, options);
 
         this.identifierObfuscatingReplacer = identifierObfuscatingReplacerFactory(
             IdentifierObfuscatingReplacer.BaseIdentifierObfuscatingReplacer
         );
-        this.scopeAnalyzer = scopeAnalyzer;
+        this.scopeIdentifiersTraverser = scopeIdentifiersTraverser;
     }
 
     /**
@@ -85,8 +73,6 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (parentNode && NodeGuards.isProgramNode(node)) {
-                            this.analyzeNode(node, parentNode);
-
                             return this.transformNode(node, parentNode);
                         }
                     }
@@ -98,65 +84,43 @@ export class ScopeIdentifiersTransformer extends AbstractNodeTransformer {
     }
 
     /**
-     * @param {Program} programNode
-     * @param {Node | null} parentNode
-     * @returns {Node}
-     */
-    public analyzeNode (programNode: ESTree.Program, parentNode: ESTree.Node | null): void {
-        this.scopeAnalyzer.analyze(programNode);
-    }
-
-    /**
      * @param {VariableDeclaration} programNode
      * @param {NodeGuards} parentNode
      * @returns {NodeGuards}
      */
     public transformNode (programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node {
-        const globalScope: eslintScope.Scope = this.scopeAnalyzer.acquireScope(programNode);
+        this.scopeIdentifiersTraverser.traverse(
+            programNode,
+            parentNode,
+            (data: IScopeIdentifiersTraverserCallbackData) => {
+                const {
+                    isGlobalDeclaration,
+                    variable,
+                    variableLexicalScopeNode
+                } = data;
 
-        this.traverseScopeVariables(globalScope);
+                if (!this.options.renameGlobals && isGlobalDeclaration) {
+                    const isImportBindingOrCatchClauseIdentifier: boolean = variable.defs
+                        .every((definition: eslintScope.Definition) =>
+                            definition.type === 'ImportBinding'
+                            || definition.type === 'CatchClause'
+                        );
+
+                    // skip all global identifiers except import statement and catch clause parameter identifiers
+                    if (!isImportBindingOrCatchClauseIdentifier) {
+                        return;
+                    }
+                }
+
+                this.transformScopeVariableIdentifiers(
+                    variable,
+                    variableLexicalScopeNode,
+                    isGlobalDeclaration
+                );
+            }
+        );
 
         return programNode;
-    }
-
-    /**
-     * @param {Scope} scope
-     */
-    private traverseScopeVariables (scope: eslintScope.Scope): void {
-        const lexicalScope: eslintScope.Scope = scope.variableScope;
-        const nodeWithLexicalScope: TNodeWithLexicalScope | null = NodeGuards.isNodeWithBlockLexicalScope(lexicalScope.block)
-            ? lexicalScope.block
-            : null;
-        const isGlobalDeclaration: boolean = ScopeIdentifiersTransformer.globalScopeNames.includes(lexicalScope.type);
-
-        if (!nodeWithLexicalScope) {
-            return;
-        }
-
-        for (const variable of scope.variables) {
-            if (variable.name === ScopeIdentifiersTransformer.argumentsVariableName) {
-                continue;
-            }
-
-            if (!this.options.renameGlobals && isGlobalDeclaration) {
-                const isImportBindingOrCatchClauseIdentifier: boolean = variable.defs
-                    .every((definition: eslintScope.Definition) =>
-                        definition.type === 'ImportBinding'
-                        || definition.type === 'CatchClause'
-                    );
-
-                // skip all global identifiers except import statement and catch clause parameter identifiers
-                if (!isImportBindingOrCatchClauseIdentifier) {
-                    continue;
-                }
-            }
-
-            this.transformScopeVariableIdentifiers(variable, nodeWithLexicalScope, isGlobalDeclaration);
-        }
-
-        for (const childScope of scope.childScopes) {
-            this.traverseScopeVariables(childScope);
-        }
     }
 
     /**

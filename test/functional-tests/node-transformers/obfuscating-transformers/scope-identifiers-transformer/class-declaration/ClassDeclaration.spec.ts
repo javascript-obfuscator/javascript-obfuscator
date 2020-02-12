@@ -483,9 +483,9 @@ describe('ScopeIdentifiersTransformer ClassDeclaration identifiers', () => {
         });
 
         describe('Variant #3: preserved identifier names shouldn\'t be used as identifier names', () => {
-            const classDeclarationRegExp: RegExp = /class *f *{/;
-            const variableDeclarationsRegExp: RegExp = /let g, *h, *i, *j;/;
-            const classReferenceRegExp: RegExp = /new f\(\);/;
+            const classDeclarationRegExp: RegExp = /class *e *{/;
+            const variableDeclarationsRegExp: RegExp = /let f, *g, *h, *i;/;
+            const classReferenceRegExp: RegExp = /new e\(\);/;
 
             let obfuscatedCode: string;
 

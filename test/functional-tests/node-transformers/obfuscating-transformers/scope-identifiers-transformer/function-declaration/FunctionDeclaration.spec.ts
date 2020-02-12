@@ -146,7 +146,7 @@ describe('ScopeIdentifiersTransformer FunctionDeclaration identifiers', () => {
         describe('Variant #5: preserved identifier names shouldn\'t be used as identifier names', () => {
             describe('Variant #1', () => {
                 const functionDeclarationRegExp: RegExp = /function *e\(\) *{/;
-                const variableDeclarationsRegExp: RegExp = /let g, *h, *i, *j;/;
+                const variableDeclarationsRegExp: RegExp = /let f, *g, *h, *i;/;
 
                 let obfuscatedCode: string;
 

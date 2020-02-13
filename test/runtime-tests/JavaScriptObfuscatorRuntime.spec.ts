@@ -16,7 +16,7 @@ const getEnvironmentCode = () => `
 `;
 
 describe('JavaScriptObfuscator runtime eval', function () {
-    const options: TInputOptions = {
+    const baseOptions: TInputOptions = {
         controlFlowFlattening: true,
         controlFlowFlatteningThreshold: 1,
         deadCodeInjection: true,
@@ -24,6 +24,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
         debugProtection: true,
         disableConsoleOutput: true,
         domainLock: ['obfuscator.io'],
+        reservedNames: ['generate', 'sha256'],
         rotateStringArray: true,
         selfDefending: true,
         splitStrings: true,
@@ -38,18 +39,34 @@ describe('JavaScriptObfuscator runtime eval', function () {
     this.timeout(100000);
 
     [
-        IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
-        IdentifierNamesGenerator.MangledIdentifierNamesGenerator
-    ].forEach((identifierNamesGenerator) => {
-        describe(`Astring. Identifier names generator: ${identifierNamesGenerator}`, () => {
+        {
+            identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
+            renameGlobals: false
+        },
+        {
+            identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
+            renameGlobals: true
+        },
+        {
+            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+            renameGlobals: false
+        },
+        {
+            identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator,
+            renameGlobals: true
+        }
+    ].forEach((options: Partial<TInputOptions>) => {
+        const detailedDescription: string = `Identifier names generator: ${options.identifierNamesGenerator}, rename globals: ${options.renameGlobals?.toString()}`;
+
+        describe(`Astring. ${detailedDescription}`, () => {
             it('should obfuscate code without any runtime errors after obfuscation: Variant #1 astring', () => {
                 const code: string = readFileAsString(__dirname + '/fixtures/astring.js');
 
                 const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...options,
-                        identifierNamesGenerator
+                        ...baseOptions,
+                        ...options
                     }
                 ).getObfuscatedCode();
 
@@ -114,21 +131,21 @@ describe('JavaScriptObfuscator runtime eval', function () {
                 });
                 
                 eval(\`\${code} test();\`);
-             `),
+            `),
                     'foo'
                 );
             });
         });
 
-        describe(`Sha256. Identifier names generator: ${identifierNamesGenerator}`, () => {
+        describe(`Sha256. ${detailedDescription}`, () => {
             it('should obfuscate code without any runtime errors after obfuscation: Variant #2 sha256', () => {
                 const code: string = readFileAsString(__dirname + '/fixtures/sha256.js');
 
                 const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
                     code,
                     {
-                        ...options,
-                        identifierNamesGenerator
+                        ...baseOptions,
+                        ...options
                     }
                 ).getObfuscatedCode();
 

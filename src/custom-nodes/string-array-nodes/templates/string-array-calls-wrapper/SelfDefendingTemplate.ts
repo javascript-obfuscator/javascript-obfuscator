@@ -1,5 +1,5 @@
-import { IEscapeSequenceEncoder } from '../../../interfaces/utils/IEscapeSequenceEncoder';
-import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
+import { IEscapeSequenceEncoder } from '../../../../interfaces/utils/IEscapeSequenceEncoder';
+import { IRandomGenerator } from '../../../../interfaces/utils/IRandomGenerator';
 
 /**
  * @param {IRandomGenerator} randomGenerator

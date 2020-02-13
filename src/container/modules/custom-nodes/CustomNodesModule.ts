@@ -40,6 +40,8 @@ import { StringArrayNode } from '../../../custom-nodes/string-array-nodes/String
 import { StringArrayRotateFunctionNode } from '../../../custom-nodes/string-array-nodes/StringArrayRotateFunctionNode';
 import { StringLiteralControlFlowStorageCallNode } from '../../../custom-nodes/control-flow-flattening-nodes/control-flow-storage-nodes/StringLiteralControlFlowStorageCallNode';
 import { StringLiteralNode } from '../../../custom-nodes/control-flow-flattening-nodes/StringLiteralNode';
+import { ICustomNodeObfuscator } from '../../../interfaces/custom-nodes/ICustomNodeObfuscator';
+import { CustomNodeObfuscator } from '../../../custom-nodes/CustomNodeObfuscator';
 
 export const customNodesModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // custom nodes
@@ -163,6 +165,7 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
                 ServiceIdentifiers.Newable__ICustomNode,
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
                 ServiceIdentifiers.ICustomNodeFormatter,
+                ServiceIdentifiers.ICustomNodeObfuscator,
                 ServiceIdentifiers.IRandomGenerator,
                 ServiceIdentifiers.IOptions,
                 ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer
@@ -175,6 +178,7 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
                 ServiceIdentifiers.Newable__ICustomNode,
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
                 ServiceIdentifiers.ICustomNodeFormatter,
+                ServiceIdentifiers.ICustomNodeObfuscator,
                 ServiceIdentifiers.IRandomGenerator,
                 ServiceIdentifiers.IOptions
             ));
@@ -186,6 +190,7 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
                 ServiceIdentifiers.Newable__ICustomNode,
                 ServiceIdentifiers.Factory__IIdentifierNamesGenerator,
                 ServiceIdentifiers.ICustomNodeFormatter,
+                ServiceIdentifiers.ICustomNodeObfuscator,
                 ServiceIdentifiers.IRandomGenerator,
                 ServiceIdentifiers.IOptions,
                 ServiceIdentifiers.IPrevailingKindOfVariablesAnalyzer
@@ -199,5 +204,10 @@ export const customNodesModule: interfaces.ContainerModule = new ContainerModule
     // custom node formatter
     bind<ICustomNodeFormatter>(ServiceIdentifiers.ICustomNodeFormatter)
         .to(CustomNodeFormatter)
+        .inSingletonScope();
+
+    // custom node obfuscator
+    bind<ICustomNodeObfuscator>(ServiceIdentifiers.ICustomNodeObfuscator)
+        .to(CustomNodeObfuscator)
         .inSingletonScope();
 });

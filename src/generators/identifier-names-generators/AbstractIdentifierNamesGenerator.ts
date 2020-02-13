@@ -42,20 +42,6 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     }
 
     /**
-     * @returns {Set<string>}
-     */
-    public getPreservedNames (): Set<string> {
-        const lexicalScopesPreservedNames: Set<string>[] = Array.from(this.lexicalScopesPreservedNamesMap.values());
-        const preservedNames: string[] = Array.from(this.preservedNamesSet);
-
-        for (const lexicalScopePreservedNames of lexicalScopesPreservedNames) {
-            preservedNames.push(...lexicalScopePreservedNames);
-        }
-
-        return new Set(preservedNames);
-    }
-
-    /**
      * @param {string} name
      */
     public preserveName (name: string): void {

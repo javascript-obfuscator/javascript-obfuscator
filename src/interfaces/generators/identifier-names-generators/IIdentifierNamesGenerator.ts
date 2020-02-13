@@ -22,11 +22,6 @@ export interface IIdentifierNamesGenerator {
     generateWithPrefix (nameLength?: number): string;
 
     /**
-     * @returns {Set<string>}
-     */
-    getPreservedNames (): Set<string>;
-
-    /**
      * @param {string} identifierName
      * @returns {boolean}
      */

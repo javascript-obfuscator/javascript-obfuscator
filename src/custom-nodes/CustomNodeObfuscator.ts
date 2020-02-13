@@ -50,7 +50,8 @@ export class CustomNodeObfuscator implements ICustomNodeObfuscator {
             template,
             {
                 ...NO_ADDITIONAL_NODES_PRESET,
-                identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
+                identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
+                seed: 1
             }
         ).getObfuscatedCode();
 

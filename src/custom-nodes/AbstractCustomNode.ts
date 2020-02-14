@@ -5,13 +5,14 @@ import { TIdentifierNamesGeneratorFactory } from '../types/container/generators/
 import { TStatement } from '../types/node/TStatement';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
+import { ICustomNodeFormatter } from '../interfaces/custom-nodes/ICustomNodeFormatter';
+import { ICustomNodeObfuscator } from '../interfaces/custom-nodes/ICustomNodeObfuscator';
 import { IIdentifierNamesGenerator } from '../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
-import { ICustomNodeFormatter } from '../interfaces/custom-nodes/ICustomNodeFormatter';
 
-import { GlobalVariableTemplate1 } from '../templates/GlobalVariableTemplate1';
-import { GlobalVariableTemplate2 } from '../templates/GlobalVariableTemplate2';
+import { GlobalVariableTemplate1 } from './common/templates/GlobalVariableTemplate1';
+import { GlobalVariableTemplate2 } from './common/templates/GlobalVariableTemplate2';
 
 @injectable()
 export abstract class AbstractCustomNode <
@@ -31,6 +32,16 @@ export abstract class AbstractCustomNode <
     protected cachedNode: TStatement[] | null = null;
 
     /**
+     * @type {ICustomNodeFormatter}
+     */
+    protected readonly customNodeFormatter: ICustomNodeFormatter;
+
+    /**
+     * @type {ICustomNodeObfuscator}
+     */
+    protected readonly customNodeObfuscator: ICustomNodeObfuscator;
+
+    /**
      * @type {IIdentifierNamesGenerator}
      */
     protected readonly identifierNamesGenerator: IIdentifierNamesGenerator;
@@ -46,13 +57,9 @@ export abstract class AbstractCustomNode <
     protected readonly randomGenerator: IRandomGenerator;
 
     /**
-     * @type {ICustomNodeFormatter}
-     */
-    protected readonly customNodeFormatter: ICustomNodeFormatter;
-
-    /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {ICustomNodeFormatter} customNodeFormatter
+     * @param {ICustomNodeObfuscator} customNodeObfuscator
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
@@ -60,11 +67,13 @@ export abstract class AbstractCustomNode <
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomNodeFormatter) customNodeFormatter: ICustomNodeFormatter,
+        @inject(ServiceIdentifiers.ICustomNodeObfuscator) customNodeObfuscator: ICustomNodeObfuscator,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
         this.customNodeFormatter = customNodeFormatter;
+        this.customNodeObfuscator = customNodeObfuscator;
         this.randomGenerator = randomGenerator;
         this.options = options;
     }
@@ -98,18 +107,6 @@ export abstract class AbstractCustomNode <
      */
     protected getNodeTemplate (): string {
         return '';
-    }
-
-    /**
-     * @param {string[]} additionalNames
-     * @returns {string[]}
-     */
-    protected getPreservedNames (additionalNames: string[]): string[] {
-        return Array.from(new Set([
-            ...Array.from(this.identifierNamesGenerator.getPreservedNames().values()),
-            ...additionalNames
-        ]).values())
-        .map((preservedName: string) => `^${preservedName}$`);
     }
 
     /**

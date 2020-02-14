@@ -7,6 +7,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { AbstractIdentifierNamesGenerator } from './AbstractIdentifierNamesGenerator';
 import { TNodeWithLexicalScope } from '../../types/node/TNodeWithLexicalScope';
+import { NodeLexicalScopeUtils } from '../../node/NodeLexicalScopeUtils';
 
 @injectable()
 export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesGenerator {
@@ -69,26 +70,11 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
     }
 
     public generate (): string {
-        if (!this.identifierNamesSet.size) {
-            throw new Error('Too many identifiers in the code, add more words to identifiers dictionary');
-        }
+        const identifierName: string = this.generateNewDictionaryName();
 
-        const iteratorResult: IteratorResult<string> = this.identifiersIterator.next();
+        this.preserveName(identifierName);
 
-        if (!iteratorResult.done) {
-            const identifierName: string =iteratorResult.value;
-
-            if (!this.isValidIdentifierName(identifierName)) {
-                return this.generate();
-            }
-
-            return iteratorResult.value;
-        }
-
-        this.identifierNamesSet = new Set(this.getIncrementedIdentifierNames([...this.identifierNamesSet]));
-        this.identifiersIterator = this.identifierNamesSet.values();
-
-        return this.generate();
+        return identifierName;
     }
 
     /**
@@ -96,11 +82,17 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
      * @returns {string}
      */
     public generateForLexicalScope (lexicalScopeNode: TNodeWithLexicalScope): string {
-        const identifierName: string = this.generate();
+        const lexicalScopes: TNodeWithLexicalScope[] = [
+            lexicalScopeNode,
+            ...NodeLexicalScopeUtils.getLexicalScopes(lexicalScopeNode)
+        ];
+        const identifierName: string = this.generateNewDictionaryName();
 
-        if (!this.isValidIdentifierNameInLexicalScope(identifierName, lexicalScopeNode)) {
+        if (!this.isValidIdentifierNameInLexicalScopes(identifierName, lexicalScopes)) {
             return this.generateForLexicalScope(lexicalScopeNode);
         }
+
+        this.preserveNameForLexicalScope(identifierName, lexicalScopeNode);
 
         return identifierName;
     }
@@ -112,7 +104,7 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
         const prefix: string = this.options.identifiersPrefix ?
             `${this.options.identifiersPrefix}`
             : '';
-        const identifierName: string = this.generate();
+        const identifierName: string = this.generateNewDictionaryName();
         const identifierNameWithPrefix: string = `${prefix}${identifierName}`;
 
         if (!this.isValidIdentifierName(identifierNameWithPrefix)) {
@@ -122,6 +114,32 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
         this.preserveName(identifierNameWithPrefix);
 
         return identifierNameWithPrefix;
+    }
+
+    /**
+     * @returns {string}
+     */
+    private generateNewDictionaryName (): string {
+        if (!this.identifierNamesSet.size) {
+            throw new Error('Too many identifiers in the code, add more words to identifiers dictionary');
+        }
+
+        const iteratorResult: IteratorResult<string> = this.identifiersIterator.next();
+
+        if (!iteratorResult.done) {
+            const identifierName: string =iteratorResult.value;
+
+            if (!this.isValidIdentifierName(identifierName)) {
+                return this.generateNewDictionaryName();
+            }
+
+            return iteratorResult.value;
+        }
+
+        this.identifierNamesSet = new Set(this.getIncrementedIdentifierNames([...this.identifierNamesSet]));
+        this.identifiersIterator = this.identifierNamesSet.values();
+
+        return this.generateNewDictionaryName();
     }
 
     /**

@@ -4,20 +4,20 @@ import format from 'string-template';
 
 import { assert } from 'chai';
 
-import { ServiceIdentifiers } from '../../../../src/container/ServiceIdentifiers';
+import { ServiceIdentifiers } from '../../../../../src/container/ServiceIdentifiers';
 
-import { ICryptUtils } from '../../../../src/interfaces/utils/ICryptUtils';
-import { IInversifyContainerFacade } from '../../../../src/interfaces/container/IInversifyContainerFacade';
-import { IObfuscatedCode } from '../../../../src/interfaces/source-code/IObfuscatedCode';
+import { ICryptUtils } from '../../../../../src/interfaces/utils/ICryptUtils';
+import { IInversifyContainerFacade } from '../../../../../src/interfaces/container/IInversifyContainerFacade';
+import { IObfuscatedCode } from '../../../../../src/interfaces/source-code/IObfuscatedCode';
 
-import { NO_ADDITIONAL_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
-import { DomainLockNodeTemplate } from '../../../../src/templates/domain-lock-nodes/domain-lock-node/DomainLockNodeTemplate';
-import { GlobalVariableTemplate1 } from '../../../../src/templates/GlobalVariableTemplate1';
+import { DomainLockNodeTemplate } from '../../../../../src/custom-nodes/domain-lock-nodes/templates/DomainLockNodeTemplate';
+import { GlobalVariableTemplate1 } from '../../../../../src/custom-nodes/common/templates/GlobalVariableTemplate1';
 
-import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
-import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade';
-import { readFileAsString } from '../../../helpers/readFileAsString';
+import { InversifyContainerFacade } from '../../../../../src/container/InversifyContainerFacade';
+import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
+import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 /**
  * @param {string} currentDomain

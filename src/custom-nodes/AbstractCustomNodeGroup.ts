@@ -4,12 +4,12 @@ import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 import { TIdentifierNamesGeneratorFactory } from '../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TNodeWithStatements } from '../types/node/TNodeWithStatements';
 
+import { ICallsGraphData } from '../interfaces/analyzers/calls-graph-analyzer/ICallsGraphData';
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
 import { ICustomNodeGroup } from '../interfaces/custom-nodes/ICustomNodeGroup';
 import { IIdentifierNamesGenerator } from '../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
-import { ICallsGraphData } from '../interfaces/analyzers/calls-graph-analyzer/ICallsGraphData';
 
 import { CustomNode } from '../enums/custom-nodes/CustomNode';
 import { ObfuscationEvent } from '../enums/event-emitters/ObfuscationEvent';

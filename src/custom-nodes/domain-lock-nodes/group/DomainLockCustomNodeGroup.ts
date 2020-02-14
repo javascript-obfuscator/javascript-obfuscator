@@ -91,7 +91,7 @@ export class DomainLockCustomNodeGroup extends AbstractCustomNodeGroup {
             return;
         }
 
-        const callsControllerFunctionName: string = this.identifierNamesGenerator.generate();
+        const callsControllerFunctionName: string = this.randomGenerator.getRandomString(5);
 
         const domainLockNode: ICustomNode<TInitialData<DomainLockNode>> =
             this.customNodeFactory(CustomNode.DomainLockNode);

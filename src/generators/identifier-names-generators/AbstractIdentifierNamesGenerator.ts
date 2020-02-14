@@ -42,13 +42,6 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     }
 
     /**
-     * @returns {Set<string>}
-     */
-    public getPreservedNames (): Set<string> {
-        return this.preservedNamesSet;
-    }
-
-    /**
      * @param {string} name
      */
     public preserveName (name: string): void {
@@ -60,8 +53,6 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
      * @param {TNodeWithLexicalScope} lexicalScopeNode
      */
     public preserveNameForLexicalScope (name: string, lexicalScopeNode: TNodeWithLexicalScope): void {
-        this.preservedNamesSet.add(name);
-
         const preservedNamesForLexicalScopeSet: Set<string> =
             this.lexicalScopesPreservedNamesMap.get(lexicalScopeNode) ?? new Set();
 
@@ -80,22 +71,28 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
 
     /**
      * @param {string} name
-     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     * @param {TNodeWithLexicalScope[]} lexicalScopeNodes
      * @returns {boolean}
      */
-    public isValidIdentifierNameInLexicalScope (name: string, lexicalScopeNode: TNodeWithLexicalScope): boolean {
-        if (!this.notReservedName(name)) {
+    public isValidIdentifierNameInLexicalScopes (name: string, lexicalScopeNodes: TNodeWithLexicalScope[]): boolean {
+        if (!this.isValidIdentifierName(name)) {
             return false;
         }
 
-        const preservedNamesForLexicalScopeSet: Set<string> | null =
-            this.lexicalScopesPreservedNamesMap.get(lexicalScopeNode) ?? null;
+        for (const lexicalScope of lexicalScopeNodes) {
+            const preservedNamesForLexicalScopeSet: Set<string> | null =
+                this.lexicalScopesPreservedNamesMap.get(lexicalScope) ?? null;
 
-        if (!preservedNamesForLexicalScopeSet) {
-            return true;
+            if (!preservedNamesForLexicalScopeSet) {
+                continue;
+            }
+
+            if (preservedNamesForLexicalScopeSet.has(name)) {
+                return false;
+            }
         }
 
-        return !preservedNamesForLexicalScopeSet.has(name);
+        return true;
     }
 
     /**

@@ -4,7 +4,7 @@ import format from 'string-template';
 
 import { assert } from 'chai';
 
-import { GlobalVariableNoEvalTemplate } from '../../../src/templates/GlobalVariableNoEvalTemplate';
+import { GlobalVariableNoEvalTemplate } from '../../../../../src/custom-nodes/common/templates/GlobalVariableNoEvalTemplate';
 
 describe('GlobalVariableNoEvalTemplate', () => {
     describe('Variant #1: simple', () => {

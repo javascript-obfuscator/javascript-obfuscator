@@ -98,12 +98,12 @@ import './functional-tests/node-transformers/preparing-transformers/variable-pre
 import './functional-tests/options/OptionsNormalizer.spec';
 import './functional-tests/options/domain-lock/Validation.spec';
 import './functional-tests/storages/string-array-storage/StringArrayStorage.spec';
-import './functional-tests/templates/debug-protection-nodes/DebugProtectionFunctionCallTemplate.spec';
-import './functional-tests/templates/domain-lock-nodes/DomainLockNodeTemplate.spec';
-import './functional-tests/templates/GlobalVariableNoEvalTemplate.spec';
-import './functional-tests/templates/string-array-nodes/string-array-template/StringArrayTemplate.spec';
-import './functional-tests/templates/string-array-nodes/string-array-calls-wrapper-node-template/StringArrayCallsWrapperNodeTemplate.spec';
-import './functional-tests/templates/string-array-nodes/string-array-rotate-function-template/StringArrayRotateFunctionTemplate.spec';
+import './functional-tests/custom-nodes/debug-protection-nodes/templates/DebugProtectionFunctionCallTemplate.spec';
+import './functional-tests/custom-nodes/domain-lock-nodes/templates/DomainLockNodeTemplate.spec';
+import './functional-tests/custom-nodes/common/templates/GlobalVariableNoEvalTemplate.spec';
+import './functional-tests/custom-nodes/string-array-nodes/templates/string-array-template/StringArrayTemplate.spec';
+import './functional-tests/custom-nodes/string-array-nodes/templates/string-array-calls-wrapper-node-template/StringArrayCallsWrapperNodeTemplate.spec';
+import './functional-tests/custom-nodes/string-array-nodes/templates/string-array-rotate-function-template/StringArrayRotateFunctionTemplate.spec';
 
 /**
  * Performance tests

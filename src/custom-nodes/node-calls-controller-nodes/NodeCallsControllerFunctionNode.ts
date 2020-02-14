@@ -4,6 +4,8 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../types/node/TStatement';
 
+import { ICustomNodeObfuscator } from '../../interfaces/custom-nodes/ICustomNodeObfuscator';
+import { ICustomNodeFormatter } from '../../interfaces/custom-nodes/ICustomNodeFormatter';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
@@ -11,14 +13,10 @@ import { ObfuscationEvent } from '../../enums/event-emitters/ObfuscationEvent';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { SingleNodeCallControllerTemplate } from '../../templates/SingleNodeCallControllerTemplate';
-
-import { NO_ADDITIONAL_NODES_PRESET } from '../../options/presets/NoCustomNodes';
+import { SingleNodeCallControllerTemplate } from '../common/templates/SingleNodeCallControllerTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { JavaScriptObfuscator } from '../../JavaScriptObfuscatorFacade';
 import { NodeUtils } from '../../node/NodeUtils';
-import { ICustomNodeFormatter } from '../../interfaces/custom-nodes/ICustomNodeFormatter';
 
 @injectable()
 export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
@@ -37,6 +35,7 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {ICustomNodeFormatter} customNodeFormatter
+     * @param {ICustomNodeObfuscator} customNodeObfuscator
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
@@ -44,10 +43,17 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomNodeFormatter) customNodeFormatter: ICustomNodeFormatter,
+        @inject(ServiceIdentifiers.ICustomNodeObfuscator) customNodeObfuscator: ICustomNodeObfuscator,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(identifierNamesGeneratorFactory, customNodeFormatter, randomGenerator, options);
+        super(
+            identifierNamesGeneratorFactory,
+            customNodeFormatter,
+            customNodeObfuscator,
+            randomGenerator,
+            options
+        );
     }
 
     /**
@@ -72,17 +78,11 @@ export class NodeCallsControllerFunctionNode extends AbstractCustomNode {
      */
     protected getNodeTemplate (): string {
         if (this.appendEvent === ObfuscationEvent.AfterObfuscation) {
-            return JavaScriptObfuscator.obfuscate(
+            return this.customNodeObfuscator.obfuscateTemplate(
                 this.customNodeFormatter.formatTemplate(SingleNodeCallControllerTemplate(), {
                     singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-                }),
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    identifierNamesGenerator: this.options.identifierNamesGenerator,
-                    identifiersDictionary: this.options.identifiersDictionary,
-                    seed: this.options.seed
-                }
-            ).getObfuscatedCode();
+                })
+            );
         }
 
         return this.customNodeFormatter.formatTemplate(SingleNodeCallControllerTemplate(), {

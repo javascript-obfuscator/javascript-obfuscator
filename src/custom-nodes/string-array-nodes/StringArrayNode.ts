@@ -4,14 +4,15 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../types/node/TStatement';
 
+import { ICustomNodeFormatter } from '../../interfaces/custom-nodes/ICustomNodeFormatter';
+import { ICustomNodeObfuscator } from '../../interfaces/custom-nodes/ICustomNodeObfuscator';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { ICustomNodeFormatter } from '../../interfaces/custom-nodes/ICustomNodeFormatter';
 import { IStringArrayStorage } from '../../interfaces/storages/string-array-storage/IStringArrayStorage';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { StringArrayTemplate } from '../../templates/string-array-nodes/string-array-node/StringArrayTemplate';
+import { StringArrayTemplate } from './templates/string-array-node/StringArrayTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeUtils } from '../../node/NodeUtils';
@@ -33,6 +34,7 @@ export class StringArrayNode extends AbstractCustomNode {
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {ICustomNodeFormatter} customNodeFormatter
+     * @param {ICustomNodeObfuscator} customNodeObfuscator
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
@@ -40,10 +42,17 @@ export class StringArrayNode extends AbstractCustomNode {
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomNodeFormatter) customNodeFormatter: ICustomNodeFormatter,
+        @inject(ServiceIdentifiers.ICustomNodeObfuscator) customNodeObfuscator: ICustomNodeObfuscator,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(identifierNamesGeneratorFactory, customNodeFormatter, randomGenerator, options);
+        super(
+            identifierNamesGeneratorFactory,
+            customNodeFormatter,
+            customNodeObfuscator,
+            randomGenerator,
+            options
+        );
     }
 
     /**

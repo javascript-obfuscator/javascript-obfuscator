@@ -1,14 +1,14 @@
 import { assert } from 'chai';
 import { spawn, Thread, Worker } from 'threads/dist';
 
-import { readFileAsString } from '../../../helpers/readFileAsString';
+import { readFileAsString } from '../../../../helpers/readFileAsString';
 
-import { NO_ADDITIONAL_NODES_PRESET } from '../../../../src/options/presets/NoCustomNodes';
+import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
-import { IdentifierNamesGenerator } from '../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
-import { ObfuscationTarget } from '../../../../src/enums/ObfuscationTarget';
+import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
+import { ObfuscationTarget } from '../../../../../src/enums/ObfuscationTarget';
 
-import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade';
+import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
 async function spawnThread(obfuscatedCode: string, threadCallback: Function, timeoutCallback: Function): Promise<void> {
     const evaluationWorker = await spawn(new Worker('./workers/evaluation-worker'));

@@ -6,6 +6,7 @@ import type { Expression } from 'estree';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../../types/node/TStatement';
 
+import { ICustomNodeObfuscator } from '../../../interfaces/custom-nodes/ICustomNodeObfuscator';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
 import { ICustomNodeFormatter } from '../../../interfaces/custom-nodes/ICustomNodeFormatter';
@@ -43,6 +44,7 @@ export class ExpressionWithOperatorControlFlowStorageCallNode extends AbstractCu
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {ICustomNodeFormatter} customNodeFormatter
+     * @param {ICustomNodeObfuscator} customNodeObfuscator
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
@@ -50,10 +52,17 @@ export class ExpressionWithOperatorControlFlowStorageCallNode extends AbstractCu
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomNodeFormatter) customNodeFormatter: ICustomNodeFormatter,
+        @inject(ServiceIdentifiers.ICustomNodeObfuscator) customNodeObfuscator: ICustomNodeObfuscator,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
-        super(identifierNamesGeneratorFactory, customNodeFormatter, randomGenerator, options);
+        super(
+            identifierNamesGeneratorFactory,
+            customNodeFormatter,
+            customNodeObfuscator,
+            randomGenerator,
+            options
+        );
     }
 
     /**

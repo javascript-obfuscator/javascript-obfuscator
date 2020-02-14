@@ -59,5 +59,7 @@ function foo () {
     const test32 = 'abc';
     const test33 = 'abc';
     const test34 = 'abc';
-    const test35 = 'last';
+    const test35 = 'abc';
+    const test36 = 'abc';
+    const test38 = 'last';
 }

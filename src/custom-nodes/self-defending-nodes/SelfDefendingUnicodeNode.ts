@@ -4,19 +4,17 @@ import { ServiceIdentifiers } from '../../container/ServiceIdentifiers';
 import { TIdentifierNamesGeneratorFactory } from '../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TStatement } from '../../types/node/TStatement';
 
+import { ICustomNodeFormatter } from '../../interfaces/custom-nodes/ICustomNodeFormatter';
+import { ICustomNodeObfuscator } from '../../interfaces/custom-nodes/ICustomNodeObfuscator';
 import { IEscapeSequenceEncoder } from '../../interfaces/utils/IEscapeSequenceEncoder';
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
-import { ICustomNodeFormatter } from '../../interfaces/custom-nodes/ICustomNodeFormatter';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { NO_ADDITIONAL_NODES_PRESET } from '../../options/presets/NoCustomNodes';
-
-import { SelfDefendingTemplate } from '../../templates/self-defending-nodes/self-defending-unicode-node/SelfDefendingTemplate';
+import { SelfDefendingTemplate } from './templates/SelfDefendingTemplate';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
-import { JavaScriptObfuscator } from '../../JavaScriptObfuscatorFacade';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
@@ -35,6 +33,7 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {ICustomNodeFormatter} customNodeFormatter
+     * @param {ICustomNodeObfuscator} customNodeObfuscator
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      * @param {IEscapeSequenceEncoder} escapeSequenceEncoder
@@ -43,11 +42,18 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
         @inject(ServiceIdentifiers.ICustomNodeFormatter) customNodeFormatter: ICustomNodeFormatter,
+        @inject(ServiceIdentifiers.ICustomNodeObfuscator) customNodeObfuscator: ICustomNodeObfuscator,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions,
         @inject(ServiceIdentifiers.IEscapeSequenceEncoder) escapeSequenceEncoder: IEscapeSequenceEncoder
     ) {
-        super(identifierNamesGeneratorFactory, customNodeFormatter, randomGenerator, options);
+        super(
+            identifierNamesGeneratorFactory,
+            customNodeFormatter,
+            customNodeObfuscator,
+            randomGenerator,
+            options
+        );
 
         this.escapeSequenceEncoder = escapeSequenceEncoder;
     }
@@ -71,18 +77,14 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
      * @returns {string}
      */
     protected getNodeTemplate (): string {
-        return JavaScriptObfuscator.obfuscate(
+        return this.customNodeObfuscator.obfuscateTemplate(
             this.customNodeFormatter.formatTemplate(SelfDefendingTemplate(this.escapeSequenceEncoder), {
-                selfDefendingFunctionName: this.identifierNamesGenerator.generate(),
+                selfDefendingFunctionName: this.randomGenerator.getRandomString(5),
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
             }),
             {
-                ...NO_ADDITIONAL_NODES_PRESET,
-                identifierNamesGenerator: this.options.identifierNamesGenerator,
-                identifiersDictionary: this.options.identifiersDictionary,
-                seed: this.options.seed,
                 unicodeEscapeSequence: true
             }
-        ).getObfuscatedCode();
+        );
     }
 }

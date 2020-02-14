@@ -1,4 +1,4 @@
-import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
+import { IRandomGenerator } from '../../../../interfaces/utils/IRandomGenerator';
 
 /**
  * @param {IRandomGenerator} randomGenerator

@@ -19,7 +19,7 @@
  *
  * @namespace
  */
-var Sha256 = {};
+let Sha256 = {};
 
 
 /**
@@ -34,8 +34,8 @@ var Sha256 = {};
  * @returns {string} Hash of msg as hex character string.
  */
 Sha256.hash = function(msg, options) {
-    var defaults = { msgFormat: 'string', outFormat: 'hex' };
-    var opt = Object.assign(defaults, options);
+    let defaults = { msgFormat: 'string', outFormat: 'hex' };
+    let opt = Object.assign(defaults, options);
 
     // note use throughout this routine of 'n >>> 0' to coerce Number 'n' to unsigned 32-bit integer
 
@@ -46,7 +46,7 @@ Sha256.hash = function(msg, options) {
     }
 
     // constants [§4.2.2]
-    var K = [
+    let K = [
         0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
         0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
         0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
@@ -57,7 +57,7 @@ Sha256.hash = function(msg, options) {
         0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2 ];
 
     // initial hash value [§5.3.3]
-    var H = [
+    let H = [
         0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19 ];
 
     // PREPROCESSING [§6.2.1]
@@ -65,13 +65,13 @@ Sha256.hash = function(msg, options) {
     msg += String.fromCharCode(0x80);  // add trailing '1' bit (+ 0's padding) to string [§5.1.1]
 
     // convert string msg into 512-bit blocks (array of 16 32-bit integers) [§5.2.1]
-    var l = msg.length/4 + 2; // length (in 32-bit integers) of msg + ‘1’ + appended length
-    var N = Math.ceil(l/16);  // number of 16-integer (512-bit) blocks required to hold 'l' ints
-    var M = new Array(N);     // message M is N×16 array of 32-bit integers
+    let l = msg.length/4 + 2; // length (in 32-bit integers) of msg + ‘1’ + appended length
+    let N = Math.ceil(l/16);  // number of 16-integer (512-bit) blocks required to hold 'l' ints
+    let M = new Array(N);     // message M is N×16 array of 32-bit integers
 
-    for (var i=0; i<N; i++) {
+    for (let i=0; i<N; i++) {
         M[i] = new Array(16);
-        for (var j=0; j<16; j++) { // encode 4 chars per integer (64 per block), big-endian encoding
+        for (let j=0; j<16; j++) { // encode 4 chars per integer (64 per block), big-endian encoding
             M[i][j] = (msg.charCodeAt(i*64+j*4)<<24) | (msg.charCodeAt(i*64+j*4+1)<<16) |
                 (msg.charCodeAt(i*64+j*4+2)<<8) | (msg.charCodeAt(i*64+j*4+3));
         } // note running off the end of msg is ok 'cos bitwise ops on NaN return 0
@@ -79,30 +79,30 @@ Sha256.hash = function(msg, options) {
     // add length (in bits) into final pair of 32-bit integers (big-endian) [§5.1.1]
     // note: most significant word would be (len-1)*8 >>> 32, but since JS converts
     // bitwise-op args to 32 bits, we need to simulate this by arithmetic operators
-    var lenHi = ((msg.length-1)*8) / Math.pow(2, 32);
-    var lenLo = ((msg.length-1)*8) >>> 0;
+    let lenHi = ((msg.length-1)*8) / Math.pow(2, 32);
+    let lenLo = ((msg.length-1)*8) >>> 0;
     M[N-1][14] = Math.floor(lenHi);
     M[N-1][15] = lenLo;
 
 
     // HASH COMPUTATION [§6.2.2]
 
-    for (var i=0; i<N; i++) {
-        var W = new Array(64);
+    for (let i=0; i<N; i++) {
+        let W = new Array(64);
 
         // 1 - prepare message schedule 'W'
-        for (var t=0;  t<16; t++) W[t] = M[i][t];
-        for (var t=16; t<64; t++) {
+        for (let t=0;  t<16; t++) W[t] = M[i][t];
+        for (let t=16; t<64; t++) {
             W[t] = (Sha256.σ1(W[t-2]) + W[t-7] + Sha256.σ0(W[t-15]) + W[t-16]) >>> 0;
         }
 
         // 2 - initialise working variables a, b, c, d, e, f, g, h with previous hash value
-        var a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
+        let a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
 
         // 3 - main loop (note 'addition modulo 2^32')
-        for (var t=0; t<64; t++) {
-            var T1 = h + Sha256.Σ1(e) + Sha256.Ch(e, f, g) + K[t] + W[t];
-            var T2 =     Sha256.Σ0(a) + Sha256.Maj(a, b, c);
+        for (let t=0; t<64; t++) {
+            let T1 = h + Sha256.Σ1(e) + Sha256.Ch(e, f, g) + K[t] + W[t];
+            let T2 =     Sha256.Σ0(a) + Sha256.Maj(a, b, c);
             h = g;
             g = f;
             f = e;
@@ -125,10 +125,10 @@ Sha256.hash = function(msg, options) {
     }
 
     // convert H0..H7 to hex strings (with leading zeros)
-    for (var h=0; h<H.length; h++) H[h] = ('00000000'+H[h].toString(16)).slice(-8);
+    for (let h=0; h<H.length; h++) H[h] = ('00000000'+H[h].toString(16)).slice(-8);
 
     // concatenate H0..H7, with separator if required
-    var separator = opt.outFormat=='hex-w' ? ' ' : '';
+    let separator = opt.outFormat=='hex-w' ? ' ' : '';
 
     return H.join(separator);
 };
@@ -170,8 +170,8 @@ Sha256.utf8Encode = function(str) {
  */
 Sha256.hexBytesToString = function(hexStr) {
     hexStr = hexStr.replace(' ', ''); // allow space-separated groups
-    var str = '';
-    for (var i=0; i<hexStr.length; i+=2) {
+    let str = '';
+    for (let i=0; i<hexStr.length; i+=2) {
         str += String.fromCharCode(parseInt(hexStr.slice(i, i+2), 16));
     }
     return str;

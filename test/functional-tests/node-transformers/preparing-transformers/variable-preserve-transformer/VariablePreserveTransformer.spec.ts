@@ -98,8 +98,8 @@ describe('VariablePreserveTransformer', () => {
         });
 
         describe('Variant #2: `renameGlobals` option is enabled', () => {
-            const transformObjectKeysNameRegExp: RegExp = /const c *= *{};/;
-            const identifierNameRegExp: RegExp = /const d *= *c;/;
+            const transformObjectKeysNameRegExp: RegExp = /const b *= *{};/;
+            const identifierNameRegExp: RegExp = /const c *= *b;/;
 
             let obfuscatedCode: string;
 
@@ -123,6 +123,36 @@ describe('VariablePreserveTransformer', () => {
 
             it('should keep the original name for global identifier', () => {
                 assert.match(obfuscatedCode, identifierNameRegExp);
+            });
+        });
+    });
+
+    describe('Variant #3: ignored node identifier name conflict with identifier name', () => {
+        describe('Variant #1: global scope', () => {
+            const functionExpressionIdentifierName: RegExp = /const c *= *function *\(\) *{};/;
+            const functionDeclarationIdentifierName: RegExp = /function a *\(\) *{}/;
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/ignored-node-identifier-name-1.js');
+
+                obfuscatedCode = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_ADDITIONAL_NODES_PRESET,
+                        identifierNamesGenerator: 'mangled',
+                        renameGlobals: true
+                    }
+                ).getObfuscatedCode();
+            });
+
+            it('should generate non-preserved name for global identifier', () => {
+                assert.match(obfuscatedCode, functionExpressionIdentifierName);
+            });
+
+            it('should keep the original name for ignored identifier', () => {
+                assert.match(obfuscatedCode, functionDeclarationIdentifierName);
             });
         });
     });

@@ -7,8 +7,6 @@ import { ICustomNodeObfuscator } from '../interfaces/custom-nodes/ICustomNodeObf
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
 
-import { IdentifierNamesGenerator } from '../enums/generators/identifier-names-generators/IdentifierNamesGenerator';
-
 import { NO_ADDITIONAL_NODES_PRESET } from '../options/presets/NoCustomNodes';
 
 import { JavaScriptObfuscator } from '../JavaScriptObfuscatorFacade';
@@ -43,24 +41,8 @@ export class CustomNodeObfuscator implements ICustomNodeObfuscator {
      * @returns {string}
      */
     public obfuscateTemplate (template: string, additionalOptions: TInputOptions = {}): string {
-        /**
-         * During the first pass we should rename all identifiers to a random one
-         */
-        const firstPassObfuscatedCode = JavaScriptObfuscator.obfuscate(
+        return JavaScriptObfuscator.obfuscate(
             template,
-            {
-                ...NO_ADDITIONAL_NODES_PRESET,
-                identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator,
-                seed: 1
-            }
-        ).getObfuscatedCode();
-
-        /**
-         * During the seconds pass we should obfuscate template to the same format as the main code
-         * Also, we should add additional transformations that depends on the custom node
-         */
-        const secondPassObfuscatedCode = JavaScriptObfuscator.obfuscate(
-            firstPassObfuscatedCode,
             {
                 ...NO_ADDITIONAL_NODES_PRESET,
                 identifierNamesGenerator: this.options.identifierNamesGenerator,
@@ -69,7 +51,5 @@ export class CustomNodeObfuscator implements ICustomNodeObfuscator {
                 ...additionalOptions
             }
         ).getObfuscatedCode();
-
-        return secondPassObfuscatedCode;
     }
 }

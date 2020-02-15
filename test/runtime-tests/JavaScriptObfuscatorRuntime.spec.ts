@@ -70,70 +70,75 @@ describe('JavaScriptObfuscator runtime eval', function () {
                     }
                 ).getObfuscatedCode();
 
-                assert.equal(
-                    eval(`
-                ${getEnvironmentCode()}
-                ${obfuscatedCode}
-                const code = generate({
-                    "type": "Program",
-                    "body": [
-                        {
-                            "type": "FunctionDeclaration",
-                            "id": {
-                                "type": "Identifier",
-                                "name": "test",
-                                "range": [
-                                    9,
-                                    13
-                                ]
-                            },
-                            "params": [],
-                            "body": {
-                                "type": "BlockStatement",
-                                "body": [
-                                    {
-                                        "type": "ReturnStatement",
-                                        "argument": {
-                                            "type": "Literal",
-                                            "value": "foo",
-                                            "raw": "'foo'",
-                                            "range": [
-                                                30,
-                                                35
-                                            ]
-                                        },
+                let evaluationResult: string;
+
+                try {
+                    evaluationResult = eval(`
+                        ${getEnvironmentCode()}
+                        ${obfuscatedCode}
+                        const code = generate({
+                            "type": "Program",
+                            "body": [
+                                {
+                                    "type": "FunctionDeclaration",
+                                    "id": {
+                                        "type": "Identifier",
+                                        "name": "test",
                                         "range": [
-                                            23,
-                                            36
+                                            9,
+                                            13
                                         ]
-                                    }
-                                ],
-                                "range": [
-                                    17,
-                                    38
-                                ]
-                            },
-                            "generator": false,
-                            "expression": false,
-                            "async": false,
+                                    },
+                                    "params": [],
+                                    "body": {
+                                        "type": "BlockStatement",
+                                        "body": [
+                                            {
+                                                "type": "ReturnStatement",
+                                                "argument": {
+                                                    "type": "Literal",
+                                                    "value": "foo",
+                                                    "raw": "'foo'",
+                                                    "range": [
+                                                        30,
+                                                        35
+                                                    ]
+                                                },
+                                                "range": [
+                                                    23,
+                                                    36
+                                                ]
+                                            }
+                                        ],
+                                        "range": [
+                                            17,
+                                            38
+                                        ]
+                                    },
+                                    "generator": false,
+                                    "expression": false,
+                                    "async": false,
+                                    "range": [
+                                        0,
+                                        38
+                                    ]
+                                }
+                            ],
+                            "sourceType": "module",
                             "range": [
                                 0,
                                 38
-                            ]
-                        }
-                    ],
-                    "sourceType": "module",
-                    "range": [
-                        0,
-                        38
-                    ],
-                    "comments": []
-                });
-                
-                eval(\`\${code} test();\`);
-            `),
-                    'foo'
-                );
+                            ],
+                            "comments": []
+                        });
+                        
+                        eval(\`\${code} test();\`);
+                    `)
+                } catch (e) {
+                    throw new Error(`Evaluation error: ${e.message}. Code: ${obfuscatedCode}`);
+                }
+
+                assert.equal(evaluationResult, 'foo');
             });
         });
 
@@ -151,10 +156,10 @@ describe('JavaScriptObfuscator runtime eval', function () {
 
                 assert.equal(
                     eval(`
-                    ${getEnvironmentCode()}
-                    ${obfuscatedCode}
-                    sha256('test');
-                `),
+                        ${getEnvironmentCode()}
+                        ${obfuscatedCode}
+                        sha256('test');
+                    `),
                     '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08'
                 );
             });

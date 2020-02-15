@@ -98,8 +98,8 @@ describe('VariablePreserveTransformer', () => {
         });
 
         describe('Variant #2: `renameGlobals` option is enabled', () => {
-            const transformObjectKeysNameRegExp: RegExp = /const b *= *{};/;
-            const identifierNameRegExp: RegExp = /const c *= *b;/;
+            const transformObjectKeysNameRegExp: RegExp = /const c *= *{};/;
+            const identifierNameRegExp: RegExp = /const d *= *c;/;
 
             let obfuscatedCode: string;
 

@@ -14,6 +14,7 @@ import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeFactory } from '../../node/NodeFactory';
+import { NodeGuards } from '../../node/NodeGuards';
 
 @injectable()
 export class ObjectExpressionVariableDeclarationHostNode extends AbstractCustomNode {
@@ -60,12 +61,14 @@ export class ObjectExpressionVariableDeclarationHostNode extends AbstractCustomN
      * @returns {TStatement[]}
      */
     protected getNodeStructure (nodeTemplate: string): TStatement[] {
+        const variableDeclarationName: string = NodeGuards.isProgramNode(this.lexicalScopeNode)
+            ? this.identifierNamesGenerator.generate()
+            : this.identifierNamesGenerator.generateForLexicalScope(this.lexicalScopeNode);
+
         const structure: TStatement = NodeFactory.variableDeclarationNode(
             [
                 NodeFactory.variableDeclaratorNode(
-                    NodeFactory.identifierNode(
-                        this.identifierNamesGenerator.generateForLexicalScope(this.lexicalScopeNode)
-                    ),
+                    NodeFactory.identifierNode(variableDeclarationName),
                     NodeFactory.objectExpressionNode(this.properties)
                 )
             ],

@@ -79,7 +79,7 @@ export class SelfDefendingUnicodeNode extends AbstractCustomNode {
     protected getNodeTemplate (): string {
         return this.customNodeObfuscator.obfuscateTemplate(
             this.customNodeFormatter.formatTemplate(SelfDefendingTemplate(this.escapeSequenceEncoder), {
-                selfDefendingFunctionName: this.randomGenerator.getRandomString(5),
+                selfDefendingFunctionName: this.identifierNamesGenerator.generate(),
                 singleNodeCallControllerFunctionName: this.callsControllerFunctionName
             }),
             {

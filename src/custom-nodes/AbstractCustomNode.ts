@@ -5,41 +5,24 @@ import { TIdentifierNamesGeneratorFactory } from '../types/container/generators/
 import { TStatement } from '../types/node/TStatement';
 
 import { ICustomNode } from '../interfaces/custom-nodes/ICustomNode';
-import { ICustomNodeFormatter } from '../interfaces/custom-nodes/ICustomNodeFormatter';
-import { ICustomNodeObfuscator } from '../interfaces/custom-nodes/ICustomNodeObfuscator';
+import { ICustomCodeHelperFormatter } from '../interfaces/custom-code-helpers/ICustomCodeHelperFormatter';
 import { IIdentifierNamesGenerator } from '../interfaces/generators/identifier-names-generators/IIdentifierNamesGenerator';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
-
-import { GlobalVariableTemplate1 } from './common/templates/GlobalVariableTemplate1';
-import { GlobalVariableTemplate2 } from './common/templates/GlobalVariableTemplate2';
 
 @injectable()
 export abstract class AbstractCustomNode <
     TInitialData extends any[] = any[]
 > implements ICustomNode <TInitialData> {
     /**
-     * @type {string[]}
-     */
-    private static readonly globalVariableTemplateFunctions: string[] = [
-        GlobalVariableTemplate1(),
-        GlobalVariableTemplate2()
-    ];
-
-    /**
      * @type {TStatement[] | null}
      */
     protected cachedNode: TStatement[] | null = null;
 
     /**
-     * @type {ICustomNodeFormatter}
+     * @type {ICustomCodeHelperFormatter}
      */
-    protected readonly customNodeFormatter: ICustomNodeFormatter;
-
-    /**
-     * @type {ICustomNodeObfuscator}
-     */
-    protected readonly customNodeObfuscator: ICustomNodeObfuscator;
+    protected readonly customCodeHelperFormatter: ICustomCodeHelperFormatter;
 
     /**
      * @type {IIdentifierNamesGenerator}
@@ -58,22 +41,19 @@ export abstract class AbstractCustomNode <
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
-     * @param {ICustomNodeFormatter} customNodeFormatter
-     * @param {ICustomNodeObfuscator} customNodeObfuscator
+     * @param {ICustomCodeHelperFormatter} customCodeHelperFormatter
      * @param {IRandomGenerator} randomGenerator
      * @param {IOptions} options
      */
     protected constructor (
         @inject(ServiceIdentifiers.Factory__IIdentifierNamesGenerator)
             identifierNamesGeneratorFactory: TIdentifierNamesGeneratorFactory,
-        @inject(ServiceIdentifiers.ICustomNodeFormatter) customNodeFormatter: ICustomNodeFormatter,
-        @inject(ServiceIdentifiers.ICustomNodeObfuscator) customNodeObfuscator: ICustomNodeObfuscator,
+        @inject(ServiceIdentifiers.ICustomCodeHelperFormatter) customCodeHelperFormatter: ICustomCodeHelperFormatter,
         @inject(ServiceIdentifiers.IRandomGenerator) randomGenerator: IRandomGenerator,
         @inject(ServiceIdentifiers.IOptions) options: IOptions
     ) {
         this.identifierNamesGenerator = identifierNamesGeneratorFactory(options);
-        this.customNodeFormatter = customNodeFormatter;
-        this.customNodeObfuscator = customNodeObfuscator;
+        this.customCodeHelperFormatter = customCodeHelperFormatter;
         this.randomGenerator = randomGenerator;
         this.options = options;
     }
@@ -83,30 +63,12 @@ export abstract class AbstractCustomNode <
      */
     public getNode (): TStatement[] {
         if (!this.cachedNode) {
-            const nodeTemplate: string = this.getNodeTemplate();
-
-            this.cachedNode = this.customNodeFormatter.formatStructure(
-                this.getNodeStructure(nodeTemplate)
+            this.cachedNode = this.customCodeHelperFormatter.formatStructure(
+                this.getNodeStructure()
             );
         }
 
         return this.cachedNode;
-    }
-
-    /**
-     * @returns {string}
-     */
-    protected getGlobalVariableTemplate (): string {
-        return this.randomGenerator
-            .getRandomGenerator()
-            .pickone(AbstractCustomNode.globalVariableTemplateFunctions);
-    }
-
-    /**
-     * @returns {string}
-     */
-    protected getNodeTemplate (): string {
-        return '';
     }
 
     /**
@@ -117,5 +79,5 @@ export abstract class AbstractCustomNode <
     /**
      * @returns {TStatement[]}
      */
-    protected abstract getNodeStructure (nodeTemplate: string): TStatement[];
+    protected abstract getNodeStructure (): TStatement[];
 }

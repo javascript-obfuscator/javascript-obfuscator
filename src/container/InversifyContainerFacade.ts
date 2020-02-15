@@ -4,6 +4,7 @@ import { ServiceIdentifiers } from './ServiceIdentifiers';
 import { analyzersModule } from './modules/analyzers/AnalyzersModule';
 import { controlFlowTransformersModule } from './modules/node-transformers/ControlFlowTransformersModule';
 import { convertingTransformersModule } from './modules/node-transformers/ConvertingTransformersModule';
+import { customCodeHelpersModule } from './modules/custom-code-helpers/CustomCodeHelpersModule';
 import { customNodesModule } from './modules/custom-nodes/CustomNodesModule';
 import { finalizingTransformersModule } from './modules/node-transformers/FinalizingTransformersModule';
 import { generatorsModule } from './modules/generators/GeneratorsModule';
@@ -194,6 +195,7 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
         this.container.load(analyzersModule);
         this.container.load(controlFlowTransformersModule);
         this.container.load(convertingTransformersModule);
+        this.container.load(customCodeHelpersModule);
         this.container.load(customNodesModule);
         this.container.load(finalizingTransformersModule);
         this.container.load(generatorsModule);

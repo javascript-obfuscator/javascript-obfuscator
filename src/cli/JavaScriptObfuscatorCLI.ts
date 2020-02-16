@@ -23,6 +23,7 @@ import { CLIUtils } from './utils/CLIUtils';
 import { JavaScriptObfuscator } from '../JavaScriptObfuscatorFacade';
 import { ObfuscatedCodeWriter } from './utils/ObfuscatedCodeWriter';
 import { SourceCodeReader } from './utils/SourceCodeReader';
+import { Utils } from '../utils/Utils';
 
 export class JavaScriptObfuscatorCLI implements IInitializable {
     /**
@@ -169,7 +170,7 @@ export class JavaScriptObfuscatorCLI implements IInitializable {
         this.commands
             .usage('<inputPath> [options]')
             .version(
-                process.env.VERSION ?? 'unknown',
+                Utils.buildVersionMessage(process.env.VERSION, process.env.BUILD_TIMESTAMP),
                 '-v, --version'
             )
             .option(

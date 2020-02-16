@@ -5,6 +5,21 @@ export class Utils {
     public static readonly hexadecimalPrefix: string = '0x';
 
     /**
+     * @param {string} version
+     * @param {string} buildTimestamp
+     * @returns {string}
+     */
+    public static buildVersionMessage (version?: string, buildTimestamp?: string): string {
+        if (!version || !buildTimestamp) {
+            return 'unknown';
+        }
+
+        const buildDate: string = new Date(parseInt(buildTimestamp, 10)).toISOString();
+
+        return `${version}_${buildDate}`;
+    }
+
+    /**
      * @param {string} url
      * @returns {string}
      */

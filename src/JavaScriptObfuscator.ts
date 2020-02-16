@@ -24,6 +24,7 @@ import { ecmaVersion } from './constants/EcmaVersion';
 
 import { ASTParserFacade } from './ASTParserFacade';
 import { NodeGuards } from './node/NodeGuards';
+import { Utils } from './utils/Utils';
 
 @injectable()
 export class JavaScriptObfuscator implements IJavaScriptObfuscator {
@@ -125,7 +126,7 @@ export class JavaScriptObfuscator implements IJavaScriptObfuscator {
      */
     public obfuscate (sourceCode: string): IObfuscatedCode {
         const timeStart: number = Date.now();
-        this.logger.info(LoggingMessage.Version, process.env.VERSION);
+        this.logger.info(LoggingMessage.Version, Utils.buildVersionMessage(process.env.VERSION, process.env.BUILD_TIMESTAMP));
         this.logger.info(LoggingMessage.ObfuscationStarted);
         this.logger.info(LoggingMessage.RandomGeneratorSeed, this.randomGenerator.getInputSeed());
 

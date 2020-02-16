@@ -79,4 +79,48 @@ describe('Utils', () => {
             });
         });
     });
+
+    describe('buildVersionMessage', () => {
+        describe('Variant #1: version and build timestamp are set', () => {
+            const expectedVersionMessage: string = '0.1.0_2020-01-01T00:00:00.000Z';
+
+            let versionMessage: string;
+
+            before(() => {
+                versionMessage = Utils.buildVersionMessage('0.1.0', '1577836800000');
+            });
+
+            it('should build version message', () => {
+                assert.equal(versionMessage, expectedVersionMessage);
+            });
+        });
+
+        describe('Variant #2: version is not set set', () => {
+            const expectedVersionMessage: string = 'unknown';
+
+            let versionMessage: string;
+
+            before(() => {
+                versionMessage = Utils.buildVersionMessage(undefined, '1577836800000');
+            });
+
+            it('should build version message', () => {
+                assert.equal(versionMessage, expectedVersionMessage);
+            });
+        });
+
+        describe('Variant #3: build timestamp is not set set', () => {
+            const expectedVersionMessage: string = 'unknown';
+
+            let versionMessage: string;
+
+            before(() => {
+                versionMessage = Utils.buildVersionMessage('0.1.0', undefined);
+            });
+
+            it('should build version message', () => {
+                assert.equal(versionMessage, expectedVersionMessage);
+            });
+        });
+    });
 });

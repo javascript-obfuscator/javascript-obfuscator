@@ -99,7 +99,7 @@ export class StringArrayCallsWrapperCodeHelper extends AbstractCustomCodeHelper 
     protected getCodeHelperTemplate (): string {
         const decodeCodeHelperTemplate: string = this.getDecodeStringArrayTemplate();
 
-        const preservedNames: string[] = [this.stringArrayName];
+        const preservedNames: string[] = [`^${this.stringArrayName}$`];
 
         return this.customCodeHelperObfuscator.obfuscateTemplate(
             this.customCodeHelperFormatter.formatTemplate(StringArrayCallsWrapperTemplate(), {

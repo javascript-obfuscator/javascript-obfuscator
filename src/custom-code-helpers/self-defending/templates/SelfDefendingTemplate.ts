@@ -11,7 +11,9 @@ export function SelfDefendingTemplate (escapeSequenceEncoder: IEscapeSequenceEnc
     return `
         const {selfDefendingFunctionName} = {callControllerFunctionName}(this, function () {
             const test = function () {
-                const regExp = new RegExp('^([^ ]+( +[^ ]+)+)+[^ ]}');
+                const regExp = test
+                    .constructor('return /" + this + "/')()
+                    .compile('^([^ ]+( +[^ ]+)+)+[^ ]}');
                 
                 return !regExp.test({selfDefendingFunctionName});
             };

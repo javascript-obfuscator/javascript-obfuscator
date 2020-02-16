@@ -7,6 +7,8 @@ import { IIdentifierNamesGenerator } from '../../interfaces/generators/identifie
 import { IOptions } from '../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../interfaces/utils/IRandomGenerator';
 
+import { NodeGuards } from '../../node/NodeGuards';
+
 @injectable()
 export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNamesGenerator {
     /**
@@ -39,6 +41,17 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
     ) {
         this.randomGenerator = randomGenerator;
         this.options = options;
+    }
+
+    /**
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
+     * @param {number} nameLength
+     * @returns {string}
+     */
+    public generate (lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string {
+        return NodeGuards.isProgramNode(lexicalScopeNode)
+            ? this.generateForGlobalScope()
+            : this.generateForLexicalScope(lexicalScopeNode);
     }
 
     /**
@@ -112,7 +125,7 @@ export abstract class AbstractIdentifierNamesGenerator implements IIdentifierNam
      * @param {number} nameLength
      * @returns {string}
      */
-    public abstract generate (nameLength?: number): string;
+    public abstract generateForGlobalScope (nameLength?: number): string;
 
     /**
      * @param {TNodeWithLexicalScope} lexicalScopeNode

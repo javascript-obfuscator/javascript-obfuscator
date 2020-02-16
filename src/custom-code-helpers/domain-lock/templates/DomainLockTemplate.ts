@@ -3,7 +3,7 @@
  */
 export function DomainLockTemplate (): string {
     return `
-        const {domainLockFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {
+        const {domainLockFunctionName} = {callControllerFunctionName}(this, function () {
             
             {globalVariableTemplate}
             

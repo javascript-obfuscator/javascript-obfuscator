@@ -77,19 +77,28 @@ export class StringArrayCodeHelperGroup extends AbstractCustomCodeHelperGroup {
         }
 
         // stringArray helper nodes append
-        this.appendCustomNodeIfExist(CustomCodeHelper.StringArray, (customCodeHelper: ICustomCodeHelper) => {
-            NodeAppender.prepend(nodeWithStatements, customCodeHelper.getNode());
-        });
+        this.appendCustomNodeIfExist(
+            CustomCodeHelper.StringArray,
+            (customCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCodeHelper>>) => {
+                NodeAppender.prepend(nodeWithStatements, customCodeHelper.getNode());
+            }
+        );
 
         // stringArrayCallsWrapper helper nodes append
-        this.appendCustomNodeIfExist(CustomCodeHelper.StringArrayCallsWrapper, (customCodeHelper: ICustomCodeHelper) => {
-            NodeAppender.insertAtIndex(nodeWithStatements, customCodeHelper.getNode(), 1);
-        });
+        this.appendCustomNodeIfExist(
+            CustomCodeHelper.StringArrayCallsWrapper,
+            (customCodeHelper: ICustomCodeHelper<TInitialData<StringArrayCallsWrapperCodeHelper>>) => {
+                NodeAppender.insertAtIndex(nodeWithStatements, customCodeHelper.getNode(), 1);
+            }
+        );
 
         // stringArrayRotateFunction helper nodes append
-        this.appendCustomNodeIfExist(CustomCodeHelper.StringArrayRotateFunction, (customCodeHelper: ICustomCodeHelper) => {
-            NodeAppender.insertAtIndex(nodeWithStatements, customCodeHelper.getNode(), 1);
-        });
+        this.appendCustomNodeIfExist(
+            CustomCodeHelper.StringArrayRotateFunction,
+            (customCodeHelper: ICustomCodeHelper<TInitialData<StringArrayRotateFunctionCodeHelper>>) => {
+                NodeAppender.insertAtIndex(nodeWithStatements, customCodeHelper.getNode(), 1);
+            }
+        );
     }
 
     public initialize (): void {

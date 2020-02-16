@@ -5,6 +5,7 @@ import { TInputOptions } from '../../src/types/options/TInputOptions';
 import { StringArrayEncoding } from '../../src/enums/StringArrayEncoding';
 import { IdentifierNamesGenerator } from '../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
 
+import { evaluateInWorker } from '../helpers/evaluateInWorker';
 import { readFileAsString } from '../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscatorFacade';
@@ -36,7 +37,7 @@ describe('JavaScriptObfuscator runtime eval', function () {
         unicodeEscapeSequence: true
     };
 
-    this.timeout(100000);
+    this.timeout(200000);
 
     [
         {
@@ -162,6 +163,124 @@ describe('JavaScriptObfuscator runtime eval', function () {
                     `),
                     '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08'
                 );
+            });
+        });
+
+        describe(`Obfuscator. ${detailedDescription}`, () => {
+            const evaluationTimeout: number = 10000;
+
+            let evaluationResult: string;
+
+            beforeEach((done) => {
+                const code: string = readFileAsString(process.cwd() + '/dist/index.js');
+
+                const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...baseOptions,
+                        ...options
+                    }
+                ).getObfuscatedCode();
+
+                evaluateInWorker(
+                    `
+                        ${getEnvironmentCode()}
+                        ${obfuscatedCode}
+                        module.exports.obfuscate('var foo = 1;').getObfuscatedCode();
+                    `,
+                    (response: string) => {
+                        evaluationResult = response;
+                        done();
+                    },
+                    (error: Error) => {
+                        evaluationResult = error.message;
+                        done();
+                    },
+                    () => {
+                        done();
+                    },
+                    evaluationTimeout
+                );
+            });
+
+            it('should obfuscate code without any runtime errors after obfuscation: Variant #3 obfuscator', () => {
+                assert.equal(
+                    evaluationResult,
+                    'var foo=0x1;'
+                );
+            });
+        });
+
+        [
+            {
+                debugProtection: false,
+                selfDefending: false,
+                stringArray: true
+            },
+            {
+                debugProtection: false,
+                selfDefending: true,
+                stringArray: false
+            },
+            {
+                debugProtection: true,
+                selfDefending: false,
+                stringArray: false
+            },
+            {
+                debugProtection: true,
+                selfDefending: true,
+                stringArray: false
+            },
+            {
+                debugProtection: true,
+                selfDefending: true,
+                stringArray: true
+            }
+        ].forEach((webpackBootstrapOptions: Partial<TInputOptions>) => {
+            describe(`Webpack bootstrap code. ${detailedDescription}. ${JSON.stringify(webpackBootstrapOptions)}`, () => {
+                const evaluationTimeout: number = 10000;
+
+                let evaluationResult: string;
+
+                beforeEach((done) => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/webpack-bootstrap.js');
+
+                    const obfuscatedCode: string = JavaScriptObfuscator.obfuscate(
+                        code,
+                        {
+                            ...baseOptions,
+                            ...options,
+                            ...webpackBootstrapOptions
+                        }
+                    ).getObfuscatedCode();
+
+                    evaluateInWorker(
+                        `
+                        ${getEnvironmentCode()}
+                        ${obfuscatedCode}
+                    `,
+                        (response: string) => {
+                            evaluationResult = response;
+                            done();
+                        },
+                        (error: Error) => {
+                            evaluationResult = error.message;
+                            done();
+                        },
+                        () => {
+                            done();
+                        },
+                        evaluationTimeout
+                    );
+                });
+
+                it('should obfuscate code without any runtime errors after obfuscation: Variant #4 webpack bootstrap', () => {
+                    assert.equal(
+                        evaluationResult,
+                        'foo'
+                    );
+                });
             });
         });
     });

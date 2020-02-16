@@ -2,10 +2,17 @@ import { TNodeWithLexicalScope } from '../../../types/node/TNodeWithLexicalScope
 
 export interface IIdentifierNamesGenerator {
     /**
+     * @param {TNodeWithLexicalScope} lexicalScopeNode
      * @param {number} nameLength
      * @returns {string}
      */
-    generate (nameLength?: number): string;
+    generate (lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string;
+
+    /**
+     * @param {number} nameLength
+     * @returns {string}
+     */
+    generateForGlobalScope (nameLength?: number): string;
 
     /**
      * @param {TNodeWithLexicalScope} lexicalScopeNode

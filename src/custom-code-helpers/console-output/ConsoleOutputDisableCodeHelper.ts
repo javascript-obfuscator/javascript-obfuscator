@@ -20,12 +20,18 @@ import { AbstractCustomCodeHelper } from '../AbstractCustomCodeHelper';
 import { NodeUtils } from '../../node/NodeUtils';
 
 @injectable()
-export class ConsoleOutputDisableExpressionCodeHelper extends AbstractCustomCodeHelper {
+export class ConsoleOutputDisableCodeHelper extends AbstractCustomCodeHelper {
     /**
      * @type {string}
      */
     @initializable()
     private callsControllerFunctionName!: string;
+
+    /**
+     * @type {string}
+     */
+    @initializable()
+    private consoleOutputDisableFunctionName!: string;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -53,9 +59,11 @@ export class ConsoleOutputDisableExpressionCodeHelper extends AbstractCustomCode
 
     /**
      * @param {string} callsControllerFunctionName
+     * @param {StaticRange} consoleOutputDisableFunctionName
      */
-    public initialize (callsControllerFunctionName: string): void {
+    public initialize (callsControllerFunctionName: string, consoleOutputDisableFunctionName: string): void {
         this.callsControllerFunctionName = callsControllerFunctionName;
+        this.consoleOutputDisableFunctionName = consoleOutputDisableFunctionName;
     }
 
     /**
@@ -75,9 +83,9 @@ export class ConsoleOutputDisableExpressionCodeHelper extends AbstractCustomCode
             : GlobalVariableNoEvalTemplate();
 
         return this.customCodeHelperFormatter.formatTemplate(ConsoleOutputDisableExpressionTemplate(), {
-            consoleLogDisableFunctionName: this.identifierNamesGenerator.generate(),
-            globalVariableTemplate,
-            singleNodeCallControllerFunctionName: this.callsControllerFunctionName
+            callControllerFunctionName: this.callsControllerFunctionName,
+            consoleLogDisableFunctionName: this.consoleOutputDisableFunctionName,
+            globalVariableTemplate
         });
     }
 }

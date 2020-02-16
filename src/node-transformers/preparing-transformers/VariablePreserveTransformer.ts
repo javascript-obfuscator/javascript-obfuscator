@@ -62,6 +62,8 @@ export class VariablePreserveTransformer extends AbstractNodeTransformer {
     public getVisitor (transformationStage: TransformationStage): IVisitor | null {
         switch (transformationStage) {
             case TransformationStage.Preparing:
+            case TransformationStage.Converting:
+            case TransformationStage.Obfuscating:
                 return {
                     enter: (node: ESTree.Node, parentNode: ESTree.Node | null): ESTree.Node | undefined => {
                         if (parentNode && NodeGuards.isProgramNode(node)) {

@@ -13,7 +13,7 @@ import { ObfuscationEvent } from '../../enums/event-emitters/ObfuscationEvent';
 
 import { initializable } from '../../decorators/Initializable';
 
-import { SingleNodeCallControllerTemplate } from '../common/templates/SingleNodeCallControllerTemplate';
+import { SingleCallControllerTemplate } from '../common/templates/SingleCallControllerTemplate';
 
 import { AbstractCustomCodeHelper } from '../AbstractCustomCodeHelper';
 import { NodeUtils } from '../../node/NodeUtils';
@@ -79,14 +79,14 @@ export class CallsControllerFunctionCodeHelper extends AbstractCustomCodeHelper 
     protected getCodeHelperTemplate (): string {
         if (this.appendEvent === ObfuscationEvent.AfterObfuscation) {
             return this.customCodeHelperObfuscator.obfuscateTemplate(
-                this.customCodeHelperFormatter.formatTemplate(SingleNodeCallControllerTemplate(), {
-                    singleNodeCallControllerFunctionName: this.callsControllerFunctionName
+                this.customCodeHelperFormatter.formatTemplate(SingleCallControllerTemplate(), {
+                    callControllerFunctionName: this.callsControllerFunctionName
                 })
             );
         }
 
-        return this.customCodeHelperFormatter.formatTemplate(SingleNodeCallControllerTemplate(), {
-            singleNodeCallControllerFunctionName: this.callsControllerFunctionName
+        return this.customCodeHelperFormatter.formatTemplate(SingleCallControllerTemplate(), {
+            callControllerFunctionName: this.callsControllerFunctionName
         });
     }
 }

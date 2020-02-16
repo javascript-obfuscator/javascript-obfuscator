@@ -16,7 +16,7 @@ import { DomainLockCustomCodeHelperGroup } from '../../../custom-code-helpers/do
 import { SelfDefendingCodeHelperGroup } from '../../../custom-code-helpers/self-defending/group/SelfDefendingCodeHelperGroup';
 import { StringArrayCodeHelperGroup } from '../../../custom-code-helpers/string-array/group/StringArrayCodeHelperGroup';
 
-import { ConsoleOutputDisableExpressionCodeHelper } from '../../../custom-code-helpers/console-output/ConsoleOutputDisableExpressionCodeHelper';
+import { ConsoleOutputDisableCodeHelper } from '../../../custom-code-helpers/console-output/ConsoleOutputDisableCodeHelper';
 import { CustomCodeHelperFormatter } from '../../../custom-code-helpers/CustomCodeHelperFormatter';
 import { CustomCodeHelperObfuscator } from '../../../custom-code-helpers/CustomCodeHelperObfuscator';
 import { DebugProtectionFunctionCallCodeHelper } from '../../../custom-code-helpers/debug-protection/DebugProtectionFunctionCallCodeHelper';
@@ -32,8 +32,8 @@ import { StringArrayRotateFunctionCodeHelper } from '../../../custom-code-helper
 export const customCodeHelpersModule: interfaces.ContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     // custom code helpers
     bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
-        .to(ConsoleOutputDisableExpressionCodeHelper)
-        .whenTargetNamed(CustomCodeHelper.ConsoleOutputDisableExpression);
+        .to(ConsoleOutputDisableCodeHelper)
+        .whenTargetNamed(CustomCodeHelper.ConsoleOutputDisable);
 
     bind<ICustomCodeHelper>(ServiceIdentifiers.ICustomCodeHelper)
         .to(DebugProtectionFunctionCallCodeHelper)

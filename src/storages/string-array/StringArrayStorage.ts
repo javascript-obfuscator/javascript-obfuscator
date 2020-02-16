@@ -152,6 +152,13 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
     /**
      * @returns {string}
      */
+    public getStorageName (): string {
+        return this.getStorageId();
+    }
+
+    /**
+     * @returns {string}
+     */
     public getStorageId (): string {
         if (!this.stringArrayStorageName) {
             this.stringArrayStorageName = this.identifierNamesGenerator
@@ -159,13 +166,6 @@ export class StringArrayStorage extends MapStorage <string, IStringArrayStorageI
         }
 
         return this.stringArrayStorageName;
-    }
-
-    /**
-     * @returns {string}
-     */
-    public getStorageName (): string {
-        return this.getStorageId();
     }
 
     /**

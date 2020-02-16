@@ -351,17 +351,22 @@ export class DeadCodeInjectionTransformer extends AbstractNodeTransformer {
      */
     private makeClonedBlockStatementNodeUnique (clonedBlockStatementNode: ESTree.BlockStatement): ESTree.BlockStatement {
         // should wrap cloned block statement node into function node for correct scope encapsulation
-        const hostNode: ESTree.FunctionExpression = NodeFactory
-            .functionExpressionNode([], clonedBlockStatementNode);
+        const hostNode: ESTree.Program = NodeFactory.programNode([
+            NodeFactory.expressionStatementNode(
+                NodeFactory.functionExpressionNode([], clonedBlockStatementNode)
+            )
+        ]);
 
+        NodeUtils.parentizeAst(hostNode);
         NodeUtils.parentizeNode(hostNode, hostNode);
-        NodeUtils.parentizeNode(clonedBlockStatementNode, hostNode);
 
-        return this.transformersRunner.transform(
+        this.transformersRunner.transform(
             hostNode,
             DeadCodeInjectionTransformer.transformersToRenameBlockScopeIdentifiers,
             TransformationStage.Obfuscating
-        ).body;
+        );
+
+        return clonedBlockStatementNode;
     }
 
     /**

@@ -844,7 +844,6 @@ describe('JavaScriptObfuscator', () => {
                                 stringArrayEncoding: StringArrayEncoding.Rc4
                             }
                         ).getObfuscatedCode();
-
                     });
 
                     it('does not break on run', () => {

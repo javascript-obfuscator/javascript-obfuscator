@@ -37,7 +37,7 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
      * @param {number} nameLength
      * @returns {string}
      */
-    public generate (nameLength?: number): string {
+    public generateForGlobalScope (nameLength?: number): string {
         const rangeMinInteger: number = 10000;
         const rangeMaxInteger: number = 99_999_999;
         const randomInteger: number = this.randomGenerator.getRandomInteger(rangeMinInteger, rangeMaxInteger);
@@ -50,7 +50,7 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
         const identifierName: string = `_${Utils.hexadecimalPrefix}${baseIdentifierName}`;
 
         if (this.randomVariableNameSet.has(identifierName)) {
-            return this.generate(nameLength);
+            return this.generateForGlobalScope(nameLength);
         }
 
         this.randomVariableNameSet.add(identifierName);
@@ -64,7 +64,7 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
      * @returns {string}
      */
     public generateForLexicalScope (lexicalScopeNode: TNodeWithLexicalScope, nameLength?: number): string {
-        return this.generate(nameLength);
+        return this.generateForGlobalScope(nameLength);
     }
 
     /**
@@ -72,7 +72,7 @@ export class HexadecimalIdentifierNamesGenerator extends AbstractIdentifierNames
      * @returns {string}
      */
     public generateWithPrefix (nameLength?: number): string {
-        const identifierName: string = this.generate(nameLength);
+        const identifierName: string = this.generateForGlobalScope(nameLength);
 
         return `${this.options.identifiersPrefix}${identifierName}`.replace('__', '_');
     }

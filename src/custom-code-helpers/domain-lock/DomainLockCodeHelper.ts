@@ -26,12 +26,18 @@ export class DomainLockCodeHelper extends AbstractCustomCodeHelper {
      * @type {string}
      */
     @initializable()
-    protected callsControllerFunctionName!: string;
+    private callsControllerFunctionName!: string;
 
     /**
      * @type {ICryptUtils}
      */
     private readonly cryptUtils: ICryptUtils;
+
+    /**
+     * @type {string}
+     */
+    @initializable()
+    private domainLockFunctionName!: string;
 
     /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
@@ -63,9 +69,11 @@ export class DomainLockCodeHelper extends AbstractCustomCodeHelper {
 
     /**
      * @param {string} callsControllerFunctionName
+     * @param {string} domainLockFunctionName
      */
-    public initialize (callsControllerFunctionName: string): void {
+    public initialize (callsControllerFunctionName: string, domainLockFunctionName: string): void {
         this.callsControllerFunctionName = callsControllerFunctionName;
+        this.domainLockFunctionName = domainLockFunctionName;
     }
 
     /**
@@ -90,11 +98,11 @@ export class DomainLockCodeHelper extends AbstractCustomCodeHelper {
             : GlobalVariableNoEvalTemplate();
 
         return this.customCodeHelperFormatter.formatTemplate(DomainLockTemplate(), {
-            domainLockFunctionName: this.identifierNamesGenerator.generate(),
+            callControllerFunctionName: this.callsControllerFunctionName,
+            domainLockFunctionName: this.domainLockFunctionName,
             diff,
             domains: hiddenDomainsString,
-            globalVariableTemplate,
-            singleNodeCallControllerFunctionName: this.callsControllerFunctionName
+            globalVariableTemplate
         });
     }
 }

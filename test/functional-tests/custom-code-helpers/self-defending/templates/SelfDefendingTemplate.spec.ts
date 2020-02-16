@@ -5,14 +5,13 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { NO_ADDITIONAL_NODES_PRESET } from '../../../../../src/options/presets/NoCustomNodes';
 
 import { IdentifierNamesGenerator } from '../../../../../src/enums/generators/identifier-names-generators/IdentifierNamesGenerator';
-import { ObfuscationTarget } from '../../../../../src/enums/ObfuscationTarget';
 
 import { evaluateInWorker } from '../../../../helpers/evaluateInWorker';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscatorFacade';
 
-describe('DebugProtectionFunctionCallTemplate', function () {
-    const evaluationTimeout: number = 1500;
+describe('SelfDefendingTemplate', function () {
+    const evaluationTimeout: number = 3500;
 
     this.timeout(10000);
 
@@ -29,7 +28,7 @@ describe('DebugProtectionFunctionCallTemplate', function () {
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
-                    debugProtection: true,
+                    selfDefending: true,
                     identifierNamesGenerator: IdentifierNamesGenerator.HexadecimalIdentifierNamesGenerator
                 }
             ).getObfuscatedCode();
@@ -50,7 +49,7 @@ describe('DebugProtectionFunctionCallTemplate', function () {
             );
         });
 
-        it('should correctly evaluate code with enabled debug protection', () => {
+        it('should correctly evaluate code with enabled self defending', () => {
             assert.equal(evaluationResult, expectedEvaluationResult);
         });
     });
@@ -68,7 +67,7 @@ describe('DebugProtectionFunctionCallTemplate', function () {
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
-                    debugProtection: true,
+                    selfDefending: true,
                     identifierNamesGenerator: IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                 }
             ).getObfuscatedCode();
@@ -89,7 +88,7 @@ describe('DebugProtectionFunctionCallTemplate', function () {
             );
         });
 
-        it('should correctly evaluate code with enabled debug protection', () => {
+        it('should correctly evaluate code with enabled self defending', () => {
             assert.equal(evaluationResult, expectedEvaluationResult);
         });
     });
@@ -107,7 +106,7 @@ describe('DebugProtectionFunctionCallTemplate', function () {
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
-                    debugProtection: true,
+                    selfDefending: true,
                     identifierNamesGenerator: IdentifierNamesGenerator.DictionaryIdentifierNamesGenerator,
                     identifiersDictionary: ['foo', 'bar', 'baz', 'bark', 'hawk', 'eagle']
                 }
@@ -129,51 +128,12 @@ describe('DebugProtectionFunctionCallTemplate', function () {
             );
         });
 
-        it('should correctly evaluate code with enabled debug protection', () => {
+        it('should correctly evaluate code with enabled self defending', () => {
             assert.equal(evaluationResult, expectedEvaluationResult);
         });
     });
 
-    describe('Variant #4: correctly obfuscated code with target `BrowserNoEval`', () => {
-        const expectedEvaluationResult: number = 1;
-
-        let obfuscatedCode: string,
-            evaluationResult: number = 0;
-
-        beforeEach((done) => {
-            const code: string = readFileAsString(__dirname + '/fixtures/input.js');
-
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    debugProtection: true,
-                    target: ObfuscationTarget.BrowserNoEval
-                }
-            ).getObfuscatedCode();
-
-            evaluateInWorker(
-                obfuscatedCode,
-                (response: number) => {
-                    evaluationResult = response;
-                    done();
-                },
-                () => {
-                    done();
-                },
-                () => {
-                    done();
-                },
-                evaluationTimeout
-            );
-        });
-
-        it('should correctly evaluate code with enabled debug protection', () => {
-            assert.equal(evaluationResult, expectedEvaluationResult);
-        });
-    });
-
-    describe('Variant #5: obfuscated code with removed debug protection code', () => {
+    describe('Variant #4: obfuscated code with beautified self defending code', () => {
         const expectedEvaluationResult: number = 0;
 
         let obfuscatedCode: string,
@@ -186,10 +146,16 @@ describe('DebugProtectionFunctionCallTemplate', function () {
                 code,
                 {
                     ...NO_ADDITIONAL_NODES_PRESET,
-                    debugProtection: true
+                    selfDefending: true
                 }
             ).getObfuscatedCode();
-            obfuscatedCode = obfuscatedCode.replace(/\+\+ *_0x([a-f0-9]){4,6}/, '');
+            obfuscatedCode = obfuscatedCode
+                .replace(/function\(\){/g, 'function () {')
+                .replace(/=/g, ' = ')
+                .replace(/,/g, ', ')
+                .replace(/;/g, '; ')
+                .replace(/{/g, '{\n')
+                .replace(/}/g, '}\n');
 
             evaluateInWorker(
                 obfuscatedCode,
@@ -208,44 +174,6 @@ describe('DebugProtectionFunctionCallTemplate', function () {
         });
 
         it('should enter code in infinity loop', () => {
-            assert.equal(evaluationResult, expectedEvaluationResult);
-        });
-    });
-
-    describe('Variant #6: single call of debug protection code', () => {
-        const expectedEvaluationResult: number = 1;
-
-        let obfuscatedCode: string,
-            evaluationResult: number = 0;
-
-        beforeEach((done) => {
-            const code: string = readFileAsString(__dirname + '/fixtures/single-call.js');
-
-            obfuscatedCode = JavaScriptObfuscator.obfuscate(
-                code,
-                {
-                    ...NO_ADDITIONAL_NODES_PRESET,
-                    debugProtection: true
-                }
-            ).getObfuscatedCode();
-
-            evaluateInWorker(
-                obfuscatedCode,
-                (response: number) => {
-                    evaluationResult = response;
-                    done();
-                },
-                () => {
-                    done();
-                },
-                () => {
-                    done();
-                },
-                evaluationTimeout
-            );
-        });
-
-        it('should correctly evaluate code with enabled debug protection', () => {
             assert.equal(evaluationResult, expectedEvaluationResult);
         });
     });

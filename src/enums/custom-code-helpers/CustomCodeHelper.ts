@@ -1,6 +1,6 @@
 export enum CustomCodeHelper {
     CallsControllerFunction = 'CallsControllerFunction',
-    ConsoleOutputDisableExpression = 'ConsoleOutputDisableExpression',
+    ConsoleOutputDisable = 'ConsoleOutputDisable',
     DebugProtectionFunctionCall = 'DebugProtectionFunctionCall',
     DebugProtectionFunctionInterval = 'DebugProtectionFunctionInterval',
     DebugProtectionFunction = 'DebugProtectionFunction',

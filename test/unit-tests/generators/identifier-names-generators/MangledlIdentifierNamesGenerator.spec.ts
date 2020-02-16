@@ -12,7 +12,7 @@ import { IdentifierNamesGenerator } from '../../../../src/enums/generators/ident
 import { InversifyContainerFacade } from '../../../../src/container/InversifyContainerFacade';
 
 describe('MangledIdentifierNamesGenerator', () => {
-    describe('generate', () => {
+    describe('generateForGlobalScope', () => {
         let identifierNamesGenerator: IIdentifierNamesGenerator,
             mangledIdentifierName: string;
 
@@ -30,7 +30,7 @@ describe('MangledIdentifierNamesGenerator', () => {
             const expectedMangledIdentifierName: string = 'a';
 
             beforeEach(() => {
-                mangledIdentifierName = identifierNamesGenerator.generate();
+                mangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
             });
 
             it('should return mangled name', () => {
@@ -44,7 +44,7 @@ describe('MangledIdentifierNamesGenerator', () => {
 
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
-                    mangledIdentifierName = identifierNamesGenerator.generate();
+                    mangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
                 }
             });
 
@@ -59,7 +59,7 @@ describe('MangledIdentifierNamesGenerator', () => {
 
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
-                    mangledIdentifierName = identifierNamesGenerator.generate();
+                    mangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
                 }
             });
 
@@ -74,7 +74,7 @@ describe('MangledIdentifierNamesGenerator', () => {
 
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
-                    mangledIdentifierName = identifierNamesGenerator.generate();
+                    mangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
                 }
             });
 
@@ -89,7 +89,7 @@ describe('MangledIdentifierNamesGenerator', () => {
 
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition; i++) {
-                    mangledIdentifierName = identifierNamesGenerator.generate();
+                    mangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
                 }
             });
 
@@ -109,7 +109,7 @@ describe('MangledIdentifierNamesGenerator', () => {
 
             beforeEach(() => {
                 for (let i: number = 0; i <= expectedMangledIdentifierPosition2; i++) {
-                    mangledIdentifierName = identifierNamesGenerator.generate();
+                    mangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
 
                     if (i === expectedMangledIdentifierPosition1) {
                         mangledIdentifierName1 = mangledIdentifierName;
@@ -189,8 +189,8 @@ describe('MangledIdentifierNamesGenerator', () => {
                     IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                 );
 
-                firstMangledIdentifierName = identifierNamesGenerator.generate();
-                secondMangledIdentifierName = identifierNamesGenerator.generate();
+                firstMangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
+                secondMangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
             });
 
             it('should generate first identifier', () => {
@@ -220,8 +220,8 @@ describe('MangledIdentifierNamesGenerator', () => {
                     IdentifierNamesGenerator.MangledIdentifierNamesGenerator
                 );
 
-                firstMangledIdentifierName = identifierNamesGenerator.generate();
-                secondMangledIdentifierName = identifierNamesGenerator.generate();
+                firstMangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
+                secondMangledIdentifierName = identifierNamesGenerator.generateForGlobalScope();
             });
 
             it('should generate first identifier', () => {

@@ -4,7 +4,7 @@
 export function DebugProtectionFunctionCallTemplate (): string {
     return `
         (function () {
-            {singleNodeCallControllerFunctionName}(
+            {callControllerFunctionName}(
                 this,
                 function () {
                     const regExp1 = new RegExp('function *\\\\( *\\\\)');

@@ -1,9 +1,9 @@
 /**
  * @returns {string}
  */
-export function SingleNodeCallControllerTemplate (): string {
+export function SingleCallControllerTemplate (): string {
     return `
-        const {singleNodeCallControllerFunctionName} = (function(){
+        const {callControllerFunctionName} = (function(){
             let firstCall = true;
             
             return function (context, fn){

@@ -90,8 +90,8 @@ export class StringArrayRotateFunctionCodeHelper extends AbstractCustomCodeHelpe
      * @returns {string}
      */
     protected getCodeHelperTemplate (): string {
-        const timesName: string = this.identifierNamesGenerator.generate();
-        const whileFunctionName: string = this.identifierNamesGenerator.generate();
+        const timesName: string = this.identifierNamesGenerator.generateForGlobalScope();
+        const whileFunctionName: string = this.identifierNamesGenerator.generateForGlobalScope();
         const preservedNames: string[] = [this.stringArrayName];
 
         let code: string = '';

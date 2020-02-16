@@ -69,7 +69,7 @@ export class DictionaryIdentifierNamesGenerator extends AbstractIdentifierNamesG
         return null;
     }
 
-    public generate (): string {
+    public generateForGlobalScope (): string {
         const identifierName: string = this.generateNewDictionaryName();
 
         this.preserveName(identifierName);

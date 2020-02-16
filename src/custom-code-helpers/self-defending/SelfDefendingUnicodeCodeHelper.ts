@@ -31,6 +31,12 @@ export class SelfDefendingUnicodeCodeHelper extends AbstractCustomCodeHelper {
     private callsControllerFunctionName!: string;
 
     /**
+     * @type {string}
+     */
+    @initializable()
+    private selfDefendingFunctionName!: string;
+
+    /**
      * @param {TIdentifierNamesGeneratorFactory} identifierNamesGeneratorFactory
      * @param {ICustomCodeHelperFormatter} customCodeHelperFormatter
      * @param {ICustomCodeHelperObfuscator} customCodeHelperObfuscator
@@ -60,9 +66,11 @@ export class SelfDefendingUnicodeCodeHelper extends AbstractCustomCodeHelper {
 
     /**
      * @param {string} callsControllerFunctionName
+     * @param {string} selfDefendingFunctionName
      */
-    public initialize (callsControllerFunctionName: string): void {
+    public initialize (callsControllerFunctionName: string, selfDefendingFunctionName: string): void {
         this.callsControllerFunctionName = callsControllerFunctionName;
+        this.selfDefendingFunctionName = selfDefendingFunctionName;
     }
 
     /**
@@ -77,14 +85,9 @@ export class SelfDefendingUnicodeCodeHelper extends AbstractCustomCodeHelper {
      * @returns {string}
      */
     protected getCodeHelperTemplate (): string {
-        return this.customCodeHelperObfuscator.obfuscateTemplate(
-            this.customCodeHelperFormatter.formatTemplate(SelfDefendingTemplate(this.escapeSequenceEncoder), {
-                selfDefendingFunctionName: this.identifierNamesGenerator.generate(),
-                singleNodeCallControllerFunctionName: this.callsControllerFunctionName
-            }),
-            {
-                unicodeEscapeSequence: true
-            }
-        );
+        return this.customCodeHelperFormatter.formatTemplate(SelfDefendingTemplate(this.escapeSequenceEncoder), {
+            callControllerFunctionName: this.callsControllerFunctionName,
+            selfDefendingFunctionName: this.selfDefendingFunctionName
+        });
     }
 }

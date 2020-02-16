@@ -57,7 +57,7 @@ export class ObjectExpressionVariableDeclarationHostNode extends AbstractCustomN
      */
     protected getNodeStructure (): TStatement[] {
         const variableDeclarationName: string = NodeGuards.isProgramNode(this.lexicalScopeNode)
-            ? this.identifierNamesGenerator.generate()
+            ? this.identifierNamesGenerator.generateForGlobalScope()
             : this.identifierNamesGenerator.generateForLexicalScope(this.lexicalScopeNode);
 
         const structure: TStatement = NodeFactory.variableDeclarationNode(

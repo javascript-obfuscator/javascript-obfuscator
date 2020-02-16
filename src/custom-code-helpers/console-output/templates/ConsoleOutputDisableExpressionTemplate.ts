@@ -3,7 +3,7 @@
  */
 export function ConsoleOutputDisableExpressionTemplate (): string {
     return `
-        const {consoleLogDisableFunctionName} = {singleNodeCallControllerFunctionName}(this, function () {
+        const {consoleLogDisableFunctionName} = {callControllerFunctionName}(this, function () {
             const func = function () {};
             
             {globalVariableTemplate}

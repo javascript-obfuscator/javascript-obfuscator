@@ -4,6 +4,7 @@ import { ServiceIdentifiers } from '../../../container/ServiceIdentifiers';
 import { TCustomCodeHelperFactory } from '../../../types/container/custom-code-helpers/TCustomCodeHelperFactory';
 import { TIdentifierNamesGeneratorFactory } from '../../../types/container/generators/TIdentifierNamesGeneratorFactory';
 import { TInitialData } from '../../../types/TInitialData';
+import { TNodeWithLexicalScope } from '../../../types/node/TNodeWithLexicalScope';
 import { TNodeWithStatements } from '../../../types/node/TNodeWithStatements';
 
 import { ICustomCodeHelper } from '../../../interfaces/custom-code-helpers/ICustomCodeHelper';
@@ -17,9 +18,11 @@ import { CustomCodeHelper } from '../../../enums/custom-code-helpers/CustomCodeH
 import { ObfuscationEvent } from '../../../enums/event-emitters/ObfuscationEvent';
 
 import { AbstractCustomCodeHelperGroup } from '../../AbstractCustomCodeHelperGroup';
+import { CallsControllerFunctionCodeHelper } from '../../calls-controller/CallsControllerFunctionCodeHelper';
 import { DomainLockCodeHelper } from '../DomainLockCodeHelper';
 import { NodeAppender } from '../../../node/NodeAppender';
-import { CallsControllerFunctionCodeHelper } from '../../calls-controller/CallsControllerFunctionCodeHelper';
+import { NodeLexicalScopeUtils } from '../../../node/NodeLexicalScopeUtils';
+import { NodeGuards } from '../../../node/NodeGuards';
 
 @injectable()
 export class DomainLockCustomCodeHelperGroup extends AbstractCustomCodeHelperGroup {
@@ -62,26 +65,50 @@ export class DomainLockCustomCodeHelperGroup extends AbstractCustomCodeHelperGro
      * @param {ICallsGraphData[]} callsGraphData
      */
     public appendNodes (nodeWithStatements: TNodeWithStatements, callsGraphData: ICallsGraphData[]): void {
+        if (!this.options.domainLock.length) {
+            return;
+        }
+
         const randomCallsGraphIndex: number = this.getRandomCallsGraphIndex(callsGraphData.length);
 
+        const domainLockFunctionHostNode: TNodeWithStatements = callsGraphData.length
+            ? NodeAppender.getOptimalBlockScope(callsGraphData, randomCallsGraphIndex)
+            : nodeWithStatements;
+        const callsControllerHostNode: TNodeWithStatements = callsGraphData.length
+            ? NodeAppender.getOptimalBlockScope(callsGraphData, randomCallsGraphIndex, 1)
+            : nodeWithStatements;
+
+        const domainLockFunctionLexicalScopeNode: TNodeWithLexicalScope | null = NodeLexicalScopeUtils
+            .getLexicalScope(domainLockFunctionHostNode) ?? null;
+
+        const domainLockFunctionName: string = domainLockFunctionLexicalScopeNode
+            && NodeGuards.isProgramNode(domainLockFunctionLexicalScopeNode)
+            ? this.identifierNamesGenerator.generate(domainLockFunctionLexicalScopeNode)
+            : this.randomGenerator.getRandomString(5);
+        const callsControllerFunctionName: string = domainLockFunctionLexicalScopeNode
+            && NodeGuards.isProgramNode(domainLockFunctionLexicalScopeNode)
+            ? this.identifierNamesGenerator.generate(domainLockFunctionLexicalScopeNode)
+            : this.randomGenerator.getRandomString(5);
+
         // domainLock helper nodes append
-        this.appendCustomNodeIfExist(CustomCodeHelper.DomainLock, (customCodeHelper: ICustomCodeHelper) => {
-            NodeAppender.appendToOptimalBlockScope(
-                callsGraphData,
-                nodeWithStatements,
-                customCodeHelper.getNode(),
-                randomCallsGraphIndex
-            );
-        });
+        this.appendCustomNodeIfExist(
+            CustomCodeHelper.DomainLock,
+            (customCodeHelper: ICustomCodeHelper<TInitialData<DomainLockCodeHelper>>) => {
+                customCodeHelper.initialize(callsControllerFunctionName, domainLockFunctionName);
+
+                NodeAppender.prepend(domainLockFunctionHostNode, customCodeHelper.getNode());
+            }
+        );
 
         // nodeCallsControllerFunction helper nodes append
-        this.appendCustomNodeIfExist(CustomCodeHelper.CallsControllerFunction, (customCodeHelper: ICustomCodeHelper) => {
-            const targetNodeWithStatements: TNodeWithStatements = callsGraphData.length
-                ? NodeAppender.getOptimalBlockScope(callsGraphData, randomCallsGraphIndex, 1)
-                : nodeWithStatements;
+        this.appendCustomNodeIfExist(
+            CustomCodeHelper.CallsControllerFunction,
+            (customCodeHelper: ICustomCodeHelper<TInitialData<CallsControllerFunctionCodeHelper>>) => {
+                customCodeHelper.initialize(this.appendEvent, callsControllerFunctionName);
 
-            NodeAppender.prepend(targetNodeWithStatements, customCodeHelper.getNode());
-        });
+                NodeAppender.prepend(callsControllerHostNode, customCodeHelper.getNode());
+            }
+        );
     }
 
     public initialize (): void {
@@ -91,17 +118,12 @@ export class DomainLockCustomCodeHelperGroup extends AbstractCustomCodeHelperGro
             return;
         }
 
-        const callsControllerFunctionName: string = this.identifierNamesGenerator.generate();
-
         const domainLockCodeHelper: ICustomCodeHelper<TInitialData<DomainLockCodeHelper>> =
             this.customCodeHelperFactory(CustomCodeHelper.DomainLock);
-        const nodeCallsControllerFunctionCodeHelper: ICustomCodeHelper<TInitialData<CallsControllerFunctionCodeHelper>> =
+        const callsControllerFunctionCodeHelper: ICustomCodeHelper<TInitialData<CallsControllerFunctionCodeHelper>> =
             this.customCodeHelperFactory(CustomCodeHelper.CallsControllerFunction);
 
-        domainLockCodeHelper.initialize(callsControllerFunctionName);
-        nodeCallsControllerFunctionCodeHelper.initialize(this.appendEvent, callsControllerFunctionName);
-
         this.customCodeHelpers.set(CustomCodeHelper.DomainLock, domainLockCodeHelper);
-        this.customCodeHelpers.set(CustomCodeHelper.CallsControllerFunction, nodeCallsControllerFunctionCodeHelper);
+        this.customCodeHelpers.set(CustomCodeHelper.CallsControllerFunction, callsControllerFunctionCodeHelper);
     }
 }
